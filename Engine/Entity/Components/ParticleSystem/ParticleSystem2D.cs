@@ -94,7 +94,6 @@ namespace Engine
                 AngularVelocity = RandomFloat(-AngularVelocity, AngularVelocity),
                 Size = StartSize,
                 IsWorldSpace = IsWorldSpace
-
             };
 
             _particles.Add(particle);
