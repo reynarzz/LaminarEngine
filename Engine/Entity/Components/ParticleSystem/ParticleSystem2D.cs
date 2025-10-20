@@ -41,6 +41,7 @@ namespace Engine
             const float bufferOffset = 1.2f;
 
             _particles.Capacity = (int)MathF.Ceiling(EmitRate * ParticleLife * bufferOffset);
+            Mesh.Vertices.Capacity = _particles.Capacity * 4;
         }
 
         public void OnUpdate()
@@ -143,7 +144,7 @@ namespace Engine
             }
 
             Mesh.IndicesToDrawCount = _particles.Count * 6;
-            IsDirty = true;
+           // IsDirty = true;
         }
     }
 }

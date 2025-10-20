@@ -17,7 +17,7 @@ namespace Engine
                 return Actor.Transform;
             }
         }
-        
+
         public override string Name { get => Actor?.Name ?? GetType().Name; set => Actor.Name = value; }
 
         private bool _isEnabled = true;
@@ -107,6 +107,12 @@ namespace Engine
         {
             CheckIfValidObject(this);
             return Actor.GetComponents<T>();
+        }
+
+        public void GetComponents<T>(ref List<T> elements) where T : Component
+        {
+            CheckIfValidObject(this);
+            Actor.GetComponents<T>(ref elements);
         }
     }
 }

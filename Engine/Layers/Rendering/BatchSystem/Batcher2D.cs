@@ -25,6 +25,9 @@ namespace Engine.Rendering
         private Material _pinkMaterial;
         private Texture2D _whiteTexture;
         private readonly Vertex[] _quadVertexArray = new Vertex[4];
+        private readonly List<List<Renderer2D>> _sortedBuckets = new();
+        private static readonly Comparison<List<Renderer2D>> _bucketSorter =
+            (a, b) => a[0].SortOrder.CompareTo(b[0].SortOrder);
 
         private struct BucketKey : IEquatable<BucketKey>
         {
@@ -98,8 +101,13 @@ namespace Engine.Rendering
                 _renderBuckets[key].Add(renderer);
             }
 
+
+            _sortedBuckets.Clear();
+            _sortedBuckets.AddRange(_renderBuckets.Values);
+            _sortedBuckets.Sort(_bucketSorter);
+
             // TODO: improve performance of order by sorting, is allocating every frame
-            foreach (var bucket in _renderBuckets.Values.OrderBy(x => x[0].SortOrder))
+            foreach (var bucket in _sortedBuckets)
             {
                 Batch2D currentBatch = null;
 
