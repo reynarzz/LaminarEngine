@@ -12,6 +12,9 @@ namespace Engine.Graphics.OpenGL
     {
         private readonly Dictionary<string, int> _uniformLocations;
         private readonly static float[] _mat4Arr = new float[16]; 
+        private readonly static float[] _vec4Arr = new float[4]; 
+        private readonly static float[] _vec3Arr = new float[3]; 
+        private readonly static float[] _vec2Arr = new float[2];
         public GLShader() : base(glCreateProgram, glDeleteProgram, glUseProgram)
         {
             _uniformLocations = new Dictionary<string, int>();
@@ -145,19 +148,24 @@ namespace Engine.Graphics.OpenGL
         internal void SetUniform(string name, vec2 value)
         {
             int location = GetLocation(name);
-            glUniform2fv(location, 1, value.to_array());
+
+            value.to_array(_vec2Arr);
+            glUniform2fv(location, 1, _vec2Arr);
         }
 
         internal void SetUniform(string name, vec3 value)
         {
             int location = GetLocation(name);
-            glUniform3fv(location, 1, value.to_array());
+            value.to_array(_vec3Arr);
+            glUniform3fv(location, 1, _vec3Arr);
         }
 
         internal void SetUniform(string name, vec4 value)
         {
             int location = GetLocation(name);
-            glUniform4fv(location, 1, value.to_array());
+
+            value.to_array(_vec4Arr);
+            glUniform4fv(location, 1, _vec4Arr);
         }
 
         internal void SetUniform(string name, mat4 value)

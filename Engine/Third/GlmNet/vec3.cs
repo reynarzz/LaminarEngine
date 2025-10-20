@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 
 namespace GlmNet
 {
@@ -130,8 +131,16 @@ namespace GlmNet
             return new[] { x, y, z };
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void to_array(Span<float> arr)
+        {
+            arr[0] = x;
+            arr[1] = y;
+            arr[2] = z;
+        }
+
         #region Comparision
-        
+
         /// <summary>
         /// Determines whether the specified <see cref="System.Object" />, is equal to this instance.
         /// The Difference is detected by the different values
