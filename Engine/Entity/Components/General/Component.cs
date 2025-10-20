@@ -103,7 +103,7 @@ namespace Engine
             return Actor.GetComponent<T>();
         }
 
-        public T[] GetComponents<T>() where T : Component
+        public Span<T> GetComponents<T>() where T : Component
         {
             CheckIfValidObject(this);
             return Actor.GetComponents<T>();

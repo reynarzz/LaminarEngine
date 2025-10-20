@@ -146,12 +146,12 @@ public class Input : LayerBase
 
     public static vec2 MousePosition { get; private set; }
 
-    private Array _keyCodesArray;
-    private Array _mouseButtonsArray;
+    private KeyCode[] _keyCodesArray;
+    private MouseButton[] _mouseButtonsArray;
     public override void Initialize() 
     {
-        _keyCodesArray = Enum.GetValues(typeof(KeyCode));
-        _mouseButtonsArray = Enum.GetValues(typeof(MouseButton));
+        _keyCodesArray = Enum.GetValues<KeyCode>();
+        _mouseButtonsArray = Enum.GetValues<MouseButton>();
 
         _previousKeys = new HashSet<KeyCode>();
         _previousMouse = new HashSet<MouseButton>();

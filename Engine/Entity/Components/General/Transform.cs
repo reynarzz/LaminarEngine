@@ -6,9 +6,9 @@ namespace Engine
 {
     public class Transform : Component
     {
-        public IReadOnlyList<Transform> Children => _children.AsReadOnly();
+        public IReadOnlyList<Transform> Children => _children;
 
-        private static mat4 IdentityM => new mat4(1.0f);
+        private static readonly mat4 IdentityM = new mat4(1.0f);
         // Local transform
         private vec3 _localPosition = default;
         private quat _localRotation = quat.Identity;

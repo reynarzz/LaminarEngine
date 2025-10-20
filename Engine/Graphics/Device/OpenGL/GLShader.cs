@@ -11,13 +11,13 @@ namespace Engine.Graphics.OpenGL
     internal class GLShader : GLGfxResource<ShaderDescriptor>
     {
         private readonly Dictionary<string, int> _uniformLocations;
-        private readonly static float[] _mat4Arr = new float[16]; 
-        private readonly static float[] _vec4Arr = new float[4]; 
-        private readonly static float[] _vec3Arr = new float[3]; 
+        private readonly static float[] _mat4Arr = new float[16];
+        private readonly static float[] _vec4Arr = new float[4];
+        private readonly static float[] _vec3Arr = new float[3];
         private readonly static float[] _vec2Arr = new float[2];
         public GLShader() : base(glCreateProgram, glDeleteProgram, glUseProgram)
         {
-            _uniformLocations = new Dictionary<string, int>();
+            _uniformLocations = new Dictionary<string, int>(StringComparer.Ordinal);
         }
 
         protected override bool CreateResource(ShaderDescriptor descriptor)
@@ -123,31 +123,40 @@ namespace Engine.Graphics.OpenGL
 
         internal void SetUniform(string name, int value)
         {
-            var location = GetLocation(name);
+            if (!GetLocation(name, out var location))
+                return;
+
             glUniform1i(location, value);
         }
 
         internal void SetUniform(string name, uint value)
         {
-            var location = GetLocation(name);
+            if (!GetLocation(name, out var location))
+                return;
+
             glUniform1ui(location, value);
         }
 
         internal void SetUniformF(string name, float value)
         {
-            var location = GetLocation(name);
+            if (!GetLocation(name, out var location))
+                return;
+
             glUniform1f(location, value);
         }
 
         internal void SetUniform(string name, int[] value)
         {
-            var location = GetLocation(name);
+            if (!GetLocation(name, out var location))
+                return;
+
             glUniform1iv(location, value.Length, value);
         }
 
         internal void SetUniform(string name, vec2 value)
         {
-            int location = GetLocation(name);
+            if (!GetLocation(name, out var location))
+                return;
 
             value.to_array(_vec2Arr);
             glUniform2fv(location, 1, _vec2Arr);
@@ -155,14 +164,17 @@ namespace Engine.Graphics.OpenGL
 
         internal void SetUniform(string name, vec3 value)
         {
-            int location = GetLocation(name);
+            if (!GetLocation(name, out var location))
+                return;
+
             value.to_array(_vec3Arr);
             glUniform3fv(location, 1, _vec3Arr);
         }
 
         internal void SetUniform(string name, vec4 value)
         {
-            int location = GetLocation(name);
+            if (!GetLocation(name, out var location))
+                return;
 
             value.to_array(_vec4Arr);
             glUniform4fv(location, 1, _vec4Arr);
@@ -170,12 +182,13 @@ namespace Engine.Graphics.OpenGL
 
         internal void SetUniform(string name, mat4 value)
         {
-            int location = GetLocation(name);
+            if (!GetLocation(name, out var location))
+                return;
 
             unsafe
             {
                 value.to_array(_mat4Arr);
-                fixed(float* m = &_mat4Arr[0])
+                fixed (float* m = &_mat4Arr[0])
                 {
                     glUniformMatrix4fv(location, 1, false, m);
                 }
@@ -183,20 +196,16 @@ namespace Engine.Graphics.OpenGL
         }
 
         // Tries to find the location for 'name', if found, the location will be cached.
-        private int GetLocation(string name)
+        private bool GetLocation(string name, out int location)
         {
-            if (_uniformLocations.TryGetValue(name, out var loc))
+            location = -1;
+            if (_uniformLocations.TryGetValue(name, out location))
             {
-                return loc;
+                return location >= 0;
             }
-            loc = glGetUniformLocation(Handle, name);
-
-            if(loc >= 0)
-            {
-                _uniformLocations.Add(name, loc);
-            }
-
-            return loc;
+            location = glGetUniformLocation(Handle, name);
+            _uniformLocations.Add(name, location);
+            return false;
         }
     }
 }
