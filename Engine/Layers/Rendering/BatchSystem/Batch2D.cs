@@ -18,6 +18,7 @@ namespace Engine.Rendering
         internal GfxResource Geometry { get; }
         internal Texture[] Textures { get; }
         internal static int[] TextureSlotArray { get; private set; }
+        private readonly Action<Renderer> _onRendererDestroyHandler;
 
         // TODO: cache this
         internal int VertexCount
@@ -95,6 +96,7 @@ namespace Engine.Rendering
             vertexDesc.BufferDesc = new BufferDataDescriptor<Vertex>() { Buffer = _verticesData };
             vertexDesc.BufferDesc.Usage = BufferUsage.Dynamic;
             _geoDescriptor.SharedIndexBuffer = sharedIndexBuffer;
+            _onRendererDestroyHandler = OnRendererDestroy;
 
             unsafe
             {
@@ -162,8 +164,8 @@ namespace Engine.Rendering
                 }
             }
 
-            renderer.OnDestroyRenderer -= OnRendererDestroy;
-            renderer.OnDestroyRenderer += OnRendererDestroy;
+            renderer.OnDestroyRenderer -= _onRendererDestroyHandler;
+            renderer.OnDestroyRenderer += _onRendererDestroyHandler;
 
             var startIndex = 0;
             var existId = _renderers.TryGetValue(renderer.GetID(), out var rendererIds);

@@ -20,6 +20,13 @@ namespace Engine.Layers
         private PostProcessingStack _postProcessStack;
         private FontRenderingSystem _fontRenderingSystem;
         private List<Renderer2D> _renderers;
+        private mat4 _viewProjMatrix;
+        private readonly Action<Shader, RenderTexture, RenderTexture, PostProcessingPass.PassUniform[]> _drawPostProcessCallback;
+
+        public RenderingLayer() : base()
+        {
+            _drawPostProcessCallback = PostProcessDraw;
+        }
 
         public override void Initialize()
         {
@@ -142,15 +149,16 @@ namespace Engine.Layers
 
             foreach (var pass in PostProcessingStack.Passes)
             {
-                void PostProcessDraw(Shader shader, RenderTexture inTex, RenderTexture outTex, PostProcessingPass.PassUniform[] uniforms)
-                {
-                    DrawScreenQuad(shader, VP, inTex, outTex, uniforms, _mainCamera);
-                }
-
-                sceneRenderTarget = pass.Render(sceneRenderTarget, PostProcessDraw);
+                sceneRenderTarget = pass.Render(sceneRenderTarget, _drawPostProcessCallback);
             }
 
             GfxDeviceManager.Current.Present(sceneRenderTarget.NativeResource);
+        }
+
+
+        private void PostProcessDraw(Shader shader, RenderTexture inTex, RenderTexture outTex, PostProcessingPass.PassUniform[] uniforms)
+        {
+            DrawScreenQuad(shader, _viewProjMatrix, inTex, outTex, uniforms, _mainCamera);
         }
 
         private void RenderPass(Batch2D batch, ref mat4 VP, RenderTexture renderTarget, RenderTexture screenGrabTarget, Camera camera)

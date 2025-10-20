@@ -12,10 +12,10 @@ namespace Engine
 {
     public class Material : EObject
     {
-        private List<RenderPass> _passes;
-        public IReadOnlyList<RenderPass> Passes => _passes;
-        private Dictionary<string, Texture> _textures;
-        internal IReadOnlyDictionary<string, Texture> Textures => _textures;
+        private readonly List<RenderPass> _passes;
+        public List<RenderPass> Passes => _passes;
+        private readonly Dictionary<string, Texture> _textures;
+        internal Dictionary<string, Texture> Textures => _textures;
 
         public Material(Shader shader)
         {

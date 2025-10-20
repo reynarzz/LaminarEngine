@@ -12,7 +12,7 @@ namespace Engine
     public class RenderPass
     {
         private readonly Dictionary<string, UniformValue> _uniforms;
-        internal IReadOnlyDictionary<string, UniformValue> Uniforms => _uniforms;
+        internal Dictionary<string, UniformValue> Uniforms => _uniforms;
 
         public bool IsScreenGrabPass { get; set; }
         public Shader Shader { get; }

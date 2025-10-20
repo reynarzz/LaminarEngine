@@ -190,18 +190,21 @@ namespace Engine.Graphics
                 var font = fontSystem.GetFont(textRenderer.FontSize);
 
                 // TODO: remove this, used for recentering
-                var split = textRenderer.Text.ToString().Split('\n');
+                //var split = textRenderer.Text.ToString().Split('\n');
 
-                for (int i = 0; i < split.Length; i++)
-                {
-                    SendTextToDraw(split[i], font, textRenderer, font.LineHeight * i);
-                }
+                //for (int i = 0; i < split.Length; i++)
+                //{
+                //    SendTextToDraw(split[i], font, textRenderer, font.LineHeight * i);
+                //}
+
+                SendTextToDraw(textRenderer.Text, font, textRenderer, font.LineHeight);
+
             }
 
             Flush(viewProjection, renderTexture);
         }
 
-        private void SendTextToDraw(string text, DynamicSpriteFont font, TextRenderer textRenderer, int lineHeight)
+        private void SendTextToDraw(StringBuilder text, DynamicSpriteFont font, TextRenderer textRenderer, int lineHeight)
         {
             var pivot = new System.Numerics.Vector2(0.5f, 0.5f);
 

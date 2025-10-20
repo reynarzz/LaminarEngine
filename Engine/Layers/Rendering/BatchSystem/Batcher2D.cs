@@ -74,7 +74,7 @@ namespace Engine.Rendering
         }
 
 
-        internal IReadOnlyList<Batch2D> GetBatches(List<Renderer2D> renderers)
+        internal List<Batch2D> GetBatches(List<Renderer2D> renderers)
         {
             // TODO: Do frustum culling
 

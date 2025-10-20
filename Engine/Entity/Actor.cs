@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,7 +12,8 @@ namespace Engine
     public class Actor : EObject
     {
         private List<Component> _components;
-        internal IReadOnlyList<Component> Components => _components;
+        internal List<Component> Components => _components;
+        private List<Component> _toDeleteComponents = new();
 
         private Transform _transform;
         public Transform Transform
@@ -84,13 +86,15 @@ namespace Engine
 
         private List<Component> _pendingToDeleteComponents;
 
-        private List<Component> _onAwakeComponents;
-        private List<Component> _onStartComponents;
+        private List<Component> _onAwakePendingComponents;
+        private List<Component> _onStartPendingComponents;
         private static readonly Action<ScriptBehavior> _awakeAction = x => { x.OnEnabled(); if (x.Actor.IsActiveInHierarchy) x.OnAwake(); };
         private static readonly Action<ScriptBehavior> _startAction = x => x.OnStart();
         private static readonly Action<IUpdatableComponent> _updateAction = x => x.OnUpdate();
         private static readonly Action<ILateUpdatableComponent> _lateUpdateAction = x => x.OnLateUpdate();
         private static readonly Action<IFixedUpdatableComponent> _fixedUpdateAction = x => x.OnFixedUpdate();
+        private static readonly Func<Actor, List<Component>> _getAwakePending = a => a._onAwakePendingComponents;
+        private static readonly Func<Actor, List<Component>> _getStartPending = a => a._onStartPendingComponents;
 
         public Actor() : this(string.Empty, string.Empty)
         {
@@ -112,8 +116,8 @@ namespace Engine
             }
 
             _components = new List<Component>();
-            _onAwakeComponents = new List<Component>();
-            _onStartComponents = new List<Component>();
+            _onAwakePendingComponents = new List<Component>();
+            _onStartPendingComponents = new List<Component>();
             _pendingToDeleteComponents = new List<Component>();
 
             _transform = AddComponent<Transform>();
@@ -162,8 +166,8 @@ namespace Engine
             var component = Activator.CreateInstance(type) as Component;
             component.Actor = this;
             _components.Add(component);
-            _onAwakeComponents.Add(component);
-            _onStartComponents.Add(component);
+            _onAwakePendingComponents.Add(component);
+            _onStartPendingComponents.Add(component);
 
             component.OnInitialize();
 
@@ -232,19 +236,28 @@ namespace Engine
             return GetComponent(typeof(T)) as T;
         }
 
-        public T[] GetComponents<T>() where T : Component
+        public void GetComponents<T>(ref List<T> elements) where T : Component
         {
             CheckIfValidObject(this);
-            var components = new List<T>();
+         
             for (int i = 0; i < _components.Count; i++)
             {
                 if (typeof(T).IsAssignableFrom(_components[i].GetType()))
                 {
-                    components.Add(_components[i] as T);
+                    if (elements == null)
+                    {
+                        elements = new List<T>();
+                    }
+                    elements.Add(_components[i] as T);
                 }
             }
+        }
 
-            return components.ToArray();
+        public Span<T> GetComponents<T>() where T : Component
+        {
+            var components = new List<T>();
+            GetComponents(ref components);
+            return CollectionsMarshal.AsSpan(components);
         }
 
         private bool IsValidComponent(Type component)
@@ -316,8 +329,8 @@ namespace Engine
             }
 
             component.Actor._components.Remove(component);
-            component.Actor._onStartComponents.Remove(component);
-            component.Actor._onAwakeComponents.Remove(component);
+            component.Actor._onStartPendingComponents.Remove(component);
+            component.Actor._onAwakePendingComponents.Remove(component);
 
             component.Actor = null;
             component.IsAlive = false;
@@ -325,12 +338,12 @@ namespace Engine
 
         internal void Awake()
         {
-            UpdateScriptBeginEvent(this, actor => actor._onAwakeComponents, _awakeAction);
+            UpdateScriptBeginEvent(this, _getAwakePending, _awakeAction);
         }
 
         internal void Start()
         {
-            UpdateScriptBeginEvent(this, actor => actor._onStartComponents, _startAction);
+            UpdateScriptBeginEvent(this, _getStartPending, _startAction);
         }
 
         public void Update()
@@ -354,7 +367,7 @@ namespace Engine
             if (actor && actor.IsActiveInHierarchy)
             {
                 var components = getPendingComponents(actor);
-                var toDelete = new List<Component>();
+                _toDeleteComponents.Clear();
 
                 for (int i = 0; i < components.Count; ++i)
                 {
@@ -376,13 +389,13 @@ namespace Engine
 #endif
                         }
 
-                        toDelete.Add(component);
+                        _toDeleteComponents.Add(component);
                     }
                 }
 
-                for (int i = 0; i < toDelete.Count; i++)
+                for (int i = 0; i < _toDeleteComponents.Count; i++)
                 {
-                    components.Remove(toDelete[i]);
+                    components.Remove(_toDeleteComponents[i]);
                 }
 
                 for (int i = 0; i < actor.Transform.Children.Count; i++)

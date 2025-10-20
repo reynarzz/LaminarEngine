@@ -85,7 +85,7 @@ namespace Engine.Rendering
             // Delete all batches that are not being used for too long, and are also big.
         }
 
-        internal IReadOnlyList<Batch2D> GetActiveBatches()
+        internal List<Batch2D> GetActiveBatches()
         {
             return _batches;
         }
