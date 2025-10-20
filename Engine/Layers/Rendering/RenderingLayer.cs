@@ -19,13 +19,14 @@ namespace Engine.Layers
         private Shader _screenShader;
         private PostProcessingStack _postProcessStack;
         private FontRenderingSystem _fontRenderingSystem;
+        private List<Renderer2D> _renderers;
 
         public override void Initialize()
         {
             _batcher2d = new Batcher2D(Consts.Graphics.MAX_QUADS_PER_BATCH);
             _pipelineFeatures = new PipelineFeatures();
             _screenPipelineFeatures = new PipelineFeatures();
-
+            _renderers = new();
             _drawCallData = new DrawCallData()
             {
                 Textures = new GfxResource[GfxDeviceManager.Current.GetDeviceInfo().MaxValidTextureUnits],
@@ -98,7 +99,10 @@ namespace Engine.Layers
             });
 
             // TODO: improve this, don't ask for renderers but add/remove with events.
-            var batches = _batcher2d.GetBatches(SceneManager.ActiveScene.FindAll<Renderer2D>(findDisabled: false));
+            _renderers.Clear();
+            SceneManager.ActiveScene.FindAll(findDisabled: false, _renderers);
+
+            var batches = _batcher2d.GetBatches(_renderers);
 
             var VP = _mainCamera.Projection * _mainCamera.ViewMatrix;
 

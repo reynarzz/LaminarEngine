@@ -175,7 +175,7 @@ namespace Engine.Graphics.OpenGL
             unsafe
             {
                 value.to_array(_mat4Arr);
-                fixed(float* m = _mat4Arr)
+                fixed(float* m = &_mat4Arr[0])
                 {
                     glUniformMatrix4fv(location, 1, false, m);
                 }
@@ -189,14 +189,14 @@ namespace Engine.Graphics.OpenGL
             {
                 return loc;
             }
-            int location = glGetUniformLocation(Handle, name);
+            loc = glGetUniformLocation(Handle, name);
 
-            if(location >= 0)
+            if(loc >= 0)
             {
-                _uniformLocations.Add(name, location);
+                _uniformLocations.Add(name, loc);
             }
 
-            return location;
+            return loc;
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Engine
     public class Material : EObject
     {
         private List<RenderPass> _passes;
-        public IReadOnlyCollection<RenderPass> Passes => _passes;
+        public IReadOnlyList<RenderPass> Passes => _passes;
         private Dictionary<string, Texture> _textures;
         internal IReadOnlyDictionary<string, Texture> Textures => _textures;
 

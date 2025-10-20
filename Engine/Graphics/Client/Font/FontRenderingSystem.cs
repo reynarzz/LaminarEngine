@@ -40,6 +40,7 @@ namespace Engine.Graphics
         private Shader _testShader;
         private mat4 _viewMatrix;
         private vec2 _targetScreenRes;
+        private List<TextRenderer> _renderers;
 
         public FontRenderingSystem()
         {
@@ -50,6 +51,7 @@ namespace Engine.Graphics
             _fontBatches = new List<GfxResource>();
             _textures = new Dictionary<Guid, Texture2D>();
             _sharedIndexBuffer = GraphicsHelper.CreateQuadIndexBuffer(Consts.Graphics.MAX_FONT_QUADS_PER_BATCH);
+            _renderers = new();
 
             _fontBatches.Add(CreateFontBatchGeometry(ref _geometryDescriptor));
 
@@ -117,11 +119,6 @@ namespace Engine.Graphics
 
         public void Flush(mat4 viewProjection, RenderTexture renderTexture)
         {
-            // Call draw call here
-
-            // Bind shaders
-            // Bind geometries.
-
             var geometryTest = _fontBatches[0];
 
             _geometryDescriptor.VertexDesc.BufferDesc.Offset = 0;
@@ -167,9 +164,10 @@ namespace Engine.Graphics
         internal void Render(mat4 viewProjection, RenderTexture renderTexture)
         {
             // TODO: refactor, bad performance.
-            var fontRenderers = SceneManager.ActiveScene.FindAll<TextRenderer>(findDisabled: false);
+            _renderers.Clear();
+            SceneManager.ActiveScene.FindAll(findDisabled: false, _renderers);
 
-            foreach (var textRenderer in fontRenderers)
+            foreach (var textRenderer in _renderers)
             {
                 if (!textRenderer.Font)
                     return;

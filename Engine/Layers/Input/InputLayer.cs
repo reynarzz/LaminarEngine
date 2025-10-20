@@ -138,37 +138,71 @@ public enum MouseButton
 
 public class Input : LayerBase
 {
-    private static Dictionary<KeyCode, bool> _currentKeys = new();
-    private static Dictionary<KeyCode, bool> _previousKeys = new();
+    private static HashSet<KeyCode> _currentKeys = new();
+    private static HashSet<KeyCode> _previousKeys = new();
 
-    private static Dictionary<MouseButton, bool> _currentMouse = new();
-    private static Dictionary<MouseButton, bool> _previousMouse = new();
+    private static HashSet<MouseButton> _currentMouse = new();
+    private static HashSet<MouseButton> _previousMouse = new();
 
     public static vec2 MousePosition { get; private set; }
 
-    public override void Initialize() { }
+    private Array _keyCodesArray;
+    private Array _mouseButtonsArray;
+    public override void Initialize() 
+    {
+        _keyCodesArray = Enum.GetValues(typeof(KeyCode));
+        _mouseButtonsArray = Enum.GetValues(typeof(MouseButton));
+
+        _previousKeys = new HashSet<KeyCode>();
+        _previousMouse = new HashSet<MouseButton>();
+    }
+
+    private void CopyKeys<T>(HashSet<T> from, HashSet<T> to)
+    {
+        to.Clear();
+        foreach (var key in from) 
+        {
+            to.Add(key);
+        }
+    }
 
     internal override void UpdateLayer()
     {
         // Poll OS events
         Glfw.PollEvents();
 
-        // Copy current to previous
-        _previousKeys = new Dictionary<KeyCode, bool>(_currentKeys);
-        _previousMouse = new Dictionary<MouseButton, bool>(_currentMouse);
+        CopyKeys(_currentKeys, _previousKeys);
+        CopyKeys(_currentMouse, _previousMouse);
 
         // Update current key states
-        foreach (KeyCode key in Enum.GetValues(typeof(KeyCode)))
+        foreach (KeyCode key in _keyCodesArray)
         {
             bool down = Glfw.GetKey(Engine.Window.NativeWindow, (Keys)key) == InputState.Press;
-            _currentKeys[key] = down;
+
+            if (down)
+            {
+                _currentKeys.Add(key);
+            }
+            else
+            {
+                _currentKeys.Remove(key);
+            }
         }
 
+        _previousMouse.Clear();
         // Update current mouse button states
-        foreach (MouseButton button in Enum.GetValues(typeof(MouseButton)))
+        foreach (MouseButton button in _mouseButtonsArray)
         {
             bool down = Glfw.GetMouseButton(Engine.Window.NativeWindow, (GLFW.MouseButton)button) == InputState.Press;
-            _currentMouse[button] = down;
+
+            if (down)
+            {
+                _currentMouse.Add(button);
+            }
+            else
+            {
+                _currentMouse.Remove(button);
+            }
         }
 
         // Update mouse position
@@ -178,36 +212,36 @@ public class Input : LayerBase
 
     public static bool GetKey(KeyCode key)
     {
-        return _currentKeys.ContainsKey(key) && _currentKeys[key];
+        return _currentKeys.Contains(key);
     }
 
     public static bool GetKeyDown(KeyCode key)
     {
-        return _currentKeys.ContainsKey(key) && _currentKeys[key] &&
-               (!_previousKeys.ContainsKey(key) || !_previousKeys[key]);
+        return _currentKeys.Contains(key) &&
+               (!_previousKeys.Contains(key));
     }
 
     public static bool GetKeyUp(KeyCode key)
     {
-        return _previousKeys.ContainsKey(key) && _previousKeys[key] &&
-               (!_currentKeys.ContainsKey(key) || !_currentKeys[key]);
+        return _previousKeys.Contains(key) &&
+               (!_currentKeys.Contains(key));
     }
 
     public static bool GetMouse(MouseButton button)
     {
-        return _currentMouse.ContainsKey(button) && _currentMouse[button];
+        return _currentMouse.Contains(button);
     }
 
     public static bool GetMouseDown(MouseButton button)
     {
-        return _currentMouse.ContainsKey(button) && _currentMouse[button] &&
-               (!_previousMouse.ContainsKey(button) || !_previousMouse[button]);
+        return _currentMouse.Contains(button)&&
+               (!_previousMouse.Contains(button));
     }
 
     public static bool GetMouseUp(MouseButton button)
     {
-        return _previousMouse.ContainsKey(button) && _previousMouse[button] &&
-               (!_currentMouse.ContainsKey(button) || !_currentMouse[button]);
+        return _previousMouse.Contains(button) &&
+               (!_currentMouse.Contains(button));
     }
 
     public override void Close()
