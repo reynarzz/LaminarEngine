@@ -12,13 +12,9 @@ namespace Engine.Rendering
 {
     internal class Batcher2D
     {
-        internal int MaxQuadsPerBatch { get; private set; }
-        private int MaxBatchVertexSize => MaxQuadsPerBatch * 4;
-
-        internal int BatchCount => _batches.Count;
+        private int MaxQuadsPerBatch { get; set; }
+        private int MaxBatchVertexSize => MaxQuadsPerBatch * VerticesPerQuad;
         internal int IndicesToDraw { get; private set; }
-
-        private List<Batch2D> _batches;
 
         private GfxResource _sharedIndexBuffer;
 
@@ -29,13 +25,22 @@ namespace Engine.Rendering
         private Material _pinkMaterial;
         private Texture2D _whiteTexture;
         private readonly Vertex[] _quadVertexArray = new Vertex[4];
+        private readonly List<List<Renderer2D>> _sortedBuckets = new();
+        private static readonly Comparison<List<Renderer2D>> _bucketSorter =
+            (a, b) => a[0].SortOrder.CompareTo(b[0].SortOrder);
 
         private struct BucketKey : IEquatable<BucketKey>
         {
-            public Material Material { get; set; }
-            public int SortOrder { get; set; }
+            private readonly Material Material;
+            private readonly int SortOrder;
 
-            public bool Equals(BucketKey other) => ReferenceEquals(Material, other.Material) && SortOrder == other.SortOrder;
+            public BucketKey(Material material, int sortOrder)
+            {
+                Material = material;
+                SortOrder = sortOrder;
+            }
+
+            public bool Equals(BucketKey other) => Equals(Material, other.Material) && SortOrder == other.SortOrder;
             public override bool Equals(object obj) => obj is BucketKey other && Equals(other);
             public override int GetHashCode()
             {
@@ -58,6 +63,7 @@ namespace Engine.Rendering
             _renderBuckets = new Dictionary<BucketKey, List<Renderer2D>>();
 
             _pinkMaterial = new Material(Tests.GetShaderPink());
+            _pinkMaterial.Name = "Pink Material";
             _whiteTexture = new Texture2D(TextureMode.Clamp, 1, 1, 4, new byte[] { 0xFF, 0xFF, 0xFF, 0xFF });
             _whiteTexture.PixelPerUnit = 1;
 
@@ -71,7 +77,7 @@ namespace Engine.Rendering
         }
 
 
-        internal IReadOnlyList<Batch2D> GetBatches(List<Renderer2D> renderers)
+        internal List<Batch2D> GetBatches(List<Renderer2D> renderers)
         {
             // TODO: Do frustum culling
 
@@ -85,7 +91,7 @@ namespace Engine.Rendering
                     continue;
                 }
 
-                var key = new BucketKey() { SortOrder = renderer.SortOrder, Material = renderer.Material };
+                var key = new BucketKey(renderer.Material, renderer.SortOrder);
 
                 if (!_renderBuckets.ContainsKey(key))
                 {
@@ -95,8 +101,13 @@ namespace Engine.Rendering
                 _renderBuckets[key].Add(renderer);
             }
 
+
+            _sortedBuckets.Clear();
+            _sortedBuckets.AddRange(_renderBuckets.Values);
+            _sortedBuckets.Sort(_bucketSorter);
+
             // TODO: improve performance of order by sorting, is allocating every frame
-            foreach (var bucket in _renderBuckets.Values.OrderBy(x => x[0].SortOrder))
+            foreach (var bucket in _sortedBuckets)
             {
                 Batch2D currentBatch = null;
 
@@ -104,6 +115,8 @@ namespace Engine.Rendering
                 {
                     var texture = renderer.Sprite?.Texture ?? _whiteTexture;
                     var material = renderer.Material ?? _pinkMaterial;
+
+                    renderer.Draw();
 
                     if (!renderer.IsDirty && !renderer.Transform.NeedsInterpolation)
                     {
@@ -123,7 +136,7 @@ namespace Engine.Rendering
                         var width = (float)chunk.Width / ppu;
                         var height = (float)chunk.Height / ppu;
 
-                        if (!CanPushGeometry(currentBatch, VerticesPerQuad, texture, material))
+                        if (!CanPushGeometry(currentBatch, renderer, VerticesPerQuad, texture, material))
                         {
                             currentBatch = _batchesPool.Get(renderer, VerticesPerQuad, MaxBatchVertexSize, material);
                         }
@@ -143,9 +156,13 @@ namespace Engine.Rendering
                         // TODO: implement proper mesh drawing, for now, since it is used just for tilemap, this works
                         var vertexCount = Math.Max(MaxBatchVertexSize, renderer.Mesh.Vertices.Count);
 
-                        if (!CanPushGeometry(currentBatch, vertexCount, texture, material))
+                        if (!CanPushGeometry(currentBatch, renderer, vertexCount, texture, material))
                         {
-                            currentBatch = _batchesPool.Get(renderer, renderer.Mesh.Vertices.Count, vertexCount, material, GraphicsHelper.CreateQuadIndexBuffer(vertexCount / VerticesPerQuad));
+                            if (!_batchesPool.GetCurrentBatch(renderer, out currentBatch))
+                            {
+                                var indexBufferNew = GraphicsHelper.CreateQuadIndexBuffer(vertexCount / VerticesPerQuad);
+                                currentBatch = _batchesPool.Get(renderer, renderer.Mesh.Vertices.Count, vertexCount, material);
+                            }
                         }
 
                         currentBatch.PushGeometry(renderer, material, texture, renderer.Mesh.IndicesToDrawCount, CollectionsMarshal.AsSpan(renderer.Mesh.Vertices));
@@ -156,9 +173,9 @@ namespace Engine.Rendering
             return _batchesPool.GetActiveBatches();
         }
 
-        private bool CanPushGeometry(Batch2D currentBatch, int vertexCount, Texture texture, Material material)
+        private bool CanPushGeometry(Batch2D currentBatch, Renderer renderer, int vertexCount, Texture texture, Material material)
         {
-            return currentBatch != null && currentBatch.CanPushGeometry(vertexCount, texture, material);
+            return currentBatch != null && currentBatch.CanPushGeometry(renderer, vertexCount, texture, material);
         }
     }
 }

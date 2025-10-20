@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 
 namespace GlmNet
 {
@@ -8,6 +7,8 @@ namespace GlmNet
     /// </summary>
     public struct mat3
     {
+        public vec3 c0, c1, c2;
+
         #region Construction
 
         /// <summary>
@@ -17,12 +18,9 @@ namespace GlmNet
         /// <param name="scale">The scale.</param>
         public mat3(float scale)
         {
-            cols = new[]
-            {
-                new vec3(scale, 0.0f, 0.0f),
-                new vec3(0.0f, scale, 0.0f),
-                new vec3(0.0f, 0.0f, scale)
-            };
+            c0 = new vec3(scale, 0.0f, 0.0f);
+            c1 = new vec3(0.0f, scale, 0.0f);
+            c2 = new vec3(0.0f, 0.0f, scale);
         }
 
         /// <summary>
@@ -32,20 +30,16 @@ namespace GlmNet
         /// <param name="cols">The colums of the matrix.</param>
         public mat3(vec3[] cols)
         {
-            this.cols = new[]
-            {
-                cols[0],
-                cols[1],
-                cols[2]
-            };
+            c0 = cols[0];
+            c1 = cols[1];
+            c2 = cols[2];
         }
 
         public mat3(vec3 a, vec3 b, vec3 c)
         {
-            this.cols = new[]
-            {
-                a, b, c
-            };
+            c0 = a;
+            c1 = b;
+            c2 = c;
         }
 
         /// <summary>
@@ -54,15 +48,11 @@ namespace GlmNet
         /// <returns>A new identity matrix.</returns>
         public static mat3 identity()
         {
-            return new mat3
-            {
-                cols = new[]
-                {
-                    new vec3(1,0,0),
-                    new vec3(0,1,0),
-                    new vec3(0,0,1)
-                }
-            };
+            return new mat3(
+                new vec3(1, 0, 0),
+                new vec3(0, 1, 0),
+                new vec3(0, 0, 1)
+            );
         }
 
         #endregion
@@ -79,8 +69,26 @@ namespace GlmNet
         /// <returns>The column at index <paramref name="column"/>.</returns>
         public vec3 this[int column]
         {
-            get { return cols[column]; }
-            set { cols[column] = value; }
+            get
+            {
+                return column switch
+                {
+                    0 => c0,
+                    1 => c1,
+                    2 => c2,
+                    _ => throw new IndexOutOfRangeException()
+                };
+            }
+            set
+            {
+                switch (column)
+                {
+                    case 0: c0 = value; break;
+                    case 1: c1 = value; break;
+                    case 2: c2 = value; break;
+                    default: throw new IndexOutOfRangeException();
+                }
+            }
         }
 
         /// <summary>
@@ -96,8 +104,13 @@ namespace GlmNet
         /// </returns>
         public float this[int column, int row]
         {
-            get { return cols[column][row]; }
-            set { cols[column][row] = value; }
+            get => this[column][row];
+            set
+            {
+                var col = this[column];
+                col[row] = value;
+                this[column] = col;
+            }
         }
 
         #endregion
@@ -108,9 +121,23 @@ namespace GlmNet
         /// Returns the matrix as a flat array of elements, column major.
         /// </summary>
         /// <returns></returns>
+        private static readonly float[] _tempArray = new float[9];
         public float[] to_array()
         {
-            return cols.SelectMany(v => v.to_array()).ToArray();
+            _tempArray[0] = c0.x; _tempArray[1] = c0.y; _tempArray[2] = c0.z;
+            _tempArray[3] = c1.x; _tempArray[4] = c1.y; _tempArray[5] = c1.z;
+            _tempArray[6] = c2.x; _tempArray[7] = c2.y; _tempArray[8] = c2.z;
+            return _tempArray;
+        }
+
+        public void to_array(Span<float> destination)
+        {
+            if (destination.Length < 9)
+                throw new ArgumentException("Destination span must be at least 9 elements long.");
+
+            destination[0] = c0.x; destination[1] = c0.y; destination[2] = c0.z;
+            destination[3] = c1.x; destination[4] = c1.y; destination[5] = c1.z;
+            destination[6] = c2.x; destination[7] = c2.y; destination[8] = c2.z;
         }
 
         /// <summary>
@@ -119,9 +146,10 @@ namespace GlmNet
         /// <returns>The <see cref="mat3"/> portion of this matrix.</returns>
         public mat2 to_mat2()
         {
-            return new mat2(new[] {
-      new vec2(cols[0][0], cols[0][1]),
-      new vec2(cols[1][0], cols[1][1])});
+            return new mat2(
+                new vec2(c0.x, c0.y),
+                new vec2(c1.x, c1.y)
+            );
         }
 
         #endregion
@@ -137,9 +165,9 @@ namespace GlmNet
         public static vec3 operator *(mat3 lhs, vec3 rhs)
         {
             return new vec3(
-                lhs[0, 0] * rhs[0] + lhs[1, 0] * rhs[1] + lhs[2, 0] * rhs[2],
-                lhs[0, 1] * rhs[0] + lhs[1, 1] * rhs[1] + lhs[2, 1] * rhs[2],
-                lhs[0, 2] * rhs[0] + lhs[1, 2] * rhs[1] + lhs[2, 2] * rhs[2]
+                lhs.c0.x * rhs.x + lhs.c1.x * rhs.y + lhs.c2.x * rhs.z,
+                lhs.c0.y * rhs.x + lhs.c1.y * rhs.y + lhs.c2.y * rhs.z,
+                lhs.c0.z * rhs.x + lhs.c1.z * rhs.y + lhs.c2.z * rhs.z
             );
         }
 
@@ -151,28 +179,22 @@ namespace GlmNet
         /// <returns>The product of <paramref name="lhs"/> and <paramref name="rhs"/>.</returns>
         public static mat3 operator *(mat3 lhs, mat3 rhs)
         {
-            return new mat3(new[]
-            {
-          lhs[0][0] * rhs[0] + lhs[1][0] * rhs[1] + lhs[2][0] * rhs[2],
-          lhs[0][1] * rhs[0] + lhs[1][1] * rhs[1] + lhs[2][1] * rhs[2],
-          lhs[0][2] * rhs[0] + lhs[1][2] * rhs[1] + lhs[2][2] * rhs[2]
-            });
+            mat3 result = new mat3();
+            result.c0 = lhs * rhs.c0;
+            result.c1 = lhs * rhs.c1;
+            result.c2 = lhs * rhs.c2;
+            return result;
         }
 
         public static mat3 operator *(mat3 lhs, float s)
         {
-            return new mat3(new[]
-            {
-                lhs[0]*s,
-                lhs[1]*s,
-                lhs[2]*s
-            });
+            return new mat3(lhs.c0 * s, lhs.c1 * s, lhs.c2 * s);
         }
 
         #endregion
 
         #region ToString support
-         
+
         public override string ToString()
         {
             return String.Format(
@@ -241,10 +263,5 @@ namespace GlmNet
             return this[0].GetHashCode() ^ this[1].GetHashCode() ^ this[2].GetHashCode();
         }
         #endregion
-
-        /// <summary>
-        /// The columms of the matrix.
-        /// </summary>
-        private vec3[] cols;
     }
 }

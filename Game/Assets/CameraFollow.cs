@@ -16,6 +16,11 @@ namespace Game
         private vec2 deadZoneSize = new vec2(0f, 4f);
         private float smoothTime = 0.3f;
         private vec3 velocity;
+        private Camera _cam;
+        public override void OnStart()
+        {
+            _cam = GetComponent<Camera>();
+        }
 
         public override void OnLateUpdate()
         {
@@ -24,6 +29,13 @@ namespace Game
 
         private void Move()
         {
+
+            var bouds = _cam.GetFrustumBoundsWorld();
+            var min = bouds.Max;
+            min.z = 0;
+
+            //Debug.DrawBox(new vec3(Transform.WorldPosition.x, Transform.WorldPosition.y,  0), vec2.One, Color.White);
+            Debug.DrawBox(new vec3(bouds.Min.x, min.y,  0), vec2.One, Color.White);
             if (!Target)
                 return;
 

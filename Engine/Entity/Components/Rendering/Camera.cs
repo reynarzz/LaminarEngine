@@ -15,11 +15,6 @@ namespace Engine
         Perspective
     }
 
-    public enum CameraOrthoMatch
-    {
-        Height,
-        Width
-    }
     public struct FrustumCorners
     {
         public vec3 NearTopLeft;
@@ -72,21 +67,7 @@ namespace Engine
         public float NearPlane { get; set; } = 0.1f;
         public float FarPlane { get; set; } = 100;
         public Color BackgroundColor { get; set; } = new(1, 1, 1, 1);
-        private CameraOrthoMatch _orthoMatch = CameraOrthoMatch.Width;
         public RenderTexture RenderTexture { get; set; }
-
-        public CameraOrthoMatch OrthoMatch
-        {
-            get => _orthoMatch;
-            set
-            {
-                if (_orthoMatch == value)
-                    return;
-
-                _orthoMatch = value;
-                UpdateCurrent();
-            }
-        }
 
         private CameraProjectionMode _projectionMode;
         public CameraProjectionMode ProjectionMode
@@ -148,68 +129,46 @@ namespace Engine
 
         private void UpdateCurrent()
         {
+            float aspect = Viewport.z / Viewport.w;
+
             if (_projectionMode == CameraProjectionMode.Orthographic)
             {
-                var matchWidth = _orthoMatch == CameraOrthoMatch.Width;
-                var orthoSize = OrthographicSize;
+                float orthoHeight = OrthographicSize;
+                float orthoWidth = orthoHeight * aspect;
 
-                if (matchWidth)
-                {
-                    //orthoSize = OrthographicSize / (Viewport.w / Viewport.z);
-                }
-                Projection = CreateOrtho(orthoSize, matchWidth, NearPlane, FarPlane, Viewport);
+                float left = -orthoWidth;
+                float right = orthoWidth;
+                float bottom = -orthoHeight;
+                float top = orthoHeight;
+
+                Projection = MathUtils.Ortho(left, right, bottom, top, NearPlane, FarPlane);
             }
             else
             {
-                float aspectRatio = Viewport.z / Viewport.w;
-                Projection = MathUtils.Perspective(Fov, aspectRatio, NearPlane, FarPlane);
+                Projection = MathUtils.Perspective(Fov, aspect, NearPlane, FarPlane);
             }
         }
 
-        private mat4 CreateOrtho(float size, bool matchWidth, float near, float far, vec4 viewport)
+        private FrustumCorners GetOrthoFrustumCornersViewSpace(float left, float right, float bottom, 
+                                                                float top, float near, float far)
         {
-            float left, right, bottom, top, aspect;
-
-            if (matchWidth)
-            {
-                aspect = viewport.w / viewport.z;
-                bottom = -size * aspect;
-                top = size * aspect;
-                left = -size;
-                right = size;
-            }
-            else
-            {
-                aspect = viewport.z / viewport.w;
-                bottom = -size;
-                top = size;
-                left = -size * aspect;
-                right = size * aspect;
-            }
-
-            return MathUtils.Ortho(left, right, bottom, top, near, far);
-        }
-
-        private FrustumCorners GetOrthoFrustumCornersViewSpace(float left, float right,
-                                                                     float bottom, float top,
-                                                                     float near, float far)
-        {
-            FrustumCorners corners;
+            FrustumCorners c;
 
             // Near plane
-            corners.NearTopLeft = new vec3(left, top, -near);
-            corners.NearTopRight = new vec3(right, top, -near);
-            corners.NearBottomRight = new vec3(right, bottom, -near);
-            corners.NearBottomLeft = new vec3(left, bottom, -near);
+            c.NearTopLeft = new vec3(left, top, -near);
+            c.NearTopRight = new vec3(right, top, -near);
+            c.NearBottomRight = new vec3(right, bottom, -near);
+            c.NearBottomLeft = new vec3(left, bottom, -near);
 
             // Far plane
-            corners.FarTopLeft = new vec3(left, top, -far);
-            corners.FarTopRight = new vec3(right, top, -far);
-            corners.FarBottomRight = new vec3(right, bottom, -far);
-            corners.FarBottomLeft = new vec3(left, bottom, -far);
+            c.FarTopLeft = new vec3(left, top, -far);
+            c.FarTopRight = new vec3(right, top, -far);
+            c.FarBottomRight = new vec3(right, bottom, -far);
+            c.FarBottomLeft = new vec3(left, bottom, -far);
 
-            return corners;
+            return c;
         }
+
 
         private FrustumCorners GetPerspectiveFrustumCornersViewSpace(float fov, float aspect,
                                                                            float near, float far)
@@ -238,33 +197,33 @@ namespace Engine
             return corners;
         }
 
-        private FrustumCorners TransformFrustomCornersToWorld(FrustumCorners viewSpaceCorners, mat4 invView)
+        private FrustumCorners TransformFrustumCornersToWorld(FrustumCorners viewSpaceCorners, mat4 worldMatrix)
         {
-            FrustumCorners world;
-            world.NearTopLeft = new vec3(invView * new vec4(viewSpaceCorners.NearTopLeft, 1));
-            world.NearTopRight = new vec3(invView * new vec4(viewSpaceCorners.NearTopRight, 1));
-            world.NearBottomRight = new vec3(invView * new vec4(viewSpaceCorners.NearBottomRight, 1));
-            world.NearBottomLeft = new vec3(invView * new vec4(viewSpaceCorners.NearBottomLeft, 1));
-            world.FarTopLeft = new vec3(invView * new vec4(viewSpaceCorners.FarTopLeft, 1));
-            world.FarTopRight = new vec3(invView * new vec4(viewSpaceCorners.FarTopRight, 1));
-            world.FarBottomRight = new vec3(invView * new vec4(viewSpaceCorners.FarBottomRight, 1));
-            world.FarBottomLeft = new vec3(invView * new vec4(viewSpaceCorners.FarBottomLeft, 1));
-            return world;
+            FrustumCorners w;
+            w.NearTopLeft = new vec3(worldMatrix * new vec4(viewSpaceCorners.NearTopLeft, 1));
+            w.NearTopRight = new vec3(worldMatrix * new vec4(viewSpaceCorners.NearTopRight, 1));
+            w.NearBottomRight = new vec3(worldMatrix * new vec4(viewSpaceCorners.NearBottomRight, 1));
+            w.NearBottomLeft = new vec3(worldMatrix * new vec4(viewSpaceCorners.NearBottomLeft, 1));
+            w.FarTopLeft = new vec3(worldMatrix * new vec4(viewSpaceCorners.FarTopLeft, 1));
+            w.FarTopRight = new vec3(worldMatrix * new vec4(viewSpaceCorners.FarTopRight, 1));
+            w.FarBottomRight = new vec3(worldMatrix * new vec4(viewSpaceCorners.FarBottomRight, 1));
+            w.FarBottomLeft = new vec3(worldMatrix * new vec4(viewSpaceCorners.FarBottomLeft, 1));
+            return w;
         }
-
         public Bounds GetFrustumBoundsWorld()
         {
-            FrustumCorners cornersVS;
-
             float aspect = Viewport.z / Viewport.w;
 
+            FrustumCorners cornersVS;
             if (ProjectionMode == CameraProjectionMode.Orthographic)
             {
-                float size = OrthographicSize;
-                float top = size * aspect;
-                float bottom = -size * aspect;
-                float right = size;
-                float left = -size;
+                float orthoHeight = OrthographicSize;
+                float orthoWidth = orthoHeight * aspect;
+
+                float left = -orthoWidth;
+                float right = orthoWidth;
+                float bottom = -orthoHeight;
+                float top = orthoHeight;
 
                 cornersVS = GetOrthoFrustumCornersViewSpace(left, right, bottom, top, NearPlane, FarPlane);
             }
@@ -273,9 +232,10 @@ namespace Engine
                 cornersVS = GetPerspectiveFrustumCornersViewSpace(Fov, aspect, NearPlane, FarPlane);
             }
 
-            FrustumCorners cornersWS = TransformFrustomCornersToWorld(cornersVS, ViewMatrix);
+            FrustumCorners cornersWS = TransformFrustumCornersToWorld(cornersVS, Transform.WorldMatrix);
             return cornersWS.GetAABB();
         }
+
 
         public override void OnDestroy()
         {

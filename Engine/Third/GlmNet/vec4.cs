@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 
 namespace GlmNet
 {
@@ -61,6 +62,14 @@ namespace GlmNet
             this.w = w;
         }
 
+        public vec4(vec2 xy, float w)
+        {
+            this.x = xy.x;
+            this.y = xy.y;
+            this.z = 0;
+            this.w = w;
+        }
+
         public static vec4 operator +(vec4 lhs, vec4 rhs)
         {
             return new vec4(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z, lhs.w + rhs.w);
@@ -105,9 +114,18 @@ namespace GlmNet
         {
             return new[] { x, y, z, w };
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void to_array(Span<float> arr)
+        {
+            arr[0] = x;
+            arr[1] = y;
+            arr[2] = z;
+            arr[3] = w;
+        }
 
         #region Comparision
-            
+
         /// <summary>
         /// Determines whether the specified <see cref="System.Object" />, is equal to this instance.
         /// The Difference is detected by the different values

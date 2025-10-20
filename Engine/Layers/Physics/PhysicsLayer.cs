@@ -5,15 +5,6 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Box2D.NET;
-using static Box2D.NET.B2Joints;
-using static Box2D.NET.B2Ids;
-using static Box2D.NET.B2Types;
-using static Box2D.NET.B2MathFunction;
-using static Box2D.NET.B2Bodies;
-using static Box2D.NET.B2Shapes;
-using static Box2D.NET.B2Diagnostics;
-using static Box2D.NET.B2Contacts;
-using GlmNet;
 using Engine.Graphics;
 using Engine.Utils;
 
@@ -29,7 +20,7 @@ namespace Engine.Layers
         private B2BodyId _floorTest;
         private float accumulator = 0f;
         private const float fixedTimeStep = 0.02f;
-
+        private List<Collider2D> _colliders = new();
         public override void Initialize()
         {
             _contactDispatcher = new ContactsDispatcher();
@@ -141,15 +132,16 @@ namespace Engine.Layers
             transform.p = new B2Vec2(rigidbody.Transform.WorldPosition.x, rigidbody.Transform.WorldPosition.y);
             transform.q = rigidbody.Transform.WorldRotation.QuatToB2Rot();
 
-            var colliders = rigidbody.GetComponents<Collider2D>();
+            _colliders.Clear();
+            rigidbody.GetComponents(ref _colliders);
 
-            for (int i = 0; i < colliders.Length; i++)
+            for (int i = 0; i < _colliders.Count; i++)
             {
-                if (colliders[i] && colliders[i].IsEnabled && colliders[i].ShapesId != null)
+                if (_colliders[i] && _colliders[i].IsEnabled && _colliders[i].ShapesId != null)
                 {
-                    for (int j = 0; j < colliders[i].ShapesId.Length; j++)
+                    for (int j = 0; j < _colliders[i].ShapesId.Length; j++)
                     {
-                        B2Worlds.b2DrawShape(_debugDraw, B2Shapes.b2GetShape(B2Worlds.b2GetWorld(0), colliders[i].ShapesId[j]), transform, B2HexColor.b2_colorBlanchedAlmond);
+                        B2Worlds.b2DrawShape(_debugDraw, B2Shapes.b2GetShape(B2Worlds.b2GetWorld(0), _colliders[i].ShapesId[j]), transform, B2HexColor.b2_colorBlanchedAlmond);
                     }
                 }
             }

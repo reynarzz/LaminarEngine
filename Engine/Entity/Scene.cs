@@ -121,10 +121,14 @@ namespace Engine
             return FindAll<T, ComponentMatcher<T>, bool>(findDisabled);
         }
 
-        private List<T> FindAll<T, TMatcher, TComparer>(TComparer comparer) where T : EObject
-                                                                            where TMatcher : struct, IMatcher<T, TComparer>
+        internal void FindAll<T>(bool findDisabled, List<T> elements) where T : Component
         {
-            var list = new List<T>();
+            FindAll<T, ComponentMatcher<T>, bool>(findDisabled, elements);
+        }
+
+        private void FindAll<T, TMatcher, TComparer>(TComparer comparer, List<T> elements) where T : EObject
+                                                                           where TMatcher : struct, IMatcher<T, TComparer>
+        {
             var matcher = default(TMatcher);
 
             void Find(Actor actor)
@@ -136,7 +140,7 @@ namespace Engine
 
                 if (result && result.IsAlive)
                 {
-                    list.Add(result);
+                    elements.Add(result);
                 }
 
                 for (int i = 0; i < actor.Transform.Children.Count; i++)
@@ -153,6 +157,13 @@ namespace Engine
                 }
             }
 
+        }
+
+        private List<T> FindAll<T, TMatcher, TComparer>(TComparer comparer) where T : EObject
+                                                                            where TMatcher : struct, IMatcher<T, TComparer>
+        {
+            var list = new List<T>();
+            FindAll<T, TMatcher, TComparer>(comparer, list);
             return list;
         }
 

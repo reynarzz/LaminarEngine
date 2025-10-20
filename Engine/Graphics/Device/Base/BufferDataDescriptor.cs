@@ -14,13 +14,25 @@ namespace Engine.Graphics
         Stream,
     }
 
-    internal unsafe class BufferDataDescriptor : IGfxResourceDescriptor
+    internal abstract class BufferDataDescriptor : IGfxResourceDescriptor
     {
         internal int Count { get; set; }
         internal int Offset { get; set; }
-
-        internal byte[] Buffer { get; set; }
-
         internal BufferUsage Usage { get; set; }
+        internal abstract int BufferLength { get; }
+        internal abstract IntPtr GetBufferUnsafePtr();      
+    }
+
+    internal unsafe class BufferDataDescriptor<T> : BufferDataDescriptor where T: unmanaged
+    {
+        internal T[] Buffer { get; set; }
+        internal override int BufferLength => Buffer.Length * sizeof(T);
+        internal override IntPtr GetBufferUnsafePtr()
+        {
+            fixed (void* ptr = Buffer)
+            {
+                return new nint(ptr);
+            }
+        }
     }
 }

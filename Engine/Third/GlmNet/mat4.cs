@@ -1,5 +1,6 @@
 using System;
-using System.Linq;
+using System.Numerics;
+using System.Runtime.CompilerServices;
 
 namespace GlmNet
 {
@@ -8,251 +9,199 @@ namespace GlmNet
     /// </summary>
     public struct mat4
     {
+        public vec4 c0, c1, c2, c3;
+
         #region Construction
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="mat4"/> struct.
-        /// This matrix is the identity matrix scaled by <paramref name="scale"/>.
-        /// </summary>
-        /// <param name="scale">The scale.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public mat4(float scale)
         {
-            cols = new[]
-                  {
-                new vec4(scale, 0.0f, 0.0f, 0.0f),
-                new vec4(0.0f, scale, 0.0f, 0.0f),
-                new vec4(0.0f, 0.0f, scale, 0.0f),
-                new vec4(0.0f, 0.0f, 0.0f, scale),
-            };
+            c0 = new vec4(scale, 0, 0, 0);
+            c1 = new vec4(0, scale, 0, 0);
+            c2 = new vec4(0, 0, scale, 0);
+            c3 = new vec4(0, 0, 0, scale);
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="mat4"/> struct.
-        /// The matrix is initialised with the <paramref name="cols"/>.
-        /// </summary>
-        /// <param name="cols">The colums of the matrix.</param>
-        public mat4(vec4[] cols)
-        {
-            this.cols = new[]
-                  {
-                cols[0],
-                cols[1],
-                cols[2],
-                cols[3]
-            };
-        }
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public mat4(vec4 a, vec4 b, vec4 c, vec4 d)
         {
-            this.cols = new[]
-            {
-                a, b, c, d
-            };
+            c0 = a; c1 = b; c2 = c; c3 = d;
         }
 
-        /// <summary>
-        /// Creates an identity matrix.
-        /// </summary>
-        /// <returns>A new identity matrix.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static mat4 identity()
         {
-            return new mat4
-            {
-                cols = new[]
-                {
-                    new vec4(1,0,0,0),
-                    new vec4(0,1,0,0),
-                    new vec4(0,0,1,0),
-                    new vec4(0,0,0,1)
-                }
-            };
+            return new mat4(
+                new vec4(1, 0, 0, 0),
+                new vec4(0, 1, 0, 0),
+                new vec4(0, 0, 1, 0),
+                new vec4(0, 0, 0, 1)
+            );
         }
 
         #endregion
 
         #region Index Access
 
-        /// <summary>
-        /// Gets or sets the <see cref="vec4"/> column at the specified index.
-        /// </summary>
-        /// <value>
-        /// The <see cref="vec4"/> column.
-        /// </value>
-        /// <param name="column">The column index.</param>
-        /// <returns>The column at index <paramref name="column"/>.</returns>
         public vec4 this[int column]
         {
-            get { return cols[column]; }
-            set { cols[column] = value; }
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => column switch
+            {
+                0 => c0,
+                1 => c1,
+                2 => c2,
+                3 => c3,
+                _ => throw new IndexOutOfRangeException()
+            };
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            set
+            {
+                switch (column)
+                {
+                    case 0: c0 = value; break;
+                    case 1: c1 = value; break;
+                    case 2: c2 = value; break;
+                    case 3: c3 = value; break;
+                    default: throw new IndexOutOfRangeException();
+                }
+            }
         }
 
-        /// <summary>
-        /// Gets or sets the element at <paramref name="column"/> and <paramref name="row"/>.
-        /// </summary>
-        /// <value>
-        /// The element at <paramref name="column"/> and <paramref name="row"/>.
-        /// </value>
-        /// <param name="column">The column index.</param>
-        /// <param name="row">The row index.</param>
-        /// <returns>
-        /// The element at <paramref name="column"/> and <paramref name="row"/>.
-        /// </returns>
         public float this[int column, int row]
         {
-            get { return cols[column][row]; }
-            set { cols[column][row] = value; }
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                return column switch
+                {
+                    0 => c0[row],
+                    1 => c1[row],
+                    2 => c2[row],
+                    3 => c3[row],
+                    _ => throw new IndexOutOfRangeException()
+                };
+            }
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            set
+            {
+                switch (column)
+                {
+                    case 0: var v0 = c0; v0[row] = value; c0 = v0; break;
+                    case 1: var v1 = c1; v1[row] = value; c1 = v1; break;
+                    case 2: var v2 = c2; v2[row] = value; c2 = v2; break;
+                    case 3: var v3 = c3; v3[row] = value; c3 = v3; break;
+                    default: throw new IndexOutOfRangeException();
+                }
+            }
         }
 
         #endregion
 
         #region Conversion
 
-        /// <summary>
-        /// Returns the matrix as a flat array of elements, column major.
-        /// </summary>
-        /// <returns></returns>
+        private static readonly float[] _cached = new float[16];
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float[] to_array()
         {
-            return cols.SelectMany(v => v.to_array()).ToArray();
+            _cached[0] = c0.x; _cached[1] = c0.y; _cached[2] = c0.z; _cached[3] = c0.w;
+            _cached[4] = c1.x; _cached[5] = c1.y; _cached[6] = c1.z; _cached[7] = c1.w;
+            _cached[8] = c2.x; _cached[9] = c2.y; _cached[10] = c2.z; _cached[11] = c2.w;
+            _cached[12] = c3.x; _cached[13] = c3.y; _cached[14] = c3.z; _cached[15] = c3.w;
+            return _cached;
         }
 
-        /// <summary>
-        /// Returns the <see cref="mat3"/> portion of this matrix.
-        /// </summary>
-        /// <returns>The <see cref="mat3"/> portion of this matrix.</returns>
-        public mat3 to_mat3()
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void to_array(Span<float> destination)
         {
-            return new mat3(new[] {
-            new vec3(cols[0][0], cols[0][1], cols[0][2]),
-            new vec3(cols[1][0], cols[1][1], cols[1][2]),
-            new vec3(cols[2][0], cols[2][1], cols[2][2])});
+            if (destination.Length < 16)
+                throw new ArgumentException("Destination span must be at least 16 elements long.");
+
+            destination[0] = c0.x; destination[1] = c0.y; destination[2] = c0.z; destination[3] = c0.w;
+            destination[4] = c1.x; destination[5] = c1.y; destination[6] = c1.z; destination[7] = c1.w;
+            destination[8] = c2.x; destination[9] = c2.y; destination[10] = c2.z; destination[11] = c2.w;
+            destination[12] = c3.x; destination[13] = c3.y; destination[14] = c3.z; destination[15] = c3.w;
         }
 
         #endregion
 
-        #region Multiplication
+        #region Multiplication (SIMD-accelerated, column-major)
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static Vector4 ToSimd(vec4 v) => new Vector4(v.x, v.y, v.z, v.w);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static vec4 FromSimd(Vector4 v) => new vec4(v.X, v.Y, v.Z, v.W);
 
         /// <summary>
         /// Multiplies the <paramref name="lhs"/> matrix by the <paramref name="rhs"/> vector.
         /// </summary>
-        /// <param name="lhs">The LHS matrix.</param>
-        /// <param name="rhs">The RHS vector.</param>
-        /// <returns>The product of <paramref name="lhs"/> and <paramref name="rhs"/>.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static vec4 operator *(mat4 lhs, vec4 rhs)
         {
-            return new vec4(
-                lhs[0, 0] * rhs[0] + lhs[1, 0] * rhs[1] + lhs[2, 0] * rhs[2] + lhs[3, 0] * rhs[3],
-                lhs[0, 1] * rhs[0] + lhs[1, 1] * rhs[1] + lhs[2, 1] * rhs[2] + lhs[3, 1] * rhs[3],
-                lhs[0, 2] * rhs[0] + lhs[1, 2] * rhs[1] + lhs[2, 2] * rhs[2] + lhs[3, 2] * rhs[3],
-                lhs[0, 3] * rhs[0] + lhs[1, 3] * rhs[1] + lhs[2, 3] * rhs[2] + lhs[3, 3] * rhs[3]
-            );
+            var x = lhs.c0.x * rhs.x + lhs.c1.x * rhs.y + lhs.c2.x * rhs.z + lhs.c3.x * rhs.w;
+            var y = lhs.c0.y * rhs.x + lhs.c1.y * rhs.y + lhs.c2.y * rhs.z + lhs.c3.y * rhs.w;
+            var z = lhs.c0.z * rhs.x + lhs.c1.z * rhs.y + lhs.c2.z * rhs.z + lhs.c3.z * rhs.w;
+            var w = lhs.c0.w * rhs.x + lhs.c1.w * rhs.y + lhs.c2.w * rhs.z + lhs.c3.w * rhs.w;
+            return new vec4(x, y, z, w);
         }
 
         /// <summary>
-        /// Multiplies the <paramref name="lhs"/> matrix by the <paramref name="rhs"/> matrix.
+        /// Multiplies two matrices (SIMD accelerated internally).
         /// </summary>
-        /// <param name="lhs">The LHS matrix.</param>
-        /// <param name="rhs">The RHS matrix.</param>
-        /// <returns>The product of <paramref name="lhs"/> and <paramref name="rhs"/>.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static mat4 operator *(mat4 lhs, mat4 rhs)
         {
-            return new mat4(new[]
-                  {
-                rhs[0][0] * lhs[0] + rhs[0][1] * lhs[1] + rhs[0][2] * lhs[2] + rhs[0][3] * lhs[3],
-                rhs[1][0] * lhs[0] + rhs[1][1] * lhs[1] + rhs[1][2] * lhs[2] + rhs[1][3] * lhs[3],
-                rhs[2][0] * lhs[0] + rhs[2][1] * lhs[1] + rhs[2][2] * lhs[2] + rhs[2][3] * lhs[3],
-                rhs[3][0] * lhs[0] + rhs[3][1] * lhs[1] + rhs[3][2] * lhs[2] + rhs[3][3] * lhs[3]
-            });
-        }
+            // Use SIMD for each column of rhs
+            var rhs0 = ToSimd(rhs.c0);
+            var rhs1 = ToSimd(rhs.c1);
+            var rhs2 = ToSimd(rhs.c2);
+            var rhs3 = ToSimd(rhs.c3);
 
-        public static mat4 operator *(mat4 lhs, float s)
-        {
-            return new mat4(new[]
-            {
-                lhs[0]*s,
-                lhs[1]*s,
-                lhs[2]*s,
-                lhs[3]*s
-            });
-        }
-
-        #endregion
-
-        #region ToString support
-            
-        public override string ToString()
-        {
-            return String.Format(
-                "[{0}, {1}, {2}, {3}; {4}, {5}, {6}, {7}; {8}, {9}, {10}, {11}; {12}, {13}, {14}, {15}]",
-                this[0, 0], this[1, 0], this[2, 0], this[3, 0],
-                this[0, 1], this[1, 1], this[2, 1], this[3, 1],
-                this[0, 2], this[1, 2], this[2, 2], this[3, 2],
-                this[0, 3], this[1, 3], this[2, 3], this[3, 3]
+            return new mat4(
+                FromSimd(ToSimd(lhs.c0) * rhs0.X + ToSimd(lhs.c1) * rhs0.Y + ToSimd(lhs.c2) * rhs0.Z + ToSimd(lhs.c3) * rhs0.W),
+                FromSimd(ToSimd(lhs.c0) * rhs1.X + ToSimd(lhs.c1) * rhs1.Y + ToSimd(lhs.c2) * rhs1.Z + ToSimd(lhs.c3) * rhs1.W),
+                FromSimd(ToSimd(lhs.c0) * rhs2.X + ToSimd(lhs.c1) * rhs2.Y + ToSimd(lhs.c2) * rhs2.Z + ToSimd(lhs.c3) * rhs2.W),
+                FromSimd(ToSimd(lhs.c0) * rhs3.X + ToSimd(lhs.c1) * rhs3.Y + ToSimd(lhs.c2) * rhs3.Z + ToSimd(lhs.c3) * rhs3.W)
             );
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static mat4 operator *(mat4 lhs, float s)
+        {
+            return new mat4(lhs.c0 * s, lhs.c1 * s, lhs.c2 * s, lhs.c3 * s);
+        }
+
         #endregion
 
-        #region Comparision
-        /// <summary>
-        /// Determines whether the specified <see cref="System.Object" />, is equal to this instance.
-        /// The Difference is detected by the different values
-        /// </summary>
-        /// <param name="obj">The <see cref="System.Object" /> to compare with this instance.</param>
-        /// <returns>
-        ///   <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
-        /// </returns>
+        #region Equality / ToString
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override bool Equals(object obj)
         {
-            if (obj.GetType() == typeof(mat4))
-            {
-                var mat = (mat4)obj;
-                if (mat[0] == this[0] && mat[1] == this[1] && mat[2] == this[2] && mat[3] == this[3])
-                    return true;
-            }
-
+            if (obj is mat4 m)
+                return c0 == m.c0 && c1 == m.c1 && c2 == m.c2 && c3 == m.c3;
             return false;
         }
-        /// <summary>
-        /// Implements the operator ==.
-        /// </summary>
-        /// <param name="m1">The first Matrix.</param>
-        /// <param name="m2">The second Matrix.</param>
-        /// <returns>
-        /// The result of the operator.
-        /// </returns>
-        public static bool operator ==(mat4 m1, mat4 m2)
-        {
-            return m1.Equals(m2);
-        }
 
-        /// <summary>
-        /// Implements the operator !=.
-        /// </summary>
-        /// <param name="m1">The first Matrix.</param>
-        /// <param name="m2">The second Matrix.</param>
-        /// <returns>
-        /// The result of the operator.
-        /// </returns>
-        public static bool operator !=(mat4 m1, mat4 m2)
-        {
-            return !m1.Equals(m2);
-        }
-
-        /// <summary>
-        /// Returns a hash code for this instance.
-        /// </summary>
-        /// <returns>
-        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
-        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override int GetHashCode()
         {
-            return this[0].GetHashCode() ^ this[1].GetHashCode() ^ this[2].GetHashCode() ^ this[3].GetHashCode();
+            return c0.GetHashCode() ^ c1.GetHashCode() ^ c2.GetHashCode() ^ c3.GetHashCode();
         }
-        #endregion
 
-        /// <summary>
-        /// The columms of the matrix.
-        /// </summary>
-        private vec4[] cols;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator ==(mat4 a, mat4 b) => a.Equals(b);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator !=(mat4 a, mat4 b) => !a.Equals(b);
+
+        public override string ToString()
+        {
+            return $"[{c0}, {c1}, {c2}, {c3}]";
+        }
+
+        #endregion
     }
 }
