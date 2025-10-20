@@ -11,6 +11,7 @@ namespace Engine.Graphics.OpenGL
     internal class GLShader : GLGfxResource<ShaderDescriptor>
     {
         private readonly Dictionary<string, int> _uniformLocations;
+        private readonly static float[] _mat4Arr = new float[16]; 
         public GLShader() : base(glCreateProgram, glDeleteProgram, glUseProgram)
         {
             _uniformLocations = new Dictionary<string, int>();
@@ -165,7 +166,8 @@ namespace Engine.Graphics.OpenGL
 
             unsafe
             {
-                fixed(float* m = value.to_array())
+                value.to_array(_mat4Arr);
+                fixed(float* m = _mat4Arr)
                 {
                     glUniformMatrix4fv(location, 1, false, m);
                 }

@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 
 namespace GlmNet
 {
@@ -8,6 +7,8 @@ namespace GlmNet
     /// </summary>
     public struct mat4
     {
+        public vec4 c0, c1, c2, c3;
+
         #region Construction
 
         /// <summary>
@@ -17,37 +18,26 @@ namespace GlmNet
         /// <param name="scale">The scale.</param>
         public mat4(float scale)
         {
-            cols = new[]
-                  {
-                new vec4(scale, 0.0f, 0.0f, 0.0f),
-                new vec4(0.0f, scale, 0.0f, 0.0f),
-                new vec4(0.0f, 0.0f, scale, 0.0f),
-                new vec4(0.0f, 0.0f, 0.0f, scale),
-            };
+            c0 = new vec4(scale, 0, 0, 0);
+            c1 = new vec4(0, scale, 0, 0);
+            c2 = new vec4(0, 0, scale, 0);
+            c3 = new vec4(0, 0, 0, scale);
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="mat4"/> struct.
-        /// The matrix is initialised with the <paramref name="cols"/>.
+        /// The matrix is initialised with the specified columns.
         /// </summary>
-        /// <param name="cols">The colums of the matrix.</param>
-        public mat4(vec4[] cols)
-        {
-            this.cols = new[]
-                  {
-                cols[0],
-                cols[1],
-                cols[2],
-                cols[3]
-            };
-        }
-
+        /// <param name="a">First column.</param>
+        /// <param name="b">Second column.</param>
+        /// <param name="c">Third column.</param>
+        /// <param name="d">Fourth column.</param>
         public mat4(vec4 a, vec4 b, vec4 c, vec4 d)
         {
-            this.cols = new[]
-            {
-                a, b, c, d
-            };
+            c0 = a;
+            c1 = b;
+            c2 = c;
+            c3 = d;
         }
 
         /// <summary>
@@ -56,16 +46,12 @@ namespace GlmNet
         /// <returns>A new identity matrix.</returns>
         public static mat4 identity()
         {
-            return new mat4
-            {
-                cols = new[]
-                {
-                    new vec4(1,0,0,0),
-                    new vec4(0,1,0,0),
-                    new vec4(0,0,1,0),
-                    new vec4(0,0,0,1)
-                }
-            };
+            return new mat4(
+                new vec4(1, 0, 0, 0),
+                new vec4(0, 1, 0, 0),
+                new vec4(0, 0, 1, 0),
+                new vec4(0, 0, 0, 1)
+            );
         }
 
         #endregion
@@ -82,10 +68,29 @@ namespace GlmNet
         /// <returns>The column at index <paramref name="column"/>.</returns>
         public vec4 this[int column]
         {
-            get { return cols[column]; }
-            set { cols[column] = value; }
+            get
+            {
+                return column switch
+                {
+                    0 => c0,
+                    1 => c1,
+                    2 => c2,
+                    3 => c3,
+                    _ => throw new IndexOutOfRangeException()
+                };
+            }
+            set
+            {
+                switch (column)
+                {
+                    case 0: c0 = value; break;
+                    case 1: c1 = value; break;
+                    case 2: c2 = value; break;
+                    case 3: c3 = value; break;
+                    default: throw new IndexOutOfRangeException();
+                }
+            }
         }
-
 
         /// <summary>
         /// Gets or sets the element at <paramref name="column"/> and <paramref name="row"/>.
@@ -100,8 +105,13 @@ namespace GlmNet
         /// </returns>
         public float this[int column, int row]
         {
-            get { return cols[column][row]; }
-            set { cols[column][row] = value; }
+            get => this[column][row];
+            set
+            {
+                var col = this[column];
+                col[row] = value;
+                this[column] = col;
+            }
         }
 
         #endregion
@@ -114,7 +124,27 @@ namespace GlmNet
         /// <returns></returns>
         public float[] to_array()
         {
-            return cols.SelectMany(v => v.to_array()).ToArray();
+            var result = new float[16];
+            result[0] = c0.x; result[1] = c0.y; result[2] = c0.z; result[3] = c0.w;
+            result[4] = c1.x; result[5] = c1.y; result[6] = c1.z; result[7] = c1.w;
+            result[8] = c2.x; result[9] = c2.y; result[10] = c2.z; result[11] = c2.w;
+            result[12] = c3.x; result[13] = c3.y; result[14] = c3.z; result[15] = c3.w;
+            return result;
+        }
+
+        /// <summary>
+        /// Writes the matrix into the specified destination span (column major).
+        /// </summary>
+        /// <param name="destination">The destination span to write into. Must have at least 16 elements.</param>
+        public void to_array(Span<float> destination)
+        {
+            if (destination.Length < 16)
+                throw new ArgumentException("Destination span must be at least 16 elements long.");
+
+            destination[0] = c0.x; destination[1] = c0.y; destination[2] = c0.z; destination[3] = c0.w;
+            destination[4] = c1.x; destination[5] = c1.y; destination[6] = c1.z; destination[7] = c1.w;
+            destination[8] = c2.x; destination[9] = c2.y; destination[10] = c2.z; destination[11] = c2.w;
+            destination[12] = c3.x; destination[13] = c3.y; destination[14] = c3.z; destination[15] = c3.w;
         }
 
         /// <summary>
@@ -123,10 +153,11 @@ namespace GlmNet
         /// <returns>The <see cref="mat3"/> portion of this matrix.</returns>
         public mat3 to_mat3()
         {
-            return new mat3(new[] {
-            new vec3(cols[0][0], cols[0][1], cols[0][2]),
-            new vec3(cols[1][0], cols[1][1], cols[1][2]),
-            new vec3(cols[2][0], cols[2][1], cols[2][2])});
+            return new mat3(
+                new vec3(c0.x, c0.y, c0.z),
+                new vec3(c1.x, c1.y, c1.z),
+                new vec3(c2.x, c2.y, c2.z)
+            );
         }
 
         #endregion
@@ -142,10 +173,10 @@ namespace GlmNet
         public static vec4 operator *(mat4 lhs, vec4 rhs)
         {
             return new vec4(
-                lhs[0, 0] * rhs[0] + lhs[1, 0] * rhs[1] + lhs[2, 0] * rhs[2] + lhs[3, 0] * rhs[3],
-                lhs[0, 1] * rhs[0] + lhs[1, 1] * rhs[1] + lhs[2, 1] * rhs[2] + lhs[3, 1] * rhs[3],
-                lhs[0, 2] * rhs[0] + lhs[1, 2] * rhs[1] + lhs[2, 2] * rhs[2] + lhs[3, 2] * rhs[3],
-                lhs[0, 3] * rhs[0] + lhs[1, 3] * rhs[1] + lhs[2, 3] * rhs[2] + lhs[3, 3] * rhs[3]
+                lhs.c0.x * rhs.x + lhs.c1.x * rhs.y + lhs.c2.x * rhs.z + lhs.c3.x * rhs.w,
+                lhs.c0.y * rhs.x + lhs.c1.y * rhs.y + lhs.c2.y * rhs.z + lhs.c3.y * rhs.w,
+                lhs.c0.z * rhs.x + lhs.c1.z * rhs.y + lhs.c2.z * rhs.z + lhs.c3.z * rhs.w,
+                lhs.c0.w * rhs.x + lhs.c1.w * rhs.y + lhs.c2.w * rhs.z + lhs.c3.w * rhs.w
             );
         }
 
@@ -157,46 +188,38 @@ namespace GlmNet
         /// <returns>The product of <paramref name="lhs"/> and <paramref name="rhs"/>.</returns>
         public static mat4 operator *(mat4 lhs, mat4 rhs)
         {
-            return new mat4(new[]
-                  {
-                rhs[0][0] * lhs[0] + rhs[0][1] * lhs[1] + rhs[0][2] * lhs[2] + rhs[0][3] * lhs[3],
-                rhs[1][0] * lhs[0] + rhs[1][1] * lhs[1] + rhs[1][2] * lhs[2] + rhs[1][3] * lhs[3],
-                rhs[2][0] * lhs[0] + rhs[2][1] * lhs[1] + rhs[2][2] * lhs[2] + rhs[2][3] * lhs[3],
-                rhs[3][0] * lhs[0] + rhs[3][1] * lhs[1] + rhs[3][2] * lhs[2] + rhs[3][3] * lhs[3]
-            });
+            mat4 result = new mat4();
+            result.c0 = lhs * rhs.c0;
+            result.c1 = lhs * rhs.c1;
+            result.c2 = lhs * rhs.c2;
+            result.c3 = lhs * rhs.c3;
+            return result;
         }
 
         public static mat4 operator *(mat4 lhs, float s)
         {
-            return new mat4(new[]
-            {
-                lhs[0]*s,
-                lhs[1]*s,
-                lhs[2]*s,
-                lhs[3]*s
-            });
+            return new mat4(lhs.c0 * s, lhs.c1 * s, lhs.c2 * s, lhs.c3 * s);
         }
 
         #endregion
 
         #region ToString support
-            
+
         public override string ToString()
         {
-            return String.Format(
-                "[{0}, {1}, {2}, {3}; {4}, {5}, {6}, {7}; {8}, {9}, {10}, {11}; {12}, {13}, {14}, {15}]",
-                this[0, 0], this[1, 0], this[2, 0], this[3, 0],
-                this[0, 1], this[1, 1], this[2, 1], this[3, 1],
-                this[0, 2], this[1, 2], this[2, 2], this[3, 2],
-                this[0, 3], this[1, 3], this[2, 3], this[3, 3]
-            );
+            return $"[{c0.x}, {c1.x}, {c2.x}, {c3.x}; " +
+                   $"{c0.y}, {c1.y}, {c2.y}, {c3.y}; " +
+                   $"{c0.z}, {c1.z}, {c2.z}, {c3.z}; " +
+                   $"{c0.w}, {c1.w}, {c2.w}, {c3.w}]";
         }
+
         #endregion
 
-        #region Comparision
+        #region Comparison
+
         /// <summary>
         /// Determines whether the specified <see cref="System.Object" />, is equal to this instance.
-        /// The Difference is detected by the different values
+        /// The Difference is detected by the different values.
         /// </summary>
         /// <param name="obj">The <see cref="System.Object" /> to compare with this instance.</param>
         /// <returns>
@@ -207,12 +230,12 @@ namespace GlmNet
             if (obj.GetType() == typeof(mat4))
             {
                 var mat = (mat4)obj;
-                if (mat[0] == this[0] && mat[1] == this[1] && mat[2] == this[2] && mat[3] == this[3])
+                if (mat.c0 == this.c0 && mat.c1 == this.c1 && mat.c2 == this.c2 && mat.c3 == this.c3)
                     return true;
             }
-
             return false;
         }
+
         /// <summary>
         /// Implements the operator ==.
         /// </summary>
@@ -249,11 +272,7 @@ namespace GlmNet
         {
             return this[0].GetHashCode() ^ this[1].GetHashCode() ^ this[2].GetHashCode() ^ this[3].GetHashCode();
         }
-        #endregion
 
-        /// <summary>
-        /// The columms of the matrix.
-        /// </summary>
-        private vec4[] cols;
+        #endregion
     }
 }

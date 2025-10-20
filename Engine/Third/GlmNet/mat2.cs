@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 
 namespace GlmNet
 {
@@ -8,6 +7,8 @@ namespace GlmNet
     /// </summary>
     public struct mat2
     {
+        public vec2 c0, c1;
+
         #region Construction
 
         /// <summary>
@@ -17,11 +18,8 @@ namespace GlmNet
         /// <param name="scale">The scale.</param>
         public mat2(float scale)
         {
-            cols = new[]
-            {
-                new vec2(scale, 0.0f),
-                new vec2(0.0f, scale)
-            };
+            c0 = new vec2(scale, 0.0f);
+            c1 = new vec2(0.0f, scale);
         }
 
         /// <summary>
@@ -31,27 +29,20 @@ namespace GlmNet
         /// <param name="cols">The colums of the matrix.</param>
         public mat2(vec2[] cols)
         {
-            this.cols = new[]
-            {
-                cols[0],
-                cols[1]
-            };
+            c0 = cols[0];
+            c1 = cols[1];
         }
 
         public mat2(vec2 a, vec2 b)
         {
-            this.cols = new[]
-            {
-                a, b
-            };
+            c0 = a;
+            c1 = b;
         }
 
         public mat2(float a, float b, float c, float d)
         {
-            this.cols = new[]
-            {
-                new vec2(a,b), new vec2(c,d)
-            };
+            c0 = new vec2(a, b);
+            c1 = new vec2(c, d);
         }
 
         /// <summary>
@@ -60,14 +51,10 @@ namespace GlmNet
         /// <returns>A new identity matrix.</returns>
         public static mat2 identity()
         {
-            return new mat2
-            {
-                cols = new[]
-                {
-                    new vec2(1,0),
-                    new vec2(0,1)
-                }
-            };
+            return new mat2(
+                new vec2(1, 0),
+                new vec2(0, 1)
+            );
         }
 
         #endregion
@@ -84,8 +71,24 @@ namespace GlmNet
         /// <returns>The column at index <paramref name="column"/>.</returns>
         public vec2 this[int column]
         {
-            get { return cols[column]; }
-            set { cols[column] = value; }
+            get
+            {
+                return column switch
+                {
+                    0 => c0,
+                    1 => c1,
+                    _ => throw new IndexOutOfRangeException()
+                };
+            }
+            set
+            {
+                switch (column)
+                {
+                    case 0: c0 = value; break;
+                    case 1: c1 = value; break;
+                    default: throw new IndexOutOfRangeException();
+                }
+            }
         }
 
         /// <summary>
@@ -101,8 +104,13 @@ namespace GlmNet
         /// </returns>
         public float this[int column, int row]
         {
-            get { return cols[column][row]; }
-            set { cols[column][row] = value; }
+            get => this[column][row];
+            set
+            {
+                var col = this[column];
+                col[row] = value;
+                this[column] = col;
+            }
         }
 
         #endregion
@@ -113,9 +121,21 @@ namespace GlmNet
         /// Returns the matrix as a flat array of elements, column major.
         /// </summary>
         /// <returns></returns>
+        private static readonly float[] _tempArray = new float[4];
         public float[] to_array()
         {
-            return cols.SelectMany(v => v.to_array()).ToArray();
+            _tempArray[0] = c0.x; _tempArray[1] = c0.y;
+            _tempArray[2] = c1.x; _tempArray[3] = c1.y;
+            return _tempArray;
+        }
+
+        public void to_array(Span<float> destination)
+        {
+            if (destination.Length < 4)
+                throw new ArgumentException("Destination span must be at least 4 elements long.");
+
+            destination[0] = c0.x; destination[1] = c0.y;
+            destination[2] = c1.x; destination[3] = c1.y;
         }
 
         #endregion
@@ -131,8 +151,8 @@ namespace GlmNet
         public static vec2 operator *(mat2 lhs, vec2 rhs)
         {
             return new vec2(
-                lhs[0, 0] * rhs[0] + lhs[1, 0] * rhs[1],
-                lhs[0, 1] * rhs[0] + lhs[1, 1] * rhs[1]
+                lhs.c0.x * rhs.x + lhs.c1.x * rhs.y,
+                lhs.c0.y * rhs.x + lhs.c1.y * rhs.y
             );
         }
 
@@ -144,20 +164,15 @@ namespace GlmNet
         /// <returns>The product of <paramref name="lhs"/> and <paramref name="rhs"/>.</returns>
         public static mat2 operator *(mat2 lhs, mat2 rhs)
         {
-            return new mat2(new[]
-            {
-          lhs[0][0] * rhs[0] + lhs[1][0] * rhs[1],
-          lhs[0][1] * rhs[0] + lhs[1][1] * rhs[1]
-            });
+            mat2 result = new mat2();
+            result.c0 = lhs * rhs.c0;
+            result.c1 = lhs * rhs.c1;
+            return result;
         }
 
         public static mat2 operator *(mat2 lhs, float s)
         {
-            return new mat2(new[]
-            {
-                lhs[0]*s,
-                lhs[1]*s
-            });
+            return new mat2(lhs.c0 * s, lhs.c1 * s);
         }
 
         #endregion
@@ -172,7 +187,7 @@ namespace GlmNet
                 this[0, 1], this[1, 1]
             );
         }
-        
+
         #endregion
 
         #region comparision
@@ -231,12 +246,7 @@ namespace GlmNet
         {
             return this[0].GetHashCode() ^ this[1].GetHashCode();
         }
-        
-        #endregion
 
-        /// <summary>
-        /// The columms of the matrix.
-        /// </summary>
-        private vec2[] cols;
+        #endregion
     }
 }
