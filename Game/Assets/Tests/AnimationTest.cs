@@ -54,7 +54,7 @@ namespace Game
             pTexture2.PixelPerUnit = 16;
 
             var spriteCurve = new SpriteCurve();
-            float fps = 11;
+            float fps = 5;
             float fpsFrac = (1.0f / fps);
 
             for (int i = 0; i < sprites.Length; i++)
@@ -67,7 +67,7 @@ namespace Game
             //animClip.AddCurve("Color", colorCurve);
             animClip.AddCurve("Sprite", spriteCurve);
             var evt = animClip.GetEventCurve();
-            var v = fpsFrac * 7.0f;
+            var v = fpsFrac * 3.0f;
             evt.AddKeyFrame(v, () => Debug.Warn("Cyan"));
             evt.AddKeyFrame(fpsFrac * 1.0f, () => Debug.Warn("Event called from animation"));
 

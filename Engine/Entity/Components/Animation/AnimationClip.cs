@@ -115,7 +115,7 @@ namespace Engine
 
         internal void EvaluateEvent(float time)
         {
-            _eventCurve?.EvaluateEvent(time);
+            _eventCurve?.Evaluate(time);
         }
 
         private T Evaluate<T>(string property, float time, Dictionary<string, AnimationCurveBase<T>> curves)
