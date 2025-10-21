@@ -9,6 +9,8 @@ namespace Engine
 {
     public class Vec3HermiteCurve : HermiteInterpolatedCurve<vec3>
     {
-        public Vec3HermiteCurve() : base(Mathf.Hermite) { }
+        private static readonly Func<vec3, vec3, vec3> Substract = (a, b) => a - b;
+        private static readonly Func<vec3, float, vec3> Divide = (a, b) => a / b;
+        public Vec3HermiteCurve() : base(Mathf.Hermite, Substract, Divide) { }
     }
 }

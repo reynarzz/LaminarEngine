@@ -9,6 +9,8 @@ namespace Engine
 {
     public class FloatHermiteCurve : HermiteInterpolatedCurve<float>
     {
-        public FloatHermiteCurve() : base(Mathf.Hermite) { }
+        private static readonly Func<float, float, float> Substract = (a, b) => a - b;
+        private static readonly Func<float, float, float> Divide = (a, b) => a / b;
+        public FloatHermiteCurve() : base(Mathf.Hermite, Substract, Divide) { }
     }
 }

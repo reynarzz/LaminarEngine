@@ -20,7 +20,8 @@ namespace Game
             SpriteCurve curve = new SpriteCurve();
             curve.AddKeyFrame(0, new Sprite());
             var hermite = new Vec3HermiteCurve();
-
+            hermite.AutoSmoothTangents();
+            
             walkClip.AddCurve("Sprite", curve);
             walkClip.AddCurve("Sprite", hermite);
 

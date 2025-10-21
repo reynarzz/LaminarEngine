@@ -34,11 +34,13 @@ namespace Engine
             {
                 foreach (var condition in transition.Conditions)
                 {
-                    if (condition(parameters))
+                    if (!condition(parameters))
                     {
-                        return transition;
+                        return null;
                     }
                 }
+
+                return transition;
             }
             return null;
         }
