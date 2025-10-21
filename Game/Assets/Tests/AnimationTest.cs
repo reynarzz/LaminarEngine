@@ -19,8 +19,11 @@ namespace Game
 
             SpriteCurve curve = new SpriteCurve();
             curve.AddKeyFrame(0, new Sprite());
-
+            
             walkClip.AddCurve("Sprite", curve);
+            var a = new EventCurve();
+            a.AddKeyFrame(5, () => { });
+            walkClip.AddEvent(a);
 
             var runClip = new AnimationClip("Run", true);
 

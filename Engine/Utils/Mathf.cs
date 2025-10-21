@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -80,7 +81,10 @@ namespace Engine
             => new quat(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w);
 
         public static vec2 Lerp(vec2 a, vec2 b, float t)
-            => a + (b - a) * Clamp01(t);
+        {
+            return a + (b - a) * Clamp01(t);
+        }
+
 
         public static vec3 Lerp(vec3 a, vec3 b, float t)
             => a + (b - a) * Clamp01(t);
@@ -88,7 +92,7 @@ namespace Engine
         public static vec3 SmoothLerp(vec3 a, vec3 b, float t)
         {
             t = t * t * (3 - 2 * t);
-            return Lerp(a, b, t);    
+            return Lerp(a, b, t);
         }
 
         public static vec3 SmoothDamp(vec3 current,
@@ -196,7 +200,7 @@ namespace Engine
 
         public static float PingPong(float t, float length = 1f)
         {
-            t = t % (2f * length);       
+            t = t % (2f * length);
             return length - Math.Abs(t - length);
         }
 
@@ -241,6 +245,84 @@ namespace Engine
             result[3, 3] = 1f;
 
             return result;
+        }
+
+        public static float Hermite(float startValue, float startTangent, float endTangent, float endValue, float t)
+        {
+            t = Clamp01(t);
+            float t2 = t * t;
+            float t3 = t2 * t;
+
+            float h00 = 2f * t3 - 3f * t2 + 1f;
+            float h10 = t3 - 2f * t2 + t;
+            float h01 = -2f * t3 + 3f * t2;
+            float h11 = t3 - t2;
+
+            return h00 * startValue + h10 * startTangent + h01 * endValue + h11 * endTangent;
+        }
+
+        public static vec2 Hermite(vec2 startValue, vec2 startTangent, vec2 endTangent, vec2 endValue, float t)
+        {
+            t = Clamp01(t);
+            float t2 = t * t;
+            float t3 = t2 * t;
+
+            float h00 = 2f * t3 - 3f * t2 + 1f;
+            float h10 = t3 - 2f * t2 + t;
+            float h01 = -2f * t3 + 3f * t2;
+            float h11 = t3 - t2;
+
+            return h00 * startValue + h10 * startTangent + h01 * endValue + h11 * endTangent;
+        }
+
+        public static vec3 Hermite(vec3 startValue, vec3 startTangent, vec3 endTangent, vec3 endValue, float t)
+        {
+            t = Clamp01(t);
+            float t2 = t * t;
+            float t3 = t2 * t;
+
+            float h00 = 2f * t3 - 3f * t2 + 1f;
+            float h10 = t3 - 2f * t2 + t;
+            float h01 = -2f * t3 + 3f * t2;
+            float h11 = t3 - t2;
+
+            return h00 * startValue + h10 * startTangent + h01 * endValue + h11 * endTangent;
+        }
+
+        public static vec4 Hermite(vec4 startValue, vec4 startTangent, vec4 endTangent, vec4 endValue, float t)
+        {
+            t = Clamp01(t);
+            float t2 = t * t;
+            float t3 = t2 * t;
+
+            float h00 = 2f * t3 - 3f * t2 + 1f;
+            float h10 = t3 - 2f * t2 + t;
+            float h01 = -2f * t3 + 3f * t2;
+            float h11 = t3 - t2;
+
+            return h00 * startValue + h10 * startTangent + h01 * endValue + h11 * endTangent;
+        }
+
+        public static quat Hermite(quat startValue, quat startTangent, quat endTangent, quat endValue, float t)
+        {
+            t = Clamp01(t);
+            float t2 = t * t;
+            float t3 = t2 * t;
+
+            float h00 = 2f * t3 - 3f * t2 + 1f;
+            float h10 = t3 - 2f * t2 + t;
+            float h01 = -2f * t3 + 3f * t2;
+            float h11 = t3 - t2;
+
+            quat result = h00 * startValue + h10 * startTangent + h01 * endValue + h11 * endTangent;
+            
+            return Normalize(result);
+        }
+
+        private static quat Normalize(quat value)
+        {
+            float length = MathF.Sqrt(value.x * value.x + value.y * value.y + value.z * value.z + value.w * value.w);
+            return length > 0f ? value / length : value;
         }
     }
 }

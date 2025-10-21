@@ -14,6 +14,7 @@ namespace Engine
         {
             var win = new Window(winName, width, height);
 
+            Window.OnWindowChanged += (x, y) => _layersManager.Update();
             if (win.IsInitialized)
             {
                 _layersManager = new LayersManager(layers);

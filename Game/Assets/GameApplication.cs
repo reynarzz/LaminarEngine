@@ -20,7 +20,7 @@ namespace Game
         // Avoid batch to take more texture slots that the system is supported, take into account materials texture count.
         // Fix: Batch2d vertices shift when an object is destroyed.
         // Implement a proper way to grow a batch when vertices are greater than MAX_QUADS_PER_BATCH (Tilemap)
-
+        // Implement
         // For game:
         // Implement enemies
         // Five levels, small, one intro level falling from outside.

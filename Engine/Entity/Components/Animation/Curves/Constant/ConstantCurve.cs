@@ -6,20 +6,10 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    public class SpriteCurve : AnimationCurveBase<Sprite>
+    public class ConstantCurve<T> : AnimationCurveBase<T>
     {
-        public override Sprite Evaluate(float time)
+        protected override T Evaluate(float time)
         {
-            if (Keyframes.Count == 0)
-            {
-                return null;
-            }
-
-            if (time >= Keyframes[^1].Time)
-            {
-                return Keyframes[^1].Value;
-            }
-
             for (int i = 0; i < Keyframes.Count - 1; i++)
             {
                 if (time >= Keyframes[i].Time && time < Keyframes[i + 1].Time)
@@ -31,5 +21,4 @@ namespace Engine
             return Keyframes[0].Value;
         }
     }
-
 }

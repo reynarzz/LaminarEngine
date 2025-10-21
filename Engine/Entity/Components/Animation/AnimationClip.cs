@@ -34,7 +34,7 @@ namespace Engine
         public bool Loop { get; set; }
         private Dictionary<string, AnimationCurveBase<float>> _floatCurves = new();
         private Dictionary<string, AnimationCurveBase<Sprite>> _spriteCurves = new();
-        
+        private EventCurve _eventCurve = new();
 
         public AnimationClip(string name, bool loop = true)
         {
@@ -52,6 +52,11 @@ namespace Engine
             _spriteCurves[property] = curve;
         }
 
+        public void AddEvent(EventCurve curve)
+        {
+            _eventCurve = curve;
+        }
+
         internal float EvaluateFloat(string property, float time)
         {
             return Evaluate(property, time, _floatCurves);
@@ -62,9 +67,17 @@ namespace Engine
             return Evaluate(property, time, _spriteCurves);
         }
 
+        internal Action EvaluateEvent(float time)
+        {
+            if (_eventCurve == null)
+                return null;
+
+            return _eventCurve.EvaluateTime(time);
+        }
+
         private T Evaluate<T>(string property, float time, Dictionary<string, AnimationCurveBase<T>> curves)
         {
-            return curves.TryGetValue(property, out var c) ? c.Evaluate(time) : default;
+            return curves.TryGetValue(property, out var c) ? c.EvaluateTime(time) : default;
         }
     }
 }

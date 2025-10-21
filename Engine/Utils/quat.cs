@@ -119,5 +119,30 @@ namespace GlmNet
                 cr * cp * cy + sr * sp * sy
             );
         }
+
+        public static quat operator *(quat q, float scalar)
+        {
+            return new quat(q.x * scalar, q.y * scalar, q.z * scalar, q.w * scalar);
+        }
+
+        public static quat operator *(float scalar, quat q)
+        {
+            return new quat(q.x * scalar, q.y * scalar, q.z * scalar, q.w * scalar);
+        }
+
+        public static quat operator +(quat a, quat b)
+        {
+            return new quat(a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w);
+        }
+
+        public static quat operator -(quat a, quat b)
+        {
+            return new quat(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w);
+        }
+        public static quat operator /(quat q, float scalar)
+        {
+            float inv = 1.0f / scalar;
+            return new quat(q.x * inv, q.y * inv, q.z * inv, q.w * inv);
+        }
     }
 }

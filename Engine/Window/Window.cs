@@ -63,6 +63,20 @@ namespace Engine
         internal static GLFW.Window NativeWindow { get; private set; }
         public bool IsInitialized => _isInitialized;
 
+        private static bool _canResize = false;
+        public static bool CanResize
+        {
+            get => _canResize; set
+            {
+                if (_canResize == value)
+                {
+                    return;
+                }
+                _canResize = value;
+                Glfw.SetWindowAttribute(NativeWindow, WindowAttribute.Resizable, _canResize);
+            }
+        }
+
         internal Window(string name, int width, int height)
         {
             _windowName = name;
@@ -101,7 +115,7 @@ namespace Engine
             Glfw.MakeContextCurrent(NativeWindow);
 
             GL.Import(Glfw.GetProcAddress);
-
+            Glfw.SetFramebufferSizeCallback(NativeWindow, (win, width, height) => SetWindowSize(width, height));
             Glfw.SwapInterval(1);
         }
 

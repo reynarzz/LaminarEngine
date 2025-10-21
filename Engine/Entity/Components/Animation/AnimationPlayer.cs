@@ -66,6 +66,9 @@ namespace Engine
             return _currentClip?.EvaluateSprite(property, _currentTime);
         }
 
-
+        internal Action GetEvent()
+        {
+            return _currentClip?.EvaluateEvent(_currentTime);
+        }
     }
 }

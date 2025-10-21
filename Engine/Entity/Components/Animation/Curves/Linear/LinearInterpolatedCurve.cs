@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    public class FloatCurve : AnimationCurveBase<float>
+    public class LinearInterpolatedCurve<T> : AnimationCurveBase<T>
     {
-        public override float Evaluate(float time)
+        private readonly Func<T, T, float, T> _lerp;
+
+        public LinearInterpolatedCurve(Func<T, T, float, T> lerp)
         {
-            if (Keyframes.Count == 0) return 0f;
+            _lerp = lerp ?? throw new ArgumentNullException(nameof(lerp));
+        }
 
-            if (time >= Keyframes[^1].Time)
-            {
-                return Keyframes[^1].Value;
-            }
-
+        protected override T Evaluate(float time)
+        {
             for (int i = 0; i < Keyframes.Count - 1; i++)
             {
                 var k1 = Keyframes[i];
@@ -24,12 +24,11 @@ namespace Engine
                 if (time >= k1.Time && time < k2.Time)
                 {
                     float t = (time - k1.Time) / (k2.Time - k1.Time);
-                    return Mathf.Lerp(k1.Value, k2.Value, t);
+                    return _lerp(k1.Value, k2.Value, t);
                 }
             }
 
             return Keyframes[0].Value;
         }
     }
-
 }
