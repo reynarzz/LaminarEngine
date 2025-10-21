@@ -73,6 +73,25 @@ namespace Engine
                 a.A + (b.A - a.A) * t
             );
         }
+
+        public static Color Hermite(Color startValue, Color startTangent, Color endTangent, Color endValue, float t)
+        {
+            t = Math.Clamp(t, 0f, 1f);
+            float t2 = t * t;
+            float t3 = t2 * t;
+
+            float h00 = 2f * t3 - 3f * t2 + 1f;
+            float h10 = t3 - 2f * t2 + t;
+            float h01 = -2f * t3 + 3f * t2;
+            float h11 = t3 - t2;
+
+            return new Color(
+                h00 * startValue.R + h10 * startTangent.R + h01 * endValue.R + h11 * endTangent.R,
+                h00 * startValue.G + h10 * startTangent.G + h01 * endValue.G + h11 * endTangent.G,
+                h00 * startValue.B + h10 * startTangent.B + h01 * endValue.B + h11 * endTangent.B,
+                h00 * startValue.A + h10 * startTangent.A + h01 * endValue.A + h11 * endTangent.A
+            );
+        }
     }
 
     public struct Color32

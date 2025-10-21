@@ -19,8 +19,11 @@ namespace Game
 
             SpriteCurve curve = new SpriteCurve();
             curve.AddKeyFrame(0, new Sprite());
-            
+            var hermite = new Vec3HermiteCurve();
+
             walkClip.AddCurve("Sprite", curve);
+            walkClip.AddCurve("Sprite", hermite);
+
             var a = new EventCurve();
             a.AddKeyFrame(5, () => { });
             walkClip.AddEvent(a);

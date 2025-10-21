@@ -6,7 +6,14 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
+    public class EventCurveData
+    {
+        public bool Raised { get; set; }
+        public Action Callback { get; set; }
+    }
+
     public class EventCurve : ConstantCurve<Action>
     {
+        
     }
 }

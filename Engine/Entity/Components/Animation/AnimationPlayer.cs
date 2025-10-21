@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GlmNet;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -64,6 +65,26 @@ namespace Engine
         internal Sprite GetSprite(string property)
         {
             return _currentClip?.EvaluateSprite(property, _currentTime);
+        }
+
+        internal vec2 GetVec2(string property)
+        {
+            return _currentClip?.EvaluateVec2(property, _currentTime) ?? default;
+        }
+
+        internal vec3 GetVec3(string property)
+        {
+            return _currentClip?.EvaluateVec3(property, _currentTime) ?? default;
+        }
+
+        internal quat GetQuat(string property)
+        {
+            return _currentClip?.EvaluateQuat(property, _currentTime) ?? default;
+        }
+
+        internal Color GetColor(string property)
+        {
+            return _currentClip?.EvaluateColor(property, _currentTime) ?? default;
         }
 
         internal Action GetEvent()

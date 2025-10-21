@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GlmNet;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace Engine
     {
         public float Duration
         {
-            get 
+            get
             {
                 float GetMax<T>(Dictionary<string, AnimationCurveBase<T>> dict)
                 {
@@ -33,6 +34,10 @@ namespace Engine
 
         public bool Loop { get; set; }
         private Dictionary<string, AnimationCurveBase<float>> _floatCurves = new();
+        private Dictionary<string, AnimationCurveBase<vec2>> _vec2Curves = new();
+        private Dictionary<string, AnimationCurveBase<vec3>> _vec3Curves = new();
+        private Dictionary<string, AnimationCurveBase<quat>> _quatCurves = new();
+        private Dictionary<string, AnimationCurveBase<Color>> _colorCurves = new();
         private Dictionary<string, AnimationCurveBase<Sprite>> _spriteCurves = new();
         private EventCurve _eventCurve = new();
 
@@ -47,6 +52,25 @@ namespace Engine
             _floatCurves[property] = curve;
         }
 
+        public void AddCurve(string property, AnimationCurveBase<vec2> curve)
+        {
+            _vec2Curves[property] = curve;
+        }
+
+        public void AddCurve(string property, AnimationCurveBase<vec3> curve)
+        {
+            _vec3Curves[property] = curve;
+        }
+
+        public void AddCurve(string property, AnimationCurveBase<quat> curve)
+        {
+            _quatCurves[property] = curve;
+        }
+        public void AddCurve(string property, AnimationCurveBase<Color> curve)
+        {
+            _colorCurves[property] = curve;
+        }
+        
         public void AddCurve(string property, AnimationCurveBase<Sprite> curve)
         {
             _spriteCurves[property] = curve;
@@ -67,6 +91,26 @@ namespace Engine
             return Evaluate(property, time, _spriteCurves);
         }
 
+        internal vec2 EvaluateVec2(string property, float time)
+        {
+            return Evaluate(property, time, _vec2Curves);
+        }
+
+        internal vec3 EvaluateVec3(string property, float time)
+        {
+            return Evaluate(property, time, _vec3Curves);
+        }
+
+        internal quat EvaluateQuat(string property, float time)
+        {
+            return Evaluate(property, time, _quatCurves);
+        }
+
+        internal Color EvaluateColor(string property, float time)
+        {
+            return Evaluate(property, time, _colorCurves);
+        }
+        
         internal Action EvaluateEvent(float time)
         {
             if (_eventCurve == null)

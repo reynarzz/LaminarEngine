@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GlmNet;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -68,6 +69,27 @@ namespace Engine
         {
             return _animPlayer.GetFloat(property);
         }
+
+        public vec2 GetVec2(string property)
+        {
+            return _animPlayer.GetVec2(property);
+        }
+
+        public vec3 GetVec3(string property)
+        {
+            return _animPlayer.GetVec3(property);
+        }
+
+        public quat GetQuat(string property)
+        {
+            return _animPlayer.GetQuat(property);
+        }
+
+        public Color GetColor(string property)
+        {
+            return _animPlayer.GetColor(property);
+        }
+
         public Sprite GetSprite(string property)
         {
             return _animPlayer.GetSprite(property);
