@@ -8,9 +8,23 @@ namespace Engine
 {
     public class HermiteInterpolatedCurve<T> : AnimationCurveBase<T>
     {
+        protected List<KeyFrameHermite<T>> Keyframes { get; } = new();
+        public override float Duration => Keyframes[^1].Time;
+
         private readonly Func<T, T, T, T, float, T> _hermite;
         private readonly Func<T, T, T> _subtract;
         private readonly Func<T, float, T> _divide;
+
+        public void AddKeyFrame(float time, T value)
+        {
+            AddKeyFrame(time, value, default, default);
+        }
+
+        public void AddKeyFrame(float time, T value, T inTangent, T outTangent)
+        {
+            Keyframes.Add(new KeyFrameHermite<T>(time, value, inTangent, outTangent));
+            SortKeyframes(Keyframes);
+        }
 
         public HermiteInterpolatedCurve(Func<T, T, T, T, float, T> hermite, Func<T, T, T> substract, Func<T, float, T> divide)
         {
@@ -18,13 +32,13 @@ namespace Engine
             _subtract = substract ?? throw new ArgumentNullException(nameof(substract));
             _divide = divide ?? throw new ArgumentNullException(nameof(divide));
         }
-
-        protected override T Evaluate(float time)
+        
+        internal override T Evaluate(float time)
         {
             for (int i = 0; i < Keyframes.Count - 1; i++)
             {
-                var k1 = (KeyFrameHermite<T>)Keyframes[i];
-                var k2 = (KeyFrameHermite<T>)Keyframes[i + 1];
+                var k1 = Keyframes[i];
+                var k2 = Keyframes[i + 1];
                 if (time >= k1.Time && time < k2.Time)
                 {
                     float t = (time - k1.Time) / (k2.Time - k1.Time);
@@ -32,7 +46,7 @@ namespace Engine
                 }
             }
 
-            return ((KeyFrameHermite<T>)Keyframes[0]).Value;
+            return Keyframes[0].Value;
         }
 
         /// <summary>
@@ -45,15 +59,15 @@ namespace Engine
 
             for (int i = 0; i < Keyframes.Count; i++)
             {
-                var prevKey = (i > 0) ? (KeyFrameHermite<T>)Keyframes[i - 1] : (KeyFrameHermite<T>)Keyframes[i];
-                var nextKey = (i < Keyframes.Count - 1) ? (KeyFrameHermite<T>)Keyframes[i + 1] : (KeyFrameHermite<T>)Keyframes[i];
+                var prevKey = (i > 0) ? Keyframes[i - 1] : Keyframes[i];
+                var nextKey = (i < Keyframes.Count - 1) ? Keyframes[i + 1] : Keyframes[i];
 
                 float deltaTime = nextKey.Time - prevKey.Time;
 
                 T deltaValue = _subtract(nextKey.Value, prevKey.Value);
                 T tangent = (deltaTime != 0f) ? _divide(deltaValue, deltaTime) : default;
 
-                var currentKey = (KeyFrameHermite<T>)Keyframes[i];
+                var currentKey = Keyframes[i];
                 currentKey.InTangent = tangent;
                 currentKey.OutTangent = tangent;
             }

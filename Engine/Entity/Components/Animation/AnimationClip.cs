@@ -116,12 +116,12 @@ namespace Engine
             if (_eventCurve == null)
                 return null;
 
-            return _eventCurve.EvaluateTime(time);
+            return _eventCurve.Evaluate(time);
         }
 
         private T Evaluate<T>(string property, float time, Dictionary<string, AnimationCurveBase<T>> curves)
         {
-            return curves.TryGetValue(property, out var c) ? c.EvaluateTime(time) : default;
+            return curves.TryGetValue(property, out var c) ? c.Evaluate(time) : default;
         }
     }
 }

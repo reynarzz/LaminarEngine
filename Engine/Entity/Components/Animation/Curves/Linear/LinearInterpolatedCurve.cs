@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    public class LinearInterpolatedCurve<T> : AnimationCurveBase<T>
+    public class LinearInterpolatedCurve<T> : DefaultKeyframeCurve<T>
     {
         private readonly Func<T, T, float, T> _lerp;
 
@@ -14,8 +14,8 @@ namespace Engine
         {
             _lerp = lerp ?? throw new ArgumentNullException(nameof(lerp));
         }
-
-        protected override T Evaluate(float time)
+        
+        internal override T Evaluate(float time)
         {
             for (int i = 0; i < Keyframes.Count - 1; i++)
             {

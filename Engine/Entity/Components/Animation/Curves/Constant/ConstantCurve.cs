@@ -6,10 +6,19 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    public class ConstantCurve<T> : AnimationCurveBase<T>
+    public class ConstantCurve<T> : DefaultKeyframeCurve<T>
     {
-        protected override T Evaluate(float time)
+        internal override T Evaluate(float time)
         {
+            if (Keyframes.Count == 0)
+            {
+                return default;
+            }
+            if (time >= Keyframes[^1].Time)
+            {
+                return Keyframes[^1].Value;
+            }
+
             for (int i = 0; i < Keyframes.Count - 1; i++)
             {
                 if (time >= Keyframes[i].Time && time < Keyframes[i + 1].Time)

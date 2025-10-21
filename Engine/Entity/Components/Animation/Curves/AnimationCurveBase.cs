@@ -8,27 +8,11 @@ namespace Engine
 {
     public abstract class AnimationCurveBase<T>
     {
-        protected List<KeyFrameBase<T>> Keyframes { get; } = new();
-        internal T EvaluateTime(float time)
+        public abstract float Duration { get; }
+        internal abstract T Evaluate(float time);
+        protected void SortKeyframes<TKey>(List<TKey> keyframes) where TKey : KeyFrameBase
         {
-            if (Keyframes.Count == 0)
-            {
-                return default;
-            }
-            if (time >= Keyframes[^1].Time)
-            {
-                return Keyframes[^1].Value;
-            }
-            return EvaluateTime(time);
-        }
-
-        protected abstract T Evaluate(float time);
-
-        public float Duration => Keyframes[^1].Time;
-        public virtual void AddKeyFrame(float time, T value)
-        {
-            Keyframes.Add(new KeyFrameBase<T>(time, value));
-            Keyframes.Sort((a, b) => a.Time.CompareTo(b.Time));
+            keyframes.Sort((a, b) => a.Time.CompareTo(b.Time));
         }
     }
 }
