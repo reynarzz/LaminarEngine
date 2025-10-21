@@ -33,6 +33,18 @@ namespace Engine
             }
         }
 
+        public void SetState(AnimationState state)
+        {
+            if (!_states.ContainsKey(state.Name))
+            {
+                AddState(state);
+            }
+
+            _currentState = state;
+            _animPlayer.Play(state.Clip);
+        }
+
+
         void IUpdatableComponent.OnUpdate()
         {
             if (_currentState == null)

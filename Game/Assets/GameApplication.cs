@@ -239,6 +239,8 @@ namespace Game
             WaterTest();
             ParticleSystem();
 
+            var animTest = new Actor<AnimationTest>();
+            animTest.Transform.WorldPosition = _player.Transform.WorldPosition;
             Debug.Success("Game Layer");
         }
 

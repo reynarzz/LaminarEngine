@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    internal class Vec2ConstantCurve : ConstantCurve<vec2>
+    public class Vec2ConstantCurve : ConstantCurve<vec2>
     {
     }
 }

@@ -28,7 +28,9 @@ namespace Engine
                     return max;
                 }
 
-                return MathF.Max(GetMax(_floatCurves), GetMax(_spriteCurves));
+                var max1 = MathF.Max(GetMax(_floatCurves), GetMax(_spriteCurves));
+                return MathF.Max(MathF.Max(MathF.Max(MathF.Max(max1, GetMax(_vec2Curves)), GetMax(_vec3Curves)),
+                                 GetMax(_quatCurves)), GetMax(_colorCurves));
             }
         }
 
@@ -70,7 +72,7 @@ namespace Engine
         {
             _colorCurves[property] = curve;
         }
-        
+
         public void AddCurve(string property, AnimationCurveBase<Sprite> curve)
         {
             _spriteCurves[property] = curve;
@@ -110,7 +112,7 @@ namespace Engine
         {
             return Evaluate(property, time, _colorCurves);
         }
-        
+
         internal Action EvaluateEvent(float time)
         {
             if (_eventCurve == null)

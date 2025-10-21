@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    internal class FloatConstantCurve : ConstantCurve<float>
+    public class FloatConstantCurve : ConstantCurve<float>
     {
     }
 }

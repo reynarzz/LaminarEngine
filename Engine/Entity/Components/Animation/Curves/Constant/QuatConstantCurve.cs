@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    internal class QuatConstantCurve : ConstantCurve<quat>
+    public class QuatConstantCurve : ConstantCurve<quat>
     {
     }
 }
