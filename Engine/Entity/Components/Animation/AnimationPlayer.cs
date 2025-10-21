@@ -29,6 +29,9 @@ namespace Engine
 
             if (_isPlaying)
             {
+                // Events are always evaluated
+                _currentClip?.EvaluateEvent(_currentTime);
+
                 _currentTime += Time.DeltaTime;
                 if (_currentClip.Loop)
                 {
@@ -43,9 +46,6 @@ namespace Engine
                 {
                     _currentTime = MathF.Min(_currentTime, _currentClip.Duration);
                 }
-
-                // Events are always evaluated
-                _currentClip?.EvaluateEvent(_currentTime);
             }
         }
 

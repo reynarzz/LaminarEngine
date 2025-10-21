@@ -55,19 +55,21 @@ namespace Game
 
             var spriteCurve = new SpriteCurve();
             float fps = 11;
+            float fpsFrac = (1.0f / fps);
 
             for (int i = 0; i < sprites.Length; i++)
             {
-                spriteCurve.AddKeyFrame((1.0f / fps) * (float)i, sprites[i]);
+                spriteCurve.AddKeyFrame(fpsFrac * (float)i, sprites[i]);
             }
 
 
-            animClip.AddCurve("Position", posCurve);
+            // animClip.AddCurve("Position", posCurve);
             //animClip.AddCurve("Color", colorCurve);
             animClip.AddCurve("Sprite", spriteCurve);
             var evt = animClip.GetEventCurve();
-            evt.AddKeyFrame(3, () => Debug.Warn("Event called from animation"));
-            evt.AddKeyFrame(2, () => Debug.Warn("Cyan"));
+            var v = fpsFrac * 7.0f;
+            evt.AddKeyFrame(v, () => Debug.Warn("Cyan"));
+            evt.AddKeyFrame(fpsFrac * 1.0f, () => Debug.Warn("Event called from animation"));
 
             Debug.Log("Anim clip duration: " + animClip.Duration);
             var state = new AnimationState("Main state", animClip);
@@ -116,7 +118,7 @@ namespace Game
             var sprite = _controller.GetSprite("Sprite");
 
             // _targetRenderer.Color = color;
-            _targetRenderer.Transform.WorldPosition = position;
+            // _targetRenderer.Transform.WorldPosition = position;
             _targetRenderer.Sprite = sprite;
         }
     }

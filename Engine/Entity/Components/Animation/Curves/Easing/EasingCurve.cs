@@ -17,6 +17,15 @@ namespace Engine
 
         internal override T Evaluate(float time)
         {
+            if (Keyframes.Count == 0)
+            {
+                return default;
+            }
+            if (time >= Keyframes[^1].Time)
+            {
+                return Keyframes[^1].Value;
+            }
+
             for (int i = 0; i < Keyframes.Count - 1; i++)
             {
                 var k1 = Keyframes[i];

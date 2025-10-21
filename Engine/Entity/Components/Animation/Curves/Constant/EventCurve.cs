@@ -62,7 +62,7 @@ namespace Engine
                 }
             }
 
-            return Keyframes[0];
+            return null;
         }
 
         internal void Restart()
