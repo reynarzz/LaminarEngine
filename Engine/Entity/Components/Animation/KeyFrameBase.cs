@@ -30,6 +30,10 @@ namespace Engine
     {
         public T InTangent { get; set; }
         public T OutTangent { get; set; }
+            
+        public KeyFrameHermite(float time, T value) : base(time, value)
+        {
+        }
 
         public KeyFrameHermite(float time, T value, T inTangent, T outTangent)
             : base(time, value)

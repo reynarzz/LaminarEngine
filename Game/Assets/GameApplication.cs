@@ -150,7 +150,7 @@ namespace Game
             camera.BackgroundColor = new Engine.Color(0.2f, 0.2f, 0.2f, 1);
             camera.OrthographicSize = 288.0f / 2.0f / 16.0f;
             // camera.OrthoMatch = CameraOrthoMatch.Width;
-            camera.RenderTexture = new RenderTexture(512, 288);
+            camera.RenderTexture = new RenderTexture(512*2, 288*2);
 
             LoadTilemap(camera);
 

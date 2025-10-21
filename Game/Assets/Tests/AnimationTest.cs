@@ -1,4 +1,6 @@
 ﻿using Engine;
+using Engine.Utils;
+using GlmNet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +28,8 @@ namespace Game
 
         private void PositionAnimation()
         {
+            _targetRenderer.Transform.WorldPosition = new vec3(5, 1, 0) + Transform.WorldPosition;
+
             var animClip = new AnimationClip("Position anim");
 
             var posCurve = new Vec2HermiteCurve();
@@ -33,19 +37,34 @@ namespace Game
             posCurve.AddKeyFrame(1, Transform.WorldPosition + new GlmNet.vec3(0, 1));
             posCurve.AddKeyFrame(2, Transform.WorldPosition + new GlmNet.vec3(1, 1));
             posCurve.AddKeyFrame(3, Transform.WorldPosition + new GlmNet.vec3(1, -1));
+            posCurve.AddKeyFrame(4, Transform.WorldPosition + new GlmNet.vec3());
             posCurve.AutoSmoothTangents();
 
-            var colorCurve = new ColorConstantCurve();
-            colorCurve.AddKeyFrame(0, Color.Teal);
-            colorCurve.AddKeyFrame(1, Color.Red);
-            colorCurve.AddKeyFrame(2, Color.Brown);
-            colorCurve.AddKeyFrame(3, Color.Cyan);
-            //colorCurve.AutoSmoothTangents();
+            var colorCurve = new ColorHermiteCurve();
+            colorCurve.AddKeyFrame(0, Color.Red);
+            colorCurve.AddKeyFrame(2, Color.Cyan);
+            colorCurve.AddKeyFrame(4, Color.Red);
+            colorCurve.AutoSmoothTangents();
 
 
-            animClip.AddCurve("Position", posCurve);
-            animClip.AddCurve("Color", colorCurve);
+            var basePath = "KingsAndPigsSprites/03-Pig/";
+            var pTexture2 = Assets.GetTexture(basePath + "Attack (34x28).png");
+            var sprites = TextureAtlasUtils.SliceSprites(pTexture2, 34, 28, new vec2(0.4f, 0.4f));
+            pTexture2.PixelPerUnit = 16;
 
+            var spriteCurve = new SpriteCurve();
+            float fps = 11;
+
+            for (int i = 0; i < sprites.Length; i++)
+            {
+                spriteCurve.AddKeyFrame((1.0f / fps) * (float)i, sprites[i]);
+            }
+
+
+            //animClip.AddCurve("Position", posCurve);
+            //animClip.AddCurve("Color", colorCurve);
+            animClip.AddCurve("Sprite", spriteCurve);
+            Debug.Log("Anim clip duration: " + animClip.Duration);
             var state = new AnimationState("Main state", animClip);
             _controller.SetState(state);
         }
@@ -86,14 +105,15 @@ namespace Game
         {
             _controller.Parameters.SetFloat("Speed", 2.0f);
 
-            var sprite = _controller.GetSprite("Body");
             var posX = _controller.GetFloat("PositionX");
 
             var position = _controller.GetVec2("Position");
             var color = _controller.GetColor("Color");
+            var sprite = _controller.GetSprite("Sprite");
 
-            _targetRenderer.Color = color;
-            _targetRenderer.Transform.WorldPosition = position;
+            // _targetRenderer.Color = color;
+            // _targetRenderer.Transform.WorldPosition = position;
+            _targetRenderer.Sprite = sprite;
         }
     }
 }

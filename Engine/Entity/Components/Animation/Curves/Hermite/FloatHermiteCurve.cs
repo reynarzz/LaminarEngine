@@ -11,6 +11,7 @@ namespace Engine
     {
         private static readonly Func<float, float, float> Substract = (a, b) => a - b;
         private static readonly Func<float, float, float> Divide = (a, b) => a / b;
-        public FloatHermiteCurve() : base(Mathf.Hermite, Substract, Divide) { }
+        private static readonly Func<float, float, float> Mul = (a, b) => a * b;
+        public FloatHermiteCurve() : base(Mathf.Hermite, Substract, Divide, Mul) { }
     }
 }

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Engine
 {
@@ -14,6 +11,21 @@ namespace Engine
         private readonly Func<T, T, T, T, float, T> _hermite;
         private readonly Func<T, T, T> _subtract;
         private readonly Func<T, float, T> _divide;
+        private readonly Func<T, float, T> _multiply;
+
+        public bool LoopInterpolate { get; set; } = true;
+
+        public HermiteInterpolatedCurve(
+            Func<T, T, T, T, float, T> hermite,
+            Func<T, T, T> subtract,
+            Func<T, float, T> divide,
+            Func<T, float, T> multiply)
+        {
+            _hermite = hermite ?? throw new ArgumentNullException(nameof(hermite));
+            _subtract = subtract ?? throw new ArgumentNullException(nameof(subtract));
+            _divide = divide ?? throw new ArgumentNullException(nameof(divide));
+            _multiply = multiply ?? throw new ArgumentNullException(nameof(multiply));
+        }
 
         public void AddKeyFrame(float time, T value)
         {
@@ -26,56 +38,124 @@ namespace Engine
             SortKeyframes(Keyframes);
         }
 
-        public HermiteInterpolatedCurve(Func<T, T, T, T, float, T> hermite, Func<T, T, T> substract, Func<T, float, T> divide)
-        {
-            _hermite = hermite ?? throw new ArgumentNullException(nameof(hermite));
-            _subtract = substract ?? throw new ArgumentNullException(nameof(substract));
-            _divide = divide ?? throw new ArgumentNullException(nameof(divide));
-        }
-        
         internal override T Evaluate(float time)
         {
             if (Keyframes.Count == 0)
+            {
                 return default;
+            }
 
-            if (time >= Keyframes[^1].Time)
-                return Keyframes[^1].Value;
+            if (Keyframes.Count == 1)
+            {
+                return Keyframes[0].Value;
+            }
+
+            float start = Keyframes[0].Time;
+            float end = Keyframes[^1].Time;
+            float duration = end - start;
+
+            if (!LoopInterpolate)
+            {
+                if (time <= start)
+                {
+                    return Keyframes[0].Value;
+                }
+                if (time >= end)
+                {
+                    return Keyframes[^1].Value;
+                }
+            }
+            else
+            {
+                // Wrap time into start end.
+                time = ((time - start) % duration + duration) % duration + start;
+            }
 
             for (int i = 0; i < Keyframes.Count - 1; i++)
             {
                 var k1 = Keyframes[i];
                 var k2 = Keyframes[i + 1];
+
                 if (time >= k1.Time && time < k2.Time)
                 {
                     float t = (time - k1.Time) / (k2.Time - k1.Time);
-                    return _hermite(k1.Value, k1.OutTangent, k2.InTangent, k2.Value, t);
+                    float dt = k2.Time - k1.Time;
+
+                    return _hermite(
+                        k1.Value,
+                        _multiply(k1.OutTangent, dt),
+                        _multiply(k2.InTangent, dt),
+                        k2.Value,
+                        t
+                    );
                 }
             }
 
-            return Keyframes[0].Value;
+            if (LoopInterpolate)
+            {
+                var kLast = Keyframes[^1];
+                var kFirst = Keyframes[0];
+                float t = (time - end + duration) / duration;
+
+                return _hermite(kLast.Value, _multiply(kLast.OutTangent, duration),
+                                _multiply(kFirst.InTangent, duration),
+                                kFirst.Value,
+                                t
+                );
+            }
+
+            return Keyframes[^1].Value;
         }
 
-        /// <summary>
-        /// Call at the end when finished adding all the keyframes.
-        /// </summary>
-        public void AutoSmoothTangents()
+        public void AutoSmoothTangents(bool cyclic = true)
         {
-            if (Keyframes.Count < 2)
-                return;
-
-            for (int i = 0; i < Keyframes.Count; i++)
+            int n = Keyframes.Count;
+            if (n < 2)
             {
-                var prevKey = (i > 0) ? Keyframes[i - 1] : Keyframes[i];
-                var nextKey = (i < Keyframes.Count - 1) ? Keyframes[i + 1] : Keyframes[i];
+                return;
+            }
 
-                float deltaTime = nextKey.Time - prevKey.Time;
+            float start = Keyframes[0].Time;
+            float end = Keyframes[^1].Time;
+            float dur = end - start;
 
-                T deltaValue = _subtract(nextKey.Value, prevKey.Value);
-                T tangent = (deltaTime != 0f) ? _divide(deltaValue, deltaTime) : default;
+            for (int i = 0; i < n; i++)
+            {
+                int prevIdx = cyclic ? (i - 1 + n) % n : Math.Max(i - 1, 0);
+                int nextIdx = cyclic ? (i + 1) % n : Math.Min(i + 1, n - 1);
 
-                var currentKey = Keyframes[i];
-                currentKey.InTangent = tangent;
-                currentKey.OutTangent = tangent;
+                var prev = Keyframes[prevIdx];
+                var next = Keyframes[nextIdx];
+                var cur = Keyframes[i];
+
+                float prevTime = prev.Time;
+                float nextTime = next.Time;
+
+                if (cyclic)
+                {
+                    if (prevIdx > i)
+                    {
+                        prevTime -= dur;
+                    }
+
+                    if (nextIdx < i)
+                    {
+                        nextTime += dur;
+                    }
+                }
+
+                float dt = nextTime - prevTime;
+                T dv = _subtract(next.Value, prev.Value);
+                T tangent = dt != 0f ? _divide(dv, dt) : default;
+
+                cur.InTangent = tangent;
+                cur.OutTangent = tangent;
+            }
+
+            if (cyclic && n > 2)
+            {
+                Keyframes[0].InTangent = Keyframes[^1].OutTangent;
+                Keyframes[0].OutTangent = Keyframes[^1].OutTangent;
             }
         }
     }
