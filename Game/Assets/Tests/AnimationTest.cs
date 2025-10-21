@@ -65,6 +65,10 @@ namespace Game
             animClip.AddCurve("Position", posCurve);
             //animClip.AddCurve("Color", colorCurve);
             animClip.AddCurve("Sprite", spriteCurve);
+            var evt = animClip.GetEventCurve();
+            evt.AddKeyFrame(3, () => Debug.Warn("Event called from animation"));
+            evt.AddKeyFrame(2, () => Debug.Warn("Cyan"));
+
             Debug.Log("Anim clip duration: " + animClip.Duration);
             var state = new AnimationState("Main state", animClip);
             _controller.SetState(state);
@@ -82,9 +86,8 @@ namespace Game
             walkClip.AddCurve("Sprite", curve);
             walkClip.AddCurve("Sprite", hermite);
 
-            var a = new EventCurve();
-            a.AddKeyFrame(5, () => { });
-            walkClip.AddEvent(a);
+            var evt = walkClip.GetEventCurve();
+            evt.AddKeyFrame(4, () => Debug.Warn("Event called"));
 
             var runClip = new AnimationClip("Run", true);
 
@@ -113,7 +116,7 @@ namespace Game
             var sprite = _controller.GetSprite("Sprite");
 
             // _targetRenderer.Color = color;
-             _targetRenderer.Transform.WorldPosition = position;
+            _targetRenderer.Transform.WorldPosition = position;
             _targetRenderer.Sprite = sprite;
         }
     }

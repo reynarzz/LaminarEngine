@@ -29,8 +29,8 @@ namespace Engine
                 }
 
                 var max1 = MathF.Max(GetMax(_floatCurves), GetMax(_spriteCurves));
-                return MathF.Max(MathF.Max(MathF.Max(MathF.Max(max1, GetMax(_vec2Curves)), GetMax(_vec3Curves)),
-                                 GetMax(_quatCurves)), GetMax(_colorCurves));
+                return MathF.Max(MathF.Max(MathF.Max(MathF.Max(MathF.Max(max1, GetMax(_vec2Curves)), GetMax(_vec3Curves)),
+                                 GetMax(_quatCurves)), GetMax(_colorCurves)), _eventCurve.Duration);
             }
         }
 
@@ -78,9 +78,9 @@ namespace Engine
             _spriteCurves[property] = curve;
         }
 
-        public void AddEvent(EventCurve curve)
+        public EventCurve GetEventCurve()
         {
-            _eventCurve = curve;
+            return _eventCurve;
         }
 
         internal float EvaluateFloat(string property, float time)
@@ -113,12 +113,9 @@ namespace Engine
             return Evaluate(property, time, _colorCurves);
         }
 
-        internal Action EvaluateEvent(float time)
+        internal void EvaluateEvent(float time)
         {
-            if (_eventCurve == null)
-                return null;
-
-            return _eventCurve.Evaluate(time);
+            _eventCurve?.EvaluateEvent(time);
         }
 
         private T Evaluate<T>(string property, float time, Dictionary<string, AnimationCurveBase<T>> curves)

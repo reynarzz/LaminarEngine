@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    internal class AnimationPlayer 
+    internal class AnimationPlayer
     {
         private AnimationClip _currentClip;
         private float _currentTime;
@@ -26,18 +26,26 @@ namespace Engine
             {
                 return;
             }
-            
+
             if (_isPlaying)
             {
                 _currentTime += Time.DeltaTime;
                 if (_currentClip.Loop)
                 {
-                    _currentTime %= _currentClip.Duration;
+                    if(_currentTime >= _currentClip.Duration)
+                    {
+                        _currentClip?.EvaluateEvent(_currentTime);
+                        _currentClip?.GetEventCurve().Restart();
+                        _currentTime = 0;
+                    }
                 }
                 else
                 {
                     _currentTime = MathF.Min(_currentTime, _currentClip.Duration);
                 }
+
+                // Events are always evaluated
+                _currentClip?.EvaluateEvent(_currentTime);
             }
         }
 
@@ -61,7 +69,7 @@ namespace Engine
         {
             return _currentClip?.EvaluateFloat(property, _currentTime) ?? 0f;
         }
-        
+
         internal Sprite GetSprite(string property)
         {
             return _currentClip?.EvaluateSprite(property, _currentTime);
@@ -85,11 +93,6 @@ namespace Engine
         internal Color GetColor(string property)
         {
             return _currentClip?.EvaluateColor(property, _currentTime) ?? default;
-        }
-
-        internal Action GetEvent()
-        {
-            return _currentClip?.EvaluateEvent(_currentTime);
         }
     }
 }
