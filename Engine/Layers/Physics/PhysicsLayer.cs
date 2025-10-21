@@ -21,6 +21,8 @@ namespace Engine.Layers
         private float accumulator = 0f;
         private const float fixedTimeStep = 0.02f;
         private List<Collider2D> _colliders = new();
+        private List<RigidBody2D> _rigidbody = new();
+
         public override void Initialize()
         {
             _contactDispatcher = new ContactsDispatcher();
@@ -80,9 +82,10 @@ namespace Engine.Layers
             accumulator = Math.Min(accumulator + Time.DeltaTime, 0.25f);
 
             // TODO: refactor, this is for fast protoyping
-            var rigidBodies = SceneManager.ActiveScene.FindAll<RigidBody2D>(findDisabled: false);
+            _rigidbody.Clear();
+            SceneManager.ActiveScene.FindAll(findDisabled: false, _rigidbody);
 
-            foreach (var rigidbody in rigidBodies)
+            foreach (var rigidbody in _rigidbody)
             {
                 rigidbody.PreUpdateBody();
             }
@@ -93,7 +96,7 @@ namespace Engine.Layers
 
                 SceneManager.ActiveScene.FixedUpdate();
 
-                foreach (var rigidbody in rigidBodies)
+                foreach (var rigidbody in _rigidbody)
                 {
                     rigidbody.PreUpdateBody();
                     rigidbody.PrevLocalPosition = rigidbody.Transform.LocalPosition;
@@ -103,7 +106,7 @@ namespace Engine.Layers
                 B2Worlds.b2World_Step(PhysicWorld.WorldID, fixedTimeStep, 4);
                 accumulator -= fixedTimeStep;
 
-                foreach (var rigidbody in rigidBodies)
+                foreach (var rigidbody in _rigidbody)
                 {
                     if (rigidbody)
                     {
@@ -114,7 +117,7 @@ namespace Engine.Layers
 
             float alpha = accumulator / fixedTimeStep;
 
-            foreach (var rigidbody in rigidBodies)
+            foreach (var rigidbody in _rigidbody)
             {
                 rigidbody.CalculatePhysicsInterpolation(rigidbody.Transform, rigidbody.PrevLocalPosition, rigidbody.PrevLocalRotation, alpha);
 

@@ -16,8 +16,6 @@ namespace Engine.Layers
         private RenderTexture _screenGrabTarget;
         private GfxResource _screenGeometry;
         private RenderTexture _defaultSceneRenderTexture;
-        private Shader _screenShader;
-        private PostProcessingStack _postProcessStack;
         private FontRenderingSystem _fontRenderingSystem;
         private List<Renderer2D> _renderers;
         private mat4 _viewProjMatrix;
@@ -59,7 +57,6 @@ namespace Engine.Layers
             }), Window.Width, Window.Height);
 
             _screenGeometry = GraphicsHelper.GetScreenQuadGeometry();
-            _screenShader = new Shader(Tests.QuadVertexShader, Tests.QuadFragmentShader);
 
             Window.OnWindowChanged += OnUpdateScreenGrabPass;
 
