@@ -28,17 +28,18 @@ namespace Game
 
         private void PositionAnimation()
         {
-            _targetRenderer.Transform.WorldPosition = new vec3(5, 1, 0) + Transform.WorldPosition;
+            //_targetRenderer.Transform.WorldPosition = new vec3(5, 1, 0) + Transform.WorldPosition;
 
             var animClip = new AnimationClip("Position anim");
 
-            var posCurve = new Vec2HermiteCurve();
+            var posCurve = new Vec2EasingCurve();
             posCurve.AddKeyFrame(0, Transform.WorldPosition + new GlmNet.vec3());
             posCurve.AddKeyFrame(1, Transform.WorldPosition + new GlmNet.vec3(0, 1));
             posCurve.AddKeyFrame(2, Transform.WorldPosition + new GlmNet.vec3(1, 1));
             posCurve.AddKeyFrame(3, Transform.WorldPosition + new GlmNet.vec3(1, -1));
             posCurve.AddKeyFrame(4, Transform.WorldPosition + new GlmNet.vec3());
-            posCurve.AutoSmoothTangents();
+            //posCurve.AutoSmoothTangents();
+            posCurve.EasingType = EasingType.EaseOutBounce;
 
             var colorCurve = new ColorHermiteCurve();
             colorCurve.AddKeyFrame(0, Color.Red);
@@ -61,7 +62,7 @@ namespace Game
             }
 
 
-            //animClip.AddCurve("Position", posCurve);
+            animClip.AddCurve("Position", posCurve);
             //animClip.AddCurve("Color", colorCurve);
             animClip.AddCurve("Sprite", spriteCurve);
             Debug.Log("Anim clip duration: " + animClip.Duration);
@@ -112,7 +113,7 @@ namespace Game
             var sprite = _controller.GetSprite("Sprite");
 
             // _targetRenderer.Color = color;
-            // _targetRenderer.Transform.WorldPosition = position;
+             _targetRenderer.Transform.WorldPosition = position;
             _targetRenderer.Sprite = sprite;
         }
     }

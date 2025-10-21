@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    public class QuatLinearCurve : LinearInterpolatedCurve<quat>
+    public class ColorEasingCurve : EasingCurve<Color>
     {
-        public QuatLinearCurve() : base(Mathf.Slerp) { }
+        public ColorEasingCurve() : base(Easing.Apply)
+        {
+        }
     }
 }

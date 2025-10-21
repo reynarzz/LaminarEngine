@@ -1,0 +1,34 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Engine
+{
+    public class EasingCurve<T> : DefaultKeyframeCurve<T>
+    {
+        private readonly Func<EasingType, T, T, float, T> _easing;
+        public EasingType EasingType { get; set; }
+        public EasingCurve(Func<EasingType, T, T, float, T> easing)
+        {
+            _easing = easing ?? throw new ArgumentNullException(nameof(easing));
+        }
+
+        internal override T Evaluate(float time)
+        {
+            for (int i = 0; i < Keyframes.Count - 1; i++)
+            {
+                var k1 = Keyframes[i];
+                var k2 = Keyframes[i + 1];
+                if (time >= k1.Time && time < k2.Time)
+                {
+                    float t = (time - k1.Time) / (k2.Time - k1.Time);
+                    return _easing(EasingType, k1.Value, k2.Value, t);
+                }
+            }
+
+            return Keyframes[0].Value;
+        }
+    }
+}
