@@ -17,13 +17,13 @@ namespace Engine
     public class EventCurve : AnimationCurveBase<Action>
     {
         private List<EventKeyFrame> Keyframes { get; } = new();
-        public override float Duration => Keyframes[^1].Time;
+        public override float Duration => Keyframes.Count > 0 ? Keyframes[^1].Time : 0;
         public void AddKeyFrame(float time, Action value)
         {
             Keyframes.Add(new EventKeyFrame(time, value));
             SortKeyframes(Keyframes);
         }
-        
+
         internal override Action Evaluate(float time)
         {
             if (Keyframes.Count == 0)

@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>net9.0</TargetFramework>
 		<ImplicitUsings>false</ImplicitUsings>
-		<Nullable>enable</Nullable>
+		<Nullable>disable</Nullable>
 		<BaseIntermediateOutputPath>Library\Build\obj\</BaseIntermediateOutputPath>
 		<BaseOutputPath>Library\Build\bin\</BaseOutputPath>
 		<DefineConstants>$(DefineConstants);PROJECT_PATH="$(MSBuildProjectFullPath)"</DefineConstants>

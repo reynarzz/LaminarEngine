@@ -6,8 +6,7 @@ namespace Engine
     public class HermiteInterpolatedCurve<T> : AnimationCurveBase<T>
     {
         protected List<KeyFrameHermite<T>> Keyframes { get; } = new();
-        public override float Duration => Keyframes[^1].Time;
-
+        public override float Duration => Keyframes.Count > 0 ? Keyframes[^1].Time : 0;
         private readonly Func<T, T, T, T, float, T> _hermite;
         private readonly Func<T, T, T> _subtract;
         private readonly Func<T, float, T> _divide;

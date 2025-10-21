@@ -237,16 +237,7 @@ namespace Game
                 _animation.Play();
             }
 
-            if (Input.GetKeyDown(KeyCode.Q))
-            {
-                Physics2D.DrawColliders = !Physics2D.DrawColliders;
-            }
-
-            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Enter))
-            {
-                Window.FullScreen(!Window.IsFullScreen);
-                Window.MouseVisible = !Window.IsFullScreen;
-            }
+           
 
 #if DEBUG
             if (Input.GetKeyDown(KeyCode.I))

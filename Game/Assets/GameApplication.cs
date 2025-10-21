@@ -36,7 +36,7 @@ namespace Game
         // Investigate why AudioMixer frees from memory automatically
 
         private vec3 _playerStartPosTest;
-        private void LoadTilemap(Camera cam)
+        private void LoadTilemap()
         {
             var testPathNow = "Tilemap";
             var tilemapTexture = Assets.GetTexture(testPathNow + "/SunnyLand_by_Ansimuz-extended.png");
@@ -141,18 +141,14 @@ namespace Game
         private Actor _player;
         public override void Initialize()
         {
+            var gameManager = new Actor("GameManager").AddComponent<GameManager>();
+
             var mainShader = new Shader(Assets.GetText("Shaders/SpriteVert.vert").Text, Assets.GetText("Shaders/SpriteFrag.frag").Text);
 
             var mat1 = new Material(mainShader);
             mat1.Name = "Entities material (player/platform etc)";
 
-            var camera = new Actor<Camera, CameraFollow>("Camera").GetComponent<Camera>();
-            camera.BackgroundColor = new Engine.Color(0.2f, 0.2f, 0.2f, 1);
-            camera.OrthographicSize = 288.0f / 2.0f / 16.0f;
-            // camera.OrthoMatch = CameraOrthoMatch.Width;
-            camera.RenderTexture = new RenderTexture(512*2, 288*2);
-
-            LoadTilemap(camera);
+            LoadTilemap();
 
             //var defChunk = sprite1.GetAtlasChunk();
             //defChunk.Pivot = new GlmNet.vec2(0.5f, 0);
@@ -167,57 +163,6 @@ namespace Game
 
             // LayerMask.TurnOn("Player", "Player");
 
-            Debug.Log("Enabled: " + LayerMask.AreEnabled(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Player")));
-
-            _player = new Actor<SpriteRenderer, RigidBody2D, CapsuleCollider2D, PlayerTest, SpriteAnimation2D>("Player");
-            _player.Layer = LayerMask.NameToLayer("Player");
-            _player.GetComponent<SpriteRenderer>().Material = mat1;
-            _player.GetComponent<SpriteRenderer>().SortOrder = 2;
-            var PlayerMatPass = mat1.Passes.ElementAt(0);
-            PlayerMatPass.Stencil.Enabled = true;
-            PlayerMatPass.Stencil.Func = StencilFunc.Always;
-            PlayerMatPass.Stencil.Ref = 3;
-            PlayerMatPass.Stencil.ZPassOp = StencilOp.Replace;
-
-            var audioClip = Assets.GetAudioClip("Audio/music/streamloops/Stream Loops 2024-02-14_L01.wav");
-            var source = _player.AddComponent<AudioSource>();
-            source.Clip = audioClip;
-            source.Loop = true;
-            //source.Play();
-
-            // var handle = System.Runtime.InteropServices.GCHandle.Alloc(source.Mixer, System.Runtime.InteropServices.GCHandleType.Normal);
-            // var reverb = source.Mixer.AddAudioFX<ReverbAudioFX>();
-            // reverb.RoomSize = 100;
-
-            Debug.Log("Duration: " + audioClip.Duration);
-            //source.PlayOneShot(audioClip);
-
-            // source.Volume = 0.3f;
-            //source.Time = 20;
-            // playerActor.GetComponent<SpriteRenderer>().Sprite = animSprites[0];
-            //sprite4.Texture.Atlas.UpdatePivot(0, new vec2(0.4f, 0.4f));
-
-            _player.GetComponent<CapsuleCollider2D>().Offset = new vec2(0, 0.25f);
-            _player.GetComponent<CapsuleCollider2D>().Size = new vec2(1.4f, 1.7f);
-            var collider3 = _player.GetComponent<Collider2D>();
-            var rigid3 = _player.GetComponent<RigidBody2D>();
-            //rigid3.Transform.WorldEulerAngles = new GlmNet.vec3(0, 0, 42);
-            rigid3.Transform.WorldPosition = _playerStartPosTest;
-            camera.Transform.WorldPosition = new GlmNet.vec3(_player.Transform.WorldPosition.x,
-                                                             _player.Transform.WorldPosition.y, -12);
-            rigid3.LockZRotation = true;
-
-            // rigid3.Actor.IsEnabled = false;
-            // actor3.GetComponent<BoxCollider2D>().IsTrigger = true;
-
-            rigid3.IsAutoMass = false;
-            // Actor.Destroy(camera.Actor);
-            var cam = Actor.Find("Camera");
-
-            if (camera)
-            {
-                camera.GetComponent<CameraFollow>().Target = _player.Transform;
-            }
 
             var platform = new Actor<Platform, SpriteRenderer>("Platform");
             platform.GetComponent<SpriteRenderer>().Material = mat1;
@@ -239,8 +184,8 @@ namespace Game
             WaterTest();
             ParticleSystem();
 
-            var animTest = new Actor<AnimationTest>();
-            animTest.Transform.WorldPosition = _player.Transform.WorldPosition;
+            //var animTest = new Actor<AnimationTest>();
+            //animTest.Transform.WorldPosition = _playerStartPosTest;
             Debug.Success("Game Layer");
         }
 

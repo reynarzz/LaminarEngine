@@ -35,11 +35,11 @@ namespace Engine
         }
 
         public bool Loop { get; set; }
-        private Dictionary<string, AnimationCurveBase<float>> _floatCurves = new();
-        private Dictionary<string, AnimationCurveBase<vec2>> _vec2Curves = new();
-        private Dictionary<string, AnimationCurveBase<vec3>> _vec3Curves = new();
-        private Dictionary<string, AnimationCurveBase<quat>> _quatCurves = new();
-        private Dictionary<string, AnimationCurveBase<Color>> _colorCurves = new();
+        private Dictionary<string, AnimationCurveBase<float>>  _floatCurves  = new();
+        private Dictionary<string, AnimationCurveBase<vec2>>   _vec2Curves   = new();
+        private Dictionary<string, AnimationCurveBase<vec3>>   _vec3Curves   = new();
+        private Dictionary<string, AnimationCurveBase<quat>>   _quatCurves   = new();
+        private Dictionary<string, AnimationCurveBase<Color>>  _colorCurves  = new();
         private Dictionary<string, AnimationCurveBase<Sprite>> _spriteCurves = new();
         private EventCurve _eventCurve = new();
 
@@ -122,5 +122,58 @@ namespace Engine
         {
             return curves.TryGetValue(property, out var c) ? c.Evaluate(time) : default;
         }
+
+        public bool HasPropertyAnyCurve(string property)
+        {
+            if (HasPropertyInFloatCurves(property))
+                return true;
+
+            if (HasPropertyInSpriteCurves(property))
+                return true;
+
+            if (HasPropertyInVec2Curves(property))
+                return true;
+
+            if (HasPropertyInVec3Curves(property))
+                return true;
+
+            if (HasPropertyInQuatCurves(property))
+                return true;
+
+            if (HasPropertyInColorCurves(property))
+                return true;
+
+            return false;
+        }
+
+        public bool HasProperty<T>(string property, Dictionary<string, AnimationCurveBase<T>> curve)
+        {
+            return curve.ContainsKey(property);
+        }
+        public bool HasPropertyInFloatCurves(string property)
+        {
+            return HasProperty(property, _floatCurves);
+        }
+        public bool HasPropertyInSpriteCurves(string property)
+        {
+            return HasProperty(property, _spriteCurves);
+        }
+        public bool HasPropertyInVec2Curves(string property)
+        {
+            return HasProperty(property, _vec2Curves);
+        }
+        public bool HasPropertyInVec3Curves(string property)
+        {
+            return HasProperty(property, _vec3Curves);
+        }
+        public bool HasPropertyInQuatCurves(string property)
+        {
+            return HasProperty(property, _quatCurves);
+        }
+        public bool HasPropertyInColorCurves(string property)
+        {
+            return HasProperty(property, _colorCurves);
+        }
+
     }
 }

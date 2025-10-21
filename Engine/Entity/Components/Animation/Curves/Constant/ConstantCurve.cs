@@ -10,24 +10,26 @@ namespace Engine
     {
         internal override T Evaluate(float time)
         {
-            if (Keyframes.Count == 0)
-            {
+            int count = Keyframes.Count;
+            if (count == 0)
                 return default;
-            }
+
+            if (count == 1 || time <= Keyframes[0].Time)
+                return Keyframes[0].Value;
+
             if (time >= Keyframes[^1].Time)
-            {
                 return Keyframes[^1].Value;
-            }
 
-            for (int i = 0; i < Keyframes.Count - 1; i++)
+            for (int i = 0; i < count - 1; i++)
             {
-                if (time >= Keyframes[i].Time && time < Keyframes[i + 1].Time)
-                {
-                    return Keyframes[i].Value;
-                }
+                var k1 = Keyframes[i];
+                var k2 = Keyframes[i + 1];
+
+                if (time >= k1.Time && time <= k2.Time)
+                    return k1.Value;
             }
 
-            return Keyframes[0].Value;
+            return Keyframes[^1].Value;
         }
     }
 }

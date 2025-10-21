@@ -34,7 +34,7 @@ namespace Engine
             {
                 foreach (var condition in transition.Conditions)
                 {
-                    if (!condition(parameters))
+                    if (!condition.IsCondition(parameters))
                     {
                         return null;
                     }

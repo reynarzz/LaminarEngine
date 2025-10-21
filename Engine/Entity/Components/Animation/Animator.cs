@@ -1,4 +1,5 @@
-﻿using GlmNet;
+﻿using Engine.Types;
+using GlmNet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    public class Animator : Component, IUpdatableComponent
+    [UniqueComponent]
+    public class Animator : Component, ILateUpdatableComponent
     {
         private Dictionary<string, AnimationState> _states = new();
         private AnimationPlayer _animPlayer = new();
@@ -33,6 +35,13 @@ namespace Engine
             }
         }
 
+        public AnimationState GetState(string name)
+        {
+            _states.TryGetValue(name, out var state);
+            return state;
+        }
+
+
         public void SetState(AnimationState state)
         {
             if (!_states.ContainsKey(state.Name))
@@ -45,7 +54,7 @@ namespace Engine
         }
 
 
-        void IUpdatableComponent.OnUpdate()
+        void ILateUpdatableComponent.OnLateUpdate()
         {
             if (_currentState == null)
             {

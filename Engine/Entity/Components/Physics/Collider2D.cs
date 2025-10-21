@@ -1,4 +1,5 @@
 ﻿using Box2D.NET;
+using Engine.Types;
 using GlmNet;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
+    [RequiredComponent(typeof(RigidBody2D))]
     public abstract class Collider2D : Component
     {
         public RigidBody2D RigidBody { get; internal set; }
