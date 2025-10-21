@@ -8,11 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Animation\**" />
     <Compile Remove="Scene\**" />
-    <EmbeddedResource Remove="Animation\**" />
     <EmbeddedResource Remove="Scene\**" />
-    <None Remove="Animation\**" />
     <None Remove="Scene\**" />
   </ItemGroup>
 

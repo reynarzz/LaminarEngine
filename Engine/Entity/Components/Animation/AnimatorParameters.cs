@@ -1,0 +1,32 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Engine
+{
+    public class AnimatorParameters
+    {
+        private readonly Dictionary<string, float> _floats = new();
+        private readonly Dictionary<string, bool> _bools = new();
+        private readonly HashSet<string> _triggers = new();
+
+        public void SetFloat(string name, float value) { _floats[name] = value; }
+        public float GetFloat(string name) => _floats.TryGetValue(name, out var v) ? v : 0f;
+        
+        public void SetBool(string name, bool value) { _bools[name] = value; }
+        public bool GetBool(string name) { return _bools.TryGetValue(name, out var v) && v; }
+
+        public void SetTrigger(string name) { _triggers.Add(name); }
+        public bool GetTrigger(string name)
+        {
+            if (_triggers.Contains(name))
+            {
+                _triggers.Remove(name);
+                return true;
+            }
+            return false;
+        }
+    }
+}

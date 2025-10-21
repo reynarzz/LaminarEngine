@@ -13,13 +13,13 @@ namespace Engine
         Constant
     }
 
-    public class AnimationCurve
+    public class Animation2DCurve
     {
         private readonly List<Keyframe> _keys = new();
         public CurveMode Mode { get; set; } = CurveMode.Smooth;
         public int Count => _keys.Count;
 
-        public AnimationCurve(params Keyframe[] keys)
+        public Animation2DCurve(params Keyframe[] keys)
         {
             _keys.AddRange(keys);
             _keys.Sort((a, b) => a.Time.CompareTo(b.Time));
