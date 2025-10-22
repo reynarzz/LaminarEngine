@@ -26,7 +26,6 @@ namespace Game
         public override void OnAwake()
         {
             InitializeMaterials();
-
             InitializeActorLayers(typeof(GameLayers));
             InitializeWorld();
         }
@@ -105,8 +104,20 @@ namespace Game
                 SortOrder = 2,
                 StartPosition = new vec2(-25.875f, -9.5625f),
                 Material = _playerSpriteMaterial,
-                StartingLife = 5
+                StartingLife = 5,
+                WalkSounds = ["Audio/HALFTONE/UI/2. Clicks/Click_4.wav", 
+                              "Audio/HALFTONE/UI/2. Clicks/Click_5.wav",
+                              "Audio/HALFTONE/UI/2. Clicks/Click_10.wav"],
+                AttackSounds = ["Audio/HALFTONE/Gameplay/Slash_1.wav"],
+                JumpSounds = ["Audio/HALFTONE/Gameplay/Jump_3.wav"],
+                GroundSounds = ["Audio/HALFTONE/Gameplay/Hit_4.wav"]
+
             });
+
+
+            var platform = new Actor<Platform, SpriteRenderer>("Platform");
+            platform.GetComponent<SpriteRenderer>().Material = _defaultSpriteMaterial;
+            platform.Layer = LayerMask.NameToLayer(GameLayers.PLATFORM);
         }
 
         public override void OnUpdate()

@@ -28,6 +28,11 @@ namespace Game
         public int SortOrder { get; set; }
         public vec2 StartPosition { get; set; }
         public Material Material { get; set; }
+
+        public string[] JumpSounds { get; set; }
+        public string[] WalkSounds { get; set; }
+        public string[] AttackSounds { get; set; }
+        public string[] GroundSounds { get; set; }
     }
 
     internal abstract class Character : ScriptBehavior
@@ -48,14 +53,21 @@ namespace Game
         protected readonly string[] Attacks = ["Attack1", "Attack2", "Attack3", "Attack4", "Attack5", "Attack6"];
         protected bool IsOnGround { get; set; }
         public int Life { get; private set; }
+
         private CharacterConfig _characterConfig;
         private AnimationState _main;
         private int _startingLife;
+        private AudioClip[] _groundSfx;
+        private AudioClip[] _jumpSfx;
+        private AudioClip[] _attackSfx;
+        private AudioClip[] _walkFx;
+
         public void Init(CharacterConfig config)
         {
             Animator = AddComponent<Animator>();
             Renderer = AddComponent<SpriteRenderer>();
             Rigidbody = AddComponent<RigidBody2D>();
+            AudioSource = AddComponent<AudioSource>();
 
             _characterConfig = config;
 
@@ -74,9 +86,32 @@ namespace Game
             Transform.WorldPosition = config.StartPosition;
             _startingLife = config.StartingLife;
             Life = _startingLife;
+
+            InitAudio(config);
         }
 
-        
+        private void InitAudio(CharacterConfig config)
+        {
+            AudioClip[] GetClips(string[] soundsPath)
+            {
+                if (soundsPath == null || soundsPath.Length == 0)
+                    return null;
+
+                var clips = new AudioClip[soundsPath.Length];
+                for (int i = 0; i < soundsPath.Length; i++)
+                {
+                    clips[i] = Assets.GetAudioClip(soundsPath[i]);
+                }
+                return clips;
+            }
+
+            _groundSfx = GetClips(config.GroundSounds);
+            _jumpSfx = GetClips(config.JumpSounds);
+            _attackSfx = GetClips(config.AttackSounds);
+            _walkFx = GetClips(config.WalkSounds);
+        }
+
+
         protected void AddSpriteAnimState(string stateName, bool makeMain, bool loop, bool useClipBlendTime, AnimatorTransition[] transitions, string spritePath, float fps, vec2 size, vec2 pivot)
         {
             var animClip = new AnimationClip(stateName, loop);
@@ -156,7 +191,8 @@ namespace Game
 
             if (dir != 0)
             {
-                Transform.LocalScale = new vec3(dir, 1, 1);
+                var scaleX = Math.Abs(Transform.LocalScale.x);
+                Transform.LocalScale = new vec3(scaleX * dir, 1, 1);
             }
         }
 
@@ -172,7 +208,7 @@ namespace Game
             if (!IsCharacterAlive())
                 return;
 
-            Rigidbody.Velocity = default;
+            Rigidbody.Velocity = new vec2(0, Rigidbody.Velocity.y > 0 ? 0 : Rigidbody.Velocity.y);
             Life = 0;
             Animator.Parameters.SetTrigger(DEATH_PROPERTY_NAME);
         }
@@ -181,6 +217,7 @@ namespace Game
         {
             if (!IsCharacterAlive())
                 return;
+
             var life = Math.Clamp(Life - amount, 0, MAX_LIFE);
             Rigidbody.Velocity = new vec2(0, Rigidbody.Velocity.y);
             if (life == 0)

@@ -34,7 +34,7 @@ namespace Game
 
             AddSpriteAnimState("Idle", true,true,false, [toRun, toJump, toFall, toAttack, toDeath, toHit], "KingsAndPigsSprites/01-King Human/Idle (78x58).png", fps, size, pivot);
             AddSpriteAnimState("Run", false, true, false, [toIdle, toJump, toFall, toAttack, toDeath, toHit], "KingsAndPigsSprites/01-King Human/Run (78x58).png", fps, size, pivot);
-            AddSpriteAnimState("Jump", false, true, false, [toFall, toAttack, toHit], "KingsAndPigsSprites/01-King Human/Jump (78x58).png", fps, size, pivot);
+            AddSpriteAnimState("Jump", false, true, false, [toIdle, toFall, toAttack, toHit], "KingsAndPigsSprites/01-King Human/Jump (78x58).png", fps, size, pivot);
             AddSpriteAnimState("Fall", false, true, false, [toIdle, toRun, toAttack, toHit], "KingsAndPigsSprites/01-King Human/Fall (78x58).png", fps, size, pivot);
             AddSpriteAnimState("Attack", false, false, true, [toIdle, toRun, toFall, toDeath, toHit], "KingsAndPigsSprites/01-King Human/Attack (78x58).png", fps, size, pivot);
             AddSpriteAnimState("Death", false, false, true, null, "KingsAndPigsSprites/01-King Human/Dead (78x58).png", fps, size, pivot);

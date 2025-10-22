@@ -150,10 +150,6 @@ namespace Game
 
             LoadTilemap();
 
-            var platform = new Actor<Platform, SpriteRenderer>("Platform");
-            platform.GetComponent<SpriteRenderer>().Material = mat1;
-            platform.Layer = LayerMask.NameToLayer(GameLayers.PLATFORM);
-
             PostProcessingStack.Push(new BloomPostProcessing());
 
             ScreenGrabTest();

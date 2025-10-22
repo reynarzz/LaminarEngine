@@ -15,7 +15,7 @@ namespace Engine
         static LayerMask()
         {
             MaskBits = new ulong[ARRAY_SIZE];
-            Names = new Dictionary<string, int>(ARRAY_SIZE);
+            Names = new Dictionary<string, int>(ARRAY_SIZE, StringComparer.OrdinalIgnoreCase);
 
             for (int i = 0; i < MaskBits.Length; i++)
             {
