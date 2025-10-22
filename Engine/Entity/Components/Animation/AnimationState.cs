@@ -23,6 +23,11 @@ namespace Engine
             _transitions.Add(transition);
         }
 
+        public void AddTransition(Span<AnimatorTransition> transition)
+        {
+            _transitions.AddRange(transition);
+        }
+
         public void RemoveTransition(AnimatorTransition transition)
         {
             _transitions.Remove(transition);
@@ -32,14 +37,10 @@ namespace Engine
         {
             foreach (var transition in _transitions)
             {
-                bool allConditionsMet = false;
+                bool allConditionsMet = true;
                 foreach (var condition in transition.Conditions)
                 {
-                    if (condition.IsCondition(parameters))
-                    {
-                        allConditionsMet = true;
-                    }
-                    else
+                    if (!condition.IsCondition(parameters))
                     {
                         allConditionsMet = false;
                         break;

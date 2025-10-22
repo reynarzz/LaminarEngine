@@ -62,7 +62,7 @@ namespace Engine
             }
 
             var transition = _currentState.CheckTransitions(Parameters);
-            if (transition != null)
+            if (transition != null && _nextState == null)
             {
                 if (_states.TryGetValue(transition.ToState, out _nextState))
                 {

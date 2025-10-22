@@ -29,10 +29,10 @@ namespace Game
                                                         new BoolCondition(ON_GROUND_PROPERTY_NAME, true)]);
 
             var toWaiIdle = new AnimatorTransition("Idle", 0.3f, [new IntCondition(VEL_X_PROP_NAME, 0, IntOp.Equal),
-                                                         new BoolCondition(ON_GROUND_PROPERTY_NAME, true)]);
+                                                                  new BoolCondition(ON_GROUND_PROPERTY_NAME, true)]);
 
             var toWaitRun = new AnimatorTransition("Run", 0.3f, [new IntCondition(VEL_X_PROP_NAME, 0, IntOp.NotEqual),
-                                                        new BoolCondition(ON_GROUND_PROPERTY_NAME, true)]);
+                                                                 new BoolCondition(ON_GROUND_PROPERTY_NAME, true)]);
 
             var toAttack = new AnimatorTransition("Attack", new TriggerCondition(Attacks[0]));
 

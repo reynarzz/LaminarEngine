@@ -18,6 +18,7 @@ namespace Engine
             _currentClip = clip;
             _isPlaying = true;
             _currentTime = 0f;
+            _currentClip?.GetEventCurve().Restart();
         }
 
         internal void Update()
