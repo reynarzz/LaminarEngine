@@ -149,12 +149,16 @@ namespace Engine
 
                 cur.InTangent = tangent;
                 cur.OutTangent = tangent;
+
+                Keyframes[i] = cur;
             }
 
             if (cyclic && n > 2)
             {
-                Keyframes[0].InTangent = Keyframes[^1].OutTangent;
-                Keyframes[0].OutTangent = Keyframes[^1].OutTangent;
+                var key = Keyframes[0];
+                key.InTangent = Keyframes[^1].OutTangent;
+                key.OutTangent = Keyframes[^1].OutTangent;
+                Keyframes[0] = key;
             }
         }
     }

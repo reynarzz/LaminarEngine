@@ -6,14 +6,19 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-   
+
     public class EventCurve : AnimationCurveBase<Action>
     {
-        private class EventKeyFrame : KeyFrameBase<Action>
+        private struct EventKeyFrame : IKeyFrame<Action>
         {
-            internal bool Raised { get; set; }
-            internal EventKeyFrame(float time, Action value) : base(time, value)
+            internal bool Raised;
+            public Action Value { get; }
+            public float Time { get; }
+
+            internal EventKeyFrame(float time, Action value)
             {
+                Time = time;
+                Value = value;
             }
         }
 
@@ -40,6 +45,7 @@ namespace Engine
                     if (!key.Raised)
                     {
                         key.Raised = true;
+                        Keyframes[i] = key;
                         key.Value?.Invoke();
                     }
                 }
@@ -52,7 +58,9 @@ namespace Engine
         {
             for (int i = 0; i < Keyframes.Count; i++)
             {
-                Keyframes[i].Raised = false;
+                var key = Keyframes[i];
+                key.Raised = false;
+                Keyframes[i] = key;
             }
         }
     }

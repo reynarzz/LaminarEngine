@@ -6,38 +6,41 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    public class KeyFrameBase
+    public interface IKeyFrame
     {
         public float Time { get; }
-
-        public KeyFrameBase(float time)
-        {
-            Time = time;
-        }
     }
 
-    public class KeyFrameBase<T> : KeyFrameBase
+    public interface IKeyFrame<T> : IKeyFrame
     {
         public T Value { get; }
-
-        public KeyFrameBase(float time, T value) : base(time)
+    }
+    public struct Keyframe<T> : IKeyFrame<T>
+    {
+        public T Value { get; }
+        public float Time { get; }
+        public Keyframe(float time, T value)
         {
+            Time = time;
             Value = value;
         }
     }
-
-    public class KeyFrameHermite<T> : KeyFrameBase<T>
+    public struct KeyFrameHermite<T> : IKeyFrame<T>
     {
         public T InTangent { get; set; }
         public T OutTangent { get; set; }
-            
-        public KeyFrameHermite(float time, T value) : base(time, value)
+
+        public T Value { get; }
+        public float Time { get; }
+
+        public KeyFrameHermite(float time, T value) : this(time, value, default, default)
         {
         }
 
         public KeyFrameHermite(float time, T value, T inTangent, T outTangent)
-            : base(time, value)
         {
+            Time = time;
+            Value = value;
             InTangent = inTangent;
             OutTangent = outTangent;
         }

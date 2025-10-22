@@ -63,8 +63,8 @@ namespace Game
             }
 
 
-            // animClip.AddCurve("Position", posCurve);
-            //animClip.AddCurve("Color", colorCurve);
+            animClip.AddCurve("Position", posCurve);
+            animClip.AddCurve("Color", colorCurve);
             animClip.AddCurve("Sprite", spriteCurve);
             var evt = animClip.GetEventCurve();
             var v = fpsFrac * 3.0f;
@@ -117,8 +117,8 @@ namespace Game
             var color = _controller.GetColor("Color");
             var sprite = _controller.GetSprite("Sprite");
 
-            // _targetRenderer.Color = color;
-            // _targetRenderer.Transform.WorldPosition = position;
+             _targetRenderer.Color = color;
+            _targetRenderer.Transform.WorldPosition = position;
             _targetRenderer.Sprite = sprite;
         }
     }

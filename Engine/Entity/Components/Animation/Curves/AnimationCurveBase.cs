@@ -10,7 +10,7 @@ namespace Engine
     {
         public abstract float Duration { get; }
         internal abstract T Evaluate(float time);
-        protected void SortKeyframes<TKey>(List<TKey> keyframes) where TKey : KeyFrameBase
+        protected void SortKeyframes<TKey>(List<TKey> keyframes) where TKey : IKeyFrame
         {
             keyframes.Sort((a, b) => a.Time.CompareTo(b.Time));
         }
