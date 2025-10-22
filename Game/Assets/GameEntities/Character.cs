@@ -52,7 +52,20 @@ namespace Game
         protected const string HIT_DAMAGE_PROPERTY_NAME = "IsHitDamage";
         protected const int MAX_LIFE = 10;
         protected readonly string[] Attacks = ["Attack1", "Attack2", "Attack3", "Attack4", "Attack5", "Attack6"];
-        protected bool IsOnGround { get; set; }
+
+        private bool _isOnGround = false;
+        protected bool IsOnGround
+        {
+            get => _isOnGround;
+            set
+            {
+                if (_isOnGround == value)
+                    return;
+
+                _isOnGround = value;
+                OnGroundChanged(value);
+            }
+        }
         private float _maxFallYVelocity = -20;
 
         private int _life;
@@ -65,7 +78,7 @@ namespace Game
         private AudioClip[] _jumpSfx;
         private AudioClip[] _attackSfx;
         private AudioClip[] _walkFx;
-
+        private float _gravityScale;
         public void Init(CharacterConfig config)
         {
             Animator = AddComponent<Animator>();
@@ -89,6 +102,7 @@ namespace Game
             Collider.Friction = 0;
             Transform.WorldPosition = config.StartPosition;
             _startingLife = config.StartingLife;
+            _gravityScale = Rigidbody.GravityScale;
             Life = _startingLife;
 
             InitAudio(config);
@@ -181,6 +195,7 @@ namespace Game
 
             if (IsOnGround)
             {
+                Rigidbody.GravityScale = _gravityScale;
                 Rigidbody.AddForce(vec2.Up * _characterConfig.JumpSpeed, ForceMode2D.Impulse);
             }
         }
@@ -232,8 +247,26 @@ namespace Game
         }
         public override void OnFixedUpdate()
         {
-            Rigidbody.Velocity = new vec2(Rigidbody.Velocity.x, Math.Clamp(Rigidbody.Velocity.y, _maxFallYVelocity, float.MaxValue));
+            if (IsCharacterAlive())
+            {
+                Rigidbody.Velocity = new vec2(Rigidbody.Velocity.x, Math.Clamp(Rigidbody.Velocity.y, _maxFallYVelocity, float.MaxValue));
+            }
+            else
+            {
+                Rigidbody.Velocity = new vec2(0, Rigidbody.Velocity.y > 0 ? 0 : Rigidbody.Velocity.y);
+
+            }
         }
+        private void OnGroundChanged(bool value)
+        {
+            Rigidbody.GravityScale = value ? 0 : _gravityScale;
+
+            if (value && Rigidbody.Velocity.y <= 0)
+            {
+                Rigidbody.Velocity = new vec2(Rigidbody.Velocity.x, 0);
+            }
+        }
+
         public void Restart()
         {
             if (!IsCharacterAlive())

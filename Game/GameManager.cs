@@ -99,7 +99,7 @@ namespace Game
                 JumpSpeed = 15,
                 WalkSpeed = 5.35f,
                 YGravityScale = 3.5f,
-                ColliderConfig = new BodyColliderOptions() { Size = new vec2(1.4f, 1.7f), Offset = new vec2(0, 0.25f) },
+                ColliderConfig = new BodyColliderOptions() { Size = new vec2(1.0f, 1.7f), Offset = new vec2(0, 0.25f) },
                 LayerName = GameLayers.PLAYER,
                 SortOrder = 2,
                 StartPosition = new vec2(-25.875f, -9.5625f),
