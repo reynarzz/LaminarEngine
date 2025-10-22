@@ -10,44 +10,37 @@ namespace Game
 {
     internal class Player : Character
     {
-        public override void OnStart()
+        public override void Init(CharacterConfig config)
         {
+            base.Init(config);
+
             const float fps = 11.5f;
             var size = new vec2(78, 58);
             var pivot = new vec2(0.4f, 0.4f);
 
-            var toJump = new AnimatorTransition("Jump", [new IntCondition(VEL_Y_PROP_NAME, 0, IntOp.GreaterThan),
-                                                         new BoolCondition(ON_GROUND_PROPERTY_NAME, false),
-                                                         new IntCondition(LIFE_PROPERTY_NAME, 0, IntOp.GreaterThan)]);
+            string[] pathSprites = ["KingsAndPigsSprites/01-King Human/Idle (78x58).png",
+                                    "KingsAndPigsSprites/01-King Human/Run (78x58).png",
+                                    "KingsAndPigsSprites/01-King Human/Jump (78x58).png",
+                                    "KingsAndPigsSprites/01-King Human/Fall (78x58).png",
+                                    "KingsAndPigsSprites/01-King Human/Hit (78x58).png",
+                                    "KingsAndPigsSprites/01-King Human/Dead (78x58).png",
+                                    "KingsAndPigsSprites/01-King Human/Attack (78x58).png"];
 
-            var toFall = new AnimatorTransition("Fall", [new IntCondition(VEL_Y_PROP_NAME, 0, IntOp.LessThan),
-                                                         new BoolCondition(ON_GROUND_PROPERTY_NAME, false),
-                                                         new IntCondition(LIFE_PROPERTY_NAME, 0, IntOp.GreaterThan)]);
-
-            var toIdle = new AnimatorTransition("Idle", [new IntCondition(VEL_X_PROP_NAME, 0, IntOp.Equal),
-                                                         new BoolCondition(ON_GROUND_PROPERTY_NAME, true),
-                                                         new IntCondition(LIFE_PROPERTY_NAME, 0, IntOp.GreaterThan)]);
-
-            var toRun = new AnimatorTransition("Run", [new IntCondition(VEL_X_PROP_NAME, 0, IntOp.NotEqual),
-                                                        new BoolCondition(ON_GROUND_PROPERTY_NAME, true),
-                                                        new IntCondition(LIFE_PROPERTY_NAME, 0, IntOp.GreaterThan)]);
-
-            var toAttack = new AnimatorTransition("Attack", new TriggerCondition(Attacks[0]));
-            var toDeath = new AnimatorTransition("Death", new TriggerCondition(DEATH_PROPERTY_NAME));
-            var toDeathLife0 = new AnimatorTransition("Death", new IntCondition(LIFE_PROPERTY_NAME, 0, IntOp.LessThanOrEqual));
-            var toHit = new AnimatorTransition("Hit", new TriggerCondition(HIT_DAMAGE_PROPERTY_NAME));
-
-            AddSpriteAnimState("Idle", true, true, false, [toRun, toJump, toFall, toAttack, toDeath, toHit], "KingsAndPigsSprites/01-King Human/Idle (78x58).png", fps, size, pivot);
-            AddSpriteAnimState("Run", false, true, false, [toIdle, toJump, toFall, toAttack, toDeath, toHit], "KingsAndPigsSprites/01-King Human/Run (78x58).png", fps, size, pivot);
-            AddSpriteAnimState("Jump", false, true, false, [toIdle, toFall, toAttack, toHit], "KingsAndPigsSprites/01-King Human/Jump (78x58).png", fps, size, pivot);
-            AddSpriteAnimState("Fall", false, true, false, [toIdle, toRun, toAttack, toHit], "KingsAndPigsSprites/01-King Human/Fall (78x58).png", fps, size, pivot);
-            AddSpriteAnimState("Attack", false, false, true, [toIdle, toRun, toFall, toDeath, toHit], "KingsAndPigsSprites/01-King Human/Attack (78x58).png", fps, size, pivot);
-            AddSpriteAnimState("Death", false, false, true, null, "KingsAndPigsSprites/01-King Human/Dead (78x58).png", fps, size, pivot);
-            AddSpriteAnimState("Hit", false, false, true, [toIdle, toRun, toJump, toFall, toAttack, toDeathLife0], "KingsAndPigsSprites/01-King Human/Hit (78x58).png", fps, size, pivot);
-
-
+            var states = new AnimationsStates();
+            for (int i = 0; i < AnimationsStates.Length; i++)
+            {
+                states[i] = new AnimationStateInfo()
+                {
+                    IsEnabled = true,
+                    Fps = fps,
+                    Pivot = pivot,
+                    Size = size,
+                    SpriteAtlasPath = pathSprites[i],
+                };
+            }
+            InitAnimationStates(states);
         }
-
+      
         public override void OnUpdate()
         {
             if (Input.GetKeyDown(KeyCode.Space))

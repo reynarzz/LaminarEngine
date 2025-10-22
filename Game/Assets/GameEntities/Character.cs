@@ -27,6 +27,7 @@ namespace Game
         public float SizeY;
     }
 
+
     public struct CharacterConfig
     {
         public float JumpSpeed;
@@ -47,6 +48,79 @@ namespace Game
 
     internal abstract class Character : ScriptBehavior
     {
+        protected struct AnimationsStates
+        {
+            public AnimationStateInfo Idle;
+            public AnimationStateInfo Walk;
+            public AnimationStateInfo Jump;
+            public AnimationStateInfo Fall;
+            public AnimationStateInfo Hit;
+            public AnimationStateInfo Death;
+            public AnimationStateInfo Attack;
+            public const int Length = 7;
+            public AnimationStateInfo this[int index]
+            {
+                get
+                {
+                    switch (index)
+                    {
+                        case 0:
+                            return Idle;
+                        case 1:
+                            return Walk;
+                        case 2:
+                            return Jump;
+                        case 3:
+                            return Fall;
+                        case 4:
+                            return Hit;
+                        case 5:
+                            return Death;
+                        case 6:
+                            return Attack;
+                        default:
+                            return default;
+                    }
+                }
+                set
+                {
+                    switch (index)
+                    {
+                        case 0:
+                            Idle = value;
+                            break;
+                        case 1:
+                            Walk = value;
+                            break;
+                        case 2:
+                            Jump = value;
+                            break;
+                        case 3:
+                            Fall = value;
+                            break;
+                        case 4:
+                            Hit = value;
+                            break;
+                        case 5:
+                            Death = value;
+                            break;
+                        case 6:
+                            Attack = value;
+                            break;
+                    }
+                }
+            }
+        }
+
+        protected struct AnimationStateInfo
+        {
+            public bool IsEnabled;
+            public string SpriteAtlasPath;
+            public vec2 Pivot;
+            public vec2 Size;
+            public float Fps;
+        }
+
         protected Animator Animator { get; private set; }
         protected SpriteRenderer Renderer { get; private set; }
         protected RigidBody2D Rigidbody { get; private set; }
@@ -60,6 +134,16 @@ namespace Game
         protected const string DEATH_PROPERTY_NAME = "IsDeath";
         protected const string LIFE_PROPERTY_NAME = "Life";
         protected const string HIT_DAMAGE_PROPERTY_NAME = "IsHitDamage";
+
+        protected const string IDLE_ANIM_STATE = "Idle";
+        protected const string WALK_ANIM_STATE = "Walk";
+        protected const string JUMP_ANIM_STATE = "Jump";
+        protected const string FALL_ANIM_STATE = "Fall";
+        protected const string HIT_ANIM_STATE = "Hit";
+        protected const string DEATH_ANIM_STATE = "Death";
+        protected const string ATTACK_ANIM_STATE = "Attack";
+
+
         protected const int MAX_LIFE = 10;
         protected readonly string[] Attacks = ["Attack1", "Attack2", "Attack3", "Attack4", "Attack5", "Attack6"];
 
@@ -88,7 +172,7 @@ namespace Game
         private AudioClip[] _attackSfx;
         private AudioClip[] _walkFx;
         private bool _jumped = false;
-        public void Init(CharacterConfig config)
+        public virtual void Init(CharacterConfig config)
         {
             Animator = AddComponent<Animator>();
             Renderer = AddComponent<SpriteRenderer>();
@@ -136,6 +220,85 @@ namespace Game
             _walkFx = GetClips(config.WalkSounds);
         }
 
+        protected void InitAnimationStates(AnimationsStates statesConfig)
+        {
+            AnimatorTransition toJump = null;
+            AnimatorTransition toFall = null;
+            AnimatorTransition toIdle = null;
+            AnimatorTransition toWalk = null;
+            AnimatorTransition toAttack = null;
+            AnimatorTransition toHit = null;
+            AnimatorTransition toDeath = null;
+            AnimatorTransition toDeathLife0 = null;
+
+            if (statesConfig.Idle.IsEnabled)
+            {
+                toIdle = new AnimatorTransition(IDLE_ANIM_STATE, [new IntCondition(VEL_X_PROP_NAME, 0, IntOp.Equal),
+                                                         new BoolCondition(ON_GROUND_PROPERTY_NAME, true),
+                                                         new IntCondition(LIFE_PROPERTY_NAME, 0, IntOp.GreaterThan)]);
+            }
+
+            if (statesConfig.Walk.IsEnabled)
+            {
+                toWalk = new AnimatorTransition(WALK_ANIM_STATE, [new IntCondition(VEL_X_PROP_NAME, 0, IntOp.NotEqual),
+                                                        new BoolCondition(ON_GROUND_PROPERTY_NAME, true),
+                                                        new IntCondition(LIFE_PROPERTY_NAME, 0, IntOp.GreaterThan)]);
+            }
+            if (statesConfig.Jump.IsEnabled)
+            {
+                toJump = new AnimatorTransition(JUMP_ANIM_STATE, [new IntCondition(VEL_Y_PROP_NAME, 0, IntOp.GreaterThan),
+                                                         new BoolCondition(ON_GROUND_PROPERTY_NAME, false),
+                                                         new IntCondition(LIFE_PROPERTY_NAME, 0, IntOp.GreaterThan)]);
+            }
+            if (statesConfig.Fall.IsEnabled)
+            {
+                toFall = new AnimatorTransition(FALL_ANIM_STATE, [new IntCondition(VEL_Y_PROP_NAME, 0, IntOp.LessThan),
+                                                         new BoolCondition(ON_GROUND_PROPERTY_NAME, false),
+                                                         new IntCondition(LIFE_PROPERTY_NAME, 0, IntOp.GreaterThan)]);
+            }
+            if (statesConfig.Attack.IsEnabled)
+            {
+                toAttack = new AnimatorTransition(ATTACK_ANIM_STATE, new TriggerCondition(Attacks[0]));
+            }
+            if (statesConfig.Hit.IsEnabled)
+            {
+                toHit = new AnimatorTransition(HIT_ANIM_STATE, new TriggerCondition(HIT_DAMAGE_PROPERTY_NAME));
+            }
+            if (statesConfig.Death.IsEnabled)
+            {
+                toDeath = new AnimatorTransition(DEATH_ANIM_STATE, new TriggerCondition(DEATH_PROPERTY_NAME));
+                toDeathLife0 = new AnimatorTransition(DEATH_ANIM_STATE, new IntCondition(LIFE_PROPERTY_NAME, 0, IntOp.LessThanOrEqual));
+            }
+
+            if (statesConfig.Idle.IsEnabled)
+            {
+                AddSpriteAnimState(IDLE_ANIM_STATE, true, true, false, [toWalk, toJump, toFall, toAttack, toDeath, toHit], statesConfig.Idle.SpriteAtlasPath, statesConfig.Idle.Fps, statesConfig.Idle.Size, statesConfig.Idle.Pivot);
+            }
+            if (statesConfig.Walk.IsEnabled)
+            {
+                AddSpriteAnimState(WALK_ANIM_STATE, false, true, false, [toIdle, toJump, toFall, toAttack, toDeath, toHit], statesConfig.Walk.SpriteAtlasPath, statesConfig.Walk.Fps, statesConfig.Walk.Size, statesConfig.Walk.Pivot);
+            }
+            if (statesConfig.Jump.IsEnabled)
+            {
+                AddSpriteAnimState(JUMP_ANIM_STATE, false, true, false, [toIdle, toFall, toAttack, toHit], statesConfig.Jump.SpriteAtlasPath, statesConfig.Jump.Fps, statesConfig.Jump.Size, statesConfig.Jump.Pivot);
+            }
+            if (statesConfig.Fall.IsEnabled)
+            {
+                AddSpriteAnimState(FALL_ANIM_STATE, false, true, false, [toIdle, toWalk, toAttack, toHit], statesConfig.Fall.SpriteAtlasPath, statesConfig.Fall.Fps, statesConfig.Fall.Size, statesConfig.Fall.Pivot);
+            }
+            if (statesConfig.Attack.IsEnabled)
+            {
+                AddSpriteAnimState(ATTACK_ANIM_STATE, false, false, true, [toIdle, toWalk, toFall, toDeath, toHit], statesConfig.Attack.SpriteAtlasPath, statesConfig.Attack.Fps, statesConfig.Attack.Size, statesConfig.Attack.Pivot);
+            }
+            if (statesConfig.Death.IsEnabled)
+            {
+                AddSpriteAnimState(DEATH_ANIM_STATE, false, false, true, null, statesConfig.Death.SpriteAtlasPath, statesConfig.Death.Fps, statesConfig.Death.Size, statesConfig.Death.Pivot);
+            }
+            if (statesConfig.Hit.IsEnabled)
+            {
+                AddSpriteAnimState(HIT_ANIM_STATE, false, false, true, [toIdle, toWalk, toJump, toFall, toAttack, toDeathLife0], statesConfig.Hit.SpriteAtlasPath, statesConfig.Hit.Fps, statesConfig.Hit.Size, statesConfig.Hit.Pivot);
+            }
+        }
 
         protected void AddSpriteAnimState(string stateName, bool makeMain, bool loop, bool useClipBlendTime, AnimatorTransition[] transitions, string spritePath, float fps, vec2 size, vec2 pivot)
         {
@@ -165,6 +328,9 @@ namespace Game
                 var duration = animClip.Duration;
                 for (int i = 0; i < transitions.Length; i++)
                 {
+                    if (transitions[i] == null)
+                        continue;
+
                     var copy = new AnimatorTransition(transitions[i]);
                     if (useClipBlendTime)
                     {
