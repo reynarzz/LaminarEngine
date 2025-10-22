@@ -30,10 +30,11 @@ namespace Game
 
     public struct CharacterConfig
     {
-        public float JumpSpeed;
+        public float JumpForce;
         public float WalkSpeed;
         public float YGravityScale;
         public int StartingLife;
+        public int SpriteLookDir;
         public BodyColliderOptions ColliderConfig;
         public GroundDetectionOptions Ground;
         public string LayerName;
@@ -48,79 +49,6 @@ namespace Game
 
     internal abstract class Character : GameEntity
     {
-        protected struct AnimationsStates
-        {
-            public AnimationStateInfo Idle;
-            public AnimationStateInfo Walk;
-            public AnimationStateInfo Jump;
-            public AnimationStateInfo Fall;
-            public AnimationStateInfo Hit;
-            public AnimationStateInfo Death;
-            public AnimationStateInfo Attack;
-            public const int Length = 7;
-            public AnimationStateInfo this[int index]
-            {
-                get
-                {
-                    switch (index)
-                    {
-                        case 0:
-                            return Idle;
-                        case 1:
-                            return Walk;
-                        case 2:
-                            return Jump;
-                        case 3:
-                            return Fall;
-                        case 4:
-                            return Hit;
-                        case 5:
-                            return Death;
-                        case 6:
-                            return Attack;
-                        default:
-                            return default;
-                    }
-                }
-                set
-                {
-                    switch (index)
-                    {
-                        case 0:
-                            Idle = value;
-                            break;
-                        case 1:
-                            Walk = value;
-                            break;
-                        case 2:
-                            Jump = value;
-                            break;
-                        case 3:
-                            Fall = value;
-                            break;
-                        case 4:
-                            Hit = value;
-                            break;
-                        case 5:
-                            Death = value;
-                            break;
-                        case 6:
-                            Attack = value;
-                            break;
-                    }
-                }
-            }
-        }
-
-        protected struct AnimationStateInfo
-        {
-            public bool IsEnabled;
-            public string SpriteAtlasPath;
-            public vec2 Pivot;
-            public vec2 Size;
-            public float Fps;
-        }
-
         protected Animator Animator { get; private set; }
         protected SpriteRenderer Renderer { get; private set; }
         protected RigidBody2D Rigidbody { get; private set; }
@@ -357,9 +285,8 @@ namespace Game
             Renderer.Sprite = Animator.GetSprite(SPRITE_PROPERTY_NAME);
             Animator.Parameters.SetFloat(VEL_X_PROP_NAME, Rigidbody.Velocity.x);
             Animator.Parameters.SetFloat(VEL_Y_PROP_NAME, Rigidbody.Velocity.y);
-
-            Animator.Parameters.SetInt(VEL_X_PROP_NAME, (int)MathF.Round(Rigidbody.Velocity.x));
-            Animator.Parameters.SetInt(VEL_Y_PROP_NAME, (int)MathF.Round(Rigidbody.Velocity.y));
+            Animator.Parameters.SetInt(VEL_X_PROP_NAME, MathF.Sign(Math.Abs(Rigidbody.Velocity.x) < 0.09 ? 0 : Rigidbody.Velocity.x));
+            Animator.Parameters.SetInt(VEL_Y_PROP_NAME, MathF.Sign(Math.Abs(Rigidbody.Velocity.y) < 0.09 ? 0 : Rigidbody.Velocity.y));
             Animator.Parameters.SetBool(ON_GROUND_PROPERTY_NAME, IsOnGround);
         }
 
@@ -373,7 +300,7 @@ namespace Game
                 _jumped = true;
                 Rigidbody.GravityScale = _characterConfig.YGravityScale;
                 Rigidbody.Velocity = new vec2(Rigidbody.Velocity.x, 0);
-                Rigidbody.AddForce(vec2.Up * _characterConfig.JumpSpeed, ForceMode2D.Impulse);
+                Rigidbody.AddForce(vec2.Up * _characterConfig.JumpForce, ForceMode2D.Impulse);
             }
         }
 
@@ -382,12 +309,53 @@ namespace Game
             if (!IsCharacterAlive())
                 return;
 
-            Rigidbody.Velocity = new vec2(_characterConfig.WalkSpeed * dir, Rigidbody.Velocity.y);
-
             if (dir != 0)
             {
                 var scaleX = Math.Abs(Transform.LocalScale.x);
-                Transform.LocalScale = new vec3(scaleX * dir, 1, 1);
+                Transform.LocalScale = new vec3(scaleX * dir * Math.Sign(_characterConfig.SpriteLookDir), 1, 1);
+
+                float targetX = _characterConfig.WalkSpeed * dir;
+                float accel = 100;
+
+
+                if (!IsOnGround)
+                    accel *= 0.7f;
+
+                float vx = Rigidbody.Velocity.x;
+
+                if (dir != 0 && MathF.Sign(vx) != dir && MathF.Abs(vx) > 0.1f)
+                {
+                    var flipAmount = 1.0f;
+                    if (!IsOnGround)
+                    {
+                        flipAmount = 0.01f;
+                    }
+                    vx = -vx * flipAmount; // Carry same magnitude, flip direction instantly
+                }
+
+                float delta = targetX - vx;
+                float maxChange = accel * Time.DeltaTime;
+                vx += Math.Clamp(delta, -maxChange, maxChange);
+
+                if (IsOnGround && dir == 0 && MathF.Abs(vx) < 0.05f)
+                {
+                    vx = 0f;
+                }
+
+                Rigidbody.Velocity = new vec2(vx, Rigidbody.Velocity.y);
+            }
+            else if (dir == 0)
+            {
+                float amount = 0;
+                if (IsOnGround)
+                {
+                    amount = 0.6f;
+                }
+                else
+                {
+                    amount = 0.95f;
+                }
+                Rigidbody.Velocity = new vec2(Rigidbody.Velocity.x * amount, Rigidbody.Velocity.y);
             }
         }
 
@@ -499,5 +467,82 @@ namespace Game
                 Animator.SetState(_main);
             }
         }
+
+
+
+
+        protected struct AnimationsStates
+        {
+            public AnimationStateInfo Idle;
+            public AnimationStateInfo Walk;
+            public AnimationStateInfo Jump;
+            public AnimationStateInfo Fall;
+            public AnimationStateInfo Hit;
+            public AnimationStateInfo Death;
+            public AnimationStateInfo Attack;
+            public const int Length = 7;
+            public AnimationStateInfo this[int index]
+            {
+                get
+                {
+                    switch (index)
+                    {
+                        case 0:
+                            return Idle;
+                        case 1:
+                            return Walk;
+                        case 2:
+                            return Jump;
+                        case 3:
+                            return Fall;
+                        case 4:
+                            return Hit;
+                        case 5:
+                            return Death;
+                        case 6:
+                            return Attack;
+                        default:
+                            return default;
+                    }
+                }
+                set
+                {
+                    switch (index)
+                    {
+                        case 0:
+                            Idle = value;
+                            break;
+                        case 1:
+                            Walk = value;
+                            break;
+                        case 2:
+                            Jump = value;
+                            break;
+                        case 3:
+                            Fall = value;
+                            break;
+                        case 4:
+                            Hit = value;
+                            break;
+                        case 5:
+                            Death = value;
+                            break;
+                        case 6:
+                            Attack = value;
+                            break;
+                    }
+                }
+            }
+        }
+
+        protected struct AnimationStateInfo
+        {
+            public bool IsEnabled;
+            public string SpriteAtlasPath;
+            public vec2 Pivot;
+            public vec2 Size;
+            public float Fps;
+        }
+
     }
 }

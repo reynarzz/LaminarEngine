@@ -48,19 +48,6 @@ namespace Game
                 Jump();
             }
 
-            if (Input.GetKey(KeyCode.A))
-            {
-                Walk(-1);
-            }
-            else if (Input.GetKey(KeyCode.D))
-            {
-                Walk(1);
-            }
-            else
-            {
-                Walk(0);
-            }
-
             if (Input.GetKeyDown(KeyCode.F))
             {
                 Attack();
@@ -85,8 +72,20 @@ namespace Game
 
         public override void OnFixedUpdate()
         {
-            base.OnFixedUpdate();
 
+            if (Input.GetKey(KeyCode.A))
+            {
+                Walk(-1);
+            }
+            else if (Input.GetKey(KeyCode.D))
+            {
+                Walk(1);
+            }
+            else
+            {
+                Walk(0);
+            }
+            base.OnFixedUpdate();
         }
     }
 }

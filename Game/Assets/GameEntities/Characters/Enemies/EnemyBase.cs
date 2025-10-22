@@ -8,5 +8,6 @@ namespace Game
 {
     internal abstract class EnemyBase : Character
     {
+
     }
 }

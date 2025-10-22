@@ -26,20 +26,31 @@ namespace Game
                 PlayerMatPass.Stencil.ZPassOp = StencilOp.Replace;
             }
 
-            public static EnemyBase InstancePigStandard(vec2 position, int lookDir)
+            public static EnemyBase InstantiatePigStandard(vec2 position, int lookDir)
             {
-                var actor = new Actor("Pig Enemy").AddComponent<PigEnemyStandard>();
+                return InstancePig<PigEnemyStandard>(position, lookDir);
+            }
+
+            public static EnemyBase InstantiateKingPig(vec2 position, int lookDir)
+            {
+                return InstancePig<KingPigEnemy>(position, lookDir);
+            }
+
+            private static EnemyBase InstancePig<T>(vec2 position, int lookDir) where T: EnemyBase
+            {
+                var actor = new Actor("Pig Enemy").AddComponent<T>();
                 actor.Init(new CharacterConfig()
                 {
-                    JumpSpeed = 15,
-                    WalkSpeed = 5.35f,
+                    JumpForce = 10,
+                    WalkSpeed = 4.35f,
                     YGravityScale = 3.5f,
-                    ColliderConfig = new BodyColliderOptions() { Size = new vec2(1.0f, 1.7f), Offset = new vec2(0, 0.25f) },
+                    ColliderConfig = new BodyColliderOptions() { Size = new vec2(1.0f, 1.0f), Offset = new vec2(0, -0.1f) },
                     LayerName = GameLayers.ENEMY,
                     SortOrder = 2,
                     StartPosition = position,
                     Material = _defaultEnemyMat,
                     StartingLife = 5,
+                    SpriteLookDir = -1,
                     Ground = new GroundDetectionOptions()
                     {
                         Enabled = true,

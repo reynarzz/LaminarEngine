@@ -96,7 +96,7 @@ namespace Game
 
             player.Init(new CharacterConfig()
             {
-                JumpSpeed = 15,
+                JumpForce = 15,
                 WalkSpeed = 5.35f,
                 YGravityScale = 3.5f,
                 ColliderConfig = new BodyColliderOptions() { Size = new vec2(1.0f, 1.7f), Offset = new vec2(0, 0.25f) },
@@ -105,6 +105,7 @@ namespace Game
                 StartPosition = new vec2(-25.875f, -9.5625f),
                 Material = _playerSpriteMaterial,
                 StartingLife = 5,
+                SpriteLookDir = 1,
                 Ground = new GroundDetectionOptions()
                 {
                     Enabled = true,
@@ -129,7 +130,8 @@ namespace Game
             platform.GetComponent<SpriteRenderer>().Material = _defaultSpriteMaterial;
             platform.Layer = LayerMask.NameToLayer(GameLayers.PLATFORM);
 
-            GamePrefabs.Enemies.InstancePigStandard(player.Transform.LocalPosition + vec3.Right, -1);
+            GamePrefabs.Enemies.InstantiatePigStandard(player.Transform.LocalPosition + vec3.Right *2, -1);
+            GamePrefabs.Enemies.InstantiateKingPig(player.Transform.LocalPosition + vec3.Right *5, -1);
         }
 
 
