@@ -24,6 +24,11 @@ namespace Engine
         public void AddState(AnimationState state)
         {
             _states[state.Name] = state;
+
+            if(_currentState == null)
+            {
+                SetState(state);
+            }
         }
 
         public void SetState(string name)

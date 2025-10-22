@@ -6,16 +6,17 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    internal class EventKeyFrame : KeyFrameBase<Action>
-    {
-        internal bool Raised { get; set; }
-        internal EventKeyFrame(float time, Action value) : base(time, value)
-        {
-        }
-    }
-
+   
     public class EventCurve : AnimationCurveBase<Action>
     {
+        private class EventKeyFrame : KeyFrameBase<Action>
+        {
+            internal bool Raised { get; set; }
+            internal EventKeyFrame(float time, Action value) : base(time, value)
+            {
+            }
+        }
+
         private List<EventKeyFrame> Keyframes { get; } = new();
         public override float Duration => Keyframes.Count > 0 ? Keyframes[^1].Time : 0;
         public void AddKeyFrame(float time, Action value)
