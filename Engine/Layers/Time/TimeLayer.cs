@@ -22,6 +22,11 @@ namespace Engine.Layers
         {
             float currentTime = (float)_stopwatch.Elapsed.TotalSeconds;
             float deltaTime = currentTime - _lastFrameTime;
+
+            if(deltaTime > 0.1)
+            {
+                deltaTime = 0.1f;
+            }
             _lastFrameTime = currentTime;
             _timePast += deltaTime;
 

@@ -23,6 +23,9 @@ namespace Engine.Layers
         public abstract void Initialize();
         public abstract void Close();
         internal virtual void UpdateLayer() { }
+        public virtual void OnPause() { }
+        public virtual void OnResume() { }
+
         public virtual void OnEvent(LayerEvent currentEvent) { }
     }
 }
