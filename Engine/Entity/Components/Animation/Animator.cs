@@ -58,7 +58,6 @@ namespace Engine
             _animPlayer.Play(state.Clip);
         }
 
-
         void ILateUpdatableComponent.OnLateUpdate()
         {
             if (_currentState == null)
@@ -119,6 +118,19 @@ namespace Engine
         public Sprite GetSprite(string property)
         {
             return _animPlayer.GetSprite(property);
+        }
+
+        /// <summary>
+        /// Removes all states, and restarts the animator
+        /// </summary>
+        public void Clear()
+        {
+            _states.Clear();
+            _currentState = null;
+            _nextState = null;
+            _transitionTime = 0;
+            _transitionDuration = 0;
+            _animPlayer.Clear();
         }
     }
 }

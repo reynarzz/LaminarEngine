@@ -128,7 +128,10 @@ namespace Game
             var platform = new Actor<Platform, SpriteRenderer>("Platform");
             platform.GetComponent<SpriteRenderer>().Material = _defaultSpriteMaterial;
             platform.Layer = LayerMask.NameToLayer(GameLayers.PLATFORM);
+
+            GamePrefabs.Enemies.InstancePigStandard(player.Transform.LocalPosition + vec3.Right, -1);
         }
+
 
         public override void OnUpdate()
         {

@@ -46,7 +46,7 @@ namespace Game
         public string[] GroundSounds;
     }
 
-    internal abstract class Character : ScriptBehavior
+    internal abstract class Character : GameEntity
     {
         protected struct AnimationsStates
         {
@@ -222,6 +222,8 @@ namespace Game
 
         protected void InitAnimationStates(AnimationsStates statesConfig)
         {
+            Animator.Clear();
+
             AnimatorTransition toJump = null;
             AnimatorTransition toFall = null;
             AnimatorTransition toIdle = null;

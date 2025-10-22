@@ -95,5 +95,12 @@ namespace Engine
         {
             return _currentClip?.EvaluateColor(property, _currentTime) ?? default;
         }
+
+        internal void Clear()
+        {
+            _isPlaying = false;
+            _currentTime = 0;
+            _currentClip = null;
+        }
     }
 }
