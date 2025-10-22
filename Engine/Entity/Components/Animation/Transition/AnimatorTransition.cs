@@ -10,7 +10,14 @@ namespace Engine
     {
         public string ToState { get; }
         public TransitionCondition[] Conditions { get; }
-        public float BlendTime { get; }
+        public float BlendTime { get; set; }
+
+        public AnimatorTransition(AnimatorTransition copy)
+        {
+            ToState = copy.ToState;
+            BlendTime = copy.BlendTime;
+            Conditions = copy.Conditions;
+        }
 
         public AnimatorTransition(string toState, float blendTime, TransitionCondition[] conditions)
         {

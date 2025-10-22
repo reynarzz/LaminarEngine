@@ -41,7 +41,7 @@ namespace Game
                         "Shaders/SpriteVert.vert",
                         "Shaders/SpriteFrag.frag");
 
-            
+
             var PlayerMatPass = _playerSpriteMaterial.Passes.ElementAt(0);
             PlayerMatPass.Stencil.Enabled = true;
             PlayerMatPass.Stencil.Func = StencilFunc.Always;
@@ -105,6 +105,7 @@ namespace Game
                 SortOrder = 2,
                 StartPosition = new vec2(-25.875f, -9.5625f),
                 Material = _playerSpriteMaterial,
+                StartingLife = 5
             });
         }
 

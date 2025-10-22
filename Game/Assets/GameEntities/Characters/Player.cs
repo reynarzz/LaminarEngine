@@ -28,19 +28,19 @@ namespace Game
             var toRun = new AnimatorTransition("Run",  [new IntCondition(VEL_X_PROP_NAME, 0, IntOp.NotEqual),
                                                         new BoolCondition(ON_GROUND_PROPERTY_NAME, true)]);
 
-            var toWaiIdle = new AnimatorTransition("Idle", 0.3f, [new IntCondition(VEL_X_PROP_NAME, 0, IntOp.Equal),
-                                                                  new BoolCondition(ON_GROUND_PROPERTY_NAME, true)]);
-
-            var toWaitRun = new AnimatorTransition("Run", 0.3f, [new IntCondition(VEL_X_PROP_NAME, 0, IntOp.NotEqual),
-                                                                 new BoolCondition(ON_GROUND_PROPERTY_NAME, true)]);
-
             var toAttack = new AnimatorTransition("Attack", new TriggerCondition(Attacks[0]));
+            var toDeath = new AnimatorTransition("Death", new TriggerCondition(DEATH_PROPERTY_NAME));
+            var toHit = new AnimatorTransition("Hit", new TriggerCondition(HIT_DAMAGE_PROPERTY_NAME));
 
-            AddSpriteAnimState("Idle", true,true, [toRun, toJump, toFall, toAttack], "KingsAndPigsSprites/01-King Human/Idle (78x58).png", fps, size, pivot);
-            AddSpriteAnimState("Run", false, true, [toIdle, toJump, toFall, toAttack], "KingsAndPigsSprites/01-King Human/Run (78x58).png", fps, size, pivot);
-            AddSpriteAnimState("Jump", false, true, [toFall, toAttack], "KingsAndPigsSprites/01-King Human/Jump (78x58).png", fps, size, pivot);
-            AddSpriteAnimState("Fall", false, true, [toIdle, toRun, toAttack], "KingsAndPigsSprites/01-King Human/Fall (78x58).png", fps, size, pivot);
-            AddSpriteAnimState("Attack", false, false, [toWaiIdle, toWaitRun, toFall], "KingsAndPigsSprites/01-King Human/Attack (78x58).png", fps, size, pivot);
+            AddSpriteAnimState("Idle", true,true,false, [toRun, toJump, toFall, toAttack, toDeath, toHit], "KingsAndPigsSprites/01-King Human/Idle (78x58).png", fps, size, pivot);
+            AddSpriteAnimState("Run", false, true, false, [toIdle, toJump, toFall, toAttack, toDeath, toHit], "KingsAndPigsSprites/01-King Human/Run (78x58).png", fps, size, pivot);
+            AddSpriteAnimState("Jump", false, true, false, [toFall, toAttack, toHit], "KingsAndPigsSprites/01-King Human/Jump (78x58).png", fps, size, pivot);
+            AddSpriteAnimState("Fall", false, true, false, [toIdle, toRun, toAttack, toHit], "KingsAndPigsSprites/01-King Human/Fall (78x58).png", fps, size, pivot);
+            AddSpriteAnimState("Attack", false, false, true, [toIdle, toRun, toFall, toDeath, toHit], "KingsAndPigsSprites/01-King Human/Attack (78x58).png", fps, size, pivot);
+            AddSpriteAnimState("Death", false, false, true, null, "KingsAndPigsSprites/01-King Human/Dead (78x58).png", fps, size, pivot);
+            AddSpriteAnimState("Hit", false, false, true, [toIdle, toRun, toJump, toFall, toAttack, toDeath], "KingsAndPigsSprites/01-King Human/Hit (78x58).png", fps, size, pivot);
+
+
         }
 
         public override void OnUpdate()
@@ -67,6 +67,22 @@ namespace Game
             {
                 Attack();
             }
+
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                Death();
+            }
+
+            if (Input.GetKeyDown(KeyCode.H))
+            {
+                HitDamage(1);
+            }
+
+            if (Input.GetKeyDown(KeyCode.Z))
+            {
+                Restart();
+            }
+
         }
 
         public override void OnFixedUpdate()

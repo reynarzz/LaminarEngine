@@ -26,12 +26,17 @@ namespace Engine
         public void SetTrigger(string name) { _triggers.Add(name); }
         public bool GetTrigger(string name)
         {
-            if (_triggers.Contains(name))
+            if (HasTrigger(name))
             {
                 _triggers.Remove(name);
                 return true;
             }
             return false;
+        }
+
+        public bool HasTrigger(string name)
+        {
+            return _triggers.Contains(name);
         }
     }
 }

@@ -22,6 +22,7 @@ namespace Game
         public float JumpSpeed { get; set; }
         public float WalkSpeed { get; set; }
         public float YGravityScale { get; set; }
+        public int StartingLife { get; set; }
         public BodyColliderOptions ColliderConfig { get; set; }
         public string LayerName { get; set; }
         public int SortOrder { get; set; }
@@ -41,11 +42,15 @@ namespace Game
         protected const string VEL_X_PROP_NAME = "VelocityX";
         protected const string VEL_Y_PROP_NAME = "VelocityY";
         protected const string ON_GROUND_PROPERTY_NAME = "IsOnGround";
+        protected const string DEATH_PROPERTY_NAME = "IsDeath";
+        protected const string HIT_DAMAGE_PROPERTY_NAME = "IsHitDamage";
+        protected const int MAX_LIFE = 10;
         protected readonly string[] Attacks = ["Attack1", "Attack2", "Attack3", "Attack4", "Attack5", "Attack6"];
         protected bool IsOnGround { get; set; }
-
+        public int Life { get; private set; }
         private CharacterConfig _characterConfig;
-
+        private AnimationState _main;
+        private int _startingLife;
         public void Init(CharacterConfig config)
         {
             Animator = AddComponent<Animator>();
@@ -67,14 +72,20 @@ namespace Game
             Renderer.Material = config.Material;
             Collider.Friction = 0;
             Transform.WorldPosition = config.StartPosition;
+            _startingLife = config.StartingLife;
+            Life = _startingLife;
         }
 
-        protected void AddSpriteAnimState(string stateName, bool makeMain, bool loop, AnimatorTransition[] transitions, string spritePath, float fps, vec2 size, vec2 pivot)
+        
+        protected void AddSpriteAnimState(string stateName, bool makeMain, bool loop, bool useClipBlendTime, AnimatorTransition[] transitions, string spritePath, float fps, vec2 size, vec2 pivot)
         {
-            var animClip = new AnimationClip(stateName);
-            animClip.Loop = loop;
+            var animClip = new AnimationClip(stateName, loop);
             var state = new AnimationState(stateName, animClip);
 
+            if (makeMain)
+            {
+                _main = state;
+            }
             var texture = Assets.GetTexture(spritePath);
             texture.PixelPerUnit = 16;
             var sprites = TextureAtlasUtils.SliceSprites(texture, (int)size.x, (int)size.y, pivot);
@@ -91,9 +102,15 @@ namespace Game
 
             if (transitions != null)
             {
+                var duration = animClip.Duration;
                 for (int i = 0; i < transitions.Length; i++)
                 {
-                    state.AddTransition(transitions[i]);
+                    var copy = new AnimatorTransition(transitions[i]);
+                    if (useClipBlendTime)
+                    {
+                        copy.BlendTime = duration;
+                    }
+                    state.AddTransition(copy);
                 }
             }
 
@@ -121,6 +138,9 @@ namespace Game
 
         protected void Jump()
         {
+            if (!IsCharacterAlive())
+                return;
+
             if (IsOnGround)
             {
                 Rigidbody.AddForce(vec2.Up * _characterConfig.JumpSpeed, ForceMode2D.Impulse);
@@ -129,6 +149,9 @@ namespace Game
 
         protected void Walk(int dir)
         {
+            if (!IsCharacterAlive())
+                return;
+
             Rigidbody.Velocity = new vec2(_characterConfig.WalkSpeed * dir, Rigidbody.Velocity.y);
 
             if (dir != 0)
@@ -139,7 +162,50 @@ namespace Game
 
         public virtual void Attack(int index = 0)
         {
+            if (!IsCharacterAlive() || Animator.Parameters.HasTrigger(Attacks[index]))
+                return;
             Animator.Parameters.SetTrigger(Attacks[index]);
+        }
+
+        protected virtual void Death()
+        {
+            if (!IsCharacterAlive())
+                return;
+
+            Rigidbody.Velocity = default;
+            Life = 0;
+            Animator.Parameters.SetTrigger(DEATH_PROPERTY_NAME);
+        }
+
+        public virtual void HitDamage(int amount)
+        {
+            if (!IsCharacterAlive())
+                return;
+            var life = Math.Clamp(Life - amount, 0, MAX_LIFE);
+            Rigidbody.Velocity = new vec2(0, Rigidbody.Velocity.y);
+            if (life == 0)
+            {
+                Death();
+            }
+            else
+            {
+                Animator.Parameters.SetTrigger(HIT_DAMAGE_PROPERTY_NAME);
+            }
+            Life = life;
+        }
+
+        protected bool IsCharacterAlive()
+        {
+            return Life > 0;
+        }
+
+        public void Restart()
+        {
+            if (!IsCharacterAlive())
+            {
+                Life = _startingLife;
+                Animator.SetState(_main);
+            }
         }
     }
 }
