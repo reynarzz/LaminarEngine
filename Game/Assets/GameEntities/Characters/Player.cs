@@ -16,19 +16,31 @@ namespace Game
             var size = new vec2(78, 58);
             var pivot = new vec2(0.4f, 0.4f);
 
-            var toJump = new AnimatorTransition("Jump", [new IntCond(VEL_Y_PROP_NAME, 0, IntOp.GreaterThan), new BoolCondition(ON_GROUND_PROPERTY_NAME, false)]);
-            var toFall = new AnimatorTransition("Fall", [new IntCond(VEL_Y_PROP_NAME, 0, IntOp.LessThan), new BoolCondition(ON_GROUND_PROPERTY_NAME, false)]);
-            var toIdle = new AnimatorTransition("Idle", [new IntCond(VEL_X_PROP_NAME, 0, IntOp.Equal), 
+            var toJump = new AnimatorTransition("Jump", [new IntCondition(VEL_Y_PROP_NAME, 0, IntOp.GreaterThan), 
+                                                         new BoolCondition(ON_GROUND_PROPERTY_NAME, false)]);
+
+            var toFall = new AnimatorTransition("Fall", [new IntCondition(VEL_Y_PROP_NAME, 0, IntOp.LessThan), 
+                                                         new BoolCondition(ON_GROUND_PROPERTY_NAME, false)]);
+
+            var toIdle = new AnimatorTransition("Idle", [new IntCondition(VEL_X_PROP_NAME, 0, IntOp.Equal), 
                                                          new BoolCondition(ON_GROUND_PROPERTY_NAME, true)]);
 
-            var toRun = new AnimatorTransition("Run",  [new IntCond(VEL_X_PROP_NAME, 0, IntOp.NotEqual),
+            var toRun = new AnimatorTransition("Run",  [new IntCondition(VEL_X_PROP_NAME, 0, IntOp.NotEqual),
                                                         new BoolCondition(ON_GROUND_PROPERTY_NAME, true)]);
 
-            AddSpriteAnimState("Idle", true, [toRun, toJump, toFall], "KingsAndPigsSprites/01-King Human/Idle (78x58).png", fps, size, pivot);
-            AddSpriteAnimState("Run", false, [toIdle, toJump, toFall], "KingsAndPigsSprites/01-King Human/Run (78x58).png", fps, size, pivot);
-            AddSpriteAnimState("Jump", false, [toFall], "KingsAndPigsSprites/01-King Human/Jump (78x58).png", fps, size, pivot);
-            AddSpriteAnimState("Fall", false, [toIdle, toRun], "KingsAndPigsSprites/01-King Human/Fall (78x58).png", fps, size, pivot);
-            AddSpriteAnimState("Attack", false, null, "KingsAndPigsSprites/01-King Human/Attack (78x58).png", fps, size, pivot);
+            var toWaiIdle = new AnimatorTransition("Idle", 0.3f, [new IntCondition(VEL_X_PROP_NAME, 0, IntOp.Equal),
+                                                         new BoolCondition(ON_GROUND_PROPERTY_NAME, true)]);
+
+            var toWaitRun = new AnimatorTransition("Run", 0.3f, [new IntCondition(VEL_X_PROP_NAME, 0, IntOp.NotEqual),
+                                                        new BoolCondition(ON_GROUND_PROPERTY_NAME, true)]);
+
+            var toAttack = new AnimatorTransition("Attack", new TriggerCondition(Attacks[0]));
+
+            AddSpriteAnimState("Idle", true,true, [toRun, toJump, toFall, toAttack], "KingsAndPigsSprites/01-King Human/Idle (78x58).png", fps, size, pivot);
+            AddSpriteAnimState("Run", false, true, [toIdle, toJump, toFall, toAttack], "KingsAndPigsSprites/01-King Human/Run (78x58).png", fps, size, pivot);
+            AddSpriteAnimState("Jump", false, true, [toFall, toAttack], "KingsAndPigsSprites/01-King Human/Jump (78x58).png", fps, size, pivot);
+            AddSpriteAnimState("Fall", false, true, [toIdle, toRun, toAttack], "KingsAndPigsSprites/01-King Human/Fall (78x58).png", fps, size, pivot);
+            AddSpriteAnimState("Attack", false, false, [toWaiIdle, toWaitRun, toFall], "KingsAndPigsSprites/01-King Human/Attack (78x58).png", fps, size, pivot);
         }
 
         public override void OnUpdate()
@@ -51,14 +63,10 @@ namespace Game
                 Walk(0);
             }
 
-            if (Input.GetKey(KeyCode.F))
+            if (Input.GetKeyDown(KeyCode.F))
             {
-                Walk(-1);
+                Attack();
             }
-
-            base.OnUpdate();
-
-
         }
 
         public override void OnFixedUpdate()

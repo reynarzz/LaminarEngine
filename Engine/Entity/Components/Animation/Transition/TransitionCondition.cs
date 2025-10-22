@@ -8,7 +8,7 @@ namespace Engine
 {
     public abstract class TransitionCondition 
     {
-        public string Property { get; }
+        internal string Property { get; }
 
         protected TransitionCondition(string property)
         {

@@ -41,7 +41,7 @@ namespace Game
         protected const string VEL_X_PROP_NAME = "VelocityX";
         protected const string VEL_Y_PROP_NAME = "VelocityY";
         protected const string ON_GROUND_PROPERTY_NAME = "IsOnGround";
-        private readonly string[] _attacks = ["Attack1", "Attack2", "Attack3", "Attack4", "Attack5", "Attack6"];
+        protected readonly string[] Attacks = ["Attack1", "Attack2", "Attack3", "Attack4", "Attack5", "Attack6"];
         protected bool IsOnGround { get; set; }
 
         private CharacterConfig _characterConfig;
@@ -69,9 +69,10 @@ namespace Game
             Transform.WorldPosition = config.StartPosition;
         }
 
-        protected void AddSpriteAnimState(string stateName, bool makeMain, AnimatorTransition[] transitions, string spritePath, float fps, vec2 size, vec2 pivot)
+        protected void AddSpriteAnimState(string stateName, bool makeMain, bool loop, AnimatorTransition[] transitions, string spritePath, float fps, vec2 size, vec2 pivot)
         {
             var animClip = new AnimationClip(stateName);
+            animClip.Loop = loop;
             var state = new AnimationState(stateName, animClip);
 
             var texture = Assets.GetTexture(spritePath);
@@ -106,11 +107,15 @@ namespace Game
             }
         }
 
-        public override void OnUpdate()
+        public override void OnLateUpdate()
         {
             Renderer.Sprite = Animator.GetSprite(SPRITE_PROPERTY_NAME);
             Animator.Parameters.SetFloat(VEL_X_PROP_NAME, Rigidbody.Velocity.x);
             Animator.Parameters.SetFloat(VEL_Y_PROP_NAME, Rigidbody.Velocity.y);
+
+            Animator.Parameters.SetInt(VEL_X_PROP_NAME, (int)MathF.Round(Rigidbody.Velocity.x));
+            Animator.Parameters.SetInt(VEL_Y_PROP_NAME, (int)MathF.Round(Rigidbody.Velocity.y));
+
             Animator.Parameters.SetBool(ON_GROUND_PROPERTY_NAME, IsOnGround);
         }
 
@@ -134,7 +139,7 @@ namespace Game
 
         public virtual void Attack(int index = 0)
         {
-            Animator.Parameters.SetTrigger(_attacks[index]);
+            Animator.Parameters.SetTrigger(Attacks[index]);
         }
     }
 }

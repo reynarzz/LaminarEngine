@@ -16,11 +16,11 @@ namespace Engine
         NotEqual
     }
 
-    public class IntCond : TransitionCondition
+    public class IntCondition : TransitionCondition
     {
         private readonly IntOp _op;
         private readonly float _compare;
-        public IntCond(string property, int compare, IntOp op) : base(property)
+        public IntCondition(string property, int compare, IntOp op) : base(property)
         {
             _op = op;
             _compare = compare;
@@ -28,7 +28,7 @@ namespace Engine
 
         public override bool IsCondition(AnimatorParameters parameters)
         {
-            var aValue = (int)Math.Round(parameters.GetFloat(Property));
+            var aValue = parameters.GetInt(Property);
 
             switch (_op)
             {

@@ -9,8 +9,13 @@ namespace Engine
     public class AnimatorParameters
     {
         private readonly Dictionary<string, float> _floats = new();
+        private readonly Dictionary<string, int> _ints = new();
         private readonly Dictionary<string, bool> _bools = new();
         private readonly HashSet<string> _triggers = new();
+
+        public void SetInt(string name, int value) { _ints[name] = value; }
+        public int GetInt(string name) => _ints.TryGetValue(name, out var v) ? v : 0;
+
 
         public void SetFloat(string name, float value) { _floats[name] = value; }
         public float GetFloat(string name) => _floats.TryGetValue(name, out var v) ? v : 0f;

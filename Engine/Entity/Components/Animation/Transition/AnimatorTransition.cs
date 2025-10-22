@@ -33,5 +33,10 @@ namespace Engine
             : this(toState, 0, condition)
         {
         }
+
+        public AnimatorTransition(string toState)
+            : this(toState, 0, new TrueCondition())
+        {
+        }
     }
 }
