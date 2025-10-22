@@ -263,8 +263,8 @@ namespace Game
             var origin2 = Transform.WorldPosition + new vec3(0.45f, yOffset, 0);
             //Debug.DrawRay(Transform.WorldPosition, Transform.Up, Color.Green);
 
-            var hitA = Physics2D.Raycast(origin1, Transform.Down * length, LayerMask.NameToBit("Floor") | LayerMask.NameToBit("Platform"));
-            var hitB = Physics2D.Raycast(origin2, Transform.Down * length, LayerMask.NameToBit("Floor") | LayerMask.NameToBit("Platform"));
+            var hitA = Physics2D.Raycast(origin1, -Transform.Up * length, LayerMask.NameToBit("Floor") | LayerMask.NameToBit("Platform"));
+            var hitB = Physics2D.Raycast(origin2, -Transform.Up * length, LayerMask.NameToBit("Floor") | LayerMask.NameToBit("Platform"));
 
             var color1 = Color.White;
             var color2 = Color.White;
@@ -322,8 +322,8 @@ namespace Game
 
             if (Physics2D.DrawColliders)
             {
-                Debug.DrawRay(origin1, Transform.Down * length, color1);
-                Debug.DrawRay(origin2, Transform.Down * length, color2);
+                Debug.DrawRay(origin1, -Transform.Up * length, color1);
+                Debug.DrawRay(origin2, -Transform.Up * length, color2);
             }
         }
         public override void OnCollisionEnter2D(Collision2D collision)

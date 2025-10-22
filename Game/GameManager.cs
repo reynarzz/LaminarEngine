@@ -105,7 +105,17 @@ namespace Game
                 StartPosition = new vec2(-25.875f, -9.5625f),
                 Material = _playerSpriteMaterial,
                 StartingLife = 5,
-                WalkSounds = ["Audio/HALFTONE/UI/2. Clicks/Click_4.wav", 
+                Ground = new GroundDetectionOptions()
+                {
+                    Enabled = true,
+                    MinX = -0.45f,
+                    MaxX = 0.45f,
+                    RaysCount = 3,
+                    SizeY = 0.7f,
+                    YOffset = 0,
+                    GroundMask = LayerMask.NameToBit("Floor") | LayerMask.NameToBit("Platform")
+                },
+                WalkSounds = ["Audio/HALFTONE/UI/2. Clicks/Click_4.wav",
                               "Audio/HALFTONE/UI/2. Clicks/Click_5.wav",
                               "Audio/HALFTONE/UI/2. Clicks/Click_10.wav"],
                 AttackSounds = ["Audio/HALFTONE/Gameplay/Slash_1.wav"],

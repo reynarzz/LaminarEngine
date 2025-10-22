@@ -144,5 +144,12 @@ namespace GlmNet
             float inv = 1.0f / scalar;
             return new quat(q.x * inv, q.y * inv, q.z * inv, q.w * inv);
         }
+
+        public static vec3 operator *(quat q, vec3 v)
+        {
+            var qv = new vec3(q.x, q.y, q.z);
+            var t = 2.0f * glm.cross(v, qv);
+            return v + q.w * t + glm.cross(qv, t);
+        }
     }
 }

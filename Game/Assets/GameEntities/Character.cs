@@ -13,26 +13,36 @@ namespace Game
 {
     public struct BodyColliderOptions
     {
-        public vec2 Offset { get; set; }
-        public vec2 Size { get; set; }
+        public vec2 Offset;
+        public vec2 Size;
+    }
+    public struct GroundDetectionOptions
+    {
+        public bool Enabled;
+        public float MinX;
+        public float MaxX;
+        public float YOffset;
+        public int RaysCount;
+        public ulong GroundMask;
+        public float SizeY;
     }
 
     public struct CharacterConfig
     {
-        public float JumpSpeed { get; set; }
-        public float WalkSpeed { get; set; }
-        public float YGravityScale { get; set; }
-        public int StartingLife { get; set; }
-        public BodyColliderOptions ColliderConfig { get; set; }
-        public string LayerName { get; set; }
-        public int SortOrder { get; set; }
-        public vec2 StartPosition { get; set; }
-        public Material Material { get; set; }
-
-        public string[] JumpSounds { get; set; }
-        public string[] WalkSounds { get; set; }
-        public string[] AttackSounds { get; set; }
-        public string[] GroundSounds { get; set; }
+        public float JumpSpeed;
+        public float WalkSpeed;
+        public float YGravityScale;
+        public int StartingLife;
+        public BodyColliderOptions ColliderConfig;
+        public GroundDetectionOptions Ground;
+        public string LayerName;
+        public int SortOrder;
+        public vec2 StartPosition;
+        public Material Material;
+        public string[] JumpSounds;
+        public string[] WalkSounds;
+        public string[] AttackSounds;
+        public string[] GroundSounds;
     }
 
     internal abstract class Character : ScriptBehavior
@@ -57,7 +67,7 @@ namespace Game
         protected bool IsOnGround
         {
             get => _isOnGround;
-            set
+            private set
             {
                 if (_isOnGround == value)
                     return;
@@ -73,12 +83,11 @@ namespace Game
 
         private CharacterConfig _characterConfig;
         private AnimationState _main;
-        private int _startingLife;
         private AudioClip[] _groundSfx;
         private AudioClip[] _jumpSfx;
         private AudioClip[] _attackSfx;
         private AudioClip[] _walkFx;
-        private float _gravityScale;
+        private bool _jumped = false;
         public void Init(CharacterConfig config)
         {
             Animator = AddComponent<Animator>();
@@ -101,9 +110,7 @@ namespace Game
             Renderer.Material = config.Material;
             Collider.Friction = 0;
             Transform.WorldPosition = config.StartPosition;
-            _startingLife = config.StartingLife;
-            _gravityScale = Rigidbody.GravityScale;
-            Life = _startingLife;
+            Life = _characterConfig.StartingLife;
 
             InitAudio(config);
         }
@@ -195,7 +202,9 @@ namespace Game
 
             if (IsOnGround)
             {
-                Rigidbody.GravityScale = _gravityScale;
+                _jumped = true;
+                Rigidbody.GravityScale = _characterConfig.YGravityScale;
+                Rigidbody.Velocity = new vec2(Rigidbody.Velocity.x, 0);
                 Rigidbody.AddForce(vec2.Up * _characterConfig.JumpSpeed, ForceMode2D.Impulse);
             }
         }
@@ -247,6 +256,11 @@ namespace Game
         }
         public override void OnFixedUpdate()
         {
+            if (_characterConfig.Ground.Enabled)
+            {
+                CheckGround();
+            }
+
             if (IsCharacterAlive())
             {
                 Rigidbody.Velocity = new vec2(Rigidbody.Velocity.x, Math.Clamp(Rigidbody.Velocity.y, _maxFallYVelocity, float.MaxValue));
@@ -257,13 +271,55 @@ namespace Game
 
             }
         }
+
+        private void CheckGround()
+        {
+            var origin1 = Transform.WorldPosition + new vec3(_characterConfig.Ground.MinX, _characterConfig.Ground.YOffset, 0);
+            var origin2 = Transform.WorldPosition + new vec3(_characterConfig.Ground.MaxX, _characterConfig.Ground.YOffset, 0);
+            var raysCount = _characterConfig.Ground.RaysCount;
+
+            var dir = Transform.Up * -_characterConfig.Ground.SizeY;
+
+            var anyHit = false;
+            uint hitIndex = 0;
+            for (var i = 0; i < raysCount; i++)
+            {
+                var pos = Mathf.Lerp(origin1, origin2, i / (float)(raysCount - 1));
+                var hit = Physics2D.Raycast(pos, dir, _characterConfig.Ground.GroundMask);
+                if (hit.isHit)
+                {
+                    hitIndex |= 1u << i;
+                    anyHit = true;
+                    break;
+                }
+            }
+            if (Physics2D.DrawColliders)
+            {
+                for (var i = 0; i < raysCount; i++)
+                {
+                    var pos = Mathf.Lerp(origin1, origin2, i / (float)(raysCount - 1));
+                    var color = Color.White;
+                    //if ((hitIndex & (1 << i)) != 0)
+                    //{
+                    //    color = Color.Red;
+                    //}
+                    Debug.DrawRay(pos, dir, color);
+                }
+            }
+            IsOnGround = anyHit;
+        }
         private void OnGroundChanged(bool value)
         {
-            Rigidbody.GravityScale = value ? 0 : _gravityScale;
+            Rigidbody.GravityScale = value ? 0 : _characterConfig.YGravityScale;
 
-            if (value && Rigidbody.Velocity.y <= 0)
+            if (value && Rigidbody.Velocity.y < 0)
             {
                 Rigidbody.Velocity = new vec2(Rigidbody.Velocity.x, 0);
+            }
+
+            if (value)
+            {
+                _jumped = false;
             }
         }
 
@@ -271,7 +327,7 @@ namespace Game
         {
             if (!IsCharacterAlive())
             {
-                Life = _startingLife;
+                Life = _characterConfig.StartingLife;
                 Animator.SetState(_main);
             }
         }

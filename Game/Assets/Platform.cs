@@ -106,6 +106,12 @@ namespace Game
             if(collider.Actor.Layer == LayerMask.NameToLayer("Player"))
             {
                 collider.Actor.Transform.Parent = Transform;
+
+                if(collider.RigidBody.Velocity.y <= 0)
+                {
+                    collider.RigidBody.Velocity = new vec2(collider.RigidBody.Velocity.x, 0);
+                }
+                // Actor.Destroy(collider.Actor);
                 Debug.Log("Enter player to platform");
             }
         }

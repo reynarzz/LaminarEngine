@@ -159,7 +159,7 @@ namespace Game
             WaterTest();
             ParticleSystem();
 
-            new Actor<AnimationTest>().Transform.WorldPosition = _playerStartPosTest;
+            // new Actor<AnimationTest>().Transform.WorldPosition = _playerStartPosTest;
             Debug.Success("Game Layer");
         }
 

@@ -1,3 +1,4 @@
+using Engine;
 using System;
 using System.Runtime.CompilerServices;
 
@@ -11,6 +12,12 @@ namespace GlmNet
         public float x;
         public float y;
         public float z;
+
+        public static vec3 One { get; } = new vec3(1, 1, 1);
+        public static vec3 Zero { get; } = new vec3(0, 0, 0);
+        public static vec3 Up { get; } = new vec3(0, 1, 0);
+        public static vec3 Right { get; } = new vec3(1, 0, 0);
+        public static vec3 Forward { get; } = new vec3(0, 0, 1);
 
         public float this[int index]
         {
@@ -92,6 +99,11 @@ namespace GlmNet
             return new vec3(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z);
         }
 
+        public static vec3 operator -(vec3 vec)
+        {
+            return new vec3(-vec.x, -vec.y, -vec.z);
+        }
+
         public static vec3 operator -(vec3 lhs, float rhs)
         {
             return new vec3(lhs.x - rhs, lhs.y - rhs, lhs.z - rhs);
@@ -125,7 +137,14 @@ namespace GlmNet
         {
             return new vec3(v.x, v.y, 0);
         }
-
+        public vec3 Normalized
+        {
+            get
+            {
+                float len = MathF.Sqrt(x * x + y * y + z * z);
+                return len > 0f ? this / len : Zero;
+            }
+        }
         public float[] to_array()
         {
             return new[] { x, y, z };
@@ -196,11 +215,11 @@ namespace GlmNet
         {
             return this.x.GetHashCode() ^ this.y.GetHashCode() ^ this.z.GetHashCode();
         }
-        
+
         #endregion
 
         #region ToString support
-        
+
         public override string ToString()
         {
             return String.Format("[{0}, {1}, {2}]", x, y, z);

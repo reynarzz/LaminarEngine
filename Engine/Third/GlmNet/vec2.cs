@@ -11,10 +11,18 @@ namespace GlmNet
         public float x;
         public float y;
 
-        public static vec2 One => new vec2(1, 1);
-        public static vec2 Zero => new vec2(0, 0);
-        public static vec2 Right => new vec2(1, 0);
-        public static vec2 Up => new vec2(0, 1);
+        public static vec2 One { get; } = new vec2(1, 1);
+        public static vec2 Zero { get; } = new vec2(0, 0);
+        public static vec2 Right { get; } = new vec2(1, 0);
+        public static vec2 Up { get; } = new vec2(0, 1);
+        public vec2 Normalized
+        {
+            get
+            {
+                float len = MathF.Sqrt(x * x + y * y);
+                return len > 0f ? this / len : Zero;
+            }
+        }
 
         public float this[int index]
         {
@@ -58,6 +66,11 @@ namespace GlmNet
         public static vec2 operator +(vec2 lhs, vec2 rhs)
         {
             return new vec2(lhs.x + rhs.x, lhs.y + rhs.y);
+        }
+
+        public static vec2 operator -(vec2 vec)
+        {
+            return new vec2(-vec.x, -vec.y);
         }
 
         public static vec2 operator +(vec2 lhs, float rhs)
