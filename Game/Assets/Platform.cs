@@ -21,6 +21,7 @@ namespace Game
         private int _direction = 1;
 
         private vec3 _startPos;
+        private Animator _animator;
         public override void OnStart()
         {
             base.OnStart();
@@ -37,33 +38,66 @@ namespace Game
             _startPos = Transform.LocalPosition = new vec3(-8, 0, 0);
 
             AddComponent<BoxCollider2D>().Size = trigger.Size;
-
+          
             Transform.WorldPosition = _startPos + Points[_pointIndex];
             _currentWait = WaitTime;
             Debug.Log("Platform start");
+            //SetAnimator();
+        }
+
+        private void SetAnimator()
+        {
+            _animator = AddComponent<Animator>();
+
+            var moveClip = new AnimationClip("MoveAnim");
+            var pointsMoveCurve = new Vec2EasingCurve();
+            pointsMoveCurve.EasingType = EasingType.EaseInOutSine;
+
+            var fps = 0.2f;
+            var unit = 1.0f / fps;
+            var waitTime = 1;
+            for (int i = 0; i < Points.Length; i++)
+            {
+                var point = _startPos + Points[i];
+                pointsMoveCurve.AddKeyFrame(unit * (float)i, point);
+                pointsMoveCurve.AddKeyFrame(unit * (float)i + waitTime, point);
+            }
+            pointsMoveCurve.AddKeyFrame(unit * Points.Length, _startPos + Points[0]);
+
+            moveClip.AddCurve("Move", pointsMoveCurve);
+            var state = new AnimationState("Move", moveClip);
+            _animator.AddState(state);
+
         }
 
         public override void OnUpdate()
         {
             base.OnUpdate();
-            var target = _startPos + Points[_pointIndex];
-
-            Transform.WorldPosition = Mathf.MoveTowards(Transform.WorldPosition, target, Time.DeltaTime * Speed);
-
-            var distance = Mathf.Distance(Transform.WorldPosition, target);
-            if (distance < 0.001f && (_currentWait -= Time.DeltaTime) <= 0)
+            if(_animator != null )
             {
-                _currentWait = WaitTime;
-                if (_pointIndex + 1 >= Points.Length)
-                {
-                    _direction = -1;
-                }
-                else if(_pointIndex <= 0)
-                {
-                    _direction = 1;
-                }
+                Transform.WorldPosition = _animator.GetVec2("Move");
+            }
+            else
+            {
+                var target = _startPos + Points[_pointIndex];
 
-                _pointIndex += _direction;
+                Transform.WorldPosition = Mathf.MoveTowards(Transform.WorldPosition, target, Time.DeltaTime * Speed);
+
+                var distance = Mathf.Distance(Transform.WorldPosition, target);
+                if (distance < 0.001f && (_currentWait -= Time.DeltaTime) <= 0)
+                {
+                    _currentWait = WaitTime;
+                    if (_pointIndex + 1 >= Points.Length)
+                    {
+                        _direction = -1;
+                    }
+                    else if (_pointIndex <= 0)
+                    {
+                        _direction = 1;
+                    }
+
+                    _pointIndex += _direction;
+                }
             }
         }
 

@@ -12,7 +12,7 @@ namespace Game
     {
         public override void OnStart()
         {
-            const float fps = 11;
+            const float fps = 11.5f;
             var size = new vec2(78, 58);
             var pivot = new vec2(0.4f, 0.4f);
 

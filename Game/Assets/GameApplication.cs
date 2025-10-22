@@ -16,11 +16,10 @@ namespace Game
         /* Fix collision exit being called when the shape is destroyed, which causes the function to have a invalid actor,
              This collisionsExit/TriggerExit should not be called with invalid actors/components*/
         // Fix rigidbody marked as interpolate if is made parent of another that is not, after exiting, the interpolation is disabled.
-        // Simple animation system (state machine, variable(bool,int,float) and transition conditions (bool (true/false), int(equal,less, greater) float(less, greater)))
         // Avoid batch to take more texture slots that the system is supported, take into account materials texture count.
         // Fix: Batch2d vertices shift when an object is destroyed.
         // Implement a proper way to grow a batch when vertices are greater than MAX_QUADS_PER_BATCH (Tilemap)
-        // Implement
+
         // For game:
         // Implement enemies
         // Five levels, small, one intro level falling from outside.
@@ -138,15 +137,9 @@ namespace Game
             tilemap.AddComponent<TilemapCollider2D>();
             tilemap.Actor.Layer = 1;
         }
-        private Actor _player;
         public override void Initialize()
         {
-            var gameManager = new Actor("GameManager").AddComponent<GameManager>();
-
-            var mainShader = new Shader(Assets.GetText("Shaders/SpriteVert.vert").Text, Assets.GetText("Shaders/SpriteFrag.frag").Text);
-
-            var mat1 = new Material(mainShader);
-            mat1.Name = "Entities material (player/platform etc)";
+            new Actor<GameManager>("GameManager");
 
             LoadTilemap();
 

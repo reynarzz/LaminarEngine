@@ -53,6 +53,7 @@ namespace Game
         protected const int MAX_LIFE = 10;
         protected readonly string[] Attacks = ["Attack1", "Attack2", "Attack3", "Attack4", "Attack5", "Attack6"];
         protected bool IsOnGround { get; set; }
+        private float _maxFallYVelocity = -20;
 
         private int _life;
         public int Life { get => _life; private set { _life = value; Animator.Parameters.SetInt(LIFE_PROPERTY_NAME, _life); } }
@@ -229,7 +230,10 @@ namespace Game
         {
             return Life > 0;
         }
-
+        public override void OnFixedUpdate()
+        {
+            Rigidbody.Velocity = new vec2(Rigidbody.Velocity.x, Math.Clamp(Rigidbody.Velocity.y, _maxFallYVelocity, float.MaxValue));
+        }
         public void Restart()
         {
             if (!IsCharacterAlive())
