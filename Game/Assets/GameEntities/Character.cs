@@ -48,11 +48,14 @@ namespace Game
         protected const string VEL_Y_PROP_NAME = "VelocityY";
         protected const string ON_GROUND_PROPERTY_NAME = "IsOnGround";
         protected const string DEATH_PROPERTY_NAME = "IsDeath";
+        protected const string LIFE_PROPERTY_NAME = "Life";
         protected const string HIT_DAMAGE_PROPERTY_NAME = "IsHitDamage";
         protected const int MAX_LIFE = 10;
         protected readonly string[] Attacks = ["Attack1", "Attack2", "Attack3", "Attack4", "Attack5", "Attack6"];
         protected bool IsOnGround { get; set; }
-        public int Life { get; private set; }
+
+        private int _life;
+        public int Life { get => _life; private set { _life = value; Animator.Parameters.SetInt(LIFE_PROPERTY_NAME, _life); } }
 
         private CharacterConfig _characterConfig;
         private AnimationState _main;
@@ -167,7 +170,6 @@ namespace Game
 
             Animator.Parameters.SetInt(VEL_X_PROP_NAME, (int)MathF.Round(Rigidbody.Velocity.x));
             Animator.Parameters.SetInt(VEL_Y_PROP_NAME, (int)MathF.Round(Rigidbody.Velocity.y));
-
             Animator.Parameters.SetBool(ON_GROUND_PROPERTY_NAME, IsOnGround);
         }
 
@@ -209,8 +211,7 @@ namespace Game
                 return;
 
             Rigidbody.Velocity = new vec2(0, Rigidbody.Velocity.y > 0 ? 0 : Rigidbody.Velocity.y);
-            Life = 0;
-            Animator.Parameters.SetTrigger(DEATH_PROPERTY_NAME);
+            HitDamage(MAX_LIFE);
         }
 
         public virtual void HitDamage(int amount)
@@ -220,14 +221,7 @@ namespace Game
 
             var life = Math.Clamp(Life - amount, 0, MAX_LIFE);
             Rigidbody.Velocity = new vec2(0, Rigidbody.Velocity.y);
-            if (life == 0)
-            {
-                Death();
-            }
-            else
-            {
-                Animator.Parameters.SetTrigger(HIT_DAMAGE_PROPERTY_NAME);
-            }
+            Animator.Parameters.SetTrigger(HIT_DAMAGE_PROPERTY_NAME);
             Life = life;
         }
 
