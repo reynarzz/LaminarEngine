@@ -16,11 +16,11 @@ namespace Engine
         NotEqual
     }
 
-    public class IntCondition : TransitionCondition
+    public class IntCond : TransitionCondition
     {
         private readonly IntOp _op;
         private readonly float _compare;
-        public IntCondition(string property, int compare, IntOp op) : base(property)
+        public IntCond(string property, int compare, IntOp op) : base(property)
         {
             _op = op;
             _compare = compare;

@@ -38,8 +38,8 @@ namespace Game
         protected AudioSource AudioSource { get; private set; }
 
         protected const string SPRITE_PROPERTY_NAME = "Sprite_Property";
-        protected const string VELOCITY_X_PROPERTY_NAME = "VelocityX";
-        protected const string VELOCITY_Y_PROPERTY_NAME = "VelocityY";
+        protected const string VEL_X_PROP_NAME = "VelocityX";
+        protected const string VEL_Y_PROP_NAME = "VelocityY";
         protected const string ON_GROUND_PROPERTY_NAME = "IsOnGround";
         private readonly string[] _attacks = ["Attack1", "Attack2", "Attack3", "Attack4", "Attack5", "Attack6"];
         protected bool IsOnGround { get; set; }
@@ -109,14 +109,17 @@ namespace Game
         public override void OnUpdate()
         {
             Renderer.Sprite = Animator.GetSprite(SPRITE_PROPERTY_NAME);
-            Animator.Parameters.SetFloat(VELOCITY_X_PROPERTY_NAME, Rigidbody.Velocity.x);
-            Animator.Parameters.SetFloat(VELOCITY_Y_PROPERTY_NAME, Rigidbody.Velocity.y);
+            Animator.Parameters.SetFloat(VEL_X_PROP_NAME, Rigidbody.Velocity.x);
+            Animator.Parameters.SetFloat(VEL_Y_PROP_NAME, Rigidbody.Velocity.y);
             Animator.Parameters.SetBool(ON_GROUND_PROPERTY_NAME, IsOnGround);
         }
 
         protected void Jump()
         {
-            Rigidbody.AddForce(vec2.Up * _characterConfig.JumpSpeed, ForceMode2D.Impulse);
+            if (IsOnGround)
+            {
+                Rigidbody.AddForce(vec2.Up * _characterConfig.JumpSpeed, ForceMode2D.Impulse);
+            }
         }
 
         protected void Walk(int dir)

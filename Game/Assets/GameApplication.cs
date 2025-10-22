@@ -150,23 +150,9 @@ namespace Game
 
             LoadTilemap();
 
-            //var defChunk = sprite1.GetAtlasChunk();
-            //defChunk.Pivot = new GlmNet.vec2(0.5f, 0);
-            //sprite1.Texture.Atlas.UpdateChunk(0, defChunk);
-
-
-            LayerMask.AssignName(3, "Player");
-            LayerMask.AssignName(1, "Floor");
-            LayerMask.AssignName(5, "Platform");
-            LayerMask.AssignName(4, "Enemy");
-            LayerMask.TurnOff("Player", "Player");
-
-            // LayerMask.TurnOn("Player", "Player");
-
-
             var platform = new Actor<Platform, SpriteRenderer>("Platform");
             platform.GetComponent<SpriteRenderer>().Material = mat1;
-            platform.Layer = LayerMask.NameToLayer("Platform");
+            platform.Layer = LayerMask.NameToLayer(GameLayers.PLATFORM);
 
             PostProcessingStack.Push(new BloomPostProcessing());
 
@@ -184,8 +170,6 @@ namespace Game
             WaterTest();
             ParticleSystem();
 
-            //var animTest = new Actor<AnimationTest>();
-            //animTest.Transform.WorldPosition = _playerStartPosTest;
             Debug.Success("Game Layer");
         }
 
@@ -200,7 +184,6 @@ namespace Game
             particleSystem.StartColor = Color.White;
             particleSystem.EndColor = new Color(0,0,0,0);
             particleSystem.EndSize = new vec2(0, 0);
-            //particleSystem.Gravity = new vec2(1, 3);
             particleSystem.Spread = new vec2(0.0f, 0);
             particleSystem.SimulationSpeed = 1;
             particleSystem.StartSize = new vec2(0.3f);

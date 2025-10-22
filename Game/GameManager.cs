@@ -63,8 +63,11 @@ namespace Game
 
             for (int i = 0; i < names.Length; i++)
             {
-                LayerMask.AssignName(i + 1, names[i]);
+                LayerMask.AssignName(i, names[i]);
             }
+
+            LayerMask.TurnOff(GameLayers.PLAYER, GameLayers.PLAYER);
+            LayerMask.TurnOn(GameLayers.PLAYER, GameLayers.PLATFORM);
         }
 
         private void GetMaterial(string name, ref Material material, string vertexCode, string shaderCode)
@@ -90,6 +93,8 @@ namespace Game
 
             Camera.Transform.WorldPosition = new vec3(player.Transform.WorldPosition.x,
                                                       player.Transform.WorldPosition.y, -12);
+
+
             player.Init(new CharacterConfig()
             {
                 JumpSpeed = 15,
