@@ -98,7 +98,7 @@ namespace Game
 
             walkState.AddTransition(new AnimatorTransition("Run", new GenericCondition(x => x.GetFloat("Speed") > 1.0f)));
 
-            runState.AddTransition(new AnimatorTransition("Walk", new FloatCondition("Speed", 1.0f, FloatConditionOp.LessThanOrEqual)));
+            runState.AddTransition(new AnimatorTransition("Walk", new FloatCondition("Speed", 1.0f, FloatOp.LessThanOrEqual)));
 
             _controller.AddState(walkState);
             _controller.AddState(runState);

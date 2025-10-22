@@ -32,15 +32,24 @@ namespace Engine
         {
             foreach (var transition in _transitions)
             {
+                bool allConditionsMet = false;
                 foreach (var condition in transition.Conditions)
                 {
-                    if (!condition.IsCondition(parameters))
+                    if (condition.IsCondition(parameters))
                     {
-                        return null;
+                        allConditionsMet = true;
+                    }
+                    else
+                    {
+                        allConditionsMet = false;
+                        break;
                     }
                 }
 
-                return transition;
+                if (allConditionsMet)
+                {
+                    return transition;
+                }
             }
             return null;
         }

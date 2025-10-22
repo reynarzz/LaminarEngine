@@ -16,13 +16,16 @@ namespace Game
             var size = new vec2(78, 58);
             var pivot = new vec2(0.4f, 0.4f);
 
-            var idleToRunTransition = new AnimatorTransition("Run", new IntCondition(VELOCITY_X_PROPERTY_NAME, 0, IntConditionOp.NotEqual));
-            var runToIdleTransition = new AnimatorTransition("Idle", new IntCondition(VELOCITY_X_PROPERTY_NAME, 0, IntConditionOp.Equal));
+            var toJump = new AnimatorTransition("Jump", new IntCondition(VELOCITY_Y_PROPERTY_NAME, 0, IntOp.GreaterThan));
+            var toFall = new AnimatorTransition("Fall", new IntCondition(VELOCITY_Y_PROPERTY_NAME, 0, IntOp.LessThan));
+            var toIdle = new AnimatorTransition("Idle", new IntCondition(VELOCITY_Y_PROPERTY_NAME, 0, IntOp.LessThanOrEqual));
+            var toRun = new AnimatorTransition("Run",  [new IntCondition(VELOCITY_X_PROPERTY_NAME, 0, IntOp.NotEqual),
+                                                        new IntCondition(VELOCITY_Y_PROPERTY_NAME, 0, IntOp.LessThanOrEqual)]);
 
-            AddSpriteAnimState("Idle", true, [idleToRunTransition], "KingsAndPigsSprites/01-King Human/Idle (78x58).png", fps, size, pivot);
-            AddSpriteAnimState("Run", false, [runToIdleTransition], "KingsAndPigsSprites/01-King Human/Run (78x58).png", fps, size, pivot);
-            AddSpriteAnimState("Jump", false, null, "KingsAndPigsSprites/01-King Human/Jump (78x58).png", fps, size, pivot);
-            AddSpriteAnimState("Fall", false, null, "KingsAndPigsSprites/01-King Human/Fall (78x58).png", fps, size, pivot);
+            AddSpriteAnimState("Idle", true, [toRun, toJump], "KingsAndPigsSprites/01-King Human/Idle (78x58).png", fps, size, pivot);
+            AddSpriteAnimState("Run", false, [toIdle, toJump], "KingsAndPigsSprites/01-King Human/Run (78x58).png", fps, size, pivot);
+            AddSpriteAnimState("Jump", false, [toFall], "KingsAndPigsSprites/01-King Human/Jump (78x58).png", fps, size, pivot);
+            AddSpriteAnimState("Fall", false, [toIdle, toRun], "KingsAndPigsSprites/01-King Human/Fall (78x58).png", fps, size, pivot);
             AddSpriteAnimState("Attack", false, null, "KingsAndPigsSprites/01-King Human/Attack (78x58).png", fps, size, pivot);
         }
 
@@ -44,6 +47,11 @@ namespace Game
             else
             {
                 Walk(0);
+            }
+
+            if (Input.GetKey(KeyCode.F))
+            {
+                Walk(-1);
             }
 
             base.OnUpdate();

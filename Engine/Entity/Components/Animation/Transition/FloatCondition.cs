@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    public enum FloatConditionOp
+    public enum FloatOp
     {
         LessThan,
         GreaterThan,
@@ -16,9 +16,9 @@ namespace Engine
 
     public class FloatCondition : TransitionCondition
     {
-        private readonly FloatConditionOp _op;
+        private readonly FloatOp _op;
         private readonly float _compare;
-        public FloatCondition(string property, float compare, FloatConditionOp op) : base(property)
+        public FloatCondition(string property, float compare, FloatOp op) : base(property)
         {
             _op = op;
             _compare = compare;
@@ -30,13 +30,13 @@ namespace Engine
 
             switch (_op)
             {
-                case FloatConditionOp.LessThan:
+                case FloatOp.LessThan:
                     return aValue < _compare;
-                case FloatConditionOp.GreaterThan:
+                case FloatOp.GreaterThan:
                     return aValue > _compare;
-                case FloatConditionOp.LessThanOrEqual:
+                case FloatOp.LessThanOrEqual:
                     return aValue <= _compare;
-                case FloatConditionOp.GreaterThanOrEqual:
+                case FloatOp.GreaterThanOrEqual:
                     return aValue >= _compare;
             }
 
