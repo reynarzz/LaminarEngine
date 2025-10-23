@@ -1,4 +1,5 @@
-﻿using SharedTypes;
+﻿using Newtonsoft.Json;
+using SharedTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -130,7 +131,7 @@ namespace GameCooker
                 // Asset length
                 bufWritter.Write(assetData.Length);
 
-                var metaBuffer = MetadataBufferWriter(bufWritter, meta);
+                var metaBuffer = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(meta));
 
                 // meta size
                 bufWritter.Write(metaBuffer.Length);
@@ -138,7 +139,6 @@ namespace GameCooker
                 long assetDataLoc = bufWritter.BaseStream.Position;
                 // Asset data
                 bufWritter.Write(assetData);
-
 
                 long metaStartLocation = bufWritter.BaseStream.Position;
 
@@ -169,11 +169,6 @@ namespace GameCooker
 
             bufWritter.Flush();
             await fs.FlushAsync();
-        }
-
-        private byte[] MetadataBufferWriter(BinaryWriter writer, AssetMetaFileBase meta)
-        {
-            return [8, 2, 6, 4, 9, 1, 7, 0, 3, 5];
         }
     }
 }

@@ -424,7 +424,7 @@ namespace Engine
                             Debug.Error(e);
                         }
 #else
-                        action(script);
+                        action(comp);
 #endif
                     }
                 }
