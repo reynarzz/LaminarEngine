@@ -38,9 +38,14 @@ namespace Game
                     SpriteAtlasPath = pathSprites[i],
                 };
             }
+
+            states.Attack.Events = [new AnimEvent { Time = 0, Callback = PlayAttackSoundFx }];
+            states.Walk.Events = [new AnimEvent { Time = 0, Callback = PlayWalkSoundFx }, new AnimEvent { Time = (1.0f / fps) * 4, Callback = PlayWalkSoundFx }];
+            states.Jump.Events = [new AnimEvent { Time = 0, Callback = PlayJumpSoundFx }];
+
             InitAnimationStates(states);
         }
-      
+
         public override void OnUpdate()
         {
             if (Input.GetKeyDown(KeyCode.Space))

@@ -39,7 +39,7 @@ namespace Engine
         {
             public Actor Invoke(Actor actor, string comparer)
             {
-                if (actor.Name.Equals(comparer))
+                if (actor && actor.Name.Equals(comparer))
                 {
                     return actor;
                 }
