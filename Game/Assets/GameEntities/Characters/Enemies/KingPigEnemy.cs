@@ -42,6 +42,7 @@ namespace Game
 
         public override void OnUpdate()
         {
+            Walk(0);
         }
     }
 }
