@@ -77,7 +77,7 @@ namespace Game
 
         private void InitializeWorld()
         {
-            var player = new Actor().AddComponent<Player>();
+            var player = new Actor("Player").AddComponent<Player>();
             player.Transform.WorldPosition = new vec3();
 
             var camActor = new Actor("MainCamera");

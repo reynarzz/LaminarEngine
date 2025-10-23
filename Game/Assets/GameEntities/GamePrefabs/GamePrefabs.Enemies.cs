@@ -42,7 +42,7 @@ namespace Game
                 actor.Init(new CharacterConfig()
                 {
                     JumpForce = 10,
-                    WalkSpeed = 4.35f,
+                    WalkSpeed = 3.35f,
                     YGravityScale = 3.5f,
                     ColliderConfig = new BodyColliderOptions() { Size = new vec2(1.0f, 1.0f), Offset = new vec2(0, -0.1f) },
                     LayerName = GameLayers.ENEMY,

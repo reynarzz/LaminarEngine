@@ -9,9 +9,14 @@ namespace Game
 {
     internal class KingPigEnemy : EnemyBase
     {
+        private StateMachine<KingPigEnemy> _stateMachine;
+
         public override void Init(CharacterConfig config)
         {
             base.Init(config);
+
+            _stateMachine = new StateMachine<KingPigEnemy>(this, [new PatrolState<KingPigEnemy>()]);
+            _stateMachine.SetInitialState<PatrolState<KingPigEnemy>>();
 
             const float fps = 11.5f;
             var size = new vec2(38, 28);
@@ -42,7 +47,7 @@ namespace Game
 
         public override void OnUpdate()
         {
-            Walk(0);
+            _stateMachine.OnUpdate();
         }
     }
 }

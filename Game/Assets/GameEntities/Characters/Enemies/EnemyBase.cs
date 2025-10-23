@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    internal abstract class EnemyBase : Character
+    internal abstract class EnemyBase : Character, IContext
     {
-
+        public Character Target { get; set; }
     }
 }

@@ -301,7 +301,7 @@ namespace Game
             Animator.Parameters.SetBool(ON_GROUND_PROPERTY_NAME, IsOnGround);
         }
 
-        protected void Jump()
+        public void Jump()
         {
             if (!IsCharacterAlive())
                 return;
@@ -315,15 +315,21 @@ namespace Game
             }
         }
 
-        protected void Walk(int dir)
+        public void LookAt(int dir)
+        {
+            var scaleX = Math.Abs(Transform.LocalScale.x);
+            Transform.LocalScale = new vec3(scaleX * dir * Math.Sign(_characterConfig.SpriteLookDir), 1, 1);
+
+        }
+
+        public void Walk(int dir)
         {
             if (!IsCharacterAlive())
                 return;
 
             if (dir != 0)
             {
-                var scaleX = Math.Abs(Transform.LocalScale.x);
-                Transform.LocalScale = new vec3(scaleX * dir * Math.Sign(_characterConfig.SpriteLookDir), 1, 1);
+                LookAt(dir);
 
                 float targetX = _characterConfig.WalkSpeed * dir;
                 float accel = 100;
@@ -357,16 +363,7 @@ namespace Game
             }
             else if (dir == 0)
             {
-                float amount = 0;
-                if (IsOnGround)
-                {
-                    amount = 0.6f;
-                }
-                else
-                {
-                    amount = 0.95f;
-                }
-                Rigidbody.Velocity = new vec2(Rigidbody.Velocity.x * amount, Rigidbody.Velocity.y);
+                Rigidbody.Velocity = new vec2(0, Rigidbody.Velocity.y);
             }
         }
 
@@ -397,7 +394,7 @@ namespace Game
             Life = life;
         }
 
-        protected bool IsCharacterAlive()
+        public bool IsCharacterAlive()
         {
             return Life > 0;
         }

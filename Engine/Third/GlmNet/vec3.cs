@@ -141,10 +141,27 @@ namespace GlmNet
         {
             get
             {
-                float len = MathF.Sqrt(x * x + y * y + z * z);
+                float len = Magnitude;
                 return len > 0f ? this / len : Zero;
             }
         }
+
+        public float Magnitude
+        {
+            get
+            {
+                return MathF.Sqrt(x * x + y * y + z * z);
+            }
+        }
+
+        public float SqrMagnitude
+        {
+            get
+            {
+                return x * x + y * y + z * z;
+            }
+        }
+
         public float[] to_array()
         {
             return new[] { x, y, z };
