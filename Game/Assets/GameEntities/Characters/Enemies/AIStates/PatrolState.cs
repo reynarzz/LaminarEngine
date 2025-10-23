@@ -16,7 +16,6 @@ namespace Game
 
         public override void OnInit()
         {
-            Debug.Log("Patrol init");
         }
 
         public override void OnEnter()
@@ -34,12 +33,16 @@ namespace Game
                 {
                     ChangeSubState<ChaseState<T>>();
                 }
+                else
+                {
+                    // TODO: patrol here
+                    Context.Walk(0);
+                }
             }
         }
 
         public void OnExit(T context)
         {
-            Debug.Log("Patrol exit");
         }
     }
 }

@@ -47,7 +47,7 @@ namespace Game
         public string[] GroundSounds;
     }
 
-    internal abstract class Character : GameEntity
+    public abstract class Character : GameEntity
     {
         protected Animator Animator { get; private set; }
         protected SpriteRenderer Renderer { get; private set; }

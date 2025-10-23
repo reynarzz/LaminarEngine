@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    internal abstract class GameEntity : ScriptBehavior
+    public abstract class GameEntity : ScriptBehavior
     {
     }
 }
