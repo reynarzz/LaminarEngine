@@ -43,6 +43,8 @@ namespace Game
                 };
             }
             InitAnimationStates(states);
+
+            Transform.LocalScale = new vec3(5, 5, 5);
         }
 
         public override void OnUpdate()

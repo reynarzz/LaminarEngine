@@ -318,7 +318,7 @@ namespace Game
         public void LookAt(int dir)
         {
             var scaleX = Math.Abs(Transform.LocalScale.x);
-            Transform.LocalScale = new vec3(scaleX * dir * Math.Sign(_characterConfig.SpriteLookDir), 1, 1);
+            Transform.LocalScale = new vec3(scaleX * dir * Math.Sign(_characterConfig.SpriteLookDir), Transform.LocalScale.y, Transform.LocalScale.z);
 
         }
 

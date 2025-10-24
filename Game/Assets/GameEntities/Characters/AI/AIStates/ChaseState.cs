@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    internal class CelebrateState<T> : StateBase<T> where T : EnemyBase
+    internal class CelebrateState<T> : StateBase<T> where T : AICharacter
     {
         public float CelebrationWait { get; set; } = 1.3f;
         private float _celebrationWaitTime = 0;
@@ -32,7 +32,7 @@ namespace Game
             }
         }
     }
-    internal class AttackState<T> : StateBase<T> where T : EnemyBase
+    internal class AttackState<T> : StateBase<T> where T : AICharacter
     {
         public float WaitToAttack { get; set; } = 0.5f;
         private float _currentTimeToAttack;
@@ -58,8 +58,11 @@ namespace Game
             {
                 ChangeSubState<CelebrateState<T>>();
             }
-
-            if (Math.Abs(dir.x) >= 2 || !Context.Target.IsCharacterAlive())
+            if (MathF.Abs(dir.y) > 2 && Context.Detector.IsTargetDetected)
+            {
+                Context.Jump();
+            }
+            else if (Math.Abs(dir.x) >= 2 || !Context.Target.IsCharacterAlive())
             {
                 ReturnToParent();
             }
@@ -70,7 +73,7 @@ namespace Game
                 Context.Attack();
 
                 // Remove this, testing
-                Task.Run(async () => { await Task.Delay(100); Context.Target.HitDamage(1);
+                Task.Run(async () => { await Task.Delay(110); Context.Target.HitDamage(1);
                     if (!Context.Target.IsCharacterAlive())
                     {
                         ChangeSubState<CelebrateState<T>>();
@@ -80,7 +83,7 @@ namespace Game
             }
         }
     }
-    internal class ChaseState<T> : StateBase<T> where T : EnemyBase
+    internal class ChaseState<T> : StateBase<T> where T : AICharacter
     {
         public ChaseState() : base([new AttackState<T>()])
         {
@@ -97,9 +100,8 @@ namespace Game
             {
                 var dir = Context.Target.Transform.WorldPosition - Context.Transform.WorldPosition;
                 var transitionDist = 1.7f;
-                var desengageDist = 8;
 
-                if (Math.Abs(dir.x) >= desengageDist || !Context.Target.IsCharacterAlive())
+                if (!Context.Detector.IsTargetDetected || !Context.Target.IsCharacterAlive())
                 {
                     Context.Walk(0);
                     ReturnToParent();

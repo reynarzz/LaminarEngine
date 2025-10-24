@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    public interface IContext { }
+    public interface IAIStateMachineContext { }
 
-    public class StateMachine<T> where T: IContext
+    public class StateMachine<T> where T: IAIStateMachineContext
     {
         private readonly Dictionary<Type, StateBase<T>> _states = new();
         private StateBase<T> _currentState;

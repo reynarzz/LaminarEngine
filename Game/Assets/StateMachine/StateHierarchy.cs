@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    public abstract class StateBase<T> where T : IContext
+    public abstract class StateBase<T> where T : IAIStateMachineContext
     {
         protected Dictionary<Type, StateBase<T>> SubStates { get; } = new();
         protected StateBase<T> Parent { get; set; }

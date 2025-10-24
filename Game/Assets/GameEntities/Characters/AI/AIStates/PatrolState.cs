@@ -27,10 +27,12 @@ namespace Game
         {
             if (Context.Target)
             {
-                var engageDist = 5f;
-                var dir = (Context.Target.Transform.WorldPosition - Context.Transform.WorldPosition);
-                if(Math.Abs(dir.x) <= engageDist && Context.Target.IsCharacterAlive())
+                //var engageDist = 5f;
+                // var dir = (Context.Target.Transform.WorldPosition - Context.Transform.WorldPosition);
+                
+                if (Context.Detector.IsTargetDetected && Context.Target.IsCharacterAlive())
                 {
+                    Context.Detector.Size = 10;
                     ChangeSubState<ChaseState<T>>();
                 }
                 else

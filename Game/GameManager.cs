@@ -11,10 +11,15 @@ namespace Game
 {
     public class GameLayers
     {
+        public const string Default = "Default";
         public const string PLAYER = "Player";
         public const string FLOOR = "Floor";
         public const string ENEMY = "Enemy";
+        public const string ENEMY_CONFUSED = "EnemyConfused";
         public const string PLATFORM = "Platform";
+        public const string COLLECTIBLE = "Collectible";
+
+        public static ulong GROUND_MASK { get; } = LayerMask.NameToBit(FLOOR) | LayerMask.NameToBit(PLATFORM) | LayerMask.NameToBit(Default);
     }
 
     internal class GameManager : ScriptBehavior
@@ -66,7 +71,8 @@ namespace Game
             }
 
             LayerMask.TurnOff(GameLayers.PLAYER, GameLayers.PLAYER);
-            LayerMask.TurnOn(GameLayers.PLAYER, GameLayers.PLATFORM);
+            //LayerMask.TurnOn(GameLayers.PLAYER, GameLayers.PLATFORM);
+            //LayerMask.TurnOn(GameLayers.PLAYER, GameLayers.Default);
         }
 
         private void GetMaterial(string name, ref Material material, string vertexCode, string shaderCode)
@@ -79,6 +85,7 @@ namespace Game
         {
             var player = new Actor("Player").AddComponent<Player>();
             player.Transform.WorldPosition = new vec3();
+            player.Actor.Layer = LayerMask.NameToLayer(GameLayers.PLAYER);
 
             var camActor = new Actor("MainCamera");
 
@@ -93,6 +100,7 @@ namespace Game
             Camera.Transform.WorldPosition = new vec3(player.Transform.WorldPosition.x,
                                                       player.Transform.WorldPosition.y, -12);
 
+            var a = LayerMask.NameToBit(GameLayers.Default);
 
             player.Init(new CharacterConfig()
             {
@@ -114,7 +122,7 @@ namespace Game
                     RaysCount = 3,
                     SizeY = 0.7f,
                     YOffset = 0,
-                    GroundMask = LayerMask.NameToBit("Floor") | LayerMask.NameToBit("Platform")
+                    GroundMask = GameLayers.GROUND_MASK
                 },
                 WalkSounds = ["Audio/HALFTONE/UI/2. Clicks/Click_4.wav",
                               "Audio/HALFTONE/UI/2. Clicks/Click_5.wav",

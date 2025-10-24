@@ -135,7 +135,7 @@ namespace Game
             tilemap.SortOrder = 3;
             tilemap3.SortOrder = 3;
             tilemap.AddComponent<TilemapCollider2D>();
-            tilemap.Actor.Layer = 1;
+            tilemap.Actor.Layer = 0;
         }
         public override void Initialize()
         {

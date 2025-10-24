@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    public abstract class AICharacter : Character, IContext
+    public interface ITargetDetector
     {
-        public Character Target { get; set; }
+        bool IsTargetDetected { get; }
+        float Size { get; set; }
     }
 }

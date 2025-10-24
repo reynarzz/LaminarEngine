@@ -59,7 +59,7 @@ namespace Game
                         RaysCount = 3,
                         SizeY = 0.7f,
                         YOffset = 0,
-                        GroundMask = LayerMask.NameToBit("Floor") | LayerMask.NameToBit("Platform")
+                        GroundMask = GameLayers.GROUND_MASK
                     },
                     WalkSounds = ["Audio/HALFTONE/UI/2. Clicks/Click_4.wav",
                               "Audio/HALFTONE/UI/2. Clicks/Click_5.wav",
