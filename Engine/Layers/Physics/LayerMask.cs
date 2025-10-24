@@ -130,7 +130,7 @@ namespace Engine
         {
             var layer = NameToLayer(name);
 
-            if(layer > 0)
+            if(layer >= 0)
             {
                 return LayerToBits(layer);
             }
