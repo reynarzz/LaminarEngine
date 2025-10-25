@@ -87,10 +87,7 @@ namespace Engine.Graphics
 
         private GfxResource CreateFontBatchGeometry(ref GeometryDescriptor desc)
         {
-            unsafe
-            {
-                return GraphicsHelper.GetEmptyGeometry<FontVertex>(_vertexData.Length, 0, ref desc, _sharedIndexBuffer);
-            }
+            return GraphicsHelper.GetEmptyGeometry<FontVertex>(_vertexData.Length, 0, ref desc, _sharedIndexBuffer);
         }
 
         public void DrawQuad(object texture, ref VertexPositionColorTexture topLeft,

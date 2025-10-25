@@ -133,7 +133,7 @@ namespace Engine.Layers
             // Example, remove from here
             var transform = new B2Transform();
             transform.p = new B2Vec2(rigidbody.Transform.WorldPosition.x, rigidbody.Transform.WorldPosition.y);
-            transform.q = rigidbody.Transform.WorldRotation.QuatToB2Rot();
+            transform.q = new B2Rot(1, 0);//rigidbody.Transform.WorldRotation.QuatToB2Rot();
 
             _colliders.Clear();
             rigidbody.GetComponents(ref _colliders);
@@ -144,7 +144,13 @@ namespace Engine.Layers
                 {
                     for (int j = 0; j < _colliders[i].ShapesId.Length; j++)
                     {
-                        B2Worlds.b2DrawShape(_debugDraw, B2Shapes.b2GetShape(B2Worlds.b2GetWorld(0), _colliders[i].ShapesId[j]), transform, B2HexColor.b2_colorBlanchedAlmond);
+                        var collider = _colliders[i];
+                        var color = B2HexColor.b2_colorCyan;
+                        if (collider.IsTrigger)
+                        {
+                            color = B2HexColor.b2_colorYellow;
+                        }
+                        B2Worlds.b2DrawShape(_debugDraw, B2Shapes.b2GetShape(B2Worlds.b2GetWorld(0), _colliders[i].ShapesId[j]), transform, color);
                     }
                 }
             }

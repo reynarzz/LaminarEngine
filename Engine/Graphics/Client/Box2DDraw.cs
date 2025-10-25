@@ -40,7 +40,7 @@ namespace Engine.Graphics
                 var p0 = new vec3(tv0.X, tv0.Y, 0);
                 var p1 = new vec3(tv1.X, tv1.Y, 0);
 
-                Debug.DrawLine(p0, p1, (uint)color);
+                Debug.DrawLine(p0, p1, GetConvertedColor(color));
             }
         }
 
@@ -58,25 +58,29 @@ namespace Engine.Graphics
             return new B2Vec2(x, y);
         }
 
+        private static uint GetConvertedColor(B2HexColor color)
+        {
+            return (((uint)color) << 8) | 0xFF;
+        }
         internal static void DrawCircle(B2Vec2 center, float radius, B2HexColor color, object context)
         {
-            Debug.DrawCircle(center.ToVec3(), radius, (uint)color);
+            Debug.DrawCircle(center.ToVec3(), radius, GetConvertedColor(color));
         }
 
         internal static void DrawSolidCircle(ref B2Transform transform, float radius, B2HexColor color, object context)
         {
             var pos = Mul(ref transform, default);
-            Debug.DrawCircle(pos.ToVec3(), radius, (uint)color);
+            Debug.DrawCircle(pos.ToVec3(), radius, GetConvertedColor(color));
         }
 
         internal static void DrawSolidCapsule(B2Vec2 p1, B2Vec2 p2, float radius, B2HexColor color, object context)
         {
-            Debug.DrawCapsule2D(new vec3(p1.X, p1.Y, 0), new vec3(p2.X, p2.Y, 0), radius, (uint)color);
+            Debug.DrawCapsule2D(new vec3(p1.X, p1.Y, 0), new vec3(p2.X, p2.Y, 0), radius, GetConvertedColor(color));
         }
 
         internal static void DrawSegment(B2Vec2 p1, B2Vec2 p2, B2HexColor color, object context)
         {
-            Debug.DrawLine(new vec3(p1.X, p1.Y, 0), new vec3(p2.X, p2.Y, 0), (uint)color);
+            Debug.DrawLine(new vec3(p1.X, p1.Y, 0), new vec3(p2.X, p2.Y, 0), GetConvertedColor(color));
         }
 
         internal static void DrawTransform(B2Transform transform, object context)

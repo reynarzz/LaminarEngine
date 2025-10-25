@@ -61,7 +61,7 @@ namespace Box2D.NET
         b2_colorGold = 0xFFD700,
         b2_colorGoldenRod = 0xDAA520,
         b2_colorGray = 0x808080,
-        b2_colorGreen = 0x008000,
+        b2_colorGreen = 0x00FF00,
         b2_colorGreenYellow = 0xADFF2F,
         b2_colorHoneyDew = 0xF0FFF0,
         b2_colorHotPink = 0xFF69B4,

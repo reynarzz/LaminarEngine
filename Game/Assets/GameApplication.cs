@@ -44,7 +44,6 @@ namespace Game
         // Game using both assets, and using stencil buffer to change beteen them sphere.
         // Investigate why AudioMixer frees from memory automatically
 
-        private vec3 _playerStartPosTest;
 
         public override void Initialize()
         {
@@ -72,7 +71,7 @@ namespace Game
         private void ParticleSystem()
         {
             var particleSystem = new Actor<ParticleSystem2D, Move>("ParticleSystem").GetComponent<ParticleSystem2D>();
-            particleSystem.Transform.WorldPosition = _playerStartPosTest + new vec3(0, 4);
+            particleSystem.Transform.WorldPosition = new vec3(0, 4);
 
             particleSystem.EmitRate = 152;
             particleSystem.ParticleLife = 3;
