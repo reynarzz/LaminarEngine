@@ -204,14 +204,18 @@ namespace Game
                             _playerStartPosTest = position;
                         }
 
-                        if (entity.Identifier.Equals("Enemy1"))
+                        switch (entity.Identifier)
                         {
-                            GamePrefabs.Enemies.InstantiateKingPig(position, -1);
+                            case "Enemy1":
+                                GamePrefabs.Enemies.InstantiateKingPig(position, -1);
+                                break;
+                            case "Coin":
+                                GamePrefabs.Collectibles.InstantiateCoin(position);
+                                break;
+                            default:
+                                break;
                         }
-                        if (entity.Identifier.Equals("Coin"))
-                        {
-                            GamePrefabs.Collectibles.InstantiateCoin(position);
-                        }
+                       
                         foreach (var field in entity.FieldInstances)
                         {
                             //Debug.Log("Name: " + field.Identifier + ", Type: " + field.Type + ", Value: " + field.Value);
@@ -279,7 +283,7 @@ namespace Game
                 Physics2D.DrawColliders = !Physics2D.DrawColliders;
             }
 
-            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Enter))
+            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.F11) || Input.GetKeyDown(KeyCode.Enter))
             {
                 Window.FullScreen(!Window.IsFullScreen);
                 Window.MouseVisible = !Window.IsFullScreen;

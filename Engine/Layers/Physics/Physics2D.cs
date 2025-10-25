@@ -20,6 +20,7 @@ namespace Engine
     public static partial class Physics2D
     {
         public static bool DrawColliders { get; set; }
+        public static bool DrawTrueCollidersRotation { get; set; }
         private static readonly B2QueryFilter _defaultQueryFilter = new B2QueryFilter(B2Constants.B2_DEFAULT_CATEGORY_BITS, 
                                                                                       B2Constants.B2_DEFAULT_MASK_BITS);
         private static B2Polygon _boxPolygon;

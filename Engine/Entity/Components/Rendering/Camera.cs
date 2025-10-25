@@ -113,7 +113,7 @@ namespace Engine
             }
         }
 
-        public Camera()
+        public Camera() : base()
         {
             OrthographicSize = 32;
             Fov = 60.0f;

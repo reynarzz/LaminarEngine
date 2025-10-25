@@ -54,7 +54,7 @@ namespace Engine.Layers
                 drawFrictionImpulses = false,
                 drawIslands = false,
             };
-            
+
             Debug.Log("World is valid: " + B2Worlds.b2World_IsValid(PhysicWorld.WorldID));
             B2Worlds.b2World_SetCustomFilterCallback(PhysicWorld.WorldID, CustomFilter, this);
 
@@ -73,7 +73,7 @@ namespace Engine.Layers
         {
             var colA = B2Shapes.b2Shape_GetUserData(shapeIdA) as Collider2D;
             var colB = B2Shapes.b2Shape_GetUserData(shapeIdB) as Collider2D;
-            
+
             return LayerMask.AreEnabled(colA.Actor.Layer, colB.Actor.Layer);
         }
 
@@ -133,7 +133,7 @@ namespace Engine.Layers
             // Example, remove from here
             var transform = new B2Transform();
             transform.p = new B2Vec2(rigidbody.Transform.WorldPosition.x, rigidbody.Transform.WorldPosition.y);
-            transform.q = new B2Rot(1, 0);//rigidbody.Transform.WorldRotation.QuatToB2Rot();
+            transform.q = !Physics2D.DrawTrueCollidersRotation ? new B2Rot(1, 0) : rigidbody.Transform.WorldRotation.QuatToB2Rot();
 
             _colliders.Clear();
             rigidbody.GetComponents(ref _colliders);
