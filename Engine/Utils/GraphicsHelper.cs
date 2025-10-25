@@ -11,9 +11,9 @@ namespace Engine
 {
     internal static class GraphicsHelper
     {
-        internal static GfxResource GetEmptyGeometry<T>(int vertCount, int indexCount, ref GeometryDescriptor geoDesc, VertexAtrib[] vertexAttribs, GfxResource indexBuffer = null) where T: unmanaged
+        internal static GfxResource GetEmptyGeometry<T>(int vertCount, int indexCount, ref GeometryDescriptor geoDesc, GfxResource indexBuffer = null) where T : unmanaged, IVertex<T>
         {
-            if(geoDesc == null)
+            if (geoDesc == null)
             {
                 geoDesc = new GeometryDescriptor();
             }
@@ -24,44 +24,50 @@ namespace Engine
             }
             else
             {
-                geoDesc.IndexDesc = new BufferDataDescriptor<uint>();
-                geoDesc.IndexDesc.Usage = BufferUsage.Dynamic;
-                geoDesc.IndexDesc.Buffer = new uint[indexCount];
+                geoDesc.IndexDesc = new BufferDataDescriptor<uint>()
+                {
+                    Usage = BufferUsage.Dynamic,
+                    Buffer = new uint[indexCount]
+                };
             }
 
             geoDesc.SharedIndexBuffer = indexBuffer;
 
-            geoDesc.VertexDesc = new VertexDataDescriptor();
-            geoDesc.VertexDesc.Attribs = vertexAttribs;
-            geoDesc.VertexDesc.BufferDesc = new BufferDataDescriptor<T>() { Buffer = new T[vertCount] };
-            geoDesc.VertexDesc.BufferDesc.Usage = BufferUsage.Dynamic;
+            geoDesc.VertexDesc = new VertexDataDescriptor()
+            {
+                Attribs = T.GetVertexAttributes(),
+                BufferDesc = new BufferDataDescriptor<T>()
+                {
+                    Buffer = new T[vertCount],
+                    Usage = BufferUsage.Dynamic,
+                }
+            };
 
             return GfxDeviceManager.Current.CreateGeometry(geoDesc);
         }
 
         internal static GfxResource GetScreenQuadGeometry()
         {
-            var geoDesc = new GeometryDescriptor();
-
-            geoDesc.IndexDesc = new BufferDataDescriptor<uint>() { Buffer = [0, 1, 2, 0, 2, 3] };
-            geoDesc.IndexDesc.Usage = BufferUsage.Static;
-
-            geoDesc.VertexDesc = new VertexDataDescriptor();
-
-            unsafe
-            {
-                geoDesc.VertexDesc.Attribs =
-                [
-                    new VertexAtrib() { Count = 3, Normalized = false, Type = GfxValueType.Float, Stride = sizeof(Vertex), Offset = 0 }, // Position
-                    new VertexAtrib() { Count = 2, Normalized = false, Type = GfxValueType.Float, Stride = sizeof(Vertex), Offset = sizeof(float) * 3 }, // UV
-                ];
-            }
-
             QuadVertices vertices = default;
             CreateQuad(ref vertices, QuadUV.DefaultUVs, 2, 2, new vec2(0.5f), Color.White, mat4.identity());
 
-            geoDesc.VertexDesc.BufferDesc = new BufferDataDescriptor<Vertex>() { Buffer = [vertices.v0, vertices.v1, vertices.v2, vertices.v3] };
-            geoDesc.VertexDesc.BufferDesc.Usage = BufferUsage.Static;
+            var geoDesc = new GeometryDescriptor()
+            {
+                IndexDesc = new BufferDataDescriptor<uint>()
+                {
+                    Buffer = [0, 1, 2, 0, 2, 3],
+                    Usage = BufferUsage.Static
+                },
+                VertexDesc = new VertexDataDescriptor()
+                {
+                    Attribs = Vertex.GetVertexAttributes(),
+                    BufferDesc = new BufferDataDescriptor<Vertex>()
+                    {
+                        Buffer = [vertices.v0, vertices.v1, vertices.v2, vertices.v3],
+                        Usage = BufferUsage.Static
+                    }
+                }
+            };
 
             return GfxDeviceManager.Current.CreateGeometry(geoDesc);
         }

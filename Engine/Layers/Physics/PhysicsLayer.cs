@@ -40,7 +40,7 @@ namespace Engine.Layers
                 DrawPointFcn = Box2DDraw.DrawPoint,
                 DrawStringFcn = Box2DDraw.DrawString,
 
-                drawShapes = false,
+                drawShapes = true,
                 drawJoints = true,
                 drawJointExtras = false,
                 drawBounds = false,

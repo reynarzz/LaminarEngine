@@ -25,10 +25,21 @@ namespace Engine
         private static bool _initializedGraphics = false;
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        private struct DebugVertex
+        private struct DebugVertex : IVertex<DebugVertex>
         {
             public vec3 Position;
             public ColorPacketRGBA Color;
+
+            private static unsafe VertexAtrib[] _attribs =
+            [
+                new VertexAtrib() { Count = 3, Normalized = false, Type = GfxValueType.Float, Stride = sizeof(DebugVertex), Offset = 0 }, // Position
+                new VertexAtrib() { Count = 1, Normalized = false, Type = GfxValueType.Uint, Stride = sizeof(DebugVertex), Offset = sizeof(float) * 3 }, // Color
+            ];
+
+            static VertexAtrib[] IVertex<DebugVertex>.GetVertexAttributes()
+            {
+                return _attribs;
+            }
         }
 
         private static string DebugVertexShader = @"
@@ -74,14 +85,7 @@ namespace Engine
 
                 unsafe
                 {
-                    var attribs = new VertexAtrib[]
-                    {
-                        new VertexAtrib() { Count = 3, Normalized = false, Type = GfxValueType.Float, Stride = sizeof(DebugVertex), Offset = 0 }, // Position
-                        new VertexAtrib() { Count = 1, Normalized = false, Type = GfxValueType.Uint, Stride = sizeof(DebugVertex), Offset = sizeof(float) * 3 }, // Color
-                    };
-
-
-                    _linesGeometry = GraphicsHelper.GetEmptyGeometry<DebugVertex>(LINES_MAX_VERTICES, 0, ref _linesGeoDescriptor, attribs);
+                    _linesGeometry = GraphicsHelper.GetEmptyGeometry<DebugVertex>(LINES_MAX_VERTICES, 0, ref _linesGeoDescriptor);
                 }
 
                 _shader = new Shader(DebugVertexShader, DebugFragmentShader);

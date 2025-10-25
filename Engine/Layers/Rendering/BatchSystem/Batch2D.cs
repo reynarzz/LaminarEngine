@@ -75,7 +75,7 @@ namespace Engine.Rendering
         {
             if (TextureSlotArray == null)
             {
-                TextureSlotArray = new int[GfxDeviceManager.Current.GetDeviceInfo().MaxValidTextureUnits-5];
+                TextureSlotArray = new int[GfxDeviceManager.Current.GetDeviceInfo().MaxValidTextureUnits - 5];
                 for (int i = 0; i < TextureSlotArray.Length; i++)
                 {
                     TextureSlotArray[i] = i;
@@ -87,7 +87,7 @@ namespace Engine.Rendering
         {
             MaxVertexSize = maxVertexSize;
             _verticesData = new Vertex[MaxVertexSize];
-            Textures = new Texture[GfxDeviceManager.Current.GetDeviceInfo().MaxValidTextureUnits-5];
+            Textures = new Texture[GfxDeviceManager.Current.GetDeviceInfo().MaxValidTextureUnits - 5];
             _renderers = new Dictionary<Guid, RendererIds>();
 
             // Create geometry buffer for this batch
@@ -98,18 +98,8 @@ namespace Engine.Rendering
             _geoDescriptor.SharedIndexBuffer = sharedIndexBuffer;
             _onRendererDestroyHandler = OnRendererDestroy;
 
-            unsafe
-            {
-                vertexDesc.Attribs =
-                [
-                    new() { Count = 3, Normalized = false, Type = GfxValueType.Float, Stride = sizeof(Vertex), Offset = 0 },                 // Position
-                    new() { Count = 2, Normalized = false, Type = GfxValueType.Float, Stride = sizeof(Vertex), Offset = sizeof(float) * 3 }, // UV
-                    new() { Count = 3, Normalized = false, Type = GfxValueType.Float, Stride = sizeof(Vertex), Offset = sizeof(float) * 5 }, // Normals
-                    new() { Count = 1, Normalized = false, Type = GfxValueType.Uint,  Stride = sizeof(Vertex), Offset = sizeof(uint)  * 8 },  // Color
-                    new() { Count = 1, Normalized = false, Type = GfxValueType.Int,   Stride = sizeof(Vertex), Offset = sizeof(int)   * 9 },  // TextureIndex
-                ];
-                _geoDescriptor.VertexDesc = vertexDesc;
-            }
+            vertexDesc.Attribs = Vertex.GetVertexAttributes();
+            _geoDescriptor.VertexDesc = vertexDesc;
 
             Geometry = GfxDeviceManager.Current.CreateGeometry(_geoDescriptor);
         }

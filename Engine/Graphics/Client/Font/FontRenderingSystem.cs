@@ -19,12 +19,25 @@ namespace Engine.Graphics
         ITexture2DManager IFontStashRenderer2.TextureManager => _textureManager;
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        internal struct FontVertex
+        internal struct FontVertex : IVertex<FontVertex>
         {
             public vec2 Position;
             public vec2 UV;
             public uint Color;
             public int VertexIndex;
+
+            private static unsafe VertexAtrib[] _attribs =
+            [
+                new VertexAtrib() { Count = 2, Normalized = false, Type = GfxValueType.Float, Stride = sizeof(FontVertex), Offset = 0 }, // Position
+                new VertexAtrib() { Count = 2, Normalized = false, Type = GfxValueType.Float, Stride = sizeof(FontVertex), Offset = sizeof(float) * 2 }, // UV
+                new VertexAtrib() { Count = 1, Normalized = false, Type = GfxValueType.Uint, Stride = sizeof(FontVertex), Offset = sizeof(float) * 4 }, // Color
+                new VertexAtrib() { Count = 1, Normalized = false, Type = GfxValueType.Int, Stride = sizeof(FontVertex), Offset = sizeof(float) * 5 }, // charIndex
+            ];
+
+            static VertexAtrib[] IVertex<FontVertex>.GetVertexAttributes()
+            {
+                return _attribs;
+            }
         }
 
         private readonly FontVertex[] _vertexData;
@@ -76,16 +89,7 @@ namespace Engine.Graphics
         {
             unsafe
             {
-                var stride = sizeof(FontVertex);
-                var attribs = new VertexAtrib[]
-                {
-                     new VertexAtrib() { Count = 2, Normalized = false, Type = GfxValueType.Float, Stride = stride, Offset = 0 }, // Position
-                     new VertexAtrib() { Count = 2, Normalized = false, Type = GfxValueType.Float, Stride = stride, Offset = sizeof(float) * 2 }, // UV
-                     new VertexAtrib() { Count = 1, Normalized = false, Type = GfxValueType.Uint, Stride = stride, Offset = sizeof(float) * 4 }, // Color
-                     new VertexAtrib() { Count = 1, Normalized = false, Type = GfxValueType.Int, Stride = stride, Offset = sizeof(float) * 5 }, // charIndex
-                };
-
-                return GraphicsHelper.GetEmptyGeometry<FontVertex>(_vertexData.Length, 0, ref desc, attribs, _sharedIndexBuffer);
+                return GraphicsHelper.GetEmptyGeometry<FontVertex>(_vertexData.Length, 0, ref desc, _sharedIndexBuffer);
             }
         }
 
@@ -127,7 +131,7 @@ namespace Engine.Graphics
                 _geometryDescriptor.VertexDesc.BufferDesc.Count = sizeof(FontVertex) * _vertexIndex;
             }
 
-            (_geometryDescriptor.VertexDesc.BufferDesc as BufferDataDescriptor<FontVertex>).Buffer =_vertexData;
+            (_geometryDescriptor.VertexDesc.BufferDesc as BufferDataDescriptor<FontVertex>).Buffer = _vertexData;
 
             GfxDeviceManager.Current.UpdateResouce(geometryTest, _geometryDescriptor);
             int texIndex = 0;
