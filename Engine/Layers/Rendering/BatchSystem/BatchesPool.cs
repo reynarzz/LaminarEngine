@@ -62,10 +62,10 @@ namespace Engine.Rendering
             newBatch.OnBatchEmpty += OnBatchEmpty;
             // Initialize to clear any old states.
             newBatch.Initialize(renderer);
-            Debug.Info("Create new batch");
 
             _batches.Add(newBatch);
             _batches.Sort((x, y) => x.SortOrder.CompareTo(y.SortOrder));
+            Debug.Info($"Create new batch: ({_batches.Count})");
 
             return newBatch;
         }

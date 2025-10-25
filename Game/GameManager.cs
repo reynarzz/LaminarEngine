@@ -209,7 +209,7 @@ namespace Game
                         }
                         if (entity.Identifier.Equals("Coin"))
                         {
-                            // GamePrefabs.Collectibles.InstantiateCoin(position);
+                            GamePrefabs.Collectibles.InstantiateCoin(position);
                         }
                         foreach (var field in entity.FieldInstances)
                         {

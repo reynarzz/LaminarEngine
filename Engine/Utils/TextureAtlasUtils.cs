@@ -62,38 +62,48 @@ namespace Engine.Utils
         {
             return SliceSprites(texture, tileWidth, tileHeight, new vec2(0.5f, 0.5f));
         }
-
+        public static Sprite[] SliceSprites(Texture2D texture, int tileWidth, int tileHeight, int startIndex, int length)
+        {
+            return SliceSprites(texture, tileWidth, tileHeight, startIndex, length, new vec2(0.5f, 0.5f));
+        }
         public static Sprite[] SliceSprites(Texture2D texture, int tileWidth, int tileHeight, vec2 pivot)
         {
             int tilesX = texture.Width / tileWidth;
             int tilesY = texture.Height / tileHeight;
-            var length = tilesX * tilesY;
+            return SliceSprites(texture, tileWidth, tileHeight, 0, tilesX * tilesY, pivot);
+        }
+
+        public static Sprite[] SliceSprites(Texture2D texture, int tileWidth, int tileHeight,
+                                            int startIndex, int length, vec2 pivot)
+        {
+            int tilesX = texture.Width / tileWidth;
+            int tilesY = texture.Height / tileHeight;
+
             var atlasChunks = new AtlasChunk[length];
             var sprites = new Sprite[length];
 
-            int index = 0;
-            for (int y = tilesY - 1; y >= 0; --y)
+            for (int i = 0; i < length; i++)
             {
-                for (int x = 0; x < tilesX; ++x)
+                int globalIndex = startIndex + i;
+                int x = globalIndex % tilesX;
+                int y = globalIndex / tilesX;
+
+                // Flip y
+                y = tilesY - 1 - y;
+
+                atlasChunks[i] = CreateTileBounds(x * tileWidth, y * tileHeight, tileWidth, tileHeight,
+                                                  pivot.x, pivot.y, texture.Width, texture.Height);
+                sprites[i] = new Sprite()
                 {
-                    var chunk = CreateTileBounds(x * tileWidth, (y) * tileHeight, tileWidth, tileHeight, 0.5f, 0.5f, texture.Width, texture.Height);
-
-                    var sprite = new Sprite();
-                    sprite.Texture = texture;
-                    sprite.AtlasIndex = index;
-                    chunk.Pivot = pivot;
-
-                    sprites[index] = sprite;
-                    atlasChunks[index] = chunk;
-
-                    index++;
-                }
+                    Texture = texture,
+                    AtlasIndex = i
+                };
             }
 
             texture.Atlas.SetChunks(atlasChunks);
-
             return sprites;
         }
+
 
         public QuadUV ConvertTexCoordToGraphicsApiCompatible(QuadUV coord)
         {

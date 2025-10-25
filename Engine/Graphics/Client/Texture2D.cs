@@ -20,8 +20,8 @@ namespace Engine
             }
         }
 
-        public static Texture2D White => new Texture2D("WhiteTexture_Internal", Guid.NewGuid(), TextureMode.Clamp, 1, 1, 4, 1, [0xFF, 0xFF, 0xFF, 0xFF]);
-        public static Texture2D Black => new Texture2D("BlackTexture_Internal", Guid.NewGuid(), TextureMode.Clamp, 1, 1, 4, 1, [0x00, 0x00, 0x00, 0x00]);
+        public static Texture2D White { get; } = new Texture2D("WhiteTexture_Internal", Guid.NewGuid(), TextureMode.Clamp, 1, 1, 4, 1, [0xFF, 0xFF, 0xFF, 0xFF]);
+        public static Texture2D Black { get; } = new Texture2D("BlackTexture_Internal", Guid.NewGuid(), TextureMode.Clamp, 1, 1, 4, 1, [0x00, 0x00, 0x00, 0xFF]);
 
         public Texture2D(string path, Guid guid, TextureMode mode, int width, int height, int channels, int pixelsPerUnit, byte[] data) :
                 base(path, guid, mode, width, height, channels, data)
