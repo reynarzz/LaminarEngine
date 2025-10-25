@@ -67,10 +67,11 @@ vec2 getGlitchOffset(vec2 uv, float time)
 
     return vec2(rowOffset, vOffset);
 }
+uniform float uPixelationAmount = 2.0f;
 
 void main()
 {
-    // Wobbly distortion
+    // Wobble distortion
     float wave1 = sin((screenUV.y * 3.1 + uTime.x * 0.3) * 40.0);
     float wave2 = cos((screenUV.x * 3.1 + uTime.x * 0.2) * 35.0);
     float wave3 = sin((screenUV.x + screenUV.y) * 10.0 + uTime.x * 0.5);
@@ -82,10 +83,22 @@ void main()
     // Glitch offsets
     vec2 glitch = getGlitchOffset(screenUV, uTime.x);
 
+    // Pixelation
+    // uPixelationAmount = how many pixels across the screen (e.g. 160 = heavy pixelation)
+    vec2 pixelatedUV = screenUV;
+    if (uPixelationAmount > 1.0)
+    {
+        vec2 pixelSize = vec2(1.0) / (uScreenSize / uPixelationAmount);
+        pixelatedUV = floor(screenUV / pixelSize) * pixelSize + pixelSize * 0.5;
+    }
+
+    // Apply wobble and glitch to pixelated UVs
+    vec2 baseUV = pixelatedUV + wobble + glitch;
+
     // Color channel split
-    vec2 rUV = screenUV + wobble + glitch + vec2(uColorSplit, 0.0);
-    vec2 gUV = screenUV + wobble + glitch;
-    vec2 bUV = screenUV + wobble + glitch - vec2(uColorSplit, 0.0);
+    vec2 rUV = baseUV + vec2(uColorSplit, 0.0);
+    vec2 gUV = baseUV;
+    vec2 bUV = baseUV - vec2(uColorSplit, 0.0);
 
     vec3 base = vec3(
         texture(uScreenGrabTex, rUV).r,
@@ -94,9 +107,10 @@ void main()
     );
 
     vec3 outline = getQuadEdgeOutline(fragUV);
-    float aspect= uScreenSize.x / uScreenSize.y;
+    float aspect = uScreenSize.x / uScreenSize.y;
 
     vec3 stars = vec3(texture(uStarsTex, vec2(worldUV.x, worldUV.y) * 2.5 + vec2(0, uTime.x * 0.2)).a);
 
     fragColor = vec4(base + stars + outline, 1.0) * vColor;
 }
+

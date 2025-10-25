@@ -18,12 +18,13 @@ namespace Game
         }
         public override void OnUpdate()
         {
+            Context.Walk(0);
+
             if ((_celebrationWaitTime -= Time.DeltaTime) > 0)
                 return;
 
             if (!Context.Target.IsCharacterAlive())
             {
-                Context.Walk(0);
                 Context.Jump();
             }
             else

@@ -20,14 +20,14 @@
 				"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 				"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 				"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-				"entityIid": "35827bd0-8560-11f0-a2f8-1384a29ebc8c"
+				"entityIid": "523fb710-ac70-11f0-ad00-7b52ae2081f8"
 			}],
 			"instancesData": [{ "iids": {
 				"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 				"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 				"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-				"entityIid": "35827bd0-8560-11f0-a2f8-1384a29ebc8c"
-			}, "worldX": -414, "worldY": 153, "widPx": 20, "heiPx": 20, "fields" : {} }]
+				"entityIid": "523fb710-ac70-11f0-ad00-7b52ae2081f8"
+			}, "worldX": -440, "worldY": 144, "widPx": 20, "heiPx": 20, "fields" : {} }]
 		},
 		{
 			"identifier": "Enemy1",
@@ -127,295 +127,625 @@
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "e6018050-ac70-11f0-8af9-cd2d2d57ed7e"
+					"entityIid": "fcb0d630-ac70-11f0-ad00-37637b6d7f62"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "ed3dc400-ac70-11f0-8af9-738f6a835361"
+					"entityIid": "fd3a5180-ac70-11f0-ad00-53a0a6377ec8"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "edc89ee0-ac70-11f0-8af9-f381d9cc1f0e"
+					"entityIid": "fdbeead0-ac70-11f0-ad00-ef181126dc01"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "ee15fb90-ac70-11f0-8af9-5b05be4fea26"
+					"entityIid": "fe349000-ac70-11f0-ad00-c707b225252c"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "ee559ca0-ac70-11f0-8af9-c78d64187205"
+					"entityIid": "018dcd20-ac70-11f0-ad00-f3bda29c4b2f"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "ee8a8f50-ac70-11f0-8af9-e3f0a048967e"
+					"entityIid": "01f03870-ac70-11f0-ad00-1719f2b8a799"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "ef87b400-ac70-11f0-8af9-39a8554d5a1e"
+					"entityIid": "025f7500-ac70-11f0-ad00-a5abb78e3cc4"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "f081f280-ac70-11f0-8af9-2360fa4cfdab"
+					"entityIid": "02bcb030-ac70-11f0-ad00-258859e58cda"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "f2499320-ac70-11f0-8af9-d94750ca77a1"
+					"entityIid": "0315ccb0-ac70-11f0-ad00-cbd9e387e07d"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "f295de60-ac70-11f0-8af9-335f4a1c42ef"
+					"entityIid": "04afcda0-ac70-11f0-ad00-f5a4c4de58e1"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "f2e20290-ac70-11f0-8af9-9745cfa73761"
+					"entityIid": "053bb9f0-ac70-11f0-ad00-a3545c44913f"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "f35f21d0-ac70-11f0-8af9-4f2499d2329b"
+					"entityIid": "06bd77f0-ac70-11f0-ad00-9b537f79bb13"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "f3aea160-ac70-11f0-8af9-7b55ed1094ad"
+					"entityIid": "071ab320-ac70-11f0-ad00-f5659a7bf5d5"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "f3eb0e20-ac70-11f0-8af9-e965794c6e08"
+					"entityIid": "07cbb3a0-ac70-11f0-ad00-b1abbd26c0df"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "f4266970-ac70-11f0-8af9-f9e09d40e1b8"
+					"entityIid": "08426a40-ac70-11f0-ad00-d530175b662c"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "f4a13ec0-ac70-11f0-8af9-639e8ba9c632"
+					"entityIid": "08f9ac50-ac70-11f0-ad00-51469230767d"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "f547b7f0-ac70-11f0-8af9-77ae410faefd"
+					"entityIid": "0b4f3510-ac70-11f0-ad00-311bc0aed1fe"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "f6923950-ac70-11f0-8af9-d3e2edb233db"
+					"entityIid": "0bc2b760-ac70-11f0-ad00-e15c317b13fe"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "f6d2c4c0-ac70-11f0-8af9-3568e441e188"
+					"entityIid": "0c422090-ac70-11f0-ad00-03d13b5aa881"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "f7137740-ac70-11f0-8af9-6b55252bd154"
+					"entityIid": "0daf9340-ac70-11f0-ad00-eb17bd48fcc8"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "f77c7240-ac70-11f0-8af9-e3405b37e948"
+					"entityIid": "0e0cce70-ac70-11f0-ad00-8753df8a24f8"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "f7cbf1d0-ac70-11f0-8af9-6d4fedd94f2e"
+					"entityIid": "0e89c6a0-ac70-11f0-ad00-b96e810ec2e6"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "fa22b310-ac70-11f0-8af9-a963b91cb5eb"
+					"entityIid": "0f049bf0-ac70-11f0-ad00-437b3feaa14e"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "fa536000-ac70-11f0-8af9-df6fe9c62f5a"
+					"entityIid": "0fc3a630-ac70-11f0-ad00-133c425aa1cc"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "fa874140-ac70-11f0-8af9-d3d049f15450"
+					"entityIid": "1026fbe0-ac70-11f0-ad00-4f3ad1ab7409"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "fb3311a0-ac70-11f0-8af9-15cc2d1cb3aa"
+					"entityIid": "108ce9a0-ac70-11f0-ad00-a9b03ad71df3"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "fbc650f0-ac70-11f0-8af9-e7086453b39f"
+					"entityIid": "15eb4590-ac70-11f0-ad00-bf164405860d"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "fcfef800-ac70-11f0-8af9-e90ad8963d3b"
+					"entityIid": "1b6e8ea0-ac70-11f0-ad00-b5245aa9a08f"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "fea38040-ac70-11f0-8af9-b1db2d8a485c"
+					"entityIid": "1bb6bb30-ac70-11f0-ad00-ef47d29e9db9"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "00320f80-ac70-11f0-8af9-b9a8a6a9d31c"
+					"entityIid": "1becbf50-ac70-11f0-ad00-13a5dcd05a90"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "00805690-ac70-11f0-8af9-7d7e726443a0"
+					"entityIid": "1c270930-ac70-11f0-ad00-731b8f2e5dca"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "00bdd4c0-ac70-11f0-8af9-e94e5c5627ab"
+					"entityIid": "1d5a5910-ac70-11f0-ad00-772e6d863ac9"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "014ddfc0-ac70-11f0-8af9-f19823834dac"
+					"entityIid": "1dbceb70-ac70-11f0-ad00-31e8cd078aaf"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "01851c60-ac70-11f0-8af9-c31ae6f8747f"
+					"entityIid": "1df81fb0-ac70-11f0-ad00-6d0001621fa8"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "02ce8c50-ac70-11f0-8af9-8d6bc2ba936d"
+					"entityIid": "1e7fed50-ac70-11f0-ad00-cff2f7379a15"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "033675e0-ac70-11f0-8af9-cf0ad8e07176"
+					"entityIid": "1ece3460-ac70-11f0-ad00-077e4d3d07c6"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "03cac6a0-ac70-11f0-8af9-5da74c0f6777"
+					"entityIid": "1f31d830-ac70-11f0-ad00-01bcc596a458"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "0457c460-ac70-11f0-8af9-b3546464836c"
+					"entityIid": "2122d2c0-ac70-11f0-ad00-31de683d5cac"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "04afcf70-ac70-11f0-8af9-290294612897"
+					"entityIid": "21a214e0-ac70-11f0-ad00-c7300fd7b3d3"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "051ff660-ac70-11f0-8af9-c7168d6895fc"
+					"entityIid": "221dfba0-ac70-11f0-ad00-2930f1af770c"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "05d53ca0-ac70-11f0-8af9-8d5ba0930d12"
+					"entityIid": "229af3d0-ac70-11f0-ad00-fb0fa6ec7562"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "ad30bee0-ac70-11f0-8af9-13f1b56f931b"
+					"entityIid": "23601890-ac70-11f0-ad00-63dd2f677c19"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "adaca5a0-ac70-11f0-8af9-4beaca8cfabd"
+					"entityIid": "23e15680-ac70-11f0-ad00-6bed304af107"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "affb5090-ac70-11f0-8af9-15888eb30d4a"
+					"entityIid": "2802ecb0-ac70-11f0-ad00-4707ca9d1b29"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "b0e64cd0-ac70-11f0-8af9-6f7243934091"
+					"entityIid": "28864d80-ac70-11f0-ad00-8919d31116eb"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "b1aa8730-ac70-11f0-8af9-c7e39cb9f446"
+					"entityIid": "28f58a10-ac70-11f0-ad00-81620b97e85c"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "b1df52d0-ac70-11f0-8af9-2560a0acae27"
+					"entityIid": "295a3f50-ac70-11f0-ad00-712aaac7a015"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "b21dbb60-ac70-11f0-8af9-6f62ad20508f"
+					"entityIid": "29acf330-ac70-11f0-ad00-97575bbe45e3"
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "b25c4b00-ac70-11f0-8af9-831b173104da"
+					"entityIid": "29ff8000-ac70-11f0-ad00-25b6297e4a02"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "2a6323d0-ac70-11f0-ad00-8f9e107a50b3"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "5250e430-ac70-11f0-ad00-079ca592d421"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "52e77ee0-ac70-11f0-ad00-537138c60587"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "53656170-ac70-11f0-ad00-d979acc7334a"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "79736550-ac70-11f0-ad00-f980399d993d"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "7a5d7730-ac70-11f0-ad00-97f9ee85ab1b"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "7adc9240-ac70-11f0-ad00-e54cca26be6c"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "7df67c70-ac70-11f0-ad00-9ff898bdc28a"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "7e9bbd20-ac70-11f0-ad00-a1e23e8f084f"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "7f079e50-ac70-11f0-ad00-fd1dba830f38"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "80797dd0-ac70-11f0-ad00-f30f89e03757"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "80d161d0-ac70-11f0-ad00-130454e23a31"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "960f4f30-ac70-11f0-ad00-cb08c8702a31"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "96686bb0-ac70-11f0-ad00-d148315eea9f"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "96c27290-ac70-11f0-ad00-337f8e5ff65a"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "96f876b0-ac70-11f0-ad00-533da34c08d5"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "982229a0-ac70-11f0-ad00-4f4cbf859b60"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "98fd9580-ac70-11f0-ad00-e9f761d0ee66"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "9b80e500-ac70-11f0-ad00-e965c9f4f2ce"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "9e5ae000-ac70-11f0-ad00-8dae97447f52"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "9ec0a6b0-ac70-11f0-ad00-edb71f571a25"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "9f2caef0-ac70-11f0-ad00-597aa10e825e"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "9f9052c0-ac70-11f0-ad00-0db7e0840714"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "9fd32820-ac70-11f0-ad00-658811ca0ad9"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "a01c3f10-ac70-11f0-ad00-cbe809c2ee95"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "a05be020-ac70-11f0-ad00-0fe97df328cc"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "a0ad5b80-ac70-11f0-ad00-ad472f811c6a"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "c69e08d0-ac70-11f0-ad00-1ba62f3def33"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "c7d7c150-ac70-11f0-ad00-f1cceb7268ad"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "c812f590-ac70-11f0-ad00-61384d34d7b0"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "c8a76d60-ac70-11f0-ad00-e1f8bc050b37"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "c9695dd0-ac70-11f0-ad00-052ee8e20e59"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "c9e98a50-ac70-11f0-ad00-456859acbe83"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "caf15d60-ac70-11f0-ad00-0fe4662ee0c0"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "db2a3260-ac70-11f0-ad00-f5ab873fa27a"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "dc65bfa0-ac70-11f0-ad00-4b38149c9b1d"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "dd1e3a30-ac70-11f0-ad00-c980bb0491a3"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "ddf78330-ac70-11f0-ad00-bbabb1144baf"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "de618fa0-ac70-11f0-ad00-255edef80a50"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "df4fc030-ac70-11f0-ad00-47d4a6c3fd87"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "e84a2ea0-ac70-11f0-ad00-07d9ea3aa24d"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "e8e1b3b0-ac70-11f0-ad00-69f2255e19ef"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "e92684e0-ac70-11f0-ad00-b3d668c79a35"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "e973e190-ac70-11f0-ad00-b965b25d79fb"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "e9b49410-ac70-11f0-ad00-d3f19dc4142e"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "ea1f8ae0-ac70-11f0-ad00-d3d89d656c42"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "ebba9d40-ac70-11f0-ad00-0b7b25c5d7a7"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "ecc07480-ac70-11f0-ad00-21bff3f9b08e"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "ed045b50-ac70-11f0-ad00-e92c66e3b191"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "ed804210-ac70-11f0-ad00-6b23bf145baa"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "edc86ea0-ac70-11f0-ad00-1dd4cfe0e082"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f14d0180-ac70-11f0-ad00-afcb27c10edc"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f1afbaf0-ac70-11f0-ad00-8d33736dff91"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f2122640-ac70-11f0-ad00-57751bac7ad2"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f2807870-ac70-11f0-ad00-4b2d20536f23"
 				}
 			],
 			"instancesData": [
@@ -423,296 +753,626 @@
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "e6018050-ac70-11f0-8af9-cd2d2d57ed7e"
-				}, "worldX": -396, "worldY": 113, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "fcb0d630-ac70-11f0-ad00-37637b6d7f62"
+				}, "worldX": -136, "worldY": -40, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "ed3dc400-ac70-11f0-8af9-738f6a835361"
-				}, "worldX": -369, "worldY": 113, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "fd3a5180-ac70-11f0-ad00-53a0a6377ec8"
+				}, "worldX": -168, "worldY": -56, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "edc89ee0-ac70-11f0-8af9-f381d9cc1f0e"
-				}, "worldX": -324, "worldY": 113, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "fdbeead0-ac70-11f0-ad00-ef181126dc01"
+				}, "worldX": -104, "worldY": -56, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "ee15fb90-ac70-11f0-8af9-5b05be4fea26"
-				}, "worldX": -224, "worldY": 115, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "fe349000-ac70-11f0-ad00-c707b225252c"
+				}, "worldX": -72, "worldY": -40, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "ee559ca0-ac70-11f0-8af9-c78d64187205"
-				}, "worldX": -168, "worldY": 121, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "018dcd20-ac70-11f0-ad00-f3bda29c4b2f"
+				}, "worldX": -424, "worldY": -120, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "ee8a8f50-ac70-11f0-8af9-e3f0a048967e"
-				}, "worldX": -108, "worldY": 118, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "01f03870-ac70-11f0-ad00-1719f2b8a799"
+				}, "worldX": -392, "worldY": -120, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "ef87b400-ac70-11f0-8af9-39a8554d5a1e"
-				}, "worldX": -65, "worldY": 126, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "025f7500-ac70-11f0-ad00-a5abb78e3cc4"
+				}, "worldX": -360, "worldY": -120, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "f081f280-ac70-11f0-8af9-2360fa4cfdab"
-				}, "worldX": -36, "worldY": 126, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "02bcb030-ac70-11f0-ad00-258859e58cda"
+				}, "worldX": -328, "worldY": -120, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "f2499320-ac70-11f0-8af9-d94750ca77a1"
-				}, "worldX": -481, "worldY": 17, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "0315ccb0-ac70-11f0-ad00-cbd9e387e07d"
+				}, "worldX": -296, "worldY": -120, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "f295de60-ac70-11f0-8af9-335f4a1c42ef"
-				}, "worldX": -481, "worldY": -19, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "04afcda0-ac70-11f0-ad00-f5a4c4de58e1"
+				}, "worldX": -488, "worldY": 8, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "f2e20290-ac70-11f0-8af9-9745cfa73761"
-				}, "worldX": -479, "worldY": -47, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "053bb9f0-ac70-11f0-ad00-a3545c44913f"
+				}, "worldX": -488, "worldY": -24, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "f35f21d0-ac70-11f0-8af9-4f2499d2329b"
-				}, "worldX": -478, "worldY": -93, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "06bd77f0-ac70-11f0-ad00-9b537f79bb13"
+				}, "worldX": -488, "worldY": -56, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "f3aea160-ac70-11f0-8af9-7b55ed1094ad"
-				}, "worldX": -478, "worldY": -126, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "071ab320-ac70-11f0-ad00-f5659a7bf5d5"
+				}, "worldX": -488, "worldY": -88, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "f3eb0e20-ac70-11f0-8af9-e965794c6e08"
-				}, "worldX": -477, "worldY": -160, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "07cbb3a0-ac70-11f0-ad00-b1abbd26c0df"
+				}, "worldX": -488, "worldY": -120, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "f4266970-ac70-11f0-8af9-f9e09d40e1b8"
-				}, "worldX": -476, "worldY": -195, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "08426a40-ac70-11f0-ad00-d530175b662c"
+				}, "worldX": -488, "worldY": -152, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "f4a13ec0-ac70-11f0-8af9-639e8ba9c632"
-				}, "worldX": -417, "worldY": -135, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "08f9ac50-ac70-11f0-ad00-51469230767d"
+				}, "worldX": -488, "worldY": -184, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "f547b7f0-ac70-11f0-8af9-77ae410faefd"
-				}, "worldX": -388, "worldY": -123, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "0b4f3510-ac70-11f0-ad00-311bc0aed1fe"
+				}, "worldX": -392, "worldY": 136, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "f6923950-ac70-11f0-8af9-d3e2edb233db"
-				}, "worldX": -166, "worldY": -36, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "0bc2b760-ac70-11f0-ad00-e15c317b13fe"
+				}, "worldX": -360, "worldY": 136, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "f6d2c4c0-ac70-11f0-8af9-3568e441e188"
-				}, "worldX": -143, "worldY": -39, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "0c422090-ac70-11f0-ad00-03d13b5aa881"
+				}, "worldX": -328, "worldY": 136, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "f7137740-ac70-11f0-8af9-6b55252bd154"
-				}, "worldX": -94, "worldY": -35, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "0daf9340-ac70-11f0-ad00-eb17bd48fcc8"
+				}, "worldX": -232, "worldY": 136, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "f77c7240-ac70-11f0-8af9-e3405b37e948"
-				}, "worldX": -122, "worldY": -35, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "0e0cce70-ac70-11f0-ad00-8753df8a24f8"
+				}, "worldX": -200, "worldY": 136, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "f7cbf1d0-ac70-11f0-8af9-6d4fedd94f2e"
-				}, "worldX": -52, "worldY": -39, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "0e89c6a0-ac70-11f0-ad00-b96e810ec2e6"
+				}, "worldX": -168, "worldY": 136, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "fa22b310-ac70-11f0-8af9-a963b91cb5eb"
-				}, "worldX": 410, "worldY": 223, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "0f049bf0-ac70-11f0-ad00-437b3feaa14e"
+				}, "worldX": -136, "worldY": 136, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "fa536000-ac70-11f0-8af9-df6fe9c62f5a"
-				}, "worldX": 431, "worldY": 223, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "0fc3a630-ac70-11f0-ad00-133c425aa1cc"
+				}, "worldX": -104, "worldY": 136, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "fa874140-ac70-11f0-8af9-d3d049f15450"
-				}, "worldX": 466, "worldY": 219, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "1026fbe0-ac70-11f0-ad00-4f3ad1ab7409"
+				}, "worldX": -72, "worldY": 136, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "fb3311a0-ac70-11f0-8af9-15cc2d1cb3aa"
-				}, "worldX": 531, "worldY": 88, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "108ce9a0-ac70-11f0-ad00-a9b03ad71df3"
+				}, "worldX": -40, "worldY": 136, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "fbc650f0-ac70-11f0-8af9-e7086453b39f"
-				}, "worldX": 612, "worldY": 123, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "15eb4590-ac70-11f0-ad00-bf164405860d"
+				}, "worldX": 616, "worldY": 104, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "fcfef800-ac70-11f0-8af9-e90ad8963d3b"
-				}, "worldX": 638, "worldY": 103, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "1b6e8ea0-ac70-11f0-ad00-b5245aa9a08f"
+				}, "worldX": 488, "worldY": -56, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "fea38040-ac70-11f0-8af9-b1db2d8a485c"
-				}, "worldX": 481, "worldY": 42, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "1bb6bb30-ac70-11f0-ad00-ef47d29e9db9"
+				}, "worldX": 504, "worldY": -56, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "00320f80-ac70-11f0-8af9-b9a8a6a9d31c"
-				}, "worldX": 768, "worldY": 73, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "1becbf50-ac70-11f0-ad00-13a5dcd05a90"
+				}, "worldX": 504, "worldY": -72, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "00805690-ac70-11f0-8af9-7d7e726443a0"
-				}, "worldX": 805, "worldY": 73, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "1c270930-ac70-11f0-ad00-731b8f2e5dca"
+				}, "worldX": 488, "worldY": -72, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "00bdd4c0-ac70-11f0-8af9-e94e5c5627ab"
-				}, "worldX": 840, "worldY": 73, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "1d5a5910-ac70-11f0-ad00-772e6d863ac9"
+				}, "worldX": 488, "worldY": -88, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "014ddfc0-ac70-11f0-8af9-f19823834dac"
-				}, "worldX": 914, "worldY": 76, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "1dbceb70-ac70-11f0-ad00-31e8cd078aaf"
+				}, "worldX": 504, "worldY": -88, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "01851c60-ac70-11f0-8af9-c31ae6f8747f"
-				}, "worldX": 939, "worldY": 76, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "1df81fb0-ac70-11f0-ad00-6d0001621fa8"
+				}, "worldX": 504, "worldY": -104, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "02ce8c50-ac70-11f0-8af9-8d6bc2ba936d"
-				}, "worldX": 599, "worldY": -65, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "1e7fed50-ac70-11f0-ad00-cff2f7379a15"
+				}, "worldX": 488, "worldY": -104, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "033675e0-ac70-11f0-8af9-cf0ad8e07176"
-				}, "worldX": 509, "worldY": -56, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "1ece3460-ac70-11f0-ad00-077e4d3d07c6"
+				}, "worldX": 488, "worldY": -120, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "03cac6a0-ac70-11f0-8af9-5da74c0f6777"
-				}, "worldX": 490, "worldY": -56, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "1f31d830-ac70-11f0-ad00-01bcc596a458"
+				}, "worldX": 504, "worldY": -120, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "0457c460-ac70-11f0-8af9-b3546464836c"
-				}, "worldX": 486, "worldY": -89, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "2122d2c0-ac70-11f0-ad00-31de683d5cac"
+				}, "worldX": 760, "worldY": 56, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "04afcf70-ac70-11f0-8af9-290294612897"
-				}, "worldX": 509, "worldY": -87, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "21a214e0-ac70-11f0-ad00-c7300fd7b3d3"
+				}, "worldX": 792, "worldY": 56, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "051ff660-ac70-11f0-8af9-c7168d6895fc"
-				}, "worldX": 494, "worldY": -117, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "221dfba0-ac70-11f0-ad00-2930f1af770c"
+				}, "worldX": 824, "worldY": 56, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "05d53ca0-ac70-11f0-8af9-8d5ba0930d12"
-				}, "worldX": 518, "worldY": -117, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "229af3d0-ac70-11f0-ad00-fb0fa6ec7562"
+				}, "worldX": 856, "worldY": 56, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "ad30bee0-ac70-11f0-8af9-13f1b56f931b"
-				}, "worldX": 935, "worldY": -173, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "23601890-ac70-11f0-ad00-63dd2f677c19"
+				}, "worldX": 904, "worldY": 56, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "adaca5a0-ac70-11f0-8af9-4beaca8cfabd"
-				}, "worldX": 933, "worldY": -102, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "23e15680-ac70-11f0-ad00-6bed304af107"
+				}, "worldX": 936, "worldY": 56, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "affb5090-ac70-11f0-8af9-15888eb30d4a"
-				}, "worldX": 935, "worldY": -142, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "2802ecb0-ac70-11f0-ad00-4707ca9d1b29"
+				}, "worldX": 936, "worldY": -184, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "b0e64cd0-ac70-11f0-8af9-6f7243934091"
-				}, "worldX": 933, "worldY": -78, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "28864d80-ac70-11f0-ad00-8919d31116eb"
+				}, "worldX": 936, "worldY": -152, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "b1aa8730-ac70-11f0-8af9-c7e39cb9f446"
-				}, "worldX": 936, "worldY": -52, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "28f58a10-ac70-11f0-ad00-81620b97e85c"
+				}, "worldX": 936, "worldY": -120, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "b1df52d0-ac70-11f0-8af9-2560a0acae27"
-				}, "worldX": 939, "worldY": -25, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "295a3f50-ac70-11f0-ad00-712aaac7a015"
+				}, "worldX": 936, "worldY": -88, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "b21dbb60-ac70-11f0-8af9-6f62ad20508f"
-				}, "worldX": 939, "worldY": 2, "widPx": 20, "heiPx": 20, "fields" : {} },
+					"entityIid": "29acf330-ac70-11f0-ad00-97575bbe45e3"
+				}, "worldX": 936, "worldY": -56, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "b25c4b00-ac70-11f0-8af9-831b173104da"
-				}, "worldX": 938, "worldY": 27, "widPx": 20, "heiPx": 20, "fields" : {} }
+					"entityIid": "29ff8000-ac70-11f0-ad00-25b6297e4a02"
+				}, "worldX": 936, "worldY": -24, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "2a6323d0-ac70-11f0-ad00-8f9e107a50b3"
+				}, "worldX": 936, "worldY": 8, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "5250e430-ac70-11f0-ad00-079ca592d421"
+				}, "worldX": 472, "worldY": 216, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "52e77ee0-ac70-11f0-ad00-537138c60587"
+				}, "worldX": 440, "worldY": 216, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "53656170-ac70-11f0-ad00-d979acc7334a"
+				}, "worldX": 408, "worldY": 216, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "79736550-ac70-11f0-ad00-f980399d993d"
+				}, "worldX": 872, "worldY": -88, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "7a5d7730-ac70-11f0-ad00-97f9ee85ab1b"
+				}, "worldX": 808, "worldY": -72, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "7adc9240-ac70-11f0-ad00-e54cca26be6c"
+				}, "worldX": 808, "worldY": -40, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "7df67c70-ac70-11f0-ad00-9ff898bdc28a"
+				}, "worldX": 840, "worldY": -24, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "7e9bbd20-ac70-11f0-ad00-a1e23e8f084f"
+				}, "worldX": 824, "worldY": -72, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "7f079e50-ac70-11f0-ad00-fd1dba830f38"
+				}, "worldX": 824, "worldY": -56, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "80797dd0-ac70-11f0-ad00-f30f89e03757"
+				}, "worldX": 840, "worldY": -88, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "80d161d0-ac70-11f0-ad00-130454e23a31"
+				}, "worldX": 840, "worldY": -72, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "960f4f30-ac70-11f0-ad00-cb08c8702a31"
+				}, "worldX": 840, "worldY": -56, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "96686bb0-ac70-11f0-ad00-d148315eea9f"
+				}, "worldX": 840, "worldY": -40, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "96c27290-ac70-11f0-ad00-337f8e5ff65a"
+				}, "worldX": 856, "worldY": -24, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "96f876b0-ac70-11f0-ad00-533da34c08d5"
+				}, "worldX": 856, "worldY": -40, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "982229a0-ac70-11f0-ad00-4f4cbf859b60"
+				}, "worldX": 856, "worldY": -56, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "98fd9580-ac70-11f0-ad00-e9f761d0ee66"
+				}, "worldX": 856, "worldY": -88, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "9b80e500-ac70-11f0-ad00-e965c9f4f2ce"
+				}, "worldX": 872, "worldY": -56, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "9e5ae000-ac70-11f0-ad00-8dae97447f52"
+				}, "worldX": 856, "worldY": -72, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "9ec0a6b0-ac70-11f0-ad00-edb71f571a25"
+				}, "worldX": 872, "worldY": -40, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "9f2caef0-ac70-11f0-ad00-597aa10e825e"
+				}, "worldX": 872, "worldY": -24, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "9f9052c0-ac70-11f0-ad00-0db7e0840714"
+				}, "worldX": 888, "worldY": -24, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "9fd32820-ac70-11f0-ad00-658811ca0ad9"
+				}, "worldX": 888, "worldY": -40, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "a01c3f10-ac70-11f0-ad00-cbe809c2ee95"
+				}, "worldX": 888, "worldY": -56, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "a05be020-ac70-11f0-ad00-0fe97df328cc"
+				}, "worldX": 888, "worldY": -72, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "a0ad5b80-ac70-11f0-ad00-ad472f811c6a"
+				}, "worldX": 888, "worldY": -88, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "c69e08d0-ac70-11f0-ad00-1ba62f3def33"
+				}, "worldX": 872, "worldY": -72, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "c7d7c150-ac70-11f0-ad00-f1cceb7268ad"
+				}, "worldX": 824, "worldY": -40, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "c812f590-ac70-11f0-ad00-61384d34d7b0"
+				}, "worldX": 824, "worldY": -24, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "c8a76d60-ac70-11f0-ad00-e1f8bc050b37"
+				}, "worldX": 824, "worldY": -88, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "c9695dd0-ac70-11f0-ad00-052ee8e20e59"
+				}, "worldX": 808, "worldY": -56, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "c9e98a50-ac70-11f0-ad00-456859acbe83"
+				}, "worldX": 808, "worldY": -88, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "caf15d60-ac70-11f0-ad00-0fe4662ee0c0"
+				}, "worldX": 808, "worldY": -40, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "db2a3260-ac70-11f0-ad00-f5ab873fa27a"
+				}, "worldX": 632, "worldY": 104, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "dc65bfa0-ac70-11f0-ad00-4b38149c9b1d"
+				}, "worldX": 536, "worldY": 72, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "dd1e3a30-ac70-11f0-ad00-c980bb0491a3"
+				}, "worldX": 488, "worldY": 24, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "ddf78330-ac70-11f0-ad00-bbabb1144baf"
+				}, "worldX": 552, "worldY": -24, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "de618fa0-ac70-11f0-ad00-255edef80a50"
+				}, "worldX": 568, "worldY": -24, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "df4fc030-ac70-11f0-ad00-47d4a6c3fd87"
+				}, "worldX": 600, "worldY": -88, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "e84a2ea0-ac70-11f0-ad00-07d9ea3aa24d"
+				}, "worldX": -472, "worldY": 8, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "e8e1b3b0-ac70-11f0-ad00-69f2255e19ef"
+				}, "worldX": -472, "worldY": -24, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "e92684e0-ac70-11f0-ad00-b3d668c79a35"
+				}, "worldX": -472, "worldY": -56, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "e973e190-ac70-11f0-ad00-b965b25d79fb"
+				}, "worldX": -472, "worldY": -88, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "e9b49410-ac70-11f0-ad00-d3f19dc4142e"
+				}, "worldX": -472, "worldY": -120, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "ea1f8ae0-ac70-11f0-ad00-d3d89d656c42"
+				}, "worldX": -472, "worldY": -152, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "ebba9d40-ac70-11f0-ad00-0b7b25c5d7a7"
+				}, "worldX": -472, "worldY": -184, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "ecc07480-ac70-11f0-ad00-21bff3f9b08e"
+				}, "worldX": -488, "worldY": -216, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "ed045b50-ac70-11f0-ad00-e92c66e3b191"
+				}, "worldX": -472, "worldY": -216, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "ed804210-ac70-11f0-ad00-6b23bf145baa"
+				}, "worldX": -488, "worldY": -248, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "edc86ea0-ac70-11f0-ad00-1dd4cfe0e082"
+				}, "worldX": -472, "worldY": -248, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f14d0180-ac70-11f0-ad00-afcb27c10edc"
+				}, "worldX": 8, "worldY": 120, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f1afbaf0-ac70-11f0-ad00-8d33736dff91"
+				}, "worldX": 40, "worldY": 120, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f2122640-ac70-11f0-ad00-57751bac7ad2"
+				}, "worldX": 72, "worldY": 120, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f2807870-ac70-11f0-ad00-4b2d20536f23"
+				}, "worldX": 104, "worldY": 120, "widPx": 20, "heiPx": 20, "fields" : {} }
 			]
 		}
 	],
@@ -2350,7 +3010,7 @@
 			"uiTileRect": null,
 			"nineSliceBorders": [],
 			"maxCount": 0,
-			"limitScope": "PerWorld",
+			"limitScope": "PerLayer",
 			"limitBehavior": "PreventAdding",
 			"pivotX": 0.5,
 			"pivotY": 0.5,
@@ -2846,25 +3506,6 @@
 					"gridTiles": [],
 					"entityInstances": [
 						{
-							"__identifier": "Player",
-							"__grid": [22,25],
-							"__pivot": [0.5,1],
-							"__tags": ["actor"],
-							"__tile": { "tilesetUid": 133, "x": 256, "y": 144, "w": 16, "h": 16 },
-							"__smartColor": "#48DA75",
-							"iid": "35827bd0-8560-11f0-a2f8-1384a29ebc8c",
-							"width": 20,
-							"height": 20,
-							"defUid": 90,
-							"px": [354,409],
-							"fieldInstances": [
-								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 91, "realEditorValues": [] },
-								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 92, "realEditorValues": [{ "id": "V_Int", "params": [3] }] }
-							],
-							"__worldX": -414,
-							"__worldY": 153
-						},
-						{
 							"__identifier": "Enemy1",
 							"__grid": [59,25],
 							"__pivot": [0.5,1],
@@ -3018,307 +3659,98 @@
 						},
 						{
 							"__identifier": "Coin",
-							"__grid": [23,23],
+							"__grid": [39,13],
 							"__pivot": [0.5,0.5],
 							"__tags": ["actor"],
 							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
 							"__smartColor": "#FF0044",
-							"iid": "e6018050-ac70-11f0-8af9-cd2d2d57ed7e",
+							"iid": "fcb0d630-ac70-11f0-ad00-37637b6d7f62",
 							"width": 20,
 							"height": 20,
 							"defUid": 172,
-							"px": [372,369],
+							"px": [632,216],
 							"fieldInstances": [
 								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
 								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
 							],
-							"__worldX": -396,
-							"__worldY": 113
+							"__worldX": -136,
+							"__worldY": -40
 						},
 						{
 							"__identifier": "Coin",
-							"__grid": [24,23],
+							"__grid": [37,12],
 							"__pivot": [0.5,0.5],
 							"__tags": ["actor"],
 							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
 							"__smartColor": "#FF0044",
-							"iid": "ed3dc400-ac70-11f0-8af9-738f6a835361",
+							"iid": "fd3a5180-ac70-11f0-ad00-53a0a6377ec8",
 							"width": 20,
 							"height": 20,
 							"defUid": 172,
-							"px": [399,369],
-							"fieldInstances": [
-								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
-								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
-							],
-							"__worldX": -369,
-							"__worldY": 113
-						},
-						{
-							"__identifier": "Coin",
-							"__grid": [27,23],
-							"__pivot": [0.5,0.5],
-							"__tags": ["actor"],
-							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
-							"__smartColor": "#FF0044",
-							"iid": "edc89ee0-ac70-11f0-8af9-f381d9cc1f0e",
-							"width": 20,
-							"height": 20,
-							"defUid": 172,
-							"px": [444,369],
-							"fieldInstances": [
-								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
-								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
-							],
-							"__worldX": -324,
-							"__worldY": 113
-						},
-						{
-							"__identifier": "Coin",
-							"__grid": [34,23],
-							"__pivot": [0.5,0.5],
-							"__tags": ["actor"],
-							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
-							"__smartColor": "#FF0044",
-							"iid": "ee15fb90-ac70-11f0-8af9-5b05be4fea26",
-							"width": 20,
-							"height": 20,
-							"defUid": 172,
-							"px": [544,371],
-							"fieldInstances": [
-								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
-								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
-							],
-							"__worldX": -224,
-							"__worldY": 115
-						},
-						{
-							"__identifier": "Coin",
-							"__grid": [37,23],
-							"__pivot": [0.5,0.5],
-							"__tags": ["actor"],
-							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
-							"__smartColor": "#FF0044",
-							"iid": "ee559ca0-ac70-11f0-8af9-c78d64187205",
-							"width": 20,
-							"height": 20,
-							"defUid": 172,
-							"px": [600,377],
+							"px": [600,200],
 							"fieldInstances": [
 								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
 								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
 							],
 							"__worldX": -168,
-							"__worldY": 121
+							"__worldY": -56
 						},
 						{
 							"__identifier": "Coin",
-							"__grid": [41,23],
+							"__grid": [41,12],
 							"__pivot": [0.5,0.5],
 							"__tags": ["actor"],
 							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
 							"__smartColor": "#FF0044",
-							"iid": "ee8a8f50-ac70-11f0-8af9-e3f0a048967e",
+							"iid": "fdbeead0-ac70-11f0-ad00-ef181126dc01",
 							"width": 20,
 							"height": 20,
 							"defUid": 172,
-							"px": [660,374],
+							"px": [664,200],
 							"fieldInstances": [
 								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
 								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
 							],
-							"__worldX": -108,
-							"__worldY": 118
+							"__worldX": -104,
+							"__worldY": -56
 						},
 						{
 							"__identifier": "Coin",
-							"__grid": [43,23],
+							"__grid": [43,13],
 							"__pivot": [0.5,0.5],
 							"__tags": ["actor"],
 							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
 							"__smartColor": "#FF0044",
-							"iid": "ef87b400-ac70-11f0-8af9-39a8554d5a1e",
+							"iid": "fe349000-ac70-11f0-ad00-c707b225252c",
 							"width": 20,
 							"height": 20,
 							"defUid": 172,
-							"px": [703,382],
+							"px": [696,216],
 							"fieldInstances": [
 								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
 								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
 							],
-							"__worldX": -65,
-							"__worldY": 126
+							"__worldX": -72,
+							"__worldY": -40
 						},
 						{
 							"__identifier": "Coin",
-							"__grid": [45,23],
+							"__grid": [21,8],
 							"__pivot": [0.5,0.5],
 							"__tags": ["actor"],
 							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
 							"__smartColor": "#FF0044",
-							"iid": "f081f280-ac70-11f0-8af9-2360fa4cfdab",
+							"iid": "018dcd20-ac70-11f0-ad00-f3bda29c4b2f",
 							"width": 20,
 							"height": 20,
 							"defUid": 172,
-							"px": [732,382],
+							"px": [344,136],
 							"fieldInstances": [
 								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
 								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
 							],
-							"__worldX": -36,
-							"__worldY": 126
-						},
-						{
-							"__identifier": "Coin",
-							"__grid": [17,17],
-							"__pivot": [0.5,0.5],
-							"__tags": ["actor"],
-							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
-							"__smartColor": "#FF0044",
-							"iid": "f2499320-ac70-11f0-8af9-d94750ca77a1",
-							"width": 20,
-							"height": 20,
-							"defUid": 172,
-							"px": [287,273],
-							"fieldInstances": [
-								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
-								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
-							],
-							"__worldX": -481,
-							"__worldY": 17
-						},
-						{
-							"__identifier": "Coin",
-							"__grid": [17,14],
-							"__pivot": [0.5,0.5],
-							"__tags": ["actor"],
-							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
-							"__smartColor": "#FF0044",
-							"iid": "f295de60-ac70-11f0-8af9-335f4a1c42ef",
-							"width": 20,
-							"height": 20,
-							"defUid": 172,
-							"px": [287,237],
-							"fieldInstances": [
-								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
-								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
-							],
-							"__worldX": -481,
-							"__worldY": -19
-						},
-						{
-							"__identifier": "Coin",
-							"__grid": [18,13],
-							"__pivot": [0.5,0.5],
-							"__tags": ["actor"],
-							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
-							"__smartColor": "#FF0044",
-							"iid": "f2e20290-ac70-11f0-8af9-9745cfa73761",
-							"width": 20,
-							"height": 20,
-							"defUid": 172,
-							"px": [289,209],
-							"fieldInstances": [
-								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
-								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
-							],
-							"__worldX": -479,
-							"__worldY": -47
-						},
-						{
-							"__identifier": "Coin",
-							"__grid": [18,10],
-							"__pivot": [0.5,0.5],
-							"__tags": ["actor"],
-							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
-							"__smartColor": "#FF0044",
-							"iid": "f35f21d0-ac70-11f0-8af9-4f2499d2329b",
-							"width": 20,
-							"height": 20,
-							"defUid": 172,
-							"px": [290,163],
-							"fieldInstances": [
-								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
-								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
-							],
-							"__worldX": -478,
-							"__worldY": -93
-						},
-						{
-							"__identifier": "Coin",
-							"__grid": [18,8],
-							"__pivot": [0.5,0.5],
-							"__tags": ["actor"],
-							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
-							"__smartColor": "#FF0044",
-							"iid": "f3aea160-ac70-11f0-8af9-7b55ed1094ad",
-							"width": 20,
-							"height": 20,
-							"defUid": 172,
-							"px": [290,130],
-							"fieldInstances": [
-								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
-								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
-							],
-							"__worldX": -478,
-							"__worldY": -126
-						},
-						{
-							"__identifier": "Coin",
-							"__grid": [18,6],
-							"__pivot": [0.5,0.5],
-							"__tags": ["actor"],
-							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
-							"__smartColor": "#FF0044",
-							"iid": "f3eb0e20-ac70-11f0-8af9-e965794c6e08",
-							"width": 20,
-							"height": 20,
-							"defUid": 172,
-							"px": [291,96],
-							"fieldInstances": [
-								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
-								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
-							],
-							"__worldX": -477,
-							"__worldY": -160
-						},
-						{
-							"__identifier": "Coin",
-							"__grid": [18,3],
-							"__pivot": [0.5,0.5],
-							"__tags": ["actor"],
-							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
-							"__smartColor": "#FF0044",
-							"iid": "f4266970-ac70-11f0-8af9-f9e09d40e1b8",
-							"width": 20,
-							"height": 20,
-							"defUid": 172,
-							"px": [292,61],
-							"fieldInstances": [
-								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
-								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
-							],
-							"__worldX": -476,
-							"__worldY": -195
-						},
-						{
-							"__identifier": "Coin",
-							"__grid": [21,7],
-							"__pivot": [0.5,0.5],
-							"__tags": ["actor"],
-							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
-							"__smartColor": "#FF0044",
-							"iid": "f4a13ec0-ac70-11f0-8af9-639e8ba9c632",
-							"width": 20,
-							"height": 20,
-							"defUid": 172,
-							"px": [351,121],
-							"fieldInstances": [
-								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
-								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
-							],
-							"__worldX": -417,
-							"__worldY": -135
+							"__worldX": -424,
+							"__worldY": -120
 						},
 						{
 							"__identifier": "Coin",
@@ -3327,378 +3759,416 @@
 							"__tags": ["actor"],
 							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
 							"__smartColor": "#FF0044",
-							"iid": "f547b7f0-ac70-11f0-8af9-77ae410faefd",
+							"iid": "01f03870-ac70-11f0-ad00-1719f2b8a799",
 							"width": 20,
 							"height": 20,
 							"defUid": 172,
-							"px": [380,133],
+							"px": [376,136],
 							"fieldInstances": [
 								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
 								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
 							],
-							"__worldX": -388,
-							"__worldY": -123
+							"__worldX": -392,
+							"__worldY": -120
 						},
 						{
 							"__identifier": "Coin",
-							"__grid": [37,13],
+							"__grid": [25,8],
 							"__pivot": [0.5,0.5],
 							"__tags": ["actor"],
 							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
 							"__smartColor": "#FF0044",
-							"iid": "f6923950-ac70-11f0-8af9-d3e2edb233db",
+							"iid": "025f7500-ac70-11f0-ad00-a5abb78e3cc4",
 							"width": 20,
 							"height": 20,
 							"defUid": 172,
-							"px": [602,220],
+							"px": [408,136],
 							"fieldInstances": [
 								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
 								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
 							],
-							"__worldX": -166,
-							"__worldY": -36
+							"__worldX": -360,
+							"__worldY": -120
 						},
 						{
 							"__identifier": "Coin",
-							"__grid": [39,13],
+							"__grid": [27,8],
 							"__pivot": [0.5,0.5],
 							"__tags": ["actor"],
 							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
 							"__smartColor": "#FF0044",
-							"iid": "f6d2c4c0-ac70-11f0-8af9-3568e441e188",
+							"iid": "02bcb030-ac70-11f0-ad00-258859e58cda",
 							"width": 20,
 							"height": 20,
 							"defUid": 172,
-							"px": [625,217],
+							"px": [440,136],
 							"fieldInstances": [
 								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
 								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
 							],
-							"__worldX": -143,
-							"__worldY": -39
+							"__worldX": -328,
+							"__worldY": -120
 						},
 						{
 							"__identifier": "Coin",
-							"__grid": [42,13],
+							"__grid": [29,8],
 							"__pivot": [0.5,0.5],
 							"__tags": ["actor"],
 							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
 							"__smartColor": "#FF0044",
-							"iid": "f7137740-ac70-11f0-8af9-6b55252bd154",
+							"iid": "0315ccb0-ac70-11f0-ad00-cbd9e387e07d",
 							"width": 20,
 							"height": 20,
 							"defUid": 172,
-							"px": [674,221],
+							"px": [472,136],
 							"fieldInstances": [
 								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
 								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
 							],
-							"__worldX": -94,
-							"__worldY": -35
+							"__worldX": -296,
+							"__worldY": -120
 						},
 						{
 							"__identifier": "Coin",
-							"__grid": [40,13],
+							"__grid": [17,16],
 							"__pivot": [0.5,0.5],
 							"__tags": ["actor"],
 							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
 							"__smartColor": "#FF0044",
-							"iid": "f77c7240-ac70-11f0-8af9-e3405b37e948",
+							"iid": "04afcda0-ac70-11f0-ad00-f5a4c4de58e1",
 							"width": 20,
 							"height": 20,
 							"defUid": 172,
-							"px": [646,221],
+							"px": [280,264],
 							"fieldInstances": [
 								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
 								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
 							],
-							"__worldX": -122,
-							"__worldY": -35
+							"__worldX": -488,
+							"__worldY": 8
 						},
 						{
 							"__identifier": "Coin",
-							"__grid": [44,13],
+							"__grid": [17,14],
 							"__pivot": [0.5,0.5],
 							"__tags": ["actor"],
 							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
 							"__smartColor": "#FF0044",
-							"iid": "f7cbf1d0-ac70-11f0-8af9-6d4fedd94f2e",
+							"iid": "053bb9f0-ac70-11f0-ad00-a3545c44913f",
 							"width": 20,
 							"height": 20,
 							"defUid": 172,
-							"px": [716,217],
+							"px": [280,232],
 							"fieldInstances": [
 								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
 								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
 							],
-							"__worldX": -52,
-							"__worldY": -39
+							"__worldX": -488,
+							"__worldY": -24
 						},
 						{
 							"__identifier": "Coin",
-							"__grid": [73,29],
+							"__grid": [17,12],
 							"__pivot": [0.5,0.5],
 							"__tags": ["actor"],
 							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
 							"__smartColor": "#FF0044",
-							"iid": "fa22b310-ac70-11f0-8af9-a963b91cb5eb",
+							"iid": "06bd77f0-ac70-11f0-ad00-9b537f79bb13",
 							"width": 20,
 							"height": 20,
 							"defUid": 172,
-							"px": [1178,479],
+							"px": [280,200],
 							"fieldInstances": [
 								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
 								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
 							],
-							"__worldX": 410,
-							"__worldY": 223
-						},
-						{
-							"__identifier": "Coin",
-							"__grid": [74,29],
-							"__pivot": [0.5,0.5],
-							"__tags": ["actor"],
-							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
-							"__smartColor": "#FF0044",
-							"iid": "fa536000-ac70-11f0-8af9-df6fe9c62f5a",
-							"width": 20,
-							"height": 20,
-							"defUid": 172,
-							"px": [1199,479],
-							"fieldInstances": [
-								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
-								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
-							],
-							"__worldX": 431,
-							"__worldY": 223
-						},
-						{
-							"__identifier": "Coin",
-							"__grid": [77,29],
-							"__pivot": [0.5,0.5],
-							"__tags": ["actor"],
-							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
-							"__smartColor": "#FF0044",
-							"iid": "fa874140-ac70-11f0-8af9-d3d049f15450",
-							"width": 20,
-							"height": 20,
-							"defUid": 172,
-							"px": [1234,475],
-							"fieldInstances": [
-								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
-								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
-							],
-							"__worldX": 466,
-							"__worldY": 219
-						},
-						{
-							"__identifier": "Coin",
-							"__grid": [81,21],
-							"__pivot": [0.5,0.5],
-							"__tags": ["actor"],
-							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
-							"__smartColor": "#FF0044",
-							"iid": "fb3311a0-ac70-11f0-8af9-15cc2d1cb3aa",
-							"width": 20,
-							"height": 20,
-							"defUid": 172,
-							"px": [1299,344],
-							"fieldInstances": [
-								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
-								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
-							],
-							"__worldX": 531,
-							"__worldY": 88
-						},
-						{
-							"__identifier": "Coin",
-							"__grid": [86,23],
-							"__pivot": [0.5,0.5],
-							"__tags": ["actor"],
-							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
-							"__smartColor": "#FF0044",
-							"iid": "fbc650f0-ac70-11f0-8af9-e7086453b39f",
-							"width": 20,
-							"height": 20,
-							"defUid": 172,
-							"px": [1380,379],
-							"fieldInstances": [
-								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
-								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
-							],
-							"__worldX": 612,
-							"__worldY": 123
-						},
-						{
-							"__identifier": "Coin",
-							"__grid": [87,22],
-							"__pivot": [0.5,0.5],
-							"__tags": ["actor"],
-							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
-							"__smartColor": "#FF0044",
-							"iid": "fcfef800-ac70-11f0-8af9-e90ad8963d3b",
-							"width": 20,
-							"height": 20,
-							"defUid": 172,
-							"px": [1406,359],
-							"fieldInstances": [
-								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
-								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
-							],
-							"__worldX": 638,
-							"__worldY": 103
-						},
-						{
-							"__identifier": "Coin",
-							"__grid": [78,18],
-							"__pivot": [0.5,0.5],
-							"__tags": ["actor"],
-							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
-							"__smartColor": "#FF0044",
-							"iid": "fea38040-ac70-11f0-8af9-b1db2d8a485c",
-							"width": 20,
-							"height": 20,
-							"defUid": 172,
-							"px": [1249,298],
-							"fieldInstances": [
-								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
-								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
-							],
-							"__worldX": 481,
-							"__worldY": 42
-						},
-						{
-							"__identifier": "Coin",
-							"__grid": [96,20],
-							"__pivot": [0.5,0.5],
-							"__tags": ["actor"],
-							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
-							"__smartColor": "#FF0044",
-							"iid": "00320f80-ac70-11f0-8af9-b9a8a6a9d31c",
-							"width": 20,
-							"height": 20,
-							"defUid": 172,
-							"px": [1536,329],
-							"fieldInstances": [
-								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
-								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
-							],
-							"__worldX": 768,
-							"__worldY": 73
-						},
-						{
-							"__identifier": "Coin",
-							"__grid": [98,20],
-							"__pivot": [0.5,0.5],
-							"__tags": ["actor"],
-							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
-							"__smartColor": "#FF0044",
-							"iid": "00805690-ac70-11f0-8af9-7d7e726443a0",
-							"width": 20,
-							"height": 20,
-							"defUid": 172,
-							"px": [1573,329],
-							"fieldInstances": [
-								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
-								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
-							],
-							"__worldX": 805,
-							"__worldY": 73
-						},
-						{
-							"__identifier": "Coin",
-							"__grid": [100,20],
-							"__pivot": [0.5,0.5],
-							"__tags": ["actor"],
-							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
-							"__smartColor": "#FF0044",
-							"iid": "00bdd4c0-ac70-11f0-8af9-e94e5c5627ab",
-							"width": 20,
-							"height": 20,
-							"defUid": 172,
-							"px": [1608,329],
-							"fieldInstances": [
-								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
-								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
-							],
-							"__worldX": 840,
-							"__worldY": 73
-						},
-						{
-							"__identifier": "Coin",
-							"__grid": [105,20],
-							"__pivot": [0.5,0.5],
-							"__tags": ["actor"],
-							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
-							"__smartColor": "#FF0044",
-							"iid": "014ddfc0-ac70-11f0-8af9-f19823834dac",
-							"width": 20,
-							"height": 20,
-							"defUid": 172,
-							"px": [1682,332],
-							"fieldInstances": [
-								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
-								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
-							],
-							"__worldX": 914,
-							"__worldY": 76
-						},
-						{
-							"__identifier": "Coin",
-							"__grid": [106,20],
-							"__pivot": [0.5,0.5],
-							"__tags": ["actor"],
-							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
-							"__smartColor": "#FF0044",
-							"iid": "01851c60-ac70-11f0-8af9-c31ae6f8747f",
-							"width": 20,
-							"height": 20,
-							"defUid": 172,
-							"px": [1707,332],
-							"fieldInstances": [
-								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
-								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
-							],
-							"__worldX": 939,
-							"__worldY": 76
-						},
-						{
-							"__identifier": "Coin",
-							"__grid": [85,11],
-							"__pivot": [0.5,0.5],
-							"__tags": ["actor"],
-							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
-							"__smartColor": "#FF0044",
-							"iid": "02ce8c50-ac70-11f0-8af9-8d6bc2ba936d",
-							"width": 20,
-							"height": 20,
-							"defUid": 172,
-							"px": [1367,191],
-							"fieldInstances": [
-								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
-								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
-							],
-							"__worldX": 599,
-							"__worldY": -65
-						},
-						{
-							"__identifier": "Coin",
-							"__grid": [79,12],
-							"__pivot": [0.5,0.5],
-							"__tags": ["actor"],
-							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
-							"__smartColor": "#FF0044",
-							"iid": "033675e0-ac70-11f0-8af9-cf0ad8e07176",
-							"width": 20,
-							"height": 20,
-							"defUid": 172,
-							"px": [1277,200],
-							"fieldInstances": [
-								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
-								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
-							],
-							"__worldX": 509,
+							"__worldX": -488,
 							"__worldY": -56
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [17,10],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "071ab320-ac70-11f0-ad00-f5659a7bf5d5",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [280,168],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -488,
+							"__worldY": -88
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [17,8],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "07cbb3a0-ac70-11f0-ad00-b1abbd26c0df",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [280,136],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -488,
+							"__worldY": -120
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [17,6],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "08426a40-ac70-11f0-ad00-d530175b662c",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [280,104],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -488,
+							"__worldY": -152
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [17,4],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "08f9ac50-ac70-11f0-ad00-51469230767d",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [280,72],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -488,
+							"__worldY": -184
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [23,24],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "0b4f3510-ac70-11f0-ad00-311bc0aed1fe",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [376,392],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -392,
+							"__worldY": 136
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [25,24],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "0bc2b760-ac70-11f0-ad00-e15c317b13fe",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [408,392],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -360,
+							"__worldY": 136
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [27,24],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "0c422090-ac70-11f0-ad00-03d13b5aa881",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [440,392],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -328,
+							"__worldY": 136
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [33,24],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "0daf9340-ac70-11f0-ad00-eb17bd48fcc8",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [536,392],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -232,
+							"__worldY": 136
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [35,24],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "0e0cce70-ac70-11f0-ad00-8753df8a24f8",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [568,392],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -200,
+							"__worldY": 136
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [37,24],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "0e89c6a0-ac70-11f0-ad00-b96e810ec2e6",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [600,392],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -168,
+							"__worldY": 136
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [39,24],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "0f049bf0-ac70-11f0-ad00-437b3feaa14e",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [632,392],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -136,
+							"__worldY": 136
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [41,24],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "0fc3a630-ac70-11f0-ad00-133c425aa1cc",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [664,392],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -104,
+							"__worldY": 136
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [43,24],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "1026fbe0-ac70-11f0-ad00-4f3ad1ab7409",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [696,392],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -72,
+							"__worldY": 136
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [45,24],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "108ce9a0-ac70-11f0-ad00-a9b03ad71df3",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [728,392],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -40,
+							"__worldY": 136
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [86,22],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "15eb4590-ac70-11f0-ad00-bf164405860d",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1384,360],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 616,
+							"__worldY": 104
 						},
 						{
 							"__identifier": "Coin",
@@ -3707,17 +4177,74 @@
 							"__tags": ["actor"],
 							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
 							"__smartColor": "#FF0044",
-							"iid": "03cac6a0-ac70-11f0-8af9-5da74c0f6777",
+							"iid": "1b6e8ea0-ac70-11f0-ad00-b5245aa9a08f",
 							"width": 20,
 							"height": 20,
 							"defUid": 172,
-							"px": [1258,200],
+							"px": [1256,200],
 							"fieldInstances": [
 								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
 								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
 							],
-							"__worldX": 490,
+							"__worldX": 488,
 							"__worldY": -56
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [79,12],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "1bb6bb30-ac70-11f0-ad00-ef47d29e9db9",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1272,200],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 504,
+							"__worldY": -56
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [79,11],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "1becbf50-ac70-11f0-ad00-13a5dcd05a90",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1272,184],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 504,
+							"__worldY": -72
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [78,11],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "1c270930-ac70-11f0-ad00-731b8f2e5dca",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1256,184],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 488,
+							"__worldY": -72
 						},
 						{
 							"__identifier": "Coin",
@@ -3726,17 +4253,17 @@
 							"__tags": ["actor"],
 							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
 							"__smartColor": "#FF0044",
-							"iid": "0457c460-ac70-11f0-8af9-b3546464836c",
+							"iid": "1d5a5910-ac70-11f0-ad00-772e6d863ac9",
 							"width": 20,
 							"height": 20,
 							"defUid": 172,
-							"px": [1254,167],
+							"px": [1256,168],
 							"fieldInstances": [
 								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
 								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
 							],
-							"__worldX": 486,
-							"__worldY": -89
+							"__worldX": 488,
+							"__worldY": -88
 						},
 						{
 							"__identifier": "Coin",
@@ -3745,17 +4272,55 @@
 							"__tags": ["actor"],
 							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
 							"__smartColor": "#FF0044",
-							"iid": "04afcf70-ac70-11f0-8af9-290294612897",
+							"iid": "1dbceb70-ac70-11f0-ad00-31e8cd078aaf",
 							"width": 20,
 							"height": 20,
 							"defUid": 172,
-							"px": [1277,169],
+							"px": [1272,168],
 							"fieldInstances": [
 								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
 								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
 							],
-							"__worldX": 509,
-							"__worldY": -87
+							"__worldX": 504,
+							"__worldY": -88
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [79,9],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "1df81fb0-ac70-11f0-ad00-6d0001621fa8",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1272,152],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 504,
+							"__worldY": -104
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [78,9],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "1e7fed50-ac70-11f0-ad00-cff2f7379a15",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1256,152],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 488,
+							"__worldY": -104
 						},
 						{
 							"__identifier": "Coin",
@@ -3764,112 +4329,226 @@
 							"__tags": ["actor"],
 							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
 							"__smartColor": "#FF0044",
-							"iid": "051ff660-ac70-11f0-8af9-c7168d6895fc",
+							"iid": "1ece3460-ac70-11f0-ad00-077e4d3d07c6",
 							"width": 20,
 							"height": 20,
 							"defUid": 172,
-							"px": [1262,139],
+							"px": [1256,136],
 							"fieldInstances": [
 								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
 								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
 							],
-							"__worldX": 494,
-							"__worldY": -117
+							"__worldX": 488,
+							"__worldY": -120
 						},
 						{
 							"__identifier": "Coin",
-							"__grid": [80,8],
+							"__grid": [79,8],
 							"__pivot": [0.5,0.5],
 							"__tags": ["actor"],
 							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
 							"__smartColor": "#FF0044",
-							"iid": "05d53ca0-ac70-11f0-8af9-8d5ba0930d12",
+							"iid": "1f31d830-ac70-11f0-ad00-01bcc596a458",
 							"width": 20,
 							"height": 20,
 							"defUid": 172,
-							"px": [1286,139],
+							"px": [1272,136],
 							"fieldInstances": [
 								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
 								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
 							],
-							"__worldX": 518,
-							"__worldY": -117
+							"__worldX": 504,
+							"__worldY": -120
 						},
 						{
 							"__identifier": "Coin",
-							"__grid": [106,5],
+							"__grid": [95,19],
 							"__pivot": [0.5,0.5],
 							"__tags": ["actor"],
 							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
 							"__smartColor": "#FF0044",
-							"iid": "ad30bee0-ac70-11f0-8af9-13f1b56f931b",
+							"iid": "2122d2c0-ac70-11f0-ad00-31de683d5cac",
 							"width": 20,
 							"height": 20,
 							"defUid": 172,
-							"px": [1703,83],
+							"px": [1528,312],
 							"fieldInstances": [
 								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
 								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
 							],
-							"__worldX": 935,
-							"__worldY": -173
+							"__worldX": 760,
+							"__worldY": 56
 						},
 						{
 							"__identifier": "Coin",
-							"__grid": [106,9],
+							"__grid": [97,19],
 							"__pivot": [0.5,0.5],
 							"__tags": ["actor"],
 							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
 							"__smartColor": "#FF0044",
-							"iid": "adaca5a0-ac70-11f0-8af9-4beaca8cfabd",
+							"iid": "21a214e0-ac70-11f0-ad00-c7300fd7b3d3",
 							"width": 20,
 							"height": 20,
 							"defUid": 172,
-							"px": [1701,154],
+							"px": [1560,312],
 							"fieldInstances": [
 								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
 								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
 							],
-							"__worldX": 933,
-							"__worldY": -102
+							"__worldX": 792,
+							"__worldY": 56
 						},
 						{
 							"__identifier": "Coin",
-							"__grid": [106,7],
+							"__grid": [99,19],
 							"__pivot": [0.5,0.5],
 							"__tags": ["actor"],
 							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
 							"__smartColor": "#FF0044",
-							"iid": "affb5090-ac70-11f0-8af9-15888eb30d4a",
+							"iid": "221dfba0-ac70-11f0-ad00-2930f1af770c",
 							"width": 20,
 							"height": 20,
 							"defUid": 172,
-							"px": [1703,114],
+							"px": [1592,312],
 							"fieldInstances": [
 								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
 								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
 							],
-							"__worldX": 935,
-							"__worldY": -142
+							"__worldX": 824,
+							"__worldY": 56
 						},
 						{
 							"__identifier": "Coin",
-							"__grid": [106,11],
+							"__grid": [101,19],
 							"__pivot": [0.5,0.5],
 							"__tags": ["actor"],
 							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
 							"__smartColor": "#FF0044",
-							"iid": "b0e64cd0-ac70-11f0-8af9-6f7243934091",
+							"iid": "229af3d0-ac70-11f0-ad00-fb0fa6ec7562",
 							"width": 20,
 							"height": 20,
 							"defUid": 172,
-							"px": [1701,178],
+							"px": [1624,312],
 							"fieldInstances": [
 								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
 								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
 							],
-							"__worldX": 933,
-							"__worldY": -78
+							"__worldX": 856,
+							"__worldY": 56
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [104,19],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "23601890-ac70-11f0-ad00-63dd2f677c19",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1672,312],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 904,
+							"__worldY": 56
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [106,19],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "23e15680-ac70-11f0-ad00-6bed304af107",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1704,312],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 936,
+							"__worldY": 56
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [106,4],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "2802ecb0-ac70-11f0-ad00-4707ca9d1b29",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1704,72],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 936,
+							"__worldY": -184
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [106,6],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "28864d80-ac70-11f0-ad00-8919d31116eb",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1704,104],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 936,
+							"__worldY": -152
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [106,8],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "28f58a10-ac70-11f0-ad00-81620b97e85c",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1704,136],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 936,
+							"__worldY": -120
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [106,10],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "295a3f50-ac70-11f0-ad00-712aaac7a015",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1704,168],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 936,
+							"__worldY": -88
 						},
 						{
 							"__identifier": "Coin",
@@ -3878,17 +4557,17 @@
 							"__tags": ["actor"],
 							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
 							"__smartColor": "#FF0044",
-							"iid": "b1aa8730-ac70-11f0-8af9-c7e39cb9f446",
+							"iid": "29acf330-ac70-11f0-ad00-97575bbe45e3",
 							"width": 20,
 							"height": 20,
 							"defUid": 172,
-							"px": [1704,204],
+							"px": [1704,200],
 							"fieldInstances": [
 								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
 								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
 							],
 							"__worldX": 936,
-							"__worldY": -52
+							"__worldY": -56
 						},
 						{
 							"__identifier": "Coin",
@@ -3897,17 +4576,17 @@
 							"__tags": ["actor"],
 							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
 							"__smartColor": "#FF0044",
-							"iid": "b1df52d0-ac70-11f0-8af9-2560a0acae27",
+							"iid": "29ff8000-ac70-11f0-ad00-25b6297e4a02",
 							"width": 20,
 							"height": 20,
 							"defUid": 172,
-							"px": [1707,231],
+							"px": [1704,232],
 							"fieldInstances": [
 								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
 								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
 							],
-							"__worldX": 939,
-							"__worldY": -25
+							"__worldX": 936,
+							"__worldY": -24
 						},
 						{
 							"__identifier": "Coin",
@@ -3916,36 +4595,1062 @@
 							"__tags": ["actor"],
 							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
 							"__smartColor": "#FF0044",
-							"iid": "b21dbb60-ac70-11f0-8af9-6f62ad20508f",
+							"iid": "2a6323d0-ac70-11f0-ad00-8f9e107a50b3",
 							"width": 20,
 							"height": 20,
 							"defUid": 172,
-							"px": [1707,258],
+							"px": [1704,264],
 							"fieldInstances": [
 								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
 								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
 							],
-							"__worldX": 939,
-							"__worldY": 2
+							"__worldX": 936,
+							"__worldY": 8
 						},
 						{
 							"__identifier": "Coin",
-							"__grid": [106,17],
+							"__grid": [77,29],
 							"__pivot": [0.5,0.5],
 							"__tags": ["actor"],
 							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
 							"__smartColor": "#FF0044",
-							"iid": "b25c4b00-ac70-11f0-8af9-831b173104da",
+							"iid": "5250e430-ac70-11f0-ad00-079ca592d421",
 							"width": 20,
 							"height": 20,
 							"defUid": 172,
-							"px": [1706,283],
+							"px": [1240,472],
 							"fieldInstances": [
 								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
 								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
 							],
-							"__worldX": 938,
-							"__worldY": 27
+							"__worldX": 472,
+							"__worldY": 216
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [75,29],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "52e77ee0-ac70-11f0-ad00-537138c60587",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1208,472],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 440,
+							"__worldY": 216
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [73,29],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "53656170-ac70-11f0-ad00-d979acc7334a",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1176,472],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 408,
+							"__worldY": 216
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [102,10],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "79736550-ac70-11f0-ad00-f980399d993d",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1640,168],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 872,
+							"__worldY": -88
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [98,11],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "7a5d7730-ac70-11f0-ad00-97f9ee85ab1b",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1576,184],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 808,
+							"__worldY": -72
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [98,13],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "7adc9240-ac70-11f0-ad00-e54cca26be6c",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1576,216],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 808,
+							"__worldY": -40
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [100,14],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "7df67c70-ac70-11f0-ad00-9ff898bdc28a",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1608,232],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 840,
+							"__worldY": -24
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [99,11],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "7e9bbd20-ac70-11f0-ad00-a1e23e8f084f",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1592,184],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 824,
+							"__worldY": -72
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [99,12],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "7f079e50-ac70-11f0-ad00-fd1dba830f38",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1592,200],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 824,
+							"__worldY": -56
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [100,10],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "80797dd0-ac70-11f0-ad00-f30f89e03757",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1608,168],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 840,
+							"__worldY": -88
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [100,11],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "80d161d0-ac70-11f0-ad00-130454e23a31",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1608,184],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 840,
+							"__worldY": -72
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [100,12],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "960f4f30-ac70-11f0-ad00-cb08c8702a31",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1608,200],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 840,
+							"__worldY": -56
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [100,13],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "96686bb0-ac70-11f0-ad00-d148315eea9f",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1608,216],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 840,
+							"__worldY": -40
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [101,14],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "96c27290-ac70-11f0-ad00-337f8e5ff65a",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1624,232],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 856,
+							"__worldY": -24
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [101,13],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "96f876b0-ac70-11f0-ad00-533da34c08d5",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1624,216],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 856,
+							"__worldY": -40
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [101,12],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "982229a0-ac70-11f0-ad00-4f4cbf859b60",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1624,200],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 856,
+							"__worldY": -56
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [101,10],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "98fd9580-ac70-11f0-ad00-e9f761d0ee66",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1624,168],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 856,
+							"__worldY": -88
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [102,12],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "9b80e500-ac70-11f0-ad00-e965c9f4f2ce",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1640,200],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 872,
+							"__worldY": -56
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [101,11],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "9e5ae000-ac70-11f0-ad00-8dae97447f52",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1624,184],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 856,
+							"__worldY": -72
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [102,13],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "9ec0a6b0-ac70-11f0-ad00-edb71f571a25",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1640,216],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 872,
+							"__worldY": -40
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [102,14],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "9f2caef0-ac70-11f0-ad00-597aa10e825e",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1640,232],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 872,
+							"__worldY": -24
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [103,14],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "9f9052c0-ac70-11f0-ad00-0db7e0840714",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1656,232],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 888,
+							"__worldY": -24
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [103,13],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "9fd32820-ac70-11f0-ad00-658811ca0ad9",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1656,216],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 888,
+							"__worldY": -40
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [103,12],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "a01c3f10-ac70-11f0-ad00-cbe809c2ee95",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1656,200],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 888,
+							"__worldY": -56
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [103,11],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "a05be020-ac70-11f0-ad00-0fe97df328cc",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1656,184],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 888,
+							"__worldY": -72
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [103,10],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "a0ad5b80-ac70-11f0-ad00-ad472f811c6a",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1656,168],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 888,
+							"__worldY": -88
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [102,11],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "c69e08d0-ac70-11f0-ad00-1ba62f3def33",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1640,184],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 872,
+							"__worldY": -72
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [99,13],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "c7d7c150-ac70-11f0-ad00-f1cceb7268ad",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1592,216],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 824,
+							"__worldY": -40
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [99,14],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "c812f590-ac70-11f0-ad00-61384d34d7b0",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1592,232],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 824,
+							"__worldY": -24
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [99,10],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "c8a76d60-ac70-11f0-ad00-e1f8bc050b37",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1592,168],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 824,
+							"__worldY": -88
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [98,12],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "c9695dd0-ac70-11f0-ad00-052ee8e20e59",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1576,200],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 808,
+							"__worldY": -56
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [98,10],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "c9e98a50-ac70-11f0-ad00-456859acbe83",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1576,168],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 808,
+							"__worldY": -88
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [98,13],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "caf15d60-ac70-11f0-ad00-0fe4662ee0c0",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1576,216],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 808,
+							"__worldY": -40
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [87,22],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "db2a3260-ac70-11f0-ad00-f5ab873fa27a",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1400,360],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 632,
+							"__worldY": 104
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [81,20],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "dc65bfa0-ac70-11f0-ad00-4b38149c9b1d",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1304,328],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 536,
+							"__worldY": 72
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [78,17],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "dd1e3a30-ac70-11f0-ad00-c980bb0491a3",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1256,280],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 488,
+							"__worldY": 24
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [82,14],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "ddf78330-ac70-11f0-ad00-bbabb1144baf",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1320,232],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 552,
+							"__worldY": -24
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [83,14],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "de618fa0-ac70-11f0-ad00-255edef80a50",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1336,232],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 568,
+							"__worldY": -24
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [85,10],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "df4fc030-ac70-11f0-ad00-47d4a6c3fd87",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1368,168],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 600,
+							"__worldY": -88
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [18,16],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "e84a2ea0-ac70-11f0-ad00-07d9ea3aa24d",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [296,264],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -472,
+							"__worldY": 8
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [18,14],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "e8e1b3b0-ac70-11f0-ad00-69f2255e19ef",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [296,232],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -472,
+							"__worldY": -24
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [18,12],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "e92684e0-ac70-11f0-ad00-b3d668c79a35",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [296,200],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -472,
+							"__worldY": -56
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [18,10],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "e973e190-ac70-11f0-ad00-b965b25d79fb",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [296,168],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -472,
+							"__worldY": -88
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [18,8],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "e9b49410-ac70-11f0-ad00-d3f19dc4142e",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [296,136],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -472,
+							"__worldY": -120
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [18,6],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "ea1f8ae0-ac70-11f0-ad00-d3d89d656c42",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [296,104],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -472,
+							"__worldY": -152
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [18,4],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "ebba9d40-ac70-11f0-ad00-0b7b25c5d7a7",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [296,72],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -472,
+							"__worldY": -184
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [17,2],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "ecc07480-ac70-11f0-ad00-21bff3f9b08e",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [280,40],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -488,
+							"__worldY": -216
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [18,2],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "ed045b50-ac70-11f0-ad00-e92c66e3b191",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [296,40],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -472,
+							"__worldY": -216
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [17,0],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "ed804210-ac70-11f0-ad00-6b23bf145baa",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [280,8],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -488,
+							"__worldY": -248
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [18,0],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "edc86ea0-ac70-11f0-ad00-1dd4cfe0e082",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [296,8],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -472,
+							"__worldY": -248
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [48,23],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "f14d0180-ac70-11f0-ad00-afcb27c10edc",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [776,376],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 8,
+							"__worldY": 120
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [50,23],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "f1afbaf0-ac70-11f0-ad00-8d33736dff91",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [808,376],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 40,
+							"__worldY": 120
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [52,23],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "f2122640-ac70-11f0-ad00-57751bac7ad2",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [840,376],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 72,
+							"__worldY": 120
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [54,23],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "f2807870-ac70-11f0-ad00-4b2d20536f23",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [872,376],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 104,
+							"__worldY": 120
+						},
+						{
+							"__identifier": "Player",
+							"__grid": [20,24],
+							"__pivot": [0.5,1],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 256, "y": 144, "w": 16, "h": 16 },
+							"__smartColor": "#48DA75",
+							"iid": "523fb710-ac70-11f0-ad00-7b52ae2081f8",
+							"width": 20,
+							"height": 20,
+							"defUid": 90,
+							"px": [328,400],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 91, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 10, "__tile": null, "defUid": 92, "realEditorValues": [] }
+							],
+							"__worldX": -440,
+							"__worldY": 144
 						}
 					]
 				},

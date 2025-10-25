@@ -95,6 +95,36 @@ namespace Engine
             return Lerp(a, b, t);
         }
 
+        public static vec3 Round(vec3 v)
+        {
+            return new vec3(MathF.Round(v.x), MathF.Round(v.y), MathF.Round(v.z));
+        }
+
+        public static vec3 Floor(vec3 v)
+        {
+            return new vec3(MathF.Floor(v.x), MathF.Floor(v.y), MathF.Floor(v.z));
+        }
+        
+        public static vec3 Ceil(vec3 v)
+        {
+            return new vec3(MathF.Ceiling(v.x), MathF.Ceiling(v.y), MathF.Ceiling(v.z));
+        }
+
+        public static vec2 Round(vec2 v)
+        {
+            return new vec2(MathF.Round(v.x), MathF.Round(v.y));
+        }
+
+        public static vec2 Floor(vec2 v)
+        {
+            return new vec2(MathF.Floor(v.x), MathF.Floor(v.y));
+        }
+
+        public static vec2 Ceil(vec2 v)
+        {
+            return new vec2(MathF.Ceiling(v.x), MathF.Ceiling(v.y));
+        }
+
         public static vec3 SmoothDamp(vec3 current,
                                       vec3 target,
                                       ref vec3 currentVelocity,

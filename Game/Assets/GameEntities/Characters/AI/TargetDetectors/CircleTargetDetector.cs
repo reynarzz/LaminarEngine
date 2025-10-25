@@ -23,7 +23,7 @@ namespace Game
         
         public override void OnTriggerStay2D(Collider2D collider)
         {
-            if (collider.Name.Equals("Player")) // Remove concrete name, testing
+            if (collider.Actor.Layer == LayerMask.NameToLayer(GameLayers.PLAYER)) 
             {
                 var dir = collider.Transform.WorldPosition - Transform.WorldPosition;
                 Bounds bounds = collider.AABB;
@@ -31,13 +31,13 @@ namespace Game
                 var hit = Physics2D.Raycast(Transform.WorldPosition, dir, LayerMask.LayerToBits(collider.Actor.Layer) | GameLayers.GROUND_MASK);
                 Debug.DrawRay(Transform.WorldPosition, dir, Color.Red);
 
-                IsTargetDetected = hit.isHit && hit.Collider == collider;
+                IsTargetDetected = hit.isHit && hit.Collider.Actor.Layer == collider.Actor.Layer;
             }
         }
 
         public override void OnTriggerExit2D(Collider2D collider)
         {
-            if (collider.Name.Equals("Player")) // Remove concrete name, testing
+            if (collider.Actor.Layer == LayerMask.NameToLayer(GameLayers.PLAYER)) 
             {
                 IsTargetDetected = false;
             }

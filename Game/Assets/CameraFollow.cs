@@ -14,7 +14,7 @@ namespace Game
         public float FollowSpeed { get; set; } = 5f;
 
         private vec2 deadZoneSize = new vec2(0f, 4f);
-        private float smoothTime = 0.3f;
+        private float smoothTime = 0.1f;
         private vec3 velocity;
         private Camera _cam;
         public override void OnStart()

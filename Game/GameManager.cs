@@ -111,11 +111,13 @@ namespace Game
             Camera.BackgroundColor = new Color(0.2f, 0.2f, 0.2f, 1);
             Camera.OrthographicSize = 288.0f / 2.0f / 16.0f;
             Camera.RenderTexture = new RenderTexture(512 * 2, 288 * 2);
+            // Camera.RenderTexture = new RenderTexture(512, 288);
 
             Camera.Transform.WorldPosition = new vec3(Player.Transform.WorldPosition.x,
                                                       Player.Transform.WorldPosition.y, -12);
 
-            var a = LayerMask.NameToBit(GameLayers.Default);
+            LoadTilemap();
+
 
             Player.Init(new CharacterConfig()
             {
@@ -125,7 +127,7 @@ namespace Game
                 ColliderConfig = new BodyColliderOptions() { Size = new vec2(1.0f, 1.7f), Offset = new vec2(0, 0.25f) },
                 LayerName = GameLayers.PLAYER,
                 SortOrder = 2,
-                StartPosition = new vec2(-25.875f, -9.5625f),
+                StartPosition = _playerStartPosTest,
                 Material = _playerSpriteMaterial,
                 StartingLife = 5,
                 SpriteLookDir = 1,
@@ -152,7 +154,6 @@ namespace Game
             platform.GetComponent<SpriteRenderer>().Material = _defaultSpriteMaterial;
             platform.Layer = LayerMask.NameToLayer(GameLayers.PLATFORM);
 
-            LoadTilemap();
 
 
             // GamePrefabs.Enemies.InstantiatePigStandard(Player.Transform.LocalPosition + vec3.Right * 2, -1);
@@ -185,9 +186,9 @@ namespace Game
             var project = ldtk.LdtkJson.FromJson(json);
             var color = project.BgColor;
 
-            vec3 ConvertToWorld(long[] px, Level level, LayerInstance layer)
+            vec3 ConvertToWorld(long[] px, Level level, float pixelPerUnit, LayerInstance layer)
             {
-                return new vec3(level.WorldX + px[0] + layer.PxOffsetX, -level.WorldY + -px[1] + -layer.PxOffsetY, 0);
+                return new vec3(MathF.Floor((level.WorldX + px[0] + layer.PxOffsetX) / pixelPerUnit), MathF.Ceiling((-level.WorldY + -px[1] + -layer.PxOffsetY) / pixelPerUnit), 0);
             }
 
             foreach (var level in project.Levels)
@@ -196,7 +197,7 @@ namespace Game
                 {
                     foreach (var entity in layer.EntityInstances)
                     {
-                        var position = ConvertToWorld(entity.Px, level, layer) / tilemapTexture.PixelPerUnit;
+                        var position = ConvertToWorld(entity.Px, level, tilemapTexture.PixelPerUnit, layer);
                         //Debug.Log("Entity: " + entity.Identifier);
                         if (entity.Identifier.Equals("Player"))
                         {

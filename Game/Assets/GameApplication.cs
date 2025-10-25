@@ -20,7 +20,7 @@ namespace Game
         // Avoid the batch to take more texture slots that the system is supported, take into account materials texture count.
         // Fix: Batch2d vertices shift when an object is destroyed.
         // Fix: New asset instances created every time GetAsset is called, put all the loaded assets in pools.
-        // Fix: Texture units overflow, a batch should only bind
+        // Fix: Texture units overflow, a batch should only bind: MAX_DEVICE_ALLOWED - RENDERER_NEEDED_TEXTURE_SLOTS
         // Implement a proper way to grow a batch when vertices are greater than MAX_QUADS_PER_BATCH (Tilemap)
 
 
@@ -51,16 +51,16 @@ namespace Game
             new Actor<GameManager>("GameManager");
 
             //PostProcessingStack.Push(new BloomPostProcessing());
-            ScreenGrabTest();
+            // ScreenGrabTest();
             TextRendering();
 
-            ScreenGrabTest3();
+            // ScreenGrabTest3();
 
             Portal();
             Portal().Transform.LocalPosition = new vec3(33, -9.1f);
             Portal().Transform.LocalPosition = new vec3(43, -1);
 
-            ScreenGrabTest5();
+            FilmGrain();
 
             WaterTest();
             ParticleSystem();
@@ -106,7 +106,8 @@ namespace Game
             test.DelayToWrite = 0.03f;
             test.Transform.WorldPosition = new vec3(0, 150);
             renderer.Color = Color.White;
-            renderer.OutlineSize = 1;
+            test.Transform.WorldScale = new vec3(0.8f, 0.8f, 0.5f);
+            //renderer.OutlineSize = 1;
 
             //var actor2 = new Actor<TextWritterTest>("Text2");
             //var test2 = actor2.GetComponent<TextWritterTest>();
@@ -157,7 +158,7 @@ namespace Game
             return screenGrabTest;
         }
 
-        private void ScreenGrabTest5()
+        private void FilmGrain()
         {
             var screenShader = new Shader(Assets.GetText("Shaders/ScreenVert.vert").Text, Assets.GetText("Shaders/FilmGrain.frag").Text);
             PostProcessingStack.Push(new PostProcessingSinglePass(screenShader));
