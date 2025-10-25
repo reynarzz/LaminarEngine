@@ -75,7 +75,7 @@ namespace Engine.Rendering
         {
             if (TextureSlotArray == null)
             {
-                TextureSlotArray = new int[GfxDeviceManager.Current.GetDeviceInfo().MaxValidTextureUnits];
+                TextureSlotArray = new int[GfxDeviceManager.Current.GetDeviceInfo().MaxValidTextureUnits-5];
                 for (int i = 0; i < TextureSlotArray.Length; i++)
                 {
                     TextureSlotArray[i] = i;
@@ -87,9 +87,9 @@ namespace Engine.Rendering
         {
             MaxVertexSize = maxVertexSize;
             _verticesData = new Vertex[MaxVertexSize];
-            Textures = new Texture[GfxDeviceManager.Current.GetDeviceInfo().MaxValidTextureUnits];
+            Textures = new Texture[GfxDeviceManager.Current.GetDeviceInfo().MaxValidTextureUnits-5];
             _renderers = new Dictionary<Guid, RendererIds>();
-           
+
             // Create geometry buffer for this batch
             _geoDescriptor = new GeometryDescriptor();
             var vertexDesc = new VertexDataDescriptor();
@@ -100,14 +100,14 @@ namespace Engine.Rendering
 
             unsafe
             {
-                vertexDesc.Attribs = new VertexAtrib[]
-                {
+                vertexDesc.Attribs =
+                [
                     new() { Count = 3, Normalized = false, Type = GfxValueType.Float, Stride = sizeof(Vertex), Offset = 0 },                 // Position
                     new() { Count = 2, Normalized = false, Type = GfxValueType.Float, Stride = sizeof(Vertex), Offset = sizeof(float) * 3 }, // UV
                     new() { Count = 3, Normalized = false, Type = GfxValueType.Float, Stride = sizeof(Vertex), Offset = sizeof(float) * 5 }, // Normals
                     new() { Count = 1, Normalized = false, Type = GfxValueType.Uint,  Stride = sizeof(Vertex), Offset = sizeof(uint)  * 8 },  // Color
                     new() { Count = 1, Normalized = false, Type = GfxValueType.Int,   Stride = sizeof(Vertex), Offset = sizeof(int)   * 9 },  // TextureIndex
-                };
+                ];
                 _geoDescriptor.VertexDesc = vertexDesc;
             }
 
@@ -151,17 +151,18 @@ namespace Engine.Rendering
             // Adds texture to a empty slot
             for (int i = 0; i < Textures.Length; i++)
             {
-                if (Textures[i] == texture)
-                {
-                    textureIndex = i;
-                    break;
-                }
-                else if (Textures[i] == null)
+                if (Textures[i] == null)
                 {
                     Textures[i] = texture;
                     textureIndex = i;
                     break;
                 }
+                else if (Textures[i].NativeResource == texture.NativeResource)
+                {
+                    textureIndex = i;
+                    break;
+                }
+
             }
 
             renderer.OnDestroyRenderer -= _onRendererDestroyHandler;
@@ -181,12 +182,12 @@ namespace Engine.Rendering
             else
             {
                 startIndex = VertexCount;
-                _renderers.Add(renderer.GetID(), new RendererIds() 
+                _renderers.Add(renderer.GetID(), new RendererIds()
                 {
-                    RendererId = startIndex, 
-                    TextureId = textureIndex, 
+                    RendererId = startIndex,
+                    TextureId = textureIndex,
                     VertexCount = vertices.Length,
-                     IndexCount = indicesCount
+                    IndexCount = indicesCount
                 });
             }
 
@@ -208,7 +209,7 @@ namespace Engine.Rendering
         private void OnRendererDestroy(Renderer renderer)
         {
             renderer.OnDestroyRenderer -= OnRendererDestroy;
-
+            var vertCountBeforeDelete = VertexCount;
             _isDirty = true;
             var rendererIds = _renderers[renderer.GetID()];
             _renderers.Remove(renderer.GetID());
@@ -278,7 +279,7 @@ namespace Engine.Rendering
 
                 int startIndex = rendererIds.RendererId;
                 int countToRemove = rendererVerticesCount;
-                int remaining = VertexCount - (startIndex + countToRemove);
+                int remaining = vertCountBeforeDelete - (startIndex + countToRemove);
 
                 if (canRemoveTexture)
                 {
@@ -331,7 +332,7 @@ namespace Engine.Rendering
             // Also removes the textures from the material to avoid binding more textures than the plaform supports.
             for (int i = 0; i < Textures.Length - Material.Textures.Count; i++)
             {
-                if (texture == Textures[i] || Textures[i] == null)
+                if (Textures[i] == null || texture.NativeResource == Textures[i].NativeResource)
                 {
                     return true;
                 }

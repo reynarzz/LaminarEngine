@@ -78,7 +78,7 @@ namespace Engine
 #if DEBUG
         ~EObject()
         {
-            Debug.Info($"Mem Destroy: ({GetType().Name}), name: {Name}");
+            Debug.Info($"Mem Destroy: ({GetType().Name}, {_guid}), name: {Name}");
         }
 #endif
 

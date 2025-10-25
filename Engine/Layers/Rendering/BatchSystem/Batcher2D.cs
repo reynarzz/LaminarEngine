@@ -64,8 +64,7 @@ namespace Engine.Rendering
 
             _pinkMaterial = new Material(Tests.GetShaderPink());
             _pinkMaterial.Name = "Pink Material";
-            _whiteTexture = new Texture2D(TextureMode.Clamp, 1, 1, 4, new byte[] { 0xFF, 0xFF, 0xFF, 0xFF });
-            _whiteTexture.PixelPerUnit = 1;
+            _whiteTexture = new Texture2D(TextureMode.Clamp, 1, 1, 4, 1, new byte[] { 0xFF, 0xFF, 0xFF, 0xFF });
 
             Initialize();
         }

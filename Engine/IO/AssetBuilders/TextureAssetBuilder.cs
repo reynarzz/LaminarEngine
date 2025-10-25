@@ -22,8 +22,8 @@ namespace Engine.IO
 
             reader.BaseStream.ReadExactly(imageData);
             var texMeta = meta as TextureMetaFile;
-
-            return new Texture2D(info.Path, guid, (TextureMode)texMeta.Config.Mode, width, height, comp, imageData);
+            Debug.Log("Build texture: " + info.Path);
+            return new Texture2D(info.Path, guid, (TextureMode)texMeta.Config.Mode, width, height, comp, texMeta.Config.PixelPerUnit, imageData);
         }
     }
 }

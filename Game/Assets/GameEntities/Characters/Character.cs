@@ -91,7 +91,7 @@ namespace Game
         private float _maxFallYVelocity = -20;
 
         private int _life;
-        public int Life { get => _life; private set { _life = value; Animator.Parameters.SetInt(LIFE_PROPERTY_NAME, _life); } }
+        public int Life { get => _life; set { _life = value; Animator.Parameters.SetInt(LIFE_PROPERTY_NAME, _life); } }
 
         private CharacterConfig _characterConfig;
         private AnimationState _main;
@@ -242,7 +242,6 @@ namespace Game
                 _main = state;
             }
             var texture = Assets.GetTexture(spritePath);
-            texture.PixelPerUnit = 16;
             var sprites = TextureAtlasUtils.SliceSprites(texture, (int)size.x, (int)size.y, pivot);
 
             var spriteCurve = new SpriteCurve();
@@ -564,12 +563,6 @@ namespace Game
             }
         }
 
-        protected struct AnimEvent
-        {
-            public float Time;
-            public Action Callback;
-        }
-
         protected struct AnimationStateInfo
         {
             public bool IsEnabled;
@@ -580,5 +573,11 @@ namespace Game
             public AnimEvent[] Events;
         }
 
+    }
+
+    public struct AnimEvent
+    {
+        public float Time;
+        public Action Callback;
     }
 }

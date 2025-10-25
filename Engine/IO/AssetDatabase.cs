@@ -12,6 +12,7 @@ namespace Engine.IO
     internal class AssetDatabase
     {
         private readonly Dictionary<AssetType, AssetBuilderBase> _assetbuilder;
+        private readonly AssetDatabaseCache _databaseCache;
         private BiDictionary<Guid, string> _guidPathDict;
         private DiskBase _disk;
         private DiskBase Disk => _disk;
@@ -25,6 +26,7 @@ namespace Engine.IO
                 { AssetType.Audio, new AudioClipAssetBuilder() },
                 { AssetType.Font, new FontAssetBuilder() },
             };
+            _databaseCache = new();
         }
 
         internal virtual void Initialize(DiskBase disk)
@@ -64,14 +66,24 @@ namespace Engine.IO
 
         private async Task<T> GetAssetAsync<T>(Guid guid) where T : AssetResourceBase
         {
+            if (_databaseCache.GetAsset<T>(guid, out var asset))
+            {
+                return asset;
+            }
             var assetContent = await Disk.GetAssetAsync(guid);
-            var assetMeta =  Disk.GetAssetMeta(guid);
+            var assetMeta = Disk.GetAssetMeta(guid);
 
-            return BuildAsset(assetContent.Info, assetMeta, guid, assetContent.RawData) as T;
+            asset = BuildAsset(assetContent.Info, assetMeta, guid, assetContent.RawData) as T;
+            _databaseCache.PushAsset(guid, asset);
+            return asset;
         }
 
         private T GetAsset<T>(Guid guid) where T : AssetResourceBase
         {
+            if (_databaseCache.GetAsset<T>(guid, out var asset))
+            {
+                return asset;
+            }
             var assetContent = Disk.GetAssetAsync(guid).GetAwaiter().GetResult();
             var assetMeta = Disk.GetAssetMeta(guid);
 
@@ -82,11 +94,15 @@ namespace Engine.IO
                 throw new Exception($"Fatal: Asset is null: {guid}");
             }
 
-            T asset = rawAsset as T;
+            asset = rawAsset as T;
 
             if (asset == null)
             {
                 Debug.Error($"Invalid asset cast to type: {typeof(T).Name}, asset type is: {rawAsset.GetType().Name}");
+            }
+            else
+            {
+                _databaseCache.PushAsset(guid, asset);
             }
 
             return asset;

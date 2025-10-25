@@ -58,15 +58,15 @@ namespace Engine.Utils
             data.SetChunks(atlasChunks);
         }
 
-        public static Sprite[] SliceSprites(Texture2D texture, int width, int height)
+        public static Sprite[] SliceSprites(Texture2D texture, int tileWidth, int tileHeight)
         {
-            return SliceSprites(texture, width, height, new vec2(0.5f, 0.5f));
+            return SliceSprites(texture, tileWidth, tileHeight, new vec2(0.5f, 0.5f));
         }
 
-        public static Sprite[] SliceSprites(Texture2D texture, int width, int height, vec2 pivot)
+        public static Sprite[] SliceSprites(Texture2D texture, int tileWidth, int tileHeight, vec2 pivot)
         {
-            int tilesX = texture.Width / width;
-            int tilesY = texture.Height / height;
+            int tilesX = texture.Width / tileWidth;
+            int tilesY = texture.Height / tileHeight;
             var length = tilesX * tilesY;
             var atlasChunks = new AtlasChunk[length];
             var sprites = new Sprite[length];
@@ -76,7 +76,7 @@ namespace Engine.Utils
             {
                 for (int x = 0; x < tilesX; ++x)
                 {
-                    var chunk = CreateTileBounds(x * width, (y) * height, width, height, 0.5f, 0.5f, texture.Width, texture.Height);
+                    var chunk = CreateTileBounds(x * tileWidth, (y) * tileHeight, tileWidth, tileHeight, 0.5f, 0.5f, texture.Width, texture.Height);
 
                     var sprite = new Sprite();
                     sprite.Texture = texture;

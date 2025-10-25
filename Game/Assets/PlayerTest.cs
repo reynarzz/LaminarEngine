@@ -84,12 +84,6 @@ namespace Game
             var FallTex = Assets.GetTexture(basePath + "Fall (78x58).png");
             var attackTex = Assets.GetTexture(basePath + "Attack (78x58).png");
 
-            pTexture.PixelPerUnit = 16;
-            pTexture2.PixelPerUnit = 16;
-            jumpTex.PixelPerUnit = 16;
-            FallTex.PixelPerUnit = 16;
-            attackTex.PixelPerUnit = 16;
-
             _runSprites = TextureAtlasUtils.SliceSprites(pTexture, 78, 58, new vec2(0.4f, 0.4f));
             _idleSprites = TextureAtlasUtils.SliceSprites(pTexture2, 78, 58, new vec2(0.4f, 0.4f));
             _jumpSprites = TextureAtlasUtils.SliceSprites(jumpTex, 78, 58, new vec2(0.4f, 0.4f));

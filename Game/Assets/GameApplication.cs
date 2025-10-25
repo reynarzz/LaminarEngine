@@ -5,6 +5,7 @@ using Engine.Layers;
 using Engine.Utils;
 using GlmNet;
 using ldtk;
+using System;
 using System.Linq;
 
 namespace Game
@@ -15,16 +16,25 @@ namespace Game
         // Implement physics: boxcast, circle cast.
         /* Fix collision exit being called when the shape is destroyed, which causes the function to have a invalid actor,
              This collisionsExit/TriggerExit should not be called with invalid actors/components*/
-        // Fix rigidbody marked as interpolate if is made parent of another that is not, after exiting, the interpolation is disabled.
-        // Avoid batch to take more texture slots that the system is supported, take into account materials texture count.
+        // Fix: rigidbody marked as interpolate if is made parent of another that is not, after exiting, the interpolation is disabled.
+        // Avoid the batch to take more texture slots that the system is supported, take into account materials texture count.
         // Fix: Batch2d vertices shift when an object is destroyed.
+        // Fix: New asset instances created every time GetAsset is called, put all the loaded assets in pools.
+        // Fix: Texture units overflow, a batch should only bind
         // Implement a proper way to grow a batch when vertices are greater than MAX_QUADS_PER_BATCH (Tilemap)
 
-        // For game:
+
+        // For the game:
         // Implement enemies
         // Five levels, small, one intro level falling from outside.
         // Colllect coins, hearts, attack enemies, go from door A to B
         // Start with nothing, then grab the hammer as a powerup (modify sprites)
+        // Implement collectibles
+        // Enemy life UI
+        // Enemy AI
+        // Enemy boss.
+        // Implement collider AABB
+        // Color palette swap to have more enemies.
 
         // -Stretch:
         // Implement bounds in sprites/renderers.
@@ -35,116 +45,12 @@ namespace Game
         // Investigate why AudioMixer frees from memory automatically
 
         private vec3 _playerStartPosTest;
-        private void LoadTilemap()
-        {
-            var testPathNow = "Tilemap";
-            var tilemapTexture = Assets.GetTexture(testPathNow + "/SunnyLand_by_Ansimuz-extended.png");
 
-            TextureAtlasUtils.SliceTiles(tilemapTexture.Atlas, 16, 16, tilemapTexture.Width, tilemapTexture.Height);
-
-            var tilemapSprite = new Sprite();
-
-            tilemapSprite.Texture = tilemapTexture;
-            tilemapSprite.Texture.PixelPerUnit = 16;
-
-            //var filepath = rootPathTest + "\\Tilemap\\World.ldtk";
-
-            var filepath = testPathNow + "/WorldTilemap.ldtk";
-            //var filepath = testPathNow + "/Test.ldtk";
-            string json = Assets.GetText(filepath).Text;
-            string json2 = Assets.GetText(testPathNow + "/Test_Grass.ldtk").Text;
-
-            var tilemapMaterial = new Material(new Shader(Assets.GetText("Shaders/SpriteVert.vert").Text, Assets.GetText("Shaders/SpriteFrag.frag").Text));
-            tilemapMaterial.Name = "Tilemap material";
-
-            var project = ldtk.LdtkJson.FromJson(json);
-            var color = project.BgColor;
-
-            vec3 ConvertToWorld(long[] px, Level level, LayerInstance layer)
-            {
-                return new vec3(level.WorldX + px[0] + layer.PxOffsetX, -level.WorldY + -px[1] + -layer.PxOffsetY, 0);
-            }
-
-            foreach (var level in project.Levels)
-            {
-                foreach (var layer in level.LayerInstances)
-                {
-                    foreach (var entity in layer.EntityInstances)
-                    {
-                        //Debug.Log("Entity: " + entity.Identifier);
-                        if (entity.Identifier.Equals("Player"))
-                        {
-                            _playerStartPosTest = ConvertToWorld(entity.Px, level, layer) / tilemapTexture.PixelPerUnit;
-                        }
-
-                        foreach (var field in entity.FieldInstances)
-                        {
-                            //Debug.Log("Name: " + field.Identifier + ", Type: " + field.Type + ", Value: " + field.Value);
-                        }
-                    }
-                }
-            }
-
-            //cam.BackgroundColor = new Color32(project.BackgroundColor.R, project.BackgroundColor.G, project.BackgroundColor.B, project.BackgroundColor.A);
-            //cam.BackgroundColor = new Color32(23, 28, 57, project.BackgroundColor.A);
-
-            var tilemapActor = new Actor<TilemapRenderer>("Foreground tilemap");
-            var tilemap = tilemapActor.GetComponent<TilemapRenderer>();
-            tilemap.Material = tilemapMaterial;
-            tilemap.Sprite = tilemapSprite;
-
-            var tilemapActor2 = new Actor<TilemapRenderer>("Background tilemap");
-            var tilemap2 = tilemapActor2.GetComponent<TilemapRenderer>();
-            tilemap2.Material = tilemapMaterial;
-            tilemap2.Sprite = tilemapSprite;
-
-            var tilemapActor3 = new Actor<TilemapRenderer>("Grass tilemap");
-            var tilemap3 = tilemapActor3.GetComponent<TilemapRenderer>();
-            tilemap3.Material = tilemapMaterial;
-            tilemap3.Sprite = tilemapSprite;
-
-            // tilemap.SetTilemapLDtk(project, new LDtkOptions() { RenderIntGridLayer = true, RenderTilesLayer = true, RenderAutoLayer = true });
-            tilemap.SetTilemapLDtk(project, new LDtkOptions()
-            {
-                RenderIntGridLayer = true,
-                RenderTilesLayer = true,
-                RenderAutoLayer = true,
-                LayersToLoadMask = 1 << 2,
-                WorldDepth = 0
-            });
-
-            tilemap2.SetTilemapLDtk(project, new LDtkOptions()
-            {
-                RenderIntGridLayer = true,
-                RenderTilesLayer = true,
-                RenderAutoLayer = true,
-                LayersToLoadMask = 1 << 3,
-                WorldDepth = 0
-            });
-
-            //tilemap3.SetTilemapLDtk(json2, new LDtkOptions()
-            //{
-            //    RenderIntGridLayer = true,
-            //    RenderTilesLayer = true,
-            //    RenderAutoLayer = true,
-            //    LayersToLoadMask = 1 << 2,
-            //    WorldDepth = 0
-            //});
-
-            tilemap2.SortOrder = 0;
-            tilemap.SortOrder = 3;
-            tilemap3.SortOrder = 3;
-            tilemap.AddComponent<TilemapCollider2D>();
-            tilemap.Actor.Layer = 0;
-        }
         public override void Initialize()
         {
             new Actor<GameManager>("GameManager");
 
-            LoadTilemap();
-
-            PostProcessingStack.Push(new BloomPostProcessing());
-
+            //PostProcessingStack.Push(new BloomPostProcessing());
             ScreenGrabTest();
             TextRendering();
 
@@ -172,7 +78,7 @@ namespace Game
             particleSystem.ParticleLife = 3;
             particleSystem.SortOrder = 7;
             particleSystem.StartColor = Color.White;
-            particleSystem.EndColor = new Color(0,0,0,0);
+            particleSystem.EndColor = new Color(0, 0, 0, 0);
             particleSystem.EndSize = new vec2(0, 0);
             particleSystem.Spread = new vec2(0.0f, 0);
             particleSystem.SimulationSpeed = 1;
@@ -187,7 +93,6 @@ namespace Game
             //particleSystem.Material.Passes.ElementAt(0).Blending.Enabled = false;
             var sprite = new Sprite();
             sprite.Texture = Texture2D.White;
-            sprite.Texture.PixelPerUnit = 1;
 
             particleSystem.Sprite = sprite;
         }

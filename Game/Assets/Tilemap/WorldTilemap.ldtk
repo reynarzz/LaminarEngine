@@ -11,50 +11,711 @@
 	"iid": "a39fb1b0-7820-11ed-b6fd-87f9a01f3d6b",
 	"jsonVersion": "1.5.3",
 	"appBuildId": 473703,
-	"nextUid": 169,
+	"nextUid": 175,
 	"identifierStyle": "Capitalize",
-	"toc": [ {
-		"identifier": "Player",
-		"instances": [{
-			"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
-			"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
-			"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-			"entityIid": "35827bd0-8560-11f0-a2f8-1384a29ebc8c"
-		}],
-		"instancesData": [{ "iids": {
-			"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
-			"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
-			"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-			"entityIid": "35827bd0-8560-11f0-a2f8-1384a29ebc8c"
-		}, "worldX": -414, "worldY": 153, "widPx": 20, "heiPx": 20, "fields" : {} }]
-	}, {
-		"identifier": "Enemy1",
-		"instances": [ {
-			"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
-			"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
-			"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-			"entityIid": "cc720190-8560-11f0-a2f8-4fbcd8bbbb9b"
-		}, {
-			"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
-			"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
-			"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-			"entityIid": "4f7f0c40-8560-11f0-a2f8-5344d6c2a350"
-		} ],
-		"instancesData": [
-			{ "iids": {
+	"toc": [
+		{
+			"identifier": "Player",
+			"instances": [{
 				"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 				"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 				"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-				"entityIid": "cc720190-8560-11f0-a2f8-4fbcd8bbbb9b"
-			}, "worldX": -119, "worldY": 151, "widPx": 20, "heiPx": 20, "fields" : {} },
-			{ "iids": {
+				"entityIid": "35827bd0-8560-11f0-a2f8-1384a29ebc8c"
+			}],
+			"instancesData": [{ "iids": {
 				"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 				"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 				"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-				"entityIid": "4f7f0c40-8560-11f0-a2f8-5344d6c2a350"
-			}, "worldX": 108, "worldY": 199, "widPx": 20, "heiPx": 20, "fields" : {} }
-		]
-	} ],
+				"entityIid": "35827bd0-8560-11f0-a2f8-1384a29ebc8c"
+			}, "worldX": -414, "worldY": 153, "widPx": 20, "heiPx": 20, "fields" : {} }]
+		},
+		{
+			"identifier": "Enemy1",
+			"instances": [
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "4f7f0c40-8560-11f0-a2f8-5344d6c2a350"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "14289ab0-ac70-11f0-8af9-9f40645e0b64"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "16a9c750-ac70-11f0-8af9-f5c1addbc4e6"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "17587de0-ac70-11f0-8af9-25ac71df25f5"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "1960f810-ac70-11f0-8af9-63358d1942a9"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "1adb3c00-ac70-11f0-8af9-35bf2d52bd56"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "423a50f0-ac70-11f0-8af9-03e7670f0f5f"
+				}
+			],
+			"instancesData": [
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "4f7f0c40-8560-11f0-a2f8-5344d6c2a350"
+				}, "worldX": 188, "worldY": 151, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "14289ab0-ac70-11f0-8af9-9f40645e0b64"
+				}, "worldX": -250, "worldY": -110, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "16a9c750-ac70-11f0-8af9-f5c1addbc4e6"
+				}, "worldX": 667, "worldY": -119, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "17587de0-ac70-11f0-8af9-25ac71df25f5"
+				}, "worldX": 860, "worldY": -180, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "1960f810-ac70-11f0-8af9-63358d1942a9"
+				}, "worldX": 875, "worldY": 73, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "1adb3c00-ac70-11f0-8af9-35bf2d52bd56"
+				}, "worldX": 789, "worldY": -23, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "423a50f0-ac70-11f0-8af9-03e7670f0f5f"
+				}, "worldX": -281, "worldY": 152, "widPx": 20, "heiPx": 20, "fields" : {} }
+			]
+		},
+		{
+			"identifier": "Coin",
+			"instances": [
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "e6018050-ac70-11f0-8af9-cd2d2d57ed7e"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "ed3dc400-ac70-11f0-8af9-738f6a835361"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "edc89ee0-ac70-11f0-8af9-f381d9cc1f0e"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "ee15fb90-ac70-11f0-8af9-5b05be4fea26"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "ee559ca0-ac70-11f0-8af9-c78d64187205"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "ee8a8f50-ac70-11f0-8af9-e3f0a048967e"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "ef87b400-ac70-11f0-8af9-39a8554d5a1e"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f081f280-ac70-11f0-8af9-2360fa4cfdab"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f2499320-ac70-11f0-8af9-d94750ca77a1"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f295de60-ac70-11f0-8af9-335f4a1c42ef"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f2e20290-ac70-11f0-8af9-9745cfa73761"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f35f21d0-ac70-11f0-8af9-4f2499d2329b"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f3aea160-ac70-11f0-8af9-7b55ed1094ad"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f3eb0e20-ac70-11f0-8af9-e965794c6e08"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f4266970-ac70-11f0-8af9-f9e09d40e1b8"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f4a13ec0-ac70-11f0-8af9-639e8ba9c632"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f547b7f0-ac70-11f0-8af9-77ae410faefd"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f6923950-ac70-11f0-8af9-d3e2edb233db"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f6d2c4c0-ac70-11f0-8af9-3568e441e188"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f7137740-ac70-11f0-8af9-6b55252bd154"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f77c7240-ac70-11f0-8af9-e3405b37e948"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f7cbf1d0-ac70-11f0-8af9-6d4fedd94f2e"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "fa22b310-ac70-11f0-8af9-a963b91cb5eb"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "fa536000-ac70-11f0-8af9-df6fe9c62f5a"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "fa874140-ac70-11f0-8af9-d3d049f15450"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "fb3311a0-ac70-11f0-8af9-15cc2d1cb3aa"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "fbc650f0-ac70-11f0-8af9-e7086453b39f"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "fcfef800-ac70-11f0-8af9-e90ad8963d3b"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "fea38040-ac70-11f0-8af9-b1db2d8a485c"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "00320f80-ac70-11f0-8af9-b9a8a6a9d31c"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "00805690-ac70-11f0-8af9-7d7e726443a0"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "00bdd4c0-ac70-11f0-8af9-e94e5c5627ab"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "014ddfc0-ac70-11f0-8af9-f19823834dac"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "01851c60-ac70-11f0-8af9-c31ae6f8747f"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "02ce8c50-ac70-11f0-8af9-8d6bc2ba936d"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "033675e0-ac70-11f0-8af9-cf0ad8e07176"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "03cac6a0-ac70-11f0-8af9-5da74c0f6777"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "0457c460-ac70-11f0-8af9-b3546464836c"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "04afcf70-ac70-11f0-8af9-290294612897"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "051ff660-ac70-11f0-8af9-c7168d6895fc"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "05d53ca0-ac70-11f0-8af9-8d5ba0930d12"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "ad30bee0-ac70-11f0-8af9-13f1b56f931b"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "adaca5a0-ac70-11f0-8af9-4beaca8cfabd"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "affb5090-ac70-11f0-8af9-15888eb30d4a"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "b0e64cd0-ac70-11f0-8af9-6f7243934091"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "b1aa8730-ac70-11f0-8af9-c7e39cb9f446"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "b1df52d0-ac70-11f0-8af9-2560a0acae27"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "b21dbb60-ac70-11f0-8af9-6f62ad20508f"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "b25c4b00-ac70-11f0-8af9-831b173104da"
+				}
+			],
+			"instancesData": [
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "e6018050-ac70-11f0-8af9-cd2d2d57ed7e"
+				}, "worldX": -396, "worldY": 113, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "ed3dc400-ac70-11f0-8af9-738f6a835361"
+				}, "worldX": -369, "worldY": 113, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "edc89ee0-ac70-11f0-8af9-f381d9cc1f0e"
+				}, "worldX": -324, "worldY": 113, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "ee15fb90-ac70-11f0-8af9-5b05be4fea26"
+				}, "worldX": -224, "worldY": 115, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "ee559ca0-ac70-11f0-8af9-c78d64187205"
+				}, "worldX": -168, "worldY": 121, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "ee8a8f50-ac70-11f0-8af9-e3f0a048967e"
+				}, "worldX": -108, "worldY": 118, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "ef87b400-ac70-11f0-8af9-39a8554d5a1e"
+				}, "worldX": -65, "worldY": 126, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f081f280-ac70-11f0-8af9-2360fa4cfdab"
+				}, "worldX": -36, "worldY": 126, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f2499320-ac70-11f0-8af9-d94750ca77a1"
+				}, "worldX": -481, "worldY": 17, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f295de60-ac70-11f0-8af9-335f4a1c42ef"
+				}, "worldX": -481, "worldY": -19, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f2e20290-ac70-11f0-8af9-9745cfa73761"
+				}, "worldX": -479, "worldY": -47, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f35f21d0-ac70-11f0-8af9-4f2499d2329b"
+				}, "worldX": -478, "worldY": -93, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f3aea160-ac70-11f0-8af9-7b55ed1094ad"
+				}, "worldX": -478, "worldY": -126, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f3eb0e20-ac70-11f0-8af9-e965794c6e08"
+				}, "worldX": -477, "worldY": -160, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f4266970-ac70-11f0-8af9-f9e09d40e1b8"
+				}, "worldX": -476, "worldY": -195, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f4a13ec0-ac70-11f0-8af9-639e8ba9c632"
+				}, "worldX": -417, "worldY": -135, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f547b7f0-ac70-11f0-8af9-77ae410faefd"
+				}, "worldX": -388, "worldY": -123, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f6923950-ac70-11f0-8af9-d3e2edb233db"
+				}, "worldX": -166, "worldY": -36, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f6d2c4c0-ac70-11f0-8af9-3568e441e188"
+				}, "worldX": -143, "worldY": -39, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f7137740-ac70-11f0-8af9-6b55252bd154"
+				}, "worldX": -94, "worldY": -35, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f77c7240-ac70-11f0-8af9-e3405b37e948"
+				}, "worldX": -122, "worldY": -35, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "f7cbf1d0-ac70-11f0-8af9-6d4fedd94f2e"
+				}, "worldX": -52, "worldY": -39, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "fa22b310-ac70-11f0-8af9-a963b91cb5eb"
+				}, "worldX": 410, "worldY": 223, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "fa536000-ac70-11f0-8af9-df6fe9c62f5a"
+				}, "worldX": 431, "worldY": 223, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "fa874140-ac70-11f0-8af9-d3d049f15450"
+				}, "worldX": 466, "worldY": 219, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "fb3311a0-ac70-11f0-8af9-15cc2d1cb3aa"
+				}, "worldX": 531, "worldY": 88, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "fbc650f0-ac70-11f0-8af9-e7086453b39f"
+				}, "worldX": 612, "worldY": 123, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "fcfef800-ac70-11f0-8af9-e90ad8963d3b"
+				}, "worldX": 638, "worldY": 103, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "fea38040-ac70-11f0-8af9-b1db2d8a485c"
+				}, "worldX": 481, "worldY": 42, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "00320f80-ac70-11f0-8af9-b9a8a6a9d31c"
+				}, "worldX": 768, "worldY": 73, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "00805690-ac70-11f0-8af9-7d7e726443a0"
+				}, "worldX": 805, "worldY": 73, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "00bdd4c0-ac70-11f0-8af9-e94e5c5627ab"
+				}, "worldX": 840, "worldY": 73, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "014ddfc0-ac70-11f0-8af9-f19823834dac"
+				}, "worldX": 914, "worldY": 76, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "01851c60-ac70-11f0-8af9-c31ae6f8747f"
+				}, "worldX": 939, "worldY": 76, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "02ce8c50-ac70-11f0-8af9-8d6bc2ba936d"
+				}, "worldX": 599, "worldY": -65, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "033675e0-ac70-11f0-8af9-cf0ad8e07176"
+				}, "worldX": 509, "worldY": -56, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "03cac6a0-ac70-11f0-8af9-5da74c0f6777"
+				}, "worldX": 490, "worldY": -56, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "0457c460-ac70-11f0-8af9-b3546464836c"
+				}, "worldX": 486, "worldY": -89, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "04afcf70-ac70-11f0-8af9-290294612897"
+				}, "worldX": 509, "worldY": -87, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "051ff660-ac70-11f0-8af9-c7168d6895fc"
+				}, "worldX": 494, "worldY": -117, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "05d53ca0-ac70-11f0-8af9-8d5ba0930d12"
+				}, "worldX": 518, "worldY": -117, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "ad30bee0-ac70-11f0-8af9-13f1b56f931b"
+				}, "worldX": 935, "worldY": -173, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "adaca5a0-ac70-11f0-8af9-4beaca8cfabd"
+				}, "worldX": 933, "worldY": -102, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "affb5090-ac70-11f0-8af9-15888eb30d4a"
+				}, "worldX": 935, "worldY": -142, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "b0e64cd0-ac70-11f0-8af9-6f7243934091"
+				}, "worldX": 933, "worldY": -78, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "b1aa8730-ac70-11f0-8af9-c7e39cb9f446"
+				}, "worldX": 936, "worldY": -52, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "b1df52d0-ac70-11f0-8af9-2560a0acae27"
+				}, "worldX": 939, "worldY": -25, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "b21dbb60-ac70-11f0-8af9-6f62ad20508f"
+				}, "worldX": 939, "worldY": 2, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "b25c4b00-ac70-11f0-8af9-831b173104da"
+				}, "worldX": 938, "worldY": 27, "widPx": 20, "heiPx": 20, "fields" : {} }
+			]
+		}
+	],
 	"worldLayout": "GridVania",
 	"worldGridWidth": 256,
 	"worldGridHeight": 256,
@@ -1575,7 +2236,7 @@
 			"showName": true,
 			"tilesetId": 133,
 			"tileRenderMode": "FitInside",
-			"tileRect": { "tilesetUid": 133, "x": 16, "y": 192, "w": 16, "h": 16 },
+			"tileRect": { "tilesetUid": 133, "x": 96, "y": 0, "w": 16, "h": 16 },
 			"uiTileRect": null,
 			"nineSliceBorders": [],
 			"maxCount": 0,
@@ -1626,6 +2287,116 @@
 					"doc": null,
 					"__type": "Int",
 					"uid": 162,
+					"type": "F_Int",
+					"isArray": false,
+					"canBeNull": false,
+					"arrayMinLength": null,
+					"arrayMaxLength": null,
+					"editorDisplayMode": "ValueOnly",
+					"editorDisplayScale": 1,
+					"editorDisplayPos": "Above",
+					"editorLinkStyle": "ZigZag",
+					"editorDisplayColor": null,
+					"editorAlwaysShow": true,
+					"editorShowInWorld": true,
+					"editorCutLongValues": true,
+					"editorTextSuffix": " HP",
+					"editorTextPrefix": null,
+					"useForSmartColor": false,
+					"exportToToc": false,
+					"searchable": false,
+					"min": 1,
+					"max": 20,
+					"regex": null,
+					"acceptFileTypes": null,
+					"defaultOverride": { "id": "V_Int", "params": [3] },
+					"textLanguageMode": null,
+					"symmetricalRef": false,
+					"autoChainRef": false,
+					"allowOutOfLevelRef": true,
+					"allowedRefs": "OnlySame",
+					"allowedRefsEntityUid": null,
+					"allowedRefTags": [],
+					"tilesetUid": null
+				}
+			]
+		},
+		{
+			"identifier": "Coin",
+			"uid": 172,
+			"tags": ["actor"],
+			"exportToToc": true,
+			"allowOutOfBounds": false,
+			"doc": null,
+			"width": 20,
+			"height": 20,
+			"resizableX": false,
+			"resizableY": false,
+			"minWidth": null,
+			"maxWidth": null,
+			"minHeight": null,
+			"maxHeight": null,
+			"keepAspectRatio": false,
+			"tileOpacity": 1,
+			"fillOpacity": 0.08,
+			"lineOpacity": 0,
+			"hollow": false,
+			"color": "#FF0044",
+			"renderMode": "Tile",
+			"showName": true,
+			"tilesetId": 133,
+			"tileRenderMode": "FitInside",
+			"tileRect": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+			"uiTileRect": null,
+			"nineSliceBorders": [],
+			"maxCount": 0,
+			"limitScope": "PerWorld",
+			"limitBehavior": "PreventAdding",
+			"pivotX": 0.5,
+			"pivotY": 0.5,
+			"fieldDefs": [
+				{
+					"identifier": "inventory",
+					"doc": null,
+					"__type": "Array<LocalEnum.ItemType>",
+					"uid": 173,
+					"type": "F_Enum(74)",
+					"isArray": true,
+					"canBeNull": false,
+					"arrayMinLength": null,
+					"arrayMaxLength": null,
+					"editorDisplayMode": "ValueOnly",
+					"editorDisplayScale": 1,
+					"editorDisplayPos": "Above",
+					"editorLinkStyle": "ZigZag",
+					"editorDisplayColor": null,
+					"editorAlwaysShow": true,
+					"editorShowInWorld": true,
+					"editorCutLongValues": true,
+					"editorTextSuffix": null,
+					"editorTextPrefix": null,
+					"useForSmartColor": false,
+					"exportToToc": false,
+					"searchable": true,
+					"min": null,
+					"max": null,
+					"regex": null,
+					"acceptFileTypes": null,
+					"defaultOverride": null,
+					"textLanguageMode": null,
+					"symmetricalRef": false,
+					"autoChainRef": false,
+					"allowOutOfLevelRef": true,
+					"allowedRefs": "OnlySame",
+					"allowedRefsEntityUid": null,
+					"allowedRefTags": [],
+					"tilesetUid": null
+				},
+				{
+					"identifier": "HP",
+					"doc": null,
+					"__type": "Int",
+					"uid": 174,
 					"type": "F_Int",
 					"isArray": false,
 					"canBeNull": false,
@@ -1958,6 +2729,28 @@
 				"opaqueTiles": "00000000000000000000000000000000000000000000000000000000000000000000000000000000111111111000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 				"averageColors": "00004b344233459b423349a959a9379c688769758ca4bc9489aab9aa58cc58bc42d74d2244ce428f4c7e4ff74abb45564ffe7dda7888a899889900000000000069a969a97a99999999989a85998699767a7579667ccc7ccc7bcb7caa7ccc7ccc22d72d2224ce228f2c7e2ff72abb25562ffeba444955ab55974300000000000059764b97599868ac679a69ab4a84477756787688475347532a932a934a837a83f2b6fb22f3acf15afa6cfdc6f899f334fccca778a7440000000000000000000059aa49aa59996999699969aa489949995999799a499949992999299948997889a385a823a379a248a749aa85a667a223a8880000000000000000000000000000189919991999199939994778166727772889289948993aaa389949a959a959a932b63b2233ad315a395c3ec6389933343ccc00000000000000000000000000008aaa8aaa8aaa8aaa8aaa7bbb8aaa7bbb8bcb7aaa8bcb7bcb69aa8aaa8aaa69aa6abb6abb6abb6abb6a226a226a226a2261a661a661a661a600000000000000006c526c426c926c91659b649c66a566a46a7b6a7b667766776aba6abb676367636da46da46da46da4616c616c616c616c8abb8abb8abb8abb00000000000000006ba5579a6689598658875cb66abb9aa989aa98ac7abc6678968a88877c87cba952755823536952475648598454455223599900000000000000000000000000003ec63da76db79dc7554885498969b4377fa29e8289cdb9ce5ade5ade49ce49ce82a68a22839b8259885b8cb5855683238aab00000000000000000000000000005d745d867da87e75448c458b86ad76ae68ac679c779b78ce3c9378867ca6adb784858933847a844788498b94854584348989000000000000000000000000000057a668b899b8449396534493858364836853697769436667755667776c73498862b66b22639c615a695c6dc5655663346bbc00000000000000000000000000006bba79b87d9679ad776a7b988abc8abc4aceaace4bba4bba6b8c4c9c4cac5b7c62a66a22639c6159695b6db5655663236abb000000000000000000000000000059aaada7a9bdcdbd59aaada7a9bdcdbd8cb8a9b98ac889b8aabaacc79ea498bd82b68b2283ad815a8a5c8ec5856783348ccc000000000000000000000000000057ac596b55946abb5abb8ca65d8677ac437b5a3368886934547a595897a57b2372957923738a7258784a7c9474557323799a0000000000000000000000000000799a5c817b9b3a886abb8464676a7a967a857a857977898889882a954a956b9562d76d2264ce628f6c7e6ff76abb65566ffe0000000000000000000000000000499977997868799579875a6465995a8957a66a735ba53a935969479a576a467732d73d2234ce328f3c7e3ff73abb35563ffe00000000000000000000000000005744985596659b747a659a76768a7a567675477738873566597698779445946572d77d2274ce728f7c7e7ff77abb75567ffe000000000000000000000000000088668a66868a9b8577666a4467846987778a7789797a87888b8676667a767ca562d76d2264ce628f6c7e6ff76abb65566ffe0000000000000000000000000000449374934c957c9574847a438475a3958695768565956853b9447a777493a493000000000000000000000000000000000000000000000000000000000000000079547a838394689a49547a6357636975786383848997b384655873748974588400000000000000000000000000000000000000000000000000000000000000007da48ca769768b554b976cba3a824a82696259526a758c986963694268478b850000000000000000000000000000000000000000000000000000000000000000696559555579557458598674573353635677575579667a8758538b848a44838b0000000000000000000000000000000000000000000000000000000000000000385437883b95534549555a855877997598772b953b9529a939a95aa84b949a840000000000000000000000000000000000000000000000000000000000000000897687898776878578998485878b789a847b8b6579998a55886998788a879b9700000000000000000000000000000000000000000000000000000000000000006ba97988897469646b987a876a997a987b987955766777765c958a858777867700000000000000000000000000000000000000000000000000000000000000005a747b947b967866a855788928884566578879a98864a579233433343334633400000000000000000000000000000000000000000000000000000000000000006a747b846a844997598669987bb8b8aabaa96ba67cba9854687669864a864b86000000000000000000000000000000000000000000000000000000000000000038ab389b48ab47ac49ab48ac579b48ac49ab38ab58bc4b8659aa5c8457ac586a0000000000000000000000000000000000000000000000000000000000000000299b2999389a379b38893955589a79bc8c9588bc7a8c599a689a5b8558ac597a00000000000000000000000000000000000000000000000000000000000000002888378936773975579b389a579b488938884b74469a465747785b75568b586a000000000000000000000000000000000000000000000000000000000000000038553865285428444755566455763a64356746743779397445674c63469b585a0000000000000000000000000000000000000000000000000000000000000000284437643a7629641555297938874879385438664665355536775a85569a785a00000000000000000000000000000000000000000000000000000000000000005789789b779b6a75668a897b64558555876576798855845694749b74a68a986a000000000000000000000000000000000000000000000000000000000000000047776766678867667799798698768866976685673755387638763b74358b387a00000000000000000000000000000000000000000000000000000000000000005777686569874944498846774677685568646987677778775a456a65ab66ca550000000000000000000000000000000000000000000000000000000000000000355656666656455546455345634558655854aa749854775577737b64777a7a7900000000000000000000000000000000000000000000000000000000000000005955895598546c758c75ba76b88797749b75a98967888789978857888788a78800000000000000000000000000000000000000000000000000000000000000006977897799776a748a749a747987ba97aa998ba8a78bab75a87ab89cbb74b97b000000000000000000000000000000000000000000000000000000000000000059645788598858546a7569996a767a766887649c767476797a54766977667976000000000000000000000000000000000000000000000000000000000000000078887a75796577777a869976987799865777667787668a53857a885a98659546000000000000000000000000000000000000000000000000000000000000000087559877a96586779788b9769866888899877576777879647759a8659888a7440000000000000000000000000000000000000000000000000000000000000000785477887a55747b7585795b7999a9667456878889aa58997888797b56776855000000000000000000000000000000000000000000000000000000000000000048545854617b644557448744537b85565899899a39994a7a58998999a5558988000000000000000000000000000000000000000000000000000000000000000089659744a6559555a55698889486a57aab43a96b9556a665a854a579a744a5550000000000000000000000000000000000000000000000000000000000000000596587556677777777778578876687778974867787668876988897779876a744000000000000000000000000000000000000000000000000000000000000000067536556875448225922415851595456654587459456947b48997a86764585560000000000000000000000000000000000000000000000000000000000000000a854a89989998556a7559766a7779976a975997596749a64968a9779a55595450000000000000000000000000000000000000000000000000000000000000000674487549854885594558445a777a7778373579b5a32675584456975958b9944000000000000000000000000000000000000000000000000000000000000000077449754b674b469b964b658a766a864a777a975a566a754a677a875b777b9650000000000000000000000000000000000000000000000000000000000000000775577547445755676558744697377637766785334556566577859755877887600000000000000000000000000000000000000000000000000000000000000002789287328772a7436793a9457795a84368a3334323364555a757b856aaa9a5500000000000000000000000000000000000000000000000000000000000000005888516b5a3349a95964797778987a5375696a536668796577887a847a74797500000000000000000000000000000000000000000000000000000000000000007b537a53767b6769748775767a9a7988759c768a7b957a847775776478647854000000000000000000000000000000000000000000000000000000000000000098999788988998889b879a869a869a86696565676965667767446854677877880000000000000000000000000000000000000000000000000000000000000000678a77997ba647887a7589999ca59ba889aa9999655667bd6ba979a967bc6c7300000000000000000000000000000000000000000000000000000000000000006aaa6556518566775965485438985888576546854ca547775999699989997a9900000000000000000000000000000000000000000000000000000000000000006678526466335644769c5a7888547a785c4454a658885c946285627b6c54674a000000000000000000000000000000000000000000000000000000000000000033843b33359c337c395c3b853899355653745a33558b536b585b5a7557885445000000000000000000000000000000000000000000000000000000000000000026551566274525664a85486546564656377756664655465545454656516a656700000000000000000000000000000000000000000000000000000000000000004964696468553a86485437443645896588548856895477446a7569547a757954000000000000000000000000000000000000000000000000000000000000000036678566399988993b968b955ba658995566588859645a986ca7796477887ca6000000000000000000000000000000000000000000000000000000000000000019562a554c665c55156a256a468c557b1a8429744a845a83196b285a496b595b00000000000000000000000000000000000000000000000000000000000000001486248645a7549615782578469a5689187629764a875a861a692a694b7a5b79000000000000000000000000000000000000000000000000000000000000000017772777489858881555255546665556199528854884588411122112411251120000000000000000000000000000000000000000000000000000000000000000"
 			}
+		},
+		{
+			"__cWid": 32,
+			"__cHei": 9,
+			"identifier": "StarkTileset",
+			"uid": 169,
+			"relPath": "../starkTileset.png",
+			"embedAtlas": null,
+			"pxWid": 512,
+			"pxHei": 144,
+			"tileGridSize": 16,
+			"spacing": 0,
+			"padding": 0,
+			"tags": [],
+			"tagsSourceEnumUid": null,
+			"enumTags": [],
+			"customData": [],
+			"savedSelections": [],
+			"cachedPixelData": {
+				"opaqueTiles": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011110000000000000000000000000000111100000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000001",
+				"averageColors": "a5649564a563b5632633253225321522a643a643a643b6432633253225321522865386539653b65325532553154325437335733573359335333523353335333456330000563396333643354346334633563300005633963336333633463346336653000056539653354345434653465353350000633593354335333553355335863346337633a6332533363364746474863346337633a6332533363367436743865356538653a6534553465356535653833563358335b3353334333564455335c553c563c553c5533633363355434543c743c643c643c7433633363346335633a653a653a653c6534543365345433543a335a335a335b335433543352335233514840484325435632553155306334985398516432484f236f236f236f236862382588354644593352c882954295435322522253235432543233513351445044696450643a6450643a854a544b854b533985395338b73f235f235f235f235d723d259d364233573351522152215220fff1fff1fff0fffe544e534e534e534e544744677432ea4289a3743274337435743564347431d557235623572357235762372597364233593358988798889880fff1fff1fff0fffe544e534e544e544e544825462434243224334848374345323742374d978d78ad788d867d67ad788d756d569d576d756d569d57666236258636416231248125475347534753476340000474327434743f633b5343224422400000000d978d78ad788d867d67ad788d756d569d576d756d569d576289a189a19ab189a5ea44ea42eb44ea400000000f113"
+			}
 		}
 	], "enums": [
 		{ "identifier": "ItemType", "uid": 74, "values": [
@@ -2073,38 +2866,16 @@
 						},
 						{
 							"__identifier": "Enemy1",
-							"__grid": [40,25],
+							"__grid": [59,25],
 							"__pivot": [0.5,1],
 							"__tags": ["actor"],
-							"__tile": { "tilesetUid": 133, "x": 16, "y": 192, "w": 16, "h": 16 },
-							"__smartColor": "#FF0044",
-							"iid": "cc720190-8560-11f0-a2f8-4fbcd8bbbb9b",
-							"width": 20,
-							"height": 20,
-							"defUid": 160,
-							"px": [649,407],
-							"fieldInstances": [
-								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": ["Healing"], "__tile": null, "defUid": 161, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["Healing"]
-								}] },
-								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 162, "realEditorValues": [] }
-							],
-							"__worldX": -119,
-							"__worldY": 151
-						},
-						{
-							"__identifier": "Enemy1",
-							"__grid": [54,28],
-							"__pivot": [0.5,1],
-							"__tags": ["actor"],
-							"__tile": { "tilesetUid": 133, "x": 16, "y": 192, "w": 16, "h": 16 },
+							"__tile": { "tilesetUid": 133, "x": 96, "y": 0, "w": 16, "h": 16 },
 							"__smartColor": "#FF0044",
 							"iid": "4f7f0c40-8560-11f0-a2f8-5344d6c2a350",
 							"width": 20,
 							"height": 20,
 							"defUid": 160,
-							"px": [876,455],
+							"px": [956,407],
 							"fieldInstances": [
 								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": ["Coin"], "__tile": null, "defUid": 161, "realEditorValues": [{
 									"id": "V_String",
@@ -2112,8 +2883,8 @@
 								}] },
 								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 162, "realEditorValues": [] }
 							],
-							"__worldX": 108,
-							"__worldY": 199
+							"__worldX": 188,
+							"__worldY": 151
 						},
 						{
 							"__identifier": "Exit",
@@ -2130,6 +2901,1051 @@
 							"fieldInstances": [],
 							"__worldX": 704,
 							"__worldY": 160
+						},
+						{
+							"__identifier": "Enemy1",
+							"__grid": [32,9],
+							"__pivot": [0.5,1],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 96, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "14289ab0-ac70-11f0-8af9-9f40645e0b64",
+							"width": 20,
+							"height": 20,
+							"defUid": 160,
+							"px": [518,146],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 161, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 162, "realEditorValues": [] }
+							],
+							"__worldX": -250,
+							"__worldY": -110
+						},
+						{
+							"__identifier": "Enemy1",
+							"__grid": [89,8],
+							"__pivot": [0.5,1],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 96, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "16a9c750-ac70-11f0-8af9-f5c1addbc4e6",
+							"width": 20,
+							"height": 20,
+							"defUid": 160,
+							"px": [1435,137],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 161, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 162, "realEditorValues": [] }
+							],
+							"__worldX": 667,
+							"__worldY": -119
+						},
+						{
+							"__identifier": "Enemy1",
+							"__grid": [101,4],
+							"__pivot": [0.5,1],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 96, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "17587de0-ac70-11f0-8af9-25ac71df25f5",
+							"width": 20,
+							"height": 20,
+							"defUid": 160,
+							"px": [1628,76],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 161, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 162, "realEditorValues": [] }
+							],
+							"__worldX": 860,
+							"__worldY": -180
+						},
+						{
+							"__identifier": "Enemy1",
+							"__grid": [102,20],
+							"__pivot": [0.5,1],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 96, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "1960f810-ac70-11f0-8af9-63358d1942a9",
+							"width": 20,
+							"height": 20,
+							"defUid": 160,
+							"px": [1643,329],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 161, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 162, "realEditorValues": [] }
+							],
+							"__worldX": 875,
+							"__worldY": 73
+						},
+						{
+							"__identifier": "Enemy1",
+							"__grid": [97,14],
+							"__pivot": [0.5,1],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 96, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "1adb3c00-ac70-11f0-8af9-35bf2d52bd56",
+							"width": 20,
+							"height": 20,
+							"defUid": 160,
+							"px": [1557,233],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 161, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 162, "realEditorValues": [] }
+							],
+							"__worldX": 789,
+							"__worldY": -23
+						},
+						{
+							"__identifier": "Enemy1",
+							"__grid": [30,25],
+							"__pivot": [0.5,1],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 96, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "423a50f0-ac70-11f0-8af9-03e7670f0f5f",
+							"width": 20,
+							"height": 20,
+							"defUid": 160,
+							"px": [487,408],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 161, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 162, "realEditorValues": [] }
+							],
+							"__worldX": -281,
+							"__worldY": 152
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [23,23],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "e6018050-ac70-11f0-8af9-cd2d2d57ed7e",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [372,369],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -396,
+							"__worldY": 113
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [24,23],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "ed3dc400-ac70-11f0-8af9-738f6a835361",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [399,369],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -369,
+							"__worldY": 113
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [27,23],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "edc89ee0-ac70-11f0-8af9-f381d9cc1f0e",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [444,369],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -324,
+							"__worldY": 113
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [34,23],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "ee15fb90-ac70-11f0-8af9-5b05be4fea26",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [544,371],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -224,
+							"__worldY": 115
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [37,23],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "ee559ca0-ac70-11f0-8af9-c78d64187205",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [600,377],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -168,
+							"__worldY": 121
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [41,23],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "ee8a8f50-ac70-11f0-8af9-e3f0a048967e",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [660,374],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -108,
+							"__worldY": 118
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [43,23],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "ef87b400-ac70-11f0-8af9-39a8554d5a1e",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [703,382],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -65,
+							"__worldY": 126
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [45,23],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "f081f280-ac70-11f0-8af9-2360fa4cfdab",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [732,382],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -36,
+							"__worldY": 126
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [17,17],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "f2499320-ac70-11f0-8af9-d94750ca77a1",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [287,273],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -481,
+							"__worldY": 17
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [17,14],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "f295de60-ac70-11f0-8af9-335f4a1c42ef",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [287,237],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -481,
+							"__worldY": -19
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [18,13],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "f2e20290-ac70-11f0-8af9-9745cfa73761",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [289,209],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -479,
+							"__worldY": -47
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [18,10],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "f35f21d0-ac70-11f0-8af9-4f2499d2329b",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [290,163],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -478,
+							"__worldY": -93
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [18,8],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "f3aea160-ac70-11f0-8af9-7b55ed1094ad",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [290,130],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -478,
+							"__worldY": -126
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [18,6],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "f3eb0e20-ac70-11f0-8af9-e965794c6e08",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [291,96],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -477,
+							"__worldY": -160
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [18,3],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "f4266970-ac70-11f0-8af9-f9e09d40e1b8",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [292,61],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -476,
+							"__worldY": -195
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [21,7],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "f4a13ec0-ac70-11f0-8af9-639e8ba9c632",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [351,121],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -417,
+							"__worldY": -135
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [23,8],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "f547b7f0-ac70-11f0-8af9-77ae410faefd",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [380,133],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -388,
+							"__worldY": -123
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [37,13],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "f6923950-ac70-11f0-8af9-d3e2edb233db",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [602,220],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -166,
+							"__worldY": -36
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [39,13],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "f6d2c4c0-ac70-11f0-8af9-3568e441e188",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [625,217],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -143,
+							"__worldY": -39
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [42,13],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "f7137740-ac70-11f0-8af9-6b55252bd154",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [674,221],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -94,
+							"__worldY": -35
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [40,13],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "f77c7240-ac70-11f0-8af9-e3405b37e948",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [646,221],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -122,
+							"__worldY": -35
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [44,13],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "f7cbf1d0-ac70-11f0-8af9-6d4fedd94f2e",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [716,217],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": -52,
+							"__worldY": -39
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [73,29],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "fa22b310-ac70-11f0-8af9-a963b91cb5eb",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1178,479],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 410,
+							"__worldY": 223
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [74,29],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "fa536000-ac70-11f0-8af9-df6fe9c62f5a",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1199,479],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 431,
+							"__worldY": 223
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [77,29],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "fa874140-ac70-11f0-8af9-d3d049f15450",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1234,475],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 466,
+							"__worldY": 219
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [81,21],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "fb3311a0-ac70-11f0-8af9-15cc2d1cb3aa",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1299,344],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 531,
+							"__worldY": 88
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [86,23],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "fbc650f0-ac70-11f0-8af9-e7086453b39f",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1380,379],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 612,
+							"__worldY": 123
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [87,22],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "fcfef800-ac70-11f0-8af9-e90ad8963d3b",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1406,359],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 638,
+							"__worldY": 103
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [78,18],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "fea38040-ac70-11f0-8af9-b1db2d8a485c",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1249,298],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 481,
+							"__worldY": 42
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [96,20],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "00320f80-ac70-11f0-8af9-b9a8a6a9d31c",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1536,329],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 768,
+							"__worldY": 73
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [98,20],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "00805690-ac70-11f0-8af9-7d7e726443a0",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1573,329],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 805,
+							"__worldY": 73
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [100,20],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "00bdd4c0-ac70-11f0-8af9-e94e5c5627ab",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1608,329],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 840,
+							"__worldY": 73
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [105,20],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "014ddfc0-ac70-11f0-8af9-f19823834dac",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1682,332],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 914,
+							"__worldY": 76
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [106,20],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "01851c60-ac70-11f0-8af9-c31ae6f8747f",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1707,332],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 939,
+							"__worldY": 76
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [85,11],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "02ce8c50-ac70-11f0-8af9-8d6bc2ba936d",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1367,191],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 599,
+							"__worldY": -65
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [79,12],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "033675e0-ac70-11f0-8af9-cf0ad8e07176",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1277,200],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 509,
+							"__worldY": -56
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [78,12],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "03cac6a0-ac70-11f0-8af9-5da74c0f6777",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1258,200],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 490,
+							"__worldY": -56
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [78,10],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "0457c460-ac70-11f0-8af9-b3546464836c",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1254,167],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 486,
+							"__worldY": -89
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [79,10],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "04afcf70-ac70-11f0-8af9-290294612897",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1277,169],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 509,
+							"__worldY": -87
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [78,8],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "051ff660-ac70-11f0-8af9-c7168d6895fc",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1262,139],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 494,
+							"__worldY": -117
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [80,8],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "05d53ca0-ac70-11f0-8af9-8d5ba0930d12",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1286,139],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 518,
+							"__worldY": -117
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [106,5],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "ad30bee0-ac70-11f0-8af9-13f1b56f931b",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1703,83],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 935,
+							"__worldY": -173
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [106,9],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "adaca5a0-ac70-11f0-8af9-4beaca8cfabd",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1701,154],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 933,
+							"__worldY": -102
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [106,7],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "affb5090-ac70-11f0-8af9-15888eb30d4a",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1703,114],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 935,
+							"__worldY": -142
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [106,11],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "b0e64cd0-ac70-11f0-8af9-6f7243934091",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1701,178],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 933,
+							"__worldY": -78
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [106,12],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "b1aa8730-ac70-11f0-8af9-c7e39cb9f446",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1704,204],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 936,
+							"__worldY": -52
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [106,14],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "b1df52d0-ac70-11f0-8af9-2560a0acae27",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1707,231],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 939,
+							"__worldY": -25
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [106,16],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "b21dbb60-ac70-11f0-8af9-6f62ad20508f",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1707,258],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 939,
+							"__worldY": 2
+						},
+						{
+							"__identifier": "Coin",
+							"__grid": [106,17],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "b25c4b00-ac70-11f0-8af9-831b173104da",
+							"width": 20,
+							"height": 20,
+							"defUid": 172,
+							"px": [1706,283],
+							"fieldInstances": [
+								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
+								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
+							],
+							"__worldX": 938,
+							"__worldY": 27
 						}
 					]
 				},
@@ -2179,7 +3995,7 @@
 					"intGridCsv": [
 						1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,
 						1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-						1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+						1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 						0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,
 						1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 						1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -5308,7 +7124,6 @@
 						{ "px": [1376,496], "src": [256,96], "f": 0, "t": 154, "d": [9,3558], "a": 1 },
 						{ "px": [224,0], "src": [224,128], "f": 1, "t": 198, "d": [10,14], "a": 1 },
 						{ "px": [368,0], "src": [224,128], "f": 0, "t": 198, "d": [10,23], "a": 1 },
-						{ "px": [1264,0], "src": [224,128], "f": 1, "t": 198, "d": [10,79], "a": 1 },
 						{ "px": [1760,0], "src": [224,128], "f": 0, "t": 198, "d": [10,110], "a": 1 },
 						{ "px": [224,16], "src": [224,128], "f": 1, "t": 198, "d": [10,126], "a": 1 },
 						{ "px": [368,16], "src": [224,128], "f": 0, "t": 198, "d": [10,135], "a": 1 },
@@ -5433,6 +7248,7 @@
 						{ "px": [1264,480], "src": [224,128], "f": 0, "t": 198, "d": [10,3439], "a": 1 },
 						{ "px": [1280,480], "src": [224,128], "f": 1, "t": 198, "d": [10,3440], "a": 1 },
 						{ "px": [1392,480], "src": [224,128], "f": 0, "t": 198, "d": [10,3447], "a": 1 },
+						{ "px": [1264,0], "src": [224,96], "f": 0, "t": 152, "d": [14,79], "a": 1 },
 						{ "px": [1760,16], "src": [224,96], "f": 3, "t": 152, "d": [14,222], "a": 1 },
 						{ "px": [672,64], "src": [224,96], "f": 1, "t": 152, "d": [14,490], "a": 1 },
 						{ "px": [1248,96], "src": [224,96], "f": 0, "t": 152, "d": [14,750], "a": 1 },
@@ -5545,6 +7361,7 @@
 						{ "px": [1424,640], "src": [192,192], "f": 0, "t": 288, "d": [78,4569], "a": 1 },
 						{ "px": [1440,640], "src": [192,192], "f": 0, "t": 288, "d": [78,4570], "a": 1 },
 						{ "px": [1488,640], "src": [192,192], "f": 0, "t": 288, "d": [78,4573], "a": 1 },
+						{ "px": [1280,0], "src": [64,144], "f": 0, "t": 211, "d": [148,80], "a": 1 },
 						{ "px": [368,64], "src": [64,144], "f": 1, "t": 211, "d": [148,471], "a": 1 },
 						{ "px": [1264,96], "src": [64,144], "f": 0, "t": 211, "d": [148,751], "a": 1 },
 						{ "px": [1248,112], "src": [64,144], "f": 0, "t": 211, "d": [148,862], "a": 1 },
@@ -5631,7 +7448,6 @@
 						{ "px": [304,0], "src": [320,272], "f": 0, "t": 411, "d": [108,19], "a": 1 },
 						{ "px": [320,0], "src": [320,272], "f": 0, "t": 411, "d": [108,20], "a": 1 },
 						{ "px": [336,0], "src": [320,272], "f": 0, "t": 411, "d": [108,21], "a": 1 },
-						{ "px": [1296,0], "src": [320,272], "f": 0, "t": 411, "d": [108,81], "a": 1 },
 						{ "px": [1312,0], "src": [320,272], "f": 0, "t": 411, "d": [108,82], "a": 1 },
 						{ "px": [1328,0], "src": [320,272], "f": 0, "t": 411, "d": [108,83], "a": 1 },
 						{ "px": [1344,0], "src": [320,272], "f": 0, "t": 411, "d": [108,84], "a": 1 },
@@ -7432,6 +9248,7 @@
 						{ "px": [1744,752], "src": [320,272], "f": 0, "t": 411, "d": [108,5373], "a": 1 },
 						{ "px": [1760,752], "src": [320,272], "f": 0, "t": 411, "d": [108,5374], "a": 1 },
 						{ "px": [1776,752], "src": [320,272], "f": 0, "t": 411, "d": [108,5375], "a": 1 },
+						{ "px": [1280,0], "src": [320,272], "f": 0, "t": 411, "d": [149,80], "a": 1 },
 						{ "px": [1728,16], "src": [320,272], "f": 3, "t": 411, "d": [149,220], "a": 1 },
 						{ "px": [368,64], "src": [320,272], "f": 1, "t": 411, "d": [149,471], "a": 1 },
 						{ "px": [1600,80], "src": [320,272], "f": 3, "t": 411, "d": [149,660], "a": 1 },
@@ -7490,8 +9307,8 @@
 						{ "px": [240,0], "src": [272,240], "f": 1, "t": 362, "d": [107,15], "a": 1 },
 						{ "px": [336,0], "src": [256,240], "f": 0, "t": 361, "d": [107,22], "a": 1 },
 						{ "px": [352,0], "src": [272,240], "f": 0, "t": 362, "d": [107,22], "a": 1 },
-						{ "px": [1296,0], "src": [256,240], "f": 1, "t": 361, "d": [107,80], "a": 1 },
-						{ "px": [1280,0], "src": [272,240], "f": 1, "t": 362, "d": [107,80], "a": 1 },
+						{ "px": [1312,0], "src": [256,240], "f": 1, "t": 361, "d": [107,81], "a": 1 },
+						{ "px": [1296,0], "src": [272,240], "f": 1, "t": 362, "d": [107,81], "a": 1 },
 						{ "px": [1728,0], "src": [256,240], "f": 0, "t": 361, "d": [107,109], "a": 1 },
 						{ "px": [1744,0], "src": [272,240], "f": 0, "t": 362, "d": [107,109], "a": 1 },
 						{ "px": [256,16], "src": [256,240], "f": 1, "t": 361, "d": [107,127], "a": 1 },

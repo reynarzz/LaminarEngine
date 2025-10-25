@@ -12,11 +12,12 @@ namespace SharedTypes
         public bool IsNearest { get; set; }
         public bool IsAtlas { get; set; }
         public int Mode { get; set; }
+        public int PixelPerUnit { get; set; }
     }
 
     [Serializable]
     public class TextureMetaFile : AssetMetaFileBase
     {
-        public TextureConfig Config { get; set; }
+        public TextureConfig Config { get; set; } = new TextureConfig() { PixelPerUnit = 100 };
     }
 }

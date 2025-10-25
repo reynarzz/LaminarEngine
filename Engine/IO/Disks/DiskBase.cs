@@ -15,21 +15,20 @@ namespace Engine.IO
 
         public abstract bool Initialize();
 
-        public struct AssetContent
+        public struct RawAssetContent
         {
             public AssetInfo Info { get; set; }
             public byte[] RawData { get; set; }
-
             public bool Success => RawData != null;
         }
 
-        public async Task<AssetContent> GetAssetAsync(Guid guid)
+        public async Task<RawAssetContent> GetAssetAsync(Guid guid)
         {
             if (AssetDatabaseInfo.Assets.TryGetValue(guid, out var info))
             {
                 if (AssetsData.TryGetValue(guid, out var data))
                 {
-                    return new AssetContent() { Info = info, RawData = data };
+                    return new RawAssetContent() { Info = info, RawData = data };
                 }
 
                 data = await LoadAssetFromDiskAsync(guid);
@@ -41,7 +40,7 @@ namespace Engine.IO
                 }
                 AssetsData.Add(guid, data);
 
-                return new AssetContent() { Info = info, RawData = data };
+                return new RawAssetContent() { Info = info, RawData = data };
             }
 
             return default;

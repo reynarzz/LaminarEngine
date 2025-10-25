@@ -2,7 +2,8 @@
   "Config": {
     "IsNearest": false,
     "IsAtlas": false,
-    "Mode": 0
+    "Mode": 0,
+    "PixelPerUnit": 100
   },
-  "GUID": "b02fdb8c-b054-473f-9614-7e0707e55bf4"
+  "GUID": "b117880e-1d18-434d-817a-58a3c9877e63"
 }

@@ -51,7 +51,7 @@ namespace Game
             var basePath = "KingsAndPigsSprites/03-Pig/";
             var pTexture2 = Assets.GetTexture(basePath + "Attack (34x28).png");
             var sprites = TextureAtlasUtils.SliceSprites(pTexture2, 34, 28, new vec2(0.4f, 0.4f));
-            pTexture2.PixelPerUnit = 16;
+
 
             var spriteCurve = new SpriteCurve();
             float fps = 5;

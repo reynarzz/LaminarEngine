@@ -133,6 +133,8 @@ namespace Engine
             }
         }
 
+        public Bounds AABB { get; private set; }
+
         internal override void OnInitialize()
         {
             RigidBody = GetComponent<RigidBody2D>();
@@ -153,7 +155,7 @@ namespace Engine
                 userData = this,
                 enableCustomFiltering = true
             };
-
+            
             Create();
         }
 

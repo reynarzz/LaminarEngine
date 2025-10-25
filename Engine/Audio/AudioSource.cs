@@ -152,6 +152,11 @@ namespace Engine
 
         public void PlayOneShot(AudioClip clip, float volume)
         {
+            if (clip == null)
+            {
+                Debug.Error("Clip is null, can't play one shot");
+                return;
+            }
             var provider = new RawDataProvider(clip.RawAudioData);
             var sound = AudioLayer.CreateSoundPlayer(GetFormatFromClip(clip), Mixer, provider);
 
