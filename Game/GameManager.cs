@@ -39,6 +39,7 @@ namespace Game
         private static Material _defaultSpriteMaterial;
         private Material _playerSpriteMaterial;
         private vec3 _playerStartPosTest;
+        private static TextRenderer _coinCounterTest;
 
         public static PlayerBag PlayerBag { get; } = new();
         public static Player Player { get; private set; }
@@ -288,6 +289,20 @@ namespace Game
                 Window.FullScreen(!Window.IsFullScreen);
                 Window.MouseVisible = !Window.IsFullScreen;
             }
+        }
+
+        internal static void UpdateCoinUI()
+        {
+            if (!_coinCounterTest)
+            {
+                _coinCounterTest = new Actor("CounterText").AddComponent<TextRenderer>();
+                _coinCounterTest.Font = Assets.Get<FontAsset>("Fonts/windows-bold[1].ttf");
+            }
+            Debug.Log("Coin: " + PlayerBag.Coins);
+            _coinCounterTest.Text.Clear();
+            _coinCounterTest.Text.Append(PlayerBag.Coins); // Remove from here, just for testing
+            _coinCounterTest.Transform.WorldPosition = new vec3(20, 20);
+
         }
     }
 }

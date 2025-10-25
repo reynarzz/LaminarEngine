@@ -40,5 +40,6 @@ void main()
 
     vec2 animatedPos = animateCharacter(position, vertIndex, uTime.y);
 
-    gl_Position = uVP * vec4(animatedPos, 0.0, 1.0);
+    //gl_Position = uVP * vec4(animatedPos, 0.0, 1.0);
+    gl_Position = uVP * vec4(position, 0.0, 1.0);
 }

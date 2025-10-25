@@ -81,8 +81,8 @@ namespace Engine.Graphics
 
             //_targetScreenRes = new vec2(Window.Width, Window.Height);
             _targetScreenRes = new vec2(512 * 2, 288 * 2);
-            //_viewMatrix = MathUtils.Ortho(0, _targetScreenRes.x, _targetScreenRes.y, 0, 0, 1);
-            _viewMatrix = MathUtils.Ortho(-_targetScreenRes.x / 2, _targetScreenRes.x / 2, _targetScreenRes.y / 2, -_targetScreenRes.y / 2, 0, -1);
+            _viewMatrix = MathUtils.Ortho(0, _targetScreenRes.x, _targetScreenRes.y, 0, 0, -1);
+            //_viewMatrix = MathUtils.Ortho(-_targetScreenRes.x / 2, _targetScreenRes.x / 2, _targetScreenRes.y / 2, -_targetScreenRes.y / 2, 0, -1);
         }
 
         private GfxResource CreateFontBatchGeometry(ref GeometryDescriptor desc)
@@ -198,7 +198,7 @@ namespace Engine.Graphics
                 //    SendTextToDraw(split[i], font, textRenderer, font.LineHeight * i);
                 //}
 
-                SendTextToDraw(textRenderer.Text, font, textRenderer, font.LineHeight);
+                SendTextToDraw(textRenderer.Text, font, textRenderer, 0);
 
             }
 
@@ -207,7 +207,33 @@ namespace Engine.Graphics
 
         private void SendTextToDraw(StringBuilder text, DynamicSpriteFont font, TextRenderer textRenderer, int lineHeight)
         {
-            var pivot = new System.Numerics.Vector2(0.5f, 0.5f);
+            var pivot = new System.Numerics.Vector2(0.0f, 1.0f);
+
+            switch (textRenderer.Horizontal)
+            {
+                case TextHorizontalAlignment.Center:
+                    pivot.X = 0.5f;
+                    break;
+                case TextHorizontalAlignment.Left:
+                    pivot.X = 0.0f;
+                    break;
+                case TextHorizontalAlignment.Right:
+                    pivot.X = 1.0f;
+                    break;
+            }
+
+            switch (textRenderer.Vertical)
+            {
+                case TextVerticalAlignment.Center:
+                    pivot.Y = 0.5f;
+                    break;
+                case TextVerticalAlignment.Bottom:
+                    pivot.Y = 1.0f;
+                    break;
+                case TextVerticalAlignment.Top:
+                    pivot.Y = 0.0f;
+                    break;
+            }
 
             float rotation = glm.radians(textRenderer.Transform.WorldEulerAngles.z);
 
@@ -216,9 +242,9 @@ namespace Engine.Graphics
 
             var effect = textRenderer.OutlineSize > 0 ? FontSystemEffect.Stroked : FontSystemEffect.None;
 
-            var size = font.MeasureString(text, scale, textRenderer.CharacterSpacing, textRenderer.LineSpacing, effect, textRenderer.OutlineSize);
-            var origin = new System.Numerics.Vector2(size.X, size.Y);
-            origin = default;
+            //var size = font.MeasureString(text, scale, textRenderer.CharacterSpacing, textRenderer.LineSpacing, effect, textRenderer.OutlineSize);
+            //var origin = new System.Numerics.Vector2(size.X, size.Y);
+            var origin = default(System.Numerics.Vector2);
             var position = new System.Numerics.Vector2(textRenderer.Transform.WorldPosition.x,
                                                        textRenderer.Transform.WorldPosition.y + lineHeight);
 

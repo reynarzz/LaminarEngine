@@ -119,12 +119,18 @@ namespace Game
 
         protected void Collect()
         {
+            if (!_collider.IsEnabled)
+            {
+                return;
+            }
+
             switch (_config.Item)
             {
                 case GameItem.None:
                     break;
                 case GameItem.Coin:
                     GameManager.PlayerBag.Coins += _config.Amount;
+                    GameManager.UpdateCoinUI(); // Remove from here, just for testing
                     break;
                 case GameItem.Health:
                     GameManager.Player.Life += _config.Amount;

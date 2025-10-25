@@ -1,11 +1,7 @@
-﻿
-using Engine;
+﻿using Engine;
 using Engine.Graphics;
 using Engine.Layers;
-using Engine.Utils;
 using GlmNet;
-using ldtk;
-using System;
 using System.Linq;
 
 namespace Game
@@ -16,6 +12,7 @@ namespace Game
         // Implement physics: boxcast, circle cast.
         /* Fix collision exit being called when the shape is destroyed, which causes the function to have a invalid actor,
              This collisionsExit/TriggerExit should not be called with invalid actors/components*/
+        // Fix: Colliders under the same rigidbody should be treated as one collider (merge)?
         // Fix: rigidbody marked as interpolate if is made parent of another that is not, after exiting, the interpolation is disabled.
         // Avoid the batch to take more texture slots that the system is supported, take into account materials texture count.
         // Fix: Batch2d vertices shift when an object is destroyed.
@@ -51,7 +48,7 @@ namespace Game
 
             //PostProcessingStack.Push(new BloomPostProcessing());
             // ScreenGrabTest();
-            TextRendering();
+            // TextRendering();
 
             // ScreenGrabTest3();
 
