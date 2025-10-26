@@ -207,9 +207,9 @@ namespace Engine
                 AudioLayer.GetMasterAudioMixer().RemoveSource(this);
             }
 
-            _soundPlayer.Stop();
-            _soundPlayer.Dispose();
-            _provider.Dispose();
+            _soundPlayer?.Stop();
+            _soundPlayer?.Dispose();
+            _provider?.Dispose();
         }
     }
 }

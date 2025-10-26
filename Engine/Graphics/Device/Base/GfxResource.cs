@@ -22,7 +22,7 @@ namespace Engine.Graphics
             }
 
             FreeResource();
-
+            GC.SuppressFinalize(this);
             _disposed = true;
         }
 

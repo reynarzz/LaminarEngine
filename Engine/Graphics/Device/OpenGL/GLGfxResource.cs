@@ -108,15 +108,10 @@ namespace Engine.Graphics.OpenGL
         {
             if (IsInitialized)
             {
+                Debug.Warn("Free gfx resource: " + GetType().Name);
                 DestroyHandle();
                 IsInitialized = false;
             }
-        }
-
-        ~GLGfxResource()
-        {
-            // This triggers an error
-            // FreeResource();
         }
     }
 }

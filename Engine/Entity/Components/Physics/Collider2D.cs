@@ -204,9 +204,11 @@ namespace Engine
             base.OnDestroy();
             if (RigidBody != null)
             {
-                DestroyShape();
                 RigidBody = null;
             }
+            DestroyShape();
+
+            _shapeDef = default;
         }
 
         private void DestroyShape()

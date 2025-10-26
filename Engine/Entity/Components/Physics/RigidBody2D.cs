@@ -168,7 +168,7 @@ namespace Engine
             get => _bodyType;
             set
             {
-                 if (_bodyType == value) return;
+                if (_bodyType == value) return;
                 _bodyType = value;
 
                 B2Bodies.b2Body_SetType(_bodyId, (B2BodyType)_bodyType);
@@ -269,7 +269,7 @@ namespace Engine
 
         internal void PostUpdateBody()
         {
-            if(_bodyType == Body2DType.Dynamic)
+            if (_bodyType == Body2DType.Dynamic)
             {
                 var position = B2Bodies.b2Body_GetPosition(_bodyId);
                 _velocity = B2Bodies.b2Body_GetLinearVelocity(_bodyId).ToVec2();
@@ -329,7 +329,7 @@ namespace Engine
                     break;
             }
         }
-      
+
         internal void UpdateBody()
         {
             Mass = _userMassValue;
@@ -354,6 +354,11 @@ namespace Engine
                 Transform.NeedsInterpolation = false;
                 Transform.OnChanged -= OnTransformChanged;
             }
+
+            if (B2Worlds.b2Body_IsValid(_bodyId))
+            {
+                B2Bodies.b2DestroyBody(_bodyId);
+            }
         }
 
         public override void OnEnabled()
@@ -369,11 +374,6 @@ namespace Engine
         {
             base.OnDisabled();
             B2Bodies.b2Body_Disable(_bodyId);
-        }
-
-        ~RigidBody2D()
-        {
-            B2Bodies.b2DestroyBody(_bodyId);
         }
     }
 }
