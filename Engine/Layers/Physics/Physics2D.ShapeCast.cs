@@ -19,7 +19,6 @@ namespace Engine
         public static CastHit2D BoxCast(vec2 origin, vec2 size, float rotation, ulong layerMask)
         {
             size *= 0.5f;
-            _castContext.Init(layerMask);
             var box = b2MakeOffsetBox(size.x, size.y, origin.ToB2Vec2(), new B2Rot(MathF.Cos(glm.radians(rotation)), MathF.Sin(glm.radians(rotation))));
             B2ShapeProxy proxy = default;
             proxy.count = box.count;
@@ -28,8 +27,10 @@ namespace Engine
             proxy.points[1] = box.vertices[1];
             proxy.points[2] = box.vertices[2];
             proxy.points[3] = box.vertices[3];
-            B2Worlds.b2World_CastShape(PhysicWorld.WorldID, ref proxy, default, _defaultQueryFilter, CastResultFunc, _castContext);
-            return _castContext.Hit;
+
+            var context = new CastContext(layerMask);
+            Box2dUtils.b2World_CastShape(PhysicWorld.WorldID, ref proxy, default, _defaultQueryFilter, CastResultFunc, ref context);
+            return context.Hit;
         }
         public static CastHit2D BoxCast(vec2 origin, vec2 size, ulong layerMask)
         {
@@ -41,19 +42,20 @@ namespace Engine
             proxy.points[1] = new B2Vec2(size.x, -size.y);
             proxy.points[2] = new B2Vec2(size.x, size.y);
             proxy.points[3] = new B2Vec2(-size.x, size.y);
-            B2Worlds.b2World_CastShape(PhysicWorld.WorldID, ref proxy, default, _defaultQueryFilter, CastResultFunc, _castContext);
-            return _castContext.Hit;
+            var context = new CastContext(layerMask);
+            Box2dUtils.b2World_CastShape(PhysicWorld.WorldID, ref proxy, default, _defaultQueryFilter, CastResultFunc, ref context);
+            return context.Hit;
         }
 
         public static CastHit2D CircleCast(vec2 origin, float radius, ulong layerMask)
         {
-            _castContext.Init(layerMask);
             B2ShapeProxy proxy = default;
             proxy.count = 1;
             proxy.points[0] = origin.ToB2Vec2();
             proxy.radius = radius;
-            B2Worlds.b2World_CastShape(PhysicWorld.WorldID, ref proxy, default, _defaultQueryFilter, CastResultFunc, _castContext);
-            return _castContext.Hit;
+            var context = new CastContext(layerMask);
+            Box2dUtils.b2World_CastShape(PhysicWorld.WorldID, ref proxy, default, _defaultQueryFilter, CastResultFunc, ref context);
+            return context.Hit;
         }
 
 
