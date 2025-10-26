@@ -41,55 +41,7 @@ namespace Engine.Utils
     /// </summary>
     internal static class Box2dUtils
     {
-        private static B2Transform _boxTransform = B2MathFunction.b2Transform_identity;
         internal delegate float b2CastResultFcn<T>(B2ShapeId shapeId, B2Vec2 point, B2Vec2 normal, float fraction, ref T context) where T: struct, ICastContext;
-
-        internal interface ICastContext
-        {
-            CastHit2D Hit { get; set; }
-            ulong LayerMask { get; }
-            bool TriggersPass { get; }
-        }
-
-        internal static void UpdateBox(ref B2Polygon shape, float halfWidth, float halfHeight, vec2 center)
-        {
-            _boxTransform.p = center.ToB2Vec2();
-
-            shape.count = 4;
-            shape.vertices[0] = B2MathFunction.b2TransformPoint(ref _boxTransform, new B2Vec2(-halfWidth, -halfHeight));
-            shape.vertices[1] = B2MathFunction.b2TransformPoint(ref _boxTransform, new B2Vec2(halfWidth, -halfHeight));
-            shape.vertices[2] = B2MathFunction.b2TransformPoint(ref _boxTransform, new B2Vec2(halfWidth, halfHeight));
-            shape.vertices[3] = B2MathFunction.b2TransformPoint(ref _boxTransform, new B2Vec2(-halfWidth, halfHeight));
-
-            shape.radius = 0.0f;
-            shape.centroid = _boxTransform.p;
-        }
-
-        internal static void ApplyBoxNormals(ref B2Polygon shape)
-        {
-            shape.normals[0] = B2MathFunction.b2RotateVector(B2MathFunction.b2Rot_identity, new B2Vec2(0.0f, -1.0f));
-            shape.normals[1] = B2MathFunction.b2RotateVector(B2MathFunction.b2Rot_identity, new B2Vec2(1.0f, 0.0f));
-            shape.normals[2] = B2MathFunction.b2RotateVector(B2MathFunction.b2Rot_identity, new B2Vec2(0.0f, 1.0f));
-            shape.normals[3] = B2MathFunction.b2RotateVector(B2MathFunction.b2Rot_identity, new B2Vec2(-1.0f, 0.0f));
-        }
-
-        internal struct B2WorldRayCastContext<T> where T : struct, ICastContext
-        {
-            public B2World world;
-            public b2CastResultFcn<T> fcn;
-            public B2QueryFilter filter;
-            public float fraction;
-            public T userContext;
-
-            public B2WorldRayCastContext(B2World world, b2CastResultFcn<T> fcn, B2QueryFilter filter, float fraction, T userContext)
-            {
-                this.world = world;
-                this.fcn = fcn;
-                this.filter = filter;
-                this.fraction = fraction;
-                this.userContext = userContext;
-            }
-        }
 
         internal static B2TreeStats b2World_CastShape<T>(B2WorldId worldId, ref B2ShapeProxy proxy, B2Vec2 translation,
                                                          B2QueryFilter filter, b2CastResultFcn<T> fcn, ref T context) where T : struct, ICastContext
@@ -110,7 +62,7 @@ namespace Engine.Utils
             input.translation = translation;
             input.maxFraction = 1.0f;
 
-            var worldContext = new B2WorldRayCastContext<T>(world, fcn, filter, 1.0f, context);
+            var worldContext = new B2WorldRayCastContext_Custom<T>(world, fcn, filter, 1.0f, context);
 
             for (int i = 0; i < (int)B2BodyType.b2_bodyTypeCount; ++i)
             {
@@ -148,7 +100,7 @@ namespace Engine.Utils
 
             B2RayCastInput input = new B2RayCastInput(origin, translation, 1.0f);
 
-            var worldContext = new B2WorldRayCastContext<T>(world, fcn, filter, 1.0f, context);
+            var worldContext = new B2WorldRayCastContext_Custom<T>(world, fcn, filter, 1.0f, context);
 
             for (int i = 0; i < (int)B2BodyType.b2_bodyTypeCount; ++i)
             {
@@ -171,13 +123,13 @@ namespace Engine.Utils
         }
 
         private static float RayCastCallback<T>(ref B2RayCastInput input, int proxyId, ulong userData,
-                                                ref B2WorldRayCastContext<T> context) where T : struct, ICastContext
+                                                ref B2WorldRayCastContext_Custom<T> context) where T : struct, ICastContext
         {
             B2_UNUSED(proxyId);
 
             int shapeId = (int)userData;
 
-            ref B2WorldRayCastContext<T> worldContext = ref context;
+            ref B2WorldRayCastContext_Custom<T> worldContext = ref context;
             B2World world = worldContext.world;
 
             B2Shape shape = b2Array_Get(ref world.shapes, shapeId);
@@ -208,13 +160,13 @@ namespace Engine.Utils
             return input.maxFraction;
         }
         private static float ShapeCastCallback<T>(ref B2ShapeCastInput input, int proxyId, ulong userData,
-                                                  ref B2WorldRayCastContext<T> context) where T : struct, ICastContext
+                                                  ref B2WorldRayCastContext_Custom<T> context) where T : struct, ICastContext
         {
             B2_UNUSED(proxyId);
 
             int shapeId = (int)userData;
 
-            ref B2WorldRayCastContext<T> worldContext = ref context;
+            ref B2WorldRayCastContext_Custom<T> worldContext = ref context;
             B2World world = worldContext.world;
 
             B2Shape shape = b2Array_Get(ref world.shapes, shapeId);
@@ -245,5 +197,32 @@ namespace Engine.Utils
 
             return input.maxFraction;
         }
+
+
+        internal interface ICastContext
+        {
+            CastHit2D Hit { get; set; }
+            ulong LayerMask { get; }
+            bool TriggersPass { get; }
+        }
+
+        private struct B2WorldRayCastContext_Custom<T> where T : struct, ICastContext
+        {
+            internal B2World world;
+            internal b2CastResultFcn<T> fcn;
+            internal B2QueryFilter filter;
+            internal float fraction;
+            internal T userContext;
+
+            internal B2WorldRayCastContext_Custom(B2World world, b2CastResultFcn<T> fcn, B2QueryFilter filter, float fraction, T userContext)
+            {
+                this.world = world;
+                this.fcn = fcn;
+                this.filter = filter;
+                this.fraction = fraction;
+                this.userContext = userContext;
+            }
+        }
+
     }
 }
