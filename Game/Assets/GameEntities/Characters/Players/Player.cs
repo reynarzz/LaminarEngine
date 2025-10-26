@@ -71,7 +71,10 @@ namespace Game
                 Attack();
             }
 
-            Debug.DrawBox(origin, size, Color.Green);
+            if (Physics2D.DrawColliders)
+            {
+                Debug.DrawBox(origin, size, Color.Green);
+            }
 
             if (Input.GetKeyDown(KeyCode.X))
             {

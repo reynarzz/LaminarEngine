@@ -49,7 +49,7 @@ namespace Game
         {
             if (Context.Target)
             {
-                var dir = Context.Target.Transform.WorldPosition - Context.Transform.WorldPosition;
+                var dir = Context.Transform.WorldPosition - Context.Target.Transform.WorldPosition;
                 var transitionDist = 1.7f;
 
                 if (!Context.Detector.IsTargetDetected || !Context.Target.IsCharacterAlive())
@@ -57,6 +57,7 @@ namespace Game
                     Context.Walk(0);
                     ReturnToParent();
                 }
+                Context.LookAt(Math.Sign(dir.x));
 
                 if (Math.Abs(dir.x) > transitionDist)
                 {
@@ -65,7 +66,6 @@ namespace Game
                 else
                 {
                     Context.Walk(0);
-                    Context.LookAt(Math.Sign(dir.x));
 
                     if (dir.Magnitude <= transitionDist)
                     {

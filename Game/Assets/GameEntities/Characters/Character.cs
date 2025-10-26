@@ -92,7 +92,7 @@ namespace Game
 
         private int _life;
         public int Life { get => _life; set { _life = value; Animator.Parameters.SetInt(LIFE_PROPERTY_NAME, _life); } }
-
+        public int SpriteLookDir => _characterConfig.SpriteLookDir;
         private CharacterConfig _characterConfig;
         private AnimationState _main;
         private AudioClip[] _groundSfx;
@@ -318,13 +318,13 @@ namespace Game
         {
             var scaleX = Math.Abs(Transform.LocalScale.x);
             Transform.LocalScale = new vec3(scaleX * dir * Math.Sign(_characterConfig.SpriteLookDir), Transform.LocalScale.y, Transform.LocalScale.z);
-
         }
 
         public void Walk(int dir)
         {
             if (!IsCharacterAlive())
                 return;
+            dir *= _characterConfig.SpriteLookDir;
 
             if (dir != 0)
             {
@@ -390,6 +390,7 @@ namespace Game
             Life = Math.Clamp(Life - amount, 0, MAX_LIFE);
             Rigidbody.Velocity = new vec2(0, Rigidbody.Velocity.y);
             Animator.Parameters.SetTrigger(HIT_DAMAGE_PROPERTY_NAME);
+            Animator.SetState(HIT_ANIM_STATE);
         }
 
         public bool IsCharacterAlive()

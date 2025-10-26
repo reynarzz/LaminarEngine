@@ -47,29 +47,35 @@ namespace Game
                 ReturnToParent();
             }
 
+            var origin = Context.Transform.WorldPosition + new vec3(Context.SpriteLookDir * Context.Transform.LocalScale.x +
+                                                                    Math.Sign(Context.Transform.LocalScale.x) * 0.5f, 0.2f);
+            var size = new vec2(1.4f, 0.5f);
+
+            if (Physics2D.DrawColliders)
+            {
+                Debug.DrawBox(origin, size, Color.Red);
+            }
+
             if ((_currentTimeToAttack -= Time.DeltaTime) <= 0)
             {
                 _currentTimeToAttack = WaitToAttack;
-                Context.Attack();
+                var hit = Physics2D.BoxCast(origin, size, 0, LayerMask.NameToBit(GameLayers.PLAYER));
 
-                var origin = Context.Transform.WorldPosition + new vec3(Context.Transform.LocalScale.x + Math.Sign(Context.Transform.LocalScale.x) * 0.5f, 0.2f);
-                var size = new vec2(1.5f, 1);
-                Debug.DrawBox(origin, size, Color.Red);
-
+                if (hit.isHit)
+                {
+                    Context.Attack();
+                }
 
                 // Remove this, testing
                 Task.Run(async () =>
                 {
                     await Task.Delay(110);
 
-                    var hit = Physics2D.BoxCast(origin, size, 0, LayerMask.NameToBit(GameLayers.PLAYER));
                     if (hit.isHit)
                     {
                         Debug.Log("Attack Player");
                         hit.Collider.GetComponent<Player>().HitDamage(1);
                     }
-
-
 
                     if (!Context.Target.IsCharacterAlive())
                     {
