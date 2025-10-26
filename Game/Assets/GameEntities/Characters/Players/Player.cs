@@ -57,10 +57,21 @@ namespace Game
                 Jump();
             }
 
+            var origin = Transform.WorldPosition + new vec3(Transform.LocalScale.x + Math.Sign(Transform.LocalScale.x) * 0.5f, 0.2f);
+            var size = new vec2(2.5f, 3);
+
             if (Input.GetKeyDown(KeyCode.F))
             {
+                var hit = Physics2D.BoxCast(origin, size, 0, LayerMask.NameToBit(GameLayers.ENEMY));
+                if (hit.isHit)
+                {
+                    Debug.Log("Attack enemy");
+                    hit.Collider.GetComponent<EnemyBase>().HitDamage(1);
+                }
                 Attack();
             }
+
+            Debug.DrawBox(origin, size, Color.Green);
 
             if (Input.GetKeyDown(KeyCode.X))
             {
@@ -77,11 +88,6 @@ namespace Game
                 Restart();
             }
 
-        }
-
-        public override void OnFixedUpdate()
-        {
-
             if (Input.GetKey(KeyCode.A))
             {
                 Walk(-1);
@@ -94,6 +100,12 @@ namespace Game
             {
                 Walk(0);
             }
+
+        }
+
+        public override void OnFixedUpdate()
+        {
+
             base.OnFixedUpdate();
         }
     }

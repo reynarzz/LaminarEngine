@@ -20,39 +20,54 @@ namespace Engine
     public static partial class Physics2D
     {
         public static bool DrawColliders { get; set; }
-        private static readonly B2QueryFilter _defaultQueryFilter = new B2QueryFilter(B2Constants.B2_DEFAULT_CATEGORY_BITS, 
+        private static readonly B2QueryFilter _defaultQueryFilter = new B2QueryFilter(B2Constants.B2_DEFAULT_CATEGORY_BITS,
                                                                                       B2Constants.B2_DEFAULT_MASK_BITS);
-        private static B2Polygon _boxPolygon;
+        private class CastContext
+        {
+            public CastHit2D Hit;
+            public ulong LayerMask;
+            public bool IgnoreTriggers = true;
+            public void Clear()
+            {
+                Hit = default;
+                LayerMask = default;
+                IgnoreTriggers = true;
+            }
+        }
+
+        private readonly static CastContext _castContext = new();
 
         static Physics2D()
         {
-            Box2dUtils.ApplyBoxNormals(ref _boxPolygon);
         }
 
         public static CastHit2D Raycast(vec2 origin, vec2 direction, ulong layerMask)
         {
-            CastHit2D hit = default;
-            float CastResultFunc(B2ShapeId shapeId, B2Vec2 point, B2Vec2 normal, float fraction, object context)
-            {
-                var collider = B2Shapes.b2Shape_GetUserData(shapeId) as Collider2D;
-                
-                if (!LayerMask.AreValid(collider.Actor.Layer, layerMask))
-                {
-                    return -1;
-                }
-
-                hit.Collider = collider;
-                hit.Point = point.ToVec2();
-                hit.Normal = normal.ToVec2();
-                hit.isHit = true;
-
-                return fraction; // Stop at the first hit
-            }
-
-            B2Worlds.b2World_CastRay(PhysicWorld.WorldID, origin.ToB2Vec2(), direction.ToB2Vec2(), _defaultQueryFilter, CastResultFunc, null);
-            return hit;
+            _castContext.Clear();
+            _castContext.LayerMask = layerMask;
+            B2Worlds.b2World_CastRay(PhysicWorld.WorldID, origin.ToB2Vec2(), direction.ToB2Vec2(), _defaultQueryFilter, CastResultFunc, _castContext);
+            return _castContext.Hit;
         }
 
+        private static float CastResultFunc(B2ShapeId shapeId, B2Vec2 point, B2Vec2 normal, float fraction, object context)
+        {
+            var castContext = context as CastContext;
+
+            var collider = B2Shapes.b2Shape_GetUserData(shapeId) as Collider2D;
+            var isColliderInvalid = collider.IsTrigger && castContext.IgnoreTriggers;
+
+            if (isColliderInvalid || !LayerMask.AreValid(collider.Actor.Layer, castContext.LayerMask))
+            {
+                return -1;
+            }
+
+            castContext.Hit.Collider = collider;
+            castContext.Hit.Point = point.ToVec2();
+            castContext.Hit.Normal = normal.ToVec2();
+            castContext.Hit.isHit = true;
+
+            return fraction; // Stop at the first hit
+        }
         public static CastHit2D Raycast(vec2 origin, vec2 direction)
         {
             return Raycast(origin, direction, ulong.MaxValue);

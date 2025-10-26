@@ -387,10 +387,9 @@ namespace Game
             if (!IsCharacterAlive())
                 return;
 
-            var life = Math.Clamp(Life - amount, 0, MAX_LIFE);
+            Life = Math.Clamp(Life - amount, 0, MAX_LIFE);
             Rigidbody.Velocity = new vec2(0, Rigidbody.Velocity.y);
             Animator.Parameters.SetTrigger(HIT_DAMAGE_PROPERTY_NAME);
-            Life = life;
         }
 
         public bool IsCharacterAlive()

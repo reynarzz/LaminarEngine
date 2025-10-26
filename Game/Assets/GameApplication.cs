@@ -9,7 +9,7 @@ namespace Game
     public class GameApplication : ApplicationLayer
     {
         // -TODO:
-        // Implement physics: boxcast, circle cast.
+        // Implement physics: circle cast.
         /* Fix collision exit being called when the shape is destroyed, which causes the function to have a invalid actor,
              This collisionsExit/TriggerExit should not be called with invalid actors/components*/
         // Fix: rigidbody marked as interpolate if is made parent of another that is not, after exiting, the interpolation is disabled.
@@ -43,7 +43,7 @@ namespace Game
         {
             new Actor<GameManager>("GameManager");
 
-
+            // PostProcessingStack.Push(new BloomPostProcessing());
             // ScreenGrabTest3();
 
             Portal();
@@ -67,7 +67,7 @@ namespace Game
             particleSystem.ParticleLife = 3;
             particleSystem.SortOrder = 7;
             particleSystem.StartColor = Color.White;
-            particleSystem.EndColor = new Color(0, 0, 0, 0);
+            particleSystem.EndColor = Color.White;// new Color(0, 0, 0, 0);
             particleSystem.EndSize = new vec2(0, 0);
             particleSystem.Spread = new vec2(0.0f, 0);
             particleSystem.SimulationSpeed = 1;
@@ -79,8 +79,13 @@ namespace Game
             var mat1 = new Material(mainShader);
             mat1.Name = "Particle material";
             particleSystem.Material = mat1;
-            //particleSystem.Material.Passes.ElementAt(0).Blending.Enabled = false;
-            var sprite = new Sprite();
+
+
+            var screenShader = new Shader(Assets.GetText("Shaders/VertScreenGrab.vert").Text, Assets.GetText("Shaders/ScreenGrabWobble.frag").Text);
+            particleSystem.Material = new Material(screenShader);
+            particleSystem.Material.GetPass(0).IsScreenGrabPass = true;
+           //particleSystem.Material.Passes.ElementAt(0).Blending.Enabled = false;
+           var sprite = new Sprite();
             sprite.Texture = Texture2D.White;
 
             particleSystem.Sprite = sprite;
