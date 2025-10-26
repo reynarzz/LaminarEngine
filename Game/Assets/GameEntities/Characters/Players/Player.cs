@@ -16,7 +16,8 @@ namespace Game
             var box = AddComponent<BoxCollider2D>();
             box.Size = new vec2(0.95f, 0.6f);
             box.Offset = new vec2(0, 0.8f);
-            
+            box.Friction = 0;
+
             const float fps = 11.5f;
             var size = new vec2(78, 58);
             var pivot = new vec2(0.4f, 0.4f);
