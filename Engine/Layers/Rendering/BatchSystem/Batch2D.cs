@@ -98,7 +98,7 @@ namespace Engine.Rendering
             _geoDescriptor.SharedIndexBuffer = sharedIndexBuffer;
             _onRendererDestroyHandler = OnRendererDestroy;
 
-            vertexDesc.Attribs = Vertex.GetVertexAttributes();
+            vertexDesc.Attribs = GraphicsHelper.GetVertexAttribs<Vertex>();
             _geoDescriptor.VertexDesc = vertexDesc;
 
             Geometry = GfxDeviceManager.Current.CreateGeometry(_geoDescriptor);

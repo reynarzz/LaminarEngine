@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Engine.Graphics
 {
-    public struct VertexAtrib
+    internal struct VertexAtrib
     {
         internal int Count { get; set; }
         internal GfxValueType Type { get; set; }

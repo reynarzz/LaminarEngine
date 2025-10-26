@@ -58,7 +58,7 @@ namespace Engine
             new() { Count = 1, Normalized = false, Type = GfxValueType.Int,   Stride = sizeof(Vertex), Offset = sizeof(int)   * 9 },  // TextureIndex
         ];
 
-        public static VertexAtrib[] GetVertexAttributes()
+        static VertexAtrib[] IVertex<Vertex>.GetVertexAttributes()
         {
             return _attribs;
         }

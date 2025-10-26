@@ -112,9 +112,6 @@ namespace Engine.Rendering
 
                 foreach (var renderer in bucket)
                 {
-                    var texture = renderer.Sprite?.Texture ?? _whiteTexture;
-                    var material = renderer.Material ?? _pinkMaterial;
-
                     renderer.Draw();
 
                     if (!renderer.IsDirty && !renderer.Transform.NeedsInterpolation)
@@ -125,6 +122,9 @@ namespace Engine.Rendering
                     {
                         renderer.MarkNotDirty();
                     }
+
+                    var texture = renderer.Sprite?.Texture ?? _whiteTexture;
+                    var material = renderer.Material ?? _pinkMaterial;
 
                     if (renderer.Mesh == null)
                     {

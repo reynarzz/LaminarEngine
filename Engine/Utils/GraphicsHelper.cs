@@ -45,11 +45,12 @@ namespace Engine
 
             return GfxDeviceManager.Current.CreateGeometry(geoDesc);
         }
-
+        
         internal static GfxResource GetScreenQuadGeometry()
         {
             QuadVertices vertices = default;
             CreateQuad(ref vertices, QuadUV.DefaultUVs, 2, 2, new vec2(0.5f), Color.White, mat4.identity());
+
 
             var geoDesc = new GeometryDescriptor()
             {
@@ -60,7 +61,7 @@ namespace Engine
                 },
                 VertexDesc = new VertexDataDescriptor()
                 {
-                    Attribs = Vertex.GetVertexAttributes(),
+                    Attribs = GetVertexAttribs<Vertex>(),
                     BufferDesc = new BufferDataDescriptor<Vertex>()
                     {
                         Buffer = [vertices.v0, vertices.v1, vertices.v2, vertices.v3],
@@ -70,6 +71,10 @@ namespace Engine
             };
 
             return GfxDeviceManager.Current.CreateGeometry(geoDesc);
+        }
+        internal static VertexAtrib[] GetVertexAttribs<T>() where T : unmanaged, IVertex<T>
+        {
+            return T.GetVertexAttributes();
         }
 
         internal static GfxResource CreateQuadIndexBuffer(int maxQuads)
