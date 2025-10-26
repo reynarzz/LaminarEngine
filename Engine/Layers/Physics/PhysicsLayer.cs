@@ -133,7 +133,7 @@ namespace Engine.Layers
             // Example, remove from here
             var transform = new B2Transform();
             transform.p = new B2Vec2(rigidbody.Transform.WorldPosition.x, rigidbody.Transform.WorldPosition.y);
-            transform.q = !Physics2D.DrawTrueCollidersRotation ? new B2Rot(1, 0) : rigidbody.Transform.WorldRotation.QuatToB2Rot();
+            transform.q = rigidbody.Transform.WorldRotation.QuatToB2Rot();
 
             _colliders.Clear();
             rigidbody.GetComponents(ref _colliders);

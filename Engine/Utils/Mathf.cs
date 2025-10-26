@@ -354,5 +354,15 @@ namespace Engine
             float length = MathF.Sqrt(value.x * value.x + value.y * value.y + value.z * value.z + value.w * value.w);
             return length > 0f ? value / length : value;
         }
+
+        internal static vec3 Min(vec3 a, vec3 b)
+        {
+            return new vec3(MathF.Min(a.x, b.x), MathF.Min(a.y, b.y), MathF.Min(a.z, b.z));
+        }
+
+        internal static vec3 Max(vec3 a, vec3 b)
+        {
+            return new vec3(MathF.Max(a.x, b.x), MathF.Max(a.y, b.y), MathF.Max(a.z, b.z));
+        }
     }
 }

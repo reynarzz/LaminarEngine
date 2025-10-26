@@ -33,7 +33,7 @@ namespace Engine.IO
             return isValid;
         }
 
-        public void PushAsset<T>(Guid guid, T asset) where T : AssetResourceBase
+        public void PushAsset(Guid guid, AssetResourceBase asset) 
         {
             _assets.Add(guid, new WeakReference<AssetResourceBase>(asset));
         }

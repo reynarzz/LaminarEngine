@@ -32,7 +32,7 @@ namespace Game
             rigid.Interpolate = true;
             var trigger = AddComponent<BoxCollider2D>();
             trigger.Size = new vec2(3, 1);
-            trigger.Offset = new vec2(0, 0.03f);
+            trigger.Offset = new vec2(0, 0.1f);
             trigger.IsTrigger = true;
             Transform.LocalScale = new vec3(trigger.Size.x, trigger.Size.y, 1);
             _startPos = Transform.LocalPosition = new vec3(-8, 0, 0);
@@ -111,6 +111,8 @@ namespace Game
                 {
                     collider.RigidBody.Velocity = new vec2(collider.RigidBody.Velocity.x, 0);
                 }
+
+
                 // Actor.Destroy(collider.Actor);
                 Debug.Log("Enter player to platform");
             }

@@ -423,16 +423,15 @@ namespace Game
 
             var dir = Transform.Up * -_characterConfig.Ground.SizeY;
 
-            var anyHit = false;
             uint hitIndex = 0;
+            CastHit2D hit = default;
             for (var i = 0; i < raysCount; i++)
             {
                 var pos = Mathf.Lerp(origin1, origin2, i / (float)(raysCount - 1));
-                var hit = Physics2D.Raycast(pos, dir, _characterConfig.Ground.GroundMask);
+                hit = Physics2D.Raycast(pos, dir, _characterConfig.Ground.GroundMask);
                 if (hit.isHit)
                 {
                     hitIndex |= 1u << i;
-                    anyHit = true;
                     break;
                 }
             }
@@ -449,7 +448,13 @@ namespace Game
                     Debug.DrawRay(pos, dir, color);
                 }
             }
-            IsOnGround = anyHit;
+            if (hit.isHit && !IsOnGround && Rigidbody.Velocity.y <= 0)
+            {
+                const float bias = 0.06f;
+                var yPos = (hit.Point.y - Collider.AABB.Min.y) + bias;
+                Transform.WorldPosition = new vec3(Transform.WorldPosition.x, yPos, Transform.WorldPosition.z); 
+            }
+            IsOnGround = hit.isHit;
         }
         private void OnGroundChanged(bool value)
         {
@@ -462,6 +467,7 @@ namespace Game
 
             if (value)
             {
+
                 _jumped = false;
             }
         }

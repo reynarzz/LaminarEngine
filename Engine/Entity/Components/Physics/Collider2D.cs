@@ -1,5 +1,6 @@
 ﻿using Box2D.NET;
 using Engine.Types;
+using Engine.Utils;
 using GlmNet;
 using System;
 using System.Collections.Generic;
@@ -133,7 +134,39 @@ namespace Engine
             }
         }
 
-        public Bounds AABB { get; private set; }
+        public Bounds AABB
+        {
+            get
+            {
+                var bounds = new Bounds() { Min = vec3.One * int.MaxValue, Max = vec3.One * int.MinValue };
+                var wId = B2Worlds.b2GetWorldFromId(PhysicWorld.WorldID);
+                var defTransform = new B2Transform() { q = Transform.WorldRotation.QuatToB2Rot() };
+                ApplyToShapesSafe(x =>
+                {
+                    var aabb = B2Shapes.b2ComputeShapeAABB(B2Shapes.b2GetShape(wId, x), defTransform);
+                    bounds.Min = Mathf.Min(bounds.Min, aabb.lowerBound.ToVec3());
+                    bounds.Max = Mathf.Max(bounds.Max, aabb.upperBound.ToVec3());
+                });
+
+                return bounds;
+            }
+        }
+
+        public Bounds AABBWorld
+        {
+            get
+            {
+                var bounds = new Bounds() { Min = vec3.One * int.MaxValue, Max = vec3.One * int.MinValue };
+                ApplyToShapesSafe(x =>
+                {
+                    var aabb = B2Shapes.b2Shape_GetAABB(x);
+                    bounds.Min = Mathf.Min(bounds.Min, aabb.lowerBound.ToVec3());
+                    bounds.Max = Mathf.Max(bounds.Max, aabb.upperBound.ToVec3());
+                });
+
+                return bounds;
+            }
+        }
 
         internal override void OnInitialize()
         {
@@ -155,7 +188,7 @@ namespace Engine
                 userData = this,
                 enableCustomFiltering = true
             };
-            
+
             Create();
         }
 

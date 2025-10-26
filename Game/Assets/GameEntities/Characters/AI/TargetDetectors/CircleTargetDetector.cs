@@ -26,7 +26,7 @@ namespace Game
             if (collider.Actor.Layer == LayerMask.NameToLayer(GameLayers.PLAYER)) 
             {
                 var dir = collider.Transform.WorldPosition - Transform.WorldPosition;
-                Bounds bounds = collider.AABB;
+            
                 // TODO: decrease the freq raycast is called.
                 var hit = Physics2D.Raycast(Transform.WorldPosition, dir, LayerMask.LayerToBits(collider.Actor.Layer) | GameLayers.GROUND_MASK);
                 Debug.DrawRay(Transform.WorldPosition, dir, Color.Red);

@@ -12,13 +12,10 @@ namespace Game
         // Implement physics: boxcast, circle cast.
         /* Fix collision exit being called when the shape is destroyed, which causes the function to have a invalid actor,
              This collisionsExit/TriggerExit should not be called with invalid actors/components*/
-        // Fix: Colliders under the same rigidbody should be treated as one collider (merge)?
         // Fix: rigidbody marked as interpolate if is made parent of another that is not, after exiting, the interpolation is disabled.
         // Avoid the batch to take more texture slots that the system is supported, take into account materials texture count.
-        // Fix: Batch2d vertices shift when an object is destroyed.
-        // Fix: New asset instances created every time GetAsset is called, put all the loaded assets in pools.
+        // Fix: Batch2d vertices shift when an object is destroyed. 
         // Fix: Texture units overflow, a batch should only bind: MAX_DEVICE_ALLOWED - RENDERER_NEEDED_TEXTURE_SLOTS
-        // Implement a proper way to grow a batch when vertices are greater than MAX_QUADS_PER_BATCH (Tilemap)
 
 
         // For the game:
@@ -46,9 +43,6 @@ namespace Game
         {
             new Actor<GameManager>("GameManager");
 
-            //PostProcessingStack.Push(new BloomPostProcessing());
-            // ScreenGrabTest();
-            // TextRendering();
 
             // ScreenGrabTest3();
 
@@ -61,7 +55,6 @@ namespace Game
             WaterTest();
             ParticleSystem();
 
-            // new Actor<AnimationTest>().Transform.WorldPosition = _playerStartPosTest;
             Debug.Success("Game Layer");
         }
 
@@ -104,12 +97,6 @@ namespace Game
             renderer.Color = Color.White;
             test.Transform.WorldScale = new vec3(0.8f, 0.8f, 0.5f);
             //renderer.OutlineSize = 1;
-
-            //var actor2 = new Actor<TextWritterTest>("Text2");
-            //var test2 = actor2.GetComponent<TextWritterTest>();
-            //test2.Text = "This is a text written line by line!\nand this, is being written just below!!!\nspecial characters: !@#$%^&*()_+ ñ";
-            //test2.DelayToWrite = 0.05f;
-            //test2.Transform.LocalPosition = new vec3(100, 200);
         }
 
         private void ScreenGrabTest()
