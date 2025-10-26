@@ -25,12 +25,12 @@ namespace Engine
         private class CastContext
         {
             public CastHit2D Hit;
-            public ulong LayerMask;
+            public ulong LayerMask { get; private set; }
             public bool IgnoreTriggers = true;
-            public void Clear()
+            public void Init(ulong layerMask)
             {
                 Hit = default;
-                LayerMask = default;
+                LayerMask = layerMask;
                 IgnoreTriggers = true;
             }
         }
@@ -43,8 +43,7 @@ namespace Engine
 
         public static CastHit2D Raycast(vec2 origin, vec2 direction, ulong layerMask)
         {
-            _castContext.Clear();
-            _castContext.LayerMask = layerMask;
+            _castContext.Init(layerMask);
             B2Worlds.b2World_CastRay(PhysicWorld.WorldID, origin.ToB2Vec2(), direction.ToB2Vec2(), _defaultQueryFilter, CastResultFunc, _castContext);
             return _castContext.Hit;
         }

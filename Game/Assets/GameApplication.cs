@@ -9,7 +9,6 @@ namespace Game
     public class GameApplication : ApplicationLayer
     {
         // -TODO:
-        // Implement physics: circle cast.
         /* Fix collision exit being called when the shape is destroyed, which causes the function to have a invalid actor,
              This collisionsExit/TriggerExit should not be called with invalid actors/components*/
         // Fix: rigidbody marked as interpolate if is made parent of another that is not, after exiting, the interpolation is disabled.

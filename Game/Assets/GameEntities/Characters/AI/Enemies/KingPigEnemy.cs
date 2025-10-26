@@ -42,6 +42,10 @@ namespace Game
                     SpriteAtlasPath = pathSprites[i],
                 };
             }
+
+            var death = states[5];
+            death.Pivot.x = 0.7f;
+            states[5] = death;
             InitAnimationStates(states);
 
             Transform.LocalScale = new vec3(5, 5, 5);
