@@ -91,9 +91,11 @@ namespace Engine
                 indices[i * 6 + 5] = i * 4 + 0;
             }
 
-            var desc = new BufferDataDescriptor<uint>() { Buffer = indices };
-            desc.Usage = BufferUsage.Static;
-            return GfxDeviceManager.Current.CreateIndexBuffer(desc);
+            return GfxDeviceManager.Current.CreateIndexBuffer(new BufferDataDescriptor<uint>()
+            {
+                Buffer = indices,
+                Usage = BufferUsage.Static
+            });
         }
 
         internal static void CreateQuad(ref QuadVertices vertices, QuadUV uvs, float width, float height, vec2 pivot,

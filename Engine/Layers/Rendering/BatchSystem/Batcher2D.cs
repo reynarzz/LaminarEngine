@@ -160,7 +160,7 @@ namespace Engine.Rendering
                             if (!_batchesPool.GetCurrentBatch(renderer, out currentBatch))
                             {
                                 var indexBufferNew = GraphicsHelper.CreateQuadIndexBuffer(vertexCount / VerticesPerQuad);
-                                currentBatch = _batchesPool.Get(renderer, renderer.Mesh.Vertices.Count, vertexCount, material);
+                                currentBatch = _batchesPool.Get(renderer, renderer.Mesh.Vertices.Count, vertexCount, material, indexBufferNew);
                             }
                         }
 
