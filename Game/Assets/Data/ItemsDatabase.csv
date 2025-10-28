@@ -1,0 +1,9 @@
+Id,Amount,MaxDefault,SecondsToDisappear,AutoConsumable,UserCanUseIt,UserCanRemove,RemoveAfterUse
+unknown,1,1,7,False,True,True,True
+coin_currency,1,1,7,False,True,True,True
+confusion_grenade,1,1,7,False,True,True,True
+small_potion,1,1,7,False,True,True,True
+normal_ammo,1,1,7,False,True,True,True
+toxic_ammo,1,1,7,False,True,True,True
+fire_ammo,1,1,7,False,True,True,True
+simple_key,1,1,7,False,True,True,True

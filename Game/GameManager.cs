@@ -156,6 +156,7 @@ namespace Game
             platform.Layer = LayerMask.NameToLayer(GameLayers.PLATFORM);
 
 
+            Debug.Log(ItemsDatabase.GetDatabaseSchemaCsv());
 
             // GamePrefabs.Enemies.InstantiatePigStandard(Player.Transform.LocalPosition + vec3.Right * 2, -1);
 
