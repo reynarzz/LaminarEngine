@@ -35,7 +35,7 @@ namespace Game
 
     public class ItemsDatabase
     {
-        private readonly Dictionary<ItemId, Item> _itemsDatabase;
+        private readonly Dictionary<ItemId, Item> _itemsDatabase = new();
         private Dictionary<ItemId, Type> _itemTypeMapper = new()
         {
             { ItemId.coin_currency, typeof(CoinItem) },
@@ -86,6 +86,10 @@ namespace Game
                 var items = new List<ItemFeatures>(ids.Length);
                 foreach (var id in ids)
                 {
+                    if(id == ItemId.none)
+                    {
+                        continue;
+                    }
                     items.Add(new ItemFeatures()
                     {
                         Id = id,

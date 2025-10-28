@@ -36,7 +36,8 @@ namespace GameCooker
                 { ".ldtk", AssetType.Text },
                 { ".json", AssetType.Text },
                 { ".xml", AssetType.Text },
-
+                { ".csv", AssetType.Text },
+           
                 // Shader
                 { ".shader", AssetType.Shader },
                 { ".glsl", AssetType.Shader },

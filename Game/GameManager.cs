@@ -40,6 +40,7 @@ namespace Game
         private Material _playerSpriteMaterial;
         private vec3 _playerStartPosTest;
         private static TextRenderer _coinCounterTest;
+        private ItemsDatabase _itemsDatabase;
 
         public static PlayerBag PlayerBag { get; } = new();
         public static Player Player { get; private set; }
@@ -47,10 +48,15 @@ namespace Game
         public override void OnAwake()
         {
             InitializeMaterials();
-            InitializeActorLayers(typeof(GameLayers));
+            InitializeActorLayers();
+            InitializeData();
             InitializeWorld();
         }
 
+        private void InitializeData()
+        {
+            _itemsDatabase = new ItemsDatabase("Data/ItemsDatabase.csv");
+        }
         private void InitializeMaterials()
         {
             GetMaterial("DefaultSpriteMaterial", ref _defaultSpriteMaterial,
@@ -69,7 +75,7 @@ namespace Game
             PlayerMatPass.Stencil.ZPassOp = StencilOp.Replace;
         }
 
-        private void InitializeActorLayers(Type layers)
+        private void InitializeActorLayers()
         {
             static string[] GetConstStringValues(Type type)
             {
@@ -79,7 +85,7 @@ namespace Game
                            .ToArray();
             }
 
-            var names = GetConstStringValues(layers);
+            var names = GetConstStringValues(typeof(GameLayers));
 
             for (int i = 0; i < names.Length; i++)
             {
@@ -156,7 +162,7 @@ namespace Game
             platform.Layer = LayerMask.NameToLayer(GameLayers.PLATFORM);
 
 
-            Debug.Log(ItemsDatabase.GetDatabaseSchemaCsv());
+            // Debug.Log(ItemsDatabase.GetDatabaseSchemaCsv());
 
             // GamePrefabs.Enemies.InstantiatePigStandard(Player.Transform.LocalPosition + vec3.Right * 2, -1);
 

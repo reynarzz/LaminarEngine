@@ -149,7 +149,9 @@ namespace Engine
                     var alreadyAdded = _components[i].GetType().IsAssignableFrom(type);
                     if (alreadyAdded)
                     {
+#if SHOW_ENGINE_WARNS
                         Debug.Warn($"Can't add component of type '{type.Name}', it should only appear once in an Actor. This will return the current one.");
+#endif
                         return _components[i];
                     }
                 }
