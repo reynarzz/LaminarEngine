@@ -9,69 +9,121 @@ namespace Game
 {
     public class Inventory
     {
-        public virtual int MaxSlots { get; set; }
-        private readonly List<Item> _items = new();
-        public int Count => _items.Count;
+        public int MaxSlots { get; }
+        private readonly InventorySlot[] _slots;
+        public IReadOnlyList<InventorySlot> Slots => _slots;
         protected event Action<Item> OnItemRemoved;
-
-        public bool Add(Item item)
+        public Inventory(int maxSlots)
         {
-            var currentItem = GetItem(item.Features.Id);
+            MaxSlots = maxSlots;
+            _slots = new InventorySlot[maxSlots];
 
-            if (currentItem != null && currentItem.Features.IsStackable &&
-                (currentItem.Features.Amount + item.Features.Amount) < currentItem.Features.MaxDefault)
+            for (int i = 0; i < _slots.Length; i++)
             {
-                currentItem.Features.Amount += item.Features.Amount;
+                _slots[i] = new InventorySlot();
+            }
+        }
+
+        public bool Add(Item item, int amount)
+        {
+            var slotIndex = GetFirstSlotIndex(item.Features.Id);
+            var currentSlot = default(InventorySlot);
+            
+            if(slotIndex >= 0)
+            {
+                currentSlot = _slots[slotIndex];
+            }
+
+            if (!currentSlot.IsEmpty() && item.Features.IsStackable && (currentSlot.Amount + amount) < item.Features.MaxPerSlot)
+            {
+                _slots[slotIndex] = new InventorySlot(currentSlot.item, currentSlot.Amount + amount);
                 return true;
             }
 
-            var canAdd = _items.Count < MaxSlots;
+            var emptySlotIndex = GetFirstEmptySlotIndex();
+            var canAdd = emptySlotIndex >= 0;
             if (canAdd)
             {
-                _items.Add(item.GetCopy());
+                _slots[emptySlotIndex] = new InventorySlot(item, amount);
             }
 
             return canAdd;
         }
 
-        public void Remove(Item item)
+        private int GetFirstEmptySlotIndex()
         {
-            if (_items.Remove(item))
+            for (int i = 0; i < _slots.Length; i++)
             {
-                OnItemRemoved?.Invoke(item);
+                if (_slots[i].IsEmpty())
+                    return i;
             }
+
+            return -1;
         }
 
-        public void Drop(Item item)
+        public void Drop(int slotIndex)
         {
-            if (_items.Remove(item))
-            {
-                Debug.Log("Instance into the world");
-            }
+            var slot = _slots[slotIndex];
+
+            // TODO: Instance into the world.
+
+
+            _slots[slotIndex] = default;
         }
 
-        public Item GetItem(int index)
+        public InventorySlot GetSlot(int index)
         {
-            return _items[index];
+            return _slots[index];
         }
-        public Item GetItem(ItemId id)
+        public int GetFirstSlotIndex(ItemId id)
         {
-            for (int i = 0; i < _items.Count; i++)
+            for (int i = 0; i < _slots.Length; i++)
             {
-                if (_items[i].Features.Id == id)
+                var slot = _slots[i];
+
+                if (!slot.IsEmpty() && slot.item.Features.Id == id)
                 {
-                    return _items[i];
+                    return i;
                 }
             }
-            return null;
+            return -1;
         }
+
+        public void Use(int slotIndex, int amountMul = 1)
+        {
+            var slot = GetSlot(slotIndex);
+
+            if (!slot.IsEmpty())
+            {
+                var useCount = Math.Clamp(amountMul, 0, Math.Min(slot.Amount, slot.item.Features.MaxPerSlot));
+
+                slot.item.Use(useCount, this);
+
+                if (slot.item.Features.DecreasesOnUse)
+                {
+                    _slots[slotIndex] = new InventorySlot(slot.item, slot.Amount - useCount);
+                }
+            }
+        }
+
+        public InventorySlot GetFirstSlot(ItemId id)
+        {
+            var index = GetFirstSlotIndex(id);
+
+            if (index >= 0)
+            {
+                return _slots[index];
+            }
+
+            return default;
+        }
+
         public void DropAll()
         {
-            foreach (Item item in _items)
+            for (int i = 0; i < _slots.Length; i++)
             {
-                Drop(item);
+                Drop(i);
             }
-            _items.Clear();
         }
     }
 }

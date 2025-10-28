@@ -8,12 +8,9 @@ namespace Game
 {
     public class PlayerInventory : CharacterInventory
     {
-        public override int MaxSlots { get; set; }
         public Item[] QuickUseItems { get; }
-
-        public PlayerInventory(int maxSlots, int maxQuickUseItems)
+        public PlayerInventory(int maxSlots, int maxQuickUseItems) : base(maxSlots)
         {
-            MaxSlots = maxSlots;
             QuickUseItems = new Item[maxQuickUseItems];
             OnItemRemoved += _OnItemRemoved;
         }

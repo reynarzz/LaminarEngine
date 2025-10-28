@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    public class CoinItem : Item
+    public class NormalAmmoItem : Item
     {
-        public CoinItem(ItemFeatures features) : base(features) { }
+        public NormalAmmoItem(ItemFeatures features) : base(features) { }
     }
 }

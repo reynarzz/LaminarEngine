@@ -91,7 +91,7 @@ namespace Game
         }
         private float _maxFallYVelocity = -20;
 
-        public CharacterInventory Inventory { get; protected set; } = new CharacterInventory();
+        public CharacterInventory Inventory { get; protected set; } = CharacterInventory.Empty;
 
         public int SpriteLookDir => _characterConfig.SpriteLookDir;
         private CharacterConfig _characterConfig;

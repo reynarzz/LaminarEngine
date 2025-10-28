@@ -10,7 +10,7 @@ namespace Game
     {
         public ItemId Id;
         public int Amount;
-        public int MaxDefault;
+        public int MaxPerSlot;
         public float SecondsToDisappear;
         public bool IsStackable;
         public bool AutoConsumable; // Should consume right when obtaining it? it will not be added to the inventory if true.

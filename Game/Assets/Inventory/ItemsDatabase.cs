@@ -12,7 +12,7 @@ namespace Game
 {
     public enum ItemId
     {
-        unknown,
+        none,
 
         // Currency
         coin_currency,
@@ -25,7 +25,7 @@ namespace Game
 
         // Ammo
         normal_ammo,
-        toxic_ammo,
+        poison_ammo,
         fire_ammo,
 
         // Keys
@@ -38,14 +38,13 @@ namespace Game
         private readonly Dictionary<ItemId, Item> _itemsDatabase;
         private Dictionary<ItemId, Type> _itemTypeMapper = new()
         {
-            { ItemId.coin_currency, typeof() },
-            { ItemId.coin_currency, typeof() },
-            { ItemId.confusion_grenade, typeof() },
-            { ItemId.small_potion, typeof(SmallPotion) },
-            { ItemId.normal_ammo, typeof() },
-            { ItemId.toxic_ammo, typeof() },
-            { ItemId.fire_ammo, typeof() },
-            { ItemId.simple_key, typeof() }
+            { ItemId.coin_currency, typeof(CoinItem) },
+            { ItemId.confusion_grenade, typeof(ConfusionGrenadeItem) },
+            { ItemId.small_potion, typeof(SmallPotionItem) },
+            { ItemId.normal_ammo, typeof(NormalAmmoItem) },
+            { ItemId.poison_ammo, typeof(PoisonAmmoItem) },
+            { ItemId.fire_ammo, typeof(FireAmmoItem) },
+            { ItemId.simple_key, typeof(SimpleKeyItem) }
         };
 
         public ItemsDatabase(string databaseCsvPath)
@@ -91,7 +90,7 @@ namespace Game
                     {
                         Id = id,
                         Amount = 1,
-                        MaxDefault = 1,
+                        MaxPerSlot = 1,
                         UserCanUseIt = true,
                         AutoConsumable = false,
                         SecondsToDisappear = 7,
