@@ -141,8 +141,8 @@ namespace Game
                 Ground = new GroundDetectionOptions()
                 {
                     Enabled = true,
-                    MinX = -0.45f,
-                    MaxX = 0.45f,
+                    MinX = -0.44f,
+                    MaxX = 0.44f,
                     RaysCount = 3,
                     SizeY = 0.7f,
                     YOffset = 0,
@@ -162,7 +162,7 @@ namespace Game
             platform.Layer = LayerMask.NameToLayer(GameLayers.PLATFORM);
 
 
-            Debug.Log(ItemsDatabase.GetDatabaseSchemaCsv());
+            // Debug.Log(ItemsDatabase.GetDatabaseSchemaCsv());
 
             // GamePrefabs.Enemies.InstantiatePigStandard(Player.Transform.LocalPosition + vec3.Right * 2, -1);
 

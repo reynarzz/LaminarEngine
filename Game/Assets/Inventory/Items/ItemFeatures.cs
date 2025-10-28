@@ -19,5 +19,6 @@ namespace Game
         public bool UserCanUseIt { get; set; }
         public bool UserCanRemove { get; set; }  // If AutoConsumable is false
         public bool RemoveAfterUse { get; set; }
+        public string SpritePath { get; set; }
     };
 }
