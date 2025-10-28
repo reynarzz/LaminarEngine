@@ -71,11 +71,17 @@ namespace Engine.IO
                 return asset;
             }
             var assetContent = await Disk.GetAssetAsync(guid);
-            var assetMeta = Disk.GetAssetMeta(guid);
 
-            asset = BuildAsset(assetContent.Info, assetMeta, guid, assetContent.RawData) as T;
-            _databaseCache.PushAsset(guid, asset);
-            return asset;
+            if (assetContent.Success)
+            {
+                var assetMeta = Disk.GetAssetMeta(guid);
+
+                asset = BuildAsset(assetContent.Info, assetMeta, guid, assetContent.RawData) as T;
+                _databaseCache.PushAsset(guid, asset);
+                return asset;
+            }
+
+            return null;
         }
 
         private T GetAsset<T>(Guid guid) where T : AssetResourceBase
@@ -85,27 +91,32 @@ namespace Engine.IO
                 return asset;
             }
             var assetContent = Disk.GetAssetAsync(guid).GetAwaiter().GetResult();
-            var assetMeta = Disk.GetAssetMeta(guid);
 
-            var rawAsset = BuildAsset(assetContent.Info, assetMeta, guid, assetContent.RawData);
-
-            if (rawAsset == null)
+            if (assetContent.Success)
             {
-                throw new Exception($"Fatal: Asset is null: {guid}");
-            }
+                var assetMeta = Disk.GetAssetMeta(guid);
 
-            asset = rawAsset as T;
+                var rawAsset = BuildAsset(assetContent.Info, assetMeta, guid, assetContent.RawData);
 
-            if (asset == null)
-            {
-                Debug.Error($"Invalid asset cast to type: {typeof(T).Name}, asset type is: {rawAsset.GetType().Name}");
-            }
-            else
-            {
-                _databaseCache.PushAsset(guid, asset);
-            }
+                if (rawAsset == null)
+                {
+                    throw new Exception($"Fatal: Asset is null: {guid}");
+                }
 
-            return asset;
+                asset = rawAsset as T;
+
+                if (asset == null)
+                {
+                    Debug.Error($"Invalid asset cast to type: {typeof(T).Name}, asset type is: {rawAsset.GetType().Name}");
+                }
+                else
+                {
+                    _databaseCache.PushAsset(guid, asset);
+                }
+
+                return asset;
+            }
+            return null;
         }
 
         private AssetResourceBase BuildAsset(AssetInfo info, AssetMetaFileBase meta, Guid guid, byte[] rawData)

@@ -82,10 +82,10 @@ namespace GameCooker
 
         public async Task<AssetsDatabaseInfo> CookAllAsync(CookOptions options)
         {
-            var files = Directory.GetFiles(options.AssetsFolderPath, "*", SearchOption.AllDirectories).Where(x => !x.EndsWith(Paths.ASSET_META_EXT_NAME));
+            var files = Directory.GetFiles(options.AssetsFolderPath, "*", SearchOption.AllDirectories);
 
             var selectedFiles = files.Where(path => _assetsTypes.TryGetValue(Path.GetExtension(path), out _))
-                                     .Select(path => (path.Replace("\\", "/"), _assetsTypes[Path.GetExtension(path)]));
+                                     .Select(path => (Paths.ClearPathSeparation(path), _assetsTypes[Path.GetExtension(path)]));
 
             await _assetCookers[options.Type].CookAssetsAsync(options.FileOptions, selectedFiles.ToArray(), ProcessAsset, options.ExportFolderPath);
 

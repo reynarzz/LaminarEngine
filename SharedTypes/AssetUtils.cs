@@ -44,5 +44,21 @@ namespace SharedTypes
                 _ => GetMeta<DefaultMetaFile>(metaJson)
             };
         }
+
+        public static bool GetMetaGuid(string path, out Guid guid)
+        {
+            guid = default;
+            string metaJson = null;
+
+            if (File.Exists(path))
+            {
+                metaJson = File.ReadAllText(path);
+
+                guid = JsonConvert.DeserializeObject<DefaultMetaFile>(metaJson).GUID;
+                return true;
+            }
+
+            return false;
+        }
     }
 }

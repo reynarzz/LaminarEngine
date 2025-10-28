@@ -1,8 +1,8 @@
-Id,Amount,MaxPerSlot,SecondsToDisappear,IsStackable,AutoConsumable,DecreasesOnUse,UserCanUseIt,UserCanRemove,RemoveAfterUse
-coin_currency,1,1,7,False,False,False,True,True,True
-confusion_grenade,1,1,7,False,False,False,True,True,True
-small_potion,1,1,7,False,False,False,True,True,True
-normal_ammo,1,1,7,False,False,False,True,True,True
-poison_ammo,1,1,7,False,False,False,True,True,True
-fire_ammo,1,1,7,False,False,False,True,True,True
-simple_key,1,1,7,False,False,False,True,True,True
+Id,Amount,MaxPerSlot,SecondsToDisappear,MultipleSlots,IsStackable,AutoConsumable,DecreasesOnUse,UserCanUseIt,UserCanRemove,RemoveAfterUse
+coin_currency,1,1,7,True,False,False,False,True,True,True
+confusion_grenade,1,1,7,True,False,False,False,True,True,True
+small_potion,1,1,7,True,False,False,False,True,True,True
+normal_ammo,1,1,7,True,False,False,False,True,True,True
+poison_ammo,1,1,7,True,False,False,False,True,True,True
+fire_ammo,1,1,7,True,False,False,False,True,True,True
+simple_key,1,1,7,True,False,False,False,True,True,True

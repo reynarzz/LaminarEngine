@@ -56,23 +56,31 @@ namespace Game
                 Debug.Error($"Items database cannot be found at path '{databaseCsvPath}'");
                 return;
             }
-            using (var strReader = new StringReader(csv.Text))
-            using (var csvReader = new CsvReader(strReader, CultureInfo.InvariantCulture))
+            try
             {
-                var records = csvReader.GetRecords<ItemFeatures>();
-
-                foreach (var itemFeatures in records)
+                using (var strReader = new StringReader(csv.Text))
+                using (var csvReader = new CsvReader(strReader, CultureInfo.InvariantCulture))
                 {
-                    if (_itemTypeMapper.TryGetValue(itemFeatures.Id, out var type))
+                    var records = csvReader.GetRecords<ItemFeatures>();
+
+                    foreach (var itemFeatures in records)
                     {
-                        _itemsDatabase[itemFeatures.Id] = Activator.CreateInstance(type, itemFeatures) as Item;
-                    }
-                    else
-                    {
-                        Debug.Error($"Item id '{itemFeatures.Id}' need to be defined");
+                        if (_itemTypeMapper.TryGetValue(itemFeatures.Id, out var type))
+                        {
+                            _itemsDatabase[itemFeatures.Id] = Activator.CreateInstance(type, itemFeatures) as Item;
+                        }
+                        else
+                        {
+                            Debug.Error($"Item id '{itemFeatures.Id}' need to be defined");
+                        }
                     }
                 }
             }
+            catch (Exception e)
+            {
+                Debug.Error(e);
+            }
+            
         }
 
         public static string GetDatabaseSchemaCsv()
@@ -99,7 +107,8 @@ namespace Game
                         AutoConsumable = false,
                         SecondsToDisappear = 7,
                         UserCanRemove = true,
-                        RemoveAfterUse = true
+                        RemoveAfterUse = true,
+                        MultipleSlots = true
                     });
                 }
 
