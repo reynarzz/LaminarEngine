@@ -10,6 +10,10 @@ namespace GameCooker
     public struct CookFileOptions
     {
         public bool CompressAllFiles { get; set; }
+        /// <summary>
+        /// From 0 (Fast) to 12 (Max compression)
+        /// </summary>
+        public int CompressionLevel { get; set; }
         public bool EncryptAllFiles { get; set; }
 
         public HashSet<AssetType> FilesToCompress { get; private set; } = new();

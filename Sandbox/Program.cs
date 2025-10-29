@@ -41,6 +41,7 @@ namespace Sandbox
                 FileOptions = new CookFileOptions()
                 {
                     CompressAllFiles = false,
+                    CompressionLevel = 12,
                     EncryptAllFiles = false,
                 }
             });

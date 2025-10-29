@@ -7,7 +7,8 @@ namespace Engine.Layers
 {
     internal class RenderingLayer : LayerBase
     {
-        private Batcher2D _batcher2d;
+        private Batcher2D _sceneBatches;
+        private Batcher2D _uiBatches;
         private Camera _mainCamera = null;
         private DrawCallData _drawCallData;
         private DrawCallData _screenQuadDrawCallData;
@@ -28,7 +29,8 @@ namespace Engine.Layers
 
         public override void Initialize()
         {
-            _batcher2d = new Batcher2D(Consts.Graphics.MAX_QUADS_PER_BATCH);
+            _sceneBatches = new Batcher2D(Consts.Graphics.MAX_QUADS_PER_BATCH);
+            _uiBatches = new Batcher2D(Consts.Graphics.MAX_QUADS_PER_BATCH);
             _pipelineFeatures = new PipelineFeatures();
             _screenPipelineFeatures = new PipelineFeatures();
             _renderers = new();
@@ -106,10 +108,26 @@ namespace Engine.Layers
             _renderers.Clear();
             SceneManager.ActiveScene.FindAll(findDisabled: false, _renderers);
 
-            var batches = _batcher2d.GetBatches(_renderers);
+            var batches = _sceneBatches.GetBatches(_renderers);
 
             var VP = _mainCamera.Projection * _mainCamera.ViewMatrix;
 
+            RenderBatches(batches, ref VP, sceneRenderTarget);
+
+            Debug.DrawGeometries(VP, sceneRenderTarget.NativeResource);
+
+            _fontRenderingSystem.Render(VP, sceneRenderTarget);
+
+            foreach (var pass in PostProcessingStack.Passes)
+            {
+                sceneRenderTarget = pass.Render(sceneRenderTarget, _drawPostProcessCallback);
+            }
+
+            GfxDeviceManager.Current.Present(sceneRenderTarget.NativeResource);
+        }
+
+        private void RenderBatches(List<Batch2D> batches, ref mat4 VP, RenderTexture sceneRenderTarget)
+        {
             foreach (var batch in batches)
             {
                 if (!batch.IsActive)
@@ -139,19 +157,7 @@ namespace Engine.Layers
 
                 RenderPass(batch, ref VP, sceneRenderTarget, _screenGrabTarget, _mainCamera);
             }
-
-            Debug.DrawGeometries(VP, sceneRenderTarget.NativeResource);
-
-            _fontRenderingSystem.Render(VP, sceneRenderTarget);
-
-            foreach (var pass in PostProcessingStack.Passes)
-            {
-                sceneRenderTarget = pass.Render(sceneRenderTarget, _drawPostProcessCallback);
-            }
-
-            GfxDeviceManager.Current.Present(sceneRenderTarget.NativeResource);
         }
-
 
         private void PostProcessDraw(Shader shader, RenderTexture inTex, RenderTexture outTex, PostProcessingPass.PassUniform[] uniforms)
         {

@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using K4os.Compression.LZ4;
 using K4os.Compression.LZ4.Streams;
 
 namespace SharedTypes
@@ -6,11 +7,11 @@ namespace SharedTypes
 
     public static class AssetCompressor
     {
-        public static void CompressFile(string inputFile, string outputFile)
+        public static void CompressFile(string inputFile, int compressionLevel, string outputFile)
         {
             using var input = File.OpenRead(inputFile);
             using var output = File.Create(outputFile);
-            CompressStreamInternal(input, output);
+            CompressStreamInternal(input, compressionLevel, output);
         }
 
         public static void DecompressFile(string inputFile, string outputFile)
@@ -20,10 +21,10 @@ namespace SharedTypes
             DecompressStreamInternal(input, output);
         }
 
-        public static MemoryStream CompressStream(Stream input)
+        public static MemoryStream CompressStream(Stream input, int compressionLevel)
         {
             var output = new MemoryStream();
-            CompressStreamInternal(input, output);
+            CompressStreamInternal(input, compressionLevel,output);
             output.Position = 0;
             return output;
         }
@@ -36,10 +37,10 @@ namespace SharedTypes
             return output;
         }
 
-        public static byte[] CompressBytes(byte[] input)
+        public static byte[] CompressBytes(byte[] input, int compressLevel)
         {
             using var inputStream = new MemoryStream(input);
-            using var compressedStream = CompressStream(inputStream);
+            using var compressedStream = CompressStream(inputStream, compressLevel);
             return compressedStream.ToArray();
         }
 
@@ -51,9 +52,13 @@ namespace SharedTypes
         }
 
 
-        private static void CompressStreamInternal(Stream input, Stream output)
+        private static void CompressStreamInternal(Stream input, int compressionLevel, Stream output)
         {
-            using var lz4 = LZ4Stream.Encode(output, leaveOpen: true);
+            var settings = new LZ4EncoderSettings
+            {
+                CompressionLevel = (LZ4Level)Math.Clamp(compressionLevel, 0, (int)LZ4Level.L12_MAX)
+            };
+            using var lz4 = LZ4Stream.Encode(output, settings, leaveOpen: true);
             input.CopyTo(lz4);
         }
 

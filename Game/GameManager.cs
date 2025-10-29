@@ -305,7 +305,7 @@ namespace Game
                 _coinCounterTest = new Actor("CounterText").AddComponent<TextRenderer>();
                 _coinCounterTest.Font = Assets.Get<FontAsset>("Fonts/windows-bold[1].ttf");
             }
-            Debug.Log("Coin: " + PlayerBag.Coins);
+
             _coinCounterTest.Text.Clear();
             _coinCounterTest.Text.Append(PlayerBag.Coins); // Remove from here, just for testing
             _coinCounterTest.Transform.WorldPosition = new vec3(20, 20);
