@@ -20,17 +20,6 @@ namespace Game
         public override void OnStart()
         {
             _textRenderer = GetComponent<UIText>();
-            _textRenderer.Font = Assets.Get<FontAsset>("Fonts/windows-bold[1].ttf");
-           // _textRenderer.Text.Length = Text.Length;
-            for (int i = 0; i < Text.Length; i++)
-            {
-                //if (Text[i] == '\n')
-                //{
-                //    _textRenderer.Text.Append('\n');
-                //}
-                //else
-                    //_textRenderer.Text.Append('\0');
-            }
         }
 
         public override void OnUpdate()

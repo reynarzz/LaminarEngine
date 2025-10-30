@@ -43,9 +43,10 @@ namespace Game
         {
             new Actor<GameManager>("GameManager");
 
-            // PostProcessingStack.Push(new BloomPostProcessing());
-            // ScreenGrabTest3();
+             PostProcessingStack.Push(new BloomPostProcessing());
+            ScreenGrabTest();
 
+            ScreenGrabTest3();
             Portal();
             Portal().Transform.LocalPosition = new vec3(33, -9.1f);
             Portal().Transform.LocalPosition = new vec3(43, -1);
@@ -54,7 +55,7 @@ namespace Game
 
             WaterTest();
             ParticleSystem();
-            TextRendering();
+            // TextRendering();
 
             Debug.Success("Game Layer");
         }
@@ -62,11 +63,11 @@ namespace Game
         private void ParticleSystem()
         {
             var particleSystem = new Actor<ParticleSystem2D, Move>("ParticleSystem").GetComponent<ParticleSystem2D>();
-            particleSystem.Transform.WorldPosition = new vec3(0, 4);
+            particleSystem.Transform.WorldPosition = new vec3(0, -14);
 
             particleSystem.EmitRate = 152;
             particleSystem.ParticleLife = 3;
-            particleSystem.SortOrder = 7;
+            particleSystem.SortOrder = 17;
             particleSystem.StartColor = Color.White;
             particleSystem.EndColor = Color.White;// new Color(0, 0, 0, 0);
             particleSystem.EndSize = new vec2(0, 0);
@@ -81,6 +82,9 @@ namespace Game
             mat1.Name = "Particle material";
             particleSystem.Material = mat1;
 
+            var t = new Actor<SpriteRenderer>();
+            t.Transform.WorldPosition = new vec3(0, -14);
+            t.GetComponent<SpriteRenderer>().SortOrder = 17;
 
             var screenShader = new Shader(Assets.GetText("Shaders/VertScreenGrab.vert").Text, Assets.GetText("Shaders/ScreenGrabWobble.frag").Text);
             particleSystem.Material = new Material(screenShader);
@@ -114,6 +118,7 @@ namespace Game
             writer.Transform.WorldScale = new vec3(0.8f, 0.8f, 0.8f);
             test.OutlineSize = 5;
             test.FontSize = 33;
+            test.Font = Assets.Get<FontAsset>("Fonts/windows-bold[1].ttf");
             test.Material = new Material(new Shader(Assets.GetText("Shaders/Font/FontVert.vert").Text, 
                                                     Assets.GetText("Shaders/Font/FontFrag.frag").Text));
         }
