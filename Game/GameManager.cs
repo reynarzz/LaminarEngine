@@ -1,4 +1,5 @@
 ﻿using Engine;
+using Engine.GUI;
 using Engine.Utils;
 using GlmNet;
 using ldtk;
@@ -39,7 +40,7 @@ namespace Game
         private static Material _defaultSpriteMaterial;
         private Material _playerSpriteMaterial;
         private vec3 _playerStartPosTest;
-        private static TextRenderer _coinCounterTest;
+        private static UIText _coinCounterTest;
         private ItemsDatabase _itemsDatabase;
 
         public static PlayerBag PlayerBag { get; } = new();
@@ -302,12 +303,12 @@ namespace Game
         {
             if (!_coinCounterTest)
             {
-                _coinCounterTest = new Actor("CounterText").AddComponent<TextRenderer>();
+                _coinCounterTest = new Actor("CounterText").AddComponent<UIText>();
                 _coinCounterTest.Font = Assets.Get<FontAsset>("Fonts/windows-bold[1].ttf");
             }
 
-            _coinCounterTest.Text.Clear();
-            _coinCounterTest.Text.Append(PlayerBag.Coins); // Remove from here, just for testing
+            _coinCounterTest.SetText(PlayerBag.Coins.ToString()); // Remove from here, just for testing
+            _coinCounterTest.Material = _defaultSpriteMaterial;
             _coinCounterTest.Transform.WorldPosition = new vec3(20, 20);
 
         }

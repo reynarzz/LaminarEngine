@@ -34,7 +34,29 @@ namespace Engine
                 return null;
             }
         }
+        private struct ComponentMatcherFunc<T> : IMatcher<T, Predicate<T>> where T : Component
+        {
+            public T Invoke(Actor actor, Predicate<T> func)
+            {
+                if (!actor)
+                    return null;
 
+                var comp = actor.GetComponent<T>();
+                if(!comp)
+                    return null;
+
+                if (!func(comp))
+                {
+                    return null;
+                }
+                else if (comp && comp.IsEnabled && comp.Actor.IsActiveInHierarchy)
+                {
+                    return comp;
+                }
+
+                return null;
+            }
+        }
         public struct ActorMatcher : IMatcher<Actor, string>
         {
             public Actor Invoke(Actor actor, string comparer)
@@ -126,6 +148,11 @@ namespace Engine
             FindAll<T, ComponentMatcher<T>, bool>(findDisabled, elements);
         }
 
+        internal void FindAll<T>(List<T> elements, Predicate<T> predicate) where T : Component
+        {
+            FindAll<T, ComponentMatcherFunc<T>, Predicate<T>>(predicate, elements);
+        }
+        
         private void FindAll<T, TMatcher, TComparer>(TComparer comparer, List<T> elements) where T : EObject
                                                                            where TMatcher : struct, IMatcher<T, TComparer>
         {

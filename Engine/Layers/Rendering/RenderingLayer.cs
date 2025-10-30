@@ -18,6 +18,7 @@ namespace Engine.Layers
         private GfxResource _screenGeometry;
         private RenderTexture _defaultSceneRenderTexture;
         private List<Renderer2D> _renderers;
+        private List<Renderer2D> _UIElementRenderers;
         private mat4 _viewProjMatrix;
         private readonly Action<Shader, RenderTexture, RenderTexture, PostProcessingPass.PassUniform[]> _drawPostProcessCallback;
 
@@ -33,6 +34,7 @@ namespace Engine.Layers
             _pipelineFeatures = new PipelineFeatures();
             _screenPipelineFeatures = new PipelineFeatures();
             _renderers = new();
+            _UIElementRenderers = new();
             _drawCallData = new DrawCallData()
             {
                 Textures = new GfxResource[GfxDeviceManager.Current.GetDeviceInfo().MaxValidTextureUnits],
@@ -103,17 +105,28 @@ namespace Engine.Layers
 
             // TODO: improve this, don't ask for renderers but add/remove with events.
             _renderers.Clear();
-            SceneManager.ActiveScene.FindAll(findDisabled: false, _renderers);
+            _UIElementRenderers.Clear();
+            SceneManager.ActiveScene.FindAll(_renderers,x => 
+            {
+                return x.IsEnabled && x is not UIElement;
+            });
+
+            SceneManager.ActiveScene.FindAll(_UIElementRenderers, x =>
+            {
+                return x.IsEnabled && x is UIElement;
+            });
 
             var batches = _sceneBatches.GetBatches(_renderers);
+            var uibatches = _uiBatches.GetBatches(_UIElementRenderers);
 
             var VP = _mainCamera.Projection * _mainCamera.ViewMatrix;
-
+            
             RenderBatches(batches, ref VP, sceneRenderTarget);
+            RenderBatches(uibatches, ref FontManager.Instance.TestUIProjection, sceneRenderTarget);
 
             Debug.DrawGeometries(VP, sceneRenderTarget.NativeResource);
 
-            FontManager.Instance.Render(VP, sceneRenderTarget);
+            // FontManager.Instance.Render(VP, sceneRenderTarget);
 
             foreach (var pass in PostProcessingStack.Passes)
             {
@@ -121,6 +134,11 @@ namespace Engine.Layers
             }
 
             GfxDeviceManager.Current.Present(sceneRenderTarget.NativeResource);
+        }
+
+        private void RenderBatches(List<Batch2D> uibatches, ref object testProjection, RenderTexture sceneRenderTarget)
+        {
+            throw new NotImplementedException();
         }
 
         private void RenderBatches(List<Batch2D> batches, ref mat4 VP, RenderTexture sceneRenderTarget)

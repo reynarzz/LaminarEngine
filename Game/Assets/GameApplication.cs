@@ -1,5 +1,6 @@
 ﻿using Engine;
 using Engine.Graphics;
+using Engine.GUI;
 using Engine.Layers;
 using GlmNet;
 using System.Linq;
@@ -53,6 +54,7 @@ namespace Game
 
             WaterTest();
             ParticleSystem();
+            TextRendering();
 
             Debug.Success("Game Layer");
         }
@@ -92,15 +94,28 @@ namespace Game
 
         private void TextRendering()
         {
-            var actor = new Actor<TextWritterTest>("Text1");
-            var test = actor.GetComponent<TextWritterTest>();
-            var renderer = actor.AddComponent<TextRenderer>();
-            test.Text = "This is a text written line by line!\nand this, is being written just below!!!\nspecial characters: !@#$%^&*()_+ ñ";
-            test.DelayToWrite = 0.03f;
-            test.Transform.WorldPosition = new vec3(0, 150);
-            renderer.Color = Color.White;
-            test.Transform.WorldScale = new vec3(0.8f, 0.8f, 0.5f);
+            //var actor = new Actor<TextWritterTest>("Text1");
+            //var test = actor.GetComponent<TextWritterTest>();
+            //var renderer = actor.AddComponent<TextRenderer>();
+            //test.Text = "This is a text written line by line!\nand this, is being written just below!!!\nspecial characters: !@#$%^&*()_+ ñ";
+            //test.DelayToWrite = 0.03f;
+            //test.Transform.WorldPosition = new vec3(0, 150);
+            //renderer.Color = Color.White;
+            //test.Transform.WorldScale = new vec3(0.8f, 0.8f, 0.5f);
             //renderer.OutlineSize = 1;
+
+            var actor = new Actor<UIText, TextWritterTest>("UIText");
+            var test = actor.GetComponent<UIText>();
+            var writer = actor.GetComponent<TextWritterTest>();
+            writer.Text = ("This is a text written line by line!\nand this, is being written just below!!!\nspecial characters: !@#$%^&*()_+ ñ");
+            writer.DelayToWrite = 0.03f;
+            writer.Transform.WorldPosition = new vec3(0, 150);
+            test.Color = Color.White;
+            writer.Transform.WorldScale = new vec3(0.8f, 0.8f, 0.8f);
+            test.OutlineSize = 5;
+            test.FontSize = 33;
+            test.Material = new Material(new Shader(Assets.GetText("Shaders/Font/FontVert.vert").Text, 
+                                                    Assets.GetText("Shaders/Font/FontFrag.frag").Text));
         }
 
         private void ScreenGrabTest()

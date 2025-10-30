@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Engine
 {
     [RequiredComponent(typeof(RectTransform))]
-    public class UIElement : Renderer
+    public class UIElement : Renderer2D
     {
         public RectTransform RectTransform { get; private set; }
         internal override void OnInitialize()

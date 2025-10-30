@@ -3,11 +3,8 @@ using Engine.Utils;
 using FontStashSharp;
 using FontStashSharp.Interfaces;
 using GlmNet;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Engine.GUI
 {
@@ -20,7 +17,7 @@ namespace Engine.GUI
         public float CharacterSpacing { get; set; }
         public float LineSpacing { get; set; }
         public int OutlineSize { get; set; }
-
+        public int Length => _text.Length;
         public TextVerticalAlignment Vertical
         {
             get => _verticalAlignment;
@@ -48,32 +45,19 @@ namespace Engine.GUI
             }
         }
 
-        private Vertex[] _vertexData;
-        private TextVerticalAlignment _verticalAlignment = TextVerticalAlignment.Top;
         private TextHorizontalAlignment _horizontalAlignment = TextHorizontalAlignment.Left;
-        private int _vertexIndex = 0;
+        private TextVerticalAlignment _verticalAlignment = TextVerticalAlignment.Top;
         private readonly StringBuilder _text = new();
 
         ITexture2DManager IFontStashRenderer2.TextureManager => FontManager.Instance.TextureManager;
-
-        public void SetText(string text)
-        {
-            _text.Clear();
-            _text.Append(text);
-        }
-        public void AddText(string text)
-        {
-            _text.Append(text);
-        }
 
         internal override void OnInitialize()
         {
             base.OnInitialize();
 
-            _vertexIndex = 0;
-            _vertexData = new Vertex[Consts.Graphics.MAX_QUADS_PER_BATCH * 4];
+            Mesh = new Mesh();
             Mesh.Vertices.Capacity = Consts.Graphics.MAX_QUADS_PER_BATCH * 4;
-
+            Sprite = new Sprite();
         }
 
         public void DrawQuad(object texture, ref VertexPositionColorTexture topLeft,
@@ -81,23 +65,31 @@ namespace Engine.GUI
                                              ref VertexPositionColorTexture bottomLeft,
                                              ref VertexPositionColorTexture bottomRight)
         {
-            var tex = texture as Texture2D;
-            Material.AddTexture(tex.Name, tex);
-
-
-            // TODO: send texture unit to vertices.
-            if (_vertexData.Length > _vertexIndex + 4)
+            if (IsDirty)
             {
-                SetFontVertex(_vertexData, ref bottomLeft, _vertexIndex + 0);
-                SetFontVertex(_vertexData, ref topLeft, _vertexIndex + 1);
-                SetFontVertex(_vertexData, ref topRight, _vertexIndex + 2);
-                SetFontVertex(_vertexData, ref bottomRight, _vertexIndex + 3);
+                Sprite.Texture = texture as Texture2D;
+                var vertIndex = (Mesh.IndicesToDrawCount / 6) * 4;
 
-                _vertexIndex += 4;
+                if (Mesh.Vertices.Count < vertIndex + 4)
+                {
+                    Mesh.Vertices.Add(default);
+                    Mesh.Vertices.Add(default);
+                    Mesh.Vertices.Add(default);
+                    Mesh.Vertices.Add(default);
+                }
+
+                var verts = CollectionsMarshal.AsSpan(Mesh.Vertices);
+
+                SetFontVertex(verts, ref bottomLeft, vertIndex + 0);
+                SetFontVertex(verts, ref topLeft, vertIndex + 1);
+                SetFontVertex(verts, ref topRight, vertIndex + 2);
+                SetFontVertex(verts, ref bottomRight, vertIndex + 3);
+
+                Mesh.IndicesToDrawCount += 6;
             }
         }
 
-        private void SetFontVertex(Vertex[] fVertex, ref VertexPositionColorTexture vertex, int vertexIndex)
+        private void SetFontVertex(Span<Vertex> fVertex, ref VertexPositionColorTexture vertex, int vertexIndex)
         {
             fVertex[vertexIndex].Position = new vec2(vertex.Position.X, vertex.Position.Y);
             fVertex[vertexIndex].UV = new vec2(vertex.TextureCoordinate.X, vertex.TextureCoordinate.Y);
@@ -107,12 +99,23 @@ namespace Engine.GUI
 
         internal override void Draw()
         {
-            SendTextToDraw(_text, FontManager.Instance.GetFont(Font).GetSpriteFont(FontSize), 0);
+            if (Font)
+            {
+                FontSize = Math.Clamp(FontSize, 1, 1000);
+                SendTextToDraw(_text, FontManager.Instance.GetFont(Font).GetSpriteFont(FontSize), 0);
+            }
+            else
+            {
+                Debug.Warn($"Font for text '{Name}' is not set");
+            }
         }
 
         private void SendTextToDraw(StringBuilder text, DynamicSpriteFont font, int lineHeight)
         {
-            _vertexIndex = 0;
+            if (IsDirty)
+            {
+                Mesh.IndicesToDrawCount = 0;
+            }
 
             var pivot = new System.Numerics.Vector2(0.0f, 1.0f);
 
@@ -156,7 +159,6 @@ namespace Engine.GUI
                                                        Transform.WorldPosition.y + lineHeight);
 
             var bounds = font.TextBounds(text, position, scale, CharacterSpacing, LineSpacing, effect, OutlineSize);
-
             var textSize = new System.Numerics.Vector2(bounds.X2 - bounds.X, bounds.Y2 - bounds.Y);
 
             // Compute pivot offset
@@ -169,6 +171,34 @@ namespace Engine.GUI
             font.DrawText(this, text, finalPosition, new FSColor(Color), rotation, origin, scale, 0,
                           CharacterSpacing, LineSpacing, TextStyle.None,
                           effect, Math.Clamp(OutlineSize, 0, OutlineSize + 1));
+        }
+
+        public void SetText(string value)
+        {
+            _text.Clear();
+            AppendText(value);
+        }
+        public void Append(string value)
+        {
+            AppendText(value);
+        }
+        public void Append(char value)
+        {
+            AppendText(value);
+        }
+        public void Append(float value)
+        {
+            AppendText(value);
+        }
+        public void Append(int value)
+        {
+            AppendText(value);
+        }
+
+        private void AppendText<T>(T value)
+        {
+            IsDirty = true;
+            _text.Append(value);
         }
     }
 }
