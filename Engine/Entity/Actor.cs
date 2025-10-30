@@ -301,6 +301,24 @@ namespace Engine
 
         public static void Destroy(Component component)
         {
+            if (component is Transform) // Can't destroy transform.
+                return;
+
+            foreach (var comp in component.Actor._components)
+            {
+                if(comp != component)
+                {
+                    var att = comp.GetType().GetCustomAttribute<RequiredComponentAttribute>();
+
+                    if (att.RequiredComponents.Contains(component.GetType()))
+                    {
+                        Debug.Warn($"Can't remove component: '{component.GetType()}', it is used by others");
+                        return;
+                    }
+                }
+            }
+            
+
             if (component && !component.IsPendingToDestroy)
             {
                 component.IsPendingToDestroy = true;

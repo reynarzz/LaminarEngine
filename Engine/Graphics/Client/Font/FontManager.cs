@@ -13,40 +13,66 @@ using System.Threading.Tasks;
 
 namespace Engine.Graphics
 {
-    internal class FontRenderingSystem : IFontStashRenderer2
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    internal struct FontVertex : IVertex<FontVertex>
     {
-        private FontTextureManager _textureManager;
-        ITexture2DManager IFontStashRenderer2.TextureManager => _textureManager;
+        public vec2 Position;
+        public vec2 UV;
+        public uint Color;
+        public int VertexIndex;
 
-        [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        internal struct FontVertex : IVertex<FontVertex>
+        private static unsafe VertexAtrib[] _attribs =
+        [
+            new VertexAtrib() { Count = 2, Normalized = false, Type = GfxValueType.Float, Stride = sizeof(FontVertex), Offset = 0 }, // Position
+            new VertexAtrib() { Count = 2, Normalized = false, Type = GfxValueType.Float, Stride = sizeof(FontVertex), Offset = sizeof(float) * 2 }, // UV
+            new VertexAtrib() { Count = 1, Normalized = false, Type = GfxValueType.Uint, Stride = sizeof(FontVertex), Offset = sizeof(float) * 4 }, // Color
+            new VertexAtrib() { Count = 1, Normalized = false, Type = GfxValueType.Int, Stride = sizeof(FontVertex), Offset = sizeof(float) * 5 }, // charIndex
+        ];
+
+        static VertexAtrib[] IVertex<FontVertex>.GetVertexAttributes()
         {
-            public vec2 Position;
-            public vec2 UV;
-            public uint Color;
-            public int VertexIndex;
-
-            private static unsafe VertexAtrib[] _attribs =
-            [
-                new VertexAtrib() { Count = 2, Normalized = false, Type = GfxValueType.Float, Stride = sizeof(FontVertex), Offset = 0 }, // Position
-                new VertexAtrib() { Count = 2, Normalized = false, Type = GfxValueType.Float, Stride = sizeof(FontVertex), Offset = sizeof(float) * 2 }, // UV
-                new VertexAtrib() { Count = 1, Normalized = false, Type = GfxValueType.Uint, Stride = sizeof(FontVertex), Offset = sizeof(float) * 4 }, // Color
-                new VertexAtrib() { Count = 1, Normalized = false, Type = GfxValueType.Int, Stride = sizeof(FontVertex), Offset = sizeof(float) * 5 }, // charIndex
-            ];
-
-            static VertexAtrib[] IVertex<FontVertex>.GetVertexAttributes()
-            {
-                return _attribs;
-            }
+            return _attribs;
         }
+    }
+
+    internal class FontManager : IFontStashRenderer2
+    {
+        private static FontTextureManager _textureManager;
+        //public static FontTextureManager TextureManager => _textureManager;
+
+        public static FontManager _instance;
+        public static FontManager Instance => _instance ?? (_instance = new FontManager());
+        public ITexture2DManager TextureManager => _textureManager;
 
         private readonly FontVertex[] _vertexData;
         private int _vertexIndex = 0;
 
         private readonly List<GfxResource> _fontBatches;
         private readonly GfxResource _sharedIndexBuffer;
-        private readonly Dictionary<Guid, FontSystem> _fontFamilies;
+        private readonly Dictionary<string, FontContent> _fontFamilies;
         private readonly Dictionary<Guid, Texture2D> _textures;
+
+        internal class FontContent
+        {
+            private readonly FontSystem _fontSystem;
+            private readonly Dictionary<int, DynamicSpriteFont> _spriteFonts;
+            internal FontContent(FontSystem fontSystem)
+            {
+                _fontSystem = fontSystem;
+                _spriteFonts = new();
+            }
+
+            internal DynamicSpriteFont GetSpriteFont(int size)
+            {
+                if(!_spriteFonts.TryGetValue(size, out var font))
+                {
+                    font = _spriteFonts[size] = _fontSystem.GetFont(size);
+                }
+
+                return font;
+            }
+        }
 
         private readonly DrawCallData _drawCallData;
         private GeometryDescriptor _geometryDescriptor;
@@ -55,11 +81,11 @@ namespace Engine.Graphics
         private vec2 _targetScreenRes;
         private List<TextRenderer> _renderers;
 
-        public FontRenderingSystem()
+        private FontManager()
         {
             _vertexData = new FontVertex[Consts.Graphics.MAX_FONT_QUADS_PER_BATCH * 4];
-            _fontFamilies = new Dictionary<Guid, FontSystem>();
             _textureManager = new FontTextureManager();
+            _fontFamilies = new();
 
             _fontBatches = new List<GfxResource>();
             _textures = new Dictionary<Guid, Texture2D>();
@@ -173,22 +199,9 @@ namespace Engine.Graphics
                 if (!textRenderer.Font)
                     return;
 
-                if (!_fontFamilies.TryGetValue(textRenderer.Font.GetID(), out var fontSystem))
-                {
-                    var settings = new FontSystemSettings
-                    {
-                        FontResolutionFactor = 3,
-                        KernelWidth = 2,
-                        KernelHeight = 2,
-                    };
+               
 
-                    fontSystem = new FontSystem(settings);
-                    fontSystem.AddFont(textRenderer.Font.Data);
-
-                    _fontFamilies.Add(textRenderer.Font.GetID(), fontSystem);
-                }
-
-                var font = fontSystem.GetFont(textRenderer.FontSize);
+                var spriteFont = GetFont(textRenderer.Font).GetSpriteFont(textRenderer.FontSize);
 
                 // TODO: remove this, used for recentering
                 //var split = textRenderer.Text.ToString().Split('\n');
@@ -198,11 +211,32 @@ namespace Engine.Graphics
                 //    SendTextToDraw(split[i], font, textRenderer, font.LineHeight * i);
                 //}
 
-                SendTextToDraw(textRenderer.Text, font, textRenderer, 0);
+                SendTextToDraw(textRenderer.Text, spriteFont, textRenderer, 0);
 
             }
 
             Flush(viewProjection, renderTexture);
+        }
+
+        internal FontContent GetFont(FontAsset font)
+        {
+            if (!_fontFamilies.TryGetValue(font.Path, out var fontContent))
+            {
+                var settings = new FontSystemSettings
+                {
+                    FontResolutionFactor = 3,
+                    KernelWidth = 2,
+                    KernelHeight = 2,
+                };
+                var fontSystem = new FontSystem(settings);
+                fontSystem.AddFont(font.Data);
+
+                fontContent = new FontContent(fontSystem);
+
+                _fontFamilies[font.Path] = fontContent;
+            }
+
+            return fontContent;
         }
 
         private void SendTextToDraw(StringBuilder text, DynamicSpriteFont font, TextRenderer textRenderer, int lineHeight)
@@ -263,5 +297,6 @@ namespace Engine.Graphics
                           textRenderer.CharacterSpacing, textRenderer.LineSpacing, TextStyle.None,
                           effect, Math.Clamp(textRenderer.OutlineSize, 0, textRenderer.OutlineSize + 1));
         }
+
     }
 }

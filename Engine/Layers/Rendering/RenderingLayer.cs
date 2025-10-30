@@ -17,7 +17,6 @@ namespace Engine.Layers
         private RenderTexture _screenGrabTarget;
         private GfxResource _screenGeometry;
         private RenderTexture _defaultSceneRenderTexture;
-        private FontRenderingSystem _fontRenderingSystem;
         private List<Renderer2D> _renderers;
         private mat4 _viewProjMatrix;
         private readonly Action<Shader, RenderTexture, RenderTexture, PostProcessingPass.PassUniform[]> _drawPostProcessCallback;
@@ -61,8 +60,6 @@ namespace Engine.Layers
             _screenGeometry = GraphicsHelper.GetScreenQuadGeometry();
 
             Window.OnWindowChanged += OnUpdateScreenGrabPass;
-
-            _fontRenderingSystem = new FontRenderingSystem();
         }
 
         private void OnUpdateScreenGrabPass(int width, int height)
@@ -116,7 +113,7 @@ namespace Engine.Layers
 
             Debug.DrawGeometries(VP, sceneRenderTarget.NativeResource);
 
-            _fontRenderingSystem.Render(VP, sceneRenderTarget);
+            FontManager.Instance.Render(VP, sceneRenderTarget);
 
             foreach (var pass in PostProcessingStack.Passes)
             {

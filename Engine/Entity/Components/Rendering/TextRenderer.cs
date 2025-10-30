@@ -28,7 +28,7 @@ namespace Engine
         public FontAsset Font { get; set; }
         public StringBuilder Text { get; } = new StringBuilder();
         public Color Color = Color.White;
-        public float FontSize { get; set; } = 32;
+        public int FontSize { get; set; } = 32;
         public float CharacterSpacing { get; set; }
         public float LineSpacing { get; set; }
         public int OutlineSize { get; set; }

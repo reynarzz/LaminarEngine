@@ -53,7 +53,10 @@ namespace Engine
 
         public void AddTexture(string name, Texture texture)
         {
-            _textures[name] = texture;
+            if(_textures.Count < GfxDeviceManager.Current.GetDeviceInfo().MaxHardwareTextureUnits)
+            {
+                _textures[name] = texture;
+            }
         }
 
         public void SetProperty<T>(string name, T value) where T : unmanaged

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Engine.Types;
 using GlmNet;
 
 namespace Engine
 {
+    [UniqueComponent]
     public class Transform : Component
     {
         public IReadOnlyList<Transform> Children => _children;

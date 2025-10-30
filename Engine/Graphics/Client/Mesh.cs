@@ -44,18 +44,18 @@ namespace Engine
     {
         public vec3 Position;
         public vec2 UV;
-        public vec3 Normals;
-        public ColorPacketRGBA Color;
+        public uint Color;
         public int _textureIndex;
         public int TextureIndex { get => _textureIndex; set => _textureIndex = value; }
+        public int VertexIndex;
 
         private unsafe static VertexAtrib[] _attribs =
         [
             new() { Count = 3, Normalized = false, Type = GfxValueType.Float, Stride = sizeof(Vertex), Offset = 0 },                  // Position
             new() { Count = 2, Normalized = false, Type = GfxValueType.Float, Stride = sizeof(Vertex), Offset = sizeof(float) * 3 },  // UV
-            new() { Count = 3, Normalized = false, Type = GfxValueType.Float, Stride = sizeof(Vertex), Offset = sizeof(float) * 5 },  // Normals
-            new() { Count = 1, Normalized = false, Type = GfxValueType.Uint,  Stride = sizeof(Vertex), Offset = sizeof(uint)  * 8 },  // Color
-            new() { Count = 1, Normalized = false, Type = GfxValueType.Int,   Stride = sizeof(Vertex), Offset = sizeof(int)   * 9 },  // TextureIndex
+            new() { Count = 1, Normalized = false, Type = GfxValueType.Uint,  Stride = sizeof(Vertex), Offset = sizeof(uint)  * 5 },  // Color
+            new() { Count = 1, Normalized = false, Type = GfxValueType.Int,   Stride = sizeof(Vertex), Offset = sizeof(int)   * 6 },  // TextureIndex
+            new() { Count = 1, Normalized = false, Type = GfxValueType.Int,  Stride = sizeof(Vertex), Offset = sizeof(int)   * 7 },  // VertexIndex
         ];
 
         static VertexAtrib[] IVertex<Vertex>.GetVertexAttributes()
