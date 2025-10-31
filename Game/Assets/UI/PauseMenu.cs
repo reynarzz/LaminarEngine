@@ -34,7 +34,7 @@ namespace Game
 
             var resumeButtonImage = NewImage("Resume button image", new vec2(0, 400), new vec2(200, 40), Color.Gray, _background.Transform);
 
-            resumeButtonImage.AddComponent<Button>().OnButtonDown += OnResume;
+            resumeButtonImage.AddComponent<Button>().OnButtonClick += OnResume;
             var text = NewText("Resume text", "Resume", default, resumeButtonImage.Transform);
             text.ReceiveEvents = false;
             text.RectTransform.Size.y = resumeButtonImage.RectTransform.Size.y;

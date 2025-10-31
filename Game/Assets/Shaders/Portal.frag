@@ -72,16 +72,16 @@ uniform float uPixelationAmount = 2.0f;
 void main()
 {
     // Wobble distortion
-    float wave1 = sin((screenUV.y * 3.1 + uTime.x * 0.3) * 40.0);
-    float wave2 = cos((screenUV.x * 3.1 + uTime.x * 0.2) * 35.0);
-    float wave3 = sin((screenUV.x + screenUV.y) * 10.0 + uTime.x * 0.5);
+    float wave1 = sin((screenUV.y * 3.1 + uTime.y * 0.3) * 40.0);
+    float wave2 = cos((screenUV.x * 3.1 + uTime.y * 0.2) * 35.0);
+    float wave3 = sin((screenUV.x + screenUV.y) * 10.0 + uTime.y * 0.5);
 
     vec2 wobble;
     wobble.x = wave1 * uDistortionAmount + wave3 * uDistortionAmount * 0.2;
     wobble.y = wave2 * uDistortionAmount + wave3 * uDistortionAmount * 0.1;
 
     // Glitch offsets
-    vec2 glitch = getGlitchOffset(screenUV, uTime.x);
+    vec2 glitch = getGlitchOffset(screenUV, uTime.y);
 
     // Pixelation
     // uPixelationAmount = how many pixels across the screen (e.g. 160 = heavy pixelation)
@@ -109,7 +109,7 @@ void main()
     vec3 outline = getQuadEdgeOutline(fragUV);
     float aspect = uScreenSize.x / uScreenSize.y;
 
-    vec3 stars = vec3(texture(uStarsTex, vec2(worldUV.x, worldUV.y) * 2.5 + vec2(0, uTime.x * 0.2)).a);
+    vec3 stars = vec3(texture(uStarsTex, vec2(worldUV.x, worldUV.y) * 2.5 + vec2(0, uTime.y * 0.2)).a);
 
     fragColor = vec4(base + stars + outline, 1.0) * vColor;
 }

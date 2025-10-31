@@ -9,7 +9,7 @@ namespace Engine.GUI
 {
     public class Button : Component, IPointerDownEvent, IPointerUpEvent, IPointerHoverEvent
     {
-        public event Action OnButtonDown;
+        public event Action OnButtonClick;
         public UIImage Graphic { get; set; }
         public bool UseSprite { get; set; }
         public Sprite NormalSprite { get; set; }
@@ -18,7 +18,6 @@ namespace Engine.GUI
 
         public void OnPointerDown(vec2 mousePos)
         {
-            OnButtonDown?.Invoke();
             if (UseSprite && Graphic && DownSprite)
             {
                 Graphic.Sprite = DownSprite;
@@ -31,6 +30,8 @@ namespace Engine.GUI
             {
                 Graphic.Sprite = NormalSprite;
             }
+
+            OnButtonClick?.Invoke();
         }
 
         public void OnPointerHover(vec2 mousePos)

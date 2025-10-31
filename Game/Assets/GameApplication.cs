@@ -17,7 +17,7 @@ namespace Game
         // Avoid the batch to take more texture slots that the system is supported, take into account materials texture count.
         // Fix: Batch2d vertices shift when an object is destroyed. 
         // Fix: Texture units overflow, a batch should only bind: MAX_DEVICE_ALLOWED - RENDERER_NEEDED_TEXTURE_SLOTS
-        // Simple UI system: Vertical/Horizontal/Grid layout, button (hover, click, release, active, disabled), 
+        // Simple UI system: Vertical/Horizontal/Grid layout, button (onDrag active, disabled), 
 
         // For the game:
         // Implement enemies
@@ -124,9 +124,9 @@ namespace Game
             mat1.Name = "Particle material";
             particleSystem.Material = mat1;
 
-            var screenShader = new Shader(Assets.GetText("Shaders/VertScreenGrab.vert").Text, Assets.GetText("Shaders/ScreenGrabWobble.frag").Text);
-            particleSystem.Material = new Material(screenShader);
-            particleSystem.Material.GetPass(0).IsScreenGrabPass = true;
+            //var screenShader = new Shader(Assets.GetText("Shaders/VertScreenGrab.vert").Text, Assets.GetText("Shaders/ScreenGrabWobble.frag").Text);
+            //particleSystem.Material = new Material(screenShader);
+            //particleSystem.Material.GetPass(0).IsScreenGrabPass = true;
 
             //particleSystem.Material.Passes.ElementAt(0).Blending.Enabled = false;
             var sprite = new Sprite();
