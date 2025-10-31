@@ -35,12 +35,12 @@ namespace Game
             var resumeButtonImage = NewImage("Resume button image", new vec2(0, 400), new vec2(200, 40), Color.Gray, _background.Transform);
 
             resumeButtonImage.AddComponent<Button>().OnButtonDown += OnResume;
-            var text = NewText("Resume text", "Resume all text here long text", default, resumeButtonImage.Transform);
+            var text = NewText("Resume text", "Resume", default, resumeButtonImage.Transform);
             text.ReceiveEvents = false;
             text.RectTransform.Size.y = resumeButtonImage.RectTransform.Size.y;
             text.RectTransform.Size.x = resumeButtonImage.RectTransform.Size.x;
             // text.Wrap = TextWrap.WordWrap;
-            // text.Fit = TextFit.ShrinkToFit;
+            text.Fit = TextFit.ShrinkToFit;
             text.Horizontal = TextHorizontalAlignment.Center;
             //text.Padding.Right = 10;
             //text.Padding.Left = 10;
