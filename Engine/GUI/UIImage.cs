@@ -47,10 +47,5 @@ namespace Engine.GUI
             Mesh.Vertices[2] = quad.v2;
             Mesh.Vertices[3] = quad.v3;
         }
-
-        public override void OnPointerDown(vec2 position)
-        {
-            Debug.Log("Pointer down: " + Name);
-        }
     }
 }

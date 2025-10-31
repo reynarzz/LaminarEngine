@@ -18,10 +18,6 @@ namespace Engine
         public bool BlockEvents { get; set; } = true;
         public bool ReceiveEvents { get; set; } = true;
 
-        public virtual void OnPointerDown(vec2 position) { }
-        public virtual void OnPointerUp(vec2 position) { }
-        public virtual void OnHover(vec2 position) { }
-
         internal override void Draw()
         {
             Debug.DrawBox(RectTransform.Rect.Center, RectTransform.Rect.Size, Color.Red);

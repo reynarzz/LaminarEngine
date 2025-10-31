@@ -21,7 +21,7 @@ namespace Engine.Layers
         internal override void UpdateLayer()
         {
             float currentTime = (float)_stopwatch.Elapsed.TotalSeconds;
-            float deltaTime = currentTime - _lastFrameTime;
+            float deltaTime = (currentTime - _lastFrameTime) * Time.TimeScale;
 
             if(deltaTime > 0.1)
             {
@@ -31,8 +31,8 @@ namespace Engine.Layers
             _timePast += deltaTime;
 
             // Update the Time static class
-            Time.DeltaTime = deltaTime * Time.TimeScale;
-            Time.SinceStarted = currentTime * Time.TimeScale;
+            Time.DeltaTime = deltaTime;
+            Time.SinceStarted = currentTime;
             Time.FPS = Time.DeltaTime > 0f ? 1f / Time.DeltaTime : 0f;
             Time.TimeCurrent = _timePast;
         }

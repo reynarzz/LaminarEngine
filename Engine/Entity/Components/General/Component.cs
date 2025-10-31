@@ -103,13 +103,13 @@ namespace Engine
             return Actor.GetComponent<T>();
         }
 
-        public Span<T> GetComponents<T>() where T : class, IComponent
+        public Span<T> GetComponents<T>() where T : class
         {
             CheckIfValidObject(this);
             return Actor.GetComponents<T>();
         }
 
-        public void GetComponents<T>(ref List<T> elements) where T : class, IComponent
+        public void GetComponents<T>(ref List<T> elements) where T : class
         {
             CheckIfValidObject(this);
             Actor.GetComponents<T>(ref elements);

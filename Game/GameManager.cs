@@ -42,10 +42,14 @@ namespace Game
         private vec3 _playerStartPosTest;
         private static UIText _coinCounterTest;
         private ItemsDatabase _itemsDatabase;
+        private PauseMenu _pauseMenu;
 
         public static PlayerBag PlayerBag { get; } = new();
         public static Player Player { get; private set; }
         public static Material DefaultMaterial => _defaultSpriteMaterial;
+
+        public static FontAsset DefaultFont { get; internal set; }
+
         public override void OnAwake()
         {
             InitializeMaterials();
@@ -57,6 +61,7 @@ namespace Game
         private void InitializeData()
         {
             _itemsDatabase = new ItemsDatabase("Data/ItemsDatabase.csv");
+            DefaultFont = Assets.Get<FontAsset>("Fonts/windows-bold[1].ttf");
         }
         private void InitializeMaterials()
         {
@@ -106,6 +111,8 @@ namespace Game
 
         private void InitializeWorld()
         {
+            _pauseMenu = new Actor("Pause menu").AddComponent<PauseMenu>();
+
             Player = new Actor("Player").AddComponent<Player>();
             Player.Transform.WorldPosition = new vec3();
             Player.Actor.Layer = LayerMask.NameToLayer(GameLayers.PLAYER);
@@ -304,7 +311,7 @@ namespace Game
             if (!_coinCounterTest)
             {
                 _coinCounterTest = new Actor("CounterText").AddComponent<UIText>();
-                _coinCounterTest.Font = Assets.Get<FontAsset>("Fonts/windows-bold[1].ttf");
+                _coinCounterTest.Font = DefaultFont; 
             }
 
             _coinCounterTest.SetText(PlayerBag.Coins.ToString()); // Remove from here, just for testing

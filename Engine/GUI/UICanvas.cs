@@ -1,4 +1,5 @@
-﻿using GlmNet;
+﻿using Engine.Types;
+using GlmNet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,21 +8,30 @@ using System.Threading.Tasks;
 
 namespace Engine.GUI
 {
+    [RequiredComponent(typeof(RectTransform))]
     public class UICanvas : Component, ILateUpdatableComponent
     {
-        public float Width { get; internal set; } = 512 * 2;
-        public float Height { get; internal set; } = 288 * 2;
+        public RectTransform RectTransform { get; private set; }
 
-        private void RebuildRecursive(UIElement element, Rect parentRect, ref bool mouseEventHandled)
+        internal override void OnInitialize()
+        {
+            base.OnInitialize();
+            RectTransform = AddComponent<RectTransform>();
+            RectTransform.Size = new vec2(512 * 2, 288 * 2);
+            RectTransform.Pivot = default;
+            RectTransform.Recalculate(null);
+        }
+
+        private void RebuildRecursive(UIElement element, RectTransform parent, ref bool mouseEventHandled)
         {
             if (!element)
                 return;
 
-            element.RectTransform.Recalculate(parentRect);
+            element.RectTransform.Recalculate(parent);
 
             foreach (var child in element.Transform.Children)
             {
-                RebuildRecursive(child.GetComponent<UIElement>(), element.RectTransform.Rect, ref mouseEventHandled);
+                RebuildRecursive(child.GetComponent<UIElement>(), element.RectTransform, ref mouseEventHandled);
             }
 
             if (mouseEventHandled)
@@ -67,14 +77,14 @@ namespace Engine.GUI
             foreach (var element in Transform.Children)
             {
                 bool blocked = false;
-                RebuildRecursive(element.GetComponent<UIElement>(), new Rect(0, 0, Width, Height), ref blocked);
+                RebuildRecursive(element.GetComponent<UIElement>(), RectTransform, ref blocked);
             }
         }
 
         public vec2 ScreenToCanvas(vec2 mousePosScreen)
         {
-            float x = (mousePosScreen.x / (float)Window.Width) * (float)Width;
-            float y = (mousePosScreen.y / (float)Window.Height) * (float)Height;
+            float x = (mousePosScreen.x / (float)Window.Width) * (float)RectTransform.Rect.Width;
+            float y = (mousePosScreen.y / (float)Window.Height) * (float)RectTransform.Rect.Height;
             return new vec2(x, y);
         }
     }
