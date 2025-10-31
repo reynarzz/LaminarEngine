@@ -9,7 +9,7 @@ namespace Engine
     public abstract class Component : EObject, IComponent
     {
         public Actor Actor { get; internal set; }
-        public Transform Transform
+        public virtual Transform Transform
         {
             get
             {

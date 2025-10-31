@@ -146,7 +146,7 @@ namespace Engine
             {
                 for (int i = 0; i < _components.Count; i++)
                 {
-                    var alreadyAdded = _components[i].GetType().IsAssignableFrom(type);
+                    var alreadyAdded = type != typeof(RectTransform)? _components[i].GetType().IsAssignableFrom(type): _components[i].GetType() == typeof(RectTransform);
                     if (alreadyAdded)
                     {
 #if SHOW_ENGINE_WARNS

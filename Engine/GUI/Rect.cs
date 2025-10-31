@@ -13,6 +13,8 @@ namespace Engine
 
         public Rect(vec2 position, vec2 size)
         {
+            X = position.x;
+            Y = position.y;
             Width = size.x;
             Height = size.y;
         }

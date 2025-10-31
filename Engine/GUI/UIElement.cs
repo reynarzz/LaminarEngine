@@ -10,20 +10,13 @@ using System.Threading.Tasks;
 namespace Engine
 {
     [RequiredComponent(typeof(RectTransform))]
-    public class UIElement : Renderer2D
+    public abstract class UIElement : Renderer2D
     {
-        public RectTransform RectTransform { get; private set; }
-        internal override void OnInitialize()
-        {
-            base.OnInitialize();
-            RectTransform = GetComponent<RectTransform>();
-        }
-
+        private RectTransform _rectTransform;
+        public RectTransform RectTransform => _rectTransform ?? (_rectTransform = GetComponent<RectTransform>());
+        public bool UseCustomSorting { get; set; }
+     
         public virtual void OnRebuild()
-        {
-        }
-
-        public virtual void Draw(UICanvas canvas, UIDrawList drawList)
         {
         }
 

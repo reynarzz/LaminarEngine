@@ -8,11 +8,10 @@ using System.Text;
 
 namespace Engine.GUI
 {
-    public class UIText : UIElement, IFontStashRenderer2
+    public class UIText : UIGraphicsElement, IFontStashRenderer2
     {
         public FontAsset Font { get; set; }
-
-        public Color Color = Color.White;
+        public Color Color { get; set; } = Color.White;
         public int FontSize { get; set; } = 32;
         public float CharacterSpacing { get; set; }
         public float LineSpacing { get; set; }
@@ -97,7 +96,7 @@ namespace Engine.GUI
             fVertex[vertexIndex].VertexIndex = vertexIndex;
         }
 
-        internal override void Draw()
+        internal override void OnCanvasDraw(UICanvas canvas)
         {
             if (Font)
             {
@@ -144,6 +143,7 @@ namespace Engine.GUI
                     pivot.Y = 0.0f;
                     break;
             }
+            pivot = new System.Numerics.Vector2(RectTransform.Pivot.x, RectTransform.Pivot.y);
 
             float rotation = glm.radians(Transform.WorldEulerAngles.z);
 
@@ -157,10 +157,10 @@ namespace Engine.GUI
             var origin = default(System.Numerics.Vector2);
             var position = new System.Numerics.Vector2(Transform.WorldPosition.x,
                                                        Transform.WorldPosition.y + lineHeight);
-
+            
             var bounds = font.TextBounds(text, position, scale, CharacterSpacing, LineSpacing, effect, OutlineSize);
-            var textSize = new System.Numerics.Vector2(bounds.X2 - bounds.X, bounds.Y2 - bounds.Y);
-
+            var textSize = new System.Numerics.Vector2(bounds.X2 - bounds.X, bounds.Y2 - bounds.Y) / 2.0f;
+            
             // Compute pivot offset
             var pivotOffset = new System.Numerics.Vector2(textSize.X * pivot.X, textSize.Y * pivot.Y);
 
@@ -200,5 +200,6 @@ namespace Engine.GUI
             IsDirty = true;
             _text.Append(value);
         }
+
     }
 }

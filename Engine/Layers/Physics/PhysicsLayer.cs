@@ -81,9 +81,9 @@ namespace Engine.Layers
         {
             accumulator = Math.Min(accumulator + Time.DeltaTime, 0.25f);
 
-            // TODO: refactor, this is for fast protoyping
+            // TODO: refactor, this is for fast prototyping
             _rigidbody.Clear();
-            SceneManager.ActiveScene.FindAll(findDisabled: false, _rigidbody);
+            SceneManager.ActiveScene.FindAll(_rigidbody, findDisabled: false);
 
             foreach (var rigidbody in _rigidbody)
             {

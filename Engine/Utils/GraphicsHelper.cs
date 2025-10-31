@@ -132,5 +132,27 @@ namespace Engine
                 UV = uvs.BottomRightUV
             };
         }
+
+        internal static QuadVertices GetUIQuadVertices(Rect rect, Color color)
+        {
+            var size = rect.Size;
+            QuadVertices vertices = default;
+
+            vec2 bottomLeft = rect.Min;
+            vec2 topLeft = new vec2(rect.Min.x, rect.Min.y + size.y);
+            vec2 topRight = rect.Min + size;
+            vec2 bottomRight = new vec2(rect.Min.x + size.x, rect.Min.y);
+
+            var uvs = QuadUV.FlipUV(QuadUV.DefaultUVs, false, true);
+
+            vertices.v0 = new Vertex { Color = color, Position = bottomLeft, UV = uvs.BottomLeftUV };
+            vertices.v1 = new Vertex { Color = color, Position = topLeft, UV = uvs.TopLeftUV };
+            vertices.v2 = new Vertex { Color = color, Position = topRight, UV = uvs.TopRightUV };
+            vertices.v3 = new Vertex { Color = color, Position = bottomRight, UV = uvs.BottomRightUV };
+
+            return vertices;
+        }
+
+
     }
 }

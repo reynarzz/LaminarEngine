@@ -8,61 +8,46 @@ using System.Threading.Tasks;
 namespace Engine.GUI
 {
     // Note: Here to remember to build a UI system.
-    public class UICanvas : UIElement, IUpdatableComponent
+    public class UICanvas : Component, IUpdatableComponent
     {
         private Camera _internalCamera;
         public Camera Camera { get; set; }
-        private List<UIElement> _elements;
-        public UIDrawList DrawList = new();
-        public List<UIElement> RootElements = new();
-        public vec2 CanvasSize;
-
-        public float Width { get; internal set; }
-        public float Height { get; internal set; }
-        public void Render()
+        private List<UIElement> _uiElements;
+        public float Width { get; internal set; } = 512 * 2;
+        public float Height { get; internal set; } = 288 * 2;
+        internal override void OnInitialize()
         {
-            DrawList.Clear();
-            foreach (var e in RootElements)
-            {
-                RebuildRecursive(e, new vec2(0, 0), CanvasSize);
-            }
+            _uiElements = new();
         }
-
-        void RebuildRecursive(UIElement element, vec2 parentPos, vec2 parentSize)
+        void RebuildRecursive(UIElement element, vec2 parentPos)
         {
-            element.RectTransform.Recalculate(); 
+            if (!element)
+                return;
+
+            element.RectTransform.Recalculate(this);
             element.OnRebuild();
-            element.Draw(this, DrawList);
-            //foreach (var child in element.Children)
-            //{
-            //    RebuildRecursive(child, element.RectTransform.ComputedRect.Position, element.RectTransform.ComputedRect.Size);
-            //}
-        }
 
-        private static void GetQuadVertices(RectTransform rt, ref vec2 bottomLeft,
-                                                              ref vec2 topLeft,
-                                                              ref vec2 topRight,
-                                                              ref vec2 bottomRight)
-        {
-            var rect = rt.ComputedRect;
-            var size = rect.Size;
-            var pivot = rt.Pivot;
+            foreach (var child in element.Transform.Children)
+            {
+                RebuildRecursive(child.GetComponent<UIElement>(), element.RectTransform.AnchoredPosition);
+            }
 
-            vec2 pivotOffset = new vec2(size.x * pivot.x, size.y * pivot.y);
-
-            bottomLeft = new vec2(-pivotOffset.x, -pivotOffset.y);
-            topLeft = new vec2(-pivotOffset.x, size.y - pivotOffset.y);
-            topRight = new vec2(size.x - pivotOffset.x, size.y - pivotOffset.y);
-            bottomRight = new vec2(size.x - pivotOffset.x, -pivotOffset.y);
-
-            bottomLeft += rect.Min;
-            topLeft += rect.Min;
-            topRight += rect.Min;
-            bottomRight += rect.Min;
+            if (element is UIGraphicsElement graphics)
+            {
+                graphics.OnCanvasDraw(this);
+            }
         }
 
         public void OnUpdate()
         {
+            _uiElements.Clear();
+            SceneManager.ActiveScene.FindAll(_uiElements, false, Actor);
+
+            foreach (var elements in _uiElements)
+            {
+                RebuildRecursive(elements, new vec2(0, 0));
+            }
         }
+
     }
 }
