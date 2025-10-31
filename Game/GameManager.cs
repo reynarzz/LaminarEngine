@@ -299,10 +299,15 @@ namespace Game
                 Physics2D.DrawColliders = !Physics2D.DrawColliders;
             }
 
-            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.F11) || Input.GetKeyDown(KeyCode.Enter))
+            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.F11))
             {
                 Window.FullScreen(!Window.IsFullScreen);
-                Window.MouseVisible = !Window.IsFullScreen;
+                // Window.MouseVisible = !Window.IsFullScreen;
+            }
+
+            if (Input.GetKeyDown(KeyCode.Enter))
+            {
+                _pauseMenu.OnPause();
             }
         }
 

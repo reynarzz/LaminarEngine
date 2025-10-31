@@ -29,18 +29,28 @@ namespace Game
             _background.BlockEvents = false;
             _background.ReceiveEvents = false;
             // Title text
-            _titleText = NewText("Title text", "Pause", new vec2(512, 0), _canvas.Transform);
+            _titleText = NewText("Title text", "Pause", new vec2(512, 10), _canvas.Transform);
 
             var resumeButtonImage = NewImage("Resume button image", new vec2(0, 400), new vec2(100, 40), Color.Gray, _background.Transform);
-            resumeButtonImage.AddComponent<Button>().OnButtonDown += OnResume; 
-            NewText("Resume text", "Resume", default, _canvas.Transform);
+            resumeButtonImage.AddComponent<Button>().OnButtonDown += OnResume;
+            var text = NewText("Resume text", "Resume", default, resumeButtonImage.Transform);
+            text.ReceiveEvents = false;
+            Actor.IsActiveSelf = false;
+            //Time.TimeScale = 0;
         }
 
         private void OnResume()
         {
             Debug.Log("Button down: ");
+            Time.TimeScale = 1;
 
             Actor.IsActiveSelf = false;
+        }
+
+        public void OnPause()
+        {
+            Actor.IsActiveSelf = !Actor.IsActiveSelf;
+            Time.TimeScale = Actor.IsActiveSelf ? 0 : 1;
         }
 
         private UIText NewText(string name, string value, vec2 position, Transform parent)
