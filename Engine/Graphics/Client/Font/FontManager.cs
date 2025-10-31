@@ -43,7 +43,7 @@ namespace Engine.Graphics
             _fontFamilies = new();
 
             var targetScreenRes = new vec2(512 * 2, 288 * 2);
-            var viewMatrix = MathUtils.Ortho(0, targetScreenRes.x, targetScreenRes.y, 0, 0, -1);
+            var viewMatrix = MathUtils.Ortho(0, targetScreenRes.x, 0, targetScreenRes.y, 0, -1);
             //var viewMatrix = MathUtils.Ortho(-_targetScreenRes.x / 2, _targetScreenRes.x / 2, _targetScreenRes.y / 2, -_targetScreenRes.y / 2, 0, -1);
 
             TestUIProjection = viewMatrix;

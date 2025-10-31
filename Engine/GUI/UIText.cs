@@ -148,19 +148,19 @@ namespace Engine.GUI
             float rotation = glm.radians(Transform.WorldEulerAngles.z);
 
             var scale = new System.Numerics.Vector2(Transform.WorldScale.x,
-                                                    Transform.WorldScale.y);
+                                                    -Transform.WorldScale.y);
 
             var effect = OutlineSize > 0 ? FontSystemEffect.Stroked : FontSystemEffect.None;
 
-            //var size = font.MeasureString(text, scale, CharacterSpacing, LineSpacing, effect, OutlineSize);
-            //var origin = new System.Numerics.Vector2(size.X, size.Y);
-            var origin = default(System.Numerics.Vector2);
+            var size = font.MeasureString(text, scale, CharacterSpacing, LineSpacing, effect, OutlineSize);
+            var origin = new System.Numerics.Vector2(size.X, size.Y);
+            //var origin = default(System.Numerics.Vector2);
             var position = new System.Numerics.Vector2(Transform.WorldPosition.x,
                                                        Transform.WorldPosition.y + lineHeight);
             
             var bounds = font.TextBounds(text, position, scale, CharacterSpacing, LineSpacing, effect, OutlineSize);
             var textSize = new System.Numerics.Vector2(bounds.X2 - bounds.X, bounds.Y2 - bounds.Y) / 2.0f;
-            
+
             // Compute pivot offset
             var pivotOffset = new System.Numerics.Vector2(textSize.X * pivot.X, textSize.Y * pivot.Y);
 

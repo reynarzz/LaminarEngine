@@ -71,25 +71,25 @@ namespace Game
             text.Material = new Material(new Shader(Assets.GetText("Shaders/Font/FontVert.vert").Text,
                                                     Assets.GetText("Shaders/Font/FontFrag.frag").Text));
 
-            text.RectTransform.AnchorMin = new vec2(0.5f, 0);
-            // text.RectTransform.AnchorMax = new vec2(1.0f, 1.0f);
+            text.RectTransform.AnchorMin = new vec2(0.5f, 1.0f);
+            text.RectTransform.AnchorMax = new vec2(0.5f, 1.0f);
             text.RectTransform.AnchoredPosition = new vec2(0, 0);
-            text.RectTransform.Pivot = new vec2(0.5f, 0);
+            text.RectTransform.Pivot = new vec2(0.0f, 1.0f);
 
             var mainShader = new Shader(Assets.GetText("Shaders/SpriteVert.vert").Text, Assets.GetText("Shaders/SpriteFrag.frag").Text);
             var mat1 = new Material(mainShader);
 
             var image = new Actor("Image test").AddComponent<UIImage>();
             image.Transform.Parent = canvas.Transform;
-            image.RectTransform.AnchorMin = new vec2(0.0f, 0.0f);
-            image.RectTransform.AnchorMax = new vec2(1.0f, 1.0f);
-            image.RectTransform.AnchoredPosition = new vec2(0, 0);
-            image.RectTransform.Pivot = new vec2(0.5f, 0.5f);
-            image.RectTransform.SizeDelta = new vec2(100, 100);
+            image.RectTransform.AnchorMin = new vec2(0.5f, 0.5f);
+            image.RectTransform.AnchorMax = new vec2(0.5f, 0.5f);
+            image.RectTransform.AnchoredPosition = new vec2(-512, -331);
+            image.RectTransform.Pivot = new vec2(0.0f, 0.0f);
+            image.RectTransform.SizeDelta = new vec2(1024, 662);
             image.Material = mat1;
             image.Sprite = new Sprite() { Texture = Assets.GetTexture("starkTileset.png") };
             image.PreserveAspect = true;
-            image.AspectMode = PreserveAspectMode.MatchHeight;
+            image.AspectMode = PreserveAspectMode.MatchWidth;
         }
 
         private void ParticleSystem()

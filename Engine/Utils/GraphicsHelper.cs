@@ -143,7 +143,7 @@ namespace Engine
             vec2 topRight = rect.Min + size;
             vec2 bottomRight = new vec2(rect.Min.x + size.x, rect.Min.y);
 
-            var uvs = QuadUV.FlipUV(QuadUV.DefaultUVs, false, true);
+            var uvs = QuadUV.DefaultUVs;
 
             vertices.v0 = new Vertex { Color = color, Position = bottomLeft, UV = uvs.BottomLeftUV };
             vertices.v1 = new Vertex { Color = color, Position = topLeft, UV = uvs.TopLeftUV };
