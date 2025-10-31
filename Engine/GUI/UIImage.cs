@@ -47,7 +47,7 @@ namespace Engine.GUI
             Mesh.Vertices[2] = quad.v2;
             Mesh.Vertices[3] = quad.v3;
 
-            IsDirty = true;
+            // IsDirty = true;
         }
     }
 }

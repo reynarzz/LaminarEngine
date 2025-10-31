@@ -225,7 +225,7 @@ namespace Game
             pass.Stencil.Func = StencilFunc.Equal;
             pass.Stencil.Ref = 3;
             pass.Stencil.ZFailOp = StencilOp.Keep;
-            renderer.Material.SetProperty("uWaterColor", new vec3(0.6f, 0.2f, 0.0f));
+            renderer.Material.SetProperty("uWaterColor", new vec3(0.2f, 0.4f, 0.7f));
             renderer.Material.AddTexture("uParticles", Assets.GetTexture("particles.png"));
 
             var pass2 = renderer.Material.PushPass(mainShader);
@@ -235,7 +235,7 @@ namespace Game
             pass2.Stencil.Ref = 3;
             pass2.Stencil.ZFailOp = StencilOp.Keep;
 
-            renderer.Material.SetProperty(1, "uWaterColor", new vec3(1.0f, 0.2f, 0.0f));
+            renderer.Material.SetProperty(1, "uWaterColor", new vec3(0.1f, 0.50f, 0.84f));
 
             waterActor.Transform.LocalScale = new vec3(10, 3, 1);
             waterActor.Transform.LocalPosition = new vec3(2.5f, -11, 1);
