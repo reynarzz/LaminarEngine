@@ -125,7 +125,7 @@ namespace Engine.Layers
             RenderBatches(uibatches, ref FontManager.Instance.TestUIProjection, sceneRenderTarget);
 
             Debug.DrawGeometries(VP, sceneRenderTarget.NativeResource);
-            // Debug.DrawGeometries(FontManager.Instance.TestUIProjection, sceneRenderTarget.NativeResource);
+            //Debug.DrawGeometries(FontManager.Instance.TestUIProjection, sceneRenderTarget.NativeResource);
 
             foreach (var pass in PostProcessingStack.Passes)
             {

@@ -44,10 +44,10 @@ namespace Game
         {
             new Actor<GameManager>("GameManager");
 
-            //PostProcessingStack.Push(new BloomPostProcessing());
-            //ScreenGrabTest();
+            PostProcessingStack.Push(new BloomPostProcessing());
+            ScreenGrabTest();
 
-            //ScreenGrabTest3();
+            ScreenGrabTest3();
             Portal();
             Portal().Transform.LocalPosition = new vec3(33, -9.1f);
             Portal().Transform.LocalPosition = new vec3(43, -1);

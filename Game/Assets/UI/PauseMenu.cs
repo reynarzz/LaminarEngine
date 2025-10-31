@@ -29,12 +29,14 @@ namespace Game
             _background.BlockEvents = false;
             _background.ReceiveEvents = false;
             // Title text
-            _titleText = NewText("Title text", "Pause", new vec2(512, 10), _canvas.Transform);
+            _titleText = NewText("Title text", "Pause", new vec2(512, 160), _canvas.Transform);
+            _titleText.FontSize = 50;
+            var resumeButtonImage = NewImage("Resume button image", new vec2(0, 400), new vec2(200, 40), Color.Gray, _background.Transform);
 
-            var resumeButtonImage = NewImage("Resume button image", new vec2(0, 400), new vec2(100, 40), Color.Gray, _background.Transform);
             resumeButtonImage.AddComponent<Button>().OnButtonDown += OnResume;
             var text = NewText("Resume text", "Resume", default, resumeButtonImage.Transform);
             text.ReceiveEvents = false;
+            text.RectTransform.Size.y = resumeButtonImage.RectTransform.Size.y;
             Actor.IsActiveSelf = false;
             //Time.TimeScale = 0;
         }
@@ -61,7 +63,6 @@ namespace Game
             text.Material = GameManager.DefaultMaterial;
             text.SetText(value);
             text.Transform.LocalPosition = position;
-
             return text;
         }
 

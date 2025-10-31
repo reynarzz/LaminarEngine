@@ -44,8 +44,8 @@ namespace Engine.GUI
             }
         }
 
-        private TextHorizontalAlignment _horizontalAlignment = TextHorizontalAlignment.Left;
-        private TextVerticalAlignment _verticalAlignment = TextVerticalAlignment.Top;
+        private TextHorizontalAlignment _horizontalAlignment = TextHorizontalAlignment.Center;
+        private TextVerticalAlignment _verticalAlignment = TextVerticalAlignment.Center;
         private readonly StringBuilder _text = new();
 
         ITexture2DManager IFontStashRenderer2.TextureManager => FontManager.Instance.TextureManager;
@@ -114,36 +114,49 @@ namespace Engine.GUI
             if (IsDirty)
                 Mesh.IndicesToDrawCount = 0;
 
-            var rt = RectTransform;
-            var rect = rt.Rect;
-            var pivot = new System.Numerics.Vector2(rt.Pivot.x, rt.Pivot.y);
-
+            var rect = RectTransform.Rect;
             float rotation = glm.radians(Transform.WorldEulerAngles.z);
             var scale = new System.Numerics.Vector2(Transform.WorldScale.x, Transform.WorldScale.y);
-
             var effect = OutlineSize > 0 ? FontSystemEffect.Stroked : FontSystemEffect.None;
 
-            var size = font.MeasureString(text, scale, CharacterSpacing, LineSpacing, effect, OutlineSize);
-            var origin = default(System.Numerics.Vector2);
+            var b = font.TextBounds(text, System.Numerics.Vector2.Zero, scale, CharacterSpacing, LineSpacing, effect, OutlineSize);
+            float textWidth = b.X2 - b.X;
+            float textHeight = b.Y2 - b.Y;
 
-            var rectPos = new System.Numerics.Vector2(rect.Min.x, rect.Min.y);
+            System.Numerics.Vector2 finalPos = new System.Numerics.Vector2(rect.Min.x, rect.Min.y);
 
-            var pivotOffset = new System.Numerics.Vector2(rect.Size.x * pivot.X, rect.Size.y * pivot.Y);
+            switch (Horizontal)
+            {
+                case TextHorizontalAlignment.Left:
+                    finalPos.X = rect.Min.x;
+                    break;
+                case TextHorizontalAlignment.Center:
+                    finalPos.X = rect.Min.x + (rect.Size.x - textWidth) * 0.5f;
+                    break;
+                case TextHorizontalAlignment.Right:
+                    finalPos.X = rect.Min.x + rect.Size.x - textWidth;
+                    break;
+            }
 
-            var position = rectPos + pivotOffset;
+            switch (Vertical)
+            {
+                case TextVerticalAlignment.Top:
+                    finalPos.Y = rect.Min.y - b.Y;
+                    break;
+                case TextVerticalAlignment.Center:
+                    finalPos.Y = Mathf.Lerp(rect.YMax, rect.YMin, 0.5f) - textHeight;
+                    break;
+                case TextVerticalAlignment.Bottom:
+                    finalPos.Y = rect.Max.y - b.Y2;
+                    break;
+            }
 
-            position.Y += lineHeight;
+            finalPos.Y += lineHeight;
 
-            var bounds = font.TextBounds(text, position, scale, CharacterSpacing, LineSpacing, effect, OutlineSize);
-            var textSize = new System.Numerics.Vector2(bounds.X2 - bounds.X, bounds.Y2 - bounds.Y);
-
-            var textPivotOffset = new System.Numerics.Vector2(textSize.X * pivot.X, textSize.Y * pivot.Y);
-            var finalPosition = position - textPivotOffset;
-
-            font.DrawText(this, text, finalPosition, new FSColor(Color),
-                rotation, origin, scale, 0, CharacterSpacing, LineSpacing,
-                TextStyle.None, effect, Math.Clamp(OutlineSize, 0, OutlineSize + 1)
-            );
+            font.DrawText(this, text, finalPos, new FSColor(Color),
+                rotation, System.Numerics.Vector2.Zero, scale, 0,
+                CharacterSpacing, LineSpacing, TextStyle.None,
+                effect, Math.Clamp(OutlineSize, 0, OutlineSize + 1));
         }
 
         public void SetText(string value)
