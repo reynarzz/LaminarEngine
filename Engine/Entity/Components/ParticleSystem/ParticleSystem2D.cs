@@ -81,6 +81,8 @@ namespace Engine
 
         private void EmitParticle()
         {
+            IsDirty = true;
+
             var localPos = new vec4(RandomFloat(-Spread.x, Spread.x), RandomFloat(-Spread.y, Spread.y), 0, 1);
             var startPos = IsWorldSpace ? Transform.WorldMatrix * localPos : localPos;
 
@@ -144,7 +146,6 @@ namespace Engine
             }
 
             Mesh.IndicesToDrawCount = _particles.Count * 6;
-           // IsDirty = true;
         }
     }
 }

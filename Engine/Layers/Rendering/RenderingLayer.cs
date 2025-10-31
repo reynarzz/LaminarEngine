@@ -136,11 +136,6 @@ namespace Engine.Layers
             GfxDeviceManager.Current.Present(sceneRenderTarget.NativeResource);
         }
 
-        private void RenderBatches(List<Batch2D> uibatches, ref object testProjection, RenderTexture sceneRenderTarget)
-        {
-            throw new NotImplementedException();
-        }
-
         private void RenderBatches(List<Batch2D> batches, ref mat4 VP, RenderTexture sceneRenderTarget)
         {
             foreach (var batch in batches)

@@ -43,10 +43,10 @@ namespace Game
         {
             new Actor<GameManager>("GameManager");
 
-             PostProcessingStack.Push(new BloomPostProcessing());
-            ScreenGrabTest();
+             //PostProcessingStack.Push(new BloomPostProcessing());
+            //ScreenGrabTest();
 
-            ScreenGrabTest3();
+            //ScreenGrabTest3();
             Portal();
             Portal().Transform.LocalPosition = new vec3(33, -9.1f);
             Portal().Transform.LocalPosition = new vec3(43, -1);
@@ -63,9 +63,9 @@ namespace Game
         private void ParticleSystem()
         {
             var particleSystem = new Actor<ParticleSystem2D, Move>("ParticleSystem").GetComponent<ParticleSystem2D>();
-            particleSystem.Transform.WorldPosition = new vec3(0, -14);
+            particleSystem.Transform.WorldPosition = new vec3(-34, -6);
 
-            particleSystem.EmitRate = 152;
+            particleSystem.EmitRate = 152; 
             particleSystem.ParticleLife = 3;
             particleSystem.SortOrder = 17;
             particleSystem.StartColor = Color.White;
@@ -82,13 +82,10 @@ namespace Game
             mat1.Name = "Particle material";
             particleSystem.Material = mat1;
 
-            var t = new Actor<SpriteRenderer>();
-            t.Transform.WorldPosition = new vec3(0, -14);
-            t.GetComponent<SpriteRenderer>().SortOrder = 17;
-
             var screenShader = new Shader(Assets.GetText("Shaders/VertScreenGrab.vert").Text, Assets.GetText("Shaders/ScreenGrabWobble.frag").Text);
             particleSystem.Material = new Material(screenShader);
             particleSystem.Material.GetPass(0).IsScreenGrabPass = true;
+
            //particleSystem.Material.Passes.ElementAt(0).Blending.Enabled = false;
            var sprite = new Sprite();
             sprite.Texture = Texture2D.White;
