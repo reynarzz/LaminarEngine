@@ -35,8 +35,22 @@ namespace Engine
             var anchorPosMax = parentPos + AnchorMax * parentSize;
             var anchorSize = anchorPosMax - anchorPosMin;
 
-            vec2 size = (AnchorMin == AnchorMax) ? SizeDelta : (anchorSize + SizeDelta);
+            vec2 size;
+            if (AnchorMin == AnchorMax)
+            {
+                // Fixed-size UI element
+                size = SizeDelta;
+            }
+            else
+            {
+                size = anchorSize + SizeDelta;
 
+                // if fully stretched, ignore SizeDelta entirely
+                if (AnchorMin == new vec2(0, 0) && AnchorMax == new vec2(1, 1))
+                {
+                    size = anchorSize;
+                }
+            }
             vec2 anchorCenter = anchorPosMin + 0.5f * anchorSize; 
             vec2 pivotPos = anchorCenter + AnchoredPosition;
             vec2 minCorner = pivotPos - size * Pivot;

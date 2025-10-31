@@ -43,7 +43,7 @@ namespace Game
         {
             new Actor<GameManager>("GameManager");
 
-             //PostProcessingStack.Push(new BloomPostProcessing());
+            //PostProcessingStack.Push(new BloomPostProcessing());
             //ScreenGrabTest();
 
             //ScreenGrabTest3();
@@ -97,7 +97,7 @@ namespace Game
             var particleSystem = new Actor<ParticleSystem2D, Move>("ParticleSystem").GetComponent<ParticleSystem2D>();
             particleSystem.Transform.WorldPosition = new vec3(-34, -6);
 
-            particleSystem.EmitRate = 152; 
+            particleSystem.EmitRate = 152;
             particleSystem.ParticleLife = 3;
             particleSystem.SortOrder = 17;
             particleSystem.StartColor = Color.White;
@@ -118,8 +118,8 @@ namespace Game
             particleSystem.Material = new Material(screenShader);
             particleSystem.Material.GetPass(0).IsScreenGrabPass = true;
 
-           //particleSystem.Material.Passes.ElementAt(0).Blending.Enabled = false;
-           var sprite = new Sprite();
+            //particleSystem.Material.Passes.ElementAt(0).Blending.Enabled = false;
+            var sprite = new Sprite();
             sprite.Texture = Texture2D.White;
 
             particleSystem.Sprite = sprite;
@@ -148,7 +148,7 @@ namespace Game
             test.OutlineSize = 5;
             test.FontSize = 33;
             test.Font = Assets.Get<FontAsset>("Fonts/windows-bold[1].ttf");
-            test.Material = new Material(new Shader(Assets.GetText("Shaders/Font/FontVert.vert").Text, 
+            test.Material = new Material(new Shader(Assets.GetText("Shaders/Font/FontVert.vert").Text,
                                                     Assets.GetText("Shaders/Font/FontFrag.frag").Text));
         }
 
