@@ -11,18 +11,18 @@ namespace Engine
 {
     public struct QuadVertices
     {
-        public Vertex v0 { get; set; }
-        public Vertex v1 { get; set; }
-        public Vertex v2 { get; set; }
-        public Vertex v3 { get; set; }
+        public Vertex v0;
+        public Vertex v1;
+        public Vertex v2;
+        public Vertex v3;
     }
 
     internal struct QuadVertices<T> where T : unmanaged, IVertex<T>
     {
-        public T v0 { get; set; }
-        public T v1 { get; set; }
-        public T v2 { get; set; }
-        public T v3 { get; set; }
+        public T v0;
+        public T v1;
+        public T v2;
+        public T v3;
     }
 
     internal interface IVertex
@@ -44,18 +44,19 @@ namespace Engine
     {
         public vec3 Position;
         public vec2 UV;
-        public vec3 Normals;
-        public ColorPacketRGBA Color;
-        public int _textureIndex;
+        public uint Color;
+        private int _textureIndex;
+        public int VertexIndex;
+
         public int TextureIndex { get => _textureIndex; set => _textureIndex = value; }
 
         private unsafe static VertexAtrib[] _attribs =
         [
             new() { Count = 3, Normalized = false, Type = GfxValueType.Float, Stride = sizeof(Vertex), Offset = 0 },                  // Position
             new() { Count = 2, Normalized = false, Type = GfxValueType.Float, Stride = sizeof(Vertex), Offset = sizeof(float) * 3 },  // UV
-            new() { Count = 3, Normalized = false, Type = GfxValueType.Float, Stride = sizeof(Vertex), Offset = sizeof(float) * 5 },  // Normals
-            new() { Count = 1, Normalized = false, Type = GfxValueType.Uint,  Stride = sizeof(Vertex), Offset = sizeof(uint)  * 8 },  // Color
-            new() { Count = 1, Normalized = false, Type = GfxValueType.Int,   Stride = sizeof(Vertex), Offset = sizeof(int)   * 9 },  // TextureIndex
+            new() { Count = 1, Normalized = false, Type = GfxValueType.Uint,  Stride = sizeof(Vertex), Offset = sizeof(uint)  * 5 },  // Color
+            new() { Count = 1, Normalized = false, Type = GfxValueType.Int,   Stride = sizeof(Vertex), Offset = sizeof(int)   * 6 },  // TextureIndex
+            new() { Count = 1, Normalized = false, Type = GfxValueType.Int,   Stride = sizeof(Vertex), Offset = sizeof(int)   * 7 },  // VertexIndex
         ];
 
         static VertexAtrib[] IVertex<Vertex>.GetVertexAttributes()

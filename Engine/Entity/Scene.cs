@@ -34,7 +34,29 @@ namespace Engine
                 return null;
             }
         }
+        private struct ComponentMatcherFunc<T> : IMatcher<T, Predicate<T>> where T : Component
+        {
+            public T Invoke(Actor actor, Predicate<T> func)
+            {
+                if (!actor)
+                    return null;
 
+                var comp = actor.GetComponent<T>();
+                if(!comp)
+                    return null;
+
+                if (!func(comp))
+                {
+                    return null;
+                }
+                else if (comp && comp.IsEnabled && comp.Actor.IsActiveInHierarchy)
+                {
+                    return comp;
+                }
+
+                return null;
+            }
+        }
         public struct ActorMatcher : IMatcher<Actor, string>
         {
             public Actor Invoke(Actor actor, string comparer)
@@ -103,7 +125,12 @@ namespace Engine
 
         internal IReadOnlyList<Actor> FindActorsByTag(string tag)
         {
-            return FindAll<Actor, ActorTagMatcher, string>(tag);
+            return FindAll<Actor, ActorTagMatcher, string>(tag, null);
+        }
+
+        internal IReadOnlyList<Actor> FindActorsByTag(string tag, Actor rootActor)
+        {
+            return FindAll<Actor, ActorTagMatcher, string>(tag, rootActor);
         }
 
         internal T FindComponent<T>(bool findDisabled) where T : Component
@@ -116,17 +143,35 @@ namespace Engine
             return Find<Actor, ActorMatcher, string>(name);
         }
 
+        internal List<T> FindAll<T>(bool findDisabled, Actor rootActor) where T : Component
+        {
+            return FindAll<T, ComponentMatcher<T>, bool>(findDisabled, rootActor);
+        }
+
         internal List<T> FindAll<T>(bool findDisabled) where T : Component
         {
-            return FindAll<T, ComponentMatcher<T>, bool>(findDisabled);
+            return FindAll<T, ComponentMatcher<T>, bool>(findDisabled, null);
         }
 
-        internal void FindAll<T>(bool findDisabled, List<T> elements) where T : Component
+        internal void FindAll<T>(List<T> elements, bool findDisabled) where T : Component
         {
-            FindAll<T, ComponentMatcher<T>, bool>(findDisabled, elements);
+            FindAll<T, ComponentMatcher<T>, bool>(findDisabled, elements, null);
+        }
+        internal void FindAll<T>(List<T> elements, bool findDisabled, Actor rootActor) where T : Component
+        {
+            FindAll<T, ComponentMatcher<T>, bool>(findDisabled, elements, rootActor);
+        }
+        internal void FindAll<T>(List<T> elements, Predicate<T> predicate) where T : Component
+        {
+            FindAll<T, ComponentMatcherFunc<T>, Predicate<T>>(predicate, elements, null);
         }
 
-        private void FindAll<T, TMatcher, TComparer>(TComparer comparer, List<T> elements) where T : EObject
+        internal void FindAll<T>(List<T> elements, Actor rootActor, Predicate<T> predicate) where T : Component
+        {
+            FindAll<T, ComponentMatcherFunc<T>, Predicate<T>>(predicate, elements, rootActor);
+        }
+
+        private void FindAll<T, TMatcher, TComparer>(TComparer comparer, List<T> elements, Actor rootActor) where T : EObject
                                                                            where TMatcher : struct, IMatcher<T, TComparer>
         {
             var matcher = default(TMatcher);
@@ -149,21 +194,27 @@ namespace Engine
                 }
             }
 
-            for (int i = 0; i < _rootActors.Count; i++)
+            if(rootActor == null)
             {
-                if (_rootActors[i])
+                for (int i = 0; i < _rootActors.Count; i++)
                 {
-                    Find(_rootActors[i]);
+                    if (_rootActors[i])
+                    {
+                        Find(_rootActors[i]);
+                    }
                 }
             }
-
+            else
+            {
+                Find(rootActor);
+            }
         }
 
-        private List<T> FindAll<T, TMatcher, TComparer>(TComparer comparer) where T : EObject
+        private List<T> FindAll<T, TMatcher, TComparer>(TComparer comparer, Actor rootActor) where T : EObject
                                                                             where TMatcher : struct, IMatcher<T, TComparer>
         {
             var list = new List<T>();
-            FindAll<T, TMatcher, TComparer>(comparer, list);
+            FindAll<T, TMatcher, TComparer>(comparer, list, rootActor);
             return list;
         }
 

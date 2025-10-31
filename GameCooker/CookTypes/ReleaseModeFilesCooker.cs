@@ -73,7 +73,7 @@ namespace GameCooker
             long currentAssetOffset = fieldIfOffset * files.Length;
 
             bufWritter.BaseStream.Position += currentAssetOffset;
-
+            int count = 0;
             foreach (var (filePath, assetType) in files)
             {
                 long startAssetBlockPos = bufWritter.BaseStream.Position;
@@ -120,7 +120,7 @@ namespace GameCooker
 
                 if (shouldCompressFile)
                 {
-                    assetData = await Task.Run(() => AssetCompressor.CompressBytes(assetData));
+                    assetData = await Task.Run(() => AssetCompressor.CompressBytes(assetData, fileOptions.CompressionLevel));
                 }
 
                 if (shouldEncryptFile)
@@ -165,6 +165,9 @@ namespace GameCooker
 
                 // advance file info position in table
                 currentFileIdPosition += fieldIfOffset;
+
+                count++;
+                Console.Write($"\r.gfs package building: {count * 100 / files.Length}%".PadRight(Console.WindowWidth));
             }
 
             bufWritter.Flush();

@@ -13,7 +13,7 @@ namespace Engine
         public int Height { get; protected set; }
         public TextureMode Mode { get; protected set; }
         public int Channels { get; }
-        internal byte[] Data { get; }
+        internal protected byte[] Data { get; internal set; }
 
         internal GfxResource NativeResource { get; }
 

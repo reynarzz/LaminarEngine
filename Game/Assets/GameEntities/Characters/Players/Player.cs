@@ -12,6 +12,8 @@ namespace Game
     {
         public override void Init(CharacterConfig config)
         {
+            Inventory = new PlayerInventory(config.InventoryMaxSlots, 4);
+
             base.Init(config);
             var box = AddComponent<BoxCollider2D>();
             box.Size = new vec2(0.95f, 0.6f);

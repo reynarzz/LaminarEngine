@@ -13,7 +13,7 @@ uniform vec3 uTime;
 // Ripple settings
 uniform vec2  uRippleCenter    = vec2(0.5); // Center point
 uniform float uRippleSpeed     = 2.0;       // Wave speed
-uniform float uRippleAmplitude = 0.02;      // Max displacement
+uniform float uRippleAmplitude = 0.01;      // Max displacement
 uniform float uRippleFrequency = 20.0;      // Wave frequency
 uniform float uEdgeStart       = 0.3;       // Start of ripple (0 = center, 1 =e dge)
 uniform float uEdgeEnd         = 0.7;       // Full ripple at edge

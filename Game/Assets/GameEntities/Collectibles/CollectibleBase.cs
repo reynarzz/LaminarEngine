@@ -133,7 +133,7 @@ namespace Game
                     GameManager.UpdateCoinUI(); // Remove from here, just for testing
                     break;
                 case GameItem.Health:
-                    GameManager.Player.Life += _config.Amount;
+                    GameManager.Player.Inventory.Life += _config.Amount;
                     break;
             }
         }

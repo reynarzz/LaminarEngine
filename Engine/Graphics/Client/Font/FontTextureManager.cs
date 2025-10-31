@@ -30,6 +30,7 @@ namespace Engine.Graphics
         public void SetTextureData(object texture, Rectangle bounds, byte[] data)
         {
             var tex2D = texture as Texture2D;
+            tex2D.Data = data;
             _sharedDescriptor.XOffset = bounds.Left;
             _sharedDescriptor.YOffset = bounds.Top;
             _sharedDescriptor.Width = bounds.Width;

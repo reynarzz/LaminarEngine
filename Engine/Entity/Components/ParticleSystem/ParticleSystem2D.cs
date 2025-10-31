@@ -81,6 +81,8 @@ namespace Engine
 
         private void EmitParticle()
         {
+            IsDirty = true;
+
             var localPos = new vec4(RandomFloat(-Spread.x, Spread.x), RandomFloat(-Spread.y, Spread.y), 0, 1);
             var startPos = IsWorldSpace ? Transform.WorldMatrix * localPos : localPos;
 
@@ -116,7 +118,7 @@ namespace Engine
             {
                 var particle = _particles[i];
 
-                _particlePositionM[3] = new vec4(particle.Position, 1);
+                _particlePositionM[3] = new vec4(particle.Position, Transform.WorldPosition.z, 1);
 
                 var particleM = _particlePositionM *
                                 glm.rotate(glm.radians(particle.Rotation), new vec3(0, 0, 1));
@@ -144,7 +146,6 @@ namespace Engine
             }
 
             Mesh.IndicesToDrawCount = _particles.Count * 6;
-           // IsDirty = true;
         }
     }
 }

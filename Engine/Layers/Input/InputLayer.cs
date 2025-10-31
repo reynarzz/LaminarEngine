@@ -189,7 +189,6 @@ public class Input : LayerBase
             }
         }
 
-        _previousMouse.Clear();
         // Update current mouse button states
         foreach (MouseButton button in _mouseButtonsArray)
         {

@@ -10,29 +10,38 @@ namespace Engine.Layers
         private Stopwatch _stopwatch;
         private float _lastFrameTime;
         private float _timePast;
+        private float _unscaledTimePast;
         public override void Initialize()
         {
             _stopwatch = new Stopwatch();
             _stopwatch.Start();
             _lastFrameTime = 0f;
             _timePast = 0;
+            _unscaledTimePast = 0;
         }
 
         internal override void UpdateLayer()
         {
             float currentTime = (float)_stopwatch.Elapsed.TotalSeconds;
-            float deltaTime = currentTime - _lastFrameTime;
+            float unscaledDeltaTime = (currentTime - _lastFrameTime);
 
-            if(deltaTime > 0.1)
+            if(unscaledDeltaTime > 0.1)
             {
-                deltaTime = 0.1f;
+                unscaledDeltaTime = 0.1f;
             }
+
+            float deltaTime = unscaledDeltaTime * Time.TimeScale;
+
             _lastFrameTime = currentTime;
             _timePast += deltaTime;
 
+            _unscaledTimePast += unscaledDeltaTime;
+
             // Update the Time static class
-            Time.DeltaTime = deltaTime * Time.TimeScale;
-            Time.SinceStarted = currentTime * Time.TimeScale;
+            Time.DeltaTime = deltaTime;
+            Time.UnscaledDeltaTime = unscaledDeltaTime;
+            Time.UnscaledTime = _unscaledTimePast;
+            Time.SinceStarted = currentTime;
             Time.FPS = Time.DeltaTime > 0f ? 1f / Time.DeltaTime : 0f;
             Time.TimeCurrent = _timePast;
         }

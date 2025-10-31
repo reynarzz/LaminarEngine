@@ -149,7 +149,9 @@ namespace Engine
                     var alreadyAdded = _components[i].GetType().IsAssignableFrom(type);
                     if (alreadyAdded)
                     {
+#if SHOW_ENGINE_WARNS
                         Debug.Warn($"Can't add component of type '{type.Name}', it should only appear once in an Actor. This will return the current one.");
+#endif
                         return _components[i];
                     }
                 }
@@ -231,15 +233,15 @@ namespace Engine
             return null;
         }
 
-        public T GetComponent<T>() where T : Component
+        public T GetComponent<T>() where T: class
         {
             return GetComponent(typeof(T)) as T;
         }
 
-        public void GetComponents<T>(ref List<T> elements) where T : Component
+        public void GetComponents<T>(ref List<T> elements) where T : class
         {
             CheckIfValidObject(this);
-         
+
             for (int i = 0; i < _components.Count; i++)
             {
                 if (typeof(T).IsAssignableFrom(_components[i].GetType()))
@@ -253,7 +255,7 @@ namespace Engine
             }
         }
 
-        public Span<T> GetComponents<T>() where T : Component
+        public Span<T> GetComponents<T>() where T : class
         {
             var components = new List<T>();
             GetComponents(ref components);
@@ -299,6 +301,24 @@ namespace Engine
 
         public static void Destroy(Component component)
         {
+            if (component is Transform) // Can't destroy transform.
+                return;
+
+            foreach (var comp in component.Actor._components)
+            {
+                if (comp != component)
+                {
+                    var att = comp.GetType().GetCustomAttribute<RequiredComponentAttribute>();
+
+                    if (att.RequiredComponents.Contains(component.GetType()))
+                    {
+                        Debug.Warn($"Can't remove component: '{component.GetType()}', it is used by others");
+                        return;
+                    }
+                }
+            }
+
+
             if (component && !component.IsPendingToDestroy)
             {
                 component.IsPendingToDestroy = true;
@@ -405,7 +425,7 @@ namespace Engine
             }
         }
 
-        private void UpdateScriptsFunction<T>(Actor actor, Action<T> action) where T: class, IComponent
+        private void UpdateScriptsFunction<T>(Actor actor, Action<T> action) where T : class, IComponent
         {
             if (actor && actor.IsActiveInHierarchy)
             {

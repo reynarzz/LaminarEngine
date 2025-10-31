@@ -17,19 +17,39 @@ namespace Engine.IO
             return AssetDatabaseInfo != null;
         }
 
+        private bool ExistsPhysicalAsset(Guid guid)
+        {
+            if (AssetDatabaseInfo.Assets.TryGetValue(guid, out var assetInfo))
+            {
+                return File.Exists(Paths.GetAbsoluteAssetPath(assetInfo.Path));
+            }
+
+            return false;
+        }
+
         protected override byte[] LoadAssetFromDisk(Guid guid)
         {
-            return File.ReadAllBytes(Paths.CreateBinFilePath(Paths.GetAssetDatabaseFolder(), guid.ToString()));
+            if (ExistsPhysicalAsset(guid))
+            {
+                return File.ReadAllBytes(Paths.CreateBinFilePath(Paths.GetAssetDatabaseFolder(), guid.ToString()));
+            }
+
+            return null;
         }
 
         protected override async Task<byte[]> LoadAssetFromDiskAsync(Guid guid)
         {
-            return await File.ReadAllBytesAsync(Paths.CreateBinFilePath(Paths.GetAssetDatabaseFolder(), guid.ToString()));
+            if (ExistsPhysicalAsset(guid))
+            {
+                return await File.ReadAllBytesAsync(Paths.CreateBinFilePath(Paths.GetAssetDatabaseFolder(), guid.ToString()));
+            }
+
+            return null;
         }
 
         protected override byte[] LoadMetaFromDisk(Guid guid)
         {
-            if(AssetDatabaseInfo.Assets.TryGetValue(guid, out var assetInfo))
+            if (AssetDatabaseInfo.Assets.TryGetValue(guid, out var assetInfo))
             {
                 return File.ReadAllBytes(Paths.GetAbsoluteAssetPath(assetInfo.Path + Paths.ASSET_META_EXT_NAME));
             }

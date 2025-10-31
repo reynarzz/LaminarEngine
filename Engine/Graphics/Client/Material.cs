@@ -14,12 +14,12 @@ namespace Engine
     {
         private readonly List<RenderPass> _passes;
         public List<RenderPass> Passes => _passes;
-        private readonly Dictionary<string, Texture> _textures;
-        internal Dictionary<string, Texture> Textures => _textures;
+        private readonly OrderedDictionary<string, Texture> _textures;
+        internal OrderedDictionary<string, Texture> Textures => _textures;
 
         public Material(Shader shader)
         {
-            _textures = new Dictionary<string, Texture>();
+            _textures = new();
             _passes = new List<RenderPass>()
             {
                 new RenderPass(shader)
@@ -51,9 +51,16 @@ namespace Engine
             _passes.RemoveAt(index);
         }
 
-        public void AddTexture(string name, Texture texture)
+        public int AddTexture(string name, Texture texture)
         {
-            _textures[name] = texture;
+            if(_textures.Count < GfxDeviceManager.Current.GetDeviceInfo().MaxHardwareTextureUnits)
+            {
+                _textures[name] = texture;
+
+                return _textures.IndexOf(name);
+            }
+
+            return -1; 
         }
 
         public void SetProperty<T>(string name, T value) where T : unmanaged

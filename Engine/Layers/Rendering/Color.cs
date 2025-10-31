@@ -92,6 +92,11 @@ namespace Engine
                 h00 * startValue.A + h10 * startTangent.A + h01 * endValue.A + h11 * endTangent.A
             );
         }
+
+        public static Color operator*(Color col, float scale)
+        {
+            return new Color(col.R * scale, col.G * scale, col.B * scale, col.A * scale);
+        }
     }
 
     public struct Color32

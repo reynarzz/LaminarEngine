@@ -1,8 +1,9 @@
 ﻿#version 330 core
-layout(location = 0) in vec2 position;
+layout(location = 0) in vec3 position;
 layout(location = 1) in vec2 uv;  
 layout(location = 2) in uint color;
-layout(location = 3) in int vertIndex;
+layout(location = 3) in int texIndex;
+layout(location = 4) in int vertIndex;
 
 out vec2 fragUV;
 out vec4 vColor;
@@ -38,8 +39,8 @@ void main()
     fragUV = uv;
     vColor = unpackColor(color);
 
-    vec2 animatedPos = animateCharacter(position, vertIndex, uTime.y);
+    vec2 animatedPos = animateCharacter(position.xy, vertIndex, uTime.y);
 
-    //gl_Position = uVP * vec4(animatedPos, 0.0, 1.0);
-    gl_Position = uVP * vec4(position, 0.0, 1.0);
+    // gl_Position = uVP * vec4(position.xy, 0.0, 1.0);
+    gl_Position = uVP * vec4(animatedPos, 0.0, 1.0);
 }

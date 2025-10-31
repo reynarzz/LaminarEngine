@@ -1,6 +1,8 @@
 ﻿using Engine;
 using Engine.Graphics;
+using Engine.GUI;
 using Engine.Layers;
+using Engine.Utils;
 using GlmNet;
 using System.Linq;
 
@@ -15,7 +17,7 @@ namespace Game
         // Avoid the batch to take more texture slots that the system is supported, take into account materials texture count.
         // Fix: Batch2d vertices shift when an object is destroyed. 
         // Fix: Texture units overflow, a batch should only bind: MAX_DEVICE_ALLOWED - RENDERER_NEEDED_TEXTURE_SLOTS
-
+        // Simple UI system: Vertical/Horizontal/Grid layout, button (onDrag active, disabled), 
 
         // For the game:
         // Implement enemies
@@ -42,9 +44,10 @@ namespace Game
         {
             new Actor<GameManager>("GameManager");
 
-            // PostProcessingStack.Push(new BloomPostProcessing());
-            // ScreenGrabTest3();
+            PostProcessingStack.Push(new BloomPostProcessing());
+            ScreenGrabTest();
 
+            ScreenGrabTest3();
             Portal();
             Portal().Transform.LocalPosition = new vec3(33, -9.1f);
             Portal().Transform.LocalPosition = new vec3(43, -1);
@@ -53,18 +56,60 @@ namespace Game
 
             WaterTest();
             ParticleSystem();
-
+            // TextRendering();
+            Canvas();
             Debug.Success("Game Layer");
+        }
+
+        private void Canvas()
+        {
+            var canvas = new Actor("Canvas").AddComponent<UICanvas>();
+
+            //var text = new Actor("Text test").AddComponent<UIText>();
+            //text.Transform.Parent = canvas.Transform;
+            //text.SetText("This is a text child of a canvas");
+            //text.Font = Assets.Get<FontAsset>("Fonts/windows-bold[1].ttf");
+            //text.Material = new Material(new Shader(Assets.GetText("Shaders/Font/FontVert.vert").Text,
+            //                                        Assets.GetText("Shaders/Font/FontFrag.frag").Text));
+            //text.SortOrder = 10;
+            //text.RectTransform.Pivot = new vec2(0.0f, 0.5f);
+
+            var mainShader = new Shader(Assets.GetText("Shaders/SpriteVert.vert").Text, Assets.GetText("Shaders/SpriteFrag.frag").Text);
+            var mat1 = new Material(mainShader);
+            Window.CanResize = true;
+
+            var sprites = TextureAtlasUtils.SliceSprites(Assets.GetTexture("KingsAndPigsSprites/12-Live and Coins/Small Heart Idle (18x14).png"), 8, 7);
+
+            UIImage Image(string name, vec2 position, vec2 size, Sprite sprite, Transform parent)
+            {
+                var image = new Actor(name).AddComponent<UIImage>();
+                image.Transform.Parent = parent.Transform;
+                image.RectTransform.Pivot = new vec2(0.0f, 0.0f);
+                image.RectTransform.Size = size;
+                image.Material = mat1;
+                image.Sprite = sprite;
+                image.PreserveAspect = true;
+                image.Transform.LocalPosition = position;
+                image.AddComponent<Button>();
+                return image;
+            }
+
+            float uiMult = 3;
+            var lifeBar = Image("Life bar", new vec2(10, 10), new vec2(66, 34) * uiMult, new Sprite() { Texture = Assets.GetTexture("KingsAndPigsSprites/12-Live and Coins/Live Bar.png") }, canvas.Transform);
+
+            Image("Heart1", new vec2(56, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);
+            Image("Heart2", new vec2(88, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);
+            Image("Heart3", new vec2(120, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);
         }
 
         private void ParticleSystem()
         {
             var particleSystem = new Actor<ParticleSystem2D, Move>("ParticleSystem").GetComponent<ParticleSystem2D>();
-            particleSystem.Transform.WorldPosition = new vec3(0, 4);
+            particleSystem.Transform.WorldPosition = new vec3(-34, -6);
 
             particleSystem.EmitRate = 152;
             particleSystem.ParticleLife = 3;
-            particleSystem.SortOrder = 7;
+            particleSystem.SortOrder = 17;
             particleSystem.StartColor = Color.White;
             particleSystem.EndColor = Color.White;// new Color(0, 0, 0, 0);
             particleSystem.EndSize = new vec2(0, 0);
@@ -79,12 +124,12 @@ namespace Game
             mat1.Name = "Particle material";
             particleSystem.Material = mat1;
 
+            //var screenShader = new Shader(Assets.GetText("Shaders/VertScreenGrab.vert").Text, Assets.GetText("Shaders/ScreenGrabWobble.frag").Text);
+            //particleSystem.Material = new Material(screenShader);
+            //particleSystem.Material.GetPass(0).IsScreenGrabPass = true;
 
-            var screenShader = new Shader(Assets.GetText("Shaders/VertScreenGrab.vert").Text, Assets.GetText("Shaders/ScreenGrabWobble.frag").Text);
-            particleSystem.Material = new Material(screenShader);
-            particleSystem.Material.GetPass(0).IsScreenGrabPass = true;
-           //particleSystem.Material.Passes.ElementAt(0).Blending.Enabled = false;
-           var sprite = new Sprite();
+            //particleSystem.Material.Passes.ElementAt(0).Blending.Enabled = false;
+            var sprite = new Sprite();
             sprite.Texture = Texture2D.White;
 
             particleSystem.Sprite = sprite;
@@ -92,15 +137,29 @@ namespace Game
 
         private void TextRendering()
         {
-            var actor = new Actor<TextWritterTest>("Text1");
-            var test = actor.GetComponent<TextWritterTest>();
-            var renderer = actor.AddComponent<TextRenderer>();
-            test.Text = "This is a text written line by line!\nand this, is being written just below!!!\nspecial characters: !@#$%^&*()_+ ñ";
-            test.DelayToWrite = 0.03f;
-            test.Transform.WorldPosition = new vec3(0, 150);
-            renderer.Color = Color.White;
-            test.Transform.WorldScale = new vec3(0.8f, 0.8f, 0.5f);
+            //var actor = new Actor<TextWritterTest>("Text1");
+            //var test = actor.GetComponent<TextWritterTest>();
+            //var renderer = actor.AddComponent<TextRenderer>();
+            //test.Text = "This is a text written line by line!\nand this, is being written just below!!!\nspecial characters: !@#$%^&*()_+ ñ";
+            //test.DelayToWrite = 0.03f;
+            //test.Transform.WorldPosition = new vec3(0, 150);
+            //renderer.Color = Color.White;
+            //test.Transform.WorldScale = new vec3(0.8f, 0.8f, 0.5f);
             //renderer.OutlineSize = 1;
+
+            var actor = new Actor<UIText, TextWritterTest>("UIText");
+            var test = actor.GetComponent<UIText>();
+            var writer = actor.GetComponent<TextWritterTest>();
+            writer.Text = ("This is a text written line by line!\nand this, is being written just below!!!\nspecial characters: !@#$%^&*()_+ ñ");
+            writer.DelayToWrite = 0.03f;
+            writer.Transform.WorldPosition = new vec3(0, 150);
+            test.Color = Color.White;
+            writer.Transform.WorldScale = new vec3(0.8f, 0.8f, 0.8f);
+            test.OutlineSize = 5;
+            test.FontSize = 33;
+            test.Font = Assets.Get<FontAsset>("Fonts/windows-bold[1].ttf");
+            test.Material = new Material(new Shader(Assets.GetText("Shaders/Font/FontVert.vert").Text,
+                                                    Assets.GetText("Shaders/Font/FontFrag.frag").Text));
         }
 
         private void ScreenGrabTest()
@@ -166,7 +225,7 @@ namespace Game
             pass.Stencil.Func = StencilFunc.Equal;
             pass.Stencil.Ref = 3;
             pass.Stencil.ZFailOp = StencilOp.Keep;
-            renderer.Material.SetProperty("uWaterColor", new vec3(0.6f, 0.2f, 0.0f));
+            renderer.Material.SetProperty("uWaterColor", new vec3(0.2f, 0.4f, 0.7f));
             renderer.Material.AddTexture("uParticles", Assets.GetTexture("particles.png"));
 
             var pass2 = renderer.Material.PushPass(mainShader);
@@ -176,7 +235,7 @@ namespace Game
             pass2.Stencil.Ref = 3;
             pass2.Stencil.ZFailOp = StencilOp.Keep;
 
-            renderer.Material.SetProperty(1, "uWaterColor", new vec3(1.0f, 0.2f, 0.0f));
+            renderer.Material.SetProperty(1, "uWaterColor", new vec3(0.1f, 0.50f, 0.84f));
 
             waterActor.Transform.LocalScale = new vec3(10, 3, 1);
             waterActor.Transform.LocalPosition = new vec3(2.5f, -11, 1);

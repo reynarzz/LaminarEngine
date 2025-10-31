@@ -73,10 +73,6 @@ namespace Engine.Graphics.OpenGL
 
                 return 0;
             }
-            else
-            {
-                Debug.Success($"Shader compilation sucess '{ShaderTypeName(shaderType)}'");
-            }
 
             return shaderId;
         }

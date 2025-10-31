@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Engine.GUI;
+using Engine.Types;
+using GlmNet;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +9,18 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    public class UIElement : Component
+    [RequiredComponent(typeof(RectTransform))]
+    public abstract class UIElement : Renderer2D
     {
+        private RectTransform _rectTransform;
+        public RectTransform RectTransform => _rectTransform ?? (_rectTransform = GetComponent<RectTransform>());
+        public bool UseCustomSorting { get; set; }
+        public bool BlockEvents { get; set; } = true;
+        public bool ReceiveEvents { get; set; } = true;
+
+        internal override void Draw()
+        {
+            Debug.DrawBox(RectTransform.Rect.Center, RectTransform.Rect.Size, Color.Red);
+        }
     }
 }

@@ -40,6 +40,7 @@ namespace Game
         public string LayerName;
         public int SortOrder;
         public vec2 StartPosition;
+        public int InventoryMaxSlots;
         public Material Material;
         public string[] JumpSounds;
         public string[] WalkSounds;
@@ -90,8 +91,8 @@ namespace Game
         }
         private float _maxFallYVelocity = -20;
 
-        private int _life;
-        public int Life { get => _life; set { _life = value; Animator.Parameters.SetInt(LIFE_PROPERTY_NAME, _life); } }
+        public CharacterInventory Inventory { get; protected set; } = CharacterInventory.Empty;
+
         public int SpriteLookDir => _characterConfig.SpriteLookDir;
         private CharacterConfig _characterConfig;
         private AnimationState _main;
@@ -122,7 +123,7 @@ namespace Game
             Renderer.Material = config.Material;
             Collider.Friction = 0;
             Transform.WorldPosition = config.StartPosition;
-            Life = _characterConfig.StartingLife;
+            Inventory.Life = _characterConfig.StartingLife;
 
             InitAudio(config);
         }
@@ -297,6 +298,7 @@ namespace Game
             Animator.Parameters.SetFloat(VEL_Y_PROP_NAME, Rigidbody.Velocity.y);
             Animator.Parameters.SetInt(VEL_X_PROP_NAME, MathF.Sign(Math.Abs(Rigidbody.Velocity.x) < 0.09 ? 0 : Rigidbody.Velocity.x));
             Animator.Parameters.SetInt(VEL_Y_PROP_NAME, MathF.Sign(Math.Abs(Rigidbody.Velocity.y) < 0.09 ? 0 : Rigidbody.Velocity.y));
+            Animator.Parameters.SetInt(LIFE_PROPERTY_NAME, Inventory.Life);
             Animator.Parameters.SetBool(ON_GROUND_PROPERTY_NAME, IsOnGround);
         }
 
@@ -387,7 +389,7 @@ namespace Game
             if (!IsCharacterAlive())
                 return;
 
-            Life = Math.Clamp(Life - amount, 0, MAX_LIFE);
+            Inventory.Life = Math.Clamp(Inventory.Life - amount, 0, MAX_LIFE);
             Rigidbody.Velocity = new vec2(0, Rigidbody.Velocity.y);
             Animator.Parameters.SetTrigger(HIT_DAMAGE_PROPERTY_NAME);
             Animator.SetState(HIT_ANIM_STATE);
@@ -395,7 +397,7 @@ namespace Game
 
         public bool IsCharacterAlive()
         {
-            return Life > 0;
+            return Inventory.Life > 0;
         }
         public override void OnFixedUpdate()
         {
@@ -476,7 +478,7 @@ namespace Game
         {
             if (!IsCharacterAlive())
             {
-                Life = _characterConfig.StartingLife;
+                Inventory.Life = _characterConfig.StartingLife;
                 Animator.SetState(_main);
             }
         }

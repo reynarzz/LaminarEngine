@@ -43,52 +43,56 @@ namespace SharedTypes
 
         public static string GetReleaseDataFolder(bool isRelativePath = false)
         {
-            return Path.Join(AppContext.BaseDirectory, RELEASE_BUILD_DATA_FOLDER_NAME);
+            return ClearPathSeparation(Path.Join(AppContext.BaseDirectory, RELEASE_BUILD_DATA_FOLDER_NAME));
         }
 
         public static string GetAssetDatabaseFolder(bool isRelativePath = false)
         {
-            return Path.Join(GetAbsolutePathFlag(isRelativePath), GetLibraryFolderPath(true), ASSET_DATABASE_FOLDER_NAME);
+            return ClearPathSeparation(Path.Join(GetAbsolutePathFlag(isRelativePath), GetLibraryFolderPath(true), ASSET_DATABASE_FOLDER_NAME));
         }
         public static string GetProjectSettingsFolder(bool isRelativePath = false)
         {
-            return Path.Join(GetAbsolutePathFlag(isRelativePath), PROJECT_CONFIG_FOLDER_NAME);
+            return ClearPathSeparation(Path.Join(GetAbsolutePathFlag(isRelativePath), PROJECT_CONFIG_FOLDER_NAME));
         }
         public static string GetAssetDatabaseFilePath(bool isRelativePath = false)
         {
-            return Path.Join(GetAbsolutePathFlag(isRelativePath), GetAssetDatabaseFolder(true), ASSET_DATABASE_FILE_NAME);
+            return ClearPathSeparation(Path.Join(GetAbsolutePathFlag(isRelativePath), GetAssetDatabaseFolder(true), ASSET_DATABASE_FILE_NAME));
         }
 
         public static string GetLibraryFolderPath(bool isRelativePath = false)
         {
-            return Path.Join(GetAbsolutePathFlag(isRelativePath), LIBRARY_FOLDER_NAME);
+            return ClearPathSeparation(Path.Join(GetAbsolutePathFlag(isRelativePath), LIBRARY_FOLDER_NAME));
         }
 
         public static string GetAssetsFolderPath(bool isRelativePath = false)
         {
-            return Path.Join(GetAbsolutePathFlag(isRelativePath), ASSETS_FOLDER_NAME);
+            return ClearPathSeparation(Path.Join(GetAbsolutePathFlag(isRelativePath), ASSETS_FOLDER_NAME));
         }
 
         public static string CreateBinFilePath(string folderPath, string guid, bool isRelativePath = false)
         {
-            return Path.Join(folderPath, guid + ASSET_DATABASE_BINARY_EXT_NAME);
+            return ClearPathSeparation(Path.Join(folderPath, guid + ASSET_DATABASE_BINARY_EXT_NAME));
         }
 
         public static string GetBuildTempFolderPath(bool isRelativePath = false)
         {
-            return Path.Join(GetAbsolutePathFlag(isRelativePath), GetLibraryFolderPath(true), BUILD_TEMP_FOLDER_NAME);
+            return ClearPathSeparation(Path.Join(GetAbsolutePathFlag(isRelativePath), GetLibraryFolderPath(true), BUILD_TEMP_FOLDER_NAME));
         }
 
         public static string GetRelativeAssetPath(string absoluteAssetPath)
         {
-            return absoluteAssetPath.Substring(absoluteAssetPath.IndexOf(ASSETS_FOLDER_NAME) + ASSETS_FOLDER_NAME.Length + 1);
+            return ClearPathSeparation(absoluteAssetPath.Substring(absoluteAssetPath.IndexOf(ASSETS_FOLDER_NAME) + ASSETS_FOLDER_NAME.Length + 1));
         }
 
         public static string GetAbsoluteAssetPath(string relativeAssetPath)
         {
-            return Path.Combine(ProjectRootFolder, ASSETS_FOLDER_NAME, relativeAssetPath);
+            return ClearPathSeparation(Path.Combine(ProjectRootFolder, ASSETS_FOLDER_NAME, relativeAssetPath));
         }
 
+        public static string ClearPathSeparation(string path)
+        {
+            return path.Replace("\\", "/");
+        }
         private static string GetAbsolutePathFlag(bool isRelativePath)
         {
             return isRelativePath ? null : ProjectRootFolder;

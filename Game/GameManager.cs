@@ -1,4 +1,5 @@
 ﻿using Engine;
+using Engine.GUI;
 using Engine.Utils;
 using GlmNet;
 using ldtk;
@@ -39,18 +40,29 @@ namespace Game
         private static Material _defaultSpriteMaterial;
         private Material _playerSpriteMaterial;
         private vec3 _playerStartPosTest;
-        private static TextRenderer _coinCounterTest;
+        private static UIText _coinCounterTest;
+        private ItemsDatabase _itemsDatabase;
+        private PauseMenu _pauseMenu;
 
         public static PlayerBag PlayerBag { get; } = new();
         public static Player Player { get; private set; }
         public static Material DefaultMaterial => _defaultSpriteMaterial;
+
+        public static FontAsset DefaultFont { get; internal set; }
+
         public override void OnAwake()
         {
             InitializeMaterials();
-            InitializeActorLayers(typeof(GameLayers));
+            InitializeActorLayers();
+            InitializeData();
             InitializeWorld();
         }
 
+        private void InitializeData()
+        {
+            _itemsDatabase = new ItemsDatabase("Data/ItemsDatabase.csv");
+            DefaultFont = Assets.Get<FontAsset>("Fonts/windows-bold[1].ttf");
+        }
         private void InitializeMaterials()
         {
             GetMaterial("DefaultSpriteMaterial", ref _defaultSpriteMaterial,
@@ -69,7 +81,7 @@ namespace Game
             PlayerMatPass.Stencil.ZPassOp = StencilOp.Replace;
         }
 
-        private void InitializeActorLayers(Type layers)
+        private void InitializeActorLayers()
         {
             static string[] GetConstStringValues(Type type)
             {
@@ -79,7 +91,7 @@ namespace Game
                            .ToArray();
             }
 
-            var names = GetConstStringValues(layers);
+            var names = GetConstStringValues(typeof(GameLayers));
 
             for (int i = 0; i < names.Length; i++)
             {
@@ -99,6 +111,8 @@ namespace Game
 
         private void InitializeWorld()
         {
+            _pauseMenu = new Actor("Pause menu").AddComponent<PauseMenu>();
+
             Player = new Actor("Player").AddComponent<Player>();
             Player.Transform.WorldPosition = new vec3();
             Player.Actor.Layer = LayerMask.NameToLayer(GameLayers.PLAYER);
@@ -135,8 +149,8 @@ namespace Game
                 Ground = new GroundDetectionOptions()
                 {
                     Enabled = true,
-                    MinX = -0.45f,
-                    MaxX = 0.45f,
+                    MinX = -0.44f,
+                    MaxX = 0.44f,
                     RaysCount = 3,
                     SizeY = 0.7f,
                     YOffset = 0,
@@ -156,6 +170,7 @@ namespace Game
             platform.Layer = LayerMask.NameToLayer(GameLayers.PLATFORM);
 
 
+            // Debug.Log(ItemsDatabase.GetDatabaseSchemaCsv());
 
             // GamePrefabs.Enemies.InstantiatePigStandard(Player.Transform.LocalPosition + vec3.Right * 2, -1);
 
@@ -284,10 +299,15 @@ namespace Game
                 Physics2D.DrawColliders = !Physics2D.DrawColliders;
             }
 
-            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.F11) || Input.GetKeyDown(KeyCode.Enter))
+            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.F11))
             {
                 Window.FullScreen(!Window.IsFullScreen);
-                Window.MouseVisible = !Window.IsFullScreen;
+                // Window.MouseVisible = !Window.IsFullScreen;
+            }
+
+            if (Input.GetKeyDown(KeyCode.Enter))
+            {
+                _pauseMenu.OnPause();
             }
         }
 
@@ -295,12 +315,12 @@ namespace Game
         {
             if (!_coinCounterTest)
             {
-                _coinCounterTest = new Actor("CounterText").AddComponent<TextRenderer>();
-                _coinCounterTest.Font = Assets.Get<FontAsset>("Fonts/windows-bold[1].ttf");
+                _coinCounterTest = new Actor("CounterText").AddComponent<UIText>();
+                _coinCounterTest.Font = DefaultFont; 
             }
-            Debug.Log("Coin: " + PlayerBag.Coins);
-            _coinCounterTest.Text.Clear();
-            _coinCounterTest.Text.Append(PlayerBag.Coins); // Remove from here, just for testing
+
+            _coinCounterTest.SetText(PlayerBag.Coins.ToString()); // Remove from here, just for testing
+            _coinCounterTest.Material = _defaultSpriteMaterial;
             _coinCounterTest.Transform.WorldPosition = new vec3(20, 20);
 
         }

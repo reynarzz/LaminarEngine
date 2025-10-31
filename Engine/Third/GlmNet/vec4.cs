@@ -12,7 +12,7 @@ namespace GlmNet
         public float y;
         public float z;
         public float w;
-
+        public vec3 xyz => new vec3(x, y, z);
         public float this[int index]
         {
             get
@@ -62,11 +62,11 @@ namespace GlmNet
             this.w = w;
         }
 
-        public vec4(vec2 xy, float w)
+        public vec4(vec2 xy, float z, float w)
         {
             this.x = xy.x;
             this.y = xy.y;
-            this.z = 0;
+            this.z = z;
             this.w = w;
         }
 

@@ -76,7 +76,7 @@ namespace Engine.Rendering
         }
 
 
-        internal List<Batch2D> GetBatches(List<Renderer2D> renderers)
+        internal List<Batch2D> GetBatches<T>(List<T> renderers) where T: Renderer2D
         {
             // TODO: Do frustum culling
 

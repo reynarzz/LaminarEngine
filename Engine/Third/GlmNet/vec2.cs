@@ -15,6 +15,8 @@ namespace GlmNet
         public static vec2 Zero { get; } = new vec2(0, 0);
         public static vec2 Right { get; } = new vec2(1, 0);
         public static vec2 Up { get; } = new vec2(0, 1);
+        public static vec2 Half { get; } = new vec2(0.5f, 0.5f);
+
         public vec2 Normalized
         {
             get
@@ -38,6 +40,7 @@ namespace GlmNet
                 return x * x + y * y;
             }
         }
+
 
         public float this[int index]
         {
@@ -122,7 +125,10 @@ namespace GlmNet
         {
             return new vec2(lhs.x / rhs, lhs.y / rhs);
         }
-
+        public static vec2 operator /(vec2 lhs, vec2 rhs)
+        {
+            return new vec2(lhs.x / rhs.x, lhs.y / rhs.y);
+        }
         public float[] to_array()
         {
             return new[] { x, y };

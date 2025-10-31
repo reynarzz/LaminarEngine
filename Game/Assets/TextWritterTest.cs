@@ -1,4 +1,5 @@
 ﻿using Engine;
+using Engine.GUI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,23 +15,11 @@ namespace Game
         private float _currentTime;
         private int _characterIndex = 0;
 
-        private TextRenderer _textRenderer;
+        private UIText _textRenderer;
 
         public override void OnStart()
         {
-            _textRenderer = GetComponent<TextRenderer>();
-            _textRenderer.Font = Assets.Get<FontAsset>("Fonts/windows-bold[1].ttf");
-            _textRenderer.FontSize = 30;
-           // _textRenderer.Text.Length = Text.Length;
-            for (int i = 0; i < Text.Length; i++)
-            {
-                //if (Text[i] == '\n')
-                //{
-                //    _textRenderer.Text.Append('\n');
-                //}
-                //else
-                    //_textRenderer.Text.Append('\0');
-            }
+            _textRenderer = GetComponent<UIText>();
         }
 
         public override void OnUpdate()
@@ -38,10 +27,10 @@ namespace Game
             if((_currentTime -= Time.DeltaTime) <= 0)
             {
                 _currentTime = DelayToWrite;
-                if ((_textRenderer.Text.Length != _characterIndex || _textRenderer.Text.Length != Text.Length) && Text.Length > _characterIndex)
+                if ((_textRenderer.Length != _characterIndex || _textRenderer.Length != Text.Length) && Text.Length > _characterIndex)
                 {
                     //_textRenderer.Text[_characterIndex] = Text[_characterIndex];
-                    _textRenderer.Text.Append(Text[_characterIndex]);
+                    _textRenderer.Append(Text[_characterIndex]);
                     _characterIndex++;
                 }
             }

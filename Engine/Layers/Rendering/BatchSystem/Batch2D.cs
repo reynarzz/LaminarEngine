@@ -128,7 +128,7 @@ namespace Engine.Rendering
             }
         }
 
-        internal void PushGeometry(Renderer2D renderer, Material material, Texture texture, int indicesCount, Span<Vertex> vertices)
+        internal void PushGeometry(Renderer renderer, Material material, Texture texture, int indicesCount, Span<Vertex> vertices)
         {
             _isDirty = true;
             IsActive = true;
