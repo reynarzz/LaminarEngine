@@ -44,10 +44,10 @@ namespace Game
         {
             new Actor<GameManager>("GameManager");
 
-            //PostProcessingStack.Push(new BloomPostProcessing());
-            //ScreenGrabTest();
+            PostProcessingStack.Push(new BloomPostProcessing());
+            ScreenGrabTest();
 
-            //ScreenGrabTest3();
+            ScreenGrabTest3();
             Portal();
             Portal().Transform.LocalPosition = new vec3(33, -9.1f);
             Portal().Transform.LocalPosition = new vec3(43, -1);
@@ -65,29 +65,41 @@ namespace Game
         {
             var canvas = new Actor("Canvas").AddComponent<UICanvas>();
 
-            var text = new Actor("Text test").AddComponent<UIText>();
-            text.Transform.Parent = canvas.Transform;
-            text.SetText("This is a text child of a canvas");
-            text.Font = Assets.Get<FontAsset>("Fonts/windows-bold[1].ttf");
-            text.Material = new Material(new Shader(Assets.GetText("Shaders/Font/FontVert.vert").Text,
-                                                    Assets.GetText("Shaders/Font/FontFrag.frag").Text));
+            //var text = new Actor("Text test").AddComponent<UIText>();
+            //text.Transform.Parent = canvas.Transform;
+            //text.SetText("This is a text child of a canvas");
+            //text.Font = Assets.Get<FontAsset>("Fonts/windows-bold[1].ttf");
+            //text.Material = new Material(new Shader(Assets.GetText("Shaders/Font/FontVert.vert").Text,
+            //                                        Assets.GetText("Shaders/Font/FontFrag.frag").Text));
+            //text.SortOrder = 10;
+            //text.RectTransform.Pivot = new vec2(0.0f, 0.5f);
 
-            text.RectTransform.Pivot = new vec2(0.0f, 0.5f);
-            //text.Transform.WorldPosition = new vec3(512/2 - text.RectTransform.Width / 2, 0);
             var mainShader = new Shader(Assets.GetText("Shaders/SpriteVert.vert").Text, Assets.GetText("Shaders/SpriteFrag.frag").Text);
             var mat1 = new Material(mainShader);
             Window.CanResize = true;
-            var image = new Actor("Image test").AddComponent<UIImage>();
-            image.Transform.Parent = canvas.Transform;
-            image.RectTransform.Pivot = new vec2(0.0f, 0.0f);
-            image.RectTransform.Width = 70;
-            image.RectTransform.Height = 70;
-            image.Material = mat1;
 
             var sprites = TextureAtlasUtils.SliceSprites(Assets.GetTexture("KingsAndPigsSprites/12-Live and Coins/Small Heart Idle (18x14).png"), 18, 14);
 
-            image.Sprite = sprites[0];
-            image.PreserveAspect = true;
+            void Image(vec2 position, vec2 size, Sprite sprite)
+            {
+                var image = new Actor("Image test").AddComponent<UIImage>();
+                image.Transform.Parent = canvas.Transform;
+                image.RectTransform.Pivot = new vec2(0.0f, 0.0f);
+                image.RectTransform.Width = size.x;
+                image.RectTransform.Height = size.y;
+                image.Material = mat1;
+                image.Sprite = sprite;
+                image.PreserveAspect = true;
+                image.Transform.LocalPosition = position;
+            }
+
+            float uiMult = 3;
+
+            vec2 healthBarPos = new vec2(10, 10);
+            Image(healthBarPos, new vec2(66, 34) * uiMult, new Sprite() { Texture = Assets.GetTexture("KingsAndPigsSprites/12-Live and Coins/Live Bar.png") });
+            Image(healthBarPos + new vec2(66, 30), new vec2(18, 14) * uiMult, sprites[0]);
+            Image(healthBarPos + new vec2(33, 30), new vec2(18, 14) * uiMult, sprites[0]);
+            Image(healthBarPos + new vec2(99, 30), new vec2(18, 14) * uiMult, sprites[0]);
         }
 
         private void ParticleSystem()

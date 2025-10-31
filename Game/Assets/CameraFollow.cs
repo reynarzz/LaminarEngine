@@ -30,12 +30,6 @@ namespace Game
         private void Move()
         {
 
-            var bouds = _cam.GetFrustumBoundsWorld();
-            var min = bouds.Max;
-            min.z = 0;
-
-            //Debug.DrawBox(new vec3(Transform.WorldPosition.x, Transform.WorldPosition.y,  0), vec2.One, Color.White);
-            Debug.DrawBox(new vec3(bouds.Min.x, min.y,  0), vec2.One, Color.White);
             if (!Target)
                 return;
 
