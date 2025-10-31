@@ -233,12 +233,12 @@ namespace Engine
             return null;
         }
 
-        public T GetComponent<T>() where T : Component
+        public T GetComponent<T>() where T: class
         {
-            return GetComponent(typeof(T)) as T;
+            return ((object)GetComponent(typeof(T))) as T;
         }
 
-        public void GetComponents<T>(ref List<T> elements) where T : Component
+        public void GetComponents<T>(ref List<T> elements) where T : class, IComponent
         {
             CheckIfValidObject(this);
 
@@ -255,7 +255,7 @@ namespace Engine
             }
         }
 
-        public Span<T> GetComponents<T>() where T : Component
+        public Span<T> GetComponents<T>() where T : class, IComponent
         {
             var components = new List<T>();
             GetComponents(ref components);

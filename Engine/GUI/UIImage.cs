@@ -18,7 +18,7 @@ namespace Engine.GUI
         internal override void OnCanvasDraw(UICanvas canvas)
         {
             var rt = RectTransform;
-            var size = rt.ComputedRect.Size;
+            var size = rt.Rect.Size;
             if (size.x <= 0f || size.y <= 0f) return;
 
             var chunk = Sprite?.GetAtlasChunk() ?? AtlasChunk.DefaultChunk;
@@ -46,8 +46,11 @@ namespace Engine.GUI
             Mesh.Vertices[1] = quad.v1;
             Mesh.Vertices[2] = quad.v2;
             Mesh.Vertices[3] = quad.v3;
+        }
 
-            // IsDirty = true;
+        public override void OnPointerDown(vec2 position)
+        {
+            Debug.Log("Pointer down: " + Name);
         }
     }
 }

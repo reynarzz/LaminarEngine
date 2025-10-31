@@ -7,29 +7,53 @@ using System.Threading.Tasks;
 
 namespace Engine.GUI
 {
-    // Note: Here to remember to build a UI system.
     public class UICanvas : Component, ILateUpdatableComponent
     {
-        private Camera _internalCamera;
-        public Camera Camera { get; set; }
-        private List<UIElement> _uiElements;
         public float Width { get; internal set; } = 512 * 2;
         public float Height { get; internal set; } = 288 * 2;
-        internal override void OnInitialize()
-        {
-            _uiElements = new();
-        }
-        void RebuildRecursive(UIElement element, vec2 parentPos)
+
+        private void RebuildRecursive(UIElement element, Rect parentRect, ref bool mouseEventHandled)
         {
             if (!element)
                 return;
 
-            element.RectTransform.Recalculate(this);
-            element.OnRebuild();
+            element.RectTransform.Recalculate(parentRect);
 
             foreach (var child in element.Transform.Children)
             {
-                RebuildRecursive(child.GetComponent<UIElement>(), element.Transform.LocalPosition);
+                RebuildRecursive(child.GetComponent<UIElement>(), element.RectTransform.Rect, ref mouseEventHandled);
+            }
+
+            if (mouseEventHandled)
+            {
+                if (element is UIGraphicsElement graphic)
+                {
+                    graphic.OnCanvasDraw(this);
+                }
+                return;
+            }
+
+            var mousePos = ScreenToCanvas(Input.MousePosition);
+            bool hasMouse = element.RectTransform.Rect.Contains(mousePos);
+
+            if (hasMouse && element.ReceiveEvents)
+            {
+                if (Input.GetMouseDown(MouseButton.Left))
+                {
+                    element.GetComponent<IPointerDownEvent>()?.OnPointerDown(mousePos);
+                }
+
+                if (Input.GetMouseUp(MouseButton.Left))
+                {
+                    element.GetComponent<IPointerUpEvent>()?.OnPointerUp(mousePos);
+                }
+
+                element.GetComponent<IPointerHoverEvent>()?.OnPointerHover(mousePos);
+
+                if (element.BlockEvents)
+                {
+                    mouseEventHandled = true;
+                }
             }
 
             if (element is UIGraphicsElement graphics)
@@ -40,14 +64,18 @@ namespace Engine.GUI
 
         public void OnLateUpdate()
         {
-            _uiElements.Clear();
-            SceneManager.ActiveScene.FindAll(_uiElements, false, Actor);
-
-            foreach (var elements in _uiElements)
+            foreach (var element in Transform.Children)
             {
-                RebuildRecursive(elements, new vec2(0, 0));
+                bool blocked = false;
+                RebuildRecursive(element.GetComponent<UIElement>(), new Rect(0, 0, Width, Height), ref blocked);
             }
         }
 
+        public vec2 ScreenToCanvas(vec2 mousePosScreen)
+        {
+            float x = (mousePosScreen.x / (float)Window.Width) * (float)Width;
+            float y = (mousePosScreen.y / (float)Window.Height) * (float)Height;
+            return new vec2(x, y);
+        }
     }
 }

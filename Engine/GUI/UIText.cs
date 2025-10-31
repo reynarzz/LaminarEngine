@@ -115,7 +115,7 @@ namespace Engine.GUI
                 Mesh.IndicesToDrawCount = 0;
 
             var rt = RectTransform;
-            var rect = rt.ComputedRect;
+            var rect = rt.Rect;
             var pivot = new System.Numerics.Vector2(rt.Pivot.x, rt.Pivot.y);
 
             float rotation = glm.radians(Transform.WorldEulerAngles.z);

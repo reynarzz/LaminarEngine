@@ -9,5 +9,6 @@ namespace Engine
     public interface IComponent : IObject
     {
         public bool IsEnabled { get; set; }
+        public Actor Actor { get; }
     }
 }

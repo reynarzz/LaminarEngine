@@ -17,7 +17,7 @@ namespace Game
         // Avoid the batch to take more texture slots that the system is supported, take into account materials texture count.
         // Fix: Batch2d vertices shift when an object is destroyed. 
         // Fix: Texture units overflow, a batch should only bind: MAX_DEVICE_ALLOWED - RENDERER_NEEDED_TEXTURE_SLOTS
-
+        // Simple UI system: Vertical/Horizontal/Grid layout, button (hover, click, release, active, disabled), 
 
         // For the game:
         // Implement enemies
@@ -44,10 +44,10 @@ namespace Game
         {
             new Actor<GameManager>("GameManager");
 
-            PostProcessingStack.Push(new BloomPostProcessing());
-            ScreenGrabTest();
+            //PostProcessingStack.Push(new BloomPostProcessing());
+            //ScreenGrabTest();
 
-            ScreenGrabTest3();
+            //ScreenGrabTest3();
             Portal();
             Portal().Transform.LocalPosition = new vec3(33, -9.1f);
             Portal().Transform.LocalPosition = new vec3(43, -1);
@@ -78,28 +78,28 @@ namespace Game
             var mat1 = new Material(mainShader);
             Window.CanResize = true;
 
-            var sprites = TextureAtlasUtils.SliceSprites(Assets.GetTexture("KingsAndPigsSprites/12-Live and Coins/Small Heart Idle (18x14).png"), 18, 14);
+            var sprites = TextureAtlasUtils.SliceSprites(Assets.GetTexture("KingsAndPigsSprites/12-Live and Coins/Small Heart Idle (18x14).png"), 8, 7);
 
-            void Image(vec2 position, vec2 size, Sprite sprite)
+            UIImage Image(string name, vec2 position, vec2 size, Sprite sprite, Transform parent)
             {
-                var image = new Actor("Image test").AddComponent<UIImage>();
-                image.Transform.Parent = canvas.Transform;
+                var image = new Actor(name).AddComponent<UIImage>();
+                image.Transform.Parent = parent.Transform;
                 image.RectTransform.Pivot = new vec2(0.0f, 0.0f);
-                image.RectTransform.Width = size.x;
-                image.RectTransform.Height = size.y;
+                image.RectTransform.Size = size;
                 image.Material = mat1;
                 image.Sprite = sprite;
                 image.PreserveAspect = true;
                 image.Transform.LocalPosition = position;
+                image.AddComponent<Button>();
+                return image;
             }
 
             float uiMult = 3;
+            var lifeBar = Image("Life bar", new vec2(10, 10), new vec2(66, 34) * uiMult, new Sprite() { Texture = Assets.GetTexture("KingsAndPigsSprites/12-Live and Coins/Live Bar.png") }, canvas.Transform);
 
-            vec2 healthBarPos = new vec2(10, 10);
-            Image(healthBarPos, new vec2(66, 34) * uiMult, new Sprite() { Texture = Assets.GetTexture("KingsAndPigsSprites/12-Live and Coins/Live Bar.png") });
-            Image(healthBarPos + new vec2(66, 30), new vec2(18, 14) * uiMult, sprites[0]);
-            Image(healthBarPos + new vec2(33, 30), new vec2(18, 14) * uiMult, sprites[0]);
-            Image(healthBarPos + new vec2(99, 30), new vec2(18, 14) * uiMult, sprites[0]);
+            Image("Heart1", new vec2(56, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);
+            Image("Heart2", new vec2(88, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);
+            Image("Heart3", new vec2(120, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);
         }
 
         private void ParticleSystem()

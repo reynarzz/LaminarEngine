@@ -8,16 +8,17 @@ namespace Engine
     public class RectTransform : Component
     {
         public vec2 Pivot = new vec2(0.5f, 0.5f);
-        public float Width = 100f;
-        public float Height = 100f;
+        public vec2 Size = new vec2(100f, 100f);
 
-        public Rect ComputedRect { get; private set; }
+        public Rect Rect { get; private set; }
 
-        public void Recalculate(UICanvas canvas)
+        public void Recalculate(Rect parent)
         {
-            vec2 size = new vec2(Width, Height);
-            vec2 topLeft = new vec2(Transform.LocalPosition) - new vec2(Pivot.x * size.x, -Pivot.y * size.y);
-            ComputedRect = new Rect(topLeft, size);
+            var localPos = new vec2(Transform.LocalPosition.x, Transform.LocalPosition.y);
+            var pivotOffset = new vec2(Pivot.x * Size.x, Pivot.y * Size.y);
+            var topLeft = parent.Min + localPos - new vec2(pivotOffset.x, -pivotOffset.y);
+
+            Rect = new Rect(topLeft, Size);
         }
     }
 }

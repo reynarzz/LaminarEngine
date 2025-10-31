@@ -15,14 +15,16 @@ namespace Engine
         private RectTransform _rectTransform;
         public RectTransform RectTransform => _rectTransform ?? (_rectTransform = GetComponent<RectTransform>());
         public bool UseCustomSorting { get; set; }
-     
-        public virtual void OnRebuild()
-        {
-        }
+        public bool BlockEvents { get; set; } = true;
+        public bool ReceiveEvents { get; set; } = true;
 
-        public virtual bool OnPointer(vec2 position, bool pressed)
+        public virtual void OnPointerDown(vec2 position) { }
+        public virtual void OnPointerUp(vec2 position) { }
+        public virtual void OnHover(vec2 position) { }
+
+        internal override void Draw()
         {
-            return false;
+            Debug.DrawBox(RectTransform.Rect.Center, RectTransform.Rect.Size, Color.Red);
         }
     }
 }

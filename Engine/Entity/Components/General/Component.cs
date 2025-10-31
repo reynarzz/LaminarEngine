@@ -97,19 +97,19 @@ namespace Engine
             Actor.AddComponent<T1, T2, T3, T4, T5>();
         }
 
-        public T GetComponent<T>() where T : Component
+        public T GetComponent<T>() where T : class
         {
             CheckIfValidObject(this);
             return Actor.GetComponent<T>();
         }
 
-        public Span<T> GetComponents<T>() where T : Component
+        public Span<T> GetComponents<T>() where T : class, IComponent
         {
             CheckIfValidObject(this);
             return Actor.GetComponents<T>();
         }
 
-        public void GetComponents<T>(ref List<T> elements) where T : Component
+        public void GetComponents<T>(ref List<T> elements) where T : class, IComponent
         {
             CheckIfValidObject(this);
             Actor.GetComponents<T>(ref elements);

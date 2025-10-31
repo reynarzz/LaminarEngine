@@ -9,6 +9,9 @@ namespace Engine.GUI
     public abstract class UIGraphicsElement : UIElement
     {
         internal abstract void OnCanvasDraw(UICanvas canvas);
-        internal sealed override void Draw() { }
+        internal sealed override void Draw() 
+        {
+            base.Draw();
+        }
     }
 }

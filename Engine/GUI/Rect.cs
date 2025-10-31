@@ -19,6 +19,14 @@ namespace Engine
             Height = size.y;
         }
 
+        public Rect(float x, float y, float width, float height)
+        {
+            X = x;
+            Y = y;
+            Width = width;
+            Height = height;
+        }
+
         public float XMin => X;
         public float YMin => Y;
         public float XMax => X + Width;

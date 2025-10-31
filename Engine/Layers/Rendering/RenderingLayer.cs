@@ -106,7 +106,7 @@ namespace Engine.Layers
             // TODO: improve this, don't ask for renderers but add/remove with events.
             _renderers.Clear();
             _UIElementRenderers.Clear();
-            SceneManager.ActiveScene.FindAll(_renderers,x => 
+            SceneManager.ActiveScene.FindAll(_renderers, x =>
             {
                 return x.IsEnabled && x is not UIElement;
             });
@@ -120,13 +120,12 @@ namespace Engine.Layers
             var uibatches = _uiBatches.GetBatches(_UIElementRenderers);
 
             var VP = _mainCamera.Projection * _mainCamera.ViewMatrix;
-            
+
             RenderBatches(batches, ref VP, sceneRenderTarget);
             RenderBatches(uibatches, ref FontManager.Instance.TestUIProjection, sceneRenderTarget);
 
             Debug.DrawGeometries(VP, sceneRenderTarget.NativeResource);
-
-            // FontManager.Instance.Render(VP, sceneRenderTarget);
+            //Debug.DrawGeometries(FontManager.Instance.TestUIProjection, sceneRenderTarget.NativeResource);
 
             foreach (var pass in PostProcessingStack.Passes)
             {
@@ -220,7 +219,7 @@ namespace Engine.Layers
                     uniformOffset++;
                 }
 
-                
+
                 // Iniforms
                 _drawCallData.Uniforms[uniformOffset + (int)Consts.Graphics.Uniforms.VP_MATRIX].SetMat4(Consts.VIEW_PROJ_UNIFORM_NAME, VP);
                 _drawCallData.Uniforms[uniformOffset + (int)Consts.Graphics.Uniforms.VIEW_MATRIX].SetMat4(Consts.VIEW_UNIFORM_NAME, camera.ViewMatrix);
