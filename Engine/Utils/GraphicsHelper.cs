@@ -45,7 +45,7 @@ namespace Engine
 
             return GfxDeviceManager.Current.CreateGeometry(geoDesc);
         }
-        
+
         internal static GfxResource GetScreenQuadGeometry()
         {
             QuadVertices vertices = default;
@@ -152,7 +152,25 @@ namespace Engine
 
             return vertices;
         }
+        internal static QuadVertices GetUIQuadVerticesLocal(QuadUV uvs, vec2 size, vec2 pivot, Color color, mat4 worldMatrix)
+        {
+            QuadVertices q = default;
+            float x0 = -pivot.x * size.x, y0 = -pivot.y * size.y;
+            float x1 = x0 + size.x, y1 = y0 + size.y;
 
+            var u = QuadUV.FlipUV(uvs, false, true);
 
+            vec4 p0 = worldMatrix * new vec4(x0, y0, 0, 1);
+            vec4 p1 = worldMatrix * new vec4(x0, y1, 0, 1);
+            vec4 p2 = worldMatrix * new vec4(x1, y1, 0, 1);
+            vec4 p3 = worldMatrix * new vec4(x1, y0, 0, 1);
+
+            q.v0 = new Vertex { Color = color, Position = new vec2(p0.x, p0.y), UV = u.BottomLeftUV };
+            q.v1 = new Vertex { Color = color, Position = new vec2(p1.x, p1.y), UV = u.TopLeftUV };
+            q.v2 = new Vertex { Color = color, Position = new vec2(p2.x, p2.y), UV = u.TopRightUV };
+            q.v3 = new Vertex { Color = color, Position = new vec2(p3.x, p3.y), UV = u.BottomRightUV };
+
+            return q;
+        }
     }
 }

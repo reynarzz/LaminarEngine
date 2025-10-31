@@ -146,7 +146,7 @@ namespace Engine
             {
                 for (int i = 0; i < _components.Count; i++)
                 {
-                    var alreadyAdded = type != typeof(RectTransform)? _components[i].GetType().IsAssignableFrom(type): _components[i].GetType() == typeof(RectTransform);
+                    var alreadyAdded = _components[i].GetType().IsAssignableFrom(type);
                     if (alreadyAdded)
                     {
 #if SHOW_ENGINE_WARNS
@@ -241,7 +241,7 @@ namespace Engine
         public void GetComponents<T>(ref List<T> elements) where T : Component
         {
             CheckIfValidObject(this);
-         
+
             for (int i = 0; i < _components.Count; i++)
             {
                 if (typeof(T).IsAssignableFrom(_components[i].GetType()))
@@ -306,7 +306,7 @@ namespace Engine
 
             foreach (var comp in component.Actor._components)
             {
-                if(comp != component)
+                if (comp != component)
                 {
                     var att = comp.GetType().GetCustomAttribute<RequiredComponentAttribute>();
 
@@ -317,7 +317,7 @@ namespace Engine
                     }
                 }
             }
-            
+
 
             if (component && !component.IsPendingToDestroy)
             {
@@ -425,7 +425,7 @@ namespace Engine
             }
         }
 
-        private void UpdateScriptsFunction<T>(Actor actor, Action<T> action) where T: class, IComponent
+        private void UpdateScriptsFunction<T>(Actor actor, Action<T> action) where T : class, IComponent
         {
             if (actor && actor.IsActiveInHierarchy)
             {

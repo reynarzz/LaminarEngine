@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Engine.GUI
 {
     // Note: Here to remember to build a UI system.
-    public class UICanvas : Component, IUpdatableComponent
+    public class UICanvas : Component, ILateUpdatableComponent
     {
         private Camera _internalCamera;
         public Camera Camera { get; set; }
@@ -29,7 +29,7 @@ namespace Engine.GUI
 
             foreach (var child in element.Transform.Children)
             {
-                RebuildRecursive(child.GetComponent<UIElement>(), element.RectTransform.AnchoredPosition);
+                RebuildRecursive(child.GetComponent<UIElement>(), element.Transform.LocalPosition);
             }
 
             if (element is UIGraphicsElement graphics)
@@ -38,7 +38,7 @@ namespace Engine.GUI
             }
         }
 
-        public void OnUpdate()
+        public void OnLateUpdate()
         {
             _uiElements.Clear();
             SceneManager.ActiveScene.FindAll(_uiElements, false, Actor);

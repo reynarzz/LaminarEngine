@@ -112,65 +112,38 @@ namespace Engine.GUI
         private void SendTextToDraw(StringBuilder text, DynamicSpriteFont font, int lineHeight)
         {
             if (IsDirty)
-            {
                 Mesh.IndicesToDrawCount = 0;
-            }
 
-            var pivot = new System.Numerics.Vector2(0.0f, 1.0f);
-
-            switch (Horizontal)
-            {
-                case TextHorizontalAlignment.Center:
-                    pivot.X = 0.5f;
-                    break;
-                case TextHorizontalAlignment.Left:
-                    pivot.X = 0.0f;
-                    break;
-                case TextHorizontalAlignment.Right:
-                    pivot.X = 1.0f;
-                    break;
-            }
-
-            switch (Vertical)
-            {
-                case TextVerticalAlignment.Center:
-                    pivot.Y = 0.5f;
-                    break;
-                case TextVerticalAlignment.Bottom:
-                    pivot.Y = 1.0f;
-                    break;
-                case TextVerticalAlignment.Top:
-                    pivot.Y = 0.0f;
-                    break;
-            }
-            pivot = new System.Numerics.Vector2(RectTransform.Pivot.x, RectTransform.Pivot.y);
+            var rt = RectTransform;
+            var rect = rt.ComputedRect;
+            var pivot = new System.Numerics.Vector2(rt.Pivot.x, rt.Pivot.y);
 
             float rotation = glm.radians(Transform.WorldEulerAngles.z);
-
-            var scale = new System.Numerics.Vector2(Transform.WorldScale.x,
-                                                    -Transform.WorldScale.y);
+            var scale = new System.Numerics.Vector2(Transform.WorldScale.x, Transform.WorldScale.y);
 
             var effect = OutlineSize > 0 ? FontSystemEffect.Stroked : FontSystemEffect.None;
 
             var size = font.MeasureString(text, scale, CharacterSpacing, LineSpacing, effect, OutlineSize);
-            var origin = new System.Numerics.Vector2(size.X, size.Y);
-            //var origin = default(System.Numerics.Vector2);
-            var position = new System.Numerics.Vector2(Transform.WorldPosition.x,
-                                                       Transform.WorldPosition.y + lineHeight);
-            
+            var origin = default(System.Numerics.Vector2);
+
+            var rectPos = new System.Numerics.Vector2(rect.Min.x, rect.Min.y);
+
+            var pivotOffset = new System.Numerics.Vector2(rect.Size.x * pivot.X, rect.Size.y * pivot.Y);
+
+            var position = rectPos + pivotOffset;
+
+            position.Y += lineHeight;
+
             var bounds = font.TextBounds(text, position, scale, CharacterSpacing, LineSpacing, effect, OutlineSize);
-            var textSize = new System.Numerics.Vector2(bounds.X2 - bounds.X, bounds.Y2 - bounds.Y) / 2.0f;
+            var textSize = new System.Numerics.Vector2(bounds.X2 - bounds.X, bounds.Y2 - bounds.Y);
 
-            // Compute pivot offset
-            var pivotOffset = new System.Numerics.Vector2(textSize.X * pivot.X, textSize.Y * pivot.Y);
+            var textPivotOffset = new System.Numerics.Vector2(textSize.X * pivot.X, textSize.Y * pivot.Y);
+            var finalPosition = position - textPivotOffset;
 
-            // Final position to start rendering from
-            var finalPosition = position - pivotOffset;
-
-            // This line calls the DrawQuad function for every character.
-            font.DrawText(this, text, finalPosition, new FSColor(Color), rotation, origin, scale, 0,
-                          CharacterSpacing, LineSpacing, TextStyle.None,
-                          effect, Math.Clamp(OutlineSize, 0, OutlineSize + 1));
+            font.DrawText(this, text, finalPosition, new FSColor(Color),
+                rotation, origin, scale, 0, CharacterSpacing, LineSpacing,
+                TextStyle.None, effect, Math.Clamp(OutlineSize, 0, OutlineSize + 1)
+            );
         }
 
         public void SetText(string value)

@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 
 namespace Engine.Graphics
 {
-    internal class FontManager 
+    internal class FontManager
     {
         private static FontManager _instance;
         public static FontManager Instance => _instance ?? (_instance = new FontManager());
@@ -28,7 +28,7 @@ namespace Engine.Graphics
 
             internal DynamicSpriteFont GetSpriteFont(int size)
             {
-                if(!_spriteFonts.TryGetValue(size, out var font))
+                if (!_spriteFonts.TryGetValue(size, out var font))
                 {
                     font = _spriteFonts[size] = _fontSystem.GetFont(size);
                 }
@@ -43,10 +43,31 @@ namespace Engine.Graphics
             _fontFamilies = new();
 
             var targetScreenRes = new vec2(512 * 2, 288 * 2);
-            var viewMatrix = MathUtils.Ortho(0, targetScreenRes.x, 0, targetScreenRes.y, 0, -1);
+            var viewMatrix = MathUtils.Ortho(0, targetScreenRes.x, targetScreenRes.y, 0, 0, -1);
             //var viewMatrix = MathUtils.Ortho(-_targetScreenRes.x / 2, _targetScreenRes.x / 2, _targetScreenRes.y / 2, -_targetScreenRes.y / 2, 0, -1);
 
             TestUIProjection = viewMatrix;
+            Window.OnWindowChanged += OnWindowChanged;
+
+        }
+        private void OnWindowChanged(int width, int height)
+        {
+            // UpdateCurrent();
+        }
+
+        private void UpdateCurrent()
+        {
+            float aspect = (float)Window.Width / (float)Window.Height;
+
+            float orthoHeight = 288*2;
+            float orthoWidth = orthoHeight * aspect;
+
+            float left = -orthoWidth;
+            float right = orthoWidth;
+            float bottom = -orthoHeight;
+            float top = orthoHeight;
+
+            TestUIProjection = MathUtils.Ortho(left, right, bottom, top, 0, -1);
         }
 
         internal FontContent GetFont(FontAsset font)

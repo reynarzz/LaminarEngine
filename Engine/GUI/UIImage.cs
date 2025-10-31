@@ -2,74 +2,50 @@
 
 namespace Engine.GUI
 {
-    public enum PreserveAspectMode
-    {
-        MatchWidth,
-        MatchHeight
-    }
-
     public class UIImage : UIGraphicsElement
     {
-        public bool PreserveAspect { get; set; } = false;
-        public PreserveAspectMode AspectMode { get; set; } = PreserveAspectMode.MatchWidth;
+        public bool PreserveAspect { get; set; }
 
         internal override void OnInitialize()
         {
             base.OnInitialize();
-
             Mesh = new Mesh();
-            Mesh.Vertices.Add(default);
-            Mesh.Vertices.Add(default);
-            Mesh.Vertices.Add(default);
-            Mesh.Vertices.Add(default);
+            Mesh.Vertices.Add(default); Mesh.Vertices.Add(default);
+            Mesh.Vertices.Add(default); Mesh.Vertices.Add(default);
             Mesh.IndicesToDrawCount = 6;
         }
 
         internal override void OnCanvasDraw(UICanvas canvas)
         {
-            var rect = RectTransform.ComputedRect;
-            var size = rect.Size;
+            var rt = RectTransform;
+            var size = rt.ComputedRect.Size;
+            if (size.x <= 0f || size.y <= 0f) return;
 
-            // Adjust size for aspect ratio
-            if (PreserveAspect && Sprite?.Texture != null)
+            var chunk = Sprite?.GetAtlasChunk() ?? AtlasChunk.DefaultChunk;
+
+            if (PreserveAspect && chunk.Width > 0 && chunk.Height > 0)
             {
-                float texW = Sprite.Texture.Width;
-                float texH = Sprite.Texture.Height;
+                float spriteRatio = (float)chunk.Width / (float)chunk.Height;
+                float rectRatio = size.x / size.y;
 
-                if (texH > 0.0f)
+                if (spriteRatio > rectRatio)
                 {
-                    float textureRatio = texW / texH;
-                    float rectW = size.x;
-                    float rectH = size.y;
-                    float rectRatio = rectW / rectH;
-
-                    if (AspectMode == PreserveAspectMode.MatchHeight)
-                    {
-                        float newWidth = rectH * textureRatio;
-                        float delta = (rectW - newWidth) * 0.5f;
-                        rect = new Rect(
-                            new vec2(rect.X + delta, rect.Y),
-                            new vec2(newWidth, rectH)
-                        );
-                    }
-                    else // MatchWidth
-                    {
-                        float newHeight = rectW / textureRatio;
-                        float delta = (rectH - newHeight) * 0.5f;
-                        rect = new Rect(
-                            new vec2(rect.X, rect.Y + delta),
-                            new vec2(rectW, newHeight)
-                        );
-                    }
+                    float newH = size.x / spriteRatio;
+                    size = new vec2(size.x, newH);
+                }
+                else
+                {
+                    float newW = size.y * spriteRatio;
+                    size = new vec2(newW, size.y);
                 }
             }
 
-            var verts = GraphicsHelper.GetUIQuadVertices(rect,  Color);
+            var quad = GraphicsHelper.GetUIQuadVerticesLocal(chunk.Uvs, size, rt.Pivot, Color, Transform.WorldMatrix);
 
-            Mesh.Vertices[0] = verts.v0;
-            Mesh.Vertices[1] = verts.v1;
-            Mesh.Vertices[2] = verts.v2;
-            Mesh.Vertices[3] = verts.v3;
+            Mesh.Vertices[0] = quad.v0;
+            Mesh.Vertices[1] = quad.v1;
+            Mesh.Vertices[2] = quad.v2;
+            Mesh.Vertices[3] = quad.v3;
 
             IsDirty = true;
         }

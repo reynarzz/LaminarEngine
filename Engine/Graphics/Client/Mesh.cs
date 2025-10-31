@@ -11,18 +11,18 @@ namespace Engine
 {
     public struct QuadVertices
     {
-        public Vertex v0 { get; set; }
-        public Vertex v1 { get; set; }
-        public Vertex v2 { get; set; }
-        public Vertex v3 { get; set; }
+        public Vertex v0;
+        public Vertex v1;
+        public Vertex v2;
+        public Vertex v3;
     }
 
     internal struct QuadVertices<T> where T : unmanaged, IVertex<T>
     {
-        public T v0 { get; set; }
-        public T v1 { get; set; }
-        public T v2 { get; set; }
-        public T v3 { get; set; }
+        public T v0;
+        public T v1;
+        public T v2;
+        public T v3;
     }
 
     internal interface IVertex
