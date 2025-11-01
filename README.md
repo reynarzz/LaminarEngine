@@ -2,7 +2,7 @@
 
 ![Gameplay](Intro.gif)
 
-GFS is a video game and game engine built entirely from scratch in **C#**, heavily inspired by the **Unity3D C# API**.
+GFS is a video game and game engine built entirely from scratch with **C#**, heavily inspired by the **Unity3D C# API**.
 
 ## Features
 
