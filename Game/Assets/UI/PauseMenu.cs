@@ -57,12 +57,18 @@ namespace Game
             _graphics.Add(resumeButtonImage);
 
 
-            var horizontalLayout = new Actor<UIImage>("HorizontalRect").AddComponent<HorizontalLayoutGroup>();
+            var horizontalLayout = new Actor<UIImage>("HorizontalRect").AddComponent<HorizontalLayout>();
             horizontalLayout.Transform.Parent = _background.Transform;
             horizontalLayout.Transform.LocalPosition = new vec3(0, 0);
-            horizontalLayout.ResizeToFit = true;
+            horizontalLayout.ResizeToFitVertical = true;
+            horizontalLayout.ResizeToFitHorizontal = true;
+            horizontalLayout.Spacing = 10;
+            horizontalLayout.Padding = new Thickness(10);
             horizontalLayout.StartPivot = new vec2(0.5f, 0.5f);
-            horizontalLayout.GetComponent<UIImage>().Material = GameManager.DefaultMaterial;
+            var img = horizontalLayout.GetComponent<UIImage>();
+            img.Material = GameManager.DefaultMaterial;
+            img.Color = Color.Gray;
+
             NewImage("Quad1", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
             NewImage("Quad2", default, new vec2(100, 100), Color.Red, horizontalLayout.Transform);
             NewImage("Quad3", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
