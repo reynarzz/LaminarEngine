@@ -1,13 +1,12 @@
 ﻿using Engine.Types;
 using GlmNet;
-using System.Collections.Generic;
 
 namespace Engine.GUI
 {
     [UniqueComponent]
     public class HorizontalLayout : UIElement, IUpdatableComponent
     {
-        public float Spacing = 5f;
+        public float Spacing { get; set; } = 5f;
         public bool ResizeToFitHorizontal { get; set; } = false;
         public bool ResizeToFitVertical { get; set; } = false;
 

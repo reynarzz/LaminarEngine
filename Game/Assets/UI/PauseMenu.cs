@@ -57,7 +57,7 @@ namespace Game
             _graphics.Add(resumeButtonImage);
 
 
-            var horizontalLayout = new Actor<UIImage>("HorizontalRect").AddComponent<HorizontalLayout>();
+            var horizontalLayout = new Actor<UIImage>("HorizontalRect").AddComponent<GridLayout>();
             horizontalLayout.Transform.Parent = _background.Transform;
             horizontalLayout.Transform.LocalPosition = new vec3(0, 0);
             horizontalLayout.ResizeToFitVertical = true;
@@ -65,13 +65,15 @@ namespace Game
             horizontalLayout.Spacing = 10;
             horizontalLayout.Padding = new Thickness(10);
             horizontalLayout.StartPivot = new vec2(0.5f, 0.5f);
+            horizontalLayout.MaxPerRow = 2;
             var img = horizontalLayout.GetComponent<UIImage>();
             img.Material = GameManager.DefaultMaterial;
             img.Color = Color.Gray;
 
-            NewImage("Quad1", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
+            NewImage("Quad1", default, new vec2(100, 100), Color.Yellow, horizontalLayout.Transform);
             NewImage("Quad2", default, new vec2(100, 100), Color.Red, horizontalLayout.Transform);
-            NewImage("Quad3", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
+            NewImage("Quad3", default, new vec2(100, 100), Color.Blue, horizontalLayout.Transform);
+            NewImage("Quad4", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
             NewImage("Quad4", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
             NewImage("Quad4", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
             NewImage("Quad4", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
