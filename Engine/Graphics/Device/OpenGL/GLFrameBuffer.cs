@@ -35,6 +35,24 @@ namespace Engine.Graphics
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
         }
 
+        internal void BlitTo(GLFrameBuffer target, bool color = true, bool depth = false)
+        {
+            glBindFramebuffer(GL_READ_FRAMEBUFFER, this.Handle);       // Source
+            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, target.Handle);     // Destination
+
+            uint mask = 0;
+            if (color) mask |= GL_COLOR_BUFFER_BIT;
+            if (depth) mask |= GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT;
+
+            glBlitFramebuffer(
+                0, 0, this.Width, this.Height,                        
+                0, 0, target.Width, target.Height,                    
+                mask,
+                GL_NEAREST);                                          
+
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        }
+
         /// <summary>
         /// Read pixels from the framebuffer (useful for screenshots or pixel effects)
         /// </summary>

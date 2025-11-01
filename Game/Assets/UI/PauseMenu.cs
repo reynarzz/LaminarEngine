@@ -24,16 +24,19 @@ namespace Game
             _canvas = new Actor("Pause menu Canvas").AddComponent<UICanvas>();
             _canvas.Transform.Parent = Transform;
 
+            var backSize = new vec2(512 * 2, 288 * 2);
             // Background
-            _background = NewImage("Background", new vec2(512, 0), new vec2(512 * 2, int.MaxValue), Color.Black * 0.5f, _canvas.Transform);
-            _background.BlockEvents = false;
-            _background.ReceiveEvents = false;
+            _background = NewImage("Background", backSize * 0.5f, backSize, Color.White, _canvas.Transform);
+            _background.BlockEvents = true;
+            _background.ReceiveEvents = true;
+            _background.Material = new Material(new Shader(Assets.GetText("Shaders/VertScreenGrab.vert").Text, Assets.GetText("Shaders/BlurFrostedGlass.frag").Text));
+            _background.Material.Passes[0].IsScreenGrabPass = true;
+
             // Title text
-            _titleText = NewText("Title text", "Pause", new vec2(512, 210), _canvas.Transform);
+            _titleText = NewText("Title text", "Pause", new vec2(0, -110), _background.Transform);
             _titleText.FontSize = 70;
 
-            var resumeButtonImage = NewImage("Resume button image", new vec2(0, 400), new vec2(200, 40), Color.Gray, _background.Transform);
-
+            var resumeButtonImage = NewImage("Resume button image", new vec2(0, 100), new vec2(200, 40), Color.Gray, _background.Transform);
             resumeButtonImage.AddComponent<Button>().OnButtonClick += OnResume;
             var text = NewText("Resume text", "Resume", default, resumeButtonImage.Transform);
             text.ReceiveEvents = false;

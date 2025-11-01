@@ -275,5 +275,11 @@ namespace Engine.Graphics.OpenGL
 
             return null;
         }
+
+        internal override void BlitRenderTargetTo(GfxResource source, GfxResource target, bool color = true, bool depth = false)
+        {
+            var sourceFB = (source as GLFrameBuffer);
+            sourceFB.BlitTo(target as GLFrameBuffer, color, depth);
+        }
     }
 }
