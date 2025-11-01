@@ -73,7 +73,25 @@ namespace Engine
                 a.A + (b.A - a.A) * t
             );
         }
+        public static Color MoveTowards(Color current, Color target, float maxStep)
+        {
+            float r = MoveChannel(current.R, target.R, maxStep);
+            float g = MoveChannel(current.G, target.G, maxStep);
+            float b = MoveChannel(current.B, target.B, maxStep);
+            float a = MoveChannel(current.A, target.A, maxStep);
 
+            return new Color(r, g, b, a);
+        }
+
+        private static float MoveChannel(float from, float to, float maxStep)
+        {
+            float delta = to - from;
+
+            if (Math.Abs(delta) <= maxStep)
+                return to;
+
+            return from + Math.Sign(delta) * maxStep;
+        }
         public static Color Hermite(Color startValue, Color startTangent, Color endTangent, Color endValue, float t)
         {
             t = Math.Clamp(t, 0f, 1f);

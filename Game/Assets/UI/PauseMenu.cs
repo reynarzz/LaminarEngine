@@ -18,7 +18,9 @@ namespace Game
 
         private UICanvas _canvas;
         private UIText _titleText;
+        private bool _show = false;
 
+        private List<UIGraphicsElement> _graphics = new();
         public override void OnStart()
         {
             _canvas = new Actor("Pause menu Canvas").AddComponent<UICanvas>();
@@ -29,14 +31,14 @@ namespace Game
             _background = NewImage("Background", backSize * 0.5f, backSize, Color.White, _canvas.Transform);
             _background.BlockEvents = true;
             _background.ReceiveEvents = true;
-            _background.Material = new Material(new Shader(Assets.GetText("Shaders/VertScreenGrab.vert").Text, Assets.GetText("Shaders/BlurFrostedGlass.frag").Text));
+            _background.Material = new Material(new Shader(Assets.GetText("Shaders/VertScreenGrab.vert").Text, Assets.GetText("Shaders/Blur.frag").Text));
             _background.Material.Passes[0].IsScreenGrabPass = true;
 
             // Title text
             _titleText = NewText("Title text", "Pause", new vec2(0, -110), _background.Transform);
             _titleText.FontSize = 70;
 
-            var resumeButtonImage = NewImage("Resume button image", new vec2(0, 100), new vec2(200, 40), Color.Gray, _background.Transform);
+            var resumeButtonImage = NewImage("Resume button image", new vec2(0, 100), new vec2(200, 40), Color.Coral, _background.Transform);
             resumeButtonImage.AddComponent<Button>().OnButtonClick += OnResume;
             var text = NewText("Resume text", "Resume", default, resumeButtonImage.Transform);
             text.ReceiveEvents = false;
@@ -47,21 +49,48 @@ namespace Game
             text.Horizontal = TextHorizontalAlignment.Center;
             //text.Padding.Right = 10;
             //text.Padding.Left = 10;
-            Actor.IsActiveSelf = false;
             //Time.TimeScale = 0;
+
+            _graphics.Add(text);
+            _graphics.Add(_titleText);
+            _graphics.Add(_background);
+            _graphics.Add(resumeButtonImage);
         }
 
         private void OnResume()
         {
             Debug.Log("Button down: ");
             Time.TimeScale = 1;
-            Actor.IsActiveSelf = false;
+            //Actor.IsActiveSelf = false;
+            _show = false;
         }
 
         public void OnPause()
         {
-            Actor.IsActiveSelf = !Actor.IsActiveSelf;
-            Time.TimeScale = Actor.IsActiveSelf ? 0 : 1;
+            //Actor.IsActiveSelf = !Actor.IsActiveSelf;
+            _show = !_show;
+            Time.TimeScale = _show ? 0 : 1;
+        }
+
+        public override void OnUpdate()
+        {
+            void SetColorAlpha(float alpha)
+            {
+                foreach (var item in _graphics)
+                {
+                    var color = item.Color;
+                    color.A = alpha;
+                    item.Color = Color.MoveTowards(item.Color, color, Time.UnscaledDeltaTime * 5f);
+                }
+            }
+            if (_show)
+            {
+                SetColorAlpha(1);
+            }
+            else
+            {
+                SetColorAlpha(0);
+            }
         }
 
         private UIText NewText(string name, string value, vec2 position, Transform parent)
