@@ -18,9 +18,14 @@ namespace Engine
         public bool BlockEvents { get; set; } = true;
         public bool ReceiveEvents { get; set; } = true;
 
-        internal override void Draw()
+        internal sealed override void Draw()
         {
-            Debug.DrawBox(RectTransform.Rect.Center, RectTransform.Rect.Size, Color.Red);
+#if DEBUG
+            if (Debug.DrawUILines)
+            {
+                Debug.DrawBoxUI(RectTransform.Rect.Center, RectTransform.Rect.Size, Color.Red);
+            }
+#endif
         }
     }
 }

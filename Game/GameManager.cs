@@ -231,7 +231,7 @@ namespace Game
                             default:
                                 break;
                         }
-                       
+
                         foreach (var field in entity.FieldInstances)
                         {
                             //Debug.Log("Name: " + field.Identifier + ", Type: " + field.Type + ", Value: " + field.Value);
@@ -294,9 +294,13 @@ namespace Game
 
         public override void OnUpdate()
         {
-            if (Input.GetKeyDown(KeyCode.Q))
+            if (Input.GetKeyDown(KeyCode.Alpha1))
             {
                 Physics2D.DrawColliders = !Physics2D.DrawColliders;
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                Debug.DrawUILines = !Debug.DrawUILines;
             }
 
             if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.F11))
@@ -316,7 +320,7 @@ namespace Game
             if (!_coinCounterTest)
             {
                 _coinCounterTest = new Actor("CounterText").AddComponent<UIText>();
-                _coinCounterTest.Font = DefaultFont; 
+                _coinCounterTest.Font = DefaultFont;
             }
 
             _coinCounterTest.SetText(PlayerBag.Coins.ToString()); // Remove from here, just for testing

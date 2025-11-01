@@ -123,10 +123,9 @@ namespace Engine.Layers
 
             RenderBatches(batches, ref VP, sceneRenderTarget);
             RenderBatches(uibatches, ref FontManager.Instance.TestUIProjection, sceneRenderTarget);
-
-            Debug.DrawGeometries(VP, sceneRenderTarget.NativeResource);
-            //Debug.DrawGeometries(FontManager.Instance.TestUIProjection, sceneRenderTarget.NativeResource);
-
+#if DEBUG
+            Debug.DrawGeometries(VP, FontManager.Instance.TestUIProjection, sceneRenderTarget.NativeResource);
+#endif
             foreach (var pass in PostProcessingStack.Passes)
             {
                 sceneRenderTarget = pass.Render(sceneRenderTarget, _drawPostProcessCallback);

@@ -22,7 +22,13 @@ namespace Engine
         private const float CIRCLE_MAX_SEGMENTS = 20;
 
         private static int _totalLinesVerticesToDraw = 0;
+        private static int _uiTotalLinesVerticesToDraw = 0;
         private static bool _initializedGraphics = false;
+        private static DebugVertex[] _linesVertexPositions;
+        private static DebugVertex[] _uiLinesVertexPositions;
+        private static bool _drawUIVertices;
+
+        public static bool DrawUILines { get; set; }
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         private struct DebugVertex : IVertex<DebugVertex>
@@ -75,10 +81,10 @@ namespace Engine
         ";
 
 
-        private static DebugVertex[] _linesVertexPositions;
 
         private static void Initialize()
         {
+#if DEBUG
             if (!_initializedGraphics)
             {
                 _initializedGraphics = true;
@@ -90,7 +96,9 @@ namespace Engine
 
                 _shader = new Shader(DebugVertexShader, DebugFragmentShader);
                 _linesVertexPositions = new DebugVertex[LINES_MAX_VERTICES];
+                _uiLinesVertexPositions = new DebugVertex[LINES_MAX_VERTICES];
             }
+#endif
         }
 
         public static void DrawRay(vec3 origin, vec3 direction, Color color)
@@ -101,17 +109,31 @@ namespace Engine
 
         public static void DrawLine(vec3 start, vec3 end, Color color)
         {
+#if DEBUG
+            if (!_drawUIVertices)
+            {
+                DrawLine(start, end, color, _linesVertexPositions, ref _totalLinesVerticesToDraw);
+            }
+            else
+            {
+                DrawLine(start, end, color, _uiLinesVertexPositions, ref _uiTotalLinesVerticesToDraw);
+            }
+#endif
+        }
+
+        private static void DrawLine(vec3 start, vec3 end, Color color, Span<DebugVertex> vertices, ref int verticesToDraw)
+        {
             Initialize();
 
-            if (_totalLinesVerticesToDraw >= _linesVertexPositions.Length)
+            if (verticesToDraw >= vertices.Length)
             {
                 Debug.Error($"Can't draw more lines, lines vertices max is: {LINES_MAX_VERTICES}");
                 return;
             }
-            _linesVertexPositions[_totalLinesVerticesToDraw + 0] = new DebugVertex() { Position = start, Color = color };
-            _linesVertexPositions[_totalLinesVerticesToDraw + 1] = new DebugVertex() { Position = end, Color = color };
+            vertices[verticesToDraw + 0] = new DebugVertex() { Position = start, Color = color };
+            vertices[verticesToDraw + 1] = new DebugVertex() { Position = end, Color = color };
 
-            _totalLinesVerticesToDraw += 2;
+            verticesToDraw += 2;
         }
 
         public static void DrawCircle(vec3 origin, float radius, Color color)
@@ -178,7 +200,12 @@ namespace Engine
                 DrawLine(p0, p1, color);
             }
         }
-
+        public static void DrawBoxUI(vec3 origin, vec3 size, Color color)
+        {
+            _drawUIVertices = true;
+            DrawBox(origin, size, color);
+            _drawUIVertices = false;
+        }
         public static void DrawBox(vec3 origin, vec3 size, Color color)
         {
             Initialize();
@@ -214,6 +241,13 @@ namespace Engine
             DrawLine(c1, c5, color);
             DrawLine(c2, c6, color);
             DrawLine(c3, c7, color);
+        }
+
+        public static void DrawBoxUI(vec3 origin, vec3 size, vec3 eulerAngles, Color color)
+        {
+            _drawUIVertices = true;
+            DrawBox(origin, size, eulerAngles, color);
+            _drawUIVertices = false;
         }
 
         public static void DrawBox(vec3 origin, vec3 size, vec3 eulerAngles, Color color)
@@ -309,8 +343,9 @@ namespace Engine
         }
 
 
-        internal static void DrawGeometries(mat4 ViewProj, GfxResource texture)
+        internal static void DrawGeometries(mat4 worldViewProj, mat4 uiViewProj, GfxResource texture)
         {
+#if DEBUG
             if (_initializedGraphics)
             {
                 // TODO: Needs refactoring, dirty drawing. 
@@ -319,44 +354,51 @@ namespace Engine
                 GL.glDisable(GL.GL_STENCIL_TEST);
 
                 shader.Bind();
-                shader.SetUniform(Consts.VIEW_PROJ_UNIFORM_NAME, ViewProj);
-
-                // Push geometries updates
-                PushLineGeometries();
 
                 if (renderTexture != null)
                 {
                     renderTexture.Bind();
                 }
-                // Draw
-                DrawLines();
+
+                void Draw(ref mat4 viewProj, DebugVertex[] vertices, ref int verticesToDrawCount)
+                {
+                    shader.SetUniform(Consts.VIEW_PROJ_UNIFORM_NAME, viewProj);
+                    PushLineGeometries(vertices, verticesToDrawCount);
+                    DrawLines(ref verticesToDrawCount);
+                }
+
+                // Draw world lines
+                Draw(ref worldViewProj, _linesVertexPositions, ref _totalLinesVerticesToDraw);
+
+                if (DrawUILines)
+                {
+                    // Draw UI lines
+                    Draw(ref uiViewProj, _uiLinesVertexPositions, ref _uiTotalLinesVerticesToDraw);
+                }
+
                 if (renderTexture != null)
                 {
                     renderTexture.Unbind();
                 }
             }
+#endif
         }
-
-        private static void DrawLines()
+        
+        private static void DrawLines(ref int verticesToDrawCount)
         {
             (_linesGeometry as GLGeometry).Bind();
 
-            GfxDeviceManager.Current.DrawArrays(DrawMode.Lines, 0, _totalLinesVerticesToDraw);
-            _totalLinesVerticesToDraw = 0;
+            GfxDeviceManager.Current.DrawArrays(DrawMode.Lines, 0, verticesToDrawCount);
+            verticesToDrawCount = 0;
         }
 
-        private static void PushLineGeometries()
+        private static void PushLineGeometries(DebugVertex[] vertices, int totalVertsToDraw)
         {
             unsafe
             {
-                // Only copy the vertices needed.
-                for (int i = 0; i < sizeof(DebugVertex) * _totalLinesVerticesToDraw; i++)
-                {
-                    (_linesGeoDescriptor.VertexDesc.BufferDesc as BufferDataDescriptor<DebugVertex>).Buffer[i] = _linesVertexPositions[i];
-                }
-
+                (_linesGeoDescriptor.VertexDesc.BufferDesc as BufferDataDescriptor<DebugVertex>).Buffer = vertices;
+                _linesGeoDescriptor.VertexDesc.BufferDesc.Count = sizeof(DebugVertex) * totalVertsToDraw;
                 _linesGeoDescriptor.VertexDesc.BufferDesc.Offset = 0;
-                _linesGeoDescriptor.VertexDesc.BufferDesc.Count = sizeof(DebugVertex) * _totalLinesVerticesToDraw;
             }
 
             GfxDeviceManager.Current.UpdateGeometry(_linesGeometry, _linesGeoDescriptor);
