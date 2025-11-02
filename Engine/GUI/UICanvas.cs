@@ -152,7 +152,6 @@ namespace Engine.GUI
 
         public void OnLateUpdate()
         {
-            
             for (int i = Transform.Children.Count - 1; i >= 0; --i)
             {
                 bool blocked = false;
