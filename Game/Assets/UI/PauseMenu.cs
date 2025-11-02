@@ -35,7 +35,7 @@ namespace Game
             _background.Material = new Material(new Shader(Assets.GetText("Shaders/VertScreenGrab.vert").Text, Assets.GetText("Shaders/Blur.frag").Text));
             _background.Material.Passes[0].IsScreenGrabPass = true;
 
-            // LayoutTest();
+            LayoutTest();
 
             // Title text
             _titleText = NewText("Title text", "Pause", new vec2(0, -110), _background.Transform);
@@ -44,10 +44,9 @@ namespace Game
             _titleText.Vertical =  TextVerticalAlignment.Center;
 
             var resumeButtonImage = NewImage("Resume button image", new vec2(0, 100), new vec2(200, 40), Color.Gray, _background.Transform);
-            resumeButtonImage.Sprite = new Sprite(Assets.GetTexture("button_square_depth_border.png"));
-            //var button = resumeButtonImage.AddComponent<Button>();
-            //button.OnButtonClick += OnResume;
-            //button.Graphic = resumeButtonImage;
+            var button = resumeButtonImage.AddComponent<Button>();
+            button.OnButtonClick += OnResume;
+            button.Graphic = resumeButtonImage;
             // button.IsDisabled = true;
             resumeButtonImage.AddComponent<ContentSizeFitter>().Padding = new Thickness(10);
             resumeButtonImage.IsSliced = true;
@@ -77,6 +76,7 @@ namespace Game
         private void LayoutTest()
         {
             var horizontalLayout = new Actor<UIImage>("HorizontalRect").AddComponent<GridLayout>();
+
             horizontalLayout.Transform.Parent = _background.Transform;
             horizontalLayout.Transform.LocalPosition = new vec3(0, 0);
             horizontalLayout.ResizeToFitVertical = true;
@@ -84,10 +84,11 @@ namespace Game
             horizontalLayout.Spacing = 10;
             horizontalLayout.Padding = new Thickness(10);
             horizontalLayout.StartPivot = new vec2(0.5f, 0.5f);
-            horizontalLayout.MaxPerRow = 3;
+            horizontalLayout.MaxPerRow = 2;
             var img = horizontalLayout.GetComponent<UIImage>();
-            img.Material = _background.Material; // GameManager.DefaultMaterial;
-            img.Color = Color.Gray;
+            img.Material = GameManager.DefaultMaterial;
+            img.Sprite = new Sprite(Assets.GetTexture("button_square_depth_border.png"));
+            img.IsSliced = true;
 
             var parent = NewImage("Quad1", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
             var tex = Assets.GetTexture("starkTileset.png");

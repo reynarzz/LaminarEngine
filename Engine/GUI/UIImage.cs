@@ -16,6 +16,8 @@ namespace Engine.GUI
         public float TopBorder = 10f;
         public float BottomBorder = 10f;
 
+        private int _currentSliceVertexIndex = 0;
+
         internal override void OnInitialize()
         {
             base.OnInitialize();
@@ -74,6 +76,21 @@ namespace Engine.GUI
 
             Mesh.IndicesToDrawCount = 54;
 
+            if (PreserveAspect && chunk.Width > 0 && chunk.Height > 0)
+            {
+                float spriteRatio = (float)chunk.Width / chunk.Height;
+                float rectRatio = size.x / size.y;
+
+                if (spriteRatio > rectRatio)
+                {
+                    size.y = size.x / spriteRatio;
+                }
+                else
+                {
+                    size.x = size.y * spriteRatio;
+                }
+            }
+
             float l = LeftBorder, r = RightBorder, t = TopBorder, b = BottomBorder;
 
             float x0 = -rt.Pivot.x * size.x;
@@ -93,10 +110,12 @@ namespace Engine.GUI
             float u3 = uv.TopRightUV.x;
 
             float v0 = uv.BottomLeftUV.y;
-            float v1 = uv.BottomLeftUV.y + b / chunk.Height;
-            float v2 = uv.TopRightUV.y - t / chunk.Height;
+            float fullHeight = uv.TopRightUV.y - uv.BottomLeftUV.y;
+            float v1 = uv.BottomLeftUV.y + (b / chunk.Height) * fullHeight;
+            float v2 = uv.TopRightUV.y - (t / chunk.Height) * fullHeight;
             float v3 = uv.TopRightUV.y;
-            CurrentVertexIndex = 0;
+
+            _currentSliceVertexIndex = 0;
 
             for (int iy = 0; iy < 3; iy++)
             {
@@ -119,18 +138,18 @@ namespace Engine.GUI
                 }
             }
         }
-        int CurrentVertexIndex = 0;
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void AddVertex(float x, float y, float u, float v)
         {
             vec4 wp = Transform.WorldMatrix * new vec4(x, y, 0, 1);
 
-            if (Mesh.Vertices.Count <= CurrentVertexIndex)
+            if (Mesh.Vertices.Count <= _currentSliceVertexIndex)
             {
                 Mesh.Vertices.Add(default);
             }
 
-            Mesh.Vertices[CurrentVertexIndex++] = new Vertex
+            Mesh.Vertices[_currentSliceVertexIndex++] = new Vertex()
             {
                 Position = new vec2(wp.x, wp.y),
                 UV = new vec2(u, v),
