@@ -1,5 +1,6 @@
 ﻿using Engine;
 using Engine.GUI;
+using Engine.Utils;
 using GlmNet;
 using System;
 using System.Collections.Generic;
@@ -34,6 +35,8 @@ namespace Game
             _background.Material = new Material(new Shader(Assets.GetText("Shaders/VertScreenGrab.vert").Text, Assets.GetText("Shaders/Blur.frag").Text));
             _background.Material.Passes[0].IsScreenGrabPass = true;
 
+            LayoutTest();
+
             // Title text
             _titleText = NewText("Title text", "Pause", new vec2(0, -110), _background.Transform);
             _titleText.FontSize = 70;
@@ -56,7 +59,11 @@ namespace Game
             _graphics.Add(_background);
             _graphics.Add(resumeButtonImage);
 
+            LogRecursive(_background.Transform);
+        }
 
+        private void LayoutTest()
+        {
             var horizontalLayout = new Actor<UIImage>("HorizontalRect").AddComponent<GridLayout>();
             horizontalLayout.Transform.Parent = _background.Transform;
             horizontalLayout.Transform.LocalPosition = new vec3(0, 0);
@@ -65,24 +72,54 @@ namespace Game
             horizontalLayout.Spacing = 10;
             horizontalLayout.Padding = new Thickness(10);
             horizontalLayout.StartPivot = new vec2(0.5f, 0.5f);
-            horizontalLayout.MaxPerRow = 2;
+            horizontalLayout.MaxPerRow = 3;
             var img = horizontalLayout.GetComponent<UIImage>();
-            img.Material = GameManager.DefaultMaterial;
+            img.Material = _background.Material; // GameManager.DefaultMaterial;
             img.Color = Color.Gray;
 
-            NewImage("Quad1", default, new vec2(100, 100), Color.Yellow, horizontalLayout.Transform);
+            var parent = NewImage("Quad1", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
+            var tex = Assets.GetTexture("starkTileset.png");
+            var coins = TextureAtlasUtils.SliceSprites(tex, 16, 16, 281, 4);
+
+            var iconContent = NewImage("Content", default, new vec2(45, 45), Color.White, parent.Transform);
+            iconContent.RectTransform.Pivot = new vec2(0.5f, 0.55f);
+            var animator = iconContent.AddComponent<Animator>();
+            var clip = new AnimationClip("Sprite");
+            var spriteCurve = new SpriteCurve();
+            for (int i = 0; i < coins.Length; i++)
+            {
+                spriteCurve.AddKeyFrame((1.0f / 7.0f) * i, coins[i]);
+            }
+            clip.AddCurve("Sprite", spriteCurve);
+            animator.AddState(new AnimationState("Coin", clip));
+            animator.OnUpdate += x =>
+            {
+                iconContent.Sprite = x.GetSprite("Sprite");
+            };
             NewImage("Quad2", default, new vec2(100, 100), Color.Red, horizontalLayout.Transform);
             NewImage("Quad3", default, new vec2(100, 100), Color.Blue, horizontalLayout.Transform);
             NewImage("Quad4", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
-            NewImage("Quad4", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
-            NewImage("Quad4", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
-            NewImage("Quad4", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
-            NewImage("Quad4", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
-            NewImage("Quad4", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
-            NewImage("Quad4", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
-
+            NewImage("Quad5", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
+            NewImage("Quad6", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
+            NewImage("Quad7", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
+            NewImage("Quad8", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
+            NewImage("Quad9", default, new vec2(100, 100), Color.Green, horizontalLayout.Transform);
+            NewImage("Quad10", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
         }
 
+        private static void LogRecursive(Transform current, int depth = 0)
+        {
+            // Create indentation with dashes based on depth
+            string indent = new string('-', depth * 2); // "--", "----", etc.
+
+            Debug.Log($"{indent}{current.Name}");
+
+            // Loop through children and recurse
+            for (int i = 0; i < current.Children.Count; i++)
+            {
+                LogRecursive(current.Children[i], depth + 1);
+            }
+        }
         private void OnResume()
         {
             Debug.Log("Button down: ");
@@ -127,6 +164,9 @@ namespace Game
             text.Material = GameManager.DefaultMaterial;
             text.SetText(value);
             text.Transform.LocalPosition = position;
+            text.BlockEvents = false;
+            text.ReceiveEvents = false;
+
             return text;
         }
 

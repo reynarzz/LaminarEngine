@@ -24,7 +24,14 @@ namespace Engine.GUI
         private void ApplyLayout()
         {
             _rectTransforms.Clear();
-            SceneManager.ActiveScene.FindAll(_rectTransforms, false, Actor);
+            foreach (var rt in Transform.Children)
+            {
+                var rectTransform = rt.GetComponent<RectTransform>();
+                if (rectTransform)
+                {
+                    _rectTransforms.Add(rectTransform);
+                }
+            }
 
             var parentRT = RectTransform;
 

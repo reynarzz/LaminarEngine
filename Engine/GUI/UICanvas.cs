@@ -21,32 +21,26 @@ namespace Engine.GUI
             RectTransform.Pivot = default;
             RectTransform.Recalculate(null);
         }
-
         private void RebuildRecursive(UIElement element, RectTransform parent, ref bool mouseEventHandled)
         {
-            if (!element)
+            if (!element || !element.IsEnabled || !element.Actor.IsActiveSelf)
                 return;
 
             element.RectTransform.Recalculate(parent);
 
-            foreach (var child in element.Transform.Children)
+            for (int i = element.Transform.Children.Count - 1; i >= 0; i--)
             {
-                RebuildRecursive(child.GetComponent<UIElement>(), element.RectTransform, ref mouseEventHandled);
-            }
-
-            if (mouseEventHandled)
-            {
-                if (element is UIGraphicsElement graphic)
+                var child = element.Transform.Children[i];
+                if (child.IsEnabled && child.Actor.IsActiveSelf)
                 {
-                    graphic.OnCanvasDraw(this);
+                    RebuildRecursive(child.GetComponent<UIElement>(), element.RectTransform, ref mouseEventHandled);
                 }
-                return;
             }
 
             var mousePos = ScreenToCanvas(Input.MousePosition);
             bool hasMouse = element.RectTransform.Rect.Contains(mousePos);
 
-            if (hasMouse && element.ReceiveEvents)
+            if (hasMouse && element.ReceiveEvents && !mouseEventHandled)
             {
                 if (Input.GetMouseDown(MouseButton.Left))
                 {
@@ -59,7 +53,6 @@ namespace Engine.GUI
                 }
 
                 element.GetComponent<IPointerHoverEvent>()?.OnPointerHover(mousePos);
-
                 if (element.BlockEvents)
                 {
                     mouseEventHandled = true;
@@ -74,10 +67,10 @@ namespace Engine.GUI
 
         public void OnLateUpdate()
         {
-            foreach (var element in Transform.Children)
+            for (int i = Transform.Children.Count - 1; i >= 0; --i) 
             {
                 bool blocked = false;
-                RebuildRecursive(element.GetComponent<UIElement>(), RectTransform, ref blocked);
+                RebuildRecursive(Transform.Children[i].GetComponent<UIElement>(), RectTransform, ref blocked);
             }
         }
 

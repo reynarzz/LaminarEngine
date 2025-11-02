@@ -18,6 +18,7 @@ namespace Engine
 
         private float _transitionTime;
         private float _transitionDuration;
+        public event Action<Animator> OnUpdate;
 
         public AnimatorParameters Parameters { get; } = new AnimatorParameters();
 
@@ -88,6 +89,8 @@ namespace Engine
             }
 
             _animPlayer.Update();
+
+            OnUpdate?.Invoke(this);
         }
 
         public float GetFloat(string property)

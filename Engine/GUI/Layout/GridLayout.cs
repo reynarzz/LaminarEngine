@@ -26,23 +26,32 @@ namespace Engine.GUI
             if (MaxPerRow < 1) MaxPerRow = 1;
 
             _rectTransforms.Clear();
-            SceneManager.ActiveScene.FindAll(_rectTransforms, false, Actor);
+
             var parentRT = RectTransform;
 
-            int count = 0;
-            foreach (var rt in _rectTransforms)
-                if (rt.Actor != Actor) count++;
+            foreach (var rt in Transform.Children)
+            {
+                var rectTransform = rt.GetComponent<RectTransform>();
+                if (rectTransform)
+                {
+                    _rectTransforms.Add(rectTransform);
+                }
+            }
 
-            int rows = (count + MaxPerRow - 1) / MaxPerRow;
+            int count = _rectTransforms.Count;
 
-            float gridWidth = MaxPerRow * ContentsSize.x + (MaxPerRow - 1) * Spacing;
+            if (count == 0)
+                return;
+
+            var maxPerRowAdjusted = Math.Min(MaxPerRow, count);
+            int rows = (count + maxPerRowAdjusted - 1) / maxPerRowAdjusted;
+
+            float gridWidth = maxPerRowAdjusted * ContentsSize.x + (maxPerRowAdjusted - 1) * Spacing;
             float gridHeight = rows * ContentsSize.y + (rows - 1) * Spacing;
 
-            // Include padding
             float totalWidth = gridWidth + Padding.Left + Padding.Right;
             float totalHeight = gridHeight + Padding.Top + Padding.Bottom;
 
-            // Origins
             float startX = -totalWidth * StartPivot.x + Padding.Left;
             float startY = -totalHeight * StartPivot.y + Padding.Top; 
 
@@ -52,8 +61,8 @@ namespace Engine.GUI
             int col = 0;
             foreach (var child in _rectTransforms)
             {
-                if (child.Actor == Actor) continue;
-
+                if (child.Actor == Actor || child.Transform.Parent != Transform) continue;
+                
                 child.Size = ContentsSize;
 
                 float posX = currentX + child.Pivot.x * child.Size.x;
@@ -65,7 +74,7 @@ namespace Engine.GUI
                 col++;
                 currentX += ContentsSize.x + Spacing;
 
-                if (col >= MaxPerRow)
+                if (col >= maxPerRowAdjusted)
                 {
                     col = 0;
                     currentX = startX;
