@@ -25,10 +25,16 @@ namespace Engine.GUI
         private List<IPointerExitEvent> _pointerExitEvents = new();
         private List<IPointerDownEvent> _pointerDownEvents = new();
         private List<IPointerUpEvent> _pointerUpEvents = new();
-        private List<IDragEvent> _pointerDragEvents = new();
+        private List<IPointerDragEvent> _pointerDragEvents = new();
 
+        // Note: this only works for single cursor, probably I will not implement multi-touch with finger id etc...
         private UIElement _dragElement;
         private UIElement _pointerEnterElement;
+        private readonly Action<IPointerEnterEvent, PointerEventData> _pointerEnterEventInvoker = (p, d) => p.OnPointerEnter(d);
+        private readonly Action<IPointerExitEvent, PointerEventData> _pointerExitEventInvoker = (p, d) => p.OnPointerExit(d);
+        private readonly Action<IPointerDownEvent, PointerEventData> _pointerDownEventInvoker = (p, d) => p.OnPointerDown(d);
+        private readonly Action<IPointerUpEvent, PointerEventData> _pointerUpEventInvoker = (p, d) => p.OnPointerUp(d);
+        private readonly Action<IPointerDragEvent, PointerEventData> _pointerDragEventInvoker = (p, d) => p.OnPointerDrag(d);
 
         internal override void OnInitialize()
         {
@@ -38,6 +44,7 @@ namespace Engine.GUI
             RectTransform.Pivot = default;
             RectTransform.Recalculate(null);
         }
+
         private void EventRecursive(UIElement element, RectTransform parent, ref bool mouseEventHandled)
         {
             if (!element || !element.IsEnabled || !element.Actor.IsActiveSelf)
@@ -61,46 +68,20 @@ namespace Engine.GUI
             {
                 if (Input.GetMouseDown(MouseButton.Left))
                 {
-                    _pointerDownEvents.Clear();
-                    element.GetComponents(ref _pointerDownEvents);
-                    foreach (var evt in _pointerDownEvents)
-                    {
-                        if ((evt as Component).IsEnabled)
-                        {
-                            evt.OnPointerDown(eventData);
-                        }
-                    }
-
                     _dragElement = element;
+                    InvokePointerEvent(element, _pointerDownEvents, eventData, _pointerDownEventInvoker);
                 }
 
                 if (Input.GetMouseUp(MouseButton.Left))
                 {
-                    _pointerUpEvents.Clear();
-                    element.GetComponents(ref _pointerUpEvents);
                     _dragElement = null;
-                    foreach (var evt in _pointerUpEvents)
-                    {
-                        if ((evt as Component).IsEnabled)
-                        {
-                            evt.OnPointerUp(eventData);
-                        }
-                    }
+                    InvokePointerEvent(element, _pointerUpEvents, eventData, _pointerUpEventInvoker);
                 }
 
                 if (_pointerEnterElement != element)
                 {
                     _pointerEnterElement = element;
-                    _pointerEnterEvents.Clear();
-                    element.GetComponents(ref _pointerEnterEvents);
-
-                    foreach (var evt in _pointerEnterEvents)
-                    {
-                        if ((evt as Component).IsEnabled)
-                        {
-                            evt.OnPointerEnter(eventData);
-                        }
-                    }
+                    InvokePointerEvent(element, _pointerEnterEvents, eventData, _pointerEnterEventInvoker);
                 }
 
                 if (element.BlockEvents)
@@ -111,47 +92,15 @@ namespace Engine.GUI
             else if (_pointerEnterElement == element)
             {
                 _pointerEnterElement = null;
-                _pointerExitEvents.Clear();
-                element.GetComponents(ref _pointerExitEvents);
-
-                foreach (var evt in _pointerExitEvents)
-                {
-                    if ((evt as Component).IsEnabled)
-                    {
-                        evt.OnPointerExit(eventData);
-                    }
-                }
+                InvokePointerEvent(element, _pointerExitEvents, eventData, _pointerExitEventInvoker);
             }
 
             if (_dragElement == element && Input.GetMouse(MouseButton.Left))
             {
-                _pointerDragEvents.Clear();
-                element.GetComponents(ref _pointerDragEvents);
-
-                foreach (var evt in _pointerDragEvents)
-                {
-                    if ((evt as Component).IsEnabled)
-                    {
-                        evt.OnPointerDrag(eventData);
-                    }
-                }
+                InvokePointerEvent(element, _pointerDragEvents, eventData, _pointerDragEventInvoker);
             }
         }
 
-
-        private void InvokePointerEvent<T>(UIElement element, List<T> events, PointerEventData eventData, Action<PointerEventData> invoker) where T: class, IPointerEvent
-        {
-            events.Clear();
-            element.GetComponents(ref events);
-
-            foreach (var evt in events)
-            {
-                if ((evt as Component).IsEnabled)
-                {
-                    invoker(eventData);
-                }
-            }
-        }
         private void DrawRecursive(UIElement element, RectTransform parent)
         {
             if (!element || !element.IsEnabled || !element.Actor.IsActiveSelf)
@@ -201,5 +150,20 @@ namespace Engine.GUI
             return new vec2(x, y);
         }
 
+        private void InvokePointerEvent<T>(UIElement element, List<T> events,
+                                           PointerEventData eventData, Action<T, PointerEventData> invoker)
+                                           where T : class, IComponent, IPointerEvent
+        {
+            events.Clear();
+            element.GetComponents(ref events);
+
+            foreach (var evt in events)
+            {
+                if (evt.IsEnabled)
+                {
+                    invoker(evt, eventData);
+                }
+            }
+        }
     }
 }

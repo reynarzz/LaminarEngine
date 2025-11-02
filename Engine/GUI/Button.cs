@@ -7,24 +7,24 @@ using System.Threading.Tasks;
 
 namespace Engine.GUI
 {
-    public class Button : Component, IPointerDownEvent, IPointerUpEvent, IPointerEnterEvent, IDragEvent
+    public class Button : Component, IPointerDownEvent, IPointerExitEvent, IPointerUpEvent, IPointerEnterEvent, IPointerDragEvent
     {
         public event Action OnButtonClick;
         public UIImage Graphic { get; set; }
         public bool UseSprite { get; set; }
         public Sprite NormalSprite { get; set; }
-        public Sprite DownSprite { get; set; }
-        public Sprite HoverSprite { get; set; }
+        public Sprite ClickSprite { get; set; }
+        public Sprite PointerEnterSprite { get; set; }
         private bool _isDragging = false;
         private bool _isPointerDown = false;
 
-        private const float _mouseDeltaThreshold = 0.2f;
+        private const float _mouseDeltaThreshold = 0.7f;
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            if (UseSprite && Graphic && DownSprite)
+            if (UseSprite && Graphic && ClickSprite)
             {
-                Graphic.Sprite = DownSprite;
+                Graphic.Sprite = ClickSprite;
             }
             _isPointerDown = true;
         }
@@ -51,9 +51,16 @@ namespace Engine.GUI
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            UseHoverSprite();
+            UsePointerEnterSprite();
         }
 
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            if (!_isDragging)
+            {
+                UseNormalSprite();
+            }
+        }
         public void OnPointerDrag(PointerEventData eventData)
         {
             if (_isPointerDown && eventData.Delta.Magnitude > _mouseDeltaThreshold)
@@ -80,12 +87,13 @@ namespace Engine.GUI
             }
         }
 
-        private void UseHoverSprite()
+        private void UsePointerEnterSprite()
         {
-            if (UseSprite && Graphic && HoverSprite)
+            if (UseSprite && Graphic && PointerEnterSprite)
             {
-                Graphic.Sprite = HoverSprite;
+                Graphic.Sprite = PointerEnterSprite;
             }
         }
+
     }
 }

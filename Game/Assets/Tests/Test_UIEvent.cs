@@ -9,8 +9,17 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    internal class Test_UIEvent : ScriptBehavior, IDragEvent, IPointerEnterEvent, IPointerExitEvent
+    internal class Test_UIEvent : ScriptBehavior, IPointerDownEvent, IPointerUpEvent, IPointerDragEvent, IPointerEnterEvent, IPointerExitEvent
     {
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            Debug.Log("Pointer down: " + Name);
+        }
+
+        public void OnPointerUp(PointerEventData eventData)
+        {
+            Debug.Log("Pointer up: " + Name);
+        }
         public void OnPointerDrag(PointerEventData eventData)
         {
             Transform.LocalPosition += new vec3(eventData.Delta);
@@ -25,5 +34,6 @@ namespace Game
         {
             Debug.Log("Pointer exit: " + Name);
         }
+
     }
 }

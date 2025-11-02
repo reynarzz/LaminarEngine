@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Engine.GUI
 {
-    public interface IPointerEvent 
+    public interface IPointerEvent : IComponent
     {
     }
 
@@ -25,7 +25,7 @@ namespace Engine.GUI
     {
         void OnPointerHold(PointerEventData eventData);
     }
-    public interface IDragEvent : IPointerEvent
+    public interface IPointerDragEvent : IPointerEvent
     {
         void OnPointerDrag(PointerEventData eventData);
     }
