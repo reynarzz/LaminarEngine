@@ -11,6 +11,13 @@ namespace Engine
         public vec2 Size = new vec2(100f, 100f);   
 
         public Rect Rect { get; private set; }
+        public RectTransform Parent 
+        { 
+            get 
+            {
+                return Transform.Parent?.GetComponent<RectTransform>();
+            } 
+        }
 
         public void Recalculate(RectTransform parent)
         {

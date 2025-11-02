@@ -211,7 +211,7 @@ namespace Engine.GUI
             if (Vertical == TextVerticalAlignment.Top)
                 pos.Y = padded.y - b.Y;
             else if (Vertical == TextVerticalAlignment.Center)
-                pos.Y = Mathf.Lerp(padded.w, padded.y, 0.5f) - textHeight;
+                pos.Y = (padded.w - b.Y2 + padded.y - b.Y) * 0.5f;
             else if (Vertical == TextVerticalAlignment.Bottom)
                 pos.Y = padded.w - b.Y2;
 
@@ -230,7 +230,7 @@ namespace Engine.GUI
                 size.x = textWidth + Padding.Left + Padding.Right;
                 size.y = textHeight + Padding.Top + Padding.Bottom;
                 RectTransform.Size = size;
-                RectTransform.Recalculate(RectTransform.Transform.Parent?.GetComponent<RectTransform>());
+                RectTransform.Recalculate(RectTransform.Parent);
             }
         }
         private vec4 GetPaddedRect()

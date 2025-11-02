@@ -40,6 +40,7 @@ namespace Game
             // Title text
             _titleText = NewText("Title text", "Pause", new vec2(0, -110), _background.Transform);
             _titleText.FontSize = 70;
+            _titleText.Fit = TextFit.ExpandToFit;
 
             var resumeButtonImage = NewImage("Resume button image", new vec2(0, 100), new vec2(200, 40), Color.Gray, _background.Transform);
             resumeButtonImage.AddComponent<Button>().OnButtonClick += OnResume;
