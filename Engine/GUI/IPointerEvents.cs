@@ -33,4 +33,9 @@ namespace Engine.GUI
     {
         void OnPointerEnter(PointerEventData eventData);
     }
+
+    public interface IPointerExitEvent : IPointerEvent
+    {
+        void OnPointerExit(PointerEventData eventData);
+    }
 }

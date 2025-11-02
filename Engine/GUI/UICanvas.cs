@@ -15,17 +15,20 @@ namespace Engine.GUI
     }
 
     [RequiredComponent(typeof(RectTransform))]
-    public class UICanvas : Component, ILateUpdatableComponent
+    public class UICanvas : Component, ILateUpdatableComponent, IUpdatableComponent
     {
         public RectTransform RectTransform { get; private set; }
         private vec2 _prevMousePos;
+        private vec2 _mouseCanvasPos;
         private vec2 _mousePosDelta;
+        private List<IPointerEnterEvent> _pointerEnterEvents = new();
+        private List<IPointerExitEvent> _pointerExitEvents = new();
         private List<IPointerDownEvent> _pointerDownEvents = new();
         private List<IPointerUpEvent> _pointerUpEvents = new();
         private List<IDragEvent> _pointerDragEvents = new();
 
         private UIElement _dragElement;
-        private float _mouseDeltaThreshold = 0.2f;
+        private UIElement _pointerEnterElement;
 
         internal override void OnInitialize()
         {
@@ -48,11 +51,10 @@ namespace Engine.GUI
                     EventRecursive(child.GetComponent<UIElement>(), element.RectTransform, ref mouseEventHandled);
                 }
             }
-            var mousePos = ScreenToCanvas(Input.MousePosition);
 
-            bool hasMouse = element.RectTransform.Rect.Contains(mousePos);
+            bool hasMouse = element.RectTransform.Rect.Contains(_mouseCanvasPos);
             var eventData = new PointerEventData();
-            eventData.Position = mousePos;
+            eventData.Position = _mouseCanvasPos;
             eventData.Delta = _mousePosDelta;
 
             if (hasMouse && element.ReceiveEvents && !mouseEventHandled)
@@ -63,7 +65,10 @@ namespace Engine.GUI
                     element.GetComponents(ref _pointerDownEvents);
                     foreach (var evt in _pointerDownEvents)
                     {
-                        evt.OnPointerDown(eventData);
+                        if ((evt as Component).IsEnabled)
+                        {
+                            evt.OnPointerDown(eventData);
+                        }
                     }
 
                     _dragElement = element;
@@ -76,14 +81,45 @@ namespace Engine.GUI
                     _dragElement = null;
                     foreach (var evt in _pointerUpEvents)
                     {
-                        evt.OnPointerUp(eventData);
+                        if ((evt as Component).IsEnabled)
+                        {
+                            evt.OnPointerUp(eventData);
+                        }
                     }
                 }
-                
-                //element.GetComponents<IPointerEnterEvent>()?.OnPointerEnter(eventData);
+
+                if (_pointerEnterElement != element)
+                {
+                    _pointerEnterElement = element;
+                    _pointerEnterEvents.Clear();
+                    element.GetComponents(ref _pointerEnterEvents);
+
+                    foreach (var evt in _pointerEnterEvents)
+                    {
+                        if ((evt as Component).IsEnabled)
+                        {
+                            evt.OnPointerEnter(eventData);
+                        }
+                    }
+                }
+
                 if (element.BlockEvents)
                 {
                     mouseEventHandled = true;
+                }
+            }
+            else if (_pointerEnterElement == element)
+            {
+                _pointerEnterElement = null;
+                _pointerExitEvents.Clear();
+                element.GetComponents(ref _pointerExitEvents);
+
+                foreach (var evt in _pointerExitEvents)
+                {
+                    if ((evt as Component).IsEnabled)
+                    {
+                        evt.OnPointerExit(eventData);
+                    }
                 }
             }
 
@@ -92,9 +128,9 @@ namespace Engine.GUI
                 _pointerDragEvents.Clear();
                 element.GetComponents(ref _pointerDragEvents);
 
-                if(_mousePosDelta.Magnitude > _mouseDeltaThreshold)
+                foreach (var evt in _pointerDragEvents)
                 {
-                    foreach (var evt in _pointerDragEvents)
+                    if ((evt as Component).IsEnabled)
                     {
                         evt.OnPointerDrag(eventData);
                     }
@@ -102,6 +138,20 @@ namespace Engine.GUI
             }
         }
 
+
+        private void InvokePointerEvent<T>(UIElement element, List<T> events, PointerEventData eventData, Action<PointerEventData> invoker) where T: class, IPointerEvent
+        {
+            events.Clear();
+            element.GetComponents(ref events);
+
+            foreach (var evt in events)
+            {
+                if ((evt as Component).IsEnabled)
+                {
+                    invoker(eventData);
+                }
+            }
+        }
         private void DrawRecursive(UIElement element, RectTransform parent)
         {
             if (!element || !element.IsEnabled || !element.Actor.IsActiveSelf)
@@ -123,13 +173,18 @@ namespace Engine.GUI
             }
         }
 
+        public void OnUpdate()
+        {
+            _mouseCanvasPos = ScreenToCanvas(Input.MousePosition);
+
+            _mousePosDelta = _mouseCanvasPos - _prevMousePos;
+            _prevMousePos = _mouseCanvasPos;
+        }
+
+
         public void OnLateUpdate()
         {
-            var mousePos = ScreenToCanvas(Input.MousePosition);
 
-            _mousePosDelta = mousePos - _prevMousePos;
-            _prevMousePos = mousePos;
-             
             for (int i = Transform.Children.Count - 1; i >= 0; --i)
             {
                 bool blocked = false;
@@ -145,5 +200,6 @@ namespace Engine.GUI
             float y = (mousePosScreen.y / (float)Window.Height) * (float)RectTransform.Rect.Height;
             return new vec2(x, y);
         }
+
     }
 }
