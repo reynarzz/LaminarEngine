@@ -11,7 +11,6 @@ namespace Engine.GUI
     {
         public event Action OnButtonClick;
         public UIGraphicsElement Graphic { get; set; }
-        public bool UseSprite { get; set; }
         public Sprite NormalSprite { get; set; }
         public Sprite ClickSprite { get; set; }
         public Sprite EnterSprite { get; set; }
@@ -22,19 +21,33 @@ namespace Engine.GUI
         public Color EnterColor { get; set; } = Color.Yellow;
         public Color ClickColor { get; set; } = Color.Blue;
 
-        private bool _isDragging = false;
-        private bool _isPointerDown = false;
-        public bool LerpColors { get; set; } = true;
-        public float LerpColorSpeed { get; set; } = 5;
-        private Color _targetColor;
-        private const float _mouseDeltaThreshold = 0.006f;
-        private vec2 _pointerDownPos;
-        public bool IsDisabled { get; set; }
 
+        public bool LerpColors { get; set; }
+        public bool IsDisabled { get; set; }
+        public bool UseSprite { get; set; }
+        public float LerpColorSpeed { get; set; } = 5;
+
+        private const float _mouseDeltaThreshold = 0.006f;
+        private bool _isPointerDown = false;
+        private bool _isDragging = false;
+        private vec2 _pointerDownPos;
+        private Color _targetColor;
+
+        internal override void OnInitialize()
+        {
+            base.OnInitialize();
+            if (!Graphic)
+            {
+                Graphic = GetComponent<UIGraphicsElement>();
+            }
+        }
         public override void OnEnabled()
         {
             base.OnEnabled();
-
+            if (!Graphic)
+            {
+                Graphic = GetComponent<UIGraphicsElement>();
+            }
             if (IsDisabled)
             {
                 SetOnDisabledGraphic();
@@ -43,8 +56,6 @@ namespace Engine.GUI
             {
                 SetOnActiveGraphic();
             }
-
-            Debug.Log("Button enable");
         }
 
         public void OnPointerDown(PointerEventData eventData)
@@ -141,7 +152,7 @@ namespace Engine.GUI
 
         private void SetOnDisabledGraphic()
         {
-            SetOnGraphics(DisableSprite ?? NormalSprite, DisabledColor);
+            SetOnGraphics(DisableSprite ?? NormalSprite, DisabledColor * (Graphic?.Color.A ?? 1.0f));
         }
 
         private void SetOnGraphics(Sprite sprite, Color color)
@@ -166,17 +177,17 @@ namespace Engine.GUI
 
         public void OnUpdate()
         {
-            if (!UseSprite && Graphic)
-            {
-                if (LerpColors)
-                {
-                    Graphic.Color = Color.Lerp(Graphic.Color, _targetColor, LerpColorSpeed * Time.UnscaledDeltaTime);
-                }
-                else
-                {
-                    Graphic.Color = _targetColor;
-                }
-            }
+            //if (!UseSprite && Graphic)
+            //{
+            //    if (LerpColors)
+            //    {
+            //        Graphic.Color = Color.Lerp(Graphic.Color, _targetColor, LerpColorSpeed * Time.UnscaledDeltaTime);
+            //    }
+            //    else
+            //    {
+            //        Graphic.Color = _targetColor;
+            //    }
+            //}
         }
     }
 }

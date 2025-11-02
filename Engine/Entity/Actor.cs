@@ -429,35 +429,35 @@ namespace Engine
             if (actor && actor.IsActiveInHierarchy)
             {
                 var components = getPendingComponents(actor);
-                _toDeleteComponents.Clear();
+                actor._toDeleteComponents.Clear();
 
                 for (int i = 0; i < components.Count; ++i)
                 {
-                    if (components[i] is IComponent component && component.IsValid() && component.IsEnabled)
+                    if (components[i] is T component && component.IsValid() && component.IsEnabled)
                     {
                         if (actor.IsActiveInHierarchy)
                         {
 #if DEBUG
                             try
                             {
-                                action(component as T);
+                                action(component);
                             }
                             catch (Exception e)
                             {
                                 Debug.Error(e);
                             }
 #else
-                            action(component as T);
+                            action(component);
 #endif
                         }
-
-                        _toDeleteComponents.Add(component);
                     }
+
+                    actor._toDeleteComponents.Add(components[i]);
                 }
 
-                for (int i = 0; i < _toDeleteComponents.Count; i++)
+                for (int i = 0; i < actor._toDeleteComponents.Count; i++)
                 {
-                    components.Remove(_toDeleteComponents[i]);
+                    components.Remove(actor._toDeleteComponents[i]);
                 }
 
                 for (int i = 0; i < actor.Transform.Children.Count; i++)
