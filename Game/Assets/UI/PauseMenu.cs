@@ -41,17 +41,17 @@ namespace Game
             _titleText = NewText("Title text", "Pause", new vec2(0, -110), _background.Transform);
             _titleText.FontSize = 70;
 
-            var resumeButtonImage = NewImage("Resume button image", new vec2(0, 100), new vec2(200, 40), Color.Coral, _background.Transform);
+            var resumeButtonImage = NewImage("Resume button image", new vec2(0, 100), new vec2(200, 40), Color.Gray, _background.Transform);
             resumeButtonImage.AddComponent<Button>().OnButtonClick += OnResume;
-            resumeButtonImage.AddComponent<ContentSizeFitter>();
+            resumeButtonImage.AddComponent<ContentSizeFitter>().Padding = new Thickness(10);
             // resumeButtonImage.AddComponent<Test_UIEvent>();
 
             var text = NewText("Resume text", "Resume", default, resumeButtonImage.Transform);
             text.ReceiveEvents = false;
             text.RectTransform.Size.y = resumeButtonImage.RectTransform.Size.y;
-            // text.RectTransform.Size.x = resumeButtonImage.RectTransform.Size.x;
+            //text.RectTransform.Size.x = resumeButtonImage.RectTransform.Size.x;
             // text.Wrap = TextWrap.WordWrap;
-            text.Fit = TextFit.ShrinkToFit;
+            text.Fit = TextFit.ExpandToFit;
             text.Horizontal = TextHorizontalAlignment.Center;
             //text.Padding.Right = 10;
             //text.Padding.Left = 10;

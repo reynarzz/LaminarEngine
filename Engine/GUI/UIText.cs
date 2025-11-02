@@ -199,6 +199,7 @@ namespace Engine.GUI
             var b = font.TextBounds(text, System.Numerics.Vector2.Zero, scale, CharacterSpacing, LineSpacing, effect, OutlineSize);
             float textWidth = b.X2 - b.X;
             float textHeight = b.Y2 - b.Y;
+            ResizeRectToText(textWidth, textHeight);
 
             System.Numerics.Vector2 pos = new(padded.x, padded.y);
 
@@ -218,8 +219,20 @@ namespace Engine.GUI
 
             font.DrawText(this, text, pos, new FSColor(Color.R, Color.G, Color.B, Color.A), rotation, System.Numerics.Vector2.Zero, scale, 0,
                           CharacterSpacing, LineSpacing, TextStyle.None, effect, Math.Clamp(OutlineSize, 0, OutlineSize + 1));
-        }
 
+
+        }
+        private void ResizeRectToText(float textWidth, float textHeight)
+        {
+            if (Fit == TextFit.ExpandToFit)
+            {
+                var size = RectTransform.Size;
+                size.x = textWidth + Padding.Left + Padding.Right;
+                size.y = textHeight + Padding.Top + Padding.Bottom;
+                RectTransform.Size = size;
+                RectTransform.Recalculate(RectTransform.Transform.Parent?.GetComponent<RectTransform>());
+            }
+        }
         private vec4 GetPaddedRect()
         {
             var r = RectTransform.Rect;
