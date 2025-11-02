@@ -12,6 +12,13 @@ namespace Engine
         public Texture2D Texture { get; set; }
         public int AtlasIndex { get; set; }
 
+        public Sprite()
+        {
+        }
+        public Sprite(Texture2D texture)
+        {
+            Texture = texture;
+        }
         public AtlasChunk GetAtlasChunk()
         {
             if (Texture)

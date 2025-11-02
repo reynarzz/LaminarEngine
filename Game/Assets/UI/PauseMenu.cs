@@ -41,13 +41,16 @@ namespace Game
             _titleText = NewText("Title text", "Pause", new vec2(0, -110), _background.Transform);
             _titleText.FontSize = 70;
             _titleText.Fit = TextFit.ExpandToFit;
+            _titleText.Vertical =  TextVerticalAlignment.Center;
 
             var resumeButtonImage = NewImage("Resume button image", new vec2(0, 100), new vec2(200, 40), Color.Gray, _background.Transform);
-            var button = resumeButtonImage.AddComponent<Button>();
-            button.OnButtonClick += OnResume;
-            button.Graphic = resumeButtonImage;
-            //button.IsDisabled = true;
+            resumeButtonImage.Sprite = new Sprite(Assets.GetTexture("button_square_depth_border.png"));
+            //var button = resumeButtonImage.AddComponent<Button>();
+            //button.OnButtonClick += OnResume;
+            //button.Graphic = resumeButtonImage;
+            // button.IsDisabled = true;
             resumeButtonImage.AddComponent<ContentSizeFitter>().Padding = new Thickness(10);
+            resumeButtonImage.IsSliced = true;
             // resumeButtonImage.AddComponent<Test_UIEvent>();
 
             var text = NewText("Resume text", "Resume", default, resumeButtonImage.Transform);
@@ -56,7 +59,7 @@ namespace Game
             // text.RectTransform.Size.x = resumeButtonImage.RectTransform.Size.x;
             // text.Wrap = TextWrap.WordWrap;
             text.Fit = TextFit.ExpandToFit;
-            text.Horizontal = TextHorizontalAlignment.Left;
+            text.Horizontal = TextHorizontalAlignment.Center;
             text.Vertical = TextVerticalAlignment.Center;
             //text.Padding.Right = 10;
             //text.Padding.Left = 10;
@@ -144,7 +147,7 @@ namespace Game
             Time.TimeScale = _show ? 0 : 1;
         }
 
-        public override void OnUpdate()
+        public override void OnLateUpdate()
         {
             void SetColorAlpha(float alpha)
             {

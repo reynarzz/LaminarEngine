@@ -98,6 +98,15 @@ namespace Engine
             });
         }
 
+        internal static GfxResource CreateQuadIndexBuffer(uint[] indices)
+        {
+            return GfxDeviceManager.Current.CreateIndexBuffer(new BufferDataDescriptor<uint>()
+            {
+                Buffer = indices,
+                Usage = BufferUsage.Static
+            });
+        }
+
         internal static void CreateQuad(ref QuadVertices vertices, QuadUV uvs, float width, float height, vec2 pivot,
                                          ColorPacketRGBA color, mat4 worldMatrix)
         {

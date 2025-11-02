@@ -70,13 +70,12 @@ namespace Engine
     {
         internal bool IsDirty { get; private set; }
         public List<Vertex> Vertices { get; }
-        public List<uint> Indices { get; }
+        public uint[] Indices { get; set; }
         public int IndicesToDrawCount { get; set; }
 
         public Mesh()
         {
             Vertices = new List<Vertex>();
-            Indices = new List<uint>();
         }
     }
 }
