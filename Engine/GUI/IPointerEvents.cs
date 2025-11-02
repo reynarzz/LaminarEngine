@@ -7,23 +7,35 @@ using System.Threading.Tasks;
 
 namespace Engine.GUI
 {
-    public interface IPointerDownEvent
+    public interface IPointerEvent : IComponent
     {
-        void OnPointerDown(vec2 mousePos);
     }
 
-    public interface IPointerUpEvent
+    public interface IPointerDownEvent : IPointerEvent
     {
-        void OnPointerUp(vec2 mousePos);
+        void OnPointerDown(PointerEventData eventData);
     }
 
-    public interface IPointerHoldEvent
+    public interface IPointerUpEvent : IPointerEvent
     {
-        void OnPointerHold(vec2 mousePos);
+        void OnPointerUp(PointerEventData eventData);
     }
 
-    public interface IPointerHoverEvent
+    public interface IPointerHoldEvent : IPointerEvent
     {
-        void OnPointerHover(vec2 mousePos);
+        void OnPointerHold(PointerEventData eventData);
+    }
+    public interface IPointerDragEvent : IPointerEvent
+    {
+        void OnPointerDrag(PointerEventData eventData);
+    }
+    public interface IPointerEnterEvent : IPointerEvent
+    {
+        void OnPointerEnter(PointerEventData eventData);
+    }
+
+    public interface IPointerExitEvent : IPointerEvent
+    {
+        void OnPointerExit(PointerEventData eventData);
     }
 }

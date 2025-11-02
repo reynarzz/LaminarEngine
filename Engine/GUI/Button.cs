@@ -7,39 +7,98 @@ using System.Threading.Tasks;
 
 namespace Engine.GUI
 {
-    public class Button : Component, IPointerDownEvent, IPointerUpEvent, IPointerHoverEvent
+    public class Button : Component, IPointerDownEvent, IPointerExitEvent, IPointerUpEvent, IPointerEnterEvent, IPointerDragEvent
     {
         public event Action OnButtonClick;
         public UIImage Graphic { get; set; }
         public bool UseSprite { get; set; }
         public Sprite NormalSprite { get; set; }
-        public Sprite DownSprite { get; set; }
-        public Sprite HoverSprite { get; set; }
+        public Sprite ClickSprite { get; set; }
+        public Sprite PointerEnterSprite { get; set; }
+        private bool _isDragging = false;
+        private bool _isPointerDown = false;
 
-        public void OnPointerDown(vec2 mousePos)
+        private const float _mouseDeltaThreshold = 0.003f;
+        private vec2 _pointerDownNormPos;
+
+        public void OnPointerDown(PointerEventData eventData)
         {
-            if (UseSprite && Graphic && DownSprite)
+            _pointerDownNormPos = eventData.NormalizedPosition;
+            if (UseSprite && Graphic && ClickSprite)
             {
-                Graphic.Sprite = DownSprite;
+                Graphic.Sprite = ClickSprite;
+            }
+            _isPointerDown = true;
+        }
+
+        public void OnPointerUp(PointerEventData eventData)
+        {
+            // Caching values here to avoid issues in case a exception throws while calling 'OnButtonClick?.Invoke()'
+            var isPointerDown = _isPointerDown;
+            var isDragging = _isDragging;
+
+            _isPointerDown = false;
+            _isDragging = false;
+
+            if (isPointerDown)
+            {
+                UseNormalSprite();
+            }
+
+            if (!isDragging && isPointerDown)
+            {
+                OnButtonClick?.Invoke();
             }
         }
 
-        public void OnPointerUp(vec2 mousePos)
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            UsePointerEnterSprite();
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            if (!_isDragging)
+            {
+                UseNormalSprite();
+            }
+        }
+
+        public void OnPointerDrag(PointerEventData eventData)
+        {
+            var delta = _pointerDownNormPos - eventData.NormalizedPosition;
+
+            if (_isPointerDown && delta.Magnitude > _mouseDeltaThreshold)
+            {
+                if (!_isDragging)
+                {
+                    Cancel();
+                }
+
+                _isDragging = true;
+            }
+        }
+
+        private void Cancel()
+        {
+            UseNormalSprite();
+        }
+
+        private void UseNormalSprite()
         {
             if (UseSprite && Graphic && NormalSprite)
             {
                 Graphic.Sprite = NormalSprite;
             }
-
-            OnButtonClick?.Invoke();
         }
 
-        public void OnPointerHover(vec2 mousePos)
+        private void UsePointerEnterSprite()
         {
-            if (UseSprite && Graphic && HoverSprite)
+            if (UseSprite && Graphic && PointerEnterSprite)
             {
-                Graphic.Sprite = HoverSprite;
+                Graphic.Sprite = PointerEnterSprite;
             }
         }
+
     }
 }

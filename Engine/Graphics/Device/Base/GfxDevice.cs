@@ -23,6 +23,7 @@ namespace Engine.Graphics
         internal abstract GfxResource CreateVertexBuffer(VertexDataDescriptor desc);
         internal abstract GfxResource CreateRenderTarget(RenderTargetDescriptor desc);
 
+        internal abstract void BlitRenderTargetTo(GfxResource source, GfxResource target, bool color = true, bool depth = true);
         internal abstract void UpdateGeometry(GfxResource resource, GeometryDescriptor desc);
         internal abstract void SetViewport(vec4 viewport);
 

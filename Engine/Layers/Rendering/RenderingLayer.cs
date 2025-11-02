@@ -122,11 +122,10 @@ namespace Engine.Layers
             var VP = _mainCamera.Projection * _mainCamera.ViewMatrix;
 
             RenderBatches(batches, ref VP, sceneRenderTarget);
-            RenderBatches(uibatches, ref FontManager.Instance.TestUIProjection, sceneRenderTarget);
-
-            Debug.DrawGeometries(VP, sceneRenderTarget.NativeResource);
-            //Debug.DrawGeometries(FontManager.Instance.TestUIProjection, sceneRenderTarget.NativeResource);
-
+            RenderBatches(uibatches, ref FontManager.Instance.TestUIProjection, sceneRenderTarget, sceneRenderTarget);
+#if DEBUG
+            Debug.DrawGeometries(VP, FontManager.Instance.TestUIProjection, sceneRenderTarget.NativeResource);
+#endif
             foreach (var pass in PostProcessingStack.Passes)
             {
                 sceneRenderTarget = pass.Render(sceneRenderTarget, _drawPostProcessCallback);
@@ -135,7 +134,7 @@ namespace Engine.Layers
             GfxDeviceManager.Current.Present(sceneRenderTarget.NativeResource);
         }
 
-        private void RenderBatches(List<Batch2D> batches, ref mat4 VP, RenderTexture sceneRenderTarget)
+        private void RenderBatches(List<Batch2D> batches, ref mat4 VP, RenderTexture sceneRenderTarget, RenderTexture grabBlitTarget = null)
         {
             foreach (var batch in batches)
             {
@@ -153,6 +152,11 @@ namespace Engine.Layers
                         Color = _mainCamera.BackgroundColor,
                         RenderTarget = _screenGrabTarget.NativeResource
                     });
+
+                    if (grabBlitTarget)
+                    {
+                        GfxDeviceManager.Current.BlitRenderTargetTo(grabBlitTarget.NativeResource, _screenGrabTarget.NativeResource);
+                    }
 
                     foreach (var batchGrab in batches)
                     {

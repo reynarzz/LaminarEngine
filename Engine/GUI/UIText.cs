@@ -22,7 +22,6 @@ namespace Engine.GUI
     public class UIText : UIGraphicsElement, IFontStashRenderer2
     {
         public FontAsset Font { get; set; }
-        public Color Color { get; set; } = Color.White;
         public int FontSize { get; set; } = 32;
         public int MinFontSize { get; set; } = 8;
         public int MaxFontSize { get; set; } = 72;
@@ -73,12 +72,20 @@ namespace Engine.GUI
                 Mesh.IndicesToDrawCount += 6;
             }
         }
+        private uint ARGBtoRGBA(uint packed)
+        {
+            byte r = (byte)(packed);
+            byte g = (byte)(packed >> 8);
+            byte b = (byte)(packed >> 16);
+            byte a = (byte)(packed >> 24);
+            return (uint)(r << 24 | g << 16 | b << 8 | a);
+        }
 
         private void SetFontVertex(Span<Vertex> fVertex, ref VertexPositionColorTexture vertex, int vertexIndex)
         {
             fVertex[vertexIndex].Position = new vec2(vertex.Position.X, vertex.Position.Y);
             fVertex[vertexIndex].UV = new vec2(vertex.TextureCoordinate.X, vertex.TextureCoordinate.Y);
-            fVertex[vertexIndex].Color = vertex.Color.PackedValue;
+            fVertex[vertexIndex].Color = ARGBtoRGBA(vertex.Color.PackedValue);
             fVertex[vertexIndex].VertexIndex = vertexIndex;
         }
 
@@ -209,7 +216,7 @@ namespace Engine.GUI
 
             pos.Y += lineHeight;
 
-            font.DrawText(this, text, pos, new FSColor(Color), rotation, System.Numerics.Vector2.Zero, scale, 0,
+            font.DrawText(this, text, pos, new FSColor(Color.R, Color.G, Color.B, Color.A), rotation, System.Numerics.Vector2.Zero, scale, 0,
                           CharacterSpacing, LineSpacing, TextStyle.None, effect, Math.Clamp(OutlineSize, 0, OutlineSize + 1));
         }
 

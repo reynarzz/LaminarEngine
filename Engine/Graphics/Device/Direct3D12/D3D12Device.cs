@@ -99,5 +99,10 @@ namespace Engine.Graphics
         {
             throw new NotImplementedException();
         }
+
+        internal override void BlitRenderTargetTo(GfxResource source, GfxResource target, bool color = true, bool depth = true)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Engine;
 using Engine.GUI;
+using Engine.Utils;
 using GlmNet;
 using System;
 using System.Collections.Generic;
@@ -18,23 +19,32 @@ namespace Game
 
         private UICanvas _canvas;
         private UIText _titleText;
+        private bool _show = false;
 
+        private List<UIGraphicsElement> _graphics = new();
         public override void OnStart()
         {
             _canvas = new Actor("Pause menu Canvas").AddComponent<UICanvas>();
             _canvas.Transform.Parent = Transform;
 
+            var backSize = new vec2(512 * 2, 288 * 2);
             // Background
-            _background = NewImage("Background", new vec2(512, 0), new vec2(512 * 2, int.MaxValue), Color.Black * 0.5f, _canvas.Transform);
-            _background.BlockEvents = false;
-            _background.ReceiveEvents = false;
+            _background = NewImage("Background", backSize * 0.5f, backSize, Color.White, _canvas.Transform);
+            _background.BlockEvents = true;
+            _background.ReceiveEvents = true;
+            _background.Material = new Material(new Shader(Assets.GetText("Shaders/VertScreenGrab.vert").Text, Assets.GetText("Shaders/Blur.frag").Text));
+            _background.Material.Passes[0].IsScreenGrabPass = true;
+
+            // LayoutTest();
+
             // Title text
-            _titleText = NewText("Title text", "Pause", new vec2(512, 210), _canvas.Transform);
+            _titleText = NewText("Title text", "Pause", new vec2(0, -110), _background.Transform);
             _titleText.FontSize = 70;
 
-            var resumeButtonImage = NewImage("Resume button image", new vec2(0, 400), new vec2(200, 40), Color.Gray, _background.Transform);
-
+            var resumeButtonImage = NewImage("Resume button image", new vec2(0, 100), new vec2(200, 40), Color.Coral, _background.Transform);
             resumeButtonImage.AddComponent<Button>().OnButtonClick += OnResume;
+            // resumeButtonImage.AddComponent<Test_UIEvent>();
+
             var text = NewText("Resume text", "Resume", default, resumeButtonImage.Transform);
             text.ReceiveEvents = false;
             text.RectTransform.Size.y = resumeButtonImage.RectTransform.Size.y;
@@ -44,21 +54,109 @@ namespace Game
             text.Horizontal = TextHorizontalAlignment.Center;
             //text.Padding.Right = 10;
             //text.Padding.Left = 10;
-            Actor.IsActiveSelf = false;
             //Time.TimeScale = 0;
+            //text.AddComponent<Test_UIEvent>();
+
+            _graphics.Add(text);
+            _graphics.Add(_titleText);
+            _graphics.Add(_background);
+            _graphics.Add(resumeButtonImage);
+
+            LogRecursive(_background.Transform);
         }
 
+        private void LayoutTest()
+        {
+            var horizontalLayout = new Actor<UIImage>("HorizontalRect").AddComponent<GridLayout>();
+            horizontalLayout.Transform.Parent = _background.Transform;
+            horizontalLayout.Transform.LocalPosition = new vec3(0, 0);
+            horizontalLayout.ResizeToFitVertical = true;
+            horizontalLayout.ResizeToFitHorizontal = true;
+            horizontalLayout.Spacing = 10;
+            horizontalLayout.Padding = new Thickness(10);
+            horizontalLayout.StartPivot = new vec2(0.5f, 0.5f);
+            horizontalLayout.MaxPerRow = 3;
+            var img = horizontalLayout.GetComponent<UIImage>();
+            img.Material = _background.Material; // GameManager.DefaultMaterial;
+            img.Color = Color.Gray;
+
+            var parent = NewImage("Quad1", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
+            var tex = Assets.GetTexture("starkTileset.png");
+            var coins = TextureAtlasUtils.SliceSprites(tex, 16, 16, 281, 4);
+
+            var iconContent = NewImage("Content", default, new vec2(45, 45), Color.White, parent.Transform);
+            iconContent.RectTransform.Pivot = new vec2(0.5f, 0.55f);
+            var animator = iconContent.AddComponent<Animator>();
+            var clip = new AnimationClip("Sprite");
+            var spriteCurve = new SpriteCurve();
+            for (int i = 0; i < coins.Length; i++)
+            {
+                spriteCurve.AddKeyFrame((1.0f / 7.0f) * i, coins[i]);
+            }
+            clip.AddCurve("Sprite", spriteCurve);
+            animator.AddState(new AnimationState("Coin", clip));
+            animator.OnUpdate += x =>
+            {
+                iconContent.Sprite = x.GetSprite("Sprite");
+            };
+            NewImage("Quad2", default, new vec2(100, 100), Color.Red, horizontalLayout.Transform);
+            NewImage("Quad3", default, new vec2(100, 100), Color.Blue, horizontalLayout.Transform);
+            NewImage("Quad4", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
+            NewImage("Quad5", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
+            NewImage("Quad6", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
+            NewImage("Quad7", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
+            NewImage("Quad8", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
+            NewImage("Quad9", default, new vec2(100, 100), Color.Green, horizontalLayout.Transform);
+            NewImage("Quad10", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
+        }
+
+        private static void LogRecursive(Transform current, int depth = 0)
+        {
+            // Create indentation with dashes based on depth
+            string indent = new string('-', depth * 2); // "--", "----", etc.
+
+            Debug.Log($"{indent}{current.Name}");
+
+            // Loop through children and recurse
+            for (int i = 0; i < current.Children.Count; i++)
+            {
+                LogRecursive(current.Children[i], depth + 1);
+            }
+        }
         private void OnResume()
         {
             Debug.Log("Button down: ");
             Time.TimeScale = 1;
-            Actor.IsActiveSelf = false;
+            //Actor.IsActiveSelf = false;
+            _show = false;
         }
 
         public void OnPause()
         {
-            Actor.IsActiveSelf = !Actor.IsActiveSelf;
-            Time.TimeScale = Actor.IsActiveSelf ? 0 : 1;
+            //Actor.IsActiveSelf = !Actor.IsActiveSelf;
+            _show = !_show;
+            Time.TimeScale = _show ? 0 : 1;
+        }
+
+        public override void OnUpdate()
+        {
+            void SetColorAlpha(float alpha)
+            {
+                foreach (var item in _graphics)
+                {
+                    var color = item.Color;
+                    color.A = alpha;
+                    item.Color = Color.MoveTowards(item.Color, color, Time.UnscaledDeltaTime * 5f);
+                }
+            }
+            if (_show)
+            {
+                SetColorAlpha(1);
+            }
+            else
+            {
+                SetColorAlpha(0);
+            }
         }
 
         private UIText NewText(string name, string value, vec2 position, Transform parent)
@@ -69,6 +167,9 @@ namespace Game
             text.Material = GameManager.DefaultMaterial;
             text.SetText(value);
             text.Transform.LocalPosition = position;
+            text.BlockEvents = false;
+            text.ReceiveEvents = false;
+
             return text;
         }
 

@@ -10,6 +10,7 @@ out vec4 fragColor;
 uniform sampler2D uScreenGrabTex;
 uniform vec2 uScreenSize;
 uniform vec3 uTime;
+uniform float uPixelate = 0;  
 
 // Simple hash noise (no texture needed)
 float hash(vec2 p)
@@ -32,22 +33,27 @@ float noise(vec2 p)
 
 void main()
 {
-    vec2 texel = 1.0 / uScreenSize;
+    vec2 uv = screenUV;
+    if (uPixelate > 0.0) 
+    {
+        vec2 pixelSize = uPixelate / uScreenSize; 
+        uv = floor(uv / pixelSize) * pixelSize;
+    }
 
-    // Generate random distortion using noise
-    float n = noise(screenUV * 20.0 + uTime.x * 0.1);  // "grain" density
-    float angle = n * 6.2831; // 2π
+    // Noise distortion
+    float n = noise(uv * 20.0 + uTime.x * 0.1);
+    float angle = n * 6.2831; 
     float amount = 0.006;
-    vec2 offset = vec2(cos(angle), sin(angle)) * amount; // distortion amount
+    vec2 offset = vec2(cos(angle), sin(angle)) * amount;
 
-    // Take multiple jittered samples to simulate blurry glass
+    // Multi-sample glass effect on pixelated UV
     vec3 color = vec3(0.0);
-    color += texture(uScreenGrabTex, screenUV + offset * 0.5).rgb;
-    color += texture(uScreenGrabTex, screenUV - offset * 0.5).rgb;
-    color += texture(uScreenGrabTex, screenUV + offset * 1.0).rgb;
-    color += texture(uScreenGrabTex, screenUV - offset * 1.0).rgb;
-    color += texture(uScreenGrabTex, screenUV + offset.yx * 0.8).rgb;
-    color += texture(uScreenGrabTex, screenUV - offset.yx * 0.8).rgb;
+    color += texture(uScreenGrabTex, uv + offset * 0.5).rgb;
+    color += texture(uScreenGrabTex, uv - offset * 0.5).rgb;
+    color += texture(uScreenGrabTex, uv + offset * 1.0).rgb;
+    color += texture(uScreenGrabTex, uv - offset * 1.0).rgb;
+    color += texture(uScreenGrabTex, uv + offset.yx * 0.8).rgb;
+    color += texture(uScreenGrabTex, uv - offset.yx * 0.8).rgb;
     color /= 6.0;
 
     fragColor = vec4(color, 1.0) * vColor;
