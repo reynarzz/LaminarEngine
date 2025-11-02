@@ -66,18 +66,20 @@ namespace Engine.GUI
 
             if (hasMouse && element.ReceiveEvents && !mouseEventHandled)
             {
+                // Pointer down event
                 if (Input.GetMouseDown(MouseButton.Left))
                 {
                     _dragElement = element;
                     InvokePointerEvent(element, _pointerDownEvents, eventData, _pointerDownEventInvoker);
                 }
-
+                // Pointer up event
                 if (Input.GetMouseUp(MouseButton.Left))
                 {
                     _dragElement = null;
                     InvokePointerEvent(element, _pointerUpEvents, eventData, _pointerUpEventInvoker);
                 }
 
+                // Pointer enter event
                 if (_pointerEnterElement != element)
                 {
                     _pointerEnterElement = element;
@@ -89,12 +91,13 @@ namespace Engine.GUI
                     mouseEventHandled = true;
                 }
             }
-            else if (_pointerEnterElement == element)
+            else if (_pointerEnterElement == element) // Pointer exit event
             {
                 _pointerEnterElement = null;
                 InvokePointerEvent(element, _pointerExitEvents, eventData, _pointerExitEventInvoker);
             }
 
+            // Drag event
             if (_dragElement == element && Input.GetMouse(MouseButton.Left))
             {
                 InvokePointerEvent(element, _pointerDragEvents, eventData, _pointerDragEventInvoker);
@@ -155,7 +158,7 @@ namespace Engine.GUI
                                            where T : class, IComponent, IPointerEvent
         {
             events.Clear();
-            element.GetComponents(ref events);
+            element.GetComponentsInChildren(ref events);
 
             foreach (var evt in events)
             {

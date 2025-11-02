@@ -233,7 +233,7 @@ namespace Engine
             return null;
         }
 
-        public T GetComponent<T>() where T: class
+        public T GetComponent<T>() where T : class
         {
             return GetComponent(typeof(T)) as T;
         }
@@ -253,6 +253,33 @@ namespace Engine
                     elements.Add(_components[i] as T);
                 }
             }
+        }
+
+        public void GetComponentsInChildren<T>(ref List<T> elements) where T : class
+        {
+            CheckIfValidObject(this);
+
+            void GetComponents(ref List<T> elements, Actor actor)
+            {
+                for (int i = 0; i < actor._components.Count; i++)
+                {
+                    if (typeof(T).IsAssignableFrom(actor._components[i].GetType()))
+                    {
+                        if (elements == null)
+                        {
+                            elements = new List<T>();
+                        }
+                        elements.Add(actor._components[i] as T);
+                    }
+                }
+
+                foreach (var child in actor.Transform.Children)
+                {
+                    GetComponents(ref elements, child.Actor);
+                }
+            }
+
+            GetComponents(ref elements, this);
         }
 
         public Span<T> GetComponents<T>() where T : class

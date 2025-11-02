@@ -112,7 +112,13 @@ namespace Engine
         public void GetComponents<T>(ref List<T> elements) where T : class
         {
             CheckIfValidObject(this);
-            Actor.GetComponents<T>(ref elements);
+            Actor.GetComponents(ref elements);
+        }
+
+        public void GetComponentsInChildren<T>(ref List<T> elements) where T : class
+        {
+            CheckIfValidObject(this);
+            Actor.GetComponentsInChildren(ref elements);
         }
     }
 }
