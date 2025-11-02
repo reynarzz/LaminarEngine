@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Engine.GUI
 {
-    public class Button : Component, IPointerDownEvent, IPointerExitEvent, IPointerUpEvent, IPointerEnterEvent, IPointerDragEvent
+    public class Button : Component, IUpdatableComponent, IPointerDownEvent, IPointerExitEvent, IPointerUpEvent, IPointerEnterEvent, IPointerDragEvent
     {
         public event Action OnButtonClick;
         public UIGraphicsElement Graphic { get; set; }
@@ -24,7 +24,9 @@ namespace Engine.GUI
 
         private bool _isDragging = false;
         private bool _isPointerDown = false;
-
+        public bool LerpColors { get; set; } = true;
+        public float LerpColorSpeed { get; set; } = 5;
+        private Color _targetColor;
         private const float _mouseDeltaThreshold = 0.006f;
         private vec2 _pointerDownPos;
         public bool IsDisabled { get; set; }
@@ -41,6 +43,8 @@ namespace Engine.GUI
             {
                 SetOnActiveGraphic();
             }
+
+            Debug.Log("Button enable");
         }
 
         public void OnPointerDown(PointerEventData eventData)
@@ -150,7 +154,27 @@ namespace Engine.GUI
                 }
                 else
                 {
-                    Graphic.Color = color;
+                    _targetColor = color;
+
+                    if (!LerpColors)
+                    {
+                        Graphic.Color = color;
+                    }
+                }
+            }
+        }
+
+        public void OnUpdate()
+        {
+            if (!UseSprite && Graphic)
+            {
+                if (LerpColors)
+                {
+                    Graphic.Color = Color.Lerp(Graphic.Color, _targetColor, LerpColorSpeed * Time.UnscaledDeltaTime);
+                }
+                else
+                {
+                    Graphic.Color = _targetColor;
                 }
             }
         }

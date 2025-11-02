@@ -10,7 +10,7 @@ namespace Engine
     /// <summary>
     /// Base class for all scripts
     /// </summary>
-    public abstract class ScriptBehavior : Component, IUpdatableComponent, ILateUpdatableComponent, IFixedUpdatableComponent
+    public abstract class ScriptBehavior : Component, IAwakeableComponent, IStartableComponent, IUpdatableComponent, ILateUpdatableComponent, IFixedUpdatableComponent
     {
         public virtual void OnAwake() { }
         public virtual void OnStart() { }

@@ -36,8 +36,6 @@ namespace Engine
         public override void OnEnabled()
         {
             base.OnEnabled();
-            Debug.Log("Enabled");
-
             IsDirty = true;
         }
 
@@ -45,7 +43,6 @@ namespace Engine
         {
             base.OnDisabled();
             IsDirty = true;
-            Debug.Log("Disabled");
             OnDestroyRenderer?.Invoke(this);
         }
 

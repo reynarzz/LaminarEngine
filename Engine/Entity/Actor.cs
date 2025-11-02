@@ -13,7 +13,7 @@ namespace Engine
     {
         private List<Component> _components;
         internal List<Component> Components => _components;
-        private List<Component> _toDeleteComponents = new();
+        private List<IComponent> _toDeleteComponents = new();
 
         private Transform _transform;
         public Transform Transform
@@ -85,16 +85,18 @@ namespace Engine
         public int Layer { get; set; } = 0;
 
         private List<Component> _pendingToDeleteComponents;
-
-        private List<Component> _onAwakePendingComponents;
-        private List<Component> _onStartPendingComponents;
-        private static readonly Action<ScriptBehavior> _awakeAction = x => { x.OnEnabled(); if (x.Actor.IsActiveInHierarchy) x.OnAwake(); };
-        private static readonly Action<ScriptBehavior> _startAction = x => x.OnStart();
+        private List<IComponent> _onAwakePendingComponents;
+        private List<IComponent> _onEnablePendingComponents;
+        private List<IComponent> _onStartPendingComponents;
+        private static readonly Action<IAwakeableComponent> _awakeAction = x => { if (x.Actor.IsActiveInHierarchy) x.OnAwake(); };
+        private static readonly Action<IEnabledComponent> _enabledAction = x => { if (x.Actor.IsActiveInHierarchy) x.OnEnabled(); };
+        private static readonly Action<IStartableComponent> _startAction = x => x.OnStart();
         private static readonly Action<IUpdatableComponent> _updateAction = x => x.OnUpdate();
         private static readonly Action<ILateUpdatableComponent> _lateUpdateAction = x => x.OnLateUpdate();
         private static readonly Action<IFixedUpdatableComponent> _fixedUpdateAction = x => x.OnFixedUpdate();
-        private static readonly Func<Actor, List<Component>> _getAwakePending = a => a._onAwakePendingComponents;
-        private static readonly Func<Actor, List<Component>> _getStartPending = a => a._onStartPendingComponents;
+        private static readonly Func<Actor, List<IComponent>> _getAwakePending = a => a._onAwakePendingComponents;
+        private static readonly Func<Actor, List<IComponent>> _getEnablePending = a => a._onEnablePendingComponents;
+        private static readonly Func<Actor, List<IComponent>> _getStartPending = a => a._onStartPendingComponents;
 
         public Actor() : this(string.Empty, string.Empty)
         {
@@ -116,10 +118,10 @@ namespace Engine
             }
 
             _components = new List<Component>();
-            _onAwakePendingComponents = new List<Component>();
-            _onStartPendingComponents = new List<Component>();
-            _pendingToDeleteComponents = new List<Component>();
-
+            _onAwakePendingComponents = new();
+            _onStartPendingComponents = new();
+            _pendingToDeleteComponents = new();
+            _onEnablePendingComponents = new();
             _transform = AddComponent<Transform>();
 
             Scene = SceneManager.ActiveScene;
@@ -168,9 +170,20 @@ namespace Engine
             var component = Activator.CreateInstance(type) as Component;
             component.Actor = this;
             _components.Add(component);
-            _onAwakePendingComponents.Add(component);
-            _onStartPendingComponents.Add(component);
 
+            if (component is IAwakeableComponent awakeable)
+            {
+                _onAwakePendingComponents.Add(awakeable);
+            }
+
+            if (component is IEnabledComponent enable)
+            {
+                _onEnablePendingComponents.Add(enable);
+            }
+            if (component is IStartableComponent start)
+            {
+                _onStartPendingComponents.Add(start);
+            }
             component.OnInitialize();
 
             return component;
@@ -378,6 +391,7 @@ namespace Engine
             component.Actor._components.Remove(component);
             component.Actor._onStartPendingComponents.Remove(component);
             component.Actor._onAwakePendingComponents.Remove(component);
+            component.Actor._onEnablePendingComponents.Remove(component);
 
             component.Actor = null;
             component.IsAlive = false;
@@ -385,6 +399,7 @@ namespace Engine
 
         internal void Awake()
         {
+            UpdateScriptBeginEvent(this, _getEnablePending, _enabledAction);
             UpdateScriptBeginEvent(this, _getAwakePending, _awakeAction);
         }
 
@@ -408,8 +423,8 @@ namespace Engine
             UpdateScriptsFunction(this, _fixedUpdateAction);
         }
 
-        private void UpdateScriptBeginEvent(Actor actor, Func<Actor, List<Component>> getPendingComponents,
-                                                         Action<ScriptBehavior> action)
+        private void UpdateScriptBeginEvent<T>(Actor actor, Func<Actor, List<IComponent>> getPendingComponents,
+                                                         Action<T> action) where T : class, IComponent
         {
             if (actor && actor.IsActiveInHierarchy)
             {
@@ -418,21 +433,21 @@ namespace Engine
 
                 for (int i = 0; i < components.Count; ++i)
                 {
-                    if (components[i] is ScriptBehavior component && component && component.IsEnabled)
+                    if (components[i] is IComponent component && component.IsValid() && component.IsEnabled)
                     {
                         if (actor.IsActiveInHierarchy)
                         {
 #if DEBUG
                             try
                             {
-                                action(component);
+                                action(component as T);
                             }
                             catch (Exception e)
                             {
                                 Debug.Error(e);
                             }
 #else
-                            action(component);
+                            action(component as T);
 #endif
                         }
 

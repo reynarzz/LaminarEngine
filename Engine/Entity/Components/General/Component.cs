@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    public abstract class Component : EObject, IComponent
+    public abstract class Component : EObject, IComponent, IEnabledComponent
     {
         public Actor Actor { get; internal set; }
         public virtual Transform Transform
