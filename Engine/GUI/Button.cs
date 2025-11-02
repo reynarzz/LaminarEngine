@@ -18,10 +18,12 @@ namespace Engine.GUI
         private bool _isDragging = false;
         private bool _isPointerDown = false;
 
-        private const float _mouseDeltaThreshold = 0.7f;
+        private const float _mouseDeltaThreshold = 0.003f;
+        private vec2 _pointerDownNormPos;
 
         public void OnPointerDown(PointerEventData eventData)
         {
+            _pointerDownNormPos = eventData.NormalizedPosition;
             if (UseSprite && Graphic && ClickSprite)
             {
                 Graphic.Sprite = ClickSprite;
@@ -61,9 +63,12 @@ namespace Engine.GUI
                 UseNormalSprite();
             }
         }
+
         public void OnPointerDrag(PointerEventData eventData)
         {
-            if (_isPointerDown && eventData.Delta.Magnitude > _mouseDeltaThreshold)
+            var delta = _pointerDownNormPos - eventData.NormalizedPosition;
+
+            if (_isPointerDown && delta.Magnitude > _mouseDeltaThreshold)
             {
                 if (!_isDragging)
                 {

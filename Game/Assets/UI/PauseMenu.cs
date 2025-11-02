@@ -35,7 +35,7 @@ namespace Game
             _background.Material = new Material(new Shader(Assets.GetText("Shaders/VertScreenGrab.vert").Text, Assets.GetText("Shaders/Blur.frag").Text));
             _background.Material.Passes[0].IsScreenGrabPass = true;
 
-            LayoutTest();
+            // LayoutTest();
 
             // Title text
             _titleText = NewText("Title text", "Pause", new vec2(0, -110), _background.Transform);
@@ -43,7 +43,7 @@ namespace Game
 
             var resumeButtonImage = NewImage("Resume button image", new vec2(0, 100), new vec2(200, 40), Color.Coral, _background.Transform);
             resumeButtonImage.AddComponent<Button>().OnButtonClick += OnResume;
-            resumeButtonImage.AddComponent<Test_UIEvent>();
+            // resumeButtonImage.AddComponent<Test_UIEvent>();
 
             var text = NewText("Resume text", "Resume", default, resumeButtonImage.Transform);
             text.ReceiveEvents = false;

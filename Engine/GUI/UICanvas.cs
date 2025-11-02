@@ -12,17 +12,20 @@ namespace Engine.GUI
     {
         public vec2 Position { get; }
         public vec2 Delta { get;}
+        public vec2 NormalizedPosition { get; }
 
         /// <summary>
         /// Actor who received the event.
         /// </summary>
         public Actor Actor { get; }
-
-        public PointerEventData(Actor actor, vec2 position, vec2 delta)
+        public UICanvas Canvas { get; }
+        public PointerEventData(Actor actor, UICanvas canvas, vec2 position, vec2 delta, vec2 positionNormalized)
         {
             Actor = actor;
+            Canvas = canvas;
             Position = position;
             Delta = delta;
+            NormalizedPosition = positionNormalized;
         }
     }
 
@@ -33,6 +36,7 @@ namespace Engine.GUI
         private vec2 _prevMousePos;
         private vec2 _mouseCanvasPos;
         private vec2 _mouseDeltaPos;
+        private vec2 _mouseNormalizedPosition;
         private List<IPointerEnterEvent> _pointerEnterEvents = new();
         private List<IPointerExitEvent> _pointerExitEvents = new();
         private List<IPointerDownEvent> _pointerDownEvents = new();
@@ -72,7 +76,9 @@ namespace Engine.GUI
             }
 
             bool hasMouse = element.RectTransform.Rect.Contains(_mouseCanvasPos);
-            var eventData = new PointerEventData(element.Actor, _mouseCanvasPos, _mouseDeltaPos);
+      
+
+            var eventData = new PointerEventData(element.Actor, this, _mouseCanvasPos, _mouseDeltaPos, _mouseNormalizedPosition);
 
             if (hasMouse && element.ReceiveEvents && !mouseEventHandled)
             {
@@ -139,6 +145,7 @@ namespace Engine.GUI
         {
             _mouseCanvasPos = ScreenToCanvas(Input.MousePosition);
             _mouseDeltaPos = _mouseCanvasPos - _prevMousePos;
+            _mouseNormalizedPosition = _mouseCanvasPos / RectTransform.Rect.Size;
             _prevMousePos = _mouseCanvasPos;
         }
 
