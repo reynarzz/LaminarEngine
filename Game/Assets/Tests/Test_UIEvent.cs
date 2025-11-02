@@ -27,12 +27,12 @@ namespace Game
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            Debug.Log("Pointer enter: " + Name);
+            Debug.Log("Pointer enter: " + eventData.Actor.Name);
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            Debug.Log("Pointer exit: " + Name);
+            Debug.Log("Pointer exit: " + eventData.Actor.Name);
         }
 
     }

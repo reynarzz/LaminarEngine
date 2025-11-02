@@ -43,6 +43,7 @@ namespace Game
 
             var resumeButtonImage = NewImage("Resume button image", new vec2(0, 100), new vec2(200, 40), Color.Coral, _background.Transform);
             resumeButtonImage.AddComponent<Button>().OnButtonClick += OnResume;
+            resumeButtonImage.AddComponent<Test_UIEvent>();
 
             var text = NewText("Resume text", "Resume", default, resumeButtonImage.Transform);
             text.ReceiveEvents = false;
@@ -54,7 +55,7 @@ namespace Game
             //text.Padding.Right = 10;
             //text.Padding.Left = 10;
             //Time.TimeScale = 0;
-            var dragTest = text.AddComponent<Test_UIEvent>();
+            //text.AddComponent<Test_UIEvent>();
 
             _graphics.Add(text);
             _graphics.Add(_titleText);
