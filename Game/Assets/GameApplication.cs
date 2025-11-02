@@ -17,7 +17,6 @@ namespace Game
         // Avoid the batch to take more texture slots that the system is supported, take into account materials texture count.
         // Fix: Batch2d vertices shift when an object is destroyed. 
         // Fix: Texture units overflow, a batch should only bind: MAX_DEVICE_ALLOWED - RENDERER_NEEDED_TEXTURE_SLOTS
-        // Simple UI system: Vertical/Horizontal/Grid layout, button (onDrag active, disabled), 
         // Implement:scroll list 
 
 
@@ -46,10 +45,10 @@ namespace Game
         {
             new Actor<GameManager>("GameManager");
 
-            PostProcessingStack.Push(new BloomPostProcessing());
-            ScreenGrabTest();
+            //PostProcessingStack.Push(new BloomPostProcessing());
+            //ScreenGrabTest();
+            //ScreenGrabTest3();
 
-            ScreenGrabTest3();
             Portal();
             Portal().Transform.LocalPosition = new vec3(33, -9.1f);
             Portal().Transform.LocalPosition = new vec3(43, -1);

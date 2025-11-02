@@ -61,7 +61,7 @@ namespace Engine.GUI
                 size.y = contentHeight; 
             }
             RectTransform.Size = size;
-            RectTransform.Recalculate(RectTransform.Transform.Parent?.GetComponent<RectTransform>());
+            RectTransform.Recalculate(RectTransform.Parent);
         }
     }
 }
