@@ -43,12 +43,13 @@ namespace Game
 
             var resumeButtonImage = NewImage("Resume button image", new vec2(0, 100), new vec2(200, 40), Color.Coral, _background.Transform);
             resumeButtonImage.AddComponent<Button>().OnButtonClick += OnResume;
+            resumeButtonImage.AddComponent<ContentSizeFitter>();
             // resumeButtonImage.AddComponent<Test_UIEvent>();
 
             var text = NewText("Resume text", "Resume", default, resumeButtonImage.Transform);
             text.ReceiveEvents = false;
             text.RectTransform.Size.y = resumeButtonImage.RectTransform.Size.y;
-            text.RectTransform.Size.x = resumeButtonImage.RectTransform.Size.x;
+            // text.RectTransform.Size.x = resumeButtonImage.RectTransform.Size.x;
             // text.Wrap = TextWrap.WordWrap;
             text.Fit = TextFit.ShrinkToFit;
             text.Horizontal = TextHorizontalAlignment.Center;
@@ -113,7 +114,7 @@ namespace Game
         private static void LogRecursive(Transform current, int depth = 0)
         {
             // Create indentation with dashes based on depth
-            string indent = new string('-', depth * 2); // "--", "----", etc.
+            string indent = new string('-', depth); // "--", "----", etc.
 
             Debug.Log($"{indent}{current.Name}");
 
