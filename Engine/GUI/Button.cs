@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Engine.GUI
 {
-    public class Button : Component, IPointerDownEvent, IPointerUpEvent, IPointerHoverEvent
+    public class Button : Component, IPointerDownEvent, IPointerUpEvent, IPointerEnterEvent, IDragEvent
     {
         public event Action OnButtonClick;
         public UIImage Graphic { get; set; }
@@ -15,8 +15,9 @@ namespace Engine.GUI
         public Sprite NormalSprite { get; set; }
         public Sprite DownSprite { get; set; }
         public Sprite HoverSprite { get; set; }
+        private bool _isDragging = false;
 
-        public void OnPointerDown(vec2 mousePos)
+        public void OnPointerDown(PointerEventData eventData)
         {
             if (UseSprite && Graphic && DownSprite)
             {
@@ -24,22 +25,34 @@ namespace Engine.GUI
             }
         }
 
-        public void OnPointerUp(vec2 mousePos)
+        public void OnPointerUp(PointerEventData eventData)
         {
             if (UseSprite && Graphic && NormalSprite)
             {
                 Graphic.Sprite = NormalSprite;
             }
 
-            OnButtonClick?.Invoke();
+            if (!_isDragging)
+            {
+                OnButtonClick?.Invoke();
+            }
+
+            _isDragging = false;
         }
 
-        public void OnPointerHover(vec2 mousePos)
+        public void OnPointerEnter(PointerEventData eventData)
         {
             if (UseSprite && Graphic && HoverSprite)
             {
                 Graphic.Sprite = HoverSprite;
             }
+        }
+
+        public void OnPointerDrag(PointerEventData eventData)
+        {
+            _isDragging = true;
+
+            // TODO: perform cancel.
         }
     }
 }

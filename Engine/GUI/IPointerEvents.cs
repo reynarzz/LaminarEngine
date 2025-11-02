@@ -13,21 +13,24 @@ namespace Engine.GUI
 
     public interface IPointerDownEvent : IPointerEvent
     {
-        void OnPointerDown(vec2 mousePos);
+        void OnPointerDown(PointerEventData eventData);
     }
 
     public interface IPointerUpEvent : IPointerEvent
     {
-        void OnPointerUp(vec2 mousePos);
+        void OnPointerUp(PointerEventData eventData);
     }
 
     public interface IPointerHoldEvent : IPointerEvent
     {
-        void OnPointerHold(vec2 mousePos);
+        void OnPointerHold(PointerEventData eventData);
     }
-
-    public interface IPointerHoverEvent : IPointerEvent
+    public interface IDragEvent : IPointerEvent
     {
-        void OnPointerHover(vec2 mousePos);
+        void OnPointerDrag(PointerEventData eventData);
+    }
+    public interface IPointerEnterEvent : IPointerEvent
+    {
+        void OnPointerEnter(PointerEventData eventData);
     }
 }
