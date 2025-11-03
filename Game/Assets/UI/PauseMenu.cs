@@ -75,21 +75,14 @@ namespace Game
 
         private void LayoutTest()
         {
-            var inventory = NewImage("Inventory image", default, new vec2(320, 240), Color.White, _background.Transform);
+            var inventoryObj = new Actor<UIElement, ContentSizeFitter>().GetComponent<UIElement>();
+            inventoryObj.Transform.Parent = _background.Transform;
+            inventoryObj.Transform.LocalPosition = new vec3(0, 198);
+
+
+            var inventory = NewImage("Inventory image", default, new vec2(320, 240), Color.White, inventoryObj.Transform);
             inventory.AddComponent<ContentSizeFitter>();
-
-            var horizontalLayout = new Actor("HorizontalRect").AddComponent<GridLayout>();
-
-            horizontalLayout.Transform.Parent = inventory.Transform;
-            horizontalLayout.Transform.LocalPosition = new vec3(0, 0);
-            horizontalLayout.ResizeToFitVertical = true;
-            horizontalLayout.ResizeToFitHorizontal = true;
-            horizontalLayout.Spacing = 10;
-            horizontalLayout.Padding = new Thickness(20);
-            horizontalLayout.Padding.Top = 70;
-            horizontalLayout.StartPivot = new vec2(0.5f, 0.5f);
-            horizontalLayout.MaxPerRow = 2;
-
+            inventory.RectTransform.Pivot = new vec2(0.5f, 0.5f);
             var img = inventory.GetComponent<UIImage>();
             img.Material = GameManager.DefaultMaterial;
             img.Sprite = new Sprite(Assets.GetTexture("pixel-ui_panel.png"));
@@ -97,14 +90,32 @@ namespace Game
             img.SlicedBorderResolution = 2;
             img.TopBorder = 10;
             img.BottomBorder = 15;
+
+            var inventoryTitleText = NewText("inventory title", "Inventory", new vec2(0, -41), inventoryObj.Transform);
+            inventoryTitleText.Fit = TextFit.ExpandToFit;
+            inventoryTitleText.FontSize = 30;
+            inventoryTitleText.OutlineSize = 0;
+
+            //inventoryTitleText.Transform.LocalScale = vec3.One * 0.3f;
+
+            var horizontalLayout = new Actor("HorizontalRect").AddComponent<GridLayout>();
+            horizontalLayout.Transform.Parent = inventory.Transform;
+            horizontalLayout.Transform.LocalPosition = new vec3(0, 0);
+            horizontalLayout.ResizeToFitVertical = true;
+            horizontalLayout.ResizeToFitHorizontal = true;
+            horizontalLayout.Spacing = 4;
+            horizontalLayout.Padding = new Thickness(12);
+            horizontalLayout.Padding.Top = 38;
+            horizontalLayout.StartPivot = new vec2(0.5f, 0.5f);
+            horizontalLayout.MaxPerRow = 10;
+            horizontalLayout.ContentsSize = new vec2(32,32);
             var slotSprite = new Sprite(Assets.GetTexture("pixel-ui_slot.png"));
 
             var parent = NewImage("Quad1", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
             parent.Sprite = slotSprite;
             var tex = Assets.GetTexture("starkTileset.png");
             var coins = TextureAtlasUtils.SliceSprites(tex, 16, 16, 281, 4);
-            
-            NewText("inventory title", "Inventory", new vec2(0, 0), inventory.Transform);
+
 
             var iconContent = NewImage("Content", default, new vec2(45, 45), Color.White, parent.Transform);
             iconContent.RectTransform.Pivot = new vec2(0.5f, 0.6f);
@@ -130,6 +141,13 @@ namespace Game
             NewImage("Quad7", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
             NewImage("Quad8", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
             NewImage("Quad9", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
+            NewImage("Quad10", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
+            NewImage("Quad10", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
+            NewImage("Quad10", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
+            NewImage("Quad10", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
+            NewImage("Quad10", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
+            NewImage("Quad10", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
+            NewImage("Quad10", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
             NewImage("Quad10", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
             NewImage("Quad10", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
             NewImage("Quad10", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;

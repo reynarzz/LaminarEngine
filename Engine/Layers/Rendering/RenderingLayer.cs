@@ -1,4 +1,5 @@
 ﻿using Engine.Graphics;
+using Engine.GUI;
 using Engine.Rendering;
 using Engine.Utils;
 using GlmNet;
@@ -122,9 +123,9 @@ namespace Engine.Layers
             var VP = _mainCamera.Projection * _mainCamera.ViewMatrix;
 
             RenderBatches(batches, ref VP, sceneRenderTarget);
-            RenderBatches(uibatches, ref FontManager.Instance.TestUIProjection, sceneRenderTarget, sceneRenderTarget);
+            RenderBatches(uibatches, ref UICanvas.UIViewProj, sceneRenderTarget, sceneRenderTarget);
 #if DEBUG
-            Debug.DrawGeometries(VP, FontManager.Instance.TestUIProjection, sceneRenderTarget.NativeResource);
+            Debug.DrawGeometries(VP, UICanvas.UIViewProj, sceneRenderTarget.NativeResource);
 #endif
             foreach (var pass in PostProcessingStack.Passes)
             {

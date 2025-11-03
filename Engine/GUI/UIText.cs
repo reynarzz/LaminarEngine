@@ -22,6 +22,7 @@ namespace Engine.GUI
     public class UIText : UIGraphicsElement, IFontStashRenderer2
     {
         public FontAsset Font { get; set; }
+        public int FontResolution { get; set; } = 1;
         public int FontSize { get; set; } = 32;
         public int MinFontSize { get; set; } = 8;
         public int MaxFontSize { get; set; } = 72;
@@ -99,7 +100,7 @@ namespace Engine.GUI
                 ApplyTextFit();
             }
 
-            var font = FontManager.Instance.GetFont(Font).GetSpriteFont(FontSize);
+            var font = FontManager.Instance.GetFont(Font).GetSpriteFont(FontResolution, FontSize);
             if (Wrap == TextWrap.WordWrap)
             {
                 SendWrappedTextToDraw(font);
@@ -126,7 +127,7 @@ namespace Engine.GUI
             {
                 for (int size = FontSize; size >= MinFontSize; size--)
                 {
-                    var font = fontAsset.GetSpriteFont(size);
+                    var font = fontAsset.GetSpriteFont(FontResolution, size);
                     var b = font.TextBounds(_text, System.Numerics.Vector2.Zero);
                     if (b.X2 - b.X <= padded.z - padded.x && b.Y2 - b.Y <= padded.w - padded.y) { FontSize = size; break; }
                 }
@@ -135,7 +136,7 @@ namespace Engine.GUI
             {
                 for (int size = FontSize; size <= MaxFontSize; size++)
                 {
-                    var font = fontAsset.GetSpriteFont(size);
+                    var font = fontAsset.GetSpriteFont(FontResolution, size);
                     var b = font.TextBounds(_text, System.Numerics.Vector2.Zero);
                     if (b.X2 - b.X > padded.z - padded.x || b.Y2 - b.Y > padded.w - padded.y) { FontSize = Math.Max(MinFontSize, size - 1); break; }
                 }

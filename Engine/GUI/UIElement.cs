@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Engine
 {
     [RequiredComponent(typeof(RectTransform))]
-    public abstract class UIElement : Renderer2D // TODO: remove renderer2d
+    public class UIElement : Renderer2D // TODO: remove renderer2d
     {
         private RectTransform _rectTransform;
         public RectTransform RectTransform => _rectTransform ?? (_rectTransform = GetComponent<RectTransform>());

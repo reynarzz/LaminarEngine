@@ -1,4 +1,5 @@
 ﻿using Engine.Types;
+using Engine.Utils;
 using GlmNet;
 using System;
 using System.Collections.Generic;
@@ -52,6 +53,8 @@ namespace Engine.GUI
         private readonly Action<IPointerUpEvent, PointerEventData> _pointerUpEventInvoker = (p, d) => p.OnPointerUp(d);
         private readonly Action<IPointerDragEvent, PointerEventData> _pointerDragEventInvoker = (p, d) => p.OnPointerDrag(d);
 
+        public static mat4 UIViewProj;
+        private static bool _staticInitialized = false;
         internal override void OnInitialize()
         {
             base.OnInitialize();
@@ -59,6 +62,23 @@ namespace Engine.GUI
             RectTransform.Size = new vec2(512 * 2, 288 * 2);
             RectTransform.Pivot = default;
             RectTransform.Recalculate(null);
+            // Window.OnWindowChanged += Window_OnWindowChanged;
+            if (!_staticInitialized)
+            {
+                _staticInitialized = true;
+                CanvasValues();
+            }
+        }
+
+        private void Window_OnWindowChanged(int width, int height)
+        {
+            RectTransform.Size = new vec2(width, height);
+            CanvasValues();
+        }
+
+        private void CanvasValues()
+        {
+            UIViewProj = MathUtils.Ortho(0, RectTransform.Size.x, RectTransform.Size.y, 0, 0, -1);
         }
 
         private void EventRecursive(UIElement element, RectTransform parent, ref bool mouseEventHandled)

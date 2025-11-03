@@ -13,27 +13,55 @@ namespace Engine.Graphics
         private static FontTextureManager _textureManager;
         public FontTextureManager TextureManager => _textureManager;
 
-        public mat4 TestUIProjection; // Remove, this should come from the UICanvas
-
         private readonly Dictionary<string, FontContent> _fontFamilies;
         internal class FontContent
         {
-            private readonly FontSystem _fontSystem;
-            private readonly Dictionary<int, DynamicSpriteFont> _spriteFonts;
-            internal FontContent(FontSystem fontSystem)
+            private class FontSystemContainer
             {
-                _fontSystem = fontSystem;
-                _spriteFonts = new();
-            }
+                private readonly FontSystem _fontSystem;
+                private readonly Dictionary<int, DynamicSpriteFont> _spriteFonts;
 
-            internal DynamicSpriteFont GetSpriteFont(int size)
-            {
-                if (!_spriteFonts.TryGetValue(size, out var font))
+                public FontSystemContainer(int resolution, byte[] fontData)
                 {
-                    font = _spriteFonts[size] = _fontSystem.GetFont(size);
+                    _spriteFonts = new Dictionary<int, DynamicSpriteFont>();
+                    _fontSystem = new FontSystem(new FontSystemSettings()
+                    {
+                        FontResolutionFactor = resolution,
+                        KernelWidth = resolution,
+                        KernelHeight = resolution,
+                    });
+                    _fontSystem.AddFont(fontData);
                 }
 
-                return font;
+                internal DynamicSpriteFont GetSpriteFont(int size)
+                {
+                    if (!_spriteFonts.TryGetValue(size, out var font))
+                    {
+                        font = _spriteFonts[size] = _fontSystem.GetFont(size);
+                    }
+
+                    return font;
+                }
+            }
+            private readonly Dictionary<int, FontSystemContainer> _fontSystems;
+
+            private readonly byte[] _fontData;
+
+            internal FontContent(byte[] data)
+            {
+                _fontData = data;
+                _fontSystems = new Dictionary<int, FontSystemContainer>();
+            }
+
+            internal DynamicSpriteFont GetSpriteFont(int resolution, int fontSize)
+            {
+                if (!_fontSystems.TryGetValue(resolution, out var fontSystemContainer))
+                {
+                    fontSystemContainer = new FontSystemContainer(resolution, _fontData);
+                    _fontSystems.Add(resolution, fontSystemContainer);
+                }
+
+                return fontSystemContainer.GetSpriteFont(fontSize);
             }
         }
 
@@ -41,49 +69,12 @@ namespace Engine.Graphics
         {
             _textureManager = new FontTextureManager();
             _fontFamilies = new();
-
-            var targetScreenRes = new vec2(512 * 2, 288 * 2);
-            var viewMatrix = MathUtils.Ortho(0, targetScreenRes.x, targetScreenRes.y, 0, 0, -1);
-            //var viewMatrix = MathUtils.Ortho(-_targetScreenRes.x / 2, _targetScreenRes.x / 2, _targetScreenRes.y / 2, -_targetScreenRes.y / 2, 0, -1);
-
-            TestUIProjection = viewMatrix;
-            Window.OnWindowChanged += OnWindowChanged;
-
         }
-        private void OnWindowChanged(int width, int height)
-        {
-            // UpdateCurrent();
-        }
-
-        private void UpdateCurrent()
-        {
-            float aspect = (float)Window.Width / (float)Window.Height;
-
-            float orthoHeight = 288*2;
-            float orthoWidth = orthoHeight * aspect;
-
-            float left = -orthoWidth;
-            float right = orthoWidth;
-            float bottom = -orthoHeight;
-            float top = orthoHeight;
-
-            TestUIProjection = MathUtils.Ortho(left, right, bottom, top, 0, -1);
-        }
-
         internal FontContent GetFont(FontAsset font)
         {
             if (!_fontFamilies.TryGetValue(font.Path, out var fontContent))
             {
-                var settings = new FontSystemSettings
-                {
-                    FontResolutionFactor = 3,
-                    KernelWidth = 2,
-                    KernelHeight = 2,
-                };
-                var fontSystem = new FontSystem(settings);
-                fontSystem.AddFont(font.Data);
-
-                fontContent = new FontContent(fontSystem);
+                fontContent = new FontContent(font.Data);
 
                 _fontFamilies[font.Path] = fontContent;
             }
