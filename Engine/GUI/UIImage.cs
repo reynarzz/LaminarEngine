@@ -13,8 +13,8 @@ namespace Engine.GUI
         // Slice sizes in pixels
         public float LeftBorder = 10f;
         public float RightBorder = 10f;
-        public float TopBorder = 10f;
         public float BottomBorder = 10f;
+        public float TopBorder = 10f;
 
         private int _currentSliceVertexIndex = 0;
 
@@ -83,7 +83,7 @@ namespace Engine.GUI
                 else size.x = size.y * spriteRatio;
             }
 
-            float l = LeftBorder, r = RightBorder, t = TopBorder, b = BottomBorder;
+            float l = LeftBorder, r = RightBorder, t = BottomBorder, b = TopBorder;
 
             float x0 = -rt.Pivot.x * size.x;
             float y0 = -rt.Pivot.y * size.y;
