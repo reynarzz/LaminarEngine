@@ -44,29 +44,32 @@ namespace Engine.GUI
                 Draw9SliceQuad(rt, size);
             }
         }
-
         private void DrawSimpleQuad(RectTransform rt, vec2 size)
         {
-            var chunk = Sprite?.GetAtlasChunk() ?? AtlasChunk.DefaultChunk;
-            Mesh.IndicesToDrawCount = 6;
-
-            if (PreserveAspect && chunk.Width > 0 && chunk.Height > 0)
+            if (IsDirty)
             {
-                float spriteRatio = (float)chunk.Width / chunk.Height;
-                float rectRatio = size.x / size.y;
+                var chunk = Sprite?.GetAtlasChunk() ?? AtlasChunk.DefaultChunk;
+                Mesh.IndicesToDrawCount = 6;
 
-                if (spriteRatio > rectRatio)
-                    size.y = size.x / spriteRatio;
-                else
-                    size.x = size.y * spriteRatio;
+                if (PreserveAspect && chunk.Width > 0 && chunk.Height > 0)
+                {
+                    float spriteRatio = (float)chunk.Width / chunk.Height;
+                    float rectRatio = size.x / size.y;
+
+                    if (spriteRatio > rectRatio)
+                        size.y = size.x / spriteRatio;
+                    else
+                        size.x = size.y * spriteRatio;
+                }
+
+                var quad = GraphicsHelper.GetUIQuadVerticesLocal(chunk.Uvs, size, rt.Pivot, Color, Transform.WorldMatrix);
+
+                Mesh.Vertices[0] = quad.v0;
+                Mesh.Vertices[1] = quad.v1;
+                Mesh.Vertices[2] = quad.v2;
+                Mesh.Vertices[3] = quad.v3;
             }
-
-            var quad = GraphicsHelper.GetUIQuadVerticesLocal(chunk.Uvs, size, rt.Pivot, Color, Transform.WorldMatrix);
-
-            Mesh.Vertices[0] = quad.v0;
-            Mesh.Vertices[1] = quad.v1;
-            Mesh.Vertices[2] = quad.v2;
-            Mesh.Vertices[3] = quad.v3;
+           
         }
 
         private void Draw9SliceQuad(RectTransform rt, vec2 size)

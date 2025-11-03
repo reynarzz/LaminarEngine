@@ -95,7 +95,7 @@ namespace Game
             }
 
             float uiMult = 3;
-            var lifeBar = Image("Life bar", new vec2(10, 10), new vec2(66, 34) * uiMult, new Sprite() { Texture = Assets.GetTexture("KingsAndPigsSprites/12-Live and Coins/Live Bar.png") }, canvas.Transform);
+            var lifeBar = Image("Life bar", new vec2(10, 10), new vec2(66, 34) * uiMult, new Sprite(Assets.GetTexture("KingsAndPigsSprites/12-Live and Coins/Live Bar.png")), canvas.Transform);
             
             Image("Heart1", new vec2(56, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);
             Image("Heart2", new vec2(88, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);
@@ -129,10 +129,7 @@ namespace Game
             //particleSystem.Material.GetPass(0).IsScreenGrabPass = true;
 
             //particleSystem.Material.Passes.ElementAt(0).Blending.Enabled = false;
-            var sprite = new Sprite();
-            sprite.Texture = Texture2D.White;
-
-            particleSystem.Sprite = sprite;
+            particleSystem.Sprite = new Sprite();
         }
 
         private void TextRendering()

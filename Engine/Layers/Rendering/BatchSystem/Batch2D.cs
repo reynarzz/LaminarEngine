@@ -62,7 +62,7 @@ namespace Engine.Rendering
         private Vertex[] _verticesData;
         public bool _isDirty;
         private Dictionary<Guid, RendererIds> _renderers;
-
+        private int _vertexOffset = int.MaxValue;
         private struct RendererIds
         {
             public int RendererId;
@@ -185,6 +185,7 @@ namespace Engine.Rendering
             for (int i = 0; i < vertices.Length; i++)
             {
                 vertices[i].TextureIndex = textureIndex;
+                _vertexOffset = Math.Min(_vertexOffset, startIndex + i);
                 _verticesData[startIndex + i] = vertices[i];
             }
         }
@@ -287,19 +288,24 @@ namespace Engine.Rendering
 
         internal void Flush()
         {
+            // TODO: only update changed vertices
             if (_isDirty)
             {
                 var vertDataDescriptor = _geoDescriptor.VertexDesc.BufferDesc;
-                vertDataDescriptor.Offset = 0;
 
                 unsafe
                 {
+                    // vertDataDescriptor.Offset = sizeof(Vertex) * _vertexOffset;
+                    //vertDataDescriptor.Count = sizeof(Vertex) * (VertexCount - _vertexOffset);
+
+                    vertDataDescriptor.Offset = sizeof(Vertex) * 0;
                     vertDataDescriptor.Count = sizeof(Vertex) * VertexCount;
                 }
 
                 (vertDataDescriptor as BufferDataDescriptor<Vertex>).Buffer = _verticesData;
 
                 GfxDeviceManager.Current.UpdateGeometry(Geometry, _geoDescriptor);
+                _vertexOffset = VertexCount;
             }
 
             _isDirty = false;

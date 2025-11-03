@@ -9,15 +9,30 @@ namespace Engine
     public abstract class Renderer2D : Renderer
     {
         public int SortOrder { get; set; } = 0;
-        private Color _color = Color.White;
-        public Color Color { get => _color; set { _color = value; IsDirty = true; } }
+        private uint _colorpacket = Color.White;
+        public Color Color
+        {
+            get => _colorpacket; 
+            set
+            {
+                if(_colorpacket == value)
+                {
+                    return;
+                }
+                _colorpacket = value; 
+                IsDirty = true;
+            }
+        }
 
         private Sprite _sprite;
-        public Sprite Sprite 
+        public Sprite Sprite
         {
             get => _sprite;
             set
             {
+                if(_sprite != null && _sprite.Equals(value))
+                    return;
+
                 IsDirty = true;
                 _sprite = value;
             }

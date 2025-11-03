@@ -148,25 +148,11 @@ namespace Game
                 iconContent.Sprite = x.GetSprite("Sprite");
             };
 
-            NewImage("Quad2", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
-            NewImage("Quad3", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
-            NewImage("Quad4", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
-            NewImage("Quad5", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
-            NewImage("Quad6", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
-            NewImage("Quad7", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
-            NewImage("Quad8", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
-            NewImage("Quad9", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
-            NewImage("Quad10", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
-            NewImage("Quad10", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
-            NewImage("Quad10", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
-            NewImage("Quad10", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
-            NewImage("Quad10", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
-            NewImage("Quad10", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
-            NewImage("Quad10", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
-            NewImage("Quad10", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
-            NewImage("Quad10", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
-            NewImage("Quad10", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
-            NewImage("Quad10", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
+            for (int i = 0; i < 19; i++)
+            {
+                NewImage("Quad2", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
+
+            }
         }
 
         private static void LogHierarchy(Transform current, int depth = 0)

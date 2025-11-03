@@ -15,7 +15,7 @@ namespace Engine
     {
         public Material Material { get; set; }
         public Mesh Mesh { get; set; }
-        protected internal bool IsDirty { get; protected set; } = true;
+        protected internal virtual bool IsDirty { get; protected set; } = true;
         internal event Action<Renderer> OnDestroyRenderer;
         internal override void OnInitialize()
         {
@@ -25,7 +25,8 @@ namespace Engine
 
         protected virtual void Transform_OnChanged(Transform obj)
         {
-            IsDirty = true;
+            // TODO: Careful with this, it could cause renderers to be dirty even when no meaningful transformation happens
+            IsDirty = true; 
         }
 
         internal void MarkNotDirty()

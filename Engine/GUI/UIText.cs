@@ -56,7 +56,11 @@ namespace Engine.GUI
         {
             if (IsDirty)
             {
-                Sprite.Texture = texture as Texture2D;
+                var tex = texture as Texture2D;
+                if (Sprite.Texture != tex)
+                {
+                    Sprite = new Sprite(0, tex);
+                }
                 var vertIndex = (Mesh.IndicesToDrawCount / 6) * 4;
                 if (Mesh.Vertices.Count < vertIndex + 4)
                 {
@@ -92,6 +96,9 @@ namespace Engine.GUI
 
         internal override void OnCanvasDraw(UICanvas canvas)
         {
+            // TODO: Remove this
+            IsDirty = true;
+
             if (!Font)
                 return;
 

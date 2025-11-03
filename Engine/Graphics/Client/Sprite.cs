@@ -9,16 +9,21 @@ namespace Engine
 {
     public class Sprite : EObject
     {
-        public Texture2D Texture { get; set; }
-        public int AtlasIndex { get; set; }
+        public Texture2D Texture { get; }
+        public int AtlasIndex { get; }
 
-        public Sprite()
+        public Sprite() : this(0, Texture2D.White)
         {
         }
-        public Sprite(Texture2D texture)
+        public Sprite(Texture2D texture) : this(0, texture)
         {
+        }
+        public Sprite(int atlasIndex, Texture2D texture)
+        {
+            AtlasIndex = atlasIndex;
             Texture = texture;
         }
+       
         public AtlasChunk GetAtlasChunk()
         {
             if (Texture)
