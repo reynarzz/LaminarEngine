@@ -3,7 +3,7 @@
 namespace Engine.GUI
 {
     [UniqueComponent]
-    public class ContentSizeFitter : UIElement, IUpdatableComponent
+    public class ContentSizeFitter : UIElement, ILateUpdatableComponent
     {
         public bool FitHorizontal { get; set; } = true;
         public bool FitVertical { get; set; } = true;
@@ -11,7 +11,7 @@ namespace Engine.GUI
 
         private readonly List<RectTransform> _children = new();
 
-        public void OnUpdate()
+        public void OnLateUpdate()
         {
             ResizeToFitChildren();
         }

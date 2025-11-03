@@ -91,7 +91,7 @@ namespace Game
                 image.Sprite = sprite;
                 image.PreserveAspect = true;
                 image.Transform.LocalPosition = position;
-                image.AddComponent<Button>();
+                // image.AddComponent<Button>();
                 return image;
             }
 

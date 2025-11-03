@@ -48,7 +48,7 @@ namespace Game
             button.OnButtonClick += OnResume;
             button.Graphic = resumeButtonImage;
             // button.IsDisabled = true;
-            resumeButtonImage.AddComponent<ContentSizeFitter>().Padding = new Thickness(10);
+            // resumeButtonImage.AddComponent<ContentSizeFitter>().Padding = new Thickness(10);
             resumeButtonImage.IsSliced = true;
             // resumeButtonImage.AddComponent<Test_UIEvent>();
 
@@ -75,29 +75,39 @@ namespace Game
 
         private void LayoutTest()
         {
-            var horizontalLayout = new Actor<UIImage>("HorizontalRect").AddComponent<GridLayout>();
+            var inventory = NewImage("Inventory image", default, new vec2(320, 240), Color.White, _background.Transform);
+            inventory.AddComponent<ContentSizeFitter>();
 
-            horizontalLayout.Transform.Parent = _background.Transform;
+            var horizontalLayout = new Actor("HorizontalRect").AddComponent<GridLayout>();
+
+            horizontalLayout.Transform.Parent = inventory.Transform;
             horizontalLayout.Transform.LocalPosition = new vec3(0, 0);
             horizontalLayout.ResizeToFitVertical = true;
             horizontalLayout.ResizeToFitHorizontal = true;
             horizontalLayout.Spacing = 10;
             horizontalLayout.Padding = new Thickness(20);
+            horizontalLayout.Padding.Top = 70;
             horizontalLayout.StartPivot = new vec2(0.5f, 0.5f);
             horizontalLayout.MaxPerRow = 2;
-            var img = horizontalLayout.GetComponent<UIImage>();
+
+            var img = inventory.GetComponent<UIImage>();
             img.Material = GameManager.DefaultMaterial;
-            img.Sprite = new Sprite(Assets.GetTexture("button_square_depth_border.png"));
+            img.Sprite = new Sprite(Assets.GetTexture("pixel-ui_panel.png"));
             img.IsSliced = true;
+            img.SlicedBorderResolution = 2;
+            img.TopBorder = 10;
             img.BottomBorder = 15;
-            img.TopBorder = 15;
-            img.RightBorder = 15;
+            var slotSprite = new Sprite(Assets.GetTexture("pixel-ui_slot.png"));
+
             var parent = NewImage("Quad1", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
+            parent.Sprite = slotSprite;
             var tex = Assets.GetTexture("starkTileset.png");
             var coins = TextureAtlasUtils.SliceSprites(tex, 16, 16, 281, 4);
+            
+            NewText("inventory title", "Inventory", new vec2(0, 0), inventory.Transform);
 
             var iconContent = NewImage("Content", default, new vec2(45, 45), Color.White, parent.Transform);
-            iconContent.RectTransform.Pivot = new vec2(0.5f, 0.55f);
+            iconContent.RectTransform.Pivot = new vec2(0.5f, 0.6f);
             var animator = iconContent.AddComponent<Animator>();
             var clip = new AnimationClip("Sprite");
             var spriteCurve = new SpriteCurve();
@@ -111,15 +121,19 @@ namespace Game
             {
                 iconContent.Sprite = x.GetSprite("Sprite");
             };
-            NewImage("Quad2", default, new vec2(100, 100), Color.Red, horizontalLayout.Transform);
-            NewImage("Quad3", default, new vec2(100, 100), Color.Blue, horizontalLayout.Transform);
-            NewImage("Quad4", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
-            NewImage("Quad5", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
-            NewImage("Quad6", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
-            NewImage("Quad7", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
-            NewImage("Quad8", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
-            NewImage("Quad9", default, new vec2(100, 100), Color.Green, horizontalLayout.Transform);
-            NewImage("Quad10", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
+
+            NewImage("Quad2", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
+            NewImage("Quad3", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
+            NewImage("Quad4", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
+            NewImage("Quad5", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
+            NewImage("Quad6", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
+            NewImage("Quad7", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
+            NewImage("Quad8", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
+            NewImage("Quad9", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
+            NewImage("Quad10", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
+            NewImage("Quad10", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
+            NewImage("Quad10", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
+            NewImage("Quad10", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
         }
 
         private static void LogRecursive(Transform current, int depth = 0)

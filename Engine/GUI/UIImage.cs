@@ -17,7 +17,7 @@ namespace Engine.GUI
         public float TopBorder = 10f;
 
         private int _currentSliceVertexIndex = 0;
-
+        public float SlicedBorderResolution { get; set; } = 1;
         internal override void OnInitialize()
         {
             base.OnInitialize();
@@ -75,23 +75,26 @@ namespace Engine.GUI
 
             var uv = QuadUV.FlipUV(chunk.Uvs, false, true);
 
-            if (PreserveAspect && chunk.Width > 0 && chunk.Height > 0)
+            float width = chunk.Width * SlicedBorderResolution;
+            float height = chunk.Height * SlicedBorderResolution;
+
+            if (PreserveAspect && width > 0 && height > 0)
             {
-                float spriteRatio = (float)chunk.Width / chunk.Height;
+                float spriteRatio = (float)width / height;
                 float rectRatio = size.x / size.y;
                 if (spriteRatio > rectRatio) size.y = size.x / spriteRatio;
                 else size.x = size.y * spriteRatio;
             }
 
-            float l = LeftBorder, r = RightBorder, t = BottomBorder, b = TopBorder;
+            float left = LeftBorder, right = RightBorder, bottom = BottomBorder, top = TopBorder;
 
             float x0 = -rt.Pivot.x * size.x;
             float y0 = -rt.Pivot.y * size.y;
-            float x1 = x0 + l;
-            float x2 = x0 + size.x - r;
+            float x1 = x0 + left;
+            float x2 = x0 + size.x - right;
             float x3 = x0 + size.x;
-            float y1 = y0 + b;
-            float y2 = y0 + size.y - t;
+            float y1 = y0 + top;
+            float y2 = y0 + size.y - bottom;
             float y3 = y0 + size.y;
 
             float uMin = MathF.Min(MathF.Min(uv.BottomLeftUV.x, uv.TopLeftUV.x), MathF.Min(uv.BottomRightUV.x, uv.TopRightUV.x));
@@ -100,13 +103,13 @@ namespace Engine.GUI
             float vMax = MathF.Max(MathF.Max(uv.BottomLeftUV.y, uv.TopLeftUV.y), MathF.Max(uv.BottomRightUV.y, uv.TopRightUV.y));
 
             float u0 = uMin;
-            float u1 = uMin + (l / chunk.Width) * (uMax - uMin);
-            float u2 = uMax - (r / chunk.Width) * (uMax - uMin);
+            float u1 = uMin + (left / width) * (uMax - uMin);
+            float u2 = uMax - (right / height) * (uMax - uMin);
             float u3 = uMax;
 
             float v0 = vMax;
-            float v1 = vMax - (b / chunk.Height) * (vMax - vMin);
-            float v2 = vMin + (t / chunk.Height) * (vMax - vMin);
+            float v1 = vMax - (top / width) * (vMax - vMin);
+            float v2 = vMin + (bottom / height) * (vMax - vMin);
             float v3 = vMin;
 
             _currentSliceVertexIndex = 0;
@@ -133,25 +136,24 @@ namespace Engine.GUI
                     AddVertex(xB, yA, uB, vA);
                 }
             }
-        }
 
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void AddVertex(float x, float y, float u, float v)
-        {
-            vec4 wp = Transform.WorldMatrix * new vec4(x, y, 0, 1);
-
-            if (Mesh.Vertices.Count <= _currentSliceVertexIndex)
+            void AddVertex(float x, float y, float u, float v)
             {
-                Mesh.Vertices.Add(default);
+                vec4 wp = Transform.WorldMatrix * new vec4(x, y, 0, 1);
+
+                if (Mesh.Vertices.Count <= _currentSliceVertexIndex)
+                {
+                    Mesh.Vertices.Add(default);
+                }
+
+                Mesh.Vertices[_currentSliceVertexIndex++] = new Vertex()
+                {
+                    Position = new vec2(wp.x, wp.y),
+                    UV = new vec2(u, v),
+                    Color = Color
+                };
             }
-
-            Mesh.Vertices[_currentSliceVertexIndex++] = new Vertex()
-            {
-                Position = new vec2(wp.x, wp.y),
-                UV = new vec2(u, v),
-                Color = Color
-            };
         }
+
     }
 }
