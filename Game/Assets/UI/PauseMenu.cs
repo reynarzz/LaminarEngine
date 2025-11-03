@@ -82,14 +82,16 @@ namespace Game
             horizontalLayout.ResizeToFitVertical = true;
             horizontalLayout.ResizeToFitHorizontal = true;
             horizontalLayout.Spacing = 10;
-            horizontalLayout.Padding = new Thickness(10);
+            horizontalLayout.Padding = new Thickness(20);
             horizontalLayout.StartPivot = new vec2(0.5f, 0.5f);
             horizontalLayout.MaxPerRow = 2;
             var img = horizontalLayout.GetComponent<UIImage>();
             img.Material = GameManager.DefaultMaterial;
             img.Sprite = new Sprite(Assets.GetTexture("button_square_depth_border.png"));
             img.IsSliced = true;
-
+            img.BottomBorder = 15;
+            img.TopBorder = 15;
+            img.RightBorder = 15;
             var parent = NewImage("Quad1", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
             var tex = Assets.GetTexture("starkTileset.png");
             var coins = TextureAtlasUtils.SliceSprites(tex, 16, 16, 281, 4);

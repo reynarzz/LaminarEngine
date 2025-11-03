@@ -72,50 +72,45 @@ namespace Engine.GUI
         private void Draw9SliceQuad(RectTransform rt, vec2 size)
         {
             var chunk = Sprite?.GetAtlasChunk() ?? AtlasChunk.DefaultChunk;
-            var uv = QuadUV.FlipUV(chunk.Uvs, false, true);
 
-            Mesh.IndicesToDrawCount = 54;
+            var uv = QuadUV.FlipUV(chunk.Uvs, false, true);
 
             if (PreserveAspect && chunk.Width > 0 && chunk.Height > 0)
             {
                 float spriteRatio = (float)chunk.Width / chunk.Height;
                 float rectRatio = size.x / size.y;
-
-                if (spriteRatio > rectRatio)
-                {
-                    size.y = size.x / spriteRatio;
-                }
-                else
-                {
-                    size.x = size.y * spriteRatio;
-                }
+                if (spriteRatio > rectRatio) size.y = size.x / spriteRatio;
+                else size.x = size.y * spriteRatio;
             }
 
             float l = LeftBorder, r = RightBorder, t = TopBorder, b = BottomBorder;
 
             float x0 = -rt.Pivot.x * size.x;
             float y0 = -rt.Pivot.y * size.y;
-
             float x1 = x0 + l;
             float x2 = x0 + size.x - r;
             float x3 = x0 + size.x;
-
             float y1 = y0 + b;
             float y2 = y0 + size.y - t;
             float y3 = y0 + size.y;
 
-            float u0 = uv.BottomLeftUV.x;
-            float u1 = uv.BottomLeftUV.x + l / chunk.Width;
-            float u2 = uv.TopRightUV.x - r / chunk.Width;
-            float u3 = uv.TopRightUV.x;
+            float uMin = MathF.Min(MathF.Min(uv.BottomLeftUV.x, uv.TopLeftUV.x), MathF.Min(uv.BottomRightUV.x, uv.TopRightUV.x));
+            float uMax = MathF.Max(MathF.Max(uv.BottomLeftUV.x, uv.TopLeftUV.x), MathF.Max(uv.BottomRightUV.x, uv.TopRightUV.x));
+            float vMin = MathF.Min(MathF.Min(uv.BottomLeftUV.y, uv.TopLeftUV.y), MathF.Min(uv.BottomRightUV.y, uv.TopRightUV.y));
+            float vMax = MathF.Max(MathF.Max(uv.BottomLeftUV.y, uv.TopLeftUV.y), MathF.Max(uv.BottomRightUV.y, uv.TopRightUV.y));
 
-            float v0 = uv.BottomLeftUV.y;
-            float fullHeight = uv.TopRightUV.y - uv.BottomLeftUV.y;
-            float v1 = uv.BottomLeftUV.y + (b / chunk.Height) * fullHeight;
-            float v2 = uv.TopRightUV.y - (t / chunk.Height) * fullHeight;
-            float v3 = uv.TopRightUV.y;
+            float u0 = uMin;
+            float u1 = uMin + (l / chunk.Width) * (uMax - uMin);
+            float u2 = uMax - (r / chunk.Width) * (uMax - uMin);
+            float u3 = uMax;
+
+            float v0 = vMax;
+            float v1 = vMax - (b / chunk.Height) * (vMax - vMin);
+            float v2 = vMin + (t / chunk.Height) * (vMax - vMin);
+            float v3 = vMin;
 
             _currentSliceVertexIndex = 0;
+            Mesh.IndicesToDrawCount = 0;
 
             for (int iy = 0; iy < 3; iy++)
             {
@@ -131,6 +126,7 @@ namespace Engine.GUI
                     float uA = ix == 0 ? u0 : (ix == 1 ? u1 : u2);
                     float uB = ix == 0 ? u1 : (ix == 1 ? u2 : u3);
 
+                    Mesh.IndicesToDrawCount += 6;
                     AddVertex(xA, yA, uA, vA);
                     AddVertex(xA, yB, uA, vB);
                     AddVertex(xB, yB, uB, vB);
@@ -138,6 +134,7 @@ namespace Engine.GUI
                 }
             }
         }
+
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void AddVertex(float x, float y, float u, float v)
