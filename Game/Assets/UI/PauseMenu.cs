@@ -43,21 +43,36 @@ namespace Game
             _titleText.Fit = TextFit.ExpandToFit;
             _titleText.Vertical =  TextVerticalAlignment.Center;
 
-            var resumeButtonImage = NewImage("Resume button image", new vec2(0, 100), new vec2(200, 40), Color.Gray, _background.Transform);
+            var tex = Assets.GetTexture("pixel-ui_buttons_long_47x14.png");
+            var buttonSlice = TextureAtlasUtils.SliceSprites(tex, 46, 14);
+
+            var resumeButtonImage = NewImage("Resume button image", new vec2(0, 100), new vec2(100, 30), Color.White, _background.Transform);
+
+            resumeButtonImage.PreserveAspect = true;
             var button = resumeButtonImage.AddComponent<Button>();
             button.OnButtonClick += OnResume;
             button.Graphic = resumeButtonImage;
+            button.UseSprite = true;
+            button.NormalSprite = buttonSlice[0];
+            button.PressedSprite = buttonSlice[1];
+
             // button.IsDisabled = true;
             // resumeButtonImage.AddComponent<ContentSizeFitter>().Padding = new Thickness(10);
-            resumeButtonImage.IsSliced = true;
+
             // resumeButtonImage.AddComponent<Test_UIEvent>();
 
             var text = NewText("Resume text", "Resume", default, resumeButtonImage.Transform);
             text.ReceiveEvents = false;
             text.RectTransform.Size.y = resumeButtonImage.RectTransform.Size.y;
-            // text.RectTransform.Size.x = resumeButtonImage.RectTransform.Size.x;
+            text.RectTransform.Size.x = resumeButtonImage.RectTransform.Size.x;
+            text.FontSize = 20;
+            text.FontResolution = 12;
+            text.Padding.Bottom = 5;
+            button.OnPointerDownEvent += () => text.Padding.Bottom -= 5;
+            button.OnPointerUpEvent += () => text.Padding.Bottom += 5;
+            button.OnPointerCancelEvent += () => text.Padding.Bottom += 5;
             // text.Wrap = TextWrap.WordWrap;
-            text.Fit = TextFit.ExpandToFit;
+
             text.Horizontal = TextHorizontalAlignment.Center;
             text.Vertical = TextVerticalAlignment.Center;
             //text.Padding.Right = 10;
@@ -117,7 +132,7 @@ namespace Game
             var coins = TextureAtlasUtils.SliceSprites(tex, 16, 16, 281, 4);
 
 
-            var iconContent = NewImage("Content", default, new vec2(45, 45), Color.White, parent.Transform);
+            var iconContent = NewImage("Content", default, new vec2(34, 34), Color.White, parent.Transform);
             iconContent.RectTransform.Pivot = new vec2(0.5f, 0.6f);
             var animator = iconContent.AddComponent<Animator>();
             var clip = new AnimationClip("Sprite");
@@ -169,7 +184,6 @@ namespace Game
         }
         private void OnResume()
         {
-            Debug.Log("Button down: ");
             Time.TimeScale = 1;
             //Actor.IsActiveSelf = false;
             _show = false;

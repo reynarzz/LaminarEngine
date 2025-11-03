@@ -20,7 +20,10 @@ namespace Engine.GUI
     {
         void OnPointerUp(PointerEventData eventData);
     }
-
+    public interface IPointerUpOutsideRectEvent : IPointerEvent
+    {
+        void OnPointerUpOutsideRect(PointerEventData eventData);
+    }
     public interface IPointerHoldEvent : IPointerEvent
     {
         void OnPointerHold(PointerEventData eventData);
@@ -38,4 +41,6 @@ namespace Engine.GUI
     {
         void OnPointerExit(PointerEventData eventData);
     }
+
+    
 }

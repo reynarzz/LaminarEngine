@@ -14,7 +14,6 @@ namespace Engine.GUI
         public vec2 Position { get; }
         public vec2 Delta { get;}
         public vec2 NormalizedPosition { get; }
-
         /// <summary>
         /// Actor who received the event.
         /// </summary>
@@ -42,6 +41,7 @@ namespace Engine.GUI
         private List<IPointerExitEvent> _pointerExitEvents = new();
         private List<IPointerDownEvent> _pointerDownEvents = new();
         private List<IPointerUpEvent> _pointerUpEvents = new();
+        private List<IPointerUpOutsideRectEvent> _pointerUpOusideRectEvents = new();
         private List<IPointerDragEvent> _pointerDragEvents = new();
 
         // Note: this only works for single cursor, probably I will not implement multi-touch with finger id etc...
@@ -51,6 +51,7 @@ namespace Engine.GUI
         private readonly Action<IPointerExitEvent, PointerEventData> _pointerExitEventInvoker = (p, d) => p.OnPointerExit(d);
         private readonly Action<IPointerDownEvent, PointerEventData> _pointerDownEventInvoker = (p, d) => p.OnPointerDown(d);
         private readonly Action<IPointerUpEvent, PointerEventData> _pointerUpEventInvoker = (p, d) => p.OnPointerUp(d);
+        private readonly Action<IPointerUpOutsideRectEvent, PointerEventData> _pointerUpOutsideRectEventInvoker = (p, d) => p.OnPointerUpOutsideRect(d);
         private readonly Action<IPointerDragEvent, PointerEventData> _pointerDragEventInvoker = (p, d) => p.OnPointerDrag(d);
 
         public static mat4 UIViewProj;
@@ -100,7 +101,8 @@ namespace Engine.GUI
 
             var eventData = new PointerEventData(element.Actor, this, _mouseCanvasPos, _mouseDeltaPos, _mouseNormalizedPosition);
 
-            if (hasMouse && element.ReceiveEvents && !mouseEventHandled)
+            var canReceivePointerEvents = hasMouse && element.ReceiveEvents && !mouseEventHandled;
+            if (canReceivePointerEvents)
             {
                 // Pointer down event
                 if (Input.GetMouseDown(MouseButton.Left))
@@ -131,6 +133,13 @@ namespace Engine.GUI
             {
                 _pointerEnterElement = null;
                 InvokePointerEvent(element, _pointerExitEvents, eventData, _pointerExitEventInvoker);
+            }
+
+            // Pointer up event, outside rect
+            if (!canReceivePointerEvents && _dragElement == element && Input.GetMouseUp(MouseButton.Left))
+            {
+                _dragElement = null;
+                InvokePointerEvent(element, _pointerUpOusideRectEvents, eventData, _pointerUpOutsideRectEventInvoker);
             }
 
             // Drag event

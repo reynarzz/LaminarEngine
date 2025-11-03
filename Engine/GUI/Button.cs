@@ -7,12 +7,17 @@ using System.Threading.Tasks;
 
 namespace Engine.GUI
 {
-    public class Button : Component, IUpdatableComponent, IPointerDownEvent, IPointerExitEvent, IPointerUpEvent, IPointerEnterEvent, IPointerDragEvent
+    public class Button : Component, IUpdatableComponent, IPointerDownEvent, IPointerExitEvent, 
+                                     IPointerUpEvent, IPointerUpOutsideRectEvent, IPointerEnterEvent, IPointerDragEvent
     {
         public event Action OnButtonClick;
+        public event Action OnButtonNormalEvent;
+        public event Action OnPointerDownEvent;
+        public event Action OnPointerUpEvent;
+        public event Action OnPointerCancelEvent;
         public UIGraphicsElement Graphic { get; set; }
         public Sprite NormalSprite { get; set; }
-        public Sprite ClickSprite { get; set; }
+        public Sprite PressedSprite { get; set; }
         public Sprite EnterSprite { get; set; }
         public Sprite DisableSprite { get; set; }
 
@@ -85,6 +90,7 @@ namespace Engine.GUI
             if (isPointerDown)
             {
                 SetOnActiveGraphic();
+                OnPointerUpEvent?.Invoke();
             }
 
             if (!isDragging && isPointerDown)
@@ -102,13 +108,22 @@ namespace Engine.GUI
             SetOnEnterGraphic();
         }
 
+        public void OnPointerUpOutsideRect(PointerEventData eventData)
+        {
+            _isPointerDown = false;
+            _isDragging = false;
+        }
+
         public void OnPointerExit(PointerEventData eventData)
         {
             if (IsDisabled)
             {
                 return;
             }
-            SetOnActiveGraphic();
+            if (_isPointerDown)
+            {
+                Cancel();
+            }
         }
 
         public void OnPointerDrag(PointerEventData eventData)
@@ -133,6 +148,8 @@ namespace Engine.GUI
 
         private void Cancel()
         {
+            _isPointerDown = false;
+            OnPointerCancelEvent?.Invoke();
             SetOnActiveGraphic();
         }
 
@@ -142,12 +159,13 @@ namespace Engine.GUI
         }
         private void SetOnClickGraphic()
         {
-            SetOnGraphics(ClickSprite ?? NormalSprite, ClickColor);
+            OnPointerDownEvent?.Invoke();
+            SetOnGraphics(PressedSprite ?? NormalSprite, ClickColor);
         }
 
         private void SetOnEnterGraphic()
         {
-            SetOnGraphics(EnterSprite ?? NormalSprite, EnterColor);
+            SetOnGraphics(EnterSprite, EnterColor);
         }
 
         private void SetOnDisabledGraphic()
@@ -159,9 +177,12 @@ namespace Engine.GUI
         {
             if (Graphic)
             {
-                if (UseSprite && sprite)
+                if (UseSprite)
                 {
-                    Graphic.Sprite = sprite;
+                    if (sprite)
+                    {
+                        Graphic.Sprite = sprite;
+                    }
                 }
                 else
                 {
@@ -189,5 +210,6 @@ namespace Engine.GUI
             //    }
             //}
         }
+
     }
 }

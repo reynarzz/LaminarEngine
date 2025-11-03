@@ -27,8 +27,8 @@ namespace Engine.Graphics
                     _fontSystem = new FontSystem(new FontSystemSettings()
                     {
                         FontResolutionFactor = resolution,
-                        KernelWidth = resolution,
-                        KernelHeight = resolution,
+                        KernelWidth = 1,
+                        KernelHeight = 1,
                     });
                     _fontSystem.AddFont(fontData);
                 }
