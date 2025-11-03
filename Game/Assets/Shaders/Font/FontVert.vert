@@ -10,6 +10,9 @@ out vec4 vColor;
 
 uniform mat4 uVP;
 uniform vec3 uTime;
+       
+uniform float uAmplitude = 2.0; 
+uniform float uFrequency = 6.0;   
 
 vec4 unpackColor(uint c) 
 {
@@ -24,12 +27,10 @@ vec2 animateCharacter(vec2 pos, int vertIndex, float time)
 {
     int charIndex = vertIndex / 4;
 
-    float amplitude = 1.0;   
-    float frequency = 4.0;   
     float charOffset = 0.6;  
 
     float phase = float(charIndex) * charOffset;
-    float yOffset = sin(time * frequency + phase) * amplitude;
+    float yOffset = sin(time * uFrequency + phase) * uAmplitude;
 
     return pos + vec2(0.0, yOffset);
 }
@@ -39,7 +40,7 @@ void main()
     fragUV = uv;
     vColor = unpackColor(color);
 
-    vec2 animatedPos = animateCharacter(position.xy, vertIndex, uTime.y);
+    vec2 animatedPos = animateCharacter(position.xy, vertIndex, uTime.x);
 
     // gl_Position = uVP * vec4(position.xy, 0.0, 1.0);
     gl_Position = uVP * vec4(animatedPos, 0.0, 1.0);

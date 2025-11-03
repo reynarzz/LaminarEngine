@@ -77,7 +77,6 @@ namespace Game
 
             var mainShader = new Shader(Assets.GetText("Shaders/SpriteVert.vert").Text, Assets.GetText("Shaders/SpriteFrag.frag").Text);
             var mat1 = new Material(mainShader);
-            Window.CanResize = true;
 
             var sprites = TextureAtlasUtils.SliceSprites(Assets.GetTexture("KingsAndPigsSprites/12-Live and Coins/Small Heart Idle (18x14).png"), 8, 7);
 
@@ -97,7 +96,7 @@ namespace Game
 
             float uiMult = 3;
             var lifeBar = Image("Life bar", new vec2(10, 10), new vec2(66, 34) * uiMult, new Sprite() { Texture = Assets.GetTexture("KingsAndPigsSprites/12-Live and Coins/Live Bar.png") }, canvas.Transform);
-
+            
             Image("Heart1", new vec2(56, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);
             Image("Heart2", new vec2(88, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);
             Image("Heart3", new vec2(120, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);

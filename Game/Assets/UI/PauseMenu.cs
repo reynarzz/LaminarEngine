@@ -36,17 +36,19 @@ namespace Game
             _background.Material.Passes[0].IsScreenGrabPass = true;
 
             LayoutTest();
+            var fontMat = new Material(new Shader(Assets.GetText("Shaders/Font/FontVert.vert").Text, Assets.GetText("Shaders/Font/FontFrag.frag").Text));
 
             // Title text
             _titleText = NewText("Title text", "Pause", new vec2(0, -110), _background.Transform);
             _titleText.FontSize = 70;
             _titleText.Fit = TextFit.ExpandToFit;
             _titleText.Vertical =  TextVerticalAlignment.Center;
+            _titleText.Material = fontMat;
 
             var tex = Assets.GetTexture("pixel-ui_buttons_long_47x14.png");
             var buttonSlice = TextureAtlasUtils.SliceSprites(tex, 46, 14);
 
-            var resumeButtonImage = NewImage("Resume button image", new vec2(0, 100), new vec2(100, 30), Color.White, _background.Transform);
+            var resumeButtonImage = NewImage("Resume button image", new vec2(0, 0), new vec2(100, 30), Color.White, _background.Transform);
 
             resumeButtonImage.PreserveAspect = true;
             var button = resumeButtonImage.AddComponent<Button>();
@@ -68,9 +70,9 @@ namespace Game
             text.FontSize = 20;
             text.FontResolution = 12;
             text.Padding.Bottom = 5;
-            button.OnPointerDownEvent += () => text.Padding.Bottom -= 5;
-            button.OnPointerUpEvent += () => text.Padding.Bottom += 5;
-            button.OnPointerCancelEvent += () => text.Padding.Bottom += 5;
+            button.OnPointerDownEvent += () => text.Padding.Bottom -= 10;
+            button.OnPointerUpEvent += () => text.Padding.Bottom += 10;
+            button.OnPointerCancelEvent += () => text.Padding.Bottom += 10;
             // text.Wrap = TextWrap.WordWrap;
 
             text.Horizontal = TextHorizontalAlignment.Center;
@@ -85,7 +87,7 @@ namespace Game
             _graphics.Add(_background);
             _graphics.Add(resumeButtonImage);
 
-            LogRecursive(_background.Transform);
+           // LogRecursive(_background.Transform);
         }
 
         private void LayoutTest()
@@ -103,8 +105,6 @@ namespace Game
             img.Sprite = new Sprite(Assets.GetTexture("pixel-ui_panel.png"));
             img.IsSliced = true;
             img.SlicedBorderResolution = 2;
-            img.TopBorder = 10;
-            img.BottomBorder = 15;
 
             var inventoryTitleText = NewText("inventory title", "Inventory", new vec2(0, -41), inventoryObj.Transform);
             inventoryTitleText.Fit = TextFit.ExpandToFit;
@@ -169,17 +169,15 @@ namespace Game
             NewImage("Quad10", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
         }
 
-        private static void LogRecursive(Transform current, int depth = 0)
+        private static void LogHierarchy(Transform current, int depth = 0)
         {
-            // Create indentation with dashes based on depth
-            string indent = new string('-', depth); // "--", "----", etc.
+            string indent = new string('-', depth);
 
             Debug.Log($"{indent}{current.Name}");
 
-            // Loop through children and recurse
             for (int i = 0; i < current.Children.Count; i++)
             {
-                LogRecursive(current.Children[i], depth + 1);
+                LogHierarchy(current.Children[i], depth + 1);
             }
         }
         private void OnResume()

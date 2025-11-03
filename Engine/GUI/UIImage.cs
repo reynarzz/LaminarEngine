@@ -153,6 +153,37 @@ namespace Engine.GUI
                     Color = Color
                 };
             }
+
+#if DEBUG
+            if (Debug.DrawUILines)
+            {
+                DebugDrawSlices(x0, x1, x2, x3, y0, y1, y2, y3);
+            }
+#endif
+        }
+
+        private void DebugDrawSlices(float x0, float x1, float x2, float x3,
+                                     float y0, float y1, float y2, float y3)
+        {
+           
+            for (int iy = 0; iy < 3; iy++)
+            {
+                float yA = iy == 0 ? y0 : (iy == 1 ? y1 : y2);
+                float yB = iy == 0 ? y1 : (iy == 1 ? y2 : y3);
+
+                for (int ix = 0; ix < 3; ix++)
+                {
+                    float xA = ix == 0 ? x0 : (ix == 1 ? x1 : x2);
+                    float xB = ix == 0 ? x1 : (ix == 1 ? x2 : x3);
+
+                    var center = Transform.WorldMatrix * new vec4((xA + xB) * 0.5f,
+                                                                   (yA + yB) * 0.5f, 0, 1);
+
+                    var size = new vec3(xB - xA, yB - yA, 0);
+
+                    Debug.DrawBoxUI(new vec3(center.x, center.y, 0), size, Color.Cyan);
+                }
+            }
         }
 
     }
