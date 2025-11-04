@@ -95,8 +95,13 @@ namespace Game
             }
 
             float uiMult = 3;
-            var lifeBar = Image("Life bar", new vec2(10, 10), new vec2(66, 34) * uiMult, new Sprite(Assets.GetTexture("KingsAndPigsSprites/12-Live and Coins/Live Bar.png")), canvas.Transform);
+            var tex = Assets.GetTexture("KingsAndPigsSprites/12-Live and Coins/Live Bar_atlas(143x34).png");
+            var lifebarSprites = TextureAtlasUtils.SliceSprites(tex, 143, 34);
+            var lifeBar = Image("Life bar", new vec2(10, 10), new vec2(143, 34) * uiMult, lifebarSprites[2], canvas.Transform);
+
             
+
+
             Image("Heart1", new vec2(56, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);
             Image("Heart2", new vec2(88, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);
             Image("Heart3", new vec2(120, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);

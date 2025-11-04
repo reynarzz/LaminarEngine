@@ -22,7 +22,7 @@ namespace Engine.GUI
     public class UIText : UIGraphicsElement, IFontStashRenderer2
     {
         public FontAsset Font { get; set; }
-        public int FontResolution { get; set; } = 1;
+        public int FontResolution { get; set; } = 5;
         public int FontSize { get; set; } = 32;
         public int MinFontSize { get; set; } = 8;
         public int MaxFontSize { get; set; } = 72;

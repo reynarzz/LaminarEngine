@@ -26,7 +26,7 @@ namespace Engine
             _multiply = multiply ?? throw new ArgumentNullException(nameof(multiply));
         }
 
-        public void AddKeyFrame(float time, T value)
+        public override void AddKeyFrame(float time, T value)
         {
             AddKeyFrame(time, value, default, default);
         }

@@ -14,5 +14,7 @@ namespace Engine
         {
             keyframes.Sort((a, b) => a.Time.CompareTo(b.Time));
         }
+
+        public abstract void AddKeyFrame(float time, T value);
     }
 }

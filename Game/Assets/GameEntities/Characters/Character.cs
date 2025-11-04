@@ -430,11 +430,16 @@ namespace Game
             for (var i = 0; i < raysCount; i++)
             {
                 var pos = Mathf.Lerp(origin1, origin2, i / (float)(raysCount - 1));
-                hit = Physics2D.Raycast(pos, dir, _characterConfig.Ground.GroundMask);
-                if (hit.isHit)
+                var hits = Physics2D.RaycastAll(pos, dir, _characterConfig.Ground.GroundMask);
+                for (var j = 0; j < CastHit2DArray.Capacity; j++)
                 {
-                    hitIndex |= 1u << i;
-                    break;
+                    hit = hits[j];
+
+                    if (hit.isHit && Mathf.Dot(vec2.Up, hit.Normal) > 0.001f)
+                    {
+                        hitIndex |= 1u << i;
+                        break;
+                    }
                 }
             }
             if (Physics2D.DrawColliders)

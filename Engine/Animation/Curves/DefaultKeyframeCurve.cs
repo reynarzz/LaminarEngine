@@ -10,7 +10,7 @@ namespace Engine
     {
         protected List<Keyframe<T>> Keyframes { get; } = new();
         public override float Duration => Keyframes.Count > 0 ? Keyframes[^1].Time : 0;
-        public void AddKeyFrame(float time, T value)
+        public override void AddKeyFrame(float time, T value)
         {
             Keyframes.Add(new Keyframe<T>(time, value));
             SortKeyframes(Keyframes);

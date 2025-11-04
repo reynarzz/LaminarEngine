@@ -30,7 +30,7 @@ namespace Engine
 
             var context = new CastContext(layerMask);
             Box2dUtils.b2World_CastShape(PhysicWorld.WorldID, ref proxy, default, _defaultQueryFilter, CastResultFunc, ref context);
-            return context.Hit;
+            return context.Hits[0];
         }
         public static CastHit2D BoxCast(vec2 origin, vec2 size, ulong layerMask)
         {
@@ -44,7 +44,7 @@ namespace Engine
             proxy.points[3] = new B2Vec2(-size.x, size.y);
             var context = new CastContext(layerMask);
             Box2dUtils.b2World_CastShape(PhysicWorld.WorldID, ref proxy, default, _defaultQueryFilter, CastResultFunc, ref context);
-            return context.Hit;
+            return context.Hits[0];
         }
 
         public static CastHit2D CircleCast(vec2 origin, float radius, ulong layerMask)
@@ -55,7 +55,7 @@ namespace Engine
             proxy.radius = radius;
             var context = new CastContext(layerMask);
             Box2dUtils.b2World_CastShape(PhysicWorld.WorldID, ref proxy, default, _defaultQueryFilter, CastResultFunc, ref context);
-            return context.Hit;
+            return context.Hits[0];
         }
 
 

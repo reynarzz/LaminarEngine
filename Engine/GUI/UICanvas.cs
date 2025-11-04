@@ -60,7 +60,7 @@ namespace Engine.GUI
         {
             base.OnInitialize();
             RectTransform = AddComponent<RectTransform>();
-            RectTransform.Size = new vec2(512 * 2, 288 * 2);
+            RectTransform.Size = new vec2(512 * 3, 288 * 3);
             RectTransform.Pivot = default;
             RectTransform.Recalculate(null);
             // Window.OnWindowChanged += Window_OnWindowChanged;

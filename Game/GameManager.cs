@@ -149,8 +149,8 @@ namespace Game
                 Ground = new GroundDetectionOptions()
                 {
                     Enabled = true,
-                    MinX = -0.44f,
-                    MaxX = 0.44f,
+                    MinX = -0.5f,
+                    MaxX = 0.5f,
                     RaysCount = 3,
                     SizeY = 0.7f,
                     YOffset = 0,

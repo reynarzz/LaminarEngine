@@ -41,10 +41,10 @@ namespace Engine.Utils
     /// </summary>
     internal static class Box2dUtils
     {
-        internal delegate float b2CastResultFcn<T>(B2ShapeId shapeId, B2Vec2 point, B2Vec2 normal, float fraction, ref T context) where T: struct, ICastContext;
+        internal delegate float b2CastResultFcn<T>(B2ShapeId shapeId, B2Vec2 point, B2Vec2 normal, float fraction, ref T context) where T : struct;
 
-        internal static B2TreeStats b2World_CastShape<T>(B2WorldId worldId, ref B2ShapeProxy proxy, B2Vec2 translation,
-                                                         B2QueryFilter filter, b2CastResultFcn<T> fcn, ref T context) where T : struct, ICastContext
+        internal static B2TreeStats b2World_CastShape(B2WorldId worldId, ref B2ShapeProxy proxy, B2Vec2 translation,
+                                                         B2QueryFilter filter, b2CastResultFcn<CastContext> fcn, ref CastContext context)
         {
             B2TreeStats treeStats = new B2TreeStats();
 
@@ -62,7 +62,7 @@ namespace Engine.Utils
             input.translation = translation;
             input.maxFraction = 1.0f;
 
-            var worldContext = new B2WorldRayCastContext_Custom<T>(world, fcn, filter, 1.0f, context);
+            var worldContext = new B2WorldRayCastContext_Custom<CastContext>(world, fcn, filter, 1.0f, context);
 
             for (int i = 0; i < (int)B2BodyType.b2_bodyTypeCount; ++i)
             {
@@ -83,8 +83,8 @@ namespace Engine.Utils
 
             return treeStats;
         }
-        internal static B2TreeStats b2World_CastRay<T>(B2WorldId worldId, B2Vec2 origin, B2Vec2 translation,
-                                                       B2QueryFilter filter, b2CastResultFcn<T> fcn, ref T context) where T : struct, ICastContext
+        internal static B2TreeStats b2World_CastRay(B2WorldId worldId, B2Vec2 origin, B2Vec2 translation,
+                                                       B2QueryFilter filter, b2CastResultFcn<CastContext> fcn, ref CastContext context)
         {
             B2TreeStats treeStats = new B2TreeStats();
 
@@ -100,7 +100,7 @@ namespace Engine.Utils
 
             B2RayCastInput input = new B2RayCastInput(origin, translation, 1.0f);
 
-            var worldContext = new B2WorldRayCastContext_Custom<T>(world, fcn, filter, 1.0f, context);
+            var worldContext = new B2WorldRayCastContext_Custom<CastContext>(world, fcn, filter, 1.0f, context);
 
             for (int i = 0; i < (int)B2BodyType.b2_bodyTypeCount; ++i)
             {
@@ -122,14 +122,14 @@ namespace Engine.Utils
             return treeStats;
         }
 
-        private static float RayCastCallback<T>(ref B2RayCastInput input, int proxyId, ulong userData,
-                                                ref B2WorldRayCastContext_Custom<T> context) where T : struct, ICastContext
+        private static float RayCastCallback(ref B2RayCastInput input, int proxyId, ulong userData,
+                                                ref B2WorldRayCastContext_Custom<CastContext> context)
         {
             B2_UNUSED(proxyId);
 
             int shapeId = (int)userData;
 
-            ref B2WorldRayCastContext_Custom<T> worldContext = ref context;
+            ref B2WorldRayCastContext_Custom<CastContext> worldContext = ref context;
             B2World world = worldContext.world;
 
             B2Shape shape = b2Array_Get(ref world.shapes, shapeId);
@@ -159,14 +159,14 @@ namespace Engine.Utils
 
             return input.maxFraction;
         }
-        private static float ShapeCastCallback<T>(ref B2ShapeCastInput input, int proxyId, ulong userData,
-                                                  ref B2WorldRayCastContext_Custom<T> context) where T : struct, ICastContext
+        private static float ShapeCastCallback(ref B2ShapeCastInput input, int proxyId, ulong userData,
+                                                  ref B2WorldRayCastContext_Custom<CastContext> context)
         {
             B2_UNUSED(proxyId);
 
             int shapeId = (int)userData;
 
-            ref B2WorldRayCastContext_Custom<T> worldContext = ref context;
+            ref B2WorldRayCastContext_Custom<CastContext> worldContext = ref context;
             B2World world = worldContext.world;
 
             B2Shape shape = b2Array_Get(ref world.shapes, shapeId);
@@ -197,16 +197,7 @@ namespace Engine.Utils
 
             return input.maxFraction;
         }
-
-
-        internal interface ICastContext
-        {
-            CastHit2D Hit { get; set; }
-            ulong LayerMask { get; }
-            bool TriggersPass { get; }
-        }
-
-        private struct B2WorldRayCastContext_Custom<T> where T : struct, ICastContext
+        private struct B2WorldRayCastContext_Custom<T> where T : struct
         {
             internal B2World world;
             internal b2CastResultFcn<T> fcn;
@@ -223,6 +214,100 @@ namespace Engine.Utils
                 this.userContext = userContext;
             }
         }
+    }
 
+
+    internal struct CastContext
+    {
+        public CastHit2DArray Hits;
+        public ulong LayerMask { get; }
+        public bool TriggersPass { get; set; }
+        public bool CastAll { get; set; }
+        public CastContext(ulong layerMask)
+        {
+            LayerMask = layerMask;
+        }
+    }
+    public struct CastHit2DArray
+    {
+        public const int Capacity = 50;
+        public int Length { get; private set; }
+
+        private CastHit2D _00;
+        private CastHit2D _01;
+        private CastHit2D _02;
+        private CastHit2D _03;
+        private CastHit2D _04;
+        private CastHit2D _05;
+        private CastHit2D _06;
+        private CastHit2D _07;
+        private CastHit2D _08;
+        private CastHit2D _09;
+        private CastHit2D _10;
+        private CastHit2D _11;
+        private CastHit2D _12;
+        private CastHit2D _13;
+        private CastHit2D _14;
+        private CastHit2D _15;
+        private CastHit2D _16;
+        private CastHit2D _17;
+        private CastHit2D _18;
+        private CastHit2D _19;
+        private CastHit2D _20;
+        private CastHit2D _21;
+        private CastHit2D _22;
+        private CastHit2D _23;
+        private CastHit2D _24;
+        private CastHit2D _25;
+        private CastHit2D _26;
+        private CastHit2D _27;
+        private CastHit2D _28;
+        private CastHit2D _29;
+        private CastHit2D _30;
+        private CastHit2D _31;
+        private CastHit2D _32;
+        private CastHit2D _33;
+        private CastHit2D _34;
+        private CastHit2D _35;
+        private CastHit2D _36;
+        private CastHit2D _37;
+        private CastHit2D _38;
+        private CastHit2D _39;
+        private CastHit2D _40;
+        private CastHit2D _41;
+        private CastHit2D _42;
+        private CastHit2D _43;
+        private CastHit2D _44;
+        private CastHit2D _45;
+        private CastHit2D _46;
+        private CastHit2D _47;
+        private CastHit2D _48;
+        private CastHit2D _49;
+        public unsafe ref CastHit2D this[int index]
+        {
+            get
+            {
+                if ((uint)index > 49)
+                {
+                    throw new IndexOutOfRangeException();
+                }
+
+                fixed (CastHit2D* ptr = &_00)
+                {
+                    return ref ptr[index];
+                }
+            }
+        }
+
+        internal void Add(CastHit2D item)
+        {
+            if (Length >= Capacity)
+            {
+                throw new Exception("Can't add more elements to array");
+            }
+
+            this[Length] = item;
+            Length++;
+        }
     }
 }

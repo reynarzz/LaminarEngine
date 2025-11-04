@@ -27,12 +27,12 @@ namespace Game
             _canvas = new Actor("Pause menu Canvas").AddComponent<UICanvas>();
             _canvas.Transform.Parent = Transform;
 
-            var backSize = new vec2(512 * 2, 288 * 2);
+            var backSize = new vec2(512 * 3, 288 * 3);
             // Background
             _background = NewImage("Background", backSize * 0.5f, backSize, Color.White, _canvas.Transform);
             _background.BlockEvents = true;
             _background.ReceiveEvents = true;
-            _background.Material = new Material(new Shader(Assets.GetText("Shaders/VertScreenGrab.vert").Text, Assets.GetText("Shaders/Blur.frag").Text));
+            _background.Material = new Material(new Shader(Assets.GetText("Shaders/VertScreenGrab.vert").Text, Assets.GetText("Shaders/GrayScale.frag").Text));
             _background.Material.Passes[0].IsScreenGrabPass = true;
 
             LayoutTest();
@@ -48,7 +48,7 @@ namespace Game
             var tex = Assets.GetTexture("pixel-ui_buttons_long_47x14.png");
             var buttonSlice = TextureAtlasUtils.SliceSprites(tex, 46, 14);
 
-            var resumeButtonImage = NewImage("Resume button image", new vec2(0, 0), new vec2(100, 30), Color.White, _background.Transform);
+            var resumeButtonImage = NewImage("Resume button image", new vec2(0, 0), new vec2(150, 100), Color.White, _background.Transform);
 
             resumeButtonImage.PreserveAspect = true;
             var button = resumeButtonImage.AddComponent<Button>();
@@ -67,8 +67,7 @@ namespace Game
             text.ReceiveEvents = false;
             text.RectTransform.Size.y = resumeButtonImage.RectTransform.Size.y;
             text.RectTransform.Size.x = resumeButtonImage.RectTransform.Size.x;
-            text.FontSize = 20;
-            text.FontResolution = 12;
+            text.FontSize = 30;
             text.Padding.Bottom = 5;
             button.OnPointerDownEvent += () => text.Padding.Bottom -= 10;
             button.OnPointerUpEvent += () => text.Padding.Bottom += 10;
@@ -94,7 +93,7 @@ namespace Game
         {
             var inventoryObj = new Actor<UIElement, ContentSizeFitter>().GetComponent<UIElement>();
             inventoryObj.Transform.Parent = _background.Transform;
-            inventoryObj.Transform.LocalPosition = new vec3(0, 198);
+            inventoryObj.Transform.LocalPosition = new vec3(0, 298);
 
 
             var inventory = NewImage("Inventory image", default, new vec2(320, 240), Color.White, inventoryObj.Transform);
@@ -104,13 +103,13 @@ namespace Game
             img.Material = GameManager.DefaultMaterial;
             img.Sprite = new Sprite(Assets.GetTexture("pixel-ui_panel.png"));
             img.IsSliced = true;
-            img.SlicedBorderResolution = 2;
+            img.SlicedBorderResolution = 2.5f;
 
-            var inventoryTitleText = NewText("inventory title", "Inventory", new vec2(0, -41), inventoryObj.Transform);
+            var inventoryTitleText = NewText("inventory title", "Inventory", new vec2(0, -52), inventoryObj.Transform);
             inventoryTitleText.Fit = TextFit.ExpandToFit;
             inventoryTitleText.FontSize = 30;
             inventoryTitleText.OutlineSize = 0;
-
+            inventoryTitleText.FontResolution = 10;
             //inventoryTitleText.Transform.LocalScale = vec3.One * 0.3f;
 
             var horizontalLayout = new Actor("HorizontalRect").AddComponent<GridLayout>();
@@ -123,7 +122,7 @@ namespace Game
             horizontalLayout.Padding.Top = 38;
             horizontalLayout.StartPivot = new vec2(0.5f, 0.5f);
             horizontalLayout.MaxPerRow = 10;
-            horizontalLayout.ContentsSize = new vec2(32,32);
+            horizontalLayout.ContentsSize = new vec2(46,46);
             var slotSprite = new Sprite(Assets.GetTexture("pixel-ui_slot.png"));
 
             var parent = NewImage("Quad1", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
