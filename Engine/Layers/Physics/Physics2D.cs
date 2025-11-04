@@ -26,7 +26,7 @@ namespace Engine
         private static readonly B2QueryFilter _defaultQueryFilter = new B2QueryFilter(B2Constants.B2_DEFAULT_CATEGORY_BITS,
                                                                                       B2Constants.B2_DEFAULT_MASK_BITS);
 
-     
+
         public static CastHit2D Raycast(vec2 origin, vec2 direction)
         {
             return Raycast(origin, direction, ulong.MaxValue);
@@ -68,7 +68,12 @@ namespace Engine
                 Fraction = fraction,
             });
 
-            return context.CastAll ? 1 : fraction;
+            if (context.CastAll)
+            {
+                return context.Hits.Length == CastHit2DArray.Capacity ? -1 : 0;
+            }
+
+            return fraction;
         }
     }
 }

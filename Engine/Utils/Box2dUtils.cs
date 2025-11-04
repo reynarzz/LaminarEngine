@@ -33,6 +33,7 @@ using static Box2D.NET.B2Islands;
 using static Box2D.NET.B2Timers;
 using static Box2D.NET.B2Sensors;
 using static Box2D.NET.B2Worlds;
+using System.Runtime.CompilerServices;
 
 namespace Engine.Utils
 {
@@ -233,56 +234,11 @@ namespace Engine.Utils
         public const int Capacity = 50;
         public int Length { get; private set; }
 
-        private CastHit2D _00;
-        private CastHit2D _01;
-        private CastHit2D _02;
-        private CastHit2D _03;
-        private CastHit2D _04;
-        private CastHit2D _05;
-        private CastHit2D _06;
-        private CastHit2D _07;
-        private CastHit2D _08;
-        private CastHit2D _09;
-        private CastHit2D _10;
-        private CastHit2D _11;
-        private CastHit2D _12;
-        private CastHit2D _13;
-        private CastHit2D _14;
-        private CastHit2D _15;
-        private CastHit2D _16;
-        private CastHit2D _17;
-        private CastHit2D _18;
-        private CastHit2D _19;
-        private CastHit2D _20;
-        private CastHit2D _21;
-        private CastHit2D _22;
-        private CastHit2D _23;
-        private CastHit2D _24;
-        private CastHit2D _25;
-        private CastHit2D _26;
-        private CastHit2D _27;
-        private CastHit2D _28;
-        private CastHit2D _29;
-        private CastHit2D _30;
-        private CastHit2D _31;
-        private CastHit2D _32;
-        private CastHit2D _33;
-        private CastHit2D _34;
-        private CastHit2D _35;
-        private CastHit2D _36;
-        private CastHit2D _37;
-        private CastHit2D _38;
-        private CastHit2D _39;
-        private CastHit2D _40;
-        private CastHit2D _41;
-        private CastHit2D _42;
-        private CastHit2D _43;
-        private CastHit2D _44;
-        private CastHit2D _45;
-        private CastHit2D _46;
-        private CastHit2D _47;
-        private CastHit2D _48;
-        private CastHit2D _49;
+        private CastHit2D _00, _01, _02, _03, _04, _05, _06, _07, _08, _09;
+        private CastHit2D _10, _11, _12, _13, _14, _15, _16, _17, _18, _19;
+        private CastHit2D _20, _21, _22, _23, _24, _25, _26, _27, _28, _29;
+        private CastHit2D _30, _31, _32, _33, _34, _35, _36, _37, _38, _39;
+        private CastHit2D _40, _41, _42, _43, _44, _45, _46, _47, _48, _49;
         public unsafe ref CastHit2D this[int index]
         {
             get
@@ -299,15 +255,14 @@ namespace Engine.Utils
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal void Add(CastHit2D item)
         {
-            if (Length >= Capacity)
+            if (Length < Capacity)
             {
-                throw new Exception("Can't add more elements to array");
+                this[Length] = item;
+                Length++;
             }
-
-            this[Length] = item;
-            Length++;
         }
     }
 }
