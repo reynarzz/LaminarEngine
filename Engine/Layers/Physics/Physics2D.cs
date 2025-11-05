@@ -54,7 +54,7 @@ namespace Engine
             var collider = B2Shapes.b2Shape_GetUserData(shapeId) as Collider2D;
             var isColliderInvalid = collider.IsTrigger && !context.TriggersPass;
 
-            if (isColliderInvalid || !LayerMask.AreValid(collider.Actor.Layer, context.LayerMask))
+            if (isColliderInvalid || !LayerMask.AreValid(collider.Actor.Layer, context.LayerMask) || context.Hits.Length == CastHit2DArray.Capacity)
             {
                 return -1;
             }
@@ -70,7 +70,7 @@ namespace Engine
 
             if (context.CastAll)
             {
-                return context.Hits.Length == CastHit2DArray.Capacity ? -1 : 0;
+                return -1;
             }
 
             return fraction;

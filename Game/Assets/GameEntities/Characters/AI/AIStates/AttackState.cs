@@ -59,30 +59,33 @@ namespace Game
             if ((_currentTimeToAttack -= Time.DeltaTime) <= 0)
             {
                 _currentTimeToAttack = WaitToAttack;
-                var hit = Physics2D.BoxCast(origin, size, 0, LayerMask.NameToBit(GameLayers.PLAYER));
+                var hits = Physics2D.BoxCastAll(origin, size, LayerMask.NameToBit(GameLayers.PLAYER));
 
-                if (hit.isHit)
+                for (int i = 0; i < hits.Length; i++)
                 {
-                    Context.Attack();
-                }
-
-                // Remove this, testing
-                Task.Run(async () =>
-                {
-                    await Task.Delay(110);
-
+                    var hit = hits[i];
                     if (hit.isHit)
                     {
-                        Debug.Log("Attack Player");
-                        hit.Collider.GetComponent<Player>().HitDamage(1);
-                    }
+                        Context.Attack();
 
-                    if (!Context.Target.IsCharacterAlive())
-                    {
-                        ChangeSubState<CelebrateState<T>>();
-                    }
-                });
+                        // Remove this, testing
+                        Task.Run(async () =>
+                        {
+                            await Task.Delay(110);
 
+                            if (hit.isHit)
+                            {
+                                Debug.Log("Attack Player");
+                                hit.Collider.GetComponent<Player>()?.HitDamage(1);
+                            }
+
+                            if (!Context.Target.IsCharacterAlive())
+                            {
+                                ChangeSubState<CelebrateState<T>>();
+                            }
+                        });
+                    }
+                }
             }
         }
     }

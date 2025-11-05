@@ -64,7 +64,7 @@ namespace Game
 
             if (Input.GetKeyDown(KeyCode.F))
             {
-                var hit = Physics2D.BoxCast(origin, size, 0, LayerMask.NameToBit(GameLayers.ENEMY));
+                var hit = Physics2D.BoxCast(origin, size, LayerMask.NameToBit(GameLayers.ENEMY));
                 if (hit.isHit)
                 {
                     Debug.Log("Attack enemy");
