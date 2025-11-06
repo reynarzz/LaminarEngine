@@ -54,4 +54,3 @@ This project is licensed under the Portfolio Non-Commercial License.
 - Use this code in commercial games, engines, or products
 - Sell or monetize any part of it
 - Use it in revenue-generating projects without my permission
-- For commercial licensing, please contact me.
