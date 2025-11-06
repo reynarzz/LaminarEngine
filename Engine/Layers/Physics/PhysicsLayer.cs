@@ -136,7 +136,7 @@ namespace Engine.Layers
             transform.q = rigidbody.Transform.WorldRotation.QuatToB2Rot();
 
             _colliders.Clear();
-            rigidbody.GetComponents(ref _colliders);
+            rigidbody.GetComponentsInChildren(ref _colliders);
 
             for (int i = 0; i < _colliders.Count; i++)
             {

@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    [RequiredComponent(typeof(RigidBody2D))]
     public abstract class Collider2D : Component
     {
         public RigidBody2D RigidBody { get; internal set; }
@@ -170,7 +169,7 @@ namespace Engine
 
         internal override void OnInitialize()
         {
-            RigidBody = GetComponent<RigidBody2D>();
+            RigidBody = GetComponentInParents<RigidBody2D>();
 
             _shapeDef = new B2ShapeDef()
             {

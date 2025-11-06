@@ -120,7 +120,10 @@ namespace Game
 
         public override void OnTriggerExit2D(Collider2D collider)
         {
-            collider.Actor.Transform.Parent = null;
+            if (collider.Actor.Layer == LayerMask.NameToLayer("Player"))
+            {
+                collider.Actor.Transform.Parent = null;
+            }
         }
     }
 }

@@ -120,5 +120,17 @@ namespace Engine
             CheckIfValidObject(this);
             Actor.GetComponentsInChildren(ref elements);
         }
+
+        public void GetComponentsInParents<T>(ref List<T> elements) where T : class
+        {
+            CheckIfValidObject(this);
+            Actor.GetComponentsInParent(ref elements);
+        }
+
+        public T GetComponentInParents<T>() where T : class
+        {
+            CheckIfValidObject(this);
+            return Actor.GetComponentInParent<T>();
+        }
     }
 }

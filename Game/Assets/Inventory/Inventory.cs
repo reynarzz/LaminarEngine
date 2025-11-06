@@ -24,8 +24,9 @@ namespace Game
             }
         }
 
-        public bool Add(Item item, int amount)
+        public bool Add(ItemId id, int amount)
         {
+            Item item = ItemsDatabase.GetItem(id);
             var slotIndex = GetFirstSlotIndex(item.Features.Id);
             var currentSlot = default(InventorySlot);
             
@@ -88,7 +89,15 @@ namespace Game
             }
             return -1;
         }
-
+        public int GetItemCount(ItemId id)
+        {
+            var index = GetFirstSlotIndex(id);
+            if(index >= 0)
+            {
+                return _slots[index].Amount;
+            }
+            return 0;
+        }
         public void Use(int slotIndex, int amountMul = 1)
         {
             var slot = GetSlot(slotIndex);

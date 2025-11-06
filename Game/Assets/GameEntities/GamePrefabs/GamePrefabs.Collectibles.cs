@@ -1,4 +1,5 @@
 ﻿using Engine;
+using Engine.Utils;
 using GlmNet;
 using System;
 using System.Collections.Generic;
@@ -26,11 +27,29 @@ namespace Game
                 PlayerMatPass.Stencil.ZPassOp = StencilOp.Replace;
             }
 
-            public static CoinCollectible InstantiateCoin(vec2 position)
+            public static Collectible InstantiateCoin(vec2 position)
             {
-                var coin = new Actor("Coin").AddComponent<CoinCollectible>();
-                coin.Transform.WorldPosition = position;
-                return coin;
+                var collectible = new Actor("Coin").AddComponent<Collectible>();
+                collectible.Transform.WorldPosition = position;
+
+                var tex = Assets.GetTexture("starkTileset.png");
+                var tiles = TextureAtlasUtils.SliceSprites(tex, 16, 16, 281, 4);
+
+                var audioClip = Assets.GetAudioClip("Audio/HALFTONE/Gameplay/Collectibles_2.wav");
+
+                collectible.Init(new Collectible.CollectibleConfig()
+                {
+                    Item = ItemId.coin_currency,
+                    Amount = 1,
+                    IdleSprites = [ tiles[0]],
+                    CollectedSprites = null,
+                    TriggerSize = new vec2(0.8f, 0.8f),
+                    AnimFPS = 7,
+                    TargetLayer = LayerMask.NameToLayer(GameLayers.PLAYER),
+                    CollectedAudioClip = audioClip
+                });
+
+                return collectible;
             }
         }
     }

@@ -8,51 +8,64 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    public enum GameItem
-    {
-        None,
-        Coin,
-        Health
-    }
-
-    public abstract class CollectibleBase : GameEntity
+    public class Collectible : GameEntity
     {
         private Animator _animator;
         private CollectibleConfig _config;
         private SpriteRenderer _renderer;
         private BoxCollider2D _collider;
+        private CircleCollider2D _worldCollider;
         protected AudioSource AudioSource { get; private set; }
         private AnimationState _idleState;
-        protected struct CollectibleConfig()
+        private bool _initializedComponents = false;
+
+        public struct CollectibleConfig()
         {
             public int TargetLayer { get; set; }
-            public GameItem Item { get; set; }
+            public ItemId Item { get; set; }
             public int Amount { get; set; }
             public vec2 TriggerSize { get; set; }
             public float AnimFPS { get; set; }
             public Sprite[] IdleSprites { get; set; }
             public Sprite[] CollectedSprites { get; set; }
+            public AudioClip CollectedAudioClip { get; set; }
             // public AnimEvent MyProperty { get; set; }
         }
-
-        public sealed override void OnAwake()
+        public void Init(CollectibleConfig config)
         {
-            Actor.Layer = LayerMask.NameToLayer(GameLayers.COLLECTIBLE);
-            _animator = AddComponent<Animator>();
-            _renderer = AddComponent<SpriteRenderer>();
-            var rigid = AddComponent<RigidBody2D>();
-            AudioSource = AddComponent<AudioSource>();
+            _config = config;
 
-            rigid.BodyType = Body2DType.Kinematic;
-            _renderer.Material = GameManager.DefaultMaterial;
-            _renderer.SortOrder = 0;
-            _collider = AddComponent<BoxCollider2D>();
+            if (!_initializedComponents)
+            {
+                _initializedComponents = true;
+                Actor.Layer = LayerMask.NameToLayer(GameLayers.COLLECTIBLE);
+                _animator = AddComponent<Animator>();
+                _renderer = AddComponent<SpriteRenderer>();
+                var rigid = AddComponent<RigidBody2D>();
+                AudioSource = AddComponent<AudioSource>();
 
-            _collider.IsTrigger = true;
+                rigid.BodyType = Body2DType.Dynamic;
+                _renderer.Material = GameManager.DefaultMaterial;
+                _renderer.SortOrder = 0;
+                _collider = AddComponent<BoxCollider2D>();
 
-            _config = Init();
+                var worldColliderActor = new Actor("WorldCollider");
+                worldColliderActor.Layer = LayerMask.NameToLayer(GameLayers.PLAYER_IGNORE);
+                worldColliderActor.Transform.Parent = Actor.Transform;
+                worldColliderActor.Transform.LocalPosition = default;
+                _worldCollider = worldColliderActor.AddComponent<CircleCollider2D>();
+
+                _collider.IsTrigger = true;
+            }
+            else
+            {
+                _animator.Clear();
+            }
+
             _collider.Size = _config.TriggerSize;
-
+            _worldCollider.Radius = 0.2f;
+            _worldCollider.Friction = 0;
+            _worldCollider.Bounciness = 0.3f;
             var idle = GetState("Idle", _config.AnimFPS, _config.IdleSprites);
             var collected = GetState("Collected", _config.AnimFPS, _config.CollectedSprites);
 
@@ -70,6 +83,7 @@ namespace Game
         public void Restore()
         {
             _collider.IsEnabled = true;
+            _worldCollider.IsEnabled = true;
             _renderer.IsEnabled = true;
             _animator.IsEnabled = false;
 
@@ -81,10 +95,10 @@ namespace Game
 
         public void Disable()
         {
+            _worldCollider.IsEnabled = false;
             _collider.IsEnabled = false;
             _renderer.IsEnabled = false;
             _animator.IsEnabled = false;
-           
         }
 
         public override void OnUpdate()
@@ -115,33 +129,18 @@ namespace Game
             return new AnimationState(name, clip);
         }
 
-        protected abstract CollectibleConfig Init();
-
-        protected void Collect()
-        {
-            if (!_collider.IsEnabled)
-            {
-                return;
-            }
-
-            switch (_config.Item)
-            {
-                case GameItem.None:
-                    break;
-                case GameItem.Coin:
-                    GameManager.PlayerBag.Coins += _config.Amount;
-                    GameManager.UpdateCoinUI(); // Remove from here, just for testing
-                    break;
-                case GameItem.Health:
-                    GameManager.Player.Inventory.Life += _config.Amount;
-                    break;
-            }
-        }
-
         public sealed override void OnTriggerEnter2D(Collider2D collider)
         {
             if (collider.Actor.Layer == _config.TargetLayer)
             {
+                var character = collider.GetComponent<Character>();
+
+                if (character)
+                {
+                    character.Inventory.Add(_config.Item, _config.Amount);
+                    AudioSource.PlayOneShot(_config.CollectedAudioClip, 0.2f);
+                    Disable();
+                }
                 OnTargetCollided(true);
             }
         }
@@ -154,6 +153,8 @@ namespace Game
             }
         }
 
-        public abstract void OnTargetCollided(bool collision);
+        public virtual void OnTargetCollided(bool collision)
+        {
+        }
     }
 }

@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    [RequiredComponent(typeof(RigidBody2D))]
     public class BoxCollider2D : Collider2D
     {
         private vec2 _size = new vec2(1, 1);

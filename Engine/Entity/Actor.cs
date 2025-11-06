@@ -295,6 +295,55 @@ namespace Engine
             GetComponents(ref elements, this);
         }
 
+        public void GetComponentsInParent<T>(ref List<T> elements) where T : class
+        {
+            CheckIfValidObject(this);
+
+            void GetComponents(ref List<T> elements, Actor actor)
+            {
+                for (int i = 0; i < actor._components.Count; i++)
+                {
+                    if (typeof(T).IsAssignableFrom(actor._components[i].GetType()))
+                    {
+                        if (elements == null)
+                        {
+                            elements = new List<T>();
+                        }
+                        elements.Add(actor._components[i] as T);
+                    }
+                }
+
+                GetComponents(ref elements, actor.Transform.Parent.Actor);
+            }
+
+            GetComponents(ref elements, this);
+        }
+
+        public T GetComponentInParent<T>() where T : class
+        {
+            CheckIfValidObject(this);
+
+            T GetComponents(Actor actor)
+            {
+                if (!actor)
+                {
+                    return default;
+                }
+
+                for (int i = 0; i < actor._components.Count; i++)
+                {
+                    if (typeof(T).IsAssignableFrom(actor._components[i].GetType()))
+                    {
+                        return actor._components[i] as T;
+                    }
+                }
+
+                return GetComponents(actor.Transform.Parent?.Actor);
+            }
+
+            return GetComponents(this);
+        }
+
         public Span<T> GetComponents<T>() where T : class
         {
             var components = new List<T>();

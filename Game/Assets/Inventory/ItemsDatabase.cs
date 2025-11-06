@@ -35,8 +35,8 @@ namespace Game
 
     public class ItemsDatabase
     {
-        private readonly Dictionary<ItemId, Item> _itemsDatabase = new();
-        private Dictionary<ItemId, Type> _itemTypeMapper = new()
+        private static readonly Dictionary<ItemId, Item> _itemsDatabase = new();
+        private static Dictionary<ItemId, Type> _itemTypeMapper = new()
         {
             { ItemId.coin_currency, typeof(CoinItem) },
             { ItemId.confusion_grenade, typeof(ConfusionGrenadeItem) },
@@ -120,7 +120,7 @@ namespace Game
             }
         }
 
-        public Item GetItem(ItemId id)
+        public static Item GetItem(ItemId id)
         {
             _itemsDatabase.TryGetValue(id, out var item);
             return item;

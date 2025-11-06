@@ -441,6 +441,9 @@ namespace Game
                         break;
                     }
                 }
+
+                if (hit.isHit)
+                    break;
             }
             if (Physics2D.DrawColliders)
             {

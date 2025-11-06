@@ -227,13 +227,11 @@ namespace Engine.Rendering
                 rendererIndicesCount = renderer.Mesh.IndicesToDrawCount;
             }
 
-
             bool canRemoveTexture = !_renderers.Values.Any(r => r.TextureId == rendererIds.TextureId);
 
             // Remove the texture if is no longer used. To save a slot.
             if (canRemoveTexture)
             {
-                Debug.Log("Remove texture: " + Textures[rendererIds.TextureId].Name);
                 Textures[rendererIds.TextureId] = null;
             }
 

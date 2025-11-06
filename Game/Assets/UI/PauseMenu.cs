@@ -20,6 +20,7 @@ namespace Game
         private UICanvas _canvas;
         private UIText _titleText;
         private bool _show = false;
+        private UIElement _inventory;
 
         private List<UIGraphicsElement> _graphics = new();
         public override void OnStart()
@@ -35,7 +36,7 @@ namespace Game
             _background.Material = new Material(new Shader(Assets.GetText("Shaders/VertScreenGrab.vert").Text, Assets.GetText("Shaders/GrayScale.frag").Text));
             _background.Material.Passes[0].IsScreenGrabPass = true;
 
-            LayoutTest();
+            Inventory();
             var fontMat = new Material(new Shader(Assets.GetText("Shaders/Font/FontVert.vert").Text, Assets.GetText("Shaders/Font/FontFrag.frag").Text));
 
             // Title text
@@ -48,7 +49,7 @@ namespace Game
             var tex = Assets.GetTexture("pixel-ui_buttons_long_47x14.png");
             var buttonSlice = TextureAtlasUtils.SliceSprites(tex, 46, 14);
 
-            var resumeButtonImage = NewImage("Resume button image", new vec2(0, 0), new vec2(150, 100), Color.White, _background.Transform);
+            var resumeButtonImage = NewImage("Resume button image", new vec2(0, 0), new vec2(150, 40), Color.White, _background.Transform);
 
             resumeButtonImage.PreserveAspect = true;
             var button = resumeButtonImage.AddComponent<Button>();
@@ -89,14 +90,13 @@ namespace Game
            // LogRecursive(_background.Transform);
         }
 
-        private void LayoutTest()
+        private void Inventory()
         {
-            var inventoryObj = new Actor<UIElement, ContentSizeFitter>().GetComponent<UIElement>();
-            inventoryObj.Transform.Parent = _background.Transform;
-            inventoryObj.Transform.LocalPosition = new vec3(0, 298);
+            _inventory = new Actor<UIElement, ContentSizeFitter>().GetComponent<UIElement>();
+            _inventory.Transform.Parent = _background.Transform;
+            _inventory.Transform.LocalPosition = new vec3(0, 298);
 
-
-            var inventory = NewImage("Inventory image", default, new vec2(320, 240), Color.White, inventoryObj.Transform);
+            var inventory = NewImage("Inventory image", default, new vec2(320, 240), Color.White, _inventory.Transform);
             inventory.AddComponent<ContentSizeFitter>();
             inventory.RectTransform.Pivot = new vec2(0.5f, 0.5f);
             var img = inventory.GetComponent<UIImage>();
@@ -105,7 +105,7 @@ namespace Game
             img.IsSliced = true;
             img.SlicedBorderResolution = 2.5f;
 
-            var inventoryTitleText = NewText("inventory title", "Inventory", new vec2(0, -52), inventoryObj.Transform);
+            var inventoryTitleText = NewText("inventory title", "Inventory", new vec2(0, -52), _inventory.Transform);
             inventoryTitleText.Fit = TextFit.ExpandToFit;
             inventoryTitleText.FontSize = 30;
             inventoryTitleText.OutlineSize = 0;
@@ -197,6 +197,11 @@ namespace Game
             else
             {
                 SetColorAlpha(0);
+            }
+
+            if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                _inventory.Actor.IsActiveSelf = !_inventory.Actor.IsActiveSelf;
             }
         }
 

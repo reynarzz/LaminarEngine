@@ -21,17 +21,11 @@ namespace Game
         public const string ENEMY_CONFUSED = "EnemyConfused";
         public const string PLATFORM = "Platform";
         public const string COLLECTIBLE = "Collectible";
+        public const string PLAYER_IGNORE = "Player_Ignore";
 
         public static ulong GROUND_MASK { get; } = LayerMask.NameToBit(FLOOR) |
                                                    LayerMask.NameToBit(PLATFORM) |
                                                    LayerMask.NameToBit(Default);
-    }
-
-    [Serializable]
-    public class PlayerBag
-    {
-        public int Coins { get; set; }
-        public int MaxLife { get; set; }
     }
 
     internal class GameManager : ScriptBehavior
@@ -44,7 +38,6 @@ namespace Game
         private ItemsDatabase _itemsDatabase;
         private PauseMenu _pauseMenu;
 
-        public static PlayerBag PlayerBag { get; } = new();
         public static Player Player { get; private set; }
         public static Material DefaultMaterial => _defaultSpriteMaterial;
 
@@ -99,7 +92,8 @@ namespace Game
             }
 
             LayerMask.TurnOff(GameLayers.PLAYER, GameLayers.PLAYER);
-            //LayerMask.TurnOn(GameLayers.PLAYER, GameLayers.PLATFORM);
+            LayerMask.TurnOff(GameLayers.PLAYER, GameLayers.PLAYER_IGNORE);
+            LayerMask.TurnOff(GameLayers.PLATFORM, GameLayers.COLLECTIBLE);
             //LayerMask.TurnOn(GameLayers.PLAYER, GameLayers.Default);
         }
 
@@ -324,9 +318,9 @@ namespace Game
                 _coinCounterTest.Font = DefaultFont;
             }
 
-            _coinCounterTest.SetText(PlayerBag.Coins.ToString()); // Remove from here, just for testing
-            _coinCounterTest.Material = _defaultSpriteMaterial;
-            _coinCounterTest.Transform.WorldPosition = new vec3(20, 20);
+            //_coinCounterTest.SetText(Player.Inventory.GetSlot.Coins.ToString()); // Remove from here, just for testing
+            //_coinCounterTest.Material = _defaultSpriteMaterial;
+            //_coinCounterTest.Transform.WorldPosition = new vec3(20, 20);
 
         }
     }
