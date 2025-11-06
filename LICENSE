@@ -1,21 +1,24 @@
-MIT License
+Non-Commercial Copyleft License (NCCL)
 
-Copyright (c) 2025 Reynardo Perez
+Copyright (c) 2025 reynarzz (Reynardo Perez)
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to use, modify, and distribute the Software, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+1. Non-Commercial Use Only  
+   The Software, and any derivative works, may not be used for commercial purposes. “Commercial purposes” means any use intended for or directed toward commercial advantage or monetary compensation.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+2. Attribution  
+   You must give appropriate credit to the original author by including the following notice in all copies or substantial portions of the Software and derivative works:  
+   “This software is based on code by Reynardo Perez (reynarzz), licensed under the Non-Commercial Copyleft License (NCCL).”
+
+3. Source Availability & Copyleft  
+   If you distribute the Software or any modified version of it, you must make the complete source code available under the same license terms as this license (NCCL), without additional restrictions.
+
+4. No Additional Restrictions  
+   You may not impose any further legal or technological restrictions that would prevent others from exercising the rights granted under this license.
+
+5. Warranty Disclaimer  
+   THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+Commercial Licensing  
+   For commercial use of this Software, you must obtain a separate proprietary license from the author.
