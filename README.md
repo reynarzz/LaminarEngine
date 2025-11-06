@@ -53,4 +53,4 @@ This project is licensed under the Non-Commercial Copyleft License (NCCL).
 ### You are NOT allowed to:
 - Use this code in commercial games, engines, or products
 - Sell or monetize any part of it
-- Use it in revenue-generating projects without my permission
+- Use it in revenue-generating projects
