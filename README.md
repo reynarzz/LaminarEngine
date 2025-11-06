@@ -43,7 +43,7 @@ Optional
 - Make sure your PATH includes the .NET 9.0 SDK.
 
 ## License
-This project is licensed under the Portfolio Non-Commercial License.
+This project is licensed under the Non-Commercial Copyleft License (NCCL).
 
 ### You are allowed to:
 - View and learn from the code
