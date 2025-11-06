@@ -50,7 +50,7 @@ namespace Game
                 _collider = AddComponent<BoxCollider2D>();
 
                 var worldColliderActor = new Actor("WorldCollider");
-                worldColliderActor.Layer = LayerMask.NameToLayer(GameLayers.PLAYER_IGNORE);
+                worldColliderActor.Layer = LayerMask.NameToLayer(GameLayers.CHARACTER_IGNORE);
                 worldColliderActor.Transform.Parent = Actor.Transform;
                 worldColliderActor.Transform.LocalPosition = default;
                 _worldCollider = worldColliderActor.AddComponent<CircleCollider2D>();
@@ -64,7 +64,6 @@ namespace Game
 
             _collider.Size = _config.TriggerSize;
             _worldCollider.Radius = 0.2f;
-            _worldCollider.Friction = 0;
             _worldCollider.Bounciness = 0.3f;
             var idle = GetState("Idle", _config.AnimFPS, _config.IdleSprites);
             var collected = GetState("Collected", _config.AnimFPS, _config.CollectedSprites);

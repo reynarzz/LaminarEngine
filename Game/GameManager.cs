@@ -21,7 +21,7 @@ namespace Game
         public const string ENEMY_CONFUSED = "EnemyConfused";
         public const string PLATFORM = "Platform";
         public const string COLLECTIBLE = "Collectible";
-        public const string PLAYER_IGNORE = "Player_Ignore";
+        public const string CHARACTER_IGNORE = "character_Ignore";
 
         public static ulong GROUND_MASK { get; } = LayerMask.NameToBit(FLOOR) |
                                                    LayerMask.NameToBit(PLATFORM) |
@@ -92,7 +92,9 @@ namespace Game
             }
 
             LayerMask.TurnOff(GameLayers.PLAYER, GameLayers.PLAYER);
-            LayerMask.TurnOff(GameLayers.PLAYER, GameLayers.PLAYER_IGNORE);
+            LayerMask.TurnOff(GameLayers.PLAYER, GameLayers.CHARACTER_IGNORE);
+            LayerMask.TurnOff(GameLayers.ENEMY, GameLayers.CHARACTER_IGNORE);
+            LayerMask.TurnOff(GameLayers.ENEMY_CONFUSED, GameLayers.CHARACTER_IGNORE);
             LayerMask.TurnOff(GameLayers.PLATFORM, GameLayers.COLLECTIBLE);
             //LayerMask.TurnOn(GameLayers.PLAYER, GameLayers.Default);
         }
