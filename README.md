@@ -46,12 +46,12 @@ Optional
 This project is licensed under the Portfolio Non-Commercial License.
 
 ### You are allowed to:
-+View and learn from the code
-+Fork and modify it for non-commercial purposes
-+Use parts of it in your own non-commercial projects, with attribution
+- View and learn from the code
+- Fork and modify it for non-commercial purposes
+- Use parts of it in your own non-commercial projects, with attribution
 
 ### You are NOT allowed to:
-Use this code in commercial games, engines, or products
-Sell or monetize any part of it
-Use it in revenue-generating projects without my permission
-For commercial licensing, please contact me.
+- Use this code in commercial games, engines, or products
+- Sell or monetize any part of it
+- Use it in revenue-generating projects without my permission
+- For commercial licensing, please contact me.
