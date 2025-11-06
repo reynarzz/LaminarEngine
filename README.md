@@ -41,3 +41,17 @@ Optional
 --------
 - Use an IDE like Visual Studio 2022+, Rider, or VS Code with C# support.
 - Make sure your PATH includes the .NET 9.0 SDK.
+
+## License
+This project is licensed under the Portfolio Non-Commercial License.
+
+### You are allowed to:
++View and learn from the code
++Fork and modify it for non-commercial purposes
++Use parts of it in your own non-commercial projects, with attribution
+
+### You are NOT allowed to:
+Use this code in commercial games, engines, or products
+Sell or monetize any part of it
+Use it in revenue-generating projects without my permission
+For commercial licensing, please contact me.
