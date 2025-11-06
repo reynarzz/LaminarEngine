@@ -22,15 +22,14 @@ namespace Game
 
         // For the game:
         // Implement enemies
+        // -Enemy AI
+        // Enemy life UI
+        //
         // Five levels, small, one intro level falling from outside.
         // Colllect coins, hearts, attack enemies, go from door A to B
-        // Start with nothing, then grab the hammer as a powerup (modify sprites)
         // Implement collectibles
-        // Enemy life UI
-        // Enemy AI
-        // Enemy boss.
-        // Implement collider AABB
-        // Color palette swap to have more enemies.
+        // Implement UI (inventory, pause menu)
+        
 
         // -Stretch:
         // Implement bounds in sprites/renderers.
@@ -135,33 +134,6 @@ namespace Game
 
             //particleSystem.Material.Passes.ElementAt(0).Blending.Enabled = false;
             particleSystem.Sprite = new Sprite();
-        }
-
-        private void TextRendering()
-        {
-            //var actor = new Actor<TextWritterTest>("Text1");
-            //var test = actor.GetComponent<TextWritterTest>();
-            //var renderer = actor.AddComponent<TextRenderer>();
-            //test.Text = "This is a text written line by line!\nand this, is being written just below!!!\nspecial characters: !@#$%^&*()_+ ñ";
-            //test.DelayToWrite = 0.03f;
-            //test.Transform.WorldPosition = new vec3(0, 150);
-            //renderer.Color = Color.White;
-            //test.Transform.WorldScale = new vec3(0.8f, 0.8f, 0.5f);
-            //renderer.OutlineSize = 1;
-
-            var actor = new Actor<UIText, TextWritterTest>("UIText");
-            var test = actor.GetComponent<UIText>();
-            var writer = actor.GetComponent<TextWritterTest>();
-            writer.Text = ("This is a text written line by line!\nand this, is being written just below!!!\nspecial characters: !@#$%^&*()_+ ñ");
-            writer.DelayToWrite = 0.03f;
-            writer.Transform.WorldPosition = new vec3(0, 150);
-            test.Color = Color.White;
-            writer.Transform.WorldScale = new vec3(0.8f, 0.8f, 0.8f);
-            test.OutlineSize = 5;
-            test.FontSize = 33;
-            test.Font = Assets.Get<FontAsset>("Fonts/windows-bold[1].ttf");
-            test.Material = new Material(new Shader(Assets.GetText("Shaders/Font/FontVert.vert").Text,
-                                                    Assets.GetText("Shaders/Font/FontFrag.frag").Text));
         }
 
         private void ScreenGrabTest()

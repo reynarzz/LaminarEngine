@@ -33,7 +33,7 @@ namespace Game
                 collectible.Transform.WorldPosition = position;
 
                 var tex = Assets.GetTexture("starkTileset.png");
-                var tiles = TextureAtlasUtils.SliceSprites(tex, 16, 16, 281, 4);
+                var tiles = TextureAtlasUtils.SliceSprites(tex, 16, 16, 281, 1);
 
                 var audioClip = Assets.GetAudioClip("Audio/HALFTONE/Gameplay/Collectibles_2.wav");
 
