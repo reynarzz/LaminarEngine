@@ -13,7 +13,7 @@ namespace Game
         public override void Init(CharacterConfig config)
         {
             Detector = AddComponent<CircleTargetDetector>();
-
+            Inventory = new CharacterInventory(5);
             base.Init(config);
         }
     }

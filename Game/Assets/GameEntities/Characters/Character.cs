@@ -91,7 +91,7 @@ namespace Game
         }
         private float _maxFallYVelocity = -20;
 
-        public CharacterInventory Inventory { get; protected set; } = CharacterInventory.Empty;
+        public CharacterInventory Inventory { get; protected set; }
 
         public int SpriteLookDir => _characterConfig.SpriteLookDir;
         private CharacterConfig _characterConfig;
@@ -368,11 +368,12 @@ namespace Game
             }
         }
 
-        public virtual void Attack(int index = 0)
+        public virtual bool Attack(int index = 0)
         {
             if (!IsCharacterAlive() || Animator.Parameters.HasTrigger(Attacks[index]))
-                return;
+                return false;
             Animator.Parameters.SetTrigger(Attacks[index]);
+            return true;
         }
 
         protected virtual void Death()

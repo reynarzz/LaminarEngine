@@ -228,7 +228,7 @@ namespace Engine
             _isDirty = false;
         }
 
-        internal mat4 GetRenderingWorldMatrix()
+        public mat4 GetRenderingWorldMatrix()
         {
             return NeedsInterpolation ? InterpolatedWorldMatrix : WorldMatrix;
         }

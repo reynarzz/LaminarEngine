@@ -34,9 +34,8 @@ namespace Game
                 return;
 
             var camPos = Transform.WorldPosition;
-            var targetPos = Target.WorldPosition;
+            var targetPos = new vec4(Target.GetRenderingWorldMatrix()[3]);
 
-            // Dead zone boundaries relative to camera center
             float left = camPos.x - deadZoneSize.x * 0.5f;
             float right = camPos.x + deadZoneSize.x * 0.5f;
             float bottom = camPos.y - deadZoneSize.y * 0.5f;
@@ -45,11 +44,9 @@ namespace Game
             float newX = camPos.x;
             float newY = camPos.y;
 
-            // Check horizontal
             if (targetPos.x < left) newX = targetPos.x + deadZoneSize.x * 0.5f;
             if (targetPos.x > right) newX = targetPos.x - deadZoneSize.x * 0.5f;
 
-            // Check vertical
             if (targetPos.y < bottom) newY = targetPos.y + deadZoneSize.y * 0.5f;
             if (targetPos.y > top) newY = targetPos.y - deadZoneSize.y * 0.5f;
 

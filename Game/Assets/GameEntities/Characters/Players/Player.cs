@@ -65,12 +65,11 @@ namespace Game
             if (Input.GetKeyDown(KeyCode.F))
             {
                 var hit = Physics2D.BoxCast(origin, size, LayerMask.NameToBit(GameLayers.ENEMY));
-                if (hit.isHit)
+                if (Attack() && hit.isHit)
                 {
                     Debug.Log("Attack enemy");
                     hit.Collider.GetComponent<EnemyBase>().HitDamage(1);
                 }
-                Attack();
             }
 
             if (Physics2D.DrawColliders)
@@ -107,7 +106,10 @@ namespace Game
             }
 
         }
-
+        public override bool Attack(int index = 0)
+        {
+            return true;
+        }
         public override void OnFixedUpdate()
         {
 
