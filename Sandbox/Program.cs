@@ -12,10 +12,14 @@ namespace Sandbox
 {
     internal class Program
     {
-        private const string GAME_FOLDER_NAME = "Game";
+        private static readonly Mutex _mutex = new Mutex(false, "Global\\SandboxApp_Game");
 
         private static void Main()
         {
+            if(!_mutex.WaitOne(0, false))
+            {
+                return;
+            }
 #if RELEASE
             var libsPath = Path.Combine(AppContext.BaseDirectory, "Data/Assemblies");
 
@@ -28,11 +32,11 @@ namespace Sandbox
                 catch { }
             }
 #else
-            // This will import all the assets without using the GUI tool. Useful for recruiters needing to just run the project.
-            var assemblyDir = Path.GetDirectoryName(AppContext.BaseDirectory)!;
-            var path = Path.GetFullPath(Path.Combine(assemblyDir, "..", "..", "..", "..", "..", GAME_FOLDER_NAME));
+            // This will import all the assets without using the GUI tool. Useful for just run the project.
+            var assemblyDir = Paths.ClearPathSeparation(Path.GetDirectoryName(AppContext.BaseDirectory)!);
+            var root = Path.Combine(assemblyDir.Substring(0, assemblyDir.LastIndexOf(Paths.SANDBOX_FOLDER_NAME)), Paths.GAME_FOLDER_NAME);
 
-            new GameProject().Initialize(new ProjectConfig() { ProjectFolderRoot = path });
+            new GameProject().Initialize(new ProjectConfig() { ProjectFolderRoot = root });
             new AssetsCooker().CookAll(new CookOptions()
             {
                 Type = CookingType.DevMode,
@@ -57,6 +61,8 @@ namespace Sandbox
                                            typeof(RenderingLayer),
                                            typeof(IOLayer))
                                           .Run();
+
+            _mutex.ReleaseMutex();
         }
     }
 }

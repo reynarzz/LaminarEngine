@@ -11,6 +11,9 @@ namespace SharedTypes
         public const string LIBRARY_FOLDER_NAME = "Library";
         public const string BUILD_TEMP_FOLDER_NAME = "BuildTemp";
         public const string ASSETS_FOLDER_NAME = "Assets";
+        public const string SANDBOX_FOLDER_NAME = "Sandbox";
+        public const string GAME_FOLDER_NAME = "Game";
+
         public const string PROJECT_CONFIG_FOLDER_NAME = "ProjectSettings";
 
         public const string ASSET_DATABASE_FOLDER_NAME = "AssetsDatabase";
