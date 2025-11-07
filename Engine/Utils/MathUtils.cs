@@ -81,7 +81,7 @@ namespace Engine.Utils
         {
             var angle = MathF.Atan2(rot.s, rot.c);
             vec3 zAxis = new vec3(0f, 0f, 1f);
-            return quat.FromAxisAngle(zAxis, angle);
+            return quat.FromAxisAngleNormalized(zAxis, angle);
         }
 
         internal static B2Vec2 ToB2Vec2(this vec2 vec)

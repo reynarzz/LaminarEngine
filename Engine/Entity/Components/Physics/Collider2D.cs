@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 namespace Engine
 {
     public abstract class Collider2D : Component
+#if DEBUG
+        , ILateUpdatableComponent
+#endif
     {
         public RigidBody2D RigidBody { get; internal set; }
 
@@ -286,5 +289,28 @@ namespace Engine
                 });
             }
         }
+#if DEBUG
+        public void OnLateUpdate()
+        {
+            if (Physics2D.DrawColliders && ShapesId != null)
+            {
+                var transform = new B2Transform();
+                var pos = new vec3(Transform.GetRenderingWorldMatrix()[3]);
+
+                transform.p = new B2Vec2(pos.x, pos.y);
+                transform.q = Transform.WorldRotation.QuatToB2Rot();
+
+                for (int i = 0; i < ShapesId.Length; i++)
+                {
+                    var color = B2HexColor.b2_colorCyan;
+                    if (IsTrigger)
+                    {
+                        color = B2HexColor.b2_colorYellow;
+                    }
+                    B2Worlds.b2DrawShape(PhysicWorld.DebugDraw, B2Shapes.b2GetShape(B2Worlds.b2GetWorld(0), ShapesId[i]), transform, color);
+                }
+            }
+        }
+#endif
     }
 }

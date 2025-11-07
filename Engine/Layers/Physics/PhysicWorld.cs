@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Box2D.NET;
+using Engine.Graphics;
 using GlmNet;
 
 namespace Engine
@@ -12,6 +13,8 @@ namespace Engine
     {
         public static B2WorldId WorldID { get; private set; }
 
+        private static B2DebugDraw _debugDraw;
+        internal static B2DebugDraw DebugDraw => _debugDraw;
         static PhysicWorld()
         {
             B2WorldDef worldDef = B2Types.b2DefaultWorldDef();
@@ -19,6 +22,34 @@ namespace Engine
             worldDef.enableContinuous = true;
 
             WorldID = B2Worlds.b2CreateWorld(ref worldDef);
+            _debugDraw = new B2DebugDraw()
+            {
+                context = null,
+                DrawPolygonFcn = Box2DDraw.DrawPolygon,
+                DrawSolidPolygonFcn = Box2DDraw.DrawSolidPolygon,
+                DrawCircleFcn = Box2DDraw.DrawCircle,
+                DrawSolidCircleFcn = Box2DDraw.DrawSolidCircle,
+                DrawSolidCapsuleFcn = Box2DDraw.DrawSolidCapsule,
+                DrawSegmentFcn = Box2DDraw.DrawSegment,
+                DrawTransformFcn = Box2DDraw.DrawTransform,
+                DrawPointFcn = Box2DDraw.DrawPoint,
+                DrawStringFcn = Box2DDraw.DrawString,
+
+                drawShapes = true,
+                drawJoints = true,
+                drawJointExtras = false,
+                drawBounds = false,
+                drawMass = false,
+                drawBodyNames = false,
+                drawContacts = true,
+                drawGraphColors = false,
+                drawContactNormals = true,
+                drawContactImpulses = false,
+                drawContactFeatures = false,
+                drawFrictionImpulses = false,
+                drawIslands = false,
+            };
+
         }
 
         internal static void SetGravity(vec2 gravity)

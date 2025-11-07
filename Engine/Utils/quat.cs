@@ -28,6 +28,14 @@ namespace GlmNet
             return new quat(axis.x * s, axis.y * s, axis.z * s, MathF.Cos(half));
         }
 
+        /// <summary>Constructs quaternion from normalized axis-angle (radians)</summary>
+        public static quat FromAxisAngleNormalized(vec3 axis, float angle)
+        {
+            float half = angle * 0.5f;
+            float s = MathF.Sin(half);
+            return new quat(axis.x * s, axis.y * s, axis.z * s, MathF.Cos(half));
+        }
+
         /// <summary>Quaternion multiplication (combining rotations)</summary>
         public static quat operator *(quat a, quat b)
         {
