@@ -43,7 +43,7 @@ Optional
 - Make sure your PATH includes the .NET 9.0 SDK.
 
 ## License
-This project is licensed under the Portfolio Non-Commercial License.
+This project is licensed under the Non-Commercial Copyleft License (NCCL).
 
 ### You are allowed to:
 - View and learn from the code
@@ -53,5 +53,4 @@ This project is licensed under the Portfolio Non-Commercial License.
 ### You are NOT allowed to:
 - Use this code in commercial games, engines, or products
 - Sell or monetize any part of it
-- Use it in revenue-generating projects without my permission
-- For commercial licensing, please contact me.
+- Use it in revenue-generating projects
