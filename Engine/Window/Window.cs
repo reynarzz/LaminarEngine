@@ -116,7 +116,7 @@ namespace Engine
 
             GL.Import(Glfw.GetProcAddress);
             Glfw.SetFramebufferSizeCallback(NativeWindow, (win, width, height) => SetWindowSize(width, height));
-            // Glfw.SwapInterval(1);
+            Glfw.SwapInterval(0);
         }
 
         internal static void SwapBuffers()

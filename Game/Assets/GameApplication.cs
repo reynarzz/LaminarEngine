@@ -52,7 +52,7 @@ namespace Game
             Portal().Transform.LocalPosition = new vec3(33, -9.1f);
             Portal().Transform.LocalPosition = new vec3(43, -1);
 
-            FilmGrain();
+            // FilmGrain();
 
             WaterTest();
             ParticleSystem();
