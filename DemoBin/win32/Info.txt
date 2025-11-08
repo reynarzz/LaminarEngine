@@ -1,6 +1,9 @@
 Move: WASD
 Jump: Space
 Attack: F
-Debug toggle: Q
+Revive: Z
+Death: X
+
+==Extras:
+Debug: 1(Alpha, above Q): World, 2(Alpha, above W): UI 
 FullScreen: Escape
-Physics Interpolation toggle (Debug mode only): I

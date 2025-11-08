@@ -37,7 +37,7 @@ namespace Game
         private static UIText _coinCounterTest;
         private ItemsDatabase _itemsDatabase;
         private PauseMenu _pauseMenu;
-
+        
         public static Player Player { get; private set; }
         public static Material DefaultMaterial => _defaultSpriteMaterial;
 
@@ -107,6 +107,11 @@ namespace Game
 
         private void InitializeWorld()
         {
+            var music = new Actor<AudioSource>("Music Manager");
+            var musicAudio = music.GetComponent<AudioSource>();
+            musicAudio.Loop = true;
+            musicAudio.Clip = Assets.GetAudioClip("Audio/music/streamloops/Stream Loops 2024-02-14_L01.wav");
+            musicAudio.Play();
             _pauseMenu = new Actor("Pause menu").AddComponent<PauseMenu>();
 
             Player = new Actor("Player").AddComponent<Player>();
@@ -217,7 +222,7 @@ namespace Game
                         switch (entity.Identifier)
                         {
                             case "Enemy1":
-                                GamePrefabs.Enemies.InstantiateKingPig(position, -1);
+                                 GamePrefabs.Enemies.InstantiateKingPig(position, -1);
                                 break;
                             case "Coin":
                                 GamePrefabs.Collectibles.InstantiateCoin(position);

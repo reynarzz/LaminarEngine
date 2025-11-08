@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Game
 {
+    // NOTE: This is a test class
     public class PauseMenu : ScriptBehavior
     {
         private UIImage _background;
@@ -21,11 +22,16 @@ namespace Game
         private UIText _titleText;
         private bool _show = false;
         private UIElement _inventory;
-
+        private AudioSource _audioSource;
+        private AudioClip _buttonAudioClip;
+        private AudioClip _pauseAudioClip;
         private List<UIGraphicsElement> _graphics = new();
         public override void OnStart()
         {
-            _canvas = new Actor("Pause menu Canvas").AddComponent<UICanvas>();
+            _canvas = new Actor<AudioSource>("Pause menu Canvas").AddComponent<UICanvas>();
+            _audioSource = _canvas.GetComponent<AudioSource>();
+            _buttonAudioClip = Assets.GetAudioClip("Audio/HALFTONE/UI/1. Buttons/Button_20_adjust.wav");
+            _pauseAudioClip = Assets.GetAudioClip("Audio/HALFTONE/UI/1. Buttons/Button_24.wav");
             _canvas.Transform.Parent = Transform;
 
             var backSize = new vec2(512 * 3, 288 * 3);
@@ -152,6 +158,8 @@ namespace Game
                 NewImage("Quad2", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
 
             }
+
+            _inventory.Actor.IsActiveSelf = false;
         }
 
         private static void LogHierarchy(Transform current, int depth = 0)
@@ -169,6 +177,11 @@ namespace Game
         {
             Time.TimeScale = 1;
             //Actor.IsActiveSelf = false;
+
+            if (_show)
+            {
+                _audioSource.PlayOneShot(_buttonAudioClip, 0.5f);
+            }
             _show = false;
         }
 
@@ -177,10 +190,19 @@ namespace Game
             //Actor.IsActiveSelf = !Actor.IsActiveSelf;
             _show = !_show;
             Time.TimeScale = _show ? 0 : 1;
+
+            if(_show)
+            _audioSource.PlayOneShot(_pauseAudioClip, 0.5f);
+            else
+            {
+                _audioSource.PlayOneShot(_buttonAudioClip, 0.5f);
+            }
+
         }
 
         public override void OnLateUpdate()
         {
+
             void SetColorAlpha(float alpha)
             {
                 foreach (var item in _graphics)
@@ -199,10 +221,10 @@ namespace Game
                 SetColorAlpha(0);
             }
 
-            if (Input.GetKeyDown(KeyCode.Tab))
-            {
-                _inventory.Actor.IsActiveSelf = !_inventory.Actor.IsActiveSelf;
-            }
+            //if (Input.GetKeyDown(KeyCode.Tab))
+            //{
+            //    _inventory.Actor.IsActiveSelf = !_inventory.Actor.IsActiveSelf;
+            //}
         }
 
         private UIText NewText(string name, string value, vec2 position, Transform parent)

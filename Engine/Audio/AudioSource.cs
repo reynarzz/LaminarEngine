@@ -14,6 +14,7 @@ namespace Engine
         private SoundPlayer _soundPlayer;
         private RawDataProvider _provider;
         private AudioMixer _mixer;
+        private bool _isLooping = false;
 
         internal SoundPlayer SoundPlayer => _soundPlayer;
         public AudioClip Clip
@@ -66,9 +67,10 @@ namespace Engine
 
         public bool Loop
         {
-            get => _soundPlayer?.IsLooping ?? false;
+            get => _isLooping;
             set
             {
+                _isLooping = value;
                 if (_soundPlayer == null)
                     return;
 
@@ -132,6 +134,9 @@ namespace Engine
         {
             if (_soundPlayer == null)
                 return;
+
+            _soundPlayer.IsLooping = Loop;
+            _soundPlayer.Volume = Volume;
 
             _soundPlayer.Play();
         }
