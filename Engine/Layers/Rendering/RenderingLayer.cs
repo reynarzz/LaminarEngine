@@ -8,8 +8,8 @@ namespace Engine.Layers
 {
     internal class RenderingLayer : LayerBase
     {
-        private Batcher2D _sceneBatches;
-        private Batcher2D _uiBatches;
+        private static Batcher2D _sceneBatches;
+        private static Batcher2D _uiBatches;
         private Camera _mainCamera = null;
         private DrawCallData _drawCallData;
         private DrawCallData _screenQuadDrawCallData;
@@ -283,9 +283,14 @@ namespace Engine.Layers
             GfxDeviceManager.Current.Draw(_screenQuadDrawCallData);
         }
 
+        public static void Test_ClearBatches()
+        {
+            _sceneBatches.Clear();
+            _uiBatches.Clear();
+        }
         public override void Close()
         {
-
+        
         }
     }
 }

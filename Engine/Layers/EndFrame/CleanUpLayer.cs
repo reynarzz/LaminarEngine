@@ -17,7 +17,7 @@ namespace Engine.Layers
         internal override void UpdateLayer()
         {
             CleaningUp = true;
-            SceneManager.ActiveScene.DeletePending();
+            SceneManager.OnCleanUpUpdate();
             CleaningUp = false;
         }
 

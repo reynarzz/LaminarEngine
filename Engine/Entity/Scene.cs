@@ -8,9 +8,6 @@ namespace Engine
 {
     public class Scene : EObject
     {
-        private bool _shouldBeDestroyed = false;
-        internal bool AboutToBeDestroyed => _shouldBeDestroyed;
-
         internal interface IMatcher<T, TComparer>
         {
             T Invoke(Actor actor, TComparer comparer);
@@ -314,29 +311,22 @@ namespace Engine
 
         internal void DeletePending()
         {
-            if (_shouldBeDestroyed)
+            for (int i = _rootActors.Count - 1; i >= 0; --i)
             {
-                for (int i = 0; i < _rootActors.Count; i++)
-                {
-                    var actor = _rootActors[i];
-                    actor.OnDestroy();
-                    actor.DeletePending();
-                }
-
-                _rootActors.Clear();
-            }
-            else
-            {
-                for (int i = _rootActors.Count - 1; i >= 0; --i)
-                {
-                    _rootActors[i].DeletePending();
-                }
+                _rootActors[i].DeletePending();
             }
         }
 
         internal void Destroy()
         {
-            _shouldBeDestroyed = true;
+            for (int i = 0; i < _rootActors.Count; i++)
+            {
+                var actor = _rootActors[i];
+                actor.OnDestroy();
+                actor.DeletePending();
+            }
+
+            _rootActors.Clear();
         }
     }
 }

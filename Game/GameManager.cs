@@ -179,6 +179,8 @@ namespace Game
 
         }
 
+        private static Material _tilemapMaterial;
+
         private void LoadTilemap()
         {
             var testPathNow = "Tilemap";
@@ -195,8 +197,11 @@ namespace Game
             string json = Assets.GetText(filepath).Text;
             string json2 = Assets.GetText(testPathNow + "/Test_Grass.ldtk").Text;
 
-            var tilemapMaterial = new Material(new Shader(Assets.GetText("Shaders/SpriteVert.vert").Text, Assets.GetText("Shaders/SpriteFrag.frag").Text));
-            tilemapMaterial.Name = "Tilemap material";
+            if(_tilemapMaterial == null)
+            {
+                _tilemapMaterial = new Material(new Shader(Assets.GetText("Shaders/SpriteVert.vert").Text, Assets.GetText("Shaders/SpriteFrag.frag").Text));
+                _tilemapMaterial.Name = "Tilemap material";
+            }
 
             var project = ldtk.LdtkJson.FromJson(json);
             var color = project.BgColor;
@@ -244,17 +249,17 @@ namespace Game
 
             var tilemapActor = new Actor<TilemapRenderer>("Foreground tilemap");
             var tilemap = tilemapActor.GetComponent<TilemapRenderer>();
-            tilemap.Material = tilemapMaterial;
+            tilemap.Material = _tilemapMaterial;
             tilemap.Sprite = tilemapSprite;
 
             var tilemapActor2 = new Actor<TilemapRenderer>("Background tilemap");
             var tilemap2 = tilemapActor2.GetComponent<TilemapRenderer>();
-            tilemap2.Material = tilemapMaterial;
+            tilemap2.Material = _tilemapMaterial;
             tilemap2.Sprite = tilemapSprite;
 
             var tilemapActor3 = new Actor<TilemapRenderer>("Grass tilemap");
             var tilemap3 = tilemapActor3.GetComponent<TilemapRenderer>();
-            tilemap3.Material = tilemapMaterial;
+            tilemap3.Material = _tilemapMaterial;
             tilemap3.Sprite = tilemapSprite;
 
             // tilemap.SetTilemapLDtk(project, new LDtkOptions() { RenderIntGridLayer = true, RenderTilesLayer = true, RenderAutoLayer = true });
@@ -319,6 +324,7 @@ namespace Game
             if (Input.GetKeyDown(KeyCode.T))
             {
                 SceneManager.Test_LoadScene(new Scene());
+                new Actor<GameManager>("GameManager");
             }
         }
 

@@ -172,6 +172,11 @@ namespace Engine.Rendering
             return _batchesPool.GetActiveBatches();
         }
 
+        internal void Clear()
+        {
+            _batchesPool.ClearPool();
+        }
+
         private bool CanPushGeometry(Batch2D currentBatch, Renderer renderer, int vertexCount, Texture texture, Material material)
         {
             return currentBatch != null && currentBatch.CanPushGeometry(renderer, vertexCount, texture, material);

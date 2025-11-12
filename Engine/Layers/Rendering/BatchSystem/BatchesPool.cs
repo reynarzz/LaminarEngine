@@ -65,7 +65,7 @@ namespace Engine.Rendering
 
             _batches.Add(newBatch);
             _batches.Sort((x, y) => x.SortOrder.CompareTo(y.SortOrder));
-            Debug.Info($"Create new batch: ({_batches.Count})");
+            Debug.Info($"Create new batch for renderer: {renderer.Name}: ({_batches.Count})");
 
             return newBatch;
         }
@@ -80,9 +80,14 @@ namespace Engine.Rendering
             Debug.Log("pooled batch");
         }
 
+        // TODO: Delete all batches that are not being used for too long, and are also big.
         internal void ClearPool()
         {
-            // Delete all batches that are not being used for too long, and are also big.
+            foreach (var batch in _batches) 
+            {
+                batch.Dispose();
+            }
+            _batches.Clear();
         }
 
         internal List<Batch2D> GetActiveBatches()
