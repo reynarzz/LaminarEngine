@@ -82,7 +82,6 @@ namespace Engine
         }
 #endif
 
-        public virtual void OnDestroy() { }
 
         public bool IsValid()
         {

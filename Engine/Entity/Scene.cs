@@ -8,6 +8,9 @@ namespace Engine
 {
     public class Scene : EObject
     {
+        private bool _shouldBeDestroyed = false;
+        internal bool AboutToBeDestroyed => _shouldBeDestroyed;
+
         internal interface IMatcher<T, TComparer>
         {
             T Invoke(Actor actor, TComparer comparer);
@@ -42,7 +45,7 @@ namespace Engine
                     return null;
 
                 var comp = actor.GetComponent<T>();
-                if(!comp)
+                if (!comp)
                     return null;
 
                 if (!func(comp))
@@ -106,7 +109,7 @@ namespace Engine
 
         internal void AddActor(Actor actor)
         {
-            actor.Scene = this;
+            actor.Scene = new WeakReference<Scene>(this);
             actor.Transform.Parent = null;
             RegisterRootActor(actor);
         }
@@ -194,7 +197,7 @@ namespace Engine
                 }
             }
 
-            if(rootActor == null)
+            if (rootActor == null)
             {
                 for (int i = 0; i < _rootActors.Count; i++)
                 {
@@ -311,10 +314,29 @@ namespace Engine
 
         internal void DeletePending()
         {
-            for (int i = _rootActors.Count - 1; i >= 0; --i)
+            if (_shouldBeDestroyed)
             {
-                _rootActors[i].DeletePending();
+                for (int i = 0; i < _rootActors.Count; i++)
+                {
+                    var actor = _rootActors[i];
+                    actor.OnDestroy();
+                    actor.DeletePending();
+                }
+
+                _rootActors.Clear();
             }
+            else
+            {
+                for (int i = _rootActors.Count - 1; i >= 0; --i)
+                {
+                    _rootActors[i].DeletePending();
+                }
+            }
+        }
+
+        internal void Destroy()
+        {
+            _shouldBeDestroyed = true;
         }
     }
 }

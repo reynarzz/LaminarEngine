@@ -51,6 +51,7 @@ namespace Engine
         public virtual void OnEnabled() { }
         public virtual void OnDisabled() { }
         public virtual void OnActorEnableChange(bool enabled) { }
+        public virtual void OnDestroy() { }
 
         public Component AddComponent(Type type)
         {

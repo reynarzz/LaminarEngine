@@ -88,9 +88,14 @@ namespace Engine.Layers
 
             if (!_mainCamera || !_mainCamera.IsEnabled)
             {
-                Debug.Error("No cameras found in scene.");
+                Debug.Warn("No cameras found in scene.");
                 GfxDeviceManager.Current.SetViewport(new vec4(0, 0, Window.Width, Window.Height));
-                GfxDeviceManager.Current.Clear(new ClearDeviceConfig() { Color = new Color(1, 0, 1, 1) });
+                GfxDeviceManager.Current.Clear(new ClearDeviceConfig() 
+                { 
+                    Color = new Color(0, 0, 0, 1), 
+                    RenderTarget = _defaultSceneRenderTexture.NativeResource 
+                });
+                GfxDeviceManager.Current.Present(_defaultSceneRenderTexture.NativeResource);
                 return;
             }
 

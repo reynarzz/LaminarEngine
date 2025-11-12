@@ -26,7 +26,7 @@ namespace Engine
             }
         }
 
-        public Scene Scene { get; internal set; }
+        internal WeakReference<Scene> Scene { get; set; }
 
         private bool _isEnabled = true;
         private bool _isActiveInHierarchy = true;
@@ -124,8 +124,8 @@ namespace Engine
             _onEnablePendingComponents = new();
             _transform = AddComponent<Transform>();
 
-            Scene = SceneManager.ActiveScene;
-            Scene.AddActor(this);
+            var scene = SceneManager.ActiveScene;
+            scene.AddActor(this);
         }
 
         public Component AddComponent(Type type)
@@ -399,7 +399,7 @@ namespace Engine
                 {
                     var att = comp.GetType().GetCustomAttribute<RequiredComponentAttribute>();
 
-                    if (att.RequiredComponents.Contains(component.GetType()))
+                    if (att != null && att.RequiredComponents.Contains(component.GetType()))
                     {
                         Debug.Warn($"Can't remove component: '{component.GetType()}', it is used by others");
                         return;
@@ -410,13 +410,18 @@ namespace Engine
 
             if (component && !component.IsPendingToDestroy)
             {
-                component.IsPendingToDestroy = true;
-                component.Actor._pendingToDeleteComponents.Add(component);
+                AddToDestroyList(component);
             }
             else
             {
                 Debug.Info("Can't destroy and already destroyed component");
             }
+        }
+
+        private static void AddToDestroyList(Component component)
+        {
+            component.IsPendingToDestroy = true;
+            component.Actor._pendingToDeleteComponents.Add(component);
         }
 
         public static IReadOnlyList<Actor> FindAllByTag(string tag)
@@ -601,7 +606,8 @@ namespace Engine
                     }
 
                     actor.IsAlive = false;
-                    actor.Scene.RemoveActor(actor);
+                    actor.Scene.TryGetTarget(out var scene);
+                    scene.RemoveActor(actor);
                     actor.Scene = null;
                 }
 
@@ -647,9 +653,16 @@ namespace Engine
             }
         }
 
+        public void OnDestroy()
+        {
 
+            foreach (var component in _components)
+            {
+                AddToDestroyList(component);
+            }
+        }
     }
-
+    
     public class Actor<T1> : Actor where T1 : Component
     {
         public Actor() : this(string.Empty, string.Empty) { }

@@ -315,6 +315,11 @@ namespace Game
             {
                 _pauseMenu.OnPause();
             }
+
+            if (Input.GetKeyDown(KeyCode.T))
+            {
+                SceneManager.Test_LoadScene(new Scene());
+            }
         }
 
         internal static void UpdateCoinUI()

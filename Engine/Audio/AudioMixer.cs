@@ -59,7 +59,7 @@ namespace Engine
             _internalMixer.RemoveModifier(fx.InternalModifier);
         }
 
-        public override void OnDestroy()
+        internal void Destroy()
         {
             if (_internalMixer == null)
                 return;
@@ -71,7 +71,7 @@ namespace Engine
 
         ~AudioMixer()
         {
-            OnDestroy();
+            Destroy();
         }
     }
 }

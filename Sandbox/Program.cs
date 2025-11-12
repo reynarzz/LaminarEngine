@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Loader;
+using System.Text;
 using Engine;
 using Engine.Layers;
 
@@ -16,7 +17,7 @@ namespace Sandbox
 
         private static void Main()
         {
-            if(!_mutex.WaitOne(0, false))
+            if (!_mutex.WaitOne(0, false))
             {
                 return;
             }
@@ -32,7 +33,7 @@ namespace Sandbox
                 catch { }
             }
 #else
-            // This will import all the assets without using the GUI tool. Useful for just run the project.
+            // This will import all the assets without using the GUI tool. Useful for running the project.
             var assemblyDir = Paths.ClearPathSeparation(Path.GetDirectoryName(AppContext.BaseDirectory)!);
             var root = Path.Combine(assemblyDir.Substring(0, assemblyDir.LastIndexOf(Paths.SANDBOX_FOLDER_NAME)), Paths.GAME_FOLDER_NAME);
 

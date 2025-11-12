@@ -36,7 +36,7 @@ namespace Engine
             NativeResource = nativeResource;
         }
 
-        public override void OnDestroy()
+        public void OnDestroy()
         {
             NativeResource.Dispose();
         }

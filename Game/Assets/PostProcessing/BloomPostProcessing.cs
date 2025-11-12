@@ -60,7 +60,7 @@ namespace Game
         public override void Dispose()
         {
             base.Dispose();
-            _brightPassShader.OnDestroy();
+            // _brightPassShader.OnDestroy();
         }
     }
 }

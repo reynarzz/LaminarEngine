@@ -203,6 +203,8 @@ namespace Engine
         {
             base.OnDestroy();
 
+            _soundPlayer?.Stop();
+
             if (Mixer)
             {
                 Mixer.RemoveSource(this);
@@ -212,7 +214,6 @@ namespace Engine
                 AudioLayer.GetMasterAudioMixer().RemoveSource(this);
             }
 
-            _soundPlayer?.Stop();
             _soundPlayer?.Dispose();
             _provider?.Dispose();
         }

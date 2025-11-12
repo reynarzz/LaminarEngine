@@ -74,10 +74,12 @@ namespace Engine
                 quat oldWorldRot = WorldRotation;
                 vec3 oldWorldScale = WorldScale;
 
+                Actor.Scene.TryGetTarget(out var scene);
+          
                 if (value == null)
-                    Actor.Scene.RegisterRootActor(Actor);
+                    scene.RegisterRootActor(Actor);
                 else
-                    Actor.Scene.UnregisterRootActor(Actor);
+                    scene.UnregisterRootActor(Actor);
 
                 _parent?._children.Remove(this);
                 _parent = value;

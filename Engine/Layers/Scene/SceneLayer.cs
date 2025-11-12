@@ -18,10 +18,14 @@ namespace Engine.Layers
 
         internal override void UpdateLayer()
         {
-            SceneManager.ActiveScene.Awake();
-            SceneManager.ActiveScene.Start();
-            SceneManager.ActiveScene.Update();
-            SceneManager.ActiveScene.LateUpdate();
+            if (!SceneManager.ActiveScene.AboutToBeDestroyed)
+            {
+                SceneManager.ActiveScene.Awake();
+                SceneManager.ActiveScene.Start();
+                SceneManager.ActiveScene.Update();
+                SceneManager.ActiveScene.LateUpdate();
+            }
+            
         }
     }
 }
