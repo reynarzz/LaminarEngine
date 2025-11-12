@@ -48,62 +48,12 @@ namespace Game
             //ScreenGrabTest();
             //ScreenGrabTest3();
 
-            Portal();
-            Portal().Transform.LocalPosition = new vec3(33, -9.1f);
-            Portal().Transform.LocalPosition = new vec3(43, -1);
-
             // FilmGrain();
 
             WaterTest();
             ParticleSystem();
             // TextRendering();
-            Canvas();
             Debug.Success("Game Layer");
-        }
-
-        private void Canvas()
-        {
-            var canvas = new Actor("Canvas").AddComponent<UICanvas>();
-
-            //var text = new Actor("Text test").AddComponent<UIText>();
-            //text.Transform.Parent = canvas.Transform;
-            //text.SetText("This is a text child of a canvas");
-            //text.Font = Assets.Get<FontAsset>("Fonts/windows-bold[1].ttf");
-            //text.Material = new Material(new Shader(Assets.GetText("Shaders/Font/FontVert.vert").Text,
-            //                                        Assets.GetText("Shaders/Font/FontFrag.frag").Text));
-            //text.SortOrder = 10;
-            //text.RectTransform.Pivot = new vec2(0.0f, 0.5f);
-
-            var mainShader = new Shader(Assets.GetText("Shaders/SpriteVert.vert").Text, Assets.GetText("Shaders/SpriteFrag.frag").Text);
-            var mat1 = new Material(mainShader);
-
-            var sprites = TextureAtlasUtils.SliceSprites(Assets.GetTexture("KingsAndPigsSprites/12-Live and Coins/Small Heart Idle (18x14).png"), 8, 7);
-
-            UIImage Image(string name, vec2 position, vec2 size, Sprite sprite, Transform parent)
-            {
-                var image = new Actor(name).AddComponent<UIImage>();
-                image.Transform.Parent = parent.Transform;
-                image.RectTransform.Pivot = new vec2(0.0f, 0.0f);
-                image.RectTransform.Size = size;
-                image.Material = mat1;
-                image.Sprite = sprite;
-                image.PreserveAspect = true;
-                image.Transform.LocalPosition = position;
-                // image.AddComponent<Button>();
-                return image;
-            }
-
-            float uiMult = 3;
-            var tex = Assets.GetTexture("KingsAndPigsSprites/12-Live and Coins/Live Bar_atlas(143x34).png");
-            var lifebarSprites = TextureAtlasUtils.SliceSprites(tex, 143, 34);
-            var lifeBar = Image("Life bar", new vec2(10, 10), new vec2(143, 34) * uiMult, lifebarSprites[2], canvas.Transform);
-
-            
-
-
-            Image("Heart1", new vec2(56, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);
-            Image("Heart2", new vec2(88, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);
-            Image("Heart3", new vec2(120, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);
         }
 
         private void ParticleSystem()
@@ -157,25 +107,6 @@ namespace Game
             var screenShader2 = new Shader(vertex, Assets.GetText("Shaders/ChromaticAberration.frag").Text);
             PostProcessingStack.Push(new PostProcessingSinglePass(screenShader2));
 
-        }
-
-        private Actor Portal()
-        {
-            var screenGrabTest = new Actor<SpriteRenderer, Rotate>();
-            var renderer = screenGrabTest.GetComponent<SpriteRenderer>();
-            renderer.SortOrder = 14;
-
-            var screenShader = new Shader(Assets.GetText("Shaders/VertScreenGrab.vert").Text, Assets.GetText("Shaders/Portal.frag").Text);
-            renderer.Material = new Material(screenShader);
-
-            var pass = renderer.Material.Passes.ElementAt(0);
-            pass.IsScreenGrabPass = true;
-
-            screenGrabTest.Transform.LocalScale = new vec3(6, 6);
-            screenGrabTest.Transform.LocalPosition = new vec3(-9, -7);
-            renderer.Material.AddTexture("uStarsTex", Assets.GetTexture("stars.png"));
-
-            return screenGrabTest;
         }
 
         private void FilmGrain()

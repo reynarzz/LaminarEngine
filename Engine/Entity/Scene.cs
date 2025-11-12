@@ -8,6 +8,12 @@ namespace Engine
 {
     public class Scene : EObject
     {
+        private readonly Action<Actor> _onAwake = x => x.Awake();
+        private readonly Action<Actor> _onStart = x => x.Start();
+        private readonly Action<Actor> _onUpdate = x => x.Update();
+        private readonly Action<Actor> _onLateUpdate = x => x.LateUpdate();
+        private readonly Action<Actor> _onFixedUpdate = x => x.FixedUpdate();
+
         internal interface IMatcher<T, TComparer>
         {
             T Invoke(Actor actor, TComparer comparer);
@@ -261,51 +267,38 @@ namespace Engine
 
         internal void Awake()
         {
-            for (int i = 0; i < _rootActors.Count; i++)
-            {
-                var actor = _rootActors[i];
-                if (actor && actor.IsActiveInHierarchy)
-                    actor.Awake();
-            }
+            CallActorFunc(_onAwake);
         }
 
         internal void Start()
         {
-            for (int i = 0; i < _rootActors.Count; i++)
-            {
-                var actor = _rootActors[i];
-                if (actor && actor.IsActiveInHierarchy)
-                    actor.Start();
-            }
+            CallActorFunc(_onStart);
         }
 
         internal void Update()
         {
-            for (int i = 0; i < _rootActors.Count; i++)
-            {
-                var actor = _rootActors[i];
-                if (actor && actor.IsActiveInHierarchy)
-                    actor.Update();
-            }
+            CallActorFunc(_onUpdate);
         }
 
         internal void LateUpdate()
         {
-            for (int i = 0; i < _rootActors.Count; i++)
-            {
-                var actor = _rootActors[i];
-                if (actor && actor.IsActiveInHierarchy)
-                    actor.LateUpdate();
-            }
+            CallActorFunc(_onLateUpdate);
         }
 
         internal void FixedUpdate()
+        {
+            CallActorFunc(_onFixedUpdate);
+        }
+
+        private void CallActorFunc(Action<Actor> callback)
         {
             for (int i = 0; i < _rootActors.Count; i++)
             {
                 var actor = _rootActors[i];
                 if (actor && actor.IsActiveInHierarchy)
-                    actor.FixedUpdate();
+                {
+                    callback(actor);
+                }
             }
         }
 
