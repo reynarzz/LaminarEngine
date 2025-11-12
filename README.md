@@ -1,4 +1,4 @@
-# GFS (Game From Scratch). Work-in-progress
+# GFS (Game From Scratch). WIP
 
 ![Gameplay](Intro.gif)
 
