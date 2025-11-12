@@ -13,6 +13,17 @@ using System.Windows.Media;
 
 namespace GameAssetsEditor
 {
+    //-------------------------------------------------------------------------------------------------------
+    /* DISCLAIMER:
+     *        This is just a quick code sketch of the system, once the tool is in full production, it will
+     *        have a proper architecture, and clean usage of XAML. 
+     *        
+     *        If a recruiter, please do not take nothing inside "GameAssetsEditor" project into account yet.
+    */
+    //-------------------------------------------------------------------------------------------------------
+
+
+
     public partial class MainWindow : Window
     {
         private readonly string[] imageExtensions = { ".png", ".jpg", ".jpeg" };
