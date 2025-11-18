@@ -175,6 +175,11 @@ namespace Engine.Rendering
         internal void Clear()
         {
             _batchesPool.ClearPool();
+            _renderBuckets.Clear();
+            _sortedBuckets.Clear();
+
+            GfxDeviceManager.Current.DestroyResource(_sharedIndexBuffer);
+            Initialize();
         }
 
         private bool CanPushGeometry(Batch2D currentBatch, Renderer renderer, int vertexCount, Texture texture, Material material)

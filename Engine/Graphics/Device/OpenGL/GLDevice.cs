@@ -281,5 +281,13 @@ namespace Engine.Graphics.OpenGL
             var sourceFB = (source as GLFrameBuffer);
             sourceFB.BlitTo(target as GLFrameBuffer, color, depth);
         }
+
+        internal override void DestroyResource(GfxResource resource)
+        {
+            if(resource != null && resource.IsInitialized)
+            {
+                resource.Dispose();
+            }
+        }
     }
 }

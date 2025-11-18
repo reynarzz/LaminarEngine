@@ -76,22 +76,21 @@ namespace Engine.Graphics.OpenGL
             Bind();
             _vertBuffer.Update(descriptor.VertexDesc.BufferDesc);
             _vertBuffer.Bind();
-            if(_sharedBuffer != null)
-            {
-                _sharedBuffer.Bind();
-            }
+         
             if (descriptor.SharedIndexBuffer != null && descriptor.SharedIndexBuffer != _sharedBuffer)
             {
                 Debug.Error("Shared index buffer error");
                 throw new Exception("Different shared index buffer, please handle it");
             }
-
-            if (_indexBuffer != null)
+            if (_sharedBuffer != null)
+            {
+                _sharedBuffer.Bind();
+            }
+            else if (_indexBuffer != null)
             {
                 _indexBuffer.Update(descriptor.IndexDesc);
                 _indexBuffer.Bind();
             }
-
             Unbind();
         }
 

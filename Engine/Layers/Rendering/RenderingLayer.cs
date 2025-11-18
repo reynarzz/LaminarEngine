@@ -283,7 +283,7 @@ namespace Engine.Layers
             GfxDeviceManager.Current.Draw(_screenQuadDrawCallData);
         }
 
-        public static void Test_ClearBatches()
+        internal static void Test_ClearBatches()
         {
             _sceneBatches.Clear();
             _uiBatches.Clear();

@@ -12,7 +12,7 @@ namespace Engine.Graphics
     internal abstract class GfxResource : IDisposable, IResourceHandle
     {
         private bool _disposed = false;
-        public bool IsInitialized { get; protected set; } = false;
+        internal protected bool IsInitialized { get; protected set; } = false;
         internal protected virtual GfxResource[] SubResources { get; protected set; }
         public void Dispose()
         {

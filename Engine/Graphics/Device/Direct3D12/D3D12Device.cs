@@ -104,5 +104,10 @@ namespace Engine.Graphics
         {
             throw new NotImplementedException();
         }
+
+        internal override void DestroyResource(GfxResource resource)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

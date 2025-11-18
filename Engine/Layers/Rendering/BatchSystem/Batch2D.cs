@@ -337,7 +337,7 @@ namespace Engine.Rendering
 
         public void Dispose()
         {
-            Geometry.Dispose();
+            GfxDeviceManager.Current.DestroyResource(Geometry);
         }
 
         internal bool Contains(Renderer renderer)
