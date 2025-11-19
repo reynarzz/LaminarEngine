@@ -110,13 +110,6 @@ namespace Engine
             return _rootActors;
         }
 
-        internal void AddActor(Actor actor)
-        {
-            actor.Scene = new WeakReference<Scene>(this);
-            actor.Transform.Parent = null;
-            RegisterRootActor(actor);
-        }
-
         internal void RemoveActor(Actor actor)
         {
             if (actor.Transform.Parent != null)

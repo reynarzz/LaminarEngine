@@ -14,11 +14,12 @@ namespace Engine.Layers
     {
         // Samples: https://github.com/ikpil/Box2D.NET/tree/e68c8ff1fb9da8bd87a71159b13010c25eed76f8/src/Box2D.NET.Samples/Samples
 
-        private ContactsDispatcher _contactDispatcher;
+        private static ContactsDispatcher _contactDispatcher;
+        public static ContactsDispatcher ContactsDispatcher => _contactDispatcher;
+
         private float accumulator = 0f;
         private const float fixedTimeStep = 0.02f;
         private List<RigidBody2D> _rigidbody = new();
-
         public override void Initialize()
         {
             _contactDispatcher = new ContactsDispatcher();

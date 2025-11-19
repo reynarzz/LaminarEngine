@@ -54,7 +54,7 @@ namespace Engine
             base.OnDestroy();
 
             Transform.OnChanged -= Transform_OnChanged;
-
+            Debug.Warn("Destroy renderer");
             OnDestroyRenderer?.Invoke(this);
         }
     }

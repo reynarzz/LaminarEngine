@@ -18,6 +18,7 @@ namespace Engine
         public static void Test_LoadScene(Scene scene)
         {
             RenderingLayer.Test_ClearBatches();
+
             _scenesToDestroy.Add(ActiveScene);
             ActiveScene = scene;
         }

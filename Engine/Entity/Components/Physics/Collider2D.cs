@@ -1,4 +1,5 @@
 ﻿using Box2D.NET;
+using Engine.Layers;
 using Engine.Types;
 using Engine.Utils;
 using GlmNet;
@@ -48,6 +49,10 @@ namespace Engine
 
                 if (canChange && AreShapesValid())
                 {
+                    if (!value)
+                    {
+                        PhysicsLayer.ContactsDispatcher.NotifyColliderToRemove(this);
+                    }
                     ApplyToShapesSafe(shape =>
                     {
                         B2Shapes.b2Shape_SetFilter(shape, value ? _defaultFilter : default);
@@ -239,6 +244,7 @@ namespace Engine
             base.OnDestroy();
             if (RigidBody != null)
             {
+                PhysicsLayer.ContactsDispatcher.NotifyColliderToRemove(this);
                 RigidBody = null;
             }
             DestroyShape();

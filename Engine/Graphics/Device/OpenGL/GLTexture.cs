@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using static OpenGL.GL;
 
-
 namespace Engine.Graphics.OpenGL
 {
     internal class GLTexture : GLGfxResource<TextureDescriptor>
@@ -19,23 +18,12 @@ namespace Engine.Graphics.OpenGL
         {
             Bind();
 
-            fixed (byte* data = descriptor.Buffer) 
+            fixed (byte* data = descriptor.Buffer)
             {
-                // Upload data
-                glTexImage2D(
-                    GL_TEXTURE_2D,
-                    0,                  // mip level
-                    GL_RGBA,            // internal format
-                    descriptor.Width,
-                    descriptor.Height,
-                    0,                  // border
-                    GL_RGBA,            // format
-                    GL_UNSIGNED_BYTE,   // type
-                    data
-                );
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, descriptor.Width, descriptor.Height, 0,
+                             GL_RGBA, GL_UNSIGNED_BYTE, data);
             }
-            
-            // Set default filtering/wrapping
+
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
@@ -60,7 +48,7 @@ namespace Engine.Graphics.OpenGL
             return true;
         }
 
-        internal override unsafe void UpdateResource(TextureDescriptor descriptor) 
+        internal override unsafe void UpdateResource(TextureDescriptor descriptor)
         {
             Bind();
             fixed (void* data = descriptor.Buffer)
@@ -73,7 +61,7 @@ namespace Engine.Graphics.OpenGL
         /// <summary>
         /// Binds texture to first slot (0)
         /// </summary>
-        internal override void Bind() 
+        internal override void Bind()
         {
             Bind(0);
         }

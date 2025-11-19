@@ -11,6 +11,10 @@ namespace Engine
 {
     public class Actor : EObject
     {
+        public string Tag { get; set; }
+        public int Layer { get; set; } = 0;
+
+        internal WeakReference<Scene> Scene { get; }
         private List<Component> _components;
         internal List<Component> Components => _components;
         private List<IComponent> _toDeleteComponents = new();
@@ -25,8 +29,6 @@ namespace Engine
                 _transform = value;
             }
         }
-
-        internal WeakReference<Scene> Scene { get; set; }
 
         private bool _isEnabled = true;
         private bool _isActiveInHierarchy = true;
@@ -64,6 +66,20 @@ namespace Engine
             }
         }
 
+        private List<Component> _pendingToDeleteComponents;
+        private List<IComponent> _onAwakePendingComponents;
+        private List<IComponent> _onEnablePendingComponents;
+        private List<IComponent> _onStartPendingComponents;
+        private static readonly Action<IAwakeableComponent> _awakeAction = x => { if (x.Actor.IsActiveInHierarchy) x.OnAwake(); };
+        private static readonly Action<IEnabledComponent> _enabledAction = x => { if (x.Actor.IsActiveInHierarchy) x.OnEnabled(); };
+        private static readonly Action<IStartableComponent> _startAction = x => x.OnStart();
+        private static readonly Action<IUpdatableComponent> _updateAction = x => x.OnUpdate();
+        private static readonly Action<ILateUpdatableComponent> _lateUpdateAction = x => x.OnLateUpdate();
+        private static readonly Action<IFixedUpdatableComponent> _fixedUpdateAction = x => x.OnFixedUpdate();
+        private static readonly Func<Actor, List<IComponent>> _getAwakePending = a => a._onAwakePendingComponents;
+        private static readonly Func<Actor, List<IComponent>> _getEnablePending = a => a._onEnablePendingComponents;
+        private static readonly Func<Actor, List<IComponent>> _getStartPending = a => a._onStartPendingComponents;
+
         internal void RecalculateHierarchyActivation()
         {
             void UpdateActiveInHierarchy(Actor actor)
@@ -79,24 +95,6 @@ namespace Engine
 
             UpdateActiveInHierarchy(this);
         }
-
-        public string Tag { get; set; }
-
-        public int Layer { get; set; } = 0;
-
-        private List<Component> _pendingToDeleteComponents;
-        private List<IComponent> _onAwakePendingComponents;
-        private List<IComponent> _onEnablePendingComponents;
-        private List<IComponent> _onStartPendingComponents;
-        private static readonly Action<IAwakeableComponent> _awakeAction = x => { if (x.Actor.IsActiveInHierarchy) x.OnAwake(); };
-        private static readonly Action<IEnabledComponent> _enabledAction = x => { if (x.Actor.IsActiveInHierarchy) x.OnEnabled(); };
-        private static readonly Action<IStartableComponent> _startAction = x => x.OnStart();
-        private static readonly Action<IUpdatableComponent> _updateAction = x => x.OnUpdate();
-        private static readonly Action<ILateUpdatableComponent> _lateUpdateAction = x => x.OnLateUpdate();
-        private static readonly Action<IFixedUpdatableComponent> _fixedUpdateAction = x => x.OnFixedUpdate();
-        private static readonly Func<Actor, List<IComponent>> _getAwakePending = a => a._onAwakePendingComponents;
-        private static readonly Func<Actor, List<IComponent>> _getEnablePending = a => a._onEnablePendingComponents;
-        private static readonly Func<Actor, List<IComponent>> _getStartPending = a => a._onStartPendingComponents;
 
         public Actor() : this(string.Empty, string.Empty)
         {
@@ -125,7 +123,8 @@ namespace Engine
             _transform = AddComponent<Transform>();
 
             var scene = SceneManager.ActiveScene;
-            scene.AddActor(this);
+            Scene = new WeakReference<Scene>(scene);
+            scene.RegisterRootActor(this);
         }
 
         public Component AddComponent(Type type)
@@ -608,7 +607,7 @@ namespace Engine
                     actor.IsAlive = false;
                     actor.Scene.TryGetTarget(out var scene);
                     scene.RemoveActor(actor);
-                    actor.Scene = null;
+                    // actor.Scene = null;
                 }
 
                 OnDestroyEventNotify(this);

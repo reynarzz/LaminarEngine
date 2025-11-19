@@ -49,7 +49,7 @@ namespace Engine.Rendering
                 var hasSpaceLeftForAnother = (batch.MaxVertexSize - batch.VertexCount) > vertexToAdd;
                 //var hasSpaceLeftForAnother = batch.VertexCount > vertexToAdd && !batch.Contains(renderer);
 
-                if (isTotalSizeEnough && hasSpaceLeftForAnother && (batch.Material == mat || batch.Material == null) && (renderer.SortOrder == batch.SortOrder || !batch.IsActive))
+                if (isTotalSizeEnough && hasSpaceLeftForAnother && (batch.Material == mat || batch.Material == null) && ((renderer.SortOrder == batch.SortOrder || batch.SortOrder == int.MinValue) || !batch.IsActive))
                 {
                     batch.Initialize(renderer);
                     _batches.Sort((x, y) => x.SortOrder.CompareTo(y.SortOrder));
@@ -72,7 +72,7 @@ namespace Engine.Rendering
 
         private void OnBatchEmpty(Batch2D batch)
         {
-            // Moves empty batch to the end.
+            // Moves empty batch, and puts it to the end.
             _batches.Remove(batch);
             _batches.Add(batch);
             batch.Clear();
@@ -83,7 +83,7 @@ namespace Engine.Rendering
         // TODO: Delete all batches that are not being used for too long, and are also big.
         internal void ClearPool()
         {
-            foreach (var batch in _batches) 
+            foreach (var batch in _batches)
             {
                 batch.Dispose();
             }

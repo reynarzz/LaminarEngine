@@ -82,8 +82,8 @@ namespace Engine.Layers
         private readonly Action<ScriptBehavior, Collider2D> _onTriggerEnter = (x, y) => x.OnTriggerEnter2D(y);
         private readonly Action<ScriptBehavior, Collider2D> _onTriggerExit = (x, y) => x.OnTriggerExit2D(y);
         private readonly Action<ScriptBehavior, Collider2D> _onTriggerStay = (x, y) => x.OnTriggerStay2D(y);
-        private Action<Action<ScriptBehavior, Collision2D>, Collider2D, Collider2D> _collisionFuncEvent => OnCollision;
-        private Action<Action<ScriptBehavior, Collider2D>, Collider2D, Collider2D> _triggerFuncEvent => OnTrigger;
+        private readonly Action<Action<ScriptBehavior, Collision2D>, Collider2D, Collider2D> _collisionFuncEvent;
+        private readonly Action<Action<ScriptBehavior, Collider2D>, Collider2D, Collider2D> _triggerFuncEvent;
 
         private HashSet<CollisionKey> _contactEnter;
         private HashSet<CollisionKey> _contactExit;
@@ -106,46 +106,15 @@ namespace Engine.Layers
             _triggerEnter = new HashSet<CollisionKey>();
             _triggerExit = new HashSet<CollisionKey>();
 
+            _collisionFuncEvent = OnCollision;
+            _triggerFuncEvent = OnTrigger;
+
             _contactEnter.EnsureCapacity(200);
             _contactExit.EnsureCapacity(200);
             _triggerEnter.EnsureCapacity(100);
             _triggerExit.EnsureCapacity(100);
         }
 
-        public void IncrementCollision(Collider2D a, Collider2D b)
-        {
-            var key = new CollisionKey(a, b);
-
-            if (_contactCounts.TryGetValue(key, out var count))
-            {
-                var contact = _contactCounts[key];
-                contact.CollisionCount = count.CollisionCount + 1;
-                _contactCounts[key] = contact;
-            }
-            else
-            {
-                var contact = _contactCounts[key];
-                contact.CollisionCount = 1;
-                _contactCounts[key] = contact;
-
-            }
-        }
-
-        public void DecrementCollision(Collider2D a, Collider2D b)
-        {
-            var key = new CollisionKey(a, b);
-
-            if (_contactCounts.TryGetValue(key, out var count))
-            {
-                count.CollisionCount--;
-                if (count.CollisionCount <= 0)
-                    _contactCounts.Remove(key);
-                else
-                    _contactCounts[key] = count;
-            }
-        }
-
-      
         private bool GetCollisionKey(B2ShapeId shapeA, B2ShapeId shapeB, out CollisionKey key)
         {
             key = default;
@@ -164,6 +133,7 @@ namespace Engine.Layers
             return true;
         }
 
+        
         internal void Update()
         {
             // Contacts
@@ -308,8 +278,7 @@ namespace Engine.Layers
 
                 if (!found)
                 {
-                    Debug.Error($"Can't exit: '{exitCollision.colliderA.Name}' and {exitCollision.colliderB.Name}\n");
-                    int x = 0;
+                    Debug.Error($"Can't exit:");
                 }
 
                 if (enterCollision.WasEnterEventRaised)
@@ -321,7 +290,7 @@ namespace Engine.Layers
                         eventForwarder(exitEvent, enterCollision.colliderA, enterCollision.colliderB);
                         eventForwarder(exitEvent, enterCollision.colliderB, enterCollision.colliderA);
                     }
-                    else
+                    else if(enterCollision.colliderA && enterCollision.colliderB)
                     {
                         enterCollision.CollisionsCount--;
                         enterCollisions.Add(enterCollision);
@@ -332,8 +301,7 @@ namespace Engine.Layers
             exitCollisions.Clear();
         }
 
-
-        internal void NotifyColliderToDestroy(Collider2D currentCollider)
+        internal void NotifyColliderToRemove(Collider2D currentCollider)
         {
             // TODO: Implement early OnCollisionExit/OnTriggerExit
 
@@ -366,6 +334,17 @@ namespace Engine.Layers
             {
                 AddToExit(_contactEnter, _contactExit);
             }
+
+            RemovePairsContaining(_contactEnter, currentCollider);
+            RemovePairsContaining(_triggerEnter, currentCollider);
+
+            //RemovePairsContaining(_contactExit, currentCollider);
+            //RemovePairsContaining(_triggerExit, currentCollider);
+        }
+
+        private void RemovePairsContaining(HashSet<CollisionKey> keys, Collider2D collider)
+        {
+            keys.RemoveWhere(x => x.colliderA == collider || x.colliderB == collider);
         }
 
         private void OnCollision(Action<ScriptBehavior, Collision2D> action, Collider2D collA, Collider2D collB)

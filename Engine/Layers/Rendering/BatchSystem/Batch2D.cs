@@ -12,8 +12,7 @@ namespace Engine.Rendering
 {
     internal class Batch2D : IDisposable
     {
-        public int MaxVertexSize { get; }
-
+        internal int MaxVertexSize { get; }
         internal Material Material { get; private set; }
         internal GfxResource Geometry { get; }
         internal Texture[] Textures { get; }
@@ -55,14 +54,15 @@ namespace Engine.Rendering
         internal DrawMode DrawMode { get; set; } = DrawMode.Triangles;
         internal DrawType DrawType { get; set; } = DrawType.Indexed;
         internal mat4 WorldMatrix { get; set; } = mat4.identity();
-        public int SortOrder { get; set; }
-        public event Action<Batch2D> OnBatchEmpty;
+        internal int SortOrder { get; set; } = int.MinValue;
+        internal event Action<Batch2D> OnBatchEmpty;
+
+        private bool _isDirty;
+        private int _vertexOffset = int.MaxValue;
+        private Dictionary<Guid, RendererIds> _renderers;
 
         private GeometryDescriptor _geoDescriptor;
         private Vertex[] _verticesData;
-        public bool _isDirty;
-        private Dictionary<Guid, RendererIds> _renderers;
-        private int _vertexOffset = int.MaxValue;
         private struct RendererIds
         {
             public int RendererId;
@@ -116,16 +116,20 @@ namespace Engine.Rendering
 
         internal void Clear()
         {
-            SortOrder = 0;
+            SortOrder = int.MinValue;
             Material = null;
             _isDirty = false;
             IsActive = false;
+            _vertexOffset = int.MaxValue;
             _renderers.Clear();
+
 
             for (int i = 0; i < Textures.Length; i++)
             {
                 Textures[i] = null;
             }
+
+            SendGeometryUpdate();
         }
 
         internal void PushGeometry(Renderer renderer, Material material, Texture texture, int indicesCount, Span<Vertex> vertices)
@@ -217,7 +221,7 @@ namespace Engine.Rendering
 
             if (renderer.Mesh == null)
             {
-                // This is rendering quads, and no a custom mesh
+                // This is rendering quads, and not a custom mesh
                 rendererVerticesCount = 4;
                 rendererIndicesCount = 6;
             }
@@ -289,24 +293,29 @@ namespace Engine.Rendering
             // TODO: only update changed vertices
             if (_isDirty)
             {
-                var vertDataDescriptor = _geoDescriptor.VertexDesc.BufferDesc;
-
-                unsafe
-                {
-                    // vertDataDescriptor.Offset = sizeof(Vertex) * _vertexOffset;
-                    //vertDataDescriptor.Count = sizeof(Vertex) * (VertexCount - _vertexOffset);
-
-                    vertDataDescriptor.Offset = sizeof(Vertex) * 0;
-                    vertDataDescriptor.Count = sizeof(Vertex) * VertexCount;
-                }
-
-                (vertDataDescriptor as BufferDataDescriptor<Vertex>).Buffer = _verticesData;
-
-                GfxDeviceManager.Current.UpdateGeometry(Geometry, _geoDescriptor);
+                SendGeometryUpdate();
                 _vertexOffset = VertexCount;
             }
 
             _isDirty = false;
+        }
+
+        private void SendGeometryUpdate()
+        {
+            var vertDataDescriptor = _geoDescriptor.VertexDesc.BufferDesc;
+
+            unsafe
+            {
+                // vertDataDescriptor.Offset = sizeof(Vertex) * _vertexOffset;
+                //vertDataDescriptor.Count = sizeof(Vertex) * (VertexCount - _vertexOffset);
+
+                vertDataDescriptor.Offset = sizeof(Vertex) * 0;
+                vertDataDescriptor.Count = sizeof(Vertex) * VertexCount;
+            }
+
+            (vertDataDescriptor as BufferDataDescriptor<Vertex>).Buffer = _verticesData;
+
+            GfxDeviceManager.Current.UpdateGeometry(Geometry, _geoDescriptor);
         }
 
         internal bool CanPushGeometry(Renderer renderer, int vertexCount, Texture texture, Material mat)
