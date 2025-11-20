@@ -37,7 +37,7 @@ namespace Game
         private static UIText _coinCounterTest;
         private ItemsDatabase _itemsDatabase;
         private PauseMenu _pauseMenu;
-        
+
         public static Player Player { get; private set; }
         public static Material DefaultMaterial => _defaultSpriteMaterial;
 
@@ -58,14 +58,8 @@ namespace Game
         }
         private void InitializeMaterials()
         {
-            GetMaterial("DefaultSpriteMaterial", ref _defaultSpriteMaterial,
-                        "Shaders/SpriteVert.vert",
-                        "Shaders/SpriteFrag.frag");
-
-            GetMaterial("PlayerMaterial", ref _playerSpriteMaterial,
-                        "Shaders/SpriteVert.vert",
-                        "Shaders/SpriteFrag.frag");
-
+            _defaultSpriteMaterial = GetMaterial("DefaultSpriteMaterial", "Shaders/SpriteVert.vert", "Shaders/SpriteFrag.frag");
+            _playerSpriteMaterial = GetMaterial("PlayerMaterial", "Shaders/SpriteVert.vert", "Shaders/SpriteFrag.frag");
 
             var PlayerMatPass = _playerSpriteMaterial.Passes.ElementAt(0);
             PlayerMatPass.Stencil.Enabled = true;
@@ -99,10 +93,13 @@ namespace Game
             //LayerMask.TurnOn(GameLayers.PLAYER, GameLayers.Default);
         }
 
-        private void GetMaterial(string name, ref Material material, string vertexCode, string shaderCode)
+
+        private static Material GetMaterial(string name, string vertexCode, string shaderCode)
         {
-            material = new Material(new Shader(Assets.GetText(vertexCode).Text, Assets.GetText(shaderCode).Text));
+            var material = new Material(new Shader(Assets.GetText(vertexCode).Text, Assets.GetText(shaderCode).Text));
             material.Name = name;
+
+            return material;
         }
 
         private void InitializeWorld()
@@ -206,7 +203,7 @@ namespace Game
             string json = Assets.GetText(filepath).Text;
             string json2 = Assets.GetText(testPathNow + "/Test_Grass.ldtk").Text;
 
-            if(_tilemapMaterial == null)
+            if (_tilemapMaterial == null)
             {
                 _tilemapMaterial = new Material(new Shader(Assets.GetText("Shaders/SpriteVert.vert").Text, Assets.GetText("Shaders/SpriteFrag.frag").Text));
                 _tilemapMaterial.Name = "Tilemap material";
@@ -236,7 +233,7 @@ namespace Game
                         switch (entity.Identifier)
                         {
                             case "Enemy1":
-                                 GamePrefabs.Enemies.InstantiateKingPig(position, -1);
+                                GamePrefabs.Enemies.InstantiateKingPig(position, -1);
                                 break;
                             case "Coin":
                                 GamePrefabs.Collectibles.InstantiateCoin(position);

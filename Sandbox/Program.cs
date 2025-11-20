@@ -51,7 +51,7 @@ namespace Sandbox
                 }
             });
 #endif
-            new Engine.Engine().Initialize("The King", 1024, 576,
+            new Engine.Engine().Initialize("GFS", 1024, 576, new Color32(28, 28, 28, 255),
                                            typeof(TimeLayer),
                                            typeof(Input),
                                            typeof(GameApplication),

@@ -36,7 +36,7 @@ namespace Engine.Layers
                 Height = Window.Height,
             }), Window.Width, Window.Height);
 
-            ClearScreenToBlack();
+            ClearScreenToColor(Window.StartWindowColor);
 
             _pipelineFeatures = new PipelineFeatures();
             _screenPipelineFeatures = new PipelineFeatures();
@@ -92,7 +92,7 @@ namespace Engine.Layers
             if (!_mainCamera || !_mainCamera.IsEnabled)
             {
                 Debug.Warn("No cameras found in scene.");
-                ClearScreenToBlack();
+                ClearScreenToColor(Color.Black);
                 return;
             }
 
@@ -286,12 +286,12 @@ namespace Engine.Layers
             _uiBatches.Clear();
         }
 
-        private void ClearScreenToBlack()
+        private void ClearScreenToColor(Color color)
         {
             GfxDeviceManager.Current.SetViewport(new vec4(0, 0, Window.Width, Window.Height));
             GfxDeviceManager.Current.Clear(new ClearDeviceConfig()
             {
-                Color = Color.Black,
+                Color = color,
                 RenderTarget = _defaultSceneRenderTexture.NativeResource
             });
             GfxDeviceManager.Current.Present(_defaultSceneRenderTexture.NativeResource);

@@ -55,7 +55,7 @@ namespace Engine
                 GLFW.Glfw.SetWindowTitle(NativeWindow, _windowName);
             }
         }
-
+        public static Color StartWindowColor { get; private set; }
         internal static bool ShouldClose => _isInitialized && Glfw.WindowShouldClose(NativeWindow);
 
         public int MonitorCount => Glfw.Monitors.Length;
@@ -77,8 +77,9 @@ namespace Engine
             }
         }
 
-        internal Window(string name, int width, int height)
+        internal Window(string name, int width, int height, Color windowColor)
         {
+            StartWindowColor = windowColor;
             _windowName = name;
             Width = width;
             Height = height;
@@ -119,7 +120,7 @@ namespace Engine
             Glfw.SwapInterval(1);
             //Glfw.SetWindowAttribute(NativeWindow, WindowAttribute.Decorated, false);
 
-            GL.glClearColor(0, 0, 0, 1.0f);
+            GL.glClearColor(windowColor.R, windowColor.G, windowColor.B, 1.0f);
 
             GL.glClear(GL.GL_COLOR_BUFFER_BIT);
             SwapBuffers();

@@ -10,9 +10,13 @@ namespace Engine
     {
         private LayersManager _layersManager;
 
-        public Engine Initialize(string winName, int width, int height, params Type[] layers)
+        public Engine Initialize(string winName, int width, int height,  params Type[] layers)
         {
-            var win = new Window(winName, width, height);
+            return Initialize(winName, width, height, Color.Black, layers); 
+        }
+        public Engine Initialize(string winName, int width, int height, Color windowColor, params Type[] layers)
+        {
+            var win = new Window(winName, width, height, windowColor);
 
             Window.OnWindowChanged += (x, y) => _layersManager.Update();
             if (win.IsInitialized)
