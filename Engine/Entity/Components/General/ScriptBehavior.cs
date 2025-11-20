@@ -16,13 +16,17 @@ namespace Engine
         private readonly List<Coroutine> _coroutines = new();
         public virtual void OnAwake() { }
         public virtual void OnStart() { }
-        public virtual void OnUpdate()
+
+        void IUpdatableComponent.OnUpdate()
         {
             for (int i = 0; i < _coroutines.Count; i++)
             {
                 _coroutines[i].Update();
             }
+
+            OnUpdate();
         }
+        public virtual void OnUpdate() { }
 
         public virtual void OnLateUpdate() { }
         public virtual void OnFixedUpdate() { }
@@ -43,13 +47,13 @@ namespace Engine
 
         public void StopCoroutine(Coroutine coroutine)
         {
-
+            coroutine.Stop();
         }
         public void StopAllCoroutine()
         {
             foreach (var coroutine in _coroutines)
             {
-                coroutine.Stop();
+                StopCoroutine(coroutine);
             }
             _coroutines.Clear();
         }

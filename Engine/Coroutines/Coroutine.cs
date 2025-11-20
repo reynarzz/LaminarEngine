@@ -42,14 +42,9 @@ namespace Engine
 
             if (_currentInstruction == null || _currentInstruction.IsInstructionCompleted)
             {
-                Advance();
+                _advanced = true;
+                IsCompleted = _target.MoveNext() == false;
             }
-        }
-
-        private void Advance()
-        {
-            _advanced = true;
-            IsCompleted = _target.MoveNext() == false;
         }
 
         internal virtual void Stop()

@@ -16,6 +16,7 @@ namespace Game
         private Camera _camera;
         private FontAsset _defaultFont;
         private UIText _textLabel;
+        private UIText _textPresents;
         public override void OnAwake()
         {
             _camera = new Actor<Camera>("Camera").GetComponent<Camera>();
@@ -39,48 +40,53 @@ namespace Game
             //logo.Material = MaterialUtils.UIMaterial;
             //logo.Transform.Parent = panel.Transform;
 
-            _textLabel = new Actor("Text label").AddComponent<UIText>();
-            _textLabel.Material = MaterialUtils.SpriteMaterial;
-            _textLabel.Font = _defaultFont;
-            _textLabel.RectTransform.Pivot = vec2.Half;
-
-            _textLabel.Transform.Parent = panel.Transform;
-            _textLabel.Transform.LocalPosition = default;
+            _textLabel = GetText("Text label", panel.Transform);
             _textLabel.FontSize = 150;
-            _textLabel.SetText("");
-
-            StartCoroutine(WriteTitle("Reynarz"));
+            _textLabel.SetText("Reynarz");
+            _textLabel.Color = Color.Transparent;
+            _textLabel.Transform.LocalPosition = new vec3(0, -50);
+            _textPresents = GetText("subtitlePresents", panel.Transform);
+            _textPresents.Color = Color.Transparent;
+            _textPresents.FontSize = 50;
+            _textPresents.Transform.LocalPosition = new vec3(0, 50, 0);
+            _textPresents.SetText("Presents");
+            StartCoroutine(WriteTitle());
         }
 
-        private IEnumerator WriteTitle(string text)
+        private UIText GetText(string name, Transform parent)
         {
-            //var textWait = new WaitForSeconds(0.1f);
-            //for (int i = 0; i < test.Length; i++)
-            //{
-            //    _textLabel.Append(test[i]);
-            //    yield return textWait;
-            //}
+            var text = new Actor("Text label").AddComponent<UIText>();
+            text.Material = MaterialUtils.SpriteMaterial;
+            text.Font = _defaultFont;
+            text.RectTransform.Pivot = vec2.Half;
 
-            IEnumerator Lerp(Renderer2D renderer, Color to)
+            text.Transform.Parent = parent;
+            text.Transform.LocalPosition = default;
+
+            return text;
+        }
+        private IEnumerator WriteTitle()
+        {
+            IEnumerator Lerp(Color to, params Renderer2D[] renderer)
             {
                 float tLerp = 0;
-                var startColor = renderer.Color;
+                var startColor = renderer.Select(x => x.Color).ToList();
                 while (tLerp < 1.0f)
                 {
                     tLerp += Time.DeltaTime;
-                    renderer.Color = Color.Lerp(startColor, to, tLerp);
+                    for (int i = 0; i < startColor.Count; i++)
+                    {
+                        renderer[i].Color = Color.Lerp(startColor[i], to, tLerp);
+                    }
                     yield return 0;
                 }
             }
 
-            _textLabel.Color = Color.Transparent;
-            _textLabel.SetText(text);
-
-            yield return StartCoroutine(Lerp(_textLabel, Color.White));
-            
-            yield return new WaitForSeconds(1);
-
-            yield return StartCoroutine(Lerp(_textLabel, Color.Transparent));
+            yield return StartCoroutine(Lerp(Color.White, _textLabel));
+            yield return new WaitForSeconds(1f);
+            yield return StartCoroutine(Lerp(Color.White, _textPresents));
+            yield return new WaitForSeconds(1.5f);
+            yield return StartCoroutine(Lerp(Color.Transparent, _textLabel, _textPresents));
 
             OnComplete();
         }
