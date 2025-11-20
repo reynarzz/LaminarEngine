@@ -299,7 +299,7 @@ namespace Engine
             _children.Remove(transform);
         }
 
-        public override void OnDestroy()
+        protected internal override void OnDestroy()
         {
             base.OnDestroy();
             OnChanged = null;

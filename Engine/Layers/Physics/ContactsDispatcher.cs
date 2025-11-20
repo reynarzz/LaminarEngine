@@ -100,7 +100,6 @@ namespace Engine.Layers
 
         public ContactsDispatcher()
         {
-            _collisionData = new Collision2D();
             _contactEnter = new HashSet<CollisionKey>();
             _contactExit = new HashSet<CollisionKey>();
             _triggerEnter = new HashSet<CollisionKey>();
@@ -133,7 +132,7 @@ namespace Engine.Layers
             return true;
         }
 
-        
+
         internal void Update()
         {
             // Contacts
@@ -290,7 +289,7 @@ namespace Engine.Layers
                         eventForwarder(exitEvent, enterCollision.colliderA, enterCollision.colliderB);
                         eventForwarder(exitEvent, enterCollision.colliderB, enterCollision.colliderA);
                     }
-                    else if(enterCollision.colliderA && enterCollision.colliderB)
+                    else if (enterCollision.colliderA && enterCollision.colliderB)
                     {
                         enterCollision.CollisionsCount--;
                         enterCollisions.Add(enterCollision);
@@ -335,8 +334,10 @@ namespace Engine.Layers
                 AddToExit(_contactEnter, _contactExit);
             }
 
-            RemovePairsContaining(_contactEnter, currentCollider);
-            RemovePairsContaining(_triggerEnter, currentCollider);
+            //Debug.Log("Collision removed: ");
+            //RemovePairsContaining(_contactEnter, currentCollider);
+            //Debug.Log("Trigger removed: ");
+            //RemovePairsContaining(_triggerEnter, currentCollider);
 
             //RemovePairsContaining(_contactExit, currentCollider);
             //RemovePairsContaining(_triggerExit, currentCollider);
@@ -344,7 +345,18 @@ namespace Engine.Layers
 
         private void RemovePairsContaining(HashSet<CollisionKey> keys, Collider2D collider)
         {
-            keys.RemoveWhere(x => x.colliderA == collider || x.colliderB == collider);
+            int removed = keys.RemoveWhere(x => x.colliderA == collider || x.colliderB == collider);
+
+            Debug.Log(removed);
+        }
+
+        // Hack: helper to clear all when changing scenes.
+        internal void ClearCollisions()
+        {
+            _contactEnter.Clear();
+            _contactExit.Clear();
+            _triggerEnter.Clear();
+            _triggerExit.Clear();
         }
 
         private void OnCollision(Action<ScriptBehavior, Collision2D> action, Collider2D collA, Collider2D collB)

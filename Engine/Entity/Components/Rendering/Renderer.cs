@@ -49,7 +49,7 @@ namespace Engine
 
         internal virtual void Draw() { }
 
-        public override void OnDestroy()
+        protected internal override void OnDestroy()
         {
             base.OnDestroy();
 

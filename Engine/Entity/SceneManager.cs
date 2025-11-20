@@ -17,8 +17,6 @@ namespace Engine
 
         public static void Test_LoadScene(Scene scene)
         {
-            RenderingLayer.Test_ClearBatches();
-
             _scenesToDestroy.Add(ActiveScene);
             ActiveScene = scene;
         }
@@ -33,6 +31,8 @@ namespace Engine
             }
             if(_scenesToDestroy.Count > 0)
             {
+                RenderingLayer.Test_ClearBatches();
+                PhysicsLayer.ContactsDispatcher.ClearCollisions();
                 _scenesToDestroy.Clear();
             }
         }

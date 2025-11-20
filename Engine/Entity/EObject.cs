@@ -75,14 +75,14 @@ namespace Engine
             }
         }
 
-#if DEBUG
+#if DEBUG && SHOW_ENGINE_WARNS
         ~EObject()
         {
-            Debug.Info($"Mem Destroy: ({GetType().Name}, {_guid}), name: {Name}");
+            Debug.Warn($"Mem Destroy: ({GetType().Name}, {_guid}), name: {Name}");
         }
 #endif
 
-
+        protected internal virtual void OnDestroy() { }
         public bool IsValid()
         {
             return this;

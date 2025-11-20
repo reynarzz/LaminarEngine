@@ -19,5 +19,9 @@ namespace Engine
 
             NativeShader = GfxDeviceManager.Current.CreateShader(shaderDescriptor);
         }
+        protected internal override void OnDestroy()
+        {
+            GfxDeviceManager.Current.DestroyResource(NativeShader);
+        }
     }
 }

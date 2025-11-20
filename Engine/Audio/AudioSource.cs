@@ -199,7 +199,7 @@ namespace Engine
             return new AudioFormat() { Channels = clip.Channels, Format = (SampleFormat)clip.SampleFormat, SampleRate = clip.SampleRate };
         }
 
-        public override void OnDestroy()
+        protected internal override void OnDestroy()
         {
             base.OnDestroy();
 

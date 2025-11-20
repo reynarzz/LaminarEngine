@@ -49,41 +49,8 @@ namespace Game
             //ScreenGrabTest3();
 
             // FilmGrain();
-
-            WaterTest();
-            ParticleSystem();
             // TextRendering();
             Debug.Success("Game Layer");
-        }
-
-        private void ParticleSystem()
-        {
-            var particleSystem = new Actor<ParticleSystem2D, Move>("ParticleSystem").GetComponent<ParticleSystem2D>();
-            particleSystem.Transform.WorldPosition = new vec3(-34, -6);
-
-            particleSystem.EmitRate = 152;
-            particleSystem.ParticleLife = 3;
-            particleSystem.SortOrder = 17;
-            particleSystem.StartColor = Color.White;
-            particleSystem.EndColor = Color.White;// new Color(0, 0, 0, 0);
-            particleSystem.EndSize = new vec2(0, 0);
-            particleSystem.Spread = new vec2(0.0f, 0);
-            particleSystem.SimulationSpeed = 1;
-            particleSystem.StartSize = new vec2(0.3f);
-            particleSystem.IsWorldSpace = true;
-            particleSystem.AngularVelocity = 40;
-            var mainShader = new Shader(Assets.GetText("Shaders/SpriteVert.vert").Text, Assets.GetText("Shaders/SpriteFrag.frag").Text);
-
-            var mat1 = new Material(mainShader);
-            mat1.Name = "Particle material";
-            particleSystem.Material = mat1;
-
-            //var screenShader = new Shader(Assets.GetText("Shaders/VertScreenGrab.vert").Text, Assets.GetText("Shaders/ScreenGrabWobble.frag").Text);
-            //particleSystem.Material = new Material(screenShader);
-            //particleSystem.Material.GetPass(0).IsScreenGrabPass = true;
-
-            //particleSystem.Material.Passes.ElementAt(0).Blending.Enabled = false;
-            particleSystem.Sprite = new Sprite();
         }
 
         private void ScreenGrabTest()
@@ -113,37 +80,6 @@ namespace Game
         {
             var screenShader = new Shader(Assets.GetText("Shaders/ScreenVert.vert").Text, Assets.GetText("Shaders/FilmGrain.frag").Text);
             PostProcessingStack.Push(new PostProcessingSinglePass(screenShader));
-        }
-
-        private void WaterTest()
-        {
-            var waterActor = new Actor<SpriteRenderer>();
-            var renderer = waterActor.GetComponent<SpriteRenderer>();
-            renderer.SortOrder = 9;
-
-            var mainShader = new Shader(Assets.GetText("Shaders/SpriteVert.vert").Text, Assets.GetText("Shaders/WaterFrag.frag").Text);
-
-            renderer.Material = new Material(mainShader);
-
-            var pass = renderer.Material.Passes.ElementAt(0);
-            pass.Stencil.Enabled = true;
-            pass.Stencil.Func = StencilFunc.Equal;
-            pass.Stencil.Ref = 3;
-            pass.Stencil.ZFailOp = StencilOp.Keep;
-            renderer.Material.SetProperty("uWaterColor", new vec3(0.2f, 0.4f, 0.7f));
-            renderer.Material.AddTexture("uParticles", Assets.GetTexture("particles.png"));
-
-            var pass2 = renderer.Material.PushPass(mainShader);
-            pass2.IsScreenGrabPass = true;
-            pass2.Stencil.Enabled = true;
-            pass2.Stencil.Func = StencilFunc.NotEqual;
-            pass2.Stencil.Ref = 3;
-            pass2.Stencil.ZFailOp = StencilOp.Keep;
-
-            renderer.Material.SetProperty(1, "uWaterColor", new vec3(0.1f, 0.50f, 0.84f));
-
-            waterActor.Transform.LocalScale = new vec3(10, 3, 1);
-            waterActor.Transform.LocalPosition = new vec3(2.5f, -11, 1);
         }
 
         public override void Close() { }

@@ -237,7 +237,7 @@ namespace Engine
         }
 
 
-        public override void OnDestroy()
+        protected internal override void OnDestroy()
         {
             base.OnDestroy();
             Window.OnWindowChanged -= OnWindowChanged;

@@ -340,7 +340,7 @@ namespace Engine
             _shouldUpdatePreTransformation = true;
         }
 
-        public override void OnDestroy()
+        protected internal override void OnDestroy()
         {
             base.OnDestroy();
 

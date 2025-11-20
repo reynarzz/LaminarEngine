@@ -239,7 +239,7 @@ namespace Engine
             return true;
         }
 
-        public override void OnDestroy()
+        protected internal override void OnDestroy()
         {
             base.OnDestroy();
             if (RigidBody != null)
