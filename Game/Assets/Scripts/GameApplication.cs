@@ -42,15 +42,13 @@ namespace Game
 
         public override void Initialize()
         {
-            new Actor<GameManager>("GameManager");
-
+            new Actor<LaunchScreen>("Launch Screen");
             //PostProcessingStack.Push(new BloomPostProcessing());
             //ScreenGrabTest();
             //ScreenGrabTest3();
 
             // FilmGrain();
             // TextRendering();
-            Debug.Success("Game Layer");
         }
 
         private void ScreenGrabTest()

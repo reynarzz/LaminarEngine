@@ -66,7 +66,7 @@ namespace Engine
         public int Priority { get; set; } = 0;
         public float NearPlane { get; set; } = 0.1f;
         public float FarPlane { get; set; } = 100;
-        public Color BackgroundColor { get; set; } = new(1, 1, 1, 1);
+        public Color BackgroundColor { get; set; } = Color.Black;
         public RenderTexture RenderTexture { get; set; }
 
         private CameraProjectionMode _projectionMode;

@@ -30,10 +30,25 @@ namespace Engine.Layers
 
         public override void Initialize()
         {
-            _sceneBatches = new Batcher2D(Consts.Graphics.MAX_QUADS_PER_BATCH);
-            _uiBatches = new Batcher2D(Consts.Graphics.MAX_QUADS_PER_BATCH);
+            _defaultSceneRenderTexture = new RenderTexture(GfxDeviceManager.Current.CreateRenderTarget(new RenderTargetDescriptor()
+            {
+                Width = Window.Width,
+                Height = Window.Height,
+            }), Window.Width, Window.Height);
+
+            ClearScreenToBlack();
+
             _pipelineFeatures = new PipelineFeatures();
             _screenPipelineFeatures = new PipelineFeatures();
+            _screenGrabTarget = new RenderTexture(GfxDeviceManager.Current.CreateRenderTarget(new RenderTargetDescriptor()
+            {
+                Width = Window.Width,
+                Height = Window.Height,
+            }), Window.Width, Window.Height);
+
+            _sceneBatches = new Batcher2D(Consts.Graphics.MAX_QUADS_PER_BATCH);
+            _uiBatches = new Batcher2D(Consts.Graphics.MAX_QUADS_PER_BATCH);
+           
             _renderers = new();
             _UIElementRenderers = new();
             _drawCallData = new DrawCallData()
@@ -47,19 +62,7 @@ namespace Engine.Layers
                 Textures = new GfxResource[GfxDeviceManager.Current.GetDeviceInfo().MaxValidTextureUnits],
                 Uniforms = new UniformValue[Consts.Graphics.MAX_UNIFORMS_PER_DRAWCALL],
             };
-
-            _screenGrabTarget = new RenderTexture(GfxDeviceManager.Current.CreateRenderTarget(new RenderTargetDescriptor()
-            {
-                Width = Window.Width,
-                Height = Window.Height,
-            }), Window.Width, Window.Height);
-
-            _defaultSceneRenderTexture = new RenderTexture(GfxDeviceManager.Current.CreateRenderTarget(new RenderTargetDescriptor()
-            {
-                Width = Window.Width,
-                Height = Window.Height,
-            }), Window.Width, Window.Height);
-
+            
             _screenGeometry = GraphicsHelper.GetScreenQuadGeometry();
 
             Window.OnWindowChanged += OnUpdateScreenGrabPass;
@@ -89,13 +92,7 @@ namespace Engine.Layers
             if (!_mainCamera || !_mainCamera.IsEnabled)
             {
                 Debug.Warn("No cameras found in scene.");
-                GfxDeviceManager.Current.SetViewport(new vec4(0, 0, Window.Width, Window.Height));
-                GfxDeviceManager.Current.Clear(new ClearDeviceConfig() 
-                { 
-                    Color = new Color(0, 0, 0, 1), 
-                    RenderTarget = _defaultSceneRenderTexture.NativeResource 
-                });
-                GfxDeviceManager.Current.Present(_defaultSceneRenderTexture.NativeResource);
+                ClearScreenToBlack();
                 return;
             }
 
@@ -287,6 +284,17 @@ namespace Engine.Layers
         {
             _sceneBatches.Clear();
             _uiBatches.Clear();
+        }
+
+        private void ClearScreenToBlack()
+        {
+            GfxDeviceManager.Current.SetViewport(new vec4(0, 0, Window.Width, Window.Height));
+            GfxDeviceManager.Current.Clear(new ClearDeviceConfig()
+            {
+                Color = Color.Black,
+                RenderTarget = _defaultSceneRenderTexture.NativeResource
+            });
+            GfxDeviceManager.Current.Present(_defaultSceneRenderTexture.NativeResource);
         }
         public override void Close()
         {

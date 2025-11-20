@@ -25,7 +25,6 @@ namespace Engine.Layers
         internal virtual void UpdateLayer() { }
         public virtual void OnPause() { }
         public virtual void OnResume() { }
-
         public virtual void OnEvent(LayerEvent currentEvent) { }
     }
 }

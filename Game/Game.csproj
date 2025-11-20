@@ -12,8 +12,10 @@
 	<ItemGroup>
 		<Compile Remove="Characters\**" />
 		<Compile Remove="Library\**" />
+		<Compile Remove="obj\**" />
 		<EmbeddedResource Remove="Characters\**" />
 		<EmbeddedResource Remove="Library\**" />
+		<EmbeddedResource Remove="obj\**" />
 		<None Remove="Characters\**" />
 		<None Remove="Library\**" />
 		<None Remove="**\*.mt" />
@@ -23,10 +25,11 @@
 		<None Remove="**\*.jpg" />
 		<None Remove="**\*.zip" />
 		<None Remove="**\*.ldtk" />
+		<None Remove="obj\**" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Include="Assets\Inventory\Items\PoisonAmmoItem.cs" />
+	  <None Include="Assets\Scripts\Inventory\Items\PoisonAmmoItem.cs" />
 	</ItemGroup>
 
 	<ItemGroup>

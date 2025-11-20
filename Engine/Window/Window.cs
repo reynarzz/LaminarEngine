@@ -13,8 +13,8 @@ namespace Engine
     public class Window
     {
         public static bool IsFullScreen { get; private set; }
-        public static int Width { get; private set; } = 920;
-        public static int Height { get; private set; } = 600;
+        public static int Width { get; private set; }
+        public static int Height { get; private set; }
 
         private static int _startWidth;
         private static int _startHeight;
@@ -91,20 +91,20 @@ namespace Engine
                 return;
 
             Glfw.WindowHint(Hint.OpenglProfile, Profile.Core);
-            Glfw.WindowHint(Hint.ContextVersionMajor, 4);
+            Glfw.WindowHint(Hint.ContextVersionMajor, 3);
             Glfw.WindowHint(Hint.ContextVersionMinor, 2);
             Glfw.WindowHint(Hint.Resizable, false);
-
+            Glfw.WindowHint(Hint.Visible, false);
+            
             try
             {
-                NativeWindow = Glfw.CreateWindow(Width, Height, name, default, default);
+                NativeWindow = Glfw.CreateWindow(Width, Height, name, GLFW.Monitor.None, default);
             }
             catch
             {
                 _isInitialized = false;
                 return;
             }
-
             // Create a window
             if (NativeWindow == GLFW.Window.None)
             {
@@ -116,7 +116,17 @@ namespace Engine
 
             GL.Import(Glfw.GetProcAddress);
             Glfw.SetFramebufferSizeCallback(NativeWindow, (win, width, height) => SetWindowSize(width, height));
-            // Glfw.SwapInterval(0);
+            Glfw.SwapInterval(1);
+            //Glfw.SetWindowAttribute(NativeWindow, WindowAttribute.Decorated, false);
+
+            GL.glClearColor(0, 0, 0, 1.0f);
+
+            GL.glClear(GL.GL_COLOR_BUFFER_BIT);
+            SwapBuffers();
+
+            Glfw.ShowWindow(NativeWindow);
+            //Glfw.SetWindowAttribute(NativeWindow, WindowAttribute.Decorated, true);
+            Glfw.RequestWindowAttention(NativeWindow);
         }
 
         internal static void SwapBuffers()
@@ -128,8 +138,8 @@ namespace Engine
         {
             var mode = Glfw.GetVideoMode(Glfw.PrimaryMonitor);
 
-            Width = Math.Clamp(width, 1, mode.Width);
-            Height = Math.Clamp(height, 1, mode.Height);
+            Width = Math.Clamp(width, 100, mode.Width);
+            Height = Math.Clamp(height, 100, mode.Height);
 
             Glfw.SetWindowSize(NativeWindow, Width, Height);
 
@@ -189,8 +199,6 @@ namespace Engine
                     Height,
                     0
                 );
-
-
             }
         }
     }
