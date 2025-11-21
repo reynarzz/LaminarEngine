@@ -128,7 +128,7 @@ namespace Game
             return new AnimationState(name, clip);
         }
 
-        public sealed override void OnTriggerEnter2D(Collider2D collider)
+        protected sealed override void OnTriggerEnter2D(Collider2D collider)
         {
             if (collider.Actor.Layer == _config.TargetLayer)
             {
@@ -144,7 +144,7 @@ namespace Game
             }
         }
 
-        public sealed override void OnTriggerExit2D(Collider2D collider)
+        protected sealed override void OnTriggerExit2D(Collider2D collider)
         {
             if (collider.Actor.Layer == _config.TargetLayer)
             {

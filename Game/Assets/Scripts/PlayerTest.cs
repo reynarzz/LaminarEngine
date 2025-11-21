@@ -65,7 +65,7 @@ namespace Game
             // _audioSource.Mixer.Mute = true;
 
             Debug.Log("Mixer: " + AudioMixer.Master.Name + ", is master: " + AudioMixer.Master.IsMaster);
-            Debug.Log("Mixer: " + _audioSource.Mixer.Name + ", is master: "+ _audioSource.Mixer.IsMaster);
+            Debug.Log("Mixer: " + _audioSource.Mixer.Name + ", is master: " + _audioSource.Mixer.IsMaster);
 
             //var reverb = _audioSource.Mixer.AddAudioFX<ReverbAudioFX>();
             //reverb.RoomSize = 30;
@@ -74,9 +74,9 @@ namespace Game
             _jumpSfx = Assets.GetAudioClip("Audio/HALFTONE/Gameplay/Jump_3.wav");
             _attackSfx = Assets.GetAudioClip("Audio/HALFTONE/Gameplay/Slash_1.wav");
             _walkFx = [Assets.GetAudioClip("Audio/HALFTONE/UI/2. Clicks/Click_4.wav"),
-                Assets.GetAudioClip("Audio/HALFTONE/UI/2. Clicks/Click_5.wav"), 
+                Assets.GetAudioClip("Audio/HALFTONE/UI/2. Clicks/Click_5.wav"),
                 Assets.GetAudioClip("Audio/HALFTONE/UI/2. Clicks/Click_10.wav")];
-            
+
             var basePath = "KingsAndPigsSprites/01-King Human/";
             var pTexture = Assets.GetTexture(basePath + "Run (78x58).png");
             var pTexture2 = Assets.GetTexture(basePath + "Idle (78x58).png");
@@ -173,7 +173,7 @@ namespace Game
                     }
                 }
 
-               
+
             }
             else if (!_attacking && Input.GetKey(KeyCode.D))
             {
@@ -193,7 +193,7 @@ namespace Game
                         _audioSource.PlayOneShot(_walkFx[0], 0.23f);
                         _waklFxSound = true;
                     }
-                    else if(!isFootDownFrame)
+                    else if (!isFootDownFrame)
                     {
                         _waklFxSound = false;
                     }
@@ -231,7 +231,7 @@ namespace Game
                 _animation.Play();
             }
 
-           
+
 
 #if DEBUG
             if (Input.GetKeyDown(KeyCode.I))
@@ -320,7 +320,7 @@ namespace Game
                 Debug.DrawRay(origin2, -Transform.Up * length, color2);
             }
         }
-        public override void OnCollisionEnter2D(Collision2D collision)
+        protected override void OnCollisionEnter2D(Collision2D collision)
         {
             //List<ContactPoint2D> contacts = null;
             //collision.GetContacts(ref contacts);
@@ -340,16 +340,16 @@ namespace Game
             //platform.Transform.WorldPosition = new vec3(-10, 5, 0);
         }
 
-        public override void OnCollisionExit2D(Collision2D collision)
+        protected override void OnCollisionExit2D(Collision2D collision)
         {
             //Debug.Info("Player Collision -exit: " + collision.OtherCollider.Name);
         }
 
-        public override void OnCollisionStay2D(Collision2D collision)
+        protected override void OnCollisionStay2D(Collision2D collision)
         {
             //Debug.Info("Player Collision stay: " + collision.OtherCollider.Name);
         }
-        public override void OnTriggerEnter2D(Collider2D collider)
+        protected override void OnTriggerEnter2D(Collider2D collider)
         {
             Debug.Log("On trigger enter: " + collider.Name);
             //Debug.Log("Destroy");

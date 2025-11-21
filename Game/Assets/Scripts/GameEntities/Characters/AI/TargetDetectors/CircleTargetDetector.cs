@@ -20,8 +20,7 @@ namespace Game
             _collider.Radius = 5;
         }
 
-        
-        public override void OnTriggerStay2D(Collider2D collider)
+        protected override void OnTriggerStay2D(Collider2D collider)
         {
             if (collider.Actor.Layer == LayerMask.NameToLayer(GameLayers.PLAYER)) 
             {
@@ -34,7 +33,7 @@ namespace Game
             }
         }
 
-        public override void OnTriggerExit2D(Collider2D collider)
+        protected override void OnTriggerExit2D(Collider2D collider)
         {
             if (collider.Actor.Layer == LayerMask.NameToLayer(GameLayers.PLAYER)) 
             {

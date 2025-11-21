@@ -70,8 +70,8 @@ namespace Engine.Layers
 
         private void OnUpdateScreenGrabPass(int width, int height)
         {
-            var w = _mainCamera.RenderTexture?.Width ?? width;
-            var h = _mainCamera.RenderTexture?.Height ?? height;
+            var w = _mainCamera?.RenderTexture?.Width ?? width;
+            var h = _mainCamera?.RenderTexture?.Height ?? height;
 
             _screenGrabTarget.UpdateTarget(w, h);
             _defaultSceneRenderTexture.UpdateTarget(w, h);
@@ -116,7 +116,7 @@ namespace Engine.Layers
 
             SceneManager.ActiveScene.FindAll(_UIElementRenderers, x =>
             {
-                return x.IsEnabled && x is UIElement;
+                return x.IsEnabled && x is UIGraphicsElement;
             });
 
             var batches = _sceneBatches.GetBatches(_renderers);

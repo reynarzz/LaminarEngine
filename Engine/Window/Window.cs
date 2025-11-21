@@ -21,6 +21,9 @@ namespace Engine
         private static string _windowName = "Game";
         public static event Action<int, int> OnWindowChanged;
         private static bool _isInitialized = false;
+        private static bool dragging = false;
+        private static double startCursorX, startCursorY;
+        private static int startWinX, startWinY;
 
         private static bool _isMouseVisible = true;
         public static bool MouseVisible
@@ -77,6 +80,37 @@ namespace Engine
             }
         }
 
+        private static void OnMouseButton(IntPtr window, GLFW.MouseButton button, GLFW.InputState state, GLFW.ModifierKeys modifiers)
+        {
+            if (button != GLFW.MouseButton.Left) return;
+
+            if (state == GLFW.InputState.Press)
+            {
+                dragging = true;
+
+                Glfw.GetCursorPosition(NativeWindow, out startCursorX, out startCursorY);
+                Glfw.GetWindowPosition(NativeWindow, out startWinX, out startWinY);
+            }
+            else if (state == GLFW.InputState.Release)
+            {
+                dragging = false;
+            }
+        }
+
+        private static void OnCursorPos(IntPtr window, double xpos, double ypos)
+        {
+            if (!dragging) return;
+
+            Glfw.GetCursorPosition(NativeWindow, out double curX, out double curY);
+
+            double dx = curX - startCursorX;
+            double dy = curY - startCursorY;
+
+            int newX = (int)(startWinX + dx);
+            int newY = (int)(startWinY + dy);
+
+            Glfw.SetWindowPosition(NativeWindow, newX, newY);
+        }
         internal Window(string name, int width, int height, Color windowColor)
         {
             StartWindowColor = windowColor;
@@ -114,11 +148,13 @@ namespace Engine
                 return;
             }
             Glfw.MakeContextCurrent(NativeWindow);
+            // Glfw.SetMouseButtonCallback(NativeWindow, OnMouseButton);
+           // Glfw.SetCursorPositionCallback(NativeWindow, OnCursorPos);
 
             GL.Import(Glfw.GetProcAddress);
             Glfw.SetFramebufferSizeCallback(NativeWindow, (win, width, height) => SetWindowSize(width, height));
             Glfw.SwapInterval(1);
-            //Glfw.SetWindowAttribute(NativeWindow, WindowAttribute.Decorated, false);
+           // Glfw.SetWindowAttribute(NativeWindow, WindowAttribute.Decorated, false);
 
             GL.glClearColor(windowColor.R, windowColor.G, windowColor.B, 1.0f);
 
@@ -155,7 +191,7 @@ namespace Engine
         public static void FullScreen(bool fullscreen, int monitorIndex = 0)
         {
             IsFullScreen = fullscreen;
-
+            // Glfw.SetWindowAttribute(NativeWindow, WindowAttribute.Decorated, !fullscreen);
             if (fullscreen)
             {
                 if (Glfw.Monitors.Length <= monitorIndex)
