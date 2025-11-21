@@ -32,14 +32,14 @@ namespace Game
     {
         public static Camera Camera { get; private set; }
         private static Material _defaultSpriteMaterial;
-        private Material _playerSpriteMaterial;
+        private static Material _stencylMaterial;
         private vec3 _playerStartPosTest;
         private static UIText _coinCounterTest;
         private ItemsDatabase _itemsDatabase;
         private PauseMenu _pauseMenu;
 
         public static Player Player { get; private set; }
-        public static Material DefaultMaterial => _defaultSpriteMaterial;
+        public static Material DefaultMaterial => _stencylMaterial;
 
         public static FontAsset DefaultFont { get; internal set; }
 
@@ -59,9 +59,9 @@ namespace Game
         private void InitializeMaterials()
         {
             _defaultSpriteMaterial = GetMaterial("DefaultSpriteMaterial", "Shaders/SpriteVert.vert", "Shaders/SpriteFrag.frag");
-            _playerSpriteMaterial = GetMaterial("PlayerMaterial", "Shaders/SpriteVert.vert", "Shaders/SpriteFrag.frag");
+            _stencylMaterial = GetMaterial("PlayerMaterial", "Shaders/SpriteVert.vert", "Shaders/SpriteFrag.frag");
 
-            var PlayerMatPass = _playerSpriteMaterial.Passes.ElementAt(0);
+            var PlayerMatPass = _stencylMaterial.Passes.ElementAt(0);
             PlayerMatPass.Stencil.Enabled = true;
             PlayerMatPass.Stencil.Func = StencilFunc.Always;
             PlayerMatPass.Stencil.Ref = 3;
@@ -141,7 +141,7 @@ namespace Game
                 LayerName = GameLayers.PLAYER,
                 SortOrder = 2,
                 StartPosition = _playerStartPosTest,
-                Material = _playerSpriteMaterial,
+                Material = _stencylMaterial,
                 StartingLife = 5,
                 SpriteLookDir = 1,
                 Ground = new GroundDetectionOptions()

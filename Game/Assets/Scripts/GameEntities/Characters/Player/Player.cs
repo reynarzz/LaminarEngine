@@ -10,6 +10,9 @@ namespace Game
 {
     internal class Player : Character
     {
+        private float _shootCooldown = 0.2f;
+        private float _shootCooldownTime = 0;
+
         public override void Init(CharacterConfig config)
         {
             Inventory = new PlayerInventory(config.InventoryMaxSlots, 4);
@@ -62,24 +65,17 @@ namespace Game
             var origin = Transform.WorldPosition + new vec3(Transform.LocalScale.x + Math.Sign(Transform.LocalScale.x) * 0.5f, 0.2f);
             var size = new vec2(2.5f, 3);
 
-            if (Input.GetKeyDown(KeyCode.F))
+            if (Input.GetKey(KeyCode.F) && _shootCooldownTime <= 0)
             {
-                var hit = Physics2D.BoxCast(origin, size, LayerMask.NameToBit(GameLayers.ENEMY));
-                if (Attack() && hit.isHit && IsCharacterAlive())
-                {
-                    Debug.Log("Attack enemy");
-                    hit.Collider.GetComponent<EnemyBase>().HitDamage(1);
-                }
+                _shootCooldownTime = _shootCooldown;
+                Attack();
             }
 
-            if (Physics2D.DrawColliders)
-            {
-                Debug.DrawBox(origin, size, Color.Green);
-            }
+            _shootCooldownTime -= Time.DeltaTime;
 
             if (Input.GetKeyDown(KeyCode.X))
             {
-                Death();
+                //Death();
             }
 
             if (Input.GetKeyDown(KeyCode.H))
@@ -106,10 +102,19 @@ namespace Game
             }
 
         }
-        //public override bool Attack(int index = 0)
-        //{
-        //    return true;
-        //}
+        public override bool Attack(int index = 0)
+        {
+            if (!IsCharacterAlive())
+                return false;
+
+            // TODO: use object pool
+            var bullet = new Actor<SpriteRenderer>("Bullet").AddComponent<Bullet>();
+
+            bullet.Shoot(vec2.Right * LookDir, 23, LayerMask.NameToBit(GameLayers.ENEMY) |
+                                                   LayerMask.NameToBit(GameLayers.Default));
+            bullet.Transform.WorldPosition = Transform.WorldPosition;
+            return true;
+        }
         public override void OnFixedUpdate()
         {
 

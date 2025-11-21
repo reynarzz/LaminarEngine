@@ -22,7 +22,9 @@ namespace Game
             _camera = new Actor<Camera>("Camera").GetComponent<Camera>();
             _defaultFont = Assets.Get<FontAsset>("Fonts/windows-bold[1].ttf");
             _camera.BackgroundColor = Color.Black;
-            CreateLaunchScreen();
+            //CreateLaunchScreen();
+
+            OnComplete();
         }
 
         private void CreateLaunchScreen()

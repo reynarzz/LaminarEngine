@@ -94,6 +94,7 @@ namespace Game
         public CharacterInventory Inventory { get; protected set; }
 
         public int SpriteLookDir => _characterConfig.SpriteLookDir;
+        public int LookDir { get; private set; }
         private CharacterConfig _characterConfig;
         private AnimationState _main;
         private AudioClip[] _groundSfx;
@@ -125,6 +126,7 @@ namespace Game
             Transform.WorldPosition = config.StartPosition;
             Inventory.Life = _characterConfig.StartingLife;
 
+            LookDir = _characterConfig.SpriteLookDir;
             InitAudio(config);
         }
 
@@ -327,10 +329,10 @@ namespace Game
             if (!IsCharacterAlive())
                 return;
             dir *= _characterConfig.SpriteLookDir;
-
             if (dir != 0)
             {
                 LookAt(dir);
+                LookDir = dir;
 
                 float targetX = _characterConfig.WalkSpeed * dir;
                 float accel = 100;
