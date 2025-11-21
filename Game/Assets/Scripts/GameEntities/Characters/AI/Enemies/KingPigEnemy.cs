@@ -15,7 +15,10 @@ namespace Game
         {
             base.Init(config);
 
-            _stateMachine = new StateMachine<KingPigEnemy>(this, [new PatrolState<KingPigEnemy>()]);
+            _stateMachine = new StateMachine<KingPigEnemy>(this, [new PatrolState<KingPigEnemy>(), 
+                                                                  new ChaseState<KingPigEnemy>(),
+                                                                  new AttackState<KingPigEnemy>(),
+                                                                  new CelebrateState<KingPigEnemy>()]);
             _stateMachine.SetInitialState<PatrolState<KingPigEnemy>>();
 
             const float fps = 11.5f;
@@ -51,6 +54,12 @@ namespace Game
             Transform.LocalScale = new vec3(5, 5, 5);
         }
 
+        public override void HitDamage(int amount)
+        {
+            base.HitDamage(amount);
+
+            _stateMachine.ChangeState<ChaseState<KingPigEnemy>>();
+        }
         public override void OnUpdate()
         {
             _stateMachine.OnUpdate();

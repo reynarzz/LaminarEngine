@@ -28,7 +28,7 @@ namespace Game
         {
             if (!_states.TryGetValue(typeof(TState), out var state))
             {
-                throw new InvalidOperationException($"State {typeof(TState).Name} not found in state machine.");
+                Debug.Error($"State {typeof(TState).Name} not found in state machine.");
             }
 
             _currentState?.OnExit();

@@ -13,7 +13,7 @@ namespace Game
         public float WaitToAttack { get; set; } = 0.5f;
         private float _currentTimeToAttack;
 
-        public AttackState() : base([new CelebrateState<T>()])
+        public AttackState() : base([])
         {
 
         }
@@ -31,12 +31,12 @@ namespace Game
                 return;
             }
 
-            var dir = (Context.Target.Transform.WorldPosition - Context.Transform.WorldPosition);
+            var dir = Context.Target.Transform.WorldPosition - Context.Transform.WorldPosition;
             Context.LookAt(Math.Sign(dir.x));
 
             if (!Context.Target.IsCharacterAlive())
             {
-                ChangeSubState<CelebrateState<T>>();
+                FSM.ChangeState<CelebrateState<T>>();
             }
             if (MathF.Abs(dir.y) > 2 && Context.Detector.IsTargetDetected)
             {
@@ -44,7 +44,7 @@ namespace Game
             }
             else if (Math.Abs(dir.x) >= 2 || !Context.Target.IsCharacterAlive())
             {
-                ReturnToParent();
+                FSM.ChangeState<ChaseState<T>>();
             }
 
             var origin = Context.Transform.WorldPosition + new vec3(Context.SpriteLookDir * Context.Transform.LocalScale.x +
@@ -81,7 +81,7 @@ namespace Game
 
                             if (!Context.Target.IsCharacterAlive())
                             {
-                                ChangeSubState<CelebrateState<T>>();
+                                FSM.ChangeState<CelebrateState<T>>();
                             }
                         });
                     }

@@ -20,8 +20,9 @@ namespace Game
             
         }
 
-        public void Shoot(vec2 dir, float speed, ulong layerMask)
+        public void Shoot(vec2 position, vec2 dir, float speed, ulong layerMask)
         {
+            Transform.WorldPosition = position;
             _shootDir = dir;
             _speed = speed;
             _layerMask = layerMask;
@@ -30,6 +31,8 @@ namespace Game
 
             var sprite = GetComponent<SpriteRenderer>();
             sprite.Material = GameManager.DefaultMaterial;
+
+            CheckCollision();
         }
 
         public override void OnUpdate()
@@ -38,6 +41,11 @@ namespace Game
         }
 
         public override void OnFixedUpdate()
+        {
+            CheckCollision();
+        }
+
+        private void CheckCollision()
         {
             var hit = Physics2D.BoxCast(Transform.WorldPosition, Transform.LocalScale, _layerMask);
             if (Physics2D.DrawColliders)
@@ -53,6 +61,7 @@ namespace Game
                     if (character.IsCharacterAlive())
                     {
                         character?.HitDamage(1);
+                        // character.GetComponent<RigidBody2D>().AddForce(_shootDir * 12, ForceMode2D.Impulse);
                     }
                     else
                     {

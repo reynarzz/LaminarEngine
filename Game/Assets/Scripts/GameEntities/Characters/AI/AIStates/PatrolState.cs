@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    internal class PatrolState<T> : StateBase<T> where T : EnemyBase
+    internal class PatrolState<T> : StateBase<T> where T : AICharacter
     {
+        private float _timeToMove = 1;
+        private float _timeMoving = 1;
         public PatrolState() : base([new ChaseState<T>()])
         {
             
@@ -32,8 +34,7 @@ namespace Game
                 
                 if (Context.Detector.IsTargetDetected && Context.Target.IsCharacterAlive())
                 {
-                    Context.Detector.Size = 10;
-                    ChangeSubState<ChaseState<T>>();
+                    FSM.ChangeState<ChaseState<T>>();
                 }
                 else
                 {
