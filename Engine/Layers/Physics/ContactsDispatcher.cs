@@ -268,77 +268,83 @@ namespace Engine.Layers
         }
 
         private void OnExit<T>(HashSet<CollisionKey> exitCollisions, HashSet<CollisionKey> enterCollisions,
-            Action<Action<ScriptBehavior, T>, Collider2D, Collider2D> eventForwarder, Action<ScriptBehavior, T> exitEvent)
+                               Action<Action<ScriptBehavior, T>, Collider2D, Collider2D> eventForwarder, 
+                               Action<ScriptBehavior, T> exitEvent)
         {
             for (int i = 0; i < exitCollisions.Count; i++)
             {
                 var exitCollision = exitCollisions.ElementAt(i);
-                var found = enterCollisions.TryGetValue(exitCollision, out var enterCollision);
-
-                if (!found)
-                {
-                    Debug.Error($"Can't exit:");
-                }
-
-                if (enterCollision.WasEnterEventRaised)
-                {
-                    enterCollisions.Remove(enterCollision);
-
-                    if (enterCollision.CollisionsCount - 1 <= 0)
-                    {
-                        eventForwarder(exitEvent, enterCollision.colliderA, enterCollision.colliderB);
-                        eventForwarder(exitEvent, enterCollision.colliderB, enterCollision.colliderA);
-                    }
-                    else if (enterCollision.colliderA && enterCollision.colliderB)
-                    {
-                        enterCollision.CollisionsCount--;
-                        enterCollisions.Add(enterCollision);
-                    }
-                }
+                OnExit(ref exitCollision, enterCollisions, eventForwarder, exitEvent);
             }
 
             exitCollisions.Clear();
         }
 
-        internal void NotifyColliderToRemove(Collider2D currentCollider)
+        private void OnExit<T>(ref CollisionKey exitCollision, HashSet<CollisionKey> enterCollisions, 
+                               Action<Action<ScriptBehavior, T>, Collider2D, Collider2D> eventForwarder,
+                               Action<ScriptBehavior, T> exitEvent)
         {
-            // TODO: Implement early OnCollisionExit/OnTriggerExit
+            var found = enterCollisions.TryGetValue(exitCollision, out var enterCollision);
 
-            /* Note: OnCollisionExit/OnTriggerExit can't be called automatically after a shape is
+#if SHOW_ENGINE_WARNS
+            if (!found)
+            {
+                Debug.Warn($"Collision exit already handled due deletion or disabling. A:{exitCollision.colliderA?.GetID()}, B:{exitCollision.colliderB?.GetID()}");
+            }
+#endif
+            if (enterCollision.WasEnterEventRaised)
+            {
+                enterCollisions.Remove(enterCollision);
+
+                if (enterCollision.CollisionsCount - 1 <= 0)
+                {
+                    eventForwarder(exitEvent, enterCollision.colliderA, enterCollision.colliderB);
+                    eventForwarder(exitEvent, enterCollision.colliderB, enterCollision.colliderA);
+                }
+                else if (enterCollision.colliderA && enterCollision.colliderB)
+                {
+                    enterCollision.CollisionsCount--;
+                    enterCollisions.Add(enterCollision);
+                }
+            }
+        }
+
+        /* Note: OnCollisionExit/OnTriggerExit can't be called automatically after a shape is
                destroyed when an actor/collider is destroyed because doing so will send invalid/destroyed actors.
                This function takes care of collecting all the OnCollisionExit/OnTriggerExit from collisions
                before the actors become invalid, so they can be called in the same frame.
-            */
-
-            void AddToExit(HashSet<CollisionKey> enter, HashSet<CollisionKey> exit)
+        */
+        internal void NotifyColliderToRemove(Collider2D currentCollider)
+        {
+            void AddToExit<T>(HashSet<CollisionKey> enter,
+                              Action<Action<ScriptBehavior, T>, Collider2D, Collider2D> eventForwarder,
+                              Action<ScriptBehavior, T> exitEvent)
             {
-                for (int i = 0; i < enter.Count; i++)
+                for (int i = enter.Count - 1; i >= 0; i--)
                 {
                     var enterKey = enter.ElementAt(i);
 
                     if (enterKey.colliderA == currentCollider ||
                         enterKey.colliderB == currentCollider)
                     {
-                        // Add all the colliders that should be notified of exit because of the incoming destruction of the actor/collider.
-                        exit.Add(enterKey);
+                        OnExit(ref enterKey, enter, eventForwarder, exitEvent);
+                        enter.Remove(enterKey);
                     }
                 }
             }
 
-            if (currentCollider.IsTrigger)
+            if (!currentCollider.IsTrigger)
             {
-                AddToExit(_triggerEnter, _triggerExit);
+                AddToExit(_contactEnter, _collisionFuncEvent, _onCollisionExit);
             }
             else
             {
-                AddToExit(_contactEnter, _contactExit);
+                AddToExit(_triggerEnter, _triggerFuncEvent, _onTriggerExit);
             }
-
             //Debug.Log("Collision removed: ");
             //RemovePairsContaining(_contactEnter, currentCollider);
             //Debug.Log("Trigger removed: ");
             //RemovePairsContaining(_triggerEnter, currentCollider);
-
             //RemovePairsContaining(_contactExit, currentCollider);
             //RemovePairsContaining(_triggerExit, currentCollider);
         }
@@ -346,7 +352,6 @@ namespace Engine.Layers
         private void RemovePairsContaining(HashSet<CollisionKey> keys, Collider2D collider)
         {
             int removed = keys.RemoveWhere(x => x.colliderA == collider || x.colliderB == collider);
-
             Debug.Log(removed);
         }
 
