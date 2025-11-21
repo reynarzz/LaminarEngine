@@ -310,7 +310,7 @@ namespace Engine.Layers
         }
 
         /* Note: OnCollisionExit/OnTriggerExit can't be called automatically after a shape is
-               destroyed when an actor/collider is destroyed because doing so will send invalid/destroyed actors.
+               destroyed when an actor/collider is destroyed because doing so could send invalid/destroyed actors.
                This function takes care of collecting all the OnCollisionExit/OnTriggerExit from collisions
                before the actors become invalid, so they can be called in the same frame.
         */

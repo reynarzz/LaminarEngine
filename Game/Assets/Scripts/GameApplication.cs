@@ -11,8 +11,6 @@ namespace Game
     public class GameApplication : ApplicationLayer
     {
         // -TODO:
-        /* Fix collision exit being called when the shape is destroyed, which causes the function to have a invalid actor,
-             This collisionsExit/TriggerExit should not be called with invalid actors/components*/
         // Fix: rigidbody marked as interpolate if is made parent of another that is not, after exiting, the interpolation is disabled.
         // Avoid the batch to take more texture slots that the system is supported, take into account materials texture count.
         // Fix: Batch2d vertices shift when an object is destroyed. 
@@ -43,23 +41,16 @@ namespace Game
         public override void Initialize()
         {
             new Actor<LaunchScreen>("Launch Screen");
-            //PostProcessingStack.Push(new BloomPostProcessing());
-            //ScreenGrabTest();
-            //ScreenGrabTest3();
+            PostProcessingStack.Push(new BloomPostProcessing());
+            ScreenGrabTest();
+            ScreenGrabTest3();
 
-            // FilmGrain();
-            // TextRendering();
+             // FilmGrain();
         }
 
         private void ScreenGrabTest()
         {
             var screenShader = new Shader(Assets.GetText("Shaders/ScreenVert.vert").Text, Assets.GetText("Shaders/CTRTv.frag").Text);
-            PostProcessingStack.Push(new PostProcessingSinglePass(screenShader));
-        }
-
-        private void ScreenGrabTest2()
-        {
-            var screenShader = new Shader(Assets.GetText("Shaders/ScreenVert.vert").Text, Assets.GetText("Shaders/GrayScale.frag").Text);
             PostProcessingStack.Push(new PostProcessingSinglePass(screenShader));
         }
 
