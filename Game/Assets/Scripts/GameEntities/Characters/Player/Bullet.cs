@@ -68,14 +68,15 @@ namespace Game
                         return;
                     }
                 }
-                Debug.Log("Hit");
                 Actor.Destroy(Actor);
+                // PoolObject();
             }
         }
 
         public void PoolObject()
         {
             _shoot = false;
+            Actor.IsActiveSelf = false;
         }
     }
 }
