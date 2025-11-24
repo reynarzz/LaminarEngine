@@ -1,4 +1,5 @@
 ﻿using Engine;
+using Engine.Graphics;
 using Engine.GUI;
 using Engine.Utils;
 using GlmNet;
@@ -37,6 +38,7 @@ namespace Game
         private static UIText _coinCounterTest;
         private ItemsDatabase _itemsDatabase;
         private PauseMenu _pauseMenu;
+        private static Material _tilemapMaterial;
 
         public static Player Player { get; private set; }
         public static Material DefaultMaterial => _stencylMaterial;
@@ -164,7 +166,7 @@ namespace Game
                 WalkSounds = ["Audio/HALFTONE/UI/2. Clicks/Click_4.wav",
                               "Audio/HALFTONE/UI/2. Clicks/Click_5.wav",
                               "Audio/HALFTONE/UI/2. Clicks/Click_10.wav"],
-                AttackSounds = ["Audio/HALFTONE/Gameplay/Slash_1.wav"],
+                AttackSounds = ["Audio/HALFTONE/Gameplay/Bullet_1.wav"],
                 JumpSounds = ["Audio/HALFTONE/Gameplay/Jump_3.wav"],
                 GroundSounds = ["Audio/HALFTONE/Gameplay/Hit_4.wav"]
 
@@ -180,8 +182,11 @@ namespace Game
             // GamePrefabs.Enemies.InstantiatePigStandard(Player.Transform.LocalPosition + vec3.Right * 2, -1);
 
             // LoadTilemap();
+            PostProcessingStack.Clear();
+            PostProcessingStack.Push(new BloomPostProcessing());
+            ScreenGrabTest();
+            ScreenGrabTest3();
             Canvas();
-
 
             Portal();
             Portal().Transform.LocalPosition = new vec3(33, -9.1f);
@@ -192,7 +197,6 @@ namespace Game
 
         }
 
-        private static Material _tilemapMaterial;
 
         private void LoadTilemap()
         {
@@ -464,6 +468,23 @@ namespace Game
 
             waterActor.Transform.LocalScale = new vec3(10, 3, 1);
             waterActor.Transform.LocalPosition = new vec3(2.5f, -11, 1);
+        }
+
+        private void ScreenGrabTest()
+        {
+            var screenShader = new Shader(Assets.GetText("Shaders/ScreenVert.vert").Text, Assets.GetText("Shaders/CTRTv.frag").Text);
+            PostProcessingStack.Insert(new PostProcessingSinglePass(screenShader), 0);
+        }
+
+        private void ScreenGrabTest3()
+        {
+            var vertex = Assets.GetText("Shaders/ScreenVert.vert").Text;
+            var screenShader = new Shader(vertex, Assets.GetText("Shaders/Ripple.frag").Text);
+            PostProcessingStack.Push(new PostProcessingSinglePass(screenShader));
+
+            var screenShader2 = new Shader(vertex, Assets.GetText("Shaders/ChromaticAberration.frag").Text);
+            PostProcessingStack.Push(new PostProcessingSinglePass(screenShader2));
+
         }
 
         internal static void UpdateCoinUI()

@@ -18,8 +18,8 @@ namespace Engine
         private static GeometryDescriptor _linesGeoDescriptor;
         private static Shader _shader;
 
-        private const int LINES_MAX_VERTICES = 1000000;
-        private const float CIRCLE_MAX_SEGMENTS = 20;
+        private const int LINES_MAX_VERTICES = 2000000;
+        private const float CIRCLE_MAX_SEGMENTS = 15;
 
         private static int _totalLinesVerticesToDraw = 0;
         private static int _uiTotalLinesVerticesToDraw = 0;
@@ -89,10 +89,7 @@ namespace Engine
             {
                 _initializedGraphics = true;
 
-                unsafe
-                {
-                    _linesGeometry = GraphicsHelper.GetEmptyGeometry<DebugVertex>(LINES_MAX_VERTICES, 0, ref _linesGeoDescriptor);
-                }
+                _linesGeometry = GraphicsHelper.GetEmptyGeometry<DebugVertex>(LINES_MAX_VERTICES, 0, ref _linesGeoDescriptor);
 
                 _shader = new Shader(DebugVertexShader, DebugFragmentShader);
                 _linesVertexPositions = new DebugVertex[LINES_MAX_VERTICES];
@@ -383,7 +380,7 @@ namespace Engine
             }
 #endif
         }
-        
+
         private static void DrawLines(ref int verticesToDrawCount)
         {
             (_linesGeometry as GLGeometry).Bind();

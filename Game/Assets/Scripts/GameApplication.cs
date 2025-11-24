@@ -34,35 +34,15 @@ namespace Game
         // Implement event in transform to know when scale changed, and get the delta scale.
         // Add 'CheckIfValidObject()' to all properties of the engine's components and actor.
         // Investigate why colliders are not freed from memory automatically.
-        // Game using both assets, and using stencil buffer to change beteen them sphere.
+        // Game using both assets, and using stencil buffer to change between them sphere.
         // Investigate why AudioMixer frees from memory automatically
 
 
         public override void Initialize()
         {
             new Actor<LaunchScreen>("Launch Screen");
-            PostProcessingStack.Push(new BloomPostProcessing());
-            ScreenGrabTest();
-            ScreenGrabTest3();
 
              // FilmGrain();
-        }
-
-        private void ScreenGrabTest()
-        {
-            var screenShader = new Shader(Assets.GetText("Shaders/ScreenVert.vert").Text, Assets.GetText("Shaders/CTRTv.frag").Text);
-            PostProcessingStack.Push(new PostProcessingSinglePass(screenShader));
-        }
-
-        private void ScreenGrabTest3()
-        {
-            var vertex = Assets.GetText("Shaders/ScreenVert.vert").Text;
-            var screenShader = new Shader(vertex, Assets.GetText("Shaders/Ripple.frag").Text);
-            PostProcessingStack.Push(new PostProcessingSinglePass(screenShader));
-
-            var screenShader2 = new Shader(vertex, Assets.GetText("Shaders/ChromaticAberration.frag").Text);
-            PostProcessingStack.Push(new PostProcessingSinglePass(screenShader2));
-
         }
 
         private void FilmGrain()

@@ -15,6 +15,7 @@ namespace Game
         private ulong _layerMask;
         public bool _shoot = false;
         private float _speed = 0;
+        private float _timeAlive = 1;
         public override void OnAwake()
         {
             
@@ -31,6 +32,7 @@ namespace Game
 
             var sprite = GetComponent<SpriteRenderer>();
             sprite.Material = GameManager.DefaultMaterial;
+            _timeAlive = 1;
 
             CheckCollision();
         }
@@ -38,6 +40,12 @@ namespace Game
         public override void OnUpdate()
         {
             Transform.WorldPosition += _shootDir * Time.DeltaTime * _speed;
+
+            // TODO: make it distance based instead.
+            if((_timeAlive -= Time.DeltaTime) <= 0)
+            {
+                PoolObject();
+            }
         }
 
         public override void OnFixedUpdate()
@@ -68,13 +76,14 @@ namespace Game
                         return;
                     }
                 }
-                Actor.Destroy(Actor);
-                // PoolObject();
+                PoolObject();
             }
         }
 
         public void PoolObject()
         {
+            Actor.Destroy(Actor);
+
             _shoot = false;
             Actor.IsActiveSelf = false;
         }

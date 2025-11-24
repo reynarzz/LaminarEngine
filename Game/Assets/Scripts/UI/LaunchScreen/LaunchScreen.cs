@@ -1,4 +1,5 @@
 ﻿using Engine;
+using Engine.Graphics;
 using Engine.GUI;
 using Engine.Utils;
 using GlmNet;
@@ -22,9 +23,16 @@ namespace Game
             _camera = new Actor<Camera>("Camera").GetComponent<Camera>();
             _defaultFont = Assets.Get<FontAsset>("Fonts/windows-bold[1].ttf");
             _camera.BackgroundColor = Color.Black;
-            //CreateLaunchScreen();
 
-            OnComplete();
+            PostProcessingStack.Push(new BloomPostProcessing());
+
+            PostProcessingStack.Push(new PostProcessingSinglePass(new Shader(Assets.GetText("Shaders/ScreenVert.vert").Text, Assets.GetText("Shaders/FilmGrain.frag").Text)));
+            PostProcessingStack.Push(new PostProcessingSinglePass(new Shader(Assets.GetText("Shaders/ScreenVert.vert").Text, Assets.GetText("Shaders/ScanLines.frag").Text)));
+
+
+            CreateLaunchScreen();
+
+            //OnComplete();
         }
 
         private void CreateLaunchScreen()
@@ -43,8 +51,8 @@ namespace Game
             //logo.Transform.Parent = panel.Transform;
 
             _textLabel = GetText("Text label", panel.Transform);
-            _textLabel.FontSize = 150;
-            _textLabel.SetText("Reynarz");
+            _textLabel.FontSize = 120;
+            _textLabel.SetText("Reynarz Games");
             _textLabel.Color = Color.Transparent;
             _textLabel.Transform.LocalPosition = new vec3(0, -50);
             _textPresents = GetText("subtitlePresents", panel.Transform);
