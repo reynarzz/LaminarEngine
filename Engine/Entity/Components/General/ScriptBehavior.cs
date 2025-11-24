@@ -63,7 +63,7 @@ namespace Engine
                 _coroutines.Remove(coroutine);
             }
         }
-        public void StopAllCoroutine()
+        public void StopAllCoroutines()
         {
             foreach (var coroutine in _coroutines)
             {

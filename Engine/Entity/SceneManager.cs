@@ -28,13 +28,14 @@ namespace Engine
         public static void LoadScene(string name)
         {
             _scenesToDestroy.Clear();
+            // Adds all scenes to destroy, except the 'DontDestroyOnLoadScene'
             for (int i = _scenes.Count - 1; i >= 1; --i)
             {
                 _scenesToDestroy.Add(_scenes[i]);
                 _scenes.RemoveAt(i);
             }
 
-            // TODO: Load scene from file
+            // TODO: Load scene from file (Probably will never be implemented since all scenes are built at runtime, without a editor)
             var scene = new Scene(name);
             ActiveScene = new WeakReference<Scene>(scene);
             _scenes.Add(scene);
@@ -81,8 +82,9 @@ namespace Engine
             }
             if (_scenesToDestroy.Count > 0)
             {
+                // Note: this is provisional.
                 RenderingLayer.Test_ClearBatches();
-                PhysicsLayer.ContactsDispatcher.ClearCollisions();
+                PhysicsLayer.Clear();
                 _scenesToDestroy.Clear();
             }
         }

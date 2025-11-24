@@ -15,11 +15,11 @@ namespace Engine.Layers
         // Samples: https://github.com/ikpil/Box2D.NET/tree/e68c8ff1fb9da8bd87a71159b13010c25eed76f8/src/Box2D.NET.Samples/Samples
 
         private static ContactsDispatcher _contactDispatcher;
-        public static ContactsDispatcher ContactsDispatcher => _contactDispatcher;
+        internal static ContactsDispatcher ContactsDispatcher => _contactDispatcher;
 
-        private float accumulator = 0f;
+        private static float _accumulator = 0f;
         private const float fixedTimeStep = 0.02f;
-        private List<RigidBody2D> _rigidbody = new();
+        private static List<RigidBody2D> _rigidbody = new();
         public override void Initialize()
         {
             _contactDispatcher = new ContactsDispatcher();
@@ -36,7 +36,7 @@ namespace Engine.Layers
 
         internal override void UpdateLayer()
         {
-            accumulator = Math.Min(accumulator + Time.DeltaTime, 0.25f);
+            _accumulator = Math.Min(_accumulator + Time.DeltaTime, 0.25f);
 
             // TODO: refactor, this is for fast prototyping
             _rigidbody.Clear();
@@ -47,7 +47,7 @@ namespace Engine.Layers
                 rigidbody.PreUpdateBody();
             }
 
-            while (accumulator >= fixedTimeStep)
+            while (_accumulator >= fixedTimeStep)
             {
                 _contactDispatcher.Update();
 
@@ -61,7 +61,7 @@ namespace Engine.Layers
                 }
 
                 B2Worlds.b2World_Step(PhysicWorld.WorldID, fixedTimeStep, 4);
-                accumulator -= fixedTimeStep;
+                _accumulator -= fixedTimeStep;
 
                 foreach (var rigidbody in _rigidbody)
                 {
@@ -72,14 +72,19 @@ namespace Engine.Layers
                 }
             }
 
-            float alpha = accumulator / fixedTimeStep;
+            float alpha = _accumulator / fixedTimeStep;
 
             foreach (var rigidbody in _rigidbody)
             {
                 rigidbody.CalculatePhysicsInterpolation(rigidbody.Transform, rigidbody.PrevLocalPosition, rigidbody.PrevLocalRotation, alpha);
             }
         }
-
+        internal static void Clear()
+        {
+            _accumulator = 0;
+            _rigidbody.Clear();
+            _contactDispatcher.ClearCollisions();
+        }
         public override void Close() { }
     }
 }
