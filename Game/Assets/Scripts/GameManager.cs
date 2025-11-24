@@ -127,16 +127,15 @@ namespace Game
             var camActor = new Actor("MainCamera");
 
             Camera = camActor.AddComponent<Camera>();
-            var follow = camActor.AddComponent<CameraFollow>();
-            follow.Target = Player.Transform;
+            var cameraFollow = camActor.AddComponent<CameraFollow>();
+            cameraFollow.Target = Player.Transform;
 
+            Camera.Transform.WorldPosition = new vec3(0,0,-12);
             Camera.BackgroundColor = new Color(0.2f, 0.2f, 0.2f, 1);
             Camera.OrthographicSize = 288.0f / 2.0f / 16.0f;
             Camera.RenderTexture = new RenderTexture(512 * 2, 288 * 2);
             // Camera.RenderTexture = new RenderTexture(512, 288);
 
-            Camera.Transform.WorldPosition = new vec3(Player.Transform.WorldPosition.x,
-                                                      Player.Transform.WorldPosition.y, -12);
 
             LoadTilemap();
 
@@ -177,6 +176,8 @@ namespace Game
             platform.Layer = LayerMask.NameToLayer(GameLayers.PLATFORM);
 
 
+            cameraFollow.SetOnTargetImmediate();
+
             // Debug.Log(ItemsDatabase.GetDatabaseSchemaCsv());
 
             // GamePrefabs.Enemies.InstantiatePigStandard(Player.Transform.LocalPosition + vec3.Right * 2, -1);
@@ -194,6 +195,7 @@ namespace Game
 
             WaterTest();
             ParticleSystem();
+
 
         }
 

@@ -27,14 +27,18 @@ namespace Game
             Move();
         }
 
+        public void SetOnTargetImmediate()
+        {
+            Transform.WorldPosition = new vec3(Target.WorldPosition.x, Target.WorldPosition.y, Transform.WorldPosition.z);
+        }
         private void Move()
         {
-
             if (!Target)
                 return;
 
             var camPos = Transform.WorldPosition;
-            var targetPos = new vec4(Target.GetRenderingWorldMatrix()[3]);
+            // var targetPos = new vec4(Target.GetRenderingWorldMatrix()[3]);
+            var targetPos = Target.Transform.WorldPosition;
 
             float left = camPos.x - deadZoneSize.x * 0.5f;
             float right = camPos.x + deadZoneSize.x * 0.5f;
