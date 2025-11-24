@@ -26,7 +26,7 @@ namespace Game
         private AudioClip _buttonAudioClip;
         private AudioClip _pauseAudioClip;
         private List<UIGraphicsElement> _graphics = new();
-        public override void OnStart()
+        public override void OnAwake()
         {
             _canvas = new Actor<AudioSource>("Pause menu Canvas").AddComponent<UICanvas>();
             _audioSource = _canvas.GetComponent<AudioSource>();

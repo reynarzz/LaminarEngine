@@ -25,14 +25,14 @@ namespace Game
             _camera.BackgroundColor = Color.Black;
 
             PostProcessingStack.Push(new BloomPostProcessing());
-
+            PostProcessingStack.Push(new PostProcessingSinglePass(new Shader(Assets.GetText("Shaders/ScreenVert.vert").Text, Assets.GetText("Shaders/ScreenGrabWobble.frag").Text)));
             PostProcessingStack.Push(new PostProcessingSinglePass(new Shader(Assets.GetText("Shaders/ScreenVert.vert").Text, Assets.GetText("Shaders/FilmGrain.frag").Text)));
             PostProcessingStack.Push(new PostProcessingSinglePass(new Shader(Assets.GetText("Shaders/ScreenVert.vert").Text, Assets.GetText("Shaders/ScanLines.frag").Text)));
 
 
-            // CreateLaunchScreen();
+            CreateLaunchScreen();
 
-            OnComplete();
+            //OnComplete();
         }
 
         private void CreateLaunchScreen()

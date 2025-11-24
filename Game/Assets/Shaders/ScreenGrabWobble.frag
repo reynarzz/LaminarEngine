@@ -13,8 +13,8 @@ uniform vec2 uScreenSize;
 uniform vec3 uTime;
 
 // Amount of wobble distortion
-uniform float uDistortionAmount = 0.0001;
-uniform float uColorSplit = 0.0012;
+uniform float uDistortionAmount = 0.0003;
+uniform float uColorSplit = 0.0017;
 uniform float uPixelationAmount = 0.0f;
 
 void main()
