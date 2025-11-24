@@ -29,10 +29,11 @@ namespace Game
             PostProcessingStack.Push(new PostProcessingSinglePass(new Shader(Assets.GetText("Shaders/ScreenVert.vert").Text, Assets.GetText("Shaders/FilmGrain.frag").Text)));
             PostProcessingStack.Push(new PostProcessingSinglePass(new Shader(Assets.GetText("Shaders/ScreenVert.vert").Text, Assets.GetText("Shaders/ScanLines.frag").Text)));
 
-
+#if DEBUG
+            OnComplete();
+#else
             CreateLaunchScreen();
-
-            //OnComplete();
+#endif
         }
 
         private void CreateLaunchScreen()

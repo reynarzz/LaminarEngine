@@ -51,17 +51,7 @@ namespace Sandbox
                 }
             });
 #endif
-            new Engine.Engine().Initialize("GFS", 1024, 576,
-                                           typeof(TimeLayer),
-                                           typeof(Input),
-                                           typeof(GameApplication),
-                                           typeof(MainThreadDispatcher),
-                                           typeof(SceneLayer),
-                                           typeof(AudioLayer),
-                                           typeof(PhysicsLayer),
-                                           typeof(RenderingLayer),
-                                           typeof(IOLayer)
-                                           ).Run();
+            new GFSEngine().Initialize<GameApplication>("GFS", 1024, 576).Run();
 
             _mutex.ReleaseMutex();
         }
