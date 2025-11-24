@@ -153,7 +153,7 @@ namespace Engine
             return list;
         }
 
-        internal static T Find<T, TMatcher, IComparer>(IComparer comparer) where TMatcher : struct, IMatcher<T, IComparer>
+        private static T Find<T, TMatcher, IComparer>(IComparer comparer) where TMatcher : struct, IMatcher<T, IComparer>
                                                                     where T : EObject
         {
             // NOTE: this is being called by functions that might modify the scene list, so using a foreach will cause an exception.

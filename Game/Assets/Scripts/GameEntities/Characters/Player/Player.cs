@@ -13,6 +13,7 @@ namespace Game
         private float _shootCooldown = 0.25f;
         private float _shootCooldownTime = 0;
         private float _bulletSpeed = 23;
+
         public override void Init(CharacterConfig config)
         {
             Inventory = new PlayerInventory(config.InventoryMaxSlots, 4);
@@ -104,6 +105,8 @@ namespace Game
         {
             if (!IsCharacterAlive())
                 return false;
+            PlayAttackSoundFx();
+
             var origin = Transform.WorldPosition + new vec3(Transform.LocalScale.x + Math.Sign(Transform.LocalScale.x) * 0.3f, -0.1f);
 
             // TODO: use object pool
