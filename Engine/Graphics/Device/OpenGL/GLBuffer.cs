@@ -35,7 +35,7 @@ namespace Engine.Graphics.OpenGL
                 return false;
             }
 
-            if (desc.GetBufferUnsafePtr().ToPointer() == null || desc.BufferLength == 0)
+            if (desc.BufferLength == 0 || desc.GetBufferUnsafePtr().ToPointer() == null)
             {
                 Debug.Error("Invalid buffer data (zero/null)");
 
@@ -43,12 +43,7 @@ namespace Engine.Graphics.OpenGL
             }
 
             Bind();
-
-            unsafe
-            {
-                glBufferData(Target, desc.BufferLength, desc.GetBufferUnsafePtr(), usage);
-            }
-
+            glBufferData(Target, desc.BufferLength, desc.GetBufferUnsafePtr(), usage);
             Unbind();
 
             return true;
@@ -57,10 +52,7 @@ namespace Engine.Graphics.OpenGL
         internal override void UpdateResource(BufferDataDescriptor desc)
         {
             Bind();
-            unsafe
-            {
-                glBufferSubData(Target, desc.Offset, desc.Count, desc.GetBufferUnsafePtr());
-            }
+            glBufferSubData(Target, desc.Offset, desc.Count, desc.GetBufferUnsafePtr());
             Unbind();
         }
     }

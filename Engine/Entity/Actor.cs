@@ -14,7 +14,7 @@ namespace Engine
         public string Tag { get; set; }
         public int Layer { get; set; } = 0;
 
-        internal WeakReference<Scene> Scene { get; }
+        internal WeakReference<Scene> Scene { get; private set; }
         private List<Component> _components;
         internal List<Component> Components => _components;
         private List<IComponent> _toDeleteComponents = new();
@@ -122,8 +122,8 @@ namespace Engine
             _onEnablePendingComponents = new();
             _transform = AddComponent<Transform>();
 
-            var scene = SceneManager.ActiveScene;
-            Scene = new WeakReference<Scene>(scene);
+            Scene = SceneManager.ActiveScene;
+            Scene.TryGetTarget(out var scene);
             scene.RegisterRootActor(this);
         }
 
@@ -425,12 +425,24 @@ namespace Engine
 
         public static IReadOnlyList<Actor> FindAllByTag(string tag)
         {
-            return SceneManager.ActiveScene.FindActorsByTag(tag);
+            return SceneManager.FindActorsByTag(tag);
         }
 
         public static IReadOnlyList<T> FindAllByType<T>(bool findDisabled = false) where T : Component
         {
-            return SceneManager.ActiveScene.FindAll<T>(findDisabled);
+            return SceneManager.FindAll<T>(findDisabled);
+        }
+
+        public static void DontDestroyOnLoad(Actor actor)
+        {
+            // Remove from current scene.
+            actor.Scene.TryGetTarget(out var scene);
+            scene.RemoveActor(actor);
+
+            // Add to 'DontDestroyOnLoad' scene.
+            SceneManager.DontDestroyOnLoadScene.TryGetTarget(out var dontDestroyOnLoadscene);
+            dontDestroyOnLoadscene.RegisterRootActor(actor);
+            actor.Scene = SceneManager.DontDestroyOnLoadScene;
         }
 
         private static void DestroyComponentNoNotify(Component component)
@@ -461,7 +473,7 @@ namespace Engine
             UpdateScriptBeginEvent(this, _getStartPending, _startAction);
         }
 
-        public void Update()
+        internal void Update()
         {
             UpdateScriptsFunction(this, _updateAction);
         }
@@ -553,7 +565,7 @@ namespace Engine
 
         public static Actor Find(string name)
         {
-            return SceneManager.ActiveScene.FindActorByName(name);
+            return SceneManager.FindActorByName(name);
         }
 
         internal bool Contains(Component component)

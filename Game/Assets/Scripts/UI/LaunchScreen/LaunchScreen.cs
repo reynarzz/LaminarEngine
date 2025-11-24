@@ -20,10 +20,11 @@ namespace Game
         public override void OnAwake()
         {
             _camera = new Actor<Camera>("Camera").GetComponent<Camera>();
-            //
             _defaultFont = Assets.Get<FontAsset>("Fonts/windows-bold[1].ttf");
-            _camera.BackgroundColor = new Color32(28, 28, 28, 255);
-            CreateLaunchScreen();
+            _camera.BackgroundColor = Color.Black;
+            //CreateLaunchScreen();
+
+            OnComplete();
         }
 
         private void CreateLaunchScreen()
@@ -31,6 +32,7 @@ namespace Game
             var canvas = new Actor("Canvas").AddComponent<UICanvas>();
 
             var panel = new Actor("Panel").AddComponent<UIElement>();
+            panel.Material = MaterialUtils.SpriteMaterial;
             panel.Transform.Parent = canvas.Transform;
             panel.Transform.LocalPosition = new vec3(canvas.RectTransform.Size.x / 2, canvas.RectTransform.Size.y / 2);
             panel.RectTransform.Size = canvas.RectTransform.Size;
@@ -82,18 +84,33 @@ namespace Game
                 }
             }
 
+            IEnumerator LerpCam(Color to, Camera camera)
+            {
+                float tLerp = 0;
+                var startColor = camera.BackgroundColor;
+                while (tLerp < 1.0f)
+                {
+                    tLerp += Time.DeltaTime;
+                    camera.BackgroundColor = Color.Lerp(startColor, to, tLerp);
+                    yield return 0;
+                }
+            }
+            yield return StartCoroutine(LerpCam(Color32.RGB(35), _camera));
+            yield return new WaitForSeconds(0.2f);
             yield return StartCoroutine(Lerp(Color.White, _textLabel));
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.3f);
             yield return StartCoroutine(Lerp(Color.White, _textPresents));
             yield return new WaitForSeconds(1.5f);
             yield return StartCoroutine(Lerp(Color.Transparent, _textLabel, _textPresents));
+            yield return StartCoroutine(LerpCam(Color.Black, _camera));
+
 
             OnComplete();
         }
 
         private void OnComplete()
         {
-            SceneManager.Test_LoadScene(new Scene());
+            SceneManager.LoadScene("Game");
             new Actor<GameManager>("GameManager");
         }
     }

@@ -18,6 +18,6 @@ namespace SharedTypes
     [Serializable]
     public class TextureMetaFile : AssetMetaFileBase
     {
-        public TextureConfig Config { get; set; } = new TextureConfig() { PixelPerUnit = 100 };
+        public TextureConfig Config { get; set; } = new TextureConfig() { PixelPerUnit = 16 };
     }
 }

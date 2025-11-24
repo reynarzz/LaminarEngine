@@ -10,6 +10,9 @@ namespace Game
 {
     internal class Player : Character
     {
+        private float _shootCooldown = 0.25f;
+        private float _shootCooldownTime = 0;
+        private float _bulletSpeed = 23;
         public override void Init(CharacterConfig config)
         {
             Inventory = new PlayerInventory(config.InventoryMaxSlots, 4);
@@ -24,10 +27,10 @@ namespace Game
             var size = new vec2(78, 58);
             var pivot = new vec2(0.4f, 0.4f);
 
-            string[] pathSprites = ["KingsAndPigsSprites/01-King Human/Idle (78x58).png",
-                                    "KingsAndPigsSprites/01-King Human/Run (78x58).png",
-                                    "KingsAndPigsSprites/01-King Human/Jump (78x58).png",
-                                    "KingsAndPigsSprites/01-King Human/Fall (78x58).png",
+            string[] pathSprites = ["KingsAndPigsSprites/01-King Human/Idle (78x58)S.png",
+                                    "KingsAndPigsSprites/01-King Human/Run (78x58)S.png",
+                                    "KingsAndPigsSprites/01-King Human/Jump (78x58)S.png",
+                                    "KingsAndPigsSprites/01-King Human/Fall (78x58)S.png",
                                     "KingsAndPigsSprites/01-King Human/Hit (78x58).png",
                                     "KingsAndPigsSprites/01-King Human/Dead (78x58).png",
                                     "KingsAndPigsSprites/01-King Human/Attack (78x58).png"];
@@ -59,27 +62,18 @@ namespace Game
                 Jump();
             }
 
-            var origin = Transform.WorldPosition + new vec3(Transform.LocalScale.x + Math.Sign(Transform.LocalScale.x) * 0.5f, 0.2f);
-            var size = new vec2(2.5f, 3);
 
-            if (Input.GetKeyDown(KeyCode.F))
+            if (Input.GetKey(KeyCode.F) && _shootCooldownTime <= 0)
             {
-                var hit = Physics2D.BoxCast(origin, size, LayerMask.NameToBit(GameLayers.ENEMY));
-                if (Attack() && hit.isHit && IsCharacterAlive())
-                {
-                    Debug.Log("Attack enemy");
-                    hit.Collider.GetComponent<EnemyBase>().HitDamage(1);
-                }
+                _shootCooldownTime = _shootCooldown;
+                Attack();
             }
 
-            if (Physics2D.DrawColliders)
-            {
-                Debug.DrawBox(origin, size, Color.Green);
-            }
+            _shootCooldownTime -= Time.DeltaTime;
 
             if (Input.GetKeyDown(KeyCode.X))
             {
-                Death();
+                //Death();
             }
 
             if (Input.GetKeyDown(KeyCode.H))
@@ -106,10 +100,20 @@ namespace Game
             }
 
         }
-        //public override bool Attack(int index = 0)
-        //{
-        //    return true;
-        //}
+        public override bool Attack(int index = 0)
+        {
+            if (!IsCharacterAlive())
+                return false;
+            var origin = Transform.WorldPosition + new vec3(Transform.LocalScale.x + Math.Sign(Transform.LocalScale.x) * 0.3f, -0.1f);
+
+            // TODO: use object pool
+            var bullet = new Actor<SpriteRenderer>("Bullet").AddComponent<Bullet>();
+
+            var mask = LayerMask.NameToBit(GameLayers.Default) | LayerMask.NameToBit(GameLayers.ENEMY) |
+                                           LayerMask.NameToBit(GameLayers.PLATFORM);
+            bullet.Shoot(origin, vec2.Right * LookDir, _bulletSpeed, mask);
+            return true;
+        }
         public override void OnFixedUpdate()
         {
 

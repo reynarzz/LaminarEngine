@@ -101,7 +101,7 @@ namespace Game
             }
         }
 
-        public override void OnTriggerEnter2D(Collider2D collider)
+        protected override void OnTriggerEnter2D(Collider2D collider)
         {
             if(collider.Actor.Layer == LayerMask.NameToLayer("Player"))
             {
@@ -118,7 +118,7 @@ namespace Game
             }
         }
 
-        public override void OnTriggerExit2D(Collider2D collider)
+        protected override void OnTriggerExit2D(Collider2D collider)
         {
             if (collider.Actor.Layer == LayerMask.NameToLayer("Player"))
             {

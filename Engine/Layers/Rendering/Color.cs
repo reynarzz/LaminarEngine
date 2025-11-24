@@ -131,6 +131,10 @@ namespace Engine
             B = b;
             A = a;
         }
+        public static Color32 RGB(byte value)
+        {
+            return new Color32(value, value, value, 255);
+        }
 
         public static implicit operator Color(Color32 c32)
         {

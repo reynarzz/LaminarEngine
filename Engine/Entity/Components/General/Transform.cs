@@ -292,8 +292,6 @@ namespace Engine
             return scaleMat * rotMat * transMat;
         }
 
-
-
         internal void RemoveChild(Transform transform)
         {
             _children.Remove(transform);

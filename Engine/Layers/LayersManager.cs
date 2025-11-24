@@ -10,6 +10,7 @@ namespace Engine.Layers
     {
         private LayerBase[] _layers;
         private CleanUpLayer _cleanupLayer;
+        private bool _layersInitialized = false;
         public LayersManager(Type[] layersTypes)
         {
             _layers = new LayerBase[layersTypes.Length];
@@ -35,23 +36,28 @@ namespace Engine.Layers
             {
                 _layers[i].Initialize();
 
-//#if DEBUG
-//                try
-//                {
-//                    _layers[i].Initialize();
-//                }
-//                catch (Exception e)
-//                {
-//                    Debug.Error(e);
-//                }
-//#else
-//                _layers[i].Initialize();
-//#endif
+                //#if DEBUG
+                //                try
+                //                {
+                //                    _layers[i].Initialize();
+                //                }
+                //                catch (Exception e)
+                //                {
+                //                    Debug.Error(e);
+                //                }
+                //#else
+                //                _layers[i].Initialize();
+                //#endif
             }
+
+            _layersInitialized = true;
         }
 
         internal void Update()
         {
+            if (!_layersInitialized)
+                return;
+
             for (int i = 0; i < _layers.Length; i++)
             {
                 _layers[i].UpdateLayer();

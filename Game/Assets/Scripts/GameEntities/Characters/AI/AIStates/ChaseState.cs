@@ -30,19 +30,21 @@ namespace Game
             }
             else
             {
-                ReturnToParent();
+                FSM.ChangeState<AttackState<T>>();
             }
         }
     }
     
     internal class ChaseState<T> : StateBase<T> where T : AICharacter
     {
-        public ChaseState() : base([new AttackState<T>()])
+        public ChaseState() : base([])
         {
         }
         public override void OnEnter()
         {
             Context.Target = Actor.Find("Player").GetComponent<Character>();
+            Context.Detector.Size = 10;
+
         }
 
         public override void OnUpdate()
@@ -55,7 +57,9 @@ namespace Game
                 if (!Context.Detector.IsTargetDetected || !Context.Target.IsCharacterAlive())
                 {
                     Context.Walk(0);
-                    ReturnToParent();
+                    // ReturnToParent();
+
+                    FSM.ChangeState<PatrolState<T>>();
                 }
                 Context.LookAt(Math.Sign(dir.x));
 
@@ -69,7 +73,7 @@ namespace Game
 
                     if (dir.Magnitude <= transitionDist)
                     {
-                        ChangeSubState<AttackState<T>>();
+                        FSM.ChangeState<AttackState<T>>();
                     }
                 }
 

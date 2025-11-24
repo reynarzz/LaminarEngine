@@ -10,7 +10,6 @@ namespace Engine
     public class Coroutine
     {
         private YieldInstruction _currentInstruction;
-        private bool _advanced = false;
         private bool _canRun = true;
         private readonly IEnumerator _target;
         internal bool IsCompleted { get; private set; }
@@ -26,23 +25,24 @@ namespace Engine
 
             if (_target.Current is YieldInstruction inst)
             {
-                if (_currentInstruction != inst || _advanced)
+                if (_currentInstruction != inst)
                 {
                     _currentInstruction = inst;
                     _currentInstruction.OnBegin();
                 }
                 _currentInstruction.Update();
 
-                _advanced = false;
             }
             else if (_target.Current is Coroutine childCoroutine && !childCoroutine.IsCompleted)
             {
+                // TODO: update children coroutine here.
+                // childCoroutine.Update();
                 return;
             }
 
             if (_currentInstruction == null || _currentInstruction.IsInstructionCompleted)
             {
-                _advanced = true;
+                _currentInstruction = null;
                 IsCompleted = _target.MoveNext() == false;
             }
         }

@@ -32,14 +32,14 @@ namespace Game
     {
         public static Camera Camera { get; private set; }
         private static Material _defaultSpriteMaterial;
-        private Material _playerSpriteMaterial;
+        private static Material _stencylMaterial;
         private vec3 _playerStartPosTest;
         private static UIText _coinCounterTest;
         private ItemsDatabase _itemsDatabase;
         private PauseMenu _pauseMenu;
 
         public static Player Player { get; private set; }
-        public static Material DefaultMaterial => _defaultSpriteMaterial;
+        public static Material DefaultMaterial => _stencylMaterial;
 
         public static FontAsset DefaultFont { get; internal set; }
 
@@ -59,9 +59,9 @@ namespace Game
         private void InitializeMaterials()
         {
             _defaultSpriteMaterial = GetMaterial("DefaultSpriteMaterial", "Shaders/SpriteVert.vert", "Shaders/SpriteFrag.frag");
-            _playerSpriteMaterial = GetMaterial("PlayerMaterial", "Shaders/SpriteVert.vert", "Shaders/SpriteFrag.frag");
+            _stencylMaterial = GetMaterial("PlayerMaterial", "Shaders/SpriteVert.vert", "Shaders/SpriteFrag.frag");
 
-            var PlayerMatPass = _playerSpriteMaterial.Passes.ElementAt(0);
+            var PlayerMatPass = _stencylMaterial.Passes.ElementAt(0);
             PlayerMatPass.Stencil.Enabled = true;
             PlayerMatPass.Stencil.Func = StencilFunc.Always;
             PlayerMatPass.Stencil.Ref = 3;
@@ -104,11 +104,18 @@ namespace Game
 
         private void InitializeWorld()
         {
-            var music = new Actor<AudioSource>("Music Manager");
-            var musicAudio = music.GetComponent<AudioSource>();
-            musicAudio.Loop = true;
-            musicAudio.Clip = Assets.GetAudioClip("Audio/music/streamloops/Stream Loops 2024-02-14_L01.wav");
-            musicAudio.Play();
+            var manager = Actor.Find("Music Manager");
+
+            if (!manager)
+            {
+                var music = new Actor<AudioSource>("Music Manager");
+                var musicAudio = music.GetComponent<AudioSource>();
+                musicAudio.Loop = true;
+                musicAudio.Clip = Assets.GetAudioClip("Audio/music/streamloops/Stream Loops 2024-02-14_L01.wav");
+                musicAudio.Play();
+                Actor.DontDestroyOnLoad(music);
+            }
+            
             _pauseMenu = new Actor("Pause menu").AddComponent<PauseMenu>();
 
             Player = new Actor("Player").AddComponent<Player>();
@@ -141,7 +148,7 @@ namespace Game
                 LayerName = GameLayers.PLAYER,
                 SortOrder = 2,
                 StartPosition = _playerStartPosTest,
-                Material = _playerSpriteMaterial,
+                Material = _stencylMaterial,
                 StartingLife = 5,
                 SpriteLookDir = 1,
                 Ground = new GroundDetectionOptions()
@@ -152,7 +159,7 @@ namespace Game
                     RaysCount = 3,
                     SizeY = 0.7f,
                     YOffset = 0,
-                    GroundMask = GameLayers.GROUND_MASK
+                    GroundMask = GameLayers.GROUND_MASK | LayerMask.NameToBit(GameLayers.ENEMY)
                 },
                 WalkSounds = ["Audio/HALFTONE/UI/2. Clicks/Click_4.wav",
                               "Audio/HALFTONE/UI/2. Clicks/Click_5.wav",
@@ -393,7 +400,7 @@ namespace Game
 
             if (Input.GetKeyDown(KeyCode.T))
             {
-                SceneManager.Test_LoadScene(new Scene());
+                SceneManager.LoadScene("Game");
                 new Actor<GameManager>("GameManager");
             }
         }

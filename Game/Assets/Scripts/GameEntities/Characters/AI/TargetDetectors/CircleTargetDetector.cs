@@ -20,8 +20,7 @@ namespace Game
             _collider.Radius = 5;
         }
 
-        
-        public override void OnTriggerStay2D(Collider2D collider)
+        protected override void OnTriggerStay2D(Collider2D collider)
         {
             if (collider.Actor.Layer == LayerMask.NameToLayer(GameLayers.PLAYER)) 
             {
@@ -29,12 +28,15 @@ namespace Game
             
                 // TODO: decrease the freq raycast is called.
                 var hit = Physics2D.Raycast(Transform.WorldPosition, dir, LayerMask.LayerToBits(collider.Actor.Layer) | GameLayers.GROUND_MASK);
-                Debug.DrawRay(Transform.WorldPosition, dir, Color.Red);
+                if (Physics2D.DrawColliders)
+                {
+                    Debug.DrawRay(Transform.WorldPosition, dir, Color.Red);
+                }
                 IsTargetDetected = hit.isHit && hit.Collider.Actor.Layer == collider.Actor.Layer;
             }
         }
 
-        public override void OnTriggerExit2D(Collider2D collider)
+        protected override void OnTriggerExit2D(Collider2D collider)
         {
             if (collider.Actor.Layer == LayerMask.NameToLayer(GameLayers.PLAYER)) 
             {

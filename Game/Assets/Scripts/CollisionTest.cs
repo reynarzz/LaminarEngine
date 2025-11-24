@@ -14,28 +14,28 @@ namespace Game
         {
         }
 
-        public override void OnCollisionEnter2D(Collision2D collision)
+        protected override void OnCollisionEnter2D(Collision2D collision)
         {
             Debug.Info($"{collision.Collider.Name}: Collision enter: " + collision.OtherCollider.Name);
             // Actor.Destroy(collision.OtherCollider.Actor);
         }
 
-        public override void OnCollisionStay2D(Collision2D collision)
+        protected override void OnCollisionStay2D(Collision2D collision)
         {
             // Debug.Log("Collision stay: " + collision.OtherCollider.Transform.WorldPosition);
         }
-        public override void OnCollisionExit2D(Collision2D collision)
+        protected override void OnCollisionExit2D(Collision2D collision)
         {
             Debug.Info($"{collision.Collider.Name}: Collision -exit: " + collision.OtherCollider.Name);
         }
 
-        public override void OnTriggerEnter2D(Collider2D collider)
+        protected override void OnTriggerEnter2D(Collider2D collider)
         {
             Debug.Info($"{collider.Actor.Name}: Trigger Enter: " + collider.Name);
             //Actor.Destroy(collider.Actor);
         }
 
-        public override void OnTriggerExit2D(Collider2D collider)
+        protected override void OnTriggerExit2D(Collider2D collider)
         {
             Debug.Info($"{collider.Actor.Name}: Trigger ~exit: " + collider.Name);
         }

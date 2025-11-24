@@ -51,7 +51,7 @@ namespace Sandbox
                 }
             });
 #endif
-            new Engine.Engine().Initialize("GFS", 1024, 576, new Color32(28, 28, 28, 255),
+            new Engine.Engine().Initialize("GFS", 1024, 576,
                                            typeof(TimeLayer),
                                            typeof(Input),
                                            typeof(GameApplication),

@@ -21,7 +21,7 @@ namespace Game
             Transform.WorldPosition = new vec3(0, -9, 0);
         }
 
-        public override void OnTriggerEnter2D(Collider2D collider)
+        protected override void OnTriggerEnter2D(Collider2D collider)
         {
             if (collider.Name.Equals("Player"))
             {
