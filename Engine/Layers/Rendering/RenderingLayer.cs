@@ -81,7 +81,7 @@ namespace Engine.Layers
         {
             if (!_mainCamera)
             {
-                _mainCamera = SceneManager.ActiveScene.FindComponent<Camera>(findDisabled: false);
+                _mainCamera = SceneManager.FindComponent<Camera>(findDisabled: false);
 
                 if (_mainCamera != null && _mainCamera.RenderTexture)
                 {
@@ -109,12 +109,12 @@ namespace Engine.Layers
             // TODO: improve this, don't ask for renderers but add/remove with events.
             _renderers.Clear();
             _UIElementRenderers.Clear();
-            SceneManager.ActiveScene.FindAll(_renderers, x =>
+            SceneManager.FindAll(_renderers, x =>
             {
                 return x.IsEnabled && x is not UIElement;
             });
 
-            SceneManager.ActiveScene.FindAll(_UIElementRenderers, x =>
+            SceneManager.FindAll(_UIElementRenderers, x =>
             {
                 return x.IsEnabled && x is UIGraphicsElement;
             });

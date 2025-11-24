@@ -110,7 +110,7 @@ namespace Game
 
         private void OnComplete()
         {
-            SceneManager.Test_LoadScene(new Scene());
+            SceneManager.LoadScene("Game");
             new Actor<GameManager>("GameManager");
         }
     }

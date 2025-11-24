@@ -104,11 +104,18 @@ namespace Game
 
         private void InitializeWorld()
         {
-            var music = new Actor<AudioSource>("Music Manager");
-            var musicAudio = music.GetComponent<AudioSource>();
-            musicAudio.Loop = true;
-            musicAudio.Clip = Assets.GetAudioClip("Audio/music/streamloops/Stream Loops 2024-02-14_L01.wav");
-            musicAudio.Play();
+            var manager = Actor.Find("Music Manager");
+
+            if (!manager)
+            {
+                var music = new Actor<AudioSource>("Music Manager");
+                var musicAudio = music.GetComponent<AudioSource>();
+                musicAudio.Loop = true;
+                musicAudio.Clip = Assets.GetAudioClip("Audio/music/streamloops/Stream Loops 2024-02-14_L01.wav");
+                musicAudio.Play();
+                Actor.DontDestroyOnLoad(music);
+            }
+            
             _pauseMenu = new Actor("Pause menu").AddComponent<PauseMenu>();
 
             Player = new Actor("Player").AddComponent<Player>();
@@ -393,7 +400,7 @@ namespace Game
 
             if (Input.GetKeyDown(KeyCode.T))
             {
-                SceneManager.Test_LoadScene(new Scene());
+                SceneManager.LoadScene("Game");
                 new Actor<GameManager>("GameManager");
             }
         }

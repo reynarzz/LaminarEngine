@@ -40,7 +40,7 @@ namespace Engine.Layers
 
             // TODO: refactor, this is for fast prototyping
             _rigidbody.Clear();
-            SceneManager.ActiveScene.FindAll(_rigidbody, findDisabled: false);
+            SceneManager.FindAll(_rigidbody, findDisabled: false);
 
             foreach (var rigidbody in _rigidbody)
             {
@@ -51,7 +51,7 @@ namespace Engine.Layers
             {
                 _contactDispatcher.Update();
 
-                SceneManager.ActiveScene.FixedUpdate();
+                SceneManager.FixedUpdate();
 
                 foreach (var rigidbody in _rigidbody)
                 {

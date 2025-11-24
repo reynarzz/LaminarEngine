@@ -14,87 +14,17 @@ namespace Engine
         private readonly Action<Actor> _onLateUpdate = x => x.LateUpdate();
         private readonly Action<Actor> _onFixedUpdate = x => x.FixedUpdate();
 
-        internal interface IMatcher<T, TComparer>
-        {
-            T Invoke(Actor actor, TComparer comparer);
-        }
 
-        private struct ComponentMatcher<T> : IMatcher<T, bool> where T : Component
-        {
-            public T Invoke(Actor actor, bool canAddDisabled)
-            {
-                if (!actor)
-                    return null;
-
-                var comp = actor.GetComponent<T>();
-
-                if (canAddDisabled)
-                {
-                    return comp;
-                }
-                else if (comp && comp.IsEnabled && comp.Actor.IsActiveInHierarchy)
-                {
-                    return comp;
-                }
-
-                return null;
-            }
-        }
-        private struct ComponentMatcherFunc<T> : IMatcher<T, Predicate<T>> where T : Component
-        {
-            public T Invoke(Actor actor, Predicate<T> func)
-            {
-                if (!actor)
-                    return null;
-
-                var comp = actor.GetComponent<T>();
-                if (!comp)
-                    return null;
-
-                if (!func(comp))
-                {
-                    return null;
-                }
-                else if (comp && comp.IsEnabled && comp.Actor.IsActiveInHierarchy)
-                {
-                    return comp;
-                }
-
-                return null;
-            }
-        }
-        public struct ActorMatcher : IMatcher<Actor, string>
-        {
-            public Actor Invoke(Actor actor, string comparer)
-            {
-                if (actor && actor.Name.Equals(comparer))
-                {
-                    return actor;
-                }
-                return null;
-            }
-        }
-
-        public struct ActorTagMatcher : IMatcher<Actor, string>
-        {
-            public Actor Invoke(Actor actor, string comparer)
-            {
-                if (actor.Tag.Equals(comparer))
-                {
-                    return actor;
-                }
-                return null;
-            }
-        }
-
-        private List<Actor> _rootActors;
-
+        private readonly List<Actor> _rootActors = new();
+        internal IReadOnlyList<Actor> RootActors => _rootActors;
         public Scene()
         {
             Name = "Scene";
-            _rootActors = new List<Actor>();
         }
-
+        public Scene(string name)
+        {
+            Name = name;
+        }
         internal void RegisterRootActor(Actor actor)
         {
             _rootActors.Add(actor);
@@ -122,142 +52,8 @@ namespace Engine
             }
         }
 
-        internal IReadOnlyList<Actor> FindActorsByTag(string tag)
-        {
-            return FindAll<Actor, ActorTagMatcher, string>(tag, null);
-        }
 
-        internal IReadOnlyList<Actor> FindActorsByTag(string tag, Actor rootActor)
-        {
-            return FindAll<Actor, ActorTagMatcher, string>(tag, rootActor);
-        }
-
-        internal T FindComponent<T>(bool findDisabled) where T : Component
-        {
-            return Find<T, ComponentMatcher<T>, bool>(findDisabled);
-        }
-
-        internal Actor FindActorByName(string name)
-        {
-            return Find<Actor, ActorMatcher, string>(name);
-        }
-
-        internal List<T> FindAll<T>(bool findDisabled, Actor rootActor) where T : Component
-        {
-            return FindAll<T, ComponentMatcher<T>, bool>(findDisabled, rootActor);
-        }
-
-        internal List<T> FindAll<T>(bool findDisabled) where T : Component
-        {
-            return FindAll<T, ComponentMatcher<T>, bool>(findDisabled, null);
-        }
-
-        internal void FindAll<T>(List<T> elements, bool findDisabled) where T : Component
-        {
-            FindAll<T, ComponentMatcher<T>, bool>(findDisabled, elements, null);
-        }
-        internal void FindAll<T>(List<T> elements, bool findDisabled, Actor rootActor) where T : Component
-        {
-            FindAll<T, ComponentMatcher<T>, bool>(findDisabled, elements, rootActor);
-        }
-        internal void FindAll<T>(List<T> elements, Predicate<T> predicate) where T : Component
-        {
-            FindAll<T, ComponentMatcherFunc<T>, Predicate<T>>(predicate, elements, null);
-        }
-
-        internal void FindAll<T>(List<T> elements, Actor rootActor, Predicate<T> predicate) where T : Component
-        {
-            FindAll<T, ComponentMatcherFunc<T>, Predicate<T>>(predicate, elements, rootActor);
-        }
-
-        private void FindAll<T, TMatcher, TComparer>(TComparer comparer, List<T> elements, Actor rootActor) where T : EObject
-                                                                           where TMatcher : struct, IMatcher<T, TComparer>
-        {
-            var matcher = default(TMatcher);
-
-            void Find(Actor actor)
-            {
-                if (!actor) // After I put this, onDestroy is not being called.
-                    return;
-
-                var result = matcher.Invoke(actor, comparer);
-
-                if (result && result.IsAlive)
-                {
-                    elements.Add(result);
-                }
-
-                for (int i = 0; i < actor.Transform.Children.Count; i++)
-                {
-                    Find(actor.Transform.Children[i].Actor);
-                }
-            }
-
-            if (rootActor == null)
-            {
-                for (int i = 0; i < _rootActors.Count; i++)
-                {
-                    if (_rootActors[i])
-                    {
-                        Find(_rootActors[i]);
-                    }
-                }
-            }
-            else
-            {
-                Find(rootActor);
-            }
-        }
-
-        private List<T> FindAll<T, TMatcher, TComparer>(TComparer comparer, Actor rootActor) where T : EObject
-                                                                            where TMatcher : struct, IMatcher<T, TComparer>
-        {
-            var list = new List<T>();
-            FindAll<T, TMatcher, TComparer>(comparer, list, rootActor);
-            return list;
-        }
-
-
-        internal T Find<T, TMatcher, IComparer>(IComparer comparer) where TMatcher : struct, IMatcher<T, IComparer>
-                                                                    where T : EObject
-        {
-            var matcher = default(TMatcher);
-
-            T Find(Actor actor)
-            {
-                var result = matcher.Invoke(actor, comparer);
-
-                if (result)
-                {
-                    return result;
-                }
-
-                for (int i = 0; i < actor.Transform.Children.Count; i++)
-                {
-                    var found = Find(actor.Transform.Children[i].Actor);
-
-                    if (found)
-                    {
-                        return found;
-                    }
-                }
-
-                return default;
-            }
-
-            for (int i = 0; i < _rootActors.Count; i++)
-            {
-                var value = Find(_rootActors[i]);
-
-                if (value)
-                {
-                    return value;
-                }
-            }
-
-            return default;
-        }
-
+        
         internal void Awake()
         {
             CallActorFunc(_onAwake);
@@ -308,8 +104,8 @@ namespace Engine
             for (int i = 0; i < _rootActors.Count; i++)
             {
                 var actor = _rootActors[i];
-                actor.OnDestroy();
-                actor.DeletePending();
+                actor.OnDestroy(); // Adds to the deletePending's list
+                actor.DeletePending(); // Removes all references
             }
 
             _rootActors.Clear();
