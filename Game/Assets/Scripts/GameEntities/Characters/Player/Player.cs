@@ -28,6 +28,8 @@ namespace Game
             box.Offset = new vec2(0, 0.8f);
             box.Friction = 0;
 
+            const float fps = 11.5f;
+
             string[] atlasid = ["player_idle",
                                     "player_run",
                                     "player_jump",
@@ -43,7 +45,7 @@ namespace Game
                 states[i] = new AnimationStateInfo()
                 {
                     IsEnabled = true,
-                    Fps = 11.5f,
+                    Fps = fps,
                     SpriteAtlasPath = atlasid[i],
                 };
             }
