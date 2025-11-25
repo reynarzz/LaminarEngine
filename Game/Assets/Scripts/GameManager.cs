@@ -117,7 +117,7 @@ namespace Game
                 musicAudio.Play();
                 Actor.DontDestroyOnLoad(music);
             }
-            
+
             _pauseMenu = new Actor("Pause menu").AddComponent<PauseMenu>();
 
             Player = new Actor("Player").AddComponent<Player>();
@@ -130,7 +130,7 @@ namespace Game
             var cameraFollow = camActor.AddComponent<CameraFollow>();
             cameraFollow.Target = Player.Transform;
 
-            Camera.Transform.WorldPosition = new vec3(0,0,-12);
+            Camera.Transform.WorldPosition = new vec3(0, 0, -12);
             Camera.BackgroundColor = new Color(0.2f, 0.2f, 0.2f, 1);
             Camera.OrthographicSize = 288.0f / 2.0f / 16.0f;
             Camera.RenderTexture = new RenderTexture(512 * 2, 288 * 2);
@@ -152,6 +152,7 @@ namespace Game
                 Material = _stencylMaterial,
                 StartingLife = 5,
                 SpriteLookDir = 1,
+                InventoryMaxSlots = 10,
                 Ground = new GroundDetectionOptions()
                 {
                     Enabled = true,
@@ -241,7 +242,14 @@ namespace Game
                         if (entity.Identifier.Equals("Player"))
                         {
                             _playerStartPosTest = position;
-                            GamePrefabs.World.InstantiateDoor(position + new vec3(0, 1));
+                            GamePrefabs.World.InstantiateDoor(position + new vec3(0, 1), x =>
+                            {
+                                var coinCount = x.Inventory.GetItemCount(ItemId.coin_currency);
+                                var coinsNeeded = 10;
+                                Debug.Log("Coins collected: " + coinCount + ", coins needed: " + coinsNeeded);
+
+                                return coinCount >= coinsNeeded;
+                            });
                         }
 
                         switch (entity.Identifier)

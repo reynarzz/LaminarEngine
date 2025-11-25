@@ -79,15 +79,16 @@ namespace Game
                     yield return null;
                 }
 
-                door.TryInteract();
-                Debug.Log("Open");
-
-                Walk(0);
-                yield return new WaitForSeconds(0.3f);
-                Animator.Play("DoorIn");
-                yield return new WaitForSeconds(0.5f);
-                Renderer.IsEnabled = false;
-                door.Close();
+                if (door.TryInteract(this))
+                {
+                    Debug.Log("Open");
+                    Walk(0);
+                    yield return new WaitForSeconds(0.3f);
+                    Animator.Play("DoorIn");
+                    yield return new WaitForSeconds(0.5f);
+                    Renderer.IsEnabled = false;
+                    door.Close();
+                }
             }
 
             StartCoroutine(WalkToDoor());

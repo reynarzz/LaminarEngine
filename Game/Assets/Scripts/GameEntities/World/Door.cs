@@ -73,13 +73,17 @@ namespace Game
             return _conditionToOpen?.Invoke(player) ?? true;
         }
 
-        public override void TryInteract()
+        public override bool TryInteract(Player player)
         {
-            if (!_isOpen)
+            if (!_isOpen && CanInteract(player))
             {
                 _isOpen = true;
                 _animator.Play("Open");
+
+                return true;
             }
+
+            return false;
         }
 
         public void Close()

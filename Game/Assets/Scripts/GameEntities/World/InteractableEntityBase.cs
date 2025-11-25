@@ -56,6 +56,6 @@ namespace Game
         }
 
         public abstract bool CanInteract(Player player);
-        public abstract void TryInteract();
+        public abstract bool TryInteract(Player player);
     }
 }
