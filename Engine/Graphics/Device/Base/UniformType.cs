@@ -14,8 +14,8 @@ namespace Engine.Graphics
         Mat4,
         Vec2,
         Vec3,
+        Vec4,
         IntArr,
         RenderTexture,
-        Vec4,
     }
 }

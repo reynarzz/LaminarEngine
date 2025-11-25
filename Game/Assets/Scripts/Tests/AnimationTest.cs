@@ -52,16 +52,10 @@ namespace Game
             var pTexture2 = Assets.GetTexture(basePath + "Attack (34x28).png");
             var sprites = TextureAtlasUtils.SliceSprites(pTexture2, 34, 28, new vec2(0.4f, 0.4f));
 
+            const float fps = 5;
+            float fpsFrac = 1.0f / fps;
 
-            var spriteCurve = new SpriteCurve();
-            float fps = 5;
-            float fpsFrac = (1.0f / fps);
-
-            for (int i = 0; i < sprites.Length; i++)
-            {
-                spriteCurve.AddKeyFrame(fpsFrac * (float)i, sprites[i]);
-            }
-
+            var spriteCurve = new SpriteCurve(fpsFrac, sprites);
 
             animClip.AddCurve("Position", posCurve);
             animClip.AddCurve("Color", colorCurve);
@@ -115,7 +109,7 @@ namespace Game
             var color = _controller.GetColor("Color");
             var sprite = _controller.GetSprite("Sprite");
 
-             _targetRenderer.Color = color;
+            _targetRenderer.Color = color;
             _targetRenderer.Transform.WorldPosition = position;
             _targetRenderer.Sprite = sprite;
         }

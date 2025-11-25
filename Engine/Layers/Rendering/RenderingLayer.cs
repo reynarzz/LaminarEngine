@@ -129,12 +129,18 @@ namespace Engine.Layers
 #if DEBUG
             Debug.DrawGeometries(VP, UICanvas.UIViewProj, sceneRenderTarget.NativeResource);
 #endif
-            foreach (var pass in PostProcessingStack.Passes)
-            {
-                sceneRenderTarget = pass.Render(sceneRenderTarget, _drawPostProcessCallback);
-            }
+            RenderPostProcessing(ref sceneRenderTarget);
 
             GfxDeviceManager.Current.Present(sceneRenderTarget.NativeResource);
+        }
+
+
+        private void RenderPostProcessing(ref RenderTexture screenRenderTexture)
+        {
+            foreach (var pass in PostProcessingStack.Passes)
+            {
+                screenRenderTexture = pass.Render(screenRenderTexture, _drawPostProcessCallback);
+            }
         }
 
         private void RenderBatches(List<Batch2D> batches, ref mat4 VP, RenderTexture sceneRenderTarget, RenderTexture grabBlitTarget = null)

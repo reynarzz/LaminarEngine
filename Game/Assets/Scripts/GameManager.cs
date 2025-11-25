@@ -53,6 +53,11 @@ namespace Game
             InitializeWorld();
         }
 
+        private void DontDestroy()
+        {
+
+        }
+
         private void InitializeData()
         {
             _itemsDatabase = new ItemsDatabase("Data/ItemsDatabase.csv");
@@ -196,8 +201,8 @@ namespace Game
 
             WaterTest();
             ParticleSystem();
-
             PostProcessingStack.Push(_fadePostProcessing);
+            _fadePostProcessing.SetAmount(0);
         }
 
 
@@ -251,7 +256,7 @@ namespace Game
                                 return coinCount >= coinsNeeded;
                             });
                         }
-
+                        
                         switch (entity.Identifier)
                         {
                             case "Enemy1":
@@ -259,6 +264,9 @@ namespace Game
                                 break;
                             case "Coin":
                                 GamePrefabs.Collectibles.InstantiateCoin(position);
+                                break;
+                            case "Door":
+                                GamePrefabs.World.InstantiateDoor(position);
                                 break;
                             default:
                                 break;
@@ -362,8 +370,6 @@ namespace Game
             var lifeBar = Image("Life bar", new vec2(10, 10), new vec2(143, 34) * uiMult, lifebarSprites[2], canvas.Transform);
 
 
-
-
             Image("Heart1", new vec2(56, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);
             Image("Heart2", new vec2(88, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);
             Image("Heart3", new vec2(120, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);
@@ -393,8 +399,6 @@ namespace Game
 #if DEBUG
             Window.Name = Time.FPS.ToString();
 #endif
-            _fadePostProcessing.SetAmount(MathF.Sin(Time.UnscaledTime) * 0.5f + 0.5f);
-
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
                 Physics2D.DrawColliders = !Physics2D.DrawColliders;
