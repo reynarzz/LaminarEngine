@@ -141,8 +141,7 @@ namespace Engine
             }
 
             var isUnique = type.GetCustomAttribute<UniqueComponentAttribute>() != null;
-            var requiredAttrib = type.GetCustomAttribute<RequiredComponentAttribute>();
-
+            var requiredAttribs = type.GetCustomAttributes<RequiredComponentAttribute>(inherit: true);
             if (isUnique)
             {
                 for (int i = 0; i < _components.Count; i++)
@@ -158,11 +157,14 @@ namespace Engine
                 }
             }
 
-            if (requiredAttrib != null)
+            if (requiredAttribs != null)
             {
-                foreach (var componentsTypes in requiredAttrib.RequiredComponents)
+                foreach (var requiredAttrib in requiredAttribs)
                 {
-                    AddComponent(componentsTypes);
+                    foreach (var componentsTypes in requiredAttrib.RequiredComponents)
+                    {
+                        AddComponent(componentsTypes);
+                    }
                 }
             }
 

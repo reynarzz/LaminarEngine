@@ -23,9 +23,9 @@ namespace Engine
             _transitions.Add(transition);
         }
 
-        public void AddTransition(Span<AnimatorTransition> transition)
+        public void AddTransition(Span<AnimatorTransition> transitions)
         {
-            _transitions.AddRange(transition);
+            _transitions.AddRange(transitions);
         }
 
         public void RemoveTransition(AnimatorTransition transition)

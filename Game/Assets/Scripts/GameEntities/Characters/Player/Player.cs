@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    internal class Player : Character
+    public class Player : Character
     {
         private float _shootCooldown = 0.25f;
         private float _shootCooldownTime = 0;

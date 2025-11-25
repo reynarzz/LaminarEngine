@@ -116,14 +116,9 @@ namespace Game
                 return null;
 
             var clip = new AnimationClip(name);
-            var spritesCurve = new SpriteCurve();
+            var spritesCurve = new SpriteCurve(_config.AnimFPS, sprites);
 
             clip.AddCurve("Sprite", spritesCurve);
-
-            for (var i = 0; i < sprites.Length; i++)
-            {
-                spritesCurve.AddKeyFrame((1.0f / _config.AnimFPS) * i, sprites[i]);
-            }
 
             return new AnimationState(name, clip);
         }

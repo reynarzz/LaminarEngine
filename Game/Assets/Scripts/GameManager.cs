@@ -241,6 +241,7 @@ namespace Game
                         if (entity.Identifier.Equals("Player"))
                         {
                             _playerStartPosTest = position;
+                            GamePrefabs.World.InstantiateDoor(position + new vec3(0, 1));
                         }
 
                         switch (entity.Identifier)
