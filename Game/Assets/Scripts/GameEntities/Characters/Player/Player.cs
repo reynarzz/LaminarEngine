@@ -1,6 +1,8 @@
 ﻿using Engine;
+using Engine.Utils;
 using GlmNet;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,11 +15,13 @@ namespace Game
         private float _shootCooldown = 0.25f;
         private float _shootCooldownTime = 0;
         private float _bulletSpeed = 23;
+        private bool _canMove = false;
+
         private readonly List<InteractableEntityBase> _nearInteractables = new();
         public override void Init(CharacterConfig config)
         {
             Inventory = new PlayerInventory(config.InventoryMaxSlots, 4);
-
+            _canMove = true;
             base.Init(config);
             var box = AddComponent<BoxCollider2D>();
             box.Size = new vec2(0.95f, 0.6f);
@@ -54,22 +58,44 @@ namespace Game
             states.Jump.Events = [new AnimEvent { Time = 0, Callback = PlayJumpSoundFx }];
 
             InitAnimationStates(states);
+
+            var doorInTexAtlas = Assets.GetTexture("KingsAndPigsSprites/01-King Human/Door In (78x58).png");
+            var doorOutTexAtlas = Assets.GetTexture("KingsAndPigsSprites/01-King Human/Door Out (78x58).png");
+
+            var doorInState = AnimatorUtils.AddState(Animator, "DoorIn", false);
+            doorInState.Clip.AddCurve(SPRITE_PROPERTY_NAME, new SpriteCurve(fps, TextureAtlasUtils.SliceSprites(doorInTexAtlas, 78, 58, pivot, 2)));
+        }
+
+        private void MoveToDoor(Door door)
+        {
+            _canMove = false;
+            IEnumerator WalkToDoor()
+            {
+                var walkDir = door.Transform.WorldPosition.x - Transform.WorldPosition.x;
+                while (Math.Abs(walkDir) > 0.1f)
+                {
+                    walkDir = door.Transform.WorldPosition.x - Transform.WorldPosition.x;
+                    Walk(Math.Sign(walkDir));
+                    yield return null;
+                }
+
+                door.TryInteract();
+                Debug.Log("Open");
+
+                Walk(0);
+                yield return new WaitForSeconds(0.2f);
+                Animator.Play("DoorIn");
+                yield return new WaitForSeconds(0.5f);
+                Renderer.IsEnabled = false;
+                yield return new WaitForSeconds(0.1f);
+                door.Close();
+            }
+
+            StartCoroutine(WalkToDoor());
         }
 
         public override void OnUpdate()
         {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                Jump();
-            }
-
-
-            if (Input.GetKey(KeyCode.F) && _shootCooldownTime <= 0)
-            {
-                _shootCooldownTime = _shootCooldown;
-                Attack();
-            }
-
             if (Input.GetKeyDown(KeyCode.E))
             {
                 if (_nearInteractables.Count > 0)
@@ -77,8 +103,12 @@ namespace Game
                     var interactable = _nearInteractables[^1];
                     if (interactable.CanInteract(this))
                     {
-                        interactable.TryInteract();
                         _nearInteractables.RemoveAt(_nearInteractables.Count - 1);
+
+                        if (interactable is Door door)
+                        {
+                            MoveToDoor(door);
+                        }
                     }
                 }
             }
@@ -98,22 +128,37 @@ namespace Game
             if (Input.GetKeyDown(KeyCode.Z))
             {
                 Restart();
+                _canMove = true;
             }
 
-            if (Input.GetKey(KeyCode.A))
+            if (_canMove)
             {
-                Walk(-1);
-            }
-            else if (Input.GetKey(KeyCode.D))
-            {
-                Walk(1);
-            }
-            else
-            {
-                Walk(0);
-            }
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    Jump();
+                }
 
+                if (Input.GetKey(KeyCode.F) && _shootCooldownTime <= 0)
+                {
+                    _shootCooldownTime = _shootCooldown;
+                    Attack();
+                }
+
+                if (Input.GetKey(KeyCode.A))
+                {
+                    Walk(-1);
+                }
+                else if (Input.GetKey(KeyCode.D))
+                {
+                    Walk(1);
+                }
+                else
+                {
+                    Walk(0);
+                }
+            }
         }
+
         public override bool Attack(int index = 0)
         {
             if (!IsCharacterAlive())
@@ -141,6 +186,7 @@ namespace Game
             var interactable = collider.GetComponent<InteractableEntityBase>();
             if (interactable)
             {
+                if(!_nearInteractables.Contains(interactable))
                 _nearInteractables.Add(interactable);
             }
         }

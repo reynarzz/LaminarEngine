@@ -1,4 +1,5 @@
 ﻿using Engine;
+using Engine.Types;
 using GlmNet;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Game
 {
+    [RequiredComponent(typeof(Animator))]
     public class Collectible : GameEntity
     {
         private Animator _animator;
@@ -39,7 +41,7 @@ namespace Game
             {
                 _initializedComponents = true;
                 Actor.Layer = LayerMask.NameToLayer(GameLayers.COLLECTIBLE);
-                _animator = AddComponent<Animator>();
+                _animator = GetComponent<Animator>();
                 _renderer = AddComponent<SpriteRenderer>();
                 var rigid = AddComponent<RigidBody2D>();
                 AudioSource = AddComponent<AudioSource>();

@@ -64,21 +64,23 @@ namespace Engine.Utils
         }
         public static Sprite[] SliceSprites(Texture2D texture, int tileWidth, int tileHeight, int startIndex, int length)
         {
-            return SliceSprites(texture, tileWidth, tileHeight, startIndex, length, new vec2(0.5f, 0.5f));
+            return SliceSprites(texture, tileWidth, tileHeight, new vec2(0.5f, 0.5f), startIndex, length);
         }
         public static Sprite[] SliceSprites(Texture2D texture, int tileWidth, int tileHeight, vec2 pivot)
         {
             int tilesX = texture.Width / tileWidth;
             int tilesY = texture.Height / tileHeight;
-            return SliceSprites(texture, tileWidth, tileHeight, 0, tilesX * tilesY, pivot);
+            return SliceSprites(texture, tileWidth, tileHeight, pivot, 0, tilesX * tilesY);
         }
 
-        public static Sprite[] SliceSprites(Texture2D texture, int tileWidth, int tileHeight,
-                                            int startIndex, int length, vec2 pivot)
+        public static Sprite[] SliceSprites(Texture2D texture, int tileWidth, int tileHeight, vec2 pivot,
+                                            int startIndex, int length = int.MaxValue)
         {
             int tilesX = texture.Width / tileWidth;
             int tilesY = texture.Height / tileHeight;
 
+            length = int.Min((tilesX * tilesY) - startIndex, length);
+        
             var atlasChunks = new AtlasChunk[length];
             var sprites = new Sprite[length];
 

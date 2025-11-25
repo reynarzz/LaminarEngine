@@ -490,8 +490,9 @@ namespace Game
             if (!IsCharacterAlive())
             {
                 Inventory.Life = _characterConfig.StartingLife;
-                Animator.SetState(_main);
             }
+            Renderer.IsEnabled = true;
+            Animator.Play(_main.Name);
         }
 
         protected void PlayJumpSoundFx()

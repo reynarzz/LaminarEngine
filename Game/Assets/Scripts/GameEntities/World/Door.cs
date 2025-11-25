@@ -22,7 +22,7 @@ namespace Game
             base.OnAwake();
 
             _animator = GetComponent<Animator>();
-            BoxCollider.Size = new vec2(3, 3);
+            BoxCollider.Size = new vec2(1.9f, 3);
 
             var idleAnim = AnimatorUtils.AddState(_animator, "Idle", false);
             var openAnim = AnimatorUtils.AddState(_animator, "Open", false);
@@ -80,6 +80,12 @@ namespace Game
                 _isOpen = true;
                 _animator.Play("Open");
             }
+        }
+
+        public void Close()
+        {
+            _isOpen = false;
+            _animator.Play("Close");
         }
     }
 }
