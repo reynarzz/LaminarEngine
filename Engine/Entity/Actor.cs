@@ -141,7 +141,6 @@ namespace Engine
             }
 
             var isUnique = type.GetCustomAttribute<UniqueComponentAttribute>() != null;
-            var requiredAttribs = type.GetCustomAttributes<RequiredComponentAttribute>(inherit: true);
             if (isUnique)
             {
                 for (int i = 0; i < _components.Count; i++)
@@ -157,9 +156,24 @@ namespace Engine
                 }
             }
 
-            if (requiredAttribs != null)
+            // Get all attributes from current type, and parent classes
+            IEnumerable<T> GetAllAttributes<T>(Type type) where T : Attribute
             {
-                foreach (var requiredAttrib in requiredAttribs)
+                var result = new List<T>();
+
+                while (type != null && type != typeof(object))
+                {
+                    result.AddRange(type.GetCustomAttributes(typeof(T), inherit: false).Cast<T>());
+                    type = type.BaseType;
+                }
+
+                return result;
+            }
+
+            var required = GetAllAttributes<RequiredComponentAttribute>(type);
+            if (required != null)
+            {
+                foreach (var requiredAttrib in required)
                 {
                     foreach (var componentsTypes in requiredAttrib.RequiredComponents)
                     {
@@ -675,7 +689,7 @@ namespace Engine
             }
         }
     }
-    
+
     public class Actor<T1> : Actor where T1 : Component
     {
         public Actor() : this(string.Empty, string.Empty) { }

@@ -27,7 +27,7 @@
 				"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 				"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
 				"entityIid": "523fb710-ac70-11f0-ad00-7b52ae2081f8"
-			}, "worldX": -440, "worldY": 144, "widPx": 20, "heiPx": 20, "fields" : {} }]
+			}, "worldX": -408, "worldY": 144, "widPx": 20, "heiPx": 20, "fields" : {} }]
 		},
 		{
 			"identifier": "Enemy1",
@@ -871,12 +871,6 @@
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "15ed5b40-ac70-11f0-83ff-e763aad3fca1"
-				},
-				{
-					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
-					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
-					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
 					"entityIid": "16d37580-ac70-11f0-83ff-bbcd2a788365"
 				},
 				{
@@ -1493,12 +1487,6 @@
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
 					"entityIid": "f2807870-ac70-11f0-ad00-4b2d20536f23"
 				}, "worldX": 104, "worldY": 120, "widPx": 20, "heiPx": 20, "fields" : {} },
-				{ "iids": {
-					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
-					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
-					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
-					"entityIid": "15ed5b40-ac70-11f0-83ff-e763aad3fca1"
-				}, "worldX": -392, "worldY": 136, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
@@ -5625,7 +5613,7 @@
 						},
 						{
 							"__identifier": "Player",
-							"__grid": [20,24],
+							"__grid": [22,24],
 							"__pivot": [0.5,1],
 							"__tags": ["actor"],
 							"__tile": { "tilesetUid": 133, "x": 256, "y": 144, "w": 16, "h": 16 },
@@ -5634,32 +5622,13 @@
 							"width": 20,
 							"height": 20,
 							"defUid": 90,
-							"px": [328,400],
+							"px": [360,400],
 							"fieldInstances": [
 								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 91, "realEditorValues": [] },
 								{ "__identifier": "HP", "__type": "Int", "__value": 10, "__tile": null, "defUid": 92, "realEditorValues": [] }
 							],
-							"__worldX": -440,
+							"__worldX": -408,
 							"__worldY": 144
-						},
-						{
-							"__identifier": "Coin",
-							"__grid": [23,24],
-							"__pivot": [0.5,0.5],
-							"__tags": ["actor"],
-							"__tile": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 },
-							"__smartColor": "#FF0044",
-							"iid": "15ed5b40-ac70-11f0-83ff-e763aad3fca1",
-							"width": 20,
-							"height": 20,
-							"defUid": 172,
-							"px": [376,392],
-							"fieldInstances": [
-								{ "__identifier": "inventory", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 173, "realEditorValues": [] },
-								{ "__identifier": "HP", "__type": "Int", "__value": 3, "__tile": null, "defUid": 174, "realEditorValues": [] }
-							],
-							"__worldX": -392,
-							"__worldY": 136
 						},
 						{
 							"__identifier": "Coin",

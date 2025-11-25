@@ -13,7 +13,7 @@ namespace Game
         private float _shootCooldown = 0.25f;
         private float _shootCooldownTime = 0;
         private float _bulletSpeed = 23;
-
+        private readonly List<InteractableEntityBase> _nearInteractables = new();
         public override void Init(CharacterConfig config)
         {
             Inventory = new PlayerInventory(config.InventoryMaxSlots, 4);
@@ -70,6 +70,19 @@ namespace Game
                 Attack();
             }
 
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                if (_nearInteractables.Count > 0)
+                {
+                    var interactable = _nearInteractables[^1];
+                    if (interactable.CanInteract(this))
+                    {
+                        interactable.TryInteract();
+                        _nearInteractables.RemoveAt(_nearInteractables.Count - 1);
+                    }
+                }
+            }
+
             _shootCooldownTime -= Time.DeltaTime;
 
             if (Input.GetKeyDown(KeyCode.X))
@@ -121,6 +134,24 @@ namespace Game
         {
 
             base.OnFixedUpdate();
+        }
+
+        protected override void OnTriggerEnter2D(Collider2D collider)
+        {
+            var interactable = collider.GetComponent<InteractableEntityBase>();
+            if (interactable)
+            {
+                _nearInteractables.Add(interactable);
+            }
+        }
+
+        protected override void OnTriggerExit2D(Collider2D collider)
+        {
+            var interactable = collider.GetComponent<InteractableEntityBase>();
+            if (interactable)
+            {
+                _nearInteractables.Remove(interactable);
+            }
         }
     }
 }

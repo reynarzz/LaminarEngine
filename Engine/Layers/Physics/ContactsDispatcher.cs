@@ -379,7 +379,7 @@ namespace Engine.Layers
 
         private void OnTrigger(Action<ScriptBehavior, Collider2D> action, Collider2D coll1, Collider2D coll2)
         {
-            if (coll1 && coll1.IsTrigger && coll1.Actor && coll2 && coll2.Actor)
+            if (coll1 && (coll1.IsTrigger || coll2.IsTrigger) && coll1.Actor && coll2 && coll2.Actor)
             {
                 OnNotifyScripts(coll1, coll2, action, ref coll2);
             }

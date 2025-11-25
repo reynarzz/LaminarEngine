@@ -132,6 +132,11 @@ namespace Engine
             return _animPlayer.GetSprite(property);
         }
 
+        //public void GetProperty(string property, ref CurveEvaluatedResult result)
+        //{
+        //    _animPlayer.GetProperty(property, ref result);
+        //}
+
         /// <summary>
         /// Removes all states, and restarts the animator
         /// </summary>

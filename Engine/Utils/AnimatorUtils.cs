@@ -15,7 +15,7 @@ namespace Engine
             animator.AddState(state);
             return state;
         }
-
+       
         public static AnimatorTransition AddTransition(AnimationState state, string toState, float blendTime, params TransitionCondition[] conditions)
         {
             var transition = new AnimatorTransition(toState, blendTime, conditions);

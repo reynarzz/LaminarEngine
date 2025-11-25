@@ -1,5 +1,6 @@
 ﻿using Engine;
 using Engine.Types;
+using Engine.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,29 +9,41 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    [RequiredComponent(typeof(RigidBody2D), typeof(BoxCollider2D))]
+    [RequiredComponent(typeof(RigidBody2D), typeof(BoxCollider2D), typeof(SpriteRenderer))]
     public abstract class InteractableEntityBase : ScriptBehavior
     {
-        public RigidBody2D Rigidbody { get; private set; }
-        public BoxCollider2D BoxCollider { get; private set; }
+        protected RigidBody2D Rigidbody { get; private set; }
+        protected BoxCollider2D BoxCollider { get; private set; }
+        protected SpriteRenderer SpriteRenderer { get; private set; }
+        private bool _isPlayerInZone = false;
         public override void OnAwake()
         {
             Rigidbody = GetComponent<RigidBody2D>();
+            Rigidbody.BodyType = Body2DType.Static;
+
             BoxCollider = GetComponent<BoxCollider2D>();
+            BoxCollider.IsTrigger = true;
+
+            SpriteRenderer = GetComponent<SpriteRenderer>();
+            SpriteRenderer.Material = MaterialUtils.SpriteMaterial;
+            SpriteRenderer.SortOrder = -1;
+
         }
 
         protected sealed override void OnTriggerEnter2D(Collider2D collider)
         {
-            if (IsPlayerLayer(collider))
+            if (IsPlayerLayer(collider) && !_isPlayerInZone)
             {
+                _isPlayerInZone = true;
                 OnPlayerInteractZone(true, collider.GetComponent<Player>());
             }
         }
 
         protected sealed override void OnTriggerExit2D(Collider2D collider)
         {
-            if (IsPlayerLayer(collider))
+            if (IsPlayerLayer(collider) && _isPlayerInZone)
             {
+                _isPlayerInZone = false;
                 OnPlayerInteractZone(false, collider.GetComponent<Player>());
             }
         }
@@ -41,5 +54,8 @@ namespace Game
         {
             return collider.Actor.Layer == LayerMask.NameToLayer(GameLayers.PLAYER);
         }
+
+        public abstract bool CanInteract(Player player);
+        public abstract void TryInteract();
     }
 }
