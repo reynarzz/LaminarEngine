@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    // Note: this is a test class with tons of bad practices, not to be used in a real game.
+    // Note: this is a test class (with tons of bad practices), not to be used in a real game.
     internal class PlayerTest : ScriptBehavior
     {
         private bool _extraJumpAvailable = false;

@@ -76,6 +76,12 @@ namespace Engine.Utils
         public static Sprite[] SliceSprites(Texture2D texture, int tileWidth, int tileHeight, vec2 pivot,
                                             int startIndex, int length = int.MaxValue)
         {
+            if(texture.Atlas.ChunksCount > 0)
+            {
+                Debug.Error("Can't slice. Sliced already.");
+                return null;
+            }
+
             int tilesX = texture.Width / tileWidth;
             int tilesY = texture.Height / tileHeight;
 
@@ -83,6 +89,7 @@ namespace Engine.Utils
         
             var atlasChunks = new AtlasChunk[length];
             var sprites = new Sprite[length];
+            texture.Atlas.SetChunks(atlasChunks);
 
             for (int i = 0; i < length; i++)
             {
@@ -95,10 +102,24 @@ namespace Engine.Utils
 
                 atlasChunks[i] = CreateTileBounds(x * tileWidth, y * tileHeight, tileWidth, tileHeight,
                                                   pivot.x, pivot.y, texture.Width, texture.Height);
+
                 sprites[i] = new Sprite(i, texture);
             }
 
-            texture.Atlas.SetChunks(atlasChunks);
+            return sprites;
+        }
+
+        public static Sprite[] GetSprites(Texture2D texture, int startIndex, int length = int.MaxValue)
+        {
+            length = int.Min(texture.Atlas.ChunksCount - startIndex, length);
+  
+            var sprites = new Sprite[length];
+
+            for (int i = 0; i < sprites.Length; ++i)
+            {
+                sprites[i] = new Sprite(i + startIndex, texture);
+            }
+
             return sprites;
         }
 

@@ -190,7 +190,6 @@ namespace Game
 
             // GamePrefabs.Enemies.InstantiatePigStandard(Player.Transform.LocalPosition + vec3.Right * 2, -1);
 
-            // LoadTilemap();
             PostProcessingStack.Clear();
             PostProcessingStack.Push(new BloomPostProcessing());
             ScreenGrabTest();
@@ -211,11 +210,6 @@ namespace Game
         private void LoadTilemap()
         {
             var testPathNow = "Tilemap";
-            var tilemapTexture = Assets.GetTexture(testPathNow + "/SunnyLand_by_Ansimuz-extended.png");
-
-            TextureAtlasUtils.SliceTiles(tilemapTexture.Atlas, 16, 16, tilemapTexture.Width, tilemapTexture.Height);
-
-            var tilemapSprite = new Sprite(tilemapTexture);
 
             //var filepath = rootPathTest + "\\Tilemap\\World.ldtk";
 
@@ -238,13 +232,16 @@ namespace Game
                 return new vec3(MathF.Floor((level.WorldX + px[0] + layer.PxOffsetX) / pixelPerUnit), MathF.Ceiling((-level.WorldY + -px[1] + -layer.PxOffsetY) / pixelPerUnit), 0);
             }
 
+            var sprite = GameTextureAtlases.GetAtlas("sunny_land_tileset")[0];
+
+
             foreach (var level in project.Levels)
             {
                 foreach (var layer in level.LayerInstances)
                 {
                     foreach (var entity in layer.EntityInstances)
                     {
-                        var position = ConvertToWorld(entity.Px, level, tilemapTexture.PixelPerUnit, layer);
+                        var position = ConvertToWorld(entity.Px, level, sprite.Texture.PixelPerUnit, layer);
                         //Debug.Log("Entity: " + entity.Identifier);
                         if (entity.Identifier.Equals("Player"))
                         {
@@ -270,17 +267,17 @@ namespace Game
             var tilemapActor = new Actor<TilemapRenderer>("Foreground tilemap");
             var tilemap = tilemapActor.GetComponent<TilemapRenderer>();
             tilemap.Material = _tilemapMaterial;
-            tilemap.Sprite = tilemapSprite;
+            tilemap.Sprite = sprite;
 
             var tilemapActor2 = new Actor<TilemapRenderer>("Background tilemap");
             var tilemap2 = tilemapActor2.GetComponent<TilemapRenderer>();
             tilemap2.Material = _tilemapMaterial;
-            tilemap2.Sprite = tilemapSprite;
+            tilemap2.Sprite = sprite;
 
             var tilemapActor3 = new Actor<TilemapRenderer>("Grass tilemap");
             var tilemap3 = tilemapActor3.GetComponent<TilemapRenderer>();
             tilemap3.Material = _tilemapMaterial;
-            tilemap3.Sprite = tilemapSprite;
+            tilemap3.Sprite = sprite;
 
             // tilemap.SetTilemapLDtk(project, new LDtkOptions() { RenderIntGridLayer = true, RenderTilesLayer = true, RenderAutoLayer = true });
             tilemap.SetTilemapLDtk(project, new LDtkOptions()
@@ -332,7 +329,7 @@ namespace Game
             var mainShader = new Shader(Assets.GetText("Shaders/SpriteVert.vert").Text, Assets.GetText("Shaders/SpriteFrag.frag").Text);
             var mat1 = new Material(mainShader);
 
-            var sprites = TextureAtlasUtils.SliceSprites(Assets.GetTexture("KingsAndPigsSprites/12-Live and Coins/Small Heart Idle (18x14).png"), 8, 7);
+            var sprites = GameTextureAtlases.GetAtlas("small_heart_idle");
 
             UIImage Image(string name, vec2 position, vec2 size, Sprite sprite, Transform parent)
             {
@@ -349,10 +346,8 @@ namespace Game
             }
 
             float uiMult = 3;
-            var tex = Assets.GetTexture("KingsAndPigsSprites/12-Live and Coins/Live Bar_atlas(143x34).png");
-            var lifebarSprites = TextureAtlasUtils.SliceSprites(tex, 143, 34);
-            var lifeBar = Image("Life bar", new vec2(10, 10), new vec2(143, 34) * uiMult, lifebarSprites[2], canvas.Transform);
-
+            var lifebarSprites = GameTextureAtlases.GetAtlas("health_bar_frame");
+            var lifeBar = Image("Life bar", new vec2(10, 10), new vec2(143, 34) * uiMult, lifebarSprites[3], canvas.Transform);
 
             Image("Heart1", new vec2(56, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);
             Image("Heart2", new vec2(88, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);

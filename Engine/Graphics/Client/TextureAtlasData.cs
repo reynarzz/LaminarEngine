@@ -64,18 +64,13 @@ namespace Engine
     public class TextureAtlasData
     {
         private AtlasChunk[] _chunks;
-        public int ChunksCount => _chunks.Length;
+        public int ChunksCount => _chunks?.Length ?? 0;
 
         public TextureAtlasData()
         {
             var defaultChunk = AtlasChunk.DefaultChunk;
             defaultChunk.Width = 1;
             defaultChunk.Height = 1;
-
-            _chunks = new AtlasChunk[1]
-            {
-                defaultChunk
-            };
         }
 
         public bool HasValidChunk(int chunkIndex)
@@ -95,7 +90,6 @@ namespace Engine
             if (isInvalidIndex)
             {
                 Debug.Error($"invalid atlas chunk index: '{index}', Atlas Max: '{_chunks.Length}'");
-
                 return AtlasChunk.DefaultChunk;
             }
 #endif
@@ -114,9 +108,8 @@ namespace Engine
 
         public void SetChunks(AtlasChunk[] chunks)
         {
-            _chunks = chunks.ToArray();
+            _chunks = chunks;
         }
-
 
         public void UpdateUvs(int index, QuadUV uvs)
         {

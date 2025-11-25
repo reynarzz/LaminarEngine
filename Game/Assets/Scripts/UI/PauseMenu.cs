@@ -133,8 +133,7 @@ namespace Game
 
             var parent = NewImage("Quad1", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
             parent.Sprite = slotSprite;
-            var tex = Assets.GetTexture("starkTileset.png");
-            var coins = TextureAtlasUtils.SliceSprites(tex, 16, 16, 281, 4);
+            var coins = GameTextureAtlases.GetAtlas("coin_currency");
 
 
             var iconContent = NewImage("Content", default, new vec2(34, 34), Color.White, parent.Transform);

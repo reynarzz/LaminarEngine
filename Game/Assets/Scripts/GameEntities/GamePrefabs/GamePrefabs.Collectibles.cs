@@ -29,19 +29,17 @@ namespace Game
 
             public static Collectible InstantiateCollectible(ItemId item, vec2 position)
             {
-                var collectible = new Actor("Collectible_"+ item.ToString()).AddComponent<Collectible>();
+                var collectible = new Actor("Collectible_" + item.ToString()).AddComponent<Collectible>();
                 collectible.Transform.WorldPosition = position;
 
-                // TODO: this depends on the type of the collectible
-                var tex = Assets.GetTexture("starkTileset.png");
-                var tiles = TextureAtlasUtils.SliceSprites(tex, 16, 16, 281, 1);
+                var tiles = GameTextureAtlases.GetAtlas(item.ToString());
                 var audioClip = Assets.GetAudioClip("Audio/HALFTONE/Gameplay/Collectibles_2.wav");
 
                 collectible.Init(new Collectible.CollectibleConfig()
                 {
                     Item = item,
                     Amount = 1,
-                    IdleSprites = [ tiles[0]],
+                    IdleSprites = tiles,
                     CollectedSprites = null,
                     TriggerSize = new vec2(0.8f, 0.8f),
                     AnimFPS = 7,

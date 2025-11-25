@@ -17,9 +17,9 @@ namespace Game
 
             var idleAnim = AnimatorUtils.AddState(Animator, "Idle", false);
             var openAnim = AnimatorUtils.AddState(Animator, "Open", false);
-            var closeAnim = AnimatorUtils.AddState(Animator, "Close", false);
 
-            var doorAtlas = Assets.GetTexture("KingsAndPigsSprites/11-Door/Opening (46x56).png");
+            idleAnim.Clip.AddCurve("Sprite", new SpriteCurve(1, GameTextureAtlases.GetAtlas("chest_normal_idle")));
+            idleAnim.Clip.AddCurve("Sprite", new SpriteCurve(1, GameTextureAtlases.GetAtlas("chest_normal_idle")));
         }
         public override bool TryInteract(Player player)
         {
