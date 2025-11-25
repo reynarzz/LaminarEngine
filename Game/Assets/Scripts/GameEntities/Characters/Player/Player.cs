@@ -83,11 +83,10 @@ namespace Game
                 Debug.Log("Open");
 
                 Walk(0);
-                yield return new WaitForSeconds(0.2f);
+                yield return new WaitForSeconds(0.3f);
                 Animator.Play("DoorIn");
                 yield return new WaitForSeconds(0.5f);
                 Renderer.IsEnabled = false;
-                yield return new WaitForSeconds(0.1f);
                 door.Close();
             }
 
