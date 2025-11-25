@@ -259,10 +259,9 @@ namespace Game
 
             if (events != null)
             {
-                var eventCurve = animClip.GetEventCurve();
                 for (int i = 0; i < events.Length; i++)
                 {
-                    eventCurve.AddKeyFrame(events[i].Time, events[i].Callback);
+                    animClip.AddEvent(events[i].Time, events[i].Callback);
                 }
             }
 

@@ -15,5 +15,7 @@ namespace Engine.Graphics
         Vec2,
         Vec3,
         IntArr,
+        RenderTexture,
+        Vec4,
     }
 }

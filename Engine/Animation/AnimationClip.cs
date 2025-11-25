@@ -87,7 +87,12 @@ namespace Engine
             _spriteCurves[property] = curve;
         }
 
-        public EventCurve GetEventCurve()
+        public void AddEvent(float time, Action callback)
+        {
+            _eventCurve.AddKeyFrame(time, callback);
+        }
+
+        internal EventCurve GetEventCurve()
         {
             return _eventCurve;
         }

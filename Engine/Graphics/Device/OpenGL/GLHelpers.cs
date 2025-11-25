@@ -114,6 +114,9 @@ namespace Engine.Graphics.OpenGL
                     case UniformType.Vec3:
                         shader.SetUniform(uniform.Name, uniform.Vec3Value);
                         break;
+                    case UniformType.Vec4:
+                        shader.SetUniform(uniform.Name, uniform.Vec4Value);
+                        break;
                     case UniformType.IntArr:
                         shader.SetUniform(uniform.Name, uniform.IntArrValue);
                         break;

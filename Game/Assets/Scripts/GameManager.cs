@@ -39,7 +39,7 @@ namespace Game
         private ItemsDatabase _itemsDatabase;
         private PauseMenu _pauseMenu;
         private static Material _tilemapMaterial;
-
+        private FadeScreenPostProcessing _fadePostProcessing = new();
         public static Player Player { get; private set; }
         public static Material DefaultMaterial => _stencylMaterial;
 
@@ -197,7 +197,7 @@ namespace Game
             WaterTest();
             ParticleSystem();
 
-
+            PostProcessingStack.Push(_fadePostProcessing);
         }
 
 
@@ -393,6 +393,8 @@ namespace Game
 #if DEBUG
             Window.Name = Time.FPS.ToString();
 #endif
+            _fadePostProcessing.SetAmount(MathF.Sin(Time.UnscaledTime) * 0.5f + 0.5f);
+
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
                 Physics2D.DrawColliders = !Physics2D.DrawColliders;

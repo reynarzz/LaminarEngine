@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GlmNet;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -61,6 +62,15 @@ namespace Engine
         public static implicit operator Color(uint packet)
         {
             return new ColorPacketRGBA(packet);
+        }
+
+        public static implicit operator vec4(Color color)
+        {
+            return new vec4(color.R, color.G, color.B, color.A);
+        }
+        public static implicit operator vec3(Color color)
+        {
+            return new vec3(color.R, color.G, color.B);
         }
 
         public static Color Lerp(Color a, Color b, float t)

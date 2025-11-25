@@ -76,8 +76,6 @@ namespace Engine.Rendering
             _batches.Remove(batch);
             _batches.Add(batch);
             batch.Clear();
-
-            Debug.Log("pooled batch");
         }
 
         // TODO: Delete all batches that are not being used for too long, and are also big.

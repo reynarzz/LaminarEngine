@@ -66,10 +66,9 @@ namespace Game
             animClip.AddCurve("Position", posCurve);
             animClip.AddCurve("Color", colorCurve);
             animClip.AddCurve("Sprite", spriteCurve);
-            var evt = animClip.GetEventCurve();
             var v = fpsFrac * 3.0f;
-            evt.AddKeyFrame(v, () => Debug.Warn("Cyan"));
-            evt.AddKeyFrame(fpsFrac * 1.0f, () => Debug.Warn("Event called from animation"));
+            animClip.AddEvent(v, () => Debug.Warn("Cyan"));
+            animClip.AddEvent(fpsFrac * 1.0f, () => Debug.Warn("Event called from animation"));
 
             Debug.Log("Anim clip duration: " + animClip.Duration);
             var state = new AnimationState("Main state", animClip);
@@ -88,8 +87,7 @@ namespace Game
             walkClip.AddCurve("Sprite", curve);
             walkClip.AddCurve("Sprite", hermite);
 
-            var evt = walkClip.GetEventCurve();
-            evt.AddKeyFrame(4, () => Debug.Warn("Event called"));
+            walkClip.AddEvent(4, () => Debug.Warn("Event called"));
 
             var runClip = new AnimationClip("Run", true);
 

@@ -16,7 +16,7 @@ namespace Game
         private Animator _animator;
         private Predicate<Player> _conditionToOpen;
         private bool _isOpen = false;
-
+        public event Action<bool> OnDoorStateChanged;
         public override void OnAwake()
         {
             base.OnAwake();
@@ -39,14 +39,14 @@ namespace Game
             openAnim.Clip.AddCurve("Sprite", new SpriteCurve(fps, sprites));
             closeAnim.Clip.AddCurve("Sprite", new SpriteCurve(fps, sprites.Reverse().ToArray()));
 
+            openAnim.Clip.AddEvent(openAnim.Clip.Duration, () => OnDoorStateChanged?.Invoke(true));
+            closeAnim.Clip.AddEvent(closeAnim.Clip.Duration, () => OnDoorStateChanged?.Invoke(true));
+
             // When player enters: Audio/Gameplay/Win_2.wav
             _animator.OnUpdate += animator =>
             {
                 SpriteRenderer.Sprite = animator.GetSprite("Sprite");
             };
-
-            var a = Actor;
-
         }
 
         public void SetConditionToOpen(Predicate<Player> condition)
@@ -90,6 +90,12 @@ namespace Game
         {
             _isOpen = false;
             _animator.Play("Close");
+        }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            OnDoorStateChanged = null;
         }
     }
 }

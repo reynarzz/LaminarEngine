@@ -19,7 +19,7 @@ namespace Game
         private RenderTexture _combineRenderTexture;
         private RenderTexture _blurRenderTexture;
         private RenderTexture _blurRenderTexture2;
-        private PassUniform[] _passUniforms = new PassUniform[1];
+        private UniformValue[] _passUniforms;
 
         public BloomPostProcessing()
         {
@@ -35,7 +35,7 @@ namespace Game
             _blurRenderTexture2 = new RenderTexture(_brightRenderTexture.Width, _brightRenderTexture.Height);
             _combineRenderTexture = new RenderTexture(Window.Width, Window.Height);
 
-            _passUniforms = [new PassUniform() { Name = "uBlurTex", RenderTexture = _blurRenderTexture2 }];
+            _passUniforms = [UniformValue.AsRenderTexture("uBlurTex", _blurRenderTexture2)];
             Window.OnWindowChanged += Window_OnWindowChanged;
         }
 
