@@ -16,6 +16,8 @@ namespace Game
         protected BoxCollider2D BoxCollider { get; private set; }
         protected SpriteRenderer SpriteRenderer { get; private set; }
         private bool _isPlayerInZone = false;
+        private Predicate<Player> _conditionToInteract;
+
         public override void OnAwake()
         {
             Rigidbody = GetComponent<RigidBody2D>();
@@ -28,6 +30,11 @@ namespace Game
             SpriteRenderer.Material = MaterialUtils.SpriteMaterial;
             SpriteRenderer.SortOrder = -1;
 
+        }
+
+        public void SetConditionToInteract(Predicate<Player> condition)
+        {
+            _conditionToInteract = condition;
         }
 
         protected sealed override void OnTriggerEnter2D(Collider2D collider)
@@ -48,14 +55,17 @@ namespace Game
             }
         }
 
-        protected abstract void OnPlayerInteractZone(bool enter, Player player);
+        public bool CanInteract(Player player)
+        {
+            return _conditionToInteract?.Invoke(player) ?? true;
+        }
 
         private bool IsPlayerLayer(Collider2D collider)
         {
             return collider.Actor.Layer == LayerMask.NameToLayer(GameLayers.PLAYER);
         }
 
-        public abstract bool CanInteract(Player player);
+        protected virtual void OnPlayerInteractZone(bool enter, Player player) { }
         public abstract bool TryInteract(Player player);
     }
 }

@@ -1,4 +1,5 @@
-﻿using GlmNet;
+﻿using Engine;
+using GlmNet;
 using ldtk;
 using System;
 using System.Collections.Generic;
@@ -12,8 +13,12 @@ namespace Game
     {
         public override GameEntity Build(vec2 position, FieldInstance[] fields)
         {
-            
-            return null;
+            foreach (var field in fields)
+            {
+                Debug.Log(field.Identifier + ", " + field.Value);
+            }
+
+            return GamePrefabs.World.InstantiateDoor(position);
         }
     }
 }

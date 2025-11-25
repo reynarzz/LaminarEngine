@@ -15,7 +15,7 @@ namespace Game
             public static Door InstantiateDoor(vec2 position, Predicate<Player> conditionToOpen = null)
             {
                 var door = new Actor("Door").AddComponent<Door>();
-                door.SetConditionToOpen(conditionToOpen ?? (_ => true));
+                door.SetConditionToInteract(conditionToOpen ?? (_ => true));
                 door.Transform.WorldPosition = position;
                 return door;
             }

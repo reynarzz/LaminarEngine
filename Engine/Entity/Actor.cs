@@ -448,9 +448,15 @@ namespace Engine
         {
             return SceneManager.FindAll<T>(findDisabled);
         }
-
+        public static void DontDestroyOnLoad(Component component)
+        {
+            DontDestroyOnLoad(component.Actor);
+        }
         public static void DontDestroyOnLoad(Actor actor)
         {
+            if (!actor)
+                return;
+
             // Remove from current scene.
             actor.Scene.TryGetTarget(out var scene);
             scene.RemoveActor(actor);

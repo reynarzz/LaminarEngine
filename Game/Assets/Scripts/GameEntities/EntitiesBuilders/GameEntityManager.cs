@@ -1,32 +1,45 @@
-﻿using GlmNet;
-using ldtk;
-using System;
+﻿using Engine;
+using GlmNet;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ldtk;
 
 namespace Game
 {
     public class GameEntityManager
     {
+        private const string DONT_DESTROY_ON_LOAD = "Persistant";
         private readonly Dictionary<string, GameEntityBuilderBase> _entityBuilders;
         public GameEntityManager()
         {
             _entityBuilders = new Dictionary<string, GameEntityBuilderBase>()
             {
-                { "Door", new DoorEntityBuilder() }
+                { "Door", new DoorEntityBuilder() },
+                { "Collectible", new ItemsEntityBuilder() },
+                { "Enemy", new EnemyEntityBuilder() },
             };
         }
 
-        public bool BuildEntity(string name, vec2 position, FieldInstance[] fields)
+        public GameEntity BuildEntity(EntityInstance entity, vec2 position)
         {
-            if(_entityBuilders.TryGetValue(name, out var builder))
+            if(_entityBuilders.TryGetValue(entity.Identifier, out var builder))
             {
-                return builder.Build(position, fields);
+                var gameEntity = builder.Build(position, entity.FieldInstances);
+
+                foreach (var tag in entity.Tags)
+                {
+                    if (tag.Equals(DONT_DESTROY_ON_LOAD))
+                    {
+                        Actor.DontDestroyOnLoad(gameEntity.Actor);
+                    }
+                }
+
+                return gameEntity;
             }
 
-            return false;
+            return null;
         }
     }
 }

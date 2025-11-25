@@ -17,7 +17,7 @@ namespace Game
             var size = new vec2(34, 28);
             var pivot = new vec2(0.58f, 0.34f);
 
-            string[] pathSprites = ["KingsAndPigsSprites/03-Pig/Idle (34x28).png",
+            string[] atlasId = ["KingsAndPigsSprites/03-Pig/Idle (34x28).png",
                                     "KingsAndPigsSprites/03-Pig/Run (34x28).png",
                                     "KingsAndPigsSprites/03-Pig/Jump (34x28).png",
                                     "KingsAndPigsSprites/03-Pig/Fall (34x28).png",
@@ -32,9 +32,7 @@ namespace Game
                 {
                     IsEnabled = true,
                     Fps = fps,
-                    Pivot = pivot,
-                    Size = size,
-                    SpriteAtlasPath = pathSprites[i],
+                    SpriteAtlasPath = atlasId[i],
                 };
             }
             InitAnimationStates(states);

@@ -27,19 +27,19 @@ namespace Game
                 PlayerMatPass.Stencil.ZPassOp = StencilOp.Replace;
             }
 
-            public static Collectible InstantiateCoin(vec2 position)
+            public static Collectible InstantiateCollectible(ItemId item, vec2 position)
             {
-                var collectible = new Actor("Coin").AddComponent<Collectible>();
+                var collectible = new Actor("Collectible_"+ item.ToString()).AddComponent<Collectible>();
                 collectible.Transform.WorldPosition = position;
 
+                // TODO: this depends on the type of the collectible
                 var tex = Assets.GetTexture("starkTileset.png");
                 var tiles = TextureAtlasUtils.SliceSprites(tex, 16, 16, 281, 1);
-
                 var audioClip = Assets.GetAudioClip("Audio/HALFTONE/Gameplay/Collectibles_2.wav");
 
                 collectible.Init(new Collectible.CollectibleConfig()
                 {
-                    Item = ItemId.coin_currency,
+                    Item = item,
                     Amount = 1,
                     IdleSprites = [ tiles[0]],
                     CollectedSprites = null,

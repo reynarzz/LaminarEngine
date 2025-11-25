@@ -622,7 +622,7 @@ namespace ldtk
         /// Default value if selected value is null or invalid.
         /// </summary>
         [JsonProperty("defaultOverride")]
-        public dynamic DefaultOverride { get; set; }
+        public object DefaultOverride { get; set; }
 
         /// <summary>
         /// User defined documentation for this field to provide help/tips to level designers about
@@ -1378,7 +1378,7 @@ namespace ldtk
         /// source image changes.
         /// </summary>
         [JsonProperty("cachedPixelData")]
-        public Dictionary<string, dynamic> CachedPixelData { get; set; }
+        public Dictionary<string, object> CachedPixelData { get; set; }
 
         /// <summary>
         /// An array of custom tile metadata
@@ -1435,7 +1435,7 @@ namespace ldtk
         /// Array of group of tiles selections, only meant to be used in the editor
         /// </summary>
         [JsonProperty("savedSelections")]
-        public Dictionary<string, dynamic>[] SavedSelections { get; set; }
+        public Dictionary<string, object>[] SavedSelections { get; set; }
 
         /// <summary>
         /// Space in pixels between all tiles
@@ -1708,7 +1708,7 @@ namespace ldtk
         /// array, then this `__value` will also be a JSON array.
         /// </summary>
         [JsonProperty("__value")]
-        public dynamic Value { get; set; }
+        public object Value { get; set; }
 
         /// <summary>
         /// Reference of the **Field definition** UID
@@ -1720,7 +1720,7 @@ namespace ldtk
         /// Editor internal raw values
         /// </summary>
         [JsonProperty("realEditorValues")]
-        public dynamic[] RealEditorValues { get; set; }
+        public object[] RealEditorValues { get; set; }
     }
 
     /// <summary>
@@ -2228,7 +2228,7 @@ namespace ldtk
         /// enabled. This object typing depends on actual field value types.
         /// </summary>
         [JsonProperty("fields")]
-        public dynamic Fields { get; set; }
+        public object Fields { get; set; }
 
         [JsonProperty("heiPx")]
         public long HeiPx { get; set; }

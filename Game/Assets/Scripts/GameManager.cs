@@ -39,11 +39,12 @@ namespace Game
         private ItemsDatabase _itemsDatabase;
         private PauseMenu _pauseMenu;
         private static Material _tilemapMaterial;
-        private FadeScreenPostProcessing _fadePostProcessing = new();
+        private FadeInOutManager _fadeInOutManager;
         public static Player Player { get; private set; }
         public static Material DefaultMaterial => _stencylMaterial;
 
         public static FontAsset DefaultFont { get; internal set; }
+        private static GameEntityManager _gameEntityManager;
 
         public override void OnAwake()
         {
@@ -62,6 +63,7 @@ namespace Game
         {
             _itemsDatabase = new ItemsDatabase("Data/ItemsDatabase.csv");
             DefaultFont = Assets.Get<FontAsset>("Fonts/windows-bold[1].ttf");
+            _gameEntityManager = new GameEntityManager();
         }
         private void InitializeMaterials()
         {
@@ -201,10 +203,10 @@ namespace Game
 
             WaterTest();
             ParticleSystem();
-            PostProcessingStack.Push(_fadePostProcessing);
-            _fadePostProcessing.SetAmount(0);
-        }
 
+            _fadeInOutManager = new Actor("FadeInOutManager").AddComponent<FadeInOutManager>();
+            Actor.DontDestroyOnLoad(_fadeInOutManager);
+        }
 
         private void LoadTilemap()
         {
@@ -256,26 +258,8 @@ namespace Game
                                 return coinCount >= coinsNeeded;
                             });
                         }
-                        
-                        switch (entity.Identifier)
-                        {
-                            case "Enemy1":
-                                GamePrefabs.Enemies.InstantiateKingPig(position, -1);
-                                break;
-                            case "Coin":
-                                GamePrefabs.Collectibles.InstantiateCoin(position);
-                                break;
-                            case "Door":
-                                GamePrefabs.World.InstantiateDoor(position);
-                                break;
-                            default:
-                                break;
-                        }
 
-                        foreach (var field in entity.FieldInstances)
-                        {
-                            //Debug.Log("Name: " + field.Identifier + ", Type: " + field.Type + ", Value: " + field.Value);
-                        }
+                        _gameEntityManager.BuildEntity(entity, position);
                     }
                 }
             }

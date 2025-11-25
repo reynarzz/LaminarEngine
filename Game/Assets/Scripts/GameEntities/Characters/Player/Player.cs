@@ -28,17 +28,14 @@ namespace Game
             box.Offset = new vec2(0, 0.8f);
             box.Friction = 0;
 
-            const float fps = 11.5f;
-            var size = new vec2(78, 58);
-            var pivot = new vec2(0.4f, 0.4f);
-
-            string[] pathSprites = ["KingsAndPigsSprites/01-King Human/Idle (78x58)S.png",
-                                    "KingsAndPigsSprites/01-King Human/Run (78x58)S.png",
-                                    "KingsAndPigsSprites/01-King Human/Jump (78x58)S.png",
-                                    "KingsAndPigsSprites/01-King Human/Fall (78x58)S.png",
-                                    "KingsAndPigsSprites/01-King Human/Hit (78x58).png",
-                                    "KingsAndPigsSprites/01-King Human/Dead (78x58).png",
-                                    "KingsAndPigsSprites/01-King Human/Attack (78x58).png"];
+            string[] atlasid = ["player_idle",
+                                    "player_run",
+                                    "player_jump",
+                                    "player_fall",
+                                    "player_hit",
+                                    "player_dead",
+                                    "player_attack",
+                                    ];
 
             var states = new AnimationsStates();
             for (int i = 0; i < AnimationsStates.Length; i++)
@@ -46,10 +43,8 @@ namespace Game
                 states[i] = new AnimationStateInfo()
                 {
                     IsEnabled = true,
-                    Fps = fps,
-                    Pivot = pivot,
-                    Size = size,
-                    SpriteAtlasPath = pathSprites[i],
+                    Fps = 11.5f,
+                    SpriteAtlasPath = atlasid[i],
                 };
             }
 
@@ -59,11 +54,36 @@ namespace Game
 
             InitAnimationStates(states);
 
-            var doorInTexAtlas = Assets.GetTexture("KingsAndPigsSprites/01-King Human/Door In (78x58).png");
-            var doorOutTexAtlas = Assets.GetTexture("KingsAndPigsSprites/01-King Human/Door Out (78x58).png");
-
             var doorInState = AnimatorUtils.AddState(Animator, "DoorIn", false);
-            doorInState.Clip.AddCurve(SPRITE_PROPERTY_NAME, new SpriteCurve(fps, TextureAtlasUtils.SliceSprites(doorInTexAtlas, 78, 58, pivot, 2)));
+            doorInState.Clip.AddCurve(SPRITE_PROPERTY_NAME, new SpriteCurve(fps, GameTextureAtlases.GetAtlas("player_door_in")));
+
+            var doorOutState = AnimatorUtils.AddState(Animator, "DoorOut", false);
+            doorOutState.Clip.AddCurve(SPRITE_PROPERTY_NAME, new SpriteCurve(fps, GameTextureAtlases.GetAtlas("player_door_out")));
+        }
+
+        public void InitLevel()
+        {
+
+        }
+        public void ExitFromDoor(Door door)
+        {
+            Renderer.IsEnabled = false;
+            _canMove = false;
+            Walk(1);
+            IEnumerator ExitFromDoor()
+            {
+                Debug.Log("Open");
+                door.Open();
+                yield return new WaitForSeconds(0.3f);
+                Animator.Play("DoorOut");
+                Renderer.IsEnabled = true;
+                yield return new WaitForSeconds(0.5f);
+                door.Close();
+                Animator.Play(IDLE_ANIM_STATE);
+                _canMove = true;
+            }
+
+            StartCoroutine(ExitFromDoor());
         }
 
         private void MoveToDoor(Door door)
@@ -186,8 +206,8 @@ namespace Game
             var interactable = collider.GetComponent<InteractableEntityBase>();
             if (interactable)
             {
-                if(!_nearInteractables.Contains(interactable))
-                _nearInteractables.Add(interactable);
+                if (!_nearInteractables.Contains(interactable))
+                    _nearInteractables.Add(interactable);
             }
         }
 
