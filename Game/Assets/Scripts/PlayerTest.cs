@@ -109,7 +109,7 @@ namespace Game
         {
         }
 
-        public override void OnUpdate()
+        protected override void OnUpdate()
         {
 #if DEBUG
             Window.Name = $"Game (FPS: {Time.FPS})";

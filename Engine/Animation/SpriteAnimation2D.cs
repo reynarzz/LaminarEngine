@@ -31,7 +31,7 @@ namespace Engine
                 Play();
             }
         }
-        public override void OnUpdate()
+        protected override void OnUpdate()
         {
             if (_frames == null)
                 return;

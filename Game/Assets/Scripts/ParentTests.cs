@@ -9,7 +9,7 @@ namespace Game
 {
     internal class ParentTests : ScriptBehavior
     {
-        public override void OnUpdate()
+        protected override void OnUpdate()
         {
             if (Input.GetKeyDown(KeyCode.F))
             {

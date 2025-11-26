@@ -374,7 +374,7 @@ namespace Game
             return screenGrabTest;
         }
 
-        public override void OnUpdate()
+        protected override void OnUpdate()
         {
 #if DEBUG
             Window.Name = Time.FPS.ToString();

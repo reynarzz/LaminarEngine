@@ -30,10 +30,16 @@ namespace Game
                 return false;
 
             Item item = ItemsDatabase.GetItem(id);
+            if (item == null)
+            {
+                Debug.Error($"Item: '{id}' is not added to the '_itemTypeMapper' dictionary, or 'itemsDatabase.csv'.");
+                return false;
+            }
+
             var slotIndex = GetFirstSlotIndex(item.Features.Id);
             var currentSlot = default(InventorySlot);
-            
-            if(slotIndex >= 0)
+
+            if (slotIndex >= 0)
             {
                 currentSlot = _slots[slotIndex];
             }
@@ -95,13 +101,26 @@ namespace Game
         public int GetItemCount(ItemId id)
         {
             var index = GetFirstSlotIndex(id);
-            if(index >= 0)
+            if (index >= 0)
             {
                 return _slots[index].Amount;
             }
             return 0;
         }
-        public void Use(int slotIndex, int amountMul = 1)
+        public bool Use(ItemId id, int amountMul = 1)
+        {
+            if (id == ItemId.none)
+                return false;
+
+            var index = GetFirstSlotIndex(id);
+            if (index >= 0)
+            {
+                return Use(index, amountMul);
+            }
+            return false;
+        }
+
+        public bool Use(int slotIndex, int amountMul = 1)
         {
             var slot = GetSlot(slotIndex);
 
@@ -115,7 +134,11 @@ namespace Game
                 {
                     _slots[slotIndex] = new InventorySlot(slot.item, slot.Amount - useCount);
                 }
+
+                return true;
             }
+
+            return false;
         }
 
         public InventorySlot GetFirstSlot(ItemId id)

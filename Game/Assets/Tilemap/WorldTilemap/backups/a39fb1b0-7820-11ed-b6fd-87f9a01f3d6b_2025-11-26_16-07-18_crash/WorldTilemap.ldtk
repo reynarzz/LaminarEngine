@@ -27,7 +27,7 @@
 				"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
 				"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
 				"entityIid": "523fb710-ac70-11f0-ad00-7b52ae2081f8"
-			}, "worldX": -440, "worldY": 144, "widPx": 20, "heiPx": 20, "fields" : {} }]
+			}, "worldX": -408, "worldY": 144, "widPx": 20, "heiPx": 20, "fields" : {} }]
 		},
 		{
 			"identifier": "Enemy",
@@ -2183,10 +2183,7 @@
 					"max": null,
 					"regex": null,
 					"acceptFileTypes": null,
-					"defaultOverride": {
-						"id": "V_Bool",
-						"params": [ true ]
-					},
+					"defaultOverride": null,
 					"textLanguageMode": null,
 					"symmetricalRef": false,
 					"autoChainRef": true,
@@ -2446,7 +2443,7 @@
 					"max": null,
 					"regex": null,
 					"acceptFileTypes": null,
-					"defaultOverride": { "id": "V_Int", "params": [1] },
+					"defaultOverride": null,
 					"textLanguageMode": null,
 					"symmetricalRef": false,
 					"autoChainRef": true,
@@ -2641,12 +2638,12 @@
 	], "enums": [
 		{ "identifier": "ItemType", "uid": 74, "values": [
 			{ "id": "Coin_currency", "tileRect": { "tilesetUid": 133, "x": 160, "y": 0, "w": 16, "h": 16 }, "color": 11307334 },
-			{ "id": "Normal_potion", "tileRect": { "tilesetUid": 133, "x": 16, "y": 272, "w": 16, "h": 16 }, "color": 10964028 },
-			{ "id": "Small_potion", "tileRect": { "tilesetUid": 133, "x": 80, "y": 272, "w": 16, "h": 16 }, "color": 16217634 },
+			{ "id": "Healing", "tileRect": { "tilesetUid": 133, "x": 16, "y": 272, "w": 16, "h": 16 }, "color": 10964028 },
 			{ "id": "Weapon", "tileRect": { "tilesetUid": 133, "x": 192, "y": 432, "w": 16, "h": 16 }, "color": 8018775 },
-			{ "id": "Simple_key", "tileRect": { "tilesetUid": 133, "x": 16, "y": 352, "w": 16, "h": 16 }, "color": 14984818 },
 			{ "id": "Chest_key", "tileRect": { "tilesetUid": 133, "x": 48, "y": 352, "w": 16, "h": 16 }, "color": 15389866 },
-			{ "id": "Boss_key", "tileRect": { "tilesetUid": 133, "x": 80, "y": 352, "w": 16, "h": 16 }, "color": 4073265 }
+			{ "id": "Simple_key", "tileRect": { "tilesetUid": 133, "x": 16, "y": 352, "w": 16, "h": 16 }, "color": 14984818 },
+			{ "id": "BossKey", "tileRect": { "tilesetUid": 133, "x": 80, "y": 352, "w": 16, "h": 16 }, "color": 4073265 },
+			{ "id": "ItemType0", "tileRect": null, "color": 16217634 }
 		], "iconTilesetUid": 133, "externalRelPath": null, "externalFileChecksum": null, "tags": [] },
 		{ "identifier": "RoomType", "uid": 98, "values": [ { "id": "Entrance", "tileRect": { "tilesetUid": 133, "x": 0, "y": 32, "w": 16, "h": 16 }, "color": 6539085 }, { "id": "Exit", "tileRect": { "tilesetUid": 133, "x": 48, "y": 240, "w": 16, "h": 16 }, "color": 11882632 } ], "iconTilesetUid": 133, "externalRelPath": null, "externalFileChecksum": null, "tags": [] },
 		{ "identifier": "EnemyType", "uid": 157, "values": [{ "id": "KingPig", "tileRect": { "tilesetUid": 133, "x": 96, "y": 0, "w": 16, "h": 16 }, "color": 12470831 }], "iconTilesetUid": 133, "externalRelPath": null, "externalFileChecksum": null, "tags": [] },
@@ -2854,7 +2851,7 @@
 						},
 						{
 							"__identifier": "Player",
-							"__grid": [52,41],
+							"__grid": [54,41],
 							"__pivot": [0.5,0.5],
 							"__tags": [ "Persistant", "Actor" ],
 							"__tile": { "tilesetUid": 133, "x": 256, "y": 144, "w": 16, "h": 16 },
@@ -2863,12 +2860,12 @@
 							"width": 20,
 							"height": 20,
 							"defUid": 90,
-							"px": [840,656],
+							"px": [872,656],
 							"fieldInstances": [{ "__identifier": "LookToRight", "__type": "Bool", "__value": true, "__tile": null, "defUid": 203, "realEditorValues": [{
 								"id": "V_Bool",
 								"params": [ true ]
 							}] }],
-							"__worldX": -440,
+							"__worldX": -408,
 							"__worldY": 144
 						},
 						{
@@ -3101,7 +3098,7 @@
 						},
 						{
 							"__identifier": "Door",
-							"__grid": [59,40],
+							"__grid": [58,40],
 							"__pivot": [0.5,0.5],
 							"__tags": ["Actor"],
 							"__tile": { "tilesetUid": 133, "x": 80, "y": 592, "w": 16, "h": 16 },
@@ -3110,17 +3107,17 @@
 							"width": 48,
 							"height": 48,
 							"defUid": 175,
-							"px": [952,648],
+							"px": [936,648],
 							"fieldInstances": [
-								{ "__identifier": "locked_by", "__type": "LocalEnum.ItemType", "__value": "Boss_key", "__tile": null, "defUid": 181, "realEditorValues": [{
+								{ "__identifier": "locked_by", "__type": "LocalEnum.ItemType", "__value": "Coin_currency", "__tile": null, "defUid": 181, "realEditorValues": [{
 									"id": "V_String",
-									"params": ["Boss_key"]
+									"params": ["Coin_currency"]
 								}] },
-								{ "__identifier": "locked_amount", "__type": "Int", "__value": 1, "__tile": null, "defUid": 179, "realEditorValues": [{ "id": "V_Int", "params": [1] }] },
-								{ "__identifier": "consume_item", "__type": "Bool", "__value": true, "__tile": null, "defUid": 218, "realEditorValues": [] },
+								{ "__identifier": "locked_amount", "__type": "Int", "__value": 5, "__tile": null, "defUid": 179, "realEditorValues": [{ "id": "V_Int", "params": [5] }] },
+								{ "__identifier": "consume_item", "__type": "Bool", "__value": false, "__tile": null, "defUid": 218, "realEditorValues": [] },
 								{ "__identifier": "level", "__type": "Int", "__value": 0, "__tile": null, "defUid": 177, "realEditorValues": [] }
 							],
-							"__worldX": -328,
+							"__worldX": -344,
 							"__worldY": 136
 						},
 						{
@@ -3141,7 +3138,7 @@
 						},
 						{
 							"__identifier": "Chest",
-							"__grid": [65,41],
+							"__grid": [63,41],
 							"__pivot": [0.5,0.5],
 							"__tags": ["Actor"],
 							"__tile": { "tilesetUid": 169, "x": 80, "y": 80, "w": 16, "h": 16 },
@@ -3150,19 +3147,19 @@
 							"width": 16,
 							"height": 16,
 							"defUid": 200,
-							"px": [1048,664],
+							"px": [1016,664],
 							"fieldInstances": [
 								{ "__identifier": "locked_by", "__type": "LocalEnum.ItemType", "__value": null, "__tile": null, "defUid": 217, "realEditorValues": [] },
-								{ "__identifier": "items_loot", "__type": "Array<LocalEnum.ItemType>", "__value": [ "Coin_currency", "Simple_key" ], "__tile": null, "defUid": 202, "realEditorValues": [ {
+								{ "__identifier": "items_loot", "__type": "Array<LocalEnum.ItemType>", "__value": [ "Coin_currency", "BossKey", null ], "__tile": null, "defUid": 202, "realEditorValues": [ {
 									"id": "V_String",
 									"params": ["Coin_currency"]
 								}, {
 									"id": "V_String",
-									"params": ["Simple_key"]
-								} ] },
-								{ "__identifier": "items_amount", "__type": "Array<Int>", "__value": [10,2], "__tile": null, "defUid": 208, "realEditorValues": [ { "id": "V_Int", "params": [10] }, { "id": "V_Int", "params": [2] } ] }
+									"params": ["BossKey"]
+								}, null ] },
+								{ "__identifier": "items_amount", "__type": "Array<Int>", "__value": [10,1,1], "__tile": null, "defUid": 208, "realEditorValues": [ { "id": "V_Int", "params": [10] }, { "id": "V_Int", "params": [1] }, { "id": "V_Int", "params": [1] } ] }
 							],
-							"__worldX": -232,
+							"__worldX": -264,
 							"__worldY": 152
 						},
 						{
@@ -3264,7 +3261,7 @@
 						},
 						{
 							"__identifier": "Chest",
-							"__grid": [63,41],
+							"__grid": [65,41],
 							"__pivot": [0.5,0.5],
 							"__tags": ["Actor"],
 							"__tile": { "tilesetUid": 169, "x": 80, "y": 80, "w": 16, "h": 16 },
@@ -3273,25 +3270,13 @@
 							"width": 16,
 							"height": 16,
 							"defUid": 200,
-							"px": [1016,664],
+							"px": [1048,664],
 							"fieldInstances": [
-								{ "__identifier": "locked_by", "__type": "LocalEnum.ItemType", "__value": "Simple_key", "__tile": null, "defUid": 217, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["Simple_key"]
-								}] },
-								{ "__identifier": "items_loot", "__type": "Array<LocalEnum.ItemType>", "__value": [ "Coin_currency", "Normal_potion", "Chest_key" ], "__tile": null, "defUid": 202, "realEditorValues": [ {
-									"id": "V_String",
-									"params": ["Coin_currency"]
-								}, {
-									"id": "V_String",
-									"params": ["Normal_potion"]
-								}, {
-									"id": "V_String",
-									"params": ["Chest_key"]
-								} ] },
-								{ "__identifier": "items_amount", "__type": "Array<Int>", "__value": [10,2,1], "__tile": null, "defUid": 208, "realEditorValues": [ { "id": "V_Int", "params": [10] }, { "id": "V_Int", "params": [2] }, { "id": "V_Int", "params": [1] } ] }
+								{ "__identifier": "locked_by", "__type": "LocalEnum.ItemType", "__value": null, "__tile": null, "defUid": 217, "realEditorValues": [] },
+								{ "__identifier": "items_loot", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 202, "realEditorValues": [] },
+								{ "__identifier": "items_amount", "__type": "Array<Int>", "__value": [], "__tile": null, "defUid": 208, "realEditorValues": [] }
 							],
-							"__worldX": -264,
+							"__worldX": -232,
 							"__worldY": 152
 						},
 						{
@@ -3307,42 +3292,12 @@
 							"defUid": 200,
 							"px": [696,664],
 							"fieldInstances": [
-								{ "__identifier": "locked_by", "__type": "LocalEnum.ItemType", "__value": "Simple_key", "__tile": null, "defUid": 217, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["Simple_key"]
-								}] },
-								{ "__identifier": "items_loot", "__type": "Array<LocalEnum.ItemType>", "__value": ["Boss_key"], "__tile": null, "defUid": 202, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["Boss_key"]
-								}] },
-								{ "__identifier": "items_amount", "__type": "Array<Int>", "__value": [1], "__tile": null, "defUid": 208, "realEditorValues": [{ "id": "V_Int", "params": [1] }] }
+								{ "__identifier": "locked_by", "__type": "LocalEnum.ItemType", "__value": null, "__tile": null, "defUid": 217, "realEditorValues": [] },
+								{ "__identifier": "items_loot", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 202, "realEditorValues": [] },
+								{ "__identifier": "items_amount", "__type": "Array<Int>", "__value": [], "__tile": null, "defUid": 208, "realEditorValues": [] }
 							],
 							"__worldX": -584,
 							"__worldY": 152
-						},
-						{
-							"__identifier": "Door",
-							"__grid": [56,40],
-							"__pivot": [0.5,0.5],
-							"__tags": ["Actor"],
-							"__tile": { "tilesetUid": 133, "x": 80, "y": 592, "w": 16, "h": 16 },
-							"__smartColor": "#BE4A2F",
-							"iid": "0d702120-ac70-11f0-ace5-356a1ca3b89d",
-							"width": 48,
-							"height": 48,
-							"defUid": 175,
-							"px": [904,648],
-							"fieldInstances": [
-								{ "__identifier": "locked_by", "__type": "LocalEnum.ItemType", "__value": "Coin_currency", "__tile": null, "defUid": 181, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["Coin_currency"]
-								}] },
-								{ "__identifier": "locked_amount", "__type": "Int", "__value": 10, "__tile": null, "defUid": 179, "realEditorValues": [{ "id": "V_Int", "params": [10] }] },
-								{ "__identifier": "consume_item", "__type": "Bool", "__value": true, "__tile": null, "defUid": 218, "realEditorValues": [] },
-								{ "__identifier": "level", "__type": "Int", "__value": 0, "__tile": null, "defUid": 177, "realEditorValues": [] }
-							],
-							"__worldX": -376,
-							"__worldY": 136
 						}
 					]
 				},

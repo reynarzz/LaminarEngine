@@ -44,7 +44,7 @@ namespace Engine
             Mesh.Vertices.Capacity = _particles.Capacity * 4;
         }
 
-        public void OnUpdate()
+        void IUpdatableComponent.OnUpdate()
         {
             var dt = Time.DeltaTime * SimulationSpeed;
 

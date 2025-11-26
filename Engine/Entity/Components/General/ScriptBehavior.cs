@@ -38,7 +38,7 @@ namespace Engine
 
             OnUpdate();
         }
-        public virtual void OnUpdate() { }
+        protected virtual void OnUpdate() { }
         public virtual void OnLateUpdate() { }
         public virtual void OnFixedUpdate() { }
         internal protected virtual void OnCollisionEnter2D(Collision2D collision) { }
