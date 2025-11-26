@@ -22,7 +22,7 @@ namespace Game
             _textRenderer = GetComponent<UIText>();
         }
 
-        public override void OnUpdate()
+        protected override void OnUpdate()
         {
             if((_currentTime -= Time.DeltaTime) <= 0)
             {

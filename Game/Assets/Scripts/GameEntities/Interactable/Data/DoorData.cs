@@ -10,7 +10,7 @@ namespace Game
     {
         public int Level { get; set; }
         public ItemId LockedBy { get; set; }
-        public int Amount { get; set; }
+        public int LockedAmount { get; set; }
         public bool ConsumeItem { get; set; }
     }
 }

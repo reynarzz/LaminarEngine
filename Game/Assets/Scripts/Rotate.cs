@@ -23,7 +23,7 @@ namespace Game
             return min + (float)new Random().NextDouble() * (max - min);
         }
 
-        public override void OnUpdate()
+        protected override void OnUpdate()
         {
             _zOffset += Time.DeltaTime * _rotateSpeed;
 

@@ -99,7 +99,7 @@ namespace Game
 
         }
 
-        public override void OnUpdate()
+        protected override void OnUpdate()
         {
             _controller.Parameters.SetFloat("Speed", 2.0f);
 

@@ -76,10 +76,14 @@ namespace Game
                     
                     yield return new WaitForSeconds(0.2f);
 
-                    foreach (var loot in Data.ChestLoot)
+                    if(Data.ChestLoot != null)
                     {
-                        player.Inventory.Add(loot.Item, loot.Amount);
+                        foreach (var loot in Data.ChestLoot)
+                        {
+                            player.Inventory.Add(loot.Item, loot.Amount);
+                        }
                     }
+                   
                     Animator.Play("CollectedIdle");
                 }
 

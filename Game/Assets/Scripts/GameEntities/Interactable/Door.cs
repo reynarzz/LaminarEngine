@@ -50,7 +50,6 @@ namespace Game
                 Open();
                 return true;
             }
-
             return false;
         }
 

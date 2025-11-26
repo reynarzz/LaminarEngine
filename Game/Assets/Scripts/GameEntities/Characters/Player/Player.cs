@@ -116,7 +116,7 @@ namespace Game
             StartCoroutine(WalkToDoor());
         }
 
-        public override void OnUpdate()
+        protected override void OnUpdate()
         {
             if (Input.GetKeyDown(KeyCode.E))
             {

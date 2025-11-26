@@ -18,7 +18,7 @@ namespace Game
             _startPos = Transform.WorldPosition;
         }
 
-        public override void OnUpdate()
+        protected override void OnUpdate()
         {
             var freq = Time.TimeCurrent * 3;
 

@@ -77,7 +77,7 @@ namespace Game
         //    _animator.AddState(state);
         //}
 
-        public override void OnUpdate()
+        protected override void OnUpdate()
         {
             base.OnUpdate();
             if(_animator != null )

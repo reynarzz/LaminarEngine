@@ -52,7 +52,7 @@ namespace Game
 
             _stateMachine.ChangeState<ChaseState<KingPigEnemy>>();
         }
-        public override void OnUpdate()
+        protected override void OnUpdate()
         {
             _stateMachine.OnUpdate();
         }

@@ -37,7 +37,7 @@ namespace Game
             CheckCollision();
         }
 
-        public override void OnUpdate()
+        protected override void OnUpdate()
         {
             Transform.WorldPosition += _shootDir * Time.DeltaTime * _speed;
 

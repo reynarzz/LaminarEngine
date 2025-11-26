@@ -105,7 +105,7 @@ namespace Game
             _animator.IsEnabled = false;
         }
 
-        public override void OnUpdate()
+        protected override void OnUpdate()
         {
             var sprite = _animator.GetSprite("Sprite");
 

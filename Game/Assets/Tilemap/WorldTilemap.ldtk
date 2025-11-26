@@ -2120,7 +2120,7 @@
 					"tilesetUid": null
 				},
 				{
-					"identifier": "value",
+					"identifier": "locked_amount",
 					"doc": null,
 					"__type": "Int",
 					"uid": 179,
@@ -3114,7 +3114,7 @@
 									"id": "V_String",
 									"params": ["Coin_currency"]
 								}] },
-								{ "__identifier": "value", "__type": "Int", "__value": 5, "__tile": null, "defUid": 179, "realEditorValues": [{ "id": "V_Int", "params": [5] }] },
+								{ "__identifier": "locked_amount", "__type": "Int", "__value": 5, "__tile": null, "defUid": 179, "realEditorValues": [{ "id": "V_Int", "params": [5] }] },
 								{ "__identifier": "consume_item", "__type": "Bool", "__value": false, "__tile": null, "defUid": 218, "realEditorValues": [] },
 								{ "__identifier": "level", "__type": "Int", "__value": 0, "__tile": null, "defUid": 177, "realEditorValues": [] }
 							],
@@ -3262,6 +3262,46 @@
 							],
 							"__worldX": 696,
 							"__worldY": -200
+						},
+						{
+							"__identifier": "Chest",
+							"__grid": [65,41],
+							"__pivot": [0.5,0.5],
+							"__tags": ["Actor"],
+							"__tile": { "tilesetUid": 169, "x": 80, "y": 80, "w": 16, "h": 16 },
+							"__smartColor": "#EAD4AA",
+							"iid": "dde64e00-ac70-11f0-80ea-2528f46db8b3",
+							"width": 16,
+							"height": 16,
+							"defUid": 200,
+							"px": [1048,664],
+							"fieldInstances": [
+								{ "__identifier": "locked_by", "__type": "LocalEnum.ItemType", "__value": null, "__tile": null, "defUid": 217, "realEditorValues": [] },
+								{ "__identifier": "items_loot", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 202, "realEditorValues": [] },
+								{ "__identifier": "items_amount", "__type": "Array<Int>", "__value": [], "__tile": null, "defUid": 208, "realEditorValues": [] }
+							],
+							"__worldX": -232,
+							"__worldY": 152
+						},
+						{
+							"__identifier": "Chest",
+							"__grid": [43,41],
+							"__pivot": [0.5,0.5],
+							"__tags": ["Actor"],
+							"__tile": { "tilesetUid": 169, "x": 80, "y": 80, "w": 16, "h": 16 },
+							"__smartColor": "#EAD4AA",
+							"iid": "e3afa0c0-ac70-11f0-80ea-89f2fbf78c6d",
+							"width": 16,
+							"height": 16,
+							"defUid": 200,
+							"px": [696,664],
+							"fieldInstances": [
+								{ "__identifier": "locked_by", "__type": "LocalEnum.ItemType", "__value": null, "__tile": null, "defUid": 217, "realEditorValues": [] },
+								{ "__identifier": "items_loot", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 202, "realEditorValues": [] },
+								{ "__identifier": "items_amount", "__type": "Array<Int>", "__value": [], "__tile": null, "defUid": 208, "realEditorValues": [] }
+							],
+							"__worldX": -584,
+							"__worldY": 152
 						}
 					]
 				},
