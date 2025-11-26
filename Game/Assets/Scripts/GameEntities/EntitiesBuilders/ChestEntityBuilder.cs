@@ -15,25 +15,22 @@ namespace Game
         public override GameEntity Build(vec2 position, FieldInstance[] fields, Func<vec2, bool, vec2> positionConverter)
         {
             var lootItems = default(ItemAmountPair[]);
-
+            ItemId lockedByItem = ItemId.none;
             for (int i = 0; i < fields.Length; i++)
             {
                 var field = fields[i];
-                if (field.Identifier.Equals("items_loot", StringComparison.OrdinalIgnoreCase))
+                if (GetEnum<ItemId>(field, "locked_by", out var lockedItem))
                 {
+                    lockedByItem = lockedItem;
+                }
+                if (GetEnumArray<ItemId>(field, "items_loot", out var items))
+                {
+                    lootItems = new ItemAmountPair[items.Length];
 
-                    var value = JsonConvert.DeserializeObject<string[]>(field.Value.ToString());
-                    for (int j = 0; j < value.Length; j++)
+                    for (int j = 0; j < items.Length; j++)
                     {
-                        if (lootItems == null)
-                        {
-                            lootItems = new ItemAmountPair[value.Length];
-                        }
-                        Enum.TryParse<ItemId>(value[j], true, out var item);
-                        var loot = lootItems[j];
-                        loot.Item = item;
-                        lootItems[j] = loot;
-
+                        ref var loot = ref lootItems[j];
+                        loot.Item = items[j];
                     }
                 }
                 else if (field.Identifier.Equals("items_amount", StringComparison.OrdinalIgnoreCase))
@@ -48,7 +45,12 @@ namespace Game
                 }
             }
 
-            return GamePrefabs.Items.InstantiateChest(position, new ChestData() { ChestLoot = lootItems });
+            return GamePrefabs.Items.InstantiateChest(position, new ChestData()
+            {
+                LockedBy = lockedByItem,
+                ChestLoot = lootItems,
+                InteractCondition = PlayerHasItem_Condition(lockedByItem, 1)
+            });
         }
 
         private void SimpleCollectible()

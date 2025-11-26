@@ -35,6 +35,7 @@ namespace Game
                 var openAtlasId = data.ChestLoot.Length > 2 ? "chest_normal_fill_open" : "chest_small_fill_open";
                 var idleAtlasId = data.ChestLoot.Length > 2 ? "chest_normal_idle" : "chest_small_idle";
                 var collectedAtlasId = data.ChestLoot.Length > 2 ? "chest_normal_empty_open" : "chest_small_empty_open";
+
                 SetAnims(idleAtlasId, openAtlasId, collectedAtlasId);
             }
             else
@@ -73,22 +74,23 @@ namespace Game
                 IEnumerator Collect()
                 {
                     Animator.Play("Open");
-                    
+
                     yield return new WaitForSeconds(0.2f);
 
-                    if(Data.ChestLoot != null)
+                    if (Data.ChestLoot != null)
                     {
+                        player.Inventory.Use(Data.LockedBy);
                         foreach (var loot in Data.ChestLoot)
                         {
                             player.Inventory.Add(loot.Item, loot.Amount);
                         }
                     }
-                   
+
                     Animator.Play("CollectedIdle");
                 }
 
                 StartCoroutine(Collect());
-               
+
                 return true;
             }
             return false;

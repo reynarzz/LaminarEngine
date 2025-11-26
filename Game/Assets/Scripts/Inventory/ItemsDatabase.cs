@@ -21,6 +21,7 @@ namespace Game
         confusion_grenade,
 
         // Health
+        normal_potion,
         small_potion,
 
         // Ammo
@@ -30,7 +31,8 @@ namespace Game
 
         // Keys
         simple_key,
-        yellow_key,
+        chest_key,
+        boss_key
     }
 
     public class ItemsDatabase
@@ -40,11 +42,14 @@ namespace Game
         {
             { ItemId.coin_currency, typeof(CoinItem) },
             { ItemId.confusion_grenade, typeof(ConfusionGrenadeItem) },
-            { ItemId.small_potion, typeof(SmallPotionItem) },
+            { ItemId.normal_potion, typeof(PotionItem) },
+            { ItemId.small_potion, typeof(PotionItem) },
             { ItemId.normal_ammo, typeof(NormalAmmoItem) },
             { ItemId.poison_ammo, typeof(PoisonAmmoItem) },
             { ItemId.fire_ammo, typeof(FireAmmoItem) },
-            { ItemId.simple_key, typeof(SimpleKeyItem) }
+            { ItemId.simple_key, typeof(KeyItem) },
+            { ItemId.chest_key, typeof(KeyItem) },
+            { ItemId.boss_key, typeof(KeyItem) },
         };
 
         public ItemsDatabase(string databaseCsvPath)

@@ -1,4 +1,5 @@
-﻿using GlmNet;
+﻿using Engine;
+using GlmNet;
 using ldtk;
 using Newtonsoft.Json;
 using System;
@@ -27,18 +28,39 @@ namespace Game
             return true;
         }
 
+        protected bool GetEnumArray<T>(FieldInstance field, string id, out T[] value) where T : unmanaged, Enum
+        {
+            value = default;
+            if (Deserialize<string[]>(field, id, out var enumsStr))
+            {
+                var enums = new T[enumsStr.Length];
+
+                for (int i = 0; i < enumsStr.Length; i++)
+                {
+                    if(!ParseEnum(enumsStr[i], out enums[i]))
+                    {
+                        Debug.Error($"Can't parse enum: {enumsStr[i]}, is not part of enum type: {typeof(T).Name}");
+                    }
+                }
+                value = enums;
+                return true;
+            }
+
+            return false;
+        }
+
         protected bool GetEnum<T>(FieldInstance field, string id, out T value) where T : unmanaged, Enum
         {
             value = default;
             if (!IsField(field, id))
                 return false;
 
-            if (Enum.TryParse<T>(field.Value?.ToString(), true, out var e))
-            {
-                value = e;
-            }
+            return ParseEnum(field.Value?.ToString(), out value);
+        }
 
-            return true;
+        private bool ParseEnum<T>(string str, out T value) where T : unmanaged, Enum
+        {
+            return Enum.TryParse(str, true, out value);
         }
         protected bool GetBool(FieldInstance field, string id, out bool value)
         {
@@ -60,6 +82,19 @@ namespace Game
             value = int.Parse(field.Value?.ToString());
 
             return true;
+        }
+
+        protected Predicate<Player> PlayerHasItem_Condition(ItemId item, int amount)
+        {
+            return p =>
+            {
+                if (item == ItemId.none)
+                {
+                    return true;
+                }
+
+                return p.Inventory.GetItemCount(item) >= amount;
+            };
         }
 
     }

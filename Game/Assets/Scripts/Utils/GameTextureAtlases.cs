@@ -70,7 +70,7 @@ namespace Game
             _tilesets["chest_normal_idle"] = GetSprites(_tilesets, "stark_full_tileset", 160, 1);
             _tilesets["chest_normal_fill_open"] = GetSprites(_tilesets, "stark_full_tileset", 164, 2);
             _tilesets["chest_normal_empty_open"] = GetSprites(_tilesets, "stark_full_tileset", 166, 2);
-            _tilesets["chest_small_idle"] = GetSprites(_tilesets, "stark_full_tileset", 162, 2);
+            _tilesets["chest_small_idle"] = GetSprites(_tilesets, "stark_full_tileset", 162, 1);
             _tilesets["chest_small_fill_open"] = GetSprites(_tilesets, "stark_full_tileset", 168, 1);
             _tilesets["chest_small_empty_open"] = GetSprites(_tilesets, "stark_full_tileset", 169, 1);
 

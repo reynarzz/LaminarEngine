@@ -28,16 +28,7 @@ namespace Game
                 }
             }
 
-            doorData.InteractCondition = p =>
-            {
-                if (doorData.LockedBy == ItemId.none || doorData.LockedAmount <= 0)
-                {
-                    return true;
-                }
-
-                return p.Inventory.GetItemCount(doorData.LockedBy) >= doorData.LockedAmount;
-            };
-
+            doorData.InteractCondition = PlayerHasItem_Condition(doorData.LockedBy, doorData.LockedAmount);
             return GamePrefabs.World.InstantiateDoor(position, doorData);
         }
     }

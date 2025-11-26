@@ -48,6 +48,7 @@ namespace Game
             if (CanInteract(player))
             {
                 Open();
+                player.Inventory.Use(Data.LockedBy);
                 return true;
             }
             return false;

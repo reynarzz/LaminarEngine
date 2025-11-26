@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    public class SmallPotionItem : Item
+    public class PotionItem : Item
     {
-        public SmallPotionItem(ItemFeatures features) : base(features) { }
+        public PotionItem(ItemFeatures features) : base(features) { }
 
         public override void Use(int amountMul, Inventory inventory)
         {
