@@ -2,6 +2,7 @@
 using Engine.Utils;
 using GlmNet;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,11 +33,12 @@ namespace Game
             {
                 var openAtlasId = ChestLoot.Length > 2 ? "chest_normal_fill_open" : "chest_small_fill_open";
                 var idleAtlasId = ChestLoot.Length > 2 ? "chest_normal_idle" : "chest_small_idle";
-                SetAnims(idleAtlasId, openAtlasId);
+                var collectedAtlasId = ChestLoot.Length > 2 ? "chest_normal_empty_open" : "chest_small_empty_open";
+                SetAnims(idleAtlasId, openAtlasId, collectedAtlasId);
             }
             else
             {
-                SetAnims("chest_normal_idle", "chest_normal_empty_open");
+                SetAnims("chest_normal_idle", "chest_normal_empty_open", "chest_normal_empty_open");
             }
 
             Animator.OnUpdate += x =>
@@ -45,7 +47,7 @@ namespace Game
             };
         }
 
-        private void SetAnims(string idleAtlasId, string openAtlasId)
+        private void SetAnims(string idleAtlasId, string openAtlasId, string collectedIdleAtlasId)
         {
             if (!Animator)
             {
@@ -53,9 +55,12 @@ namespace Game
             }
             var idleAnim = AnimatorUtils.AddState(Animator, "Idle", false);
             var openAnim = AnimatorUtils.AddState(Animator, "Open", false);
+            var collectedIdle = AnimatorUtils.AddState(Animator, "CollectedIdle", false);
 
             idleAnim.Clip.AddCurve("Sprite", new SpriteCurve(11, GameTextureAtlases.GetAtlas(idleAtlasId)));
             openAnim.Clip.AddCurve("Sprite", new SpriteCurve(11, GameTextureAtlases.GetAtlas(openAtlasId)));
+            //openAnim.Clip.AddEvent(openAnim.Clip.Duration, () => { });
+            collectedIdle.Clip.AddCurve("Sprite", new SpriteCurve(11, GameTextureAtlases.GetAtlas(collectedIdleAtlasId)[^1]));
         }
 
         public override bool TryInteract(Player player)
@@ -63,11 +68,22 @@ namespace Game
             if (!_isOpened && CanInteract(player))
             {
                 _isOpened = true;
-                Animator.Play("Open");
-                foreach (var loot in ChestLoot)
+
+                IEnumerator Collect()
                 {
-                    player.Inventory.Add(loot.Item, loot.Amount);
+                    Animator.Play("Open");
+                    
+                    yield return new WaitForSeconds(0.2f);
+
+                    foreach (var loot in ChestLoot)
+                    {
+                        player.Inventory.Add(loot.Item, loot.Amount);
+                    }
+                    Animator.Play("CollectedIdle");
                 }
+
+                StartCoroutine(Collect());
+               
                 return true;
             }
             return false;
