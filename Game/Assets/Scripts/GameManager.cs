@@ -191,7 +191,7 @@ namespace Game
             // GamePrefabs.Enemies.InstantiatePigStandard(Player.Transform.LocalPosition + vec3.Right * 2, -1);
 
             PostProcessingStack.Clear();
-            PostProcessingStack.Push(new BloomPostProcessing());
+            // PostProcessingStack.Push(new BloomPostProcessing());
             //ScreenGrabTest();
             ScreenGrabTest3();
 
