@@ -11,7 +11,7 @@ namespace Game
 {
     public class DoorEntityBuilder : GameEntityBuilderBase
     {
-        public override GameEntity Build(vec2 position, FieldInstance[] fields)
+        public override GameEntity Build(vec2 position, FieldInstance[] fields, Func<vec2, bool, vec2> positionConverter)
         {
             foreach (var field in fields)
             {

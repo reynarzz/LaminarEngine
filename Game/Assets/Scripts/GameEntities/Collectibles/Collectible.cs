@@ -47,6 +47,9 @@ namespace Game
                 AudioSource = AddComponent<AudioSource>();
 
                 rigid.BodyType = Body2DType.Dynamic;
+                rigid.LockZRotation = true;
+                rigid.Interpolate = true;
+
                 _renderer.Material = GameManager.DefaultMaterial;
                 _renderer.SortOrder = 0;
                 _collider = AddComponent<BoxCollider2D>();

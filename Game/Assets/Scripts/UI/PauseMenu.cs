@@ -219,10 +219,10 @@ namespace Game
                 SetColorAlpha(0);
             }
 
-            //if (Input.GetKeyDown(KeyCode.Tab))
-            //{
-            //    _inventory.Actor.IsActiveSelf = !_inventory.Actor.IsActiveSelf;
-            //}
+            if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                _inventory.Actor.IsActiveSelf = !_inventory.Actor.IsActiveSelf;
+            }
         }
 
         private UIText NewText(string name, string value, vec2 position, Transform parent)

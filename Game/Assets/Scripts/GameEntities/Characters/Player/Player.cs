@@ -31,13 +31,13 @@ namespace Game
             const float fps = 11.5f;
 
             string[] atlasid = ["player_idle",
-                                    "player_run",
-                                    "player_jump",
-                                    "player_fall",
-                                    "player_hit",
-                                    "player_dead",
-                                    "player_attack",
-                                    ];
+                                "player_run",
+                                "player_jump",
+                                "player_fall",
+                                "player_hit",
+                                "player_dead",
+                                "player_attack",
+                                ];
 
             var states = new AnimationsStates();
             for (int i = 0; i < AnimationsStates.Length; i++)

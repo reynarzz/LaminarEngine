@@ -10,7 +10,7 @@ namespace Game
 {
     public class LevelMusicEntityBuilder : GameEntityBuilderBase
     {
-        public override GameEntity Build(vec2 position, FieldInstance[] fields)
+        public override GameEntity Build(vec2 position, FieldInstance[] fields, Func<vec2, bool, vec2> positionConverter)
         {
             return null;
         }

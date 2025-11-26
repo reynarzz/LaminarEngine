@@ -121,7 +121,7 @@ namespace Game
                 var musicAudio = music.GetComponent<AudioSource>();
                 musicAudio.Loop = true;
                 musicAudio.Clip = Assets.GetAudioClip("Audio/music/streamloops/Stream Loops 2024-02-14_L01.wav");
-                musicAudio.Play();
+                // musicAudio.Play();
                 Actor.DontDestroyOnLoad(music);
             }
 
@@ -179,9 +179,6 @@ namespace Game
 
             });
 
-            var platform = new Actor<Platform, SpriteRenderer>("Platform");
-            platform.GetComponent<SpriteRenderer>().Material = _defaultSpriteMaterial;
-            platform.Layer = LayerMask.NameToLayer(GameLayers.PLATFORM);
 
 
             cameraFollow.SetOnTargetImmediate();
@@ -228,9 +225,14 @@ namespace Game
             var project = ldtk.LdtkJson.FromJson(json);
             var color = project.BgColor;
 
-            vec3 ConvertToWorld(long[] px, Level level, float pixelPerUnit, LayerInstance layer)
+            vec2 ConvertToWorld(long x, long y, Level level, float pixelPerUnit, LayerInstance layer, bool isGridPos = false)
             {
-                return new vec3(MathF.Floor((level.WorldX + px[0] + layer.PxOffsetX) / pixelPerUnit), MathF.Ceiling((-level.WorldY + -px[1] + -layer.PxOffsetY) / pixelPerUnit), 0);
+                if (isGridPos)
+                {
+                    x *= layer.GridSize;
+                    y *= layer.GridSize;
+                }
+                return new vec2(MathF.Floor((level.WorldX + x + layer.PxOffsetX) / pixelPerUnit), MathF.Ceiling((-level.WorldY + -y + -layer.PxOffsetY) / pixelPerUnit));
             }
 
             var sprite = GameTextureAtlases.GetAtlas("sunny_land_tileset")[0];
@@ -242,12 +244,12 @@ namespace Game
                 {
                     foreach (var entity in layer.EntityInstances)
                     {
-                        var position = ConvertToWorld(entity.Px, level, sprite.Texture.PixelPerUnit, layer);
+                        var position = ConvertToWorld(entity.Px[0], entity.Px[1], level, sprite.Texture.PixelPerUnit, layer);
                         //Debug.Log("Entity: " + entity.Identifier);
                         if (entity.Identifier.Equals("Player"))
                         {
                             _playerStartPosTest = position;
-                            GamePrefabs.World.InstantiateDoor(position + new vec3(0, 1), x =>
+                            GamePrefabs.World.InstantiateDoor(position + new vec2(0, 1), x =>
                             {
                                 var coinCount = x.Inventory.GetItemCount(ItemId.coin_currency);
                                 var coinsNeeded = 10;
@@ -257,7 +259,11 @@ namespace Game
                             });
                         }
 
-                        _gameEntityManager.BuildEntity(entity, position);
+                        _gameEntityManager.BuildEntity(entity, position, (vec2, isGrid) =>
+                        {
+                            // TODO: refactor, instead send a helper class that contains convert methods.
+                            return ConvertToWorld((int)vec2.x, (int)vec2.y, level, sprite.Texture.PixelPerUnit, layer, isGrid);
+                        });
                     }
                 }
             }

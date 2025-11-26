@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ldtk;
+using System;
 
 namespace Game
 {
@@ -20,14 +21,15 @@ namespace Game
                 { "Collectible", new ItemsEntityBuilder() },
                 { "Enemy", new EnemyEntityBuilder() },
                 { "Chest", new ChestEntityBuilder() },
+                { "Platform", new PlatformEntityBuilder() },
             };
         }
 
-        public GameEntity BuildEntity(EntityInstance entity, vec2 position)
+        public GameEntity BuildEntity(EntityInstance entity, vec2 position, Func<vec2, bool, vec2> positionConverter)
         {
-            if(_entityBuilders.TryGetValue(entity.Identifier, out var builder))
+            if (_entityBuilders.TryGetValue(entity.Identifier, out var builder))
             {
-                var gameEntity = builder.Build(position, entity.FieldInstances);
+                var gameEntity = builder.Build(position, entity.FieldInstances, positionConverter);
 
                 foreach (var tag in entity.Tags)
                 {

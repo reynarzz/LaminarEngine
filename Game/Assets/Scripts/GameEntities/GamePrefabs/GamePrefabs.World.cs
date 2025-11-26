@@ -1,4 +1,5 @@
 ﻿using Engine;
+using Engine.Utils;
 using GlmNet;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,16 @@ namespace Game
                 door.SetConditionToInteract(conditionToOpen ?? (_ => true));
                 door.Transform.WorldPosition = position;
                 return door;
+            }
+
+            public static Platform InstantiatePlatform(vec2 position, vec2[] positions)
+            {
+                var platform = new Actor<SpriteRenderer>("Platform").AddComponent<Platform>();
+                platform.GetComponent<SpriteRenderer>().Material = MaterialUtils.SpriteMaterial;
+                platform.Actor.Layer = LayerMask.NameToLayer(GameLayers.PLATFORM);
+                platform.Init(position, positions);
+
+                return platform;
             }
         }
     }
