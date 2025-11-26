@@ -3153,14 +3153,11 @@
 							"px": [1048,664],
 							"fieldInstances": [
 								{ "__identifier": "locked_by", "__type": "LocalEnum.ItemType", "__value": null, "__tile": null, "defUid": 217, "realEditorValues": [] },
-								{ "__identifier": "items_loot", "__type": "Array<LocalEnum.ItemType>", "__value": [ "Coin_currency", "Simple_key" ], "__tile": null, "defUid": 202, "realEditorValues": [ {
-									"id": "V_String",
-									"params": ["Coin_currency"]
-								}, {
+								{ "__identifier": "items_loot", "__type": "Array<LocalEnum.ItemType>", "__value": ["Simple_key"], "__tile": null, "defUid": 202, "realEditorValues": [{
 									"id": "V_String",
 									"params": ["Simple_key"]
-								} ] },
-								{ "__identifier": "items_amount", "__type": "Array<Int>", "__value": [10,2], "__tile": null, "defUid": 208, "realEditorValues": [ { "id": "V_Int", "params": [10] }, { "id": "V_Int", "params": [2] } ] }
+								}] },
+								{ "__identifier": "items_amount", "__type": "Array<Int>", "__value": [1], "__tile": null, "defUid": 208, "realEditorValues": [{ "id": "V_Int", "params": [1] }] }
 							],
 							"__worldX": -232,
 							"__worldY": 152
@@ -3279,7 +3276,7 @@
 									"id": "V_String",
 									"params": ["Simple_key"]
 								}] },
-								{ "__identifier": "items_loot", "__type": "Array<LocalEnum.ItemType>", "__value": [ "Coin_currency", "Normal_potion", "Chest_key" ], "__tile": null, "defUid": 202, "realEditorValues": [ {
+								{ "__identifier": "items_loot", "__type": "Array<LocalEnum.ItemType>", "__value": [ "Coin_currency", "Normal_potion", "Chest_key", "Simple_key" ], "__tile": null, "defUid": 202, "realEditorValues": [ {
 									"id": "V_String",
 									"params": ["Coin_currency"]
 								}, {
@@ -3288,8 +3285,11 @@
 								}, {
 									"id": "V_String",
 									"params": ["Chest_key"]
+								}, {
+									"id": "V_String",
+									"params": ["Simple_key"]
 								} ] },
-								{ "__identifier": "items_amount", "__type": "Array<Int>", "__value": [10,2,1], "__tile": null, "defUid": 208, "realEditorValues": [ { "id": "V_Int", "params": [10] }, { "id": "V_Int", "params": [2] }, { "id": "V_Int", "params": [1] } ] }
+								{ "__identifier": "items_amount", "__type": "Array<Int>", "__value": [10,2,1,1], "__tile": null, "defUid": 208, "realEditorValues": [ { "id": "V_Int", "params": [10] }, { "id": "V_Int", "params": [2] }, { "id": "V_Int", "params": [1] }, null ] }
 							],
 							"__worldX": -264,
 							"__worldY": 152
