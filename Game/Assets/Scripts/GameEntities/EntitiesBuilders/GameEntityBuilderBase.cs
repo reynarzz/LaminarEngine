@@ -12,8 +12,8 @@ namespace Game
     public abstract class GameEntityBuilderBase
     {
         public abstract GameEntity Build(vec2 position, FieldInstance[] fields, Func<vec2, bool, vec2> positionConverter);
-
-        protected bool IsFieldId<T>(FieldInstance field, string id, out T value)
+        
+        protected bool IsFieldId<T>(FieldInstance field, string id, out T value) where T: class
         {
             value = default;
             var isField = field.Identifier.Equals(id, StringComparison.OrdinalIgnoreCase);
@@ -27,6 +27,13 @@ namespace Game
                 else if (typeof(T).IsClass)
                 {
                     value = (T)field.Value;
+                }
+                else if (typeof(T).IsEnum)
+                {
+                    if(Enum.TryParse(typeof(T), field.Value.ToString(), out var e))
+                    {
+                        value = (T)e;
+                    }
                 }
                 else if (typeof(T) == typeof(int))
                 {
