@@ -10,30 +10,31 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    public struct ChestLoot
+    public struct ItemAmountPair
     {
         public ItemId Item { get; set; }
         public int Amount { get; set; }
     }
 
-    public class Chest : AnimatedInteractable
+    public class Chest : AnimatedInteractable<ChestData>
     {
-        public ChestLoot[] ChestLoot { get; private set; }
         private bool _isOpened = false;
         public override void OnAwake()
         {
             base.OnAwake();
+            BoxCollider.Size = new vec2(1.7f, BoxCollider.Size.y);
+            SpriteRenderer.SortOrder = GameConsts.ChestRenderSorting;
         }
 
-        public void SetChestLoot(params ChestLoot[] loot)
+        public override void Init(ChestData data)
         {
-            ChestLoot = loot;
+            base.Init(data);
 
-            if (ChestLoot != null)
+            if (data.ChestLoot != null)
             {
-                var openAtlasId = ChestLoot.Length > 2 ? "chest_normal_fill_open" : "chest_small_fill_open";
-                var idleAtlasId = ChestLoot.Length > 2 ? "chest_normal_idle" : "chest_small_idle";
-                var collectedAtlasId = ChestLoot.Length > 2 ? "chest_normal_empty_open" : "chest_small_empty_open";
+                var openAtlasId = data.ChestLoot.Length > 2 ? "chest_normal_fill_open" : "chest_small_fill_open";
+                var idleAtlasId = data.ChestLoot.Length > 2 ? "chest_normal_idle" : "chest_small_idle";
+                var collectedAtlasId = data.ChestLoot.Length > 2 ? "chest_normal_empty_open" : "chest_small_empty_open";
                 SetAnims(idleAtlasId, openAtlasId, collectedAtlasId);
             }
             else
@@ -75,7 +76,7 @@ namespace Game
                     
                     yield return new WaitForSeconds(0.2f);
 
-                    foreach (var loot in ChestLoot)
+                    foreach (var loot in Data.ChestLoot)
                     {
                         player.Inventory.Add(loot.Item, loot.Amount);
                     }

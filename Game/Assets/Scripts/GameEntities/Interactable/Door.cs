@@ -11,9 +11,8 @@ using System.Threading.Tasks;
 namespace Game
 {
     [RequiredComponent(typeof(Animator))]
-    public class Door : AnimatedInteractable
+    public class Door : AnimatedInteractable<DoorData>
     {
-        private bool _isOpen = false;
         public event Action<bool> OnDoorStateChanged;
         const int fps = 11;
 
@@ -35,27 +34,13 @@ namespace Game
             closeAnim.Clip.AddCurve("Sprite", new SpriteCurve(fps, closingSprites));
 
             openAnim.Clip.AddEvent(openAnim.Clip.Duration, () => OnDoorStateChanged?.Invoke(true));
-            closeAnim.Clip.AddEvent(closeAnim.Clip.Duration, () => OnDoorStateChanged?.Invoke(true));
+            closeAnim.Clip.AddEvent(closeAnim.Clip.Duration, () => OnDoorStateChanged?.Invoke(false));
 
             // When player enters: Audio/Gameplay/Win_2.wav
             Animator.OnUpdate += animator =>
             {
                 SpriteRenderer.Sprite = animator.GetSprite("Sprite");
             };
-        }
-
-        public override void OnUpdate()
-        {
-            if (Input.GetKeyDown(KeyCode.I))
-            {
-                Animator.Play(_isOpen ? "Close" : "Open");
-                _isOpen = !_isOpen;
-            }
-        }
-
-        protected override void OnPlayerInteractZone(bool enter, Player player)
-        {
-            Debug.Log("Player enter: " + enter);
         }
 
         public override bool TryInteract(Player player)
@@ -71,13 +56,11 @@ namespace Game
 
         public void Close()
         {
-            _isOpen = false;
             Animator.Play("Close");
         }
 
         public void Open()
         {
-            _isOpen = true;
             Animator.Play("Open");
         }
 

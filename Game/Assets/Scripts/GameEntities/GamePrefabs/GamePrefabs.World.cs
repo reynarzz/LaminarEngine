@@ -13,10 +13,10 @@ namespace Game
     {
         public static class World
         {
-            public static Door InstantiateDoor(vec2 position, Predicate<Player> conditionToOpen = null)
+            public static Door InstantiateDoor(vec2 position, DoorData data)
             {
                 var door = new Actor("Door").AddComponent<Door>();
-                door.SetConditionToInteract(conditionToOpen ?? (_ => true));
+                door.Init(data);
                 door.Transform.WorldPosition = position;
                 return door;
             }
@@ -25,7 +25,7 @@ namespace Game
             {
                 var platform = new Actor<SpriteRenderer>("Platform").AddComponent<Platform>();
                 platform.GetComponent<SpriteRenderer>().Material = MaterialUtils.SpriteMaterial;
-                platform.Actor.Layer = LayerMask.NameToLayer(GameLayers.PLATFORM);
+                platform.Actor.Layer = LayerMask.NameToLayer(GameConsts.PLATFORM);
                 platform.Init(position, positions);
 
                 return platform;

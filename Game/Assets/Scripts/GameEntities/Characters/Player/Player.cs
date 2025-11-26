@@ -196,8 +196,8 @@ namespace Game
             // TODO: use object pool
             var bullet = new Actor<SpriteRenderer>("Bullet").AddComponent<Bullet>();
 
-            var mask = LayerMask.NameToBit(GameLayers.Default) | LayerMask.NameToBit(GameLayers.ENEMY) |
-                                           LayerMask.NameToBit(GameLayers.PLATFORM);
+            var mask = LayerMask.NameToBit(GameConsts.Default) | LayerMask.NameToBit(GameConsts.ENEMY) |
+                                           LayerMask.NameToBit(GameConsts.PLATFORM);
             bullet.Shoot(origin, vec2.Right * LookDir, _bulletSpeed, mask);
             return true;
         }
