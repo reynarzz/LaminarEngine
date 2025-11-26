@@ -36,7 +36,7 @@ namespace Game
                 states[i] = new AnimationStateInfo()
                 {
                     IsEnabled = true,
-                    Fps = 11.5f,
+                    Fps = 10.0f,
                     SpriteAtlasPath = atlasId[i],
                 };
             }

@@ -34,10 +34,10 @@ void main()
 {
     float randomAmp = uWaveAmplitude * mix(0.5, 1.5, noise(fragUV.x * uNoiseScale));
 
-    float wave = sin(fragUV.x * uWaveFrequency + uTime.x * uWaveSpeed)
+    float wave = sin(fragUV.x * uWaveFrequency + uTime.y * uWaveSpeed)
                * randomAmp;
 
-    float wobble = (noise(fragUV.x * uNoiseScale * 0.3 + uTime.x * 0.5) - 0.5)
+    float wobble = (noise(fragUV.x * uNoiseScale * 0.3 + uTime.y * 0.5) - 0.5)
                  * uNoiseStrength;
 
     float topEdge = uOutlineHeight + wave + wobble;
