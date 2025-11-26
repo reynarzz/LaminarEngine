@@ -205,37 +205,37 @@ namespace Game
 
             if (statesConfig.Idle.IsEnabled)
             {
-                AddSpriteAnimState(IDLE_ANIM_STATE, true, true, false, [toWalk, toJump, toFall, toAttack, toDeath, toHit], statesConfig.Idle.SpriteAtlasPath, statesConfig.Idle.Fps, statesConfig.Idle.Size, statesConfig.Idle.Pivot, statesConfig.Idle.Events);
+                AddSpriteAnimState(IDLE_ANIM_STATE, true, true, false, [toWalk, toJump, toFall, toAttack, toDeath, toHit], statesConfig.Idle.SpriteAtlasPath, statesConfig.Idle.Fps, statesConfig.Idle.Events);
             }
             if (statesConfig.Walk.IsEnabled)
             {
-                AddSpriteAnimState(WALK_ANIM_STATE, false, true, false, [toIdle, toJump, toFall, toAttack, toDeath, toHit], statesConfig.Walk.SpriteAtlasPath, statesConfig.Walk.Fps, statesConfig.Walk.Size, statesConfig.Walk.Pivot, statesConfig.Walk.Events);
+                AddSpriteAnimState(WALK_ANIM_STATE, false, true, false, [toIdle, toJump, toFall, toAttack, toDeath, toHit], statesConfig.Walk.SpriteAtlasPath, statesConfig.Walk.Fps, statesConfig.Walk.Events);
             }
             if (statesConfig.Jump.IsEnabled)
             {
-                AddSpriteAnimState(JUMP_ANIM_STATE, false, false, false, [toIdle, toFall, toAttack, toHit], statesConfig.Jump.SpriteAtlasPath, statesConfig.Jump.Fps, statesConfig.Jump.Size, statesConfig.Jump.Pivot, statesConfig.Jump.Events);
+                AddSpriteAnimState(JUMP_ANIM_STATE, false, false, false, [toIdle, toFall, toAttack, toHit], statesConfig.Jump.SpriteAtlasPath, statesConfig.Jump.Fps, statesConfig.Jump.Events);
             }
             if (statesConfig.Fall.IsEnabled)
             {
-                AddSpriteAnimState(FALL_ANIM_STATE, false, false, false, [toIdle, toWalk, toAttack, toHit], statesConfig.Fall.SpriteAtlasPath, statesConfig.Fall.Fps, statesConfig.Fall.Size, statesConfig.Fall.Pivot, statesConfig.Fall.Events);
+                AddSpriteAnimState(FALL_ANIM_STATE, false, false, false, [toIdle, toWalk, toAttack, toHit], statesConfig.Fall.SpriteAtlasPath, statesConfig.Fall.Fps, statesConfig.Fall.Events);
             }
             if (statesConfig.Attack.IsEnabled)
             {
-                AddSpriteAnimState(ATTACK_ANIM_STATE, false, false, true, [toIdle, toWalk, toFall, toDeath, toHit], statesConfig.Attack.SpriteAtlasPath, statesConfig.Attack.Fps, statesConfig.Attack.Size, statesConfig.Attack.Pivot, statesConfig.Attack.Events);
+                AddSpriteAnimState(ATTACK_ANIM_STATE, false, false, true, [toIdle, toWalk, toFall, toDeath, toHit], statesConfig.Attack.SpriteAtlasPath, statesConfig.Attack.Fps, statesConfig.Attack.Events);
             }
             if (statesConfig.Death.IsEnabled)
             {
-                AddSpriteAnimState(DEATH_ANIM_STATE, false, false, true, null, statesConfig.Death.SpriteAtlasPath, statesConfig.Death.Fps, statesConfig.Death.Size, statesConfig.Death.Pivot, statesConfig.Death.Events);
+                AddSpriteAnimState(DEATH_ANIM_STATE, false, false, true, null, statesConfig.Death.SpriteAtlasPath, statesConfig.Death.Fps, statesConfig.Death.Events);
             }
             if (statesConfig.Hit.IsEnabled)
             {
-                AddSpriteAnimState(HIT_ANIM_STATE, false, false, true, [toIdle, toWalk, toJump, toFall, toAttack, toDeathLife0], statesConfig.Hit.SpriteAtlasPath, statesConfig.Hit.Fps, statesConfig.Hit.Size, statesConfig.Hit.Pivot, statesConfig.Hit.Events);
+                AddSpriteAnimState(HIT_ANIM_STATE, false, false, true, [toIdle, toWalk, toJump, toFall, toAttack, toDeathLife0], statesConfig.Hit.SpriteAtlasPath, statesConfig.Hit.Fps, statesConfig.Hit.Events);
             }
         }
 
         protected void AddSpriteAnimState(string stateName, bool makeMain, bool loop, bool useClipBlendTime,
-                                          AnimatorTransition[] transitions, string spritePath, float fps,
-                                          vec2 size, vec2 pivot, AnimEvent[] events)
+                                          AnimatorTransition[] transitions, string atlasId, float fps,
+                                          AnimEvent[] events)
         {
             var animClip = new AnimationClip(stateName, loop);
             var state = new AnimationState(stateName, animClip);
@@ -244,25 +244,16 @@ namespace Game
             {
                 _main = state;
             }
-            var texture = Assets.GetTexture(spritePath);
-            var sprites = TextureAtlasUtils.SliceSprites(texture, (int)size.x, (int)size.y, pivot);
 
-            var spriteCurve = new SpriteCurve();
-
-            var unit = 1.0f / fps;
-            for (int i = 0; i < sprites.Length; i++)
-            {
-                spriteCurve.AddKeyFrame(unit * i, sprites[i]);
-            }
-
-            animClip.AddCurve(SPRITE_PROPERTY_NAME, spriteCurve);
+            var sprites = GameTextureAtlases.GetAtlas(atlasId);
+                
+            animClip.AddCurve(SPRITE_PROPERTY_NAME, new SpriteCurve(fps, sprites));
 
             if (events != null)
             {
-                var eventCurve = animClip.GetEventCurve();
                 for (int i = 0; i < events.Length; i++)
                 {
-                    eventCurve.AddKeyFrame(events[i].Time, events[i].Callback);
+                    animClip.AddEvent(events[i].Time, events[i].Callback);
                 }
             }
 
@@ -490,8 +481,9 @@ namespace Game
             if (!IsCharacterAlive())
             {
                 Inventory.Life = _characterConfig.StartingLife;
-                Animator.SetState(_main);
             }
+            Renderer.IsEnabled = true;
+            Animator.Play(_main.Name);
         }
 
         protected void PlayJumpSoundFx()
@@ -586,8 +578,6 @@ namespace Game
         {
             public bool IsEnabled;
             public string SpriteAtlasPath;
-            public vec2 Pivot;
-            public vec2 Size;
             public float Fps;
             public AnimEvent[] Events;
         }

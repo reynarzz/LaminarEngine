@@ -11,11 +11,11 @@ namespace Game
 {
     internal partial class GamePrefabs
     {
-        public static class Collectibles
+        public static class Items
         {
             private static Material _collectiblesDefault;
 
-            static Collectibles()
+            static Items()
             {
                 _collectiblesDefault = new Material(new Shader(Assets.GetText("Shaders/SpriteVert.vert").Text, Assets.GetText("Shaders/SpriteFrag.frag").Text));
                 _collectiblesDefault.Name = "Collectibles Default";
@@ -27,21 +27,19 @@ namespace Game
                 PlayerMatPass.Stencil.ZPassOp = StencilOp.Replace;
             }
 
-            public static Collectible InstantiateCoin(vec2 position)
+            public static Collectible InstantiateCollectible(ItemId item, vec2 position)
             {
-                var collectible = new Actor("Coin").AddComponent<Collectible>();
+                var collectible = new Actor("Collectible_" + item.ToString()).AddComponent<Collectible>();
                 collectible.Transform.WorldPosition = position;
 
-                var tex = Assets.GetTexture("starkTileset.png");
-                var tiles = TextureAtlasUtils.SliceSprites(tex, 16, 16, 281, 1);
-
+                var tiles = GameTextureAtlases.GetAtlas(item.ToString());
                 var audioClip = Assets.GetAudioClip("Audio/HALFTONE/Gameplay/Collectibles_2.wav");
 
                 collectible.Init(new Collectible.CollectibleConfig()
                 {
-                    Item = ItemId.coin_currency,
+                    Item = item,
                     Amount = 1,
-                    IdleSprites = [ tiles[0]],
+                    IdleSprites = tiles,
                     CollectedSprites = null,
                     TriggerSize = new vec2(0.8f, 0.8f),
                     AnimFPS = 7,
@@ -50,6 +48,16 @@ namespace Game
                 });
 
                 return collectible;
+            }
+
+            public static Chest InstantiateChest(vec2 position, ChestLoot[] loot = null, Predicate<Player> conditionToOpen = null)
+            {
+                var chest = new Actor("Chest").AddComponent<Chest>();
+                chest.GetComponent<SpriteRenderer>().SortOrder = 4;
+                chest.Transform.WorldPosition = position;
+                chest.SetChestLoot(loot);
+                chest.SetConditionToInteract(conditionToOpen);
+                return chest;
             }
         }
     }

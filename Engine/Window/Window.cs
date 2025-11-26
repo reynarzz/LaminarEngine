@@ -130,7 +130,10 @@ namespace Engine
             Glfw.WindowHint(Hint.ContextVersionMinor, 2);
             Glfw.WindowHint(Hint.Resizable, false);
             Glfw.WindowHint(Hint.Visible, false);
-            
+            //Glfw.WindowHint(Hint.OpenglForwardCompatible, Constants.True);
+            //Glfw.WindowHint(Hint.SrgbCapable, Constants.True);
+            //Glfw.WindowHint(Hint.Doublebuffer, Constants.True);
+
             try
             {
                 NativeWindow = Glfw.CreateWindow(Width, Height, name, GLFW.Monitor.None, default);
@@ -149,12 +152,12 @@ namespace Engine
             }
             Glfw.MakeContextCurrent(NativeWindow);
             // Glfw.SetMouseButtonCallback(NativeWindow, OnMouseButton);
-           // Glfw.SetCursorPositionCallback(NativeWindow, OnCursorPos);
+            // Glfw.SetCursorPositionCallback(NativeWindow, OnCursorPos);
 
             GL.Import(Glfw.GetProcAddress);
             Glfw.SetFramebufferSizeCallback(NativeWindow, (win, width, height) => SetWindowSize(width, height));
             Glfw.SwapInterval(1);
-           // Glfw.SetWindowAttribute(NativeWindow, WindowAttribute.Decorated, false);
+            // Glfw.SetWindowAttribute(NativeWindow, WindowAttribute.Decorated, false);
 
             GL.glClearColor(windowColor.R, windowColor.G, windowColor.B, 1.0f);
 

@@ -14,11 +14,10 @@ namespace Engine
 
         public bool LoopInterpolate { get; set; } = true;
 
-        public HermiteInterpolatedCurve(
-            Func<T, T, T, T, float, T> hermite,
-            Func<T, T, T> subtract,
-            Func<T, float, T> divide,
-            Func<T, float, T> multiply)
+        public HermiteInterpolatedCurve(Func<T, T, T, T, float, T> hermite,
+                                        Func<T, T, T> subtract,
+                                        Func<T, float, T> divide,
+                                        Func<T, float, T> multiply)
         {
             _hermite = hermite ?? throw new ArgumentNullException(nameof(hermite));
             _subtract = subtract ?? throw new ArgumentNullException(nameof(subtract));

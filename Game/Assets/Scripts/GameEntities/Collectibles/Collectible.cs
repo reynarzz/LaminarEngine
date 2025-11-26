@@ -1,4 +1,5 @@
 ﻿using Engine;
+using Engine.Types;
 using GlmNet;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Game
 {
+    [RequiredComponent(typeof(Animator))]
     public class Collectible : GameEntity
     {
         private Animator _animator;
@@ -39,12 +41,15 @@ namespace Game
             {
                 _initializedComponents = true;
                 Actor.Layer = LayerMask.NameToLayer(GameLayers.COLLECTIBLE);
-                _animator = AddComponent<Animator>();
+                _animator = GetComponent<Animator>();
                 _renderer = AddComponent<SpriteRenderer>();
                 var rigid = AddComponent<RigidBody2D>();
                 AudioSource = AddComponent<AudioSource>();
 
                 rigid.BodyType = Body2DType.Dynamic;
+                rigid.LockZRotation = true;
+                rigid.Interpolate = true;
+
                 _renderer.Material = GameManager.DefaultMaterial;
                 _renderer.SortOrder = 0;
                 _collider = AddComponent<BoxCollider2D>();
@@ -116,14 +121,9 @@ namespace Game
                 return null;
 
             var clip = new AnimationClip(name);
-            var spritesCurve = new SpriteCurve();
+            var spritesCurve = new SpriteCurve(_config.AnimFPS, sprites);
 
             clip.AddCurve("Sprite", spritesCurve);
-
-            for (var i = 0; i < sprites.Length; i++)
-            {
-                spritesCurve.AddKeyFrame((1.0f / _config.AnimFPS) * i, sprites[i]);
-            }
 
             return new AnimationState(name, clip);
         }

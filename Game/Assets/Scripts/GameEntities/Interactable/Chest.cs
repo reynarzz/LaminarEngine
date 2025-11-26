@@ -1,0 +1,92 @@
+﻿using Engine;
+using Engine.Utils;
+using GlmNet;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Game
+{
+    public struct ChestLoot
+    {
+        public ItemId Item { get; set; }
+        public int Amount { get; set; }
+    }
+
+    public class Chest : AnimatedInteractable
+    {
+        public ChestLoot[] ChestLoot { get; private set; }
+        private bool _isOpened = false;
+        public override void OnAwake()
+        {
+            base.OnAwake();
+        }
+
+        public void SetChestLoot(params ChestLoot[] loot)
+        {
+            ChestLoot = loot;
+
+            if (ChestLoot != null)
+            {
+                var openAtlasId = ChestLoot.Length > 2 ? "chest_normal_fill_open" : "chest_small_fill_open";
+                var idleAtlasId = ChestLoot.Length > 2 ? "chest_normal_idle" : "chest_small_idle";
+                var collectedAtlasId = ChestLoot.Length > 2 ? "chest_normal_empty_open" : "chest_small_empty_open";
+                SetAnims(idleAtlasId, openAtlasId, collectedAtlasId);
+            }
+            else
+            {
+                SetAnims("chest_normal_idle", "chest_normal_empty_open", "chest_normal_empty_open");
+            }
+
+            Animator.OnUpdate += x =>
+            {
+                SpriteRenderer.Sprite = x.GetSprite("Sprite");
+            };
+        }
+
+        private void SetAnims(string idleAtlasId, string openAtlasId, string collectedIdleAtlasId)
+        {
+            if (!Animator)
+            {
+                Animator = GetComponent<Animator>();
+            }
+            var idleAnim = AnimatorUtils.AddState(Animator, "Idle", false);
+            var openAnim = AnimatorUtils.AddState(Animator, "Open", false);
+            var collectedIdle = AnimatorUtils.AddState(Animator, "CollectedIdle", false);
+
+            idleAnim.Clip.AddCurve("Sprite", new SpriteCurve(11, GameTextureAtlases.GetAtlas(idleAtlasId)));
+            openAnim.Clip.AddCurve("Sprite", new SpriteCurve(11, GameTextureAtlases.GetAtlas(openAtlasId)));
+            //openAnim.Clip.AddEvent(openAnim.Clip.Duration, () => { });
+            collectedIdle.Clip.AddCurve("Sprite", new SpriteCurve(11, GameTextureAtlases.GetAtlas(collectedIdleAtlasId)[^1]));
+        }
+
+        public override bool TryInteract(Player player)
+        {
+            if (!_isOpened && CanInteract(player))
+            {
+                _isOpened = true;
+
+                IEnumerator Collect()
+                {
+                    Animator.Play("Open");
+                    
+                    yield return new WaitForSeconds(0.2f);
+
+                    foreach (var loot in ChestLoot)
+                    {
+                        player.Inventory.Add(loot.Item, loot.Amount);
+                    }
+                    Animator.Play("CollectedIdle");
+                }
+
+                StartCoroutine(Collect());
+               
+                return true;
+            }
+            return false;
+        }
+    }
+}

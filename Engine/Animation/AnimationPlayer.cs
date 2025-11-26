@@ -71,6 +71,11 @@ namespace Engine
             return _currentClip?.EvaluateFloat(property, _currentTime) ?? 0f;
         }
 
+        internal void GetProperty(string property, ref CurveEvaluatedResult result)
+        {
+            _currentClip?.Evaluate(property, _currentTime, ref result);
+        }
+
         internal Sprite GetSprite(string property)
         {
             return _currentClip?.EvaluateSprite(property, _currentTime);

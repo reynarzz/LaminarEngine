@@ -141,8 +141,6 @@ namespace Engine
             }
 
             var isUnique = type.GetCustomAttribute<UniqueComponentAttribute>() != null;
-            var requiredAttrib = type.GetCustomAttribute<RequiredComponentAttribute>();
-
             if (isUnique)
             {
                 for (int i = 0; i < _components.Count; i++)
@@ -158,11 +156,29 @@ namespace Engine
                 }
             }
 
-            if (requiredAttrib != null)
+            // Get all attributes from current type, and parent classes
+            IEnumerable<T> GetAllAttributes<T>(Type type) where T : Attribute
             {
-                foreach (var componentsTypes in requiredAttrib.RequiredComponents)
+                var result = new List<T>();
+
+                while (type != null && type != typeof(object))
                 {
-                    AddComponent(componentsTypes);
+                    result.AddRange(type.GetCustomAttributes(typeof(T), inherit: false).Cast<T>());
+                    type = type.BaseType;
+                }
+
+                return result;
+            }
+
+            var required = GetAllAttributes<RequiredComponentAttribute>(type);
+            if (required != null)
+            {
+                foreach (var requiredAttrib in required)
+                {
+                    foreach (var componentsTypes in requiredAttrib.RequiredComponents)
+                    {
+                        AddComponent(componentsTypes);
+                    }
                 }
             }
 
@@ -432,9 +448,15 @@ namespace Engine
         {
             return SceneManager.FindAll<T>(findDisabled);
         }
-
+        public static void DontDestroyOnLoad(Component component)
+        {
+            DontDestroyOnLoad(component.Actor);
+        }
         public static void DontDestroyOnLoad(Actor actor)
         {
+            if (!actor)
+                return;
+
             // Remove from current scene.
             actor.Scene.TryGetTarget(out var scene);
             scene.RemoveActor(actor);
@@ -673,7 +695,7 @@ namespace Engine
             }
         }
     }
-    
+
     public class Actor<T1> : Actor where T1 : Component
     {
         public Actor() : this(string.Empty, string.Empty) { }

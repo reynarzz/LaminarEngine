@@ -21,7 +21,7 @@ namespace Engine.Layers
         private List<Renderer2D> _renderers;
         private List<Renderer2D> _UIElementRenderers;
         private mat4 _viewProjMatrix;
-        private readonly Action<Shader, RenderTexture, RenderTexture, PostProcessingPass.PassUniform[]> _drawPostProcessCallback;
+        private readonly Action<Shader, RenderTexture, RenderTexture, UniformValue[]> _drawPostProcessCallback;
 
         public RenderingLayer() : base()
         {
@@ -48,7 +48,7 @@ namespace Engine.Layers
 
             _sceneBatches = new Batcher2D(Consts.Graphics.MAX_QUADS_PER_BATCH);
             _uiBatches = new Batcher2D(Consts.Graphics.MAX_QUADS_PER_BATCH);
-           
+
             _renderers = new();
             _UIElementRenderers = new();
             _drawCallData = new DrawCallData()
@@ -62,7 +62,7 @@ namespace Engine.Layers
                 Textures = new GfxResource[GfxDeviceManager.Current.GetDeviceInfo().MaxValidTextureUnits],
                 Uniforms = new UniformValue[Consts.Graphics.MAX_UNIFORMS_PER_DRAWCALL],
             };
-            
+
             _screenGeometry = GraphicsHelper.GetScreenQuadGeometry();
 
             Window.OnWindowChanged += OnUpdateScreenGrabPass;
@@ -129,12 +129,18 @@ namespace Engine.Layers
 #if DEBUG
             Debug.DrawGeometries(VP, UICanvas.UIViewProj, sceneRenderTarget.NativeResource);
 #endif
-            foreach (var pass in PostProcessingStack.Passes)
-            {
-                sceneRenderTarget = pass.Render(sceneRenderTarget, _drawPostProcessCallback);
-            }
+            RenderPostProcessing(ref sceneRenderTarget);
 
             GfxDeviceManager.Current.Present(sceneRenderTarget.NativeResource);
+        }
+
+
+        private void RenderPostProcessing(ref RenderTexture screenRenderTexture)
+        {
+            foreach (var pass in PostProcessingStack.Passes)
+            {
+                screenRenderTexture = pass.Render(screenRenderTexture, _drawPostProcessCallback);
+            }
         }
 
         private void RenderBatches(List<Batch2D> batches, ref mat4 VP, RenderTexture sceneRenderTarget, RenderTexture grabBlitTarget = null)
@@ -175,7 +181,7 @@ namespace Engine.Layers
             }
         }
 
-        private void PostProcessDraw(Shader shader, RenderTexture inTex, RenderTexture outTex, PostProcessingPass.PassUniform[] uniforms)
+        private void PostProcessDraw(Shader shader, RenderTexture inTex, RenderTexture outTex, UniformValue[] uniforms)
         {
             DrawScreenQuad(shader, _viewProjMatrix, inTex, outTex, uniforms, _mainCamera);
         }
@@ -243,17 +249,31 @@ namespace Engine.Layers
         }
 
         private void DrawScreenQuad(Shader shader, mat4 VP, RenderTexture sceneRenderTarget, RenderTexture renderTarget,
-                                    PostProcessingPass.PassUniform[] uniforms, Camera camera)
+                                    UniformValue[] uniforms, Camera camera)
         {
+            // Texture 0 is the screen
             _screenQuadDrawCallData.Textures[0] = sceneRenderTarget.NativeResource.SubResources[0];
 
             int uniformIndex = 0;
             if (uniforms != null)
             {
-                for (; uniformIndex < uniforms.Length; uniformIndex++)
+                for (int i = 0; i < uniforms.Length; i++)
                 {
-                    _screenQuadDrawCallData.Textures[uniformIndex + 1] = uniforms[uniformIndex].RenderTexture.NativeResource.SubResources[0];
-                    _screenQuadDrawCallData.Uniforms[uniformIndex].SetInt(uniforms[uniformIndex].Name, uniformIndex + 1);
+                    var type = uniforms[i].Type;
+                    if (type == UniformType.Invalid)
+                        continue;
+                    if (type == UniformType.RenderTexture)
+                    {
+                        // Texture + 1 is the texture that will be used by the shader.
+                        _screenQuadDrawCallData.Textures[uniformIndex + 1] = uniforms[i].RenderTextureValue.NativeResource.SubResources[0];
+                        _screenQuadDrawCallData.Uniforms[uniformIndex].SetInt(uniforms[i].Name, uniformIndex + 1);
+                    }
+                    else
+                    {
+                        _screenQuadDrawCallData.Uniforms[uniformIndex] = uniforms[i];
+                    }
+
+                    uniformIndex++;
                 }
             }
 
@@ -266,7 +286,6 @@ namespace Engine.Layers
             _screenQuadDrawCallData.Features = _screenPipelineFeatures;
             _screenQuadDrawCallData.RenderTarget = renderTarget?.NativeResource;
             _screenQuadDrawCallData.Viewport = new vec4(0, 0, renderTarget?.Width ?? Window.Width, renderTarget?.Height ?? Window.Height);
-
 
             // Uniforms
             _screenQuadDrawCallData.Uniforms[uniformIndex + 0].SetMat4(Consts.VIEW_PROJ_UNIFORM_NAME, VP);
@@ -298,7 +317,7 @@ namespace Engine.Layers
         }
         public override void Close()
         {
-        
+
         }
     }
 }

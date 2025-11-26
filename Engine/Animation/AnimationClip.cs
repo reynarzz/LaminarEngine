@@ -41,13 +41,22 @@ namespace Engine
         private Dictionary<string, AnimationCurveBase<quat>>   _quatCurves   = new();
         private Dictionary<string, AnimationCurveBase<Color>>  _colorCurves  = new();
         private Dictionary<string, AnimationCurveBase<Sprite>> _spriteCurves = new();
+        private Dictionary<string, AnimationCurveBase> _curves = new();
+
         private EventCurve _eventCurve = new();
+
+       
 
         public AnimationClip(string name, bool loop = true)
         {
             Name = name;
             Loop = loop;
         }
+
+        //public void AddCurve(string property, AnimationCurveBase curve)
+        //{
+        //    _curves[property] = curve;
+        //}
 
         public void AddCurve(string property, AnimationCurveBase<float> curve)
         {
@@ -78,9 +87,20 @@ namespace Engine
             _spriteCurves[property] = curve;
         }
 
-        public EventCurve GetEventCurve()
+        public void AddEvent(float time, Action callback)
+        {
+            _eventCurve.AddKeyFrame(time, callback);
+        }
+
+        internal EventCurve GetEventCurve()
         {
             return _eventCurve;
+        }
+
+        internal void Evaluate(string property, float time, ref CurveEvaluatedResult result)
+        {
+           // TODO: 
+           // result = _curves.TryGetValue(property, out var c) ? c.Evaluate(time) : default;
         }
 
         internal float EvaluateFloat(string property, float time)

@@ -1,0 +1,101 @@
+﻿using Engine;
+using Engine.Utils;
+using GlmNet;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Game
+{
+    public static class GameTextureAtlases
+    {
+        private readonly static Dictionary<string, Sprite[]> _tilesets;
+        static GameTextureAtlases()
+        {
+            _tilesets = new Dictionary<string, Sprite[]>()
+            {
+                // Player atlases
+                { "player_idle",     SliceSprites("KingsAndPigsSprites/01-King Human/Idle (78x58)S.png", 78, 58, new vec2(0.4f, 0.4f)) },
+                { "player_run",      SliceSprites("KingsAndPigsSprites/01-King Human/Run (78x58)S.png", 78, 58, new vec2(0.4f, 0.4f)) },
+                { "player_jump",     SliceSprites("KingsAndPigsSprites/01-King Human/Jump (78x58)S.png", 78, 58, new vec2(0.4f, 0.4f)) },
+                { "player_fall",     SliceSprites("KingsAndPigsSprites/01-King Human/Fall (78x58)S.png", 78, 58, new vec2(0.4f, 0.4f)) },
+                { "player_hit",      SliceSprites("KingsAndPigsSprites/01-King Human/Hit (78x58).png", 78, 58, new vec2(0.4f, 0.4f)) },
+                { "player_dead",     SliceSprites("KingsAndPigsSprites/01-King Human/Dead (78x58).png", 78, 58, new vec2(0.4f, 0.4f)) },
+                { "player_attack",   SliceSprites("KingsAndPigsSprites/01-King Human/Attack (78x58).png", 78, 58, new vec2(0.4f, 0.4f)) },
+                { "player_door_in",  SliceSprites("KingsAndPigsSprites/01-King Human/Door In (78x58).png", 78, 58, new vec2(0.4f, 0.4f), 2) },
+                { "player_door_out", SliceSprites("KingsAndPigsSprites/01-King Human/Door Out (78x58).png", 78, 58, new vec2(0.4f, 0.4f), 2) },
+
+                { "door_opening",    SliceSprites("KingsAndPigsSprites/11-Door/Opening (46x56).png", 46, 56, vec2.Half, 1) },
+
+                // Enemy: King pig
+                { "kingpig_enemy_idle",   SliceSprites("KingsAndPigsSprites/02-King Pig/Idle (38x28).png", 38, 28, new vec2(0.52f, 0.34f)) },
+                { "kingpig_enemy_run",    SliceSprites("KingsAndPigsSprites/02-King Pig/Run (38x28).png", 38, 28, new vec2(0.52f, 0.34f)) },
+                { "kingpig_enemy_jump",   SliceSprites("KingsAndPigsSprites/02-King Pig/Jump (38x28).png", 38, 28, new vec2(0.52f, 0.34f)) },
+                { "kingpig_enemy_fall",   SliceSprites("KingsAndPigsSprites/02-King Pig/Fall (38x28).png", 38, 28, new vec2(0.52f, 0.34f)) },
+                { "kingpig_enemy_hit",    SliceSprites("KingsAndPigsSprites/02-King Pig/Hit (38x28).png", 38, 28, new vec2(0.52f, 0.34f)) },
+                { "kingpig_enemy_dead",   SliceSprites("KingsAndPigsSprites/02-King Pig/Dead (38x28).png", 38, 28, new vec2(0.7f, 0.34f)) },
+                { "kingpig_enemy_attack", SliceSprites("KingsAndPigsSprites/02-King Pig/Attack (38x28).png", 38, 28, new vec2(0.52f, 0.34f)) },
+
+                // Enemy: Pig
+                { "pig_enemy_idle",   SliceSprites("KingsAndPigsSprites/03-Pig/Idle (34x28).png",   34, 28, new vec2(0.58f, 0.34f)) },
+                { "pig_enemy_run",    SliceSprites("KingsAndPigsSprites/03-Pig/Run (34x28).png",    34, 28, new vec2(0.58f, 0.34f)) },
+                { "pig_enemy_jump",   SliceSprites("KingsAndPigsSprites/03-Pig/Jump (34x28).png",   34, 28, new vec2(0.58f, 0.34f)) },
+                { "pig_enemy_fall",   SliceSprites("KingsAndPigsSprites/03-Pig/Fall (34x28).png",   34, 28, new vec2(0.58f, 0.34f)) },
+                { "pig_enemy_hit",    SliceSprites("KingsAndPigsSprites/03-Pig/Hit (34x28).png",    34, 28, new vec2(0.58f, 0.34f)) },
+                { "pig_enemy_dead",   SliceSprites("KingsAndPigsSprites/03-Pig/Dead (34x28).png",   34, 28, new vec2(0.58f, 0.34f)) },
+                { "pig_enemy_attack", SliceSprites("KingsAndPigsSprites/03-Pig/Attack (34x28).png", 34, 28, new vec2(0.58f, 0.34f)) },
+
+                // Full tilesets
+                { "stark_full_tileset", SliceSprites("starkTileset.png", 16, 16, new vec2(0.5f, 0.35f)) },
+                { "sunny_land_tileset", SliceSprites("Tilemap/SunnyLand_by_Ansimuz-extended.png", 16, 16, vec2.Half) },
+
+                // Heart
+                { "small_heart_idle", SliceSprites("KingsAndPigsSprites/12-Live and Coins/Small Heart Idle (18x14).png", 8, 7, vec2.Half) },
+                { "health_bar_frame", SliceSprites("KingsAndPigsSprites/12-Live and Coins/Live Bar_atlas(143x34).png", 143, 34, vec2.Half) },
+
+                // UI
+                { "ui_buttons_long", SliceSprites("pixel-ui_buttons_long_47x14.png", 46, 14, vec2.Half) },
+
+            };
+
+            _tilesets["door_closing"] = _tilesets["door_opening"].Reverse().ToArray();
+
+            // Collectible
+            _tilesets["coin_currency"] = GetSprites(_tilesets, "stark_full_tileset", 281, 4);
+            _tilesets["coin_gray"] = GetSprites(_tilesets, "stark_full_tileset", 277, 4);
+
+            // Chest
+            _tilesets["chest_normal_idle"] = GetSprites(_tilesets, "stark_full_tileset", 160, 1);
+            _tilesets["chest_normal_fill_open"] = GetSprites(_tilesets, "stark_full_tileset", 164, 2);
+            _tilesets["chest_normal_empty_open"] = GetSprites(_tilesets, "stark_full_tileset", 166, 2);
+            _tilesets["chest_small_idle"] = GetSprites(_tilesets, "stark_full_tileset", 162, 2);
+            _tilesets["chest_small_fill_open"] = GetSprites(_tilesets, "stark_full_tileset", 168, 1);
+            _tilesets["chest_small_empty_open"] = GetSprites(_tilesets, "stark_full_tileset", 169, 1);
+
+            // Spikes
+            _tilesets["spikes_ground"] = GetSprites(_tilesets, "stark_full_tileset", 183, 4);
+            _tilesets["spikes_wall"] = GetSprites(_tilesets, "stark_full_tileset", 215, 4);
+        }
+
+        public static Sprite[] GetAtlas(string atlasId)
+        {
+            if (_tilesets.TryGetValue(atlasId, out var sprite))
+            {
+                return sprite;
+            }
+
+            return null;
+        }
+
+        private static Sprite[] GetSprites(Dictionary<string, Sprite[]> tileset, string name, int startIndex, int length = int.MaxValue)
+        {
+            return TextureAtlasUtils.GetSprites(tileset[name][0].Texture, startIndex, length);
+        }
+        private static Sprite[] SliceSprites(string name, int width, int height, vec2 pivot, int startIndex = 0, int length = int.MaxValue)
+        {
+            return TextureAtlasUtils.SliceSprites(Assets.GetTexture(name), width, height, pivot, startIndex, length);
+        }
+    }
+}

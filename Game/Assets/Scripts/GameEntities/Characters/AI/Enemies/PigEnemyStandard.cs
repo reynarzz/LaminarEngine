@@ -14,16 +14,14 @@ namespace Game
             base.Init(config);
 
             const float fps = 11.5f;
-            var size = new vec2(34, 28);
-            var pivot = new vec2(0.58f, 0.34f);
-
-            string[] pathSprites = ["KingsAndPigsSprites/03-Pig/Idle (34x28).png",
-                                    "KingsAndPigsSprites/03-Pig/Run (34x28).png",
-                                    "KingsAndPigsSprites/03-Pig/Jump (34x28).png",
-                                    "KingsAndPigsSprites/03-Pig/Fall (34x28).png",
-                                    "KingsAndPigsSprites/03-Pig/Hit (34x28).png",
-                                    "KingsAndPigsSprites/03-Pig/Dead (34x28).png",
-                                    "KingsAndPigsSprites/03-Pig/Attack (34x28).png"];
+            
+            string[] atlasId = [
+                                
+                                
+                                
+                                
+                                
+                                ];
 
             var states = new AnimationsStates();
             for (int i = 0; i < AnimationsStates.Length; i++)
@@ -32,9 +30,7 @@ namespace Game
                 {
                     IsEnabled = true,
                     Fps = fps,
-                    Pivot = pivot,
-                    Size = size,
-                    SpriteAtlasPath = pathSprites[i],
+                    SpriteAtlasPath = atlasId[i],
                 };
             }
             InitAnimationStates(states);

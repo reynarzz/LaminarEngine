@@ -52,8 +52,7 @@ namespace Game
             _titleText.Vertical =  TextVerticalAlignment.Center;
             _titleText.Material = fontMat;
 
-            var tex = Assets.GetTexture("pixel-ui_buttons_long_47x14.png");
-            var buttonSlice = TextureAtlasUtils.SliceSprites(tex, 46, 14);
+            var buttonSlice = GameTextureAtlases.GetAtlas("ui_buttons_long");
 
             var resumeButtonImage = NewImage("Resume button image", new vec2(0, 0), new vec2(150, 40), Color.White, _background.Transform);
 
@@ -133,8 +132,7 @@ namespace Game
 
             var parent = NewImage("Quad1", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
             parent.Sprite = slotSprite;
-            var tex = Assets.GetTexture("starkTileset.png");
-            var coins = TextureAtlasUtils.SliceSprites(tex, 16, 16, 281, 4);
+            var coins = GameTextureAtlases.GetAtlas("coin_currency");
 
 
             var iconContent = NewImage("Content", default, new vec2(34, 34), Color.White, parent.Transform);
@@ -221,10 +219,10 @@ namespace Game
                 SetColorAlpha(0);
             }
 
-            //if (Input.GetKeyDown(KeyCode.Tab))
-            //{
-            //    _inventory.Actor.IsActiveSelf = !_inventory.Actor.IsActiveSelf;
-            //}
+            if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                _inventory.Actor.IsActiveSelf = !_inventory.Actor.IsActiveSelf;
+            }
         }
 
         private UIText NewText(string name, string value, vec2 position, Transform parent)

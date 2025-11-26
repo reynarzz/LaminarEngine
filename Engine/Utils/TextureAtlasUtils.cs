@@ -64,23 +64,32 @@ namespace Engine.Utils
         }
         public static Sprite[] SliceSprites(Texture2D texture, int tileWidth, int tileHeight, int startIndex, int length)
         {
-            return SliceSprites(texture, tileWidth, tileHeight, startIndex, length, new vec2(0.5f, 0.5f));
+            return SliceSprites(texture, tileWidth, tileHeight, new vec2(0.5f, 0.5f), startIndex, length);
         }
         public static Sprite[] SliceSprites(Texture2D texture, int tileWidth, int tileHeight, vec2 pivot)
         {
             int tilesX = texture.Width / tileWidth;
             int tilesY = texture.Height / tileHeight;
-            return SliceSprites(texture, tileWidth, tileHeight, 0, tilesX * tilesY, pivot);
+            return SliceSprites(texture, tileWidth, tileHeight, pivot, 0, tilesX * tilesY);
         }
 
-        public static Sprite[] SliceSprites(Texture2D texture, int tileWidth, int tileHeight,
-                                            int startIndex, int length, vec2 pivot)
+        public static Sprite[] SliceSprites(Texture2D texture, int tileWidth, int tileHeight, vec2 pivot,
+                                            int startIndex, int length = int.MaxValue)
         {
+            if(texture.Atlas.ChunksCount > 0)
+            {
+                Debug.Error("Can't slice. Sliced already.");
+                return null;
+            }
+
             int tilesX = texture.Width / tileWidth;
             int tilesY = texture.Height / tileHeight;
 
+            length = int.Min((tilesX * tilesY) - startIndex, length);
+        
             var atlasChunks = new AtlasChunk[length];
             var sprites = new Sprite[length];
+            texture.Atlas.SetChunks(atlasChunks);
 
             for (int i = 0; i < length; i++)
             {
@@ -93,10 +102,24 @@ namespace Engine.Utils
 
                 atlasChunks[i] = CreateTileBounds(x * tileWidth, y * tileHeight, tileWidth, tileHeight,
                                                   pivot.x, pivot.y, texture.Width, texture.Height);
+
                 sprites[i] = new Sprite(i, texture);
             }
 
-            texture.Atlas.SetChunks(atlasChunks);
+            return sprites;
+        }
+
+        public static Sprite[] GetSprites(Texture2D texture, int startIndex, int length = int.MaxValue)
+        {
+            length = int.Min(texture.Atlas.ChunksCount - startIndex, length);
+  
+            var sprites = new Sprite[length];
+
+            for (int i = 0; i < sprites.Length; ++i)
+            {
+                sprites[i] = new Sprite(i + startIndex, texture);
+            }
+
             return sprites;
         }
 

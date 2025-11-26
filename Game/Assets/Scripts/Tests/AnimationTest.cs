@@ -52,24 +52,17 @@ namespace Game
             var pTexture2 = Assets.GetTexture(basePath + "Attack (34x28).png");
             var sprites = TextureAtlasUtils.SliceSprites(pTexture2, 34, 28, new vec2(0.4f, 0.4f));
 
+            const float fps = 5;
+            float fpsFrac = 1.0f / fps;
 
-            var spriteCurve = new SpriteCurve();
-            float fps = 5;
-            float fpsFrac = (1.0f / fps);
-
-            for (int i = 0; i < sprites.Length; i++)
-            {
-                spriteCurve.AddKeyFrame(fpsFrac * (float)i, sprites[i]);
-            }
-
+            var spriteCurve = new SpriteCurve(fpsFrac, sprites);
 
             animClip.AddCurve("Position", posCurve);
             animClip.AddCurve("Color", colorCurve);
             animClip.AddCurve("Sprite", spriteCurve);
-            var evt = animClip.GetEventCurve();
             var v = fpsFrac * 3.0f;
-            evt.AddKeyFrame(v, () => Debug.Warn("Cyan"));
-            evt.AddKeyFrame(fpsFrac * 1.0f, () => Debug.Warn("Event called from animation"));
+            animClip.AddEvent(v, () => Debug.Warn("Cyan"));
+            animClip.AddEvent(fpsFrac * 1.0f, () => Debug.Warn("Event called from animation"));
 
             Debug.Log("Anim clip duration: " + animClip.Duration);
             var state = new AnimationState("Main state", animClip);
@@ -88,8 +81,7 @@ namespace Game
             walkClip.AddCurve("Sprite", curve);
             walkClip.AddCurve("Sprite", hermite);
 
-            var evt = walkClip.GetEventCurve();
-            evt.AddKeyFrame(4, () => Debug.Warn("Event called"));
+            walkClip.AddEvent(4, () => Debug.Warn("Event called"));
 
             var runClip = new AnimationClip("Run", true);
 
@@ -117,7 +109,7 @@ namespace Game
             var color = _controller.GetColor("Color");
             var sprite = _controller.GetSprite("Sprite");
 
-             _targetRenderer.Color = color;
+            _targetRenderer.Color = color;
             _targetRenderer.Transform.WorldPosition = position;
             _targetRenderer.Sprite = sprite;
         }

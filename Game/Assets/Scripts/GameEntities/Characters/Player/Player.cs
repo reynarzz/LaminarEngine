@@ -1,6 +1,8 @@
 ﻿using Engine;
+using Engine.Utils;
 using GlmNet;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,16 +10,18 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    internal class Player : Character
+    public class Player : Character
     {
         private float _shootCooldown = 0.25f;
         private float _shootCooldownTime = 0;
         private float _bulletSpeed = 23;
+        private bool _canMove = false;
 
+        private readonly List<InteractableEntityBase> _nearInteractables = new();
         public override void Init(CharacterConfig config)
         {
             Inventory = new PlayerInventory(config.InventoryMaxSlots, 4);
-
+            _canMove = true;
             base.Init(config);
             var box = AddComponent<BoxCollider2D>();
             box.Size = new vec2(0.95f, 0.6f);
@@ -25,16 +29,15 @@ namespace Game
             box.Friction = 0;
 
             const float fps = 11.5f;
-            var size = new vec2(78, 58);
-            var pivot = new vec2(0.4f, 0.4f);
 
-            string[] pathSprites = ["KingsAndPigsSprites/01-King Human/Idle (78x58)S.png",
-                                    "KingsAndPigsSprites/01-King Human/Run (78x58)S.png",
-                                    "KingsAndPigsSprites/01-King Human/Jump (78x58)S.png",
-                                    "KingsAndPigsSprites/01-King Human/Fall (78x58)S.png",
-                                    "KingsAndPigsSprites/01-King Human/Hit (78x58).png",
-                                    "KingsAndPigsSprites/01-King Human/Dead (78x58).png",
-                                    "KingsAndPigsSprites/01-King Human/Attack (78x58).png"];
+            string[] atlasid = ["player_idle",
+                                "player_run",
+                                "player_jump",
+                                "player_fall",
+                                "player_hit",
+                                "player_dead",
+                                "player_attack",
+                                ];
 
             var states = new AnimationsStates();
             for (int i = 0; i < AnimationsStates.Length; i++)
@@ -43,9 +46,7 @@ namespace Game
                 {
                     IsEnabled = true,
                     Fps = fps,
-                    Pivot = pivot,
-                    Size = size,
-                    SpriteAtlasPath = pathSprites[i],
+                    SpriteAtlasPath = atlasid[i],
                 };
             }
 
@@ -54,20 +55,88 @@ namespace Game
             states.Jump.Events = [new AnimEvent { Time = 0, Callback = PlayJumpSoundFx }];
 
             InitAnimationStates(states);
+
+            var doorInState = AnimatorUtils.AddState(Animator, "DoorIn", false);
+            doorInState.Clip.AddCurve(SPRITE_PROPERTY_NAME, new SpriteCurve(fps, GameTextureAtlases.GetAtlas("player_door_in")));
+
+            var doorOutState = AnimatorUtils.AddState(Animator, "DoorOut", false);
+            doorOutState.Clip.AddCurve(SPRITE_PROPERTY_NAME, new SpriteCurve(fps, GameTextureAtlases.GetAtlas("player_door_out")));
+        }
+
+        public void InitLevel()
+        {
+
+        }
+        public void ExitFromDoor(Door door)
+        {
+            Renderer.IsEnabled = false;
+            _canMove = false;
+            Walk(1);
+            IEnumerator ExitFromDoor()
+            {
+                Debug.Log("Open");
+                door.Open();
+                yield return new WaitForSeconds(0.3f);
+                Animator.Play("DoorOut");
+                Renderer.IsEnabled = true;
+                yield return new WaitForSeconds(0.5f);
+                door.Close();
+                Animator.Play(IDLE_ANIM_STATE);
+                _canMove = true;
+            }
+
+            StartCoroutine(ExitFromDoor());
+        }
+
+        private void MoveToDoor(Door door)
+        {
+            _canMove = false;
+            IEnumerator WalkToDoor()
+            {
+                var walkDir = door.Transform.WorldPosition.x - Transform.WorldPosition.x;
+                while (Math.Abs(walkDir) > 0.1f)
+                {
+                    walkDir = door.Transform.WorldPosition.x - Transform.WorldPosition.x;
+                    Walk(Math.Sign(walkDir));
+                    yield return null;
+                }
+
+                if (door.TryInteract(this))
+                {
+                    Debug.Log("Open");
+                    Walk(0);
+                    yield return new WaitForSeconds(0.3f);
+                    Animator.Play("DoorIn");
+                    yield return new WaitForSeconds(0.5f);
+                    Renderer.IsEnabled = false;
+                    door.Close();
+                }
+            }
+
+            StartCoroutine(WalkToDoor());
         }
 
         public override void OnUpdate()
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.E))
             {
-                Jump();
-            }
+                if (_nearInteractables.Count > 0)
+                {
+                    var interactable = _nearInteractables[^1];
+                    if (interactable.CanInteract(this))
+                    {
+                        _nearInteractables.RemoveAt(_nearInteractables.Count - 1);
 
-
-            if (Input.GetKey(KeyCode.F) && _shootCooldownTime <= 0)
-            {
-                _shootCooldownTime = _shootCooldown;
-                Attack();
+                        if (interactable is Door door)
+                        {
+                            MoveToDoor(door);
+                        }
+                        else
+                        {
+                            interactable.TryInteract(this);
+                        }
+                    }
+                }
             }
 
             _shootCooldownTime -= Time.DeltaTime;
@@ -85,22 +154,37 @@ namespace Game
             if (Input.GetKeyDown(KeyCode.Z))
             {
                 Restart();
+                _canMove = true;
             }
 
-            if (Input.GetKey(KeyCode.A))
+            if (_canMove)
             {
-                Walk(-1);
-            }
-            else if (Input.GetKey(KeyCode.D))
-            {
-                Walk(1);
-            }
-            else
-            {
-                Walk(0);
-            }
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    Jump();
+                }
 
+                if (Input.GetKey(KeyCode.F) && _shootCooldownTime <= 0)
+                {
+                    _shootCooldownTime = _shootCooldown;
+                    Attack();
+                }
+
+                if (Input.GetKey(KeyCode.A))
+                {
+                    Walk(-1);
+                }
+                else if (Input.GetKey(KeyCode.D))
+                {
+                    Walk(1);
+                }
+                else
+                {
+                    Walk(0);
+                }
+            }
         }
+
         public override bool Attack(int index = 0)
         {
             if (!IsCharacterAlive())
@@ -121,6 +205,25 @@ namespace Game
         {
 
             base.OnFixedUpdate();
+        }
+
+        protected override void OnTriggerEnter2D(Collider2D collider)
+        {
+            var interactable = collider.GetComponent<InteractableEntityBase>();
+            if (interactable)
+            {
+                if (!_nearInteractables.Contains(interactable))
+                    _nearInteractables.Add(interactable);
+            }
+        }
+
+        protected override void OnTriggerExit2D(Collider2D collider)
+        {
+            var interactable = collider.GetComponent<InteractableEntityBase>();
+            if (interactable)
+            {
+                _nearInteractables.Remove(interactable);
+            }
         }
     }
 }

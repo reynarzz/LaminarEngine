@@ -39,11 +39,12 @@ namespace Game
         private ItemsDatabase _itemsDatabase;
         private PauseMenu _pauseMenu;
         private static Material _tilemapMaterial;
-
+        private FadeInOutManager _fadeInOutManager;
         public static Player Player { get; private set; }
         public static Material DefaultMaterial => _stencylMaterial;
 
         public static FontAsset DefaultFont { get; internal set; }
+        private static GameEntityManager _gameEntityManager;
 
         public override void OnAwake()
         {
@@ -53,10 +54,16 @@ namespace Game
             InitializeWorld();
         }
 
+        private void DontDestroy()
+        {
+
+        }
+
         private void InitializeData()
         {
             _itemsDatabase = new ItemsDatabase("Data/ItemsDatabase.csv");
             DefaultFont = Assets.Get<FontAsset>("Fonts/windows-bold[1].ttf");
+            _gameEntityManager = new GameEntityManager();
         }
         private void InitializeMaterials()
         {
@@ -114,10 +121,10 @@ namespace Game
                 var musicAudio = music.GetComponent<AudioSource>();
                 musicAudio.Loop = true;
                 musicAudio.Clip = Assets.GetAudioClip("Audio/music/streamloops/Stream Loops 2024-02-14_L01.wav");
-                musicAudio.Play();
+                // musicAudio.Play();
                 Actor.DontDestroyOnLoad(music);
             }
-            
+
             _pauseMenu = new Actor("Pause menu").AddComponent<PauseMenu>();
 
             Player = new Actor("Player").AddComponent<Player>();
@@ -130,7 +137,7 @@ namespace Game
             var cameraFollow = camActor.AddComponent<CameraFollow>();
             cameraFollow.Target = Player.Transform;
 
-            Camera.Transform.WorldPosition = new vec3(0,0,-12);
+            Camera.Transform.WorldPosition = new vec3(0, 0, -12);
             Camera.BackgroundColor = new Color(0.2f, 0.2f, 0.2f, 1);
             Camera.OrthographicSize = 288.0f / 2.0f / 16.0f;
             Camera.RenderTexture = new RenderTexture(512 * 2, 288 * 2);
@@ -152,6 +159,7 @@ namespace Game
                 Material = _stencylMaterial,
                 StartingLife = 5,
                 SpriteLookDir = 1,
+                InventoryMaxSlots = 10,
                 Ground = new GroundDetectionOptions()
                 {
                     Enabled = true,
@@ -171,9 +179,6 @@ namespace Game
 
             });
 
-            var platform = new Actor<Platform, SpriteRenderer>("Platform");
-            platform.GetComponent<SpriteRenderer>().Material = _defaultSpriteMaterial;
-            platform.Layer = LayerMask.NameToLayer(GameLayers.PLATFORM);
 
 
             cameraFollow.SetOnTargetImmediate();
@@ -182,11 +187,11 @@ namespace Game
 
             // GamePrefabs.Enemies.InstantiatePigStandard(Player.Transform.LocalPosition + vec3.Right * 2, -1);
 
-            // LoadTilemap();
             PostProcessingStack.Clear();
-            PostProcessingStack.Push(new BloomPostProcessing());
-            ScreenGrabTest();
+            // PostProcessingStack.Push(new BloomPostProcessing());
+            //ScreenGrabTest();
             ScreenGrabTest3();
+
             Canvas();
 
             Portal();
@@ -196,18 +201,13 @@ namespace Game
             WaterTest();
             ParticleSystem();
 
-
+            _fadeInOutManager = new Actor("FadeInOutManager").AddComponent<FadeInOutManager>();
+            Actor.DontDestroyOnLoad(_fadeInOutManager);
         }
-
 
         private void LoadTilemap()
         {
             var testPathNow = "Tilemap";
-            var tilemapTexture = Assets.GetTexture(testPathNow + "/SunnyLand_by_Ansimuz-extended.png");
-
-            TextureAtlasUtils.SliceTiles(tilemapTexture.Atlas, 16, 16, tilemapTexture.Width, tilemapTexture.Height);
-
-            var tilemapSprite = new Sprite(tilemapTexture);
 
             //var filepath = rootPathTest + "\\Tilemap\\World.ldtk";
 
@@ -225,10 +225,18 @@ namespace Game
             var project = ldtk.LdtkJson.FromJson(json);
             var color = project.BgColor;
 
-            vec3 ConvertToWorld(long[] px, Level level, float pixelPerUnit, LayerInstance layer)
+            vec2 ConvertToWorld(long x, long y, Level level, float pixelPerUnit, LayerInstance layer, bool isGridPos = false)
             {
-                return new vec3(MathF.Floor((level.WorldX + px[0] + layer.PxOffsetX) / pixelPerUnit), MathF.Ceiling((-level.WorldY + -px[1] + -layer.PxOffsetY) / pixelPerUnit), 0);
+                if (isGridPos)
+                {
+                    x *= layer.GridSize;
+                    y *= layer.GridSize;
+                }
+                return new vec2(MathF.Floor((level.WorldX + x + layer.PxOffsetX) / pixelPerUnit), MathF.Ceiling((-level.WorldY + -y + -layer.PxOffsetY) / pixelPerUnit));
             }
+
+            var sprite = GameTextureAtlases.GetAtlas("sunny_land_tileset")[0];
+
 
             foreach (var level in project.Levels)
             {
@@ -236,29 +244,26 @@ namespace Game
                 {
                     foreach (var entity in layer.EntityInstances)
                     {
-                        var position = ConvertToWorld(entity.Px, level, tilemapTexture.PixelPerUnit, layer);
+                        var position = ConvertToWorld(entity.Px[0], entity.Px[1], level, sprite.Texture.PixelPerUnit, layer);
                         //Debug.Log("Entity: " + entity.Identifier);
                         if (entity.Identifier.Equals("Player"))
                         {
                             _playerStartPosTest = position;
+                            GamePrefabs.World.InstantiateDoor(position + new vec2(0, 1), x =>
+                            {
+                                var coinCount = x.Inventory.GetItemCount(ItemId.coin_currency);
+                                var coinsNeeded = 10;
+                                Debug.Log("Coins collected: " + coinCount + ", coins needed: " + coinsNeeded);
+
+                                return coinCount >= coinsNeeded;
+                            });
                         }
 
-                        switch (entity.Identifier)
+                        _gameEntityManager.BuildEntity(entity, position, (vec2, isGrid) =>
                         {
-                            case "Enemy1":
-                                GamePrefabs.Enemies.InstantiateKingPig(position, -1);
-                                break;
-                            case "Coin":
-                                GamePrefabs.Collectibles.InstantiateCoin(position);
-                                break;
-                            default:
-                                break;
-                        }
-
-                        foreach (var field in entity.FieldInstances)
-                        {
-                            //Debug.Log("Name: " + field.Identifier + ", Type: " + field.Type + ", Value: " + field.Value);
-                        }
+                            // TODO: refactor, instead send a helper class that contains convert methods.
+                            return ConvertToWorld((int)vec2.x, (int)vec2.y, level, sprite.Texture.PixelPerUnit, layer, isGrid);
+                        });
                     }
                 }
             }
@@ -269,17 +274,17 @@ namespace Game
             var tilemapActor = new Actor<TilemapRenderer>("Foreground tilemap");
             var tilemap = tilemapActor.GetComponent<TilemapRenderer>();
             tilemap.Material = _tilemapMaterial;
-            tilemap.Sprite = tilemapSprite;
+            tilemap.Sprite = sprite;
 
             var tilemapActor2 = new Actor<TilemapRenderer>("Background tilemap");
             var tilemap2 = tilemapActor2.GetComponent<TilemapRenderer>();
             tilemap2.Material = _tilemapMaterial;
-            tilemap2.Sprite = tilemapSprite;
+            tilemap2.Sprite = sprite;
 
             var tilemapActor3 = new Actor<TilemapRenderer>("Grass tilemap");
             var tilemap3 = tilemapActor3.GetComponent<TilemapRenderer>();
             tilemap3.Material = _tilemapMaterial;
-            tilemap3.Sprite = tilemapSprite;
+            tilemap3.Sprite = sprite;
 
             // tilemap.SetTilemapLDtk(project, new LDtkOptions() { RenderIntGridLayer = true, RenderTilesLayer = true, RenderAutoLayer = true });
             tilemap.SetTilemapLDtk(project, new LDtkOptions()
@@ -331,7 +336,7 @@ namespace Game
             var mainShader = new Shader(Assets.GetText("Shaders/SpriteVert.vert").Text, Assets.GetText("Shaders/SpriteFrag.frag").Text);
             var mat1 = new Material(mainShader);
 
-            var sprites = TextureAtlasUtils.SliceSprites(Assets.GetTexture("KingsAndPigsSprites/12-Live and Coins/Small Heart Idle (18x14).png"), 8, 7);
+            var sprites = GameTextureAtlases.GetAtlas("small_heart_idle");
 
             UIImage Image(string name, vec2 position, vec2 size, Sprite sprite, Transform parent)
             {
@@ -348,12 +353,8 @@ namespace Game
             }
 
             float uiMult = 3;
-            var tex = Assets.GetTexture("KingsAndPigsSprites/12-Live and Coins/Live Bar_atlas(143x34).png");
-            var lifebarSprites = TextureAtlasUtils.SliceSprites(tex, 143, 34);
-            var lifeBar = Image("Life bar", new vec2(10, 10), new vec2(143, 34) * uiMult, lifebarSprites[2], canvas.Transform);
-
-
-
+            var lifebarSprites = GameTextureAtlases.GetAtlas("health_bar_frame");
+            var lifeBar = Image("Life bar", new vec2(10, 10), new vec2(143, 34) * uiMult, lifebarSprites[3], canvas.Transform);
 
             Image("Heart1", new vec2(56, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);
             Image("Heart2", new vec2(88, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);
@@ -481,12 +482,16 @@ namespace Game
         private void ScreenGrabTest3()
         {
             var vertex = Assets.GetText("Shaders/ScreenVert.vert").Text;
-            var screenShader = new Shader(vertex, Assets.GetText("Shaders/Ripple.frag").Text);
-            PostProcessingStack.Push(new PostProcessingSinglePass(screenShader));
+            //var screenShader = new Shader(vertex, Assets.GetText("Shaders/Ripple.frag").Text);
+            //PostProcessingStack.Push(new PostProcessingSinglePass(screenShader));
 
             var screenShader2 = new Shader(vertex, Assets.GetText("Shaders/ChromaticAberration.frag").Text);
             PostProcessingStack.Push(new PostProcessingSinglePass(screenShader2));
 
+            var scalines = new PostProcessingSinglePass(new Shader(vertex, Assets.GetText("Shaders/ScanLines.frag").Text));
+            scalines.SetValue("uScanlineIntensity", 0.2f);
+            scalines.SetValue("uScanlineSpacing", 2);
+            PostProcessingStack.Push(scalines);
         }
 
         internal static void UpdateCoinUI()

@@ -84,6 +84,8 @@ namespace Engine
                 {
                     _currentState = _nextState;
                     _nextState = null;
+                    _transitionDuration = 0;
+                    _transitionTime = 0;
                     _animPlayer.Play(_currentState.Clip);
                 }
             }
@@ -91,6 +93,13 @@ namespace Engine
             _animPlayer.Update();
 
             OnUpdate?.Invoke(this);
+        }
+
+        public void Play(string state)
+        {
+            _states.TryGetValue(state, out _nextState);
+            _transitionDuration = 0;
+            _transitionTime = 0;
         }
 
         public float GetFloat(string property)
@@ -122,6 +131,11 @@ namespace Engine
         {
             return _animPlayer.GetSprite(property);
         }
+
+        //public void GetProperty(string property, ref CurveEvaluatedResult result)
+        //{
+        //    _animPlayer.GetProperty(property, ref result);
+        //}
 
         /// <summary>
         /// Removes all states, and restarts the animator

@@ -27,7 +27,7 @@ namespace Game
         // Colllect coins, hearts, attack enemies, go from door A to B
         // Implement collectibles
         // Implement UI (inventory, pause menu)
-        
+
 
         // -Stretch:
         // Implement bounds in sprites/renderers.
@@ -42,7 +42,7 @@ namespace Game
         {
             new Actor<LaunchScreen>("Launch Screen");
 
-             // FilmGrain();
+            // FilmGrain();
         }
 
         private void FilmGrain()

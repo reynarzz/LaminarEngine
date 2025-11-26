@@ -42,7 +42,7 @@ namespace Engine.IO
 
         internal async Task<T> GetAssetAsync<T>(string path) where T : AssetResourceBase
         {
-            if (_guidPathDict.TryGetByValue(path, out var guid))
+            if (_guidPathDict.TryGetByValue(Paths.ClearPathSeparation(path), out var guid))
             {
                 return await GetAssetAsync<T>(guid);
             }
@@ -54,7 +54,7 @@ namespace Engine.IO
 
         internal T GetAsset<T>(string path) where T : AssetResourceBase
         {
-            if (_guidPathDict.TryGetByValue(path, out var guid))
+            if (_guidPathDict.TryGetByValue(Paths.ClearPathSeparation(path), out var guid))
             {
                 return GetAsset<T>(guid);
             }

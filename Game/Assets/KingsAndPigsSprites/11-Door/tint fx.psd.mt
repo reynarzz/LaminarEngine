@@ -3,7 +3,7 @@
     "IsNearest": false,
     "IsAtlas": false,
     "Mode": 0,
-    "PixelPerUnit": 12 
+    "PixelPerUnit": 16
   },
-  "GUID": "2f779d6a-a4bb-4860-b3d7-9a2ed747698b"
+  "GUID": "95892f37-5ea7-4626-97b8-45e1e85452d1"
 }

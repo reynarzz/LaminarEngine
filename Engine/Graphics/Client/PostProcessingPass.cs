@@ -8,15 +8,9 @@ namespace Engine.Graphics
 {
     public abstract class PostProcessingPass : IDisposable
     {
-        public struct PassUniform
-        {
-            public string Name { get; set; }
-            public RenderTexture RenderTexture { get; set; }
-        }
+        private Action<Shader, RenderTexture, RenderTexture, UniformValue[]> _drawCallback;
 
-        private Action<Shader, RenderTexture, RenderTexture, PassUniform[]> _drawCallback;
-
-        public RenderTexture Render(RenderTexture inRenderTexture, Action<Shader, RenderTexture, RenderTexture, PassUniform[]> draw)
+        internal RenderTexture Render(RenderTexture inRenderTexture, Action<Shader, RenderTexture, RenderTexture, UniformValue[]> draw)
         {
             _drawCallback = draw;
             return Render(inRenderTexture);
@@ -24,7 +18,11 @@ namespace Engine.Graphics
 
         protected abstract RenderTexture Render(RenderTexture inRenderTexture);
 
-        protected void Draw(Shader shader, RenderTexture readFrom, RenderTexture applyTo, params PassUniform[] uniforms)
+        protected void Draw(Shader shader, RenderTexture readFrom, RenderTexture applyTo)
+        {
+            Draw(shader, readFrom, applyTo, null);
+        }
+        protected void Draw(Shader shader, RenderTexture readFrom, RenderTexture applyTo, UniformValue[] uniforms)
         {
             _drawCallback(shader, readFrom, applyTo, uniforms);
         }
