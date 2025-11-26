@@ -257,20 +257,24 @@ namespace Engine.Layers
             int uniformIndex = 0;
             if (uniforms != null)
             {
-                for (; uniformIndex < uniforms.Length; uniformIndex++)
+                for (int i = 0; i < uniforms.Length; i++)
                 {
-                    if (uniforms[uniformIndex].Type == UniformType.RenderTexture)
+                    var type = uniforms[i].Type;
+                    if (type == UniformType.Invalid)
+                        continue;
+                    if (type == UniformType.RenderTexture)
                     {
                         // Texture + 1 is the texture that will be used by the shader.
-                        _screenQuadDrawCallData.Textures[uniformIndex + 1] = uniforms[uniformIndex].RenderTextureValue.NativeResource.SubResources[0];
-                        _screenQuadDrawCallData.Uniforms[uniformIndex].SetInt(uniforms[uniformIndex].Name, uniformIndex + 1);
+                        _screenQuadDrawCallData.Textures[uniformIndex + 1] = uniforms[i].RenderTextureValue.NativeResource.SubResources[0];
+                        _screenQuadDrawCallData.Uniforms[uniformIndex].SetInt(uniforms[i].Name, uniformIndex + 1);
                     }
                     else
                     {
-                        _screenQuadDrawCallData.Uniforms[uniformIndex] = uniforms[uniformIndex];
+                        _screenQuadDrawCallData.Uniforms[uniformIndex] = uniforms[i];
                     }
-                }
 
+                    uniformIndex++;
+                }
             }
 
             // Pipeline

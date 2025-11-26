@@ -130,9 +130,9 @@ namespace Engine
             Glfw.WindowHint(Hint.ContextVersionMinor, 2);
             Glfw.WindowHint(Hint.Resizable, false);
             Glfw.WindowHint(Hint.Visible, false);
-            Glfw.WindowHint(Hint.OpenglForwardCompatible, Constants.True);
-            Glfw.WindowHint(Hint.SrgbCapable, Constants.True);
-            Glfw.WindowHint(Hint.Doublebuffer, Constants.True);
+            //Glfw.WindowHint(Hint.OpenglForwardCompatible, Constants.True);
+            //Glfw.WindowHint(Hint.SrgbCapable, Constants.True);
+            //Glfw.WindowHint(Hint.Doublebuffer, Constants.True);
 
             try
             {

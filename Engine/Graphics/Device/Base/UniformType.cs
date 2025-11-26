@@ -8,6 +8,7 @@ namespace Engine.Graphics
 {
     internal enum UniformType
     {
+        Invalid,
         Int,
         Float,
         Uint,
