@@ -30,7 +30,7 @@ namespace Game
 
         // Keys
         simple_key,
-
+        yellow_key,
     }
 
     public class ItemsDatabase

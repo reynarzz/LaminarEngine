@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Game
 {
     [RequiredComponent(typeof(Animator))]
-    public abstract class AnimatedInteractable : InteractableEntityBase
+    public abstract class AnimatedInteractable<T> : InteractableEntityBase<T> where T: InteractableData
     {
         protected Animator Animator { get; set; }
         public override void OnAwake()

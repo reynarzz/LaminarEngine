@@ -14,7 +14,7 @@ namespace Game
     {
         public override GameEntity Build(vec2 position, FieldInstance[] fields, Func<vec2, bool, vec2> positionConverter)
         {
-            var lootItems = default(ChestLoot[]);
+            var lootItems = default(ItemAmountPair[]);
 
             for (int i = 0; i < fields.Length; i++)
             {
@@ -27,7 +27,7 @@ namespace Game
                     {
                         if (lootItems == null)
                         {
-                            lootItems = new ChestLoot[value.Length];
+                            lootItems = new ItemAmountPair[value.Length];
                         }
                         Enum.TryParse<ItemId>(value[j], true, out var item);
                         var loot = lootItems[j];
@@ -48,7 +48,7 @@ namespace Game
                 }
             }
 
-            return GamePrefabs.Items.InstantiateChest(position, lootItems);
+            return GamePrefabs.Items.InstantiateChest(position, new ChestData() { ChestLoot = lootItems });
         }
 
         private void SimpleCollectible()

@@ -59,7 +59,7 @@ namespace Game
             if ((_currentTimeToAttack -= Time.DeltaTime) <= 0)
             {
                 _currentTimeToAttack = WaitToAttack;
-                var hits = Physics2D.BoxCastAll(origin, size, LayerMask.NameToBit(GameLayers.PLAYER));
+                var hits = Physics2D.BoxCastAll(origin, size, LayerMask.NameToBit(GameConsts.PLAYER));
 
                 for (int i = 0; i < hits.Length; i++)
                 {

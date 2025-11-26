@@ -45,7 +45,7 @@ namespace Game
                     WalkSpeed = 3.35f,
                     YGravityScale = 3.5f,
                     ColliderConfig = new BodyColliderOptions() { Size = new vec2(1.0f, 1.0f), Offset = new vec2(0, -0.1f) },
-                    LayerName = GameLayers.ENEMY,
+                    LayerName = GameConsts.ENEMY,
                     SortOrder = 2,
                     StartPosition = position,
                     Material = _defaultEnemyMat,
@@ -59,7 +59,7 @@ namespace Game
                         RaysCount = 3,
                         SizeY = 0.7f,
                         YOffset = 0,
-                        GroundMask = GameLayers.GROUND_MASK | LayerMask.NameToBit(GameLayers.ENEMY)
+                        GroundMask = GameConsts.GROUND_MASK | LayerMask.NameToBit(GameConsts.ENEMY)
                     },
                     WalkSounds = ["Audio/HALFTONE/UI/2. Clicks/Click_4.wav",
                               "Audio/HALFTONE/UI/2. Clicks/Click_5.wav",

@@ -15,6 +15,7 @@ namespace Game
         // Avoid the batch to take more texture slots that the system is supported, take into account materials texture count.
         // Fix: Batch2d vertices shift when an object is destroyed. 
         // Fix: Texture units overflow, a batch should only bind: MAX_DEVICE_ALLOWED - RENDERER_NEEDED_TEXTURE_SLOTS
+        // Fix: Can't change renderer sorting after is in a batch.
         // Implement:scroll list 
         // Bake tilemaps in binary file, the geometry should be already converted to the memory layout of the vertex array.
 

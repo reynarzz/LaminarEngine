@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    public class GameLayers
+    public class GameConsts
     {
         public const string Default = "Default";
         public const string PLAYER = "Player";
@@ -24,6 +24,7 @@ namespace Game
         public const string COLLECTIBLE = "Collectible";
         public const string CHARACTER_IGNORE = "character_Ignore";
 
+        public const int ChestRenderSorting = 3;
         public static ulong GROUND_MASK { get; } = LayerMask.NameToBit(FLOOR) |
                                                    LayerMask.NameToBit(PLATFORM) |
                                                    LayerMask.NameToBit(Default);
@@ -87,18 +88,18 @@ namespace Game
                            .ToArray();
             }
 
-            var names = GetConstStringValues(typeof(GameLayers));
+            var names = GetConstStringValues(typeof(GameConsts));
 
             for (int i = 0; i < names.Length; i++)
             {
                 LayerMask.AssignName(i, names[i]);
             }
 
-            LayerMask.TurnOff(GameLayers.PLAYER, GameLayers.PLAYER);
-            LayerMask.TurnOff(GameLayers.PLAYER, GameLayers.CHARACTER_IGNORE);
-            LayerMask.TurnOff(GameLayers.ENEMY, GameLayers.CHARACTER_IGNORE);
-            LayerMask.TurnOff(GameLayers.ENEMY_CONFUSED, GameLayers.CHARACTER_IGNORE);
-            LayerMask.TurnOff(GameLayers.PLATFORM, GameLayers.COLLECTIBLE);
+            LayerMask.TurnOff(GameConsts.PLAYER, GameConsts.PLAYER);
+            LayerMask.TurnOff(GameConsts.PLAYER, GameConsts.CHARACTER_IGNORE);
+            LayerMask.TurnOff(GameConsts.ENEMY, GameConsts.CHARACTER_IGNORE);
+            LayerMask.TurnOff(GameConsts.ENEMY_CONFUSED, GameConsts.CHARACTER_IGNORE);
+            LayerMask.TurnOff(GameConsts.PLATFORM, GameConsts.COLLECTIBLE);
             //LayerMask.TurnOn(GameLayers.PLAYER, GameLayers.Default);
         }
 
@@ -129,7 +130,7 @@ namespace Game
 
             Player = new Actor("Player").AddComponent<Player>();
             Player.Transform.WorldPosition = new vec3();
-            Player.Actor.Layer = LayerMask.NameToLayer(GameLayers.PLAYER);
+            Player.Actor.Layer = LayerMask.NameToLayer(GameConsts.PLAYER);
 
             var camActor = new Actor("MainCamera");
 
@@ -153,7 +154,7 @@ namespace Game
                 WalkSpeed = 5.35f,
                 YGravityScale = 3.5f,
                 ColliderConfig = new BodyColliderOptions() { Size = new vec2(1.0f, 1.7f), Offset = new vec2(0, 0.25f) },
-                LayerName = GameLayers.PLAYER,
+                LayerName = GameConsts.PLAYER,
                 SortOrder = 2,
                 StartPosition = _playerStartPosTest,
                 Material = _stencylMaterial,
@@ -168,7 +169,7 @@ namespace Game
                     RaysCount = 3,
                     SizeY = 0.7f,
                     YOffset = 0,
-                    GroundMask = GameLayers.GROUND_MASK | LayerMask.NameToBit(GameLayers.ENEMY)
+                    GroundMask = GameConsts.GROUND_MASK | LayerMask.NameToBit(GameConsts.ENEMY)
                 },
                 WalkSounds = ["Audio/HALFTONE/UI/2. Clicks/Click_4.wav",
                               "Audio/HALFTONE/UI/2. Clicks/Click_5.wav",
@@ -249,14 +250,7 @@ namespace Game
                         if (entity.Identifier.Equals("Player"))
                         {
                             _playerStartPosTest = position;
-                            GamePrefabs.World.InstantiateDoor(position + new vec2(0, 1), x =>
-                            {
-                                var coinCount = x.Inventory.GetItemCount(ItemId.coin_currency);
-                                var coinsNeeded = 10;
-                                Debug.Log("Coins collected: " + coinCount + ", coins needed: " + coinsNeeded);
-
-                                return coinCount >= coinsNeeded;
-                            });
+                            GamePrefabs.World.InstantiateDoor(position + new vec2(0, 1), new DoorData() { InteractCondition = x => false});
                         }
 
                         _gameEntityManager.BuildEntity(entity, position, (vec2, isGrid) =>

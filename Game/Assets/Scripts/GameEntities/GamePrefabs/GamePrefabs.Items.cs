@@ -43,20 +43,19 @@ namespace Game
                     CollectedSprites = null,
                     TriggerSize = new vec2(0.8f, 0.8f),
                     AnimFPS = 7,
-                    TargetLayer = LayerMask.NameToLayer(GameLayers.PLAYER),
+                    TargetLayer = LayerMask.NameToLayer(GameConsts.PLAYER),
                     CollectedAudioClip = audioClip
                 });
 
                 return collectible;
             }
 
-            public static Chest InstantiateChest(vec2 position, ChestLoot[] loot = null, Predicate<Player> conditionToOpen = null)
+            public static Chest InstantiateChest(vec2 position, ChestData data)
             {
                 var chest = new Actor("Chest").AddComponent<Chest>();
                 chest.GetComponent<SpriteRenderer>().SortOrder = 4;
                 chest.Transform.WorldPosition = position;
-                chest.SetChestLoot(loot);
-                chest.SetConditionToInteract(conditionToOpen);
+                chest.Init(data);
                 return chest;
             }
         }

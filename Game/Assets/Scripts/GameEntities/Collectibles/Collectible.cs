@@ -40,7 +40,7 @@ namespace Game
             if (!_initializedComponents)
             {
                 _initializedComponents = true;
-                Actor.Layer = LayerMask.NameToLayer(GameLayers.COLLECTIBLE);
+                Actor.Layer = LayerMask.NameToLayer(GameConsts.COLLECTIBLE);
                 _animator = GetComponent<Animator>();
                 _renderer = AddComponent<SpriteRenderer>();
                 var rigid = AddComponent<RigidBody2D>();
@@ -55,7 +55,7 @@ namespace Game
                 _collider = AddComponent<BoxCollider2D>();
 
                 var worldColliderActor = new Actor("WorldCollider");
-                worldColliderActor.Layer = LayerMask.NameToLayer(GameLayers.CHARACTER_IGNORE);
+                worldColliderActor.Layer = LayerMask.NameToLayer(GameConsts.CHARACTER_IGNORE);
                 worldColliderActor.Transform.Parent = Actor.Transform;
                 worldColliderActor.Transform.LocalPosition = default;
                 _worldCollider = worldColliderActor.AddComponent<CircleCollider2D>();

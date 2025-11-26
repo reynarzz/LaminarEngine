@@ -22,7 +22,7 @@ namespace Game
             var yPositions = default(vec2[]);
             for (int i = 0; i < fields.Length; i++)
             {
-                if (IsFieldId<PlatformPoints[]>(fields[i], "positions", out var value))
+                if (Deserialize<PlatformPoints[]>(fields[i], "positions", out var value))
                 {
                     yPositions = value.Select(x => positionConverter(new vec2(x.cx, x.cy), true)).ToArray();
                 }

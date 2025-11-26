@@ -12,37 +12,55 @@ namespace Game
     public abstract class GameEntityBuilderBase
     {
         public abstract GameEntity Build(vec2 position, FieldInstance[] fields, Func<vec2, bool, vec2> positionConverter);
-        
-        protected bool IsFieldId<T>(FieldInstance field, string id, out T value) where T: class
+
+        private bool IsField(FieldInstance field, string id)
+        {
+            return field.Identifier.Equals(id, StringComparison.OrdinalIgnoreCase);
+        }
+
+        protected bool Deserialize<T>(FieldInstance field, string id, out T value)
         {
             value = default;
-            var isField = field.Identifier.Equals(id, StringComparison.OrdinalIgnoreCase);
+            if (!IsField(field, id) || field.Value == null)
+                return false;
+            value = JsonConvert.DeserializeObject<T>(field.Value.ToString());
+            return true;
+        }
 
-            if (isField)
+        protected bool GetEnum<T>(FieldInstance field, string id, out T value) where T : unmanaged, Enum
+        {
+            value = default;
+            if (!IsField(field, id))
+                return false;
+
+            if (Enum.TryParse<T>(field.Value?.ToString(), true, out var e))
             {
-                if (typeof(T).IsArray)
-                {
-                    value = JsonConvert.DeserializeObject<T>(field.Value.ToString());
-                }
-                else if (typeof(T).IsClass)
-                {
-                    value = (T)field.Value;
-                }
-                else if (typeof(T).IsEnum)
-                {
-                    if(Enum.TryParse(typeof(T), field.Value.ToString(), out var e))
-                    {
-                        value = (T)e;
-                    }
-                }
-                else if (typeof(T) == typeof(int))
-                {
-                    throw new Exception("TODO: implement int");
-                }
-
+                value = e;
             }
 
-            return isField;
+            return true;
         }
+        protected bool GetBool(FieldInstance field, string id, out bool value)
+        {
+            value = default;
+            if (!IsField(field, id))
+                return false;
+
+            value = bool.Parse(field.Value?.ToString());
+
+            return true;
+        }
+
+        protected bool GetInt(FieldInstance field, string id, out int value)
+        {
+            value = default;
+            if (!IsField(field, id))
+                return false;
+
+            value = int.Parse(field.Value?.ToString());
+
+            return true;
+        }
+
     }
 }
