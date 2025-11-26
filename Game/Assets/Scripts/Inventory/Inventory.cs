@@ -75,8 +75,7 @@ namespace Game
         {
             var slot = _slots[slotIndex];
 
-            // TODO: Instance into the world.
-
+            // TODO: Instance items entities in the world, so the player can collect them gain.
 
             _slots[slotIndex] = default;
         }

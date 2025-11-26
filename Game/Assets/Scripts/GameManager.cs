@@ -479,8 +479,10 @@ namespace Game
             //var screenShader = new Shader(vertex, Assets.GetText("Shaders/Ripple.frag").Text);
             //PostProcessingStack.Push(new PostProcessingSinglePass(screenShader));
 
-            var screenShader2 = new Shader(vertex, Assets.GetText("Shaders/ChromaticAberration.frag").Text);
-            PostProcessingStack.Push(new PostProcessingSinglePass(screenShader2));
+            var chormaticAberration = new PostProcessingSinglePass(new Shader(vertex, Assets.GetText("Shaders/ChromaticAberration.frag").Text));
+            chormaticAberration.SetValue("uAberrationStrength", 0.01f);
+
+            PostProcessingStack.Push(chormaticAberration);
 
             var scalines = new PostProcessingSinglePass(new Shader(vertex, Assets.GetText("Shaders/ScanLines.frag").Text));
             scalines.SetValue("uScanlineIntensity", 0.2f);
