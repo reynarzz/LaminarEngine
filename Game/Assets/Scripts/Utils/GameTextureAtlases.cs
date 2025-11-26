@@ -16,7 +16,6 @@ namespace Game
         {
             _tilesets = new Dictionary<string, Sprite[]>()
             {
-
                 // Player atlases
                 { "player_idle",     SliceSprites("KingsAndPigsSprites/01-King Human/Idle (78x58)S.png", 78, 58, new vec2(0.4f, 0.4f)) },
                 { "player_run",      SliceSprites("KingsAndPigsSprites/01-King Human/Run (78x58)S.png", 78, 58, new vec2(0.4f, 0.4f)) },
@@ -56,7 +55,9 @@ namespace Game
                 { "small_heart_idle", SliceSprites("KingsAndPigsSprites/12-Live and Coins/Small Heart Idle (18x14).png", 8, 7, vec2.Half) },
                 { "health_bar_frame", SliceSprites("KingsAndPigsSprites/12-Live and Coins/Live Bar_atlas(143x34).png", 143, 34, vec2.Half) },
 
-                
+                // UI
+                { "ui_buttons_long", SliceSprites("pixel-ui_buttons_long_47x14.png", 46, 14, vec2.Half) },
+
             };
 
             _tilesets["door_closing"] = _tilesets["door_opening"].Reverse().ToArray();
