@@ -17,6 +17,8 @@ namespace Engine
         public Mesh Mesh { get; set; }
         protected internal virtual bool IsDirty { get; protected set; } = true;
         internal event Action<Renderer> OnDestroyRenderer;
+        internal protected bool PrivateBatch { get; protected set; }
+
         internal override void OnInitialize()
         {
             Transform.OnChanged += Transform_OnChanged;

@@ -16,7 +16,7 @@ namespace Game
         // Fix: Batch2d vertices shift when an object is destroyed. 
         // Fix: Texture units overflow, a batch should only bind: MAX_DEVICE_ALLOWED - RENDERER_NEEDED_TEXTURE_SLOTS
         // Implement:scroll list 
-
+        // Bake tilemaps in binary file, the geometry should be already converted to the memory layout of the vertex array.
 
         // For the game:
         // Implement enemies
@@ -37,18 +37,9 @@ namespace Game
         // Game using both assets, and using stencil buffer to change between them sphere.
         // Investigate why AudioMixer frees from memory automatically
 
-
         public override void Initialize()
         {
             new Actor<LaunchScreen>("Launch Screen");
-
-            // FilmGrain();
-        }
-
-        private void FilmGrain()
-        {
-            var screenShader = new Shader(Assets.GetText("Shaders/ScreenVert.vert").Text, Assets.GetText("Shaders/FilmGrain.frag").Text);
-            PostProcessingStack.Push(new PostProcessingSinglePass(screenShader));
         }
 
         public override void Close() { }

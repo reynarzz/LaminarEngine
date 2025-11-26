@@ -38,6 +38,7 @@ namespace Engine
 
             Mesh = new Mesh();
             Mesh.IndicesToDrawCount = 0;
+            PrivateBatch = true;
         }
 
         public void AddTile(Tile tile, vec3 position, float rot = 0)
@@ -146,11 +147,6 @@ namespace Engine
             {
                 SetTilemapLDtk(ldtk.LdtkJson.FromJson(json), options);
             }
-        }
-
-        public void RemoveTile(int x, int y)
-        {
-
         }
     }
 
