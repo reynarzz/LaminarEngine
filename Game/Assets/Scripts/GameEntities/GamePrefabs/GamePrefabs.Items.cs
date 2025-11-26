@@ -11,11 +11,11 @@ namespace Game
 {
     internal partial class GamePrefabs
     {
-        public static class Collectibles
+        public static class Items
         {
             private static Material _collectiblesDefault;
 
-            static Collectibles()
+            static Items()
             {
                 _collectiblesDefault = new Material(new Shader(Assets.GetText("Shaders/SpriteVert.vert").Text, Assets.GetText("Shaders/SpriteFrag.frag").Text));
                 _collectiblesDefault.Name = "Collectibles Default";
@@ -48,6 +48,16 @@ namespace Game
                 });
 
                 return collectible;
+            }
+
+            public static Chest InstantiateChest(vec2 position, ChestLoot[] loot = null, Predicate<Player> conditionToOpen = null)
+            {
+                var chest = new Actor("Chest").AddComponent<Chest>();
+                chest.GetComponent<SpriteRenderer>().SortOrder = 4;
+                chest.Transform.WorldPosition = position;
+                chest.SetChestLoot(loot);
+                chest.SetConditionToInteract(conditionToOpen);
+                return chest;
             }
         }
     }

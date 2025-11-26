@@ -26,6 +26,9 @@ namespace Game
 
         public bool Add(ItemId id, int amount)
         {
+            if (id == ItemId.none)
+                return false;
+
             Item item = ItemsDatabase.GetItem(id);
             var slotIndex = GetFirstSlotIndex(item.Features.Id);
             var currentSlot = default(InventorySlot);

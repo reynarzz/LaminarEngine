@@ -131,6 +131,10 @@ namespace Game
                         {
                             MoveToDoor(door);
                         }
+                        else
+                        {
+                            interactable.TryInteract(this);
+                        }
                     }
                 }
             }

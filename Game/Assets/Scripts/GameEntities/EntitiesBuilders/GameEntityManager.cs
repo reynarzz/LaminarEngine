@@ -19,6 +19,7 @@ namespace Game
                 { "Door", new DoorEntityBuilder() },
                 { "Collectible", new ItemsEntityBuilder() },
                 { "Enemy", new EnemyEntityBuilder() },
+                { "Chest", new ChestEntityBuilder() },
             };
         }
 

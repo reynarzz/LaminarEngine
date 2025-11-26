@@ -19,7 +19,7 @@ namespace Game
                 {
                     if(Enum.TryParse<ItemId>(field.Value.ToString(), true, out var item))
                     {
-                        GamePrefabs.Collectibles.InstantiateCollectible(item, position);
+                        GamePrefabs.Items.InstantiateCollectible(item, position);
                     }
                     else
                     {

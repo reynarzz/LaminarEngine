@@ -11,7 +11,7 @@
 	"iid": "a39fb1b0-7820-11ed-b6fd-87f9a01f3d6b",
 	"jsonVersion": "1.5.3",
 	"appBuildId": 473703,
-	"nextUid": 205,
+	"nextUid": 209,
 	"identifierStyle": "Capitalize",
 	"toc": [
 		{
@@ -2573,7 +2573,7 @@
 			"pivotY": 0.5,
 			"fieldDefs": [
 				{
-					"identifier": "Items",
+					"identifier": "items_loot",
 					"doc": null,
 					"__type": "Array<LocalEnum.ItemType>",
 					"uid": 202,
@@ -2583,6 +2583,43 @@
 					"arrayMinLength": null,
 					"arrayMaxLength": null,
 					"editorDisplayMode": "NameAndValue",
+					"editorDisplayScale": 1,
+					"editorDisplayPos": "Above",
+					"editorLinkStyle": "StraightArrow",
+					"editorDisplayColor": null,
+					"editorAlwaysShow": false,
+					"editorShowInWorld": true,
+					"editorCutLongValues": true,
+					"editorTextSuffix": null,
+					"editorTextPrefix": null,
+					"useForSmartColor": false,
+					"exportToToc": false,
+					"searchable": false,
+					"min": null,
+					"max": null,
+					"regex": null,
+					"acceptFileTypes": null,
+					"defaultOverride": null,
+					"textLanguageMode": null,
+					"symmetricalRef": false,
+					"autoChainRef": true,
+					"allowOutOfLevelRef": true,
+					"allowedRefs": "OnlySame",
+					"allowedRefsEntityUid": null,
+					"allowedRefTags": [],
+					"tilesetUid": null
+				},
+				{
+					"identifier": "items_amount",
+					"doc": null,
+					"__type": "Array<Int>",
+					"uid": 208,
+					"type": "F_Int",
+					"isArray": true,
+					"canBeNull": false,
+					"arrayMinLength": null,
+					"arrayMaxLength": null,
+					"editorDisplayMode": "Hidden",
 					"editorDisplayScale": 1,
 					"editorDisplayPos": "Above",
 					"editorLinkStyle": "StraightArrow",
@@ -2675,7 +2712,7 @@
 			"savedSelections": [],
 			"cachedPixelData": {
 				"opaqueTiles": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011110000000000000000000000000000111100000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000001",
-				"averageColors": "a5649564a563b5632633253225321522a643a643a643b6432633253225321522865386539653b65325532553154325437335733573359335333523353335333456330000563396333643354346334633563300005633963336333633463346336653000056539653354345434653465353350000633593354335333553355335863346337633a6332533363364746474863346337633a6332533363367436743865356538653a6534553465356535653833563358335b3353334333564455335c553c563c553c5533633363355434543c743c643c643c7433633363346335633a653a653a653c6534543365345433543a335a335a335b335433543352335233514840484325435632553155306334985398516432484f236f236f236f236862382588354644593352c882954295435322522253235432543233513351445044696450643a6450643a854a544b854b533985395338b73f235f235f235f235d723d259d364233573351522152215220fff1fff1fff0fffe544e534e534e534e544744677432ea4289a3743274337435743564347431d557235623572357235762372597364233593358988798889880fff1fff1fff0fffe544e534e544e544e544825462434243224334848374345323742374d978d78ad788d867d67ad788d756d569d576d756d569d57666236258636416231248125475347534753476340000474327434743f633b5343224422400000000d978d78ad788d867d67ad788d756d569d576d756d569d576289a189a19ab189a5ea44ea42eb44ea400000000f113"
+				"averageColors": "a5649564a563b5632633253225321522a643a643a643b6432633253225321522865386539653b65325532553154325437335733573359335333523353335333456330000563396333643354346334633563300005633963336333633463346336653000056539653354345434653465353350000633593354335333553355335863346337633a6332533363364746474863346337633a6332533363367436743865356538653a6534553465356535653833563358335b3353334333564455335c553c563c553c5533633363355434543c743c643c643c7433633363346335633a653a653a653c6534543365345433543a335a335a335b335433543352335233514840484325435632553155306334985398516432484f236f236f236f236862382588354644593352c882954295435322522253235432543233513351445044696450000a6450000a854b854a544b533985395338b73f235f235f235f235d723d259d364233573351522152215220fff1fff1fff0fffe544e534e534e534e544744677432ea4289a3743274337435743564347431d557235623572357235762372597364233593358988798889880fff1fff1fff0fffe544e534e544e544e544825462434243224334848374345323742374d978d78ad788d867d67ad788d756d569d576d756d569d57666236258636416231248125475347534753476340000474327434743f633b5343224422400000000d978d78ad788d867d67ad788d756d569d576d756d569d576289a189a19ab189a5ea44ea42eb44ea400000000f113"
 			}
 		}
 	], "enums": [
@@ -3181,16 +3218,19 @@
 							"height": 16,
 							"defUid": 200,
 							"px": [504,408],
-							"fieldInstances": [{ "__identifier": "Items", "__type": "Array<LocalEnum.ItemType>", "__value": [ "Coin_currency", "BossKey", "WoodenKey" ], "__tile": null, "defUid": 202, "realEditorValues": [ {
-								"id": "V_String",
-								"params": ["Coin_currency"]
-							}, {
-								"id": "V_String",
-								"params": ["BossKey"]
-							}, {
-								"id": "V_String",
-								"params": ["WoodenKey"]
-							} ] }],
+							"fieldInstances": [
+								{ "__identifier": "items_loot", "__type": "Array<LocalEnum.ItemType>", "__value": [ "Coin_currency", "BossKey", "WoodenKey" ], "__tile": null, "defUid": 202, "realEditorValues": [ {
+									"id": "V_String",
+									"params": ["Coin_currency"]
+								}, {
+									"id": "V_String",
+									"params": ["BossKey"]
+								}, {
+									"id": "V_String",
+									"params": ["WoodenKey"]
+								} ] },
+								{ "__identifier": "items_amount", "__type": "Array<Int>", "__value": [10,1,1], "__tile": null, "defUid": 208, "realEditorValues": [ { "id": "V_Int", "params": [10] }, { "id": "V_Int", "params": [1] }, { "id": "V_Int", "params": [1] } ] }
+							],
 							"__worldX": -264,
 							"__worldY": 152
 						},
