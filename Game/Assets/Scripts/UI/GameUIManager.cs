@@ -11,6 +11,11 @@ namespace Game
     {
         protected override void OnAwake()
         {
+            Actor.DontDestroyOnLoad(this);
+        }
+
+        public void GoToMainMenu()
+        {
 
         }
     }

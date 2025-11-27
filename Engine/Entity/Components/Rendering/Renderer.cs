@@ -19,7 +19,7 @@ namespace Engine
         internal event Action<Renderer> OnDestroyRenderer;
         internal protected bool PrivateBatch { get; protected set; }
 
-        internal override void OnInitialize()
+        protected override void OnAwake()
         {
             Transform.OnChanged += Transform_OnChanged;
             IsDirty = true;

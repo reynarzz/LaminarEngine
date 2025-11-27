@@ -41,9 +41,9 @@ namespace Engine.GUI
         public int Length => _text.Length;
         ITexture2DManager IFontStashRenderer2.TextureManager => FontManager.Instance.TextureManager;
 
-        internal override void OnInitialize()
+        protected override void OnAwake()
         {
-            base.OnInitialize();
+            base.OnAwake();
             Mesh = new Mesh();
             Mesh.Vertices.Capacity = Consts.Graphics.MAX_QUADS_PER_BATCH * 4;
             Sprite = new Sprite();

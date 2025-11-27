@@ -25,7 +25,7 @@ namespace Engine
             set
             {
                 _rotationOffset = value;
-                UpdateShape();
+                UpdateShapeSafe();
             }
         }
 
@@ -67,7 +67,7 @@ namespace Engine
             set
             {
                 _offset = value;
-                UpdateShape();
+                UpdateShapeSafe();
             }
         }
 
@@ -175,7 +175,7 @@ namespace Engine
             }
         }
 
-        internal override void OnInitialize()
+        protected override void OnAwake()
         {
             RigidBody = GetComponentInParents<RigidBody2D>();
 
@@ -211,7 +211,13 @@ namespace Engine
 
         protected abstract B2ShapeId[] CreateShape(B2BodyId bodyId);
         protected abstract void UpdateShape();
-
+        protected void UpdateShapeSafe()
+        {
+            if(ShapesId != null && RigidBody)
+            {
+                UpdateShape();
+            }
+        }
         protected bool AreShapesValid()
         {
             if (_shapesID == null || _shapesID.Length == 0)

@@ -14,7 +14,6 @@ namespace Engine
     public abstract class ScriptBehavior : Component, IAwakeableComponent, IStartableComponent, IUpdatableComponent, ILateUpdatableComponent, IFixedUpdatableComponent, IDrawableGizmo
     {
         private readonly List<Coroutine> _coroutines = new();
-        void IAwakeableComponent.OnAwake() { OnAwake(); }
         void IStartableComponent.OnStart() { OnStart(); }
         void ILateUpdatableComponent.OnLateUpdate() { OnLateUpdate(); }
         void IFixedUpdatableComponent.OnFixedUpdate() { OnFixedUpdate(); }
@@ -40,7 +39,6 @@ namespace Engine
 
             OnUpdate();
         }
-        protected virtual void OnAwake() { }
         protected virtual void OnStart() { }
         protected virtual void OnUpdate() { }
         protected virtual void OnLateUpdate() { }

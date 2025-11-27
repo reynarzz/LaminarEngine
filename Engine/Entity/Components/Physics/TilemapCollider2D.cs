@@ -30,11 +30,11 @@ namespace Engine
 
         }
 
-        internal override void OnInitialize()
+        protected override void OnAwake()
         {
             _renderer = GetComponent<TilemapRenderer>();
 
-            base.OnInitialize();
+            base.OnAwake();
 
             RigidBody.BodyType = Body2DType.Static;
         }

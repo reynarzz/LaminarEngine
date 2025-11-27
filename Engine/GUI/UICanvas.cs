@@ -56,9 +56,9 @@ namespace Engine.GUI
 
         public static mat4 UIViewProj;
         private static bool _staticInitialized = false;
-        internal override void OnInitialize()
+        protected override void OnAwake()
         {
-            base.OnInitialize();
+            base.OnAwake();
             RectTransform = AddComponent<RectTransform>();
             RectTransform.Size = new vec2(512 * 3, 288 * 3);
             RectTransform.Pivot = default;

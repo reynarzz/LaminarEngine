@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    public abstract class Component : EObject, IComponent, IEnabledComponent
+    public abstract class Component : EObject, IComponent, IAwakeableComponent, IEnabledComponent
     {
         public Actor Actor { get; internal set; }
         public virtual Transform Transform
@@ -46,10 +46,10 @@ namespace Engine
                 }
             }
         }
-
-        internal virtual void OnInitialize() { }
+        void IAwakeableComponent.OnAwake() { OnAwake(); }
         public virtual void OnEnabled() { }
         public virtual void OnDisabled() { }
+        protected virtual void OnAwake() { }
 
         public Component AddComponent(Type type)
         {

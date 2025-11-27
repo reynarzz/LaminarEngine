@@ -229,8 +229,7 @@ namespace Engine
             }
         }
 
-
-        internal override void OnInitialize()
+        protected override void OnAwake()
         {
             var worldPos = Transform.WorldPosition;
             var worldRot = Transform.WorldRotation;

@@ -24,7 +24,7 @@ namespace Engine
             set
             {
                 _size = new vec2(Math.Clamp(value.x, 1.0f, float.MaxValue), Math.Clamp(value.y, 1.001f, float.MaxValue));
-                UpdateShape();
+                UpdateShapeSafe();
             }
         }
 
@@ -34,7 +34,7 @@ namespace Engine
             set
             {
                 _direction = value;
-                UpdateShape();
+                UpdateShapeSafe();
             }
         }
 

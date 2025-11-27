@@ -21,7 +21,7 @@ namespace Engine
             set
             {
                 _size = value;
-                UpdateShape();
+                UpdateShapeSafe();
             }
         }
 
@@ -31,11 +31,11 @@ namespace Engine
             set
             {
                 _cornerRadius = value;
-                UpdateShape();
+                UpdateShapeSafe();
             }
         }
 
-        internal override void OnInitialize()
+        protected override void OnAwake()
         {
             // TODO: instead of using the scale, use the bounds of the sprite
             var scale = Transform.WorldScale;
@@ -58,7 +58,7 @@ namespace Engine
             }
 
 
-            base.OnInitialize();
+            base.OnAwake();
         }
 
         protected override B2ShapeId[] CreateShape(B2BodyId bodyId)

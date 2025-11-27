@@ -92,7 +92,9 @@ namespace Game
             _graphics.Add(_background);
             _graphics.Add(resumeButtonImage);
 
-           // LogRecursive(_background.Transform);
+            // LogRecursive(_background.Transform);
+
+            SetColorAlpha(0, true);
         }
 
         private void Inventory()
@@ -197,19 +199,27 @@ namespace Game
             }
 
         }
+        void SetColorAlpha(float alpha, bool immediate = false)
+        {
+            foreach (var item in _graphics)
+            {
+                var color = item.Color;
+                color.A = alpha;
+                if (!immediate)
+                {
+                    item.Color = Color.MoveTowards(item.Color, color, Time.UnscaledDeltaTime * 5f);
+                }
+                else
+                {
+                    item.Color = color;
+                }
+            }
+        }
 
         protected override void OnLateUpdate()
         {
 
-            void SetColorAlpha(float alpha)
-            {
-                foreach (var item in _graphics)
-                {
-                    var color = item.Color;
-                    color.A = alpha;
-                    item.Color = Color.MoveTowards(item.Color, color, Time.UnscaledDeltaTime * 5f);
-                }
-            }
+            
             if (_show)
             {
                 SetColorAlpha(1);

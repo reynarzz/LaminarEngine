@@ -38,9 +38,9 @@ namespace Engine.GUI
         private vec2 _pointerDownPos;
         private Color _targetColor;
 
-        internal override void OnInitialize()
+        protected override void OnAwake()
         {
-            base.OnInitialize();
+            base.OnAwake();
             if (!Graphic)
             {
                 Graphic = GetComponent<UIGraphicsElement>();

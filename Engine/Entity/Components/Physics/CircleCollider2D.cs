@@ -17,7 +17,7 @@ namespace Engine
             set
             {
                 _radius = value;
-                UpdateShape();
+                UpdateShapeSafe();
             }
         }
 

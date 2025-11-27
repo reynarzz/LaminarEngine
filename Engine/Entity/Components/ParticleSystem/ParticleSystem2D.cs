@@ -32,9 +32,9 @@ namespace Engine
 
         public vec2 Gravity { get; set; }
         public bool Prewarm { get; set; }
-        internal override void OnInitialize()
+        protected override void OnAwake()
         {
-            base.OnInitialize();
+            base.OnAwake();
 
             Mesh = new Mesh();
             Mesh.IndicesToDrawCount = 0;
