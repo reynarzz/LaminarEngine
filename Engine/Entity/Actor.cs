@@ -557,9 +557,9 @@ namespace Engine
         {
             if (actor && actor.IsActiveInHierarchy)
             {
-                for (int i = 0; i < actor._components.Count; i++)
+                foreach (var component in actor._components)
                 {
-                    var comp = actor._components[i] as T;
+                    var comp = component as T;
                     if (comp != null && comp.IsValid() && (comp.IsEnabled || updateIfDisabled))
                     {
 #if DEBUG
