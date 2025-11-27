@@ -112,6 +112,7 @@ namespace Engine.Rendering
             }
             Clear();
             SortOrder = renderer.SortOrder;
+            IsActive = true;
 
             return true;
         }
@@ -124,7 +125,6 @@ namespace Engine.Rendering
             IsActive = false;
             _vertexOffset = int.MaxValue;
             _renderers.Clear();
-
 
             for (int i = 0; i < Textures.Length; i++)
             {

@@ -1,4 +1,5 @@
 ﻿using Engine;
+using Engine.Utils;
 using GlmNet;
 using System;
 using System.Collections.Generic;
@@ -12,20 +13,6 @@ namespace Game
     {
         public static class Enemies
         {
-            private static Material _defaultEnemyMat;
-
-            static Enemies()
-            {
-                _defaultEnemyMat = new Material(new Shader(Assets.GetText("Shaders/SpriteVert.vert").Text, Assets.GetText("Shaders/SpriteFrag.frag").Text));
-                _defaultEnemyMat.Name = "Enemy Default";
-
-                var PlayerMatPass = _defaultEnemyMat.GetPass(0);
-                PlayerMatPass.Stencil.Enabled = true;
-                PlayerMatPass.Stencil.Func = StencilFunc.Always;
-                PlayerMatPass.Stencil.Ref = 3;
-                PlayerMatPass.Stencil.ZPassOp = StencilOp.Replace;
-            }
-
             public static EnemyBase InstantiatePigStandard(vec2 position, int lookDir)
             {
                 return InstancePig<PigEnemyStandard>(position, lookDir);
@@ -48,7 +35,7 @@ namespace Game
                     LayerName = GameConsts.ENEMY,
                     SortOrder = 2,
                     StartPosition = position,
-                    Material = _defaultEnemyMat,
+                    Material = MaterialUtils.SpriteMaterial,
                     StartingLife = 5,
                     SpriteLookDir = -1,
                     Ground = new GroundDetectionOptions()

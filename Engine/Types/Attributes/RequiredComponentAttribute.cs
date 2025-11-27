@@ -10,6 +10,7 @@ namespace Engine.Types
     public class RequiredComponentAttribute : Attribute
     {
         public Type[] RequiredComponents { get; }
+        private RequiredComponentAttribute() { }
         public RequiredComponentAttribute(params Type[] components)
         {
             RequiredComponents = components;

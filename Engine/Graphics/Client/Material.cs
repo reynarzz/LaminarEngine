@@ -17,7 +17,7 @@ namespace Engine
         private readonly OrderedDictionary<string, Texture> _textures;
         internal OrderedDictionary<string, Texture> Textures => _textures;
         public Shader Shader { get; }
-        public Material(Shader shader)
+        public Material(Shader shader) : base("Material")
         {
             Shader = shader;
             _textures = new();

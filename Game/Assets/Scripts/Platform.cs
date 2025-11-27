@@ -26,7 +26,7 @@ namespace Game
         private Animator _animator;
         protected override void OnAwake()
         {
-            base.OnStart();
+            base.OnAwake();
             _renderer = GetComponent<SpriteRenderer>();
             _renderer.Color = Color.Green;
             var rigid = GetComponent<RigidBody2D>();

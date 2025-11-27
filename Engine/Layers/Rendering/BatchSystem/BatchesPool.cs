@@ -63,12 +63,24 @@ namespace Engine.Rendering
                 var hasSpaceLeftForAnother = (batch.MaxVertexSize - batch.VertexCount) >= vertexToAdd;
                 var isBatchSizeEnough = isMaxSizeEnough && hasSpaceLeftForAnother;
                 var isSameSortOrder = renderer.SortOrder == batch.SortOrder || batch.SortOrder == int.MinValue;
-                var isValidMaterial = batch.Material == mat || batch.Material == null;
+                var isValidMaterial = batch.Material == mat || !batch.Material;
 
                 var selectedBatch = default(Batch2D);
                 // TODO: find the smallest batch first
                 if (isBatchSizeEnough && ((isValidMaterial && isSameSortOrder) || !batch.IsActive))
                 {
+                    if (selectedBatch == null)
+                    {
+                        selectedBatch = batch;
+                    }
+                    else if ((selectedBatch.MaxVertexSize >= batch.MaxVertexSize || selectedBatch.VertexCount >= batch.VertexCount) && batch.SortOrder == renderer.SortOrder) // Checks if this is a smaller batch that it can fit
+                    {
+                        selectedBatch = batch;
+                    }
+                    else
+                    {
+                        continue;
+                    }
                     if (batch.Initialize(renderer))
                     {
                         _batches.Sort((x, y) => x.SortOrder.CompareTo(y.SortOrder));
@@ -79,18 +91,9 @@ namespace Engine.Rendering
                     {
                         Debug.Log("Found existing batch for: " + renderer.Name);
                     }
-                    if(selectedBatch == null)
-                    {
-                        selectedBatch = batch;
-                    }
-                    else if(selectedBatch.MaxVertexSize > batch.MaxVertexSize || selectedBatch.VertexCount > batch.VertexCount)
-                    {
-                        selectedBatch = batch;
-                    }
-
+                    
                     return selectedBatch;
                 }
-
             }
 
             var newBatch = new Batch2D(maxVertexSize, indexBuffer == null ? _sharedIndexBuffer : indexBuffer);
@@ -108,12 +111,18 @@ namespace Engine.Rendering
         private void OnBatchEmpty(Batch2D batch)
         {
             // Moves empty batch, and puts it to the end.
-            _batches.Remove(batch);
-            _batches.Add(batch);
             batch.Clear();
-            Debug.Log("Empty batch: ");
+            if (_batches.Remove(batch))
+            {
+                _batches.Add(batch);
+                Debug.Log("Empty batch: ");
+            }
+            else
+            {
+                Debug.EngineError("Could not remove batch");
+            }
         }
-
+        
         // TODO: Delete all batches that are not being used for too long, and are also big.
         internal void ClearPool()
         {

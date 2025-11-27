@@ -1,15 +1,12 @@
-﻿using Engine;
+﻿using System;
+using System.Linq;
+using System.Reflection;
+using Engine;
 using Engine.Graphics;
 using Engine.GUI;
 using Engine.Utils;
-using GlmNet;
 using ldtk;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using GlmNet;
 
 namespace Game
 {
@@ -37,12 +34,11 @@ namespace Game
         private static UIText _coinCounterTest;
         private ItemsDatabase _itemsDatabase;
         private PauseMenu _pauseMenu;
-        private static Material _tilemapMaterial;
         private FadeInOutManager _fadeInOutManager;
         public static Player Player { get; private set; }
         public static Material DefaultMaterial => MaterialUtils.SpriteMaterial;
 
-        public static FontAsset DefaultFont { get; internal set; }
+        public static FontAsset DefaultFont { get; private set; }
         private static GameEntityManager _gameEntityManager;
 
         protected override void OnAwake()
@@ -58,7 +54,7 @@ namespace Game
             DefaultFont = Assets.Get<FontAsset>("Fonts/windows-bold[1].ttf");
             _gameEntityManager = new GameEntityManager();
         }
-      
+
         private void InitializeActorLayers()
         {
             static string[] GetConstStringValues(Type type)
@@ -82,15 +78,6 @@ namespace Game
             LayerMask.TurnOff(GameConsts.ENEMY_CONFUSED, GameConsts.CHARACTER_IGNORE);
             LayerMask.TurnOff(GameConsts.PLATFORM, GameConsts.COLLECTIBLE);
             //LayerMask.TurnOn(GameLayers.PLAYER, GameLayers.Default);
-        }
-
-
-        private static Material GetMaterial(string name, string vertexCode, string shaderCode)
-        {
-            var material = new Material(new Shader(Assets.GetText(vertexCode).Text, Assets.GetText(shaderCode).Text));
-            material.Name = name;
-
-            return material;
         }
 
         private void InitializeWorld()
@@ -125,9 +112,7 @@ namespace Game
             Camera.RenderTexture = new RenderTexture(512 * 2, 288 * 2);
             // Camera.RenderTexture = new RenderTexture(512, 288);
 
-
             LoadTilemap();
-
 
             Player.Init(new CharacterConfig()
             {
@@ -198,12 +183,6 @@ namespace Game
             string json = Assets.GetText(filepath).Text;
             string json2 = Assets.GetText(testPathNow + "/Test_Grass.ldtk").Text;
 
-            if (_tilemapMaterial == null)
-            {
-                _tilemapMaterial = new Material(new Shader(Assets.GetText("Shaders/SpriteVert.vert").Text, Assets.GetText("Shaders/SpriteFrag.frag").Text));
-                _tilemapMaterial.Name = "Tilemap material";
-            }
-
             var project = ldtk.LdtkJson.FromJson(json);
             var color = project.BgColor;
 
@@ -231,7 +210,7 @@ namespace Game
                         if (entity.Identifier.Equals("Player"))
                         {
                             _playerStartPosTest = position;
-                            GamePrefabs.World.InstantiateDoor(position + new vec2(0, 1), new DoorData() { InteractCondition = x => false});
+                            GamePrefabs.World.InstantiateDoor(position + new vec2(0, 1), new DoorData() { InteractCondition = x => false });
                         }
 
                         _gameEntityManager.BuildEntity(entity, position, (vec2, isGrid) =>
@@ -242,23 +221,23 @@ namespace Game
                     }
                 }
             }
-            _tilemapMaterial = MaterialUtils.SpriteMaterialWorld;
+            var tilemapMaterial = MaterialUtils.SpriteMaterialWorld;
             //cam.BackgroundColor = new Color32(project.BackgroundColor.R, project.BackgroundColor.G, project.BackgroundColor.B, project.BackgroundColor.A);
             //cam.BackgroundColor = new Color32(23, 28, 57, project.BackgroundColor.A);
 
             var tilemapActor = new Actor<TilemapRenderer>("Foreground tilemap");
             var tilemap = tilemapActor.GetComponent<TilemapRenderer>();
-            tilemap.Material = _tilemapMaterial;
+            tilemap.Material = tilemapMaterial;
             tilemap.Sprite = sprite;
 
             var tilemapActor2 = new Actor<TilemapRenderer>("Background tilemap");
             var tilemap2 = tilemapActor2.GetComponent<TilemapRenderer>();
-            tilemap2.Material = _tilemapMaterial;
+            tilemap2.Material = tilemapMaterial;
             tilemap2.Sprite = sprite;
 
             var tilemapActor3 = new Actor<TilemapRenderer>("Grass tilemap");
             var tilemap3 = tilemapActor3.GetComponent<TilemapRenderer>();
-            tilemap3.Material = _tilemapMaterial;
+            tilemap3.Material = tilemapMaterial;
             tilemap3.Sprite = sprite;
 
             // tilemap.SetTilemapLDtk(project, new LDtkOptions() { RenderIntGridLayer = true, RenderTilesLayer = true, RenderAutoLayer = true });
@@ -308,9 +287,6 @@ namespace Game
             //text.SortOrder = 10;
             //text.RectTransform.Pivot = new vec2(0.0f, 0.5f);
 
-            var mainShader = new Shader(Assets.GetText("Shaders/SpriteVert.vert").Text, Assets.GetText("Shaders/SpriteFrag.frag").Text);
-            var mat1 = new Material(mainShader);
-
             var sprites = GameTextureAtlases.GetAtlas("small_heart_idle");
 
             UIImage Image(string name, vec2 position, vec2 size, Sprite sprite, Transform parent)
@@ -319,7 +295,7 @@ namespace Game
                 image.Transform.Parent = parent.Transform;
                 image.RectTransform.Pivot = new vec2(0.0f, 0.0f);
                 image.RectTransform.Size = size;
-                image.Material = mat1;
+                image.Material = MaterialUtils.UIMaterial;
                 image.Sprite = sprite;
                 image.PreserveAspect = true;
                 image.Transform.LocalPosition = position;
@@ -338,13 +314,13 @@ namespace Game
 
         private Actor Portal()
         {
-            var screenGrabTest = new Actor<SpriteRenderer, Rotate>();
+            var screenGrabTest = new Actor<SpriteRenderer, Rotate>("Portal");
             var renderer = screenGrabTest.GetComponent<SpriteRenderer>();
             renderer.SortOrder = 14;
 
             var screenShader = new Shader(Assets.GetText("Shaders/VertScreenGrab.vert").Text, Assets.GetText("Shaders/Portal.frag").Text);
             renderer.Material = new Material(screenShader);
-
+            renderer.Material.Name = "Portal Material";
             var pass = renderer.Material.GetPass(0);
             pass.IsScreenGrabPass = true;
 
@@ -426,6 +402,7 @@ namespace Game
             var mainShader = new Shader(Assets.GetText("Shaders/SpriteVert.vert").Text, Assets.GetText("Shaders/WaterFrag.frag").Text);
 
             renderer.Material = new Material(mainShader);
+            renderer.Material.Name = "Water Material";
 
             var pass = renderer.Material.GetPass(0);
             pass.Stencil.Enabled = true;

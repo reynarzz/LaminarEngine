@@ -1,4 +1,5 @@
 ﻿using Engine;
+using Engine.Types;
 using GlmNet;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Game
 {
+    [RequiredComponent(typeof(Camera))]
     public class CameraFollow : ScriptBehavior
     {
         public Transform Target { get; set; }
@@ -17,7 +19,7 @@ namespace Game
         private float smoothTime = 0.2f;
         private vec3 velocity;
         private Camera _cam;
-        protected override void OnStart()
+        protected override void OnAwake()
         {
             _cam = GetComponent<Camera>();
         }
