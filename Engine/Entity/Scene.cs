@@ -110,9 +110,13 @@ namespace Engine
             {
                 var actor = _rootActors[i];
                 actor.OnDestroy(); // Adds to the deletePending's list
-                actor.DeletePending(); // Removes all references
             }
 
+            for (int i = 0; i < _rootActors.Count; i++)
+            {
+                var actor = _rootActors[i];
+                actor.DeletePending(); // Removes all references
+            }
             _rootActors.Clear();
         }
 

@@ -96,7 +96,7 @@ namespace Engine.Rendering
             vertexDesc.BufferDesc = new BufferDataDescriptor<Vertex>() { Buffer = _verticesData };
             vertexDesc.BufferDesc.Usage = BufferUsage.Dynamic;
             _geoDescriptor.SharedIndexBuffer = sharedIndexBuffer;
-            _onRendererDestroyHandler = OnRendererDestroy;
+            _onRendererDestroyHandler = RemoveRenderer;
 
             vertexDesc.Attribs = GraphicsHelper.GetVertexAttribs<Vertex>();
             _geoDescriptor.VertexDesc = vertexDesc;
@@ -104,14 +104,16 @@ namespace Engine.Rendering
             Geometry = GfxDeviceManager.Current.CreateGeometry(_geoDescriptor);
         }
 
-        internal void Initialize(Renderer2D renderer)
+        internal bool Initialize(Renderer2D renderer)
         {
             if (IsActive)
-                return;
-
+            {
+                return false;
+            }
             Clear();
-
             SortOrder = renderer.SortOrder;
+
+            return true;
         }
 
         internal void Clear()
@@ -156,7 +158,6 @@ namespace Engine.Rendering
                     textureIndex = i;
                     break;
                 }
-
             }
 
             renderer.OnDestroyRenderer -= _onRendererDestroyHandler;
@@ -201,90 +202,101 @@ namespace Engine.Rendering
         {
         }
 
-        private void OnRendererDestroy(Renderer renderer)
+        public void RemoveRenderer(Renderer renderer)
         {
             renderer.OnDestroyRenderer -= _onRendererDestroyHandler;
-            var vertCountBeforeDelete = VertexCount;
+
+            // If renderer doesn't exist, do nothing
+            if (!_renderers.TryGetValue(renderer.GetID(), out var removedInfo))
+                return;
+
+            int removedVertexStart = removedInfo.RendererId;
+            int removedTextureId = removedInfo.TextureId;
+
+            int removedVertexCount;
+            int removedIndexCount;
+
+            if (renderer.Mesh == null)
+            {
+                removedVertexCount = 4;
+                removedIndexCount = 6;
+            }
+            else
+            {
+                removedVertexCount = renderer.Mesh.Vertices.Count;
+                removedIndexCount = renderer.Mesh.IndicesToDrawCount;
+            }
+
+            int oldVertexCount = VertexCount;
             _isDirty = true;
-            var rendererIds = _renderers[renderer.GetID()];
+
             _renderers.Remove(renderer.GetID());
 
             if (_renderers.Count == 0)
             {
+                if (removedTextureId >= 0 && removedTextureId < Textures.Length)
+                    Textures[removedTextureId] = null;
+
                 IsActive = false;
                 OnBatchEmpty?.Invoke(this);
                 return;
             }
 
-            var rendererVerticesCount = 0;
-            var rendererIndicesCount = 0;
+            bool textureUnused = !_renderers.Values.Any(v => v.TextureId == removedTextureId);
 
-            if (renderer.Mesh == null)
+            if (textureUnused)
             {
-                // This is rendering quads, and not a custom mesh
-                rendererVerticesCount = 4;
-                rendererIndicesCount = 6;
-            }
-            else
-            {
-                rendererVerticesCount = renderer.Mesh.Vertices.Count;
-                rendererIndicesCount = renderer.Mesh.IndicesToDrawCount;
-            }
+                Textures[removedTextureId] = null;
 
-            bool canRemoveTexture = !_renderers.Values.Any(r => r.TextureId == rendererIds.TextureId);
-
-            // Remove the texture if is no longer used. To save a slot.
-            if (canRemoveTexture)
-            {
-                Textures[rendererIds.TextureId] = null;
-            }
-
-            if (rendererIds.RendererId + rendererVerticesCount < _verticesData.Length)
-            {
-                int removedStart = rendererIds.RendererId;
-                int removedCount = rendererVerticesCount;
-
-                foreach (var kv in _renderers)
+                if (removedTextureId < Textures.Length - 1)
                 {
-                    var otherRenderer = kv.Key;
-                    var otherStartids = kv.Value;
-
-                    if (kv.Key != renderer.GetID() && kv.Value.TextureId > rendererIds.TextureId)
-                    {
-                        var isSlotOccupied = _renderers.Any(x => x.Value.TextureId == otherStartids.TextureId - 1);
-
-                        if (!isSlotOccupied)
-                        {
-                            otherStartids.TextureId--;
-                            _verticesData[otherStartids.RendererId].TextureIndex = otherStartids.TextureId;
-                            //Debug.Log($"Change {kv.Key.Name} texture index: " + otherStartids.TextureId);
-                            _renderers[kv.Key] = otherStartids;
-                        }
-                    }
-
-                    if (otherStartids.RendererId > removedStart)
-                    {
-                        // Shift renderer ID down by the number of removed vertices
-                        otherStartids.RendererId -= removedCount;
-                        _renderers[otherRenderer] = otherStartids;
-                    }
+                    Array.Copy(
+                        Textures,
+                        removedTextureId + 1,
+                        Textures,
+                        removedTextureId,
+                        Textures.Length - (removedTextureId + 1)
+                    );
                 }
 
-                int startIndex = rendererIds.RendererId;
-                int countToRemove = rendererVerticesCount;
-                int remaining = vertCountBeforeDelete - (startIndex + countToRemove);
-
-                if (canRemoveTexture)
+                foreach (var key in _renderers.Keys.ToList())
                 {
-                    Array.Copy(Textures, rendererIds.TextureId + 1, Textures, rendererIds.TextureId, Textures.Length - (rendererIds.TextureId + 1));
-                }
+                    var info = _renderers[key];
 
-                // Shift the trailing vertices down
-                Array.Copy(_verticesData,
-                           startIndex + countToRemove,
-                           _verticesData,
-                           startIndex,
-                           remaining);
+                    if (info.TextureId > removedTextureId)
+                    {
+                        info.TextureId--;
+                        _renderers[key] = info;
+
+                        // Update vertex data texture index for first vertex of the renderer
+                        if (info.RendererId < _verticesData.Length)
+                            _verticesData[info.RendererId].TextureIndex = info.TextureId;
+                    }
+                }
+            }
+
+            int trailingVertexCount = oldVertexCount - (removedVertexStart + removedVertexCount);
+
+            if (trailingVertexCount > 0)
+            {
+                Array.Copy(
+                    _verticesData,
+                    removedVertexStart + removedVertexCount,
+                    _verticesData,
+                    removedVertexStart,
+                    trailingVertexCount
+                );
+            }
+
+            foreach (var key in _renderers.Keys.ToList())
+            {
+                var info = _renderers[key];
+
+                if (info.RendererId > removedVertexStart)
+                {
+                    info.RendererId -= removedVertexCount;
+                    _renderers[key] = info;
+                }
             }
         }
 
@@ -313,7 +325,7 @@ namespace Engine.Rendering
                 vertDataDescriptor.Count = sizeof(Vertex) * VertexCount;
             }
 
-            (vertDataDescriptor as BufferDataDescriptor<Vertex>).Buffer = _verticesData;
+            //(vertDataDescriptor as BufferDataDescriptor<Vertex>).Buffer = _verticesData;
 
             GfxDeviceManager.Current.UpdateGeometry(Geometry, _geoDescriptor);
         }

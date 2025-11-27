@@ -28,7 +28,7 @@ namespace Engine
         public static void LoadScene(string name)
         {
             ClearScenes();
-            // OnCleanUpUpdate();
+            OnCleanUpUpdate();
 
             // TODO: Load scene from file (Probably will never be implemented since all scenes are built at runtime, without a editor)
             var scene = new Scene(name);

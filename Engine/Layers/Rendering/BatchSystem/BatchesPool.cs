@@ -26,8 +26,16 @@ namespace Engine.Rendering
             {
                 if (batch.Contains(renderer))
                 {
-                    batchOut = batch;
-                    return true;
+                    if(batch.SortOrder == renderer.SortOrder)
+                    {
+                        batchOut = batch;
+                        return true;
+                    }
+                    else
+                    {
+                        batch.RemoveRenderer(renderer);
+                        return false;
+                    }
                 }
             }
 
@@ -43,29 +51,56 @@ namespace Engine.Rendering
                 }
             }
 
+            //_batches.Find(x =>
+            //{
+            //    return false;
+            //});
+
+            // TODO: fix this
             foreach (var batch in _batches)
             {
-                var isTotalSizeEnough = batch.MaxVertexSize >= maxVertexSize;
-                var hasSpaceLeftForAnother = (batch.MaxVertexSize - batch.VertexCount) > vertexToAdd;
-                //var hasSpaceLeftForAnother = batch.VertexCount > vertexToAdd && !batch.Contains(renderer);
+                var isMaxSizeEnough = batch.MaxVertexSize >= maxVertexSize;
+                var hasSpaceLeftForAnother = (batch.MaxVertexSize - batch.VertexCount) >= vertexToAdd;
+                var isBatchSizeEnough = isMaxSizeEnough && hasSpaceLeftForAnother;
+                var isSameSortOrder = renderer.SortOrder == batch.SortOrder || batch.SortOrder == int.MinValue;
+                var isValidMaterial = batch.Material == mat || batch.Material == null;
 
-                if (isTotalSizeEnough && hasSpaceLeftForAnother && (batch.Material == mat || batch.Material == null) && ((renderer.SortOrder == batch.SortOrder || batch.SortOrder == int.MinValue) || !batch.IsActive))
+                var selectedBatch = default(Batch2D);
+                // TODO: find the smallest batch first
+                if (isBatchSizeEnough && ((isValidMaterial && isSameSortOrder) || !batch.IsActive))
                 {
-                    batch.Initialize(renderer);
-                    // _batches.Sort((x, y) => x.SortOrder.CompareTo(y.SortOrder));
+                    if (batch.Initialize(renderer))
+                    {
+                        _batches.Sort((x, y) => x.SortOrder.CompareTo(y.SortOrder));
 
-                    return batch;
+                        Debug.Log("Found empty batch for: " + renderer.Name);
+                    }
+                    else
+                    {
+                        Debug.Log("Found existing batch for: " + renderer.Name);
+                    }
+                    if(selectedBatch == null)
+                    {
+                        selectedBatch = batch;
+                    }
+                    else if(selectedBatch.MaxVertexSize > batch.MaxVertexSize || selectedBatch.VertexCount > batch.VertexCount)
+                    {
+                        selectedBatch = batch;
+                    }
+
+                    return selectedBatch;
                 }
+
             }
 
-            Batch2D newBatch = new Batch2D(maxVertexSize, indexBuffer == null ? _sharedIndexBuffer : indexBuffer);
+            var newBatch = new Batch2D(maxVertexSize, indexBuffer == null ? _sharedIndexBuffer : indexBuffer);
             newBatch.OnBatchEmpty += OnBatchEmpty;
             // Initialize to clear any old states.
             newBatch.Initialize(renderer);
 
             _batches.Add(newBatch);
             _batches.Sort((x, y) => x.SortOrder.CompareTo(y.SortOrder));
-            Debug.Info($"Create new batch for renderer: {renderer.Name}: ({_batches.Count})");
+            Debug.Info($"Create new batch for: {renderer.GetType().Name}: {renderer.Name}: sort: {renderer.SortOrder} ({_batches.Count})");
 
             return newBatch;
         }
@@ -76,6 +111,7 @@ namespace Engine.Rendering
             _batches.Remove(batch);
             _batches.Add(batch);
             batch.Clear();
+            Debug.Log("Empty batch: ");
         }
 
         // TODO: Delete all batches that are not being used for too long, and are also big.
