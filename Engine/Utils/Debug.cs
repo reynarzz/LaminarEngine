@@ -11,12 +11,13 @@ namespace Engine
 {
     public static partial class Debug
     {
-        public enum LogLevel
+        internal enum LogLevel
         {
             Debug,
             Info,
             Warn,
             Error,
+            EngineError,
             Success
         }
 
@@ -51,6 +52,14 @@ namespace Engine
                                 [CallerMemberName] string member = "")
         {
             LogMessage(LogLevel.Error, message, file, line, member);
+        }
+
+        internal static void EngineError<T>(T message,
+                                [CallerFilePath] string file = "",
+                                [CallerLineNumber] int line = 0,
+                                [CallerMemberName] string member = "")
+        {
+            LogMessage(LogLevel.EngineError, message, file, line, member);
         }
 
         public static void Success<T>(T message,
@@ -90,6 +99,7 @@ namespace Engine
                 LogLevel.Info => ConsoleColor.White,
                 LogLevel.Warn => ConsoleColor.Yellow,
                 LogLevel.Error => ConsoleColor.Red,
+                LogLevel.EngineError => ConsoleColor.DarkRed,
                 LogLevel.Success => ConsoleColor.Green,
                 _ => ConsoleColor.White
             };

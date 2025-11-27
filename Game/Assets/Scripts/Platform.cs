@@ -24,7 +24,7 @@ namespace Game
 
         private vec2 _startPos;
         private Animator _animator;
-        protected override void OnStart()
+        protected override void OnAwake()
         {
             base.OnStart();
             _renderer = GetComponent<SpriteRenderer>();
@@ -39,7 +39,7 @@ namespace Game
             Transform.LocalScale = new vec3(trigger.Size.x, trigger.Size.y, 1);
 
             AddComponent<BoxCollider2D>().Size = trigger.Size;
-          
+            
             _currentWait = WaitTime;
             Debug.Log("Platform start");
             //SetAnimator();

@@ -43,7 +43,10 @@ namespace Engine
             if (_currentInstruction == null || _currentInstruction.IsInstructionCompleted)
             {
                 _currentInstruction = null;
-                IsCompleted = _target.MoveNext() == false;
+                if(_target != null)
+                {
+                    IsCompleted = _target.MoveNext() == false;
+                }
             }
         }
 

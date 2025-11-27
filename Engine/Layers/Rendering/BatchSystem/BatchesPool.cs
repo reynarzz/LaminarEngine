@@ -52,7 +52,7 @@ namespace Engine.Rendering
                 if (isTotalSizeEnough && hasSpaceLeftForAnother && (batch.Material == mat || batch.Material == null) && ((renderer.SortOrder == batch.SortOrder || batch.SortOrder == int.MinValue) || !batch.IsActive))
                 {
                     batch.Initialize(renderer);
-                    _batches.Sort((x, y) => x.SortOrder.CompareTo(y.SortOrder));
+                    // _batches.Sort((x, y) => x.SortOrder.CompareTo(y.SortOrder));
 
                     return batch;
                 }

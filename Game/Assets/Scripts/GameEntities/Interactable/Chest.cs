@@ -24,6 +24,7 @@ namespace Game
             base.OnAwake();
             BoxCollider.Size = new vec2(1.7f, BoxCollider.Size.y);
             SpriteRenderer.SortOrder = GameConsts.ChestRenderSorting;
+            SpriteRenderer.Material = MaterialUtils.SpriteMaterial;
         }
 
         public override void Init(ChestData data)

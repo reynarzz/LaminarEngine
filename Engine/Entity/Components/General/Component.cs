@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -118,6 +119,14 @@ namespace Engine
         {
             CheckIfValidObject(this);
             Actor.GetComponentsInChildren(ref elements);
+        }
+
+        public Span<T> GetComponentsInChildren<T>() where T : class
+        {
+            var elements = new List<T>();
+            CheckIfValidObject(this);
+            Actor.GetComponentsInChildren(ref elements);
+            return CollectionsMarshal.AsSpan(elements);
         }
 
         public void GetComponentsInParents<T>(ref List<T> elements) where T : class

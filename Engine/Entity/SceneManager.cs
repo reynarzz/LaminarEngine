@@ -27,6 +27,17 @@ namespace Engine
 
         public static void LoadScene(string name)
         {
+            ClearScenes();
+            // OnCleanUpUpdate();
+
+            // TODO: Load scene from file (Probably will never be implemented since all scenes are built at runtime, without a editor)
+            var scene = new Scene(name);
+            ActiveScene = new WeakReference<Scene>(scene);
+            _scenes.Add(scene);
+        }
+
+        private static void ClearScenes()
+        {
             _scenesToDestroy.Clear();
             // Adds all scenes to destroy, except the 'DontDestroyOnLoadScene'
             for (int i = _scenes.Count - 1; i >= 1; --i)
@@ -34,11 +45,6 @@ namespace Engine
                 _scenesToDestroy.Add(_scenes[i]);
                 _scenes.RemoveAt(i);
             }
-
-            // TODO: Load scene from file (Probably will never be implemented since all scenes are built at runtime, without a editor)
-            var scene = new Scene(name);
-            ActiveScene = new WeakReference<Scene>(scene);
-            _scenes.Add(scene);
         }
 
         public static void LoadSceneAdditive(string name)
@@ -89,8 +95,10 @@ namespace Engine
 
         internal static void OnCleanUpUpdate()
         {
-            ActiveScene.TryGetTarget(out var activeScene);
-            activeScene.DeletePending();
+            if (ActiveScene.TryGetTarget(out var activeScene))
+            {
+                activeScene.DeletePending();
+            }
 
             foreach (var scene in _scenesToDestroy)
             {
@@ -99,13 +107,12 @@ namespace Engine
             if (_scenesToDestroy.Count > 0)
             {
                 // Note: this is provisional.
-                RenderingLayer.Test_ClearBatches();
+                // RenderingLayer.Test_ClearBatches();
                 PhysicsLayer.Clear();
                 _scenesToDestroy.Clear();
             }
         }
 
-    
         internal static IReadOnlyList<Actor> FindActorsByTag(string tag)
         {
             return FindAll<Actor, ActorTagMatcher, string>(tag, null);

@@ -41,7 +41,7 @@ namespace Engine
         {
             if (_layersManager == null)
             {
-                Debug.Error("FATAL: Engine couldn't not be initialized correctly.");
+                Debug.EngineError("FATAL: Engine couldn't not be initialized correctly.");
                 return;
             }
 

@@ -46,7 +46,6 @@ namespace Engine.GUI
             base.OnAwake();
             Mesh = new Mesh();
             Mesh.Vertices.Capacity = Consts.Graphics.MAX_QUADS_PER_BATCH * 4;
-            Sprite = new Sprite();
         }
 
         public void DrawQuad(object texture, ref VertexPositionColorTexture topLeft,
@@ -57,7 +56,7 @@ namespace Engine.GUI
             if (IsDirty)
             {
                 var tex = texture as Texture2D;
-                if (Sprite.Texture != tex)
+                if (Sprite == null || Sprite.Texture != tex)
                 {
                     Sprite = new Sprite(0, tex);
                 }

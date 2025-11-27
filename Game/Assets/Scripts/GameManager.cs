@@ -33,8 +33,6 @@ namespace Game
     internal class GameManager : ScriptBehavior
     {
         public static Camera Camera { get; private set; }
-        private static Material _defaultSpriteMaterial;
-        private static Material _stencylMaterial;
         private vec3 _playerStartPosTest;
         private static UIText _coinCounterTest;
         private ItemsDatabase _itemsDatabase;
@@ -42,14 +40,13 @@ namespace Game
         private static Material _tilemapMaterial;
         private FadeInOutManager _fadeInOutManager;
         public static Player Player { get; private set; }
-        public static Material DefaultMaterial => _stencylMaterial;
+        public static Material DefaultMaterial => MaterialUtils.SpriteMaterial;
 
         public static FontAsset DefaultFont { get; internal set; }
         private static GameEntityManager _gameEntityManager;
 
         protected override void OnAwake()
         {
-            InitializeMaterials();
             InitializeActorLayers();
             InitializeData();
             InitializeWorld();
@@ -61,18 +58,7 @@ namespace Game
             DefaultFont = Assets.Get<FontAsset>("Fonts/windows-bold[1].ttf");
             _gameEntityManager = new GameEntityManager();
         }
-        private void InitializeMaterials()
-        {
-            _defaultSpriteMaterial = GetMaterial("DefaultSpriteMaterial", "Shaders/SpriteVert.vert", "Shaders/SpriteFrag.frag");
-            _stencylMaterial = GetMaterial("PlayerMaterial", "Shaders/SpriteVert.vert", "Shaders/SpriteFrag.frag");
-
-            var PlayerMatPass = _stencylMaterial.Passes.ElementAt(0);
-            PlayerMatPass.Stencil.Enabled = true;
-            PlayerMatPass.Stencil.Func = StencilFunc.Always;
-            PlayerMatPass.Stencil.Ref = 3;
-            PlayerMatPass.Stencil.ZPassOp = StencilOp.Replace;
-        }
-
+      
         private void InitializeActorLayers()
         {
             static string[] GetConstStringValues(Type type)
@@ -152,7 +138,7 @@ namespace Game
                 LayerName = GameConsts.PLAYER,
                 SortOrder = 2,
                 StartPosition = _playerStartPosTest,
-                Material = _stencylMaterial,
+                Material = MaterialUtils.SpriteMaterial,
                 StartingLife = 5,
                 SpriteLookDir = 1,
                 InventoryMaxSlots = 10,
@@ -256,7 +242,7 @@ namespace Game
                     }
                 }
             }
-
+            _tilemapMaterial = MaterialUtils.SpriteMaterialWorld;
             //cam.BackgroundColor = new Color32(project.BackgroundColor.R, project.BackgroundColor.G, project.BackgroundColor.B, project.BackgroundColor.A);
             //cam.BackgroundColor = new Color32(23, 28, 57, project.BackgroundColor.A);
 
@@ -359,7 +345,7 @@ namespace Game
             var screenShader = new Shader(Assets.GetText("Shaders/VertScreenGrab.vert").Text, Assets.GetText("Shaders/Portal.frag").Text);
             renderer.Material = new Material(screenShader);
 
-            var pass = renderer.Material.Passes.ElementAt(0);
+            var pass = renderer.Material.GetPass(0);
             pass.IsScreenGrabPass = true;
 
             screenGrabTest.Transform.LocalScale = new vec3(6, 6);
@@ -441,7 +427,7 @@ namespace Game
 
             renderer.Material = new Material(mainShader);
 
-            var pass = renderer.Material.Passes.ElementAt(0);
+            var pass = renderer.Material.GetPass(0);
             pass.Stencil.Enabled = true;
             pass.Stencil.Func = StencilFunc.Equal;
             pass.Stencil.Ref = 3;

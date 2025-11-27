@@ -19,7 +19,7 @@ namespace Game
                 _defaultEnemyMat = new Material(new Shader(Assets.GetText("Shaders/SpriteVert.vert").Text, Assets.GetText("Shaders/SpriteFrag.frag").Text));
                 _defaultEnemyMat.Name = "Enemy Default";
 
-                var PlayerMatPass = _defaultEnemyMat.Passes.ElementAt(0);
+                var PlayerMatPass = _defaultEnemyMat.GetPass(0);
                 PlayerMatPass.Stencil.Enabled = true;
                 PlayerMatPass.Stencil.Func = StencilFunc.Always;
                 PlayerMatPass.Stencil.Ref = 3;

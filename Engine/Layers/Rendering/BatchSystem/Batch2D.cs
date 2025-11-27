@@ -203,7 +203,7 @@ namespace Engine.Rendering
 
         private void OnRendererDestroy(Renderer renderer)
         {
-            renderer.OnDestroyRenderer -= OnRendererDestroy;
+            renderer.OnDestroyRenderer -= _onRendererDestroyHandler;
             var vertCountBeforeDelete = VertexCount;
             _isDirty = true;
             var rendererIds = _renderers[renderer.GetID()];
