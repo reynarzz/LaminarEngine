@@ -17,12 +17,12 @@ namespace Game
         private float smoothTime = 0.2f;
         private vec3 velocity;
         private Camera _cam;
-        public override void OnStart()
+        protected override void OnStart()
         {
             _cam = GetComponent<Camera>();
         }
 
-        public override void OnLateUpdate()
+        protected override void OnLateUpdate()
         {
             Move();
         }

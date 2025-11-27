@@ -12,7 +12,7 @@ namespace Game
     public abstract class AnimatedInteractable<T> : InteractableEntityBase<T> where T: InteractableData
     {
         protected Animator Animator { get; set; }
-        public override void OnAwake()
+        protected override void OnAwake()
         {
             base.OnAwake();
             Animator = GetComponent<Animator>();

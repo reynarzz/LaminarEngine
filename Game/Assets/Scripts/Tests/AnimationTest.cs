@@ -14,7 +14,7 @@ namespace Game
         private Animator _controller;
         private SpriteRenderer _targetRenderer;
 
-        public override void OnStart()
+        protected override void OnStart()
         {
             _controller = AddComponent<Animator>();
             _targetRenderer = AddComponent<SpriteRenderer>();

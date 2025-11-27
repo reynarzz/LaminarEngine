@@ -127,6 +127,7 @@ namespace Engine.Layers
             RenderBatches(batches, ref VP, sceneRenderTarget);
             RenderBatches(uibatches, ref UICanvas.UIViewProj, sceneRenderTarget, sceneRenderTarget);
 #if DEBUG
+            SceneManager.OnDrawGizmos();
             Debug.DrawGeometries(VP, UICanvas.UIViewProj, sceneRenderTarget.NativeResource);
 #endif
             RenderPostProcessing(ref sceneRenderTarget);

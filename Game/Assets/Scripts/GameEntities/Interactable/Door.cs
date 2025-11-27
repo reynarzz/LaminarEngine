@@ -16,7 +16,7 @@ namespace Game
         public event Action<bool> OnDoorStateChanged;
         const int fps = 11;
 
-        public override void OnAwake()
+        protected override void OnAwake()
         {
             base.OnAwake();
 

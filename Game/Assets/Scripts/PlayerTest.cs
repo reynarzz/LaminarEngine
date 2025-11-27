@@ -40,7 +40,7 @@ namespace Game
         private AudioClip[] _walkFx;
         private bool _waklFxSound = false;
 
-        public override async void OnAwake()
+        protected override async void OnAwake()
         {
             Debug.Info("Awake");
             //new Actor<RotateTest>();
@@ -95,7 +95,7 @@ namespace Game
             _animation.FPS = 14;
         }
 
-        public override void OnStart()
+        protected override void OnStart()
         {
             Debug.Info("Start");
             //new Actor<RotateTest>();
@@ -241,7 +241,7 @@ namespace Game
 #endif
         }
 
-        public override void OnFixedUpdate()
+        protected override void OnFixedUpdate()
         {
             TestGround();
             _rigid.Velocity = new vec2(_rigid.Velocity.x, Math.Clamp(_rigid.Velocity.y, _maxFallYVelocity, float.MaxValue));

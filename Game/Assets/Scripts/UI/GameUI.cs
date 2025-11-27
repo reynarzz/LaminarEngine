@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    internal class MainMenu : GameUI
+    public class GameUI : ScriptBehavior
     {
     }
 }

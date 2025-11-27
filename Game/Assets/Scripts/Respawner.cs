@@ -12,7 +12,7 @@ namespace Game
     {
         public vec3 RespawnPosition { get; set; } = new vec3(-7, -4, 0);
 
-        public override void OnStart()
+        protected override void OnStart()
         {
             AddComponent<RigidBody2D>().BodyType = Body2DType.Kinematic;
             var col = AddComponent<BoxCollider2D>();

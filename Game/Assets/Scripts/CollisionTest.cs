@@ -10,7 +10,7 @@ namespace Game
 {
     internal class CollisionTest : ScriptBehavior
     {
-        public override void OnStart()
+        protected override void OnStart()
         {
         }
 

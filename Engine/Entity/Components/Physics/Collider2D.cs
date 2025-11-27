@@ -296,7 +296,7 @@ namespace Engine
             }
         }
 #if DEBUG
-        public void OnLateUpdate()
+        void ILateUpdatableComponent.OnLateUpdate()
         {
             if (Physics2D.DrawColliders && ShapesId != null)
             {
@@ -313,7 +313,8 @@ namespace Engine
                     {
                         color = B2HexColor.b2_colorYellow;
                     }
-                    B2Worlds.b2DrawShape(PhysicWorld.DebugDraw, B2Shapes.b2GetShape(B2Worlds.b2GetWorld(0), ShapesId[i]), transform, color);
+
+                    B2Worlds.b2DrawShape(PhysicWorld.DebugDraw, B2Shapes.b2GetShape(PhysicWorld.World, ShapesId[i]), transform, color);
                 }
             }
         }

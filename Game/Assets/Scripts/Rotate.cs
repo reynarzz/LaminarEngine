@@ -12,7 +12,7 @@ namespace Game
         private float _zOffset;
         private float _rotateSpeed = 0;
 
-        public override void OnStart()
+        protected override void OnStart()
         {
             _zOffset = new Random().NextSingle() * 360;
             _rotateSpeed = RandomRange(30, 50);

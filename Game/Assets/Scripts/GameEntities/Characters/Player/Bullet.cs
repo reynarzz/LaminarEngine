@@ -16,7 +16,7 @@ namespace Game
         public bool _shoot = false;
         private float _speed = 0;
         private float _timeAlive = 1;
-        public override void OnAwake()
+        protected override void OnAwake()
         {
             
         }
@@ -48,7 +48,7 @@ namespace Game
             }
         }
 
-        public override void OnFixedUpdate()
+        protected override void OnFixedUpdate()
         {
             CheckCollision();
         }
