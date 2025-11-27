@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    public class FadeInOutManager : ScriptBehavior
+    public class FadeInOutManager : GameUI
     {
         private FadeScreenPostProcessing _fadePostProcessing = new();
         private static FadeInOutManager _instance;
         public static FadeInOutManager Instance => _instance;
 
-        public override void OnAwake()
+        protected override void OnAwake()
         {
             PostProcessingStack.Push(_fadePostProcessing);
             _instance = this;

@@ -47,17 +47,12 @@ namespace Game
         public static FontAsset DefaultFont { get; internal set; }
         private static GameEntityManager _gameEntityManager;
 
-        public override void OnAwake()
+        protected override void OnAwake()
         {
             InitializeMaterials();
             InitializeActorLayers();
             InitializeData();
             InitializeWorld();
-        }
-
-        private void DontDestroy()
-        {
-
         }
 
         private void InitializeData()

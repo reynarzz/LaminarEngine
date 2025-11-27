@@ -13,7 +13,7 @@ namespace Game
         public float Size { get => _collider.Radius; set => _collider.Radius = value; } 
 
         private CircleCollider2D _collider;
-        public override void OnAwake()
+        protected override void OnAwake()
         {
             _collider = AddComponent<CircleCollider2D>();
             _collider.IsTrigger = true;

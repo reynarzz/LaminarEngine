@@ -11,7 +11,7 @@ namespace Game
     {
         float angle = 40;
 
-        public override void OnStart()
+        protected override void OnStart()
         {
             Debug.Info("Start Rotate: " + Name);
         }
@@ -22,7 +22,7 @@ namespace Game
             Transform.LocalEulerAngles = new GlmNet.vec3(0, 0, angle);
         }
 
-        public override void OnFixedUpdate()
+        protected override void OnFixedUpdate()
         {
         }
     }

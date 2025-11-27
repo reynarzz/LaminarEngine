@@ -11,8 +11,8 @@ namespace Engine
 {
     internal static class PhysicWorld
     {
-        public static B2WorldId WorldID { get; private set; }
-
+        public static B2WorldId WorldID { get; }
+        public static B2World World { get; }
         private static B2DebugDraw _debugDraw;
         internal static B2DebugDraw DebugDraw => _debugDraw;
         static PhysicWorld()
@@ -22,6 +22,8 @@ namespace Engine
             worldDef.enableContinuous = true;
 
             WorldID = B2Worlds.b2CreateWorld(ref worldDef);
+            World = B2Worlds.b2GetWorld(0);
+
             _debugDraw = new B2DebugDraw()
             {
                 context = null,

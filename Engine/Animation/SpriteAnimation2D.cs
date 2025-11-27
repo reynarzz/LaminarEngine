@@ -24,7 +24,7 @@ namespace Engine
         {
         }
 
-        public override void OnAwake()
+        protected override void OnAwake()
         {
             if (StartOnAwake)
             {

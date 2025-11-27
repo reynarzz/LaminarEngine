@@ -71,6 +71,22 @@ namespace Engine
             }
         }
 
+        internal static void FixedUpdate()
+        {
+            foreach (var scene in _scenes)
+            {
+                scene.FixedUpdate();
+            }
+        }
+
+        internal static void OnDrawGizmos()
+        {
+            for (int i = 0; i < _scenes.Count; i++)
+            {
+                _scenes[i].OnDrawGizmos();
+            }
+        }
+
         internal static void OnCleanUpUpdate()
         {
             ActiveScene.TryGetTarget(out var activeScene);
@@ -89,14 +105,7 @@ namespace Engine
             }
         }
 
-        internal static void FixedUpdate()
-        {
-            foreach (var scene in _scenes)
-            {
-                scene.FixedUpdate();
-            }
-        }
-
+    
         internal static IReadOnlyList<Actor> FindActorsByTag(string tag)
         {
             return FindAll<Actor, ActorTagMatcher, string>(tag, null);

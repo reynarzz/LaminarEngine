@@ -9,14 +9,16 @@ using System.Threading.Tasks;
 namespace Engine
 {
     /// <summary>
-    /// Base class for all scripts
+    /// Base class for all scripts.
     /// </summary>
-    public abstract class ScriptBehavior : Component, IAwakeableComponent, IStartableComponent, IUpdatableComponent, ILateUpdatableComponent, IFixedUpdatableComponent
+    public abstract class ScriptBehavior : Component, IAwakeableComponent, IStartableComponent, IUpdatableComponent, ILateUpdatableComponent, IFixedUpdatableComponent, IDrawableGizmo
     {
         private readonly List<Coroutine> _coroutines = new();
-        public virtual void OnAwake() { }
-        public virtual void OnStart() { }
-
+        void IAwakeableComponent.OnAwake() { OnAwake(); }
+        void IStartableComponent.OnStart() { OnStart(); }
+        void ILateUpdatableComponent.OnLateUpdate() { OnLateUpdate(); }
+        void IFixedUpdatableComponent.OnFixedUpdate() { OnFixedUpdate(); }
+        void IDrawableGizmo.OnDrawGizmo() { OnDrawGizmo(); }
         void IUpdatableComponent.OnUpdate()
         {
             bool anyIncomplete = false;
@@ -38,23 +40,24 @@ namespace Engine
 
             OnUpdate();
         }
+        protected virtual void OnAwake() { }
+        protected virtual void OnStart() { }
         protected virtual void OnUpdate() { }
-        public virtual void OnLateUpdate() { }
-        public virtual void OnFixedUpdate() { }
+        protected virtual void OnLateUpdate() { }
+        protected virtual void OnFixedUpdate() { }
+        protected virtual void OnDrawGizmo() { }
         internal protected virtual void OnCollisionEnter2D(Collision2D collision) { }
         internal protected virtual void OnCollisionExit2D(Collision2D collision) { }
         internal protected virtual void OnCollisionStay2D(Collision2D collision) { }
         internal protected virtual void OnTriggerEnter2D(Collider2D collider) { }
         internal protected virtual void OnTriggerStay2D(Collider2D collider) { }
         internal protected virtual void OnTriggerExit2D(Collider2D collider) { }
-
         public Coroutine StartCoroutine(IEnumerator routine)
         {
             var coroutine = new Coroutine(routine);
             _coroutines.Add(coroutine);
             return coroutine;
         }
-
         public void StopCoroutine(Coroutine coroutine)
         {
             if (_coroutines.Contains(coroutine))

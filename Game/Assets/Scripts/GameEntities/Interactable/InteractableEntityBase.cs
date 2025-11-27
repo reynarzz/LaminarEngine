@@ -16,7 +16,7 @@ namespace Game
         protected BoxCollider2D BoxCollider { get; private set; }
         protected SpriteRenderer SpriteRenderer { get; private set; }
         private bool _isPlayerInZone = false;
-        public override void OnAwake()
+        protected override void OnAwake()
         {
             Rigidbody = GetComponent<RigidBody2D>();
             Rigidbody.BodyType = Body2DType.Static;

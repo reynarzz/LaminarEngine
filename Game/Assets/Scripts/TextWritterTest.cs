@@ -17,7 +17,7 @@ namespace Game
 
         private UIText _textRenderer;
 
-        public override void OnStart()
+        protected override void OnStart()
         {
             _textRenderer = GetComponent<UIText>();
         }

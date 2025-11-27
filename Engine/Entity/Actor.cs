@@ -75,7 +75,9 @@ namespace Engine
         private static readonly Action<IStartableComponent> _startAction = x => x.OnStart();
         private static readonly Action<IUpdatableComponent> _updateAction = x => x.OnUpdate();
         private static readonly Action<ILateUpdatableComponent> _lateUpdateAction = x => x.OnLateUpdate();
+        private static readonly Action<IDrawableGizmo> _drawGizmoUpdateAction = x => x.OnDrawGizmo();
         private static readonly Action<IFixedUpdatableComponent> _fixedUpdateAction = x => x.OnFixedUpdate();
+        
         private static readonly Func<Actor, List<IComponent>> _getAwakePending = a => a._onAwakePendingComponents;
         private static readonly Func<Actor, List<IComponent>> _getEnablePending = a => a._onEnablePendingComponents;
         private static readonly Func<Actor, List<IComponent>> _getStartPending = a => a._onStartPendingComponents;
@@ -510,6 +512,11 @@ namespace Engine
             UpdateScriptsFunction(this, _fixedUpdateAction);
         }
 
+        internal void OnDrawGizmoUpdate()
+        {
+            UpdateScriptsFunction(this, _drawGizmoUpdateAction, true);
+        }
+
         private void UpdateScriptBeginEvent<T>(Actor actor, Func<Actor, List<IComponent>> getPendingComponents,
                                                          Action<T> action) where T : class, IComponent
         {
@@ -554,14 +561,14 @@ namespace Engine
             }
         }
 
-        private void UpdateScriptsFunction<T>(Actor actor, Action<T> action) where T : class, IComponent
+        private void UpdateScriptsFunction<T>(Actor actor, Action<T> action, bool updateIfDisabled = false) where T : class, IComponent
         {
             if (actor && actor.IsActiveInHierarchy)
             {
                 foreach (var component in actor._components)
                 {
                     var comp = component as T;
-                    if (comp != null && comp.IsValid() && comp.IsEnabled)
+                    if (comp != null && comp.IsValid() && (comp.IsEnabled || updateIfDisabled))
                     {
 #if DEBUG
                         try
@@ -694,6 +701,7 @@ namespace Engine
                 AddToDestroyList(component);
             }
         }
+
     }
 
     public class Actor<T1> : Actor where T1 : Component

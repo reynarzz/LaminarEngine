@@ -13,7 +13,7 @@ namespace Game
     {
         private vec3 _startPos;
 
-        public override void OnStart()
+        protected override void OnStart()
         {
             _startPos = Transform.WorldPosition;
         }

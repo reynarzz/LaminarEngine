@@ -24,7 +24,7 @@ namespace Game
 
         private vec2 _startPos;
         private Animator _animator;
-        public override void OnStart()
+        protected override void OnStart()
         {
             base.OnStart();
             _renderer = GetComponent<SpriteRenderer>();

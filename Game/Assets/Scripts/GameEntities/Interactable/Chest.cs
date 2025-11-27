@@ -19,7 +19,7 @@ namespace Game
     public class Chest : AnimatedInteractable<ChestData>
     {
         private bool _isOpened = false;
-        public override void OnAwake()
+        protected override void OnAwake()
         {
             base.OnAwake();
             BoxCollider.Size = new vec2(1.7f, BoxCollider.Size.y);

@@ -201,7 +201,7 @@ namespace Game
             bullet.Shoot(origin, vec2.Right * LookDir, _bulletSpeed, mask);
             return true;
         }
-        public override void OnFixedUpdate()
+        protected override void OnFixedUpdate()
         {
 
             base.OnFixedUpdate();

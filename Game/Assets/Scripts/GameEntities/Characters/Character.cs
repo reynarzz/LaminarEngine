@@ -284,7 +284,7 @@ namespace Game
             }
         }
 
-        public override void OnLateUpdate()
+        protected override void OnLateUpdate()
         {
             Renderer.Sprite = Animator.GetSprite(SPRITE_PROPERTY_NAME);
             Animator.Parameters.SetFloat(VEL_X_PROP_NAME, Rigidbody.Velocity.x);
@@ -393,7 +393,7 @@ namespace Game
         {
             return Inventory.Life > 0;
         }
-        public override void OnFixedUpdate()
+        protected override void OnFixedUpdate()
         {
             if (_characterConfig.Ground.Enabled)
             {

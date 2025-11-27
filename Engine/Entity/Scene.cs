@@ -13,6 +13,7 @@ namespace Engine
         private readonly Action<Actor> _onUpdate = x => x.Update();
         private readonly Action<Actor> _onLateUpdate = x => x.LateUpdate();
         private readonly Action<Actor> _onFixedUpdate = x => x.FixedUpdate();
+        private readonly Action<Actor> _onDrawGizmoUpdate = x => x.OnDrawGizmoUpdate();
 
 
         private readonly List<Actor> _rootActors = new();
@@ -79,6 +80,11 @@ namespace Engine
             CallActorFunc(_onFixedUpdate);
         }
 
+        internal void OnDrawGizmos()
+        {
+            CallActorFunc(_onDrawGizmoUpdate);
+        }
+
         private void CallActorFunc(Action<Actor> callback)
         {
             for (int i = 0; i < _rootActors.Count; i++)
@@ -90,7 +96,6 @@ namespace Engine
                 }
             }
         }
-
         internal void DeletePending()
         {
             for (int i = _rootActors.Count - 1; i >= 0; --i)
@@ -110,5 +115,7 @@ namespace Engine
 
             _rootActors.Clear();
         }
+
+        
     }
 }
