@@ -113,7 +113,6 @@ namespace Engine.Rendering
             Clear();
             SortOrder = renderer.SortOrder;
             IsActive = true;
-
             return true;
         }
 

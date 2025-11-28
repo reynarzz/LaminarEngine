@@ -51,12 +51,9 @@ namespace Engine.Rendering
                 }
             }
 
-            //_batches.Find(x =>
-            //{
-            //    return false;
-            //});
+            var selectedBatch = default(Batch2D);
 
-            // TODO: fix this
+            // Try to find the best batch for the renderer.
             foreach (var batch in _batches)
             {
                 var isMaxSizeEnough = batch.MaxVertexSize >= maxVertexSize;
@@ -65,7 +62,6 @@ namespace Engine.Rendering
                 var isSameSortOrder = renderer.SortOrder == batch.SortOrder || batch.SortOrder == int.MinValue;
                 var isValidMaterial = batch.Material == mat || !batch.Material;
 
-                var selectedBatch = default(Batch2D);
                 // TODO: find the smallest batch first
                 if (isBatchSizeEnough && ((isValidMaterial && isSameSortOrder) || !batch.IsActive))
                 {
@@ -73,41 +69,40 @@ namespace Engine.Rendering
                     {
                         selectedBatch = batch;
                     }
-                    else if ((selectedBatch.MaxVertexSize >= batch.MaxVertexSize || selectedBatch.VertexCount >= batch.VertexCount) && batch.SortOrder == renderer.SortOrder) // Checks if this is a smaller batch that it can fit
+                    else if ((selectedBatch.MaxVertexSize > batch.MaxVertexSize || selectedBatch.VertexCount > batch.VertexCount)) // Checks if this is a smaller batch that it can fit
                     {
                         selectedBatch = batch;
                     }
-                    else
-                    {
-                        continue;
-                    }
-                    if (batch.Initialize(renderer))
-                    {
-                        _batches.Sort((x, y) => x.SortOrder.CompareTo(y.SortOrder));
-
-                        Debug.Log("Found empty batch for: " + renderer.Name);
-                    }
-                    else
-                    {
-                        Debug.Log("Found existing batch for: " + renderer.Name);
-                    }
-                    
-                    return selectedBatch;
                 }
             }
 
+            if (selectedBatch != null)
+            {
+                if (selectedBatch.Initialize(renderer))
+                {
+                    SortBatches();
+                    Debug.Log("Found empty batch for: " + renderer.Name);
+                }
+                else
+                {
+                    Debug.Log("Found existing batch for: " + renderer.Name);
+                }
+
+                return selectedBatch;
+            }
             var newBatch = new Batch2D(maxVertexSize, indexBuffer == null ? _sharedIndexBuffer : indexBuffer);
             newBatch.OnBatchEmpty += OnBatchEmpty;
             // Initialize to clear any old states.
             newBatch.Initialize(renderer);
 
             _batches.Add(newBatch);
-            _batches.Sort((x, y) => x.SortOrder.CompareTo(y.SortOrder));
+            SortBatches();
             Debug.Info($"Create new batch for: {renderer.GetType().Name}: {renderer.Name}: sort: {renderer.SortOrder} ({_batches.Count})");
 
             return newBatch;
         }
 
+        // Maybe the problem is the order that the batches are being rendered.
         private void OnBatchEmpty(Batch2D batch)
         {
             // Moves empty batch, and puts it to the end.
@@ -123,6 +118,22 @@ namespace Engine.Rendering
             }
         }
         
+        private void SortBatches()
+        {
+            _batches.Sort((x, y) =>
+            {
+                if (x.IsActive && !y.IsActive) return -1;  // x first
+                if (!x.IsActive && y.IsActive) return 1;   // y first
+
+                // Both active → sort by SortOrder
+                if (x.IsActive && y.IsActive)
+                    return x.SortOrder.CompareTo(y.SortOrder);
+
+                // Both inactive → keep original relative order (stable behavior)
+                return 0;
+            });
+        }
+
         // TODO: Delete all batches that are not being used for too long, and are also big.
         internal void ClearPool()
         {

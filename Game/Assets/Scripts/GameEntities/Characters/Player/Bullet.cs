@@ -16,10 +16,6 @@ namespace Game
         public bool _shoot = false;
         private float _speed = 0;
         private float _timeAlive = 1;
-        protected override void OnAwake()
-        {
-            
-        }
 
         public void Shoot(vec2 position, vec2 dir, float speed, ulong layerMask)
         {
