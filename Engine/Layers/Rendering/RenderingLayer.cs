@@ -79,6 +79,8 @@ namespace Engine.Layers
 
         internal override void UpdateLayer()
         {
+            EngineInfo.Renderer.Clear();
+
             if (!_mainCamera)
             {
                 _mainCamera = SceneManager.FindComponent<Camera>(findDisabled: false);
@@ -124,9 +126,15 @@ namespace Engine.Layers
 
             var VP = _mainCamera.Projection * _mainCamera.ViewMatrix;
 
-            RenderBatches(batches, ref VP, sceneRenderTarget);
-            RenderBatches(uibatches, ref UICanvas.UIViewProj, sceneRenderTarget, sceneRenderTarget);
+            var geoBatchesInfo = RenderBatches(batches, ref VP, sceneRenderTarget);
+            var uiBatchesInfo = RenderBatches(uibatches, ref UICanvas.UIViewProj, sceneRenderTarget, sceneRenderTarget);
 #if DEBUG
+            EngineInfo.Renderer.WBatches = geoBatchesInfo.BatchesCount;
+            EngineInfo.Renderer.GrabScreenPass = geoBatchesInfo.ScreenGrabPasses;
+
+            EngineInfo.Renderer.UIBatches = uiBatchesInfo.BatchesCount;
+            EngineInfo.Renderer.UIGrabScreenPass = uiBatchesInfo.ScreenGrabPasses;
+
             SceneManager.OnDrawGizmos();
             Debug.DrawGeometries(VP, UICanvas.UIViewProj, sceneRenderTarget.NativeResource);
 #endif
@@ -144,12 +152,17 @@ namespace Engine.Layers
             }
         }
 
-        private void RenderBatches(List<Batch2D> batches, ref mat4 VP, RenderTexture sceneRenderTarget, RenderTexture grabBlitTarget = null)
+      
+        private RenderingBatchesInfo RenderBatches(List<Batch2D> batches, ref mat4 VP, RenderTexture sceneRenderTarget, RenderTexture grabBlitTarget = null)
         {
+            RenderingBatchesInfo info = default;
             foreach (var batch in batches)
             {
                 if (!batch.IsActive)
+                {
                     break;
+                }
+                info.BatchesCount++;
 
                 batch.Flush();
 
@@ -168,10 +181,14 @@ namespace Engine.Layers
                         GfxDeviceManager.Current.BlitRenderTargetTo(grabBlitTarget.NativeResource, _screenGrabTarget.NativeResource);
                     }
 
+                    info.ScreenGrabPasses++;
+
                     foreach (var batchGrab in batches)
                     {
                         if (!batchGrab.IsActive || batchGrab == batch)
+                        {
                             break;
+                        }
 
                         batchGrab.Flush();
                         RenderPass(batchGrab, ref VP, _screenGrabTarget, _screenGrabTarget, _mainCamera);
@@ -180,6 +197,8 @@ namespace Engine.Layers
 
                 RenderPass(batch, ref VP, sceneRenderTarget, _screenGrabTarget, _mainCamera);
             }
+
+            return info;
         }
 
         private void PostProcessDraw(Shader shader, RenderTexture inTex, RenderTexture outTex, UniformValue[] uniforms)
@@ -319,6 +338,12 @@ namespace Engine.Layers
         public override void Close()
         {
 
+        }
+
+        private struct RenderingBatchesInfo
+        {
+            public int BatchesCount { get; set; }
+            public int ScreenGrabPasses { get; set; }
         }
     }
 }

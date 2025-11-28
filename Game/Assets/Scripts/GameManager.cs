@@ -333,7 +333,7 @@ namespace Game
         protected override void OnUpdate()
         {
 #if DEBUG
-            Window.Name = Time.FPS.ToString();
+            Window.Name = EngineInfo.RendererInfoToString() + ", FPS: " + Time.FPS.ToString();
 #endif
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {

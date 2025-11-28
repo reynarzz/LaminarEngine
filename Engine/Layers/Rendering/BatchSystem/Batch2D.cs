@@ -337,13 +337,20 @@ namespace Engine.Rendering
             GfxDeviceManager.Current.UpdateGeometry(Geometry, _geoDescriptor);
         }
 
-        internal bool CanPushGeometry(Renderer2D renderer, int vertexCount, Texture texture, Material mat)
+        internal bool CanPushGeometry(Renderer2D renderer, int vertexCount, int neededBatchVertexSize, Texture texture, Material mat)
         {
-            var subsTractVertices = 0;
             _renderers.TryGetValue(renderer.GetID(), out var rendeId);
-            subsTractVertices = rendeId.VertexCount;
+            var subsTractVertices = rendeId.VertexCount;
 
-            if(SortOrder != renderer.SortOrder || SortOrder!= int.MinValue)
+            var isMaxSizeEnough = MaxVertexSize >= neededBatchVertexSize;
+            var hasSpaceLeftForAnother = (MaxVertexSize - VertexCount) >= vertexCount;
+            var isBatchSizeEnough = isMaxSizeEnough && hasSpaceLeftForAnother;
+            var isInvalidSortOrder = renderer.SortOrder != SortOrder || SortOrder != int.MinValue;
+            var isInvalidMaterial = Material != mat || !Material;
+
+            // return isBatchSizeEnough && ((isValidMaterial && isSameSortOrder) || !IsActive);
+
+            if (isInvalidSortOrder)
             {
                 return false;
             }

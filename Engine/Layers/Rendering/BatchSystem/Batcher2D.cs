@@ -135,7 +135,7 @@ namespace Engine.Rendering
                         var width = (float)chunk.Width / ppu;
                         var height = (float)chunk.Height / ppu;
 
-                        if (!CanPushGeometry(currentBatch, renderer, VerticesPerQuad, texture, material))
+                        if (!CanPushGeometry(currentBatch, renderer, VerticesPerQuad, MaxBatchVertexSize, texture, material))
                         {
                             currentBatch = _batchesPool.Get(renderer, VerticesPerQuad, MaxBatchVertexSize, material);
                         }
@@ -155,7 +155,7 @@ namespace Engine.Rendering
                         // TODO: implement proper mesh drawing, for now, since it is used just for tilemap, this works
                         var vertexCount = Math.Max(MaxBatchVertexSize, renderer.Mesh.Vertices.Count);
 
-                        if (!CanPushGeometry(currentBatch, renderer, vertexCount, texture, material))
+                        if (!CanPushGeometry(currentBatch, renderer, vertexCount, MaxBatchVertexSize, texture, material))
                         {
                             if (!_batchesPool.GetCurrentBatch(renderer, out currentBatch))
                             {
@@ -182,9 +182,9 @@ namespace Engine.Rendering
             Initialize();
         }
 
-        private bool CanPushGeometry(Batch2D currentBatch, Renderer2D renderer, int vertexCount, Texture texture, Material material)
+        private bool CanPushGeometry(Batch2D currentBatch, Renderer2D renderer, int vertexCount, int maxBatchVertexSize, Texture texture, Material material)
         {
-            return currentBatch != null && currentBatch.CanPushGeometry(renderer, vertexCount, texture, material);
+            return currentBatch != null && currentBatch.CanPushGeometry(renderer, vertexCount, maxBatchVertexSize, texture, material);
         }
     }
 }

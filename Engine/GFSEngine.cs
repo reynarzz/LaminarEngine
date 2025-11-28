@@ -9,7 +9,7 @@ namespace Engine
     public class GFSEngine
     {
         private LayersManager _layersManager;
-
+        
         public GFSEngine Initialize<T>(string winName, int width, int height) where T: ApplicationLayer
         {
             return Initialize<T>(winName, width, height, Color.Black); 
