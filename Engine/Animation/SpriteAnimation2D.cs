@@ -20,10 +20,6 @@ namespace Engine
         private bool _isPlaying = false;
         public Renderer2D Renderer { get; set; }
 
-        internal override void OnInitialize()
-        {
-        }
-
         protected override void OnAwake()
         {
             if (StartOnAwake)

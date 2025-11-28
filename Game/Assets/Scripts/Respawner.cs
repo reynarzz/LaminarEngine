@@ -26,7 +26,7 @@ namespace Game
             if (collider.Name.Equals("Player"))
             {
                 Debug.Log("Respawn");
-                collider.RigidBody.Velocity = default;
+                // collider.RigidBody.Velocity = default;
                 collider.Transform.WorldPosition = RespawnPosition;
             }
         }

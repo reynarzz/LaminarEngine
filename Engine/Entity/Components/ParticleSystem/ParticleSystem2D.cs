@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    public class ParticleSystem2D : Renderer2D, IUpdatableComponent
+    public class ParticleSystem2D : Renderer2D, IUpdatableComponent, IStartableComponent
     {
         private static mat4 _particlePositionM = mat4.identity();
 
@@ -32,9 +32,9 @@ namespace Engine
 
         public vec2 Gravity { get; set; }
         public bool Prewarm { get; set; }
-        internal override void OnInitialize()
+        protected override void OnAwake()
         {
-            base.OnInitialize();
+            base.OnAwake();
 
             Mesh = new Mesh();
             Mesh.IndicesToDrawCount = 0;
@@ -44,6 +44,13 @@ namespace Engine
             Mesh.Vertices.Capacity = _particles.Capacity * 4;
         }
 
+        void IStartableComponent.OnStart()
+        {
+            if (Prewarm)
+            {
+                // TODO: Pre warm here.
+            }
+        }
         void IUpdatableComponent.OnUpdate()
         {
             var dt = Time.DeltaTime * SimulationSpeed;
@@ -123,7 +130,7 @@ namespace Engine
                 var particleM = _particlePositionM *
                                 glm.rotate(glm.radians(particle.Rotation), new vec3(0, 0, 1));
 
-                var particleModel = particle.IsWorldSpace? particleM: Transform.WorldMatrix * particleM;
+                var particleModel = particle.IsWorldSpace ? particleM : Transform.WorldMatrix * particleM;
 
                 var size = particle.Size;
 
@@ -147,5 +154,6 @@ namespace Engine
 
             Mesh.IndicesToDrawCount = _particles.Count * 6;
         }
+
     }
 }

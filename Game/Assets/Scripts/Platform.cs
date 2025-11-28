@@ -24,9 +24,9 @@ namespace Game
 
         private vec2 _startPos;
         private Animator _animator;
-        protected override void OnStart()
+        protected override void OnAwake()
         {
-            base.OnStart();
+            base.OnAwake();
             _renderer = GetComponent<SpriteRenderer>();
             _renderer.Color = Color.Green;
             var rigid = GetComponent<RigidBody2D>();
@@ -39,7 +39,7 @@ namespace Game
             Transform.LocalScale = new vec3(trigger.Size.x, trigger.Size.y, 1);
 
             AddComponent<BoxCollider2D>().Size = trigger.Size;
-          
+            
             _currentWait = WaitTime;
             Debug.Log("Platform start");
             //SetAnimator();
@@ -117,9 +117,9 @@ namespace Game
             {
                 collider.Actor.Transform.Parent = Transform;
 
-                if(collider.RigidBody.Velocity.y <= 0)
+                if(collider.AttachedRigidbody.Velocity.y <= 0)
                 {
-                    collider.RigidBody.Velocity = new vec2(collider.RigidBody.Velocity.x, 0);
+                    collider.AttachedRigidbody.Velocity = new vec2(collider.AttachedRigidbody.Velocity.x, 0);
                 }
 
 

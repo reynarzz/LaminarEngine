@@ -9,18 +9,14 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    [RequiredComponent(typeof(RigidBody2D), typeof(BoxCollider2D), typeof(SpriteRenderer))]
+    [RequiredComponent(typeof(BoxCollider2D), typeof(SpriteRenderer))]
     public abstract class InteractableEntityBase : GameEntity 
     {
-        protected RigidBody2D Rigidbody { get; private set; }
         protected BoxCollider2D BoxCollider { get; private set; }
         protected SpriteRenderer SpriteRenderer { get; private set; }
         private bool _isPlayerInZone = false;
         protected override void OnAwake()
         {
-            Rigidbody = GetComponent<RigidBody2D>();
-            Rigidbody.BodyType = Body2DType.Static;
-
             BoxCollider = GetComponent<BoxCollider2D>();
             BoxCollider.IsTrigger = true;
 

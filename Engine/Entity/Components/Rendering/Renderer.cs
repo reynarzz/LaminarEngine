@@ -19,7 +19,7 @@ namespace Engine
         internal event Action<Renderer> OnDestroyRenderer;
         internal protected bool PrivateBatch { get; protected set; }
 
-        internal override void OnInitialize()
+        protected override void OnAwake()
         {
             Transform.OnChanged += Transform_OnChanged;
             IsDirty = true;
@@ -47,6 +47,7 @@ namespace Engine
             base.OnDisabled();
             IsDirty = true;
             OnDestroyRenderer?.Invoke(this);
+            Debug.Warn("Disable renderer: " + Name);
         }
 
         internal virtual void Draw() { }
@@ -56,8 +57,9 @@ namespace Engine
             base.OnDestroy();
 
             Transform.OnChanged -= Transform_OnChanged;
-            Debug.Warn("Destroy renderer");
+            Debug.Warn("Destroy renderer: " + Name);
             OnDestroyRenderer?.Invoke(this);
+            OnDestroyRenderer = null;
         }
     }
 }

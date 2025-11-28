@@ -13,12 +13,13 @@ namespace Engine
     public class Material : EObject
     {
         private readonly List<RenderPass> _passes;
-        public List<RenderPass> Passes => _passes;
+        internal List<RenderPass> Passes => _passes;
         private readonly OrderedDictionary<string, Texture> _textures;
         internal OrderedDictionary<string, Texture> Textures => _textures;
-
-        public Material(Shader shader)
+        public Shader Shader { get; }
+        public Material(Shader shader) : base("Material")
         {
+            Shader = shader;
             _textures = new();
             _passes = new List<RenderPass>()
             {

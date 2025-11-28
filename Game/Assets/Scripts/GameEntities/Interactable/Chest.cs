@@ -24,6 +24,7 @@ namespace Game
             base.OnAwake();
             BoxCollider.Size = new vec2(1.7f, BoxCollider.Size.y);
             SpriteRenderer.SortOrder = GameConsts.ChestRenderSorting;
+            SpriteRenderer.Material = MaterialUtils.SpriteMaterial;
         }
 
         public override void Init(ChestData data)
@@ -63,6 +64,8 @@ namespace Game
             openAnim.Clip.AddCurve("Sprite", new SpriteCurve(11, GameTextureAtlases.GetAtlas(openAtlasId)));
             //openAnim.Clip.AddEvent(openAnim.Clip.Duration, () => { });
             collectedIdle.Clip.AddCurve("Sprite", new SpriteCurve(11, GameTextureAtlases.GetAtlas(collectedIdleAtlasId)[^1]));
+
+            SpriteRenderer.Sprite = GameTextureAtlases.GetAtlas(idleAtlasId)[0];
         }
 
         public override bool TryInteract(Player player)

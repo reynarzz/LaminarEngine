@@ -19,6 +19,7 @@ namespace Engine
             new vec2(1f, 0f),   
             new vec2(0.5f, 1f)  
         ];
+        private List<B2Hull> _hulls = new List<B2Hull>();
 
         public void Generate()
         {
@@ -27,7 +28,6 @@ namespace Engine
                 Create();
             }
         }
-        private List<B2Hull> _hulls = new List<B2Hull>();
 
         protected override B2ShapeId[] CreateShape(B2BodyId bodyId)
         {

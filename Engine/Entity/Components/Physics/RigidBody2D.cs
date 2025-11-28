@@ -229,8 +229,7 @@ namespace Engine
             }
         }
 
-
-        internal override void OnInitialize()
+        protected override void OnAwake()
         {
             var worldPos = Transform.WorldPosition;
             var worldRot = Transform.WorldRotation;
@@ -248,11 +247,15 @@ namespace Engine
 
             _bodyId = B2Bodies.b2CreateBody(PhysicWorld.WorldID, ref bodyDef);
 
-            var colliders = GetComponents<Collider2D>();
+            var colliders = GetComponentsInChildren<Collider2D>();
             foreach (var collider in colliders)
             {
-                collider.RigidBody = this;
-                collider.Create();
+                var rigid = collider.GetComponent<RigidBody2D>();
+                if (!rigid || rigid == this)
+                {
+                    collider.AttachedRigidbody = this;
+                    collider.Create();
+                }
             }
 
             Transform.OnChanged += OnTransformChanged;
@@ -353,6 +356,17 @@ namespace Engine
 
                 Transform.NeedsInterpolation = false;
                 Transform.OnChanged -= OnTransformChanged;
+            }
+
+            // Makes collider to use the default body. TODO: it shold link to the next available rigidbody in the hierarchy.
+            var colliders = GetComponentsInChildren<Collider2D>();
+            foreach (var collider in colliders)
+            {
+                if (collider && collider.AttachedRigidbody == this)
+                {
+                    collider.AttachedRigidbody = null;
+                    collider.Create();
+                }
             }
 
             if (B2Worlds.b2Body_IsValid(_bodyId))

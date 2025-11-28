@@ -30,13 +30,13 @@ namespace Engine
 
         }
 
-        internal override void OnInitialize()
+        protected override void OnAwake()
         {
             _renderer = GetComponent<TilemapRenderer>();
 
-            base.OnInitialize();
+            base.OnAwake();
 
-            RigidBody.BodyType = Body2DType.Static;
+            AttachedRigidbody.BodyType = Body2DType.Static;
         }
 
         protected override B2ShapeId[] CreateShape(B2BodyId bodyId)

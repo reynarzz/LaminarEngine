@@ -32,9 +32,9 @@ namespace Engine
         public IReadOnlyList<vec2> TilesPositions => _tilesPositions;
         private List<vec2> _tilesPositions = new();
 
-        internal override void OnInitialize()
+        protected override void OnAwake()
         {
-            base.OnInitialize();
+            base.OnAwake();
 
             Mesh = new Mesh();
             Mesh.IndicesToDrawCount = 0;

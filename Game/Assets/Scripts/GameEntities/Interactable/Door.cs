@@ -37,6 +37,9 @@ namespace Game
             closeAnim.Clip.AddEvent(closeAnim.Clip.Duration, () => OnDoorStateChanged?.Invoke(false));
 
             // When player enters: Audio/Gameplay/Win_2.wav
+
+            SpriteRenderer.Sprite = openingSprites[0];
+
             Animator.OnUpdate += animator =>
             {
                 SpriteRenderer.Sprite = animator.GetSprite("Sprite");

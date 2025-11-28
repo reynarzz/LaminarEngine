@@ -13,18 +13,8 @@ namespace Game
     {
         public static class Items
         {
-            private static Material _collectiblesDefault;
-
             static Items()
             {
-                _collectiblesDefault = new Material(new Shader(Assets.GetText("Shaders/SpriteVert.vert").Text, Assets.GetText("Shaders/SpriteFrag.frag").Text));
-                _collectiblesDefault.Name = "Collectibles Default";
-
-                var PlayerMatPass = _collectiblesDefault.Passes.ElementAt(0);
-                PlayerMatPass.Stencil.Enabled = true;
-                PlayerMatPass.Stencil.Func = StencilFunc.Always;
-                PlayerMatPass.Stencil.Ref = 3;
-                PlayerMatPass.Stencil.ZPassOp = StencilOp.Replace;
             }
 
             public static Collectible InstantiateCollectible(ItemId item, vec2 position)
@@ -49,7 +39,7 @@ namespace Game
 
                 return collectible;
             }
-
+             
             public static Chest InstantiateChest(vec2 position, ChestData data)
             {
                 var chest = new Actor("Chest").AddComponent<Chest>();

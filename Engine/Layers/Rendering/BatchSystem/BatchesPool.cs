@@ -26,8 +26,16 @@ namespace Engine.Rendering
             {
                 if (batch.Contains(renderer))
                 {
-                    batchOut = batch;
-                    return true;
+                    if (batch.SortOrder == renderer.SortOrder)
+                    {
+                        batchOut = batch;
+                        return true;
+                    }
+                    else
+                    {
+                        batch.RemoveRenderer(renderer);
+                        return false;
+                    }
                 }
             }
 
@@ -43,29 +51,53 @@ namespace Engine.Rendering
                 }
             }
 
+            var selectedBatch = default(Batch2D);
+
+            // Try to find the best batch for the renderer.
             foreach (var batch in _batches)
             {
-                var isTotalSizeEnough = batch.MaxVertexSize >= maxVertexSize;
-                var hasSpaceLeftForAnother = (batch.MaxVertexSize - batch.VertexCount) > vertexToAdd;
-                //var hasSpaceLeftForAnother = batch.VertexCount > vertexToAdd && !batch.Contains(renderer);
+                var isMaxSizeEnough = batch.MaxVertexSize >= maxVertexSize;
+                var hasSpaceLeftForAnother = (batch.MaxVertexSize - batch.VertexCount) >= vertexToAdd;
+                var isBatchSizeEnough = isMaxSizeEnough && hasSpaceLeftForAnother;
+                var isSameSortOrder = renderer.SortOrder == batch.SortOrder || batch.SortOrder == int.MinValue;
+                var isValidMaterial = batch.Material == mat || !batch.Material;
 
-                if (isTotalSizeEnough && hasSpaceLeftForAnother && (batch.Material == mat || batch.Material == null) && ((renderer.SortOrder == batch.SortOrder || batch.SortOrder == int.MinValue) || !batch.IsActive))
+                // TODO: find the smallest batch first
+                if (isBatchSizeEnough && ((isValidMaterial && isSameSortOrder) || !batch.IsActive))
                 {
-                    batch.Initialize(renderer);
-                    _batches.Sort((x, y) => x.SortOrder.CompareTo(y.SortOrder));
-
-                    return batch;
+                    if (selectedBatch == null)
+                    {
+                        selectedBatch = batch;
+                    }
+                    else if ((selectedBatch.MaxVertexSize > batch.MaxVertexSize || selectedBatch.VertexCount > batch.VertexCount)) // Checks if this is a smaller batch that it can fit
+                    {
+                        selectedBatch = batch;
+                    }
                 }
             }
 
-            Batch2D newBatch = new Batch2D(maxVertexSize, indexBuffer == null ? _sharedIndexBuffer : indexBuffer);
+            if (selectedBatch != null)
+            {
+                if (selectedBatch.Initialize(renderer))
+                {
+                    SortBatches();
+                    Debug.Log("Found empty batch for: " + renderer.Name);
+                }
+                else
+                {
+                    Debug.Log("Found existing batch for: " + renderer.Name);
+                }
+
+                return selectedBatch;
+            }
+            var newBatch = new Batch2D(maxVertexSize, indexBuffer == null ? _sharedIndexBuffer : indexBuffer);
             newBatch.OnBatchEmpty += OnBatchEmpty;
             // Initialize to clear any old states.
             newBatch.Initialize(renderer);
 
             _batches.Add(newBatch);
-            _batches.Sort((x, y) => x.SortOrder.CompareTo(y.SortOrder));
-            Debug.Info($"Create new batch for renderer: {renderer.Name}: ({_batches.Count})");
+            SortBatches();
+            Debug.Info($"Create new batch for: {renderer.GetType().Name}: {renderer.Name}: sort: {renderer.SortOrder} ({_batches.Count})");
 
             return newBatch;
         }
@@ -73,9 +105,40 @@ namespace Engine.Rendering
         private void OnBatchEmpty(Batch2D batch)
         {
             // Moves empty batch, and puts it to the end.
-            _batches.Remove(batch);
-            _batches.Add(batch);
             batch.Clear();
+            if (_batches.Remove(batch))
+            {
+                _batches.Add(batch);
+                Debug.Log("Empty batch: ");
+            }
+            else
+            {
+                Debug.EngineError("Could not remove batch");
+            }
+        }
+
+        private void SortBatches()
+        {
+            _batches.Sort((x, y) =>
+            {
+                if (x.IsActive && !y.IsActive) 
+                {
+                    return -1;  
+                }
+                if (!x.IsActive && y.IsActive)
+                {
+                    return 1;   
+                }
+
+                // If both are active, sort by SortOrder.
+                if (x.IsActive && y.IsActive)
+                {
+                    return x.SortOrder.CompareTo(y.SortOrder);
+                }
+
+                // if both are inactive, keep original relative order.
+                return 0;
+            });
         }
 
         // TODO: Delete all batches that are not being used for too long, and are also big.

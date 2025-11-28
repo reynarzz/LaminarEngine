@@ -18,9 +18,9 @@ namespace Engine.GUI
 
         private int _currentSliceVertexIndex = 0;
         public float SlicedBorderResolution { get; set; } = 1;
-        internal override void OnInitialize()
+        protected override void OnAwake()
         {
-            base.OnInitialize();
+            base.OnAwake();
             Mesh = new Mesh();
             Mesh.IndicesToDrawCount = 6;
             for (int i = 0; i < 4; i++)

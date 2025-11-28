@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Engine
 {
-    public abstract class Component : EObject, IComponent, IEnabledComponent
+    public abstract class Component : EObject, IComponent, IAwakeableComponent, IEnabledComponent
     {
         public Actor Actor { get; internal set; }
         public virtual Transform Transform
@@ -46,10 +47,10 @@ namespace Engine
                 }
             }
         }
-
-        internal virtual void OnInitialize() { }
+        void IAwakeableComponent.OnAwake() { OnAwake(); }
         public virtual void OnEnabled() { }
         public virtual void OnDisabled() { }
+        protected virtual void OnAwake() { }
 
         public Component AddComponent(Type type)
         {
@@ -120,10 +121,26 @@ namespace Engine
             Actor.GetComponentsInChildren(ref elements);
         }
 
+        public Span<T> GetComponentsInChildren<T>() where T : class
+        {
+            var elements = new List<T>();
+            CheckIfValidObject(this);
+            Actor.GetComponentsInChildren(ref elements);
+            return CollectionsMarshal.AsSpan(elements);
+        }
+
         public void GetComponentsInParents<T>(ref List<T> elements) where T : class
         {
             CheckIfValidObject(this);
             Actor.GetComponentsInParent(ref elements);
+        }
+
+        public Span<T> GetComponentsInParents<T>() where T : class
+        {
+            var elements = new List<T>();
+            CheckIfValidObject(this);
+            Actor.GetComponentsInParent(ref elements);
+            return CollectionsMarshal.AsSpan(elements);
         }
 
         public T GetComponentInParents<T>() where T : class

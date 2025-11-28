@@ -82,22 +82,7 @@ namespace Engine
         private static readonly Func<Actor, List<IComponent>> _getEnablePending = a => a._onEnablePendingComponents;
         private static readonly Func<Actor, List<IComponent>> _getStartPending = a => a._onStartPendingComponents;
 
-        internal void RecalculateHierarchyActivation()
-        {
-            void UpdateActiveInHierarchy(Actor actor)
-            {
-                var parent = actor.Transform.Parent;
-                actor.IsActiveInHierarchy = (parent != null ? parent.Actor.IsActiveInHierarchy && actor.IsActiveSelf : actor.IsActiveSelf);
-
-                for (int i = 0; i < actor.Transform.Children.Count; i++)
-                {
-                    UpdateActiveInHierarchy(actor.Transform.Children[i].Actor);
-                }
-            }
-
-            UpdateActiveInHierarchy(this);
-        }
-
+     
         public Actor() : this(string.Empty, string.Empty)
         {
         }
@@ -187,21 +172,28 @@ namespace Engine
             var component = Activator.CreateInstance(type) as Component;
             component.Actor = this;
             _components.Add(component);
-
-            if (component is IAwakeableComponent awakeable)
-            {
-                _onAwakePendingComponents.Add(awakeable);
-            }
-
-            if (component is IEnabledComponent enable)
-            {
-                _onEnablePendingComponents.Add(enable);
-            }
+            
             if (component is IStartableComponent start)
             {
                 _onStartPendingComponents.Add(start);
             }
-            component.OnInitialize();
+
+            if (!IsActiveInHierarchy || !IsActiveSelf)
+            {
+                _onAwakePendingComponents.Add(component);
+                _onEnablePendingComponents.Add(component);
+            }
+            else
+            {
+                (component as IAwakeableComponent).OnAwake();
+
+                // NOTE: All components are enabled by default, so this if is unncessary right now,
+                //       however, in the future I might add a flag to addComponents that are disabled by default.
+                if (component.IsEnabled)
+                {
+                    (component as IEnabledComponent).OnEnabled();
+                }
+            }
 
             return component;
         }
@@ -565,9 +557,9 @@ namespace Engine
         {
             if (actor && actor.IsActiveInHierarchy)
             {
-                foreach (var component in actor._components)
+                for (int i = 0; i < actor._components.Count; i++)
                 {
-                    var comp = component as T;
+                    var comp = actor._components[i] as T;
                     if (comp != null && comp.IsValid() && (comp.IsEnabled || updateIfDisabled))
                     {
 #if DEBUG
@@ -691,6 +683,21 @@ namespace Engine
             {
                 Transform.Children[i].Actor.DeletePending();
             }
+        }
+        internal void RecalculateHierarchyActivation()
+        {
+            void UpdateActiveInHierarchy(Actor actor)
+            {
+                var parent = actor.Transform.Parent;
+                actor.IsActiveInHierarchy = (parent != null ? parent.Actor.IsActiveInHierarchy && actor.IsActiveSelf : actor.IsActiveSelf);
+
+                for (int i = 0; i < actor.Transform.Children.Count; i++)
+                {
+                    UpdateActiveInHierarchy(actor.Transform.Children[i].Actor);
+                }
+            }
+
+            UpdateActiveInHierarchy(this);
         }
 
         public void OnDestroy()

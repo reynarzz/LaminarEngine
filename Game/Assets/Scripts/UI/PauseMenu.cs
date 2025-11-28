@@ -40,7 +40,7 @@ namespace Game
             _background.BlockEvents = true;
             _background.ReceiveEvents = true;
             _background.Material = new Material(new Shader(Assets.GetText("Shaders/VertScreenGrab.vert").Text, Assets.GetText("Shaders/GrayScale.frag").Text));
-            _background.Material.Passes[0].IsScreenGrabPass = true;
+            _background.Material.GetPass(0).IsScreenGrabPass = true;
 
             Inventory();
             var fontMat = new Material(new Shader(Assets.GetText("Shaders/Font/FontVert.vert").Text, Assets.GetText("Shaders/Font/FontFrag.frag").Text));
@@ -92,7 +92,9 @@ namespace Game
             _graphics.Add(_background);
             _graphics.Add(resumeButtonImage);
 
-           // LogRecursive(_background.Transform);
+            // LogRecursive(_background.Transform);
+
+            SetColorAlpha(0, true);
         }
 
         private void Inventory()
@@ -102,7 +104,7 @@ namespace Game
             _inventory.Transform.LocalPosition = new vec3(0, 298);
 
             var inventory = NewImage("Inventory image", default, new vec2(320, 240), Color.White, _inventory.Transform);
-            inventory.AddComponent<ContentSizeFitter>();
+            var fitter = inventory.AddComponent<ContentSizeFitter>();
             inventory.RectTransform.Pivot = new vec2(0.5f, 0.5f);
             var img = inventory.GetComponent<UIImage>();
             img.Material = GameManager.DefaultMaterial;
@@ -156,7 +158,7 @@ namespace Game
                 NewImage("Quad2", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
 
             }
-
+            fitter.ResizeToFitChildren();
             _inventory.Actor.IsActiveSelf = false;
         }
 
@@ -197,19 +199,27 @@ namespace Game
             }
 
         }
+        void SetColorAlpha(float alpha, bool immediate = false)
+        {
+            foreach (var item in _graphics)
+            {
+                var color = item.Color;
+                color.A = alpha;
+                if (!immediate)
+                {
+                    item.Color = Color.MoveTowards(item.Color, color, Time.UnscaledDeltaTime * 5f);
+                }
+                else
+                {
+                    item.Color = color;
+                }
+            }
+        }
 
         protected override void OnLateUpdate()
         {
 
-            void SetColorAlpha(float alpha)
-            {
-                foreach (var item in _graphics)
-                {
-                    var color = item.Color;
-                    color.A = alpha;
-                    item.Color = Color.MoveTowards(item.Color, color, Time.UnscaledDeltaTime * 5f);
-                }
-            }
+            
             if (_show)
             {
                 SetColorAlpha(1);
@@ -221,6 +231,7 @@ namespace Game
 
             if (Input.GetKeyDown(KeyCode.Tab))
             {
+                _inventory.GetComponentsInChildren<ContentSizeFitter>()[0].ResizeToFitChildren();
                 _inventory.Actor.IsActiveSelf = !_inventory.Actor.IsActiveSelf;
             }
         }
