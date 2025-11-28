@@ -13,7 +13,7 @@ namespace Engine
 {
     public abstract class Collider2D : Component
 #if DEBUG
-        , ILateUpdatableComponent
+        , IDrawableGizmo
 #endif
     {
         public RigidBody2D AttachedRigidbody { get; internal set; }
@@ -379,7 +379,7 @@ namespace Engine
             }
         }
 #if DEBUG
-        void ILateUpdatableComponent.OnLateUpdate()
+        void IDrawableGizmo.OnDrawGizmo()
         {
             if (Physics2D.DrawColliders && ShapesId != null)
             {
