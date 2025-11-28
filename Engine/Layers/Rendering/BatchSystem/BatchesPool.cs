@@ -12,7 +12,7 @@ namespace Engine.Rendering
     {
         private readonly GfxResource _sharedIndexBuffer;
         private List<Batch2D> _batches;
-
+        public int MaxEmptyBatches { get; set; } = 10;
         public BatchesPool(GfxResource sharedIndexBuffer)
         {
             _sharedIndexBuffer = sharedIndexBuffer;
@@ -33,7 +33,7 @@ namespace Engine.Rendering
                     }
                     else
                     {
-                        // Debug.Warn($"Changed sorting: from {batch.SortOrder}, to: {renderer.SortOrder}" + renderer.Name);
+                        Debug.Warn($"Changed sorting: from {batch.SortOrder}, to: {renderer.SortOrder}" + renderer.Name);
                         batch.RemoveRenderer(renderer);
                         return false;
                     }
@@ -43,7 +43,7 @@ namespace Engine.Rendering
             return false;
         }
 
-        internal Batch2D Get(Renderer2D renderer, int vertexToAdd, int maxVertexSize, Material mat, GfxResource indexBuffer = null)
+        internal Batch2D Get(Renderer2D renderer, int vertexToAdd, int maxVertexSize, Texture2D texture, Material mat, GfxResource indexBuffer = null)
         {
             {
                 if (GetCurrentBatch(renderer, out var batch))
@@ -57,20 +57,14 @@ namespace Engine.Rendering
             // Try to find the best batch for the renderer.
             foreach (var batch in _batches)
             {
-                var isMaxSizeEnough = batch.MaxVertexSize >= maxVertexSize;
-                var hasSpaceLeftForAnother = (batch.MaxVertexSize - batch.VertexCount) >= vertexToAdd;
-                var isBatchSizeEnough = isMaxSizeEnough && hasSpaceLeftForAnother;
-                var isSameSortOrder = renderer.SortOrder == batch.SortOrder || batch.SortOrder == int.MinValue;
-                var isValidMaterial = batch.Material == mat || !batch.Material;
-
                 // TODO: find the smallest batch first
-                if (isBatchSizeEnough && ((isValidMaterial && isSameSortOrder) || !batch.IsActive))
+                if (batch.CanPushGeometry(renderer, vertexToAdd, maxVertexSize, texture, mat))
                 {
                     if (selectedBatch == null)
                     {
                         selectedBatch = batch;
                     }
-                    else if ((selectedBatch.MaxVertexSize > batch.MaxVertexSize || selectedBatch.VertexCount > batch.VertexCount)) // Checks if this is a smaller batch that it can fit in
+                    else if (selectedBatch.MaxVertexSize > batch.MaxVertexSize || selectedBatch.VertexCount > batch.VertexCount) // Checks if this is a smaller batch that it can fit in
                     {
                         selectedBatch = batch;
                     }
@@ -123,13 +117,13 @@ namespace Engine.Rendering
         {
             _batches.Sort((x, y) =>
             {
-                if (x.IsActive && !y.IsActive) 
+                if (x.IsActive && !y.IsActive)
                 {
-                    return -1;  
+                    return -1;
                 }
                 if (!x.IsActive && y.IsActive)
                 {
-                    return 1;   
+                    return 1;
                 }
 
                 // If both are active, sort by SortOrder.
@@ -141,6 +135,20 @@ namespace Engine.Rendering
                 // if both are inactive, keep original relative order.
                 return 0;
             });
+
+            var index = _batches.FindIndex(x => !x.IsActive);
+
+            if (index < 0)
+                return;
+
+            var emptyCount = _batches.Count - index;
+
+            if (emptyCount > MaxEmptyBatches)
+            {
+                Debug.Warn("Removed empty batches: " + (emptyCount - MaxEmptyBatches) + ", ValidCount: " + index);
+                var removeCount = emptyCount - MaxEmptyBatches;
+                _batches.RemoveRange(index, removeCount);
+            }
         }
 
         // TODO: Delete all batches that are not being used for too long, and are also big.

@@ -339,37 +339,42 @@ namespace Engine.Rendering
 
         internal bool CanPushGeometry(Renderer2D renderer, int vertexCount, int neededBatchVertexSize, Texture texture, Material mat)
         {
-            _renderers.TryGetValue(renderer.GetID(), out var rendeId);
-            var subsTractVertices = rendeId.VertexCount;
-
             var isMaxSizeEnough = MaxVertexSize >= neededBatchVertexSize;
             var hasSpaceLeftForAnother = (MaxVertexSize - VertexCount) >= vertexCount;
             var isBatchSizeEnough = isMaxSizeEnough && hasSpaceLeftForAnother;
-            var isInvalidSortOrder = renderer.SortOrder != SortOrder || SortOrder != int.MinValue;
-            var isInvalidMaterial = Material != mat || !Material;
+            var isSameSortOrder = renderer.SortOrder == SortOrder || SortOrder == int.MinValue;
+            var isValidMaterial = Material == mat || !Material;
 
-            // return isBatchSizeEnough && ((isValidMaterial && isSameSortOrder) || !IsActive);
+            var isvalidLayout = isBatchSizeEnough && ((isValidMaterial && isSameSortOrder) || !IsActive);
 
-            if (isInvalidSortOrder)
+            if (!isvalidLayout)
             {
                 return false;
             }
-            if (vertexCount + VertexCount - subsTractVertices > MaxVertexSize)
-            {
-                return false;
-            }
-            if (!Material)
-                return true;
+            //if (renderer.SortOrder != SortOrder || SortOrder != int.MinValue)
+            //{
+            //    return false;
+            //}
+            //if (vertexCount + VertexCount - subsTractVertices > MaxVertexSize)
+            //{
+            //    return false;
+            //}
+            //if (!Material)
+            //    return true;
 
-            if (mat != Material)
-                return false;
+            //if (mat != Material)
+            //    return false;
 
             // Also removes the textures from the material to avoid binding more textures than the plaform supports.
-            for (int i = 0; i < Textures.Length - Material.Textures.Count; i++)
+
+            if (Material)
             {
-                if (Textures[i] == null || texture.NativeResource == Textures[i].NativeResource)
+                for (int i = 0; i < Textures.Length - Material.Textures.Count; i++)
                 {
-                    return true;
+                    if (Textures[i] == null || texture.NativeResource == Textures[i].NativeResource)
+                    {
+                        return true;
+                    }
                 }
             }
 

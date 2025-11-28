@@ -134,7 +134,7 @@ namespace Engine.Layers
 
             EngineInfo.Renderer.UIBatches = uiBatchesInfo.BatchesCount;
             EngineInfo.Renderer.UIGrabScreenPass = uiBatchesInfo.ScreenGrabPasses;
-
+            EngineInfo.Renderer.PostProcessingPasses = PostProcessingStack.Passes.Count;
             SceneManager.OnDrawGizmos();
             Debug.DrawGeometries(VP, UICanvas.UIViewProj, sceneRenderTarget.NativeResource);
 #endif

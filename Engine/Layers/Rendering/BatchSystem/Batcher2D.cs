@@ -76,7 +76,7 @@ namespace Engine.Rendering
         }
 
 
-        internal List<Batch2D> GetBatches<T>(List<T> renderers) where T: Renderer2D
+        internal List<Batch2D> GetBatches<T>(List<T> renderers) where T : Renderer2D
         {
             // TODO: Do frustum culling
 
@@ -108,8 +108,6 @@ namespace Engine.Rendering
             // TODO: improve performance of order by sorting, is allocating every frame
             foreach (var bucket in _sortedBuckets)
             {
-                Batch2D currentBatch = null;
-
                 foreach (var renderer in bucket)
                 {
                     renderer.Draw();
@@ -135,10 +133,7 @@ namespace Engine.Rendering
                         var width = (float)chunk.Width / ppu;
                         var height = (float)chunk.Height / ppu;
 
-                        if (!CanPushGeometry(currentBatch, renderer, VerticesPerQuad, MaxBatchVertexSize, texture, material))
-                        {
-                            currentBatch = _batchesPool.Get(renderer, VerticesPerQuad, MaxBatchVertexSize, material);
-                        }
+                        var currentBatch = _batchesPool.Get(renderer, VerticesPerQuad, MaxBatchVertexSize, texture, material);
 
                         QuadVertices quad = default;
                         GraphicsHelper.CreateQuad(ref quad, chunk.Uvs, width, height, chunk.Pivot, renderer.Color, worldMatrix);
@@ -155,13 +150,10 @@ namespace Engine.Rendering
                         // TODO: implement proper mesh drawing, for now, since it is used just for tilemap, this works
                         var vertexCount = Math.Max(MaxBatchVertexSize, renderer.Mesh.Vertices.Count);
 
-                        if (!CanPushGeometry(currentBatch, renderer, vertexCount, MaxBatchVertexSize, texture, material))
+                        if (!_batchesPool.GetCurrentBatch(renderer, out var currentBatch))
                         {
-                            if (!_batchesPool.GetCurrentBatch(renderer, out currentBatch))
-                            {
-                                var indexBufferNew = GraphicsHelper.CreateQuadIndexBuffer(vertexCount / VerticesPerQuad);
-                                currentBatch = _batchesPool.Get(renderer, renderer.Mesh.Vertices.Count, vertexCount, material, indexBufferNew);
-                            }
+                            var indexBufferNew = GraphicsHelper.CreateQuadIndexBuffer(vertexCount / VerticesPerQuad);
+                            currentBatch = _batchesPool.Get(renderer, renderer.Mesh.Vertices.Count, vertexCount, texture, material, indexBufferNew);
                         }
 
                         currentBatch.PushGeometry(renderer, material, texture, renderer.Mesh.IndicesToDrawCount, CollectionsMarshal.AsSpan(renderer.Mesh.Vertices));
@@ -180,11 +172,6 @@ namespace Engine.Rendering
 
             GfxDeviceManager.Current.DestroyResource(_sharedIndexBuffer);
             Initialize();
-        }
-
-        private bool CanPushGeometry(Batch2D currentBatch, Renderer2D renderer, int vertexCount, int maxBatchVertexSize, Texture texture, Material material)
-        {
-            return currentBatch != null && currentBatch.CanPushGeometry(renderer, vertexCount, maxBatchVertexSize, texture, material);
         }
     }
 }
