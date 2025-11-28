@@ -12,6 +12,8 @@ namespace Engine
         internal static WeakReference<Scene> ActiveScene { get; private set; }
         internal static WeakReference<Scene> DontDestroyOnLoadScene { get; private set; }
 
+        private static Scene _activeScene;
+
         private static readonly List<Scene> _scenesToDestroy = new();
         private static readonly List<Scene> _scenes = new();
 
@@ -21,8 +23,9 @@ namespace Engine
             LoadSceneAdditive("DontDestroyOnLoad");
             LoadSceneAdditive("DefaultScene");
 
+            _activeScene = _scenes[1];
             DontDestroyOnLoadScene = new WeakReference<Scene>(_scenes[0]);
-            ActiveScene = new WeakReference<Scene>(_scenes[1]);
+            ActiveScene = new WeakReference<Scene>(_activeScene);
         }
 
         public static void LoadScene(string name)
@@ -32,7 +35,8 @@ namespace Engine
 
             // TODO: Load scene from file (Probably will never be implemented since all scenes are built at runtime, without a editor)
             var scene = new Scene(name);
-            ActiveScene = new WeakReference<Scene>(scene);
+            _activeScene = scene;
+            ActiveScene = new WeakReference<Scene>(_activeScene);
             _scenes.Add(scene);
         }
 
@@ -95,10 +99,7 @@ namespace Engine
 
         internal static void OnCleanUpUpdate()
         {
-            if (ActiveScene.TryGetTarget(out var activeScene))
-            {
-                activeScene.DeletePending();
-            }
+            _activeScene.DeletePending();
 
             foreach (var scene in _scenesToDestroy)
             {
@@ -108,7 +109,7 @@ namespace Engine
             {
                 // Note: this is provisional.
                 // RenderingLayer.Test_ClearBatches();
-                PhysicsLayer.Clear();
+                // PhysicsLayer.Clear();
                 _scenesToDestroy.Clear();
             }
         }

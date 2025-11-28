@@ -117,9 +117,9 @@ namespace Game
             {
                 collider.Actor.Transform.Parent = Transform;
 
-                if(collider.RigidBody.Velocity.y <= 0)
+                if(collider.AttachedRigidbody.Velocity.y <= 0)
                 {
-                    collider.RigidBody.Velocity = new vec2(collider.RigidBody.Velocity.x, 0);
+                    collider.AttachedRigidbody.Velocity = new vec2(collider.AttachedRigidbody.Velocity.x, 0);
                 }
 
 

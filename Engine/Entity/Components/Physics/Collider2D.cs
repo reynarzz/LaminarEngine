@@ -16,7 +16,7 @@ namespace Engine
         , ILateUpdatableComponent
 #endif
     {
-        public RigidBody2D RigidBody { get; internal set; }
+        public RigidBody2D AttachedRigidbody { get; internal set; }
 
         private float _rotationOffset;
         public float RotationOffset
@@ -38,6 +38,7 @@ namespace Engine
         internal B2ShapeId[] ShapesId => _shapesID;
         private B2Filter _defaultFilter = new B2Filter(B2Constants.B2_DEFAULT_CATEGORY_BITS,
                                                        B2Constants.B2_DEFAULT_MASK_BITS, 0);
+        private B2BodyId _defaultBody;
 
         public override bool IsEnabled
         {
@@ -46,6 +47,17 @@ namespace Engine
             {
                 var canChange = value != base.IsEnabled;
                 base.IsEnabled = value;
+                if (B2Worlds.b2Body_IsValid(_defaultBody))
+                {
+                    if (value)
+                    {
+                        B2Bodies.b2Body_Enable(_defaultBody);
+                    }
+                    else
+                    {
+                        B2Bodies.b2Body_Disable(_defaultBody);
+                    }
+                }
 
                 if (canChange && AreShapesValid())
                 {
@@ -71,27 +83,32 @@ namespace Engine
             }
         }
 
-
         public bool IsTrigger
         {
             get => _isTrigger;
             set
             {
+                _isTrigger = value;
+
                 if (/*_isTrigger == value ||*/ !AreShapesValid())
                 {
                     return;
                 }
 
-                _isTrigger = value;
                 var world = B2Worlds.b2GetWorldFromId(PhysicWorld.WorldID);
 
                 var success = ApplyToShapesSafe(shapeid =>
                 {
                     B2Shapes.b2Shape_EnableSensorEvents(shapeid, value);
                     B2Shapes.b2Shape_EnableContactEvents(shapeid, !value);
-                    _shapeDef.isSensor = value;
 
                     var shape = B2Shapes.b2GetShape(world, shapeid);
+                    if (_shapeDef.isSensor)
+                    {
+                        B2Sensors.b2DestroySensor(PhysicWorld.World, shape);
+                    }
+
+                    _shapeDef.isSensor = value;
 
                     if (value)
                     {
@@ -106,34 +123,37 @@ namespace Engine
                             overlaps2 = B2Arrays.b2Array_Create<B2Visitor>(16),
                             shapeId = shape.id
                         };
-
                         B2Arrays.b2Array_Push(ref world.sensors, sensor);
                     }
                     else
                     {
                         shape.sensorIndex = B2Constants.B2_NULL_INDEX;
                     }
+
                 });
             }
         }
 
+        private float _friction;
         public float Friction
         {
             get => AreShapesValid() ? B2Shapes.b2Shape_GetFriction(_shapesID[0]) : -1;
             set
             {
+                _friction = value;
                 ApplyToShapesSafe(shape =>
                 {
                     B2Shapes.b2Shape_SetFriction(shape, value);
                 });
             }
         }
-
+        private float _bounciness;
         public float Bounciness
         {
             get => AreShapesValid() ? B2Shapes.b2Shape_GetRestitution(_shapesID[0]) : -1;
             set
             {
+                _bounciness = value;
                 ApplyToShapesSafe(shape =>
                 {
                     B2Shapes.b2Shape_SetRestitution(shape, value);
@@ -177,8 +197,13 @@ namespace Engine
 
         protected override void OnAwake()
         {
-            RigidBody = GetComponentInParents<RigidBody2D>();
+            AttachedRigidbody = GetComponentInParents<RigidBody2D>();
+            Transform.OnChanged += Transform_OnChanged;
+            Create();
+        }
 
+        internal void Create()
+        {
             _shapeDef = new B2ShapeDef()
             {
                 enableContactEvents = true,
@@ -186,7 +211,7 @@ namespace Engine
                 enableSensorEvents = true,
                 // enablePreSolveEvents = false,
                 invokeContactCreation = true,
-                isSensor = false,
+                isSensor = _isTrigger,
                 density = 1,
                 updateBodyMass = true,
                 material = B2Types.b2DefaultSurfaceMaterial(),
@@ -196,24 +221,51 @@ namespace Engine
                 enableCustomFiltering = true
             };
 
-            Create();
+            if (IsEnabled)
+            {
+                if (AttachedRigidbody)
+                {
+                    if (B2Worlds.b2Body_IsValid(_defaultBody))
+                    {
+                        B2Bodies.b2Body_Disable(_defaultBody);
+                    }
+                    AddShapesToBody(AttachedRigidbody.BodyId);
+                    AttachedRigidbody.UpdateBody();
+                }
+                else
+                {
+                    CreateDefaultBody();
+                    AddShapesToBody(_defaultBody);
+                }
+            }
         }
 
-        internal void Create()
+        private void CreateDefaultBody()
         {
-            if (IsEnabled && RigidBody)
-            {
-                DestroyShape();
-                _shapesID = CreateShape(RigidBody.BodyId);
-                RigidBody.UpdateBody();
-            }
+            var bodyDef = B2Types.b2DefaultBodyDef();
+            bodyDef.type = B2BodyType.b2_staticBody;
+            bodyDef.position = Transform.WorldPosition.ToB2Vec2();
+            bodyDef.rotation = Transform.WorldRotation.QuatToB2Rot();
+            bodyDef.name = GetID().ToString();
+            bodyDef.isBullet = false;
+            bodyDef.isAwake = true;
+            bodyDef.isEnabled = true;
+            bodyDef.gravityScale = 1;
+            bodyDef.enableSleep = false;
+            _defaultBody = B2Bodies.b2CreateBody(PhysicWorld.WorldID, ref bodyDef);
+        }
+
+        private void AddShapesToBody(B2BodyId body)
+        {
+            DestroyShape();
+            _shapesID = CreateShape(body);
         }
 
         protected abstract B2ShapeId[] CreateShape(B2BodyId bodyId);
         protected abstract void UpdateShape();
         protected void UpdateShapeSafe()
         {
-            if(ShapesId != null && RigidBody)
+            if (ShapesId != null && (AttachedRigidbody || B2Worlds.b2Body_IsValid(_defaultBody)))
             {
                 UpdateShape();
             }
@@ -248,14 +300,24 @@ namespace Engine
         protected internal override void OnDestroy()
         {
             base.OnDestroy();
-            if (RigidBody != null)
+            if (AttachedRigidbody != null)
             {
                 PhysicsLayer.ContactsDispatcher.NotifyColliderToRemove(this);
-                RigidBody = null;
+                AttachedRigidbody = null;
             }
             DestroyShape();
+            B2Bodies.b2DestroyBody(_defaultBody);
 
+            Transform.OnChanged -= Transform_OnChanged;
             _shapeDef = default;
+        }
+
+        private void Transform_OnChanged(Transform transform)
+        {
+            if (B2Worlds.b2Body_IsValid(_defaultBody) && B2Bodies.b2Body_IsEnabled(_defaultBody))
+            {
+                B2Bodies.b2Body_SetTransform(_defaultBody, transform.WorldPosition.ToB2Vec2(), transform.WorldRotation.QuatToB2Rot());
+            }
         }
 
         private void DestroyShape()
@@ -267,7 +329,7 @@ namespace Engine
             {
                 if (B2Worlds.b2Shape_IsValid(_shapesID[i]))
                 {
-                    var autoMass = RigidBody ? RigidBody.IsAutoMass : false;
+                    var autoMass = AttachedRigidbody ? AttachedRigidbody.IsAutoMass : false;
                     B2Shapes.b2DestroyShape(_shapesID[i], autoMass);
                     _shapesID[i] = default;
                 }
@@ -286,12 +348,16 @@ namespace Engine
                     B2Shapes.b2Shape_SetFilter(shape, _defaultFilter);
                 });
             }
+
+            if (B2Worlds.b2Body_IsValid(_defaultBody))
+            {
+                B2Bodies.b2Body_Enable(_defaultBody);
+            }
         }
 
         public override void OnDisabled()
         {
             base.OnDisabled();
-
 
             if (IsEnabled && AreShapesValid())
             {
@@ -299,6 +365,11 @@ namespace Engine
                 {
                     B2Shapes.b2Shape_SetFilter(shape, default);
                 });
+            }
+
+            if (B2Worlds.b2Body_IsValid(_defaultBody))
+            {
+                B2Bodies.b2Body_Disable(_defaultBody);
             }
         }
 #if DEBUG

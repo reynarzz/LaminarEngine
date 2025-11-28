@@ -135,6 +135,14 @@ namespace Engine
             Actor.GetComponentsInParent(ref elements);
         }
 
+        public Span<T> GetComponentsInParents<T>() where T : class
+        {
+            var elements = new List<T>();
+            CheckIfValidObject(this);
+            Actor.GetComponentsInParent(ref elements);
+            return CollectionsMarshal.AsSpan(elements);
+        }
+
         public T GetComponentInParents<T>() where T : class
         {
             CheckIfValidObject(this);

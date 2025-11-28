@@ -20,7 +20,7 @@ namespace Game
         // Bake tilemaps in binary file, the geometry should be already converted to the memory layout of the vertex array.
         // Why is creating new batches?
         // When a renderer is disabled and enabled, it will search for the first available one, it could find a huge batch reserved for another.So i have to search for the smallest, sameSort(if possible) valid one that a renderer fits in.
-
+        // Collider: Bounciness and other properties could not be set properly if set in the awake function.
 
         // For the game:
         // game UI architecture

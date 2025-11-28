@@ -19,7 +19,7 @@ namespace Game
             _collider.IsTrigger = true;
             _collider.Radius = 5;
         }
-
+     
         protected override void OnTriggerStay2D(Collider2D collider)
         {
             if (collider.Actor.Layer == LayerMask.NameToLayer(GameConsts.PLAYER)) 
