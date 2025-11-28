@@ -17,7 +17,7 @@ namespace Engine
         private readonly OrderedDictionary<string, Texture> _textures;
         internal OrderedDictionary<string, Texture> Textures => _textures;
         public Shader Shader { get; }
-        public Material(Shader shader) : base("Material")
+        public Material(string name, Shader shader) : base(name)
         {
             Shader = shader;
             _textures = new();
@@ -25,6 +25,9 @@ namespace Engine
             {
                 new RenderPass(shader)
             };
+        }
+        public Material(Shader shader) : this("Material", shader)
+        {
         }
 
         public RenderPass PushPass(Shader shader)

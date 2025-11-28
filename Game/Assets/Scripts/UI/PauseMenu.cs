@@ -28,7 +28,7 @@ namespace Game
         private List<UIGraphicsElement> _graphics = new();
 
         private static Material _backgroundMat;
-
+        private static int _matCount = 0;
         protected override void OnAwake()
         {
             _canvas = new Actor<AudioSource>("Pause menu Canvas").AddComponent<UICanvas>();
@@ -59,8 +59,8 @@ namespace Game
             _titleText.Fit = TextFit.ExpandToFit;
             _titleText.Vertical =  TextVerticalAlignment.Center;
 
-            // TODO: The renderer has triggers a problem with this line.
-            _titleText.Material = new Material(new Shader(Assets.GetText("Shaders/Font/FontVert.vert").Text, Assets.GetText("Shaders/Font/FontFrag.frag").Text));
+            // TODO: The renderer has a problem with this line.
+            _titleText.Material = new Material("Title Material: " + (_matCount++), new Shader(Assets.GetText("Shaders/Font/FontVert.vert").Text, Assets.GetText("Shaders/Font/FontFrag.frag").Text));
             //-- _titleText.Material = MaterialUtils.FontMaterial; // Use this instead
 
             var buttonSlice = GameTextureAtlases.GetAtlas("ui_buttons_long");
@@ -110,7 +110,7 @@ namespace Game
 
         private void Inventory()
         {
-            _inventory = new Actor<UIElement, ContentSizeFitter>().GetComponent<UIElement>();
+            _inventory = new Actor<UIElement, ContentSizeFitter>("Inventory").GetComponent<UIElement>();
             _inventory.Transform.Parent = _background.Transform;
             _inventory.Transform.LocalPosition = new vec3(0, 298);
 
@@ -166,7 +166,7 @@ namespace Game
 
             for (int i = 0; i < 19; i++)
             {
-                NewImage("Quad2", default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
+                NewImage("IQuad: " + i, default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
 
             }
             fitter.ResizeToFitChildren();

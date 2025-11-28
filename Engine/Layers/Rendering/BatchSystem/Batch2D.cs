@@ -130,7 +130,7 @@ namespace Engine.Rendering
                 Textures[i] = null;
             }
 
-            SendGeometryUpdate();
+           // SendGeometryUpdate();
         }
 
         internal void PushGeometry(Renderer renderer, Material material, Texture texture, int indicesCount, Span<Vertex> vertices)
@@ -339,6 +339,8 @@ namespace Engine.Rendering
             {
                 return false;
             }
+            if (!Material)
+                return true;
 
             if (mat != Material)
                 return false;

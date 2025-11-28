@@ -108,7 +108,9 @@ namespace Engine.Graphics.OpenGL
         {
             if (IsInitialized)
             {
+#if SHOW_ENGINE_MESSAGES
                 Debug.Warn("Free gfx resource: " + GetType().Name);
+#endif
                 DestroyHandle();
                 IsInitialized = false;
             }

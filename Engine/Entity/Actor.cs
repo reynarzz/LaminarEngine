@@ -77,12 +77,12 @@ namespace Engine
         private static readonly Action<ILateUpdatableComponent> _lateUpdateAction = x => x.OnLateUpdate();
         private static readonly Action<IDrawableGizmo> _drawGizmoUpdateAction = x => x.OnDrawGizmo();
         private static readonly Action<IFixedUpdatableComponent> _fixedUpdateAction = x => x.OnFixedUpdate();
-        
+
         private static readonly Func<Actor, List<IComponent>> _getAwakePending = a => a._onAwakePendingComponents;
         private static readonly Func<Actor, List<IComponent>> _getEnablePending = a => a._onEnablePendingComponents;
         private static readonly Func<Actor, List<IComponent>> _getStartPending = a => a._onStartPendingComponents;
 
-     
+
         public Actor() : this(string.Empty, string.Empty)
         {
         }
@@ -135,7 +135,7 @@ namespace Engine
                     var alreadyAdded = _components[i].GetType().IsAssignableFrom(type);
                     if (alreadyAdded)
                     {
-#if SHOW_ENGINE_WARNS
+#if SHOW_ENGINE_MESSAGES
                         Debug.Warn($"Can't add component of type '{type.Name}', it should only appear once in an Actor. This will return the current one.");
 #endif
                         return _components[i];
@@ -172,7 +172,7 @@ namespace Engine
             var component = Activator.CreateInstance(type) as Component;
             component.Actor = this;
             _components.Add(component);
-            
+
             if (component is IStartableComponent start)
             {
                 _onStartPendingComponents.Add(start);
@@ -596,6 +596,12 @@ namespace Engine
 
         internal void DeletePending()
         {
+            // Check if a child asked to be removed.
+            for (int i = 0; i < Transform.Children.Count; i++)
+            {
+                Transform.Children[i].Actor.DeletePending();
+            }
+
             if (IsPendingToDestroy)
             {
                 void OnDestroyEventNotify(Actor actor)
@@ -604,18 +610,7 @@ namespace Engine
                        (also transform's onChange event will not be cleared)*/
                     for (int i = actor._components.Count - 1; i >= 0; i--)
                     {
-#if DEBUG
-                        try
-                        {
-                            actor._components[i].OnDestroy();
-                        }
-                        catch (Exception e)
-                        {
-                            Debug.Error(e);
-                        }
-#else
-                        actor._components[i].OnDestroy();
-#endif
+                        CallOnDestroyComponent(actor._components[i]);
                     }
 
                     // Notify children components
@@ -654,34 +649,39 @@ namespace Engine
                 for (int i = _pendingToDeleteComponents.Count - 1; i >= 0; --i)
                 {
                     var component = _pendingToDeleteComponents[i];
-#if DEBUG
-                    try
-                    {
-                        if (component != null)
-                        {
-                            component.OnDestroy();
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Debug.Error(e);
-                    }
-#else
-                    if (component != null)
-                    {
-                        component.OnDestroy();
-                    }
-#endif
+                    CallOnDestroyComponent(component);
                     DestroyComponentNoNotify(component);
                 }
 
                 _pendingToDeleteComponents.Clear();
             }
 
-            // Check if a child ask to be removed.
-            for (int i = 0; i < Transform.Children.Count; i++)
+            void CallOnDestroyComponent(Component component)
             {
-                Transform.Children[i].Actor.DeletePending();
+                void CallOnDestroy()
+                {
+                    if (component == null)
+                        return;
+                    Debug.Log("Destroy component: " + component.GetType().Name + ", Actor: " + component.Actor.Name);
+
+                    if (component.IsEnabled)
+                    {
+                        component.OnDisabled();
+                    }
+                    component.OnDestroy();
+                }
+#if DEBUG
+                try
+                {
+                    CallOnDestroy();
+                }
+                catch (Exception e)
+                {
+                    Debug.Error(e);
+                }
+#else
+                CallOnDestroy();
+#endif
             }
         }
         internal void RecalculateHierarchyActivation()
@@ -700,15 +700,20 @@ namespace Engine
             UpdateActiveInHierarchy(this);
         }
 
-        public void OnDestroy()
+        protected internal override void OnDestroy()
         {
+            base.OnDestroy();
+
+            for (int i = 0; i < Transform.Children.Count; i++)
+            {
+                Transform.Children[i].Actor.OnDestroy();
+            }
 
             foreach (var component in _components)
             {
                 AddToDestroyList(component);
             }
         }
-
     }
 
     public class Actor<T1> : Actor where T1 : Component
