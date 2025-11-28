@@ -275,7 +275,7 @@ namespace Game
 
         private void Canvas()
         {
-            var canvas = new Actor("Canvas").AddComponent<UICanvas>();
+            var canvas = new Actor("Canvas Health").AddComponent<UICanvas>();
 
             //var text = new Actor("Text test").AddComponent<UIText>();
             //text.Transform.Parent = canvas.Transform;
@@ -305,7 +305,7 @@ namespace Game
             float uiMult = 3;
             var lifebarSprites = GameTextureAtlases.GetAtlas("health_bar_frame");
             var lifeBar = Image("Life bar", new vec2(10, 10), new vec2(143, 34) * uiMult, lifebarSprites[3], canvas.Transform);
-
+            Debug.Warn("Is texture alive: " + sprites[0].Texture.IsAliveTex());
             Image("Heart1", new vec2(56, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);
             Image("Heart2", new vec2(88, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);
             Image("Heart3", new vec2(120, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);

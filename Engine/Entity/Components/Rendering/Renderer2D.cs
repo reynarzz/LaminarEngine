@@ -8,18 +8,30 @@ namespace Engine
 {
     public abstract class Renderer2D : Renderer
     {
-        public int SortOrder { get; set; } = 0;
+        private int _sortingOrder = 0;
+        public int SortOrder
+        {
+            get => _sortingOrder;
+            set
+            {
+                if (_sortingOrder == value)
+                    return;
+
+                _sortingOrder = value;
+                IsDirty = true;
+            }
+        }
         private uint _colorpacket = Color.White;
         public Color Color
         {
-            get => _colorpacket; 
+            get => _colorpacket;
             set
             {
-                if(_colorpacket == value)
+                if (_colorpacket == value)
                 {
                     return;
                 }
-                _colorpacket = value; 
+                _colorpacket = value;
                 IsDirty = true;
             }
         }
@@ -30,7 +42,7 @@ namespace Engine
             get => _sprite;
             set
             {
-                if(_sprite != null && _sprite.Equals(value))
+                if (_sprite != null && _sprite.Equals(value))
                     return;
 
                 IsDirty = true;

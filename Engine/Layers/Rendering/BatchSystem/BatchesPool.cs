@@ -69,7 +69,7 @@ namespace Engine.Rendering
                     {
                         selectedBatch = batch;
                     }
-                    else if ((selectedBatch.MaxVertexSize > batch.MaxVertexSize || selectedBatch.VertexCount > batch.VertexCount)) // Checks if this is a smaller batch that it can fit
+                    else if ((selectedBatch.MaxVertexSize > batch.MaxVertexSize || selectedBatch.VertexCount > batch.VertexCount)) // Checks if this is a smaller batch that it can fit in
                     {
                         selectedBatch = batch;
                     }
@@ -85,7 +85,8 @@ namespace Engine.Rendering
                 }
                 else
                 {
-                    Debug.Log("Found existing batch for: " + renderer.Name);
+                    Debug.Log("Found existing batch for: " + renderer.Name + ", Batch: Sorting: " + selectedBatch.SortOrder);
+                    SortBatches();
                 }
 
                 return selectedBatch;

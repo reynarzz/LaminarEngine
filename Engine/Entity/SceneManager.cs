@@ -30,7 +30,7 @@ namespace Engine
 
         public static void LoadScene(string name)
         {
-            PrintActorsInScene(_activeScene);
+            // PrintActorsInScene(_activeScene);
             ClearScenes();
             OnCleanUpUpdate();
 
@@ -57,7 +57,7 @@ namespace Engine
             {
                 Actors(_activeScene.RootActors[i]);
             }
-            
+
         }
         private static void ClearScenes()
         {

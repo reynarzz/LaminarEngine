@@ -36,11 +36,14 @@ namespace Engine
             NativeResource = nativeResource;
         }
 
-        public void OnDestroy()
+        protected internal override void OnDestroy()
         {
             NativeResource.Dispose();
         }
-
+        public bool IsAliveTex()
+        {
+            return GfxDeviceManager.Current.IsResourceValid(NativeResource);
+        }
         protected abstract IResourceHandle Create();
     }
 }
