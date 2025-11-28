@@ -223,12 +223,13 @@ namespace Engine
 
             if (IsEnabled)
             {
+                if (B2Worlds.b2Body_IsValid(_defaultBody))
+                {
+                    B2Bodies.b2DestroyBody(_defaultBody);
+                }
+
                 if (AttachedRigidbody)
                 {
-                    if (B2Worlds.b2Body_IsValid(_defaultBody))
-                    {
-                        B2Bodies.b2Body_Disable(_defaultBody);
-                    }
                     AddShapesToBody(AttachedRigidbody.BodyId);
                     AttachedRigidbody.UpdateBody();
                 }
@@ -313,6 +314,7 @@ namespace Engine
                 B2Bodies.b2DestroyBody(_defaultBody);
             }
 
+            _defaultBody = default;
             _shapeDef = default;
         }
 
