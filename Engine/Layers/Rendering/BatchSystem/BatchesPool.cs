@@ -26,7 +26,7 @@ namespace Engine.Rendering
             {
                 if (batch.Contains(renderer))
                 {
-                    if(batch.SortOrder == renderer.SortOrder)
+                    if (batch.SortOrder == renderer.SortOrder)
                     {
                         batchOut = batch;
                         return true;
@@ -102,7 +102,6 @@ namespace Engine.Rendering
             return newBatch;
         }
 
-        // Maybe the problem is the order that the batches are being rendered.
         private void OnBatchEmpty(Batch2D batch)
         {
             // Moves empty batch, and puts it to the end.
@@ -117,19 +116,27 @@ namespace Engine.Rendering
                 Debug.EngineError("Could not remove batch");
             }
         }
-        
+
         private void SortBatches()
         {
             _batches.Sort((x, y) =>
             {
-                if (x.IsActive && !y.IsActive) return -1;  // x first
-                if (!x.IsActive && y.IsActive) return 1;   // y first
+                if (x.IsActive && !y.IsActive) 
+                {
+                    return -1;  
+                }
+                if (!x.IsActive && y.IsActive)
+                {
+                    return 1;   
+                }
 
-                // Both active → sort by SortOrder
+                // If both are active, sort by SortOrder.
                 if (x.IsActive && y.IsActive)
+                {
                     return x.SortOrder.CompareTo(y.SortOrder);
+                }
 
-                // Both inactive → keep original relative order (stable behavior)
+                // if both are inactive, keep original relative order.
                 return 0;
             });
         }

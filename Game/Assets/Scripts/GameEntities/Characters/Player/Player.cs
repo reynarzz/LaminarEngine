@@ -200,10 +200,9 @@ namespace Game
                                            LayerMask.NameToBit(GameConsts.PLATFORM);
             bullet.Shoot(origin, vec2.Right * LookDir, _bulletSpeed, mask);
             return true;
-        }
+        } 
         protected override void OnFixedUpdate()
         {
-
             base.OnFixedUpdate();
         }
 

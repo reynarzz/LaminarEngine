@@ -350,7 +350,7 @@ namespace Game
                 Window.FullScreen(!Window.IsFullScreen);
                 // Window.MouseVisible = !Window.IsFullScreen;
             }
-
+             
             if (Input.GetKeyDown(KeyCode.Enter))
             {
                 _pauseMenu.OnPause();
@@ -362,7 +362,7 @@ namespace Game
                 new Actor<GameManager>("GameManager");
             }
         }
-
+         
         private void ParticleSystem()
         {
             var particleSystem = new Actor<ParticleSystem2D, Move>("ParticleSystem").GetComponent<ParticleSystem2D>();

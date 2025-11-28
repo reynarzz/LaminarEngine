@@ -39,7 +39,7 @@ namespace Game
 
                 return collectible;
             }
-
+             
             public static Chest InstantiateChest(vec2 position, ChestData data)
             {
                 var chest = new Actor("Chest").AddComponent<Chest>();
