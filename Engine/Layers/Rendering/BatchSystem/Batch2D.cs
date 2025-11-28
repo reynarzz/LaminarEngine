@@ -130,7 +130,7 @@ namespace Engine.Rendering
                 Textures[i] = null;
             }
 
-           // SendGeometryUpdate();
+            SendGeometryUpdate();
         }
 
         internal void PushGeometry(Renderer renderer, Material material, Texture texture, int indicesCount, Span<Vertex> vertices)
@@ -169,6 +169,7 @@ namespace Engine.Rendering
             {
                 rendererIds.VertexCount = vertices.Length;
                 rendererIds.IndexCount = indicesCount;
+                rendererIds.TextureId = textureIndex; // added recently, if causes problems remove
                 _renderers[renderer.GetID()] = rendererIds;
 
                 startIndex = rendererIds.RendererId;
@@ -204,10 +205,13 @@ namespace Engine.Rendering
         public void RemoveRenderer(Renderer renderer)
         {
             renderer.OnDestroyRenderer -= _onRendererDestroyHandler;
-
+            Debug.Log("Remove renderer from batch: " + renderer.Name);
             // If renderer doesn't exist, do nothing
             if (!_renderers.TryGetValue(renderer.GetID(), out var removedInfo))
+            {
+                Debug.EngineError("Wrong batch for renderer: " + renderer.Name);
                 return;
+            }
 
             int removedVertexStart = removedInfo.RendererId;
             int removedTextureId = removedInfo.TextureId;
@@ -230,7 +234,6 @@ namespace Engine.Rendering
             _isDirty = true;
 
             _renderers.Remove(renderer.GetID());
-
             if (_renderers.Count == 0)
             {
                 if (removedTextureId >= 0 && removedTextureId < Textures.Length)
@@ -257,8 +260,9 @@ namespace Engine.Rendering
                         Textures.Length - (removedTextureId + 1)
                     );
                 }
+                var renderers = _renderers.Keys.ToList();
 
-                foreach (var key in _renderers.Keys.ToList())
+                foreach (var key in renderers)
                 {
                     var info = _renderers[key];
 
@@ -267,9 +271,13 @@ namespace Engine.Rendering
                         info.TextureId--;
                         _renderers[key] = info;
 
-                        // Update vertex data texture index for first vertex of the renderer
-                        if (info.RendererId < _verticesData.Length)
-                            _verticesData[info.RendererId].TextureIndex = info.TextureId;
+                        // if (info.RendererId < _verticesData.Length)
+                        {
+                            for (int i = 0; i < info.VertexCount; i++)
+                            {
+                                _verticesData[info.RendererId + i].TextureIndex = info.TextureId;
+                            }
+                        }
                     }
                 }
             }
@@ -329,12 +337,23 @@ namespace Engine.Rendering
             GfxDeviceManager.Current.UpdateGeometry(Geometry, _geoDescriptor);
         }
 
-        internal bool CanPushGeometry(Renderer renderer, int vertexCount, Texture texture, Material mat)
+        internal bool CanPushGeometry(Renderer2D renderer, int vertexCount, int neededBatchVertexSize, Texture texture, Material mat)
         {
-            var subsTractVertices = 0;
             _renderers.TryGetValue(renderer.GetID(), out var rendeId);
-            subsTractVertices = rendeId.VertexCount;
+            var subsTractVertices = rendeId.VertexCount;
 
+            var isMaxSizeEnough = MaxVertexSize >= neededBatchVertexSize;
+            var hasSpaceLeftForAnother = (MaxVertexSize - VertexCount) >= vertexCount;
+            var isBatchSizeEnough = isMaxSizeEnough && hasSpaceLeftForAnother;
+            var isInvalidSortOrder = renderer.SortOrder != SortOrder || SortOrder != int.MinValue;
+            var isInvalidMaterial = Material != mat || !Material;
+
+            // return isBatchSizeEnough && ((isValidMaterial && isSameSortOrder) || !IsActive);
+
+            if (isInvalidSortOrder)
+            {
+                return false;
+            }
             if (vertexCount + VertexCount - subsTractVertices > MaxVertexSize)
             {
                 return false;

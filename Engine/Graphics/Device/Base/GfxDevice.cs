@@ -35,5 +35,6 @@ namespace Engine.Graphics
 
         internal abstract byte[] ReadRenderTargetColors(GfxResource nativeResource);
         internal abstract void DestroyResource(GfxResource resource);
+        internal abstract bool IsResourceValid(GfxResource nativeResource);
     }
 }

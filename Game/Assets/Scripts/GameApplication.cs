@@ -15,11 +15,12 @@ namespace Game
         // Avoid the batch to take more texture slots that the system is supported, take into account materials texture count.
         // Fix: Batch2d vertices shift when an object is destroyed. 
         // Fix: Texture units overflow, a batch should only bind: MAX_DEVICE_ALLOWED - RENDERER_NEEDED_TEXTURE_SLOTS
-        // Fix: Can't change renderer sorting after is in a batch.
+        // Fix: Can't change renderer sorting properly after is in a batch, it doesnt get deleted from previous batch.
         // Implement:scroll list 
         // Bake tilemaps in binary file, the geometry should be already converted to the memory layout of the vertex array.
-        // Why is creating new batches? this is due to new materials, but again, why batches are not re used since the batch material is being reset?
         // When a renderer is disabled and enabled, it will search for the first available one, it could find a huge batch reserved for another.So i have to search for the smallest, sameSort(if possible) valid one that a renderer fits in.
+        // Investigate why ui textures are not showing up correctly
+
 
         // For the game:
         // game UI architecture

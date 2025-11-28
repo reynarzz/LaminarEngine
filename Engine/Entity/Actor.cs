@@ -662,8 +662,9 @@ namespace Engine
                 {
                     if (component == null)
                         return;
+#if SHOW_ENGINE_MESSAGES
                     Debug.Log("Destroy component: " + component.GetType().Name + ", Actor: " + component.Actor.Name);
-
+#endif
                     if (component.IsEnabled)
                     {
                         component.OnDisabled();

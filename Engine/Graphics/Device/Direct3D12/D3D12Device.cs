@@ -109,5 +109,10 @@ namespace Engine.Graphics
         {
             throw new NotImplementedException();
         }
+
+        internal override bool IsResourceValid(GfxResource nativeResource)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

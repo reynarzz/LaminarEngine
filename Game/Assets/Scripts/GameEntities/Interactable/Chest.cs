@@ -23,8 +23,14 @@ namespace Game
         {
             base.OnAwake();
             BoxCollider.Size = new vec2(1.7f, BoxCollider.Size.y);
-            SpriteRenderer.SortOrder = GameConsts.ChestRenderSorting;
             SpriteRenderer.Material = MaterialUtils.SpriteMaterial;
+        }
+
+        protected override void OnStart()
+        {
+            base.OnStart();
+
+            SpriteRenderer.SortOrder = GameConsts.ChestRenderSorting;
         }
 
         public override void Init(ChestData data)
@@ -68,6 +74,16 @@ namespace Game
             SpriteRenderer.Sprite = GameTextureAtlases.GetAtlas(idleAtlasId)[0];
         }
 
+        protected override void OnUpdate()
+        {
+            base.OnUpdate();
+
+            if (Input.GetKeyDown(KeyCode.J))
+            {
+                Debug.Log("Change sorting");
+                SpriteRenderer.SortOrder = SpriteRenderer.SortOrder == 0? 3: 0;
+            }
+        }
         public override bool TryInteract(Player player)
         {
             if (!_isOpened && CanInteract(player))

@@ -289,5 +289,10 @@ namespace Engine.Graphics.OpenGL
                 resource.Dispose();
             }
         }
+
+        internal override bool IsResourceValid(GfxResource nativeResource)
+        {
+            return nativeResource.IsInitialized;
+        }
     }
 }
