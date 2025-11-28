@@ -223,12 +223,13 @@ namespace Engine
 
             if (IsEnabled)
             {
+                if (B2Worlds.b2Body_IsValid(_defaultBody))
+                {
+                    B2Bodies.b2DestroyBody(_defaultBody);
+                }
+
                 if (AttachedRigidbody)
                 {
-                    if (B2Worlds.b2Body_IsValid(_defaultBody))
-                    {
-                        B2Bodies.b2Body_Disable(_defaultBody);
-                    }
                     AddShapesToBody(AttachedRigidbody.BodyId);
                     AttachedRigidbody.UpdateBody();
                 }
@@ -300,15 +301,20 @@ namespace Engine
         protected internal override void OnDestroy()
         {
             base.OnDestroy();
-            if (AttachedRigidbody != null)
+            Transform.OnChanged -= Transform_OnChanged;
+
+            // if (AttachedRigidbody != null)
             {
                 PhysicsLayer.ContactsDispatcher.NotifyColliderToRemove(this);
                 AttachedRigidbody = null;
             }
             DestroyShape();
-            B2Bodies.b2DestroyBody(_defaultBody);
+            if (B2Worlds.b2Body_IsValid(_defaultBody))
+            {
+                B2Bodies.b2DestroyBody(_defaultBody);
+            }
 
-            Transform.OnChanged -= Transform_OnChanged;
+            _defaultBody = default;
             _shapeDef = default;
         }
 
