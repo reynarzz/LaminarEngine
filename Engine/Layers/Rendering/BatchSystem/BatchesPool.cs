@@ -33,6 +33,7 @@ namespace Engine.Rendering
                     }
                     else
                     {
+                        Debug.Warn($"Changed sorting: from {batch.SortOrder}, to: {renderer.SortOrder}" + renderer.Name);
                         batch.RemoveRenderer(renderer);
                         return false;
                     }

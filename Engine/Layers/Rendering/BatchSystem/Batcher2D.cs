@@ -182,7 +182,7 @@ namespace Engine.Rendering
             Initialize();
         }
 
-        private bool CanPushGeometry(Batch2D currentBatch, Renderer renderer, int vertexCount, Texture texture, Material material)
+        private bool CanPushGeometry(Batch2D currentBatch, Renderer2D renderer, int vertexCount, Texture texture, Material material)
         {
             return currentBatch != null && currentBatch.CanPushGeometry(renderer, vertexCount, texture, material);
         }

@@ -81,7 +81,7 @@ namespace Game
             if (Input.GetKeyDown(KeyCode.J))
             {
                 Debug.Log("Change sorting");
-                SpriteRenderer.SortOrder = 0;
+                SpriteRenderer.SortOrder = SpriteRenderer.SortOrder == 0? 3: 0;
             }
         }
         public override bool TryInteract(Player player)
