@@ -26,6 +26,9 @@ namespace Game
         private AudioClip _buttonAudioClip;
         private AudioClip _pauseAudioClip;
         private List<UIGraphicsElement> _graphics = new();
+
+        private static Material _backgroundMat;
+
         protected override void OnAwake()
         {
             _canvas = new Actor<AudioSource>("Pause menu Canvas").AddComponent<UICanvas>();
@@ -39,18 +42,26 @@ namespace Game
             _background = NewImage("Background", backSize * 0.5f, backSize, Color.White, _canvas.Transform);
             _background.BlockEvents = true;
             _background.ReceiveEvents = true;
-            _background.Material = new Material(new Shader(Assets.GetText("Shaders/VertScreenGrab.vert").Text, Assets.GetText("Shaders/GrayScale.frag").Text));
+
+            if (!_backgroundMat)
+            {
+                _backgroundMat = new Material(new Shader(Assets.GetText("Shaders/VertScreenGrab.vert").Text, Assets.GetText("Shaders/GrayScale.frag").Text));
+            }
+
+            _background.Material = _backgroundMat;
             _background.Material.GetPass(0).IsScreenGrabPass = true;
 
             Inventory();
-            var fontMat = new Material(new Shader(Assets.GetText("Shaders/Font/FontVert.vert").Text, Assets.GetText("Shaders/Font/FontFrag.frag").Text));
 
             // Title text
             _titleText = NewText("Title text", "Pause", new vec2(0, -110), _background.Transform);
             _titleText.FontSize = 70;
             _titleText.Fit = TextFit.ExpandToFit;
             _titleText.Vertical =  TextVerticalAlignment.Center;
-            _titleText.Material = fontMat;
+
+            // TODO: The renderer has triggers a problem with this line.
+            _titleText.Material = new Material(new Shader(Assets.GetText("Shaders/Font/FontVert.vert").Text, Assets.GetText("Shaders/Font/FontFrag.frag").Text));
+            //-- _titleText.Material = MaterialUtils.FontMaterial; // Use this instead
 
             var buttonSlice = GameTextureAtlases.GetAtlas("ui_buttons_long");
 

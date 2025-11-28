@@ -109,7 +109,7 @@ namespace Engine
             {
                 // Note: this is provisional.
                 // RenderingLayer.Test_ClearBatches();
-                // PhysicsLayer.Clear();
+                PhysicsLayer.Clear(); // Remove
                 _scenesToDestroy.Clear();
             }
         }
