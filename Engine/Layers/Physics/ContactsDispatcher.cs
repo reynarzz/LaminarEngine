@@ -286,7 +286,7 @@ namespace Engine.Layers
         {
             var found = enterCollisions.TryGetValue(exitCollision, out var enterCollision);
 
-#if SHOW_ENGINE_WARNS
+#if SHOW_ENGINE_MESSAGES
             if (!found)
             {
                 Debug.Warn($"Collision exit already handled due deletion or disabling. A:{exitCollision.colliderA?.GetID()}, B:{exitCollision.colliderB?.GetID()}");

@@ -18,9 +18,8 @@ namespace Game
         // Fix: Can't change renderer sorting after is in a batch.
         // Implement:scroll list 
         // Bake tilemaps in binary file, the geometry should be already converted to the memory layout of the vertex array.
-        // Why is creating new batches?
+        // Why is creating new batches? this is due to new materials, but again, why batches are not re used since the batch material is being reset?
         // When a renderer is disabled and enabled, it will search for the first available one, it could find a huge batch reserved for another.So i have to search for the smallest, sameSort(if possible) valid one that a renderer fits in.
-        // Collider: Bounciness and other properties could not be set properly if set in the awake function.
 
         // For the game:
         // game UI architecture
@@ -28,7 +27,7 @@ namespace Game
         // Implement enemies
         // -Enemy AI
         // Enemy life UI
-      
+
         // Five levels, small, one intro level falling from outside.
         // Colllect coins, hearts, attack enemies, go from door A to B
         // Implement collectibles

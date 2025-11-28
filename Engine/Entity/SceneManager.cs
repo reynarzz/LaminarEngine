@@ -30,6 +30,7 @@ namespace Engine
 
         public static void LoadScene(string name)
         {
+            PrintActorsInScene(_activeScene);
             ClearScenes();
             OnCleanUpUpdate();
 
@@ -40,6 +41,24 @@ namespace Engine
             _scenes.Add(scene);
         }
 
+        private static void PrintActorsInScene(Scene scene)
+        {
+            void Actors(Actor actor)
+            {
+                Debug.Log(actor.Name);
+
+                foreach (var item in actor.Transform.Children)
+                {
+                    Actors(item.Actor);
+                }
+            }
+
+            for (int i = 0; i < _activeScene.RootActors.Count; i++)
+            {
+                Actors(_activeScene.RootActors[i]);
+            }
+            
+        }
         private static void ClearScenes()
         {
             _scenesToDestroy.Clear();
@@ -109,7 +128,7 @@ namespace Engine
             {
                 // Note: this is provisional.
                 // RenderingLayer.Test_ClearBatches();
-                // PhysicsLayer.Clear();
+                PhysicsLayer.Clear(); // Remove
                 _scenesToDestroy.Clear();
             }
         }

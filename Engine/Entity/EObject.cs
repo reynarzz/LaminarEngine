@@ -69,13 +69,15 @@ namespace Engine
             {
                 throw new DestroyedObjectException($"Can't use destroyed object of type: '{obj.GetType().Name}'");
             }
+#if SHOW_ENGINE_MESSAGES
             else if (obj.IsPendingToDestroy)
             {
                 Debug.Error($"Object of type: '{obj.GetType().Name}' was marked to be destroyed, please don't use it.");
             }
+#endif
         }
 
-#if DEBUG && SHOW_ENGINE_WARNS
+#if DEBUG && SHOW_ENGINE_MESSAGES
         ~EObject()
         {
             Debug.Warn($"Mem Destroy: ({GetType().Name}, {_guid}), name: {Name}");

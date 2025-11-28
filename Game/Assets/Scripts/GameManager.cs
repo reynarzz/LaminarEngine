@@ -31,7 +31,6 @@ namespace Game
     {
         public static Camera Camera { get; private set; }
         private vec3 _playerStartPosTest;
-        private static UIText _coinCounterTest;
         private ItemsDatabase _itemsDatabase;
         private PauseMenu _pauseMenu;
         private FadeInOutManager _fadeInOutManager;
@@ -446,20 +445,6 @@ namespace Game
             scalines.SetValue("uScanlineIntensity", 0.2f);
             scalines.SetValue("uScanlineSpacing", 2);
             PostProcessingStack.Push(scalines);
-        }
-
-        internal static void UpdateCoinUI()
-        {
-            if (!_coinCounterTest)
-            {
-                _coinCounterTest = new Actor("CounterText").AddComponent<UIText>();
-                _coinCounterTest.Font = DefaultFont;
-            }
-
-            //_coinCounterTest.SetText(Player.Inventory.GetSlot.Coins.ToString()); // Remove from here, just for testing
-            //_coinCounterTest.Material = _defaultSpriteMaterial;
-            //_coinCounterTest.Transform.WorldPosition = new vec3(20, 20);
-
         }
     }
 }

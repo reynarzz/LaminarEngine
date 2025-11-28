@@ -63,20 +63,20 @@ namespace Game
             _tilesets["door_closing"] = _tilesets["door_opening"].Reverse().ToArray();
 
             // Collectible
-            _tilesets["coin_currency"] = GetSprites(_tilesets, "stark_full_tileset", 281, 4);
-            _tilesets["coin_gray"] = GetSprites(_tilesets, "stark_full_tileset", 277, 4);
+            _tilesets["coin_currency"] = TakeSprites(_tilesets["stark_full_tileset"], 281, 4);
+            _tilesets["coin_gray"] = TakeSprites(_tilesets["stark_full_tileset"], 277, 4);
 
             // Chest
-            _tilesets["chest_normal_idle"] = GetSprites(_tilesets, "stark_full_tileset", 160, 1);
-            _tilesets["chest_normal_fill_open"] = GetSprites(_tilesets, "stark_full_tileset", 164, 2);
-            _tilesets["chest_normal_empty_open"] = GetSprites(_tilesets, "stark_full_tileset", 166, 2);
-            _tilesets["chest_small_idle"] = GetSprites(_tilesets, "stark_full_tileset", 162, 1);
-            _tilesets["chest_small_fill_open"] = GetSprites(_tilesets, "stark_full_tileset", 168, 1);
-            _tilesets["chest_small_empty_open"] = GetSprites(_tilesets, "stark_full_tileset", 169, 1);
+            _tilesets["chest_normal_idle"] = TakeSprites(_tilesets["stark_full_tileset"], 160, 1);
+            _tilesets["chest_normal_fill_open"] = TakeSprites(_tilesets["stark_full_tileset"], 164, 2);
+            _tilesets["chest_normal_empty_open"] = TakeSprites(_tilesets["stark_full_tileset"], 166, 2);
+            _tilesets["chest_small_idle"] = TakeSprites(_tilesets["stark_full_tileset"], 162, 1);
+            _tilesets["chest_small_fill_open"] = TakeSprites(_tilesets["stark_full_tileset"], 168, 1);
+            _tilesets["chest_small_empty_open"] = TakeSprites(_tilesets["stark_full_tileset"], 169, 1);
 
             // Spikes
-            _tilesets["spikes_ground"] = GetSprites(_tilesets, "stark_full_tileset", 183, 4);
-            _tilesets["spikes_wall"] = GetSprites(_tilesets, "stark_full_tileset", 215, 4);
+            _tilesets["spikes_ground"] = TakeSprites(_tilesets["stark_full_tileset"], 183, 4);
+            _tilesets["spikes_wall"] = TakeSprites(_tilesets["stark_full_tileset"], 215, 4);
         }
 
         public static Sprite[] GetAtlas(string atlasId)
@@ -89,9 +89,9 @@ namespace Game
             return null;
         }
 
-        private static Sprite[] GetSprites(Dictionary<string, Sprite[]> tileset, string name, int startIndex, int length = int.MaxValue)
+        private static Sprite[] TakeSprites(Sprite[] tileset, int startIndex, int length = int.MaxValue)
         {
-            return TextureAtlasUtils.GetSprites(tileset[name][0].Texture, startIndex, length);
+            return TextureAtlasUtils.GetSprites(tileset[0].Texture, startIndex, length);
         }
         private static Sprite[] SliceSprites(string name, int width, int height, vec2 pivot, int startIndex = 0, int length = int.MaxValue)
         {
