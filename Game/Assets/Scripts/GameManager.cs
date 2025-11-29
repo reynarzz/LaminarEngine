@@ -32,13 +32,13 @@ namespace Game
         public static Camera Camera { get; private set; }
         private vec3 _playerStartPosTest;
         private ItemsDatabase _itemsDatabase;
-        private PauseMenu _pauseMenu;
         private FadeInOutManager _fadeInOutManager;
         public static Player Player { get; private set; }
         public static Material DefaultMaterial => MaterialUtils.SpriteMaterial;
 
         public static FontAsset DefaultFont { get; private set; }
         private static GameEntityManager _gameEntityManager;
+        private static GameUIManager _gameUIManger;
 
         protected override void OnAwake()
         {
@@ -93,7 +93,11 @@ namespace Game
                 Actor.DontDestroyOnLoad(music);
             }
 
-            _pauseMenu = new Actor("Pause menu").AddComponent<PauseMenu>();
+            if (!_gameUIManger)
+            {
+                _gameUIManger = new Actor("GameUIManager").AddComponent<GameUIManager>();
+            }
+
 
             Player = new Actor("Player").AddComponent<Player>();
             Player.Transform.WorldPosition = new vec3();
@@ -272,10 +276,10 @@ namespace Game
             tilemap.AddComponent<TilemapCollider2D>();
             tilemap.Actor.Layer = 0;
         }
-
+        UICanvas _heartCanvas = null;
         private void Canvas()
         {
-            var canvas = new Actor("Canvas Health").AddComponent<UICanvas>();
+            _heartCanvas = new Actor("Canvas Health").AddComponent<UICanvas>();
 
             //var text = new Actor("Text test").AddComponent<UIText>();
             //text.Transform.Parent = canvas.Transform;
@@ -304,28 +308,34 @@ namespace Game
 
             float uiMult = 3;
             var lifebarSprites = GameTextureAtlases.GetAtlas("health_bar_frame");
-            var lifeBar = Image("Life bar", new vec2(10, 10), new vec2(143, 34) * uiMult, lifebarSprites[3], canvas.Transform);
-            Debug.Warn("Is texture alive: " + sprites[0].Texture.IsAliveTex());
+            var lifeBar = Image("Life bar", new vec2(10, 10), new vec2(143, 34) * uiMult, lifebarSprites[3], _heartCanvas.Transform);
             Image("Heart1", new vec2(56, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);
             Image("Heart2", new vec2(88, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);
             Image("Heart3", new vec2(120, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);
+
+            // _heartCanvas.OnLateUpdate();
         }
 
+        private Material _portalMaterialTest;
         private Actor Portal()
         {
             var screenGrabTest = new Actor<SpriteRenderer, Rotate>("Portal");
             var renderer = screenGrabTest.GetComponent<SpriteRenderer>();
             renderer.SortOrder = 14;
 
-            var screenShader = new Shader(Assets.GetText("Shaders/VertScreenGrab.vert").Text, Assets.GetText("Shaders/Portal.frag").Text);
-            renderer.Material = new Material(screenShader);
-            renderer.Material.Name = "Portal Material";
-            var pass = renderer.Material.GetPass(0);
-            pass.IsScreenGrabPass = true;
+            if (!_portalMaterialTest)
+            {
+                var screenShader = new Shader(Assets.GetText("Shaders/VertScreenGrab.vert").Text, Assets.GetText("Shaders/Portal.frag").Text);
+                _portalMaterialTest = new Material(screenShader);
+                _portalMaterialTest.Name = "Portal Material";
+                _portalMaterialTest.AddTexture("uStarsTex", Assets.GetTexture("stars.png"));
+                var pass = _portalMaterialTest.GetPass(0);
+                pass.IsScreenGrabPass = true;
+            }
 
+            renderer.Material = _portalMaterialTest;
             screenGrabTest.Transform.LocalScale = new vec3(6, 6);
             screenGrabTest.Transform.LocalPosition = new vec3(-9, -7);
-            renderer.Material.AddTexture("uStarsTex", Assets.GetTexture("stars.png"));
 
             return screenGrabTest;
         }
@@ -333,7 +343,7 @@ namespace Game
         protected override void OnUpdate()
         {
 #if DEBUG
-            Window.Name = EngineInfo.RendererInfoToString() + ", FPS: " + Time.FPS.ToString();
+            Window.Name = EngineInfo.RendererInfoToString() + " | FPS: " + ((int)Time.FPS).ToString();
 #endif
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
@@ -349,10 +359,14 @@ namespace Game
                 Window.FullScreen(!Window.IsFullScreen);
                 // Window.MouseVisible = !Window.IsFullScreen;
             }
-             
+            if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                _heartCanvas.Actor.IsActiveSelf = !_heartCanvas.Actor.IsActiveSelf;
+            }
+
             if (Input.GetKeyDown(KeyCode.Enter))
             {
-                _pauseMenu.OnPause();
+                _gameUIManger.PauseMenu.OnPause();
             }
 
             if (Input.GetKeyDown(KeyCode.T))
@@ -361,7 +375,7 @@ namespace Game
                 new Actor<GameManager>("GameManager");
             }
         }
-         
+
         private void ParticleSystem()
         {
             var particleSystem = new Actor<ParticleSystem2D, Move>("ParticleSystem").GetComponent<ParticleSystem2D>();

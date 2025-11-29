@@ -14,10 +14,9 @@ namespace Engine.Rendering
     {
         internal int MaxVertexSize { get; }
         internal Material Material { get; private set; }
-        internal GfxResource Geometry { get; }
-        internal Texture[] Textures { get; }
-        internal static int[] TextureSlotArray { get; private set; }
-        private readonly Action<Renderer> _onRendererDestroyHandler;
+        internal GfxResource Geometry { get; private set; }
+        internal Texture[] Textures { get; private set; }
+        internal static int[] TextureSlotArray { get; }
 
         // TODO: cache this
         internal int VertexCount
@@ -60,11 +59,26 @@ namespace Engine.Rendering
         private bool _isDirty;
         private int _vertexOffset = int.MaxValue;
         private Dictionary<Guid, RendererIds> _renderers;
-
+        public int RenderersCount => _renderers.Count;
         private GeometryDescriptor _geoDescriptor;
         private Vertex[] _verticesData;
+        public string RenderersNames
+        {
+            get
+            {
+                var str = new StringBuilder();
+
+                foreach (var item in _renderers.Values)
+                {
+                    str.Append("\n" + item.Renderer.Name);
+                }
+
+                return str.ToString();
+            }
+        }
         private struct RendererIds
         {
+            public Renderer Renderer;
             public int RendererId;
             public int TextureId;
             public int VertexCount;
@@ -83,7 +97,7 @@ namespace Engine.Rendering
             }
         }
 
-        internal Batch2D(int maxVertexSize, GfxResource sharedIndexBuffer)
+        internal Batch2D(int maxVertexSize, GfxResource sharedIndexBuffer, uint[] rawIndices)
         {
             MaxVertexSize = maxVertexSize;
             _verticesData = new Vertex[MaxVertexSize];
@@ -92,14 +106,23 @@ namespace Engine.Rendering
 
             // Create geometry buffer for this batch
             _geoDescriptor = new GeometryDescriptor();
-            var vertexDesc = new VertexDataDescriptor();
-            vertexDesc.BufferDesc = new BufferDataDescriptor<Vertex>() { Buffer = _verticesData };
-            vertexDesc.BufferDesc.Usage = BufferUsage.Dynamic;
-            _geoDescriptor.SharedIndexBuffer = sharedIndexBuffer;
-            _onRendererDestroyHandler = RemoveRenderer;
-
-            vertexDesc.Attribs = GraphicsHelper.GetVertexAttribs<Vertex>();
-            _geoDescriptor.VertexDesc = vertexDesc;
+            if (rawIndices != null)
+            {
+                _geoDescriptor.IndexDesc = new BufferDataDescriptor<uint>()
+                {
+                    Buffer = rawIndices,
+                    Usage = BufferUsage.Dynamic
+                };
+            }
+            else
+            {
+                _geoDescriptor.SharedIndexBuffer = sharedIndexBuffer;
+            }
+            _geoDescriptor.VertexDesc = new VertexDataDescriptor()
+            {
+                BufferDesc = new BufferDataDescriptor<Vertex>() { Buffer = _verticesData, Usage = BufferUsage.Dynamic },
+                Attribs = GraphicsHelper.GetVertexAttribs<Vertex>()
+            };
 
             Geometry = GfxDeviceManager.Current.CreateGeometry(_geoDescriptor);
         }
@@ -133,16 +156,9 @@ namespace Engine.Rendering
             SendGeometryUpdate();
         }
 
-        internal void PushGeometry(Renderer renderer, Material material, Texture texture, int indicesCount, Span<Vertex> vertices)
+        private bool SetTextureToEmptySlot(Texture texture, out int textureIndex)
         {
-            _isDirty = true;
-            IsActive = true;
-            if (!Material)
-            {
-                Material = material;
-            }
-
-            int textureIndex = 0;
+            textureIndex = -1;
             // Adds texture to a empty slot
             for (int i = 0; i < Textures.Length; i++)
             {
@@ -159,8 +175,26 @@ namespace Engine.Rendering
                 }
             }
 
-            renderer.OnDestroyRenderer -= _onRendererDestroyHandler;
-            renderer.OnDestroyRenderer += _onRendererDestroyHandler;
+            return textureIndex >= 0;
+        }
+        internal void PushGeometry(Renderer renderer, Material material, Texture texture, int indicesCount, Span<Vertex> vertices)
+        {
+            _isDirty = true;
+            IsActive = true;
+            if (!Material)
+            {
+                Material = material;
+            }
+
+            var wasTextureSlotFound = SetTextureToEmptySlot(texture, out var textureIndex);
+
+            if (!wasTextureSlotFound)
+            {
+                Debug.EngineError("Tried to add texture to a full batch");
+            }
+
+            renderer.OnDestroyRenderer -= RemoveRenderer;
+            renderer.OnDestroyRenderer += RemoveRenderer;
 
             var startIndex = 0;
             var existId = _renderers.TryGetValue(renderer.GetID(), out var rendererIds);
@@ -179,6 +213,7 @@ namespace Engine.Rendering
                 startIndex = VertexCount;
                 _renderers.Add(renderer.GetID(), new RendererIds()
                 {
+                    Renderer = renderer,
                     RendererId = startIndex,
                     TextureId = textureIndex,
                     VertexCount = vertices.Length,
@@ -190,21 +225,43 @@ namespace Engine.Rendering
             for (int i = 0; i < vertices.Length; i++)
             {
                 vertices[i].TextureIndex = textureIndex;
-                _vertexOffset = Math.Min(_vertexOffset, startIndex + i);
                 _verticesData[startIndex + i] = vertices[i];
+                _vertexOffset = Math.Min(_vertexOffset, startIndex + i);
             }
         }
-
-        /// <summary>
-        /// Will push geometry immediatelly to gpu.
-        /// </summary>
-        internal void PushGeometryImmediate(Material material, Texture texture, int indicesCount, params Vertex[] vertices)
+        internal bool ReplaceTexture(Renderer renderer, Texture texture)
         {
+            if (_renderers.TryGetValue(renderer.GetID(), out var currentRendererId))
+            {
+                var anotherRendererUsesTexture = false;
+                foreach (var (key, rendererId) in _renderers)
+                {
+                    if (key == renderer.GetID())
+                        continue;
+
+                    if (rendererId.TextureId == currentRendererId.TextureId)
+                    {
+                        anotherRendererUsesTexture = true;
+                        break;
+                    }
+                }
+
+                if (anotherRendererUsesTexture)
+                {
+                    return SetTextureToEmptySlot(texture, out var textureIndex);
+                }
+
+                Textures[currentRendererId.TextureId] = texture;
+
+                return true;
+            }
+
+            return false;
         }
 
         public void RemoveRenderer(Renderer renderer)
         {
-            renderer.OnDestroyRenderer -= _onRendererDestroyHandler;
+            renderer.OnDestroyRenderer -= RemoveRenderer;
             Debug.Log("Remove renderer from batch: " + renderer.Name);
             // If renderer doesn't exist, do nothing
             if (!_renderers.TryGetValue(renderer.GetID(), out var removedInfo))
@@ -339,38 +396,50 @@ namespace Engine.Rendering
 
         internal bool CanPushGeometry(Renderer2D renderer, int vertexCount, int neededBatchVertexSize, Texture texture, Material mat)
         {
-            _renderers.TryGetValue(renderer.GetID(), out var rendeId);
-            var subsTractVertices = rendeId.VertexCount;
-
             var isMaxSizeEnough = MaxVertexSize >= neededBatchVertexSize;
             var hasSpaceLeftForAnother = (MaxVertexSize - VertexCount) >= vertexCount;
             var isBatchSizeEnough = isMaxSizeEnough && hasSpaceLeftForAnother;
-            var isInvalidSortOrder = renderer.SortOrder != SortOrder || SortOrder != int.MinValue;
-            var isInvalidMaterial = Material != mat || !Material;
+            var isSameSortOrder = renderer.SortOrder == SortOrder || SortOrder == int.MinValue;
+            var isValidMaterial = Material == mat || !Material;
 
-            // return isBatchSizeEnough && ((isValidMaterial && isSameSortOrder) || !IsActive);
-
-            if (isInvalidSortOrder)
+            var isvalidLayout = isBatchSizeEnough && ((isValidMaterial && isSameSortOrder) || !IsActive);
+            if (!isSameSortOrder)
+            {
+                var x = 0;
+            }
+            if (!isvalidLayout)
             {
                 return false;
             }
-            if (vertexCount + VertexCount - subsTractVertices > MaxVertexSize)
-            {
-                return false;
-            }
-            if (!Material)
-                return true;
+            //if (renderer.SortOrder != SortOrder || SortOrder != int.MinValue)
+            //{
+            //    return false;
+            //}
+            //if (vertexCount + VertexCount - subsTractVertices > MaxVertexSize)
+            //{
+            //    return false;
+            //}
+            //if (!Material) 
+            //    return true;
 
-            if (mat != Material)
-                return false;
+            //if (mat != Material)
+            //    return false;
 
             // Also removes the textures from the material to avoid binding more textures than the plaform supports.
-            for (int i = 0; i < Textures.Length - Material.Textures.Count; i++)
+
+            if (Material)
             {
-                if (Textures[i] == null || texture.NativeResource == Textures[i].NativeResource)
+                for (int i = 0; i < Textures.Length - Material.Textures.Count; i++)
                 {
-                    return true;
+                    if (Textures[i] == null || texture.NativeResource == Textures[i].NativeResource)
+                    {
+                        return true;
+                    }
                 }
+            }
+            else
+            {
+                return true;
             }
 
             return false;
@@ -379,6 +448,18 @@ namespace Engine.Rendering
         public void Dispose()
         {
             GfxDeviceManager.Current.DestroyResource(Geometry);
+
+            foreach (var renderers in _renderers.Values.ToList())
+            {
+                renderers.Renderer.OnDestroyRenderer -= RemoveRenderer;
+            }
+            _renderers.Clear();
+            Material = null;
+            Geometry = null;
+            _verticesData = null;
+            Textures = null;
+            _geoDescriptor = null;
+
         }
 
         internal bool Contains(Renderer renderer)

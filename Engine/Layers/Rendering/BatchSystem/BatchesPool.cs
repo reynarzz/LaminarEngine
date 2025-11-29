@@ -12,41 +12,46 @@ namespace Engine.Rendering
     {
         private readonly GfxResource _sharedIndexBuffer;
         private List<Batch2D> _batches;
-
+        public int MaxEmptyBatches { get; set; } = 5;
         public BatchesPool(GfxResource sharedIndexBuffer)
         {
             _sharedIndexBuffer = sharedIndexBuffer;
             _batches = new List<Batch2D>();
         }
 
-        internal bool GetCurrentBatch(Renderer2D renderer, out Batch2D batchOut)
+        internal bool GetCurrentBatch(Renderer2D renderer, Texture texture, out Batch2D batchOut)
         {
             batchOut = null;
             foreach (var batch in _batches)
             {
                 if (batch.Contains(renderer))
                 {
-                    if (batch.SortOrder == renderer.SortOrder)
+                    if (batch.Material != renderer.Material || batch.SortOrder != renderer.SortOrder)
                     {
-                        batchOut = batch;
-                        return true;
-                    }
-                    else
-                    {
-                        // Debug.Warn($"Changed sorting: from {batch.SortOrder}, to: {renderer.SortOrder}" + renderer.Name);
                         batch.RemoveRenderer(renderer);
                         return false;
                     }
+                    else if (!batch.Textures.Contains(texture))
+                    {
+                        if (!batch.ReplaceTexture(renderer, texture))
+                        {
+                            batch.RemoveRenderer(renderer);
+                            return false;
+                        }
+                    }
+                    
+                    batchOut = batch;
+                    return true;
                 }
             }
 
             return false;
         }
 
-        internal Batch2D Get(Renderer2D renderer, int vertexToAdd, int maxVertexSize, Material mat, GfxResource indexBuffer = null)
+        internal Batch2D Get(Renderer2D renderer, int vertexToAdd, int maxVertexSize, Texture texture, Material mat, uint[] rawIndices = null)
         {
             {
-                if (GetCurrentBatch(renderer, out var batch))
+                if (GetCurrentBatch(renderer, texture, out var batch))
                 {
                     return batch;
                 }
@@ -57,20 +62,17 @@ namespace Engine.Rendering
             // Try to find the best batch for the renderer.
             foreach (var batch in _batches)
             {
-                var isMaxSizeEnough = batch.MaxVertexSize >= maxVertexSize;
-                var hasSpaceLeftForAnother = (batch.MaxVertexSize - batch.VertexCount) >= vertexToAdd;
-                var isBatchSizeEnough = isMaxSizeEnough && hasSpaceLeftForAnother;
-                var isSameSortOrder = renderer.SortOrder == batch.SortOrder || batch.SortOrder == int.MinValue;
-                var isValidMaterial = batch.Material == mat || !batch.Material;
-
                 // TODO: find the smallest batch first
-                if (isBatchSizeEnough && ((isValidMaterial && isSameSortOrder) || !batch.IsActive))
+                var canPush = batch.CanPushGeometry(renderer, vertexToAdd, maxVertexSize, texture, mat);
+                if (canPush)
                 {
                     if (selectedBatch == null)
                     {
                         selectedBatch = batch;
                     }
-                    else if ((selectedBatch.MaxVertexSize > batch.MaxVertexSize || selectedBatch.VertexCount > batch.VertexCount)) // Checks if this is a smaller batch that it can fit in
+                    // Checks if this is a smaller compatible batch that this renderer can fit in.
+                    else if ((selectedBatch.MaxVertexSize > batch.MaxVertexSize || selectedBatch.VertexCount > batch.VertexCount) &&
+                               batch.Material == selectedBatch.Material && batch.SortOrder == selectedBatch.SortOrder)
                     {
                         selectedBatch = batch;
                     }
@@ -82,17 +84,17 @@ namespace Engine.Rendering
                 if (selectedBatch.Initialize(renderer))
                 {
                     SortBatches();
-                    Debug.Log("Found empty batch for: " + renderer.Name);
+                    // Debug.Log("Found empty batch for: " + renderer.Name);
                 }
                 else
                 {
-                    Debug.Log("Found existing batch for: " + renderer.Name + ", Batch: Sorting: " + selectedBatch.SortOrder);
-                    SortBatches();
+                    // Debug.Log("Found existing batch for: " + renderer.Name + ", Batch: Sorting: " + selectedBatch.SortOrder);
+                    // SortBatches();
                 }
 
                 return selectedBatch;
             }
-            var newBatch = new Batch2D(maxVertexSize, indexBuffer == null ? _sharedIndexBuffer : indexBuffer);
+            var newBatch = new Batch2D(maxVertexSize, _sharedIndexBuffer, rawIndices);
             newBatch.OnBatchEmpty += OnBatchEmpty;
             // Initialize to clear any old states.
             newBatch.Initialize(renderer);
@@ -119,17 +121,18 @@ namespace Engine.Rendering
             }
         }
 
+        private bool _recalculateMaxBatches = false;
         private void SortBatches()
         {
             _batches.Sort((x, y) =>
             {
-                if (x.IsActive && !y.IsActive) 
+                if (x.IsActive && !y.IsActive)
                 {
-                    return -1;  
+                    return -1;
                 }
                 if (!x.IsActive && y.IsActive)
                 {
-                    return 1;   
+                    return 1;
                 }
 
                 // If both are active, sort by SortOrder.
@@ -141,6 +144,8 @@ namespace Engine.Rendering
                 // if both are inactive, keep original relative order.
                 return 0;
             });
+
+            _recalculateMaxBatches = true;
         }
 
         // TODO: Delete all batches that are not being used for too long, and are also big.
@@ -153,8 +158,48 @@ namespace Engine.Rendering
             _batches.Clear();
         }
 
+
+        private void RemoveExtraBatches()
+        {
+            var index = _batches.FindIndex(x => !x.IsActive);
+
+            if (index < 0)
+                return;
+
+            var emptyCount = _batches.Count - index;
+
+            if (emptyCount > MaxEmptyBatches)
+            {
+                var removeCount = emptyCount - MaxEmptyBatches;
+
+                for (int i = 0; i < removeCount; i++)
+                {
+                    _batches[i + index].Dispose();
+                }
+
+                _batches.RemoveRange(index, removeCount);
+
+                Debug.Warn("Removed empty batches: " + (removeCount) + ", ValidCount: " + index);
+
+            }
+        }
+
         internal List<Batch2D> GetActiveBatches()
         {
+            if (Input.GetKeyDown(KeyCode.H))
+            {
+                foreach (var batch in _batches)
+                {
+                    Debug.Warn("Batches renderers: " + batch.RenderersNames);
+                }
+            }
+
+            if (_recalculateMaxBatches)
+            {
+                _recalculateMaxBatches = false;
+                RemoveExtraBatches();
+            }
+
             return _batches;
         }
     }

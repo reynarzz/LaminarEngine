@@ -12,7 +12,7 @@ namespace Game
 {
     public class Player : Character
     {
-        private float _shootCooldown = 0.25f;
+        private float _shootCooldown = 0.21f;
         private float _shootCooldownTime = 0;
         private float _bulletSpeed = 23;
         private bool _canMove = false;

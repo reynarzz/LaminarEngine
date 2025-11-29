@@ -20,6 +20,8 @@ namespace Engine
             public static int TotalDrawCalls => WDrawCalls + UIDrawCalls + PostProcessingPasses;
             public static int TotalBatches => WBatches + UIBatches;
 
+            public static int SavedByBatching { get; internal set; }
+
             internal static void Clear()
             {
                 WBatches = 0;
@@ -30,9 +32,9 @@ namespace Engine
 
         public static string RendererInfoToString()
         {
-            return $"Rendering: WBatches:{Renderer.WBatches} | WScreenGrabs:{Renderer.GrabScreenPass} | WDrawCalls:{Renderer.WDrawCalls} " +
-                $"| UIBatches:{Renderer.UIBatches} | UIScreenGrabs:{Renderer.UIGrabScreenPass} | UIDrawCalls:{Renderer.UIDrawCalls} " +
-                $"| AllBatches:{Renderer.TotalBatches} | AllDrawCalls:{Renderer.TotalDrawCalls}";
+            return $"Rendering: WBatches:{Renderer.WBatches} | WScreenGrabs:{Renderer.GrabScreenPass} | W_DC:{Renderer.WDrawCalls} " +
+                $"| UIBatches:{Renderer.UIBatches} | UIScreenGrabs:{Renderer.UIGrabScreenPass} | UI_DC:{Renderer.UIDrawCalls} " +
+                $"| AllBatches:{Renderer.TotalBatches} | All_DCs:{Renderer.TotalDrawCalls} | W_DC_BatchSaved:{Renderer.SavedByBatching}";
         }
     }
 }

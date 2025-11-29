@@ -30,7 +30,7 @@ namespace Engine.GUI
     }
 
     [RequiredComponent(typeof(RectTransform))]
-    public class UICanvas : Component, ILateUpdatableComponent, IUpdatableComponent
+    public class UICanvas : Component, IUpdatableComponent, IPreRenderable
     {
         public RectTransform RectTransform { get; private set; }
         private vec2 _prevMousePos;
@@ -170,7 +170,7 @@ namespace Engine.GUI
             }
         }
 
-        public void OnUpdate()
+        void IUpdatableComponent.OnUpdate()
         {
             _mouseCanvasPos = ScreenToCanvas(Input.MousePosition);
             _mouseDeltaPos = _mouseCanvasPos - _prevMousePos;
@@ -178,8 +178,7 @@ namespace Engine.GUI
             _prevMousePos = _mouseCanvasPos;
         }
 
-
-        public void OnLateUpdate()
+        void IPreRenderable.OnPreRender()
         {
             for (int i = Transform.Children.Count - 1; i >= 0; --i)
             {
@@ -213,5 +212,6 @@ namespace Engine.GUI
                 }
             }
         }
+
     }
 }

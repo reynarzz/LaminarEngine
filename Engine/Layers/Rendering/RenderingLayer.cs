@@ -108,6 +108,8 @@ namespace Engine.Layers
                 RenderTarget = sceneRenderTarget.NativeResource
             });
 
+            SceneManager.OnPreRenderUpdate();
+
             // TODO: improve this, don't ask for renderers but add/remove with events.
             _renderers.Clear();
             _UIElementRenderers.Clear();
@@ -121,6 +123,7 @@ namespace Engine.Layers
                 return x.IsEnabled && x is UIGraphicsElement;
             });
 
+
             var batches = _sceneBatches.GetBatches(_renderers);
             var uibatches = _uiBatches.GetBatches(_UIElementRenderers);
 
@@ -131,10 +134,10 @@ namespace Engine.Layers
 #if DEBUG
             EngineInfo.Renderer.WBatches = geoBatchesInfo.BatchesCount;
             EngineInfo.Renderer.GrabScreenPass = geoBatchesInfo.ScreenGrabPasses;
-
             EngineInfo.Renderer.UIBatches = uiBatchesInfo.BatchesCount;
             EngineInfo.Renderer.UIGrabScreenPass = uiBatchesInfo.ScreenGrabPasses;
-
+            EngineInfo.Renderer.PostProcessingPasses = PostProcessingStack.Passes.Count;
+            EngineInfo.Renderer.SavedByBatching = (geoBatchesInfo.TotalRenderers - geoBatchesInfo.BatchesCount) * (uiBatchesInfo.ScreenGrabPasses + 1);
             SceneManager.OnDrawGizmos();
             Debug.DrawGeometries(VP, UICanvas.UIViewProj, sceneRenderTarget.NativeResource);
 #endif
@@ -163,7 +166,7 @@ namespace Engine.Layers
                     break;
                 }
                 info.BatchesCount++;
-
+                info.TotalRenderers += batch.RenderersCount; 
                 batch.Flush();
 
                 var isScreenGrabPass = batch.Material.Passes.Any(x => x.IsScreenGrabPass);
@@ -344,6 +347,7 @@ namespace Engine.Layers
         {
             public int BatchesCount { get; set; }
             public int ScreenGrabPasses { get; set; }
+            public int TotalRenderers { get; set; }
         }
     }
 }

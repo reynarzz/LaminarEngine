@@ -79,6 +79,17 @@ namespace Engine
 
         internal static GfxResource CreateQuadIndexBuffer(int maxQuads)
         {
+            var indices = GetQuadIndices(maxQuads);
+
+            return GfxDeviceManager.Current.CreateIndexBuffer(new BufferDataDescriptor<uint>()
+            {
+                Buffer = indices,
+                Usage = BufferUsage.Static
+            });
+        }
+
+        internal static uint[] GetQuadIndices(int maxQuads)
+        {
             var indices = new uint[maxQuads * 6];
 
             for (uint i = 0; i < maxQuads; i++)
@@ -90,12 +101,7 @@ namespace Engine
                 indices[i * 6 + 4] = i * 4 + 3;
                 indices[i * 6 + 5] = i * 4 + 0;
             }
-
-            return GfxDeviceManager.Current.CreateIndexBuffer(new BufferDataDescriptor<uint>()
-            {
-                Buffer = indices,
-                Usage = BufferUsage.Static
-            });
+            return indices;
         }
 
         internal static GfxResource CreateQuadIndexBuffer(uint[] indices)

@@ -97,7 +97,7 @@ namespace Engine.Graphics.OpenGL
         protected override void FreeResource()
         {
             _vertBuffer.Dispose();
-
+            _sharedBuffer = null;
             if (_indexBuffer != null)
             {
                 _indexBuffer.Dispose();

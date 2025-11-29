@@ -76,6 +76,7 @@ namespace Engine
         private static readonly Action<IUpdatableComponent> _updateAction = x => x.OnUpdate();
         private static readonly Action<ILateUpdatableComponent> _lateUpdateAction = x => x.OnLateUpdate();
         private static readonly Action<IDrawableGizmo> _drawGizmoUpdateAction = x => x.OnDrawGizmo();
+        private static readonly Action<IPreRenderable> _preRenderUpdateAction = x => x.OnPreRender();
         private static readonly Action<IFixedUpdatableComponent> _fixedUpdateAction = x => x.OnFixedUpdate();
 
         private static readonly Func<Actor, List<IComponent>> _getAwakePending = a => a._onAwakePendingComponents;
@@ -480,8 +481,8 @@ namespace Engine
 
         internal void Awake()
         {
-            UpdateScriptBeginEvent(this, _getEnablePending, _enabledAction);
             UpdateScriptBeginEvent(this, _getAwakePending, _awakeAction);
+            UpdateScriptBeginEvent(this, _getEnablePending, _enabledAction);
         }
 
         internal void Start()
@@ -509,6 +510,11 @@ namespace Engine
             UpdateScriptsFunction(this, _drawGizmoUpdateAction, true);
         }
 
+        internal void OnPreRenderUpdate()
+        {
+            UpdateScriptsFunction(this, _preRenderUpdateAction, true);
+        }
+        
         private void UpdateScriptBeginEvent<T>(Actor actor, Func<Actor, List<IComponent>> getPendingComponents,
                                                          Action<T> action) where T : class, IComponent
         {
