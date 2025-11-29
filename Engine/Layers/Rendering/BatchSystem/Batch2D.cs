@@ -62,6 +62,20 @@ namespace Engine.Rendering
         public int RenderersCount => _renderers.Count;
         private GeometryDescriptor _geoDescriptor;
         private Vertex[] _verticesData;
+        public string RenderersNames
+        {
+            get
+            {
+                var str = new StringBuilder();
+
+                foreach (var item in _renderers.Values)
+                {
+                    str.Append("\n" + item.Renderer.Name);
+                }
+
+                return str.ToString();
+            }
+        }
         private struct RendererIds
         {
             public Renderer Renderer;
@@ -112,17 +126,7 @@ namespace Engine.Rendering
 
             Geometry = GfxDeviceManager.Current.CreateGeometry(_geoDescriptor);
         }
-        internal string GetRenderersNames()
-        {
-            var str = new StringBuilder();
 
-            foreach (var item in _renderers.Values)
-            {
-                str.Append("\n" + item.Renderer.Name);
-            }
-
-            return str.ToString();
-        }
         internal bool Initialize(Renderer2D renderer)
         {
             if (IsActive)
@@ -152,16 +156,9 @@ namespace Engine.Rendering
             SendGeometryUpdate();
         }
 
-        internal void PushGeometry(Renderer renderer, Material material, Texture texture, int indicesCount, Span<Vertex> vertices)
+        private bool SetTextureToEmptySlot(Texture texture, out int textureIndex)
         {
-            _isDirty = true;
-            IsActive = true;
-            if (!Material)
-            {
-                Material = material;
-            }
-
-            int textureIndex = 0;
+            textureIndex = -1;
             // Adds texture to a empty slot
             for (int i = 0; i < Textures.Length; i++)
             {
@@ -176,6 +173,24 @@ namespace Engine.Rendering
                     textureIndex = i;
                     break;
                 }
+            }
+
+            return textureIndex >= 0;
+        }
+        internal void PushGeometry(Renderer renderer, Material material, Texture texture, int indicesCount, Span<Vertex> vertices)
+        {
+            _isDirty = true;
+            IsActive = true;
+            if (!Material)
+            {
+                Material = material;
+            }
+
+            var wasTextureSlotFound = SetTextureToEmptySlot(texture, out var textureIndex);
+
+            if (!wasTextureSlotFound)
+            {
+                Debug.EngineError("Tried to add texture to a full batch");
             }
 
             renderer.OnDestroyRenderer -= RemoveRenderer;
@@ -213,6 +228,37 @@ namespace Engine.Rendering
                 _verticesData[startIndex + i] = vertices[i];
                 _vertexOffset = Math.Min(_vertexOffset, startIndex + i);
             }
+        }
+        internal bool ReplaceTexture(Renderer renderer, Texture texture)
+        {
+            if (_renderers.TryGetValue(renderer.GetID(), out var currentRendererId))
+            {
+                var anotherRendererUsesTexture = false;
+                foreach (var (key, rendererId) in _renderers)
+                {
+                    if (key == renderer.GetID())
+                        continue;
+
+                    if (rendererId.TextureId == currentRendererId.TextureId)
+                    {
+                        anotherRendererUsesTexture = true;
+                        break;
+                    }
+                }
+
+                if (anotherRendererUsesTexture)
+                {
+                    return SetTextureToEmptySlot(texture, out var textureIndex);
+                }
+                else
+                {
+                    Textures[currentRendererId.TextureId] = texture;
+                }
+
+                return true;
+            }
+
+            return false;
         }
 
         public void RemoveRenderer(Renderer renderer)
@@ -359,7 +405,10 @@ namespace Engine.Rendering
             var isValidMaterial = Material == mat || !Material;
 
             var isvalidLayout = isBatchSizeEnough && ((isValidMaterial && isSameSortOrder) || !IsActive);
-
+            if (!isSameSortOrder)
+            {
+                var x = 0;
+            }
             if (!isvalidLayout)
             {
                 return false;

@@ -29,7 +29,6 @@ namespace Game
         protected override void OnStart()
         {
             base.OnStart();
-
             SpriteRenderer.SortOrder = GameConsts.ChestRenderSorting;
         }
 

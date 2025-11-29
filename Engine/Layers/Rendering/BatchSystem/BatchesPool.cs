@@ -19,23 +19,32 @@ namespace Engine.Rendering
             _batches = new List<Batch2D>();
         }
 
-        internal bool GetCurrentBatch(Renderer2D renderer, out Batch2D batchOut)
+        internal bool GetCurrentBatch(Renderer2D renderer, Texture texture, out Batch2D batchOut)
         {
             batchOut = null;
             foreach (var batch in _batches)
             {
                 if (batch.Contains(renderer))
                 {
-                    if (batch.SortOrder == renderer.SortOrder)
+                    if (batch.Material != renderer.Material || batch.SortOrder != renderer.SortOrder)
                     {
-                        batchOut = batch;
-                        return true;
+                        batch.RemoveRenderer(renderer);
+                        return false;
+                    }
+                    else if (!batch.Textures.Contains(texture))
+                    {
+                        // TODO: replace texture
+                        var result = batch.ReplaceTexture(renderer, texture);
+                        if (!result)
+                        {
+                            batch.RemoveRenderer(renderer);
+                            return false;
+                        }
                     }
                     else
                     {
-                       // Debug.Warn($"Changed sorting: from {batch.SortOrder}, to: {renderer.SortOrder}" + renderer.Name);
-                        batch.RemoveRenderer(renderer);
-                        return false;
+                        batchOut = batch;
+                        return true;
                     }
                 }
             }
@@ -43,10 +52,10 @@ namespace Engine.Rendering
             return false;
         }
 
-        internal Batch2D Get(Renderer2D renderer, int vertexToAdd, int maxVertexSize, Texture2D texture, Material mat, uint[] rawIndices = null)
+        internal Batch2D Get(Renderer2D renderer, int vertexToAdd, int maxVertexSize, Texture texture, Material mat, uint[] rawIndices = null)
         {
             {
-                if (GetCurrentBatch(renderer, out var batch))
+                if (GetCurrentBatch(renderer, texture, out var batch))
                 {
                     return batch;
                 }
@@ -185,7 +194,7 @@ namespace Engine.Rendering
             {
                 foreach (var batch in _batches)
                 {
-                    Debug.Warn("Batches renderers: " + batch.GetRenderersNames());
+                    Debug.Warn("Batches renderers: " + batch.RenderersNames);
                 }
             }
 

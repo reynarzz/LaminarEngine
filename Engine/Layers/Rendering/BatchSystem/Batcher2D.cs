@@ -147,7 +147,7 @@ namespace Engine.Rendering
                         // TODO: implement proper mesh drawing, for now, since it is used just for tilemap, this works
                         var vertexCount = Math.Max(MaxBatchVertexSize, renderer.Mesh.Vertices.Count);
 
-                        if (!_batchesPool.GetCurrentBatch(renderer, out var currentBatch))
+                        if (!_batchesPool.GetCurrentBatch(renderer, texture, out var currentBatch))
                         {
                             var indices = GraphicsHelper.GetQuadIndices(vertexCount / VerticesPerQuad);
                             currentBatch = _batchesPool.Get(renderer, renderer.Mesh.Vertices.Count, vertexCount, texture, material, indices);
