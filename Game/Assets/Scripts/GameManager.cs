@@ -32,13 +32,13 @@ namespace Game
         public static Camera Camera { get; private set; }
         private vec3 _playerStartPosTest;
         private ItemsDatabase _itemsDatabase;
-        private PauseMenu _pauseMenu;
         private FadeInOutManager _fadeInOutManager;
         public static Player Player { get; private set; }
         public static Material DefaultMaterial => MaterialUtils.SpriteMaterial;
 
         public static FontAsset DefaultFont { get; private set; }
         private static GameEntityManager _gameEntityManager;
+        private static GameUIManager _gameUIManger;
 
         protected override void OnAwake()
         {
@@ -93,7 +93,11 @@ namespace Game
                 Actor.DontDestroyOnLoad(music);
             }
 
-            _pauseMenu = new Actor("Pause menu").AddComponent<PauseMenu>();
+            if (!_gameUIManger)
+            {
+                _gameUIManger = new Actor("GameUIManager").AddComponent<GameUIManager>();
+            }
+
 
             Player = new Actor("Player").AddComponent<Player>();
             Player.Transform.WorldPosition = new vec3();
@@ -353,10 +357,10 @@ namespace Game
             {
                 _heartCanvas.Actor.IsActiveSelf = !_heartCanvas.Actor.IsActiveSelf;
             }
-                
+
             if (Input.GetKeyDown(KeyCode.Enter))
             {
-                _pauseMenu.OnPause();
+                _gameUIManger.PauseMenu.OnPause();
             }
 
             if (Input.GetKeyDown(KeyCode.T))
@@ -365,7 +369,7 @@ namespace Game
                 new Actor<GameManager>("GameManager");
             }
         }
-         
+
         private void ParticleSystem()
         {
             var particleSystem = new Actor<ParticleSystem2D, Move>("ParticleSystem").GetComponent<ParticleSystem2D>();

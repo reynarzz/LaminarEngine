@@ -112,7 +112,17 @@ namespace Engine.Rendering
 
             Geometry = GfxDeviceManager.Current.CreateGeometry(_geoDescriptor);
         }
+        internal string GetRenderersNames()
+        {
+            var str = new StringBuilder();
 
+            foreach (var item in _renderers.Values)
+            {
+                str.Append("\n" + item.Renderer.Name);
+            }
+
+            return str.ToString();
+        }
         internal bool Initialize(Renderer2D renderer)
         {
             if (IsActive)
@@ -379,6 +389,10 @@ namespace Engine.Rendering
                         return true;
                     }
                 }
+            }
+            else
+            {
+                return true;
             }
 
             return false;

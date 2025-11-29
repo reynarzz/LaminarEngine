@@ -58,13 +58,16 @@ namespace Engine.Rendering
             foreach (var batch in _batches)
             {
                 // TODO: find the smallest batch first
-                if (batch.CanPushGeometry(renderer, vertexToAdd, maxVertexSize, texture, mat))
+                var canPush = batch.CanPushGeometry(renderer, vertexToAdd, maxVertexSize, texture, mat);
+                if (canPush)
                 {
                     if (selectedBatch == null)
                     {
                         selectedBatch = batch;
                     }
-                    else if (selectedBatch.MaxVertexSize > batch.MaxVertexSize || selectedBatch.VertexCount > batch.VertexCount) // Checks if this is a smaller batch that it can fit in
+                    // Checks if this is a smaller compatible batch that this renderer can fit in.
+                    else if ((selectedBatch.MaxVertexSize > batch.MaxVertexSize || selectedBatch.VertexCount > batch.VertexCount) && 
+                               batch.Material == selectedBatch.Material && batch.SortOrder == selectedBatch.SortOrder) 
                     {
                         selectedBatch = batch;
                     }
@@ -113,6 +116,7 @@ namespace Engine.Rendering
             }
         }
 
+        private bool _recalculateMaxBatches = false;
         private void SortBatches()
         {
             _batches.Sort((x, y) =>
@@ -136,6 +140,22 @@ namespace Engine.Rendering
                 return 0;
             });
 
+            _recalculateMaxBatches = true;
+        }
+
+        // TODO: Delete all batches that are not being used for too long, and are also big.
+        internal void ClearPool()
+        {
+            foreach (var batch in _batches)
+            {
+                batch.Dispose();
+            }
+            _batches.Clear();
+        }
+
+
+        private void RemoveExtraBatches()
+        {
             var index = _batches.FindIndex(x => !x.IsActive);
 
             if (index < 0)
@@ -159,18 +179,22 @@ namespace Engine.Rendering
             }
         }
 
-        // TODO: Delete all batches that are not being used for too long, and are also big.
-        internal void ClearPool()
-        {
-            foreach (var batch in _batches)
-            {
-                batch.Dispose();
-            }
-            _batches.Clear();
-        }
-
         internal List<Batch2D> GetActiveBatches()
         {
+            if (Input.GetKeyDown(KeyCode.H))
+            {
+                foreach (var batch in _batches)
+                {
+                    Debug.Warn("Batches renderers: " + batch.GetRenderersNames());
+                }
+            }
+
+            if (_recalculateMaxBatches)
+            {
+                _recalculateMaxBatches = false;
+                RemoveExtraBatches();
+            }
+
             return _batches;
         }
     }

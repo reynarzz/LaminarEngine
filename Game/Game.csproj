@@ -40,4 +40,8 @@
 		<ProjectReference Include="..\Engine\Engine.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Assets\Scripts\ServiceLocator\" />
+	</ItemGroup>
+
 </Project>
