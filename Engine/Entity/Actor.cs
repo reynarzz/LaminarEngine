@@ -480,8 +480,8 @@ namespace Engine
 
         internal void Awake()
         {
-            UpdateScriptBeginEvent(this, _getEnablePending, _enabledAction);
             UpdateScriptBeginEvent(this, _getAwakePending, _awakeAction);
+            UpdateScriptBeginEvent(this, _getEnablePending, _enabledAction);
         }
 
         internal void Start()
