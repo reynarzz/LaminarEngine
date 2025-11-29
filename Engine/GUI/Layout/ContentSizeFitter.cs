@@ -20,7 +20,6 @@ namespace Engine.GUI
                 var rect = child.GetComponent<UIElement>();
                 if (rect && child.Actor.IsActiveSelf && rect.IsEnabled)
                 {
-                  //  rect.RectTransform.Recalculate(rect.RectTransform.Parent);
                     _children.Add(rect.RectTransform);
                 }
             }
@@ -57,7 +56,8 @@ namespace Engine.GUI
                 size.y = contentHeight; 
             }
             RectTransform.Size = size;
-            RectTransform.Recalculate(RectTransform.Parent);
+            RectTransform.Recalculate();
+            _children.Clear();
         }
     }
 }

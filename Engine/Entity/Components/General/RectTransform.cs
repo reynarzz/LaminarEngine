@@ -18,7 +18,10 @@ namespace Engine
                 return Transform.Parent?.GetComponent<RectTransform>();
             } 
         }
-
+        public void Recalculate()
+        {
+            Recalculate(Parent);
+        }
         public void Recalculate(RectTransform parent)
         {
             var parentPos = parent?.Rect.Min ?? default;
