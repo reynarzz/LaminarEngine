@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Engine.GUI
 {
     public class Button : Component, IUpdatableComponent, IPointerDownEvent, IPointerExitEvent, 
-                                     IPointerUpEvent, IPointerUpOutsideRectEvent, IPointerEnterEvent, IPointerDragEvent
+                                     IPointerUpEvent, IPointerUpOutsideRectEvent, IPointerEnterEvent, IPointerDragEvent, IStartableComponent
     {
         public event Action OnButtonClick;
         public event Action OnButtonNormalEvent;
@@ -46,9 +46,13 @@ namespace Engine.GUI
                 Graphic = GetComponent<UIGraphicsElement>();
             }
         }
+
         public override void OnEnabled()
         {
             base.OnEnabled();
+        }
+        public void OnStart()
+        {
             if (!Graphic)
             {
                 Graphic = GetComponent<UIGraphicsElement>();

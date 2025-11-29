@@ -33,7 +33,7 @@ namespace Engine.Rendering
                     }
                     else
                     {
-                        Debug.Warn($"Changed sorting: from {batch.SortOrder}, to: {renderer.SortOrder}" + renderer.Name);
+                       // Debug.Warn($"Changed sorting: from {batch.SortOrder}, to: {renderer.SortOrder}" + renderer.Name);
                         batch.RemoveRenderer(renderer);
                         return false;
                     }
@@ -43,7 +43,7 @@ namespace Engine.Rendering
             return false;
         }
 
-        internal Batch2D Get(Renderer2D renderer, int vertexToAdd, int maxVertexSize, Texture2D texture, Material mat, GfxResource indexBuffer = null)
+        internal Batch2D Get(Renderer2D renderer, int vertexToAdd, int maxVertexSize, Texture2D texture, Material mat, uint[] rawIndices = null)
         {
             {
                 if (GetCurrentBatch(renderer, out var batch))
@@ -76,17 +76,17 @@ namespace Engine.Rendering
                 if (selectedBatch.Initialize(renderer))
                 {
                     SortBatches();
-                    Debug.Log("Found empty batch for: " + renderer.Name);
+                    // Debug.Log("Found empty batch for: " + renderer.Name);
                 }
                 else
                 {
-                    Debug.Log("Found existing batch for: " + renderer.Name + ", Batch: Sorting: " + selectedBatch.SortOrder);
-                    SortBatches();
+                   // Debug.Log("Found existing batch for: " + renderer.Name + ", Batch: Sorting: " + selectedBatch.SortOrder);
+                   // SortBatches();
                 }
 
                 return selectedBatch;
             }
-            var newBatch = new Batch2D(maxVertexSize, indexBuffer == null ? _sharedIndexBuffer : indexBuffer);
+            var newBatch = new Batch2D(maxVertexSize, _sharedIndexBuffer, rawIndices);
             newBatch.OnBatchEmpty += OnBatchEmpty;
             // Initialize to clear any old states.
             newBatch.Initialize(renderer);
@@ -145,7 +145,6 @@ namespace Engine.Rendering
 
             if (emptyCount > MaxEmptyBatches)
             {
-                Debug.Warn("Removed empty batches: " + (emptyCount - MaxEmptyBatches) + ", ValidCount: " + index);
                 var removeCount = emptyCount - MaxEmptyBatches;
 
                 for (int i = 0; i < removeCount; i++)
@@ -154,6 +153,9 @@ namespace Engine.Rendering
                 }
 
                 _batches.RemoveRange(index, removeCount);
+
+                Debug.Warn("Removed empty batches: " + (removeCount) + ", ValidCount: " + index);
+
             }
         }
 

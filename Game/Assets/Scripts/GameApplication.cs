@@ -19,7 +19,7 @@ namespace Game
         // Implement:scroll list 
         // Bake tilemaps in binary file, the geometry should be already converted to the memory layout of the vertex array.
         // When a renderer is disabled and enabled, it will search for the first available one, it could find a huge batch reserved for another.So i have to search for the smallest, sameSort(if possible) valid one that a renderer fits in.
-        // Investigate why ui textures are not showing up correctly
+        // Investigate why ui such as UIImage and UIText do not show up correctly after restating the scene, is this related to batching?
 
 
         // For the game:

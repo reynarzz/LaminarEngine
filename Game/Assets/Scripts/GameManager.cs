@@ -272,10 +272,10 @@ namespace Game
             tilemap.AddComponent<TilemapCollider2D>();
             tilemap.Actor.Layer = 0;
         }
-
+        UICanvas _heartCanvas = null;
         private void Canvas()
         {
-            var canvas = new Actor("Canvas Health").AddComponent<UICanvas>();
+            _heartCanvas = new Actor("Canvas Health").AddComponent<UICanvas>();
 
             //var text = new Actor("Text test").AddComponent<UIText>();
             //text.Transform.Parent = canvas.Transform;
@@ -304,7 +304,7 @@ namespace Game
 
             float uiMult = 3;
             var lifebarSprites = GameTextureAtlases.GetAtlas("health_bar_frame");
-            var lifeBar = Image("Life bar", new vec2(10, 10), new vec2(143, 34) * uiMult, lifebarSprites[3], canvas.Transform);
+            var lifeBar = Image("Life bar", new vec2(10, 10), new vec2(143, 34) * uiMult, lifebarSprites[3], _heartCanvas.Transform);
             Debug.Warn("Is texture alive: " + sprites[0].Texture.IsAliveTex());
             Image("Heart1", new vec2(56, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);
             Image("Heart2", new vec2(88, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);
@@ -349,7 +349,11 @@ namespace Game
                 Window.FullScreen(!Window.IsFullScreen);
                 // Window.MouseVisible = !Window.IsFullScreen;
             }
-             
+            if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                _heartCanvas.Actor.IsActiveSelf = !_heartCanvas.Actor.IsActiveSelf;
+            }
+                
             if (Input.GetKeyDown(KeyCode.Enter))
             {
                 _pauseMenu.OnPause();
