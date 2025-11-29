@@ -33,19 +33,15 @@ namespace Engine.Rendering
                     }
                     else if (!batch.Textures.Contains(texture))
                     {
-                        // TODO: replace texture
-                        var result = batch.ReplaceTexture(renderer, texture);
-                        if (!result)
+                        if (!batch.ReplaceTexture(renderer, texture))
                         {
                             batch.RemoveRenderer(renderer);
                             return false;
                         }
                     }
-                    else
-                    {
-                        batchOut = batch;
-                        return true;
-                    }
+                    
+                    batchOut = batch;
+                    return true;
                 }
             }
 
@@ -75,8 +71,8 @@ namespace Engine.Rendering
                         selectedBatch = batch;
                     }
                     // Checks if this is a smaller compatible batch that this renderer can fit in.
-                    else if ((selectedBatch.MaxVertexSize > batch.MaxVertexSize || selectedBatch.VertexCount > batch.VertexCount) && 
-                               batch.Material == selectedBatch.Material && batch.SortOrder == selectedBatch.SortOrder) 
+                    else if ((selectedBatch.MaxVertexSize > batch.MaxVertexSize || selectedBatch.VertexCount > batch.VertexCount) &&
+                               batch.Material == selectedBatch.Material && batch.SortOrder == selectedBatch.SortOrder)
                     {
                         selectedBatch = batch;
                     }
@@ -92,8 +88,8 @@ namespace Engine.Rendering
                 }
                 else
                 {
-                   // Debug.Log("Found existing batch for: " + renderer.Name + ", Batch: Sorting: " + selectedBatch.SortOrder);
-                   // SortBatches();
+                    // Debug.Log("Found existing batch for: " + renderer.Name + ", Batch: Sorting: " + selectedBatch.SortOrder);
+                    // SortBatches();
                 }
 
                 return selectedBatch;

@@ -250,10 +250,8 @@ namespace Engine.Rendering
                 {
                     return SetTextureToEmptySlot(texture, out var textureIndex);
                 }
-                else
-                {
-                    Textures[currentRendererId.TextureId] = texture;
-                }
+
+                Textures[currentRendererId.TextureId] = texture;
 
                 return true;
             }
