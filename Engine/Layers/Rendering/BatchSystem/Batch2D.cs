@@ -60,7 +60,7 @@ namespace Engine.Rendering
         private bool _isDirty;
         private int _vertexOffset = int.MaxValue;
         private Dictionary<Guid, RendererIds> _renderers;
-
+        public int RenderersCount => _renderers.Count;
         private GeometryDescriptor _geoDescriptor;
         private Vertex[] _verticesData;
         private struct RendererIds
@@ -193,13 +193,6 @@ namespace Engine.Rendering
                 _vertexOffset = Math.Min(_vertexOffset, startIndex + i);
                 _verticesData[startIndex + i] = vertices[i];
             }
-        }
-
-        /// <summary>
-        /// Will push geometry immediatelly to gpu.
-        /// </summary>
-        internal void PushGeometryImmediate(Material material, Texture texture, int indicesCount, params Vertex[] vertices)
-        {
         }
 
         public void RemoveRenderer(Renderer renderer)

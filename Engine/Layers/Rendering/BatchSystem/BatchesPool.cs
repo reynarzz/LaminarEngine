@@ -12,7 +12,7 @@ namespace Engine.Rendering
     {
         private readonly GfxResource _sharedIndexBuffer;
         private List<Batch2D> _batches;
-        public int MaxEmptyBatches { get; set; } = 10;
+        public int MaxEmptyBatches { get; set; } = 5;
         public BatchesPool(GfxResource sharedIndexBuffer)
         {
             _sharedIndexBuffer = sharedIndexBuffer;
@@ -147,6 +147,12 @@ namespace Engine.Rendering
             {
                 Debug.Warn("Removed empty batches: " + (emptyCount - MaxEmptyBatches) + ", ValidCount: " + index);
                 var removeCount = emptyCount - MaxEmptyBatches;
+
+                for (int i = 0; i < removeCount; i++)
+                {
+                    _batches[i + index].Dispose();
+                }
+
                 _batches.RemoveRange(index, removeCount);
             }
         }
