@@ -108,6 +108,8 @@ namespace Engine.Layers
                 RenderTarget = sceneRenderTarget.NativeResource
             });
 
+            SceneManager.OnPreRenderUpdate();
+
             // TODO: improve this, don't ask for renderers but add/remove with events.
             _renderers.Clear();
             _UIElementRenderers.Clear();
@@ -121,6 +123,7 @@ namespace Engine.Layers
                 return x.IsEnabled && x is UIGraphicsElement;
             });
 
+
             var batches = _sceneBatches.GetBatches(_renderers);
             var uibatches = _uiBatches.GetBatches(_UIElementRenderers);
 
@@ -131,7 +134,6 @@ namespace Engine.Layers
 #if DEBUG
             EngineInfo.Renderer.WBatches = geoBatchesInfo.BatchesCount;
             EngineInfo.Renderer.GrabScreenPass = geoBatchesInfo.ScreenGrabPasses;
-
             EngineInfo.Renderer.UIBatches = uiBatchesInfo.BatchesCount;
             EngineInfo.Renderer.UIGrabScreenPass = uiBatchesInfo.ScreenGrabPasses;
             EngineInfo.Renderer.PostProcessingPasses = PostProcessingStack.Passes.Count;

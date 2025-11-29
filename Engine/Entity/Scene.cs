@@ -14,7 +14,8 @@ namespace Engine
         private readonly Action<Actor> _onLateUpdate = x => x.LateUpdate();
         private readonly Action<Actor> _onFixedUpdate = x => x.FixedUpdate();
         private readonly Action<Actor> _onDrawGizmoUpdate = x => x.OnDrawGizmoUpdate();
-
+        private readonly Action<Actor> _onPreRenderUpdate = x => x.OnPreRenderUpdate();
+        
 
         private readonly List<Actor> _rootActors = new();
         internal IReadOnlyList<Actor> RootActors => _rootActors;
@@ -84,7 +85,10 @@ namespace Engine
         {
             CallActorFunc(_onDrawGizmoUpdate);
         }
-
+        internal void OnPreRender()
+        {
+            CallActorFunc(_onPreRenderUpdate);
+        }
         private void CallActorFunc(Action<Actor> callback)
         {
             for (int i = 0; i < _rootActors.Count; i++)

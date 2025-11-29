@@ -6,9 +6,37 @@ namespace Engine.GUI
 {
     public class UIImage : UIGraphicsElement
     {
-        public bool PreserveAspect { get; set; } = false;
+        private bool _preserveAspect = false;
+        public bool PreserveAspect
+        {
+            get => _preserveAspect;
+            set
+            {
+                if (_preserveAspect == value)
+                    return;
 
-        public bool IsSliced { get; set; } = false;
+                IsDirty = true;
+
+                _preserveAspect = value;
+            }
+        }
+
+        private bool _isSliced = false;
+        public bool IsSliced
+        {
+            get => _isSliced;
+            set
+            {
+                if (_isSliced == value)
+                    return;
+
+                IsDirty = true;
+
+                _isSliced = value;
+            }
+        }
+
+        // TODO: set image dirty when any property changes.
 
         // Slice sizes in pixels
         public float LeftBorder = 10f;
@@ -33,43 +61,47 @@ namespace Engine.GUI
         {
             var rt = RectTransform;
             var size = rt.Rect.Size;
-            if (size.x <= 0f || size.y <= 0f) return;
+            if (size.x <= 0f || size.y <= 0f)
+            {
+                Debug.Log("Zero size image: " + Name);
+                return;
+            }
 
-            if (!IsSliced)
-            {
-                DrawSimpleQuad(rt, size);
-            }
-            else
-            {
-                Draw9SliceQuad(rt, size);
-            }
-        }
-        private void DrawSimpleQuad(RectTransform rt, vec2 size)
-        {
             if (IsDirty)
             {
-                var chunk = Sprite?.GetAtlasChunk() ?? AtlasChunk.DefaultChunk;
-                Mesh.IndicesToDrawCount = 6;
-
-                if (PreserveAspect && chunk.Width > 0 && chunk.Height > 0)
+                if (!IsSliced)
                 {
-                    float spriteRatio = (float)chunk.Width / chunk.Height;
-                    float rectRatio = size.x / size.y;
-
-                    if (spriteRatio > rectRatio)
-                        size.y = size.x / spriteRatio;
-                    else
-                        size.x = size.y * spriteRatio;
+                    DrawSimpleQuad(rt, size);
                 }
-
-                var quad = GraphicsHelper.GetUIQuadVerticesLocal(chunk.Uvs, size, rt.Pivot, Color, Transform.WorldMatrix);
-
-                Mesh.Vertices[0] = quad.v0;
-                Mesh.Vertices[1] = quad.v1;
-                Mesh.Vertices[2] = quad.v2;
-                Mesh.Vertices[3] = quad.v3;
+                else
+                {
+                    Draw9SliceQuad(rt, size);
+                }
             }
-           
+        }
+
+        private void DrawSimpleQuad(RectTransform rt, vec2 size)
+        {
+            var chunk = Sprite?.GetAtlasChunk() ?? AtlasChunk.DefaultChunk;
+            Mesh.IndicesToDrawCount = 6;
+
+            if (PreserveAspect && chunk.Width > 0 && chunk.Height > 0)
+            {
+                float spriteRatio = (float)chunk.Width / chunk.Height;
+                float rectRatio = size.x / size.y;
+
+                if (spriteRatio > rectRatio)
+                    size.y = size.x / spriteRatio;
+                else
+                    size.x = size.y * spriteRatio;
+            }
+
+            var quad = GraphicsHelper.GetUIQuadVerticesLocal(chunk.Uvs, size, rt.Pivot, Color, Transform.WorldMatrix);
+
+            Mesh.Vertices[0] = quad.v0;
+            Mesh.Vertices[1] = quad.v1;
+            Mesh.Vertices[2] = quad.v2;
+            Mesh.Vertices[3] = quad.v3;
         }
 
         private void Draw9SliceQuad(RectTransform rt, vec2 size)
@@ -168,7 +200,7 @@ namespace Engine.GUI
         private void DebugDrawSlices(float x0, float x1, float x2, float x3,
                                      float y0, float y1, float y2, float y3)
         {
-           
+
             for (int iy = 0; iy < 3; iy++)
             {
                 float yA = iy == 0 ? y0 : (iy == 1 ? y1 : y2);

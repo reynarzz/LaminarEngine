@@ -309,27 +309,33 @@ namespace Game
             float uiMult = 3;
             var lifebarSprites = GameTextureAtlases.GetAtlas("health_bar_frame");
             var lifeBar = Image("Life bar", new vec2(10, 10), new vec2(143, 34) * uiMult, lifebarSprites[3], _heartCanvas.Transform);
-            Debug.Warn("Is texture alive: " + sprites[0].Texture.IsAliveTex());
             Image("Heart1", new vec2(56, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);
             Image("Heart2", new vec2(88, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);
             Image("Heart3", new vec2(120, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);
+
+            // _heartCanvas.OnLateUpdate();
         }
 
+        private Material _portalMaterialTest;
         private Actor Portal()
         {
             var screenGrabTest = new Actor<SpriteRenderer, Rotate>("Portal");
             var renderer = screenGrabTest.GetComponent<SpriteRenderer>();
             renderer.SortOrder = 14;
 
-            var screenShader = new Shader(Assets.GetText("Shaders/VertScreenGrab.vert").Text, Assets.GetText("Shaders/Portal.frag").Text);
-            renderer.Material = new Material(screenShader);
-            renderer.Material.Name = "Portal Material";
-            var pass = renderer.Material.GetPass(0);
-            pass.IsScreenGrabPass = true;
+            if (!_portalMaterialTest)
+            {
+                var screenShader = new Shader(Assets.GetText("Shaders/VertScreenGrab.vert").Text, Assets.GetText("Shaders/Portal.frag").Text);
+                _portalMaterialTest = new Material(screenShader);
+                _portalMaterialTest.Name = "Portal Material";
+                _portalMaterialTest.AddTexture("uStarsTex", Assets.GetTexture("stars.png"));
+                var pass = _portalMaterialTest.GetPass(0);
+                pass.IsScreenGrabPass = true;
+            }
 
+            renderer.Material = _portalMaterialTest;
             screenGrabTest.Transform.LocalScale = new vec3(6, 6);
             screenGrabTest.Transform.LocalPosition = new vec3(-9, -7);
-            renderer.Material.AddTexture("uStarsTex", Assets.GetTexture("stars.png"));
 
             return screenGrabTest;
         }
@@ -337,7 +343,7 @@ namespace Game
         protected override void OnUpdate()
         {
 #if DEBUG
-            Window.Name = EngineInfo.RendererInfoToString() + ", FPS: " + Time.FPS.ToString();
+            Window.Name = EngineInfo.RendererInfoToString() + " | FPS: " + ((int)Time.FPS).ToString();
 #endif
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {

@@ -115,7 +115,13 @@ namespace Engine
                 _scenes[i].OnDrawGizmos();
             }
         }
-
+        internal static void OnPreRenderUpdate()
+        {
+            for (int i = 0; i < _scenes.Count; i++)
+            {
+                _scenes[i].OnPreRender();
+            }
+        }
         internal static void OnCleanUpUpdate()
         {
             _activeScene.DeletePending();

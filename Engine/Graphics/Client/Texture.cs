@@ -40,10 +40,6 @@ namespace Engine
         {
             NativeResource.Dispose();
         }
-        public bool IsAliveTex()
-        {
-            return GfxDeviceManager.Current.IsResourceValid(NativeResource);
-        }
         protected abstract IResourceHandle Create();
     }
 }
