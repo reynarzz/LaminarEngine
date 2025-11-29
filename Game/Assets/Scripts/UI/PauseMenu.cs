@@ -107,6 +107,7 @@ namespace Game
 
             SetColorAlpha(0, true);
         }
+        private ContentSizeFitter _fitter;
 
         private void Inventory()
         {
@@ -115,7 +116,7 @@ namespace Game
             _inventory.Transform.LocalPosition = new vec3(0, 298);
 
             var inventory = NewImage("Inventory image", default, new vec2(320, 240), Color.White, _inventory.Transform);
-            var fitter = inventory.AddComponent<ContentSizeFitter>();
+            _fitter = inventory.AddComponent<ContentSizeFitter>();
             inventory.RectTransform.Pivot = new vec2(0.5f, 0.5f);
             var img = inventory.GetComponent<UIImage>();
             img.Material = GameManager.DefaultMaterial;
@@ -142,7 +143,7 @@ namespace Game
             horizontalLayout.MaxPerRow = 10;
             horizontalLayout.ContentsSize = new vec2(46,46);
             var slotSprite = new Sprite(Assets.GetTexture("pixel-ui_slot.png"));
-
+            
             var parent = NewImage("Quad1", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
             parent.Sprite = slotSprite;
             var coins = GameTextureAtlases.GetAtlas("coin_currency");
@@ -152,12 +153,8 @@ namespace Game
             iconContent.RectTransform.Pivot = new vec2(0.5f, 0.6f);
             var animator = iconContent.AddComponent<Animator>();
             var clip = new AnimationClip("Sprite");
-            var spriteCurve = new SpriteCurve();
-            for (int i = 0; i < coins.Length; i++)
-            {
-                spriteCurve.AddKeyFrame((1.0f / 7.0f) * i, coins[i]);
-            }
-            clip.AddCurve("Sprite", spriteCurve);
+            
+            clip.AddCurve("Sprite", new SpriteCurve(7.0f, coins));
             animator.AddState(new AnimationState("Coin", clip));
             animator.OnUpdate += x =>
             {
@@ -169,7 +166,8 @@ namespace Game
                 NewImage("IQuad: " + i, default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
 
             }
-            fitter.ResizeToFitChildren();
+            horizontalLayout.RecalculateLayout();
+            _fitter.ResizeToFitChildren();
             _inventory.Actor.IsActiveSelf = false;
         }
 
@@ -242,7 +240,6 @@ namespace Game
 
             if (Input.GetKeyDown(KeyCode.Tab))
             {
-                _inventory.GetComponentsInChildren<ContentSizeFitter>()[0].ResizeToFitChildren();
                 _inventory.Actor.IsActiveSelf = !_inventory.Actor.IsActiveSelf;
             }
         }

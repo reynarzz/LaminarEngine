@@ -13,6 +13,8 @@ namespace Engine.Rendering
         private readonly GfxResource _sharedIndexBuffer;
         private List<Batch2D> _batches;
         public int MaxEmptyBatches { get; set; } = 5;
+        private bool _recalculateMaxBatches = false;
+
         public BatchesPool(GfxResource sharedIndexBuffer)
         {
             _sharedIndexBuffer = sharedIndexBuffer;
@@ -121,7 +123,6 @@ namespace Engine.Rendering
             }
         }
 
-        private bool _recalculateMaxBatches = false;
         private void SortBatches()
         {
             _batches.Sort((x, y) =>

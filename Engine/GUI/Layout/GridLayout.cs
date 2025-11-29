@@ -1,11 +1,10 @@
 ﻿using Engine.Types;
 using GlmNet;
-using System.Collections.Generic;
 
 namespace Engine.GUI
 {
     [UniqueComponent]
-    public class GridLayout : UIElement, IUpdatableComponent
+    public class GridLayout : UIElement
     {
         public float Spacing { get; set; } = 5f;
         public int MaxPerRow { get; set; } = 3;
@@ -19,9 +18,7 @@ namespace Engine.GUI
 
         private readonly List<RectTransform> _rectTransforms = new();
 
-        void IUpdatableComponent.OnUpdate() => ApplyGrid();
-
-        private void ApplyGrid()
+        public void RecalculateLayout()
         {
             if (MaxPerRow < 1) MaxPerRow = 1;
 

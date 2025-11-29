@@ -4,7 +4,7 @@ using GlmNet;
 namespace Engine.GUI
 {
     [UniqueComponent]
-    public class HorizontalLayout : UIElement, IUpdatableComponent
+    public class HorizontalLayout : UIElement
     {
         public float Spacing { get; set; } = 5f;
         public bool ResizeToFitHorizontal { get; set; } = false;
@@ -16,12 +16,7 @@ namespace Engine.GUI
 
         private readonly List<RectTransform> _rectTransforms = new();
 
-        void IUpdatableComponent.OnUpdate()
-        {
-            ApplyLayout();
-        }
-
-        private void ApplyLayout()
+        public void RecalculateLayout()
         {
             _rectTransforms.Clear();
             foreach (var rt in Transform.Children)
