@@ -372,6 +372,7 @@ namespace Game
             if (Input.GetKeyDown(KeyCode.T))
             {
                 SceneManager.LoadScene("Game");
+                PostProcessingStack.Clear();
                 new Actor<GameManager>("GameManager");
             }
         }

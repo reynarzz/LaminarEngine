@@ -232,7 +232,7 @@ namespace Engine
 
         public mat4 GetRenderingWorldMatrix()
         {
-            return NeedsInterpolation ? InterpolatedWorldMatrix : WorldMatrix;
+            return NeedsInterpolation && !Actor.IsAwaking ? InterpolatedWorldMatrix : WorldMatrix;
         }
 
         private static vec3 QuaternionToEuler(quat q)

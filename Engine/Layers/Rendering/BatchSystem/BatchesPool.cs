@@ -115,7 +115,6 @@ namespace Engine.Rendering
             if (_batches.Remove(batch))
             {
                 _batches.Add(batch);
-                Debug.Log("Empty batch: ");
             }
             else
             {
@@ -187,14 +186,6 @@ namespace Engine.Rendering
 
         internal List<Batch2D> GetActiveBatches()
         {
-            if (Input.GetKeyDown(KeyCode.H))
-            {
-                foreach (var batch in _batches)
-                {
-                    Debug.Warn("Batches renderers: " + batch.RenderersNames);
-                }
-            }
-
             if (_recalculateMaxBatches)
             {
                 _recalculateMaxBatches = false;

@@ -37,7 +37,7 @@ namespace Game
                 {
                     IsEnabled = true,
                     Fps = 10.0f,
-                    SpriteAtlasPath = atlasId[i],
+                    SpriteAtlasId = atlasId[i],
                 };
             }
 

@@ -128,6 +128,7 @@ namespace Game
 
             LookDir = _characterConfig.SpriteLookDir;
             InitAudio(config);
+            
         }
 
         private void InitAudio(CharacterConfig config)
@@ -205,32 +206,34 @@ namespace Game
 
             if (statesConfig.Idle.IsEnabled)
             {
-                AddSpriteAnimState(IDLE_ANIM_STATE, true, true, false, [toWalk, toJump, toFall, toAttack, toDeath, toHit], statesConfig.Idle.SpriteAtlasPath, statesConfig.Idle.Fps, statesConfig.Idle.Events);
+                AddSpriteAnimState(IDLE_ANIM_STATE, true, true, false, [toWalk, toJump, toFall, toAttack, toDeath, toHit], statesConfig.Idle.SpriteAtlasId, statesConfig.Idle.Fps, statesConfig.Idle.Events);
             }
             if (statesConfig.Walk.IsEnabled)
             {
-                AddSpriteAnimState(WALK_ANIM_STATE, false, true, false, [toIdle, toJump, toFall, toAttack, toDeath, toHit], statesConfig.Walk.SpriteAtlasPath, statesConfig.Walk.Fps, statesConfig.Walk.Events);
+                AddSpriteAnimState(WALK_ANIM_STATE, false, true, false, [toIdle, toJump, toFall, toAttack, toDeath, toHit], statesConfig.Walk.SpriteAtlasId, statesConfig.Walk.Fps, statesConfig.Walk.Events);
             }
             if (statesConfig.Jump.IsEnabled)
             {
-                AddSpriteAnimState(JUMP_ANIM_STATE, false, false, false, [toIdle, toFall, toAttack, toHit], statesConfig.Jump.SpriteAtlasPath, statesConfig.Jump.Fps, statesConfig.Jump.Events);
+                AddSpriteAnimState(JUMP_ANIM_STATE, false, false, false, [toIdle, toFall, toAttack, toHit], statesConfig.Jump.SpriteAtlasId, statesConfig.Jump.Fps, statesConfig.Jump.Events);
             }
             if (statesConfig.Fall.IsEnabled)
             {
-                AddSpriteAnimState(FALL_ANIM_STATE, false, false, false, [toIdle, toWalk, toAttack, toHit], statesConfig.Fall.SpriteAtlasPath, statesConfig.Fall.Fps, statesConfig.Fall.Events);
+                AddSpriteAnimState(FALL_ANIM_STATE, false, false, false, [toIdle, toWalk, toAttack, toHit], statesConfig.Fall.SpriteAtlasId, statesConfig.Fall.Fps, statesConfig.Fall.Events);
             }
             if (statesConfig.Attack.IsEnabled)
             {
-                AddSpriteAnimState(ATTACK_ANIM_STATE, false, false, true, [toIdle, toWalk, toFall, toDeath, toHit], statesConfig.Attack.SpriteAtlasPath, statesConfig.Attack.Fps, statesConfig.Attack.Events);
+                AddSpriteAnimState(ATTACK_ANIM_STATE, false, false, true, [toIdle, toWalk, toFall, toDeath, toHit], statesConfig.Attack.SpriteAtlasId, statesConfig.Attack.Fps, statesConfig.Attack.Events);
             }
             if (statesConfig.Death.IsEnabled)
             {
-                AddSpriteAnimState(DEATH_ANIM_STATE, false, false, true, null, statesConfig.Death.SpriteAtlasPath, statesConfig.Death.Fps, statesConfig.Death.Events);
+                AddSpriteAnimState(DEATH_ANIM_STATE, false, false, true, null, statesConfig.Death.SpriteAtlasId, statesConfig.Death.Fps, statesConfig.Death.Events);
             }
             if (statesConfig.Hit.IsEnabled)
             {
-                AddSpriteAnimState(HIT_ANIM_STATE, false, false, true, [toIdle, toWalk, toJump, toFall, toAttack, toDeathLife0], statesConfig.Hit.SpriteAtlasPath, statesConfig.Hit.Fps, statesConfig.Hit.Events);
+                AddSpriteAnimState(HIT_ANIM_STATE, false, false, true, [toIdle, toWalk, toJump, toFall, toAttack, toDeathLife0], statesConfig.Hit.SpriteAtlasId, statesConfig.Hit.Fps, statesConfig.Hit.Events);
             }
+
+            Renderer.Sprite = GameTextureAtlases.GetAtlas(statesConfig.Idle.SpriteAtlasId).FirstOrDefault();
         }
 
         protected void AddSpriteAnimState(string stateName, bool makeMain, bool loop, bool useClipBlendTime,
@@ -577,7 +580,7 @@ namespace Game
         protected struct AnimationStateInfo
         {
             public bool IsEnabled;
-            public string SpriteAtlasPath;
+            public string SpriteAtlasId;
             public float Fps;
             public AnimEvent[] Events;
         }

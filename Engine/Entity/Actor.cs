@@ -19,6 +19,8 @@ namespace Engine
         internal List<Component> Components => _components;
         private List<IComponent> _toDeleteComponents = new();
 
+        internal bool IsAwaking { get; private set; } = true;
+
         private Transform _transform;
         public Transform Transform
         {
@@ -284,6 +286,9 @@ namespace Engine
 
             void GetComponents(ref List<T> elements, Actor actor)
             {
+                if (!actor || actor.Components == null)
+                    return;
+
                 for (int i = 0; i < actor._components.Count; i++)
                 {
                     if (typeof(T).IsAssignableFrom(actor._components[i].GetType()))
@@ -487,6 +492,10 @@ namespace Engine
 
         internal void Start()
         {
+            if (IsActiveInHierarchy)
+            {
+                IsAwaking = false;
+            }
             UpdateScriptBeginEvent(this, _getStartPending, _startAction);
         }
 
@@ -514,7 +523,7 @@ namespace Engine
         {
             UpdateScriptsFunction(this, _preRenderUpdateAction, true);
         }
-        
+
         private void UpdateScriptBeginEvent<T>(Actor actor, Func<Actor, List<IComponent>> getPendingComponents,
                                                          Action<T> action) where T : class, IComponent
         {

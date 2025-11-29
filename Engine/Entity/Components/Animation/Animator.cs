@@ -47,7 +47,6 @@ namespace Engine
             return state;
         }
 
-
         public void SetState(AnimationState state)
         {
             if (!_states.ContainsKey(state.Name))
