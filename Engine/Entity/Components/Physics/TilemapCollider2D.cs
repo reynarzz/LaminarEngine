@@ -12,7 +12,7 @@ using System.Numerics;
 
 namespace Engine
 {
-    [UniqueComponent, RequiredComponent(typeof(TilemapRenderer), typeof(RigidBody2D))]
+    [UniqueComponent, RequiredComponent(typeof(TilemapRenderer))]
     public class TilemapCollider2D : Collider2D
     {
         private TilemapRenderer _renderer;
@@ -35,8 +35,6 @@ namespace Engine
             _renderer = GetComponent<TilemapRenderer>();
 
             base.OnAwake();
-
-            AttachedRigidbody.BodyType = Body2DType.Static;
         }
 
         protected override B2ShapeId[] CreateShape(B2BodyId bodyId)
