@@ -18,6 +18,7 @@ namespace GlmNet
         public static vec3 Up { get; } = new vec3(0, 1, 0);
         public static vec3 Right { get; } = new vec3(1, 0, 0);
         public static vec3 Forward { get; } = new vec3(0, 0, 1);
+        public static vec3 Half { get; } = new vec3(0.5f, 0.5f, 0.5f);
 
         public float this[int index]
         {
@@ -161,6 +162,7 @@ namespace GlmNet
                 return x * x + y * y + z * z;
             }
         }
+
 
         public float[] to_array()
         {

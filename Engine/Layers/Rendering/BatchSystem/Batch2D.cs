@@ -262,11 +262,9 @@ namespace Engine.Rendering
         public void RemoveRenderer(Renderer renderer)
         {
             renderer.OnDestroyRenderer -= RemoveRenderer;
-            Debug.Log("Remove renderer from batch: " + renderer.Name);
             // If renderer doesn't exist, do nothing
             if (!_renderers.TryGetValue(renderer.GetID(), out var removedInfo))
             {
-                Debug.EngineError("Wrong batch for renderer: " + renderer.Name);
                 return;
             }
 

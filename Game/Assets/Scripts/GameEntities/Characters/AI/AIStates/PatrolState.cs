@@ -22,7 +22,7 @@ namespace Game
 
         public override void OnEnter()
         {
-            Context.Target = Actor.Find("Player").GetComponent<Character>();
+            Context.Target = Actor.Find("Player")?.GetComponent<Character>();
         }
 
         public override void OnUpdate()

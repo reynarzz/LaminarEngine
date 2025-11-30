@@ -14,30 +14,25 @@ namespace Game
     {
         public abstract GameEntity Build(vec2 position, FieldInstance[] fields, Func<vec2, bool, vec2> positionConverter);
 
-        private bool IsField(FieldInstance field, string id)
-        {
-            return field.Identifier.Equals(id, StringComparison.OrdinalIgnoreCase);
-        }
-
-        protected bool Deserialize<T>(FieldInstance field, string id, out T value)
+        protected bool Deserialize<T>(FieldInstance[] fields, string id, out T value)
         {
             value = default;
-            if (!IsField(field, id) || field.Value == null)
+            if (!TryGetField(fields, id, out var field, true))
                 return false;
             value = JsonConvert.DeserializeObject<T>(field.Value.ToString());
             return true;
         }
 
-        protected bool GetEnumArray<T>(FieldInstance field, string id, out T[] value) where T : unmanaged, Enum
+        protected bool GetEnumArray<T>(FieldInstance[] fields, string id, out T[] value) where T : unmanaged, Enum
         {
             value = default;
-            if (Deserialize<string[]>(field, id, out var enumsStr))
+            if (Deserialize<string[]>(fields, id, out var enumsStr))
             {
                 var enums = new T[enumsStr.Length];
 
                 for (int i = 0; i < enumsStr.Length; i++)
                 {
-                    if(!ParseEnum(enumsStr[i], out enums[i]))
+                    if (!ParseEnum(enumsStr[i], out enums[i]))
                     {
                         Debug.Error($"Can't parse enum: {enumsStr[i]}, is not part of enum type: {typeof(T).Name}");
                     }
@@ -47,6 +42,15 @@ namespace Game
             }
 
             return false;
+        }
+
+        protected bool GetEnum<T>(FieldInstance[] fields, string id, out T value) where T : unmanaged, Enum
+        {
+            value = default;
+            if (!TryGetField(fields, id, out var field))
+                return false;
+
+            return ParseEnum(field.Value?.ToString(), out value);
         }
 
         protected bool GetEnum<T>(FieldInstance field, string id, out T value) where T : unmanaged, Enum
@@ -62,13 +66,24 @@ namespace Game
         {
             return Enum.TryParse(str, true, out value);
         }
-        protected bool GetBool(FieldInstance field, string id, out bool value)
+        protected bool GetBool(FieldInstance[] fields, string id, out bool value)
         {
             value = default;
-            if (!IsField(field, id))
+            if (!TryGetField(fields, id, out var field))
                 return false;
 
             value = bool.Parse(field.Value?.ToString());
+
+            return true;
+        }
+
+        protected bool GetInt(FieldInstance[] fields, string id, out int value)
+        {
+            value = default;
+            if (!TryGetField(fields, id, out var field))
+                return false;
+
+            value = int.Parse(field.Value?.ToString());
 
             return true;
         }
@@ -84,6 +99,29 @@ namespace Game
             return true;
         }
 
+        private bool TryGetField(FieldInstance[] fields, string id, out FieldInstance fieldOut, bool failIfValueIsNull = false)
+        {
+            fieldOut = null;
+            foreach (var field in fields)
+            {
+                if (IsField(field, id))
+                {
+                    if (failIfValueIsNull && field.Value == null)
+                    {
+                        break;
+                    }
+                    fieldOut = field;
+                }
+            }
+
+            return fieldOut != null;
+        }
+
+        private bool IsField(FieldInstance field, string id)
+        {
+            return field.Identifier.Equals(id, StringComparison.OrdinalIgnoreCase);
+        }
+
         protected Predicate<Player> PlayerHasItem_Condition(ItemId item, int amount)
         {
             return p =>
@@ -96,6 +134,5 @@ namespace Game
                 return p.Inventory.GetItemCount(item) >= amount;
             };
         }
-
     }
 }

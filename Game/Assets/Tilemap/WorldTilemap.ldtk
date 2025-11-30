@@ -11,7 +11,7 @@
 	"iid": "a39fb1b0-7820-11ed-b6fd-87f9a01f3d6b",
 	"jsonVersion": "1.5.3",
 	"appBuildId": 473703,
-	"nextUid": 220,
+	"nextUid": 224,
 	"identifierStyle": "Capitalize",
 	"toc": [
 		{
@@ -1674,7 +1674,7 @@
 			"pivotY": 0.5,
 			"fieldDefs": [
 				{
-					"identifier": "LookToRight",
+					"identifier": "look_to_right",
 					"doc": null,
 					"__type": "Bool",
 					"uid": 203,
@@ -2607,6 +2607,119 @@
 					"tilesetUid": null
 				}
 			]
+		},
+		{
+			"identifier": "Portal",
+			"uid": 220,
+			"tags": ["Actor"],
+			"exportToToc": false,
+			"allowOutOfBounds": false,
+			"doc": null,
+			"width": 16,
+			"height": 16,
+			"resizableX": false,
+			"resizableY": false,
+			"minWidth": null,
+			"maxWidth": null,
+			"minHeight": null,
+			"maxHeight": null,
+			"keepAspectRatio": false,
+			"tileOpacity": 1,
+			"fillOpacity": 0.08,
+			"lineOpacity": 0,
+			"hollow": false,
+			"color": "#733E39",
+			"renderMode": "Tile",
+			"showName": true,
+			"tilesetId": 133,
+			"tileRenderMode": "FitInside",
+			"tileRect": { "tilesetUid": 133, "x": 32, "y": 224, "w": 16, "h": 16 },
+			"uiTileRect": null,
+			"nineSliceBorders": [],
+			"maxCount": 0,
+			"limitScope": "PerLevel",
+			"limitBehavior": "MoveLastOne",
+			"pivotX": 0.5,
+			"pivotY": 0.5,
+			"fieldDefs": [
+				{
+					"identifier": "Target",
+					"doc": null,
+					"__type": "EntityRef",
+					"uid": 222,
+					"type": "F_EntityRef",
+					"isArray": false,
+					"canBeNull": true,
+					"arrayMinLength": null,
+					"arrayMaxLength": null,
+					"editorDisplayMode": "RefLinkBetweenCenters",
+					"editorDisplayScale": 1,
+					"editorDisplayPos": "Above",
+					"editorLinkStyle": "CurvedArrow",
+					"editorDisplayColor": null,
+					"editorAlwaysShow": false,
+					"editorShowInWorld": true,
+					"editorCutLongValues": true,
+					"editorTextSuffix": null,
+					"editorTextPrefix": null,
+					"useForSmartColor": false,
+					"exportToToc": false,
+					"searchable": false,
+					"min": null,
+					"max": null,
+					"regex": null,
+					"acceptFileTypes": null,
+					"defaultOverride": null,
+					"textLanguageMode": null,
+					"symmetricalRef": false,
+					"autoChainRef": true,
+					"allowOutOfLevelRef": true,
+					"allowedRefs": "OnlySame",
+					"allowedRefsEntityUid": null,
+					"allowedRefTags": [],
+					"tilesetUid": null
+				},
+				{
+					"identifier": "player_look_to_right",
+					"doc": null,
+					"__type": "Bool",
+					"uid": 223,
+					"type": "F_Bool",
+					"isArray": false,
+					"canBeNull": false,
+					"arrayMinLength": null,
+					"arrayMaxLength": null,
+					"editorDisplayMode": "Hidden",
+					"editorDisplayScale": 1,
+					"editorDisplayPos": "Above",
+					"editorLinkStyle": "StraightArrow",
+					"editorDisplayColor": null,
+					"editorAlwaysShow": false,
+					"editorShowInWorld": true,
+					"editorCutLongValues": true,
+					"editorTextSuffix": null,
+					"editorTextPrefix": null,
+					"useForSmartColor": false,
+					"exportToToc": false,
+					"searchable": false,
+					"min": null,
+					"max": null,
+					"regex": null,
+					"acceptFileTypes": null,
+					"defaultOverride": {
+						"id": "V_Bool",
+						"params": [ true ]
+					},
+					"textLanguageMode": null,
+					"symmetricalRef": false,
+					"autoChainRef": true,
+					"allowOutOfLevelRef": true,
+					"allowedRefs": "OnlySame",
+					"allowedRefsEntityUid": null,
+					"allowedRefTags": [],
+					"tilesetUid": null
+				}
+			]
 		}
 	], "tilesets": [
 		{
@@ -2850,7 +2963,7 @@
 							"height": 20,
 							"defUid": 90,
 							"px": [840,656],
-							"fieldInstances": [{ "__identifier": "LookToRight", "__type": "Bool", "__value": true, "__tile": null, "defUid": 203, "realEditorValues": [{
+							"fieldInstances": [{ "__identifier": "look_to_right", "__type": "Bool", "__value": true, "__tile": null, "defUid": 203, "realEditorValues": [{
 								"id": "V_Bool",
 								"params": [ true ]
 							}] }],
@@ -3457,6 +3570,60 @@
 							],
 							"__worldX": -968,
 							"__worldY": 152
+						},
+						{
+							"__identifier": "Portal",
+							"__grid": [73,39],
+							"__pivot": [0.5,0.5],
+							"__tags": ["Actor"],
+							"__tile": { "tilesetUid": 133, "x": 32, "y": 224, "w": 16, "h": 16 },
+							"__smartColor": "#733E39",
+							"iid": "623212e0-ac70-11f0-9a6a-6974938cbccb",
+							"width": 16,
+							"height": 16,
+							"defUid": 220,
+							"px": [1176,632],
+							"fieldInstances": [
+								{ "__identifier": "Target", "__type": "EntityRef", "__value": {
+									"entityIid": "0cca19f0-ac70-11f0-9a6a-61a0255beb08",
+									"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+									"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+									"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3"
+								}, "__tile": null, "defUid": 222, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["0cca19f0-ac70-11f0-9a6a-61a0255beb08"]
+								}] },
+								{ "__identifier": "player_look_to_right", "__type": "Bool", "__value": true, "__tile": null, "defUid": 223, "realEditorValues": [] }
+							],
+							"__worldX": -104,
+							"__worldY": 120
+						},
+						{
+							"__identifier": "Portal",
+							"__grid": [99,39],
+							"__pivot": [0.5,0.5],
+							"__tags": ["Actor"],
+							"__tile": { "tilesetUid": 133, "x": 32, "y": 224, "w": 16, "h": 16 },
+							"__smartColor": "#733E39",
+							"iid": "0cca19f0-ac70-11f0-9a6a-61a0255beb08",
+							"width": 16,
+							"height": 16,
+							"defUid": 220,
+							"px": [1592,632],
+							"fieldInstances": [
+								{ "__identifier": "Target", "__type": "EntityRef", "__value": {
+									"entityIid": "623212e0-ac70-11f0-9a6a-6974938cbccb",
+									"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+									"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+									"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3"
+								}, "__tile": null, "defUid": 222, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["623212e0-ac70-11f0-9a6a-6974938cbccb"]
+								}] },
+								{ "__identifier": "player_look_to_right", "__type": "Bool", "__value": true, "__tile": null, "defUid": 223, "realEditorValues": [] }
+							],
+							"__worldX": 312,
+							"__worldY": 120
 						}
 					]
 				},

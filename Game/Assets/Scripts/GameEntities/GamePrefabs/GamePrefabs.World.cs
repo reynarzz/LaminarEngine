@@ -23,6 +23,11 @@ namespace Game
 
             public static Platform InstantiatePlatform(vec2 position, vec2[] positions)
             {
+                if(positions == null)
+                {
+                    Debug.Error("No position set for platform");
+                    return null;
+                }
                 var platform = new Actor<SpriteRenderer>("Platform").AddComponent<Platform>();
                 platform.GetComponent<SpriteRenderer>().Material = MaterialUtils.SpriteMaterial;
                 platform.Actor.Layer = LayerMask.NameToLayer(GameConsts.PLATFORM);

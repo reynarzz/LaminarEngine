@@ -47,7 +47,6 @@ namespace Engine
             return state;
         }
 
-
         public void SetState(AnimationState state)
         {
             if (!_states.ContainsKey(state.Name))
@@ -60,6 +59,11 @@ namespace Engine
         }
 
         void ILateUpdatableComponent.OnLateUpdate()
+        {
+            UpdateFrames();
+        }
+
+        private void UpdateFrames()
         {
             if (_currentState == null)
             {
@@ -100,6 +104,7 @@ namespace Engine
             _states.TryGetValue(state, out _nextState);
             _transitionDuration = 0;
             _transitionTime = 0;
+            UpdateFrames();
         }
 
         public float GetFloat(string property)

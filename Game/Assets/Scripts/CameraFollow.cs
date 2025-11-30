@@ -22,6 +22,7 @@ namespace Game
         protected override void OnAwake()
         {
             _cam = GetComponent<Camera>();
+            Actor.DontDestroyOnLoad(this);
         }
 
         protected override void OnLateUpdate()

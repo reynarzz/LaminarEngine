@@ -37,7 +37,7 @@ namespace Game
                 {
                     IsEnabled = true,
                     Fps = 10.0f,
-                    SpriteAtlasPath = atlasId[i],
+                    SpriteAtlasId = atlasId[i],
                 };
             }
 
@@ -46,11 +46,14 @@ namespace Game
             Transform.LocalScale = new vec3(5);
         }
 
-        public override void HitDamage(int amount)
+        public override bool HitDamage(int amount)
         {
-            base.HitDamage(amount);
+            var isHit = base.HitDamage(amount);
 
+            if(isHit)
             _stateMachine.ChangeState<ChaseState<KingPigEnemy>>();
+
+            return isHit;
         }
         protected override void OnUpdate()
         {

@@ -36,7 +36,7 @@ namespace Game
                     SortOrder = 2,
                     StartPosition = position,
                     Material = MaterialUtils.SpriteMaterial,
-                    StartingLife = 5,
+                    StartingLife = 3,
                     SpriteLookDir = -1,
                     Ground = new GroundDetectionOptions()
                     {

@@ -19,6 +19,8 @@ namespace Engine
         internal List<Component> Components => _components;
         private List<IComponent> _toDeleteComponents = new();
 
+        internal bool IsAwaking { get; private set; } = true;
+
         private Transform _transform;
         public Transform Transform
         {
@@ -190,10 +192,10 @@ namespace Engine
 
                 // NOTE: All components are enabled by default, so this if is unncessary right now,
                 //       however, in the future I might add a flag to addComponents that are disabled by default.
-                if (component.IsEnabled)
-                {
-                    (component as IEnabledComponent).OnEnabled();
-                }
+                //if (component.IsEnabled) // Remove from here
+                //{
+                //    (component as IEnabledComponent).OnEnabled();
+                //}
             }
 
             return component;
@@ -284,6 +286,13 @@ namespace Engine
 
             void GetComponents(ref List<T> elements, Actor actor)
             {
+                if (!actor || actor.Components == null)
+                {
+                    Debug.EngineError($"Can't get components for actor in parent: {Name}, actor is already deleted., actor null: {(actor == null)}");
+                    // TODO: this happens when an actor is a child of another and the scene is changed, I need to find a way to exit gracefully, for now is ok.
+                    return;
+                }
+
                 for (int i = 0; i < actor._components.Count; i++)
                 {
                     if (typeof(T).IsAssignableFrom(actor._components[i].GetType()))
@@ -481,12 +490,16 @@ namespace Engine
 
         internal void Awake()
         {
-            UpdateScriptBeginEvent(this, _getAwakePending, _awakeAction);
+            UpdateScriptBeginEvent(this, _getAwakePending, _awakeAction, false);
             UpdateScriptBeginEvent(this, _getEnablePending, _enabledAction);
         }
 
         internal void Start()
         {
+            if (IsActiveInHierarchy)
+            {
+                IsAwaking = false;
+            }
             UpdateScriptBeginEvent(this, _getStartPending, _startAction);
         }
 
@@ -514,9 +527,9 @@ namespace Engine
         {
             UpdateScriptsFunction(this, _preRenderUpdateAction, true);
         }
-        
+
         private void UpdateScriptBeginEvent<T>(Actor actor, Func<Actor, List<IComponent>> getPendingComponents,
-                                                         Action<T> action) where T : class, IComponent
+                                                         Action<T> action, bool checkIfComponentIsEnabled = true) where T : class, IComponent
         {
             if (actor && actor.IsActiveInHierarchy)
             {
@@ -525,7 +538,7 @@ namespace Engine
 
                 for (int i = 0; i < components.Count; ++i)
                 {
-                    if (components[i] is T component && component.IsValid() && component.IsEnabled)
+                    if (components[i] is T component && component.IsValid() && (!checkIfComponentIsEnabled || (checkIfComponentIsEnabled && component.IsEnabled)))
                     {
                         if (actor.IsActiveInHierarchy)
                         {

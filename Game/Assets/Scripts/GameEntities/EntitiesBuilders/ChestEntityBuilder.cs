@@ -15,34 +15,32 @@ namespace Game
         public override GameEntity Build(vec2 position, FieldInstance[] fields, Func<vec2, bool, vec2> positionConverter)
         {
             var lootItems = default(ItemAmountPair[]);
-            ItemId lockedByItem = ItemId.none;
-            for (int i = 0; i < fields.Length; i++)
+        
+            if (Deserialize<int[]>(fields, "items_amount", out var lootAmount))
             {
-                var field = fields[i];
-                if (GetEnum<ItemId>(field, "locked_by", out var lockedItem))
-                {
-                    lockedByItem = lockedItem;
-                }
-                if (GetEnumArray<ItemId>(field, "items_loot", out var items))
-                {
-                    lootItems = new ItemAmountPair[items.Length];
+                lootItems = new ItemAmountPair[lootAmount.Length];
 
-                    for (int j = 0; j < items.Length; j++)
-                    {
-                        ref var loot = ref lootItems[j];
-                        loot.Item = items[j];
-                    }
-                }
-                else if (field.Identifier.Equals("items_amount", StringComparison.OrdinalIgnoreCase))
+                for (int j = 0; j < lootAmount.Length; j++)
                 {
-                    var value = JsonConvert.DeserializeObject<int[]>(field.Value.ToString());
-                    for (int j = 0; j < value.Length; j++)
-                    {
-                        var loot = lootItems[j];
-                        loot.Amount = value[j];
-                        lootItems[j] = loot;
-                    }
+                    var loot = lootItems[j];
+                    loot.Amount = lootAmount[j];
+                    lootItems[j] = loot;
                 }
+            }
+
+            if (GetEnumArray<ItemId>(fields, "items_loot", out var items))
+            {
+                for (int j = 0; j < items.Length; j++)
+                {
+                    ref var loot = ref lootItems[j];
+                    loot.Item = items[j];
+                }
+            }
+
+            ItemId lockedByItem = ItemId.none;
+            if (GetEnum<ItemId>(fields, "locked_by", out var lockedItem))
+            {
+                lockedByItem = lockedItem;
             }
 
             return GamePrefabs.Items.InstantiateChest(position, new ChestData()

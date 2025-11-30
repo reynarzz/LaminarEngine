@@ -30,7 +30,7 @@ namespace Game
                 {
                     IsEnabled = true,
                     Fps = fps,
-                    SpriteAtlasPath = atlasId[i],
+                    SpriteAtlasId = atlasId[i],
                 };
             }
             InitAnimationStates(states);
