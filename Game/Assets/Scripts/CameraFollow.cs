@@ -18,10 +18,8 @@ namespace Game
         private vec2 deadZoneSize = new vec2(0f, 4f);
         private float smoothTime = 0.2f;
         private vec3 velocity;
-        private Camera _cam;
         protected override void OnAwake()
         {
-            _cam = GetComponent<Camera>();
             Actor.DontDestroyOnLoad(this);
         }
 

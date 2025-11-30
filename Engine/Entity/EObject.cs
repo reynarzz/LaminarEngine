@@ -60,10 +60,10 @@ namespace Engine
             return obj != null && obj.IsAlive && !obj.IsPendingToDestroy && obj._guid != Guid.Empty;
         }
 
-        protected void CheckIfValidObject(EObject obj)
+        protected bool CheckIfValidObject(EObject obj)
         {
             if (CleanUpLayer.CleaningUp)
-                return;
+                return false;
 
             if (!obj.IsAlive)
             {
@@ -75,6 +75,8 @@ namespace Engine
                 Debug.Error($"Object of type: '{obj.GetType().Name}' was marked to be destroyed, please don't use it.");
             }
 #endif
+
+            return true;
         }
 
 #if DEBUG && SHOW_ENGINE_MESSAGES

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Engine.Graphics;
+using Engine.Types;
 using Engine.Utils;
 using GlmNet;
 
@@ -59,6 +60,7 @@ namespace Engine
         }
     }
 
+    [UniqueComponent]
     public class Camera : Component
     {
         public mat4 Projection { get; private set; }
@@ -113,15 +115,17 @@ namespace Engine
             }
         }
 
-        public Camera() : base()
+        protected override void OnAwake()
         {
+            base.OnAwake();
+
             OrthographicSize = 32;
             Fov = 60.0f;
             Window.OnWindowChanged += OnWindowChanged;
             UpdateCurrent();
             //UpdatePerspective();
         }
-
+       
         private void OnWindowChanged(int width, int height)
         {
             UpdateCurrent();

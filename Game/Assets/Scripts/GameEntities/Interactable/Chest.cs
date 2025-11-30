@@ -79,7 +79,6 @@ namespace Game
 
             if (Input.GetKeyDown(KeyCode.J))
             {
-                Debug.Log("Change sorting");
                 SpriteRenderer.SortOrder = SpriteRenderer.SortOrder == 0? 3: 0;
             }
         }

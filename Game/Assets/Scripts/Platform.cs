@@ -40,8 +40,6 @@ namespace Game
             AddComponent<BoxCollider2D>().Size = trigger.Size;
             
             _currentWait = WaitTime;
-            Debug.Log("Platform start");
-            //SetAnimator();
         }
 
         public void Init(vec2 position, vec2[] positions)

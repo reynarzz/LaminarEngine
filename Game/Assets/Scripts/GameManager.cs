@@ -36,8 +36,12 @@ namespace Game
         public static Material DefaultMaterial => MaterialUtils.SpriteMaterial;
 
         public static FontAsset DefaultFont { get; private set; }
-        private static GameEntityManager _gameEntityManager;
+        private GameEntityManager _gameEntityManager;
         private static GameUIManager _gameUIManger;
+        private static LevelBuilderManager _tilemapManager;
+
+        //public static vec2 GameResolution { get; } = new vec2(640, 360);
+        public static vec2 GameResolution { get; } = new vec2(512, 288);
 
         protected override void OnAwake()
         {
@@ -51,6 +55,7 @@ namespace Game
             _itemsDatabase = new ItemsDatabase("Data/ItemsDatabase.csv");
             DefaultFont = Assets.Get<FontAsset>("Fonts/windows-bold[1].ttf");
             _gameEntityManager = new GameEntityManager();
+            _tilemapManager = new LevelBuilderManager(_gameEntityManager);
         }
 
         private void InitializeActorLayers()
@@ -106,12 +111,36 @@ namespace Game
             {
                 _gameUIManger = new Actor("GameUIManager").AddComponent<GameUIManager>();
             }
+            
+            Player = _tilemapManager.BuildLevel(new LevelData()
+            {
+                LevelIndex = 0,
+                TilemapPath = "Tilemap/WorldTilemap.ldtk",
+                TilemapSprites = GameTextureAtlases.GetAtlas("sunny_land_tileset"),
+                WorldSpacePixelsPerUnit = GameTextureAtlases.GetAtlas("sunny_land_tileset")[0].Texture.PixelPerUnit,
+                Tilemaps = 
+                {
+                    new TilemapData()
+                    {
+                        Name = "Foreground tilemap",
+                        EnableCollision = true,
+                        LayersToDraw = 1 << 2,
+                        SortingOrder = 3,
+                        SpriteIndex = 0
+                    },
+                    new TilemapData()
+                    {
+                        Name = "Background tilemap",
+                        EnableCollision = false,
+                        LayersToDraw = 1 << 3,
+                        SortingOrder = -2,
+                        SpriteIndex = 0
+                    },
+                }
+            });
 
-            LoadTilemap();
-
+            InitializeCamera(Player.Transform);
             // Debug.Log(ItemsDatabase.GetDatabaseSchemaCsv());
-
-            // GamePrefabs.Enemies.InstantiatePigStandard(Player.Transform.LocalPosition + vec3.Right * 2, -1);
 
             WaterTest();
             ParticleSystem();
@@ -119,137 +148,21 @@ namespace Game
 
         private void InitializeCamera(Transform target)
         {
-            var camActor = new Actor("MainCamera");
+            if (!Camera)
+            {
+                Camera = new Actor<CameraFollow>("MainCamera").AddComponent<Camera>();
+                Camera.Transform.WorldPosition = new vec3(0, 0, -12);
+                Camera.BackgroundColor = new Color(0.2f, 0.2f, 0.2f, 1);
+                Camera.OrthographicSize = GameResolution.y / 2.0f / 16.0f;
+                Camera.ProjectionMode = CameraProjectionMode.Orthographic;
+                Camera.RenderTexture = new RenderTexture((int)GameResolution.x * 2, (int)GameResolution.y * 2);
+            }
 
-            Camera = camActor.AddComponent<Camera>();
-            var cameraFollow = camActor.AddComponent<CameraFollow>();
+            var cameraFollow = Camera.GetComponent<CameraFollow>();
             cameraFollow.Target = target;
-
-            Camera.Transform.WorldPosition = new vec3(0, 0, -12);
-            Camera.BackgroundColor = new Color(0.2f, 0.2f, 0.2f, 1);
-            Camera.OrthographicSize = 288.0f / 2.0f / 16.0f;
-            Camera.RenderTexture = new RenderTexture(512 * 2, 288 * 2);
             cameraFollow.SetOnTargetImmediate();
-            // Camera.RenderTexture = new RenderTexture(512, 288);
-
         }
-        private void LoadTilemap()
-        {
-            var testPathNow = "Tilemap";
 
-            //var filepath = rootPathTest + "\\Tilemap\\World.ldtk";
-
-            var filepath = testPathNow + "/WorldTilemap.ldtk";
-            //var filepath = testPathNow + "/Test.ldtk";
-            string json = Assets.GetText(filepath).Text;
-            string json2 = Assets.GetText(testPathNow + "/Test_Grass.ldtk").Text;
-
-            var project = ldtk.LdtkJson.FromJson(json);
-            var color = project.BgColor;
-
-            vec2 ConvertToWorld(long x, long y, Level level, float pixelPerUnit, LayerInstance layer, bool isGridPos = false)
-            {
-                if (isGridPos)
-                {
-                    x *= layer.GridSize;
-                    y *= layer.GridSize;
-                }
-                return new vec2(MathF.Floor((level.WorldX + x + layer.PxOffsetX) / pixelPerUnit), MathF.Ceiling((-level.WorldY + -y + -layer.PxOffsetY) / pixelPerUnit));
-            }
-
-            var sprite = GameTextureAtlases.GetAtlas("sunny_land_tileset")[0];
-
-
-            foreach (var level in project.Levels)
-            {
-                foreach (var layer in level.LayerInstances)
-                {
-                    foreach (var entity in layer.EntityInstances)
-                    {
-                        var position = ConvertToWorld(entity.Px[0], entity.Px[1], level, sprite.Texture.PixelPerUnit, layer);
-                        //Debug.Log("Entity: " + entity.Identifier);
-
-                        var isPlayer = entity.Identifier.Equals("Player");
-                        GameEntity gameEntity = null;
-                        if (!isPlayer || (isPlayer && !Player))
-                        {
-                           gameEntity = _gameEntityManager.BuildEntity(entity, position, (vec2, isGrid) =>
-                           {
-                               // TODO: refactor, instead send a helper class that contains convert methods.
-                               return ConvertToWorld((int)vec2.x, (int)vec2.y, level, sprite.Texture.PixelPerUnit, layer, isGrid);
-                           });
-                        }
-
-                        if (isPlayer)
-                        {
-                            if (!Player)
-                            {
-                                InitializeCamera(gameEntity.Transform);
-                                Player = gameEntity.GetComponent<Player>();
-                            }
-                            else
-                            {
-                                Player.Transform.WorldPosition = position;
-                            }
-                            GamePrefabs.World.InstantiateDoor(position + new vec2(0, 1), new DoorData() { InteractCondition = x => false });
-                        }
-
-                    }
-                }
-            }
-            var tilemapMaterial = MaterialUtils.SpriteMaterialWorld;
-            //cam.BackgroundColor = new Color32(project.BackgroundColor.R, project.BackgroundColor.G, project.BackgroundColor.B, project.BackgroundColor.A);
-            //cam.BackgroundColor = new Color32(23, 28, 57, project.BackgroundColor.A);
-
-            var tilemapActor = new Actor<TilemapRenderer>("Foreground tilemap");
-            var tilemap = tilemapActor.GetComponent<TilemapRenderer>();
-            tilemap.Material = tilemapMaterial;
-            tilemap.Sprite = sprite;
-
-            var tilemapActor2 = new Actor<TilemapRenderer>("Background tilemap");
-            var tilemap2 = tilemapActor2.GetComponent<TilemapRenderer>();
-            tilemap2.Material = tilemapMaterial;
-            tilemap2.Sprite = sprite;
-
-            var tilemapActor3 = new Actor<TilemapRenderer>("Grass tilemap");
-            var tilemap3 = tilemapActor3.GetComponent<TilemapRenderer>();
-            tilemap3.Material = tilemapMaterial;
-            tilemap3.Sprite = sprite;
-
-            // tilemap.SetTilemapLDtk(project, new LDtkOptions() { RenderIntGridLayer = true, RenderTilesLayer = true, RenderAutoLayer = true });
-            tilemap.SetTilemapLDtk(project, new LDtkOptions()
-            {
-                RenderIntGridLayer = true,
-                RenderTilesLayer = true,
-                RenderAutoLayer = true,
-                LayersToLoadMask = 1 << 2,
-                WorldDepth = 0
-            });
-            tilemap2.SetTilemapLDtk(project, new LDtkOptions()
-            {
-                RenderIntGridLayer = true,
-                RenderTilesLayer = true,
-                RenderAutoLayer = true,
-                LayersToLoadMask = 1 << 3,
-                WorldDepth = 0
-            });
-
-            //tilemap3.SetTilemapLDtk(json2, new LDtkOptions()
-            //{
-            //    RenderIntGridLayer = true,
-            //    RenderTilesLayer = true,
-            //    RenderAutoLayer = true,
-            //    LayersToLoadMask = 1 << 2,
-            //    WorldDepth = 0
-            //});
-
-            tilemap2.SortOrder = -2;
-            tilemap.SortOrder = 3;
-            tilemap3.SortOrder = 3;
-            tilemap.AddComponent<TilemapCollider2D>();
-            tilemap.Actor.Layer = 0;
-        }
-    
 
         protected override void OnUpdate()
         {

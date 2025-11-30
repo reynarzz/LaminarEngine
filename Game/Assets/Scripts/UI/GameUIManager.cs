@@ -18,12 +18,14 @@ namespace Game
             Actor.DontDestroyOnLoad(this);
 
             _hudCanvas = new Actor("HUD Canvas").AddComponent<UICanvas>();
-            PauseMenu = new Actor("Pause menu").AddComponent<PauseMenu>();
 
-            PauseMenu.Transform.Parent = Transform;
             _hudCanvas.Transform.Parent = Transform;
 
             InitializeUIs();
+
+            PauseMenu = new Actor("Pause menu").AddComponent<PauseMenu>();
+            PauseMenu.Transform.Parent = Transform;
+
         }
 
         private void InitializeUIs()
