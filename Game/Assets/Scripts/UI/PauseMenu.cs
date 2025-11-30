@@ -39,7 +39,7 @@ namespace Game
 
             var backSize = new vec2(512 * 3, 288 * 3);
             // Background
-            _background = NewImage("Background", backSize * 0.5f, backSize, Color.White, _canvas.Transform);
+            _background = NewImage("Background", backSize * 0.5f, backSize, Color32.RGB(200), _canvas.Transform);
             _background.BlockEvents = true;
             _background.ReceiveEvents = true;
 
@@ -57,7 +57,7 @@ namespace Game
             _titleText = NewText("Title text", "Pause", new vec2(0, -110), _background.Transform);
             _titleText.FontSize = 70;
             _titleText.Fit = TextFit.ExpandToFit;
-            _titleText.Vertical =  TextVerticalAlignment.Center;
+            _titleText.Vertical = TextVerticalAlignment.Center;
 
             // TODO: The renderer has a problem with this line.
             _titleText.Material = new Material("Title Material: " + (_matCount++), new Shader(Assets.GetText("Shaders/Font/FontVert.vert").Text, Assets.GetText("Shaders/Font/FontFrag.frag").Text));
@@ -141,9 +141,9 @@ namespace Game
             horizontalLayout.Padding.Top = 38;
             horizontalLayout.StartPivot = new vec2(0.5f, 0.5f);
             horizontalLayout.MaxPerRow = 10;
-            horizontalLayout.ContentsSize = new vec2(46,46);
+            horizontalLayout.ContentsSize = new vec2(46, 46);
             var slotSprite = new Sprite(Assets.GetTexture("pixel-ui_slot.png"));
-            
+
             var parent = NewImage("Quad1", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
             parent.Sprite = slotSprite;
             var coins = GameTextureAtlases.GetAtlas("coin_currency");
@@ -153,7 +153,7 @@ namespace Game
             iconContent.RectTransform.Pivot = new vec2(0.5f, 0.6f);
             var animator = iconContent.AddComponent<Animator>();
             var clip = new AnimationClip("Sprite");
-            
+
             clip.AddCurve("Sprite", new SpriteCurve(7.0f, coins));
             animator.AddState(new AnimationState("Coin", clip));
             animator.OnUpdate += x =>
@@ -200,8 +200,8 @@ namespace Game
             _show = !_show;
             Time.TimeScale = _show ? 0 : 1;
 
-            if(_show)
-            _audioSource.PlayOneShot(_pauseAudioClip, 0.5f);
+            if (_show)
+                _audioSource.PlayOneShot(_pauseAudioClip, 0.5f);
             else
             {
                 _audioSource.PlayOneShot(_buttonAudioClip, 0.5f);
@@ -228,7 +228,7 @@ namespace Game
         protected override void OnLateUpdate()
         {
 
-            
+
             if (_show)
             {
                 SetColorAlpha(1);

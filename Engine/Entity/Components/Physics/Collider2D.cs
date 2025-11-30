@@ -381,7 +381,7 @@ namespace Engine
 #if DEBUG
         void IDrawableGizmo.OnDrawGizmo()
         {
-            if (Physics2D.DrawColliders && ShapesId != null)
+            if (Physics2D.DrawColliders && ShapesId != null && IsEnabled)
             {
                 var transform = new B2Transform();
                 var pos = new vec3(Transform.GetRenderingWorldMatrix()[3]);

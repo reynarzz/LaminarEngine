@@ -12,9 +12,6 @@ namespace Game
         {
             var portal = new Actor<SpriteRenderer>("Portal").AddComponent<Portal>();
             PortalData portalData = null;
-            var renderer = portal.GetComponent<SpriteRenderer>();
-            renderer.SortOrder = 14;
-            renderer.Material = MaterialUtils.PortalMaterial;
             portal.Transform.LocalScale = new vec3(6, 6);
             portal.Transform.WorldPosition = entityData.WorldPosition;
 
@@ -31,6 +28,8 @@ namespace Game
                 {
                     TargetPos = targetEntity.WorldPosition,
                 };
+
+                Debug.Log("Current portalPos: " + entityData.WorldPosition + ", Target portal pos: " + targetEntity.WorldPosition);
             }
 
             portal.Init(portalData);
