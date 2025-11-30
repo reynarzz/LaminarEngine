@@ -17,15 +17,15 @@ namespace Game
             public long cx { get; set; }
             public long cy { get; set; }
         }
-        public override GameEntity Build(vec2 position, FieldInstance[] fields, Func<vec2, bool, vec2> positionConverter)
+        public override GameEntity Build(EntityInstanceData entityData, IReadOnlyDictionary<string, LayerData> layers, Func<vec2, bool, vec2> positionConverter)
         {
             var yPositions = default(vec2[]);
-            if (Deserialize<PlatformPoints[]>(fields, "positions", out var value))
+            if (Deserialize<PlatformPoints[]>(entityData.Entity.FieldInstances, "positions", out var value))
             {
                 yPositions = value.Select(x => positionConverter(new vec2(x.cx, x.cy), true)).ToArray();
             }
 
-            return GamePrefabs.World.InstantiatePlatform(position, yPositions);
+            return GamePrefabs.World.InstantiatePlatform(entityData.WorldPosition, yPositions);
         }
     }
 }

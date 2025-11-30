@@ -14,6 +14,21 @@ namespace Game
 
             AddComponent<Rotate>();
         }
+
+        public override void Init(PortalData data)
+        {
+            base.Init(data);
+
+            if (data != null)
+            {
+                // read data
+            }
+            else
+            {
+                // This is a landing - one way portal.
+            }
+        }
+
         public override bool TryInteract(Player player)
         {
             return false;

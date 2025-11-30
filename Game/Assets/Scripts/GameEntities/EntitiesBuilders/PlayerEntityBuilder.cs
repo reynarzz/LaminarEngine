@@ -13,7 +13,7 @@ namespace Game
     internal class PlayerEntityBuilder : GameEntityBuilderBase
     {
         private static Player _player;
-        public override GameEntity Build(vec2 position, FieldInstance[] fields, Func<vec2, bool, vec2> positionConverter)
+        public override GameEntity Build(EntityInstanceData entityData, IReadOnlyDictionary<string, LayerData> layers, Func<vec2, bool, vec2> positionConverter)
         {
             if (!_player)
             {
@@ -30,7 +30,7 @@ namespace Game
                     ColliderConfig = new BodyColliderOptions() { Size = new vec2(1.0f, 1.7f), Offset = new vec2(0, 0.25f) },
                     LayerName = GameConsts.PLAYER,
                     SortOrder = 2,
-                    StartPosition = position,
+                    StartPosition = entityData.WorldPosition,
                     Material = MaterialUtils.SpriteMaterial,
                     StartingLife = 4,
                     SpriteLookDir = 1,
@@ -55,12 +55,12 @@ namespace Game
                 });
             }
 
-            if (GetBool(fields, "look_to_right", out bool lookToRight))
+            if (GetBool(entityData.Entity.FieldInstances, "look_to_right", out bool lookToRight))
             {
                 _player.LookAt(lookToRight ? 1 : -1);
             }
 
-            _player.Transform.WorldPosition = position;
+            _player.Transform.WorldPosition = entityData.WorldPosition;
 
             return _player;
         }
