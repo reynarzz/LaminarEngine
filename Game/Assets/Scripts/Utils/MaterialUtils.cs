@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Engine;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Engine.Utils
+namespace Game
 {
     public static class MaterialUtils
     {
@@ -13,6 +14,7 @@ namespace Engine.Utils
         public static Material SpriteMaterialWorld { get; }
         public static Material UIMaterial { get; }
         public static Material FontMaterial { get; }
+        public static Material PortalMaterial { get; }
 
         static MaterialUtils()
         {
@@ -33,8 +35,21 @@ namespace Engine.Utils
             overlayPass.Stencil.Func = StencilFunc.Equal;
             overlayPass.Stencil.Ref = 3;
             overlayPass.Stencil.ZPassOp = StencilOp.Keep;
+
+            PortalMaterial = InitPortalMaterial();
         }
 
+        private static Material InitPortalMaterial()
+        {
+            var screenShader = new Shader(Assets.GetText("Shaders/VertScreenGrab.vert").Text, Assets.GetText("Shaders/Portal.frag").Text);
+            var material = new Material(screenShader);
+            material.Name = "Portal Material";
+            material.AddTexture("uStarsTex", Assets.GetTexture("stars.png"));
+            var pass = material.GetPass(0);
+            pass.IsScreenGrabPass = true;
+
+            return material;
+        }
         private static Material GetMaterial(string name, string vertexCode, string shaderCode)
         {
             var material = new Material(new Shader(Assets.GetText(vertexCode).Text, Assets.GetText(shaderCode).Text));

@@ -381,15 +381,17 @@ namespace Game
             HitDamage(MAX_LIFE);
         }
 
-        public virtual void HitDamage(int amount)
+        public virtual bool HitDamage(int amount)
         {
             if (!IsCharacterAlive())
-                return;
+                return false;
 
             Inventory.Life = Math.Clamp(Inventory.Life - amount, 0, MAX_LIFE);
             Rigidbody.Velocity = new vec2(0, Rigidbody.Velocity.y);
             Animator.Parameters.SetTrigger(HIT_DAMAGE_PROPERTY_NAME);
             Animator.SetState(HIT_ANIM_STATE);
+
+            return true;
         }
 
         public bool IsCharacterAlive()

@@ -19,6 +19,7 @@ namespace Game
         protected override void OnAwake()
         {
             PostProcessingStack.Push(_fadePostProcessing);
+            // _fadePostProcessing.Value = 1;
             _instance = this;
         }
 

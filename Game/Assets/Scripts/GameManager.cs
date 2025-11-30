@@ -30,9 +30,8 @@ namespace Game
     internal class GameManager : ScriptBehavior
     {
         public static Camera Camera { get; private set; }
-        private vec3 _playerStartPosTest;
         private ItemsDatabase _itemsDatabase;
-        private FadeInOutManager _fadeInOutManager;
+        private static FadeInOutManager _fadeInOutManager;
         public static Player Player { get; private set; }
         public static Material DefaultMaterial => MaterialUtils.SpriteMaterial;
 
@@ -81,6 +80,16 @@ namespace Game
 
         private void InitializeWorld()
         {
+            PostProcessingStack.Clear();
+            // PostProcessingStack.Push(new BloomPostProcessing());
+            //ScreenGrabTest();
+            ScreenGrabTest3();
+            if (!_fadeInOutManager)
+            {
+                _fadeInOutManager = new Actor("FadeInOutManager").AddComponent<FadeInOutManager>();
+                Actor.DontDestroyOnLoad(_fadeInOutManager);
+            }
+
             var manager = Actor.Find("Music Manager");
 
             if (!manager)
@@ -98,83 +107,32 @@ namespace Game
                 _gameUIManger = new Actor("GameUIManager").AddComponent<GameUIManager>();
             }
 
-
-            Player = new Actor("Player").AddComponent<Player>();
-            Player.Transform.WorldPosition = new vec3();
-            Player.Actor.Layer = LayerMask.NameToLayer(GameConsts.PLAYER);
-
-            var camActor = new Actor("MainCamera");
-
-            Camera = camActor.AddComponent<Camera>();
-            var cameraFollow = camActor.AddComponent<CameraFollow>();
-            cameraFollow.Target = Player.Transform;
-
-            Camera.Transform.WorldPosition = new vec3(0, 0, -12);
-            Camera.BackgroundColor = new Color(0.2f, 0.2f, 0.2f, 1);
-            Camera.OrthographicSize = 288.0f / 2.0f / 16.0f;
-            Camera.RenderTexture = new RenderTexture(512 * 2, 288 * 2);
-            // Camera.RenderTexture = new RenderTexture(512, 288);
-
             LoadTilemap();
-
-            Player.Init(new CharacterConfig()
-            {
-                JumpForce = 15,
-                WalkSpeed = 5.35f,
-                YGravityScale = 3.5f,
-                ColliderConfig = new BodyColliderOptions() { Size = new vec2(1.0f, 1.7f), Offset = new vec2(0, 0.25f) },
-                LayerName = GameConsts.PLAYER,
-                SortOrder = 2,
-                StartPosition = _playerStartPosTest,
-                Material = MaterialUtils.SpriteMaterial,
-                StartingLife = 5,
-                SpriteLookDir = 1,
-                InventoryMaxSlots = 10,
-                Ground = new GroundDetectionOptions()
-                {
-                    Enabled = true,
-                    MinX = -0.5f,
-                    MaxX = 0.5f,
-                    RaysCount = 3,
-                    SizeY = 0.7f,
-                    YOffset = 0,
-                    GroundMask = GameConsts.GROUND_MASK | LayerMask.NameToBit(GameConsts.ENEMY)
-                },
-                WalkSounds = ["Audio/HALFTONE/UI/2. Clicks/Click_4.wav",
-                              "Audio/HALFTONE/UI/2. Clicks/Click_5.wav",
-                              "Audio/HALFTONE/UI/2. Clicks/Click_10.wav"],
-                AttackSounds = ["Audio/HALFTONE/Gameplay/Bullet_1.wav"],
-                JumpSounds = ["Audio/HALFTONE/Gameplay/Jump_3.wav"],
-                GroundSounds = ["Audio/HALFTONE/Gameplay/Hit_4.wav"]
-
-            });
-
-
-
-            cameraFollow.SetOnTargetImmediate();
 
             // Debug.Log(ItemsDatabase.GetDatabaseSchemaCsv());
 
             // GamePrefabs.Enemies.InstantiatePigStandard(Player.Transform.LocalPosition + vec3.Right * 2, -1);
 
-            PostProcessingStack.Clear();
-            // PostProcessingStack.Push(new BloomPostProcessing());
-            //ScreenGrabTest();
-            ScreenGrabTest3();
-
-            Canvas();
-
-            Portal();
-            Portal().Transform.LocalPosition = new vec3(33, -9.1f);
-            Portal().Transform.LocalPosition = new vec3(43, -1);
-
             WaterTest();
             ParticleSystem();
-
-            _fadeInOutManager = new Actor("FadeInOutManager").AddComponent<FadeInOutManager>();
-            Actor.DontDestroyOnLoad(_fadeInOutManager);
         }
 
+        private void InitializeCamera(Transform target)
+        {
+            var camActor = new Actor("MainCamera");
+
+            Camera = camActor.AddComponent<Camera>();
+            var cameraFollow = camActor.AddComponent<CameraFollow>();
+            cameraFollow.Target = target;
+
+            Camera.Transform.WorldPosition = new vec3(0, 0, -12);
+            Camera.BackgroundColor = new Color(0.2f, 0.2f, 0.2f, 1);
+            Camera.OrthographicSize = 288.0f / 2.0f / 16.0f;
+            Camera.RenderTexture = new RenderTexture(512 * 2, 288 * 2);
+            cameraFollow.SetOnTargetImmediate();
+            // Camera.RenderTexture = new RenderTexture(512, 288);
+
+        }
         private void LoadTilemap()
         {
             var testPathNow = "Tilemap";
@@ -210,17 +168,32 @@ namespace Game
                     {
                         var position = ConvertToWorld(entity.Px[0], entity.Px[1], level, sprite.Texture.PixelPerUnit, layer);
                         //Debug.Log("Entity: " + entity.Identifier);
-                        if (entity.Identifier.Equals("Player"))
+
+                        var isPlayer = entity.Identifier.Equals("Player");
+                        GameEntity gameEntity = null;
+                        if (!isPlayer || (isPlayer && !Player))
                         {
-                            _playerStartPosTest = position;
+                           gameEntity = _gameEntityManager.BuildEntity(entity, position, (vec2, isGrid) =>
+                           {
+                               // TODO: refactor, instead send a helper class that contains convert methods.
+                               return ConvertToWorld((int)vec2.x, (int)vec2.y, level, sprite.Texture.PixelPerUnit, layer, isGrid);
+                           });
+                        }
+
+                        if (isPlayer)
+                        {
+                            if (!Player)
+                            {
+                                InitializeCamera(gameEntity.Transform);
+                                Player = gameEntity.GetComponent<Player>();
+                            }
+                            else
+                            {
+                                Player.Transform.WorldPosition = position;
+                            }
                             GamePrefabs.World.InstantiateDoor(position + new vec2(0, 1), new DoorData() { InteractCondition = x => false });
                         }
 
-                        _gameEntityManager.BuildEntity(entity, position, (vec2, isGrid) =>
-                        {
-                            // TODO: refactor, instead send a helper class that contains convert methods.
-                            return ConvertToWorld((int)vec2.x, (int)vec2.y, level, sprite.Texture.PixelPerUnit, layer, isGrid);
-                        });
                     }
                 }
             }
@@ -276,69 +249,7 @@ namespace Game
             tilemap.AddComponent<TilemapCollider2D>();
             tilemap.Actor.Layer = 0;
         }
-        UICanvas _heartCanvas = null;
-        private void Canvas()
-        {
-            _heartCanvas = new Actor("Canvas Health").AddComponent<UICanvas>();
-
-            //var text = new Actor("Text test").AddComponent<UIText>();
-            //text.Transform.Parent = canvas.Transform;
-            //text.SetText("This is a text child of a canvas");
-            //text.Font = Assets.Get<FontAsset>("Fonts/windows-bold[1].ttf");
-            //text.Material = new Material(new Shader(Assets.GetText("Shaders/Font/FontVert.vert").Text,
-            //                                        Assets.GetText("Shaders/Font/FontFrag.frag").Text));
-            //text.SortOrder = 10;
-            //text.RectTransform.Pivot = new vec2(0.0f, 0.5f);
-
-            var sprites = GameTextureAtlases.GetAtlas("small_heart_idle");
-
-            UIImage Image(string name, vec2 position, vec2 size, Sprite sprite, Transform parent)
-            {
-                var image = new Actor(name).AddComponent<UIImage>();
-                image.Transform.Parent = parent.Transform;
-                image.RectTransform.Pivot = new vec2(0.0f, 0.0f);
-                image.RectTransform.Size = size;
-                image.Material = MaterialUtils.UIMaterial;
-                image.Sprite = sprite;
-                image.PreserveAspect = true;
-                image.Transform.LocalPosition = position;
-                // image.AddComponent<Button>();
-                return image;
-            }
-
-            float uiMult = 3;
-            var lifebarSprites = GameTextureAtlases.GetAtlas("health_bar_frame");
-            var lifeBar = Image("Life bar", new vec2(10, 10), new vec2(143, 34) * uiMult, lifebarSprites[3], _heartCanvas.Transform);
-            Image("Heart1", new vec2(56, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);
-            Image("Heart2", new vec2(88, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);
-            Image("Heart3", new vec2(120, 40), new vec2(8, 7) * uiMult, sprites[0], lifeBar.Transform);
-
-            // _heartCanvas.OnLateUpdate();
-        }
-
-        private Material _portalMaterialTest;
-        private Actor Portal()
-        {
-            var screenGrabTest = new Actor<SpriteRenderer, Rotate>("Portal");
-            var renderer = screenGrabTest.GetComponent<SpriteRenderer>();
-            renderer.SortOrder = 14;
-
-            if (!_portalMaterialTest)
-            {
-                var screenShader = new Shader(Assets.GetText("Shaders/VertScreenGrab.vert").Text, Assets.GetText("Shaders/Portal.frag").Text);
-                _portalMaterialTest = new Material(screenShader);
-                _portalMaterialTest.Name = "Portal Material";
-                _portalMaterialTest.AddTexture("uStarsTex", Assets.GetTexture("stars.png"));
-                var pass = _portalMaterialTest.GetPass(0);
-                pass.IsScreenGrabPass = true;
-            }
-
-            renderer.Material = _portalMaterialTest;
-            screenGrabTest.Transform.LocalScale = new vec3(6, 6);
-            screenGrabTest.Transform.LocalPosition = new vec3(-9, -7);
-
-            return screenGrabTest;
-        }
+    
 
         protected override void OnUpdate()
         {
@@ -358,10 +269,6 @@ namespace Game
             {
                 Window.FullScreen(!Window.IsFullScreen);
                 // Window.MouseVisible = !Window.IsFullScreen;
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha3))
-            {
-                _heartCanvas.Actor.IsActiveSelf = !_heartCanvas.Actor.IsActiveSelf;
             }
 
             if (Input.GetKeyDown(KeyCode.Enter))

@@ -61,6 +61,15 @@ namespace Game
 
             var doorOutState = AnimatorUtils.AddState(Animator, "DoorOut", false);
             doorOutState.Clip.AddCurve(SPRITE_PROPERTY_NAME, new SpriteCurve(fps, GameTextureAtlases.GetAtlas("player_door_out")));
+
+            Inventory.OnLifeChanged += Inventory_OnLifeChanged;
+            GameUIManager.PlayerHealthUI.InitHealth(Inventory.Life);
+
+        }
+
+        private void Inventory_OnLifeChanged(int life)
+        {
+            GameUIManager.PlayerHealthUI.UpdatePlayerHealth(life);
         }
 
         public void InitLevel()
@@ -185,6 +194,11 @@ namespace Game
             }
         }
 
+        protected override void OnFixedUpdate()
+        {
+            base.OnFixedUpdate();
+        }
+
         public override bool Attack(int index = 0)
         {
             if (!IsCharacterAlive())
@@ -201,11 +215,6 @@ namespace Game
             bullet.Shoot(origin, vec2.Right * LookDir, _bulletSpeed, mask);
             return true;
         } 
-        protected override void OnFixedUpdate()
-        {
-            base.OnFixedUpdate();
-        }
-
         protected override void OnTriggerEnter2D(Collider2D collider)
         {
             var interactable = collider.GetComponent<InteractableEntityBase>();

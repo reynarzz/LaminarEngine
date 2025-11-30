@@ -22,6 +22,8 @@ namespace Game
                 { "Enemy", new EnemyEntityBuilder() },
                 { "Chest", new ChestEntityBuilder() },
                 { "Platform", new PlatformEntityBuilder() },
+                { "Player", new PlayerEntityBuilder() },
+                { "Portal", new PortalEntityBuilder() },
             };
         }
 

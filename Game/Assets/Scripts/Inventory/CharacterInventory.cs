@@ -8,8 +8,21 @@ namespace Game
 {
     public class CharacterInventory : Inventory
     {
-        public static CharacterInventory Empty { get; } = new CharacterInventory(0);
-        public int Life { get; set; }
+        public event Action<int> OnLifeChanged;
+
+        private int _life;
+        public int Life
+        {
+            get => _life; 
+            set
+            {
+                if (_life == value)
+                    return;
+                _life = value;
+                OnLifeChanged?.Invoke(_life);
+            }
+        }
+
         public CharacterInventory(int maxSlots) : base(maxSlots) { }
     }
 }

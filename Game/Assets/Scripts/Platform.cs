@@ -22,7 +22,6 @@ namespace Game
         private int _pointIndex = 0;
         private int _direction = 1;
 
-        private vec2 _startPos;
         private Animator _animator;
         protected override void OnAwake()
         {
@@ -48,7 +47,6 @@ namespace Game
         public void Init(vec2 position, vec2[] positions)
         {
             _positions = positions;
-            _startPos = position;
             _pointIndex = 0;
             Transform.WorldPosition = positions[0];
         }
