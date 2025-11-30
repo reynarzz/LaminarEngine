@@ -13,6 +13,8 @@ namespace Game
     {
         private const string DONT_DESTROY_ON_LOAD = "Persistant";
         private readonly Dictionary<string, GameEntityBuilderBase> _entityBuilders;
+
+        public static Player Player { get; private set; }
         public GameEntityManager()
         {
             _entityBuilders = new Dictionary<string, GameEntityBuilderBase>()
