@@ -171,14 +171,12 @@ namespace Game
 
                         var isPlayer = entity.Identifier.Equals("Player");
                         GameEntity gameEntity = null;
-                        if (!isPlayer || (isPlayer && !Player))
+                        
+                        gameEntity = _gameEntityManager.BuildEntity(entity, position, (vec2, isGrid) =>
                         {
-                           gameEntity = _gameEntityManager.BuildEntity(entity, position, (vec2, isGrid) =>
-                           {
-                               // TODO: refactor, instead send a helper class that contains convert methods.
-                               return ConvertToWorld((int)vec2.x, (int)vec2.y, level, sprite.Texture.PixelPerUnit, layer, isGrid);
-                           });
-                        }
+                            // TODO: refactor, instead send a helper class that contains convert methods.
+                            return ConvertToWorld((int)vec2.x, (int)vec2.y, level, sprite.Texture.PixelPerUnit, layer, isGrid);
+                        });
 
                         if (isPlayer)
                         {
@@ -186,10 +184,6 @@ namespace Game
                             {
                                 InitializeCamera(gameEntity.Transform);
                                 Player = gameEntity.GetComponent<Player>();
-                            }
-                            else
-                            {
-                                Player.Transform.WorldPosition = position;
                             }
                             GamePrefabs.World.InstantiateDoor(position + new vec2(0, 1), new DoorData() { InteractCondition = x => false });
                         }
@@ -249,7 +243,7 @@ namespace Game
             tilemap.AddComponent<TilemapCollider2D>();
             tilemap.Actor.Layer = 0;
         }
-    
+
 
         protected override void OnUpdate()
         {

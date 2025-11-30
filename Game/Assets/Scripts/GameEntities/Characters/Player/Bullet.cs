@@ -24,7 +24,7 @@ namespace Game
             _speed = speed;
             _layerMask = layerMask;
             _shoot = true;
-            Transform.WorldScale = new vec3(0.6f, 0.2f);
+            Transform.WorldScale = new vec3(0.6f, 0.18f);
 
             var sprite = GetComponent<SpriteRenderer>();
             sprite.Material = GameManager.DefaultMaterial;
