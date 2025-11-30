@@ -3600,7 +3600,7 @@
 						},
 						{
 							"__identifier": "Portal",
-							"__grid": [100,40],
+							"__grid": [99,39],
 							"__pivot": [0.5,0.5],
 							"__tags": ["Actor"],
 							"__tile": { "tilesetUid": 133, "x": 32, "y": 224, "w": 16, "h": 16 },
@@ -3609,7 +3609,7 @@
 							"width": 16,
 							"height": 16,
 							"defUid": 220,
-							"px": [1608,648],
+							"px": [1592,632],
 							"fieldInstances": [
 								{ "__identifier": "Target", "__type": "EntityRef", "__value": {
 									"entityIid": "623212e0-ac70-11f0-9a6a-6974938cbccb",
@@ -3622,8 +3622,8 @@
 								}] },
 								{ "__identifier": "player_look_to_right", "__type": "Bool", "__value": true, "__tile": null, "defUid": 223, "realEditorValues": [] }
 							],
-							"__worldX": 328,
-							"__worldY": 136
+							"__worldX": 312,
+							"__worldY": 120
 						}
 					]
 				},

@@ -34,7 +34,7 @@ namespace Game
                 SortOrder = 2,
                 StartPosition = position,
                 Material = MaterialUtils.SpriteMaterial,
-                StartingLife = 3,
+                StartingLife = 4,
                 SpriteLookDir = 1,
                 InventoryMaxSlots = 10,
                 Ground = new GroundDetectionOptions()

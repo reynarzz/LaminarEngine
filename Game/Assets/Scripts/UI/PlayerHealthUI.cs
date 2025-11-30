@@ -17,6 +17,7 @@ namespace Game
         private const int _minHeartsSlots = 3;
         private const int _maxHeartsSlots = 10;
         private int _enabledHeartsCount;
+        private float _hearthAnimTime = 0;
         protected override void OnAwake()
         {
             var heartCanvas = new Actor("Canvas Health").AddComponent<UICanvas>();
@@ -79,6 +80,8 @@ namespace Game
                     heartImage.Transform.LocalScale = vec3.One;
                 }
             }
+
+            _hearthAnimTime = 0;
         }
 
         private IEnumerator HeartsAnim()
@@ -87,8 +90,10 @@ namespace Game
             {
                 if (_enabledHeartsCount > 0)
                 {
-                    _heartsImages[_enabledHeartsCount - 1].Transform.LocalScale = vec3.One + ((vec3.Half * MathF.Sin(Time.TimeCurrent * 5)) + vec3.Half) * 0.3f;
+                    var heartImage = _heartsImages[_enabledHeartsCount - 1];
+                    heartImage.Transform.LocalScale = vec3.One + ((vec3.Half * MathF.Sin(_hearthAnimTime * 5)) + vec3.Half) * 0.2f;
                 }
+                _hearthAnimTime += Time.DeltaTime;
                 yield return 0;
             }
         }
