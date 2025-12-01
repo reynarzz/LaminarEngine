@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 namespace Engine.Types
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class RequiredComponentAttribute : Attribute
+    public class RequireComponentAttribute : Attribute
     {
         public Type[] RequiredComponents { get; }
-        private RequiredComponentAttribute() { }
-        public RequiredComponentAttribute(params Type[] components)
+        private RequireComponentAttribute() { }
+        public RequireComponentAttribute(params Type[] components)
         {
             RequiredComponents = components;
         }

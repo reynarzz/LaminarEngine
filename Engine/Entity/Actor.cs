@@ -165,7 +165,7 @@ namespace Engine
             var component = Activator.CreateInstance(type) as Component;
             component.Actor = this;
 
-            var required = GetAllAttributes<RequiredComponentAttribute>(type);
+            var required = GetAllAttributes<RequireComponentAttribute>(type);
             if (required != null)
             {
                 foreach (var requiredAttrib in required)
@@ -428,7 +428,7 @@ namespace Engine
             {
                 if (comp != component)
                 {
-                    var att = comp.GetType().GetCustomAttribute<RequiredComponentAttribute>();
+                    var att = comp.GetType().GetCustomAttribute<RequireComponentAttribute>();
 
                     if (att != null && att.RequiredComponents.Contains(component.GetType()))
                     {

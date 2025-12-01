@@ -18,7 +18,7 @@ namespace Game
         }
         public bool IsEmpty()
         {
-            return Amount == 0 && item == null;
+            return item == null || (item.Features.RemoveAfterUse && Amount == 0) || item.Features.Id == ItemId.none;
         }
     }
 }

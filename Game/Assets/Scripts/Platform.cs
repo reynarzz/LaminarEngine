@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    [RequiredComponent(typeof(SpriteRenderer), typeof(RigidBody2D), typeof(BoxCollider2D))]
+    [RequireComponent(typeof(SpriteRenderer), typeof(RigidBody2D), typeof(BoxCollider2D))]
     internal class Platform : GameEntity
     {
         private vec2[] _positions;

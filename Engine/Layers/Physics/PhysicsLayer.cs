@@ -60,7 +60,7 @@ namespace Engine.Layers
                     rigidbody.PrevLocalRotation = rigidbody.Transform.LocalRotation;
                 }
 
-                B2Worlds.b2World_Step(PhysicWorld.WorldID, fixedTimeStep, 4);
+                B2Worlds.b2World_Step(PhysicWorld.WorldID, fixedTimeStep, 6);
                 _accumulator -= fixedTimeStep;
 
                 foreach (var rigidbody in _rigidbody)

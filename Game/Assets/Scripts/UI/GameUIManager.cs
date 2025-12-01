@@ -45,31 +45,6 @@ namespace Game
 
         }
 
-        public static UIText NewText(string name, string value, vec2 position, Transform parent)
-        {
-            var text = new Actor(name).AddComponent<UIText>();
-            text.Transform.Parent = parent;
-            text.Font = GameManager.DefaultFont;
-            text.Material = GameManager.DefaultMaterial;
-            text.SetText(value);
-            text.Transform.LocalPosition = position;
-            text.BlockEvents = false;
-            text.ReceiveEvents = false;
-
-            return text;
-        }
-
-        public static UIImage NewImage(string name, vec2 position, vec2 size, Color color, Transform parent)
-        {
-            var image = new Actor(name).AddComponent<UIImage>();
-            image.Material = GameManager.DefaultMaterial;
-            image.Transform.Parent = parent;
-            image.RectTransform.Pivot = vec2.Half;
-            image.RectTransform.Size = size;
-            image.Transform.LocalPosition = position;
-            image.Color = color;
-
-            return image;
-        }
+      
     }
 }

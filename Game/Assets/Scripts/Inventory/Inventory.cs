@@ -13,6 +13,7 @@ namespace Game
         private readonly InventorySlot[] _slots;
         public IReadOnlyList<InventorySlot> Slots => _slots;
         protected event Action<Item> OnItemRemoved;
+        public event Action<Inventory> OnInventoryChanged;
         public Inventory(int maxSlots)
         {
             MaxSlots = maxSlots;
@@ -47,6 +48,7 @@ namespace Game
             if (!currentSlot.IsEmpty() && item.Features.IsStackable && (currentSlot.Amount + amount) < item.Features.MaxPerSlot)
             {
                 _slots[slotIndex] = new InventorySlot(currentSlot.item, currentSlot.Amount + amount);
+                OnInventoryChanged?.Invoke(this);
                 return true;
             }
 
@@ -55,6 +57,8 @@ namespace Game
             if (canAdd)
             {
                 _slots[emptySlotIndex] = new InventorySlot(item, amount);
+                OnInventoryChanged?.Invoke(this);
+
             }
 
             return canAdd;
@@ -78,6 +82,8 @@ namespace Game
             // TODO: Instance items entities in the world, so the player can collect them gain.
 
             _slots[slotIndex] = default;
+
+            OnInventoryChanged?.Invoke(this);
         }
 
         public InventorySlot GetSlot(int index)
@@ -133,6 +139,8 @@ namespace Game
                 {
                     _slots[slotIndex] = new InventorySlot(slot.item, slot.Amount - useCount);
                 }
+
+                OnInventoryChanged?.Invoke(this);
 
                 return true;
             }

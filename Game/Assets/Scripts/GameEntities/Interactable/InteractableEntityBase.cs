@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    [RequiredComponent(typeof(BoxCollider2D), typeof(SpriteRenderer))]
+    [RequireComponent(typeof(BoxCollider2D), typeof(SpriteRenderer))]
     public abstract class InteractableEntityBase : GameEntity 
     {
         [RequiredProperty] protected BoxCollider2D BoxCollider { get; private set; }

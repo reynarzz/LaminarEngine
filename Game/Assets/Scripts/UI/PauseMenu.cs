@@ -39,7 +39,7 @@ namespace Game
 
             var backSize = new vec2(512 * 3, 288 * 3);
             // Background
-            _background = GameUIManager.NewImage("Background", backSize * 0.5f, backSize, Color32.RGB(200), _canvas.Transform);
+            _background = UiUtils.NewImage("Background", backSize * 0.5f, backSize, Color32.RGB(200), _canvas.Transform);
             _background.BlockEvents = true;
             _background.ReceiveEvents = true;
 
@@ -52,7 +52,7 @@ namespace Game
             _background.Material.GetPass(0).IsScreenGrabPass = true;
 
             // Title text
-            _titleText = GameUIManager.NewText("Title text", "Pause", new vec2(0, -110), _background.Transform);
+            _titleText = UiUtils.NewText("Title text", "Pause", new vec2(0, -110), _background.Transform);
             _titleText.FontSize = 70;
             _titleText.Fit = TextFit.ExpandToFit;
             _titleText.Vertical = TextVerticalAlignment.Center;
@@ -63,7 +63,7 @@ namespace Game
 
             var buttonSlice = GameTextureAtlases.GetAtlas("ui_buttons_long");
 
-            var resumeButtonImage = GameUIManager.NewImage("Resume button image", new vec2(0, 0), new vec2(150, 40), Color.White, _background.Transform);
+            var resumeButtonImage = UiUtils.NewImage("Resume button image", new vec2(0, 0), new vec2(150, 40), Color.White, _background.Transform);
 
             resumeButtonImage.PreserveAspect = true;
             var button = resumeButtonImage.AddComponent<Button>();
@@ -78,7 +78,7 @@ namespace Game
 
             // resumeButtonImage.AddComponent<Test_UIEvent>();
 
-            var text = GameUIManager.NewText("Resume text", "Resume", default, resumeButtonImage.Transform);
+            var text = UiUtils.NewText("Resume text", "Resume", default, resumeButtonImage.Transform);
             text.ReceiveEvents = false;
             text.RectTransform.Size.y = resumeButtonImage.RectTransform.Size.y;
             text.RectTransform.Size.x = resumeButtonImage.RectTransform.Size.x;
