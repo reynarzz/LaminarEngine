@@ -73,7 +73,7 @@ namespace Game
             _gridLayout.Padding = new Thickness(12);
             _gridLayout.Padding.Top = 38;
             _gridLayout.StartPivot = new vec2(0.5f, 0.5f);
-            _gridLayout.MaxPerRow = 10;
+            _gridLayout.MaxPerRow = 7;
             _gridLayout.ContentsSize = new vec2(46, 46);
             _slotSprite = new Sprite(Assets.GetTexture("pixel-ui_slot.png"));
 

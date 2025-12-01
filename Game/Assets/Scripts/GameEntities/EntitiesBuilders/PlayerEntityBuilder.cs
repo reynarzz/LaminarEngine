@@ -34,7 +34,7 @@ namespace Game
                     Material = MaterialUtils.SpriteMaterial,
                     StartingLife = 4,
                     SpriteLookDir = 1,
-                    InventoryMaxSlots = 12,
+                    InventoryMaxSlots = 14,
                     Ground = new GroundDetectionOptions()
                     {
                         Enabled = true,
