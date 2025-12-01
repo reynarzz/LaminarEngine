@@ -30,17 +30,16 @@ namespace Game
             PlayerHealth = InitUI<PlayerHealthUI>("Player Health UI");
             Inventory = InitUI<InventoryUI>("Inventory");
 
-
             PauseMenu = InitUI<PauseMenu>("Pause menu");
         }
 
-        private T InitUI<T>(string name) where T: GameUI
+        private T InitUI<T>(string name) where T : GameUI
         {
             var ui = new Actor(name).AddComponent<T>();
             ui.Transform.Parent = _hudCanvas.Transform;
             return ui;
         }
-         
+
         public void GoToMainMenu()
         {
 

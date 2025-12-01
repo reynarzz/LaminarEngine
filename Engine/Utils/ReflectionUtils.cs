@@ -30,7 +30,7 @@ namespace Engine.Utils
             }
         }
 
-        public static IEnumerable<MemberInfo> GetAllMembersWithAttribute<TAttr>(Type type, bool inherit = true) where TAttr : Attribute
+        public static IEnumerable<MemberInfo> GetAllMembersWithAttribute<T>(Type type, bool inherit = true) where T : Attribute
         {
             const BindingFlags flags =
                 BindingFlags.Instance |
@@ -41,12 +41,20 @@ namespace Engine.Utils
             while (type != null && type != typeof(object))
             {
                 foreach (var prop in type.GetProperties(flags))
-                    if (prop.IsDefined(typeof(TAttr), inherit))
+                {
+                    if (prop.IsDefined(typeof(T), inherit))
+                    {
                         yield return prop;
-
+                    }
+                }
+                    
                 foreach (var field in type.GetFields(flags))
-                    if (field.IsDefined(typeof(TAttr), inherit))
+                {
+                    if (field.IsDefined(typeof(T), inherit))
+                    {
                         yield return field;
+                    }
+                }
 
                 type = type.BaseType;
             }

@@ -9,9 +9,8 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    [RequiredComponent(typeof(UICanvas))]
     public class GameUI : ScriptBehavior
     {
-        [RequiredProperty] public UICanvas Canvas { get; private set; }
+  
     }
 }
