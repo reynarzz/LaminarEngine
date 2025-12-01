@@ -63,13 +63,13 @@ namespace Game
             doorOutState.Clip.AddCurve(SPRITE_PROPERTY_NAME, new SpriteCurve(fps, GameTextureAtlases.GetAtlas("player_door_out")));
 
             Inventory.OnLifeChanged += Inventory_OnLifeChanged;
-            GameUIManager.PlayerHealthUI.InitHealth(Inventory.Life);
+            GameUIManager.PlayerHealth.InitHealth(Inventory.Life);
 
         }
 
         private void Inventory_OnLifeChanged(int life)
         {
-            GameUIManager.PlayerHealthUI.UpdatePlayerHealth(life);
+            GameUIManager.PlayerHealth.UpdatePlayerHealth(life);
         }
 
         public void InitLevel()

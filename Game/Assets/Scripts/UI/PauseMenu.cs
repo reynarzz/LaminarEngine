@@ -39,7 +39,7 @@ namespace Game
 
             var backSize = new vec2(512 * 3, 288 * 3);
             // Background
-            _background = NewImage("Background", backSize * 0.5f, backSize, Color32.RGB(200), _canvas.Transform);
+            _background = GameUIManager.NewImage("Background", backSize * 0.5f, backSize, Color32.RGB(200), _canvas.Transform);
             _background.BlockEvents = true;
             _background.ReceiveEvents = true;
 
@@ -51,10 +51,8 @@ namespace Game
             _background.Material = _backgroundMat;
             _background.Material.GetPass(0).IsScreenGrabPass = true;
 
-            Inventory();
-
             // Title text
-            _titleText = NewText("Title text", "Pause", new vec2(0, -110), _background.Transform);
+            _titleText = GameUIManager.NewText("Title text", "Pause", new vec2(0, -110), _background.Transform);
             _titleText.FontSize = 70;
             _titleText.Fit = TextFit.ExpandToFit;
             _titleText.Vertical = TextVerticalAlignment.Center;
@@ -65,7 +63,7 @@ namespace Game
 
             var buttonSlice = GameTextureAtlases.GetAtlas("ui_buttons_long");
 
-            var resumeButtonImage = NewImage("Resume button image", new vec2(0, 0), new vec2(150, 40), Color.White, _background.Transform);
+            var resumeButtonImage = GameUIManager.NewImage("Resume button image", new vec2(0, 0), new vec2(150, 40), Color.White, _background.Transform);
 
             resumeButtonImage.PreserveAspect = true;
             var button = resumeButtonImage.AddComponent<Button>();
@@ -80,7 +78,7 @@ namespace Game
 
             // resumeButtonImage.AddComponent<Test_UIEvent>();
 
-            var text = NewText("Resume text", "Resume", default, resumeButtonImage.Transform);
+            var text = GameUIManager.NewText("Resume text", "Resume", default, resumeButtonImage.Transform);
             text.ReceiveEvents = false;
             text.RectTransform.Size.y = resumeButtonImage.RectTransform.Size.y;
             text.RectTransform.Size.x = resumeButtonImage.RectTransform.Size.x;
@@ -106,69 +104,6 @@ namespace Game
             // LogRecursive(_background.Transform);
 
             SetColorAlpha(0, true);
-        }
-        private ContentSizeFitter _fitter;
-
-        private void Inventory()
-        {
-            _inventory = new Actor<UIElement, ContentSizeFitter>("Inventory").GetComponent<UIElement>();
-            _inventory.Transform.Parent = _background.Transform;
-            _inventory.Transform.LocalPosition = new vec3(0, 298);
-
-            var inventory = NewImage("Inventory image", default, new vec2(320, 240), Color.White, _inventory.Transform);
-            _fitter = inventory.AddComponent<ContentSizeFitter>();
-            inventory.RectTransform.Pivot = new vec2(0.5f, 0.5f);
-            var img = inventory.GetComponent<UIImage>();
-            img.Material = GameManager.DefaultMaterial;
-            img.Sprite = new Sprite(Assets.GetTexture("pixel-ui_panel.png"));
-            img.IsSliced = true;
-            img.SlicedBorderResolution = 2.5f;
-
-            var inventoryTitleText = NewText("inventory title", "Inventory", new vec2(0, -52), _inventory.Transform);
-            inventoryTitleText.Fit = TextFit.ExpandToFit;
-            inventoryTitleText.FontSize = 30;
-            inventoryTitleText.OutlineSize = 0;
-            inventoryTitleText.FontResolution = 10;
-            //inventoryTitleText.Transform.LocalScale = vec3.One * 0.3f;
-
-            var horizontalLayout = new Actor("HorizontalRect").AddComponent<GridLayout>();
-            horizontalLayout.Transform.Parent = inventory.Transform;
-            horizontalLayout.Transform.LocalPosition = new vec3(0, 0);
-            horizontalLayout.ResizeToFitVertical = true;
-            horizontalLayout.ResizeToFitHorizontal = true;
-            horizontalLayout.Spacing = 4;
-            horizontalLayout.Padding = new Thickness(12);
-            horizontalLayout.Padding.Top = 38;
-            horizontalLayout.StartPivot = new vec2(0.5f, 0.5f);
-            horizontalLayout.MaxPerRow = 10;
-            horizontalLayout.ContentsSize = new vec2(46, 46);
-            var slotSprite = new Sprite(Assets.GetTexture("pixel-ui_slot.png"));
-
-            var parent = NewImage("Quad1", default, new vec2(100, 100), Color.White, horizontalLayout.Transform);
-            parent.Sprite = slotSprite;
-            var coins = GameTextureAtlases.GetAtlas("coin_currency");
-
-
-            var iconContent = NewImage("Content", default, new vec2(34, 34), Color.White, parent.Transform);
-            iconContent.RectTransform.Pivot = new vec2(0.5f, 0.6f);
-            var animator = iconContent.AddComponent<Animator>();
-            var clip = new AnimationClip("Sprite");
-
-            clip.AddCurve("Sprite", new SpriteCurve(7.0f, coins));
-            animator.AddState(new AnimationState("Coin", clip));
-            animator.OnUpdate += x =>
-            {
-                iconContent.Sprite = x.GetSprite("Sprite");
-            };
-
-            for (int i = 0; i < 19; i++)
-            {
-                NewImage("IQuad: " + i, default, new vec2(100, 100), Color.White, horizontalLayout.Transform).Sprite = slotSprite;
-
-            }
-            horizontalLayout.RecalculateLayout();
-            _fitter.ResizeToFitChildren();
-            _inventory.Actor.IsActiveSelf = false;
         }
 
         private static void LogHierarchy(Transform current, int depth = 0)
@@ -238,37 +173,6 @@ namespace Game
                 SetColorAlpha(0);
             }
 
-            if (Input.GetKeyDown(KeyCode.Tab))
-            {
-                _inventory.Actor.IsActiveSelf = !_inventory.Actor.IsActiveSelf;
-            }
-        }
-
-        private UIText NewText(string name, string value, vec2 position, Transform parent)
-        {
-            var text = new Actor(name).AddComponent<UIText>();
-            text.Transform.Parent = parent;
-            text.Font = GameManager.DefaultFont;
-            text.Material = GameManager.DefaultMaterial;
-            text.SetText(value);
-            text.Transform.LocalPosition = position;
-            text.BlockEvents = false;
-            text.ReceiveEvents = false;
-
-            return text;
-        }
-
-        private UIImage NewImage(string name, vec2 position, vec2 size, Color color, Transform parent)
-        {
-            var image = new Actor(name).AddComponent<UIImage>();
-            image.Material = GameManager.DefaultMaterial;
-            image.Transform.Parent = parent;
-            image.RectTransform.Pivot = vec2.Half;
-            image.RectTransform.Size = size;
-            image.Transform.LocalPosition = position;
-            image.Color = color;
-
-            return image;
         }
     }
 }

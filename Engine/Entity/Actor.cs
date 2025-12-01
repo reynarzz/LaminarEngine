@@ -1,6 +1,7 @@
 ﻿using Engine.Types;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -160,6 +161,9 @@ namespace Engine
                 return result;
             }
 
+            var component = Activator.CreateInstance(type) as Component;
+            component.Actor = this;
+
             var required = GetAllAttributes<RequiredComponentAttribute>(type);
             if (required != null)
             {
@@ -167,13 +171,22 @@ namespace Engine
                 {
                     foreach (var componentsTypes in requiredAttrib.RequiredComponents)
                     {
-                        AddComponent(componentsTypes);
+                        var requiredComponent = AddComponent(componentsTypes);
+
+                        foreach (var property in GetAllPropertiesWithAttribute<RequiredPropertyAttribute>(type))
+                        {
+                            if(property.PropertyType == requiredComponent.GetType())
+                            {
+                                if(property.SetMethod != null)
+                                {
+                                    property.SetValue(component, requiredComponent);
+                                }
+                            }
+                        }
                     }
                 }
             }
 
-            var component = Activator.CreateInstance(type) as Component;
-            component.Actor = this;
             _components.Add(component);
 
             if (component is IStartableComponent start)
@@ -201,6 +214,25 @@ namespace Engine
             return component;
         }
 
+       private IEnumerable<PropertyInfo> GetAllPropertiesWithAttribute<TAttr>(Type type, bool inherit = true) where TAttr : Attribute
+        {
+            const BindingFlags flags =
+                BindingFlags.Instance |
+                BindingFlags.Public |
+                BindingFlags.NonPublic |
+                BindingFlags.DeclaredOnly;
+
+            while (type != null && type != typeof(object))
+            {
+                foreach (var prop in type.GetProperties(flags))
+                {
+                    if (prop.IsDefined(typeof(TAttr), inherit) && prop.SetMethod != null)
+                        yield return prop;
+                }
+
+                type = type.BaseType;
+            }
+        }
         public T AddComponent<T>() where T : Component
         {
             CheckIfValidObject(this);

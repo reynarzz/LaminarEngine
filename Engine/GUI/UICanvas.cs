@@ -29,7 +29,7 @@ namespace Engine.GUI
         }
     }
 
-    [RequiredComponent(typeof(RectTransform))]
+    [UniqueComponent, RequiredComponent(typeof(RectTransform))]
     public class UICanvas : Component, IUpdatableComponent, IPreRenderable
     {
         public RectTransform RectTransform { get; private set; }

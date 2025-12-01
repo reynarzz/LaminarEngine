@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    [RequiredComponent(typeof(Animator))]
     public class Door : AnimatedInteractable<DoorData>
     {
         public event Action<bool> OnDoorStateChanged;
