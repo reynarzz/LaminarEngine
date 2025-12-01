@@ -14,18 +14,21 @@ namespace Game
         private readonly static Dictionary<string, Sprite[]> _tilesets;
         static GameTextureAtlases()
         {
+            var playerPivot = new vec2(0.4f, 0.42f);
+
+
             _tilesets = new Dictionary<string, Sprite[]>()
             {
                 // Player atlases
-                { "player_idle",     SliceSprites("KingsAndPigsSprites/01-King Human/Idle (78x58)S.png", 78, 58, new vec2(0.4f, 0.4f)) },
-                { "player_run",      SliceSprites("KingsAndPigsSprites/01-King Human/Run (78x58)S.png", 78, 58, new vec2(0.4f, 0.4f)) },
-                { "player_jump",     SliceSprites("KingsAndPigsSprites/01-King Human/Jump (78x58)S.png", 78, 58, new vec2(0.4f, 0.4f)) },
-                { "player_fall",     SliceSprites("KingsAndPigsSprites/01-King Human/Fall (78x58)S.png", 78, 58, new vec2(0.4f, 0.4f)) },
-                { "player_hit",      SliceSprites("KingsAndPigsSprites/01-King Human/Hit (78x58).png", 78, 58, new vec2(0.4f, 0.4f)) },
-                { "player_dead",     SliceSprites("KingsAndPigsSprites/01-King Human/Dead (78x58).png", 78, 58, new vec2(0.4f, 0.4f)) },
-                { "player_attack",   SliceSprites("KingsAndPigsSprites/01-King Human/Attack (78x58).png", 78, 58, new vec2(0.4f, 0.4f)) },
-                { "player_door_in",  SliceSprites("KingsAndPigsSprites/01-King Human/Door In (78x58).png", 78, 58, new vec2(0.4f, 0.4f), 2) },
-                { "player_door_out", SliceSprites("KingsAndPigsSprites/01-King Human/Door Out (78x58).png", 78, 58, new vec2(0.4f, 0.4f), 2) },
+                { "player_idle",     SliceSprites("KingsAndPigsSprites/01-King Human/Idle (78x58)S.png", 78, 58, playerPivot) },
+                { "player_run",      SliceSprites("KingsAndPigsSprites/01-King Human/Run (78x58)S.png", 78, 58,     playerPivot) },
+                { "player_jump",     SliceSprites("KingsAndPigsSprites/01-King Human/Jump (78x58)S.png", 78, 58,    playerPivot) },
+                { "player_fall",     SliceSprites("KingsAndPigsSprites/01-King Human/Fall (78x58)S.png", 78, 58,    playerPivot) },
+                { "player_hit",      SliceSprites("KingsAndPigsSprites/01-King Human/Hit (78x58).png", 78, 58,      playerPivot) },
+                { "player_dead",     SliceSprites("KingsAndPigsSprites/01-King Human/Dead (78x58).png", 78, 58,     playerPivot) },
+                { "player_attack",   SliceSprites("KingsAndPigsSprites/01-King Human/Attack (78x58).png", 78, 58,   playerPivot) },
+                { "player_door_in",  SliceSprites("KingsAndPigsSprites/01-King Human/Door In (78x58).png", 78, 58,  playerPivot, 2) },
+                { "player_door_out", SliceSprites("KingsAndPigsSprites/01-King Human/Door Out (78x58).png", 78, 58, playerPivot, 2) },
 
                 { "door_opening",    SliceSprites("KingsAndPigsSprites/11-Door/Opening (46x56).png", 46, 56, vec2.Half, 1) },
 

@@ -18,7 +18,9 @@ namespace Game
         public float WaitTime { get; set; } = 1.5f;
         private float _currentWait = 0;
 
-        private SpriteRenderer _renderer;
+        [RequiredProperty] private SpriteRenderer _renderer;
+        [RequiredProperty] private RigidBody2D _rigid;
+
         private int _pointIndex = 0;
         private int _direction = 1;
 
@@ -26,11 +28,9 @@ namespace Game
         protected override void OnAwake()
         {
             base.OnAwake();
-            _renderer = GetComponent<SpriteRenderer>();
             _renderer.Color = Color.Green;
-            var rigid = GetComponent<RigidBody2D>();
-            rigid.BodyType = Body2DType.Kinematic;
-            rigid.Interpolate = true;
+            _rigid.BodyType = Body2DType.Kinematic;
+            _rigid.Interpolate = true;
             var trigger = GetComponent<BoxCollider2D>();
             trigger.Size = new vec2(3, 1);
             trigger.Offset = new vec2(0, 0.1f);

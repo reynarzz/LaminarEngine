@@ -12,15 +12,12 @@ namespace Game
     [RequiredComponent(typeof(BoxCollider2D), typeof(SpriteRenderer))]
     public abstract class InteractableEntityBase : GameEntity 
     {
-        protected BoxCollider2D BoxCollider { get; private set; }
-        protected SpriteRenderer SpriteRenderer { get; private set; }
+        [RequiredProperty] protected BoxCollider2D BoxCollider { get; private set; }
+        [RequiredProperty] protected SpriteRenderer SpriteRenderer { get; private set; }
         private bool _isPlayerInZone = false;
         protected override void OnAwake()
         {
-            BoxCollider = GetComponent<BoxCollider2D>();
             BoxCollider.IsTrigger = true;
-
-            SpriteRenderer = GetComponent<SpriteRenderer>();
             SpriteRenderer.Material = MaterialUtils.SpriteMaterial;
             SpriteRenderer.SortOrder = -1;
         }

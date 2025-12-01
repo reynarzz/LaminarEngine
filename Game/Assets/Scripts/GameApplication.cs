@@ -16,7 +16,7 @@ namespace Game
         // Fix: Batch2d vertices shift when an object is destroyed. 
         // Fix: Texture units overflow, a batch should only bind: MAX_DEVICE_ALLOWED - RENDERER_NEEDED_TEXTURE_SLOTS
         // Implement:scroll list 
-        // Bake tilemaps in binary file, the geometry should be already converted to the memory layout of the vertex array.
+        // Bake tilemaps quads vertices, and collision data in binary file, the geometry should be already converted to the memory layout of the vertex array.
 
 
         // For the game:
@@ -27,8 +27,6 @@ namespace Game
         // Enemy life UI
         // implement player's iframes after getting hit
         // Camera shake.
-
-
         // Five levels, small, one intro level falling from outside.
         // Colllect coins, hearts, attack enemies, go from door A to B
         // Implement collectibles
@@ -39,7 +37,6 @@ namespace Game
         // Implement bounds in sprites/renderers.
         // Implement event in transform to know when scale changed, and get the delta scale.
         // Add 'CheckIfValidObject()' to all properties of the engine's components and actor.
-        // Investigate why colliders are not freed from memory automatically.
         // Game using both assets, and using stencil buffer to change between them sphere.
         // Investigate why AudioMixer frees from memory automatically
 

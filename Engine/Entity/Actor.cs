@@ -1,6 +1,8 @@
 ﻿using Engine.Types;
+using Engine.Utils;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -160,6 +162,9 @@ namespace Engine
                 return result;
             }
 
+            var component = Activator.CreateInstance(type) as Component;
+            component.Actor = this;
+
             var required = GetAllAttributes<RequiredComponentAttribute>(type);
             if (required != null)
             {
@@ -167,13 +172,19 @@ namespace Engine
                 {
                     foreach (var componentsTypes in requiredAttrib.RequiredComponents)
                     {
-                        AddComponent(componentsTypes);
+                        var requiredComponent = AddComponent(componentsTypes);
+
+                        foreach (var property in ReflectionUtils.GetAllMembersWithAttribute<RequiredPropertyAttribute>(type))
+                        {
+                            if (ReflectionUtils.GetMemberType(property) == requiredComponent.GetType())
+                            {
+                                ReflectionUtils.SetMemberValue(component, property, requiredComponent);
+                            }
+                        }
                     }
                 }
             }
 
-            var component = Activator.CreateInstance(type) as Component;
-            component.Actor = this;
             _components.Add(component);
 
             if (component is IStartableComponent start)
@@ -200,6 +211,7 @@ namespace Engine
 
             return component;
         }
+
 
         public T AddComponent<T>() where T : Component
         {

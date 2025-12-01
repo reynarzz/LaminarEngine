@@ -12,11 +12,11 @@ namespace Game
 {
     internal class ChestEntityBuilder : GameEntityBuilderBase
     {
-        public override GameEntity Build(vec2 position, FieldInstance[] fields, Func<vec2, bool, vec2> positionConverter)
+        public override GameEntity Build(EntityInstanceData entityData, IReadOnlyDictionary<string, LayerData> layers, Func<vec2, bool, vec2> positionConverter)
         {
             var lootItems = default(ItemAmountPair[]);
         
-            if (Deserialize<int[]>(fields, "items_amount", out var lootAmount))
+            if (Deserialize<int[]>(entityData.Entity.FieldInstances, "items_amount", out var lootAmount))
             {
                 lootItems = new ItemAmountPair[lootAmount.Length];
 
@@ -28,7 +28,7 @@ namespace Game
                 }
             }
 
-            if (GetEnumArray<ItemId>(fields, "items_loot", out var items))
+            if (GetEnumArray<ItemId>(entityData.Entity.FieldInstances, "items_loot", out var items))
             {
                 for (int j = 0; j < items.Length; j++)
                 {
@@ -38,12 +38,12 @@ namespace Game
             }
 
             ItemId lockedByItem = ItemId.none;
-            if (GetEnum<ItemId>(fields, "locked_by", out var lockedItem))
+            if (GetEnum<ItemId>(entityData.Entity.FieldInstances, "locked_by", out var lockedItem))
             {
                 lockedByItem = lockedItem;
             }
 
-            return GamePrefabs.Items.InstantiateChest(position, new ChestData()
+            return GamePrefabs.Items.InstantiateChest(entityData.WorldPosition, new ChestData()
             {
                 LockedBy = lockedByItem,
                 ChestLoot = lootItems,

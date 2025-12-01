@@ -12,7 +12,7 @@ namespace Game
 {
     public abstract class GameEntityBuilderBase
     {
-        public abstract GameEntity Build(vec2 position, FieldInstance[] fields, Func<vec2, bool, vec2> positionConverter);
+        public abstract GameEntity Build(EntityInstanceData entityData, IReadOnlyDictionary<string, LayerData> layers, Func<vec2, bool, vec2> positionConverter);
 
         protected bool Deserialize<T>(FieldInstance[] fields, string id, out T value)
         {
@@ -77,6 +77,15 @@ namespace Game
             return true;
         }
 
+        protected bool GetDictionary(FieldInstance[] fields, string id, out Dictionary<string, string> value)
+        {
+            value = default;
+            if (!TryGetField(fields, id, out var field))
+                return false;
+            value = JsonConvert.DeserializeObject<Dictionary<string, string>>(field.Value.ToString());
+            return true;
+        }
+
         protected bool GetInt(FieldInstance[] fields, string id, out int value)
         {
             value = default;
@@ -134,5 +143,6 @@ namespace Game
                 return p.Inventory.GetItemCount(item) >= amount;
             };
         }
+
     }
 }

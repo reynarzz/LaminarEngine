@@ -105,10 +105,10 @@ namespace GlmNet
             return new vec3(-vec.x, -vec.y, -vec.z);
         }
 
-        public static vec3 operator -(vec3 lhs, float rhs)
-        {
-            return new vec3(lhs.x - rhs, lhs.y - rhs, lhs.z - rhs);
-        }
+        //public static vec3 operator -(vec3 lhs, float rhs)
+        //{
+        //    return new vec3(lhs.x - rhs, lhs.y - rhs, lhs.z - rhs);
+        //}
 
         public static vec3 operator *(vec3 self, float s)
         {

@@ -10,9 +10,9 @@ namespace Game
 {
     internal class EnemyEntityBuilder : GameEntityBuilderBase
     {
-        public override GameEntity Build(vec2 position, FieldInstance[] fields, Func<vec2, bool, vec2> positionConverter)
+        public override GameEntity Build(EntityInstanceData entityData, IReadOnlyDictionary<string, LayerData> layers, Func<vec2, bool, vec2> positionConverter)
         {
-            var enemy = GamePrefabs.Enemies.InstantiateKingPig(position, -1);
+            var enemy = GamePrefabs.Enemies.InstantiateKingPig(entityData.WorldPosition, -1);
 
             return enemy;
         }

@@ -11,11 +11,6 @@ namespace Game
     [RequiredComponent(typeof(Animator))]
     public abstract class AnimatedInteractable<T> : InteractableEntityBase<T> where T: InteractableData
     {
-        protected Animator Animator { get; set; }
-        protected override void OnAwake()
-        {
-            base.OnAwake();
-            Animator = GetComponent<Animator>();
-        }
+        [RequiredProperty] protected Animator Animator { get; set; }
     }
 }

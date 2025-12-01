@@ -11,11 +11,11 @@ namespace Game
 {
     public class DoorEntityBuilder : GameEntityBuilderBase
     {
-        public override GameEntity Build(vec2 position, FieldInstance[] fields, Func<vec2, bool, vec2> positionConverter)
+        public override GameEntity Build(EntityInstanceData entityData, IReadOnlyDictionary<string, LayerData> layers, Func<vec2, bool, vec2> positionConverter)
         {
             var doorData = new DoorData();
 
-            foreach (var field in fields)
+            foreach (var field in entityData.Entity.FieldInstances)
             {
                 if (GetEnum<ItemId>(field, "locked_by", out var item))
                 {
@@ -29,7 +29,7 @@ namespace Game
             }
 
             doorData.InteractCondition = PlayerHasItem_Condition(doorData.LockedBy, doorData.LockedAmount);
-            return GamePrefabs.World.InstantiateDoor(position, doorData);
+            return GamePrefabs.World.InstantiateDoor(entityData.WorldPosition, doorData);
         }
     }
 }

@@ -11,15 +11,15 @@ namespace Game
 {
     internal class ItemsEntityBuilder : GameEntityBuilderBase
     {
-        public override GameEntity Build(vec2 position, FieldInstance[] fields, Func<vec2, bool, vec2> positionConverter)
+        public override GameEntity Build(EntityInstanceData entityData, IReadOnlyDictionary<string, LayerData> layers, Func<vec2, bool, vec2> positionConverter)
         {
-            foreach (var field in fields)
+            foreach (var field in entityData.Entity.FieldInstances)
             {
                 if (field.Identifier.Equals("ItemType", StringComparison.OrdinalIgnoreCase))
                 {
                     if(Enum.TryParse<ItemId>(field.Value.ToString(), true, out var item))
                     {
-                        GamePrefabs.Items.InstantiateCollectible(item, position);
+                        GamePrefabs.Items.InstantiateCollectible(item, entityData.WorldPosition);
                     }
                     else
                     {
