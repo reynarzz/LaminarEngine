@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Engine.Types
 {
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
     public class RequiredPropertyAttribute : Attribute
     {
     }

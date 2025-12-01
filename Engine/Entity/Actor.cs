@@ -1,4 +1,5 @@
 ﻿using Engine.Types;
+using Engine.Utils;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -173,14 +174,11 @@ namespace Engine
                     {
                         var requiredComponent = AddComponent(componentsTypes);
 
-                        foreach (var property in GetAllPropertiesWithAttribute<RequiredPropertyAttribute>(type))
+                        foreach (var property in ReflectionUtils.GetAllMembersWithAttribute<RequiredPropertyAttribute>(type))
                         {
-                            if(property.PropertyType == requiredComponent.GetType())
+                            if (ReflectionUtils.GetMemberType(property) == requiredComponent.GetType())
                             {
-                                if(property.SetMethod != null)
-                                {
-                                    property.SetValue(component, requiredComponent);
-                                }
+                                ReflectionUtils.SetMemberValue(component, property, requiredComponent);
                             }
                         }
                     }
@@ -214,25 +212,7 @@ namespace Engine
             return component;
         }
 
-       private IEnumerable<PropertyInfo> GetAllPropertiesWithAttribute<TAttr>(Type type, bool inherit = true) where TAttr : Attribute
-        {
-            const BindingFlags flags =
-                BindingFlags.Instance |
-                BindingFlags.Public |
-                BindingFlags.NonPublic |
-                BindingFlags.DeclaredOnly;
 
-            while (type != null && type != typeof(object))
-            {
-                foreach (var prop in type.GetProperties(flags))
-                {
-                    if (prop.IsDefined(typeof(TAttr), inherit) && prop.SetMethod != null)
-                        yield return prop;
-                }
-
-                type = type.BaseType;
-            }
-        }
         public T AddComponent<T>() where T : Component
         {
             CheckIfValidObject(this);
