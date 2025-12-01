@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    [RequiredComponent(typeof(Camera))]
+    [RequireComponent(typeof(Camera))]
     public class CameraFollow : ScriptBehavior
     {
         public Transform Target { get; set; }

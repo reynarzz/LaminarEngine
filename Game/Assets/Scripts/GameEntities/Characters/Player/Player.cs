@@ -21,6 +21,8 @@ namespace Game
         public override void Init(CharacterConfig config)
         {
             Inventory = new PlayerInventory(config.InventoryMaxSlots, 4);
+            GameUIManager.Inventory.InitInventory(Inventory);
+
             _canMove = true;
             base.Init(config);
             var box = AddComponent<BoxCollider2D>();

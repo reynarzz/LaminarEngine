@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    [RequiredComponent(typeof(Animator))]
+    [RequireComponent(typeof(Animator))]
     public class Collectible : GameEntity
     {
         private Animator _animator;

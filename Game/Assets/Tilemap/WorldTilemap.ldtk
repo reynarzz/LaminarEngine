@@ -3102,7 +3102,7 @@
 									"id": "V_String",
 									"params": ["Simple_key"]
 								}] },
-								{ "__identifier": "items_amount", "__type": "Array<Int>", "__value": [1], "__tile": null, "defUid": 208, "realEditorValues": [{ "id": "V_Int", "params": [1] }] }
+								{ "__identifier": "items_amount", "__type": "Array<Int>", "__value": [2], "__tile": null, "defUid": 208, "realEditorValues": [{ "id": "V_Int", "params": [2] }] }
 							],
 							"__worldX": -232,
 							"__worldY": 152
@@ -3284,11 +3284,11 @@
 							"defUid": 175,
 							"px": [904,648],
 							"fieldInstances": [
-								{ "__identifier": "locked_by", "__type": "LocalEnum.ItemType", "__value": "Coin_currency", "__tile": null, "defUid": 181, "realEditorValues": [{
+								{ "__identifier": "locked_by", "__type": "LocalEnum.ItemType", "__value": "Simple_key", "__tile": null, "defUid": 181, "realEditorValues": [{
 									"id": "V_String",
-									"params": ["Coin_currency"]
+									"params": ["Simple_key"]
 								}] },
-								{ "__identifier": "locked_amount", "__type": "Int", "__value": 10, "__tile": null, "defUid": 179, "realEditorValues": [{ "id": "V_Int", "params": [10] }] },
+								{ "__identifier": "locked_amount", "__type": "Int", "__value": 1, "__tile": null, "defUid": 179, "realEditorValues": [{ "id": "V_Int", "params": [1] }] },
 								{ "__identifier": "consume_item", "__type": "Bool", "__value": true, "__tile": null, "defUid": 218, "realEditorValues": [] },
 								{ "__identifier": "level", "__type": "Int", "__value": 0, "__tile": null, "defUid": 177, "realEditorValues": [] }
 							],

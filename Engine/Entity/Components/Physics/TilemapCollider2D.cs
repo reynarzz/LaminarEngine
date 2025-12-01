@@ -12,7 +12,7 @@ using System.Numerics;
 
 namespace Engine
 {
-    [UniqueComponent, RequiredComponent(typeof(TilemapRenderer))]
+    [UniqueComponent, RequireComponent(typeof(TilemapRenderer))]
     public class TilemapCollider2D : Collider2D
     {
         private TilemapRenderer _renderer;

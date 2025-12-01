@@ -12,6 +12,7 @@ namespace Game
     public static class GameTextureAtlases
     {
         private readonly static Dictionary<string, Sprite[]> _tilesets;
+        private readonly static Dictionary<string, Sprite> _sprites;
         static GameTextureAtlases()
         {
             var playerPivot = new vec2(0.4f, 0.42f);
@@ -80,16 +81,36 @@ namespace Game
             // Spikes
             _tilesets["spikes_ground"] = TakeSprites(_tilesets["stark_full_tileset"], 183, 4);
             _tilesets["spikes_wall"] = TakeSprites(_tilesets["stark_full_tileset"], 215, 4);
+
+
+            // Init sprites
+            _sprites = new Dictionary<string, Sprite>()
+            {
+                { ItemId.coin_currency.ToString(),  _tilesets["coin_currency"][0] },
+                { ItemId.boss_key.ToString(),  _tilesets["stark_full_tileset"][194] },
+                { ItemId.chest_key.ToString(),  _tilesets["stark_full_tileset"][195] },
+
+            };
         }
 
         public static Sprite[] GetAtlas(string atlasId)
         {
-            if (_tilesets.TryGetValue(atlasId, out var sprite))
+            return GetValueSafe(_tilesets, atlasId);
+        }
+
+        public static Sprite GetSprite(string spriteId)
+        {
+            return GetValueSafe(_sprites, spriteId);
+        }
+
+        private static T GetValueSafe<T>(Dictionary<string, T> dict, string key)
+        {
+            if (dict.TryGetValue(key, out var sprite))
             {
                 return sprite;
             }
 
-            return null;
+            return default;
         }
 
         private static Sprite[] TakeSprites(Sprite[] tileset, int startIndex, int length = int.MaxValue)

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    [RequiredComponent(typeof(Animator))]
+    [RequireComponent(typeof(Animator))]
     public abstract class AnimatedInteractable<T> : InteractableEntityBase<T> where T: InteractableData
     {
         [RequiredProperty] protected Animator Animator { get; set; }
