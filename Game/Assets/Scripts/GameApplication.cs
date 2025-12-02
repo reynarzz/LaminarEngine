@@ -31,7 +31,7 @@ namespace Game
         // Colllect coins, hearts, attack enemies, go from door A to B
         // Implement collectibles
         // Implement UI (inventory, pause menu)
-
+        // Show interactable icon for: doors, chests, portals etc...
 
         // -Stretch:
         // Implement bounds in sprites/renderers.

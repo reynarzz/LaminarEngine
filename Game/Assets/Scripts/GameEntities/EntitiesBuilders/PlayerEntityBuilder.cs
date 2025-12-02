@@ -50,8 +50,8 @@ namespace Game
                               "Audio/HALFTONE/UI/2. Clicks/Click_10.wav"],
                     AttackSounds = ["Audio/HALFTONE/Gameplay/Bullet_1.wav"],
                     JumpSounds = ["Audio/HALFTONE/Gameplay/Jump_3.wav"],
-                    GroundSounds = ["Audio/HALFTONE/Gameplay/Hit_4.wav"]
-
+                    GroundSounds = ["Audio/HALFTONE/Gameplay/Hit_4.wav"],
+                    HitSound = "Audio/HALFTONE/Gameplay/Hit_2.wav"
                 });
             }
 

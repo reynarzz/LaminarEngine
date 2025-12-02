@@ -38,6 +38,7 @@ namespace Game
                     Material = MaterialUtils.SpriteMaterial,
                     StartingLife = 3,
                     SpriteLookDir = -1,
+                    InventoryMaxSlots = 3,
                     Ground = new GroundDetectionOptions()
                     {
                         Enabled = true,
@@ -53,7 +54,7 @@ namespace Game
                               "Audio/HALFTONE/UI/2. Clicks/Click_10.wav"],
                     AttackSounds = ["Audio/HALFTONE/Gameplay/Slash_1.wav"],
                     JumpSounds = ["Audio/HALFTONE/Gameplay/Jump_3.wav"],
-                    GroundSounds = ["Audio/HALFTONE/Gameplay/Hit_4.wav"]
+                    GroundSounds = ["Audio/HALFTONE/Gameplay/Hit_4.wav"],
 
                 });
                 actor.Transform.LocalScale = new vec3(1 * Math.Sign(lookDir), 1, 1);

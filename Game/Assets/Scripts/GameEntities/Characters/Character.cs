@@ -46,6 +46,7 @@ namespace Game
         public string[] WalkSounds;
         public string[] AttackSounds;
         public string[] GroundSounds;
+        public string HitSound;
     }
 
     public abstract class Character : GameEntity
@@ -101,6 +102,7 @@ namespace Game
         private AudioClip[] _jumpSfx;
         private AudioClip[] _attackSfx;
         private AudioClip[] _walkFx;
+        private AudioClip _hitSfx;
         private bool _jumped = false;
         public virtual void Init(CharacterConfig config)
         {
@@ -138,18 +140,20 @@ namespace Game
                 if (soundsPath == null || soundsPath.Length == 0)
                     return null;
 
-                var clips = new AudioClip[soundsPath.Length];
+                var clips = new List<AudioClip>();
                 for (int i = 0; i < soundsPath.Length; i++)
                 {
-                    clips[i] = Assets.GetAudioClip(soundsPath[i]);
+                    if(!string.IsNullOrEmpty(soundsPath[i]))
+                    clips.Add(Assets.GetAudioClip(soundsPath[i]));
                 }
-                return clips;
+                return clips.ToArray();
             }
 
             _groundSfx = GetClips(config.GroundSounds);
             _jumpSfx = GetClips(config.JumpSounds);
             _attackSfx = GetClips(config.AttackSounds);
             _walkFx = GetClips(config.WalkSounds);
+            _hitSfx = GetClips([config.HitSound]).FirstOrDefault();
         }
 
         protected void InitAnimationStates(AnimationsStates statesConfig)
@@ -392,7 +396,7 @@ namespace Game
             Animator.SetState(HIT_ANIM_STATE);
 
             CameraShake.Instance.BurstShake(30, 0.19f, 0.09f);
-
+            PlayHitSfx();
             return true;
         }
 
@@ -493,6 +497,11 @@ namespace Game
             Animator.Play(_main.Name);
         }
 
+        protected void PlayHitSfx()
+        {
+            if(_hitSfx != null)
+            AudioSource.PlayOneShot(_hitSfx, 0.1f);
+        }
         protected void PlayJumpSoundFx()
         {
             if (_jumpSfx != null && _jumpSfx.Length > 0)
