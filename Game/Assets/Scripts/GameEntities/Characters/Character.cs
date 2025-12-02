@@ -391,6 +391,8 @@ namespace Game
             Animator.Parameters.SetTrigger(HIT_DAMAGE_PROPERTY_NAME);
             Animator.SetState(HIT_ANIM_STATE);
 
+            CameraShake.Instance.BurstShake(30, 0.19f, 0.09f);
+
             return true;
         }
 

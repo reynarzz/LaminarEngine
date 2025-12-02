@@ -179,6 +179,7 @@ namespace Game
                 {
                     _shootCooldownTime = _shootCooldown;
                     Attack();
+                    CameraShake.Instance.BurstShake(30, 0.13f, 0.08f);
                 }
 
                 if (Input.GetKey(KeyCode.A))
@@ -196,6 +197,16 @@ namespace Game
             }
         }
 
+        public override bool HitDamage(int amount)
+        {
+            var isHit = base.HitDamage(amount);
+
+            if (isHit)
+            {
+                //CameraShake.Instance.BurstShake(30, 0.19f, 0.09f);
+            }
+            return isHit;
+        }
         protected override void OnFixedUpdate()
         {
             base.OnFixedUpdate();
@@ -216,7 +227,7 @@ namespace Game
                                            LayerMask.NameToBit(GameConsts.PLATFORM);
             bullet.Shoot(origin, vec2.Right * LookDir, _bulletSpeed, mask);
             return true;
-        } 
+        }
         protected override void OnTriggerEnter2D(Collider2D collider)
         {
             var interactable = collider.GetComponent<InteractableEntityBase>();

@@ -364,5 +364,67 @@ namespace Engine
         {
             return new vec3(MathF.Max(a.x, b.x), MathF.Max(a.y, b.y), MathF.Max(a.z, b.z));
         }
+
+        private static float SmoothNoise1D(float x)
+        {
+            int i = (int)MathF.Floor(x);
+            float f = x - i;
+
+            float a = Hash(i);
+            float b = Hash(i + 1);
+
+            // Cosine interpolation
+            float ft = f * MathF.PI;
+            float s = (1f - MathF.Cos(ft)) * 0.5f;
+
+            return a * (1f - s) + b * s; // returns [-1,1]
+        }
+
+        // Hash to deterministic random [-1,1]
+        private static float Hash(int x)
+        {
+            unchecked
+            {
+                x = (x << 13) ^ x;
+                int h = (x * (x * x * 15731 + 789221) + 1376312589);
+                return 1f - ((h & 0x7fffffff) / 1073741824f);
+            }
+        }
+
+        public static vec2 Noise2(float t)
+        {
+            float x = SmoothNoise1D(t + 0f);
+            float y = SmoothNoise1D(t + 100f);
+            return new vec2(x, y);
+        }
+
+        public static vec3 Noise3(float t)
+        {
+            float x = SmoothNoise1D(t + 0f);
+            float y = SmoothNoise1D(t + 2f);
+            float z = SmoothNoise1D(t + 3f);
+            return new vec3(x, y, z);
+        }
+
+        public static vec3 Noise3Fractal(float t, int octaves = 3)
+        {
+            float amp = 1f;
+            float freq = 1f;
+
+            vec3 sum = vec3.Zero;
+            float norm = 0f;
+
+            for (int i = 0; i < octaves; i++)
+            {
+                sum += Noise3(t * freq) * amp;
+                norm += amp;
+
+                amp *= 0.5f;
+                freq *= 2f;
+            }
+
+            return sum / norm; // stays in [-1,1]
+        }
+
     }
 }
