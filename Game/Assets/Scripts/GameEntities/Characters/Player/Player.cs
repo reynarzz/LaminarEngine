@@ -179,7 +179,7 @@ namespace Game
                 {
                     _shootCooldownTime = _shootCooldown;
                     Attack();
-                    CameraShake.Instance.BurstShake(30, 0.13f, 0.08f);
+                    CameraShake.Instance.BurstShake(20, 0.09f, 0.09f);
                 }
 
                 if (Input.GetKey(KeyCode.A))
