@@ -87,6 +87,8 @@ namespace Game
             if (_isInitialized)
             {
                 UpdateInventory(inventory);
+                inventory.OnInventoryChanged -= UpdateInventory;
+                inventory.OnInventoryChanged += UpdateInventory;
                 return;
             }
 

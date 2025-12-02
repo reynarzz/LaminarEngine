@@ -94,6 +94,9 @@ namespace SharedTypes
 
         public static string ClearPathSeparation(string path)
         {
+            if (string.IsNullOrEmpty(path))
+                return "";
+
             return path.Replace("\\", "/");
         }
         private static string GetAbsolutePathFlag(bool isRelativePath)

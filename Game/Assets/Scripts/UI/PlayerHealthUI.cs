@@ -92,8 +92,8 @@ namespace Game
                 {
                     var heartImage = _heartsImages[_enabledHeartsCount - 1];
                     heartImage.Transform.LocalScale = vec3.One + ((vec3.Half * MathF.Sin(_hearthAnimTime * 5)) + vec3.Half) * 0.2f;
+                    _hearthAnimTime += Time.DeltaTime;
                 }
-                _hearthAnimTime += Time.DeltaTime;
                 yield return 0;
             }
         }
