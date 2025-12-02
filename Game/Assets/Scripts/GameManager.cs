@@ -116,8 +116,8 @@ namespace Game
             {
                 LevelIndex = 0,
                 TilemapPath = "Tilemap/WorldTilemap.ldtk",
-                TilemapSprites = GameTextureAtlases.GetAtlas("sunny_land_tileset"),
-                WorldSpacePixelsPerUnit = GameTextureAtlases.GetAtlas("sunny_land_tileset")[0].Texture.PixelPerUnit,
+                TilemapSprites = GameTextures.GetAtlas("sunny_land_tileset"),
+                WorldSpacePixelsPerUnit = GameTextures.GetAtlas("sunny_land_tileset")[0].Texture.PixelPerUnit,
                 Tilemaps = 
                 {
                     new TilemapData()

@@ -233,7 +233,7 @@ namespace Game
                 AddSpriteAnimState(HIT_ANIM_STATE, false, false, true, [toIdle, toWalk, toJump, toFall, toAttack, toDeathLife0], statesConfig.Hit.SpriteAtlasId, statesConfig.Hit.Fps, statesConfig.Hit.Events);
             }
 
-            Renderer.Sprite = GameTextureAtlases.GetAtlas(statesConfig.Idle.SpriteAtlasId).FirstOrDefault();
+            Renderer.Sprite = GameTextures.GetAtlas(statesConfig.Idle.SpriteAtlasId).FirstOrDefault();
         }
 
         protected void AddSpriteAnimState(string stateName, bool makeMain, bool loop, bool useClipBlendTime,
@@ -248,7 +248,7 @@ namespace Game
                 _main = state;
             }
 
-            var sprites = GameTextureAtlases.GetAtlas(atlasId);
+            var sprites = GameTextures.GetAtlas(atlasId);
                 
             animClip.AddCurve(SPRITE_PROPERTY_NAME, new SpriteCurve(fps, sprites));
 

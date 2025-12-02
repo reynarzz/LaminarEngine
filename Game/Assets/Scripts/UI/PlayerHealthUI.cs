@@ -23,7 +23,7 @@ namespace Game
             var heartCanvas = new Actor("Canvas Health").AddComponent<UICanvas>();
             heartCanvas.Transform.Parent = Transform;
 
-            var sprites = GameTextureAtlases.GetAtlas("small_heart_idle");
+            var sprites = GameTextures.GetAtlas("small_heart_idle");
 
             UIImage Image(string name, vec2 position, vec2 size, Sprite sprite, Transform parent)
             {
@@ -39,7 +39,7 @@ namespace Game
             }
 
             const float uiSizeMult = 3;
-            var lifebarSprites = GameTextureAtlases.GetAtlas("health_bar_frame");
+            var lifebarSprites = GameTextures.GetAtlas("health_bar_frame");
             _healthFrame = Image("Life bar", new vec2(10, 10), new vec2(143, 34) * uiSizeMult, lifebarSprites[^1], heartCanvas.Transform);
 
             _heartsImages = new UIImage[lifebarSprites.Length + 2];
@@ -63,7 +63,7 @@ namespace Game
         public void SetMaxHeartsSlots(int count)
         {
             count = Math.Clamp(count, _minHeartsSlots, _maxHeartsSlots);
-            _healthFrame.Sprite = GameTextureAtlases.GetAtlas("health_bar_frame")[count - 3];
+            _healthFrame.Sprite = GameTextures.GetAtlas("health_bar_frame")[count - 3];
         }
 
         public void UpdatePlayerHealth(int count)

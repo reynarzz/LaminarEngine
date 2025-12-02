@@ -22,7 +22,7 @@ namespace Game
                 var collectible = new Actor("Collectible_" + item.ToString()).AddComponent<Collectible>();
                 collectible.Transform.WorldPosition = position;
 
-                var tiles = GameTextureAtlases.GetAtlas(item.ToString());
+                var tiles = GameTextures.GetAtlas(item.ToString());
                 var audioClip = Assets.GetAudioClip("Audio/HALFTONE/Gameplay/Collectibles_2.wav");
 
                 collectible.Init(new Collectible.CollectibleConfig()

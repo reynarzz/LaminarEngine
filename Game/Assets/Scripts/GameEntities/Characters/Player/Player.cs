@@ -59,10 +59,10 @@ namespace Game
             InitAnimationStates(states);
 
             var doorInState = AnimatorUtils.AddState(Animator, "DoorIn", false);
-            doorInState.Clip.AddCurve(SPRITE_PROPERTY_NAME, new SpriteCurve(fps, GameTextureAtlases.GetAtlas("player_door_in")));
+            doorInState.Clip.AddCurve(SPRITE_PROPERTY_NAME, new SpriteCurve(fps, GameTextures.GetAtlas("player_door_in")));
 
             var doorOutState = AnimatorUtils.AddState(Animator, "DoorOut", false);
-            doorOutState.Clip.AddCurve(SPRITE_PROPERTY_NAME, new SpriteCurve(fps, GameTextureAtlases.GetAtlas("player_door_out")));
+            doorOutState.Clip.AddCurve(SPRITE_PROPERTY_NAME, new SpriteCurve(fps, GameTextures.GetAtlas("player_door_out")));
 
             Inventory.OnLifeChanged += Inventory_OnLifeChanged;
             GameUIManager.PlayerHealth.InitHealth(Inventory.Life);

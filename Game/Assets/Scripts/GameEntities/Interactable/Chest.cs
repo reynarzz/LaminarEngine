@@ -65,12 +65,12 @@ namespace Game
             var openAnim = AnimatorUtils.AddState(Animator, "Open", false);
             var collectedIdle = AnimatorUtils.AddState(Animator, "CollectedIdle", false);
 
-            idleAnim.Clip.AddCurve("Sprite", new SpriteCurve(11, GameTextureAtlases.GetAtlas(idleAtlasId)));
-            openAnim.Clip.AddCurve("Sprite", new SpriteCurve(11, GameTextureAtlases.GetAtlas(openAtlasId)));
+            idleAnim.Clip.AddCurve("Sprite", new SpriteCurve(11, GameTextures.GetAtlas(idleAtlasId)));
+            openAnim.Clip.AddCurve("Sprite", new SpriteCurve(11, GameTextures.GetAtlas(openAtlasId)));
             //openAnim.Clip.AddEvent(openAnim.Clip.Duration, () => { });
-            collectedIdle.Clip.AddCurve("Sprite", new SpriteCurve(11, GameTextureAtlases.GetAtlas(collectedIdleAtlasId)[^1]));
+            collectedIdle.Clip.AddCurve("Sprite", new SpriteCurve(11, GameTextures.GetAtlas(collectedIdleAtlasId)[^1]));
 
-            SpriteRenderer.Sprite = GameTextureAtlases.GetAtlas(idleAtlasId)[0];
+            SpriteRenderer.Sprite = GameTextures.GetAtlas(idleAtlasId)[0];
         }
 
         protected override void OnUpdate()

@@ -21,6 +21,7 @@ namespace Game
         confusion_grenade,
 
         // Health
+        big_potion,
         normal_potion,
         small_potion,
 
@@ -42,6 +43,7 @@ namespace Game
         {
             { ItemId.coin_currency, typeof(CoinItem) },
             { ItemId.confusion_grenade, typeof(ConfusionGrenadeItem) },
+            { ItemId.big_potion, typeof(PotionItem) },
             { ItemId.normal_potion, typeof(PotionItem) },
             { ItemId.small_potion, typeof(PotionItem) },
             { ItemId.normal_ammo, typeof(NormalAmmoItem) },
