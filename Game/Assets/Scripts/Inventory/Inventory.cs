@@ -52,18 +52,62 @@ namespace Game
                 return true;
             }
 
-            var emptySlotIndex = GetFirstEmptySlotIndex();
-            var canAdd = emptySlotIndex >= 0;
-            if (canAdd)
-            {
-                _slots[emptySlotIndex] = new InventorySlot(item, amount);
-                OnInventoryChanged?.Invoke(this);
-
-            }
-
-            return canAdd;
+            return AllocateItemInNewSlots(item, amount);
         }
 
+        private List<(int slotIndex, int amount)> GetSlotsWhereItemFits(Item item, int amount)
+        {
+            var slots = new List<(int, int)>();
+            for (int i = 0; i < Slots.Count; i++)
+            {
+                int amountToAdd = 0;
+                var slot = Slots[i];
+                if (slot.IsEmpty())
+                {
+                    amountToAdd = amount > item.Features.MaxPerSlot? item.Features.MaxPerSlot: amount;
+                    slots.Add((i, amountToAdd));
+                }
+                else if (item.Features.IsStackable && item.Features.Id == slot.item.Features.Id && slot.Amount < item.Features.MaxPerSlot)
+                {
+                    amountToAdd = item.Features.MaxPerSlot - slot.Amount;
+
+                    slots.Add((i, amountToAdd));
+                }
+
+                amount -= amountToAdd;
+                if (amount <= 0)
+                    break;
+            }
+
+            if(amount > 0)
+            {
+                return null;
+            }
+            return slots;
+        }
+
+        public bool DoesFitInInventory(ItemId id, int amount)
+        {
+            var fitSlots = GetSlotsWhereItemFits(ItemsDatabase.GetItem(id), amount);
+            return fitSlots == null || fitSlots.Count == 0;
+        }
+        private bool AllocateItemInNewSlots(Item item, int amount)
+        {
+            var fitSlots = GetSlotsWhereItemFits(item, amount);
+            if (fitSlots == null || fitSlots.Count == 0)
+            {
+                return false;
+            }
+
+            foreach (var slotFitValue in fitSlots)
+            {
+                var slot = _slots[slotFitValue.slotIndex];
+                _slots[slotFitValue.slotIndex] = new InventorySlot(item, slot.Amount + slotFitValue.amount);
+            }
+
+            OnInventoryChanged?.Invoke(this);
+            return true;
+        }
         private int GetFirstEmptySlotIndex()
         {
             for (int i = 0; i < _slots.Length; i++)

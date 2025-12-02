@@ -3270,7 +3270,7 @@
 						},
 						{
 							"__identifier": "Chest",
-							"__grid": [43,41],
+							"__grid": [45,41],
 							"__pivot": [0.5,0.5],
 							"__tags": ["Actor"],
 							"__tile": { "tilesetUid": 169, "x": 80, "y": 80, "w": 16, "h": 16 },
@@ -3279,7 +3279,7 @@
 							"width": 16,
 							"height": 16,
 							"defUid": 200,
-							"px": [696,664],
+							"px": [728,664],
 							"fieldInstances": [
 								{ "__identifier": "locked_by", "__type": "LocalEnum.ItemType", "__value": "Chest_key", "__tile": null, "defUid": 217, "realEditorValues": [{
 									"id": "V_String",
@@ -3289,9 +3289,9 @@
 									"id": "V_String",
 									"params": ["Normal_potion"]
 								}] },
-								{ "__identifier": "items_amount", "__type": "Array<Int>", "__value": [1], "__tile": null, "defUid": 208, "realEditorValues": [{ "id": "V_Int", "params": [1] }] }
+								{ "__identifier": "items_amount", "__type": "Array<Int>", "__value": [38], "__tile": null, "defUid": 208, "realEditorValues": [{ "id": "V_Int", "params": [38] }] }
 							],
-							"__worldX": -584,
+							"__worldX": -552,
 							"__worldY": 152
 						},
 						{

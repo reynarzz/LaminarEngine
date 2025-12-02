@@ -83,7 +83,6 @@ namespace Game
             _tilesets["spikes_ground"] = TakeSprites(_tilesets["stark_full_tileset"], 183, 4);
             _tilesets["spikes_wall"] = TakeSprites(_tilesets["stark_full_tileset"], 215, 4);
 
-
             // Init sprites
             _sprites = new Dictionary<string, Sprite>()
             {

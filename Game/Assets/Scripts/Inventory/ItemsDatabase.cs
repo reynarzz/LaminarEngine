@@ -109,13 +109,15 @@ namespace Game
                     {
                         Id = id,
                         Amount = 1,
-                        MaxPerSlot = 1,
+                        MaxPerSlot = 999,
                         UserCanUseIt = true,
                         AutoConsumable = false,
                         SecondsToDisappear = 7,
                         UserCanRemove = true,
                         RemoveAfterUse = true,
-                        MultipleSlots = true
+                        MultipleSlots = true,
+                        DecreasesOnUse = true,
+                        IsStackable = true,
                     });
                 }
 

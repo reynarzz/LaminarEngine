@@ -90,20 +90,34 @@ namespace Game
 
                 IEnumerator Collect()
                 {
+                    //if (!player.Inventory.DoesFitInInventory())
+                    //{
+                    //    yield break;
+                    //}
                     Animator.Play("Open");
 
                     yield return new WaitForSeconds(0.2f);
 
                     if (Data.ChestLoot != null)
                     {
-                        player.Inventory.Use(Data.LockedBy);
-                        foreach (var loot in Data.ChestLoot)
+                        if (Data.LockedBy == ItemId.none || player.Inventory.Use(Data.LockedBy))
                         {
-                            player.Inventory.Add(loot.Item, loot.Amount);
+                            foreach (var loot in Data.ChestLoot)
+                            {
+                                var added = player.Inventory.Add(loot.Item, loot.Amount);
+
+                                if (added)
+                                {
+                                    // TODO: check how much of this item wasn't added.
+                                }
+                            }
+                            Animator.Play("CollectedIdle");
+                        }
+                        else
+                        {
+                            Animator.Play("Idle");
                         }
                     }
-
-                    Animator.Play("CollectedIdle");
                 }
 
                 StartCoroutine(Collect());
