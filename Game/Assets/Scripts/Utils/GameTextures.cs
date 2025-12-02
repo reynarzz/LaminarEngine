@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    public static class GameTextureAtlases
+    public static class GameTextures
     {
         private readonly static Dictionary<string, Sprite[]> _tilesets;
         private readonly static Dictionary<string, Sprite> _sprites;
-        static GameTextureAtlases()
+        static GameTextures()
         {
             var playerPivot = new vec2(0.4f, 0.42f);
 
@@ -54,6 +54,7 @@ namespace Game
                 // Full tilesets
                 { "stark_full_tileset", SliceSprites("starkTileset.png", 16, 16, new vec2(0.5f, 0.35f)) },
                 { "sunny_land_tileset", SliceSprites("Tilemap/SunnyLand_by_Ansimuz-extended.png", 16, 16, vec2.Half) },
+                { "raven_ui_tileset", SliceSprites("RavenUI/RavenFantasy16x16.png", 16, 16, vec2.Half) },
 
                 // Heart
                 { "small_heart_idle", SliceSprites("KingsAndPigsSprites/12-Live and Coins/Small Heart Idle (18x14).png", 8, 7, vec2.Half) },
@@ -82,14 +83,16 @@ namespace Game
             _tilesets["spikes_ground"] = TakeSprites(_tilesets["stark_full_tileset"], 183, 4);
             _tilesets["spikes_wall"] = TakeSprites(_tilesets["stark_full_tileset"], 215, 4);
 
-
             // Init sprites
             _sprites = new Dictionary<string, Sprite>()
             {
-                { ItemId.coin_currency.ToString(),  _tilesets["coin_currency"][0] },
-                { ItemId.boss_key.ToString(),  _tilesets["stark_full_tileset"][194] },
-                { ItemId.chest_key.ToString(),  _tilesets["stark_full_tileset"][195] },
-
+                { ItemId.coin_currency.ToString(),  _tilesets["raven_ui_tileset"][135] },
+                { ItemId.boss_key.ToString(),  _tilesets["raven_ui_tileset"][183] },
+                { ItemId.chest_key.ToString(),  _tilesets["raven_ui_tileset"][177] },
+                { ItemId.simple_key.ToString(),  _tilesets["raven_ui_tileset"][176] },
+                { ItemId.big_potion.ToString(),  _tilesets["raven_ui_tileset"][271] },
+                { ItemId.normal_potion.ToString(),  _tilesets["raven_ui_tileset"][266] },
+                { ItemId.small_potion.ToString(),  _tilesets["raven_ui_tileset"][264] },
             };
         }
 

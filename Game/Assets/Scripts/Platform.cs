@@ -32,7 +32,7 @@ namespace Game
             _rigid.BodyType = Body2DType.Kinematic;
             _rigid.Interpolate = true;
             var trigger = GetComponent<BoxCollider2D>();
-            trigger.Size = new vec2(3, 1);
+            trigger.Size = new vec2(3, 0.4f);
             trigger.Offset = new vec2(0, 0.1f);
             trigger.IsTrigger = true;
             Transform.LocalScale = new vec3(trigger.Size.x, trigger.Size.y, 1);
@@ -82,9 +82,9 @@ namespace Game
             }
             else
             {
-                var target = /*_startPos +*/ _positions[_pointIndex];
+                var target = _positions[_pointIndex] + (vec2.Up * (1.0f - Transform.LocalScale.y)) / 2.0f;
 
-                Transform.WorldPosition = Mathf.MoveTowards((vec2)Transform.WorldPosition, target, Time.DeltaTime * Speed);
+                Transform.WorldPosition = Mathf.MoveTowards((vec2)Transform.WorldPosition, target , Time.DeltaTime * Speed);
 
                 var distance = Mathf.Distance((vec2)Transform.WorldPosition, target);
                 if (distance < 0.001f && (_currentWait -= Time.DeltaTime) <= 0)

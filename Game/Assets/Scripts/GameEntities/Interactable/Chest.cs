@@ -65,12 +65,12 @@ namespace Game
             var openAnim = AnimatorUtils.AddState(Animator, "Open", false);
             var collectedIdle = AnimatorUtils.AddState(Animator, "CollectedIdle", false);
 
-            idleAnim.Clip.AddCurve("Sprite", new SpriteCurve(11, GameTextureAtlases.GetAtlas(idleAtlasId)));
-            openAnim.Clip.AddCurve("Sprite", new SpriteCurve(11, GameTextureAtlases.GetAtlas(openAtlasId)));
+            idleAnim.Clip.AddCurve("Sprite", new SpriteCurve(11, GameTextures.GetAtlas(idleAtlasId)));
+            openAnim.Clip.AddCurve("Sprite", new SpriteCurve(11, GameTextures.GetAtlas(openAtlasId)));
             //openAnim.Clip.AddEvent(openAnim.Clip.Duration, () => { });
-            collectedIdle.Clip.AddCurve("Sprite", new SpriteCurve(11, GameTextureAtlases.GetAtlas(collectedIdleAtlasId)[^1]));
+            collectedIdle.Clip.AddCurve("Sprite", new SpriteCurve(11, GameTextures.GetAtlas(collectedIdleAtlasId)[^1]));
 
-            SpriteRenderer.Sprite = GameTextureAtlases.GetAtlas(idleAtlasId)[0];
+            SpriteRenderer.Sprite = GameTextures.GetAtlas(idleAtlasId)[0];
         }
 
         protected override void OnUpdate()
@@ -90,20 +90,34 @@ namespace Game
 
                 IEnumerator Collect()
                 {
+                    //if (!player.Inventory.DoesFitInInventory())
+                    //{
+                    //    yield break;
+                    //}
                     Animator.Play("Open");
 
                     yield return new WaitForSeconds(0.2f);
 
                     if (Data.ChestLoot != null)
                     {
-                        player.Inventory.Use(Data.LockedBy);
-                        foreach (var loot in Data.ChestLoot)
+                        if (Data.LockedBy == ItemId.none || player.Inventory.Use(Data.LockedBy))
                         {
-                            player.Inventory.Add(loot.Item, loot.Amount);
+                            foreach (var loot in Data.ChestLoot)
+                            {
+                                var added = player.Inventory.Add(loot.Item, loot.Amount);
+
+                                if (added)
+                                {
+                                    // TODO: check how much of this item wasn't added.
+                                }
+                            }
+                            Animator.Play("CollectedIdle");
+                        }
+                        else
+                        {
+                            Animator.Play("Idle");
                         }
                     }
-
-                    Animator.Play("CollectedIdle");
                 }
 
                 StartCoroutine(Collect());

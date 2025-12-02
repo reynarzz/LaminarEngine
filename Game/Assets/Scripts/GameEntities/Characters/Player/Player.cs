@@ -59,10 +59,10 @@ namespace Game
             InitAnimationStates(states);
 
             var doorInState = AnimatorUtils.AddState(Animator, "DoorIn", false);
-            doorInState.Clip.AddCurve(SPRITE_PROPERTY_NAME, new SpriteCurve(fps, GameTextureAtlases.GetAtlas("player_door_in")));
+            doorInState.Clip.AddCurve(SPRITE_PROPERTY_NAME, new SpriteCurve(fps, GameTextures.GetAtlas("player_door_in")));
 
             var doorOutState = AnimatorUtils.AddState(Animator, "DoorOut", false);
-            doorOutState.Clip.AddCurve(SPRITE_PROPERTY_NAME, new SpriteCurve(fps, GameTextureAtlases.GetAtlas("player_door_out")));
+            doorOutState.Clip.AddCurve(SPRITE_PROPERTY_NAME, new SpriteCurve(fps, GameTextures.GetAtlas("player_door_out")));
 
             Inventory.OnLifeChanged += Inventory_OnLifeChanged;
             GameUIManager.PlayerHealth.InitHealth(Inventory.Life);
@@ -179,6 +179,7 @@ namespace Game
                 {
                     _shootCooldownTime = _shootCooldown;
                     Attack();
+                    CameraShake.Instance.BurstShake(20, 0.09f, 0.09f);
                 }
 
                 if (Input.GetKey(KeyCode.A))
@@ -196,6 +197,16 @@ namespace Game
             }
         }
 
+        public override bool HitDamage(int amount)
+        {
+            var isHit = base.HitDamage(amount);
+
+            if (isHit)
+            {
+                //CameraShake.Instance.BurstShake(30, 0.19f, 0.09f);
+            }
+            return isHit;
+        }
         protected override void OnFixedUpdate()
         {
             base.OnFixedUpdate();
@@ -216,7 +227,7 @@ namespace Game
                                            LayerMask.NameToBit(GameConsts.PLATFORM);
             bullet.Shoot(origin, vec2.Right * LookDir, _bulletSpeed, mask);
             return true;
-        } 
+        }
         protected override void OnTriggerEnter2D(Collider2D collider)
         {
             var interactable = collider.GetComponent<InteractableEntityBase>();

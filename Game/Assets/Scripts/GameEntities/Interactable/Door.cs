@@ -25,8 +25,8 @@ namespace Game
             var openAnim = AnimatorUtils.AddState(Animator, "Open", false);
             var closeAnim = AnimatorUtils.AddState(Animator, "Close", false);
 
-            var openingSprites = GameTextureAtlases.GetAtlas("door_opening");
-            var closingSprites = GameTextureAtlases.GetAtlas("door_closing");
+            var openingSprites = GameTextures.GetAtlas("door_opening");
+            var closingSprites = GameTextures.GetAtlas("door_closing");
 
             idleAnim.Clip.AddCurve("Sprite", new SpriteCurve(fps, openingSprites[0]));
             openAnim.Clip.AddCurve("Sprite", new SpriteCurve(fps, openingSprites));

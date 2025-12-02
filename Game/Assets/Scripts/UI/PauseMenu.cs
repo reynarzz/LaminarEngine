@@ -61,7 +61,7 @@ namespace Game
             _titleText.Material = new Material("Title Material: " + (_matCount++), new Shader(Assets.GetText("Shaders/Font/FontVert.vert").Text, Assets.GetText("Shaders/Font/FontFrag.frag").Text));
             //-- _titleText.Material = MaterialUtils.FontMaterial; // Use this instead
 
-            var buttonSlice = GameTextureAtlases.GetAtlas("ui_buttons_long");
+            var buttonSlice = GameTextures.GetAtlas("ui_buttons_long");
 
             var resumeButtonImage = UiUtils.NewImage("Resume button image", new vec2(0, 0), new vec2(150, 40), Color.White, _background.Transform);
 

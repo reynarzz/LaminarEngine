@@ -29,7 +29,7 @@ namespace Game
                     TargetPos = targetEntity.WorldPosition,
                 };
 
-                Debug.Log("Current portalPos: " + entityData.WorldPosition + ", Target portal pos: " + targetEntity.WorldPosition);
+                // Debug.Log("Current portalPos: " + entityData.WorldPosition + ", Target portal pos: " + targetEntity.WorldPosition);
             }
 
             portal.Init(portalData);

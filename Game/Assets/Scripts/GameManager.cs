@@ -116,8 +116,8 @@ namespace Game
             {
                 LevelIndex = 0,
                 TilemapPath = "Tilemap/WorldTilemap.ldtk",
-                TilemapSprites = GameTextureAtlases.GetAtlas("sunny_land_tileset"),
-                WorldSpacePixelsPerUnit = GameTextureAtlases.GetAtlas("sunny_land_tileset")[0].Texture.PixelPerUnit,
+                TilemapSprites = GameTextures.GetAtlas("sunny_land_tileset"),
+                WorldSpacePixelsPerUnit = GameTextures.GetAtlas("sunny_land_tileset")[0].Texture.PixelPerUnit,
                 Tilemaps = 
                 {
                     new TilemapData()
@@ -150,7 +150,7 @@ namespace Game
         {
             if (!Camera)
             {
-                Camera = new Actor<CameraFollow>("MainCamera").AddComponent<Camera>();
+                Camera = new Actor<CameraFollow, CameraShake>("MainCamera").AddComponent<Camera>();
                 Camera.Transform.WorldPosition = new vec3(0, 0, -12);
                 Camera.BackgroundColor = new Color(0.2f, 0.2f, 0.2f, 1);
                 Camera.OrthographicSize = GameResolution.y / 2.0f / 16.0f;

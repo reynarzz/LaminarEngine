@@ -96,8 +96,8 @@ namespace Game
                 var slotUI = new InventorySlotUI();
                 slotUI.BackgroundImage = UiUtils.NewImage("InventorySlot:" + i, default, new vec2(100, 100), Color.White, _gridLayout.Transform);
                 slotUI.BackgroundImage.Sprite = _slotSprite;
-                slotUI.IconImage = UiUtils.NewImage("Content", default, new vec2(34, 34), Color.White, slotUI.BackgroundImage.Transform);
-                slotUI.IconImage.RectTransform.Pivot = new vec2(0.5f, 0.6f);
+                slotUI.IconImage = UiUtils.NewImage("Content", default, new vec2(36, 36), Color.White, slotUI.BackgroundImage.Transform);
+                slotUI.IconImage.RectTransform.Pivot = new vec2(0.5f, 0.5f);
                 _slotsUI[i] = slotUI;
 
                 //var animator = iconContent.AddComponent<Animator>();
@@ -132,7 +132,7 @@ namespace Game
                 if (!slotData.IsEmpty())
                 {
                     slotUI.IconImage.Color = Color.White;
-                    slotUI.IconImage.Sprite = GameTextureAtlases.GetSprite(slotData.item.Features.Id.ToString());
+                    slotUI.IconImage.Sprite = GameTextures.GetSprite(slotData.item.Features.Id.ToString());
                 }
             }
 
