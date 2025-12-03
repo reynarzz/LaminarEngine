@@ -38,7 +38,7 @@ namespace Game
             // When player enters: Audio/Gameplay/Win_2.wav
 
             SpriteRenderer.Sprite = openingSprites[0];
-
+            InteractableRenderer.Transform.LocalPosition += vec3.Up * 3;
             Animator.OnUpdate += animator =>
             {
                 SpriteRenderer.Sprite = animator.GetSprite("Sprite");
@@ -49,9 +49,12 @@ namespace Game
         {
             if (CanInteract(player))
             {
-                Open();
-                player.Inventory.Use(Data.LockedBy);
-                return true;
+                if(Data.LockedBy == ItemId.none || player.Inventory.Use(Data.LockedBy))
+                {
+                    Open();
+                    InteractableRenderVisible(false);
+                    return true;
+                }
             }
             return false;
         }

@@ -55,7 +55,8 @@ namespace Game
                 { "stark_full_tileset", SliceSprites("starkTileset.png", 16, 16, new vec2(0.5f, 0.35f)) },
                 { "sunny_land_tileset", SliceSprites("Tilemap/SunnyLand_by_Ansimuz-extended.png", 16, 16, vec2.Half) },
                 { "raven_ui_tileset", SliceSprites("RavenUI/RavenFantasy16x16.png", 16, 16, vec2.Half) },
-
+                { "keyboard", SliceSprites("Keyboard Letters and Symbols.png", 16, 16, vec2.Half) },
+                
                 // Heart
                 { "small_heart_idle", SliceSprites("KingsAndPigsSprites/12-Live and Coins/Small Heart Idle (18x14).png", 8, 7, vec2.Half) },
                 { "health_bar_frame", SliceSprites("KingsAndPigsSprites/12-Live and Coins/Live Bar_atlas(143x34).png", 143, 34, vec2.Half) },
@@ -93,6 +94,10 @@ namespace Game
                 { ItemId.big_potion.ToString(),  _tilesets["raven_ui_tileset"][271] },
                 { ItemId.normal_potion.ToString(),  _tilesets["raven_ui_tileset"][266] },
                 { ItemId.small_potion.ToString(),  _tilesets["raven_ui_tileset"][264] },
+                { "E_Interactable", new Sprite(Assets.GetTexture("eInteract.png")) },
+                { "E_Interactable2", new Sprite(Assets.GetTexture("eInteract2.png")) },
+                { "E_Interactable3", new Sprite(Assets.GetTexture("eInteract3.png")) },
+
             };
         }
 

@@ -22,6 +22,8 @@ namespace Game
 
             _circle = AddComponent<CircleCollider2D>();
             _circle.IsTrigger = true;
+            InteractableRenderer.SortOrder = 15;
+            //InteractableRenderer.Transform.LocalPosition += vec3.Up * 4;
         }
 
         public override void Init(PortalData data)
@@ -69,6 +71,10 @@ namespace Game
 
         protected override void OnPlayerInteractZone(bool enter, Player player)
         {
+            if (!Data.IsArriveOnly)
+            {
+                base.OnPlayerInteractZone(enter, player);
+            }
             if (enter && Data.IsArriveOnly && !_shouldDisappear)
             {
                 TimedExecute(() => _shouldDisappear = true, 0.5f);

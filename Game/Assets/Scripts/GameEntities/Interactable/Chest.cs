@@ -24,6 +24,7 @@ namespace Game
             base.OnAwake();
             BoxCollider.Size = new vec2(1.7f, BoxCollider.Size.y);
             SpriteRenderer.Material = MaterialUtils.SpriteMaterial;
+            InteractableRenderer.Transform.LocalPosition += vec3.Up * 1.7f;
         }
 
         protected override void OnStart()
@@ -82,6 +83,10 @@ namespace Game
                 SpriteRenderer.SortOrder = SpriteRenderer.SortOrder == 0? 3: 0;
             }
         }
+        protected override void OnPlayerInteractZone(bool enter, Player player)
+        {
+            base.OnPlayerInteractZone(enter && !_isOpened, player);
+        }
         public override bool TryInteract(Player player)
         {
             if (!_isOpened && CanInteract(player))
@@ -95,7 +100,7 @@ namespace Game
                     //    yield break;
                     //}
                     Animator.Play("Open");
-
+                    InteractableRenderVisible(false);
                     yield return new WaitForSeconds(0.2f);
 
                     if (Data.ChestLoot != null)

@@ -14,7 +14,7 @@ uniform vec3 uTime;
 uniform vec2  uRippleCenter    = vec2(0.5);
 uniform float uRippleSpeed     = 2.0;
 uniform float uRippleAmplitude = 0.01;
-uniform float uRippleFrequency = 20.0;
+uniform float uRippleFrequency = 30.0;
 uniform float uEdgeStart       = 0.3;
 uniform float uEdgeEnd         = 0.7;
 

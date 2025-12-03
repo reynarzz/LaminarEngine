@@ -25,7 +25,7 @@ uniform float uContrast = 1.0;
 uniform vec3 uRGBBalance = vec3(1.0, 0.8, 0.84);
 
 uniform float uGlassReflectStrength = 0.0;   // curved CRT glass reflection
-uniform float uAberrationStrength   = 0.01;   // chromatic aberration
+uniform float uAberrationStrength   = 0.00;   // chromatic aberration
 uniform float uMaskStrength         = 0.01;   // aperture grille / shadow mask
 uniform float uMaskScale            = 1.0;   // scaling of CRT mask pattern
 uniform float uNoiseStrength        = 0.0;   // analog noise level
@@ -38,7 +38,8 @@ void main()
 {
     vec2 uv = screenUV * 2.0 - 1.0;
 
-    if (uJitterStrength > 0.0) {
+    if (uJitterStrength > 0.0) 
+    {
         float jitter = sin(uTime.x * 15.0 + uv.y * 120.0)
                       * 0.0005 * uJitterStrength;
         uv.x += jitter;
@@ -96,25 +97,29 @@ void main()
                              clamp(distortedUV - vec2(0.0, texel.y), 0.0, 1.0)).rgb * uPhosphorGlow;
     color += (glowAbove + glowBelow) * 0.5;
 
-    if (uMaskStrength > 0.0) {
+    if (uMaskStrength > 0.0) 
+    {
         vec3 mask = texture(uMaskTexture, pixelPos * uMaskScale).rgb;
         color = mix(color, color * mask, uMaskStrength);
     }
 
     color *= uRGBBalance;
 
-    if (uGlassReflectStrength > 0.0) {
+    if (uGlassReflectStrength > 0.0) 
+    {
         float curve = pow(length(uv), 2.5);
         vec3 glassTint = vec3(0.05, 0.08, 0.10);
         color = mix(color, color + curve * glassTint, uGlassReflectStrength);
     }
 
-    if (uVignetteStrength > 0.0) {
+    if (uVignetteStrength > 0.0) 
+    {
         float vignette = pow(length(uv), 2.2);
         color *= (1.0 - vignette * uVignetteStrength);
     }
 
-    if (uNoiseStrength > 0.0) {
+    if (uNoiseStrength > 0.0) 
+    {
         float noise = fract(sin(dot(pixelPos, vec2(12.34, 78.91))) * 43758.5453);
         color += (noise - 0.5) * uNoiseStrength;
     }
