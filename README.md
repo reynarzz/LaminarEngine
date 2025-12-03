@@ -24,7 +24,7 @@ GFS is a 2D video game and game engine built entirely from scratch with **C#**, 
 - [x] Tilemap optimized auto collider.
 - [x] Font rendering.
 - [x] Windows deploy.
-- [ ] Implement particle system.
+- [x] Implement particle system.
 - [ ] Optimize rendering, and expand it to support complex geometries.
 - [ ] Make the demo game (Proper architecture).
 - [ ] macOS, Android, and IOS platforms deploy.
@@ -54,3 +54,6 @@ This project is licensed under the Non-Commercial Copyleft License (NCCL).
 - Use this code in commercial games, engines, or products
 - Sell or monetize any part of it
 - Use it in revenue-generating projects
+
+## Contributions
+Since this is a portfolio piece, unfortunately, I'm not accepting contributions.
