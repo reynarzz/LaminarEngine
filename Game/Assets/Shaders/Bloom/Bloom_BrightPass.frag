@@ -4,12 +4,18 @@ in vec2 screenUV;
 out vec4 fragColor;
 
 uniform sampler2D uScreenGrabTex;
-uniform float uThreshold = 0.999;
+uniform float uThreshold = 0.6; 
+uniform float uKnee = 0.2;      
 
 void main()
 {
     vec3 color = texture(uScreenGrabTex, screenUV).rgb;
-    float brightness = max(max(color.r, color.g), color.b);
-    color = (brightness > uThreshold) ? color : vec3(0.0);
-    fragColor = vec4(color, 1.0);
+
+    float brightness = dot(color, vec3(0.2126, 0.7152, 0.0722));
+
+    float soft = clamp((brightness - uThreshold) / uKnee, 0.0, 1.0);
+
+    vec3 bloom = color * soft;
+
+    fragColor = vec4(bloom, 1.0);
 }

@@ -4,7 +4,7 @@ out vec4 fragColor;
 
 uniform sampler2D uScreenGrabTex;
 uniform sampler2D uBlurTex;
-uniform float uBloomStrength = 0.3;
+uniform float uBloomStrength = 0.2;
 
 void main()
 {

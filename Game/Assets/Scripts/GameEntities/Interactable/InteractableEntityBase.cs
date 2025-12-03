@@ -1,7 +1,9 @@
 ﻿using Engine;
 using Engine.Types;
 using Engine.Utils;
+using GlmNet;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,16 +12,28 @@ using System.Threading.Tasks;
 namespace Game
 {
     [RequireComponent(typeof(BoxCollider2D), typeof(SpriteRenderer))]
-    public abstract class InteractableEntityBase : GameEntity 
+    public abstract class InteractableEntityBase : GameEntity
     {
         [RequiredProperty] protected BoxCollider2D BoxCollider { get; private set; }
         [RequiredProperty] protected SpriteRenderer SpriteRenderer { get; private set; }
+        [RequiredProperty] protected SpriteRenderer InteractableRenderer { get; private set; }
+
         private bool _isPlayerInZone = false;
+        private Coroutine _coroutine;
+
         protected override void OnAwake()
         {
             BoxCollider.IsTrigger = true;
             SpriteRenderer.Material = MaterialUtils.SpriteMaterial;
             SpriteRenderer.SortOrder = -1;
+
+            InteractableRenderer = new Actor("InteractableIcon").AddComponent<SpriteRenderer>();
+            InteractableRenderer.Transform.Parent = Transform;
+            InteractableRenderer.Material = MaterialUtils.SpriteMaterial;
+            InteractableRenderer.IsEnabled = true;
+            InteractableRenderer.SortOrder = 6;
+            InteractableRenderer.Color = Color.Transparent;
+            InteractableRenderer.Sprite = GameTextures.GetSprite("E_Interactable3");
         }
 
         protected sealed override void OnTriggerEnter2D(Collider2D collider)
@@ -44,13 +58,45 @@ namespace Game
         {
             return collider.Actor.Layer == LayerMask.NameToLayer(GameConsts.PLAYER);
         }
+        protected override void OnLateUpdate()
+        {
+            base.OnLateUpdate();
+            InteractableRenderer.Transform.LocalPosition += vec3.Up * MathF.Sin(Time.TimeCurrent * 5) * Time.DeltaTime;
+        }
 
         public abstract bool TryInteract(Player player);
         public abstract bool CanInteract(Player player);
-        protected virtual void OnPlayerInteractZone(bool enter, Player player) { }
+        protected virtual void OnPlayerInteractZone(bool enter, Player player)
+        {
+            InteractableRenderVisible(enter && CanInteract(player));
+        }
+
+        protected void InteractableRenderVisible(bool isVisible)
+        {
+            if (_coroutine != null)
+            {
+                StopCoroutine(_coroutine);
+            }
+            _coroutine = StartCoroutine(InteractableRendererAnimation(isVisible));
+        }
+
+        private IEnumerator InteractableRendererAnimation(bool show, float speed = 4)
+        {
+            float t = InteractableRenderer.Color.A;
+            while (show?(t < 1.0f):(t > 0.0f))
+            {
+                t += (show ? Time.DeltaTime : -Time.DeltaTime) * speed;
+                t = Mathf.Clamp01(t);
+
+                var c = InteractableRenderer.Color;
+                c.A = t;
+                InteractableRenderer.Color = c;
+                yield return null;
+            }
+        }
     }
 
-    public abstract class InteractableEntityBase<T> : InteractableEntityBase where T: InteractableData
+    public abstract class InteractableEntityBase<T> : InteractableEntityBase where T : InteractableData
     {
         protected T Data { get; private set; }
         public virtual void Init(T data)

@@ -11,29 +11,44 @@ uniform vec2 uScreenSize;
 uniform vec3 uTime;
 
 // Ripple settings
-uniform vec2  uRippleCenter    = vec2(0.5); // Center point
-uniform float uRippleSpeed     = 2.0;       // Wave speed
-uniform float uRippleAmplitude = 0.01;      // Max displacement
-uniform float uRippleFrequency = 20.0;      // Wave frequency
-uniform float uEdgeStart       = 0.3;       // Start of ripple (0 = center, 1 =e dge)
-uniform float uEdgeEnd         = 0.7;       // Full ripple at edge
+uniform vec2  uRippleCenter    = vec2(0.5);
+uniform float uRippleSpeed     = 2.0;
+uniform float uRippleAmplitude = 0.01;
+uniform float uRippleFrequency = 30.0;
+uniform float uEdgeStart       = 0.3;
+uniform float uEdgeEnd         = 0.7;
+
+uniform float uRippleBL = 1.0;
+uniform float uRippleTR = 1.0;
+uniform float uRippleTL = 0.04;
+uniform float uRippleBR = 1.0;
 
 void main()
 {
     vec2 dir  = screenUV - uRippleCenter;
     float dist = length(dir);
 
-    // Compute how much ripple applies (fade near center)
-    // 0 at center, 1 at edges
     float edgeFactor = smoothstep(uEdgeStart, uEdgeEnd, dist);
 
-    // Ripple offset — only strong at edges
-    float ripple = sin(dist * uRippleFrequency - uTime.x * uRippleSpeed) * uRippleAmplitude * edgeFactor;
+    vec2 uv01 = screenUV;
 
-    // Distortion direction
+    float wTL = (1.0 - uv01.x) * (1.0 - uv01.y);
+    float wTR =      uv01.x    * (1.0 - uv01.y);
+    float wBL = (1.0 - uv01.x) *      uv01.y;
+    float wBR =      uv01.x    *      uv01.y;
+
+    float cornerStrength = wTL * uRippleBL +
+          wTR * uRippleTR +
+          wBL * uRippleTL +
+          wBR * uRippleBR;
+
+    float ripple = sin(dist * uRippleFrequency - uTime.x * uRippleSpeed)
+        * uRippleAmplitude
+        * edgeFactor
+        * cornerStrength;
+
     vec2 uv = screenUV + normalize(dir) * ripple;
 
-    // Sample final color
     vec3 color = texture(uScreenGrabTex, uv).rgb;
 
     fragColor = vec4(color, 1.0) * vColor;
