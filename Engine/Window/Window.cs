@@ -26,7 +26,7 @@ namespace Engine
         private static int startWinX, startWinY;
 
         private static bool _isMouseVisible = true;
-        public static bool MouseVisible
+        public static bool CursorVisible
         {
             get => _isMouseVisible;
 

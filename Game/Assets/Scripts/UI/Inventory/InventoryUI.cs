@@ -50,11 +50,11 @@ namespace Game
 
             var inventoryImage = UiUtils.NewImage("Inventory image", default, new vec2(320, 240), Color.White, _inventory.Transform);
             _fitter = inventoryImage.AddComponent<ContentSizeFitter>();
-            inventoryImage.Material = GameManager.DefaultMaterial;
+            inventoryImage.Material = MaterialUtils.WobbleMaterial;
             //inventoryImage.Sprite = new Sprite(Assets.GetTexture("pixel-ui_panel.png"));
             inventoryImage.IsSliced = true;
             inventoryImage.SlicedBorderResolution = 2.5f;
-            inventoryImage.Color = Color.Transparent;
+            //inventoryImage.Color = new Color(0,0,0,  0.1f);
 
 
             var inventoryTitleText = UiUtils.NewText("inventory title", "Inventory", new vec2(0, -52), _inventory.Transform);
@@ -76,7 +76,7 @@ namespace Game
             _gridLayout.MaxPerRow = 3;
             _gridLayout.ContentsSize = new vec2(46, 46);
 
-            _inventory.Transform.LocalPosition = new vec3(120, 160);
+            _inventory.Transform.LocalPosition = new vec3(120, 180);
 
             // _inventory.Actor.IsActiveSelf = false;
         }

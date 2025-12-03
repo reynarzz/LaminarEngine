@@ -20,7 +20,7 @@ uniform float uEdgeEnd         = 0.7;
 
 uniform float uRippleBL = 1.0;
 uniform float uRippleTR = 1.0;
-uniform float uRippleTL = 0.04;
+uniform float uRippleTL = 0.02;
 uniform float uRippleBR = 1.0;
 
 void main()
