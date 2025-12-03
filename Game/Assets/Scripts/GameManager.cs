@@ -142,7 +142,15 @@ namespace Game
                 }
             });
 
-            Player = result.Player;
+            if (Player != result.Player)
+            {
+                Player = result.Player;
+            }
+            else
+            {
+                Player.InitLevel();
+            }
+
             ForegroundTilemap = result.Tilemaps[0];
             InitializeCamera(Player.Transform, ForegroundTilemap.Bounds);
         }
