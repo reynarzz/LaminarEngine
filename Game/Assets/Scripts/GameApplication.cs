@@ -18,13 +18,11 @@ namespace Game
         // GameIcon, it should be baked into the game data.
 
         // For the game:
-        // ---Level transition using door and faded in fade out.
         // ---Add spikes
         // ----Enemy AI
-
+        // implement player's iframes after getting hit
         // Five levels, small, one intro level falling from outside.
         // Loot jumps from enemies, and chests, keys, and other key items will remain in inventory.
-        // Platform should check with a box cast if the player is below.
         // Water and lava.
 
         // Late release polish:
@@ -32,8 +30,8 @@ namespace Game
         // Finish inventory.
         // Implement UI (inventory, pause menu)
         // Enemy life UI
-        // implement player's iframes after getting hit
         // Implement more enemies.
+        // Save system.
 
         // -Stretch:
         // Bake tilemaps quads vertices, and collision data in binary file, the geometry should be already converted to the memory layout of the vertex array.
