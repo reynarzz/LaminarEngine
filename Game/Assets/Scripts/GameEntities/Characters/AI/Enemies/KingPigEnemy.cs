@@ -46,9 +46,9 @@ namespace Game
             Transform.LocalScale = new vec3(5);
         }
 
-        public override bool HitDamage(int amount)
+        public override bool HitDamage(GameEntity who, int amount)
         {
-            var isHit = base.HitDamage(amount);
+            var isHit = base.HitDamage(who, amount);
 
             if(isHit)
             _stateMachine.ChangeState<ChaseState<KingPigEnemy>>();

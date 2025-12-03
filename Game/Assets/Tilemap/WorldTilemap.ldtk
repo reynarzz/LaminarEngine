@@ -155,6 +155,12 @@
 				},
 				{
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "6cb7f9b0-ac70-11f0-9450-7db81f30b195"
+				},
+				{
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "1a1ff1e0-ac70-11f0-942f-6f49853f651b",
 					"layerIid": "1a2018f0-ac70-11f0-942f-c97c3b10dff0",
 					"entityIid": "288af3d0-ac70-11f0-ba01-574d573a135a"
@@ -269,6 +275,12 @@
 					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
 					"entityIid": "8598ea90-ac70-11f0-ace5-bddcd0ec0be5"
 				}, "worldX": -104, "worldY": -88, "widPx": 20, "heiPx": 20, "fields" : {} },
+				{ "iids": {
+					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
+					"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+					"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+					"entityIid": "6cb7f9b0-ac70-11f0-9450-7db81f30b195"
+				}, "worldX": -280, "worldY": 152, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "1a1ff1e0-ac70-11f0-942f-6f49853f651b",
@@ -3804,6 +3816,25 @@
 							],
 							"__worldX": -632,
 							"__worldY": 376
+						},
+						{
+							"__identifier": "Enemy",
+							"__grid": [51,38],
+							"__pivot": [0.5,0.5],
+							"__tags": ["Actor"],
+							"__tile": { "tilesetUid": 133, "x": 96, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#FF0044",
+							"iid": "6cb7f9b0-ac70-11f0-9450-7db81f30b195",
+							"width": 20,
+							"height": 20,
+							"defUid": 160,
+							"px": [824,616],
+							"fieldInstances": [
+								{ "__identifier": "EnemyType", "__type": "LocalEnum.EnemyType", "__value": "KingPig", "__tile": null, "defUid": 197, "realEditorValues": [] },
+								{ "__identifier": "Loot", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 219, "realEditorValues": [] }
+							],
+							"__worldX": -280,
+							"__worldY": 152
 						}
 					]
 				},

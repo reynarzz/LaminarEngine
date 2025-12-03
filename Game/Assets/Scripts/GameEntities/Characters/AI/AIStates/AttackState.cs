@@ -76,7 +76,7 @@ namespace Game
                             if (hit.isHit)
                             {
                                 Debug.Log("Attack Player");
-                                hit.Collider.GetComponent<Player>()?.HitDamage(1);
+                                hit.Collider.GetComponent<Player>()?.HitDamage(Context, 1);
                             }
 
                             if (!Context.Target.IsCharacterAlive())

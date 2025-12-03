@@ -165,10 +165,13 @@ namespace Game
             {
                 //Death();
             }
-
+            if (Input.GetKeyDown(KeyCode.Z))
+            {
+                Restart();
+            }
             if (Input.GetKeyDown(KeyCode.H))
             {
-                HitDamage(1);
+                HitDamage(this, 1);
             }
 
             if (_canMove)
@@ -182,7 +185,6 @@ namespace Game
                 {
                     _shootCooldownTime = _shootCooldown;
                     Attack();
-                    CameraShake.Instance.BurstShake(20, 0.09f, 0.09f);
                 }
 
                 if (Input.GetKey(KeyCode.A))
@@ -200,9 +202,9 @@ namespace Game
             }
         }
 
-        public override bool HitDamage(int amount)
+        public override bool HitDamage(GameEntity who, int amount)
         {
-            var isHit = base.HitDamage(amount);
+            var isHit = base.HitDamage(who, amount);
 
             if (isHit)
             {
@@ -210,15 +212,12 @@ namespace Game
             }
             return isHit;
         }
-        protected override void OnFixedUpdate()
-        {
-            base.OnFixedUpdate();
-        }
-
+        
         public override bool Attack(int index = 0)
         {
             if (!IsCharacterAlive())
                 return false;
+            CameraShake.Instance.BurstShake(20, 0.09f, 0.09f);
             PlayAttackSoundFx();
 
             var origin = Transform.WorldPosition + new vec3(Transform.LocalScale.x + Math.Sign(Transform.LocalScale.x) * 0.3f, -0.1f);
@@ -229,6 +228,8 @@ namespace Game
             var mask = LayerMask.NameToBit(GameConsts.Default) | LayerMask.NameToBit(GameConsts.ENEMY) |
                                            LayerMask.NameToBit(GameConsts.PLATFORM);
             bullet.Shoot(origin, vec2.Right * LookDir, _bulletSpeed, mask);
+
+            Debug.Log("Shoot");
             return true;
         }
         protected override void OnTriggerEnter2D(Collider2D collider)

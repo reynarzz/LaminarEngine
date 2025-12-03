@@ -35,6 +35,9 @@ namespace Game
                     StartingLife = 4,
                     SpriteLookDir = 1,
                     InventoryMaxSlots = 6,
+                    HitInvincibilityTime = 1,
+                    HitRecoilTime = 0.5f,
+                    HitRecoilStrengthScaling = 4,
                     Ground = new GroundDetectionOptions()
                     {
                         Enabled = true,

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    internal class Bullet : ScriptBehavior
+    internal class Bullet : GameEntity
     {
         private vec3 _shootDir;
         private ulong _layerMask;
@@ -64,7 +64,7 @@ namespace Game
                 {
                     if (character.IsCharacterAlive())
                     {
-                        character?.HitDamage(1);
+                        character?.HitDamage(this, 1);
                         // character.GetComponent<RigidBody2D>().AddForce(_shootDir * 12, ForceMode2D.Impulse);
                     }
                     else

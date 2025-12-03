@@ -16,6 +16,8 @@ namespace Game
         // Fix: Batch2d vertices shift when an object is destroyed. 
         // Fix: Texture units overflow, a batch should only bind: MAX_DEVICE_ALLOWED - RENDERER_NEEDED_TEXTURE_SLOTS
         // GameIcon, it should be baked into the game data.
+        // Fix issue that the animation get stuck when player is dead, this happened after the hit recoil functionality.
+
 
         // For the game:
         // ---Add spikes
