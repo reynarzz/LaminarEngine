@@ -38,7 +38,7 @@ namespace Game
             // When player enters: Audio/Gameplay/Win_2.wav
 
             SpriteRenderer.Sprite = openingSprites[0];
-            InteractableRenderer.Transform.LocalPosition += vec3.Up * 3;
+            InteractableRenderer.Transform.LocalPosition += vec3.Up * 2.5f;
             Animator.OnUpdate += animator =>
             {
                 SpriteRenderer.Sprite = animator.GetSprite("Sprite");

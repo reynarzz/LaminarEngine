@@ -278,7 +278,7 @@ namespace Game
             PostProcessingStack.Push(new PostProcessingSinglePass(screenShader));
 
             var chormaticAberration = new PostProcessingSinglePass(new Shader(vertex, Assets.GetText("Shaders/ChromaticAberration.frag").Text));
-            chormaticAberration.SetValue("uAberrationStrength", 0.007f);
+            chormaticAberration.SetValue("uAberrationStrength", 0.004f);
 
             PostProcessingStack.Push(chormaticAberration);
 

@@ -97,6 +97,7 @@ namespace Game
                 { "E_Interactable", new Sprite(Assets.GetTexture("eInteract.png")) },
                 { "E_Interactable2", new Sprite(Assets.GetTexture("eInteract2.png")) },
                 { "E_Interactable3", new Sprite(Assets.GetTexture("eInteract3.png")) },
+                { "InventorySlot", new Sprite(Assets.GetTexture("InventorySlot.png")) },
 
             };
         }

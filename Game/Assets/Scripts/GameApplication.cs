@@ -30,7 +30,6 @@ namespace Game
         // Colllect coins, hearts, attack enemies, go from door A to B
         // Implement collectibles
         // Implement UI (inventory, pause menu)
-        // Show interactable icon for: doors, chests, portals etc...
         // Loot jumps from enemies, and chests, keys, and other key items will remain in inventory.
         // Inventory should be under the health bar.
         // Platform should check with a box cast if the player is below.

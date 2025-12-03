@@ -23,7 +23,7 @@ namespace Game
             _circle = AddComponent<CircleCollider2D>();
             _circle.IsTrigger = true;
             InteractableRenderer.SortOrder = 15;
-            //InteractableRenderer.Transform.LocalPosition += vec3.Up * 4;
+            // InteractableRenderer.Transform.LocalPosition += vec3.Up * 4;
         }
 
         public override void Init(PortalData data)

@@ -18,9 +18,9 @@ uniform float uRippleFrequency = 30.0;
 uniform float uEdgeStart       = 0.3;
 uniform float uEdgeEnd         = 0.7;
 
-uniform float uRippleTL = 1.0;
+uniform float uRippleBL = 1.0;
 uniform float uRippleTR = 1.0;
-uniform float uRippleBL = 0.1;
+uniform float uRippleTL = 0.04;
 uniform float uRippleBR = 1.0;
 
 void main()
@@ -37,9 +37,9 @@ void main()
     float wBL = (1.0 - uv01.x) *      uv01.y;
     float wBR =      uv01.x    *      uv01.y;
 
-    float cornerStrength = wTL * uRippleTL +
+    float cornerStrength = wTL * uRippleBL +
           wTR * uRippleTR +
-          wBL * uRippleBL +
+          wBL * uRippleTL +
           wBR * uRippleBR;
 
     float ripple = sin(dist * uRippleFrequency - uTime.x * uRippleSpeed)

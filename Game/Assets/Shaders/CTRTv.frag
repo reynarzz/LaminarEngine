@@ -10,7 +10,7 @@ uniform vec3 uTime;
 
 // CRT TV Controls
 uniform vec3 uBackgroundColor = vec3(0.07);
-uniform float uDistortionStrength = 0.09;
+uniform float uDistortionStrength = 0.03;
 uniform float uCornerTL = 1.0;
 uniform float uCornerTR = 1.0;
 uniform float uCornerBL = 1.0;
