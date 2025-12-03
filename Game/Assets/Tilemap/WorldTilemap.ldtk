@@ -11,7 +11,7 @@
 	"iid": "a39fb1b0-7820-11ed-b6fd-87f9a01f3d6b",
 	"jsonVersion": "1.5.3",
 	"appBuildId": 473703,
-	"nextUid": 232,
+	"nextUid": 233,
 	"identifierStyle": "Capitalize",
 	"toc": [
 		{
@@ -1667,7 +1667,7 @@
 		{
 			"identifier": "Player",
 			"uid": 90,
-			"tags": [ "Persistant", "Actor" ],
+			"tags": [ "Persistant", "Actor", "Warpable" ],
 			"exportToToc": true,
 			"allowOutOfBounds": false,
 			"doc": "Starting point of the player",
@@ -2113,7 +2113,7 @@
 		{
 			"identifier": "Door",
 			"uid": 175,
-			"tags": ["Actor"],
+			"tags": [ "Actor", "Warpable" ],
 			"exportToToc": false,
 			"allowOutOfBounds": false,
 			"doc": null,
@@ -2259,56 +2259,19 @@
 					"tilesetUid": null
 				},
 				{
-					"identifier": "level",
+					"identifier": "target",
 					"doc": null,
-					"__type": "Int",
-					"uid": 177,
-					"type": "F_Int",
-					"isArray": false,
-					"canBeNull": false,
-					"arrayMinLength": null,
-					"arrayMaxLength": null,
-					"editorDisplayMode": "Hidden",
-					"editorDisplayScale": 1,
-					"editorDisplayPos": "Above",
-					"editorLinkStyle": "StraightArrow",
-					"editorDisplayColor": null,
-					"editorAlwaysShow": false,
-					"editorShowInWorld": true,
-					"editorCutLongValues": true,
-					"editorTextSuffix": null,
-					"editorTextPrefix": null,
-					"useForSmartColor": false,
-					"exportToToc": false,
-					"searchable": false,
-					"min": null,
-					"max": null,
-					"regex": null,
-					"acceptFileTypes": null,
-					"defaultOverride": null,
-					"textLanguageMode": null,
-					"symmetricalRef": false,
-					"autoChainRef": true,
-					"allowOutOfLevelRef": true,
-					"allowedRefs": "OnlySame",
-					"allowedRefsEntityUid": null,
-					"allowedRefTags": [],
-					"tilesetUid": null
-				},
-				{
-					"identifier": "LocationInLevel",
-					"doc": null,
-					"__type": "Point",
-					"uid": 230,
-					"type": "F_Point",
+					"__type": "EntityRef",
+					"uid": 232,
+					"type": "F_EntityRef",
 					"isArray": false,
 					"canBeNull": true,
 					"arrayMinLength": null,
 					"arrayMaxLength": null,
-					"editorDisplayMode": "Hidden",
+					"editorDisplayMode": "RefLinkBetweenCenters",
 					"editorDisplayScale": 1,
 					"editorDisplayPos": "Above",
-					"editorLinkStyle": "StraightArrow",
+					"editorLinkStyle": "CurvedArrow",
 					"editorDisplayColor": null,
 					"editorAlwaysShow": false,
 					"editorShowInWorld": true,
@@ -2327,9 +2290,9 @@
 					"symmetricalRef": false,
 					"autoChainRef": true,
 					"allowOutOfLevelRef": true,
-					"allowedRefs": "OnlySame",
+					"allowedRefs": "OnlyTags",
 					"allowedRefsEntityUid": null,
-					"allowedRefTags": [],
+					"allowedRefTags": ["Warpable"],
 					"tilesetUid": null
 				}
 			]
@@ -3114,7 +3077,7 @@
 							"__identifier": "Player",
 							"__grid": [41,38],
 							"__pivot": [0.5,0.5],
-							"__tags": [ "Persistant", "Actor" ],
+							"__tags": [ "Persistant", "Actor", "Warpable" ],
 							"__tile": { "tilesetUid": 133, "x": 256, "y": 144, "w": 16, "h": 16 },
 							"__smartColor": "#48DA75",
 							"iid": "523fb710-ac70-11f0-ad00-7b52ae2081f8",
@@ -3133,7 +3096,7 @@
 							"__identifier": "Door",
 							"__grid": [48,37],
 							"__pivot": [0.5,0.5],
-							"__tags": ["Actor"],
+							"__tags": [ "Actor", "Warpable" ],
 							"__tile": { "tilesetUid": 133, "x": 80, "y": 592, "w": 16, "h": 16 },
 							"__smartColor": "#BE4A2F",
 							"iid": "1cc89fc0-ac70-11f0-aab3-373fffb3fdd1",
@@ -3148,8 +3111,15 @@
 								}] },
 								{ "__identifier": "locked_amount", "__type": "Int", "__value": 1, "__tile": null, "defUid": 179, "realEditorValues": [{ "id": "V_Int", "params": [1] }] },
 								{ "__identifier": "consume_item", "__type": "Bool", "__value": true, "__tile": null, "defUid": 218, "realEditorValues": [] },
-								{ "__identifier": "level", "__type": "Int", "__value": 0, "__tile": null, "defUid": 177, "realEditorValues": [] },
-								{ "__identifier": "LocationInLevel", "__type": "Point", "__value": null, "__tile": null, "defUid": 230, "realEditorValues": [] }
+								{ "__identifier": "target", "__type": "EntityRef", "__value": {
+									"entityIid": "0d702120-ac70-11f0-ace5-356a1ca3b89d",
+									"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+									"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+									"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3"
+								}, "__tile": null, "defUid": 232, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["0d702120-ac70-11f0-ace5-356a1ca3b89d"]
+								}] }
 							],
 							"__worldX": -328,
 							"__worldY": 136
@@ -3361,7 +3331,7 @@
 							"__identifier": "Door",
 							"__grid": [45,37],
 							"__pivot": [0.5,0.5],
-							"__tags": ["Actor"],
+							"__tags": [ "Actor", "Warpable" ],
 							"__tile": { "tilesetUid": 133, "x": 80, "y": 592, "w": 16, "h": 16 },
 							"__smartColor": "#BE4A2F",
 							"iid": "0d702120-ac70-11f0-ace5-356a1ca3b89d",
@@ -3376,8 +3346,15 @@
 								}] },
 								{ "__identifier": "locked_amount", "__type": "Int", "__value": 1, "__tile": null, "defUid": 179, "realEditorValues": [{ "id": "V_Int", "params": [1] }] },
 								{ "__identifier": "consume_item", "__type": "Bool", "__value": true, "__tile": null, "defUid": 218, "realEditorValues": [] },
-								{ "__identifier": "level", "__type": "Int", "__value": 0, "__tile": null, "defUid": 177, "realEditorValues": [] },
-								{ "__identifier": "LocationInLevel", "__type": "Point", "__value": null, "__tile": null, "defUid": 230, "realEditorValues": [] }
+								{ "__identifier": "target", "__type": "EntityRef", "__value": {
+									"entityIid": "8ef28fa0-ac70-11f0-942f-47dc5ba98a84",
+									"layerIid": "1a2018f0-ac70-11f0-942f-c97c3b10dff0",
+									"levelIid": "1a1ff1e0-ac70-11f0-942f-6f49853f651b",
+									"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3"
+								}, "__tile": null, "defUid": 232, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["8ef28fa0-ac70-11f0-942f-47dc5ba98a84"]
+								}] }
 							],
 							"__worldX": -376,
 							"__worldY": 136
@@ -12894,7 +12871,7 @@
 							"__identifier": "Door",
 							"__grid": [73,5],
 							"__pivot": [0.5,0.5],
-							"__tags": ["Actor"],
+							"__tags": [ "Actor", "Warpable" ],
 							"__tile": { "tilesetUid": 133, "x": 80, "y": 592, "w": 16, "h": 16 },
 							"__smartColor": "#BE4A2F",
 							"iid": "4db66d40-ac70-11f0-942f-d5097c382706",
@@ -12906,8 +12883,7 @@
 								{ "__identifier": "locked_by", "__type": "LocalEnum.ItemType", "__value": null, "__tile": null, "defUid": 181, "realEditorValues": [] },
 								{ "__identifier": "locked_amount", "__type": "Int", "__value": 1, "__tile": null, "defUid": 179, "realEditorValues": [] },
 								{ "__identifier": "consume_item", "__type": "Bool", "__value": true, "__tile": null, "defUid": 218, "realEditorValues": [] },
-								{ "__identifier": "level", "__type": "Int", "__value": 0, "__tile": null, "defUid": 177, "realEditorValues": [] },
-								{ "__identifier": "LocationInLevel", "__type": "Point", "__value": null, "__tile": null, "defUid": 230, "realEditorValues": [] }
+								{ "__identifier": "target", "__type": "EntityRef", "__value": null, "__tile": null, "defUid": 232, "realEditorValues": [] }
 							],
 							"__worldX": -24,
 							"__worldY": 600
@@ -12916,7 +12892,7 @@
 							"__identifier": "Player",
 							"__grid": [7,9],
 							"__pivot": [0.5,0.5],
-							"__tags": [ "Persistant", "Actor" ],
+							"__tags": [ "Persistant", "Actor", "Warpable" ],
 							"__tile": { "tilesetUid": 133, "x": 256, "y": 144, "w": 16, "h": 16 },
 							"__smartColor": "#48DA75",
 							"iid": "8ef28fa0-ac70-11f0-942f-47dc5ba98a84",
@@ -12932,7 +12908,7 @@
 							"__identifier": "Door",
 							"__grid": [59,12],
 							"__pivot": [0.5,0.5],
-							"__tags": ["Actor"],
+							"__tags": [ "Actor", "Warpable" ],
 							"__tile": { "tilesetUid": 133, "x": 80, "y": 592, "w": 16, "h": 16 },
 							"__smartColor": "#BE4A2F",
 							"iid": "b6952cb0-ac70-11f0-ba01-092326dfacb1",
@@ -12944,8 +12920,7 @@
 								{ "__identifier": "locked_by", "__type": "LocalEnum.ItemType", "__value": null, "__tile": null, "defUid": 181, "realEditorValues": [] },
 								{ "__identifier": "locked_amount", "__type": "Int", "__value": 1, "__tile": null, "defUid": 179, "realEditorValues": [] },
 								{ "__identifier": "consume_item", "__type": "Bool", "__value": true, "__tile": null, "defUid": 218, "realEditorValues": [] },
-								{ "__identifier": "level", "__type": "Int", "__value": 0, "__tile": null, "defUid": 177, "realEditorValues": [] },
-								{ "__identifier": "LocationInLevel", "__type": "Point", "__value": null, "__tile": null, "defUid": 230, "realEditorValues": [] }
+								{ "__identifier": "target", "__type": "EntityRef", "__value": null, "__tile": null, "defUid": 232, "realEditorValues": [] }
 							],
 							"__worldX": -248,
 							"__worldY": 712

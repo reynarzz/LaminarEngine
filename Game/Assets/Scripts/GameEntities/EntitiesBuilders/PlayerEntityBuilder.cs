@@ -13,7 +13,7 @@ namespace Game
     internal class PlayerEntityBuilder : GameEntityBuilderBase
     {
         private static Player _player;
-        public override GameEntity Build(EntityInstanceData entityData, IReadOnlyDictionary<string, LayerData> layers, Func<vec2, bool, vec2> positionConverter)
+        public override GameEntity Build(EntityInstanceData entityData, WorldData worldData, Func<vec2, bool, vec2> positionConverter)
         {
             if (!_player)
             {

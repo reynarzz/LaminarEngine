@@ -17,7 +17,7 @@ namespace Game
             public long cx { get; set; }
             public long cy { get; set; }
         }
-        public override GameEntity Build(EntityInstanceData entityData, IReadOnlyDictionary<string, LayerData> layers, Func<vec2, bool, vec2> positionConverter)
+        public override GameEntity Build(EntityInstanceData entityData, WorldData worldData, Func<vec2, bool, vec2> positionConverter)
         {
             var yPositions = default(vec2[]);
             if (Deserialize<PlatformPoints[]>(entityData.Entity.FieldInstances, "positions", out var value))

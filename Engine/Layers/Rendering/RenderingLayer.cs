@@ -54,13 +54,13 @@ namespace Engine.Layers
             _drawCallData = new DrawCallData()
             {
                 Textures = new GfxResource[GfxDeviceManager.Current.GetDeviceInfo().MaxValidTextureUnits],
-                Uniforms = new UniformValue[Consts.Graphics.MAX_UNIFORMS_PER_DRAWCALL],
+                Uniforms = new UniformValue[GfxDeviceManager.Current.GetDeviceInfo().MaxUniformsCount],
             };
 
             _screenQuadDrawCallData = new DrawCallData()
             {
                 Textures = new GfxResource[GfxDeviceManager.Current.GetDeviceInfo().MaxValidTextureUnits],
-                Uniforms = new UniformValue[Consts.Graphics.MAX_UNIFORMS_PER_DRAWCALL],
+                Uniforms = new UniformValue[GfxDeviceManager.Current.GetDeviceInfo().MaxUniformsCount],
             };
 
             _screenGeometry = GraphicsHelper.GetScreenQuadGeometry();
@@ -123,11 +123,12 @@ namespace Engine.Layers
                 return x.IsEnabled && x is UIGraphicsElement;
             });
 
-
             var batches = _sceneBatches.GetBatches(_renderers);
             var uibatches = _uiBatches.GetBatches(_UIElementRenderers);
 
             var VP = _mainCamera.Projection * _mainCamera.ViewMatrix;
+
+            ClearUniforms(_screenQuadDrawCallData);
 
             var geoBatchesInfo = RenderBatches(batches, ref VP, sceneRenderTarget);
             var uiBatchesInfo = RenderBatches(uibatches, ref UICanvas.UIViewProj, sceneRenderTarget, sceneRenderTarget);
@@ -141,6 +142,7 @@ namespace Engine.Layers
             SceneManager.OnDrawGizmos();
             Debug.DrawGeometries(VP, UICanvas.UIViewProj, sceneRenderTarget.NativeResource);
 #endif
+
             RenderPostProcessing(ref sceneRenderTarget);
 
             GfxDeviceManager.Current.Present(sceneRenderTarget.NativeResource);
@@ -154,7 +156,6 @@ namespace Engine.Layers
                 screenRenderTexture = pass.Render(screenRenderTexture, _drawPostProcessCallback);
             }
         }
-
       
         private RenderingBatchesInfo RenderBatches(List<Batch2D> batches, ref mat4 VP, RenderTexture sceneRenderTarget, RenderTexture grabBlitTarget = null)
         {
@@ -248,23 +249,26 @@ namespace Engine.Layers
                 _drawCallData.RenderTarget = renderTarget.NativeResource;
                 _drawCallData.Viewport = new vec4(0, 0, renderTarget.Width, renderTarget.Height);
 
+                // Uniforms
+                _drawCallData.Uniforms[(int)Consts.Graphics.Uniforms.VP_MATRIX].SetMat4(Consts.VIEW_PROJ_UNIFORM_NAME, VP);
+                _drawCallData.Uniforms[(int)Consts.Graphics.Uniforms.VIEW_MATRIX].SetMat4(Consts.VIEW_UNIFORM_NAME, camera.ViewMatrix);
+                _drawCallData.Uniforms[(int)Consts.Graphics.Uniforms.PROJECTION_MATRIX].SetMat4(Consts.PROJECTION_UNIFORM_NAME, camera.ViewMatrix);
+                _drawCallData.Uniforms[(int)Consts.Graphics.Uniforms.TEXTURES_ARRAY].SetIntArr(Consts.TEX_ARRAY_UNIFORM_NAME, Batch2D.TextureSlotArray);
+                _drawCallData.Uniforms[(int)Consts.Graphics.Uniforms.MODEL_MATRIX].SetMat4(Consts.MODEL_UNIFORM_NAME, batch.WorldMatrix);
+                _drawCallData.Uniforms[(int)Consts.Graphics.Uniforms.SCREEN_RENDER_TARGET_GRAB].SetInt(Consts.SCREEN_GRAB_TEX_UNIFORM_NAME, screenGrabIndex);
+                _drawCallData.Uniforms[(int)Consts.Graphics.Uniforms.SCREEN_SIZE].SetVec2(Consts.SCREEN_SIZE_UNIFORM_NAME, new vec2(renderTarget.Width, renderTarget.Height));
+                _drawCallData.Uniforms[(int)Consts.Graphics.Uniforms.APP_TIME].SetVec3(Consts.TIME_UNIFORM_NAME, new vec3(Time.UnscaledTime, Time.TimeCurrent, Time.DeltaTime));
+
+                // Clears Next unused uniform, so the device does not send more data than necessary.
+                _drawCallData.Uniforms[(int)Consts.Graphics.Uniforms.COUNT] = default;
+
+                // Adds extra uniforms needed by renderers.
                 int uniformOffset = 0;
                 foreach (var (name, uniform) in pass.Uniforms)
                 {
-                    _drawCallData.Uniforms[uniformOffset] = uniform;
+                    _drawCallData.Uniforms[uniformOffset + (int)Consts.Graphics.Uniforms.COUNT] = uniform;
                     uniformOffset++;
                 }
-
-
-                // Iniforms
-                _drawCallData.Uniforms[uniformOffset + (int)Consts.Graphics.Uniforms.VP_MATRIX].SetMat4(Consts.VIEW_PROJ_UNIFORM_NAME, VP);
-                _drawCallData.Uniforms[uniformOffset + (int)Consts.Graphics.Uniforms.VIEW_MATRIX].SetMat4(Consts.VIEW_UNIFORM_NAME, camera.ViewMatrix);
-                _drawCallData.Uniforms[uniformOffset + (int)Consts.Graphics.Uniforms.PROJECTION_MATRIX].SetMat4(Consts.PROJECTION_UNIFORM_NAME, camera.ViewMatrix);
-                _drawCallData.Uniforms[uniformOffset + (int)Consts.Graphics.Uniforms.TEXTURES_ARRAY].SetIntArr(Consts.TEX_ARRAY_UNIFORM_NAME, Batch2D.TextureSlotArray);
-                _drawCallData.Uniforms[uniformOffset + (int)Consts.Graphics.Uniforms.MODEL_MATRIX].SetMat4(Consts.MODEL_UNIFORM_NAME, batch.WorldMatrix);
-                _drawCallData.Uniforms[uniformOffset + (int)Consts.Graphics.Uniforms.SCREEN_RENDER_TARGET_GRAB].SetInt(Consts.SCREEN_GRAB_TEX_UNIFORM_NAME, screenGrabIndex);
-                _drawCallData.Uniforms[uniformOffset + (int)Consts.Graphics.Uniforms.SCREEN_SIZE].SetVec2(Consts.SCREEN_SIZE_UNIFORM_NAME, new vec2(renderTarget.Width, renderTarget.Height));
-                _drawCallData.Uniforms[uniformOffset + (int)Consts.Graphics.Uniforms.APP_TIME].SetVec3(Consts.TIME_UNIFORM_NAME, new vec3(Time.UnscaledTime, Time.TimeCurrent, Time.DeltaTime));
 
                 // Draw
                 GfxDeviceManager.Current.Draw(_drawCallData);
@@ -337,6 +341,15 @@ namespace Engine.Layers
                 RenderTarget = _defaultSceneRenderTexture.NativeResource
             });
             GfxDeviceManager.Current.Present(_defaultSceneRenderTexture.NativeResource);
+        }
+
+        private void ClearUniforms(DrawCallData drawCall)
+        {
+            // Clear uniforms
+            for (int i = 0; i < drawCall.Uniforms.Length; i++)
+            {
+                drawCall.Uniforms[i] = default;
+            }
         }
         public override void Close()
         {

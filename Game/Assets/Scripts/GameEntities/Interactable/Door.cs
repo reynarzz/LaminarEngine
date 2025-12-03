@@ -62,6 +62,13 @@ namespace Game
         public void Close()
         {
             Animator.Play("Close");
+
+            // TODO: fade in/ fade out.
+
+            if(Data.CurrentLevel != Data.TargetLevelIndex)
+            {
+                GameManager.Instance.BuildLevel(Data.TargetLevelIndex);
+            }
         }
 
         public void Open()

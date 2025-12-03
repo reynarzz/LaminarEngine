@@ -29,25 +29,28 @@ namespace Game
 
     internal class GameManager : ScriptBehavior
     {
-        public static Camera Camera { get; private set; }
+        public Camera Camera { get; private set; }
         private ItemsDatabase _itemsDatabase;
-        private static FadeInOutManager _fadeInOutManager;
-        public static Player Player { get; private set; }
-        public static Material DefaultMaterial => MaterialUtils.SpriteMaterial;
-        public static TilemapResult ForegroundTilemap { get; set; }
+        private FadeInOutManager _fadeInOutManager;
+        public Player Player { get; private set; }
+        private TilemapResult ForegroundTilemap { get; set; }
         public static FontAsset DefaultFont { get; private set; }
         private GameEntityManager _gameEntityManager;
-        private static GameUIManager _gameUIManger;
-        private static LevelBuilderManager _tilemapManager;
-
+        private GameUIManager _gameUIManger;
+        private TilemapWorldBuilderManager _tilemapManager;
+        public static GameManager Instance { get; private set; }
         //public static vec2 GameResolution { get; } = new vec2(640, 360);
         public static vec2 GameResolution { get; } = new vec2(512, 288);
 
         protected override void OnAwake()
         {
+            Instance = this;
+            Actor.DontDestroyOnLoad(this);
+
             InitializeActorLayers();
             InitializeData();
             InitializeWorld();
+
         }
 
         private void InitializeData()
@@ -55,7 +58,7 @@ namespace Game
             _itemsDatabase = new ItemsDatabase("Data/ItemsDatabase.csv");
             DefaultFont = Assets.Get<FontAsset>("Fonts/windows-bold[1].ttf");
             _gameEntityManager = new GameEntityManager();
-            _tilemapManager = new LevelBuilderManager(_gameEntityManager);
+            _tilemapManager = new TilemapWorldBuilderManager("Tilemap/WorldTilemap.ldtk", _gameEntityManager);
         }
 
         private void InitializeActorLayers()
@@ -90,33 +93,34 @@ namespace Game
             PostProcessingStack.Push(new BloomPostProcessing());
 
             ScreenGrabTest3();
-            if (!_fadeInOutManager)
-            {
-                _fadeInOutManager = new Actor("FadeInOutManager").AddComponent<FadeInOutManager>();
-                Actor.DontDestroyOnLoad(_fadeInOutManager);
-            }
+            _fadeInOutManager = new Actor("FadeInOutManager").AddComponent<FadeInOutManager>();
+            _fadeInOutManager.Transform.Parent = Transform;
 
-            var manager = Actor.Find("Music Manager");
+            var music = new Actor<AudioSource>("Music Manager");
+            var musicAudio = music.GetComponent<AudioSource>();
+            musicAudio.Loop = true;
+            musicAudio.Clip = Assets.GetAudioClip("Audio/music/streamloops/Stream Loops 2024-02-14_L01.wav");
+            musicAudio.Transform.Parent = Transform;
+            // musicAudio.Play();
 
-            if (!manager)
-            {
-                var music = new Actor<AudioSource>("Music Manager");
-                var musicAudio = music.GetComponent<AudioSource>();
-                musicAudio.Loop = true;
-                musicAudio.Clip = Assets.GetAudioClip("Audio/music/streamloops/Stream Loops 2024-02-14_L01.wav");
-                // musicAudio.Play();
-                Actor.DontDestroyOnLoad(music);
-            }
 
-            if (!_gameUIManger)
-            {
-                _gameUIManger = new Actor("GameUIManager").AddComponent<GameUIManager>();
-            }
+            _gameUIManger = new Actor("GameUIManager").AddComponent<GameUIManager>();
+            _gameUIManger.Transform.Parent = Transform;
 
-            var result = _tilemapManager.BuildLevel(new LevelData()
+            // Begin from first level.
+            BuildLevel(levelIndex: 0);
+        
+        }
+
+        public void BuildLevel(int levelIndex)
+        {
+            SceneManager.LoadScene("Level: " + levelIndex);
+            ParticleSystem();
+            WaterTest();
+
+            var result = _tilemapManager.BuildLevel(new LevelInstantiateInfo()
             {
-                LevelIndex = 0,
-                TilemapPath = "Tilemap/WorldTilemap.ldtk",
+                LevelIndex = levelIndex,
                 TilemapSprites = GameTextures.GetAtlas("sunny_land_tileset"),
                 WorldSpacePixelsPerUnit = GameTextures.GetAtlas("sunny_land_tileset")[0].Texture.PixelPerUnit,
                 Tilemaps =
@@ -139,14 +143,10 @@ namespace Game
                     },
                 }
             });
+
             Player = result.Player;
             ForegroundTilemap = result.Tilemaps[0];
-
             InitializeCamera(Player.Transform, ForegroundTilemap.Bounds);
-            // Debug.Log(ItemsDatabase.GetDatabaseSchemaCsv());
-
-            WaterTest();
-            ParticleSystem();
         }
 
         private void InitializeCamera(Transform target, Bounds levelBounds)
@@ -154,11 +154,11 @@ namespace Game
             if (!Camera)
             {
                 Camera = new Actor<CameraFollow, CameraShake>("MainCamera").AddComponent<Camera>();
-                Camera.Transform.WorldPosition = new vec3(0, 0, -12);
                 Camera.BackgroundColor = new Color(0.2f, 0.2f, 0.2f, 1);
                 Camera.OrthographicSize = GameResolution.y / 2.0f / 16.0f;
                 Camera.ProjectionMode = CameraProjectionMode.Orthographic;
                 Camera.RenderTexture = new RenderTexture((int)GameResolution.x * 2, (int)GameResolution.y * 2);
+                Camera.Transform.Parent = Transform;
             }
 
             var cameraFollow = Camera.GetComponent<CameraFollow>();
@@ -196,9 +196,7 @@ namespace Game
 
             if (Input.GetKeyDown(KeyCode.T))
             {
-                SceneManager.LoadScene("Game");
-                PostProcessingStack.Clear();
-                new Actor<GameManager>("GameManager");
+                BuildLevel(0);
             }
 
         }

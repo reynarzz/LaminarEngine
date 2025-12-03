@@ -50,7 +50,7 @@ namespace Game
                 rigid.LockZRotation = true;
                 rigid.Interpolate = true;
 
-                _renderer.Material = GameManager.DefaultMaterial;
+                _renderer.Material = MaterialUtils.SpriteMaterial;
                 _renderer.SortOrder = 0;
                 _collider = AddComponent<BoxCollider2D>();
 

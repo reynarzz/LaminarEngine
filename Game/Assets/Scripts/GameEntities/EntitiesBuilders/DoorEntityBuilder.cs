@@ -11,7 +11,7 @@ namespace Game
 {
     public class DoorEntityBuilder : GameEntityBuilderBase
     {
-        public override GameEntity Build(EntityInstanceData entityData, IReadOnlyDictionary<string, LayerData> layers, Func<vec2, bool, vec2> positionConverter)
+        public override GameEntity Build(EntityInstanceData entityData, WorldData worldData, Func<vec2, bool, vec2> positionConverter)
         {
             var doorData = new DoorData();
 
@@ -27,7 +27,14 @@ namespace Game
                     doorData.LockedAmount = value;
                 }
             }
+            
+            doorData.CurrentLevel = worldData.Levels[entityData.LevelIID].LevelIndex;
 
+            if (GetEntityRef(entityData.Entity.FieldInstances, "target", worldData, out var targetValue))
+            {
+                doorData.TargetPosition = targetValue.WorldPosition;
+                doorData.TargetLevelIndex = worldData.Levels[targetValue.LevelIID].LevelIndex;
+            }
             doorData.InteractCondition = PlayerHasItem_Condition(doorData.LockedBy, doorData.LockedAmount);
             return GamePrefabs.World.InstantiateDoor(entityData.WorldPosition, doorData);
         }

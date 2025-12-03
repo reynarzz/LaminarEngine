@@ -30,7 +30,8 @@ namespace Engine
 
         public static void LoadScene(string name)
         {
-            // PrintActorsInScene(_activeScene);
+            PrintActorsInScene(_activeScene);
+
             ClearScenes();
             OnCleanUpUpdate();
 
@@ -40,22 +41,22 @@ namespace Engine
             ActiveScene = new WeakReference<Scene>(_activeScene);
             _scenes.Add(scene);
         }
+        private static void LogHierarchy(Transform current, int depth = 0)
+        {
+            string indent = new string('-', depth);
 
+            Debug.Log($"{indent}{current.Name}");
+
+            for (int i = 0; i < current.Children.Count; i++)
+            {
+                LogHierarchy(current.Children[i], depth + 1);
+            }
+        }
         private static void PrintActorsInScene(Scene scene)
         {
-            void Actors(Actor actor)
-            {
-                Debug.Log(actor.Name);
-
-                foreach (var item in actor.Transform.Children)
-                {
-                    Actors(item.Actor);
-                }
-            }
-
             for (int i = 0; i < _activeScene.RootActors.Count; i++)
             {
-                Actors(_activeScene.RootActors[i]);
+                LogHierarchy(_activeScene.RootActors[i].Transform);
             }
 
         }

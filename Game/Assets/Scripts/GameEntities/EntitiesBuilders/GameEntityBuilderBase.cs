@@ -12,7 +12,7 @@ namespace Game
 {
     public abstract class GameEntityBuilderBase
     {
-        public abstract GameEntity Build(EntityInstanceData entityData, IReadOnlyDictionary<string, LayerData> layers, Func<vec2, bool, vec2> positionConverter);
+        public abstract GameEntity Build(EntityInstanceData entityData, WorldData worldData, Func<vec2, bool, vec2> positionConverter);
 
         protected bool Deserialize<T>(FieldInstance[] fields, string id, out T value)
         {
@@ -77,13 +77,26 @@ namespace Game
             return true;
         }
 
+        protected bool GetEntityRef(FieldInstance[] fields, string id, WorldData data, out EntityInstanceData value)
+        {
+            value = default;
+            if (GetDictionary(fields, id, out var dict))
+            {
+                value = data.Levels[dict["levelIid"]].Layers[dict["layerIid"]].EntitiesData[dict["entityIid"]];
+                return true;
+            }
+
+            return false;
+        }
+
+
         protected bool GetDictionary(FieldInstance[] fields, string id, out Dictionary<string, string> value)
         {
             value = default;
             if (!TryGetField(fields, id, out var field))
                 return false;
 
-            if(field.Value == null)
+            if (field.Value == null)
             {
                 return false;
             }

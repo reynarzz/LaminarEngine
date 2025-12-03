@@ -8,22 +8,15 @@ namespace Game
 {
     public class PortalEntityBuilder : GameEntityBuilderBase
     {
-        public override GameEntity Build(EntityInstanceData entityData, IReadOnlyDictionary<string, LayerData> layers, Func<vec2, bool, vec2> positionConverter)
+        public override GameEntity Build(EntityInstanceData entityData, WorldData worldData, Func<vec2, bool, vec2> positionConverter)
         {
             var portal = new Actor<SpriteRenderer>("Portal").AddComponent<Portal>();
             var portalData = new PortalData();
             portal.Transform.WorldPosition = entityData.WorldPosition;
 
-            if (GetDictionary(entityData.Entity.FieldInstances, "Target", out var targetValue))
+            if (GetEntityRef(entityData.Entity.FieldInstances, "Target", worldData, out var targetValue))
             {
-                /* -Keys
-                 entityIid
-                 layerIid
-                 levelIid
-                 worldIid
-                 */
-                var targetEntity = layers[targetValue["layerIid"]].EntitiesData[targetValue["entityIid"]];
-                portalData.TargetPos = targetEntity.WorldPosition;
+                portalData.TargetPos = targetValue.WorldPosition;
 
                 // Debug.Log("Current portalPos: " + entityData.WorldPosition + ", Target portal pos: " + targetEntity.WorldPosition);
             }
