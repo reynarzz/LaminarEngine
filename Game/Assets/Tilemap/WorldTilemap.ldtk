@@ -12819,7 +12819,7 @@
 					"entityInstances": [
 						{
 							"__identifier": "Portal",
-							"__grid": [36,8],
+							"__grid": [36,7],
 							"__pivot": [0.5,0.5],
 							"__tags": ["Actor"],
 							"__tile": { "tilesetUid": 133, "x": 32, "y": 224, "w": 16, "h": 16 },
@@ -12828,7 +12828,7 @@
 							"width": 16,
 							"height": 16,
 							"defUid": 220,
-							"px": [584,136],
+							"px": [584,120],
 							"fieldInstances": [
 								{ "__identifier": "Target", "__type": "EntityRef", "__value": {
 									"entityIid": "4350fd20-ac70-11f0-942f-5188a2a96ab2",
@@ -12844,7 +12844,7 @@
 								{ "__identifier": "locked_amount", "__type": "Int", "__value": 1, "__tile": null, "defUid": 225, "realEditorValues": [] }
 							],
 							"__worldX": -616,
-							"__worldY": 648
+							"__worldY": 632
 						},
 						{
 							"__identifier": "Portal",

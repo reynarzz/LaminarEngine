@@ -33,7 +33,19 @@ namespace Game
             closeAnim.Clip.AddCurve("Sprite", new SpriteCurve(fps, closingSprites));
 
             openAnim.Clip.AddEvent(openAnim.Clip.Duration, () => OnDoorStateChanged?.Invoke(true));
-            closeAnim.Clip.AddEvent(closeAnim.Clip.Duration, () => OnDoorStateChanged?.Invoke(false));
+            closeAnim.Clip.AddEvent(closeAnim.Clip.Duration, () =>
+            {
+                OnDoorStateChanged?.Invoke(false);
+
+                FadeInOutManager.Instance.FadeIn(1, () =>
+                {
+                    if (Data.CurrentLevel != Data.TargetLevelIndex)
+                    {
+                        GameManager.Instance.BuildLevel(Data.TargetLevelIndex);
+                        FadeInOutManager.Instance.FadeOut(1);
+                    }
+                });
+            });
 
             // When player enters: Audio/Gameplay/Win_2.wav
 
@@ -65,10 +77,6 @@ namespace Game
 
             // TODO: fade in/ fade out.
 
-            if(Data.CurrentLevel != Data.TargetLevelIndex)
-            {
-                GameManager.Instance.BuildLevel(Data.TargetLevelIndex);
-            }
         }
 
         public void Open()

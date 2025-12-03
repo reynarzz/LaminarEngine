@@ -91,7 +91,7 @@ namespace Engine.Graphics.OpenGL
             var shader = shaderRes as GLShader;
             foreach (var uniform in uniforms)
             {
-                if (string.IsNullOrEmpty(uniform.Name))
+                if (uniform.Type == UniformType.Invalid)
                     break;
 
                 switch (uniform.Type)
