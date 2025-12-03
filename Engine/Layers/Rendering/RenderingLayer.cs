@@ -211,6 +211,8 @@ namespace Engine.Layers
 
         private void RenderPass(Batch2D batch, ref mat4 VP, RenderTexture renderTarget, RenderTexture screenGrabTarget, Camera camera)
         {
+            ClearUniforms(_drawCallData);
+
             foreach (var pass in batch.Material.Passes)
             {
                 int boundTex = 0;
@@ -256,7 +258,7 @@ namespace Engine.Layers
                 }
 
 
-                // Iniforms
+                // Uniforms
                 _drawCallData.Uniforms[uniformOffset + (int)Consts.Graphics.Uniforms.VP_MATRIX].SetMat4(Consts.VIEW_PROJ_UNIFORM_NAME, VP);
                 _drawCallData.Uniforms[uniformOffset + (int)Consts.Graphics.Uniforms.VIEW_MATRIX].SetMat4(Consts.VIEW_UNIFORM_NAME, camera.ViewMatrix);
                 _drawCallData.Uniforms[uniformOffset + (int)Consts.Graphics.Uniforms.PROJECTION_MATRIX].SetMat4(Consts.PROJECTION_UNIFORM_NAME, camera.ViewMatrix);
@@ -274,6 +276,7 @@ namespace Engine.Layers
         private void DrawScreenQuad(Shader shader, mat4 VP, RenderTexture sceneRenderTarget, RenderTexture renderTarget,
                                     UniformValue[] uniforms, Camera camera)
         {
+            ClearUniforms(_screenQuadDrawCallData);
             // Texture 0 is the screen
             _screenQuadDrawCallData.Textures[0] = sceneRenderTarget.NativeResource.SubResources[0];
 
@@ -337,6 +340,15 @@ namespace Engine.Layers
                 RenderTarget = _defaultSceneRenderTexture.NativeResource
             });
             GfxDeviceManager.Current.Present(_defaultSceneRenderTexture.NativeResource);
+        }
+
+        private void ClearUniforms(DrawCallData drawCall)
+        {
+            // Clear uniforms
+            for (int i = 0; i < drawCall.Uniforms.Length; i++)
+            {
+                drawCall.Uniforms[i] = default;
+            }
         }
         public override void Close()
         {

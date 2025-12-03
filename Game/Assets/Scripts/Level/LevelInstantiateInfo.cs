@@ -17,9 +17,8 @@ namespace Game
         public ulong LayersToDraw { get; set; }
     }
 
-    public class LevelData
+    public class LevelInstantiateInfo
     {
-        public string TilemapPath { get; set; }
         public int LevelIndex { get; set; }
         public Sprite[] TilemapSprites { get; set; }
         public List<TilemapData> Tilemaps { get; set; } = new List<TilemapData>();

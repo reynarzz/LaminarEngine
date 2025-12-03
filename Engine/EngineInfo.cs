@@ -32,9 +32,9 @@ namespace Engine
 
         public static string RendererInfoToString()
         {
-            return $"WBatches:{Renderer.WBatches} | WScreenGrabs:{Renderer.GrabScreenPass} | W_DC:{Renderer.WDrawCalls} " +
-                $"| UIBatches:{Renderer.UIBatches} | UIScreenGrabs:{Renderer.UIGrabScreenPass} | UI_DC:{Renderer.UIDrawCalls} " +
-                $"| AllBatches:{Renderer.TotalBatches} | All_DCs:{Renderer.TotalDrawCalls} | W_DC_BatchSaved:{Renderer.SavedByBatching}";
+            return $"WBatches:{Renderer.WBatches} | W_SC_Grabs:{Renderer.GrabScreenPass} | W_DC:{Renderer.WDrawCalls} " +
+                $"| UIBatches:{Renderer.UIBatches} | UI_SC_Grabs:{Renderer.UIGrabScreenPass} | UI_DC:{Renderer.UIDrawCalls} " +
+                $"| AllBatches:{Renderer.TotalBatches} | All_DCs:{Renderer.TotalDrawCalls} | W_Saved:{Renderer.SavedByBatching}";
         }
     }
 }

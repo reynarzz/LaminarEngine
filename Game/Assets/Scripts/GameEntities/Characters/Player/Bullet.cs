@@ -27,7 +27,7 @@ namespace Game
             Transform.WorldScale = new vec3(0.6f, 0.18f);
 
             var sprite = GetComponent<SpriteRenderer>();
-            sprite.Material = GameManager.DefaultMaterial;
+            sprite.Material = MaterialUtils.SpriteMaterial;
             _timeAlive = 1;
 
             CheckCollision();

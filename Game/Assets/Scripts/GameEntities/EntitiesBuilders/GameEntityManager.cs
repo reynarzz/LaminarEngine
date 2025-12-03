@@ -29,11 +29,11 @@ namespace Game
             };
         }
 
-        public GameEntity BuildEntity(EntityInstanceData entityData, IReadOnlyDictionary<string, LayerData> layers, Func<vec2, bool, vec2> positionConverter)
+        public GameEntity BuildEntity(EntityInstanceData entityData, WorldData worldData, Func<vec2, bool, vec2> positionConverter)
         {
             if (_entityBuilders.TryGetValue(entityData.Entity.Identifier, out var builder))
             {
-                var gameEntity = builder.Build(entityData, layers, positionConverter);
+                var gameEntity = builder.Build(entityData, worldData, positionConverter);
 
                 foreach (var tag in entityData.Entity.Tags)
                 {

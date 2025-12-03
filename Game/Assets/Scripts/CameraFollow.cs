@@ -20,6 +20,7 @@ namespace Game
         private vec3 velocity;
         public Bounds LevelBounds { get; set; }
         [RequiredProperty] private Camera _camera;
+        private readonly float _zPosition = -10;
         protected override void OnAwake()
         {
             Actor.DontDestroyOnLoad(this);
@@ -32,7 +33,7 @@ namespace Game
 
         public void SetOnTargetImmediate()
         {
-            Transform.WorldPosition = AdjustPositionInsideBounds(new vec3(Target.WorldPosition.x, Target.WorldPosition.y, Transform.WorldPosition.z));
+            Transform.WorldPosition = AdjustPositionInsideBounds(new vec3(Target.WorldPosition.x, Target.WorldPosition.y, _zPosition));
         }
 
         private void Move()

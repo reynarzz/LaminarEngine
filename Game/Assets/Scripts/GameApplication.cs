@@ -25,7 +25,7 @@ namespace Game
         // Five levels, small, one intro level falling from outside.
         // Loot jumps from enemies, and chests, keys, and other key items will remain in inventory.
         // Platform should check with a box cast if the player is below.
-
+        // Water and lava.
 
         // Late release polish:
         // -final sound for hit should be sound like "vanish" when the character dies.
