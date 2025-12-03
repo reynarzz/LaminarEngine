@@ -33,6 +33,7 @@ namespace Game
         // Implement UI (inventory, pause menu)
         // Show interactable icon for: doors, chests, portals etc...
 
+
         // -Stretch:
         // Implement bounds in sprites/renderers.
         // Implement event in transform to know when scale changed, and get the delta scale.

@@ -34,7 +34,7 @@ namespace Game
         private static FadeInOutManager _fadeInOutManager;
         public static Player Player { get; private set; }
         public static Material DefaultMaterial => MaterialUtils.SpriteMaterial;
-
+        public static TilemapResult ForegroundTilemap { get; set; }
         public static FontAsset DefaultFont { get; private set; }
         private GameEntityManager _gameEntityManager;
         private static GameUIManager _gameUIManger;
@@ -112,9 +112,9 @@ namespace Game
                 _gameUIManger = new Actor("GameUIManager").AddComponent<GameUIManager>();
             }
             
-            Player = _tilemapManager.BuildLevel(new LevelData()
+            var result = _tilemapManager.BuildLevel(new LevelData()
             {
-                LevelIndex = 0,
+                LevelIndex = 1,
                 TilemapPath = "Tilemap/WorldTilemap.ldtk",
                 TilemapSprites = GameTextures.GetAtlas("sunny_land_tileset"),
                 WorldSpacePixelsPerUnit = GameTextures.GetAtlas("sunny_land_tileset")[0].Texture.PixelPerUnit,
@@ -138,6 +138,8 @@ namespace Game
                     },
                 }
             });
+            Player = result.Player;
+            ForegroundTilemap = result.Tilemaps[0];
 
             InitializeCamera(Player.Transform);
             // Debug.Log(ItemsDatabase.GetDatabaseSchemaCsv());
@@ -195,6 +197,8 @@ namespace Game
                 PostProcessingStack.Clear();
                 new Actor<GameManager>("GameManager");
             }
+
+            Debug.DrawBox(ForegroundTilemap.Bounds.Center, ForegroundTilemap.Bounds.Size, Color.Red);
         }
 
         private void ParticleSystem()

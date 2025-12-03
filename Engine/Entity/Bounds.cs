@@ -11,5 +11,8 @@ namespace Engine
     {
         public vec3 Max;
         public vec3 Min;
+        public vec3 Size => Max - Min;
+        public vec3 Center => (Min + Max) * 0.5f;
+        public vec3 Extents => (Max - Min) * 0.5f;
     }
 }
