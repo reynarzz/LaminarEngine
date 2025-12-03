@@ -23,7 +23,6 @@ namespace Game
             Inventory = new PlayerInventory(config.InventoryMaxSlots, 4);
             GameUIManager.Inventory.InitInventory(Inventory);
 
-            _canMove = true;
             base.Init(config);
             var box = AddComponent<BoxCollider2D>();
             box.Size = new vec2(0.95f, 0.6f);
@@ -67,6 +66,7 @@ namespace Game
             Inventory.OnLifeChanged += Inventory_OnLifeChanged;
             GameUIManager.PlayerHealth.InitHealth(Inventory.Life);
 
+            InitLevel();
         }
 
         private void Inventory_OnLifeChanged(int life)
@@ -76,10 +76,15 @@ namespace Game
 
         public void InitLevel()
         {
-
+            _canMove = false;
+            Renderer.IsEnabled = false;
+            TimedExecute(() => ExitFromDoor(_nearInteractables.FirstOrDefault(x => x as Door) as Door), 0.7f);
         }
+
         public void ExitFromDoor(Door door)
         {
+            if (door == null)
+                return;
             Renderer.IsEnabled = false;
             _canMove = false;
             Walk(1);
@@ -90,7 +95,7 @@ namespace Game
                 yield return new WaitForSeconds(0.3f);
                 Animator.Play("DoorOut");
                 Renderer.IsEnabled = true;
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(0.4f);
                 door.Close();
                 Animator.Play(IDLE_ANIM_STATE);
                 _canMove = true;

@@ -37,14 +37,16 @@ namespace Game
             {
                 OnDoorStateChanged?.Invoke(false);
 
-                FadeInOutManager.Instance.FadeIn(1, () =>
+                if (Data.CurrentLevel != Data.TargetLevelIndex)
                 {
-                    if (Data.CurrentLevel != Data.TargetLevelIndex)
+                    FadeInOutManager.Instance.FadeIn(1, () =>
                     {
+
                         GameManager.Instance.BuildLevel(Data.TargetLevelIndex);
                         FadeInOutManager.Instance.FadeOut(1);
-                    }
-                });
+
+                    });
+                }
             });
 
             // When player enters: Audio/Gameplay/Win_2.wav
@@ -61,7 +63,7 @@ namespace Game
         {
             if (CanInteract(player))
             {
-                if(Data.LockedBy == ItemId.none || player.Inventory.Use(Data.LockedBy))
+                if (Data.LockedBy == ItemId.none || player.Inventory.Use(Data.LockedBy))
                 {
                     Open();
                     InteractableRenderVisible(false);
