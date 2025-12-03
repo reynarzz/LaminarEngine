@@ -86,8 +86,9 @@ namespace Game
         private void InitializeWorld()
         {
             PostProcessingStack.Clear();
-            // PostProcessingStack.Push(new BloomPostProcessing());
-            //ScreenGrabTest();
+            ScreenGrabTest();
+            PostProcessingStack.Push(new BloomPostProcessing());
+
             ScreenGrabTest3();
             if (!_fadeInOutManager)
             {
@@ -111,14 +112,14 @@ namespace Game
             {
                 _gameUIManger = new Actor("GameUIManager").AddComponent<GameUIManager>();
             }
-            
+
             var result = _tilemapManager.BuildLevel(new LevelData()
             {
-                LevelIndex = 1,
+                LevelIndex = 0,
                 TilemapPath = "Tilemap/WorldTilemap.ldtk",
                 TilemapSprites = GameTextures.GetAtlas("sunny_land_tileset"),
                 WorldSpacePixelsPerUnit = GameTextures.GetAtlas("sunny_land_tileset")[0].Texture.PixelPerUnit,
-                Tilemaps = 
+                Tilemaps =
                 {
                     new TilemapData()
                     {
@@ -273,8 +274,8 @@ namespace Game
         private void ScreenGrabTest3()
         {
             var vertex = Assets.GetText("Shaders/ScreenVert.vert").Text;
-            //var screenShader = new Shader(vertex, Assets.GetText("Shaders/Ripple.frag").Text);
-            //PostProcessingStack.Push(new PostProcessingSinglePass(screenShader));
+            var screenShader = new Shader(vertex, Assets.GetText("Shaders/Ripple.frag").Text);
+            PostProcessingStack.Push(new PostProcessingSinglePass(screenShader));
 
             var chormaticAberration = new PostProcessingSinglePass(new Shader(vertex, Assets.GetText("Shaders/ChromaticAberration.frag").Text));
             chormaticAberration.SetValue("uAberrationStrength", 0.007f);

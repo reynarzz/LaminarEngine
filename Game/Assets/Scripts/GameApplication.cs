@@ -17,22 +17,27 @@ namespace Game
         // Fix: Texture units overflow, a batch should only bind: MAX_DEVICE_ALLOWED - RENDERER_NEEDED_TEXTURE_SLOTS
         // Implement:scroll list 
         // Bake tilemaps quads vertices, and collision data in binary file, the geometry should be already converted to the memory layout of the vertex array.
-
+        // GameIcon, it should be baked into the game data.
 
         // For the game:
         // game UI architecture
-        // Level system
+        // Level transition using door and faded in fade out.
         // Implement enemies
         // -Enemy AI
         // Enemy life UI
         // implement player's iframes after getting hit
-        // Camera shake.
         // Five levels, small, one intro level falling from outside.
         // Colllect coins, hearts, attack enemies, go from door A to B
         // Implement collectibles
         // Implement UI (inventory, pause menu)
         // Show interactable icon for: doors, chests, portals etc...
+        // Loot jumps from enemies, and chests, keys, and other key items will remain in inventory.
+        // Inventory should be under the health bar.
+        // Platform should check with a box cast if the player is below.
 
+        // Late release polish:
+        // -final sound for hit should be sound like "vanish" when the character dies.
+        // Finish inventory.
 
         // -Stretch:
         // Implement bounds in sprites/renderers.
