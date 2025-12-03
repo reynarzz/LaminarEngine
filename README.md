@@ -56,4 +56,4 @@ This project is licensed under the Non-Commercial Copyleft License (NCCL).
 - Use it in revenue-generating projects
 
 ## Contributions
-Since this is a portfolio piece, unfortunately, I'm not accepting contributions.
+Since this is a solo project, unfortunately, I'm not accepting contributions.
