@@ -103,13 +103,11 @@ namespace Game
             musicAudio.Transform.Parent = Transform;
             // musicAudio.Play();
 
-
             _gameUIManger = new Actor("GameUIManager").AddComponent<GameUIManager>();
             _gameUIManger.Transform.Parent = Transform;
 
             // Begin from first level.
             BuildLevel(levelIndex: 0);
-        
         }
 
         public void BuildLevel(int levelIndex)

@@ -19,28 +19,35 @@ namespace Game
         protected override void OnAwake()
         {
             PostProcessingStack.Push(_fadePostProcessing);
-            // _fadePostProcessing.Value = 1;
+            _fadePostProcessing.Color = Color.Black;
+             _fadePostProcessing.Value = 1;
+            FadeOut(1);
             _instance = this;
         }
 
-        public void FadeIn(float speed)
+        public void FadeIn(float speed, Action onComplete = null)
         {
-            StartCoroutine(Fade(1, speed));
+            StartCoroutine(Fade(1, speed, onComplete));
         }
 
-        public void FadeOut(float speed)
+        public void FadeOut(float speed, Action onComplete = null)
         {
-            StartCoroutine(Fade(0, speed));
+            StartCoroutine(Fade(0, speed, onComplete));
         }
 
-        private IEnumerator Fade(float target, float speed)
+        private IEnumerator Fade(float target, float speed, Action onComplete)
         {
             var val = _fadePostProcessing.Value;
-            while (_fadePostProcessing.Value != target)
+            var t = 0.0f;
+            while (t < 1.0f)
             {
-                _fadePostProcessing.Value = Mathf.Lerp(val, target, Time.UnscaledDeltaTime * speed);
+                _fadePostProcessing.Value = Mathf.Lerp(val, target, t);
+                t += Time.UnscaledDeltaTime * speed;
+
                 yield return null;
             }
+
+            onComplete?.Invoke();
         }
     }
 }
