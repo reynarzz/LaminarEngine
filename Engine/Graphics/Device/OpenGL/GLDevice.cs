@@ -1,4 +1,5 @@
-﻿using GlmNet;
+﻿using Engine.Utils;
+using GlmNet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,15 @@ namespace Engine.Graphics.OpenGL
             {
                 glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxTextureUnits);
                 glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, &maxTextureUnitsAccessInVertexShader);
+
+                int maxVertexUniforms = 0;
+                glGetIntegerv(GL_MAX_VERTEX_UNIFORM_COMPONENTS, &maxVertexUniforms);
+                int maxFragmentUniforms = 0;
+                glGetIntegerv(GL_MAX_FRAGMENT_UNIFORM_COMPONENTS, &maxFragmentUniforms);
+
+                _gfxDeviceInfo.MaxUniformsCount = (int)MathF.Min(Consts.Graphics.MAX_UNIFORMS_PER_DRAWCALL, MathF.Min(maxFragmentUniforms, maxFragmentUniforms));
+                //int maxUniformBlocks = 0;
+                //glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &maxUniformBlocks);
             }
 
             _gfxDeviceInfo.MaxHardwareTextureUnits = maxTextureUnits;

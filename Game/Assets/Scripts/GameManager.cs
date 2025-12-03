@@ -109,14 +109,14 @@ namespace Game
 
             // Begin from first level.
             BuildLevel(levelIndex: 0);
-
-            WaterTest();
-            ParticleSystem();
+        
         }
 
         public void BuildLevel(int levelIndex)
         {
             SceneManager.LoadScene("Level: " + levelIndex);
+            ParticleSystem();
+            WaterTest();
 
             var result = _tilemapManager.BuildLevel(new LevelInstantiateInfo()
             {
