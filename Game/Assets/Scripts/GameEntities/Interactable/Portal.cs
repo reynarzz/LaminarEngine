@@ -71,7 +71,7 @@ namespace Game
         {
             if (enter && Data.IsArriveOnly && !_shouldDisappear)
             {
-                TimedExecute(() => _shouldDisappear = true, 1.0f);
+                TimedExecute(() => _shouldDisappear = true, 0.5f);
             }
         }
     }

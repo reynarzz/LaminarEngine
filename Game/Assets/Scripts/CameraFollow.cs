@@ -60,8 +60,8 @@ namespace Game
 
             var targetCameraPos = new vec3(newX, newY, camPos.z);
 
-            Transform.WorldPosition = Mathf.SmoothDamp(camPos, AdjustPositionInsideBounds(targetCameraPos), ref velocity, smoothTime);
-
+            Transform.WorldPosition = AdjustPositionInsideBounds(Mathf.SmoothDamp(camPos, AdjustPositionInsideBounds(targetCameraPos), ref velocity, smoothTime));
+            
             if (Physics2D.DrawColliders)
             {
                 Debug.DrawBox(new vec3(Transform.WorldPosition.x, Transform.WorldPosition.y, 0), new vec3(deadZoneSize.x, deadZoneSize.y, 0), Color.Green);
