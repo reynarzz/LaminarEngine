@@ -82,6 +82,11 @@ namespace Game
             value = default;
             if (!TryGetField(fields, id, out var field))
                 return false;
+
+            if(field.Value == null)
+            {
+                return false;
+            }
             value = JsonConvert.DeserializeObject<Dictionary<string, string>>(field.Value.ToString());
             return true;
         }

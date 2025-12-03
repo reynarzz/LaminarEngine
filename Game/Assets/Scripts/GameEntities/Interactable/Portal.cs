@@ -1,6 +1,7 @@
 ﻿using Engine;
 using GlmNet;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,8 @@ namespace Game
     public class Portal : InteractableEntityBase<PortalData>
     {
         private CircleCollider2D _circle;
+        private bool _shouldDisappear = false;
+        private SpriteRenderer _renderer;
         protected override void OnAwake()
         {
             base.OnAwake();
@@ -26,15 +29,17 @@ namespace Game
             base.Init(data);
 
             var portal = new Actor<Rotate>("PortalSprite").AddComponent<SpriteRenderer>();
-            var renderer = portal.GetComponent<SpriteRenderer>();
-            renderer.SortOrder = 14;
-            renderer.Material = MaterialUtils.PortalMaterial;
+            _renderer = portal.GetComponent<SpriteRenderer>();
+            _renderer.SortOrder = 14;
+            _renderer.Material = MaterialUtils.PortalMaterial;
+
             portal.Transform.LocalScale = new vec3(6, 6);
             portal.Transform.WorldPosition = Transform.WorldPosition;
+            portal.Transform.Parent = Transform;
 
-           // BoxCollider.Size = portal.Transform.LocalScale;
+            // BoxCollider.Size = portal.Transform.LocalScale;
             _circle.Radius = 3;
-            if (data != null)
+            if (!data.IsArriveOnly)
             {
                 // read data
             }
@@ -46,12 +51,28 @@ namespace Game
 
         public override bool TryInteract(Player player)
         {
-            if (Data != null && CanInteract(player))
+            if (!Data.IsArriveOnly && CanInteract(player))
             {
                 player.Transform.WorldPosition = Data.TargetPos;
                 return true;
             }
             return false;
+        }
+
+        protected override void OnUpdate()
+        {
+            if (_shouldDisappear)
+            {
+                _renderer.Color = Color.Lerp(_renderer.Color, Color.Transparent, Time.DeltaTime);
+            }
+        }
+
+        protected override void OnPlayerInteractZone(bool enter, Player player)
+        {
+            if (enter && Data.IsArriveOnly && !_shouldDisappear)
+            {
+                TimedExecute(() => _shouldDisappear = true, 0.5f);
+            }
         }
     }
 }

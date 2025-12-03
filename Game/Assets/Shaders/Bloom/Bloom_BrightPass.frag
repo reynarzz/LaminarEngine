@@ -4,7 +4,7 @@ in vec2 screenUV;
 out vec4 fragColor;
 
 uniform sampler2D uScreenGrabTex;
-uniform float uThreshold = 0.96;
+uniform float uThreshold = 0.999;
 
 void main()
 {

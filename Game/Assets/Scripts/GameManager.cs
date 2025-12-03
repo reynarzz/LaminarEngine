@@ -34,7 +34,7 @@ namespace Game
         private static FadeInOutManager _fadeInOutManager;
         public static Player Player { get; private set; }
         public static Material DefaultMaterial => MaterialUtils.SpriteMaterial;
-
+        public static TilemapResult ForegroundTilemap { get; set; }
         public static FontAsset DefaultFont { get; private set; }
         private GameEntityManager _gameEntityManager;
         private static GameUIManager _gameUIManger;
@@ -86,8 +86,9 @@ namespace Game
         private void InitializeWorld()
         {
             PostProcessingStack.Clear();
-            // PostProcessingStack.Push(new BloomPostProcessing());
-            //ScreenGrabTest();
+            ScreenGrabTest();
+            PostProcessingStack.Push(new BloomPostProcessing());
+
             ScreenGrabTest3();
             if (!_fadeInOutManager)
             {
@@ -111,14 +112,14 @@ namespace Game
             {
                 _gameUIManger = new Actor("GameUIManager").AddComponent<GameUIManager>();
             }
-            
-            Player = _tilemapManager.BuildLevel(new LevelData()
+
+            var result = _tilemapManager.BuildLevel(new LevelData()
             {
                 LevelIndex = 0,
                 TilemapPath = "Tilemap/WorldTilemap.ldtk",
                 TilemapSprites = GameTextures.GetAtlas("sunny_land_tileset"),
                 WorldSpacePixelsPerUnit = GameTextures.GetAtlas("sunny_land_tileset")[0].Texture.PixelPerUnit,
-                Tilemaps = 
+                Tilemaps =
                 {
                     new TilemapData()
                     {
@@ -138,15 +139,17 @@ namespace Game
                     },
                 }
             });
+            Player = result.Player;
+            ForegroundTilemap = result.Tilemaps[0];
 
-            InitializeCamera(Player.Transform);
+            InitializeCamera(Player.Transform, ForegroundTilemap.Bounds);
             // Debug.Log(ItemsDatabase.GetDatabaseSchemaCsv());
 
             WaterTest();
             ParticleSystem();
         }
 
-        private void InitializeCamera(Transform target)
+        private void InitializeCamera(Transform target, Bounds levelBounds)
         {
             if (!Camera)
             {
@@ -160,6 +163,7 @@ namespace Game
 
             var cameraFollow = Camera.GetComponent<CameraFollow>();
             cameraFollow.Target = target;
+            cameraFollow.LevelBounds = levelBounds;
             cameraFollow.SetOnTargetImmediate();
         }
 
@@ -168,6 +172,7 @@ namespace Game
         {
 #if DEBUG
             Window.Name = EngineInfo.RendererInfoToString() + " | FPS: " + ((int)Time.FPS).ToString();
+            // Debug.DrawBox(ForegroundTilemap.Bounds.Center, ForegroundTilemap.Bounds.Size, Color.Red);
 #endif
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
@@ -195,6 +200,7 @@ namespace Game
                 PostProcessingStack.Clear();
                 new Actor<GameManager>("GameManager");
             }
+
         }
 
         private void ParticleSystem()
@@ -268,8 +274,8 @@ namespace Game
         private void ScreenGrabTest3()
         {
             var vertex = Assets.GetText("Shaders/ScreenVert.vert").Text;
-            //var screenShader = new Shader(vertex, Assets.GetText("Shaders/Ripple.frag").Text);
-            //PostProcessingStack.Push(new PostProcessingSinglePass(screenShader));
+            var screenShader = new Shader(vertex, Assets.GetText("Shaders/Ripple.frag").Text);
+            PostProcessingStack.Push(new PostProcessingSinglePass(screenShader));
 
             var chormaticAberration = new PostProcessingSinglePass(new Shader(vertex, Assets.GetText("Shaders/ChromaticAberration.frag").Text));
             chormaticAberration.SetValue("uAberrationStrength", 0.007f);

@@ -72,5 +72,17 @@ namespace Engine
             }
             _coroutines.Clear();
         }
+
+        public Coroutine TimedExecute(Action callback, float seconds)
+        {
+            IEnumerator Delay(Action callback, float seconds)
+            {
+                yield return new WaitForSeconds(seconds);
+
+                callback?.Invoke();
+            }
+
+            return StartCoroutine(Delay(callback, seconds));
+        }
     }
 }

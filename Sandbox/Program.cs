@@ -3,8 +3,6 @@ using System.Runtime.InteropServices;
 using System.Runtime.Loader;
 using System.Text;
 using Engine;
-using Engine.Layers;
-
 using Game;
 using GameCooker;
 using SharedTypes;

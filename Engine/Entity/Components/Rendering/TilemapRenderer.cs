@@ -108,36 +108,33 @@ namespace Engine
         {
             _tilesPositions.Clear();
 
-            for (int i = 0; i < project.Levels.Length; i++)
-            {
-                var level = project.Levels[i];
+            var level = project.Levels[options.LevelToLoad];
 
-                if (level.WorldDepth != options.WorldDepth)
+            //if (level.WorldDepth != options.WorldDepth)
+            //    continue;
+
+            for (int j = level.LayerInstances.Length - 1; j >= 0; j--)
+            {
+                if (((options.LayersToLoadMask & (1UL << j)) == 0) && options.LayersToLoadMask != 0)
                     continue;
 
-                for (int j = level.LayerInstances.Length - 1; j >= 0; j--)
+                var layer = level.LayerInstances[j];
+
+                if (!layer.Visible)
+                    continue;
+
+                var type = layer.Type;
+
+                switch (type)
                 {
-                    if (((options.LayersToLoadMask & (1UL << j)) == 0) && options.LayersToLoadMask != 0)
-                        continue;
-
-                    var layer = level.LayerInstances[j];
-
-                    if (!layer.Visible)
-                        continue;
-
-                    var type = layer.Type;
-
-                    switch (type)
-                    {
-                        case "AutoLayer":
-                        case "IntGrid":
-                            PaintTiles(level, layer, layer.AutoLayerTiles);
-                            break;
-                        case "Entities":
-                            break;
-                        default:
-                            break;
-                    }
+                    case "AutoLayer":
+                    case "IntGrid":
+                        PaintTiles(level, layer, layer.AutoLayerTiles);
+                        break;
+                    case "Entities":
+                        break;
+                    default:
+                        break;
                 }
             }
         }
@@ -156,7 +153,7 @@ namespace Engine
         public bool RenderIntGridLayer { get; set; }
         public bool RenderTilesLayer { get; set; }
         public bool RenderAutoLayer { get; set; }
-        public int[] LevelsToLoad { get; set; }
+        public int LevelToLoad { get; set; }
         public ulong LayersToLoadMask { get; set; }
         public int WorldDepth { get; set; }
     }

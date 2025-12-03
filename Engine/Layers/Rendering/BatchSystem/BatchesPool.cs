@@ -103,7 +103,7 @@ namespace Engine.Rendering
 
             _batches.Add(newBatch);
             SortBatches();
-            Debug.Info($"Create new batch for: {renderer.GetType().Name}: {renderer.Name}: sort: {renderer.SortOrder} ({_batches.Count})");
+            // Debug.Info($"Create new batch for: {renderer.GetType().Name}: {renderer.Name}: sort: {renderer.SortOrder} ({_batches.Count})");
 
             return newBatch;
         }

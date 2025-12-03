@@ -28,7 +28,7 @@ namespace Game
             Instance = this;
         }
 
-        protected override void OnLateUpdate()
+        protected override void OnUpdate()
         {
             Camera.Transform.WorldPosition -= _lastShake;
 

@@ -22,31 +22,45 @@ namespace Game
         public LayerInstance Layer { get; set; }
         public Dictionary<string, EntityInstanceData> EntitiesData { get; set; }
     }
-
+    public class LevelBuildResult
+    {
+        public Player Player { get; set; }
+        public TilemapResult[] Tilemaps { get; set; }
+    }
+    public class TilemapResult
+    {
+        public Bounds Bounds;
+    }
     public class LevelBuilderManager
     {
         private readonly GameEntityManager _entityManager;
-
         public LevelBuilderManager(GameEntityManager entityManager)
         {
             _entityManager = entityManager;
         }
 
-        public Player BuildLevel(LevelData levelData)
+        public LevelBuildResult BuildLevel(LevelData levelData)
         {
             var project = LdtkJson.FromJson(Assets.GetText(levelData.TilemapPath).Text);
-
             //cam.BackgroundColor = new Color32(project.BackgroundColor.R, project.BackgroundColor.G, project.BackgroundColor.B, project.BackgroundColor.A);
             //cam.BackgroundColor = new Color32(23, 28, 57, project.BackgroundColor.A);
 
-            InstantiateTilemap(project, levelData);
-            return InstantiateEntities(project, levelData);
+            var tilemaps = InstantiateTilemap(project, levelData);
+            var player = InstantiateEntities(project, levelData);
+            return new LevelBuildResult()
+            {
+                Player = player,
+                Tilemaps = tilemaps
+            };
         }
 
-        private void InstantiateTilemap(LdtkJson project, LevelData levelData)
+        private TilemapResult[] InstantiateTilemap(LdtkJson project, LevelData levelData)
         {
-            foreach (var tilemapData in levelData.Tilemaps)
+            var result = new TilemapResult[levelData.Tilemaps.Count];
+            for (int i = 0; i < levelData.Tilemaps.Count; i++)
             {
+                var tilemapData = levelData.Tilemaps[i];
+
                 var tilemap = new Actor(tilemapData.Name).AddComponent<TilemapRenderer>();
                 tilemap.Material = tilemapData.Material ?? MaterialUtils.SpriteMaterialWorld;
                 tilemap.Sprite = levelData.TilemapSprites[tilemapData.SpriteIndex];
@@ -58,14 +72,36 @@ namespace Game
                     RenderTilesLayer = true,
                     RenderAutoLayer = true,
                     LayersToLoadMask = tilemapData.LayersToDraw,
-                    WorldDepth = 0
+                    WorldDepth = 0,
+                    LevelToLoad = levelData.LevelIndex
                 });
 
                 if (tilemapData.EnableCollision)
                 {
                     tilemap.AddComponent<TilemapCollider2D>();
                 }
+
+                var tilemapResult = new TilemapResult()
+                {
+                    Bounds = new Bounds()
+                    {
+                        Min = vec3.One * int.MaxValue,
+                        Max = vec3.One * int.MinValue
+                    }
+                };
+
+                foreach (var position in tilemap.TilesPositions)
+                {
+                    tilemapResult.Bounds.Min = new vec3(Math.Min(tilemapResult.Bounds.Min.x, position.x), Math.Min(tilemapResult.Bounds.Min.y, position.y));
+                    tilemapResult.Bounds.Max = new vec3(Math.Max(tilemapResult.Bounds.Max.x, position.x), Math.Max(tilemapResult.Bounds.Max.y, position.y));
+                }
+
+                tilemapResult.Bounds.Min -= vec3.One * 0.5f;
+                tilemapResult.Bounds.Max += vec3.One * 0.5f;
+                result[i] = tilemapResult;
             }
+
+            return result;
         }
 
         private Player InstantiateEntities(LdtkJson project, LevelData levelData)
