@@ -32,7 +32,11 @@ namespace Game
             openAnim.Clip.AddCurve("Sprite", new SpriteCurve(fps, openingSprites));
             closeAnim.Clip.AddCurve("Sprite", new SpriteCurve(fps, closingSprites));
 
-            openAnim.Clip.AddEvent(openAnim.Clip.Duration, () => OnDoorStateChanged?.Invoke(true));
+            openAnim.Clip.AddEvent(openAnim.Clip.Duration, () =>
+            {
+                CameraShake.Instance.BurstShake(20, 0.1f, 0.1f);
+                OnDoorStateChanged?.Invoke(true);
+            });
             closeAnim.Clip.AddEvent(closeAnim.Clip.Duration, () =>
             {
                 OnDoorStateChanged?.Invoke(false);

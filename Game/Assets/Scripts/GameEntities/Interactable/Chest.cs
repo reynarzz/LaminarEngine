@@ -68,7 +68,10 @@ namespace Game
 
             idleAnim.Clip.AddCurve("Sprite", new SpriteCurve(11, GameTextures.GetAtlas(idleAtlasId)));
             openAnim.Clip.AddCurve("Sprite", new SpriteCurve(11, GameTextures.GetAtlas(openAtlasId)));
-            //openAnim.Clip.AddEvent(openAnim.Clip.Duration, () => { });
+            openAnim.Clip.AddEvent(openAnim.Clip.Duration, () => 
+            {
+                CameraShake.Instance.BurstShake(20, 0.1f, 0.15f);
+            });
             collectedIdle.Clip.AddCurve("Sprite", new SpriteCurve(11, GameTextures.GetAtlas(collectedIdleAtlasId)[^1]));
 
             SpriteRenderer.Sprite = GameTextures.GetAtlas(idleAtlasId)[0];
