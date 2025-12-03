@@ -104,7 +104,7 @@ namespace Engine
         {
             return new vec3(MathF.Floor(v.x), MathF.Floor(v.y), MathF.Floor(v.z));
         }
-        
+
         public static vec3 Ceil(vec3 v)
         {
             return new vec3(MathF.Ceiling(v.x), MathF.Ceiling(v.y), MathF.Ceiling(v.z));
@@ -223,10 +223,12 @@ namespace Engine
                 Clamp(v.y, min.y, max.y));
 
         public static vec3 Clamp(vec3 v, vec3 min, vec3 max)
-            => new vec3(
-                Clamp(v.x, min.x, max.x),
-                Clamp(v.y, min.y, max.y),
-                Clamp(v.z, min.z, max.z));
+        {
+            return new vec3(Clamp(v.x, min.x, max.x),
+                 Clamp(v.y, min.y, max.y),
+                 Clamp(v.z, min.z, max.z));
+        }
+
 
         public static float PingPong(float t, float length = 1f)
         {
@@ -345,7 +347,7 @@ namespace Engine
             float h11 = t3 - t2;
 
             quat result = h00 * startValue + h10 * startTangent + h01 * endValue + h11 * endTangent;
-            
+
             return Normalize(result);
         }
 

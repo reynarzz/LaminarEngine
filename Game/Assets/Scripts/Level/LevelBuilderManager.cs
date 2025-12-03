@@ -72,7 +72,8 @@ namespace Game
                     RenderTilesLayer = true,
                     RenderAutoLayer = true,
                     LayersToLoadMask = tilemapData.LayersToDraw,
-                    WorldDepth = 0
+                    WorldDepth = 0,
+                    LevelToLoad = levelData.LevelIndex
                 });
 
                 if (tilemapData.EnableCollision)
@@ -92,7 +93,7 @@ namespace Game
                 foreach (var position in tilemap.TilesPositions)
                 {
                     tilemapResult.Bounds.Min = new vec3(Math.Min(tilemapResult.Bounds.Min.x, position.x), Math.Min(tilemapResult.Bounds.Min.y, position.y));
-                    tilemapResult.Bounds.Max = new vec3(Math.Max(tilemapResult.Bounds.Max.x, position.x), Math.Min(tilemapResult.Bounds.Max.y, position.y));
+                    tilemapResult.Bounds.Max = new vec3(Math.Max(tilemapResult.Bounds.Max.x, position.x), Math.Max(tilemapResult.Bounds.Max.y, position.y));
                 }
 
                 tilemapResult.Bounds.Min -= vec3.One * 0.5f;

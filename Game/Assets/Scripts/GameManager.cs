@@ -141,14 +141,14 @@ namespace Game
             Player = result.Player;
             ForegroundTilemap = result.Tilemaps[0];
 
-            InitializeCamera(Player.Transform);
+            InitializeCamera(Player.Transform, ForegroundTilemap.Bounds);
             // Debug.Log(ItemsDatabase.GetDatabaseSchemaCsv());
 
             WaterTest();
             ParticleSystem();
         }
 
-        private void InitializeCamera(Transform target)
+        private void InitializeCamera(Transform target, Bounds levelBounds)
         {
             if (!Camera)
             {
@@ -162,6 +162,7 @@ namespace Game
 
             var cameraFollow = Camera.GetComponent<CameraFollow>();
             cameraFollow.Target = target;
+            cameraFollow.LevelBounds = levelBounds;
             cameraFollow.SetOnTargetImmediate();
         }
 
@@ -170,6 +171,7 @@ namespace Game
         {
 #if DEBUG
             Window.Name = EngineInfo.RendererInfoToString() + " | FPS: " + ((int)Time.FPS).ToString();
+            // Debug.DrawBox(ForegroundTilemap.Bounds.Center, ForegroundTilemap.Bounds.Size, Color.Red);
 #endif
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
@@ -198,7 +200,6 @@ namespace Game
                 new Actor<GameManager>("GameManager");
             }
 
-            Debug.DrawBox(ForegroundTilemap.Bounds.Center, ForegroundTilemap.Bounds.Size, Color.Red);
         }
 
         private void ParticleSystem()

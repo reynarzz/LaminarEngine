@@ -18,6 +18,8 @@ namespace Game
         private vec2 deadZoneSize = new vec2(0f, 4f);
         private float smoothTime = 0.2f;
         private vec3 velocity;
+        public Bounds LevelBounds { get; set; }
+        [RequiredProperty] private Camera _camera;
         protected override void OnAwake()
         {
             Actor.DontDestroyOnLoad(this);
@@ -30,8 +32,9 @@ namespace Game
 
         public void SetOnTargetImmediate()
         {
-            Transform.WorldPosition = new vec3(Target.WorldPosition.x, Target.WorldPosition.y, Transform.WorldPosition.z);
+            Transform.WorldPosition = AdjustPositionInsideBounds(new vec3(Target.WorldPosition.x, Target.WorldPosition.y, Transform.WorldPosition.z));
         }
+
         private void Move()
         {
             if (!Target)
@@ -57,12 +60,20 @@ namespace Game
 
             var targetCameraPos = new vec3(newX, newY, camPos.z);
 
-            Transform.WorldPosition = Mathf.SmoothDamp(camPos, targetCameraPos, ref velocity, smoothTime);
+            Transform.WorldPosition = Mathf.SmoothDamp(camPos, AdjustPositionInsideBounds(targetCameraPos), ref velocity, smoothTime);
 
             if (Physics2D.DrawColliders)
             {
                 Debug.DrawBox(new vec3(Transform.WorldPosition.x, Transform.WorldPosition.y, 0), new vec3(deadZoneSize.x, deadZoneSize.y, 0), Color.Green);
             }
+        }
+
+        private vec3 AdjustPositionInsideBounds(vec3 pos)
+        {
+            var frustum = _camera.GetFrustumBoundsWorld();
+            var targetCameraPos = Mathf.Clamp(pos, LevelBounds.Min + frustum.Extents, LevelBounds.Max - frustum.Extents);
+            targetCameraPos.z = pos.z;
+            return targetCameraPos;
         }
     }
 }
