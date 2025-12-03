@@ -17,7 +17,6 @@ namespace Game
         {
             var playerPivot = new vec2(0.4f, 0.42f);
 
-
             _tilesets = new Dictionary<string, Sprite[]>()
             {
                 // Player atlases
@@ -29,7 +28,7 @@ namespace Game
                 { "player_dead",     SliceSprites("KingsAndPigsSprites/01-King Human/Dead (78x58).png", 78, 58,     playerPivot) },
                 { "player_attack",   SliceSprites("KingsAndPigsSprites/01-King Human/Attack (78x58).png", 78, 58,   playerPivot) },
                 { "player_door_in",  SliceSprites("KingsAndPigsSprites/01-King Human/Door In (78x58).png", 78, 58,  playerPivot, 2) },
-                { "player_door_out", SliceSprites("KingsAndPigsSprites/01-King Human/Door Out (78x58).png", 78, 58, playerPivot, 2) },
+                { "player_door_out", SliceSprites("KingsAndPigsSprites/01-King Human/Door Out (78x58).png", 78, 58, playerPivot, 1) },
 
                 { "door_opening",    SliceSprites("KingsAndPigsSprites/11-Door/Opening (46x56).png", 46, 56, vec2.Half, 1) },
 

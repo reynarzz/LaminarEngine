@@ -78,7 +78,7 @@ namespace Game
         protected readonly string[] Attacks = ["Attack1", "Attack2", "Attack3", "Attack4", "Attack5", "Attack6"];
 
         private bool _isOnGround = false;
-        protected bool IsOnGround
+        public bool IsOnGround
         {
             get => _isOnGround;
             private set

@@ -74,11 +74,14 @@ namespace Game
             GameUIManager.PlayerHealth.UpdatePlayerHealth(life);
         }
 
-        public void InitLevel()
+        public void InitLevel(bool startWithDoor = true)
         {
-            _canMove = false;
-            Renderer.IsEnabled = false;
-            TimedExecute(() => ExitFromDoor(_nearInteractables.FirstOrDefault(x => x as Door) as Door), 0.7f);
+            if (startWithDoor)
+            {
+                _canMove = false;
+                Renderer.IsEnabled = false;
+                TimedExecute(() => ExitFromDoor(_nearInteractables.FirstOrDefault(x => x as Door) as Door), 0.7f);
+            }
         }
 
         public void ExitFromDoor(Door door)
@@ -87,12 +90,13 @@ namespace Game
                 return;
             Renderer.IsEnabled = false;
             _canMove = false;
-            Walk(1);
+            
             IEnumerator ExitFromDoor()
             {
                 Debug.Log("Open");
                 door.Open();
                 yield return new WaitForSeconds(0.3f);
+                Walk(1);
                 Animator.Play("DoorOut");
                 Renderer.IsEnabled = true;
                 yield return new WaitForSeconds(0.4f);
@@ -165,12 +169,6 @@ namespace Game
             if (Input.GetKeyDown(KeyCode.H))
             {
                 HitDamage(1);
-            }
-
-            if (Input.GetKeyDown(KeyCode.Z))
-            {
-                Restart();
-                _canMove = true;
             }
 
             if (_canMove)

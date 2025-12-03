@@ -65,7 +65,7 @@ namespace Game
         {
             if (_shouldDisappear)
             {
-                _renderer.Color = Color.Lerp(_renderer.Color, Color.Transparent, Time.DeltaTime);
+                _renderer.Color = Color.Lerp(_renderer.Color, Color.Transparent, Time.DeltaTime * 2);
             }
         }
 

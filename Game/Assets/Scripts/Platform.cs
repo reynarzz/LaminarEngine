@@ -84,7 +84,15 @@ namespace Game
             {
                 var target = _positions[_pointIndex] + (vec2.Up * (1.0f - Transform.LocalScale.y)) / 2.0f;
 
-                Transform.WorldPosition = Mathf.MoveTowards((vec2)Transform.WorldPosition, target , Time.DeltaTime * Speed);
+                var castPos = Transform.LocalPosition - vec3.Up * 0.5f;
+                var castSize = Transform.LocalScale + vec3.Right * 0.2f;
+                var hit = Physics2D.BoxCast(castPos, castSize, LayerMask.NameToBit(GameConsts.PLAYER));
+
+               // Debug.DrawBox(castPos, castSize, Color.Red);
+                if (!hit.isHit || (_direction > 0 || hit.Collider.Transform.WorldPosition.y > Transform.WorldPosition.y))
+                {
+                    Transform.WorldPosition = Mathf.MoveTowards((vec2)Transform.WorldPosition, target, Time.DeltaTime * Speed);
+                }
 
                 var distance = Mathf.Distance((vec2)Transform.WorldPosition, target);
                 if (distance < 0.001f && (_currentWait -= Time.DeltaTime) <= 0)
@@ -105,6 +113,8 @@ namespace Game
                     }
                 }
             }
+
+            
         }
 
         protected override void OnTriggerEnter2D(Collider2D collider)
