@@ -102,7 +102,9 @@ namespace Game
             _graphics.Add(resumeButtonImage);
 
             // LogRecursive(_background.Transform);
-
+#if !DEBUG
+            Window.CursorVisible = false;
+#endif
             SetColorAlpha(0, true);
         }
 
@@ -126,6 +128,10 @@ namespace Game
             {
                 _audioSource.PlayOneShot(_buttonAudioClip, 0.5f);
             }
+#if !DEBUG
+
+            Window.CursorVisible = false;
+#endif
             _show = false;
         }
 
@@ -134,9 +140,13 @@ namespace Game
             //Actor.IsActiveSelf = !Actor.IsActiveSelf;
             _show = !_show;
             Time.TimeScale = _show ? 0 : 1;
-
+#if !DEBUG
+            Window.CursorVisible = _show;
+#endif
             if (_show)
+            {
                 _audioSource.PlayOneShot(_pauseAudioClip, 0.5f);
+            }
             else
             {
                 _audioSource.PlayOneShot(_buttonAudioClip, 0.5f);

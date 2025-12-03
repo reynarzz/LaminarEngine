@@ -274,8 +274,8 @@ namespace Game
         private void ScreenGrabTest3()
         {
             var vertex = Assets.GetText("Shaders/ScreenVert.vert").Text;
-            var screenShader = new Shader(vertex, Assets.GetText("Shaders/Ripple.frag").Text);
-            PostProcessingStack.Push(new PostProcessingSinglePass(screenShader));
+            //var screenShader = new Shader(vertex, Assets.GetText("Shaders/Ripple.frag").Text);
+            //PostProcessingStack.Push(new PostProcessingSinglePass(screenShader));
 
             var chormaticAberration = new PostProcessingSinglePass(new Shader(vertex, Assets.GetText("Shaders/ChromaticAberration.frag").Text));
             chormaticAberration.SetValue("uAberrationStrength", 0.004f);
