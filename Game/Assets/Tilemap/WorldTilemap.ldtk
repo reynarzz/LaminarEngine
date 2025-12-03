@@ -39,7 +39,7 @@
 					"levelIid": "1a1ff1e0-ac70-11f0-942f-6f49853f651b",
 					"layerIid": "1a2018f0-ac70-11f0-942f-c97c3b10dff0",
 					"entityIid": "8ef28fa0-ac70-11f0-942f-47dc5ba98a84"
-				}, "worldX": -1080, "worldY": 664, "widPx": 20, "heiPx": 20, "fields" : {} }
+				}, "worldX": -1064, "worldY": 664, "widPx": 20, "heiPx": 20, "fields" : {} }
 			]
 		},
 		{
@@ -12890,7 +12890,7 @@
 						},
 						{
 							"__identifier": "Player",
-							"__grid": [7,9],
+							"__grid": [8,9],
 							"__pivot": [0.5,0.5],
 							"__tags": [ "Persistant", "Actor", "Warpable" ],
 							"__tile": { "tilesetUid": 133, "x": 256, "y": 144, "w": 16, "h": 16 },
@@ -12899,9 +12899,9 @@
 							"width": 20,
 							"height": 20,
 							"defUid": 90,
-							"px": [120,152],
+							"px": [136,152],
 							"fieldInstances": [{ "__identifier": "look_to_right", "__type": "Bool", "__value": true, "__tile": null, "defUid": 203, "realEditorValues": [] }],
-							"__worldX": -1080,
+							"__worldX": -1064,
 							"__worldY": 664
 						},
 						{

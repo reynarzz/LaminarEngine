@@ -36,14 +36,13 @@ namespace Game
             closeAnim.Clip.AddEvent(closeAnim.Clip.Duration, () =>
             {
                 OnDoorStateChanged?.Invoke(false);
-
+                CameraShake.Instance.BurstShake(20, 0.2f, 0.15f);
                 if (Data.CurrentLevel != Data.TargetLevelIndex)
                 {
-                    FadeInOutManager.Instance.FadeIn(1, () =>
+                    FadeInOutManager.Instance.FadeIn(1.5f, () =>
                     {
-
                         GameManager.Instance.BuildLevel(Data.TargetLevelIndex);
-                        FadeInOutManager.Instance.FadeOut(1);
+                        FadeInOutManager.Instance.FadeOut(1.5f);
 
                     });
                 }
