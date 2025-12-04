@@ -10,6 +10,11 @@ namespace Engine
 {
     public struct Mathf
     {
+        public const float E = 2.7182818284590452354f;
+
+        public const float PI = 3.14159265358979323846f;
+
+        public const float Tau = 6.283185307179586476925f;
         public static float Clamp(float value, float min, float max)
            => value < min ? min : (value > max ? max : value);
 

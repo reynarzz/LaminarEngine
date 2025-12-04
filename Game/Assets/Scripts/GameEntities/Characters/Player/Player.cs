@@ -95,7 +95,7 @@ namespace Game
             {
                 Debug.Log("Open");
                 door.Open();
-                yield return new WaitForSeconds(0.3f);
+                yield return new WaitForSeconds(0.36f);
                 Walk(1);
                 Animator.Play("DoorOut");
                 Renderer.IsEnabled = true;
@@ -103,6 +103,7 @@ namespace Game
                 door.Close();
                 Animator.Play(IDLE_ANIM_STATE);
                 _canMove = true;
+                IsEnteringThroughDoor = false;
             }
 
             StartCoroutine(ExitFromDoor());
@@ -111,6 +112,7 @@ namespace Game
         private void MoveToDoor(Door door)
         {
             _canMove = false;
+            IsEnteringThroughDoor = true;
             IEnumerator WalkToDoor()
             {
                 var walkDir = door.Transform.WorldPosition.x - Transform.WorldPosition.x;
@@ -138,7 +140,7 @@ namespace Game
 
         protected override void OnUpdate()
         {
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.E) && IsCharacterAlive())
             {
                 if (_nearInteractables.Count > 0)
                 {

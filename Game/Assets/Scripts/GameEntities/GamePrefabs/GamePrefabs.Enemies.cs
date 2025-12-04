@@ -39,7 +39,7 @@ namespace Game
                     StartingLife = 3,
                     SpriteLookDir = -1,
                     InventoryMaxSlots = 3,
-                    HitInvincibilityTime = 0,
+                    HitInvincibilityBlinks = 0,
                     HitRecoilTime = 0.2f,
                     HitRecoilStrengthScaling = 3,
                     Ground = new GroundDetectionOptions()
@@ -50,7 +50,7 @@ namespace Game
                         RaysCount = 3,
                         SizeY = 0.7f,
                         YOffset = 0,
-                        GroundMask = GameConsts.GROUND_MASK | LayerMask.NameToBit(GameConsts.ENEMY)
+                        GroundMask = GameConsts.GROUND_MASK //| LayerMask.NameToBit(GameConsts.ENEMY)
                     },
                     WalkSounds = ["Audio/HALFTONE/UI/2. Clicks/Click_4.wav",
                               "Audio/HALFTONE/UI/2. Clicks/Click_5.wav",

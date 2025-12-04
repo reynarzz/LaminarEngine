@@ -37,8 +37,10 @@ namespace Game
         {
             Transform.WorldPosition += _shootDir * Time.DeltaTime * _speed;
 
+            CheckCollision();
+
             // TODO: make it distance based instead.
-            if((_timeAlive -= Time.DeltaTime) <= 0)
+            if ((_timeAlive -= Time.DeltaTime) <= 0)
             {
                 PoolObject();
             }
@@ -46,33 +48,38 @@ namespace Game
 
         protected override void OnFixedUpdate()
         {
-            CheckCollision();
         }
 
         private void CheckCollision()
         {
-            var hit = Physics2D.BoxCast(Transform.WorldPosition, Transform.LocalScale, _layerMask);
+            var hits = Physics2D.BoxCastAll(Transform.WorldPosition, Transform.LocalScale, _layerMask);
             if (Physics2D.DrawColliders)
             {
                 Debug.DrawBox(Transform.WorldPosition, Transform.LocalScale, Color.Red);
             }
-            if (hit.isHit && Actor)
-            {
-                var character = hit.Collider.GetComponent<Character>();
 
-                if (character)
+            for (int i = 0; i < hits.Length; i++)
+            {
+                ref var hit = ref hits[i];
+                if (hit.isHit && Actor)
                 {
-                    if (character.IsCharacterAlive())
+                    var character = hit.Collider.GetComponent<Character>();
+
+                    if (character)
                     {
-                        character?.HitDamage(this, 1);
-                        // character.GetComponent<RigidBody2D>().AddForce(_shootDir * 12, ForceMode2D.Impulse);
+                        if (character.IsCharacterAlive())
+                        {
+                            character?.HitDamage(this, 1);
+                            // character.GetComponent<RigidBody2D>().AddForce(_shootDir * 12, ForceMode2D.Impulse);
+                        }
+                        else
+                        {
+                            return;
+                        }
                     }
-                    else
-                    {
-                        return;
-                    }
+                    PoolObject();
+                    break;
                 }
-                PoolObject();
             }
         }
 

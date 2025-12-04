@@ -3,6 +3,7 @@ using Engine;
 using Engine.Utils;
 using GlmNet;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization.Formatters;
@@ -49,7 +50,7 @@ namespace Game
         public string HitSound;
         public float HitRecoilTime;
         public float HitRecoilStrengthScaling;
-        public float HitInvincibilityTime;
+        public int HitInvincibilityBlinks;
     }
 
     public abstract class Character : GameEntity
@@ -107,6 +108,9 @@ namespace Game
         private AudioClip[] _walkFx;
         private AudioClip _hitSfx;
         private bool _jumped = false;
+        private AnimationState _deadState;
+        public bool IsInvencible { get; protected set; }
+        public bool IsEnteringThroughDoor { get; protected set; }
         public virtual void Init(CharacterConfig config)
         {
             Animator = AddComponent<Animator>();
@@ -235,7 +239,7 @@ namespace Game
             }
             if (statesConfig.Death.IsEnabled)
             {
-                AddSpriteAnimState(DEATH_ANIM_STATE, false, false, true, null, statesConfig.Death.SpriteAtlasId, statesConfig.Death.Fps, statesConfig.Death.Events);
+                _deadState = AddSpriteAnimState(DEATH_ANIM_STATE, false, false, true, null, statesConfig.Death.SpriteAtlasId, statesConfig.Death.Fps, statesConfig.Death.Events);
             }
             if (statesConfig.Hit.IsEnabled)
             {
@@ -245,7 +249,7 @@ namespace Game
             Renderer.Sprite = GameTextures.GetAtlas(statesConfig.Idle.SpriteAtlasId).FirstOrDefault();
         }
 
-        protected void AddSpriteAnimState(string stateName, bool makeMain, bool loop, bool useClipBlendTime,
+        protected AnimationState AddSpriteAnimState(string stateName, bool makeMain, bool loop, bool useClipBlendTime,
                                           AnimatorTransition[] transitions, string atlasId, float fps,
                                           AnimEvent[] events)
         {
@@ -294,6 +298,8 @@ namespace Game
             {
                 Animator.AddState(state);
             }
+
+            return state;
         }
 
         protected sealed override void OnLateUpdate()
@@ -307,6 +313,11 @@ namespace Game
             Animator.Parameters.SetBool(ON_GROUND_PROPERTY_NAME, IsOnGround);
 
             _currentHitRecoilTime = Math.Clamp(_currentHitRecoilTime - Time.DeltaTime, -1, _currentHitRecoilTime);
+
+            if(!IsCharacterAlive() && Animator.CurrentState != _deadState && IsOnGround)
+            {
+                Animator.Play(DEATH_ANIM_STATE);
+            }
         }
 
         public void Jump()
@@ -399,13 +410,11 @@ namespace Game
 
         public virtual bool HitDamage(GameEntity who, int amount)
         {
-            if (!IsCharacterAlive())
+            if (!IsCharacterAlive() || IsInvencible || IsEnteringThroughDoor)
                 return false;
-            
+
             Inventory.Life = Math.Clamp(Inventory.Life - amount, 0, MAX_LIFE);
             Rigidbody.GravityScale = _characterConfig.YGravityScale;
-
-
             
             var damageDir = (Transform.WorldPosition - who.Transform.WorldPosition).Normalized;
             float max = 50;
@@ -424,6 +433,32 @@ namespace Game
             {
                 Animator.Parameters.SetTrigger(HIT_DAMAGE_PROPERTY_NAME);
                 Animator.SetState(HIT_ANIM_STATE);
+
+                if (_characterConfig.HitInvincibilityBlinks > 0 && !IsInvencible)
+                {
+                    IsInvencible = true;
+                    IEnumerator HitEffect()
+                    {
+                        float endAngle = (float)Mathf.PI / 2f + 2f * (float)Mathf.PI * _characterConfig.HitInvincibilityBlinks; 
+                        float angle = 0f;
+                        var color = Renderer.Color;
+
+                        while (angle < endAngle)
+                        {
+                            const float freq = 30;
+                            angle += Time.DeltaTime * freq;
+                            float alpha = MathF.Sin(angle) * 0.5f + 0.5f;
+                            Renderer.Color = new Color(Renderer.Color.R, Renderer.Color.G, Renderer.Color.B, alpha);
+
+                            yield return null;
+                        }
+
+                        Renderer.Color = color;
+                        IsInvencible = false;
+                    }
+
+                    StartCoroutine(HitEffect());
+                }
             }
             else
             {

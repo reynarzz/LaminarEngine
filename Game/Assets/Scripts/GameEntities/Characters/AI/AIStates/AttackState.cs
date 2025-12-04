@@ -59,32 +59,48 @@ namespace Game
             if ((_currentTimeToAttack -= Time.DeltaTime) <= 0)
             {
                 _currentTimeToAttack = WaitToAttack;
-                var hits = Physics2D.BoxCastAll(origin, size, LayerMask.NameToBit(GameConsts.PLAYER));
 
-                for (int i = 0; i < hits.Length; i++)
+                bool TryFindPlayerInRange(out Player player)
                 {
-                    var hit = hits[i];
-                    if (hit.isHit)
+                    player = null;
+                    var hits = Physics2D.BoxCastAll(origin, size, LayerMask.NameToBit(GameConsts.PLAYER));
+                    for (int i = 0; i < hits.Length; i++)
                     {
-                        Context.Attack();
-
-                        // Remove this, testing
-                        Task.Run(async () =>
+                        var hit = hits[i];
+                        if (hit.isHit)
                         {
-                            await Task.Delay(110);
+                            player = hit.Collider.GetComponent<Player>();
 
-                            if (hit.isHit)
+                            if (player && !player.IsEnteringThroughDoor)
                             {
-                                Debug.Log("Attack Player");
-                                hit.Collider.GetComponent<Player>()?.HitDamage(Context, 1);
+                                return true;
                             }
-
-                            if (!Context.Target.IsCharacterAlive())
-                            {
-                                FSM.ChangeState<CelebrateState<T>>();
-                            }
-                        });
+                        }
                     }
+
+                    return false;
+                }
+
+                if (TryFindPlayerInRange(out var player))
+                {
+                    Context.Attack();
+
+                    // Remove this, testing
+                    Task.Run(async () =>
+                    {
+                        await Task.Delay(110);
+
+                        if (TryFindPlayerInRange(out player))
+                        {
+                            Debug.Log("Attack Player");
+                            player?.HitDamage(Context, 1);
+                        }
+
+                        if (!Context.Target.IsCharacterAlive())
+                        {
+                            FSM.ChangeState<CelebrateState<T>>();
+                        }
+                    });
                 }
             }
         }
