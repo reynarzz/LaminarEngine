@@ -37,7 +37,7 @@ namespace Game
                     InventoryMaxSlots = 6,
                     HitInvincibilityTime = 1,
                     HitRecoilTime = 0.5f,
-                    HitRecoilStrengthScaling = 4,
+                    HitRecoilStrengthScaling = 3.5f,
                     Ground = new GroundDetectionOptions()
                     {
                         Enabled = true,
@@ -46,7 +46,7 @@ namespace Game
                         RaysCount = 3,
                         SizeY = 0.7f,
                         YOffset = 0,
-                        GroundMask = GameConsts.GROUND_MASK | LayerMask.NameToBit(GameConsts.ENEMY)
+                        GroundMask = GameConsts.GROUND_MASK
                     },
                     WalkSounds = ["Audio/HALFTONE/UI/2. Clicks/Click_4.wav",
                               "Audio/HALFTONE/UI/2. Clicks/Click_5.wav",

@@ -81,6 +81,7 @@ namespace Game
             LayerMask.TurnOff(GameConsts.PLAYER, GameConsts.PLAYER);
             LayerMask.TurnOff(GameConsts.PLAYER, GameConsts.CHARACTER_IGNORE);
             LayerMask.TurnOff(GameConsts.ENEMY, GameConsts.CHARACTER_IGNORE);
+            LayerMask.TurnOff(GameConsts.ENEMY, GameConsts.PLAYER);
             LayerMask.TurnOff(GameConsts.ENEMY_CONFUSED, GameConsts.CHARACTER_IGNORE);
             LayerMask.TurnOff(GameConsts.PLATFORM, GameConsts.COLLECTIBLE);
             //LayerMask.TurnOn(GameLayers.PLAYER, GameLayers.Default);

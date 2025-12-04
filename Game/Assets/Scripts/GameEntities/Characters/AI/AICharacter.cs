@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Engine;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,11 @@ namespace Game
         public ITargetDetector Detector { get; private set; }
         public override void Init(CharacterConfig config)
         {
-            Detector = AddComponent<CircleTargetDetector>();
+
+            var detector = new Actor("EnemyTargetDetector").AddComponent<CircleTargetDetector>();
+            detector.Transform.Parent = Transform;
+            Detector = detector;
+
             Inventory = new CharacterInventory(5);
             base.Init(config);
         }

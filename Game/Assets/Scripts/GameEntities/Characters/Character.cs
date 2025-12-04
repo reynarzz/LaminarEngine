@@ -525,10 +525,14 @@ namespace Game
                 _currentHitRecoilTime = 0;
                 _jumped = false;
 
-                if (!IsCharacterAlive() && Animator.CurrentState != Animator.GetState(DEATH_ANIM_STATE))
+                if (!IsCharacterAlive())
                 {
-                    Debug.Warn("Death when ground touch");
-                    Animator.Play(DEATH_ANIM_STATE);
+                    if(Animator.CurrentState != Animator.GetState(DEATH_ANIM_STATE))
+                    {
+                        Debug.Warn("Death when ground touch");
+                        Animator.Play(DEATH_ANIM_STATE);
+                    }
+                       CameraShake.Instance.BurstShake(20, 0.1f, 0.2f);
                 }
             }
         }
