@@ -19,7 +19,7 @@ namespace Engine
         private float _transitionTime;
         private float _transitionDuration;
         public event Action<Animator> OnUpdate;
-
+        public AnimationState CurrentState => _currentState;
         public AnimatorParameters Parameters { get; } = new AnimatorParameters();
 
         public void AddState(AnimationState state)

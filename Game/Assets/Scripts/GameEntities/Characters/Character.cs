@@ -199,7 +199,8 @@ namespace Game
             }
             if (statesConfig.Attack.IsEnabled)
             {
-                toAttack = new AnimatorTransition(ATTACK_ANIM_STATE, new TriggerCondition(Attacks[0]));
+                toAttack = new AnimatorTransition(ATTACK_ANIM_STATE, [new TriggerCondition(Attacks[0]),
+                                                         new IntCondition(LIFE_PROPERTY_NAME, 0, IntOp.GreaterThan)]);
             }
             if (statesConfig.Hit.IsEnabled)
             {
@@ -208,16 +209,17 @@ namespace Game
             if (statesConfig.Death.IsEnabled)
             {
                 toDeath = new AnimatorTransition(DEATH_ANIM_STATE, new TriggerCondition(DEATH_PROPERTY_NAME));
-                toDeathLife0 = new AnimatorTransition(DEATH_ANIM_STATE, new IntCondition(LIFE_PROPERTY_NAME, 0, IntOp.LessThanOrEqual));
+                toDeathLife0 = new AnimatorTransition(DEATH_ANIM_STATE, [new IntCondition(LIFE_PROPERTY_NAME, 0, IntOp.LessThanOrEqual),
+                                                                        new BoolCondition(ON_GROUND_PROPERTY_NAME, true)]);
             }
 
             if (statesConfig.Idle.IsEnabled)
             {
-                AddSpriteAnimState(IDLE_ANIM_STATE, true, true, false, [toWalk, toJump, toFall, toAttack, toDeathLife0, toDeath, toHit], statesConfig.Idle.SpriteAtlasId, statesConfig.Idle.Fps, statesConfig.Idle.Events);
+                AddSpriteAnimState(IDLE_ANIM_STATE, true, true, false, [toWalk, toJump, toFall, toAttack, toHit], statesConfig.Idle.SpriteAtlasId, statesConfig.Idle.Fps, statesConfig.Idle.Events);
             }
             if (statesConfig.Walk.IsEnabled)
             {
-                AddSpriteAnimState(WALK_ANIM_STATE, false, true, false, [toIdle, toJump, toFall, toAttack, toDeathLife0, toDeath, toHit], statesConfig.Walk.SpriteAtlasId, statesConfig.Walk.Fps, statesConfig.Walk.Events);
+                AddSpriteAnimState(WALK_ANIM_STATE, false, true, false, [toIdle, toJump, toFall, toAttack, toHit], statesConfig.Walk.SpriteAtlasId, statesConfig.Walk.Fps, statesConfig.Walk.Events);
             }
             if (statesConfig.Jump.IsEnabled)
             {
@@ -229,7 +231,7 @@ namespace Game
             }
             if (statesConfig.Attack.IsEnabled)
             {
-                AddSpriteAnimState(ATTACK_ANIM_STATE, false, false, true, [toIdle, toWalk, toFall, toDeath, toDeathLife0, toHit], statesConfig.Attack.SpriteAtlasId, statesConfig.Attack.Fps, statesConfig.Attack.Events);
+                AddSpriteAnimState(ATTACK_ANIM_STATE, false, false, true, [toIdle, toWalk, toFall, toHit], statesConfig.Attack.SpriteAtlasId, statesConfig.Attack.Fps, statesConfig.Attack.Events);
             }
             if (statesConfig.Death.IsEnabled)
             {
@@ -304,14 +306,7 @@ namespace Game
             Animator.Parameters.SetInt(LIFE_PROPERTY_NAME, Inventory.Life);
             Animator.Parameters.SetBool(ON_GROUND_PROPERTY_NAME, IsOnGround);
 
-            if (IsCharacterAlive())
-            {
-                _currentHitRecoilTime = Math.Clamp(_currentHitRecoilTime - Time.DeltaTime, -1, _currentHitRecoilTime);
-            }
-            else
-            {
-                _currentHitRecoilTime = 0;
-            }
+            _currentHitRecoilTime = Math.Clamp(_currentHitRecoilTime - Time.DeltaTime, -1, _currentHitRecoilTime);
         }
 
         public void Jump()
@@ -409,24 +404,26 @@ namespace Game
             
             Inventory.Life = Math.Clamp(Inventory.Life - amount, 0, MAX_LIFE);
             Rigidbody.GravityScale = _characterConfig.YGravityScale;
+
+
             
-            if(Inventory.Life > 0)
+            var damageDir = (Transform.WorldPosition - who.Transform.WorldPosition).Normalized;
+            float max = 50;
+            if (IsOnGround)
+            {
+                damageDir.y = (float)(max / 100.0f) * _characterConfig.HitRecoilStrengthScaling;
+            }
+            else
+            {
+                damageDir.y = 0;
+            }
+            Rigidbody.Velocity = damageDir * _characterConfig.HitRecoilStrengthScaling;
+            _currentHitRecoilTime = _characterConfig.HitRecoilTime;
+
+            if (Inventory.Life > 0)
             {
                 Animator.Parameters.SetTrigger(HIT_DAMAGE_PROPERTY_NAME);
                 Animator.SetState(HIT_ANIM_STATE);
-
-                var damageDir = (Transform.WorldPosition - who.Transform.WorldPosition).Normalized;
-                float max = 50;
-                if (IsOnGround)
-                {
-                    damageDir.y = (float)(max / 100.0f) * _characterConfig.HitRecoilStrengthScaling;
-                }
-                else
-                {
-                    damageDir.y = 0;
-                }
-                Rigidbody.Velocity = damageDir * _characterConfig.HitRecoilStrengthScaling;
-                _currentHitRecoilTime = _characterConfig.HitRecoilTime;
             }
             else
             {
@@ -527,6 +524,12 @@ namespace Game
             {
                 _currentHitRecoilTime = 0;
                 _jumped = false;
+
+                if (!IsCharacterAlive() && Animator.CurrentState != Animator.GetState(DEATH_ANIM_STATE))
+                {
+                    Debug.Warn("Death when ground touch");
+                    Animator.Play(DEATH_ANIM_STATE);
+                }
             }
         }
 
