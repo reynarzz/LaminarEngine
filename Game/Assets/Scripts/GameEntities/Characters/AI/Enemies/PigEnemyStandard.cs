@@ -68,12 +68,7 @@ namespace Game
 
             if (Input.GetKeyDown(KeyCode.O))
             {
-                HitDamage(1);
-            }
-
-            if (Input.GetKeyDown(KeyCode.M))
-            {
-                Restart();
+                HitDamage(this, 1);
             }
         }
 

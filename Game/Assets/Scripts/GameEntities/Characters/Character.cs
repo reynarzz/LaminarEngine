@@ -3,6 +3,7 @@ using Engine;
 using Engine.Utils;
 using GlmNet;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization.Formatters;
@@ -47,6 +48,9 @@ namespace Game
         public string[] AttackSounds;
         public string[] GroundSounds;
         public string HitSound;
+        public float HitRecoilTime;
+        public float HitRecoilStrengthScaling;
+        public int HitInvincibilityBlinks;
     }
 
     public abstract class Character : GameEntity
@@ -76,9 +80,9 @@ namespace Game
 
         protected const int MAX_LIFE = 10;
         protected readonly string[] Attacks = ["Attack1", "Attack2", "Attack3", "Attack4", "Attack5", "Attack6"];
-
+        protected float _currentHitRecoilTime = 0;
         private bool _isOnGround = false;
-        protected bool IsOnGround
+        public bool IsOnGround
         {
             get => _isOnGround;
             private set
@@ -104,6 +108,9 @@ namespace Game
         private AudioClip[] _walkFx;
         private AudioClip _hitSfx;
         private bool _jumped = false;
+        private AnimationState _deadState;
+        public bool IsInvencible { get; protected set; }
+        public bool IsEnteringThroughDoor { get; protected set; }
         public virtual void Init(CharacterConfig config)
         {
             Animator = AddComponent<Animator>();
@@ -130,7 +137,7 @@ namespace Game
 
             LookDir = _characterConfig.SpriteLookDir;
             InitAudio(config);
-            
+
         }
 
         private void InitAudio(CharacterConfig config)
@@ -143,8 +150,8 @@ namespace Game
                 var clips = new List<AudioClip>();
                 for (int i = 0; i < soundsPath.Length; i++)
                 {
-                    if(!string.IsNullOrEmpty(soundsPath[i]))
-                    clips.Add(Assets.GetAudioClip(soundsPath[i]));
+                    if (!string.IsNullOrEmpty(soundsPath[i]))
+                        clips.Add(Assets.GetAudioClip(soundsPath[i]));
                 }
                 return clips.ToArray();
             }
@@ -196,7 +203,8 @@ namespace Game
             }
             if (statesConfig.Attack.IsEnabled)
             {
-                toAttack = new AnimatorTransition(ATTACK_ANIM_STATE, new TriggerCondition(Attacks[0]));
+                toAttack = new AnimatorTransition(ATTACK_ANIM_STATE, [new TriggerCondition(Attacks[0]),
+                                                         new IntCondition(LIFE_PROPERTY_NAME, 0, IntOp.GreaterThan)]);
             }
             if (statesConfig.Hit.IsEnabled)
             {
@@ -205,16 +213,17 @@ namespace Game
             if (statesConfig.Death.IsEnabled)
             {
                 toDeath = new AnimatorTransition(DEATH_ANIM_STATE, new TriggerCondition(DEATH_PROPERTY_NAME));
-                toDeathLife0 = new AnimatorTransition(DEATH_ANIM_STATE, new IntCondition(LIFE_PROPERTY_NAME, 0, IntOp.LessThanOrEqual));
+                toDeathLife0 = new AnimatorTransition(DEATH_ANIM_STATE, [new IntCondition(LIFE_PROPERTY_NAME, 0, IntOp.LessThanOrEqual),
+                                                                        new BoolCondition(ON_GROUND_PROPERTY_NAME, true)]);
             }
 
             if (statesConfig.Idle.IsEnabled)
             {
-                AddSpriteAnimState(IDLE_ANIM_STATE, true, true, false, [toWalk, toJump, toFall, toAttack, toDeath, toHit], statesConfig.Idle.SpriteAtlasId, statesConfig.Idle.Fps, statesConfig.Idle.Events);
+                AddSpriteAnimState(IDLE_ANIM_STATE, true, true, false, [toWalk, toJump, toFall, toAttack, toHit], statesConfig.Idle.SpriteAtlasId, statesConfig.Idle.Fps, statesConfig.Idle.Events);
             }
             if (statesConfig.Walk.IsEnabled)
             {
-                AddSpriteAnimState(WALK_ANIM_STATE, false, true, false, [toIdle, toJump, toFall, toAttack, toDeath, toHit], statesConfig.Walk.SpriteAtlasId, statesConfig.Walk.Fps, statesConfig.Walk.Events);
+                AddSpriteAnimState(WALK_ANIM_STATE, false, true, false, [toIdle, toJump, toFall, toAttack, toHit], statesConfig.Walk.SpriteAtlasId, statesConfig.Walk.Fps, statesConfig.Walk.Events);
             }
             if (statesConfig.Jump.IsEnabled)
             {
@@ -226,11 +235,11 @@ namespace Game
             }
             if (statesConfig.Attack.IsEnabled)
             {
-                AddSpriteAnimState(ATTACK_ANIM_STATE, false, false, true, [toIdle, toWalk, toFall, toDeath, toHit], statesConfig.Attack.SpriteAtlasId, statesConfig.Attack.Fps, statesConfig.Attack.Events);
+                AddSpriteAnimState(ATTACK_ANIM_STATE, false, false, true, [toIdle, toWalk, toFall, toHit], statesConfig.Attack.SpriteAtlasId, statesConfig.Attack.Fps, statesConfig.Attack.Events);
             }
             if (statesConfig.Death.IsEnabled)
             {
-                AddSpriteAnimState(DEATH_ANIM_STATE, false, false, true, null, statesConfig.Death.SpriteAtlasId, statesConfig.Death.Fps, statesConfig.Death.Events);
+                _deadState = AddSpriteAnimState(DEATH_ANIM_STATE, false, false, true, null, statesConfig.Death.SpriteAtlasId, statesConfig.Death.Fps, statesConfig.Death.Events);
             }
             if (statesConfig.Hit.IsEnabled)
             {
@@ -240,7 +249,7 @@ namespace Game
             Renderer.Sprite = GameTextures.GetAtlas(statesConfig.Idle.SpriteAtlasId).FirstOrDefault();
         }
 
-        protected void AddSpriteAnimState(string stateName, bool makeMain, bool loop, bool useClipBlendTime,
+        protected AnimationState AddSpriteAnimState(string stateName, bool makeMain, bool loop, bool useClipBlendTime,
                                           AnimatorTransition[] transitions, string atlasId, float fps,
                                           AnimEvent[] events)
         {
@@ -253,7 +262,7 @@ namespace Game
             }
 
             var sprites = GameTextures.GetAtlas(atlasId);
-                
+
             animClip.AddCurve(SPRITE_PROPERTY_NAME, new SpriteCurve(fps, sprites));
 
             if (events != null)
@@ -289,9 +298,11 @@ namespace Game
             {
                 Animator.AddState(state);
             }
+
+            return state;
         }
 
-        protected override void OnLateUpdate()
+        protected sealed override void OnLateUpdate()
         {
             Renderer.Sprite = Animator.GetSprite(SPRITE_PROPERTY_NAME);
             Animator.Parameters.SetFloat(VEL_X_PROP_NAME, Rigidbody.Velocity.x);
@@ -300,11 +311,18 @@ namespace Game
             Animator.Parameters.SetInt(VEL_Y_PROP_NAME, MathF.Sign(Math.Abs(Rigidbody.Velocity.y) < 0.09 ? 0 : Rigidbody.Velocity.y));
             Animator.Parameters.SetInt(LIFE_PROPERTY_NAME, Inventory.Life);
             Animator.Parameters.SetBool(ON_GROUND_PROPERTY_NAME, IsOnGround);
+
+            _currentHitRecoilTime = Math.Clamp(_currentHitRecoilTime - Time.DeltaTime, -1, _currentHitRecoilTime);
+
+            if(!IsCharacterAlive() && Animator.CurrentState != _deadState && IsOnGround)
+            {
+                Animator.Play(DEATH_ANIM_STATE);
+            }
         }
 
         public void Jump()
         {
-            if (!IsCharacterAlive())
+            if (!CanCharacterMove())
                 return;
 
             if (IsOnGround)
@@ -318,13 +336,19 @@ namespace Game
 
         public void LookAt(int dir)
         {
+            LookDir = dir;
             var scaleX = Math.Abs(Transform.LocalScale.x);
             Transform.LocalScale = new vec3(scaleX * dir * Math.Sign(_characterConfig.SpriteLookDir), Transform.LocalScale.y, Transform.LocalScale.z);
         }
 
+
+        protected bool CanCharacterMove()
+        {
+            return IsCharacterAlive() && _currentHitRecoilTime <= 0;
+        }
         public void Walk(int dir)
         {
-            if (!IsCharacterAlive())
+            if (!CanCharacterMove())
                 return;
             dir *= _characterConfig.SpriteLookDir;
             if (dir != 0)
@@ -370,7 +394,7 @@ namespace Game
 
         public virtual bool Attack(int index = 0)
         {
-            if (!IsCharacterAlive() || Animator.Parameters.HasTrigger(Attacks[index]))
+            if (!CanCharacterMove() || Animator.Parameters.HasTrigger(Attacks[index]))
                 return false;
             Animator.Parameters.SetTrigger(Attacks[index]);
             return true;
@@ -382,28 +406,77 @@ namespace Game
                 return;
 
             Rigidbody.Velocity = new vec2(0, Rigidbody.Velocity.y > 0 ? 0 : Rigidbody.Velocity.y);
-            HitDamage(MAX_LIFE);
+            HitDamage(this, MAX_LIFE);
         }
 
-        public virtual bool HitDamage(int amount)
+        public virtual bool HitDamage(GameEntity who, int amount)
         {
-            if (!IsCharacterAlive())
+            if (!IsCharacterAlive() || IsInvencible || IsEnteringThroughDoor)
                 return false;
 
             Inventory.Life = Math.Clamp(Inventory.Life - amount, 0, MAX_LIFE);
-            Rigidbody.Velocity = new vec2(0, Rigidbody.Velocity.y);
-            Animator.Parameters.SetTrigger(HIT_DAMAGE_PROPERTY_NAME);
-            Animator.SetState(HIT_ANIM_STATE);
+            Rigidbody.GravityScale = _characterConfig.YGravityScale;
+            
+            var damageDir = (Transform.WorldPosition - who.Transform.WorldPosition).Normalized;
+            float max = 50;
+            if (IsOnGround)
+            {
+                damageDir.y = (float)(max / 100.0f) * _characterConfig.HitRecoilStrengthScaling;
+            }
+            else
+            {
+                damageDir.y = 0;
+            }
+            Rigidbody.Velocity = damageDir * _characterConfig.HitRecoilStrengthScaling;
+            _currentHitRecoilTime = _characterConfig.HitRecoilTime;
+
+            if (Inventory.Life > 0)
+            {
+                Animator.Parameters.SetTrigger(HIT_DAMAGE_PROPERTY_NAME);
+                Animator.SetState(HIT_ANIM_STATE);
+
+                if (_characterConfig.HitInvincibilityBlinks > 0 && !IsInvencible)
+                {
+                    IsInvencible = true;
+                    IEnumerator HitEffect()
+                    {
+                        float endAngle = (float)Mathf.PI / 2f + 2f * (float)Mathf.PI * _characterConfig.HitInvincibilityBlinks; 
+                        float angle = 0f;
+                        var color = Renderer.Color;
+
+                        while (angle < endAngle)
+                        {
+                            const float freq = 30;
+                            angle += Time.DeltaTime * freq;
+                            float alpha = MathF.Sin(angle) * 0.5f + 0.5f;
+                            Renderer.Color = new Color(Renderer.Color.R, Renderer.Color.G, Renderer.Color.B, alpha);
+
+                            yield return null;
+                        }
+
+                        Renderer.Color = color;
+                        IsInvencible = false;
+                    }
+
+                    StartCoroutine(HitEffect());
+                }
+            }
+            else
+            {
+                Animator.SetState(HIT_ANIM_STATE);
+                Animator.Parameters.SetTrigger(DEATH_ANIM_STATE);
+            }
 
             CameraShake.Instance.BurstShake(30, 0.19f, 0.09f);
             PlayHitSfx();
             return true;
         }
-
+       
         public bool IsCharacterAlive()
         {
             return Inventory.Life > 0;
         }
+
         protected override void OnFixedUpdate()
         {
             if (_characterConfig.Ground.Enabled)
@@ -411,14 +484,17 @@ namespace Game
                 CheckGround();
             }
 
-            if (IsCharacterAlive())
+            if (_currentHitRecoilTime <= 0)
             {
-                Rigidbody.Velocity = new vec2(Rigidbody.Velocity.x, Math.Clamp(Rigidbody.Velocity.y, _maxFallYVelocity, float.MaxValue));
-            }
-            else
-            {
-                Rigidbody.Velocity = new vec2(0, Rigidbody.Velocity.y > 0 ? 0 : Rigidbody.Velocity.y);
+                if (IsCharacterAlive())
+                {
+                    Rigidbody.Velocity = new vec2(Rigidbody.Velocity.x, Math.Clamp(Rigidbody.Velocity.y, _maxFallYVelocity, float.MaxValue));
+                }
+                else
+                {
+                    Rigidbody.Velocity = new vec2(0, Rigidbody.Velocity.y > 0 ? 0 : Rigidbody.Velocity.y);
 
+                }
             }
         }
 
@@ -467,7 +543,7 @@ namespace Game
             {
                 const float bias = 0.06f;
                 var yPos = (hit.Point.y - Collider.AABB.Min.y) + bias;
-                Transform.WorldPosition = new vec3(Transform.WorldPosition.x, yPos, Transform.WorldPosition.z); 
+                Transform.WorldPosition = new vec3(Transform.WorldPosition.x, yPos, Transform.WorldPosition.z);
             }
             IsOnGround = hit.isHit;
         }
@@ -482,8 +558,18 @@ namespace Game
 
             if (value)
             {
-
+                _currentHitRecoilTime = 0;
                 _jumped = false;
+
+                if (!IsCharacterAlive())
+                {
+                    if(Animator.CurrentState != Animator.GetState(DEATH_ANIM_STATE))
+                    {
+                        Debug.Warn("Death when ground touch");
+                        Animator.Play(DEATH_ANIM_STATE);
+                    }
+                       CameraShake.Instance.BurstShake(20, 0.1f, 0.2f);
+                }
             }
         }
 
@@ -499,8 +585,8 @@ namespace Game
 
         protected void PlayHitSfx()
         {
-            if(_hitSfx != null)
-            AudioSource.PlayOneShot(_hitSfx, 0.1f);
+            if (_hitSfx != null)
+                AudioSource.PlayOneShot(_hitSfx, 0.1f);
         }
         protected void PlayJumpSoundFx()
         {

@@ -74,11 +74,14 @@ namespace Game
             GameUIManager.PlayerHealth.UpdatePlayerHealth(life);
         }
 
-        public void InitLevel()
+        public void InitLevel(bool startWithDoor = true)
         {
-            _canMove = false;
-            Renderer.IsEnabled = false;
-            TimedExecute(() => ExitFromDoor(_nearInteractables.FirstOrDefault(x => x as Door) as Door), 0.7f);
+            if (startWithDoor)
+            {
+                _canMove = false;
+                Renderer.IsEnabled = false;
+                TimedExecute(() => ExitFromDoor(_nearInteractables.FirstOrDefault(x => x as Door) as Door), 0.7f);
+            }
         }
 
         public void ExitFromDoor(Door door)
@@ -87,18 +90,20 @@ namespace Game
                 return;
             Renderer.IsEnabled = false;
             _canMove = false;
-            Walk(1);
+            
             IEnumerator ExitFromDoor()
             {
                 Debug.Log("Open");
                 door.Open();
-                yield return new WaitForSeconds(0.3f);
+                yield return new WaitForSeconds(0.36f);
+                Walk(LookDir);
                 Animator.Play("DoorOut");
                 Renderer.IsEnabled = true;
                 yield return new WaitForSeconds(0.4f);
                 door.Close();
                 Animator.Play(IDLE_ANIM_STATE);
                 _canMove = true;
+                IsEnteringThroughDoor = false;
             }
 
             StartCoroutine(ExitFromDoor());
@@ -107,6 +112,7 @@ namespace Game
         private void MoveToDoor(Door door)
         {
             _canMove = false;
+            IsEnteringThroughDoor = true;
             IEnumerator WalkToDoor()
             {
                 var walkDir = door.Transform.WorldPosition.x - Transform.WorldPosition.x;
@@ -134,7 +140,7 @@ namespace Game
 
         protected override void OnUpdate()
         {
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.E) && IsCharacterAlive())
             {
                 if (_nearInteractables.Count > 0)
                 {
@@ -161,16 +167,13 @@ namespace Game
             {
                 //Death();
             }
-
-            if (Input.GetKeyDown(KeyCode.H))
-            {
-                HitDamage(1);
-            }
-
             if (Input.GetKeyDown(KeyCode.Z))
             {
                 Restart();
-                _canMove = true;
+            }
+            if (Input.GetKeyDown(KeyCode.H))
+            {
+                HitDamage(this, 1);
             }
 
             if (_canMove)
@@ -184,7 +187,6 @@ namespace Game
                 {
                     _shootCooldownTime = _shootCooldown;
                     Attack();
-                    CameraShake.Instance.BurstShake(20, 0.09f, 0.09f);
                 }
 
                 if (Input.GetKey(KeyCode.A))
@@ -202,9 +204,9 @@ namespace Game
             }
         }
 
-        public override bool HitDamage(int amount)
+        public override bool HitDamage(GameEntity who, int amount)
         {
-            var isHit = base.HitDamage(amount);
+            var isHit = base.HitDamage(who, amount);
 
             if (isHit)
             {
@@ -212,15 +214,13 @@ namespace Game
             }
             return isHit;
         }
-        protected override void OnFixedUpdate()
-        {
-            base.OnFixedUpdate();
-        }
-
+        
         public override bool Attack(int index = 0)
         {
             if (!IsCharacterAlive())
                 return false;
+
+            CameraShake.Instance.BurstShake(20, 0.09f, 0.09f);
             PlayAttackSoundFx();
 
             var origin = Transform.WorldPosition + new vec3(Transform.LocalScale.x + Math.Sign(Transform.LocalScale.x) * 0.3f, -0.1f);
@@ -231,6 +231,7 @@ namespace Game
             var mask = LayerMask.NameToBit(GameConsts.Default) | LayerMask.NameToBit(GameConsts.ENEMY) |
                                            LayerMask.NameToBit(GameConsts.PLATFORM);
             bullet.Shoot(origin, vec2.Right * LookDir, _bulletSpeed, mask);
+
             return true;
         }
         protected override void OnTriggerEnter2D(Collider2D collider)

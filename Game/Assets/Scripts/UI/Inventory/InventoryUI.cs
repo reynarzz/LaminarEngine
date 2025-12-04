@@ -96,7 +96,7 @@ namespace Game
             {
                 var slotUI = new InventorySlotUI();
                 slotUI.BackgroundImage = UiUtils.NewImage("InventorySlot:" + i, default, new vec2(100, 100), Color.White, _gridLayout.Transform);
-                slotUI.BackgroundImage.Sprite = GameTextures.GetSprite("InventorySlot");
+                slotUI.BackgroundImage.Sprite = GameTextures.GetSprite("inventory_slot");
                 slotUI.IconImage = UiUtils.NewImage("Content", default, new vec2(36, 36), Color.White, slotUI.BackgroundImage.Transform);
                 slotUI.IconImage.RectTransform.Pivot = new vec2(0.5f, 0.5f);
                 _slotsUI[i] = slotUI;

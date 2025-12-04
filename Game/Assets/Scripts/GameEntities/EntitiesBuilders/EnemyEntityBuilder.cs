@@ -12,6 +12,7 @@ namespace Game
     {
         public override GameEntity Build(EntityInstanceData entityData, WorldData worldData, Func<vec2, bool, vec2> positionConverter)
         {
+           // if()
             var enemy = GamePrefabs.Enemies.InstantiateKingPig(entityData.WorldPosition, -1);
 
             return enemy;

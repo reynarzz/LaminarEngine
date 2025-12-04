@@ -8,32 +8,6 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    internal class CelebrateState<T> : StateBase<T> where T : AICharacter
-    {
-        public float CelebrationWait { get; set; } = 1.3f;
-        private float _celebrationWaitTime = 0;
-
-        public override void OnEnter()
-        {
-            _celebrationWaitTime = CelebrationWait;
-        }
-        public override void OnUpdate()
-        {
-            Context.Walk(0);
-
-            if ((_celebrationWaitTime -= Time.DeltaTime) > 0)
-                return;
-
-            if (!Context.Target.IsCharacterAlive())
-            {
-                Context.Jump();
-            }
-            else
-            {
-                FSM.ChangeState<AttackState<T>>();
-            }
-        }
-    }
     
     internal class ChaseState<T> : StateBase<T> where T : AICharacter
     {
@@ -49,6 +23,10 @@ namespace Game
 
         public override void OnUpdate()
         {
+            if (!Context.IsCharacterAlive())
+            {
+                FSM.ChangeState<DeadState<T>>();
+            }
             if (Context.Target)
             {
                 var dir = Context.Transform.WorldPosition - Context.Target.Transform.WorldPosition;

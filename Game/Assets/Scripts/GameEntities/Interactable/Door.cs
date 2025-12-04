@@ -32,18 +32,21 @@ namespace Game
             openAnim.Clip.AddCurve("Sprite", new SpriteCurve(fps, openingSprites));
             closeAnim.Clip.AddCurve("Sprite", new SpriteCurve(fps, closingSprites));
 
-            openAnim.Clip.AddEvent(openAnim.Clip.Duration, () => OnDoorStateChanged?.Invoke(true));
+            openAnim.Clip.AddEvent(openAnim.Clip.Duration, () =>
+            {
+                CameraShake.Instance.BurstShake(20, 0.1f, 0.1f);
+                OnDoorStateChanged?.Invoke(true);
+            });
             closeAnim.Clip.AddEvent(closeAnim.Clip.Duration, () =>
             {
                 OnDoorStateChanged?.Invoke(false);
-
+                CameraShake.Instance.BurstShake(20, 0.2f, 0.15f);
                 if (Data.CurrentLevel != Data.TargetLevelIndex)
                 {
-                    FadeInOutManager.Instance.FadeIn(1, () =>
+                    FadeInOutManager.Instance.FadeIn(1.5f, () =>
                     {
-
                         GameManager.Instance.BuildLevel(Data.TargetLevelIndex);
-                        FadeInOutManager.Instance.FadeOut(1);
+                        FadeInOutManager.Instance.FadeOut(1.45f);
 
                     });
                 }

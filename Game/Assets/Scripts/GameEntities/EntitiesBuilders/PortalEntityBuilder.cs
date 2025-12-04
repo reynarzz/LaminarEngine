@@ -14,7 +14,7 @@ namespace Game
             var portalData = new PortalData();
             portal.Transform.WorldPosition = entityData.WorldPosition;
 
-            if (GetEntityRef(entityData.Entity.FieldInstances, "Target", worldData, out var targetValue))
+            if (GetEntityRef(entityData.Entity.FieldInstances, "target", worldData, out var targetValue))
             {
                 portalData.TargetPos = targetValue.WorldPosition;
 

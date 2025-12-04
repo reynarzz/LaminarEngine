@@ -17,7 +17,6 @@ namespace Game
         {
             var playerPivot = new vec2(0.4f, 0.42f);
 
-
             _tilesets = new Dictionary<string, Sprite[]>()
             {
                 // Player atlases
@@ -29,7 +28,7 @@ namespace Game
                 { "player_dead",     SliceSprites("KingsAndPigsSprites/01-King Human/Dead (78x58).png", 78, 58,     playerPivot) },
                 { "player_attack",   SliceSprites("KingsAndPigsSprites/01-King Human/Attack (78x58).png", 78, 58,   playerPivot) },
                 { "player_door_in",  SliceSprites("KingsAndPigsSprites/01-King Human/Door In (78x58).png", 78, 58,  playerPivot, 2) },
-                { "player_door_out", SliceSprites("KingsAndPigsSprites/01-King Human/Door Out (78x58).png", 78, 58, playerPivot, 2) },
+                { "player_door_out", SliceSprites("KingsAndPigsSprites/01-King Human/Door Out (78x58).png", 78, 58, playerPivot, 1, 4) },
 
                 { "door_opening",    SliceSprites("KingsAndPigsSprites/11-Door/Opening (46x56).png", 46, 56, vec2.Half, 1) },
 
@@ -94,10 +93,10 @@ namespace Game
                 { ItemId.big_potion.ToString(),  _tilesets["raven_ui_tileset"][271] },
                 { ItemId.normal_potion.ToString(),  _tilesets["raven_ui_tileset"][266] },
                 { ItemId.small_potion.ToString(),  _tilesets["raven_ui_tileset"][264] },
-                { "E_Interactable", new Sprite(Assets.GetTexture("eInteract.png")) },
-                { "E_Interactable2", new Sprite(Assets.GetTexture("eInteract2.png")) },
-                { "E_Interactable3", new Sprite(Assets.GetTexture("eInteract3.png")) },
-                { "InventorySlot", new Sprite(Assets.GetTexture("InventorySlot.png")) },
+                { "e_interactable", new Sprite(Assets.GetTexture("eInteract.png")) },
+                { "e_interactable2", new Sprite(Assets.GetTexture("eInteract2.png")) },
+                { "e_interactable3", new Sprite(Assets.GetTexture("eInteract3.png")) },
+                { "inventory_slot", new Sprite(Assets.GetTexture("InventorySlot.png")) },
 
             };
         }

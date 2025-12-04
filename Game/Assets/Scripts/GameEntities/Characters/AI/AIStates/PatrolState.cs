@@ -27,6 +27,10 @@ namespace Game
 
         public override void OnUpdate()
         {
+            if (!Context.IsCharacterAlive())
+            {
+                FSM.ChangeState<DeadState<T>>();
+            }
             if (Context.Target)
             {
                 //var engageDist = 5f;

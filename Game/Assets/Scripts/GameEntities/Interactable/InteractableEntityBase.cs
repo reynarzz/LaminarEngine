@@ -33,7 +33,7 @@ namespace Game
             InteractableRenderer.IsEnabled = true;
             InteractableRenderer.SortOrder = 6;
             InteractableRenderer.Color = Color.Transparent;
-            InteractableRenderer.Sprite = GameTextures.GetSprite("E_Interactable3");
+            InteractableRenderer.Sprite = GameTextures.GetSprite("e_interactable3");
         }
 
         protected sealed override void OnTriggerEnter2D(Collider2D collider)

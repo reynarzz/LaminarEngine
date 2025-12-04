@@ -15,10 +15,11 @@ namespace Game
         {
             base.Init(config);
 
-            _stateMachine = new StateMachine<KingPigEnemy>(this, [new PatrolState<KingPigEnemy>(),
-                                                                  new ChaseState<KingPigEnemy>(),
-                                                                  new AttackState<KingPigEnemy>(),
-                                                                  new CelebrateState<KingPigEnemy>()]);
+            _stateMachine = new StateMachine<KingPigEnemy>(this, 
+                [new PatrolState<KingPigEnemy>(), new ChaseState<KingPigEnemy>(),
+                 new AttackState<KingPigEnemy>(), new CelebrateState<KingPigEnemy>(),
+                 new DeadState<KingPigEnemy>()]);
+
             _stateMachine.SetInitialState<PatrolState<KingPigEnemy>>();
 
             string[] atlasId = ["kingpig_enemy_idle",
@@ -46,9 +47,9 @@ namespace Game
             Transform.LocalScale = new vec3(5);
         }
 
-        public override bool HitDamage(int amount)
+        public override bool HitDamage(GameEntity who, int amount)
         {
-            var isHit = base.HitDamage(amount);
+            var isHit = base.HitDamage(who, amount);
 
             if(isHit)
             _stateMachine.ChangeState<ChaseState<KingPigEnemy>>();

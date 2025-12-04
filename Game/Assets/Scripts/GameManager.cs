@@ -81,6 +81,8 @@ namespace Game
             LayerMask.TurnOff(GameConsts.PLAYER, GameConsts.PLAYER);
             LayerMask.TurnOff(GameConsts.PLAYER, GameConsts.CHARACTER_IGNORE);
             LayerMask.TurnOff(GameConsts.ENEMY, GameConsts.CHARACTER_IGNORE);
+            LayerMask.TurnOff(GameConsts.ENEMY, GameConsts.PLAYER);
+            LayerMask.TurnOff(GameConsts.ENEMY, GameConsts.ENEMY);
             LayerMask.TurnOff(GameConsts.ENEMY_CONFUSED, GameConsts.CHARACTER_IGNORE);
             LayerMask.TurnOff(GameConsts.PLATFORM, GameConsts.COLLECTIBLE);
             //LayerMask.TurnOn(GameLayers.PLAYER, GameLayers.Default);
@@ -179,7 +181,6 @@ namespace Game
 #if DEBUG
             Window.Name = EngineInfo.RendererInfoToString() + " | FPS: " + ((int)Time.FPS).ToString();
             // Debug.DrawBox(ForegroundTilemap.Bounds.Center, ForegroundTilemap.Bounds.Size, Color.Red);
-#endif
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
                 Physics2D.DrawColliders = !Physics2D.DrawColliders;
@@ -189,22 +190,21 @@ namespace Game
                 Debug.DrawUILines = !Debug.DrawUILines;
             }
 
+            if (Input.GetKeyDown(KeyCode.T))
+            {
+                BuildLevel(0);
+            }
+#endif
+            if (Input.GetKeyDown(KeyCode.Enter))
+            {
+                _gameUIManger.PauseMenu.OnPause();
+            }
+            
             if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.F11))
             {
                 Window.FullScreen(!Window.IsFullScreen);
                 // Window.MouseVisible = !Window.IsFullScreen;
             }
-
-            if (Input.GetKeyDown(KeyCode.Enter))
-            {
-                _gameUIManger.PauseMenu.OnPause();
-            }
-
-            if (Input.GetKeyDown(KeyCode.T))
-            {
-                BuildLevel(0);
-            }
-
         }
 
         private void ParticleSystem()
