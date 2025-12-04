@@ -16,7 +16,7 @@ namespace Game
         {
             var lootItems = default(ItemAmountPair[]);
         
-            if (Deserialize<int[]>(entityData.Entity.FieldInstances, "items_amount", out var lootAmount))
+            if (Deserialize<int[]>(entityData, "items_amount", out var lootAmount))
             {
                 lootItems = new ItemAmountPair[lootAmount.Length];
 
@@ -28,7 +28,7 @@ namespace Game
                 }
             }
 
-            if (GetEnumArray<ItemId>(entityData.Entity.FieldInstances, "items_loot", out var items))
+            if (GetEnumArray<ItemId>(entityData, "items_loot", out var items))
             {
                 for (int j = 0; j < items.Length; j++)
                 {
@@ -38,7 +38,7 @@ namespace Game
             }
 
             ItemId lockedByItem = ItemId.none;
-            if (GetEnum<ItemId>(entityData.Entity.FieldInstances, "locked_by", out var lockedItem))
+            if (GetEnum<ItemId>(entityData, "locked_by", out var lockedItem))
             {
                 lockedByItem = lockedItem;
             }

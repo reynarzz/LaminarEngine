@@ -15,6 +15,8 @@ namespace Game
         private static Player _player;
         public override GameEntity Build(EntityInstanceData entityData, WorldData worldData, Func<vec2, bool, vec2> positionConverter)
         {
+            GetBool(entityData, "look_to_right", out bool lookToRight);
+
             if (!_player)
             {
                 _player = new Actor("Player").AddComponent<Player>();
@@ -33,9 +35,10 @@ namespace Game
                     StartPosition = entityData.WorldPosition,
                     Material = MaterialUtils.SpriteMaterial,
                     StartingLife = 4,
-                    SpriteLookDir = 1,
+                    SpriteLookDirFlip = 1,
                     InventoryMaxSlots = 6,
                     HitInvincibilityBlinks = 5,
+                    StartLookDir = lookToRight ? 1 : -1,
                     HitRecoilTime = 0.5f,
                     HitRecoilStrengthScaling = 3.5f,
                     Ground = new GroundDetectionOptions()
@@ -57,13 +60,11 @@ namespace Game
                     HitSound = "Audio/HALFTONE/Gameplay/Hit_2.wav"
                 });
             }
-
-            if (GetBool(entityData.Entity.FieldInstances, "look_to_right", out bool lookToRight))
+            else
             {
+                _player.Transform.WorldPosition = entityData.WorldPosition;
                 _player.LookAt(lookToRight ? 1 : -1);
             }
-
-            _player.Transform.WorldPosition = entityData.WorldPosition;
 
             return _player;
         }

@@ -20,7 +20,7 @@ namespace Game
         public override GameEntity Build(EntityInstanceData entityData, WorldData worldData, Func<vec2, bool, vec2> positionConverter)
         {
             var yPositions = default(vec2[]);
-            if (Deserialize<PlatformPoints[]>(entityData.Entity.FieldInstances, "positions", out var value))
+            if (Deserialize<PlatformPoints[]>(entityData, "positions", out var value))
             {
                 yPositions = value.Select(x => positionConverter(new vec2(x.cx, x.cy), true)).ToArray();
             }

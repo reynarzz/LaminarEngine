@@ -11,7 +11,7 @@
 	"iid": "a39fb1b0-7820-11ed-b6fd-87f9a01f3d6b",
 	"jsonVersion": "1.5.3",
 	"appBuildId": 473703,
-	"nextUid": 235,
+	"nextUid": 239,
 	"identifierStyle": "Capitalize",
 	"toc": [
 		{
@@ -1827,6 +1827,46 @@
 					"tilesetUid": null
 				},
 				{
+					"identifier": "look_to_right",
+					"doc": null,
+					"__type": "Bool",
+					"uid": 238,
+					"type": "F_Bool",
+					"isArray": false,
+					"canBeNull": false,
+					"arrayMinLength": null,
+					"arrayMaxLength": null,
+					"editorDisplayMode": "Hidden",
+					"editorDisplayScale": 1,
+					"editorDisplayPos": "Above",
+					"editorLinkStyle": "StraightArrow",
+					"editorDisplayColor": null,
+					"editorAlwaysShow": false,
+					"editorShowInWorld": true,
+					"editorCutLongValues": true,
+					"editorTextSuffix": null,
+					"editorTextPrefix": null,
+					"useForSmartColor": false,
+					"exportToToc": false,
+					"searchable": false,
+					"min": null,
+					"max": null,
+					"regex": null,
+					"acceptFileTypes": null,
+					"defaultOverride": {
+						"id": "V_Bool",
+						"params": [ true ]
+					},
+					"textLanguageMode": null,
+					"symmetricalRef": false,
+					"autoChainRef": true,
+					"allowOutOfLevelRef": true,
+					"allowedRefs": "OnlySame",
+					"allowedRefsEntityUid": null,
+					"allowedRefTags": [],
+					"tilesetUid": null
+				},
+				{
 					"identifier": "loot",
 					"doc": null,
 					"__type": "Array<LocalEnum.ItemType>",
@@ -1904,7 +1944,7 @@
 					"tilesetUid": null
 				},
 				{
-					"identifier": "random_loot_count",
+					"identifier": "random_loot_range",
 					"doc": null,
 					"__type": "Int",
 					"uid": 234,
@@ -1930,7 +1970,47 @@
 					"max": null,
 					"regex": null,
 					"acceptFileTypes": null,
-					"defaultOverride": null,
+					"defaultOverride": { "id": "V_Int", "params": [2] },
+					"textLanguageMode": null,
+					"symmetricalRef": false,
+					"autoChainRef": true,
+					"allowOutOfLevelRef": true,
+					"allowedRefs": "OnlySame",
+					"allowedRefsEntityUid": null,
+					"allowedRefTags": [],
+					"tilesetUid": null
+				},
+				{
+					"identifier": "random_item_type",
+					"doc": null,
+					"__type": "LocalEnum.RandomItemType",
+					"uid": 237,
+					"type": "F_Enum(236)",
+					"isArray": false,
+					"canBeNull": false,
+					"arrayMinLength": null,
+					"arrayMaxLength": null,
+					"editorDisplayMode": "Hidden",
+					"editorDisplayScale": 1,
+					"editorDisplayPos": "Above",
+					"editorLinkStyle": "StraightArrow",
+					"editorDisplayColor": null,
+					"editorAlwaysShow": false,
+					"editorShowInWorld": true,
+					"editorCutLongValues": true,
+					"editorTextSuffix": null,
+					"editorTextPrefix": null,
+					"useForSmartColor": false,
+					"exportToToc": false,
+					"searchable": false,
+					"min": null,
+					"max": null,
+					"regex": null,
+					"acceptFileTypes": null,
+					"defaultOverride": {
+						"id": "V_String",
+						"params": ["HealthOrAmmo"]
+					},
 					"textLanguageMode": null,
 					"symmetricalRef": false,
 					"autoChainRef": true,
@@ -3010,13 +3090,19 @@
 			{ "id": "Boss_key", "tileRect": { "tilesetUid": 226, "x": 112, "y": 176, "w": 16, "h": 16 }, "color": 4073265 }
 		], "iconTilesetUid": 226, "externalRelPath": null, "externalFileChecksum": null, "tags": [] },
 		{ "identifier": "RoomType", "uid": 98, "values": [ { "id": "Entrance", "tileRect": { "tilesetUid": 133, "x": 0, "y": 32, "w": 16, "h": 16 }, "color": 6539085 }, { "id": "Exit", "tileRect": { "tilesetUid": 133, "x": 48, "y": 240, "w": 16, "h": 16 }, "color": 11882632 } ], "iconTilesetUid": 133, "externalRelPath": null, "externalFileChecksum": null, "tags": [] },
-		{ "identifier": "EnemyType", "uid": 157, "values": [{ "id": "KingPig", "tileRect": { "tilesetUid": 133, "x": 96, "y": 0, "w": 16, "h": 16 }, "color": 12470831 }], "iconTilesetUid": 133, "externalRelPath": null, "externalFileChecksum": null, "tags": [] },
+		{ "identifier": "EnemyType", "uid": 157, "values": [ { "id": "KingPig", "tileRect": { "tilesetUid": 133, "x": 96, "y": 0, "w": 16, "h": 16 }, "color": 12470831 }, { "id": "RegularPig", "tileRect": { "tilesetUid": 133, "x": 96, "y": 0, "w": 16, "h": 16 }, "color": 5325783 } ], "iconTilesetUid": 133, "externalRelPath": null, "externalFileChecksum": null, "tags": [] },
 		{ "identifier": "LevelMusic", "uid": 194, "values": [
 			{ "id": "Music1", "tileRect": null, "color": 12470831 },
 			{ "id": "Music2", "tileRect": null, "color": 14120515 },
 			{ "id": "Music3", "tileRect": null, "color": 15389866 },
 			{ "id": "Music4", "tileRect": null, "color": 14984818 }
-		], "iconTilesetUid": 133, "externalRelPath": null, "externalFileChecksum": null, "tags": [] }
+		], "iconTilesetUid": 133, "externalRelPath": null, "externalFileChecksum": null, "tags": [] },
+		{ "identifier": "RandomItemType", "uid": 236, "values": [
+			{ "id": "All", "tileRect": null, "color": 12470831 },
+			{ "id": "Health", "tileRect": null, "color": 14120515 },
+			{ "id": "Ammo", "tileRect": null, "color": 15389866 },
+			{ "id": "HealthOrAmmo", "tileRect": null, "color": 14984818 }
+		], "iconTilesetUid": null, "externalRelPath": null, "externalFileChecksum": null, "tags": [] }
 	], "externalEnums": [], "levelFields": [
 		{
 			"identifier": "roomType",
@@ -3135,9 +3221,11 @@
 									"id": "V_String",
 									"params": ["KingPig"]
 								}] },
+								{ "__identifier": "look_to_right", "__type": "Bool", "__value": true, "__tile": null, "defUid": 238, "realEditorValues": [] },
 								{ "__identifier": "loot", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 219, "realEditorValues": [] },
 								{ "__identifier": "random_loot", "__type": "Bool", "__value": true, "__tile": null, "defUid": 233, "realEditorValues": [] },
-								{ "__identifier": "random_loot_count", "__type": "Int", "__value": 0, "__tile": null, "defUid": 234, "realEditorValues": [] }
+								{ "__identifier": "random_loot_range", "__type": "Int", "__value": 2, "__tile": null, "defUid": 234, "realEditorValues": [] },
+								{ "__identifier": "random_item_type", "__type": "LocalEnum.RandomItemType", "__value": "HealthOrAmmo", "__tile": null, "defUid": 237, "realEditorValues": [] }
 							],
 							"__worldX": 667,
 							"__worldY": -119
@@ -3159,9 +3247,11 @@
 									"id": "V_String",
 									"params": ["KingPig"]
 								}] },
+								{ "__identifier": "look_to_right", "__type": "Bool", "__value": true, "__tile": null, "defUid": 238, "realEditorValues": [] },
 								{ "__identifier": "loot", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 219, "realEditorValues": [] },
 								{ "__identifier": "random_loot", "__type": "Bool", "__value": true, "__tile": null, "defUid": 233, "realEditorValues": [] },
-								{ "__identifier": "random_loot_count", "__type": "Int", "__value": 0, "__tile": null, "defUid": 234, "realEditorValues": [] }
+								{ "__identifier": "random_loot_range", "__type": "Int", "__value": 2, "__tile": null, "defUid": 234, "realEditorValues": [] },
+								{ "__identifier": "random_item_type", "__type": "LocalEnum.RandomItemType", "__value": "HealthOrAmmo", "__tile": null, "defUid": 237, "realEditorValues": [] }
 							],
 							"__worldX": 789,
 							"__worldY": -23
@@ -3329,9 +3419,11 @@
 									"id": "V_String",
 									"params": ["KingPig"]
 								}] },
+								{ "__identifier": "look_to_right", "__type": "Bool", "__value": true, "__tile": null, "defUid": 238, "realEditorValues": [] },
 								{ "__identifier": "loot", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 219, "realEditorValues": [] },
 								{ "__identifier": "random_loot", "__type": "Bool", "__value": true, "__tile": null, "defUid": 233, "realEditorValues": [] },
-								{ "__identifier": "random_loot_count", "__type": "Int", "__value": 0, "__tile": null, "defUid": 234, "realEditorValues": [] }
+								{ "__identifier": "random_loot_range", "__type": "Int", "__value": 2, "__tile": null, "defUid": 234, "realEditorValues": [] },
+								{ "__identifier": "random_item_type", "__type": "LocalEnum.RandomItemType", "__value": "HealthOrAmmo", "__tile": null, "defUid": 237, "realEditorValues": [] }
 							],
 							"__worldX": 328,
 							"__worldY": -56
@@ -3468,9 +3560,11 @@
 							"px": [1608,664],
 							"fieldInstances": [
 								{ "__identifier": "enemy_type", "__type": "LocalEnum.EnemyType", "__value": "KingPig", "__tile": null, "defUid": 197, "realEditorValues": [] },
+								{ "__identifier": "look_to_right", "__type": "Bool", "__value": true, "__tile": null, "defUid": 238, "realEditorValues": [] },
 								{ "__identifier": "loot", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 219, "realEditorValues": [] },
 								{ "__identifier": "random_loot", "__type": "Bool", "__value": true, "__tile": null, "defUid": 233, "realEditorValues": [] },
-								{ "__identifier": "random_loot_count", "__type": "Int", "__value": 0, "__tile": null, "defUid": 234, "realEditorValues": [] }
+								{ "__identifier": "random_loot_range", "__type": "Int", "__value": 2, "__tile": null, "defUid": 234, "realEditorValues": [] },
+								{ "__identifier": "random_item_type", "__type": "LocalEnum.RandomItemType", "__value": "HealthOrAmmo", "__tile": null, "defUid": 237, "realEditorValues": [] }
 							],
 							"__worldX": 504,
 							"__worldY": 200
@@ -3489,9 +3583,11 @@
 							"px": [1672,696],
 							"fieldInstances": [
 								{ "__identifier": "enemy_type", "__type": "LocalEnum.EnemyType", "__value": "KingPig", "__tile": null, "defUid": 197, "realEditorValues": [] },
+								{ "__identifier": "look_to_right", "__type": "Bool", "__value": true, "__tile": null, "defUid": 238, "realEditorValues": [] },
 								{ "__identifier": "loot", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 219, "realEditorValues": [] },
 								{ "__identifier": "random_loot", "__type": "Bool", "__value": true, "__tile": null, "defUid": 233, "realEditorValues": [] },
-								{ "__identifier": "random_loot_count", "__type": "Int", "__value": 0, "__tile": null, "defUid": 234, "realEditorValues": [] }
+								{ "__identifier": "random_loot_range", "__type": "Int", "__value": 2, "__tile": null, "defUid": 234, "realEditorValues": [] },
+								{ "__identifier": "random_item_type", "__type": "LocalEnum.RandomItemType", "__value": "HealthOrAmmo", "__tile": null, "defUid": 237, "realEditorValues": [] }
 							],
 							"__worldX": 568,
 							"__worldY": 232
@@ -3510,9 +3606,11 @@
 							"px": [1768,664],
 							"fieldInstances": [
 								{ "__identifier": "enemy_type", "__type": "LocalEnum.EnemyType", "__value": "KingPig", "__tile": null, "defUid": 197, "realEditorValues": [] },
+								{ "__identifier": "look_to_right", "__type": "Bool", "__value": true, "__tile": null, "defUid": 238, "realEditorValues": [] },
 								{ "__identifier": "loot", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 219, "realEditorValues": [] },
 								{ "__identifier": "random_loot", "__type": "Bool", "__value": true, "__tile": null, "defUid": 233, "realEditorValues": [] },
-								{ "__identifier": "random_loot_count", "__type": "Int", "__value": 0, "__tile": null, "defUid": 234, "realEditorValues": [] }
+								{ "__identifier": "random_loot_range", "__type": "Int", "__value": 2, "__tile": null, "defUid": 234, "realEditorValues": [] },
+								{ "__identifier": "random_item_type", "__type": "LocalEnum.RandomItemType", "__value": "HealthOrAmmo", "__tile": null, "defUid": 237, "realEditorValues": [] }
 							],
 							"__worldX": 664,
 							"__worldY": 200
@@ -3531,9 +3629,11 @@
 							"px": [1704,584],
 							"fieldInstances": [
 								{ "__identifier": "enemy_type", "__type": "LocalEnum.EnemyType", "__value": "KingPig", "__tile": null, "defUid": 197, "realEditorValues": [] },
+								{ "__identifier": "look_to_right", "__type": "Bool", "__value": true, "__tile": null, "defUid": 238, "realEditorValues": [] },
 								{ "__identifier": "loot", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 219, "realEditorValues": [] },
 								{ "__identifier": "random_loot", "__type": "Bool", "__value": true, "__tile": null, "defUid": 233, "realEditorValues": [] },
-								{ "__identifier": "random_loot_count", "__type": "Int", "__value": 0, "__tile": null, "defUid": 234, "realEditorValues": [] }
+								{ "__identifier": "random_loot_range", "__type": "Int", "__value": 2, "__tile": null, "defUid": 234, "realEditorValues": [] },
+								{ "__identifier": "random_item_type", "__type": "LocalEnum.RandomItemType", "__value": "HealthOrAmmo", "__tile": null, "defUid": 237, "realEditorValues": [] }
 							],
 							"__worldX": 600,
 							"__worldY": 120
@@ -3552,9 +3652,11 @@
 							"px": [1864,440],
 							"fieldInstances": [
 								{ "__identifier": "enemy_type", "__type": "LocalEnum.EnemyType", "__value": "KingPig", "__tile": null, "defUid": 197, "realEditorValues": [] },
+								{ "__identifier": "look_to_right", "__type": "Bool", "__value": true, "__tile": null, "defUid": 238, "realEditorValues": [] },
 								{ "__identifier": "loot", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 219, "realEditorValues": [] },
 								{ "__identifier": "random_loot", "__type": "Bool", "__value": true, "__tile": null, "defUid": 233, "realEditorValues": [] },
-								{ "__identifier": "random_loot_count", "__type": "Int", "__value": 0, "__tile": null, "defUid": 234, "realEditorValues": [] }
+								{ "__identifier": "random_loot_range", "__type": "Int", "__value": 2, "__tile": null, "defUid": 234, "realEditorValues": [] },
+								{ "__identifier": "random_item_type", "__type": "LocalEnum.RandomItemType", "__value": "HealthOrAmmo", "__tile": null, "defUid": 237, "realEditorValues": [] }
 							],
 							"__worldX": 760,
 							"__worldY": -24
@@ -3573,9 +3675,11 @@
 							"px": [1848,328],
 							"fieldInstances": [
 								{ "__identifier": "enemy_type", "__type": "LocalEnum.EnemyType", "__value": "KingPig", "__tile": null, "defUid": 197, "realEditorValues": [] },
+								{ "__identifier": "look_to_right", "__type": "Bool", "__value": true, "__tile": null, "defUid": 238, "realEditorValues": [] },
 								{ "__identifier": "loot", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 219, "realEditorValues": [] },
 								{ "__identifier": "random_loot", "__type": "Bool", "__value": true, "__tile": null, "defUid": 233, "realEditorValues": [] },
-								{ "__identifier": "random_loot_count", "__type": "Int", "__value": 0, "__tile": null, "defUid": 234, "realEditorValues": [] }
+								{ "__identifier": "random_loot_range", "__type": "Int", "__value": 2, "__tile": null, "defUid": 234, "realEditorValues": [] },
+								{ "__identifier": "random_item_type", "__type": "LocalEnum.RandomItemType", "__value": "HealthOrAmmo", "__tile": null, "defUid": 237, "realEditorValues": [] }
 							],
 							"__worldX": 744,
 							"__worldY": -136
@@ -3594,9 +3698,11 @@
 							"px": [1912,312],
 							"fieldInstances": [
 								{ "__identifier": "enemy_type", "__type": "LocalEnum.EnemyType", "__value": "KingPig", "__tile": null, "defUid": 197, "realEditorValues": [] },
+								{ "__identifier": "look_to_right", "__type": "Bool", "__value": true, "__tile": null, "defUid": 238, "realEditorValues": [] },
 								{ "__identifier": "loot", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 219, "realEditorValues": [] },
 								{ "__identifier": "random_loot", "__type": "Bool", "__value": true, "__tile": null, "defUid": 233, "realEditorValues": [] },
-								{ "__identifier": "random_loot_count", "__type": "Int", "__value": 0, "__tile": null, "defUid": 234, "realEditorValues": [] }
+								{ "__identifier": "random_loot_range", "__type": "Int", "__value": 2, "__tile": null, "defUid": 234, "realEditorValues": [] },
+								{ "__identifier": "random_item_type", "__type": "LocalEnum.RandomItemType", "__value": "HealthOrAmmo", "__tile": null, "defUid": 237, "realEditorValues": [] }
 							],
 							"__worldX": 808,
 							"__worldY": -152
@@ -3615,9 +3721,11 @@
 							"px": [1960,280],
 							"fieldInstances": [
 								{ "__identifier": "enemy_type", "__type": "LocalEnum.EnemyType", "__value": "KingPig", "__tile": null, "defUid": 197, "realEditorValues": [] },
+								{ "__identifier": "look_to_right", "__type": "Bool", "__value": true, "__tile": null, "defUid": 238, "realEditorValues": [] },
 								{ "__identifier": "loot", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 219, "realEditorValues": [] },
 								{ "__identifier": "random_loot", "__type": "Bool", "__value": true, "__tile": null, "defUid": 233, "realEditorValues": [] },
-								{ "__identifier": "random_loot_count", "__type": "Int", "__value": 0, "__tile": null, "defUid": 234, "realEditorValues": [] }
+								{ "__identifier": "random_loot_range", "__type": "Int", "__value": 2, "__tile": null, "defUid": 234, "realEditorValues": [] },
+								{ "__identifier": "random_item_type", "__type": "LocalEnum.RandomItemType", "__value": "HealthOrAmmo", "__tile": null, "defUid": 237, "realEditorValues": [] }
 							],
 							"__worldX": 856,
 							"__worldY": -184
@@ -3636,9 +3744,11 @@
 							"px": [1896,536],
 							"fieldInstances": [
 								{ "__identifier": "enemy_type", "__type": "LocalEnum.EnemyType", "__value": "KingPig", "__tile": null, "defUid": 197, "realEditorValues": [] },
+								{ "__identifier": "look_to_right", "__type": "Bool", "__value": true, "__tile": null, "defUid": 238, "realEditorValues": [] },
 								{ "__identifier": "loot", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 219, "realEditorValues": [] },
 								{ "__identifier": "random_loot", "__type": "Bool", "__value": true, "__tile": null, "defUid": 233, "realEditorValues": [] },
-								{ "__identifier": "random_loot_count", "__type": "Int", "__value": 0, "__tile": null, "defUid": 234, "realEditorValues": [] }
+								{ "__identifier": "random_loot_range", "__type": "Int", "__value": 2, "__tile": null, "defUid": 234, "realEditorValues": [] },
+								{ "__identifier": "random_item_type", "__type": "LocalEnum.RandomItemType", "__value": "HealthOrAmmo", "__tile": null, "defUid": 237, "realEditorValues": [] }
 							],
 							"__worldX": 792,
 							"__worldY": 72
@@ -3657,9 +3767,11 @@
 							"px": [1976,536],
 							"fieldInstances": [
 								{ "__identifier": "enemy_type", "__type": "LocalEnum.EnemyType", "__value": "KingPig", "__tile": null, "defUid": 197, "realEditorValues": [] },
+								{ "__identifier": "look_to_right", "__type": "Bool", "__value": true, "__tile": null, "defUid": 238, "realEditorValues": [] },
 								{ "__identifier": "loot", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 219, "realEditorValues": [] },
 								{ "__identifier": "random_loot", "__type": "Bool", "__value": true, "__tile": null, "defUid": 233, "realEditorValues": [] },
-								{ "__identifier": "random_loot_count", "__type": "Int", "__value": 0, "__tile": null, "defUid": 234, "realEditorValues": [] }
+								{ "__identifier": "random_loot_range", "__type": "Int", "__value": 2, "__tile": null, "defUid": 234, "realEditorValues": [] },
+								{ "__identifier": "random_item_type", "__type": "LocalEnum.RandomItemType", "__value": "HealthOrAmmo", "__tile": null, "defUid": 237, "realEditorValues": [] }
 							],
 							"__worldX": 872,
 							"__worldY": 72
@@ -3678,9 +3790,11 @@
 							"px": [2056,536],
 							"fieldInstances": [
 								{ "__identifier": "enemy_type", "__type": "LocalEnum.EnemyType", "__value": "KingPig", "__tile": null, "defUid": 197, "realEditorValues": [] },
+								{ "__identifier": "look_to_right", "__type": "Bool", "__value": true, "__tile": null, "defUid": 238, "realEditorValues": [] },
 								{ "__identifier": "loot", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 219, "realEditorValues": [] },
 								{ "__identifier": "random_loot", "__type": "Bool", "__value": true, "__tile": null, "defUid": 233, "realEditorValues": [] },
-								{ "__identifier": "random_loot_count", "__type": "Int", "__value": 0, "__tile": null, "defUid": 234, "realEditorValues": [] }
+								{ "__identifier": "random_loot_range", "__type": "Int", "__value": 2, "__tile": null, "defUid": 234, "realEditorValues": [] },
+								{ "__identifier": "random_item_type", "__type": "LocalEnum.RandomItemType", "__value": "HealthOrAmmo", "__tile": null, "defUid": 237, "realEditorValues": [] }
 							],
 							"__worldX": 952,
 							"__worldY": 72
@@ -3699,9 +3813,11 @@
 							"px": [856,360],
 							"fieldInstances": [
 								{ "__identifier": "enemy_type", "__type": "LocalEnum.EnemyType", "__value": "KingPig", "__tile": null, "defUid": 197, "realEditorValues": [] },
+								{ "__identifier": "look_to_right", "__type": "Bool", "__value": true, "__tile": null, "defUid": 238, "realEditorValues": [] },
 								{ "__identifier": "loot", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 219, "realEditorValues": [] },
 								{ "__identifier": "random_loot", "__type": "Bool", "__value": true, "__tile": null, "defUid": 233, "realEditorValues": [] },
-								{ "__identifier": "random_loot_count", "__type": "Int", "__value": 0, "__tile": null, "defUid": 234, "realEditorValues": [] }
+								{ "__identifier": "random_loot_range", "__type": "Int", "__value": 2, "__tile": null, "defUid": 234, "realEditorValues": [] },
+								{ "__identifier": "random_item_type", "__type": "LocalEnum.RandomItemType", "__value": "HealthOrAmmo", "__tile": null, "defUid": 237, "realEditorValues": [] }
 							],
 							"__worldX": -248,
 							"__worldY": -104
@@ -3720,9 +3836,11 @@
 							"px": [728,360],
 							"fieldInstances": [
 								{ "__identifier": "enemy_type", "__type": "LocalEnum.EnemyType", "__value": "KingPig", "__tile": null, "defUid": 197, "realEditorValues": [] },
+								{ "__identifier": "look_to_right", "__type": "Bool", "__value": true, "__tile": null, "defUid": 238, "realEditorValues": [] },
 								{ "__identifier": "loot", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 219, "realEditorValues": [] },
 								{ "__identifier": "random_loot", "__type": "Bool", "__value": true, "__tile": null, "defUid": 233, "realEditorValues": [] },
-								{ "__identifier": "random_loot_count", "__type": "Int", "__value": 0, "__tile": null, "defUid": 234, "realEditorValues": [] }
+								{ "__identifier": "random_loot_range", "__type": "Int", "__value": 2, "__tile": null, "defUid": 234, "realEditorValues": [] },
+								{ "__identifier": "random_item_type", "__type": "LocalEnum.RandomItemType", "__value": "HealthOrAmmo", "__tile": null, "defUid": 237, "realEditorValues": [] }
 							],
 							"__worldX": -376,
 							"__worldY": -104
@@ -3741,9 +3859,11 @@
 							"px": [888,360],
 							"fieldInstances": [
 								{ "__identifier": "enemy_type", "__type": "LocalEnum.EnemyType", "__value": "KingPig", "__tile": null, "defUid": 197, "realEditorValues": [] },
+								{ "__identifier": "look_to_right", "__type": "Bool", "__value": true, "__tile": null, "defUid": 238, "realEditorValues": [] },
 								{ "__identifier": "loot", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 219, "realEditorValues": [] },
 								{ "__identifier": "random_loot", "__type": "Bool", "__value": true, "__tile": null, "defUid": 233, "realEditorValues": [] },
-								{ "__identifier": "random_loot_count", "__type": "Int", "__value": 0, "__tile": null, "defUid": 234, "realEditorValues": [] }
+								{ "__identifier": "random_loot_range", "__type": "Int", "__value": 2, "__tile": null, "defUid": 234, "realEditorValues": [] },
+								{ "__identifier": "random_item_type", "__type": "LocalEnum.RandomItemType", "__value": "HealthOrAmmo", "__tile": null, "defUid": 237, "realEditorValues": [] }
 							],
 							"__worldX": -216,
 							"__worldY": -104
@@ -3762,9 +3882,11 @@
 							"px": [1000,376],
 							"fieldInstances": [
 								{ "__identifier": "enemy_type", "__type": "LocalEnum.EnemyType", "__value": "KingPig", "__tile": null, "defUid": 197, "realEditorValues": [] },
+								{ "__identifier": "look_to_right", "__type": "Bool", "__value": true, "__tile": null, "defUid": 238, "realEditorValues": [] },
 								{ "__identifier": "loot", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 219, "realEditorValues": [] },
 								{ "__identifier": "random_loot", "__type": "Bool", "__value": true, "__tile": null, "defUid": 233, "realEditorValues": [] },
-								{ "__identifier": "random_loot_count", "__type": "Int", "__value": 0, "__tile": null, "defUid": 234, "realEditorValues": [] }
+								{ "__identifier": "random_loot_range", "__type": "Int", "__value": 2, "__tile": null, "defUid": 234, "realEditorValues": [] },
+								{ "__identifier": "random_item_type", "__type": "LocalEnum.RandomItemType", "__value": "HealthOrAmmo", "__tile": null, "defUid": 237, "realEditorValues": [] }
 							],
 							"__worldX": -104,
 							"__worldY": -88
@@ -3944,9 +4066,11 @@
 							"px": [824,616],
 							"fieldInstances": [
 								{ "__identifier": "enemy_type", "__type": "LocalEnum.EnemyType", "__value": "KingPig", "__tile": null, "defUid": 197, "realEditorValues": [] },
+								{ "__identifier": "look_to_right", "__type": "Bool", "__value": true, "__tile": null, "defUid": 238, "realEditorValues": [] },
 								{ "__identifier": "loot", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 219, "realEditorValues": [] },
 								{ "__identifier": "random_loot", "__type": "Bool", "__value": true, "__tile": null, "defUid": 233, "realEditorValues": [] },
-								{ "__identifier": "random_loot_count", "__type": "Int", "__value": 0, "__tile": null, "defUid": 234, "realEditorValues": [] }
+								{ "__identifier": "random_loot_range", "__type": "Int", "__value": 2, "__tile": null, "defUid": 234, "realEditorValues": [] },
+								{ "__identifier": "random_item_type", "__type": "LocalEnum.RandomItemType", "__value": "HealthOrAmmo", "__tile": null, "defUid": 237, "realEditorValues": [] }
 							],
 							"__worldX": -280,
 							"__worldY": 152
@@ -13188,9 +13312,11 @@
 							"px": [1160,216],
 							"fieldInstances": [
 								{ "__identifier": "enemy_type", "__type": "LocalEnum.EnemyType", "__value": "KingPig", "__tile": null, "defUid": 197, "realEditorValues": [] },
+								{ "__identifier": "look_to_right", "__type": "Bool", "__value": true, "__tile": null, "defUid": 238, "realEditorValues": [] },
 								{ "__identifier": "loot", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 219, "realEditorValues": [] },
 								{ "__identifier": "random_loot", "__type": "Bool", "__value": true, "__tile": null, "defUid": 233, "realEditorValues": [] },
-								{ "__identifier": "random_loot_count", "__type": "Int", "__value": 0, "__tile": null, "defUid": 234, "realEditorValues": [] }
+								{ "__identifier": "random_loot_range", "__type": "Int", "__value": 2, "__tile": null, "defUid": 234, "realEditorValues": [] },
+								{ "__identifier": "random_item_type", "__type": "LocalEnum.RandomItemType", "__value": "HealthOrAmmo", "__tile": null, "defUid": 237, "realEditorValues": [] }
 							],
 							"__worldX": -40,
 							"__worldY": 728

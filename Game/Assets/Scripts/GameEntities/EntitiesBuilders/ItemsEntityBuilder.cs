@@ -13,20 +13,20 @@ namespace Game
     {
         public override GameEntity Build(EntityInstanceData entityData, WorldData worldData, Func<vec2, bool, vec2> positionConverter)
         {
-            foreach (var field in entityData.Entity.FieldInstances)
-            {
-                if (field.Identifier.Equals("ItemType", StringComparison.OrdinalIgnoreCase))
-                {
-                    if(Enum.TryParse<ItemId>(field.Value.ToString(), true, out var item))
-                    {
-                        GamePrefabs.Items.InstantiateCollectible(item, entityData.WorldPosition);
-                    }
-                    else
-                    {
-                        Debug.Error($"Can't create item: {field.Value.ToString()}, is not in the enum.");
-                    }
-                }
-            }
+            //foreach (var field in entityData)
+            //{
+            //    if (field.Identifier.Equals("ItemType", StringComparison.OrdinalIgnoreCase))
+            //    {
+            //        if(Enum.TryParse<ItemId>(field.Value.ToString(), true, out var item))
+            //        {
+            //            GamePrefabs.Items.InstantiateCollectible(item, entityData.WorldPosition);
+            //        }
+            //        else
+            //        {
+            //            Debug.Error($"Can't create item: {field.Value.ToString()}, is not in the enum.");
+            //        }
+            //    }
+            //}
 
             return null;
         }

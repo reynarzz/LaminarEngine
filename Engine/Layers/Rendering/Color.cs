@@ -43,10 +43,10 @@ namespace Engine
 
         public Color(float r, float g, float b, float a = 1f)
         {
-            R = r;
-            G = g;
-            B = b;
-            A = a;
+            R = Mathf.Clamp01(r);
+            G = Mathf.Clamp01(g);
+            B = Mathf.Clamp01(b);
+            A = Mathf.Clamp01(a);
         }
 
         public static implicit operator ColorPacketRGBA(Color c)
@@ -75,7 +75,7 @@ namespace Engine
 
         public static Color Lerp(Color a, Color b, float t)
         {
-            t = Math.Clamp(t, 0f, 1f);
+            t = Mathf.Clamp01(t);
             return new Color(
                 a.R + (b.R - a.R) * t,
                 a.G + (b.G - a.G) * t,
@@ -104,7 +104,7 @@ namespace Engine
         }
         public static Color Hermite(Color startValue, Color startTangent, Color endTangent, Color endValue, float t)
         {
-            t = Math.Clamp(t, 0f, 1f);
+            t = Mathf.Clamp01(t);
             float t2 = t * t;
             float t3 = t2 * t;
 
