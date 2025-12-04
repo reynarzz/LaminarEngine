@@ -230,7 +230,7 @@ namespace Game
         {
             var waterActor = new Actor<SpriteRenderer>();
             var renderer = waterActor.GetComponent<SpriteRenderer>();
-            renderer.SortOrder = 9;
+            renderer.SortOrder = 3;
 
             var mainShader = new Shader(Assets.GetText("Shaders/SpriteVert.vert").Text, Assets.GetText("Shaders/WaterFrag.frag").Text);
 

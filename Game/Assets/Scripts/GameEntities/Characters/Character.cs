@@ -505,7 +505,6 @@ namespace Game
                 OnCharacterDead?.Invoke();
             }
 
-            CameraShake.Instance.BurstShake(30, 0.19f, 0.09f);
             PlayHitSfx();
             return true;
         }

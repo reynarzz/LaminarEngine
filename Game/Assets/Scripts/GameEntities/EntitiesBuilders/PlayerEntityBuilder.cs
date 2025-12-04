@@ -34,7 +34,7 @@ namespace Game
                     SortOrder = 2,
                     StartPosition = entityData.WorldPosition,
                     Material = MaterialUtils.SpriteMaterial,
-                    StartingLife = 4,
+                    StartingLife = 6,
                     SpriteLookDirFlip = 1,
                     InventoryMaxSlots = 6,
                     HitInvincibilityBlinks = 5,

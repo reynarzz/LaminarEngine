@@ -91,12 +91,15 @@ namespace Game
                 if (hit.isHit && Actor)
                 {
                     var character = hit.Collider.GetComponent<Character>();
-
+                    bool characterWasHit = false;
                     if (character)
                     {
                         if (character.IsCharacterAlive())
                         {
-                            character?.HitDamage(this, 1);
+                            if(character.HitDamage(this, 1))
+                            {
+                                characterWasHit = true;
+                            }
                             // character.GetComponent<RigidBody2D>().AddForce(_shootDir * 12, ForceMode2D.Impulse);
                         }
                         else
@@ -104,6 +107,15 @@ namespace Game
                             return;
                         }
                     }
+                    if (characterWasHit)
+                    {
+                        CameraShake.Instance.BurstShake(30, 0.19f, 0.09f);
+                    }
+                    else
+                    {
+                        CameraShake.Instance.BurstShake(10, 0.09f, 0.09f);
+                    }
+
                     PoolObject();
                     break;
                 }
@@ -119,6 +131,8 @@ namespace Game
             {
                 Actor.Destroy(_particleSystem);
             };
+
+
             _shoot = false;
             Actor.IsActiveSelf = false;
         }
