@@ -20,6 +20,7 @@ namespace Game
         public const string PLATFORM = "Platform";
         public const string COLLECTIBLE = "Collectible";
         public const string CHARACTER_IGNORE = "character_Ignore";
+        public const string NO_WALKABLE = "no_walkable";
 
         public const int ChestRenderSorting = 3;
         public static ulong GROUND_MASK { get; } = LayerMask.NameToBit(FLOOR) |

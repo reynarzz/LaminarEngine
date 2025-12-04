@@ -330,7 +330,7 @@ namespace Game
                 IEnumerator Disappear()
                 {
                     float t = Renderer.Color.A;
-                    yield return new WaitForSeconds(1.5f);
+                    yield return new WaitForSeconds(1.3f);
                     while (t > 0)
                     {
                         t -= Time.DeltaTime;

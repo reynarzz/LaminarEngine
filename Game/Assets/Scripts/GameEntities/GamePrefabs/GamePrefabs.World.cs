@@ -30,7 +30,7 @@ namespace Game
                 }
                 var platform = new Actor<SpriteRenderer>("Platform").AddComponent<Platform>();
                 platform.GetComponent<SpriteRenderer>().Material = MaterialUtils.SpriteMaterial;
-                platform.Actor.Layer = LayerMask.NameToLayer(GameConsts.PLATFORM);
+                platform.Actor.Layer = LayerMask.NameToLayer(GameConsts.NO_WALKABLE);
                 platform.Init(position, positions);
 
                 return platform;

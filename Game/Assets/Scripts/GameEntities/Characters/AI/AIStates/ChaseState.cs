@@ -18,7 +18,6 @@ namespace Game
         {
             Context.Target = Actor.Find("Player").GetComponent<Character>();
             Context.Detector.Size = 10;
-
         }
 
         public override void OnUpdate()
@@ -39,7 +38,7 @@ namespace Game
 
                     FSM.ChangeState<PatrolState<T>>();
                 }
-                Context.LookAt(Math.Sign(dir.x));
+                // Context.LookAt(Math.Sign(dir.x));
 
                 if (Math.Abs(dir.x) > transitionDist)
                 {
