@@ -62,24 +62,28 @@ namespace Engine.Rendering
             var selectedBatch = default(Batch2D);
 
             // Try to find the best batch for the renderer.
-            foreach (var batch in _batches)
+            if (!renderer.PrivateBatch)
             {
-                // TODO: find the smallest batch first
-                var canPush = batch.CanPushGeometry(renderer, vertexToAdd, maxVertexSize, texture, mat);
-                if (canPush)
+                foreach (var batch in _batches)
                 {
-                    if (selectedBatch == null)
+                    // TODO: find the smallest batch first
+                    var canPush = batch.CanPushGeometry(renderer, vertexToAdd, maxVertexSize, texture, mat);
+                    if (canPush)
                     {
-                        selectedBatch = batch;
-                    }
-                    // Checks if this is a smaller compatible batch that this renderer can fit in.
-                    else if ((selectedBatch.MaxVertexSize > batch.MaxVertexSize || selectedBatch.VertexCount > batch.VertexCount) &&
-                               batch.Material == selectedBatch.Material && batch.SortOrder == selectedBatch.SortOrder)
-                    {
-                        selectedBatch = batch;
+                        if (selectedBatch == null)
+                        {
+                            selectedBatch = batch;
+                        }
+                        // Checks if this is a smaller compatible batch that this renderer can fit in.
+                        else if ((selectedBatch.MaxVertexSize > batch.MaxVertexSize || selectedBatch.VertexCount > batch.VertexCount) &&
+                                   batch.Material == selectedBatch.Material && batch.SortOrder == selectedBatch.SortOrder)
+                        {
+                            selectedBatch = batch;
+                        }
                     }
                 }
             }
+         
 
             if (selectedBatch != null)
             {

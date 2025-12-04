@@ -49,8 +49,16 @@ namespace Sandbox
                 }
             });
 #endif
+
             new GFSEngine().Initialize<GameApplication>("GFS", 1024, 576).Run();
 
+#if DEBUG
+            // Just a debug utility to verify the paths loaded during the game execution.
+            foreach (var item in Assets.LoadedPaths())
+            {
+                Console.WriteLine(item);
+            }
+#endif
             _mutex.ReleaseMutex();
         }
     }

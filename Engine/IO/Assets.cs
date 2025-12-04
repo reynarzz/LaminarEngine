@@ -43,7 +43,17 @@ namespace Engine
 
         public static T Get<T>(string path) where T: AssetResourceBase
         {
+            if(!_loadedPaths.Contains(path))
+            _loadedPaths.Add(path);
             return IOLayer.GetDatabase().GetAsset<T>(path);
         }
+
+#if DEBUG
+        private static List<string> _loadedPaths = new();
+        public static string[] LoadedPaths()
+        {
+            return _loadedPaths.ToArray();
+        }
+#endif
     }
 }

@@ -63,6 +63,7 @@ namespace Game
         protected RigidBody2D Rigidbody { get; private set; }
         protected Collider2D Collider { get; private set; }
         protected AudioSource AudioSource { get; private set; }
+        public event Action OnCharacterDead;
 
         protected const string SPRITE_PROPERTY_NAME = "Sprite_Property";
         protected const string VEL_X_PROP_NAME = "VelocityX";
@@ -324,6 +325,7 @@ namespace Game
         private void PlayDeadAnim()
         {
             Animator.Play(DEATH_ANIM_STATE);
+            // Actor.Layer = LayerMask.NameToLayer(GameConsts.CHARACTER_DEAD);
 
             if (_characterConfig.DisappearOnDead)
             {
@@ -340,6 +342,7 @@ namespace Game
                     }
 
                     Renderer.Color = new Color(Renderer.Color.R, Renderer.Color.G, Renderer.Color.B, 0);
+                    Actor.IsActiveSelf = false;
                 }
 
                 StartCoroutine(Disappear());
@@ -441,6 +444,26 @@ namespace Game
             HitDamage(this, MAX_LIFE);
         }
 
+        private IEnumerator HitEffect(int blinks)
+        {
+            float endAngle = (float)Mathf.PI / 2f + 2f * (float)Mathf.PI * blinks;
+            float angle = 0f;
+            var color = Renderer.Color;
+
+            while (angle < endAngle)
+            {
+                const float freq = 30;
+                angle += Time.DeltaTime * freq;
+                float alpha = MathF.Sin(angle) * 0.5f + 0.5f;
+                Renderer.Color = new Color(Renderer.Color.R, Renderer.Color.G, Renderer.Color.B, alpha);
+
+                yield return null;
+            }
+
+            Renderer.Color = color;
+            IsInvencible = false;
+        }
+
         public virtual bool HitDamage(GameEntity who, int amount)
         {
             if (!IsCharacterAlive() || IsInvencible || IsEnteringThroughDoor)
@@ -470,33 +493,16 @@ namespace Game
                 if (_characterConfig.HitInvincibilityBlinks > 0 && !IsInvencible)
                 {
                     IsInvencible = true;
-                    IEnumerator HitEffect()
-                    {
-                        float endAngle = (float)Mathf.PI / 2f + 2f * (float)Mathf.PI * _characterConfig.HitInvincibilityBlinks;
-                        float angle = 0f;
-                        var color = Renderer.Color;
 
-                        while (angle < endAngle)
-                        {
-                            const float freq = 30;
-                            angle += Time.DeltaTime * freq;
-                            float alpha = MathF.Sin(angle) * 0.5f + 0.5f;
-                            Renderer.Color = new Color(Renderer.Color.R, Renderer.Color.G, Renderer.Color.B, alpha);
 
-                            yield return null;
-                        }
-
-                        Renderer.Color = color;
-                        IsInvencible = false;
-                    }
-
-                    StartCoroutine(HitEffect());
+                    StartCoroutine(HitEffect(_characterConfig.HitInvincibilityBlinks));
                 }
             }
             else
             {
                 Animator.SetState(HIT_ANIM_STATE);
                 Animator.Parameters.SetTrigger(DEATH_ANIM_STATE);
+                OnCharacterDead?.Invoke();
             }
 
             CameraShake.Instance.BurstShake(30, 0.19f, 0.09f);
@@ -606,10 +612,19 @@ namespace Game
             {
                 Inventory.Life = _characterConfig.StartingLife;
             }
+
+#if DEBUG
             Renderer.IsEnabled = true;
             Animator.Play(_main.Name);
+#endif
         }
 
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            OnCharacterDead = null;
+        }
         protected void PlayHitSfx()
         {
             if (_hitSfx != null)

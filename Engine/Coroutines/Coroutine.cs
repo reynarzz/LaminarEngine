@@ -33,6 +33,10 @@ namespace Engine
                 _currentInstruction.Update();
 
             }
+            else if (_target.Current is IEnumerator enumerator && enumerator.MoveNext())
+            {
+
+            }
             else if (_target.Current is Coroutine childCoroutine && !childCoroutine.IsCompleted)
             {
                 // TODO: update children coroutine here.

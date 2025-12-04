@@ -32,6 +32,9 @@ namespace Engine
 
         public vec2 Gravity { get; set; }
         public bool Prewarm { get; set; }
+        private bool _canEmit = true;
+        private bool _emitEventSent;
+        public event Action OnEmitFinished;
         protected override void OnAwake()
         {
             base.OnAwake();
@@ -42,6 +45,8 @@ namespace Engine
 
             _particles.Capacity = (int)MathF.Ceiling(EmitRate * ParticleLife * bufferOffset);
             Mesh.Vertices.Capacity = _particles.Capacity * 4;
+            Sprite = new Sprite();
+            PrivateBatch = true; // TODO: Remove this
         }
 
         void IStartableComponent.OnStart()
@@ -84,12 +89,20 @@ namespace Engine
                 EmitParticle();
                 _emitAccumulator -= 1.0f;
             }
+
+            if(_particles.Count == 0 && _canEmit == false && !_emitEventSent)
+            {
+                _emitEventSent = true;
+                OnEmitFinished?.Invoke();
+            }
         }
 
         private void EmitParticle()
         {
             IsDirty = true;
 
+            if (!_canEmit)
+                return;
             var localPos = new vec4(RandomFloat(-Spread.x, Spread.x), RandomFloat(-Spread.y, Spread.y), 0, 1);
             var startPos = IsWorldSpace ? Transform.WorldMatrix * localPos : localPos;
 
@@ -108,7 +121,16 @@ namespace Engine
 
             _particles.Add(particle);
         }
+        public void Pause()
+        {
+            _canEmit = false;
+        }
 
+        public void Play()
+        {
+            _canEmit = true;
+            _emitEventSent = false;
+        }
         private float RandomFloat(float min, float max)
         {
             return (float)(Random.Shared.NextDouble() * (max - min) + min);
@@ -155,5 +177,11 @@ namespace Engine
             Mesh.IndicesToDrawCount = _particles.Count * 6;
         }
 
+        protected internal override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            OnEmitFinished = null;
+        }
     }
 }
