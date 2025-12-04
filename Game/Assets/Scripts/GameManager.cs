@@ -133,7 +133,7 @@ namespace Game
                         Name = "Foreground tilemap",
                         EnableCollision = true,
                         LayersToDraw = 1 << 2,
-                        SortingOrder = 3,
+                        SortingOrder = 4,
                         SpriteIndex = 0
                     },
                     new TilemapData()
