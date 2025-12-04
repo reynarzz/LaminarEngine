@@ -34,7 +34,7 @@ namespace Game
             _rigid.Interpolate = true;
             var trigger = GetComponent<BoxCollider2D>();
             trigger.Size = new vec2(3, 0.4f);
-            trigger.Offset = new vec2(0, 0.2f);
+            trigger.Offset = new vec2(0, 0.3f);
             trigger.IsTrigger = true;
             Transform.LocalScale = new vec3(trigger.Size.x, trigger.Size.y, 1);
 
@@ -117,8 +117,6 @@ namespace Game
                     }
                 }
             }
-
-
         }
 
         protected override void OnTriggerEnter2D(Collider2D collider)
@@ -129,7 +127,7 @@ namespace Game
 
                 if (collider.AttachedRigidbody.Velocity.y <= 0)
                 {
-                    collider.AttachedRigidbody.Velocity = new vec2(collider.AttachedRigidbody.Velocity.x, 0);
+                   // collider.AttachedRigidbody.Velocity = new vec2(collider.AttachedRigidbody.Velocity.x, 0);
                 }
 
 
