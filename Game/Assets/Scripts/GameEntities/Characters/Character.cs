@@ -336,12 +336,13 @@ namespace Game
 
         public void LookAt(int dir)
         {
+            LookDir = dir;
             var scaleX = Math.Abs(Transform.LocalScale.x);
             Transform.LocalScale = new vec3(scaleX * dir * Math.Sign(_characterConfig.SpriteLookDir), Transform.LocalScale.y, Transform.LocalScale.z);
         }
 
 
-        private bool CanCharacterMove()
+        protected bool CanCharacterMove()
         {
             return IsCharacterAlive() && _currentHitRecoilTime <= 0;
         }

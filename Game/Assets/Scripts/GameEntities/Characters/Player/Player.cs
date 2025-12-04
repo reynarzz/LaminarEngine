@@ -96,7 +96,7 @@ namespace Game
                 Debug.Log("Open");
                 door.Open();
                 yield return new WaitForSeconds(0.36f);
-                Walk(1);
+                Walk(LookDir);
                 Animator.Play("DoorOut");
                 Renderer.IsEnabled = true;
                 yield return new WaitForSeconds(0.4f);
@@ -219,6 +219,7 @@ namespace Game
         {
             if (!IsCharacterAlive())
                 return false;
+
             CameraShake.Instance.BurstShake(20, 0.09f, 0.09f);
             PlayAttackSoundFx();
 
@@ -231,7 +232,6 @@ namespace Game
                                            LayerMask.NameToBit(GameConsts.PLATFORM);
             bullet.Shoot(origin, vec2.Right * LookDir, _bulletSpeed, mask);
 
-            Debug.Log("Shoot");
             return true;
         }
         protected override void OnTriggerEnter2D(Collider2D collider)
