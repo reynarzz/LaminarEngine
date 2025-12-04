@@ -46,7 +46,7 @@ namespace Game
                     FadeInOutManager.Instance.FadeIn(1.5f, () =>
                     {
                         GameManager.Instance.BuildLevel(Data.TargetLevelIndex);
-                        FadeInOutManager.Instance.FadeOut(1.5f);
+                        FadeInOutManager.Instance.FadeOut(1.45f);
 
                     });
                 }

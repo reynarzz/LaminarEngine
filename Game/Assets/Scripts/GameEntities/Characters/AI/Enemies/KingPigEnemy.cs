@@ -15,10 +15,11 @@ namespace Game
         {
             base.Init(config);
 
-            _stateMachine = new StateMachine<KingPigEnemy>(this, [new PatrolState<KingPigEnemy>(),
-                                                                  new ChaseState<KingPigEnemy>(),
-                                                                  new AttackState<KingPigEnemy>(),
-                                                                  new CelebrateState<KingPigEnemy>()]);
+            _stateMachine = new StateMachine<KingPigEnemy>(this, 
+                [new PatrolState<KingPigEnemy>(), new ChaseState<KingPigEnemy>(),
+                 new AttackState<KingPigEnemy>(), new CelebrateState<KingPigEnemy>(),
+                 new DeadState<KingPigEnemy>()]);
+
             _stateMachine.SetInitialState<PatrolState<KingPigEnemy>>();
 
             string[] atlasId = ["kingpig_enemy_idle",

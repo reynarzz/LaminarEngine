@@ -28,7 +28,7 @@ namespace Game
 
             if (!Context.IsCharacterAlive())
             {
-                return;
+                FSM.ChangeState<DeadState<T>>();
             }
 
             var dir = Context.Target.Transform.WorldPosition - Context.Transform.WorldPosition;
