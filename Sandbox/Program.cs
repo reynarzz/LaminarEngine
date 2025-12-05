@@ -42,7 +42,7 @@ namespace Sandbox
             if (File.Exists(releaseAssetsPath))
             {
                 releaseAssetsList = File.ReadAllText(releaseAssetsPath)?.Split('\n', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
-            }
+            } 
             new AssetsCooker().CookAll(new CookOptions()
             {
                 Type = CookingType.DevMode,
@@ -56,8 +56,8 @@ namespace Sandbox
                 },
                 MatchingFiles = releaseAssetsList
             });
-#endif
-            new GFSEngine().Initialize<GameApplication>("GFS", 1024, 576).Run();
+#endif 
+            new GFSEngine().Initialize<GameApplication>("GFS | By Reynardo Perez", 1024, 576).Run();
 
             _mutex.ReleaseMutex();
         }

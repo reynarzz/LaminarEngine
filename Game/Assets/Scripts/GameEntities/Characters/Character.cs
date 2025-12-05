@@ -236,7 +236,7 @@ namespace Game
             }
             if (statesConfig.Jump.IsEnabled)
             {
-                AddSpriteAnimState(JUMP_ANIM_STATE, false, false, false, [toIdle, toFall, toAttack, toHit], statesConfig.Jump.SpriteAtlasId, statesConfig.Jump.Fps, statesConfig.Jump.Events);
+                AddSpriteAnimState(JUMP_ANIM_STATE, false, false, false, [toIdle, toFall, toWalk, toAttack, toHit], statesConfig.Jump.SpriteAtlasId, statesConfig.Jump.Fps, statesConfig.Jump.Events);
             }
             if (statesConfig.Fall.IsEnabled)
             {
