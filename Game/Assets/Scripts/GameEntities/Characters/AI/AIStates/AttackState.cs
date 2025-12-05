@@ -47,9 +47,9 @@ namespace Game
                 FSM.ChangeState<ChaseState<T>>();
             }
 
-            var origin = Context.Transform.WorldPosition + new vec3(Context.SpriteLookDir * Context.Transform.LocalScale.x +
-                                                                    Math.Sign(Context.Transform.LocalScale.x) * 0.5f, 0.0f);
-            var size = new vec2(1.6f, 1.2f);
+            var origin = Context.Transform.WorldPosition + new vec3(Context.LookDir -
+                                                                    Math.Sign(Context.LookDir) * 0.5f, 0.0f);
+            var size = new vec2(1.5f, 1.2f);
 
             if (Physics2D.DrawColliders)
             {

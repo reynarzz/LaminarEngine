@@ -29,7 +29,7 @@ namespace Game
             if (Context.Target)
             {
                 var dir = Context.Transform.WorldPosition - Context.Target.Transform.WorldPosition;
-                var transitionDist = 1.7f;
+                var transitionDist = 1.4f;
 
                 if (!Context.Detector.IsTargetDetected || !Context.Target.IsCharacterAlive())
                 {
