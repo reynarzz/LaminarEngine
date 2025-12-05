@@ -14,7 +14,7 @@ namespace Game
     {
         public event Action<bool> OnDoorStateChanged;
         const int fps = 11;
-
+        private bool _playerEnter;
         protected override void OnAwake()
         {
             base.OnAwake();
@@ -41,13 +41,15 @@ namespace Game
             {
                 OnDoorStateChanged?.Invoke(false);
                 CameraShake.Instance.BurstShake(20, 0.2f, 0.15f);
+
+                if (!_playerEnter)
+                    return;
                 if (Data.CurrentLevel != Data.TargetLevelIndex)
                 {
                     FadeInOutManager.Instance.FadeIn(1.5f, () =>
                     {
-                        GameManager.Instance.BuildLevel(Data.TargetLevelIndex);
+                        GameManager.Instance.BuildLevel(Data.TargetLevelIndex, Data.TargetPosition);
                         FadeInOutManager.Instance.FadeOut(1.45f);
-
                     });
                 }
             });
@@ -68,6 +70,7 @@ namespace Game
             {
                 if (Data.LockedBy == ItemId.none || player.Inventory.Use(Data.LockedBy))
                 {
+                    _playerEnter = true;
                     Open();
                     InteractableRenderVisible(false);
                     return true;

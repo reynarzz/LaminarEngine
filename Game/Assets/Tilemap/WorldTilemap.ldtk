@@ -11,7 +11,7 @@
 	"iid": "a39fb1b0-7820-11ed-b6fd-87f9a01f3d6b",
 	"jsonVersion": "1.5.3",
 	"appBuildId": 473703,
-	"nextUid": 239,
+	"nextUid": 240,
 	"identifierStyle": "Capitalize",
 	"toc": [
 		{
@@ -187,12 +187,6 @@
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "1a1ff1e0-ac70-11f0-942f-6f49853f651b",
 					"layerIid": "1a2018f0-ac70-11f0-942f-c97c3b10dff0",
-					"entityIid": "c6707710-ac70-11f0-92d6-5f60790e1606"
-				},
-				{
-					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
-					"levelIid": "1a1ff1e0-ac70-11f0-942f-6f49853f651b",
-					"layerIid": "1a2018f0-ac70-11f0-942f-c97c3b10dff0",
 					"entityIid": "c7a5e9d0-ac70-11f0-92d6-d1645795f4e0"
 				}
 			],
@@ -334,19 +328,13 @@
 					"levelIid": "1a1ff1e0-ac70-11f0-942f-6f49853f651b",
 					"layerIid": "1a2018f0-ac70-11f0-942f-c97c3b10dff0",
 					"entityIid": "c5f839d0-ac70-11f0-92d6-871d1a9e8656"
-				}, "worldX": -88, "worldY": 616, "widPx": 20, "heiPx": 20, "fields" : {} },
-				{ "iids": {
-					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
-					"levelIid": "1a1ff1e0-ac70-11f0-942f-6f49853f651b",
-					"layerIid": "1a2018f0-ac70-11f0-942f-c97c3b10dff0",
-					"entityIid": "c6707710-ac70-11f0-92d6-5f60790e1606"
-				}, "worldX": -56, "worldY": 616, "widPx": 20, "heiPx": 20, "fields" : {} },
+				}, "worldX": -104, "worldY": 616, "widPx": 20, "heiPx": 20, "fields" : {} },
 				{ "iids": {
 					"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3",
 					"levelIid": "1a1ff1e0-ac70-11f0-942f-6f49853f651b",
 					"layerIid": "1a2018f0-ac70-11f0-942f-c97c3b10dff0",
 					"entityIid": "c7a5e9d0-ac70-11f0-92d6-d1645795f4e0"
-				}, "worldX": -120, "worldY": 616, "widPx": 20, "heiPx": 20, "fields" : {} }
+				}, "worldX": -136, "worldY": 616, "widPx": 20, "heiPx": 20, "fields" : {} }
 			]
 		},
 		{ "identifier": "Collectible", "instances": [], "instancesData": [] }
@@ -2488,6 +2476,46 @@
 					"tilesetUid": null
 				},
 				{
+					"identifier": "look_to_right",
+					"doc": null,
+					"__type": "Bool",
+					"uid": 239,
+					"type": "F_Bool",
+					"isArray": false,
+					"canBeNull": false,
+					"arrayMinLength": null,
+					"arrayMaxLength": null,
+					"editorDisplayMode": "Hidden",
+					"editorDisplayScale": 1,
+					"editorDisplayPos": "Above",
+					"editorLinkStyle": "StraightArrow",
+					"editorDisplayColor": null,
+					"editorAlwaysShow": false,
+					"editorShowInWorld": true,
+					"editorCutLongValues": true,
+					"editorTextSuffix": null,
+					"editorTextPrefix": null,
+					"useForSmartColor": false,
+					"exportToToc": false,
+					"searchable": false,
+					"min": null,
+					"max": null,
+					"regex": null,
+					"acceptFileTypes": null,
+					"defaultOverride": {
+						"id": "V_Bool",
+						"params": [ true ]
+					},
+					"textLanguageMode": null,
+					"symmetricalRef": false,
+					"autoChainRef": true,
+					"allowOutOfLevelRef": true,
+					"allowedRefs": "OnlySame",
+					"allowedRefsEntityUid": null,
+					"allowedRefTags": [],
+					"tilesetUid": null
+				},
+				{
 					"identifier": "target",
 					"doc": null,
 					"__type": "EntityRef",
@@ -3513,6 +3541,7 @@
 								}] },
 								{ "__identifier": "locked_amount", "__type": "Int", "__value": 1, "__tile": null, "defUid": 179, "realEditorValues": [{ "id": "V_Int", "params": [1] }] },
 								{ "__identifier": "consume_item", "__type": "Bool", "__value": true, "__tile": null, "defUid": 218, "realEditorValues": [] },
+								{ "__identifier": "look_to_right", "__type": "Bool", "__value": true, "__tile": null, "defUid": 239, "realEditorValues": [] },
 								{ "__identifier": "target", "__type": "EntityRef", "__value": {
 									"entityIid": "8ef28fa0-ac70-11f0-942f-47dc5ba98a84",
 									"layerIid": "1a2018f0-ac70-11f0-942f-c97c3b10dff0",
@@ -3835,27 +3864,6 @@
 						},
 						{
 							"__identifier": "Portal",
-							"__grid": [78,23],
-							"__pivot": [0.5,0.5],
-							"__tags": ["Actor"],
-							"__tile": { "tilesetUid": 133, "x": 32, "y": 224, "w": 16, "h": 16 },
-							"__smartColor": "#733E39",
-							"iid": "0cca19f0-ac70-11f0-9a6a-61a0255beb08",
-							"width": 16,
-							"height": 16,
-							"defUid": 220,
-							"px": [1256,376],
-							"fieldInstances": [
-								{ "__identifier": "target", "__type": "EntityRef", "__value": null, "__tile": null, "defUid": 222, "realEditorValues": [null] },
-								{ "__identifier": "player_look_to_right", "__type": "Bool", "__value": true, "__tile": null, "defUid": 223, "realEditorValues": [] },
-								{ "__identifier": "locked_by", "__type": "LocalEnum.ItemType", "__value": null, "__tile": null, "defUid": 224, "realEditorValues": [] },
-								{ "__identifier": "locked_amount", "__type": "Int", "__value": 1, "__tile": null, "defUid": 225, "realEditorValues": [] }
-							],
-							"__worldX": 152,
-							"__worldY": -88
-						},
-						{
-							"__identifier": "Portal",
 							"__grid": [29,52],
 							"__pivot": [0.5,0.5],
 							"__tags": ["Actor"],
@@ -3928,6 +3936,7 @@
 								}] },
 								{ "__identifier": "locked_amount", "__type": "Int", "__value": 2, "__tile": null, "defUid": 179, "realEditorValues": [{ "id": "V_Int", "params": [2] }] },
 								{ "__identifier": "consume_item", "__type": "Bool", "__value": true, "__tile": null, "defUid": 218, "realEditorValues": [] },
+								{ "__identifier": "look_to_right", "__type": "Bool", "__value": true, "__tile": null, "defUid": 239, "realEditorValues": [] },
 								{ "__identifier": "target", "__type": "EntityRef", "__value": null, "__tile": null, "defUid": 232, "realEditorValues": [] }
 							],
 							"__worldX": -552,
@@ -4177,6 +4186,36 @@
 							],
 							"__worldX": 328,
 							"__worldY": 200
+						},
+						{
+							"__identifier": "Door",
+							"__grid": [78,24],
+							"__pivot": [0.5,0.5],
+							"__tags": [ "Actor", "Warpable" ],
+							"__tile": { "tilesetUid": 133, "x": 80, "y": 592, "w": 16, "h": 16 },
+							"__smartColor": "#BE4A2F",
+							"iid": "22f69cc0-ac70-11f0-9855-e171ef5262e8",
+							"width": 48,
+							"height": 48,
+							"defUid": 175,
+							"px": [1256,392],
+							"fieldInstances": [
+								{ "__identifier": "locked_by", "__type": "LocalEnum.ItemType", "__value": null, "__tile": null, "defUid": 181, "realEditorValues": [] },
+								{ "__identifier": "locked_amount", "__type": "Int", "__value": 1, "__tile": null, "defUid": 179, "realEditorValues": [] },
+								{ "__identifier": "consume_item", "__type": "Bool", "__value": true, "__tile": null, "defUid": 218, "realEditorValues": [] },
+								{ "__identifier": "look_to_right", "__type": "Bool", "__value": true, "__tile": null, "defUid": 239, "realEditorValues": [] },
+								{ "__identifier": "target", "__type": "EntityRef", "__value": {
+									"entityIid": "4db66d40-ac70-11f0-942f-d5097c382706",
+									"layerIid": "1a2018f0-ac70-11f0-942f-c97c3b10dff0",
+									"levelIid": "1a1ff1e0-ac70-11f0-942f-6f49853f651b",
+									"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3"
+								}, "__tile": null, "defUid": 232, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["4db66d40-ac70-11f0-942f-d5097c382706"]
+								}] }
+							],
+							"__worldX": 152,
+							"__worldY": -72
 						}
 					]
 				},
@@ -13675,7 +13714,16 @@
 								{ "__identifier": "locked_by", "__type": "LocalEnum.ItemType", "__value": null, "__tile": null, "defUid": 181, "realEditorValues": [] },
 								{ "__identifier": "locked_amount", "__type": "Int", "__value": 1, "__tile": null, "defUid": 179, "realEditorValues": [] },
 								{ "__identifier": "consume_item", "__type": "Bool", "__value": true, "__tile": null, "defUid": 218, "realEditorValues": [] },
-								{ "__identifier": "target", "__type": "EntityRef", "__value": null, "__tile": null, "defUid": 232, "realEditorValues": [] }
+								{ "__identifier": "look_to_right", "__type": "Bool", "__value": true, "__tile": null, "defUid": 239, "realEditorValues": [] },
+								{ "__identifier": "target", "__type": "EntityRef", "__value": {
+									"entityIid": "22f69cc0-ac70-11f0-9855-e171ef5262e8",
+									"layerIid": "338fb841-8560-11f0-984d-b1610a9d11cf",
+									"levelIid": "338fb840-8560-11f0-984d-cf2c5df76d3f",
+									"worldIid": "ca3d7420-c640-11ed-ad34-5f1a115c4cf3"
+								}, "__tile": null, "defUid": 232, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["22f69cc0-ac70-11f0-9855-e171ef5262e8"]
+								}] }
 							],
 							"__worldX": -24,
 							"__worldY": 600
@@ -13715,6 +13763,7 @@
 								{ "__identifier": "locked_by", "__type": "LocalEnum.ItemType", "__value": null, "__tile": null, "defUid": 181, "realEditorValues": [] },
 								{ "__identifier": "locked_amount", "__type": "Int", "__value": 1, "__tile": null, "defUid": 179, "realEditorValues": [] },
 								{ "__identifier": "consume_item", "__type": "Bool", "__value": true, "__tile": null, "defUid": 218, "realEditorValues": [] },
+								{ "__identifier": "look_to_right", "__type": "Bool", "__value": true, "__tile": null, "defUid": 239, "realEditorValues": [] },
 								{ "__identifier": "target", "__type": "EntityRef", "__value": null, "__tile": null, "defUid": 232, "realEditorValues": [] }
 							],
 							"__worldX": -248,
@@ -13893,7 +13942,7 @@
 						},
 						{
 							"__identifier": "Enemy",
-							"__grid": [69,6],
+							"__grid": [68,6],
 							"__pivot": [0.5,0.5],
 							"__tags": ["Actor"],
 							"__tile": { "tilesetUid": 133, "x": 96, "y": 0, "w": 16, "h": 16 },
@@ -13902,7 +13951,7 @@
 							"width": 20,
 							"height": 20,
 							"defUid": 160,
-							"px": [1112,104],
+							"px": [1096,104],
 							"fieldInstances": [
 								{ "__identifier": "enemy_type", "__type": "LocalEnum.EnemyType", "__value": "KingPig", "__tile": null, "defUid": 197, "realEditorValues": [] },
 								{ "__identifier": "look_to_right", "__type": "Bool", "__value": false, "__tile": null, "defUid": 238, "realEditorValues": [{
@@ -13914,38 +13963,12 @@
 								{ "__identifier": "random_loot_range", "__type": "Int", "__value": 2, "__tile": null, "defUid": 234, "realEditorValues": [] },
 								{ "__identifier": "random_item_type", "__type": "LocalEnum.RandomItemType", "__value": "HealthOrAmmo", "__tile": null, "defUid": 237, "realEditorValues": [] }
 							],
-							"__worldX": -88,
+							"__worldX": -104,
 							"__worldY": 616
 						},
 						{
 							"__identifier": "Enemy",
-							"__grid": [71,6],
-							"__pivot": [0.5,0.5],
-							"__tags": ["Actor"],
-							"__tile": { "tilesetUid": 133, "x": 96, "y": 0, "w": 16, "h": 16 },
-							"__smartColor": "#FF0044",
-							"iid": "c6707710-ac70-11f0-92d6-5f60790e1606",
-							"width": 20,
-							"height": 20,
-							"defUid": 160,
-							"px": [1144,104],
-							"fieldInstances": [
-								{ "__identifier": "enemy_type", "__type": "LocalEnum.EnemyType", "__value": "KingPig", "__tile": null, "defUid": 197, "realEditorValues": [] },
-								{ "__identifier": "look_to_right", "__type": "Bool", "__value": false, "__tile": null, "defUid": 238, "realEditorValues": [{
-									"id": "V_Bool",
-									"params": [ false ]
-								}] },
-								{ "__identifier": "loot", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 219, "realEditorValues": [] },
-								{ "__identifier": "random_loot", "__type": "Bool", "__value": true, "__tile": null, "defUid": 233, "realEditorValues": [] },
-								{ "__identifier": "random_loot_range", "__type": "Int", "__value": 2, "__tile": null, "defUid": 234, "realEditorValues": [] },
-								{ "__identifier": "random_item_type", "__type": "LocalEnum.RandomItemType", "__value": "HealthOrAmmo", "__tile": null, "defUid": 237, "realEditorValues": [] }
-							],
-							"__worldX": -56,
-							"__worldY": 616
-						},
-						{
-							"__identifier": "Enemy",
-							"__grid": [67,6],
+							"__grid": [66,6],
 							"__pivot": [0.5,0.5],
 							"__tags": ["Actor"],
 							"__tile": { "tilesetUid": 133, "x": 96, "y": 0, "w": 16, "h": 16 },
@@ -13954,7 +13977,7 @@
 							"width": 20,
 							"height": 20,
 							"defUid": 160,
-							"px": [1080,104],
+							"px": [1064,104],
 							"fieldInstances": [
 								{ "__identifier": "enemy_type", "__type": "LocalEnum.EnemyType", "__value": "KingPig", "__tile": null, "defUid": 197, "realEditorValues": [] },
 								{ "__identifier": "look_to_right", "__type": "Bool", "__value": false, "__tile": null, "defUid": 238, "realEditorValues": [{
@@ -13966,7 +13989,7 @@
 								{ "__identifier": "random_loot_range", "__type": "Int", "__value": 2, "__tile": null, "defUid": 234, "realEditorValues": [] },
 								{ "__identifier": "random_item_type", "__type": "LocalEnum.RandomItemType", "__value": "HealthOrAmmo", "__tile": null, "defUid": 237, "realEditorValues": [] }
 							],
-							"__worldX": -120,
+							"__worldX": -136,
 							"__worldY": 616
 						}
 					]
