@@ -28,7 +28,7 @@ namespace SharedTypes
         public static string ProjectRootFolder
         {
             get => _projectRootFolder;
-            set
+            internal set
             {
                 if (!Path.IsPathRooted(value))
                 {
