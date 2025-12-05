@@ -55,8 +55,11 @@ namespace Game
         {
             if (!Data.IsArriveOnly && CanInteract(player))
             {
-                player.Transform.WorldPosition = Data.TargetPos;
-                return true;
+                if (Data.LockedBy == ItemId.none || player.Inventory.Use(Data.LockedBy))
+                {
+                    player.Transform.WorldPosition = Data.TargetPos;
+                    return true;
+                }
             }
             return false;
         }

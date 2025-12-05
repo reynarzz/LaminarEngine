@@ -15,6 +15,7 @@ namespace Game
         public event Action<bool> OnDoorStateChanged;
         const int fps = 11;
         private bool _playerEnter;
+        private bool _isClosed = true;
         protected override void OnAwake()
         {
             base.OnAwake();
@@ -39,6 +40,7 @@ namespace Game
             });
             closeAnim.Clip.AddEvent(closeAnim.Clip.Duration, () =>
             {
+                _isClosed = true;
                 OnDoorStateChanged?.Invoke(false);
                 CameraShake.Instance.BurstShake(20, 0.2f, 0.15f);
 
@@ -66,7 +68,7 @@ namespace Game
 
         public override bool TryInteract(Player player)
         {
-            if (CanInteract(player))
+            if (CanInteract(player) && _isClosed)
             {
                 if (Data.LockedBy == ItemId.none || player.Inventory.Use(Data.LockedBy))
                 {
@@ -89,6 +91,7 @@ namespace Game
 
         public void Open()
         {
+            _isClosed = false;
             Animator.Play("Open");
         }
 

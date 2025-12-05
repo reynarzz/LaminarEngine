@@ -14,6 +14,16 @@ namespace Game
             var portalData = new PortalData();
             portal.Transform.WorldPosition = entityData.WorldPosition;
 
+            if (GetEnum<ItemId>(entityData, "locked_by", out var item))
+            {
+                portalData.LockedBy = item;
+            }
+
+            if (GetInt(entityData, "locked_amount", out var value))
+            {
+                portalData.LockedAmount = value;
+            }
+
             if (GetEntityRef(entityData, "target", worldData, out var targetValue))
             {
                 portalData.TargetPos = targetValue.WorldPosition;
@@ -24,6 +34,9 @@ namespace Game
             {
                 portalData.IsArriveOnly = true;
             }
+
+            portalData.InteractCondition = PlayerHasItem_Condition(portalData.LockedBy, portalData.LockedAmount);
+
             portal.Init(portalData);
 
             return portal;
