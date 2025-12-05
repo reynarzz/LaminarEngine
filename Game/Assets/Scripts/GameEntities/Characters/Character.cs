@@ -180,6 +180,7 @@ namespace Game
             AnimatorTransition toFall = null;
             AnimatorTransition toIdle = null;
             AnimatorTransition toWalk = null;
+            AnimatorTransition toWalkYVeloDown = null;
             AnimatorTransition toAttack = null;
             AnimatorTransition toHit = null;
             AnimatorTransition toDeath = null;
@@ -196,6 +197,11 @@ namespace Game
             {
                 toWalk = new AnimatorTransition(WALK_ANIM_STATE, [new IntCondition(VEL_X_PROP_NAME, 0, IntOp.NotEqual),
                                                         new BoolCondition(ON_GROUND_PROPERTY_NAME, true),
+                                                        new IntCondition(LIFE_PROPERTY_NAME, 0, IntOp.GreaterThan)]);
+
+                toWalkYVeloDown = new AnimatorTransition(WALK_ANIM_STATE, [new IntCondition(VEL_X_PROP_NAME, 0, IntOp.NotEqual),
+                                                        new BoolCondition(ON_GROUND_PROPERTY_NAME, true),
+                                                        new IntCondition(VEL_Y_PROP_NAME, 0, IntOp.LessThan),
                                                         new IntCondition(LIFE_PROPERTY_NAME, 0, IntOp.GreaterThan)]);
             }
             if (statesConfig.Jump.IsEnabled)
@@ -236,7 +242,7 @@ namespace Game
             }
             if (statesConfig.Jump.IsEnabled)
             {
-                AddSpriteAnimState(JUMP_ANIM_STATE, false, false, false, [toIdle, toFall, toWalk, toAttack, toHit], statesConfig.Jump.SpriteAtlasId, statesConfig.Jump.Fps, statesConfig.Jump.Events);
+                AddSpriteAnimState(JUMP_ANIM_STATE, false, false, false, [toIdle, toFall, toWalkYVeloDown, toAttack, toHit], statesConfig.Jump.SpriteAtlasId, statesConfig.Jump.Fps, statesConfig.Jump.Events);
             }
             if (statesConfig.Fall.IsEnabled)
             {

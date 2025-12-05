@@ -19,7 +19,8 @@ namespace Game
         // Fix: Batch2d vertices shift when an object is destroyed. 
         // Fix: Texture units overflow, a batch should only bind: MAX_DEVICE_ALLOWED - RENDERER_NEEDED_TEXTURE_SLOTS
         // GameIcon, it should be baked into the game data.
-        // Fix player getting stuck in wall corners due to ground raycast.
+        // Fix player getting stuck in wall corners due to ground raycast,
+        //     :this can be solved by checking if the player is colliding with a wall, if so, then push him away the wall.
 
         // For the game:
         // ---Add spikes
