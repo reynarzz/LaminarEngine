@@ -56,7 +56,7 @@ namespace Game
             {
                 sb.AppendLine(item);
             }
-            File.WriteAllText(Paths.ProjectRootFolder + "/_ReleaseAssetsList.txt", sb.ToString());
+            File.WriteAllText(Paths.GetLibraryFolderPath() + "/_ReleaseAssetsList.txt", sb.ToString());
 #endif
         }
     }
