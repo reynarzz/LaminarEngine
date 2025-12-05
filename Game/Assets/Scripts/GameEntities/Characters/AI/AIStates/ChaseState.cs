@@ -11,7 +11,8 @@ namespace Game
 
     internal class ChaseState<T> : StateBase<T> where T : AICharacter
     {
-        private float _timeToSearch = 3;
+        private readonly float _timeToSearch = 1;
+        private float _currentTimeToSearch;
         public ChaseState() : base([])
         {
         }
@@ -34,13 +35,13 @@ namespace Game
 
                 if (Context.Detector.IsTargetDetected)
                 {
-                    _timeToSearch = 3;
+                    _currentTimeToSearch = _timeToSearch;
                 }
                 else
                 {
-                    _timeToSearch -= Time.DeltaTime;
+                    _currentTimeToSearch -= Time.DeltaTime;
                 }
-                if ((!Context.Detector.IsTargetDetected && _timeToSearch <= 0) || !Context.Target.IsCharacterAlive())
+                if ((!Context.Detector.IsTargetDetected && _currentTimeToSearch <= 0) || !Context.Target.IsCharacterAlive())
                 {
                     Context.Walk(0);
                     // ReturnToParent();

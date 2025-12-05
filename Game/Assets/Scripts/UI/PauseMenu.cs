@@ -40,6 +40,7 @@ namespace Game
             var backSize = new vec2(512 * 3, 288 * 3);
             // Background
             _background = UiUtils.NewImage("Background", backSize * 0.5f, backSize, Color32.RGB(200), _canvas.Transform);
+            
             _background.BlockEvents = true;
             _background.ReceiveEvents = true;
 
@@ -56,34 +57,55 @@ namespace Game
             _titleText.FontSize = 70;
             _titleText.Fit = TextFit.ExpandToFit;
             _titleText.Vertical = TextVerticalAlignment.Center;
-
+            _titleText.Transform.WorldScale = vec3.One * 2;
             // TODO: The renderer has a problem with this line.
             _titleText.Material = new Material("Title Material: " + (_matCount++), new Shader(Assets.GetText("Shaders/Font/FontVert.vert").Text, Assets.GetText("Shaders/Font/FontFrag.frag").Text));
             //-- _titleText.Material = MaterialUtils.FontMaterial; // Use this instead
 
+            var resume = MenuButton("Resume", new vec2(0, 70));
+            resume.button.OnButtonClick += OnResume;
+
+            var quit = MenuButton("Quit", new vec2(0, 130));
+            quit.button.OnButtonClick += OnQuitGame;
+
+            _graphics.Add(_titleText);
+            _graphics.Add(_background);
+
+            // LogRecursive(_background.Transform);
+
+            SetColorAlpha(0, true);
+        }
+
+        private void OnQuitGame()
+        {
+            Window.CloseWindow();
+        }
+
+        private (UIText text, UIImage image, Button button) MenuButton(string label, vec2 position)
+        {
             var buttonSlice = GameTextures.GetAtlas("ui_buttons_long");
 
-            var resumeButtonImage = UiUtils.NewImage("Resume button image", new vec2(0, 0), new vec2(150, 40), Color.White, _background.Transform);
+            var buttonImage = UiUtils.NewImage(label + "_button image", position, new vec2(150, 40), Color.White, _background.Transform);
 
-            resumeButtonImage.PreserveAspect = true;
-            var button = resumeButtonImage.AddComponent<Button>();
-            button.OnButtonClick += OnResume;
-            button.Graphic = resumeButtonImage;
+            buttonImage.PreserveAspect = true;
+            var button = buttonImage.AddComponent<Button>();
+            button.Graphic = buttonImage;
             button.UseSprite = true;
             button.NormalSprite = buttonSlice[0];
             button.PressedSprite = buttonSlice[1];
-
+            buttonImage.SortOrder = 2;
             // button.IsDisabled = true;
             // resumeButtonImage.AddComponent<ContentSizeFitter>().Padding = new Thickness(10);
 
             // resumeButtonImage.AddComponent<Test_UIEvent>();
 
-            var text = UiUtils.NewText("Resume text", "Resume", default, resumeButtonImage.Transform);
+            var text = UiUtils.NewText(label + "_text", label, default, buttonImage.Transform);
             text.ReceiveEvents = false;
-            text.RectTransform.Size.y = resumeButtonImage.RectTransform.Size.y;
-            text.RectTransform.Size.x = resumeButtonImage.RectTransform.Size.x;
+            text.RectTransform.Size.y = buttonImage.RectTransform.Size.y;
+            text.RectTransform.Size.x = buttonImage.RectTransform.Size.x;
             text.FontSize = 30;
             text.Padding.Bottom = 5;
+            text.SortOrder = 2;
             button.OnPointerDownEvent += () => text.Padding.Bottom -= 10;
             button.OnPointerUpEvent += () => text.Padding.Bottom += 10;
             button.OnPointerCancelEvent += () => text.Padding.Bottom += 10;
@@ -97,15 +119,9 @@ namespace Game
             //text.AddComponent<Test_UIEvent>();
 
             _graphics.Add(text);
-            _graphics.Add(_titleText);
-            _graphics.Add(_background);
-            _graphics.Add(resumeButtonImage);
+            _graphics.Add(buttonImage);
 
-            // LogRecursive(_background.Transform);
-#if !DEBUG
-            Window.CursorVisible = false;
-#endif
-            SetColorAlpha(0, true);
+            return (text, buttonImage, button);
         }
 
         private static void LogHierarchy(Transform current, int depth = 0)

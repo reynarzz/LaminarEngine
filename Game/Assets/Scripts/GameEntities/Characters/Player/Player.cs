@@ -53,9 +53,9 @@ namespace Game
                 };
             }
 
-            states.Attack.Events = [new AnimEvent { Time = 0, Callback = PlayAttackSoundFx }];
-            states.Walk.Events = [new AnimEvent { Time = 0, Callback = PlayWalkSoundFx }, new AnimEvent { Time = (1.0f / fps) * 4, Callback = PlayWalkSoundFx }];
-            states.Jump.Events = [new AnimEvent { Time = 0, Callback = PlayJumpSoundFx }];
+            states.Attack.Events = [new AnimEvent { Time = 0, Callback = PlayAttackSFX }];
+            states.Walk.Events = [new AnimEvent { Time = 0, Callback = PlayWalkSFX }, new AnimEvent { Time = (1.0f / fps) * 4, Callback = PlayWalkSFX }];
+          //  states.Jump.Events = [new AnimEvent { Time = 0, Callback = PlayJumpSoundFx }];
 
             InitAnimationStates(states);
 
@@ -170,18 +170,6 @@ namespace Game
 
             _shootCooldownTime -= Time.DeltaTime;
 
-            if (Input.GetKeyDown(KeyCode.X))
-            {
-                //Death();
-            }
-            if (Input.GetKeyDown(KeyCode.Z))
-            {
-                Restart();
-            }
-            if (Input.GetKeyDown(KeyCode.H))
-            {
-                HitDamage(this, 1);
-            }
 
             if (_canMove)
             {
@@ -213,26 +201,30 @@ namespace Game
                     Walk(0);
                 }
             }
-        }
 
-        public override bool HitDamage(GameEntity who, int amount)
-        {
-            var isHit = base.HitDamage(who, amount);
-
-            if (isHit)
+#if DEBUG
+            if (Input.GetKeyDown(KeyCode.X))
             {
-                //CameraShake.Instance.BurstShake(30, 0.19f, 0.09f);
+                //Death();
             }
-            return isHit;
+            if (Input.GetKeyDown(KeyCode.Z))
+            {
+                Restart();
+            }
+            if (Input.GetKeyDown(KeyCode.H))
+            {
+                HitDamage(this, 1);
+            }
+#endif
         }
-        
+
         public override bool Attack(int index = 0)
         {
             if (!IsCharacterAlive())
                 return false;
 
             CameraShake.Instance.BurstShake(20, 0.09f, 0.09f);
-            PlayAttackSoundFx();
+            PlayAttackSFX();
 
             var origin = Transform.WorldPosition + new vec3(Transform.LocalScale.x + Math.Sign(Transform.LocalScale.x) * 0.3f, -0.1f);
 

@@ -109,7 +109,9 @@ namespace Game
             var music = new Actor<AudioSource>("Music Manager");
             var musicAudio = music.GetComponent<AudioSource>();
             musicAudio.Loop = true;
-            musicAudio.Clip = Assets.GetAudioClip("Audio/music/streamloops/Stream Loops 2024-02-14_L01.wav");
+            // musicAudio.Clip = Assets.GetAudioClip("Audio/music/streamloops/Stream Loops 2024-02-14_L01.wav");
+            musicAudio.Clip = Assets.GetAudioClip("Audio/MinifantasyMusic/Goblins_Dance_(Battle).wav");
+            
             musicAudio.Transform.Parent = Transform;
             musicAudio.Play();
 

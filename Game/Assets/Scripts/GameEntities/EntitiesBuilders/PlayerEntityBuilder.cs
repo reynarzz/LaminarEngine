@@ -27,7 +27,7 @@ namespace Game
                 _player.Init(new CharacterConfig()
                 {
                     JumpForce = 15,
-                    NormalJumpHeightThreshold = 1.85f,
+                    NormalJumpHeightThreshold = 2.1f,
                     MaxJumpHeight = 3,
                     WalkSpeed = 5.35f,
                     YGravityScale = 3.5f,
@@ -54,13 +54,17 @@ namespace Game
                         YOffset = 0,
                         GroundMask = GameConsts.GROUND_MASK
                     },
+                    HitSoundsVolume = 0.08f * 1.3f,
+                    WalkSoundsVolume = 0.13f * 1.3f,
+                    AttackSoundsVolume = 0.12f * 1.3f,
+                    JumpSoundsVolume = 0.1f * 1.3f,
                     WalkSounds = ["Audio/HALFTONE/UI/2. Clicks/Click_4.wav",
-                              "Audio/HALFTONE/UI/2. Clicks/Click_5.wav",
-                              "Audio/HALFTONE/UI/2. Clicks/Click_10.wav"],
+                                  "Audio/HALFTONE/UI/2. Clicks/Click_5.wav",
+                                  "Audio/HALFTONE/UI/2. Clicks/Click_10.wav"],
                     AttackSounds = ["Audio/HALFTONE/Gameplay/Bullet_1.wav"],
                     JumpSounds = ["Audio/HALFTONE/Gameplay/Jump_3.wav"],
                     GroundSounds = ["Audio/HALFTONE/Gameplay/Hit_4.wav"],
-                    HitSound = "Audio/HALFTONE/Gameplay/Hit_2.wav"
+                    HitSounds = ["Audio/HALFTONE/Gameplay/Hit_2.wav"]
                 });
             }
             else

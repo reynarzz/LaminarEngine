@@ -77,15 +77,6 @@ namespace Game
             SpriteRenderer.Sprite = GameTextures.GetAtlas(idleAtlasId)[0];
         }
 
-        protected override void OnUpdate()
-        {
-            base.OnUpdate();
-
-            if (Input.GetKeyDown(KeyCode.J))
-            {
-                SpriteRenderer.SortOrder = SpriteRenderer.SortOrder == 0? 3: 0;
-            }
-        }
         protected override void OnPlayerInteractZone(bool enter, Player player)
         {
             base.OnPlayerInteractZone(enter && !_isOpened, player);
@@ -104,6 +95,8 @@ namespace Game
                     //}
                     Animator.Play("Open");
                     InteractableRenderVisible(false);
+                    AudioSource.PlayOneShot(Assets.GetAudioClip("Audio/MinifantasySfx/01_chest_open_3.wav"), 0.3f);
+
                     yield return new WaitForSeconds(0.2f);
 
                     if (Data.ChestLoot != null)

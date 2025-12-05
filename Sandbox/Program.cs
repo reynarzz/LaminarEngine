@@ -35,14 +35,13 @@ namespace Sandbox
             var assemblyDir = Paths.ClearPathSeparation(Path.GetDirectoryName(AppContext.BaseDirectory)!);
             var root = Path.Combine(assemblyDir.Substring(0, assemblyDir.LastIndexOf(Paths.SANDBOX_FOLDER_NAME)), Paths.GAME_FOLDER_NAME);
 
-            
             new GameProject().Initialize(new ProjectConfig() { ProjectFolderRoot = root });
             var releaseAssetsPath = Paths.GetLibraryFolderPath() + "/_ReleaseAssetsList.txt";
             var releaseAssetsList = default(string[]);
             if (File.Exists(releaseAssetsPath))
             {
                 releaseAssetsList = File.ReadAllText(releaseAssetsPath)?.Split('\n', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
-            } 
+            }
             new AssetsCooker().CookAll(new CookOptions()
             {
                 Type = CookingType.DevMode,
@@ -56,7 +55,7 @@ namespace Sandbox
                 },
                 MatchingFiles = releaseAssetsList
             });
-#endif 
+#endif
             new GFSEngine().Initialize<GameApplication>("GFS | By Reynardo Perez", 1024, 576).Run();
 
             _mutex.ReleaseMutex();
