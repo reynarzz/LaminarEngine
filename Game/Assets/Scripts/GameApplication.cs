@@ -24,7 +24,7 @@ namespace Game
         // ---Add spikes
         // ----Enemy AI
         // Five levels, small, one intro level falling from outside.
-        // Loot jumps from enemies, and chests, keys, and other key items will remain in inventory.
+        // All Loot jumps from enemies, and chests, keys, and other key items will remain in inventory, others will consume at contact.
         // Water and lava.
 
         // Late release polish:

@@ -25,7 +25,14 @@ namespace Engine
         public static bool DrawColliders { get; set; }
         private static readonly B2QueryFilter _defaultQueryFilter = new B2QueryFilter(B2Constants.B2_DEFAULT_CATEGORY_BITS,
                                                                                       B2Constants.B2_DEFAULT_MASK_BITS);
-
+        public static vec2 Gravity
+        {
+            get => B2Worlds.b2World_GetGravity(PhysicWorld.WorldID).ToVec2(); 
+            set
+            {
+                B2Worlds.b2World_SetGravity(PhysicWorld.WorldID, value.ToB2Vec2());
+            }
+        }
 
         public static CastHit2D Raycast(vec2 origin, vec2 direction)
         {

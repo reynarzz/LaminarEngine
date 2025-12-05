@@ -16,13 +16,15 @@ namespace Game
             get => _life; 
             set
             {
-                if (_life == value)
+                var life = Math.Clamp(value, 0, MaxLife);
+
+                if (_life == life)
                     return;
-                _life = value;
+                _life = life;
                 OnLifeChanged?.Invoke(_life);
             }
         }
-
+        public int MaxLife { get; set; }
         public CharacterInventory(int maxSlots) : base(maxSlots) { }
     }
 }

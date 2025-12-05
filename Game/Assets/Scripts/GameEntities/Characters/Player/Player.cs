@@ -187,9 +187,13 @@ namespace Game
             {
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    Jump();
+                    BeginJump();
                 }
+                else if (Input.GetKeyUp(KeyCode.Space))
+                {
 
+                    EndJump();
+                }
                 if (Input.GetKey(KeyCode.F) && _shootCooldownTime <= 0)
                 {
                     _shootCooldownTime = _shootCooldown;

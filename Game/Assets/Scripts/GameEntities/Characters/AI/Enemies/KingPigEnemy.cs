@@ -14,7 +14,7 @@ namespace Game
         public override void Init(CharacterConfig config)
         {
             base.Init(config);
-
+            Detector.Size = 7;
             _stateMachine = new StateMachine<KingPigEnemy>(this, 
                 [new PatrolState<KingPigEnemy>(), new ChaseState<KingPigEnemy>(),
                  new AttackState<KingPigEnemy>(), new CelebrateState<KingPigEnemy>(),

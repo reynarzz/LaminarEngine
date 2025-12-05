@@ -4119,12 +4119,12 @@
 							"defUid": 200,
 							"px": [1224,872],
 							"fieldInstances": [
-								{ "__identifier": "locked_by", "__type": "LocalEnum.ItemType", "__value": "Normal_potion", "__tile": null, "defUid": 217, "realEditorValues": [{
+								{ "__identifier": "locked_by", "__type": "LocalEnum.ItemType", "__value": null, "__tile": null, "defUid": 217, "realEditorValues": [null] },
+								{ "__identifier": "items_loot", "__type": "Array<LocalEnum.ItemType>", "__value": ["Coin_currency"], "__tile": null, "defUid": 202, "realEditorValues": [{
 									"id": "V_String",
-									"params": ["Normal_potion"]
+									"params": ["Coin_currency"]
 								}] },
-								{ "__identifier": "items_loot", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 202, "realEditorValues": [] },
-								{ "__identifier": "items_amount", "__type": "Array<Int>", "__value": [], "__tile": null, "defUid": 208, "realEditorValues": [] }
+								{ "__identifier": "items_amount", "__type": "Array<Int>", "__value": [4], "__tile": null, "defUid": 208, "realEditorValues": [{ "id": "V_Int", "params": [4] }] }
 							],
 							"__worldX": 120,
 							"__worldY": 408
@@ -4146,8 +4146,11 @@
 									"id": "V_String",
 									"params": ["Coin_currency"]
 								}] },
-								{ "__identifier": "items_loot", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 202, "realEditorValues": [] },
-								{ "__identifier": "items_amount", "__type": "Array<Int>", "__value": [], "__tile": null, "defUid": 208, "realEditorValues": [] }
+								{ "__identifier": "items_loot", "__type": "Array<LocalEnum.ItemType>", "__value": ["Normal_potion"], "__tile": null, "defUid": 202, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Normal_potion"]
+								}] },
+								{ "__identifier": "items_amount", "__type": "Array<Int>", "__value": [1], "__tile": null, "defUid": 208, "realEditorValues": [{ "id": "V_Int", "params": [1] }] }
 							],
 							"__worldX": 408,
 							"__worldY": 408

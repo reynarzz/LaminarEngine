@@ -32,9 +32,12 @@ namespace Game
     public struct CharacterConfig
     {
         public float JumpForce;
+        public float NormalJumpHeightThreshold;
+        public float MaxJumpHeight;
         public float WalkSpeed;
         public float YGravityScale;
         public int StartingLife;
+        public int MaxLife;
         public int SpriteLookDirFlip;
         public BodyColliderOptions ColliderConfig;
         public GroundDetectionOptions Ground;
@@ -113,6 +116,9 @@ namespace Game
         private AudioClip _hitSfx;
         private bool _jumped = false;
         private AnimationState _deadState;
+        private bool _jumping = false;
+        private float _jumpStartY;
+
         public bool IsInvencible { get; protected set; }
         public bool IsEnteringThroughDoor { get; protected set; }
         public virtual void Init(CharacterConfig config)
@@ -137,6 +143,7 @@ namespace Game
             Renderer.Material = config.Material;
             Collider.Friction = 0;
             Transform.WorldPosition = config.StartPosition;
+            Inventory.MaxLife = _characterConfig.MaxLife;
             Inventory.Life = _characterConfig.StartingLife;
             InitAudio(config);
             LookAt(_characterConfig.StartLookDir);
@@ -363,6 +370,73 @@ namespace Game
             }
         }
 
+        public void BeginJump()
+        {
+            if (!CanCharacterMove()) return;
+            if (!IsOnGround || _jumping) return;
+
+            _jumping = true;
+            _jumpStartY = Transform.WorldPosition.y;
+
+            Rigidbody.GravityScale = _characterConfig.YGravityScale;
+            float gravity = MathF.Abs(Physics2D.Gravity.y * Rigidbody.GravityScale);
+            float jumpVelocity = MathF.Sqrt(2 * gravity * _characterConfig.MaxJumpHeight);
+
+            // Give exact velocity to reach desired height
+            Rigidbody.Velocity = new vec2(Rigidbody.Velocity.x, jumpVelocity);
+
+            PlayJumpSoundFx();
+        }
+
+        public void EndJump()
+        {
+            var diff = Transform.WorldPosition.y - _jumpStartY;
+            Debug.Log(diff + ", " + _characterConfig.NormalJumpHeightThreshold);
+            var isNormalJump = diff >= _characterConfig.NormalJumpHeightThreshold;
+            if (Rigidbody.Velocity.y > 0 && !isNormalJump)
+            {
+                Rigidbody.Velocity = new vec2(Rigidbody.Velocity.x, Rigidbody.Velocity.y * 0.5f);
+            }
+
+            _jumping = false;
+        }
+
+        protected override void OnFixedUpdate()
+        {
+            if (_characterConfig.Ground.Enabled)
+            {
+                CheckGround();
+            }
+
+            if (_currentHitRecoilTime <= 0)
+            {
+                if (IsCharacterAlive())
+                {
+                    Rigidbody.Velocity = new vec2(Rigidbody.Velocity.x, Math.Clamp(Rigidbody.Velocity.y, _maxFallYVelocity, float.MaxValue));
+                }
+                else
+                {
+                    Rigidbody.Velocity = new vec2(0, Rigidbody.Velocity.y > 0 ? 0 : Rigidbody.Velocity.y);
+
+                }
+            }
+
+            //if (_jumping)
+            //{
+            //    _currentJumpHeight = Rigidbody.Transform.WorldPosition.y - _jumpStartY;
+            //    Debug.Log("Jumping");
+            //    if (_currentJumpHeight < _maxJumpHeight)
+            //    {
+            //        Rigidbody.AddForce(vec2.Up * _characterConfig.NormalJumpForce, ForceMode2D.Force);
+            //    }
+            //    else
+            //    {
+            //        Debug.Log("End jump");
+            //        EndJump();
+            //    }
+            //}
+
+        }
         public void LookAt(int dir)
         {
             if (dir == 0)
@@ -459,7 +533,11 @@ namespace Game
 
                 yield return null;
             }
-
+            if(color.A < 0.9)
+            {
+                Debug.Error("Fix: character color is not being restarted correctly.");
+            }
+            color.A = 1;
             Renderer.Color = color;
             IsInvencible = false;
         }
@@ -514,26 +592,6 @@ namespace Game
             return Inventory.Life > 0;
         }
 
-        protected override void OnFixedUpdate()
-        {
-            if (_characterConfig.Ground.Enabled)
-            {
-                CheckGround();
-            }
-
-            if (_currentHitRecoilTime <= 0)
-            {
-                if (IsCharacterAlive())
-                {
-                    Rigidbody.Velocity = new vec2(Rigidbody.Velocity.x, Math.Clamp(Rigidbody.Velocity.y, _maxFallYVelocity, float.MaxValue));
-                }
-                else
-                {
-                    Rigidbody.Velocity = new vec2(0, Rigidbody.Velocity.y > 0 ? 0 : Rigidbody.Velocity.y);
-
-                }
-            }
-        }
 
         private void CheckGround()
         {
@@ -597,7 +655,7 @@ namespace Game
             {
                 _currentHitRecoilTime = 0;
                 _jumped = false;
-
+                _jumping = false;
                 if (!IsCharacterAlive())
                 {
                     CameraShake.Instance.BurstShake(20, 0.1f, 0.2f);

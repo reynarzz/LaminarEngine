@@ -11,13 +11,14 @@ namespace Game
 
     internal class ChaseState<T> : StateBase<T> where T : AICharacter
     {
+        private float _timeToSearch = 3;
         public ChaseState() : base([])
         {
         }
         public override void OnEnter()
         {
             Context.Target = Actor.Find("Player").GetComponent<Character>();
-            Context.Detector.Size = 10;
+            Context.Detector.Size = 13;
         }
 
         public override void OnUpdate()
@@ -31,7 +32,15 @@ namespace Game
                 var dir = Context.Transform.WorldPosition - Context.Target.Transform.WorldPosition;
                 var transitionDist = 1.4f;
 
-                if (!Context.Detector.IsTargetDetected || !Context.Target.IsCharacterAlive())
+                if (Context.Detector.IsTargetDetected)
+                {
+                    _timeToSearch = 3;
+                }
+                else
+                {
+                    _timeToSearch -= Time.DeltaTime;
+                }
+                if ((!Context.Detector.IsTargetDetected && _timeToSearch <= 0) || !Context.Target.IsCharacterAlive())
                 {
                     Context.Walk(0);
                     // ReturnToParent();
