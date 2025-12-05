@@ -45,7 +45,7 @@ namespace Sandbox
             }
             new AssetsCooker().CookAll(new CookOptions()
             {
-                Type = CookingType.ReleaseMode,
+                Type = CookingType.DevMode,
                 AssetsFolderPath = Paths.GetAssetsFolderPath(),
                 ExportFolderPath = Paths.GetAssetDatabaseFolder(),
                 FileOptions = new CookFileOptions()
