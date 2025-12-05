@@ -35,17 +35,17 @@ namespace Sandbox
             var assemblyDir = Paths.ClearPathSeparation(Path.GetDirectoryName(AppContext.BaseDirectory)!);
             var root = Path.Combine(assemblyDir.Substring(0, assemblyDir.LastIndexOf(Paths.SANDBOX_FOLDER_NAME)), Paths.GAME_FOLDER_NAME);
 
-            var releaseAssetsPath = root + "/_ReleaseAssetsList.txt";
+            
+            new GameProject().Initialize(new ProjectConfig() { ProjectFolderRoot = root });
+            var releaseAssetsPath = Paths.GetLibraryFolderPath() + "/_ReleaseAssetsList.txt";
             var releaseAssetsList = default(string[]);
-
             if (File.Exists(releaseAssetsPath))
             {
                 releaseAssetsList = File.ReadAllText(releaseAssetsPath)?.Split('\n', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
             }
-            new GameProject().Initialize(new ProjectConfig() { ProjectFolderRoot = root });
             new AssetsCooker().CookAll(new CookOptions()
             {
-                Type = CookingType.DevMode,
+                Type = CookingType.ReleaseMode,
                 AssetsFolderPath = Paths.GetAssetsFolderPath(),
                 ExportFolderPath = Paths.GetAssetDatabaseFolder(),
                 FileOptions = new CookFileOptions()
