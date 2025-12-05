@@ -24,7 +24,7 @@ namespace Engine
         private static bool dragging = false;
         private static double startCursorX, startCursorY;
         private static int startWinX, startWinY;
-
+        internal static event Action OnWindowClose;
         private static bool _isMouseVisible = true;
         public static bool CursorVisible
         {
@@ -167,6 +167,10 @@ namespace Engine
             Glfw.ShowWindow(NativeWindow);
             //Glfw.SetWindowAttribute(NativeWindow, WindowAttribute.Decorated, true);
             Glfw.RequestWindowAttention(NativeWindow);
+            Glfw.SetCloseCallback(NativeWindow, (x) => 
+            {
+                OnWindowClose?.Invoke();
+            });
         }
 
         internal static void SwapBuffers()

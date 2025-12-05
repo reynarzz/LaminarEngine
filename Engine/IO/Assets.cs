@@ -23,7 +23,7 @@ namespace Engine
 
         public static TextAsset GetText(string path)
         {
-            return IOLayer.GetDatabase().GetAsset<TextAsset>(path);
+            return Get<TextAsset>(path);
         }
 
         public static FontAsset GetFont(string path)
@@ -43,8 +43,11 @@ namespace Engine
 
         public static T Get<T>(string path) where T: AssetResourceBase
         {
-            if(!_loadedPaths.Contains(path))
+#if DEBUG
+            if (!string.IsNullOrEmpty(path) && !_loadedPaths.Contains(path))
             _loadedPaths.Add(path);
+#endif
+
             return IOLayer.GetDatabase().GetAsset<T>(path);
         }
 

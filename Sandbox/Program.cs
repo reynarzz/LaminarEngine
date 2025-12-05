@@ -35,6 +35,13 @@ namespace Sandbox
             var assemblyDir = Paths.ClearPathSeparation(Path.GetDirectoryName(AppContext.BaseDirectory)!);
             var root = Path.Combine(assemblyDir.Substring(0, assemblyDir.LastIndexOf(Paths.SANDBOX_FOLDER_NAME)), Paths.GAME_FOLDER_NAME);
 
+            var releaseAssetsPath = root + "/_ReleaseAssetsList.txt";
+            var releaseAssetsList = default(string[]);
+
+            if (File.Exists(releaseAssetsPath))
+            {
+                releaseAssetsList = File.ReadAllText(releaseAssetsPath)?.Split('\n', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+            }
             new GameProject().Initialize(new ProjectConfig() { ProjectFolderRoot = root });
             new AssetsCooker().CookAll(new CookOptions()
             {
@@ -46,19 +53,12 @@ namespace Sandbox
                     CompressAllFiles = false,
                     CompressionLevel = 12,
                     EncryptAllFiles = false,
-                }
+                },
+                MatchingFiles = releaseAssetsList
             });
 #endif
-
             new GFSEngine().Initialize<GameApplication>("GFS", 1024, 576).Run();
 
-#if DEBUG
-            // Just a debug utility to verify the paths loaded during the game execution.
-            foreach (var item in Assets.LoadedPaths())
-            {
-                Console.WriteLine(item);
-            }
-#endif
             _mutex.ReleaseMutex();
         }
     }
