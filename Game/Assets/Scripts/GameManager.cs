@@ -120,7 +120,7 @@ namespace Game
             BuildLevel(levelIndex: 0);
         }
 
-        public void BuildLevel(int levelIndex)
+        public void BuildLevel(int levelIndex, vec2 playerStartPos = default)
         {
             SceneManager.LoadScene("Level: " + levelIndex);
             WaterTest();
@@ -162,6 +162,11 @@ namespace Game
             }
 
             ForegroundTilemap = result.Tilemaps[0];
+
+            if(playerStartPos != default)
+            {
+                Player.Transform.WorldPosition = playerStartPos;
+            }
             InitializeCamera(Player.Transform, ForegroundTilemap.Bounds);
         }
 

@@ -36,7 +36,7 @@ namespace Game
                 //var engageDist = 5f;
                 // var dir = (Context.Target.Transform.WorldPosition - Context.Transform.WorldPosition);
                 
-                if (Context.Detector.IsTargetDetected && Context.Target.IsCharacterAlive())
+                if (Context.Detector.IsTargetDetected && Context.Target.IsCharacterAlive() && !Context.Target.IsEnteringThroughDoor)
                 {
                     FSM.ChangeState<ChaseState<T>>();
                 }

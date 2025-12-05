@@ -57,6 +57,7 @@ namespace Game
                     StartPosition = data.Position,
                     Material = MaterialUtils.SpriteMaterial,
                     StartingLife = 3,
+                    MaxLife = 3,
                     StartLookDir = data.LookDir,
                     SpriteLookDirFlip = -1,
                     InventoryMaxSlots = data.StartInventoryItems != null ? data.StartInventoryItems.Length : 0,

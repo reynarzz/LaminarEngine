@@ -27,6 +27,8 @@ namespace Game
                 _player.Init(new CharacterConfig()
                 {
                     JumpForce = 15,
+                    NormalJumpHeightThreshold = 1.85f,
+                    MaxJumpHeight = 3,
                     WalkSpeed = 5.35f,
                     YGravityScale = 3.5f,
                     ColliderConfig = new BodyColliderOptions() { Size = new vec2(1.0f, 1.7f), Offset = new vec2(0, 0.25f) },
@@ -35,6 +37,7 @@ namespace Game
                     StartPosition = entityData.WorldPosition,
                     Material = MaterialUtils.SpriteMaterial,
                     StartingLife = 6,
+                    MaxLife = 6,
                     SpriteLookDirFlip = 1,
                     InventoryMaxSlots = 6,
                     HitInvincibilityBlinks = 5,

@@ -19,12 +19,13 @@ namespace Game
         // Fix: Batch2d vertices shift when an object is destroyed. 
         // Fix: Texture units overflow, a batch should only bind: MAX_DEVICE_ALLOWED - RENDERER_NEEDED_TEXTURE_SLOTS
         // GameIcon, it should be baked into the game data.
+        // Fix player getting stuck in wall corners due to ground raycast.
 
         // For the game:
         // ---Add spikes
         // ----Enemy AI
         // Five levels, small, one intro level falling from outside.
-        // Loot jumps from enemies, and chests, keys, and other key items will remain in inventory.
+        // All Loot jumps from enemies, and chests, keys, and other key items will remain in inventory, others will consume at contact.
         // Water and lava.
 
         // Late release polish:
