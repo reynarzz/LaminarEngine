@@ -73,5 +73,13 @@ namespace Engine.Layers
                 _layers[i].OnEvent(currentEvent);
             }
         }
+
+        internal void OnClose()
+        {
+            for (int i = 0; i < _layers.Length; i++)
+            {
+                _layers[i].Close();
+            }
+        }
     }
 }

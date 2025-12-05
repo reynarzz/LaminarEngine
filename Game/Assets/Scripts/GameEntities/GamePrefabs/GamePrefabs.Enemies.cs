@@ -9,21 +9,41 @@ using System.Threading.Tasks;
 
 namespace Game
 {
+    public enum EnemyType
+    {
+        Invalid,
+        KingPig
+    }
+
+    public class EnemyInstanceData
+    {
+        public EnemyType Type;
+        public int LookDir;
+        public vec2 Position;
+        public ItemAmountPair[] StartInventoryItems;
+    }
+
     internal partial class GamePrefabs
     {
         public static class Enemies
         {
-            public static EnemyBase InstantiatePigStandard(vec2 position, int lookDir)
+            public static EnemyBase InstantiateEnemy(EnemyInstanceData data)
             {
-                return InstancePig<PigEnemyStandard>(position, lookDir);
+                switch (data.Type)
+                {
+                    case EnemyType.Invalid:
+                        break;
+                    case EnemyType.KingPig:
+                        return InstancePig<KingPigEnemy>(data);
+                    default:
+                        Debug.Error($"Enemy type to instantiate is not implemented: {data.Type}");
+                        break;
+                }
+
+                return null;
             }
 
-            public static EnemyBase InstantiateKingPig(vec2 position, int lookDir)
-            {
-                return InstancePig<KingPigEnemy>(position, lookDir);
-            }
-
-            private static EnemyBase InstancePig<T>(vec2 position, int lookDir) where T: EnemyBase
+            private static EnemyBase InstancePig<T>(EnemyInstanceData data) where T : EnemyBase
             {
                 var actor = new Actor("Pig Enemy").AddComponent<T>();
                 actor.Init(new CharacterConfig()
@@ -34,14 +54,17 @@ namespace Game
                     ColliderConfig = new BodyColliderOptions() { Size = new vec2(1.0f, 1.0f), Offset = new vec2(0, -0.1f) },
                     LayerName = GameConsts.ENEMY,
                     SortOrder = 2,
-                    StartPosition = position,
+                    StartPosition = data.Position,
                     Material = MaterialUtils.SpriteMaterial,
                     StartingLife = 3,
-                    SpriteLookDir = -1,
-                    InventoryMaxSlots = 3,
+                    StartLookDir = data.LookDir,
+                    SpriteLookDirFlip = -1,
+                    InventoryMaxSlots = data.StartInventoryItems != null ? data.StartInventoryItems.Length : 0,
+                    StartInventoryValues = data.StartInventoryItems,
                     HitInvincibilityBlinks = 0,
                     HitRecoilTime = 0.2f,
                     HitRecoilStrengthScaling = 3,
+                    DisappearOnDead = true,
                     Ground = new GroundDetectionOptions()
                     {
                         Enabled = true,
@@ -58,9 +81,8 @@ namespace Game
                     AttackSounds = ["Audio/HALFTONE/Gameplay/Slash_1.wav"],
                     JumpSounds = ["Audio/HALFTONE/Gameplay/Jump_3.wav"],
                     GroundSounds = ["Audio/HALFTONE/Gameplay/Hit_4.wav"],
-
                 });
-                actor.Transform.LocalScale = new vec3(1 * Math.Sign(lookDir), 1, 1);
+
                 return actor;
             }
         }

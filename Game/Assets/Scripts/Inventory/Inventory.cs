@@ -17,6 +17,11 @@ namespace Game
         public Inventory(int maxSlots)
         {
             MaxSlots = maxSlots;
+
+            if (maxSlots > 0)
+            {
+
+            }
             _slots = new InventorySlot[maxSlots];
 
             for (int i = 0; i < _slots.Length; i++)
@@ -64,7 +69,7 @@ namespace Game
                 var slot = Slots[i];
                 if (slot.IsEmpty())
                 {
-                    amountToAdd = amount > item.Features.MaxPerSlot? item.Features.MaxPerSlot: amount;
+                    amountToAdd = amount > item.Features.MaxPerSlot ? item.Features.MaxPerSlot : amount;
                     slots.Add((i, amountToAdd));
                 }
                 else if (item.Features.IsStackable && item.Features.Id == slot.item.Features.Id && slot.Amount < item.Features.MaxPerSlot)
@@ -79,7 +84,7 @@ namespace Game
                     break;
             }
 
-            if(amount > 0)
+            if (amount > 0)
             {
                 return null;
             }
@@ -121,13 +126,16 @@ namespace Game
 
         public void Drop(int slotIndex)
         {
-            var slot = _slots[slotIndex];
+            if (_slots != null)
+            {
+                var slot = _slots[slotIndex];
 
-            // TODO: Instance items entities in the world, so the player can collect them gain.
+                // TODO: Instance items entities in the world, so the player can collect them gain.
 
-            _slots[slotIndex] = default;
+                _slots[slotIndex] = default;
 
-            OnInventoryChanged?.Invoke(this);
+                OnInventoryChanged?.Invoke(this);
+            }
         }
 
         public InventorySlot GetSlot(int index)
@@ -206,9 +214,12 @@ namespace Game
 
         public void DropAll()
         {
-            for (int i = 0; i < _slots.Length; i++)
+            if (_slots != null)
             {
-                Drop(i);
+                for (int i = 0; i < _slots.Length; i++)
+                {
+                    Drop(i);
+                }
             }
         }
     }

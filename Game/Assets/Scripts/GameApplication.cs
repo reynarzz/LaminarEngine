@@ -4,7 +4,10 @@ using Engine.GUI;
 using Engine.Layers;
 using Engine.Utils;
 using GlmNet;
+using SharedTypes;
+using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace Game
 {
@@ -45,6 +48,16 @@ namespace Game
             new Actor<LaunchScreen>("Launch Screen");
         }
 
-        public override void Close() { }
+        public override void Close() 
+        {
+#if DEBUG
+            var sb = new StringBuilder();
+            foreach (var item in Assets.LoadedPaths())
+            {
+                sb.AppendLine(item);
+            }
+            File.WriteAllText(Paths.ProjectRootFolder + "/_ReleaseAssetsList.txt", sb.ToString());
+#endif
+        }
     }
 }

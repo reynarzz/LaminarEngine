@@ -85,7 +85,27 @@ namespace GameCooker
             var files = Directory.GetFiles(options.AssetsFolderPath, "*", SearchOption.AllDirectories);
 
             var selectedFiles = files.Where(path => _assetsTypes.TryGetValue(Path.GetExtension(path), out _))
-                                     .Select(path => (Paths.ClearPathSeparation(path), _assetsTypes[Path.GetExtension(path)]));
+                                     .Select(path => (path: Paths.ClearPathSeparation(path), assetType: _assetsTypes[Path.GetExtension(path)]));
+
+            if(options.Type == CookingType.ReleaseMode && options.MatchingFiles != null && options.MatchingFiles.Length > 0)
+            {
+                Console.WriteLine("Warning: Building only selected files, make sure these are updated!");
+                selectedFiles = selectedFiles.Where(x => 
+                {
+                    for (int i = 0; i < options.MatchingFiles.Length; i++)
+                    {
+                        if (string.IsNullOrEmpty(options.MatchingFiles[i]))
+                            continue;
+
+                        if (x.path.EndsWith(options.MatchingFiles[i]))
+                        {
+                            return true;
+                        }
+
+                    }
+                    return false;
+                });
+            }
 
             await _assetCookers[options.Type].CookAssetsAsync(options.FileOptions, selectedFiles.ToArray(), ProcessAsset, options.ExportFolderPath);
 

@@ -225,7 +225,8 @@ namespace Engine.Rendering
             for (int i = 0; i < vertices.Length; i++)
             {
                 vertices[i].TextureIndex = textureIndex;
-                _verticesData[startIndex + i] = vertices[i];
+                ref var vert = ref vertices[i];
+                _verticesData[startIndex + i] = vert;
                 _vertexOffset = Math.Min(_vertexOffset, startIndex + i);
             }
         }
@@ -357,6 +358,12 @@ namespace Engine.Rendering
                 if (info.RendererId > removedVertexStart)
                 {
                     info.RendererId -= removedVertexCount;
+
+                    if(info.RendererId < 0)
+                    {
+                        Debug.EngineError("RendererId is less than 0");
+                        info.RendererId = 0;
+                    }
                     _renderers[key] = info;
                 }
             }

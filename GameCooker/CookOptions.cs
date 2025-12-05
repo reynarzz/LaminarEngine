@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GameCooker
 {
-    public struct CookFileOptions
+    public class CookFileOptions
     {
         public bool CompressAllFiles { get; set; }
         /// <summary>
@@ -23,11 +23,16 @@ namespace GameCooker
         public CookFileOptions() { }
     }
 
-    public struct CookOptions
+    public class CookOptions
     {
         public CookingType Type { get; set; }
         public string AssetsFolderPath { get; set; }
         public string ExportFolderPath { get; set; }
         public CookFileOptions FileOptions { get; set; }
+
+        /// <summary>
+        /// Only cook these files, path should be relative to the 'Assets' folder
+        /// </summary>
+        public string[] MatchingFiles { get; set; }
     }
 }

@@ -16,10 +16,12 @@ namespace Game
         public const string PLAYER = "Player";
         public const string FLOOR = "Floor";
         public const string ENEMY = "Enemy";
+        public const string CHARACTER_DEAD = "character_dead";
         public const string ENEMY_CONFUSED = "EnemyConfused";
         public const string PLATFORM = "Platform";
         public const string COLLECTIBLE = "Collectible";
         public const string CHARACTER_IGNORE = "character_Ignore";
+        public const string NO_WALKABLE = "no_walkable";
 
         public const int ChestRenderSorting = 3;
         public static ulong GROUND_MASK { get; } = LayerMask.NameToBit(FLOOR) |
@@ -80,9 +82,11 @@ namespace Game
 
             LayerMask.TurnOff(GameConsts.PLAYER, GameConsts.PLAYER);
             LayerMask.TurnOff(GameConsts.PLAYER, GameConsts.CHARACTER_IGNORE);
+            LayerMask.TurnOff(GameConsts.PLAYER, GameConsts.CHARACTER_DEAD);
             LayerMask.TurnOff(GameConsts.ENEMY, GameConsts.CHARACTER_IGNORE);
             LayerMask.TurnOff(GameConsts.ENEMY, GameConsts.PLAYER);
-            LayerMask.TurnOff(GameConsts.ENEMY, GameConsts.ENEMY);
+            LayerMask.TurnOff(GameConsts.ENEMY, GameConsts.CHARACTER_DEAD);
+            // LayerMask.TurnOff(GameConsts.ENEMY, GameConsts.ENEMY);
             LayerMask.TurnOff(GameConsts.ENEMY_CONFUSED, GameConsts.CHARACTER_IGNORE);
             LayerMask.TurnOff(GameConsts.PLATFORM, GameConsts.COLLECTIBLE);
             //LayerMask.TurnOn(GameLayers.PLAYER, GameLayers.Default);
@@ -103,7 +107,7 @@ namespace Game
             musicAudio.Loop = true;
             musicAudio.Clip = Assets.GetAudioClip("Audio/music/streamloops/Stream Loops 2024-02-14_L01.wav");
             musicAudio.Transform.Parent = Transform;
-            // musicAudio.Play();
+            musicAudio.Play();
 
             _gameUIManger = new Actor("GameUIManager").AddComponent<GameUIManager>();
             _gameUIManger.Transform.Parent = Transform;
@@ -115,7 +119,6 @@ namespace Game
         public void BuildLevel(int levelIndex)
         {
             SceneManager.LoadScene("Level: " + levelIndex);
-            ParticleSystem();
             WaterTest();
 
             var result = _tilemapManager.BuildLevel(new LevelInstantiateInfo()
@@ -130,7 +133,7 @@ namespace Game
                         Name = "Foreground tilemap",
                         EnableCollision = true,
                         LayersToDraw = 1 << 2,
-                        SortingOrder = 3,
+                        SortingOrder = 4,
                         SpriteIndex = 0
                     },
                     new TilemapData()
@@ -147,6 +150,7 @@ namespace Game
             if (Player != result.Player)
             {
                 Player = result.Player;
+                Player.OnCharacterDead += OnPlayerDead;
             }
             else
             {
@@ -155,6 +159,21 @@ namespace Game
 
             ForegroundTilemap = result.Tilemaps[0];
             InitializeCamera(Player.Transform, ForegroundTilemap.Bounds);
+        }
+
+        private void OnPlayerDead()
+        {
+#if RELEASE
+            TimedExecute(() => 
+            {
+                FadeInOutManager.Instance.FadeIn(1, () =>
+                {
+                    BuildLevel(0);
+                    FadeInOutManager.Instance.FadeOut(1);
+                    Player.Restart();
+                });
+            }, 2.3f);
+#endif
         }
 
         private void InitializeCamera(Transform target, Bounds levelBounds)
@@ -207,41 +226,11 @@ namespace Game
             }
         }
 
-        private void ParticleSystem()
-        {
-            var particleSystem = new Actor<ParticleSystem2D, Move>("ParticleSystem").GetComponent<ParticleSystem2D>();
-            particleSystem.Transform.WorldPosition = new vec3(-34, -6);
-
-            particleSystem.EmitRate = 152;
-            particleSystem.ParticleLife = 3;
-            particleSystem.SortOrder = 17;
-            particleSystem.StartColor = Color.White;
-            particleSystem.EndColor = Color.White;// new Color(0, 0, 0, 0);
-            particleSystem.EndSize = new vec2(0, 0);
-            particleSystem.Spread = new vec2(0.0f, 0);
-            particleSystem.SimulationSpeed = 1;
-            particleSystem.StartSize = new vec2(0.3f);
-            particleSystem.IsWorldSpace = true;
-            particleSystem.AngularVelocity = 40;
-            var mainShader = new Shader(Assets.GetText("Shaders/SpriteVert.vert").Text, Assets.GetText("Shaders/SpriteFrag.frag").Text);
-
-            var mat1 = new Material(mainShader);
-            mat1.Name = "Particle material";
-            particleSystem.Material = mat1;
-
-            //var screenShader = new Shader(Assets.GetText("Shaders/VertScreenGrab.vert").Text, Assets.GetText("Shaders/ScreenGrabWobble.frag").Text);
-            //particleSystem.Material = new Material(screenShader);
-            //particleSystem.Material.GetPass(0).IsScreenGrabPass = true;
-
-            //particleSystem.Material.Passes.ElementAt(0).Blending.Enabled = false;
-            particleSystem.Sprite = new Sprite();
-        }
-
         private void WaterTest()
         {
             var waterActor = new Actor<SpriteRenderer>();
             var renderer = waterActor.GetComponent<SpriteRenderer>();
-            renderer.SortOrder = 9;
+            renderer.SortOrder = 3;
 
             var mainShader = new Shader(Assets.GetText("Shaders/SpriteVert.vert").Text, Assets.GetText("Shaders/WaterFrag.frag").Text);
 

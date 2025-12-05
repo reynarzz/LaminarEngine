@@ -18,11 +18,13 @@ namespace Game
         private bool _canMove = false;
 
         private readonly List<InteractableEntityBase> _nearInteractables = new();
+
+
         public override void Init(CharacterConfig config)
         {
             Inventory = new PlayerInventory(config.InventoryMaxSlots, 4);
             GameUIManager.Inventory.InitInventory(Inventory);
-
+            
             base.Init(config);
             var box = AddComponent<BoxCollider2D>();
             box.Size = new vec2(0.95f, 0.6f);
@@ -115,6 +117,11 @@ namespace Game
             IsEnteringThroughDoor = true;
             IEnumerator WalkToDoor()
             {
+                if (!door)
+                {
+                    Debug.Error("Door is null! why?");
+                    yield break;
+                }
                 var walkDir = door.Transform.WorldPosition.x - Transform.WorldPosition.x;
                 while (Math.Abs(walkDir) > 0.1f)
                 {
@@ -226,7 +233,7 @@ namespace Game
             var origin = Transform.WorldPosition + new vec3(Transform.LocalScale.x + Math.Sign(Transform.LocalScale.x) * 0.3f, -0.1f);
 
             // TODO: use object pool
-            var bullet = new Actor<SpriteRenderer>("Bullet").AddComponent<Bullet>();
+            var bullet = new Actor("Bullet").AddComponent<Bullet>();
 
             var mask = LayerMask.NameToBit(GameConsts.Default) | LayerMask.NameToBit(GameConsts.ENEMY) |
                                            LayerMask.NameToBit(GameConsts.PLATFORM);
@@ -234,6 +241,7 @@ namespace Game
 
             return true;
         }
+
         protected override void OnTriggerEnter2D(Collider2D collider)
         {
             var interactable = collider.GetComponent<InteractableEntityBase>();

@@ -25,6 +25,7 @@ namespace Game
         private int _direction = 1;
 
         private Animator _animator;
+        private BoxCollider2D _platformCollider;
         protected override void OnAwake()
         {
             base.OnAwake();
@@ -33,12 +34,15 @@ namespace Game
             _rigid.Interpolate = true;
             var trigger = GetComponent<BoxCollider2D>();
             trigger.Size = new vec2(3, 0.4f);
-            trigger.Offset = new vec2(0, 0.1f);
+            trigger.Offset = new vec2(0, 0.3f);
             trigger.IsTrigger = true;
             Transform.LocalScale = new vec3(trigger.Size.x, trigger.Size.y, 1);
 
-            AddComponent<BoxCollider2D>().Size = trigger.Size;
-            
+            var collider = new Actor("PlatformCollider").AddComponent<BoxCollider2D>();
+
+            collider.Size = trigger.Size;
+            collider.Actor.Layer = LayerMask.NameToLayer(GameConsts.PLATFORM);
+            collider.Transform.Parent = Transform;
             _currentWait = WaitTime;
         }
 
@@ -76,7 +80,7 @@ namespace Game
         protected override void OnUpdate()
         {
             base.OnUpdate();
-            if(_animator != null )
+            if (_animator != null)
             {
                 Transform.WorldPosition = _animator.GetVec2("Move");
             }
@@ -88,7 +92,7 @@ namespace Game
                 var castSize = Transform.LocalScale + vec3.Right * 0.2f;
                 var hit = Physics2D.BoxCast(castPos, castSize, LayerMask.NameToBit(GameConsts.PLAYER));
 
-               // Debug.DrawBox(castPos, castSize, Color.Red);
+                // Debug.DrawBox(castPos, castSize, Color.Red);
                 if (!hit.isHit || (_direction > 0 || hit.Collider.Transform.WorldPosition.y > Transform.WorldPosition.y))
                 {
                     Transform.WorldPosition = Mathf.MoveTowards((vec2)Transform.WorldPosition, target, Time.DeltaTime * Speed);
@@ -107,25 +111,23 @@ namespace Game
                         _direction = 1;
                     }
 
-                    if(_pointIndex + _direction >= 0)
+                    if (_pointIndex + _direction >= 0)
                     {
                         _pointIndex += _direction;
                     }
                 }
             }
-
-            
         }
 
         protected override void OnTriggerEnter2D(Collider2D collider)
         {
-            if(collider.Actor.Layer == LayerMask.NameToLayer("Player"))
+            if (collider.Actor.Layer == LayerMask.NameToLayer("Player"))
             {
                 collider.Actor.Transform.Parent = Transform;
 
-                if(collider.AttachedRigidbody.Velocity.y <= 0)
+                if (collider.AttachedRigidbody.Velocity.y <= 0)
                 {
-                    collider.AttachedRigidbody.Velocity = new vec2(collider.AttachedRigidbody.Velocity.x, 0);
+                   // collider.AttachedRigidbody.Velocity = new vec2(collider.AttachedRigidbody.Velocity.x, 0);
                 }
 
 

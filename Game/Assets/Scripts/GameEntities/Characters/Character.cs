@@ -35,13 +35,14 @@ namespace Game
         public float WalkSpeed;
         public float YGravityScale;
         public int StartingLife;
-        public int SpriteLookDir;
+        public int SpriteLookDirFlip;
         public BodyColliderOptions ColliderConfig;
         public GroundDetectionOptions Ground;
         public string LayerName;
         public int SortOrder;
         public vec2 StartPosition;
         public int InventoryMaxSlots;
+        public ItemAmountPair[] StartInventoryValues;
         public Material Material;
         public string[] JumpSounds;
         public string[] WalkSounds;
@@ -51,6 +52,8 @@ namespace Game
         public float HitRecoilTime;
         public float HitRecoilStrengthScaling;
         public int HitInvincibilityBlinks;
+        public bool DisappearOnDead;
+        public int StartLookDir;
     }
 
     public abstract class Character : GameEntity
@@ -60,6 +63,7 @@ namespace Game
         protected RigidBody2D Rigidbody { get; private set; }
         protected Collider2D Collider { get; private set; }
         protected AudioSource AudioSource { get; private set; }
+        public event Action OnCharacterDead;
 
         protected const string SPRITE_PROPERTY_NAME = "Sprite_Property";
         protected const string VEL_X_PROP_NAME = "VelocityX";
@@ -98,7 +102,7 @@ namespace Game
 
         public CharacterInventory Inventory { get; protected set; }
 
-        public int SpriteLookDir => _characterConfig.SpriteLookDir;
+        public int SpriteLookDir => _characterConfig.SpriteLookDirFlip;
         public int LookDir { get; private set; }
         private CharacterConfig _characterConfig;
         private AnimationState _main;
@@ -134,10 +138,8 @@ namespace Game
             Collider.Friction = 0;
             Transform.WorldPosition = config.StartPosition;
             Inventory.Life = _characterConfig.StartingLife;
-
-            LookDir = _characterConfig.SpriteLookDir;
             InitAudio(config);
-
+            LookAt(_characterConfig.StartLookDir);
         }
 
         private void InitAudio(CharacterConfig config)
@@ -314,9 +316,36 @@ namespace Game
 
             _currentHitRecoilTime = Math.Clamp(_currentHitRecoilTime - Time.DeltaTime, -1, _currentHitRecoilTime);
 
-            if(!IsCharacterAlive() && Animator.CurrentState != _deadState && IsOnGround)
+            if (!IsCharacterAlive() && Animator.CurrentState != _deadState && IsOnGround)
             {
-                Animator.Play(DEATH_ANIM_STATE);
+                PlayDeadAnim();
+            }
+        }
+
+        private void PlayDeadAnim()
+        {
+            Animator.Play(DEATH_ANIM_STATE);
+            // Actor.Layer = LayerMask.NameToLayer(GameConsts.CHARACTER_DEAD);
+
+            if (_characterConfig.DisappearOnDead)
+            {
+                IEnumerator Disappear()
+                {
+                    float t = Renderer.Color.A;
+                    yield return new WaitForSeconds(1f);
+                    while (t > 0)
+                    {
+                        t -= Time.DeltaTime;
+
+                        Renderer.Color = new Color(Renderer.Color.R, Renderer.Color.G, Renderer.Color.B, t);
+                        yield return null;
+                    }
+
+                    Renderer.Color = new Color(Renderer.Color.R, Renderer.Color.G, Renderer.Color.B, 0);
+                    Actor.IsActiveSelf = false;
+                }
+
+                StartCoroutine(Disappear());
             }
         }
 
@@ -336,9 +365,15 @@ namespace Game
 
         public void LookAt(int dir)
         {
+            if (dir == 0)
+            {
+                dir = 1;
+                Debug.Error("Look dir is 0, it should be either 1 or -1");
+            }
+
             LookDir = dir;
             var scaleX = Math.Abs(Transform.LocalScale.x);
-            Transform.LocalScale = new vec3(scaleX * dir * Math.Sign(_characterConfig.SpriteLookDir), Transform.LocalScale.y, Transform.LocalScale.z);
+            Transform.LocalScale = new vec3(scaleX * dir * Math.Sign(_characterConfig.SpriteLookDirFlip), Transform.LocalScale.y, Transform.LocalScale.z);
         }
 
 
@@ -350,7 +385,7 @@ namespace Game
         {
             if (!CanCharacterMove())
                 return;
-            dir *= _characterConfig.SpriteLookDir;
+            dir *= _characterConfig.SpriteLookDirFlip;
             if (dir != 0)
             {
                 LookAt(dir);
@@ -409,6 +444,26 @@ namespace Game
             HitDamage(this, MAX_LIFE);
         }
 
+        private IEnumerator HitEffect(int blinks)
+        {
+            float endAngle = (float)Mathf.PI / 2f + 2f * (float)Mathf.PI * blinks;
+            float angle = 0f;
+            var color = Renderer.Color;
+
+            while (angle < endAngle)
+            {
+                const float freq = 30;
+                angle += Time.DeltaTime * freq;
+                float alpha = MathF.Sin(angle) * 0.5f + 0.5f;
+                Renderer.Color = new Color(Renderer.Color.R, Renderer.Color.G, Renderer.Color.B, alpha);
+
+                yield return null;
+            }
+
+            Renderer.Color = color;
+            IsInvencible = false;
+        }
+
         public virtual bool HitDamage(GameEntity who, int amount)
         {
             if (!IsCharacterAlive() || IsInvencible || IsEnteringThroughDoor)
@@ -416,7 +471,7 @@ namespace Game
 
             Inventory.Life = Math.Clamp(Inventory.Life - amount, 0, MAX_LIFE);
             Rigidbody.GravityScale = _characterConfig.YGravityScale;
-            
+
             var damageDir = (Transform.WorldPosition - who.Transform.WorldPosition).Normalized;
             float max = 50;
             if (IsOnGround)
@@ -438,40 +493,22 @@ namespace Game
                 if (_characterConfig.HitInvincibilityBlinks > 0 && !IsInvencible)
                 {
                     IsInvencible = true;
-                    IEnumerator HitEffect()
-                    {
-                        float endAngle = (float)Mathf.PI / 2f + 2f * (float)Mathf.PI * _characterConfig.HitInvincibilityBlinks; 
-                        float angle = 0f;
-                        var color = Renderer.Color;
 
-                        while (angle < endAngle)
-                        {
-                            const float freq = 30;
-                            angle += Time.DeltaTime * freq;
-                            float alpha = MathF.Sin(angle) * 0.5f + 0.5f;
-                            Renderer.Color = new Color(Renderer.Color.R, Renderer.Color.G, Renderer.Color.B, alpha);
 
-                            yield return null;
-                        }
-
-                        Renderer.Color = color;
-                        IsInvencible = false;
-                    }
-
-                    StartCoroutine(HitEffect());
+                    StartCoroutine(HitEffect(_characterConfig.HitInvincibilityBlinks));
                 }
             }
             else
             {
                 Animator.SetState(HIT_ANIM_STATE);
                 Animator.Parameters.SetTrigger(DEATH_ANIM_STATE);
+                OnCharacterDead?.Invoke();
             }
 
-            CameraShake.Instance.BurstShake(30, 0.19f, 0.09f);
             PlayHitSfx();
             return true;
         }
-       
+
         public bool IsCharacterAlive()
         {
             return Inventory.Life > 0;
@@ -563,12 +600,7 @@ namespace Game
 
                 if (!IsCharacterAlive())
                 {
-                    if(Animator.CurrentState != Animator.GetState(DEATH_ANIM_STATE))
-                    {
-                        Debug.Warn("Death when ground touch");
-                        Animator.Play(DEATH_ANIM_STATE);
-                    }
-                       CameraShake.Instance.BurstShake(20, 0.1f, 0.2f);
+                    CameraShake.Instance.BurstShake(20, 0.1f, 0.2f);
                 }
             }
         }
@@ -579,10 +611,19 @@ namespace Game
             {
                 Inventory.Life = _characterConfig.StartingLife;
             }
+
+#if DEBUG
             Renderer.IsEnabled = true;
             Animator.Play(_main.Name);
+#endif
         }
 
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            OnCharacterDead = null;
+        }
         protected void PlayHitSfx()
         {
             if (_hitSfx != null)

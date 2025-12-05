@@ -15,22 +15,19 @@ namespace Game
         {
             var doorData = new DoorData();
 
-            foreach (var field in entityData.Entity.FieldInstances)
-            {
-                if (GetEnum<ItemId>(field, "locked_by", out var item))
-                {
-                    doorData.LockedBy = item;
-                }
+			if (GetEnum<ItemId>(entityData, "locked_by", out var item))
+			{
+				doorData.LockedBy = item;
+			}
 
-                if (GetInt(field, "locked_amount", out var value))
-                {
-                    doorData.LockedAmount = value;
-                }
-            }
-            
-            doorData.CurrentLevel = worldData.Levels[entityData.LevelIID].LevelIndex;
+			if (GetInt(entityData, "locked_amount", out var value))
+			{
+				doorData.LockedAmount = value;
+			}
 
-            if (GetEntityRef(entityData.Entity.FieldInstances, "target", worldData, out var targetValue))
+			doorData.CurrentLevel = worldData.Levels[entityData.LevelIID].LevelIndex;
+
+            if (GetEntityRef(entityData, "target", worldData, out var targetValue))
             {
                 doorData.TargetPosition = targetValue.WorldPosition;
                 doorData.TargetLevelIndex = worldData.Levels[targetValue.LevelIID].LevelIndex;

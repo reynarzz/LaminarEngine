@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Game
 {
+    [RequireComponent(typeof(SpriteRenderer))]
     internal class Bullet : GameEntity
     {
         private vec3 _shootDir;
@@ -16,7 +17,8 @@ namespace Game
         public bool _shoot = false;
         private float _speed = 0;
         private float _timeAlive = 1;
-
+        [RequiredProperty] private SpriteRenderer _renderer;
+        private ParticleSystem2D _particleSystem;
         public void Shoot(vec2 position, vec2 dir, float speed, ulong layerMask)
         {
             Transform.WorldPosition = position;
@@ -26,10 +28,9 @@ namespace Game
             _shoot = true;
             Transform.WorldScale = new vec3(0.6f, 0.18f);
 
-            var sprite = GetComponent<SpriteRenderer>();
-            sprite.Material = MaterialUtils.SpriteMaterial;
+            _renderer.Material = MaterialUtils.SpriteMaterial;
             _timeAlive = 1;
-
+            _particleSystem = GetParticles();
             CheckCollision();
         }
 
@@ -44,6 +45,32 @@ namespace Game
             {
                 PoolObject();
             }
+
+            if(_particleSystem)
+            _particleSystem.Transform.WorldPosition = Transform.WorldPosition;
+        }
+
+        private ParticleSystem2D GetParticles()
+        {
+            var particleSystem = new Actor("ParticleSystem").AddComponent<ParticleSystem2D>();
+            particleSystem.EmitRate = 50;
+            particleSystem.ParticleLife = 0.2f;
+            particleSystem.SortOrder = _renderer.SortOrder;
+            particleSystem.StartColor = new Color(1, 1, 1, 0.5f);
+            particleSystem.EndColor = Color.Transparent;// new Color(0, 0, 0, 0);
+            particleSystem.EndSize = new vec2(0, 0);
+            particleSystem.Spread = new vec2(0.0f, 0);
+            particleSystem.SimulationSpeed = 1;
+            particleSystem.StartSize = new vec2(0.3f);
+            particleSystem.IsWorldSpace = true;
+            particleSystem.Gravity = default;
+            particleSystem.VelocityMax = default;
+            particleSystem.VelocityMin = default;
+            particleSystem.AngularVelocity = 40;
+            particleSystem.Material = MaterialUtils.SpriteMaterial;
+            particleSystem.Transform.LocalPosition = default;
+            particleSystem.Transform.WorldScale = vec3.One;
+            return particleSystem;
         }
 
         protected override void OnFixedUpdate()
@@ -64,12 +91,15 @@ namespace Game
                 if (hit.isHit && Actor)
                 {
                     var character = hit.Collider.GetComponent<Character>();
-
+                    bool characterWasHit = false;
                     if (character)
                     {
                         if (character.IsCharacterAlive())
                         {
-                            character?.HitDamage(this, 1);
+                            if(character.HitDamage(this, 1))
+                            {
+                                characterWasHit = true;
+                            }
                             // character.GetComponent<RigidBody2D>().AddForce(_shootDir * 12, ForceMode2D.Impulse);
                         }
                         else
@@ -77,6 +107,15 @@ namespace Game
                             return;
                         }
                     }
+                    if (characterWasHit)
+                    {
+                        CameraShake.Instance.BurstShake(30, 0.19f, 0.09f);
+                    }
+                    else
+                    {
+                        CameraShake.Instance.BurstShake(10, 0.09f, 0.09f);
+                    }
+
                     PoolObject();
                     break;
                 }
@@ -86,6 +125,13 @@ namespace Game
         public void PoolObject()
         {
             Actor.Destroy(Actor);
+            _particleSystem.Pause();
+
+            _particleSystem.OnEmitFinished += () =>
+            {
+                Actor.Destroy(_particleSystem);
+            };
+
 
             _shoot = false;
             Actor.IsActiveSelf = false;

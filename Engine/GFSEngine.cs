@@ -19,6 +19,7 @@ namespace Engine
             var win = new Window(winName, width, height, windowColor);
 
             Window.OnWindowChanged += (x, y) => _layersManager.Update();
+            Window.OnWindowClose += () => { _layersManager.OnClose(); };
             if (win.IsInitialized)
             {
                 _layersManager = new LayersManager([typeof(TimeLayer),

@@ -14,19 +14,19 @@ namespace Game
     {
         public abstract GameEntity Build(EntityInstanceData entityData, WorldData worldData, Func<vec2, bool, vec2> positionConverter);
 
-        protected bool Deserialize<T>(FieldInstance[] fields, string id, out T value)
+        protected bool Deserialize<T>(EntityInstanceData target, string id, out T value)
         {
             value = default;
-            if (!TryGetField(fields, id, out var field, true))
+            if (!TryGetField(target, id, out var field, true))
                 return false;
             value = JsonConvert.DeserializeObject<T>(field.Value.ToString());
             return true;
         }
 
-        protected bool GetEnumArray<T>(FieldInstance[] fields, string id, out T[] value) where T : unmanaged, Enum
+        protected bool GetEnumArray<T>(EntityInstanceData target, string id, out T[] value) where T : unmanaged, Enum
         {
             value = default;
-            if (Deserialize<string[]>(fields, id, out var enumsStr))
+            if (Deserialize<string[]>(target, id, out var enumsStr))
             {
                 var enums = new T[enumsStr.Length];
 
@@ -44,10 +44,10 @@ namespace Game
             return false;
         }
 
-        protected bool GetEnum<T>(FieldInstance[] fields, string id, out T value) where T : unmanaged, Enum
+        protected bool GetEnum<T>(EntityInstanceData target, string id, out T value) where T : unmanaged, Enum
         {
             value = default;
-            if (!TryGetField(fields, id, out var field))
+            if (!TryGetField(target, id, out var field))
                 return false;
 
             return ParseEnum(field.Value?.ToString(), out value);
@@ -66,10 +66,10 @@ namespace Game
         {
             return Enum.TryParse(str, true, out value);
         }
-        protected bool GetBool(FieldInstance[] fields, string id, out bool value)
+        protected bool GetBool(EntityInstanceData target, string id, out bool value)
         {
             value = default;
-            if (!TryGetField(fields, id, out var field))
+            if (!TryGetField(target, id, out var field))
                 return false;
 
             value = bool.Parse(field.Value?.ToString());
@@ -77,10 +77,10 @@ namespace Game
             return true;
         }
 
-        protected bool GetEntityRef(FieldInstance[] fields, string id, WorldData data, out EntityInstanceData value)
+        protected bool GetEntityRef(EntityInstanceData target, string id, WorldData data, out EntityInstanceData value)
         {
             value = default;
-            if (GetDictionary(fields, id, out var dict))
+            if (GetDictionary(target, id, out var dict))
             {
                 value = data.Levels[dict["levelIid"]].Layers[dict["layerIid"]].EntitiesData[dict["entityIid"]];
                 return true;
@@ -90,10 +90,10 @@ namespace Game
         }
 
 
-        protected bool GetDictionary(FieldInstance[] fields, string id, out Dictionary<string, string> value)
+        protected bool GetDictionary(EntityInstanceData target, string id, out Dictionary<string, string> value)
         {
             value = default;
-            if (!TryGetField(fields, id, out var field))
+            if (!TryGetField(target, id, out var field))
                 return false;
 
             if (field.Value == null)
@@ -104,10 +104,10 @@ namespace Game
             return true;
         }
 
-        protected bool GetInt(FieldInstance[] fields, string id, out int value)
+        protected bool GetInt(EntityInstanceData target, string id, out int value)
         {
             value = default;
-            if (!TryGetField(fields, id, out var field))
+            if (!TryGetField(target, id, out var field))
                 return false;
 
             value = int.Parse(field.Value?.ToString());
@@ -126,10 +126,10 @@ namespace Game
             return true;
         }
 
-        private bool TryGetField(FieldInstance[] fields, string id, out FieldInstance fieldOut, bool failIfValueIsNull = false)
+        private bool TryGetField(EntityInstanceData target, string id, out FieldInstance fieldOut, bool failIfValueIsNull = false)
         {
             fieldOut = null;
-            foreach (var field in fields)
+            foreach (var field in target.Entity.FieldInstances)
             {
                 if (IsField(field, id))
                 {

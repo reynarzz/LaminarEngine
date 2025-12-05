@@ -1,9 +1,8 @@
 Move: WASD
 Jump: Space
-Attack: F
-Revive: Z
-Death: X
+Shoot: F
+Interact: E
+FullScreen: Escape/F11
 
-==Extras:
+==Extras (Debug mode):
 Debug: 1(Alpha, above Q): World, 2(Alpha, above W): UI 
-FullScreen: Escape
