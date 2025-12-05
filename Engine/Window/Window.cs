@@ -245,5 +245,10 @@ namespace Engine
                 );
             }
         }
+
+        public static void CloseWindow()
+        {
+            Glfw.SetWindowShouldClose(NativeWindow, true);
+        }
     }
 }

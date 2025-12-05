@@ -23,6 +23,7 @@ namespace Game
         //     :this can be solved by checking if the player is colliding with a wall, if so, then push him away the wall.
 
         // For the game:
+        // Improve game architecture.
         // ---Add spikes
         // ----Enemy AI
         // Five levels, small, one intro level falling from outside.
@@ -47,6 +48,10 @@ namespace Game
 
         public override void Initialize()
         {
+#if RELEASE
+            Window.FullScreen(true);
+            Window.CursorVisible = false;
+#endif
             new Actor<LaunchScreen>("Launch Screen");
         }
 

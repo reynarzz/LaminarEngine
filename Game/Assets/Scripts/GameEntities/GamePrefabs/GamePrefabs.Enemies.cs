@@ -86,9 +86,7 @@ namespace Game
                     AttackSounds = ["Audio/HALFTONE/Gameplay/Slash_1.wav"],
                     JumpSounds = ["Audio/HALFTONE/Gameplay/Jump_3.wav"],
                     GroundSounds = ["Audio/HALFTONE/Gameplay/Hit_4.wav"],
-                    HitSounds = ["Audio/MinifantasySfx/16_human_walk_stone_1.wav",
-                    "Audio/MinifantasySfx/16_human_walk_stone_2.wav",
-                    "Audio/MinifantasySfx/16_human_walk_stone_3.wav"]
+                    HitSounds = ["Audio/MinifantasySfx/16_human_walk_stone_1.wav"]
                 });
 
                 return actor;

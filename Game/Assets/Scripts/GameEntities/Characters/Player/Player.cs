@@ -170,18 +170,6 @@ namespace Game
 
             _shootCooldownTime -= Time.DeltaTime;
 
-            if (Input.GetKeyDown(KeyCode.X))
-            {
-                //Death();
-            }
-            if (Input.GetKeyDown(KeyCode.Z))
-            {
-                Restart();
-            }
-            if (Input.GetKeyDown(KeyCode.H))
-            {
-                HitDamage(this, 1);
-            }
 
             if (_canMove)
             {
@@ -213,19 +201,23 @@ namespace Game
                     Walk(0);
                 }
             }
-        }
 
-        public override bool HitDamage(GameEntity who, int amount)
-        {
-            var isHit = base.HitDamage(who, amount);
-
-            if (isHit)
+#if DEBUG
+            if (Input.GetKeyDown(KeyCode.X))
             {
-                //CameraShake.Instance.BurstShake(30, 0.19f, 0.09f);
+                //Death();
             }
-            return isHit;
+            if (Input.GetKeyDown(KeyCode.Z))
+            {
+                Restart();
+            }
+            if (Input.GetKeyDown(KeyCode.H))
+            {
+                HitDamage(this, 1);
+            }
+#endif
         }
-        
+
         public override bool Attack(int index = 0)
         {
             if (!IsCharacterAlive())

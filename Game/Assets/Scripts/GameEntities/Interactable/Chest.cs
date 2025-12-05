@@ -77,15 +77,6 @@ namespace Game
             SpriteRenderer.Sprite = GameTextures.GetAtlas(idleAtlasId)[0];
         }
 
-        protected override void OnUpdate()
-        {
-            base.OnUpdate();
-
-            if (Input.GetKeyDown(KeyCode.J))
-            {
-                SpriteRenderer.SortOrder = SpriteRenderer.SortOrder == 0? 3: 0;
-            }
-        }
         protected override void OnPlayerInteractZone(bool enter, Player player)
         {
             base.OnPlayerInteractZone(enter && !_isOpened, player);
