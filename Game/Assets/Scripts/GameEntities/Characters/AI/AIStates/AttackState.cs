@@ -12,11 +12,7 @@ namespace Game
     {
         public float WaitToAttack { get; set; } = 0.5f;
         private float _currentTimeToAttack;
-
-        public AttackState() : base([])
-        {
-
-        }
+        public AttackState() : base([]) { }
         public override void OnEnter()
         {
             _currentTimeToAttack = 0;
@@ -29,6 +25,7 @@ namespace Game
             if (!Context.IsCharacterAlive())
             {
                 FSM.ChangeState<DeadState<T>>();
+                return;
             }
 
             var dir = Context.Target.Transform.WorldPosition - Context.Transform.WorldPosition;
@@ -37,6 +34,8 @@ namespace Game
             if (!Context.Target.IsCharacterAlive())
             {
                 FSM.ChangeState<CelebrateState<T>>();
+                return;
+
             }
             if (MathF.Abs(dir.y) > 2 && Context.Detector.IsTargetDetected)
             {
@@ -45,6 +44,7 @@ namespace Game
             else if (Math.Abs(dir.x) >= 2 || !Context.Target.IsCharacterAlive())
             {
                 FSM.ChangeState<ChaseState<T>>();
+                return;
             }
 
             var origin = Context.Transform.WorldPosition + new vec3(Context.LookDir -
@@ -90,15 +90,16 @@ namespace Game
                     {
                         await Task.Delay(110);
 
+                        if (!Context.Target.IsCharacterAlive())
+                        {
+                            FSM.ChangeState<CelebrateState<T>>();
+                            return;
+                        }
+
                         if (TryFindPlayerInRange(out player))
                         {
                             Debug.Log("Attack Player");
                             player?.HitDamage(Context, 1);
-                        }
-
-                        if (!Context.Target.IsCharacterAlive())
-                        {
-                            FSM.ChangeState<CelebrateState<T>>();
                         }
                     });
                 }

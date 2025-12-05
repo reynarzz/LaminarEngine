@@ -35,11 +35,13 @@ namespace Game
 
             openAnim.Clip.AddEvent(openAnim.Clip.Duration, () =>
             {
+                AudioSource.PlayOneShot(Assets.GetAudioClip("Audio/MinifantasySfx/05_door_open_1.mp3"), 0.3f);
                 CameraShake.Instance.BurstShake(20, 0.1f, 0.1f);
                 OnDoorStateChanged?.Invoke(true);
             });
             closeAnim.Clip.AddEvent(closeAnim.Clip.Duration, () =>
             {
+                AudioSource.PlayOneShot(Assets.GetAudioClip("Audio/MinifantasySfx/06_door_close_1.mp3"), 0.3f);
                 _isClosed = true;
                 OnDoorStateChanged?.Invoke(false);
                 CameraShake.Instance.BurstShake(20, 0.2f, 0.15f);

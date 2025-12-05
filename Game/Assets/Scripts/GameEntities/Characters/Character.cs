@@ -51,12 +51,18 @@ namespace Game
         public string[] WalkSounds;
         public string[] AttackSounds;
         public string[] GroundSounds;
-        public string HitSound;
+        public string[] HitSounds;
+
+        public float WalkSoundsVolume;
+        public float AttackSoundsVolume;
+        public float HitSoundsVolume;
+        public float JumpSoundsVolume;
         public float HitRecoilTime;
         public float HitRecoilStrengthScaling;
         public int HitInvincibilityBlinks;
         public bool DisappearOnDead;
         public int StartLookDir;
+
     }
 
     public abstract class Character : GameEntity
@@ -113,7 +119,7 @@ namespace Game
         private AudioClip[] _jumpSfx;
         private AudioClip[] _attackSfx;
         private AudioClip[] _walkFx;
-        private AudioClip _hitSfx;
+        private AudioClip[] _hitSfx;
         private bool _jumped = false;
         private AnimationState _deadState;
         private bool _jumping = false;
@@ -169,7 +175,7 @@ namespace Game
             _jumpSfx = GetClips(config.JumpSounds);
             _attackSfx = GetClips(config.AttackSounds);
             _walkFx = GetClips(config.WalkSounds);
-            _hitSfx = GetClips([config.HitSound]).FirstOrDefault();
+            _hitSfx = GetClips(config.HitSounds);
         }
 
         protected void InitAnimationStates(AnimationsStates statesConfig)
@@ -201,7 +207,7 @@ namespace Game
 
                 toWalkYVeloDown = new AnimatorTransition(WALK_ANIM_STATE, [new IntCondition(VEL_X_PROP_NAME, 0, IntOp.NotEqual),
                                                         new BoolCondition(ON_GROUND_PROPERTY_NAME, true),
-                                                        new IntCondition(VEL_Y_PROP_NAME, 0, IntOp.LessThan),
+                                                        new IntCondition(VEL_Y_PROP_NAME, 0, IntOp.LessThanOrEqual),
                                                         new IntCondition(LIFE_PROPERTY_NAME, 0, IntOp.GreaterThan)]);
             }
             if (statesConfig.Jump.IsEnabled)
@@ -388,10 +394,9 @@ namespace Game
             float gravity = MathF.Abs(Physics2D.Gravity.y * Rigidbody.GravityScale);
             float jumpVelocity = MathF.Sqrt(2 * gravity * _characterConfig.MaxJumpHeight);
 
-            // Give exact velocity to reach desired height
             Rigidbody.Velocity = new vec2(Rigidbody.Velocity.x, jumpVelocity);
 
-            PlayJumpSoundFx();
+            PlayJumpSFX();
         }
 
         public void EndJump()
@@ -426,23 +431,8 @@ namespace Game
 
                 }
             }
-
-            //if (_jumping)
-            //{
-            //    _currentJumpHeight = Rigidbody.Transform.WorldPosition.y - _jumpStartY;
-            //    Debug.Log("Jumping");
-            //    if (_currentJumpHeight < _maxJumpHeight)
-            //    {
-            //        Rigidbody.AddForce(vec2.Up * _characterConfig.NormalJumpForce, ForceMode2D.Force);
-            //    }
-            //    else
-            //    {
-            //        Debug.Log("End jump");
-            //        EndJump();
-            //    }
-            //}
-
         }
+
         public void LookAt(int dir)
         {
             if (dir == 0)
@@ -589,7 +579,7 @@ namespace Game
                 OnCharacterDead?.Invoke();
             }
 
-            PlayHitSfx();
+            PlayHitSFX();
             return true;
         }
 
@@ -648,6 +638,7 @@ namespace Game
             }
             IsOnGround = hit.isHit;
         }
+
         private void OnGroundChanged(bool value)
         {
             Rigidbody.GravityScale = value ? 0 : _characterConfig.YGravityScale;
@@ -688,30 +679,41 @@ namespace Game
 
             OnCharacterDead = null;
         }
-        protected void PlayHitSfx()
+
+        protected void PlayHitSFX()
         {
-            if (_hitSfx != null)
-                AudioSource.PlayOneShot(_hitSfx, 0.1f);
+            if (_hitSfx != null && _hitSfx.Length > 0)
+            {
+                var index = Random.Shared.Next(0, _hitSfx.Length);
+                AudioSource.PlayOneShot(_hitSfx[index], _characterConfig.HitSoundsVolume);
+            }
         }
-        protected void PlayJumpSoundFx()
+        protected void PlayJumpSFX()
         {
             if (_jumpSfx != null && _jumpSfx.Length > 0)
-                AudioSource.PlayOneShot(_jumpSfx[0], 0.2f);
+            {
+                AudioSource.PlayOneShot(_jumpSfx[0], _characterConfig.JumpSoundsVolume);
+            }
         }
 
-        protected void PlayWalkSoundFx()
+        protected void PlayWalkSFX()
         {
             if (_walkFx != null && _walkFx.Length > 0)
-                AudioSource.PlayOneShot(_walkFx[0], 0.2f);
+            {
+                var index = Random.Shared.Next(0, _hitSfx.Length);
+                AudioSource.PlayOneShot(_walkFx[index], _characterConfig.WalkSoundsVolume);
+            }
         }
 
-        protected void PlayAttackSoundFx()
+        protected void PlayAttackSFX()
         {
             if (_attackSfx != null && _attackSfx.Length > 0)
-                AudioSource.PlayOneShot(_attackSfx[0], 0.2f);
+            {
+                AudioSource.PlayOneShot(_attackSfx[0], _characterConfig.AttackSoundsVolume);
+            }
         }
 
-        protected void PlayGroundSoundFx()
+        protected void PlayGroundSFX()
         {
             if (_groundSfx != null && _groundSfx.Length > 0)
                 AudioSource.PlayOneShot(_groundSfx[0], 0.2f);

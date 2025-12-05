@@ -76,12 +76,19 @@ namespace Game
                         YOffset = 0,
                         GroundMask = GameConsts.GROUND_MASK //| LayerMask.NameToBit(GameConsts.ENEMY)
                     },
+                    HitSoundsVolume = 0.8f,
+                    WalkSoundsVolume = 0.18f,
+                    AttackSoundsVolume = 0.18f,
+                    JumpSoundsVolume = 0.17f,
                     WalkSounds = ["Audio/HALFTONE/UI/2. Clicks/Click_4.wav",
                               "Audio/HALFTONE/UI/2. Clicks/Click_5.wav",
                               "Audio/HALFTONE/UI/2. Clicks/Click_10.wav"],
                     AttackSounds = ["Audio/HALFTONE/Gameplay/Slash_1.wav"],
                     JumpSounds = ["Audio/HALFTONE/Gameplay/Jump_3.wav"],
                     GroundSounds = ["Audio/HALFTONE/Gameplay/Hit_4.wav"],
+                    HitSounds = ["Audio/MinifantasySfx/16_human_walk_stone_1.wav",
+                    "Audio/MinifantasySfx/16_human_walk_stone_2.wav",
+                    "Audio/MinifantasySfx/16_human_walk_stone_3.wav"]
                 });
 
                 return actor;

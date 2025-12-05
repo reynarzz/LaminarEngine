@@ -11,12 +11,13 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    [RequireComponent(typeof(BoxCollider2D), typeof(SpriteRenderer))]
+    [RequireComponent(typeof(BoxCollider2D), typeof(SpriteRenderer), typeof(AudioSource))]
     public abstract class InteractableEntityBase : GameEntity
     {
         [RequiredProperty] protected BoxCollider2D BoxCollider { get; private set; }
         [RequiredProperty] protected SpriteRenderer SpriteRenderer { get; private set; }
         [RequiredProperty] protected SpriteRenderer InteractableRenderer { get; private set; }
+        [RequiredProperty] protected AudioSource AudioSource { get; private set; }
 
         private bool _isPlayerInZone = false;
         private Coroutine _coroutine;

@@ -25,9 +25,9 @@ namespace Engine.Layers
             float currentTime = (float)_stopwatch.Elapsed.TotalSeconds;
             float unscaledDeltaTime = (currentTime - _lastFrameTime);
 
-            if(unscaledDeltaTime > 0.1)
+            if (unscaledDeltaTime > 0.1)
             {
-                unscaledDeltaTime = 0.1f;
+                unscaledDeltaTime = 0.016f;
             }
 
             float deltaTime = unscaledDeltaTime * Time.TimeScale;

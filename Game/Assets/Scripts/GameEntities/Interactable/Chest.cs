@@ -104,6 +104,8 @@ namespace Game
                     //}
                     Animator.Play("Open");
                     InteractableRenderVisible(false);
+                    AudioSource.PlayOneShot(Assets.GetAudioClip("Audio/MinifantasySfx/01_chest_open_3.wav"), 0.3f);
+
                     yield return new WaitForSeconds(0.2f);
 
                     if (Data.ChestLoot != null)
