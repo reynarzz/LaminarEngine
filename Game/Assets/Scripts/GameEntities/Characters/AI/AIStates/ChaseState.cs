@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    
+
     internal class ChaseState<T> : StateBase<T> where T : AICharacter
     {
         public ChaseState() : base([])
@@ -47,13 +47,8 @@ namespace Game
                 else
                 {
                     Context.Walk(0);
-
-                    if (dir.Magnitude <= transitionDist)
-                    {
-                        FSM.ChangeState<AttackState<T>>();
-                    }
+                    FSM.ChangeState<AttackState<T>>();
                 }
-
             }
             else
             {

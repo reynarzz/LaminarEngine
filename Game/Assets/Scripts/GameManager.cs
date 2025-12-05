@@ -17,7 +17,7 @@ namespace Game
         public const string FLOOR = "Floor";
         public const string ENEMY = "Enemy";
         public const string CHARACTER_DEAD = "character_dead";
-        public const string ENEMY_CONFUSED = "EnemyConfused";
+        public const string ENEMY_CONFUSED = "EnemyConfused"; // enemy that attacks other enemies.
         public const string PLATFORM = "Platform";
         public const string COLLECTIBLE = "Collectible";
         public const string CHARACTER_IGNORE = "character_Ignore";
@@ -27,6 +27,10 @@ namespace Game
         public static ulong GROUND_MASK { get; } = LayerMask.NameToBit(FLOOR) |
                                                    LayerMask.NameToBit(PLATFORM) |
                                                    LayerMask.NameToBit(Default);
+
+        public static ulong CHARACTER_MASK { get; } = LayerMask.NameToBit(ENEMY) |
+                                                      LayerMask.NameToBit(PLAYER) |
+                                                      LayerMask.NameToBit(ENEMY_CONFUSED);
     }
 
     internal class GameManager : ScriptBehavior

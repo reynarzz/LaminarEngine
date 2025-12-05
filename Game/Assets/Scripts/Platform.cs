@@ -121,24 +121,15 @@ namespace Game
 
         protected override void OnTriggerEnter2D(Collider2D collider)
         {
-            if (collider.Actor.Layer == LayerMask.NameToLayer("Player"))
+            if (LayerMask.AreValid(collider.Actor.Layer, GameConsts.CHARACTER_MASK))
             {
                 collider.Actor.Transform.Parent = Transform;
-
-                if (collider.AttachedRigidbody.Velocity.y <= 0)
-                {
-                   // collider.AttachedRigidbody.Velocity = new vec2(collider.AttachedRigidbody.Velocity.x, 0);
-                }
-
-
-                // Actor.Destroy(collider.Actor);
-                Debug.Log("Enter player to platform");
             }
         }
 
         protected override void OnTriggerExit2D(Collider2D collider)
         {
-            if (collider.Actor.Layer == LayerMask.NameToLayer("Player"))
+            if (LayerMask.AreValid(collider.Actor.Layer, GameConsts.CHARACTER_MASK))
             {
                 collider.Actor.Transform.Parent = null;
             }
