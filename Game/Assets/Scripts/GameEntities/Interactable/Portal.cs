@@ -14,6 +14,7 @@ namespace Game
         private CircleCollider2D _circle;
         private bool _shouldDisappear = false;
         private SpriteRenderer _renderer;
+        private static AudioClip _clip;
         protected override void OnAwake()
         {
             base.OnAwake();
@@ -24,6 +25,12 @@ namespace Game
             _circle.IsTrigger = true;
             InteractableRenderer.SortOrder = 15;
             // InteractableRenderer.Transform.LocalPosition += vec3.Up * 4;
+
+            // TODO: move this to an audio library class.
+            if (_clip == null)
+            {
+                _clip = Assets.Get<AudioClip>("Audio/RetroSounds/portal.wav");
+            }
         }
 
         public override void Init(PortalData data)
@@ -58,6 +65,7 @@ namespace Game
                 if (Data.LockedBy == ItemId.none || player.Inventory.Use(Data.LockedBy))
                 {
                     player.Transform.WorldPosition = Data.TargetPos;
+                    AudioSource.PlayOneShot(_clip, 0.14f);
                     return true;
                 }
             }
