@@ -22,6 +22,7 @@ namespace Game
         public const string COLLECTIBLE = "Collectible";
         public const string CHARACTER_IGNORE = "character_Ignore";
         public const string NO_WALKABLE = "no_walkable";
+        public const string BULLET = "bullet";
 
         public const int ChestRenderSorting = 3;
         public static ulong GROUND_MASK { get; } = LayerMask.NameToBit(FLOOR) |
@@ -93,6 +94,9 @@ namespace Game
             // LayerMask.TurnOff(GameConsts.ENEMY, GameConsts.ENEMY);
             LayerMask.TurnOff(GameConsts.ENEMY_CONFUSED, GameConsts.CHARACTER_IGNORE);
             LayerMask.TurnOff(GameConsts.PLATFORM, GameConsts.COLLECTIBLE);
+            LayerMask.TurnOffAll(GameConsts.BULLET);
+            LayerMask.TurnOn(GameConsts.BULLET, GameConsts.COLLECTIBLE);
+
             //LayerMask.TurnOn(GameLayers.PLAYER, GameLayers.Default);
         }
 
@@ -139,7 +143,7 @@ namespace Game
                         Name = "Foreground tilemap",
                         EnableCollision = true,
                         LayersToDraw = 1 << 2,
-                        SortingOrder = 4,
+                        SortingOrder = 5,
                         SpriteIndex = 0
                     },
                     new TilemapData()
@@ -241,7 +245,7 @@ namespace Game
         {
             var waterActor = new Actor<SpriteRenderer>();
             var renderer = waterActor.GetComponent<SpriteRenderer>();
-            renderer.SortOrder = 3;
+            renderer.SortOrder = 4;
 
             var mainShader = new Shader(Assets.GetText("Shaders/SpriteVert.vert").Text, Assets.GetText("Shaders/WaterFrag.frag").Text);
 

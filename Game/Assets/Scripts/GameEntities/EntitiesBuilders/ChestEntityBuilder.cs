@@ -15,39 +15,45 @@ namespace Game
         public override GameEntity Build(EntityInstanceData entityData, WorldData worldData, Func<vec2, bool, vec2> positionConverter)
         {
             var lootItems = default(ItemAmountPair[]);
-        
-            if (Deserialize<int[]>(entityData, "items_amount", out var lootAmount))
-            {
-                lootItems = new ItemAmountPair[lootAmount.Length];
-
-                for (int j = 0; j < lootAmount.Length; j++)
-                {
-                    var loot = lootItems[j];
-                    loot.Amount = lootAmount[j];
-                    lootItems[j] = loot;
-                }
-            }
 
             if (GetEnumArray<ItemId>(entityData, "items_loot", out var items))
             {
+                lootItems = new ItemAmountPair[items.Length];
+
                 for (int j = 0; j < items.Length; j++)
                 {
                     ref var loot = ref lootItems[j];
                     loot.Item = items[j];
+                    loot.Amount = 1;
                 }
             }
 
-            ItemId lockedByItem = ItemId.none;
-            if (GetEnum<ItemId>(entityData, "locked_by", out var lockedItem))
+            if (Deserialize<int[]>(entityData, "items_amount", out var lootAmount))
             {
-                lockedByItem = lockedItem;
+                if(lootAmount.Length == lootItems.Length)
+                {
+                    for (int j = 0; j < lootAmount.Length; j++)
+                    {
+                        ref var loot = ref lootItems[j];
+                        loot.Amount = lootAmount[j];
+                    }
+                }
+                else
+                {
+                    Debug.Error($"Items amount {lootAmount.Length} for chest are not in sync for items type: {lootItems.Length}: " + entityData.Entity.Iid);
+                }
+            }
+
+            if(!GetEnum<ItemId>(entityData, "locked_by", out var lockedItem))
+            {
+                lockedItem = ItemId.none;
             }
 
             return GamePrefabs.Items.InstantiateChest(entityData.WorldPosition, new ChestData()
             {
-                LockedBy = lockedByItem,
+                LockedBy = lockedItem,
                 ChestLoot = lootItems,
-                InteractCondition = PlayerHasItem_Condition(lockedByItem, 1)
+                InteractCondition = PlayerHasItem_Condition(lockedItem, 1)
             });
         }
 

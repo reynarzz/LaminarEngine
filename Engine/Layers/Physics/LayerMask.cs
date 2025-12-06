@@ -48,9 +48,34 @@ namespace Engine
             ModifyLayers(layerA, layerB, (mask, bit) => mask & ~bit);
         }
 
+        public static void TurnOffAll(string name)
+        {
+            TurnOffAll(NameToLayer(name));
+        }
+
+        public static void TurnOffAll(int layer)
+        {
+            var bit = LayerToBits(layer);
+
+            for (int i = 0; i < MaskBits.Length; i++)
+            {
+                MaskBits[i] &= ~bit;
+            }
+        }
+
         public static void TurnOn(int layerA, int layerB)
         {
             ModifyLayers(layerA, layerB, (mask, bit) => mask | bit);
+        }
+
+        public static void TurnOnAll(int layer)
+        {
+            var bit = LayerToBits(layer);
+
+            for (int i = 0; i < MaskBits.Length; i++)
+            {
+                MaskBits[i] |= bit;
+            }
         }
 
         public static void TurnOff(string nameA, string nameB)
@@ -137,5 +162,6 @@ namespace Engine
 
             return 0;
         }
+
     }
 }

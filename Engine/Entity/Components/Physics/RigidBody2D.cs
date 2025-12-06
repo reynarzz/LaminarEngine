@@ -35,6 +35,7 @@ namespace Engine
         private bool _isZRotationLocked = false;
         private bool _shouldUpdatePreTransformation = false;
         private float _gravityScale = 1;
+        private float _angularDamping = 0;
         private readonly static mat4 _identity = mat4.identity();
         internal B2BodyId BodyId => _bodyId;
 
@@ -150,6 +151,17 @@ namespace Engine
                 B2Bodies.b2Body_SetGravityScale(_bodyId, _gravityScale);
             }
         }
+
+        public float AngularDamping
+        {
+            get => _angularDamping;
+            set
+            {
+                _angularDamping = value;
+                B2Bodies.b2Body_SetAngularDamping(_bodyId, _angularDamping);
+            }
+        }
+
 
         public bool LockZRotation
         {
