@@ -261,6 +261,10 @@ namespace Game
             if (statesConfig.Death.IsEnabled)
             {
                 _deadState = AddSpriteAnimState(DEATH_ANIM_STATE, false, false, true, null, statesConfig.Death.SpriteAtlasId, statesConfig.Death.Fps, statesConfig.Death.Events);
+                _deadState.Clip.AddEvent(0, () =>
+                {
+                    Inventory?.DropAll(Transform.WorldPosition);
+                });
             }
             if (statesConfig.Hit.IsEnabled)
             {
@@ -582,6 +586,8 @@ namespace Game
             PlayHitSFX();
             return true;
         }
+
+
 
         public bool IsCharacterAlive()
         {

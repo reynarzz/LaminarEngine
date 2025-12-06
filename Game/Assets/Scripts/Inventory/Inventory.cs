@@ -1,4 +1,5 @@
 ﻿using Engine;
+using GlmNet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +31,7 @@ namespace Game
             }
         }
 
-        public bool Add(ItemId id, int amount)
+        public bool Add(ItemId id, int amount, bool forceAddInventory = false)
         {
             if (id == ItemId.none)
                 return false;
@@ -40,6 +41,12 @@ namespace Game
             {
                 Debug.Error($"Item: '{id}' is not added to the '_itemTypeMapper' dictionary, or 'itemsDatabase.csv'.");
                 return false;
+            }
+
+            if (item.Features.AutoConsumable && !forceAddInventory)
+            {
+                item.Use(amount, this);
+                return true;
             }
 
             var slotIndex = GetFirstSlotIndex(item.Features.Id);
@@ -124,13 +131,17 @@ namespace Game
             return -1;
         }
 
-        public void Drop(int slotIndex)
+        public void Drop(int slotIndex, vec2 position)
         {
             if (_slots != null)
             {
                 var slot = _slots[slotIndex];
 
-                // TODO: Instance items entities in the world, so the player can collect them gain.
+                if (!slot.IsEmpty())
+                {
+                    Debug.Log("Drop: " + slot.item.Features.Id);
+                    GamePrefabs.Items.InstantiateCollectible(slot.item.Features.Id, slot.Amount, true, position);
+                }
 
                 _slots[slotIndex] = default;
 
@@ -212,13 +223,13 @@ namespace Game
             return default;
         }
 
-        public void DropAll()
+        public void DropAll(vec2 position)
         {
             if (_slots != null)
             {
                 for (int i = 0; i < _slots.Length; i++)
                 {
-                    Drop(i);
+                    Drop(i, position);
                 }
             }
         }

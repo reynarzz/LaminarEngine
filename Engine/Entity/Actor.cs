@@ -96,7 +96,7 @@ namespace Engine
         {
         }
 
-        public Actor(string name, string id) : base(name, id)
+        internal Actor(string name, string id) : base(name, id)
         {
             if (string.IsNullOrEmpty(name))
             {
