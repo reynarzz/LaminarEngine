@@ -19,18 +19,18 @@ namespace Engine
         internal bool IsAlive { get; set; } = true;
         internal bool IsPendingToDestroy { get; set; } = false;
 
-        public EObject()
+        internal EObject()
         {
             _guid = Guid.NewGuid();
         }
 
-        public EObject(string name)
+        internal EObject(string name)
         {
             Name = name;
             _guid = Guid.NewGuid();
         }
 
-        public EObject(string name, string id)
+        internal EObject(string name, string id)
         {
             Name = name;
 
@@ -44,7 +44,7 @@ namespace Engine
             }
         }
 
-        public EObject(string name, Guid id)
+        internal EObject(string name, Guid id)
         {
             Name = name;
             _guid = id;

@@ -18,7 +18,9 @@ namespace Engine
                 return Actor.Transform;
             }
         }
-
+        internal Component()
+        {
+        }
         public override string Name { get => Actor?.Name ?? GetType().Name; set => Actor.Name = value; }
 
         private bool _isEnabled = true;

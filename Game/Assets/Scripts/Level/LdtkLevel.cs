@@ -79,7 +79,7 @@ namespace Engine
         public string[] LevelEntities { get; set; }
     }
 
-    public class LdtkLevel : Component
+    public class LdtkLevel : ScriptBehavior
     {
         public void SetLevel(EntityBuilder entitiesBuilder, LevelOptions options)
         {

@@ -17,29 +17,38 @@ namespace Game
             {
             }
 
-            public static Collectible InstantiateCollectible(ItemId item, vec2 position)
+            public static Collectible[] InstantiateCollectible(ItemId item, int amount, bool instantiateAmount, vec2 position)
             {
-                var collectible = new Actor("Collectible_" + item.ToString()).AddComponent<Collectible>();
-                collectible.Transform.WorldPosition = position;
+                int count = (instantiateAmount ? amount : 1);
+                var collectibles = new Collectible[count];
 
-                var tiles = GameTextures.GetAtlas(item.ToString());
-                var audioClip = Assets.GetAudioClip("Audio/HALFTONE/Gameplay/Collectibles_2.wav");
-
-                collectible.Init(new Collectible.CollectibleConfig()
+                for (int i = 0; i < count; i++)
                 {
-                    Item = item,
-                    Amount = 1,
-                    IdleSprites = tiles,
-                    CollectedSprites = null,
-                    TriggerSize = new vec2(0.8f, 0.8f),
-                    AnimFPS = 7,
-                    TargetLayer = LayerMask.NameToLayer(GameConsts.PLAYER),
-                    CollectedAudioClip = audioClip
-                });
+                    var angle = glm.radians(Random.Shared.Next(60, 120));
+                    var dir = new vec2(MathF.Cos(angle), MathF.Sin(angle)) * 7;
 
-                return collectible;
+                    var collectible = new Actor("Collectible_" + item.ToString()).AddComponent<Collectible>();
+                    collectible.Transform.WorldPosition = position;
+
+                    var audioClip = Assets.GetAudioClip("Audio/HALFTONE/Gameplay/Collectibles_2.wav");
+
+                    collectible.Init(new Collectible.CollectibleConfig()
+                    {
+                        Item = item,
+                        Amount = instantiateAmount ? 1 : amount,
+                        Sprite = GameTextures.GetSprite(item.ToString()),
+                        TriggerSize = new vec2(1f, 1f),
+                        TargetLayer = LayerMask.NameToLayer(GameConsts.PLAYER),
+                        CollectedAudioClip = audioClip,
+                        ForceDir = dir
+                    });
+
+                    collectibles[i] = collectible;
+                }
+
+                return collectibles;
             }
-             
+
             public static Chest InstantiateChest(vec2 position, ChestData data)
             {
                 var chest = new Actor("Chest").AddComponent<Chest>();

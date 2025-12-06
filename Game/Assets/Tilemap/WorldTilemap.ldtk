@@ -3924,7 +3924,10 @@
 									"id": "V_Bool",
 									"params": [ false ]
 								}] },
-								{ "__identifier": "loot", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 219, "realEditorValues": [] },
+								{ "__identifier": "loot", "__type": "Array<LocalEnum.ItemType>", "__value": ["Chest_key"], "__tile": null, "defUid": 219, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Chest_key"]
+								}] },
 								{ "__identifier": "random_loot", "__type": "Bool", "__value": true, "__tile": null, "defUid": 233, "realEditorValues": [] },
 								{ "__identifier": "random_loot_range", "__type": "Int", "__value": 2, "__tile": null, "defUid": 234, "realEditorValues": [] },
 								{ "__identifier": "random_item_type", "__type": "LocalEnum.RandomItemType", "__value": "HealthOrAmmo", "__tile": null, "defUid": 237, "realEditorValues": [] }
@@ -3949,7 +3952,7 @@
 									"id": "V_String",
 									"params": ["Chest_key"]
 								}] },
-								{ "__identifier": "locked_amount", "__type": "Int", "__value": 2, "__tile": null, "defUid": 179, "realEditorValues": [{ "id": "V_Int", "params": [2] }] },
+								{ "__identifier": "locked_amount", "__type": "Int", "__value": 29, "__tile": null, "defUid": 179, "realEditorValues": [{ "id": "V_Int", "params": [29] }] },
 								{ "__identifier": "consume_item", "__type": "Bool", "__value": true, "__tile": null, "defUid": 218, "realEditorValues": [] },
 								{ "__identifier": "look_to_right", "__type": "Bool", "__value": true, "__tile": null, "defUid": 239, "realEditorValues": [] },
 								{ "__identifier": "target", "__type": "EntityRef", "__value": null, "__tile": null, "defUid": 232, "realEditorValues": [] }
@@ -4275,6 +4278,38 @@
 							],
 							"__worldX": 760,
 							"__worldY": -152
+						},
+						{
+							"__identifier": "Chest",
+							"__grid": [19,36],
+							"__pivot": [0.5,0.5],
+							"__tags": ["Actor"],
+							"__tile": { "tilesetUid": 169, "x": 80, "y": 80, "w": 16, "h": 16 },
+							"__smartColor": "#EAD4AA",
+							"iid": "987a4be0-ac70-11f0-ba6a-077c36501a1c",
+							"width": 16,
+							"height": 16,
+							"defUid": 200,
+							"px": [312,584],
+							"fieldInstances": [
+								{ "__identifier": "locked_by", "__type": "LocalEnum.ItemType", "__value": null, "__tile": null, "defUid": 217, "realEditorValues": [null] },
+								{ "__identifier": "items_loot", "__type": "Array<LocalEnum.ItemType>", "__value": [ "Normal_potion", "Chest_key", "Big_Potion", "Coin_currency" ], "__tile": null, "defUid": 202, "realEditorValues": [ {
+									"id": "V_String",
+									"params": ["Normal_potion"]
+								}, {
+									"id": "V_String",
+									"params": ["Chest_key"]
+								}, {
+									"id": "V_String",
+									"params": ["Big_Potion"]
+								}, {
+									"id": "V_String",
+									"params": ["Coin_currency"]
+								} ] },
+								{ "__identifier": "items_amount", "__type": "Array<Int>", "__value": [1,1,1,1], "__tile": null, "defUid": 208, "realEditorValues": [ { "id": "V_Int", "params": [1] }, null, null, null ] }
+							],
+							"__worldX": -792,
+							"__worldY": 120
 						}
 					]
 				},
@@ -13986,8 +14021,11 @@
 							"px": [1016,104],
 							"fieldInstances": [
 								{ "__identifier": "locked_by", "__type": "LocalEnum.ItemType", "__value": null, "__tile": null, "defUid": 217, "realEditorValues": [] },
-								{ "__identifier": "items_loot", "__type": "Array<LocalEnum.ItemType>", "__value": [], "__tile": null, "defUid": 202, "realEditorValues": [] },
-								{ "__identifier": "items_amount", "__type": "Array<Int>", "__value": [], "__tile": null, "defUid": 208, "realEditorValues": [] }
+								{ "__identifier": "items_loot", "__type": "Array<LocalEnum.ItemType>", "__value": ["Small_potion"], "__tile": null, "defUid": 202, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Small_potion"]
+								}] },
+								{ "__identifier": "items_amount", "__type": "Array<Int>", "__value": [1], "__tile": null, "defUid": 208, "realEditorValues": [{ "id": "V_Int", "params": [1] }] }
 							],
 							"__worldX": -184,
 							"__worldY": 616
