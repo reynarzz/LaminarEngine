@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    [RequireComponent(typeof(SpriteRenderer))]
+    [RequireComponent(typeof(SpriteRenderer), typeof(RigidBody2D), typeof(BoxCollider2D))]
     internal class Bullet : GameEntity
     {
         private vec3 _shootDir;
@@ -18,7 +18,19 @@ namespace Game
         private float _speed = 0;
         private float _timeAlive = 1;
         [RequiredProperty] private SpriteRenderer _renderer;
+        [RequiredProperty] private RigidBody2D _rigid;
+        [RequiredProperty] private BoxCollider2D _collider;
         private ParticleSystem2D _particleSystem;
+
+        protected override void OnAwake()
+        {
+            base.OnAwake();
+
+            _rigid.BodyType = Body2DType.Static;
+            Actor.Layer = LayerMask.NameToLayer(GameConsts.BULLET);
+            _collider.Size = new vec2(1, 0.3f);
+        }
+
         public void Shoot(vec2 position, vec2 dir, float speed, ulong layerMask)
         {
             Transform.WorldPosition = position;
@@ -73,10 +85,6 @@ namespace Game
             return particleSystem;
         }
 
-        protected override void OnFixedUpdate()
-        {
-        }
-
         private void CheckCollision()
         {
             var hits = Physics2D.BoxCastAll(Transform.WorldPosition, Transform.LocalScale, _layerMask);
@@ -122,6 +130,10 @@ namespace Game
             }
         }
 
+        protected override void OnTriggerEnter2D(Collider2D collider)
+        {
+            collider.AttachedRigidbody.AddForce(_shootDir * 5, ForceMode2D.Impulse);
+        }
         public void PoolObject()
         {
             Actor.Destroy(Actor);

@@ -37,12 +37,11 @@ namespace Game
             base.OnAwake();
 
             RigidBody.BodyType = Body2DType.Dynamic;
-            RigidBody.LockZRotation = true;
             RigidBody.Interpolate = true;
             RigidBody.GravityScale = 3;
-            
+            RigidBody.AngularDamping = 2;
             Renderer.Material = MaterialUtils.SpriteMaterial;
-            Renderer.SortOrder = 3;
+            Renderer.SortOrder = 2;
 
             Collider.IsTrigger = true;
 
@@ -95,7 +94,7 @@ namespace Game
                 if (character && character.IsCharacterAlive())
                 {
                     character.Inventory.Add(_config.Item, _config.Amount);
-                    AudioSource.PlayOneShot(_config.CollectedAudioClip, 0.2f);
+                    AudioSource.PlayOneShot(_config.CollectedAudioClip, 0.1f);
                     Disable();
                 }
                 OnTargetCollided(true);

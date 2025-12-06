@@ -27,7 +27,6 @@ namespace Game
         // ---Add spikes
         // ----Enemy AI
         // Five levels, small, one intro level falling from outside.
-        // All Loot jumps from enemies, and chests, keys, and other key items will remain in inventory, others will consume at contact.
         // Water and lava.
 
         // Late release polish:
@@ -38,7 +37,7 @@ namespace Game
         // Implement more enemies.
         // Save system.
 
-        // -Stretch:
+        // -Stretch goals:
         // Bake tilemaps quads vertices, and collision data in binary file, the geometry should be already converted to the memory layout of the vertex array.
         // Implement bounds in sprites/renderers.
         // Implement event in transform to know when scale changed, and get the delta scale.
