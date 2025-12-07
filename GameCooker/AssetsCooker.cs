@@ -56,7 +56,7 @@ namespace GameCooker
                 { AssetType.Texture, new TextureAssetProcessor() },
                 { AssetType.Audio, new AudioAssetProcessor() },
                 { AssetType.Text, new TextAssetProcessor() },
-                { AssetType.Shader, new TextAssetProcessor() },
+                { AssetType.Shader, new ShaderAssetProcessor() },
                 { AssetType.Font, new RawBytesAssetProcessor() },
             };
 
