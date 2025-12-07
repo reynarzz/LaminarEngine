@@ -30,7 +30,7 @@ namespace GameCooker
 #if WINDOWS
                         lines[i] = "#version 330 core";
 #else
-                        lines[i] = "#version 410";
+                        lines[i] = "#version 310";
 #endif
                     }
 
