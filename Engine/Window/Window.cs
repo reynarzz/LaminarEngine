@@ -126,8 +126,13 @@ namespace Engine
                 return;
 
             Glfw.WindowHint(Hint.OpenglProfile, Profile.Core);
+#if WINDOWS
             Glfw.WindowHint(Hint.ContextVersionMajor, 3);
             Glfw.WindowHint(Hint.ContextVersionMinor, 2);
+#else
+Glfw.WindowHint(Hint.ContextVersionMajor, 4);
+            Glfw.WindowHint(Hint.ContextVersionMinor, 1);
+#endif
             Glfw.WindowHint(Hint.Resizable, false);
             Glfw.WindowHint(Hint.Visible, false);
             //Glfw.WindowHint(Hint.OpenglForwardCompatible, Constants.True);
@@ -149,6 +154,11 @@ namespace Engine
                 Console.WriteLine("Failed to create GLFW window");
                 Glfw.Terminate();
                 return;
+            }
+            else
+            {
+                Console.WriteLine("GLFW window sucess");
+
             }
             Glfw.MakeContextCurrent(NativeWindow);
             // Glfw.SetMouseButtonCallback(NativeWindow, OnMouseButton);
