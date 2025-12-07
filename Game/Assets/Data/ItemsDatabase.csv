@@ -1,8 +1,8 @@
 Id,Amount,MaxPerSlot,SecondsToDisappear,MultipleSlots,IsStackable,AutoConsumable,DecreasesOnUse,UserCanUseIt,UserCanRemove,RemoveAfterUse,SpritePath
-coin_currency,1,999,7,False,True,False,True,True,False,True,
+coin_currency,1,50,7,False,True,False,True,True,False,True,
 confusion_grenade,1,999,7,True,False,True,False,True,True,True,
 big_potion,5,99,7,True,True,True,True,True,True,True,
-normal_potion,3,99,7,True,True,False,True,True,True,True,
+normal_potion,3,99,7,True,True,True,True,True,True,True,
 small_potion,1,99,7,True,True,True,True,True,True,True,
 normal_ammo,1,999,7,True,True,True,True,True,True,True,
 poison_ammo,1,999,7,True,True,True,True,True,True,True,
