@@ -124,12 +124,15 @@ namespace Engine
                     continue;
 
                 var type = layer.Type;
-
+                Debug.Log(type);
                 switch (type)
                 {
                     case "AutoLayer":
                     case "IntGrid":
                         PaintTiles(level, layer, layer.AutoLayerTiles);
+                        break;
+                    case "Tiles":
+                        PaintTiles(level, layer, layer.GridTiles);
                         break;
                     case "Entities":
                         break;

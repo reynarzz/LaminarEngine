@@ -31,13 +31,12 @@ namespace Game
             public vec2 ForceDir { get; set; }
         }
 
-
         protected override void OnAwake()
         {
             base.OnAwake();
 
             RigidBody.BodyType = Body2DType.Dynamic;
-            RigidBody.Interpolate = true;
+            RigidBody.Interpolate = false;
             RigidBody.GravityScale = 3;
             RigidBody.AngularDamping = 2;
             Renderer.Material = MaterialUtils.SpriteMaterial;

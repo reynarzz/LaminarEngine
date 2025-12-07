@@ -142,7 +142,7 @@ namespace Game
                     {
                         Name = "Foreground tilemap",
                         EnableCollision = true,
-                        LayersToDraw = 1 << 2,
+                        LayersToDraw = 1 << 3,
                         SortingOrder = 5,
                         SpriteIndex = 0
                     },
@@ -150,8 +150,16 @@ namespace Game
                     {
                         Name = "Background tilemap",
                         EnableCollision = false,
-                        LayersToDraw = 1 << 3,
+                        LayersToDraw = 1 << 4,
                         SortingOrder = -2,
+                        SpriteIndex = 0
+                    },
+                    new TilemapData()
+                    {
+                        Name = "Decoration tilemap",
+                        EnableCollision = false,
+                        LayersToDraw = 1 << 0,
+                        SortingOrder = 6,
                         SpriteIndex = 0
                     },
                 }
