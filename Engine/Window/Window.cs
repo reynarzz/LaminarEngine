@@ -115,8 +115,6 @@ namespace Engine
         {
             StartWindowColor = windowColor;
             _windowName = name;
-            Width = width;
-            Height = height;
             _startWidth = width;
             _startHeight = height;
 
@@ -124,7 +122,7 @@ namespace Engine
 
             if (!_isInitialized)
                 return;
-
+            
             Glfw.WindowHint(Hint.OpenglProfile, Profile.Core);
             Glfw.WindowHint(Hint.ContextVersionMajor, 3);
             Glfw.WindowHint(Hint.ContextVersionMinor, 2);
@@ -136,7 +134,7 @@ namespace Engine
 
             try
             {
-                NativeWindow = Glfw.CreateWindow(Width, Height, name, GLFW.Monitor.None, default);
+                NativeWindow = Glfw.CreateWindow(width, height, name, GLFW.Monitor.None, default);
             }
             catch
             {
@@ -160,7 +158,14 @@ namespace Engine
             // Glfw.SetCursorPositionCallback(NativeWindow, OnCursorPos);
 
             GL.Import(Glfw.GetProcAddress);
-            Glfw.SetFramebufferSizeCallback(NativeWindow, (win, width, height) => SetWindowSize(width, height));
+            Glfw.SetFramebufferSizeCallback(NativeWindow, (win, width, height) =>
+            {
+                Width = width;
+                Height = height;
+                OnWindowChanged?.Invoke(Width, Height);
+                System.Console.WriteLine("Resized frame buffer");
+            });
+
             Glfw.SwapInterval(1);
             // Glfw.SetWindowAttribute(NativeWindow, WindowAttribute.Decorated, false);
 
@@ -172,10 +177,15 @@ namespace Engine
             Glfw.ShowWindow(NativeWindow);
             //Glfw.SetWindowAttribute(NativeWindow, WindowAttribute.Decorated, true);
             Glfw.RequestWindowAttention(NativeWindow);
-            Glfw.SetCloseCallback(NativeWindow, (x) => 
+            Glfw.SetCloseCallback(NativeWindow, (x) =>
             {
                 OnWindowClose?.Invoke();
             });
+            
+            Glfw.GetFramebufferSize(NativeWindow, out width, out height);
+            Width = width;
+            Height = height;
+            
         }
 
         internal static void SwapBuffers()
@@ -191,7 +201,7 @@ namespace Engine
             Height = Math.Clamp(height, 100, mode.Height);
 
             Glfw.SetWindowSize(NativeWindow, Width, Height);
-
+            
             OnWindowChanged?.Invoke(Width, Height);
         }
 
@@ -236,6 +246,7 @@ namespace Engine
             {
                 Width = _startWidth;
                 Height = _startHeight;
+                
                 OnWindowChanged?.Invoke(Width, Height);
 
                 // Switch back to windowed mode

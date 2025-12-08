@@ -9623,7 +9623,7 @@ namespace OpenGL
         #if DEBUG
                 Console.WriteLine($"[GL] Function not supported: {name}");
         #endif
-                return null; // macOS will hit this for many functions
+                return null; // macOS will hit this for some functions
             }
 
             return Marshal.GetDelegateForFunctionPointer<T>(ptr);
