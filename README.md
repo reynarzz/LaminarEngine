@@ -34,8 +34,10 @@ GFS is a 2D video game and game engine built entirely from scratch with **C#**, 
 ### Prerequisites
 #### Note: If you are only interested in playing the game, download the repo, and go to DemoBin/win32
 
-- Windows
+- Windows:
 - .NET 9.0 SDK or later: https://dotnet.microsoft.com/en-us/download/dotnet/9.0
+-MacOS:
+#### Build the Sandbox project
 
 Optional
 --------
