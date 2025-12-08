@@ -227,11 +227,6 @@ namespace Engine
                 GLFW.Monitor monitor = Glfw.Monitors[monitorIndex];
                 var mode = Glfw.GetVideoMode(monitor);
 
-                Width = mode.Width;
-                Height = mode.Height;
-
-                OnWindowChanged?.Invoke(Width, Height);
-
                 // Switch to fullscreen
                 Glfw.SetWindowMonitor(
                     NativeWindow,
@@ -242,24 +237,31 @@ namespace Engine
                     mode.RefreshRate
                 );
 
+                Glfw.GetFramebufferSize(NativeWindow, out var width, out var height);
+                Width = width;
+                Height = height;
+
+                OnWindowChanged?.Invoke(Width, Height);
+
             }
             else
             {
-                Width = _startWidth;
-                Height = _startHeight;
-                
-                OnWindowChanged?.Invoke(Width, Height);
-
                 // Switch back to windowed mode
                 Glfw.SetWindowMonitor(
                     NativeWindow,
                     GLFW.Monitor.None,
                     100,
                     100,
-                    Width,
-                    Height,
+                    _startWidth,
+                    _startHeight,
                     0
                 );
+
+                Glfw.GetFramebufferSize(NativeWindow, out var width, out var height);
+                Width = width;
+                Height = height;
+
+                OnWindowChanged?.Invoke(Width, Height);
             }
         }
 

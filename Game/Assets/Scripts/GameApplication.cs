@@ -46,7 +46,6 @@ namespace Game
         // Game using both assets, and using stencil buffer to change between them sphere.
         // Investigate why AudioMixer frees from memory automatically
         // Port to mac, android, ios, linux.
-        //MACOS: a default VAO should be created before anything else.
         
         public override void Initialize()
         {
