@@ -30,7 +30,10 @@ namespace Engine.Layers
 
         public override void Initialize()
         {
-           // ClearScreenToColor(Window.StartWindowColor);
+            _defaultSceneRenderTexture = new RenderTexture(Window.Width, Window.Height);
+            _screenGrabTarget = new RenderTexture(Window.Width, Window.Height);
+
+            ClearScreenToColor(Window.StartWindowColor);
 
             _pipelineFeatures = new PipelineFeatures();
             _screenPipelineFeatures = new PipelineFeatures();
@@ -53,17 +56,6 @@ namespace Engine.Layers
             };
 
             _screenGeometry = GraphicsHelper.GetScreenQuadGeometry();
-
-            // Window.OnWindowChanged += OnUpdateScreenGrabPass;
-        }
-
-        private void OnUpdateScreenGrabPass(int width, int height)
-        {
-            var w = _mainCamera?.RenderTexture?.Width ?? width;
-            var h = _mainCamera?.RenderTexture?.Height ?? height;
-
-            // _screenGrabTarget.UpdateTarget(w, h);
-            // _defaultSceneRenderTexture.UpdateTarget(w, h);
         }
 
         internal override void UpdateLayer()
@@ -74,13 +66,7 @@ namespace Engine.Layers
             {
                 _mainCamera = SceneManager.FindComponent<Camera>(findDisabled: false);
             }
-            if (_defaultSceneRenderTexture == null)
-            {
 
-                _defaultSceneRenderTexture = new RenderTexture(Window.Width, Window.Height);
-                _screenGrabTarget = new RenderTexture(Window.Width, Window.Height);
-
-            }
             if (!_mainCamera || !_mainCamera.IsEnabled)
             {
                 Debug.Warn("No cameras found in scene.");
@@ -88,16 +74,15 @@ namespace Engine.Layers
                 return;
             }
 
-           
             var sceneRenderTarget = _mainCamera.RenderTexture ?? _defaultSceneRenderTexture;
-            //GfxDeviceManager.Current.SetViewport(new vec4(0, 0, sceneRenderTarget.Width, sceneRenderTarget.Height));
+            GfxDeviceManager.Current.SetViewport(new vec4(0, 0, sceneRenderTarget.Width, sceneRenderTarget.Height));
 
-            //// Clear screen
-            //GfxDeviceManager.Current.Clear(new ClearDeviceConfig()
-            //{
-            //    Color = _mainCamera.BackgroundColor,
-            //    RenderTarget = sceneRenderTarget.NativeResource
-            //});
+            // Clear buffer screen.
+            GfxDeviceManager.Current.Clear(new ClearDeviceConfig()
+            {
+                Color = _mainCamera.BackgroundColor,
+                RenderTarget = sceneRenderTarget.NativeResource
+            });
 
             SceneManager.OnPreRenderUpdate();
 
