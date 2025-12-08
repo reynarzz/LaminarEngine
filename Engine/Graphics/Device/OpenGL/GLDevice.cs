@@ -12,6 +12,7 @@ namespace Engine.Graphics.OpenGL
     internal class GLDevice : GfxDevice
     {
         private readonly GfxDeviceInfo _gfxDeviceInfo;
+        private static uint _defaultVAO;
         public GLDevice()
         {
             int maxTextureUnits;
@@ -39,6 +40,12 @@ namespace Engine.Graphics.OpenGL
             _gfxDeviceInfo.Vendor = glGetString(GL_VENDOR);
             _gfxDeviceInfo.Renderer = glGetString(GL_RENDERER);
             _gfxDeviceInfo.Version = glGetString(GL_VERSION);
+
+#if MACOS
+            _defaultVAO = glGenVertexArray();
+            glBindVertexArray(_defaultVAO);
+            System.Console.WriteLine("MacOs default vao.");
+#endif
         }
 
         internal override void Initialize()

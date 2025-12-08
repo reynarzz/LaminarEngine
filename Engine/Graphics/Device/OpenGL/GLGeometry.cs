@@ -66,7 +66,7 @@ namespace Engine.Graphics.OpenGL
                 glEnableVertexAttribArray(i);
             }
 
-            Unbind();
+          //  Unbind();
 
             return true;
         }
@@ -91,7 +91,7 @@ namespace Engine.Graphics.OpenGL
                 _indexBuffer.Update(descriptor.IndexDesc);
                 _indexBuffer.Bind();
             }
-            Unbind();
+          //  Unbind();
         }
 
         protected override void FreeResource()

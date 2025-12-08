@@ -115,7 +115,7 @@ namespace Game
             musicAudio.Loop = true;
             // musicAudio.Clip = Assets.GetAudioClip("Audio/music/streamloops/Stream Loops 2024-02-14_L01.wav");
             musicAudio.Clip = Assets.GetAudioClip("Audio/MinifantasyMusic/Goblins_Dance_(Battle).wav");
-            
+            musicAudio.Mixer = new AudioMixer("Music");
             musicAudio.Transform.Parent = Transform;
             musicAudio.Play();
 

@@ -115,8 +115,6 @@ namespace Engine
         {
             StartWindowColor = windowColor;
             _windowName = name;
-            Width = width;
-            Height = height;
             _startWidth = width;
             _startHeight = height;
 
@@ -124,19 +122,19 @@ namespace Engine
 
             if (!_isInitialized)
                 return;
-
+            
             Glfw.WindowHint(Hint.OpenglProfile, Profile.Core);
             Glfw.WindowHint(Hint.ContextVersionMajor, 3);
             Glfw.WindowHint(Hint.ContextVersionMinor, 2);
             Glfw.WindowHint(Hint.Resizable, false);
             Glfw.WindowHint(Hint.Visible, false);
-            //Glfw.WindowHint(Hint.OpenglForwardCompatible, Constants.True);
+            Glfw.WindowHint(Hint.OpenglForwardCompatible, Constants.True);
             //Glfw.WindowHint(Hint.SrgbCapable, Constants.True);
             //Glfw.WindowHint(Hint.Doublebuffer, Constants.True);
 
             try
             {
-                NativeWindow = Glfw.CreateWindow(Width, Height, name, GLFW.Monitor.None, default);
+                NativeWindow = Glfw.CreateWindow(width, height, name, GLFW.Monitor.None, default);
             }
             catch
             {
@@ -150,12 +148,24 @@ namespace Engine
                 Glfw.Terminate();
                 return;
             }
+            else
+            {
+                Console.WriteLine("GLFW window sucess");
+
+            }
             Glfw.MakeContextCurrent(NativeWindow);
             // Glfw.SetMouseButtonCallback(NativeWindow, OnMouseButton);
             // Glfw.SetCursorPositionCallback(NativeWindow, OnCursorPos);
 
             GL.Import(Glfw.GetProcAddress);
-            Glfw.SetFramebufferSizeCallback(NativeWindow, (win, width, height) => SetWindowSize(width, height));
+            Glfw.SetFramebufferSizeCallback(NativeWindow, (win, width, height) =>
+            {
+                Width = width;
+                Height = height;
+                OnWindowChanged?.Invoke(Width, Height);
+                System.Console.WriteLine("Resized frame buffer");
+            });
+
             Glfw.SwapInterval(1);
             // Glfw.SetWindowAttribute(NativeWindow, WindowAttribute.Decorated, false);
 
@@ -167,10 +177,15 @@ namespace Engine
             Glfw.ShowWindow(NativeWindow);
             //Glfw.SetWindowAttribute(NativeWindow, WindowAttribute.Decorated, true);
             Glfw.RequestWindowAttention(NativeWindow);
-            Glfw.SetCloseCallback(NativeWindow, (x) => 
+            Glfw.SetCloseCallback(NativeWindow, (x) =>
             {
                 OnWindowClose?.Invoke();
             });
+            
+            Glfw.GetFramebufferSize(NativeWindow, out width, out height);
+            Width = width;
+            Height = height;
+            
         }
 
         internal static void SwapBuffers()
@@ -182,11 +197,12 @@ namespace Engine
         {
             var mode = Glfw.GetVideoMode(Glfw.PrimaryMonitor);
 
-            Width = Math.Clamp(width, 100, mode.Width);
-            Height = Math.Clamp(height, 100, mode.Height);
-
-            Glfw.SetWindowSize(NativeWindow, Width, Height);
-
+            Glfw.SetWindowSize(NativeWindow, width, height);
+            
+            Glfw.GetFramebufferSize(NativeWindow, out width, out height);
+            Width = width;
+            Height = height;
+            
             OnWindowChanged?.Invoke(Width, Height);
         }
 
@@ -231,6 +247,7 @@ namespace Engine
             {
                 Width = _startWidth;
                 Height = _startHeight;
+                
                 OnWindowChanged?.Invoke(Width, Height);
 
                 // Switch back to windowed mode

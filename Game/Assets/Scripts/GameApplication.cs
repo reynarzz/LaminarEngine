@@ -36,6 +36,7 @@ namespace Game
         // Enemy life UI
         // Implement more enemies.
         // Save system.
+        // when a interactable is locked by items show the items needed.
 
         // -Stretch goals:
         // Bake tilemaps quads vertices, and collision data in binary file, the geometry should be already converted to the memory layout of the vertex array.
@@ -44,7 +45,9 @@ namespace Game
         // Add 'CheckIfValidObject()' to all properties of the engine's components and actor.
         // Game using both assets, and using stencil buffer to change between them sphere.
         // Investigate why AudioMixer frees from memory automatically
-
+        // Port to mac, android, ios, linux.
+        //MACOS: a default VAO should be created before anything else.
+        
         public override void Initialize()
         {
 #if RELEASE

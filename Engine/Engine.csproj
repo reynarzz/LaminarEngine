@@ -6,8 +6,32 @@
     <Nullable>disable</Nullable>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
+	<!-- Windows -->
+	<PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
+		<DefineConstants>WINDOWS;DESKTOP;$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
 
-  <ItemGroup>
+	<!-- Linux -->
+	<PropertyGroup Condition="'$(OS)' == 'Unix' AND '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'True'">
+		<DefineConstants>LINUX;UNIX;DESKTOP;$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
+
+	<!-- macOS -->
+	<PropertyGroup Condition="'$(OS)' == 'Unix' AND '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'True'">
+		<DefineConstants>MACOS;OSX;UNIX;DESKTOP;$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
+
+	<!-- Android -->
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-android' OR '$(TargetFramework)' == 'net8.0-android' OR '$(TargetFramework)' == 'net7.0-android'">
+		<DefineConstants>ANDROID;MOBILE;$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
+
+	<!-- iOS -->
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios' OR '$(TargetFramework)' == 'net8.0-ios' OR '$(TargetFramework)' == 'net7.0-ios'">
+		<DefineConstants>IOS;MOBILE;$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
+
+	<ItemGroup>
     <Compile Remove="Scene\**" />
     <EmbeddedResource Remove="Scene\**" />
     <None Remove="Scene\**" />
@@ -21,7 +45,7 @@
     <PackageReference Include="FontStashSharp.PlatformAgnostic" Version="1.4.1" />
     <PackageReference Include="glfw-net" Version="3.3.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-    <PackageReference Include="SoundFlow" Version="1.2.1" />
+    <PackageReference Include="SoundFlow" Version="1.3.0" />
   </ItemGroup>
 
   <ItemGroup>

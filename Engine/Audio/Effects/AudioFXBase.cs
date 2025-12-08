@@ -12,6 +12,6 @@ namespace Engine
     {
         internal abstract SoundModifier InternalModifier { get; }
         public bool Enabled { get => InternalModifier.Enabled; set => InternalModifier.Enabled = value; }
-        public AudioFXBase(AudioFormat format, string effectName) : base(effectName) { }
+        internal AudioFXBase(AudioFormat format, string effectName) : base(effectName) { }
     }
 }
