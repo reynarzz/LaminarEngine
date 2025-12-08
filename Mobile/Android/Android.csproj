@@ -8,7 +8,7 @@
     <ApplicationId>com.reynarz.gfs</ApplicationId>
     <ApplicationVersion>1</ApplicationVersion>
     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-	<RuntimeIdentifiers>android-arm;android-arm64</RuntimeIdentifiers>
+	<RuntimeIdentifiers>android-arm;android-arm64;android-x86;android-x64</RuntimeIdentifiers>
     
 	  <!--
       Enables trim analyzers and full trimming during Release mode.
