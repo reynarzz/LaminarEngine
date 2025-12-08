@@ -15,5 +15,6 @@ public class GLRenderer : Java.Lang.Object, GLSurfaceView.IRenderer
 
     public void OnSurfaceCreated(IGL10? gl, Javax.Microedition.Khronos.Egl.EGLConfig? config)
     {
+        // Here manage context loss
     }
 }
