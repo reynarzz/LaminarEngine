@@ -197,10 +197,11 @@ namespace Engine
         {
             var mode = Glfw.GetVideoMode(Glfw.PrimaryMonitor);
 
-            Width = Math.Clamp(width, 100, mode.Width);
-            Height = Math.Clamp(height, 100, mode.Height);
-
-            Glfw.SetWindowSize(NativeWindow, Width, Height);
+            Glfw.SetWindowSize(NativeWindow, width, height);
+            
+            Glfw.GetFramebufferSize(NativeWindow, out width, out height);
+            Width = width;
+            Height = height;
             
             OnWindowChanged?.Invoke(Width, Height);
         }
