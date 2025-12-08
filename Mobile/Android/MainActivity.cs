@@ -1,20 +1,54 @@
-using Engine;
-using Game;
+using Android.App;
+using Android.OS;
+using Android.Views;
+using Engine.Android;
 
 namespace Android
 {
+    // dotnet publish -f net9.0-android -c Release
     [Activity(Label = "@string/app_name", MainLauncher = true)]
     public class MainActivity : Activity
     {
+        private GLView? _glView;
+
         protected override void OnCreate(Bundle? savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+            Window.SetFlags(Android.Views.WindowManagerFlags.Fullscreen, Android.Views.WindowManagerFlags.Fullscreen);
+            Window.AddFlags(Android.Views.WindowManagerFlags.KeepScreenOn);
 
-            // Set our view from the "main" layout resource
-            SetContentView(Resource.Layout.activity_main);
+            _glView = new GLView(this);
+            SetContentView(_glView);
+        }
 
+        protected override void OnPause()
+        {
+            base.OnPause();
+            _glView?.OnPause();
+        }
 
-            // new GFSEngine().Initialize<GameApplication>("GFS | By Reynardo Perez", 1024, 576).Run();
+        protected override void OnResume()
+        {
+            base.OnResume();
+            _glView?.OnResume();
+        }
+
+        public override void OnWindowFocusChanged(bool hasFocus)
+        {
+            base.OnWindowFocusChanged(hasFocus);
+
+            if (hasFocus)
+            {
+                Window.DecorView.SystemUiVisibility =
+                    (StatusBarVisibility)(
+                        SystemUiFlags.ImmersiveSticky
+                      | SystemUiFlags.HideNavigation
+                      | SystemUiFlags.Fullscreen
+                      | SystemUiFlags.LayoutHideNavigation
+                      | SystemUiFlags.LayoutFullscreen
+                      | SystemUiFlags.LayoutStable
+                    );
+            }
         }
     }
 }
