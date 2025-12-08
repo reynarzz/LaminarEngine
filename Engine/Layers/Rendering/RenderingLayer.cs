@@ -77,7 +77,7 @@ namespace Engine.Layers
             var sceneRenderTarget = _mainCamera.RenderTexture ?? _defaultSceneRenderTexture;
             GfxDeviceManager.Current.SetViewport(new vec4(0, 0, sceneRenderTarget.Width, sceneRenderTarget.Height));
 
-            // Clear buffer screen.
+            // Clear main render target.
             GfxDeviceManager.Current.Clear(new ClearDeviceConfig()
             {
                 Color = _mainCamera.BackgroundColor,

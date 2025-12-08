@@ -8,7 +8,6 @@
 	  <SelfContained>true</SelfContained>
 	  <PublishSingleFile>true</PublishSingleFile>
     <InvariantGlobalization>true</InvariantGlobalization>
-	  <DefineConstants>$(DefineConstants);PROJECT_DIR="$(MSBuildProjectDirectory)"</DefineConstants>
 	  <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
 
@@ -51,7 +50,7 @@
         Condition="'$(OS)' == 'Windows_NT'">
   <Message Text="PostBuild: Windows detected: copying glfw3.dll" Importance="high" />
   <Copy
-      SourceFiles="$(SolutionDir)Third\Win\glfw\lib-vc2022\glfw3.dll"
+      SourceFiles="$(MSBuildProjectDirectory)/..//Third/Win/glfw/lib-vc2022/glfw.dll"
       DestinationFiles="$(TargetDir)glfw.dll"
       SkipUnchangedFiles="true" />
 </Target>
