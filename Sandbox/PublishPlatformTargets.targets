@@ -1,0 +1,62 @@
+﻿<Project>
+
+
+	<PropertyGroup>
+		<AssembliesDir>$(PublishDir)/Data/Assemblies</AssembliesDir>
+		<DataDir>$(PublishDir)/Data</DataDir>
+		<ProjectRoot>$(MSBuildProjectDirectory)\..</ProjectRoot>
+		<GameDir>$(MSBuildProjectDirectory)\..\Game</GameDir>
+	</PropertyGroup>
+	
+	<Target Name="PreparePublish"
+        BeforeTargets="Publish">
+		<Message Text="Preparing common publish folders in $(PublishDir)" Importance="high" />
+		<MakeDir Directories="$(AssembliesDir)" />
+
+	</Target>
+	
+  <!-- WINDOWS -->
+  <Target Name="Publish_Windows"
+          AfterTargets="Publish"
+          Condition="'$(RuntimeIdentifier)' != '' AND $(RuntimeIdentifier.StartsWith('win'))">
+
+    <Message Text="Publishing for Windows: RID=$(RuntimeIdentifier)" Importance="high" />
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\..\Third\Win\glfw\lib-vc2022\glfw.dll"
+          DestinationFiles="$(AssembliesDir)/glfw.dll"
+          SkipUnchangedFiles="true" />
+
+	<Move  SourceFiles="$(PublishDir)/miniaudio.dll"
+	 DestinationFiles="$(AssembliesDir)/miniaudio.dll"/>
+  </Target>
+
+
+  <!-- LINUX -->
+  <Target Name="Publish_Linux"
+          AfterTargets="Publish"
+          Condition="'$(RuntimeIdentifier)' != '' AND $(RuntimeIdentifier.StartsWith('linux'))">
+
+    <Message Text="Publishing for Linux: RID=$(RuntimeIdentifier)" Importance="high" />
+
+    <Copy
+        SourceFiles="$(MSBuildProjectDirectory)/../Third/Linux/glfw/libglfw.so"
+        DestinationFiles="$(PublishDir)Native/libglfw.so"
+        SkipUnchangedFiles="true" />
+  </Target>
+
+
+  <!-- MACOS -->
+  <Target Name="Publish_macOS"
+          AfterTargets="Publish"
+          Condition="'$(RuntimeIdentifier)' != '' AND 
+                     ($(RuntimeIdentifier.StartsWith('osx')) OR 
+                      $(RuntimeIdentifier.StartsWith('macos')))">
+
+    <Message Text="Publishing for macOS: RID=$(RuntimeIdentifier)" Importance="high" />
+
+    <Copy
+        SourceFiles="$(MSBuildProjectDirectory)/../Third/MacOs/glfw/lib-universal/libglfw.dylib"
+        DestinationFiles="$(PublishDir)Native/libglfw.dylib"
+        SkipUnchangedFiles="true" />
+  </Target>
+
+</Project>
