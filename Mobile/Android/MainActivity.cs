@@ -1,4 +1,5 @@
 using Android.App;
+using Android.Content.PM;
 using Android.Content.Res;
 using Android.OS;
 using Android.Views;
@@ -10,8 +11,15 @@ using System.Text;
 namespace Android
 {
     // dotnet publish -f net9.0-android -c Release
-    [Activity(Label = "@string/app_name", MainLauncher = true)]
-    public class MainActivity : Activity
+    [Activity(Label = "@string/app_name", MainLauncher = true, 
+        ScreenOrientation = ScreenOrientation.Landscape, 
+        ConfigurationChanges = ConfigChanges.Orientation 
+                           | ConfigChanges.ScreenSize 
+                           | ConfigChanges.KeyboardHidden 
+                           | ConfigChanges.Keyboard
+                           | ConfigChanges.Navigation
+                           | ConfigChanges.LayoutDirection)]
+    public partial class MainActivity : Activity
     {
         private GLView? _glView;
         protected override void OnCreate(Bundle? savedInstanceState)

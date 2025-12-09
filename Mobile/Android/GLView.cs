@@ -1,16 +1,21 @@
 ﻿using Android.Content;
 using Android.Opengl;
+using Android.Views;
 
 namespace Engine.Android
 {
-    public class GLView : GLSurfaceView, IWindow
+    public partial class GLView : GLSurfaceView, IWindow
     {
         private readonly GLRenderer _renderer;
 
         public GLView(Context context) : base(context)
         {
+           // SetBackgroundColor(global::Android.Graphics.Color.Black);
+
             // Request an OpenGL ES 3.0 context
             SetEGLContextClientVersion(3);
+            Focusable = true;
+            FocusableInTouchMode = true;
 
             _renderer = new GLRenderer(this);
             SetRenderer(_renderer);
