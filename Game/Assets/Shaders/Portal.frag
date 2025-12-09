@@ -14,17 +14,17 @@ uniform vec3 uTime;
 uniform sampler2D uStarsTex;
 
 // Amount of wobble distortion
-uniform float uDistortionAmount = 0.009;
+uniform float uDistortionAmount;
 
-uniform vec3 uOutlineColor = vec3(1.6, 1.0, 1.0);
-uniform float uOutlineThickness = 0.02; // fraction of UV
-uniform bool uDotted = false;            
-uniform float uDotSpacing = 0.15;        // spacing between dots in UV units
+uniform vec3 uOutlineColor;
+uniform float uOutlineThickness; // fraction of UV
+uniform bool uDotted;            
+uniform float uDotSpacing;        // spacing between dots in UV units
 
 // Extra glitch parameters
-uniform float uGlitchMaxOffset = 0.03;
-uniform float uGlitchFreq = 20.0;
-uniform float uColorSplit = 0.001;
+uniform float uGlitchMaxOffset;
+uniform float uGlitchFreq;
+uniform float uColorSplit;
 
 float rand(float x) { return fract(sin(x * 1234.5) * 5678.9); }
 float rand(vec2 v) { return fract(sin(dot(v, vec2(12.9898,78.233))) * 43758.5453); }

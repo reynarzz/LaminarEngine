@@ -225,7 +225,6 @@ namespace Game
             cameraFollow.SetOnTargetImmediate();
         }
 
-
         protected override void OnUpdate()
         {
 #if DEBUG
@@ -273,7 +272,29 @@ namespace Game
             pass.Stencil.Func = StencilFunc.Equal;
             pass.Stencil.Ref = 3;
             pass.Stencil.ZFailOp = StencilOp.Keep;
-            renderer.Material.SetProperty("uWaterColor", new vec3(0.2f, 0.4f, 0.7f));
+            renderer.Material.SetProperty(0, "uWaveAmplitude", 0.08f);
+            renderer.Material.SetProperty(0, "uWaveFrequency", 8.0f);
+            renderer.Material.SetProperty(0, "uWaveSpeed", 3.0f);
+            renderer.Material.SetProperty(0, "uNoiseScale", 15.0f);
+            renderer.Material.SetProperty(0, "uNoiseStrength", 0.15f);
+            renderer.Material.SetProperty(0, "uWaterColor", new vec3(0.2f, 0.4f, 0.7f));
+            renderer.Material.SetProperty(0, "uOutlineHeight", 0.85f);
+            renderer.Material.SetProperty(0, "uOutlineColor", new vec3(1.0f, 1.0f, 1.0f));
+            renderer.Material.SetProperty(0, "uOutlineThickness", 0.04f);
+
+
+            /*uniform vec3  uTime;                     
+uniform float uWaveAmplitude    = 0.08f    
+uniform float uWaveFrequency    = 8.0 f    
+uniform float uWaveSpeed        = 3.0f     
+uniform float uNoiseScale       = 15.0f    
+uniform float uNoiseStrength    = 0.15f    
+uniform vec3  uWaterColor       = vec3(0.2f, 0.2f, 1.0f)
+uniform float uOutlineHeight    = 0.85f     
+uniform vec3  uOutlineColor     = vec3(1.0f, 1.0f, 1.0f)
+uniform float uOutlineThickness = 0.04f  
+            */
+
             renderer.Material.AddTexture("uParticles", Assets.GetTexture("particles.png"));
 
             var pass2 = renderer.Material.PushPass(mainShader);
@@ -283,7 +304,15 @@ namespace Game
             pass2.Stencil.Ref = 3;
             pass2.Stencil.ZFailOp = StencilOp.Keep;
 
+            renderer.Material.SetProperty(1, "uWaveAmplitude", 0.08f);
+            renderer.Material.SetProperty(1, "uWaveFrequency", 8.0f);
+            renderer.Material.SetProperty(1, "uWaveSpeed", 3.0f);
+            renderer.Material.SetProperty(1, "uNoiseScale", 15.0f);
+            renderer.Material.SetProperty(1, "uNoiseStrength", 0.15f);
             renderer.Material.SetProperty(1, "uWaterColor", new vec3(0.1f, 0.50f, 0.84f));
+            renderer.Material.SetProperty(1, "uOutlineHeight", 0.85f);
+            renderer.Material.SetProperty(1, "uOutlineColor", new vec3(1.0f, 1.0f, 1.0f));
+            renderer.Material.SetProperty(1, "uOutlineThickness", 0.04f);
 
             waterActor.Transform.LocalScale = new vec3(10, 3, 1);
             waterActor.Transform.LocalPosition = new vec3(2.5f, -11, 1);
@@ -317,30 +346,6 @@ namespace Game
             pass.SetValue("uJitterStrength", 0.5f);
 
             PostProcessingStack.Insert(pass, 0);
-
-            /*
-uniform float  = 0;//0.03;
-uniform float  = 1.0;
-uniform float  = 1.0;
-uniform float  = 1.0;
-uniform float  = 1.0;
-uniform float uEdgeSoftness              0.001   
-uniform float uScanlineIntensity         0.4   
-uniform float uScanlineSpacing           4.0   
-uniform float uPhosphorGlow              0.05    
-uniform float uRGBOffset                 0.0    
-uniform float uBrightness                1.6    
-uniform float uContrast                  1.0    
-uniform vec3  uRGBBalance                new vec3(1.0, 0.8, 0.84);
-uniform float uGlassReflectStrength      0.0  
-uniform float uAberrationStrength        0.00
-uniform float uMaskStrength              0.01
-uniform float uMaskScale                 1.0  
-uniform float uNoiseStrength             0.0  
-uniform float uVignetteStrength          0.01 
-uniform float uJitterStrength            0.5  
-             */
-
         }
 
         private void ScreenGrabTest3()
@@ -354,10 +359,10 @@ uniform float uJitterStrength            0.5
 
             PostProcessingStack.Push(chormaticAberration);
 
-            var scalines = new PostProcessingSinglePass(new Shader(vertex, Assets.GetText("Shaders/ScanLines.frag").Text));
-            scalines.SetValue("uScanlineIntensity", 0.2f);
-            scalines.SetValue("uScanlineSpacing", 2);
-            PostProcessingStack.Push(scalines);
+            var scanlines = new PostProcessingSinglePass(new Shader(vertex, Assets.GetText("Shaders/ScanLines.frag").Text));
+            scanlines.SetValue("uScanlineIntensity", 0.2f);
+            scanlines.SetValue("uScanlineSpacing", 2);
+            PostProcessingStack.Push(scanlines);
         }
     }
 }

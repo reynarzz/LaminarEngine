@@ -1,4 +1,5 @@
 ﻿using Engine;
+using GlmNet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,6 +41,9 @@ namespace Game
 
             PortalMaterial = InitPortalMaterial();
             WobbleMaterial.GetPass(0).IsScreenGrabPass = true;
+            WobbleMaterial.SetProperty(0, "uDistortionAmount", 0.0003f);
+            WobbleMaterial.SetProperty(0, "uColorSplit", 0.0017f);
+            WobbleMaterial.SetProperty(0, "uPixelationAmount", 0.0f);
         }
 
         private static Material InitPortalMaterial()
@@ -50,6 +54,14 @@ namespace Game
             material.AddTexture("uStarsTex", Assets.GetTexture("stars.png"));
             var pass = material.GetPass(0);
             pass.IsScreenGrabPass = true;
+            material.SetProperty("uDistortionAmount", 0.009f);
+            material.SetProperty("uOutlineColor", new vec3(1.6f, 1.0f, 1.0f));
+            material.SetProperty("uOutlineThickness", 0.01f);
+            material.SetProperty("uDotted", 0);
+            material.SetProperty("uDotSpacing", 0.15f);
+            material.SetProperty("uGlitchMaxOffset", 0.03f);
+            material.SetProperty("uGlitchFreq", 20.0f);
+            material.SetProperty("uColorSplit", 0.001f);
 
             return material;
         }

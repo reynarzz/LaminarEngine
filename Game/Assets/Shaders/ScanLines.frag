@@ -8,8 +8,8 @@ uniform sampler2D uScreenGrabTex;
 uniform vec2 uScreenSize;
 uniform vec3 uTime;
 
-uniform float uScanlineIntensity = 0.35;
-uniform float uScanlineSpacing = 3.0;
+uniform float uScanlineIntensity;
+uniform float uScanlineSpacing;
 
 void main()
 {

@@ -5,7 +5,7 @@ out vec4 fragColor;
 
 uniform sampler2D uScreenGrabTex;
 uniform vec2 uScreenSize;   // (width, height)
-uniform bool uHorizontal = true;   // true = horizontal, false = vertical
+uniform bool uHorizontal;   // true = horizontal, false = vertical
 
 void main()
 {

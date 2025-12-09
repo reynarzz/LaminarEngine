@@ -25,9 +25,18 @@ namespace Game
             _camera.BackgroundColor = Color.Black;
 
             PostProcessingStack.Push(new BloomPostProcessing());
-            PostProcessingStack.Push(new PostProcessingSinglePass(new Shader(Assets.GetText("Shaders/ScreenVert.vert").Text, Assets.GetText("Shaders/ScreenGrabWobble.frag").Text)));
+
+            var wobble = new PostProcessingSinglePass(new Shader(Assets.GetText("Shaders/ScreenVert.vert").Text, Assets.GetText("Shaders/ScreenGrabWobble.frag").Text));
+            wobble.SetValue("uDistortionAmount", 0.0003f);
+            wobble.SetValue("uColorSplit", 0.0017f);
+            wobble.SetValue("uPixelationAmount", 0.0f);
+            PostProcessingStack.Push(wobble);
+          
             PostProcessingStack.Push(new PostProcessingSinglePass(new Shader(Assets.GetText("Shaders/ScreenVert.vert").Text, Assets.GetText("Shaders/FilmGrain.frag").Text)));
-            PostProcessingStack.Push(new PostProcessingSinglePass(new Shader(Assets.GetText("Shaders/ScreenVert.vert").Text, Assets.GetText("Shaders/ScanLines.frag").Text)));
+            var scanlines = new PostProcessingSinglePass(new Shader(Assets.GetText("Shaders/ScreenVert.vert").Text, Assets.GetText("Shaders/ScanLines.frag").Text));
+            scanlines.SetValue("uScanlineIntensity", 0.2f);
+            scanlines.SetValue("uScanlineSpacing", 2);
+            PostProcessingStack.Push(scanlines);
 
 #if DEBUG
             OnComplete();

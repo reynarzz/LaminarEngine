@@ -6,15 +6,15 @@ in vec2 worldUV;
 out vec4 fragColor;
 
 uniform vec3  uTime;                     
-uniform float uWaveAmplitude  = 0.08;    
-uniform float uWaveFrequency  = 8.0;     
-uniform float uWaveSpeed      = 3.0;     
-uniform float uNoiseScale     = 15.0;    
-uniform float uNoiseStrength  = 0.15;    
-uniform vec3  uWaterColor     = vec3(0.2, 0.2, 1.0);
-uniform float uOutlineHeight  = 0.85;     
-uniform vec3  uOutlineColor   = vec3(1.0, 1.0, 1.0);
-uniform float uOutlineThickness = 0.04;  
+uniform float uWaveAmplitude;
+uniform float uWaveFrequency;
+uniform float uWaveSpeed;
+uniform float uNoiseScale;
+uniform float uNoiseStrength;
+uniform vec3  uWaterColor;
+uniform float uOutlineHeight;
+uniform vec3  uOutlineColor;
+uniform float uOutlineThickness;
 uniform sampler2D uParticles;
 
 // Stable hash function — avoids NaN / denormal issues

@@ -12,14 +12,16 @@ namespace Game
     {
         private Shader _brightPassShader;
         private Shader _blurPassShader;
-        private Shader _blurPassShader2;
         private Shader _combinePassShader;
 
         private RenderTexture _brightRenderTexture;
         private RenderTexture _combineRenderTexture;
         private RenderTexture _blurRenderTexture;
         private RenderTexture _blurRenderTexture2;
-        private UniformValue[] _passUniforms;
+        private UniformValue[] _combinePassUniforms;
+        private UniformValue[] _brightPassUniforms;
+        private UniformValue[] _horizontalPassUniforms;
+        private UniformValue[] _verticalPassUniforms;
 
         public BloomPostProcessing()
         {
@@ -27,7 +29,6 @@ namespace Game
 
             _brightPassShader = new Shader(vertex, Assets.GetText("Shaders/Bloom/Bloom_BrightPass.frag").Text);
             _blurPassShader = new Shader(vertex, Assets.GetText("Shaders/Bloom/Bloom_GaussianBlur.frag").Text);
-            _blurPassShader2 = new Shader(vertex, Assets.GetText("Shaders/Bloom/Bloom_GaussianBlur_vTest.frag").Text);
             _combinePassShader = new Shader(vertex, Assets.GetText("Shaders/Bloom/Bloom_Combine.frag").Text);
 
             _brightRenderTexture = new RenderTexture(Screen.Width / 3, Screen.Height / 3);
@@ -35,7 +36,26 @@ namespace Game
             _blurRenderTexture2 = new RenderTexture(_brightRenderTexture.Width, _brightRenderTexture.Height);
             _combineRenderTexture = new RenderTexture(Screen.Width, Screen.Height);
 
-            _passUniforms = [UniformValue.AsRenderTexture("uBlurTex", _blurRenderTexture2)];
+            _combinePassUniforms = 
+            [
+                UniformValue.AsRenderTexture("uBlurTex", _blurRenderTexture2),
+                UniformValue.AsFloat("uBloomStrength", 0.2f)
+            ];
+            _brightPassUniforms =
+            [
+                UniformValue.AsFloat("uThreshold", 0.6f),
+                UniformValue.AsFloat("uKnee", 0.2f),
+            ];
+            _horizontalPassUniforms =
+            [
+                UniformValue.AsInt("uHorizontal", 1)
+            ];
+
+            _verticalPassUniforms =
+            [
+                UniformValue.AsInt("uHorizontal", 0)
+            ];
+
             WindowManager.Window.OnWindowChanged += Window_OnWindowChanged;
         }
 
@@ -49,12 +69,12 @@ namespace Game
 
         protected override RenderTexture Render(RenderTexture inRenderTexture)
         {
-            Draw(_brightPassShader, inRenderTexture, _brightRenderTexture);
-            Draw(_blurPassShader, _brightRenderTexture, _blurRenderTexture);
-            Draw(_blurPassShader2, _blurRenderTexture, _blurRenderTexture2);
-            Draw(_combinePassShader, inRenderTexture, _combineRenderTexture, _passUniforms);
+            Draw(_brightPassShader, inRenderTexture, _brightRenderTexture, _brightPassUniforms);
+            Draw(_blurPassShader, _brightRenderTexture, _blurRenderTexture, _horizontalPassUniforms);
+            Draw(_blurPassShader, _blurRenderTexture, _blurRenderTexture2, _verticalPassUniforms);
+            Draw(_combinePassShader, inRenderTexture, _combineRenderTexture, _combinePassUniforms);
 
-            return _combineRenderTexture;
+            return _blurRenderTexture2;
         }
 
         public override void Dispose()

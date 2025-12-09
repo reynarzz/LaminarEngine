@@ -11,11 +11,11 @@ uniform vec2 uScreenSize;
 uniform vec3 uTime;
 
 // Controls
-uniform float uScanlineIntensity = 0.25;     // darkness of scanlines
-uniform float uScanlineSpacing = 5.0;        // spacing between scanlines in pixels
-uniform float uPhosphorGlow = 0.3;           // phosphor glow
-uniform float uRGBOffset = 1.0;              // RGB horizontal offset
-uniform vec3 uBackgroundColor = vec3(0.0);   // background color (default black)
+uniform float uScanlineIntensity;// = 0.25;     // darkness of scanlines
+uniform float uScanlineSpacing;// = 5.0;        // spacing between scanlines in pixels
+uniform float uPhosphorGlow;// = 0.3;           // phosphor glow
+uniform float uRGBOffset;// = 1.0;              // RGB horizontal offset
+uniform vec3 uBackgroundColor;// = vec3(0.0);   // background color (default black)
 
 void main()
 {
