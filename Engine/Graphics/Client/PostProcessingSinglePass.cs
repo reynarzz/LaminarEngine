@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GlmNet;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace Engine.Graphics
     {
         private readonly Shader _shader;
         private readonly RenderTexture _renderTextureOut;
-        public UniformValue[] _uniforms = new UniformValue[10];
+        public UniformValue[] _uniforms = new UniformValue[30];
         private readonly Dictionary<string, int> _uniformIndex = new();
         public PostProcessingSinglePass(Shader shader)
         {
@@ -38,6 +39,16 @@ namespace Engine.Graphics
             if (index >= 0)
             {
                 _uniforms[index].SetFloat(name, value);
+            }
+        }
+
+        public void SetValue(string name, vec3 value)
+        {
+            var index = GetIndex(name);
+
+            if (index >= 0)
+            {
+                _uniforms[index].SetVec3(name, value);
             }
         }
 

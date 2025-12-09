@@ -27,12 +27,12 @@ namespace Engine.Graphics.OpenGL
                 return false;
             }
 
-            uint vertId = CompileShader(GL_VERTEX_SHADER, descriptor.VertexSource);
+            uint vertId = CompileShader(GL_VERTEX_SHADER, descriptor.VertexSource, descriptor.VertName);
 
             if (vertId == 0)
                 return false;
 
-            uint fragId = CompileShader(GL_FRAGMENT_SHADER, descriptor.FragmentSource);
+            uint fragId = CompileShader(GL_FRAGMENT_SHADER, descriptor.FragmentSource, descriptor.FragName);
 
             if (fragId == 0)
                 return false;
@@ -49,7 +49,7 @@ namespace Engine.Graphics.OpenGL
             return ValidateProgram(Handle);
         }
 
-        private unsafe uint CompileShader(int shaderType, byte[] shaderSource)
+        private unsafe uint CompileShader(int shaderType, byte[] shaderSource, string name)
         {
             uint shaderId = glCreateShader(shaderType);
             string src = Encoding.UTF8.GetString(shaderSource);
@@ -67,7 +67,7 @@ namespace Engine.Graphics.OpenGL
                 glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &length);
                 var message = glGetShaderInfoLog(shaderId, length);
 
-                Debug.Error($"failed to compile '{ShaderTypeName(shaderType)}' \n{message}");
+                Debug.Error($"failed to compile '{ShaderTypeName(shaderType)}' \n{message}, name: {name}");
                 glDeleteShader(shaderId);
 
                 return 0;

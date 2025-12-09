@@ -18,7 +18,7 @@ namespace GameCooker
     {
         private readonly static MiniAudioEngine _engine = new MiniAudioEngine();
 
-        byte[] IAssetProcessor.Process(string path, AssetMetaFileBase meta)
+        byte[] IAssetProcessor.Process(string path, AssetMetaFileBase meta, CookingPlatform platform)
         {
             using var fs = new FileStream(path, FileMode.Open, FileAccess.Read);
 

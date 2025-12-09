@@ -9,7 +9,7 @@ namespace GameCooker
 {
     internal class RawBytesAssetProcessor : IAssetProcessor
     {
-        byte[] IAssetProcessor.Process(string path, AssetMetaFileBase meta)
+        byte[] IAssetProcessor.Process(string path, AssetMetaFileBase meta, CookingPlatform platform)
         {
             return File.ReadAllBytes(path);
         }

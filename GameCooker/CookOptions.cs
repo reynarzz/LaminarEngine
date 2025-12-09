@@ -26,6 +26,7 @@ namespace GameCooker
     public class CookOptions
     {
         public CookingType Type { get; set; }
+        public CookingPlatform Platform { get; set; }
         public string AssetsFolderPath { get; set; }
         public string ExportFolderPath { get; set; }
         public CookFileOptions FileOptions { get; set; }

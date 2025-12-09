@@ -111,10 +111,10 @@ namespace Game
             _fadeInOutManager = new Actor("FadeInOutManager").AddComponent<FadeInOutManager>();
             _fadeInOutManager.Transform.Parent = Transform;
 
-          //  IEnumerator next()
+            //  IEnumerator next()
             {
-              //  yield return null;
-               // yield return null;
+                //  yield return null;
+                // yield return null;
 
                 var music = new Actor<AudioSource>("Music Manager");
                 var musicAudio = music.GetComponent<AudioSource>();
@@ -131,7 +131,7 @@ namespace Game
                 // Begin from first level.
                 BuildLevel(levelIndex: 0);
             }
-           // StartCoroutine(next());
+            // StartCoroutine(next());
         }
 
         public void BuildLevel(int levelIndex, vec2 playerStartPos = default)
@@ -263,7 +263,7 @@ namespace Game
             var renderer = waterActor.GetComponent<SpriteRenderer>();
             renderer.SortOrder = 4;
 
-            var mainShader = new Shader(Assets.GetText("Shaders/SpriteVert.vert").Text, Assets.GetText("Shaders/WaterFrag.frag").Text);
+            var mainShader = new Shader(Assets.GetText("Shaders/SpriteVert.vert").Text, Assets.GetText("Shaders/WaterFrag.frag").Text, "Shaders/SpriteVert.vert", "Shaders/WaterFrag.frag");
 
             renderer.Material = new Material(mainShader);
             renderer.Material.Name = "Water Material";
@@ -292,7 +292,55 @@ namespace Game
         private void ScreenGrabTest()
         {
             var screenShader = new Shader(Assets.GetText("Shaders/ScreenVert.vert").Text, Assets.GetText("Shaders/CTRTv.frag").Text);
-            PostProcessingStack.Insert(new PostProcessingSinglePass(screenShader), 0);
+            var pass = new PostProcessingSinglePass(screenShader);
+
+            pass.SetValue("uBackgroundColor", new vec3(0.07f));
+            pass.SetValue("uDistortionStrength", 0);
+            pass.SetValue("uCornerTL", 0);
+            pass.SetValue("uCornerTR", 0);
+            pass.SetValue("uCornerBL", 0);
+            pass.SetValue("uCornerBR", 0);
+            pass.SetValue("uEdgeSoftness", 0.001f);
+            pass.SetValue("uScanlineIntensity", 0.4f);
+            pass.SetValue("uScanlineSpacing", 4.0f);
+            pass.SetValue("uPhosphorGlow", 0.05f);
+            pass.SetValue("uRGBOffset", 0.0f);
+            pass.SetValue("uBrightness", 1.6f);
+            pass.SetValue("uContrast", 1.0f);
+            pass.SetValue("uRGBBalance", new vec3(1.0f, 0.8f, 0.84f));
+            pass.SetValue("uGlassReflectStrength", 0.0f);
+            pass.SetValue("uAberrationStrength", 0.00f);
+            pass.SetValue("uMaskStrength", 0.01f);
+            pass.SetValue("uMaskScale", 1.0f);
+            pass.SetValue("uNoiseStrength", 0.0f);
+            pass.SetValue("uVignetteStrength", 0.01f);
+            pass.SetValue("uJitterStrength", 0.5f);
+
+            PostProcessingStack.Insert(pass, 0);
+
+            /*
+uniform float  = 0;//0.03;
+uniform float  = 1.0;
+uniform float  = 1.0;
+uniform float  = 1.0;
+uniform float  = 1.0;
+uniform float uEdgeSoftness              0.001   
+uniform float uScanlineIntensity         0.4   
+uniform float uScanlineSpacing           4.0   
+uniform float uPhosphorGlow              0.05    
+uniform float uRGBOffset                 0.0    
+uniform float uBrightness                1.6    
+uniform float uContrast                  1.0    
+uniform vec3  uRGBBalance                new vec3(1.0, 0.8, 0.84);
+uniform float uGlassReflectStrength      0.0  
+uniform float uAberrationStrength        0.00
+uniform float uMaskStrength              0.01
+uniform float uMaskScale                 1.0  
+uniform float uNoiseStrength             0.0  
+uniform float uVignetteStrength          0.01 
+uniform float uJitterStrength            0.5  
+             */
+
         }
 
         private void ScreenGrabTest3()

@@ -42,13 +42,14 @@ namespace Sandbox
             new GameCooker.AssetsCooker().CookAll(new GameCooker.CookOptions()
             {
                 Type = GameCooker.CookingType.DevMode,
+                Platform = GameCooker.CookingPlatform.Windows,
                 AssetsFolderPath = Paths.GetAssetsFolderPath(),
                 ExportFolderPath = Paths.GetAssetDatabaseFolder(),
                 FileOptions = new GameCooker.CookFileOptions()
                 {
-                    CompressAllFiles = true,
+                    CompressAllFiles = false,
                     CompressionLevel = 12,
-                    EncryptAllFiles = true,
+                    EncryptAllFiles = false,
                 },
                 MatchingFiles = releaseAssetsList
             });

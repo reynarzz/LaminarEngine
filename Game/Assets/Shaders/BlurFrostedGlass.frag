@@ -10,7 +10,7 @@ out vec4 fragColor;
 uniform sampler2D uScreenGrabTex;
 uniform vec2 uScreenSize;
 uniform vec3 uTime;
-uniform float uPixelate = 0;  
+uniform float uPixelate;  
 
 // Simple hash noise (no texture needed)
 float hash(vec2 p)

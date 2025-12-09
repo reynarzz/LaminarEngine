@@ -9,29 +9,28 @@ uniform vec2 uScreenSize;
 uniform vec3 uTime;
 
 // CRT TV Controls
-uniform vec3 uBackgroundColor = vec3(0.07);
-uniform float uDistortionStrength = 0;//0.03;
-uniform float uCornerTL = 1.0;
-uniform float uCornerTR = 1.0;
-uniform float uCornerBL = 1.0;
-uniform float uCornerBR = 1.0;
-uniform float uEdgeSoftness = 0.001;
-uniform float uScanlineIntensity = 0.4;
-uniform float uScanlineSpacing = 4.0;
-uniform float uPhosphorGlow = 0.05;
-uniform float uRGBOffset = 0.0;
-uniform float uBrightness = 1.6;
-uniform float uContrast = 1.0;
-uniform vec3 uRGBBalance = vec3(1.0, 0.8, 0.84);
+uniform vec3 uBackgroundColor;
+uniform float uDistortionStrength;//0.03;
+uniform float uCornerTL;
+uniform float uCornerTR;
+uniform float uCornerBL;
+uniform float uCornerBR;
+uniform float uEdgeSoftness;
+uniform float uScanlineIntensity;
+uniform float uScanlineSpacing;
+uniform float uPhosphorGlow;
+uniform float uRGBOffset;
+uniform float uBrightness;
+uniform float uContrast;
+uniform vec3 uRGBBalance;
 
-uniform float uGlassReflectStrength = 0.0;   // curved CRT glass reflection
-uniform float uAberrationStrength   = 0.00;   // chromatic aberration
-uniform float uMaskStrength         = 0.01;   // aperture grille / shadow mask
-uniform float uMaskScale            = 1.0;   // scaling of CRT mask pattern
-uniform float uNoiseStrength        = 0.0;   // analog noise level
-uniform float uVignetteStrength     = 0.01;   // CRT glass vignette
-uniform float uJitterStrength       = 0.5;   // horizontal beam jitter
-
+uniform float uGlassReflectStrength;   // curved CRT glass reflection
+uniform float uAberrationStrength;   // chromatic aberration
+uniform float uMaskStrength;   // aperture grille / shadow mask
+uniform float uMaskScale;   // scaling of CRT mask pattern
+uniform float uNoiseStrength;   // analog noise level
+uniform float uVignetteStrength;   // CRT glass vignette
+uniform float uJitterStrength;   // horizontal beam jitter
 uniform sampler2D uMaskTexture;              // CRT mask texture (optional)
 
 void main()

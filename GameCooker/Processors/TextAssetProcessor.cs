@@ -10,7 +10,7 @@ namespace GameCooker
 {
     internal class TextAssetProcessor : IAssetProcessor
     {
-        byte[] IAssetProcessor.Process(string path, AssetMetaFileBase meta)
+        byte[] IAssetProcessor.Process(string path, AssetMetaFileBase meta, CookingPlatform platform)
         {
             using var reader = new StreamReader(path, Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
 

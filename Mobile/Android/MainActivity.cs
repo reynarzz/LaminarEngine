@@ -14,32 +14,13 @@ namespace Android
     public class MainActivity : Activity
     {
         private GLView? _glView;
-        private GLRenderer _renderer;
-        private GFSEngine _engine;
         protected override void OnCreate(Bundle? savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             Window.SetFlags(Android.Views.WindowManagerFlags.Fullscreen, Android.Views.WindowManagerFlags.Fullscreen);
             Window.AddFlags(Android.Views.WindowManagerFlags.KeepScreenOn);
 
-            _renderer = new GLRenderer();
-            _glView = new GLView(this, _renderer);
-
-
-            AssetManager assets = Application.Context.Assets;
-
-            MemoryStream memStream;
-            using (var stream = assets.Open("GameData.gfs"))
-            {
-                memStream = new MemoryStream();
-                stream.CopyTo(memStream);
-                memStream.Position = 0;   
-            }
-
-            var reader = new BinaryReader(memStream, Encoding.UTF8, leaveOpen: false);
-
-            _engine = new GFSEngine(_glView, typeof(GameApplication), reader);
-            _renderer.SetEngine(_engine);
+            _glView = new GLView(this);
 
             SetContentView(_glView);
         }

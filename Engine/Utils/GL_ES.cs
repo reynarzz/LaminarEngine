@@ -7,11 +7,11 @@ namespace OpenGL.ES
     public static unsafe class GLES30
     {
 #if ANDROID
-    private const string LIB = "GLESv2";
+    public const string LIB = "libGLESv2.so";
 #elif IOS || __IOS__
-    private const string LIB = "__Internal";
+    public const string LIB = "__Internal";
 #else
-        private const string LIB = "GLESv2";
+        public const string LIB = "GLESv2";
 #endif
         private static string PtrToStringUtf8(IntPtr ptr, int length)
         {

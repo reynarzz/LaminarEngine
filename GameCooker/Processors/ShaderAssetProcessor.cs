@@ -12,7 +12,7 @@ namespace GameCooker
     {
         private readonly StringBuilder _sb = new();
 
-        byte[] IAssetProcessor.Process(string path, AssetMetaFileBase meta)
+        byte[] IAssetProcessor.Process(string path, AssetMetaFileBase meta, CookingPlatform platform)
         {
             using var reader = new StreamReader(path, Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
             var str = reader.ReadToEnd();
@@ -27,14 +27,29 @@ namespace GameCooker
                 {
                     if (lines[i].Contains("#version"))
                     {
-#if WINDOWS
-                        lines[i] = "#version 330 core";
-#else
-                        lines[i] = "#version 310";
-#endif
-                    }
+                        if (platform == CookingPlatform.Windows)
+                        {
+                            lines[i] = "#version 330 core";
+                            _sb.AppendLine(lines[i]);
 
-                    _sb.AppendLine(lines[i]);
+                        }
+                        else if(platform == CookingPlatform.Android)
+                        {
+                            lines[i] = "#version 300 es";
+                            _sb.AppendLine(lines[i]);
+                            _sb.AppendLine("precision mediump float;");
+                        }
+                        else
+                        {
+                            lines[i] = "#version 310";
+                            _sb.AppendLine(lines[i]);
+
+                        }
+                    }
+                    else
+                    {
+                        _sb.AppendLine(lines[i]);
+                    }
                 }
             }
             else

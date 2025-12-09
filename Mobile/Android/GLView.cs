@@ -7,13 +7,13 @@ namespace Engine.Android
     {
         private readonly GLRenderer _renderer;
 
-        public GLView(Context context, GLRenderer renderer) : base(context)
+        public GLView(Context context) : base(context)
         {
             // Request an OpenGL ES 3.0 context
             SetEGLContextClientVersion(3);
 
-            _renderer = renderer;
-            SetRenderer(renderer);
+            _renderer = new GLRenderer(this);
+            SetRenderer(_renderer);
 
             // Render continuously
             RenderMode = Rendermode.Continuously;

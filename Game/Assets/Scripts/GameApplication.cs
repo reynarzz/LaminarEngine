@@ -58,14 +58,14 @@ namespace Game
 
         public override void Close() 
         {
-#if DEBUG
-            var sb = new StringBuilder();
-            foreach (var item in Assets.LoadedPaths())
-            {
-                sb.AppendLine(item);
-            }
-            File.WriteAllText(Paths.GetLibraryFolderPath() + "/_ReleaseAssetsList.txt", sb.ToString());
-#endif
+//#if DEBUG
+//            var sb = new StringBuilder();
+//            foreach (var item in Assets.LoadedPaths())
+//            {
+//                sb.AppendLine(item);
+//            }
+//            File.WriteAllText(Paths.GetLibraryFolderPath() + "/_ReleaseAssetsList.txt", sb.ToString());
+//#endif
         }
     }
 }

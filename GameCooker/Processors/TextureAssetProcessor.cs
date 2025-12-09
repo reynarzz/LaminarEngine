@@ -20,7 +20,7 @@ namespace GameCooker
 
     internal class TextureAssetProcessor : IAssetProcessor
     {
-        byte[] IAssetProcessor.Process(string path, AssetMetaFileBase meta)
+        byte[] IAssetProcessor.Process(string path, AssetMetaFileBase meta, CookingPlatform platform)
         {
             StbImage.stbi_set_flip_vertically_on_load(1);
 

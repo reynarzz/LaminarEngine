@@ -1,6 +1,6 @@
 ﻿#version 330 core
 
-uniform sampler2D uTextures[15]; //uniform sampler2D uTextures[{32}]
+uniform sampler2D uTextures[15]; 
 in vec2 fragUV;
 in vec4 vColor;
 

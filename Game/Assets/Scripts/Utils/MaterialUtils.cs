@@ -53,9 +53,9 @@ namespace Game
 
             return material;
         }
-        private static Material GetMaterial(string name, string vertexCode, string shaderCode)
+        private static Material GetMaterial(string name, string vertexPath, string fragmentPath)
         {
-            var material = new Material(new Shader(Assets.GetText(vertexCode).Text, Assets.GetText(shaderCode).Text));
+            var material = new Material(new Shader(Assets.GetText(vertexPath).Text, Assets.GetText(fragmentPath).Text, vertexPath, fragmentPath));
             material.Name = name;
 
             return material;
