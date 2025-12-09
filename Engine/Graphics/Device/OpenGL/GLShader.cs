@@ -5,16 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static OpenGL.GL;
+// using static OpenGL.ES.GLES30;
 
 namespace Engine.Graphics.OpenGL
 {
     internal class GLShader : GLGfxResource<ShaderDescriptor>
     {
         private readonly Dictionary<string, int> _uniformLocations;
-        private readonly static float[] _mat4Arr = new float[16];
-        private readonly static float[] _vec4Arr = new float[4];
-        private readonly static float[] _vec3Arr = new float[3];
-        private readonly static float[] _vec2Arr = new float[2];
         public GLShader() : base(glCreateProgram, glDeleteProgram, glUseProgram)
         {
             _uniformLocations = new Dictionary<string, int>(StringComparer.Ordinal);
@@ -146,7 +143,11 @@ namespace Engine.Graphics.OpenGL
             if (!GetLocation(name, out var location))
                 return;
 
-            glUniform1iv(location, value.Length, value);
+            unsafe
+            {
+                fixed(int* v = value)   
+                glUniform1iv(location, value.Length, v);
+            }
         }
 
         internal void SetUniform(string name, vec2 value)
@@ -154,8 +155,10 @@ namespace Engine.Graphics.OpenGL
             if (!GetLocation(name, out var location))
                 return;
 
-            value.to_array(_vec2Arr);
-            glUniform2fv(location, 1, _vec2Arr);
+            unsafe
+            {
+                glUniform2fv(location, 1, &value.x);
+            }
         }
 
         internal void SetUniform(string name, vec3 value)
@@ -163,8 +166,10 @@ namespace Engine.Graphics.OpenGL
             if (!GetLocation(name, out var location))
                 return;
 
-            value.to_array(_vec3Arr);
-            glUniform3fv(location, 1, _vec3Arr);
+            unsafe
+            {
+                glUniform3fv(location, 1, &value.x);
+            }
         }
 
         internal void SetUniform(string name, vec4 value)
@@ -172,8 +177,10 @@ namespace Engine.Graphics.OpenGL
             if (!GetLocation(name, out var location))
                 return;
 
-            value.to_array(_vec4Arr);
-            glUniform4fv(location, 1, _vec4Arr);
+            unsafe
+            {
+                glUniform4fv(location, 1, &value.x);
+            }
         }
 
         internal void SetUniform(string name, mat4 value)
@@ -183,11 +190,7 @@ namespace Engine.Graphics.OpenGL
 
             unsafe
             {
-                value.to_array(_mat4Arr);
-                fixed (float* m = &_mat4Arr[0])
-                {
-                    glUniformMatrix4fv(location, 1, false, m);
-                }
+                glUniformMatrix4fv(location, 1, false, &value.c0.x);
             }
         }
 

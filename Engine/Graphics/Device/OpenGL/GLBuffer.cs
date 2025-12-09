@@ -43,7 +43,7 @@ namespace Engine.Graphics.OpenGL
             }
 
             Bind();
-            glBufferData(Target, desc.BufferLength, desc.GetBufferUnsafePtr(), usage);
+            glBufferData(Target, desc.BufferLength, desc.GetBufferUnsafePtr().ToPointer(), usage);
             Unbind();
 
             return true;
@@ -52,7 +52,10 @@ namespace Engine.Graphics.OpenGL
         internal override void UpdateResource(BufferDataDescriptor desc)
         {
             Bind();
-            glBufferSubData(Target, desc.Offset, desc.Count, desc.GetBufferUnsafePtr());
+            unsafe
+            {
+                glBufferSubData(Target, desc.Offset, desc.Count, desc.GetBufferUnsafePtr().ToPointer());
+            }
             Unbind();
         }
     }
