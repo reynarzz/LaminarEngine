@@ -46,7 +46,9 @@ namespace Game
         // Game using both assets, and using stencil buffer to change between them sphere.
         // Investigate why AudioMixer frees from memory automatically
         // Port to mac, android, ios, linux.
-        
+        // Leave rendering in the main thread, and move all the layers to another one.
+        // Android: Manage opengl context loss.
+
         public override void Initialize()
         {
 #if RELEASE

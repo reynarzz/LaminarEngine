@@ -32,7 +32,23 @@ namespace Android
 
             SetContentView(_glView);
         }
-      
+        private void Force60Hz()
+        {
+            if (Build.VERSION.SdkInt < BuildVersionCodes.M)
+                return;
+
+            var display = WindowManager.DefaultDisplay;
+            foreach (var mode in display.GetSupportedModes())
+            {
+                if (Math.Abs(mode.RefreshRate - 60f) < 0.5f)
+                {
+                    var attrs = Window.Attributes;
+                    attrs.PreferredDisplayModeId = mode.ModeId;
+                    Window.Attributes = attrs;
+                    break;
+                }
+            }
+        }
         protected override void OnPause()
         {
             base.OnPause();

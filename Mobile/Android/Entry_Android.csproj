@@ -12,7 +12,11 @@
 	<DefineConstants>ANDROID;MOBILE;$(DefineConstants)</DefineConstants>
 	<AndroidFastDeploymentEnabled>false</AndroidFastDeploymentEnabled>
 	<AndroidSupportedAbis>armeabi-v7a;arm64-v8a</AndroidSupportedAbis>
-
+	<MinSdkVersion>23</MinSdkVersion>
+	<TargetSdkVersion>34</TargetSdkVersion>
+	<CompileSdkVersion>34</CompileSdkVersion>
+	<UseLatestAndroidPlatformSdk>true</UseLatestAndroidPlatformSdk>
+	  
 	  <!--
       Enables trim analyzers and full trimming during Release mode.
       To learn more, see: https://learn.microsoft.com/dotnet/core/deploying/trimming/trimming-options#trimming-granularity
