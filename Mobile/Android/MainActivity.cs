@@ -22,7 +22,7 @@ namespace Android
 
             _renderer = new GLRenderer();
             _glView = new GLView(this, _renderer);
-            _engine = new GFSEngine(_glView, typeof(GameApplication));
+            //_engine = new GFSEngine(_glView, typeof(GameApplication));
             _renderer.SetEngine(_engine);
 
             SetContentView(_glView);

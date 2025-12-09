@@ -8,7 +8,7 @@
     <ApplicationId>com.reynarz.gfs</ApplicationId>
     <ApplicationVersion>1</ApplicationVersion>
     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-	<RuntimeIdentifiers>android-arm;android-arm64;</RuntimeIdentifiers>
+	<RuntimeIdentifiers>android-arm;android-arm64</RuntimeIdentifiers>
 	<DefineConstants>ANDROID;MOBILE;$(DefineConstants)</DefineConstants>
 	<AndroidFastDeploymentEnabled>false</AndroidFastDeploymentEnabled>
 	<AndroidSupportedAbis>armeabi-v7a;arm64-v8a</AndroidSupportedAbis>
@@ -20,6 +20,10 @@
     <TrimMode>full</TrimMode>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
+	
+	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+		<EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
+	</PropertyGroup>
 	
 	<ItemGroup>
 		<AndroidNativeLibrary Include="jniLibs\**\*.so" />

@@ -20,7 +20,6 @@
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
 		<DefineConstants>ANDROID;MOBILE;$(DefineConstants)</DefineConstants>
 		<RuntimeIdentifiers>$(RuntimeIdentifiers)</RuntimeIdentifiers>
-
 	</PropertyGroup>
 
 	<!-- iOS -->
