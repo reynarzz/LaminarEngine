@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 #if DESKTOP
 using static OpenGL.GL;
 #else
-  -jh  using static OpenGL.ES.GLES30;
+using static OpenGL.ES.GLES30;
 #endif
 
 namespace Engine.Graphics.OpenGL
