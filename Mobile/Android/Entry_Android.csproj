@@ -29,8 +29,9 @@
 		<AndroidNativeLibrary Include="jniLibs\**\*.so" />
 		<ProjectReference Include="..\..\Engine\Engine.csproj" />
         <ProjectReference Include="..\..\Game\Game.csproj" />
+		<Folder Include="Assets\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Assets\" />
-  </ItemGroup>
+	<ItemGroup>
+		<AndroidAsset Include="Assets\**\*.*" />
+	</ItemGroup>
 </Project>

@@ -78,15 +78,17 @@ namespace Engine
 #if DEBUG
             lock (_lock) // thread-safe color changes
             {
+#if !MOBILE
                 var prevColor = Console.ForegroundColor;
                 Console.ForegroundColor = LevelToColor(level);
-
+#endif
                 string timestamp = DateTime.Now.ToString("HH:mm:ss");
                 string filename = System.IO.Path.GetFileName(file);
                 //Console.WriteLine($"[{timestamp}] [{level}] {filename}:{line} ({member}) - {message}");
                 Console.WriteLine($"[{timestamp}] [{level}] [{filename}:{line}] {message}");
-
+#if !MOBILE
                 Console.ForegroundColor = prevColor;
+#endif
             }
 #endif
         }

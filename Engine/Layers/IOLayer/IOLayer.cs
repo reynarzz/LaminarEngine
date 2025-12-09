@@ -19,10 +19,14 @@ namespace Engine.Layers
             DiskBase disk = null;
             _assetDatabase = new AssetDatabase();
 
-#if DEBUG
+#if DEBUG && !MOBILE
             disk = new DevModeDisk();
 #else
+#if !MOBILE
             disk = new ReleaseModeDisk(Paths.GetReleaseDataFolder());
+#else
+            disk = new ReleaseModeDisk(GFSEngine.AssetFileStream);
+#endif
 #endif
             disk.Initialize();
 

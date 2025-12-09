@@ -25,11 +25,13 @@ namespace Engine.Layers
         public override void Initialize()
         {
             _engine = new MiniAudioEngine();
-            var defaultDevice = _engine.PlaybackDevices.FirstOrDefault(x => x.IsDefault);
+            var defaultDevice = _engine.PlaybackDevices.FirstOrDefault();
+#if DESKTOP
             if (!defaultDevice.IsDefault)
             {
                 throw new Exception("No default playback device found.");
             }
+#endif
             _currentDevice = _engine.InitializePlaybackDevice(defaultDevice, _defaultFormat);
             _currentDevice.Start();
 

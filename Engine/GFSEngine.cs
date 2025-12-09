@@ -9,10 +9,15 @@ namespace Engine
     public class GFSEngine
     {
         private LayersManager _layersManager;
+        internal static BinaryReader AssetFileStream { get; private set; }
+        public GFSEngine(IWindow window, Type gameLayerType) : this(window, gameLayerType, null)
+        {
 
-        public GFSEngine(IWindow window, Type gameLayerType)
+        }
+        public GFSEngine(IWindow window, Type gameLayerType, BinaryReader assetFileStream)
         {
             WindowManager.Window = window;
+            AssetFileStream = assetFileStream;
 
             window.OnWindowChanged += (x, y) => _layersManager.Update();
             window.OnWindowClose += () => { _layersManager.OnClose(); };

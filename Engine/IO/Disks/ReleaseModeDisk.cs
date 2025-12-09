@@ -20,12 +20,15 @@ namespace Engine.IO
             public int AssetMetaSize { get; set; }
         }
 
-        private Dictionary<Guid, AssetLocInfo> _assetsLocations;
-        public ReleaseModeDisk(string folderPath)
+        private readonly Dictionary<Guid, AssetLocInfo> _assetsLocations;
+        public ReleaseModeDisk(string folderPath) : 
+            this(new BinaryReader(new FileStream(Path.Combine(folderPath, Paths.GetAssetBuildDataFilename()), FileMode.Open, FileAccess.Read)))
         {
-            var fstream = new FileStream(Path.Combine(folderPath, Paths.GetAssetBuildDataFilename()), FileMode.Open, FileAccess.Read);
-            _reader = new BinaryReader(fstream);
+        }
 
+        public ReleaseModeDisk(BinaryReader reader)
+        {
+            _reader = reader;
             _assetsLocations = new Dictionary<Guid, AssetLocInfo>();
         }
 
