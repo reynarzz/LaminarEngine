@@ -5,7 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+#if DESKTOP
 using static OpenGL.GL;
+#else
+    using static OpenGL.ES.GLES30;
+#endif
 
 namespace Engine.Graphics.OpenGL
 {
@@ -37,9 +41,11 @@ namespace Engine.Graphics.OpenGL
             _gfxDeviceInfo.MaxTexAccessInVertexShader = maxTextureUnitsAccessInVertexShader;
 
             _gfxDeviceInfo.MaxValidTextureUnits = Math.Min(_gfxDeviceInfo.MaxHardwareTextureUnits, _gfxDeviceInfo.MaxTexAccessInVertexShader);
+#if DESKTOP
             _gfxDeviceInfo.Vendor = glGetString(GL_VENDOR);
             _gfxDeviceInfo.Renderer = glGetString(GL_RENDERER);
             _gfxDeviceInfo.Version = glGetString(GL_VERSION);
+#endif
 
 #if MACOS
             _defaultVAO = glGenVertexArray();

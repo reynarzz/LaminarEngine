@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+#if DESKTOP
 using static OpenGL.GL;
+#else
+  -jh  using static OpenGL.ES.GLES30;
+#endif
 
 namespace Engine.Graphics.OpenGL
 {

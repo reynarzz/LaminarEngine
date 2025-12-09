@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+#if DESKTOP
 using static OpenGL.GL;
-// using static OpenGL.ES.GLES30;
-
+#else
+    using static OpenGL.ES.GLES30;
+#endif
 namespace Engine.Graphics.OpenGL
 {
     internal class GLShader : GLGfxResource<ShaderDescriptor>

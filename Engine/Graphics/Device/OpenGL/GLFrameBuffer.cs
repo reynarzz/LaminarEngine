@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using Engine.Graphics.OpenGL;
+#if DESKTOP
 using static OpenGL.GL;
+#else
+    using static OpenGL.ES.GLES30;
+#endif
+
 
 namespace Engine.Graphics
 {
-
-
     internal class GLFrameBuffer : GLGfxResource<RenderTargetDescriptor>
     {
         public GLTexture ColorTexture { get; private set; }

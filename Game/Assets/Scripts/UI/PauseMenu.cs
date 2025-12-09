@@ -144,9 +144,9 @@ namespace Game
             {
                 _audioSource.PlayOneShot(_buttonAudioClip, 0.5f);
             }
-#if !DEBUG
+#if RELEASE
 
-            Window.CursorVisible = false;
+            WindowManager.Window.CursorVisible = false;
 #endif
             _show = false;
         }
@@ -156,8 +156,8 @@ namespace Game
             //Actor.IsActiveSelf = !Actor.IsActiveSelf;
             _show = !_show;
             Time.TimeScale = _show ? 0 : 1;
-#if !DEBUG
-            Window.CursorVisible = _show;
+#if RELEASE
+            WindowManager.Window.CursorVisible = _show;
 #endif
             if (_show)
             {

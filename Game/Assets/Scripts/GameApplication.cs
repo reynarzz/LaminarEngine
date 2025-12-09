@@ -50,8 +50,8 @@ namespace Game
         public override void Initialize()
         {
 #if RELEASE
-            Window.FullScreen(true);
-            Window.CursorVisible = false;
+            Screen.IsFullScreen = true;
+            WindowManager.Window.CursorVisible = false;
 #endif
             new Actor<LaunchScreen>("Launch Screen");
         }
