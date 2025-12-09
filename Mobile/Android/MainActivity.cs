@@ -39,15 +39,12 @@ namespace Android
 
             if (hasFocus)
             {
-                Window.DecorView.SystemUiVisibility =
-                    (StatusBarVisibility)(
-                        SystemUiFlags.ImmersiveSticky
-                      | SystemUiFlags.HideNavigation
-                      | SystemUiFlags.Fullscreen
-                      | SystemUiFlags.LayoutHideNavigation
-                      | SystemUiFlags.LayoutFullscreen
-                      | SystemUiFlags.LayoutStable
-                    );
+                Window.DecorView.SystemUiFlags = SystemUiFlags.ImmersiveSticky
+                                               | SystemUiFlags.HideNavigation
+                                               | SystemUiFlags.Fullscreen
+                                               | SystemUiFlags.LayoutHideNavigation
+                                               | SystemUiFlags.LayoutFullscreen
+                                               | SystemUiFlags.LayoutStable;
             }
         }
     }
