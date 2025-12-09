@@ -30,7 +30,7 @@ namespace Engine.Android
 
         public int MonitorCount { get; set; }
 
-        public bool IsInitialized { get; set; }
+        public bool IsInitialized { get; set; } = true;
 
         public bool CanResize { get; set; }
 

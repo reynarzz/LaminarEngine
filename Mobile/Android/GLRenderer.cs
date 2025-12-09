@@ -15,10 +15,10 @@ namespace Engine.Android
 
         public void OnDrawFrame(IGL10? gl)
         {
-            if(_engine != null)
-            {
-                _engine.Update();
-            }
+            //if(_engine != null)
+            //{
+            //    _engine.Update();
+            //}
         }
 
         public void OnSurfaceChanged(IGL10? gl, int width, int height)

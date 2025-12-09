@@ -8,8 +8,10 @@
     <ApplicationId>com.reynarz.gfs</ApplicationId>
     <ApplicationVersion>1</ApplicationVersion>
     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-	<RuntimeIdentifiers>android-arm;android-arm64;android-x86;android-x64</RuntimeIdentifiers>
+	<RuntimeIdentifiers>android-arm;android-arm64;</RuntimeIdentifiers>
 	<DefineConstants>ANDROID;MOBILE;$(DefineConstants)</DefineConstants>
+	<AndroidFastDeploymentEnabled>false</AndroidFastDeploymentEnabled>
+	<AndroidSupportedAbis>armeabi-v7a;arm64-v8a</AndroidSupportedAbis>
 
 	  <!--
       Enables trim analyzers and full trimming during Release mode.
@@ -18,7 +20,7 @@
     <TrimMode>full</TrimMode>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
-
+	
 	<ItemGroup>
     <ProjectReference Include="..\..\Engine\Engine.csproj" />
     <ProjectReference Include="..\..\Game\Game.csproj" />
