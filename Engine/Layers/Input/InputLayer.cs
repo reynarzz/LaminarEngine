@@ -167,6 +167,7 @@ public class Input : LayerBase
 
     internal override void UpdateLayer()
     {
+#if DESKTOP
         // Poll OS events
         GLFW.Glfw.PollEvents();
 
@@ -206,6 +207,7 @@ public class Input : LayerBase
         // Update mouse position
         GLFW.Glfw.GetCursorPosition(Engine.Window.NativeWindow, out double x, out double y);
         MousePosition = new vec2((float)x, (float)y);
+#endif
     }
 
     public static bool GetKey(KeyCode key)
