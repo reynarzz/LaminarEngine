@@ -5,5 +5,6 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-[assembly: InternalsVisibleTo("Sandbox")]
+[assembly: InternalsVisibleTo("Entry_Desktop")]
+[assembly: InternalsVisibleTo("Entry_Android")]
 

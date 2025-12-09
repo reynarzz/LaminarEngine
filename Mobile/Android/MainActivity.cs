@@ -1,7 +1,9 @@
 using Android.App;
 using Android.OS;
 using Android.Views;
+using Engine;
 using Engine.Android;
+using Game;
 
 namespace Android
 {
@@ -10,14 +12,19 @@ namespace Android
     public class MainActivity : Activity
     {
         private GLView? _glView;
-
+        private GLRenderer _renderer;
+        private GFSEngine _engine;
         protected override void OnCreate(Bundle? savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             Window.SetFlags(Android.Views.WindowManagerFlags.Fullscreen, Android.Views.WindowManagerFlags.Fullscreen);
             Window.AddFlags(Android.Views.WindowManagerFlags.KeepScreenOn);
 
-            _glView = new GLView(this);
+            _renderer = new GLRenderer();
+            _glView = new GLView(this, _renderer);
+            _engine = new GFSEngine(_glView, typeof(GameApplication));
+            _renderer.SetEngine(_engine);
+
             SetContentView(_glView);
         }
 

@@ -9,23 +9,18 @@ namespace Engine
     public class GFSEngine
     {
         private LayersManager _layersManager;
-        private WindowManager _windowManager;
 
-        public GFSEngine Initialize<T>(string winName, int width, int height) where T: ApplicationLayer
+        public GFSEngine(IWindow window, Type gameLayerType)
         {
-            return Initialize<T>(winName, width, height, Color.Black); 
-        }
-        public GFSEngine Initialize<T>(string winName, int width, int height, Color windowColor) where T : ApplicationLayer
-        {
-            _windowManager = new WindowManager(winName, width, height, windowColor);
+            WindowManager.Window = window;
 
-            WindowManager.Window.OnWindowChanged += (x, y) => _layersManager.Update();
-            WindowManager.Window.OnWindowClose += () => { _layersManager.OnClose(); };
-            if (WindowManager.Window.IsInitialized)
+            window.OnWindowChanged += (x, y) => _layersManager.Update();
+            window.OnWindowClose += () => { _layersManager.OnClose(); };
+            if (window.IsInitialized)
             {
                 _layersManager = new LayersManager([typeof(TimeLayer),
                                                     typeof(Input),
-                                                    typeof(T),
+                                                    gameLayerType,
                                                     typeof(MainThreadDispatcher),
                                                     typeof(SceneLayer),
                                                     typeof(AudioLayer),
@@ -36,9 +31,8 @@ namespace Engine
                 _layersManager.Initialize();
             }
 
-            return this;
         }
-
+        
         public void Run()
         {
             if (_layersManager == null)
@@ -49,8 +43,13 @@ namespace Engine
 
             while (!WindowManager.Window.ShouldClose)
             {
-                _layersManager.Update();
+                Update();
             }
+        }
+
+        public void Update()
+        {
+            _layersManager.Update();
         }
     }
 }

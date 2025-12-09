@@ -8,14 +8,6 @@ namespace Engine
 {
     public class WindowManager
     {
-        private static IWindow _window;
-        public static IWindow Window => _window;
-
-        public WindowManager(string name, int width, int height, Color windowColor)
-        {
-#if WINDOWS
-            _window = new Window(name, width, height, windowColor);
-#endif
-        }
+        public static IWindow Window { get; internal set; }
     }
 }

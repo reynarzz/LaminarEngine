@@ -53,8 +53,8 @@ namespace Sandbox
                 MatchingFiles = releaseAssetsList
             });
 #endif
-            new GFSEngine().Initialize<GameApplication>("GFS | By Reynardo Perez", 1024, 576).Run();
-
+            new GFSEngine(new Window("GFS | By Reynardo Perez", 1024, 576, Color.Black), typeof(GameApplication)).Run();
+            
             _mutex.ReleaseMutex();
         }
     }
