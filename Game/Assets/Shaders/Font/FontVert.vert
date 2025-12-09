@@ -11,8 +11,9 @@ out vec4 vColor;
 uniform mat4 uVP;
 uniform vec3 uTime;
        
-uniform float uAmplitude = 2.0; 
-uniform float uFrequency = 6.0;   
+uniform float uAmplitude; 
+uniform float uFrequency;   
+flat out int fragTexIndex;            // flat = no interpolation between vertices
 
 vec4 unpackColor(uint c) 
 {
@@ -31,6 +32,7 @@ vec2 animateCharacter(vec2 pos, int vertIndex, float time)
 
     float phase = float(charIndex) * charOffset;
     float yOffset = sin(time * uFrequency + phase) * uAmplitude;
+    fragTexIndex = texIndex;
 
     return pos + vec2(0.0, yOffset);
 }

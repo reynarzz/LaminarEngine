@@ -11,8 +11,8 @@ uniform vec2 uScreenSize;
 uniform vec3 uTime;
 
 // Parameters
-uniform float uSplitAmount = 0.005;
-uniform float uGlitchSpeed = 5.0;
+uniform float uSplitAmount; //= 0.005;
+uniform float uGlitchSpeed; //= 5.0;
 
 void main()
 {

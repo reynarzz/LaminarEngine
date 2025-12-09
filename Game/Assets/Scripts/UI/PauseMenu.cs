@@ -59,7 +59,7 @@ namespace Game
             _titleText.Vertical = TextVerticalAlignment.Center;
             _titleText.Transform.WorldScale = vec3.One * 2;
             // TODO: The renderer has a problem with this line.
-            _titleText.Material = new Material("Title Material: " + (_matCount++), new Shader(Assets.GetText("Shaders/Font/FontVert.vert").Text, Assets.GetText("Shaders/Font/FontFrag.frag").Text));
+            _titleText.Material = MaterialUtils.FontMaterial;
             //-- _titleText.Material = MaterialUtils.FontMaterial; // Use this instead
 
             var resume = MenuButton("Resume", new vec2(0, 70));

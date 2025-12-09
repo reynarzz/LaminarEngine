@@ -11,17 +11,17 @@ uniform vec2 uScreenSize;
 uniform vec3 uTime;
 
 // Ripple settings
-uniform vec2  uRippleCenter    = vec2(0.5);
-uniform float uRippleSpeed     = 2.0;
-uniform float uRippleAmplitude = 0.01;
-uniform float uRippleFrequency = 30.0;
-uniform float uEdgeStart       = 0.3;
-uniform float uEdgeEnd         = 0.7;
+uniform vec2  uRippleCenter;//    = vec2(0.5);
+uniform float uRippleSpeed ;//    = 2.0;
+uniform float uRippleAmplitude;// = 0.01;
+uniform float uRippleFrequency;// = 30.0;
+uniform float uEdgeStart;//       = 0.3;
+uniform float uEdgeEnd;//         = 0.7;
 
-uniform float uRippleBL = 1.0;
-uniform float uRippleTR = 1.0;
-uniform float uRippleTL = 0.02;
-uniform float uRippleBR = 1.0;
+uniform float uRippleBL;// = 1.0;
+uniform float uRippleTR;// = 1.0;
+uniform float uRippleTL;// = 0.02;
+uniform float uRippleBR;//= 1.0;
 
 void main()
 {

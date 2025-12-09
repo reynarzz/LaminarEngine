@@ -46,7 +46,7 @@ namespace Sandbox
                 AssetsFolderPath = Paths.GetAssetsFolderPath(),
                 ExportFolderPath = Paths.GetAssetDatabaseFolder(),
                 FileOptions = new GameCooker.CookFileOptions()
-                {
+                { 
                     CompressAllFiles = false,
                     CompressionLevel = 12,
                     EncryptAllFiles = false,

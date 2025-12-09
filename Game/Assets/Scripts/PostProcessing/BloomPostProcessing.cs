@@ -74,7 +74,7 @@ namespace Game
             Draw(_blurPassShader, _blurRenderTexture, _blurRenderTexture2, _verticalPassUniforms);
             Draw(_combinePassShader, inRenderTexture, _combineRenderTexture, _combinePassUniforms);
 
-            return _blurRenderTexture2;
+            return _combineRenderTexture;
         }
 
         public override void Dispose()

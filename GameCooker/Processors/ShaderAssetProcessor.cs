@@ -57,7 +57,7 @@ namespace GameCooker
                 Console.WriteLine("Shader doesn't contain '#version' tag");
             }
 
-            return Encoding.UTF8.GetBytes(_sb.ToString());
+            return Encoding.UTF8.GetBytes(_sb.ToString().TrimStart());
         }
     }
 }

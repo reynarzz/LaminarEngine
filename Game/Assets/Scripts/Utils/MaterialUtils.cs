@@ -44,6 +44,9 @@ namespace Game
             WobbleMaterial.SetProperty(0, "uDistortionAmount", 0.0003f);
             WobbleMaterial.SetProperty(0, "uColorSplit", 0.0017f);
             WobbleMaterial.SetProperty(0, "uPixelationAmount", 0.0f);
+            
+            FontMaterial.SetProperty(0, "uAmplitude", 2.0f);
+            FontMaterial.SetProperty(0, "uFrequency", 6.0f);
         }
 
         private static Material InitPortalMaterial()
@@ -62,7 +65,8 @@ namespace Game
             material.SetProperty("uGlitchMaxOffset", 0.03f);
             material.SetProperty("uGlitchFreq", 20.0f);
             material.SetProperty("uColorSplit", 0.001f);
-
+            material.SetProperty("uPixelationAmount", 2.0f);
+            
             return material;
         }
         private static Material GetMaterial(string name, string vertexPath, string fragmentPath)

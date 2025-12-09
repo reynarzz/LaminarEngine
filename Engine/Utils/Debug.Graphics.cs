@@ -91,7 +91,7 @@ namespace Engine
 
                 _linesGeometry = GraphicsHelper.GetEmptyGeometry<DebugVertex>(LINES_MAX_VERTICES, 0, ref _linesGeoDescriptor);
 
-                _shader = new Shader(DebugVertexShader, DebugFragmentShader);
+                _shader = new Shader(InternalShaderUtils.ShaderPlatformCleaner(DebugVertexShader), InternalShaderUtils.ShaderPlatformCleaner(DebugFragmentShader));
                 _linesVertexPositions = new DebugVertex[LINES_MAX_VERTICES];
                 _uiLinesVertexPositions = new DebugVertex[LINES_MAX_VERTICES];
             }

@@ -11,9 +11,9 @@ uniform vec2 uScreenSize;
 uniform vec3 uTime;
 
 // Vignette controls
-uniform float uVignetteStrength = 0.7; // 0 = no vignette, 1 = full dark edges
-uniform float uVignetteStart = 0.4;    // distance from center where vignette starts
-uniform float uVignetteEnd = 0.8;      // distance from center where vignette reaches full effect
+uniform float uVignetteStrength;// = 0.7; // 0 = no vignette, 1 = full dark edges
+uniform float uVignetteStart;// = 0.4;    // distance from center where vignette starts
+uniform float uVignetteEnd;// = 0.8;      // distance from center where vignette reaches full effect
 
 void main()
 {

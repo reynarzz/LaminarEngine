@@ -8,8 +8,8 @@ out vec4 fragColor;
 uniform sampler2D uScreenGrabTex;
 uniform vec2 uScreenSize;
 uniform float uFrameSeed;       
-uniform float uNoiseStrength = 0.1;
-uniform float uNoiseSize = 1.0;
+uniform float uNoiseStrength;
+uniform float uNoiseSize;
 
 // Integer-style hash (no repeating patterns)
 float random(vec2 uv, float seed)

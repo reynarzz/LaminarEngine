@@ -25,6 +25,7 @@ uniform float uDotSpacing;        // spacing between dots in UV units
 uniform float uGlitchMaxOffset;
 uniform float uGlitchFreq;
 uniform float uColorSplit;
+uniform float uPixelationAmount;
 
 float rand(float x) { return fract(sin(x * 1234.5) * 5678.9); }
 float rand(vec2 v) { return fract(sin(dot(v, vec2(12.9898,78.233))) * 43758.5453); }
@@ -67,7 +68,6 @@ vec2 getGlitchOffset(vec2 uv, float time)
 
     return vec2(rowOffset, vOffset);
 }
-uniform float uPixelationAmount = 2.0f;
 
 void main()
 {

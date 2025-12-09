@@ -61,7 +61,7 @@ namespace Engine.Rendering
             MaxQuadsPerBatch = maxQuadsPerBatch;
             _renderBuckets = new Dictionary<BucketKey, List<Renderer2D>>();
 
-            _pinkMaterial = new Material(Tests.GetShaderPink());
+            _pinkMaterial = new Material(InternalShaderUtils.GetShaderPink());
             _pinkMaterial.Name = "Pink Material";
             Initialize();
         }
@@ -120,6 +120,11 @@ namespace Engine.Rendering
 
                     var texture = renderer.Sprite?.Texture ?? Texture2D.White;
                     var material = renderer.Material ?? _pinkMaterial;
+
+                    if(material != null && !material.Shader.NativeShader.IsInitialized)
+                    {
+                        material = _pinkMaterial;
+                    }
 
                     if (renderer.Mesh == null)
                     {

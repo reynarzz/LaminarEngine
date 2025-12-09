@@ -10,9 +10,9 @@ uniform vec2 uScreenSize;
 uniform vec3 uTime;
 
 // Controls
-uniform float uDistortionStrength = 0.05;   // how strong the curvature is
-uniform vec3 uBackgroundColor = vec3(0.0); // background color for edges
-uniform float uEdgeSoftness = 0.001;        // smooth transition width
+uniform float uDistortionStrength;// = 0.05;   // how strong the curvature is
+uniform vec3 uBackgroundColor;// = vec3(0.0); // background color for edges
+uniform float uEdgeSoftness;// = 0.001;        // smooth transition width
 
 void main()
 {
