@@ -11,7 +11,7 @@ using System.Text;
 namespace Android
 {
     // dotnet publish -f net9.0-android -c Release
-    [Activity(Label = "@string/app_name", MainLauncher = true, 
+    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true, 
         ScreenOrientation = ScreenOrientation.Landscape, 
         ConfigurationChanges = ConfigChanges.Orientation 
                            | ConfigChanges.ScreenSize 
@@ -42,6 +42,9 @@ namespace Android
         protected override void OnResume()
         {
             base.OnResume();
+
+            SetScreenFlags();
+
             _glView?.OnResume();
         }
 
@@ -51,13 +54,18 @@ namespace Android
 
             if (hasFocus)
             {
-                Window.DecorView.SystemUiFlags = SystemUiFlags.ImmersiveSticky
-                                               | SystemUiFlags.HideNavigation
-                                               | SystemUiFlags.Fullscreen
-                                               | SystemUiFlags.LayoutHideNavigation
-                                               | SystemUiFlags.LayoutFullscreen
-                                               | SystemUiFlags.LayoutStable;
+                SetScreenFlags();
             }
+        }
+
+        private void SetScreenFlags()
+        {
+            Window.DecorView.SystemUiFlags = SystemUiFlags.ImmersiveSticky
+                                              | SystemUiFlags.HideNavigation
+                                              | SystemUiFlags.Fullscreen
+                                              | SystemUiFlags.LayoutHideNavigation
+                                              | SystemUiFlags.LayoutFullscreen
+                                              | SystemUiFlags.LayoutStable;
         }
     }
 }

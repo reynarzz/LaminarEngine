@@ -10,8 +10,6 @@ namespace Engine.Android
 
         public GLView(Context context) : base(context)
         {
-           // SetBackgroundColor(global::Android.Graphics.Color.Black);
-
             // Request an OpenGL ES 3.0 context
             SetEGLContextClientVersion(3);
             Focusable = true;
