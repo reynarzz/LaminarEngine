@@ -78,7 +78,7 @@ namespace Game
 
         private void OnQuitGame()
         {
-            Window.CloseWindow();
+            //--Window.CloseWindow();
         }
 
         private (UIText text, UIImage image, Button button) MenuButton(string label, vec2 position)

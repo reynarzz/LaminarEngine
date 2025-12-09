@@ -187,7 +187,7 @@ namespace Engine.Graphics.OpenGL
 
         internal override void Present()
         {
-            Window.SwapBuffers();
+            WindowManager.Window.SwapBuffers();
         }
 
         internal override void Present(GfxResource renderTarget)
@@ -195,7 +195,7 @@ namespace Engine.Graphics.OpenGL
             var frameBuffer = renderTarget as GLFrameBuffer;
             if (frameBuffer != null)
             {
-                frameBuffer.BlitToScreen(Window.Width, Window.Height);
+                frameBuffer.BlitToScreen(Screen.Width, Screen.Height);
             }
 
             Present();

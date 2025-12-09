@@ -103,8 +103,8 @@ namespace Engine
         {
             get
             {
-                _viewport.z = Window.Width;
-                _viewport.w = Window.Height;
+                _viewport.z = Screen.Width;
+                _viewport.w = Screen.Height;
 
                 return _viewport;
             }
@@ -121,7 +121,7 @@ namespace Engine
 
             OrthographicSize = 32;
             Fov = 60.0f;
-            Window.OnWindowChanged += OnWindowChanged;
+            WindowManager.Window.OnWindowChanged += OnWindowChanged;
             UpdateCurrent();
             //UpdatePerspective();
         }
@@ -244,7 +244,7 @@ namespace Engine
         protected internal override void OnDestroy()
         {
             base.OnDestroy();
-            Window.OnWindowChanged -= OnWindowChanged;
+            WindowManager.Window.OnWindowChanged -= OnWindowChanged;
         }
     }
 }

@@ -30,10 +30,10 @@ namespace Engine.Layers
 
         public override void Initialize()
         {
-            _defaultSceneRenderTexture = new RenderTexture(Window.Width, Window.Height);
-            _screenGrabTarget = new RenderTexture(Window.Width, Window.Height);
+            _defaultSceneRenderTexture = new RenderTexture(Screen.Width, Screen.Height);
+            _screenGrabTarget = new RenderTexture(Screen.Width, Screen.Height);
 
-            ClearScreenToColor(Window.StartWindowColor);
+            ClearScreenToColor(WindowManager.Window.StartWindowColor);
 
             _pipelineFeatures = new PipelineFeatures();
             _screenPipelineFeatures = new PipelineFeatures();
@@ -288,7 +288,7 @@ namespace Engine.Layers
             _screenQuadDrawCallData.Geometry = _screenGeometry;
             _screenQuadDrawCallData.Features = _screenPipelineFeatures;
             _screenQuadDrawCallData.RenderTarget = renderTarget?.NativeResource;
-            _screenQuadDrawCallData.Viewport = new vec4(0, 0, renderTarget?.Width ?? Window.Width, renderTarget?.Height ?? Window.Height);
+            _screenQuadDrawCallData.Viewport = new vec4(0, 0, renderTarget?.Width ?? Screen.Width, renderTarget?.Height ?? Screen.Height);
 
             // Uniforms
             _screenQuadDrawCallData.Uniforms[uniformIndex + 0].SetMat4(Consts.VIEW_PROJ_UNIFORM_NAME, VP);
@@ -304,7 +304,7 @@ namespace Engine.Layers
 
         private void ClearScreenToColor(Color color)
         {
-            GfxDeviceManager.Current.SetViewport(new vec4(0, 0, Window.Width, Window.Height));
+            GfxDeviceManager.Current.SetViewport(new vec4(0, 0, Screen.Width, Screen.Height));
             GfxDeviceManager.Current.Clear(new ClearDeviceConfig()
             {
                 Color = color,

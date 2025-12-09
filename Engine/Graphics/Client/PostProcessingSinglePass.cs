@@ -15,8 +15,8 @@ namespace Engine.Graphics
         public PostProcessingSinglePass(Shader shader)
         {
             _shader = shader;
-            _renderTextureOut = new RenderTexture(Window.Width, Window.Height);
-            Window.OnWindowChanged += UpdateRenderTargetSize;
+            _renderTextureOut = new RenderTexture(Screen.Width, Screen.Height);
+            WindowManager.Window.OnWindowChanged += UpdateRenderTargetSize;
         }
 
         public void UpdateRenderTargetSize(int width, int height)
@@ -60,7 +60,7 @@ namespace Engine.Graphics
         public override void Dispose()
         {
             base.Dispose();
-            Window.OnWindowChanged -= UpdateRenderTargetSize;
+            WindowManager.Window.OnWindowChanged -= UpdateRenderTargetSize;
             _renderTextureOut.OnDestroy();
         }
     }

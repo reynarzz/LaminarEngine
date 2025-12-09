@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Engine;
 using Engine.Layers;
-using GLFW;
 using GlmNet;
 
 public enum KeyCode
@@ -169,7 +168,7 @@ public class Input : LayerBase
     internal override void UpdateLayer()
     {
         // Poll OS events
-        Glfw.PollEvents();
+        GLFW.Glfw.PollEvents();
 
         CopyKeys(_currentKeys, _previousKeys);
         CopyKeys(_currentMouse, _previousMouse);
@@ -177,7 +176,7 @@ public class Input : LayerBase
         // Update current key states
         foreach (KeyCode key in _keyCodesArray)
         {
-            bool down = Glfw.GetKey(Engine.Window.NativeWindow, (Keys)key) == InputState.Press;
+            bool down = GLFW.Glfw.GetKey(Engine.Window.NativeWindow, (GLFW.Keys)key) == GLFW.InputState.Press;
 
             if (down)
             {
@@ -192,7 +191,7 @@ public class Input : LayerBase
         // Update current mouse button states
         foreach (MouseButton button in _mouseButtonsArray)
         {
-            bool down = Glfw.GetMouseButton(Engine.Window.NativeWindow, (GLFW.MouseButton)button) == InputState.Press;
+            bool down = GLFW.Glfw.GetMouseButton(Engine.Window.NativeWindow, (GLFW.MouseButton)button) == GLFW.InputState.Press;
 
             if (down)
             {
@@ -205,7 +204,7 @@ public class Input : LayerBase
         }
 
         // Update mouse position
-        Glfw.GetCursorPosition(Engine.Window.NativeWindow, out double x, out double y);
+        GLFW.Glfw.GetCursorPosition(Engine.Window.NativeWindow, out double x, out double y);
         MousePosition = new vec2((float)x, (float)y);
     }
 

@@ -30,13 +30,13 @@ namespace Game
             _blurPassShader2 = new Shader(vertex, Assets.GetText("Shaders/Bloom/Bloom_GaussianBlur_vTest.frag").Text);
             _combinePassShader = new Shader(vertex, Assets.GetText("Shaders/Bloom/Bloom_Combine.frag").Text);
 
-            _brightRenderTexture = new RenderTexture(Window.Width / 3, Window.Height / 3);
+            _brightRenderTexture = new RenderTexture(Screen.Width / 3, Screen.Height / 3);
             _blurRenderTexture = new RenderTexture(_brightRenderTexture.Width, _brightRenderTexture.Height);
             _blurRenderTexture2 = new RenderTexture(_brightRenderTexture.Width, _brightRenderTexture.Height);
-            _combineRenderTexture = new RenderTexture(Window.Width, Window.Height);
+            _combineRenderTexture = new RenderTexture(Screen.Width, Screen.Height);
 
             _passUniforms = [UniformValue.AsRenderTexture("uBlurTex", _blurRenderTexture2)];
-            Window.OnWindowChanged += Window_OnWindowChanged;
+            WindowManager.Window.OnWindowChanged += Window_OnWindowChanged;
         }
 
         private void Window_OnWindowChanged(int width, int height)

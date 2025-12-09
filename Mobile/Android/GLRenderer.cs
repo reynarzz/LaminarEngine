@@ -10,11 +10,17 @@ namespace Engine.Android
         {
             glClearColor(0, 1, 0, 1);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
         }
 
         public void OnSurfaceChanged(IGL10? gl, int width, int height)
         {
+            unsafe
+            {
+                int a = 0;
+                glGenVertexArrays(1, &a);
+                glBindVertexArray(a);
+                glCreateProgram();
+            }
         }
 
         public void OnSurfaceCreated(IGL10? gl, Javax.Microedition.Khronos.Egl.EGLConfig? config)

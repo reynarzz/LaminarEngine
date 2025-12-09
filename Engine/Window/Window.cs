@@ -10,23 +10,37 @@ using OpenGL;
 
 namespace Engine
 {
-    public class Window
+    public class Window : IWindow
     {
-        public static bool IsFullScreen { get; private set; }
-        public static int Width { get; private set; }
-        public static int Height { get; private set; }
+        private bool _isFullScreen;
+        public bool IsFullScreen
+        {
+            get => _isFullScreen;
+            set
+            {
+                if (_isFullScreen == value)
+                    return;
 
-        private static int _startWidth;
-        private static int _startHeight;
-        private static string _windowName = "Game";
-        public static event Action<int, int> OnWindowChanged;
+                _isFullScreen = value;
+
+                FullScreen(value);
+            }
+        }
+        public int Width { get; private set; }
+        public int Height { get; private set; }
+        private SizeCallback _onResizeCallback;
+        private WindowCallback _closeCallback;
+        private int _startWidth;
+        private int _startHeight;
+        private string _windowName = "Game";
+        public event Action<int, int> OnWindowChanged;
         private static bool _isInitialized = false;
-        private static bool dragging = false;
-        private static double startCursorX, startCursorY;
-        private static int startWinX, startWinY;
-        internal static event Action OnWindowClose;
-        private static bool _isMouseVisible = true;
-        public static bool CursorVisible
+        private bool dragging = false;
+        private double startCursorX, startCursorY;
+        private int startWinX, startWinY;
+        public event Action OnWindowClose;
+        private bool _isMouseVisible = true;
+        public bool CursorVisible
         {
             get => _isMouseVisible;
 
@@ -44,7 +58,7 @@ namespace Engine
                 }
             }
         }
-        public static string Name
+        public string Name
         {
             get => _windowName;
             set
@@ -58,16 +72,16 @@ namespace Engine
                 GLFW.Glfw.SetWindowTitle(NativeWindow, _windowName);
             }
         }
-        public static Color StartWindowColor { get; private set; }
-        internal static bool ShouldClose => _isInitialized && Glfw.WindowShouldClose(NativeWindow);
+        public Color StartWindowColor { get; private set; }
+        public bool ShouldClose => _isInitialized && Glfw.WindowShouldClose(NativeWindow);
 
         public int MonitorCount => Glfw.Monitors.Length;
 
         internal static GLFW.Window NativeWindow { get; private set; }
         public bool IsInitialized => _isInitialized;
 
-        private static bool _canResize = false;
-        public static bool CanResize
+        private bool _canResize = false;
+        public bool CanResize
         {
             get => _canResize; set
             {
@@ -80,7 +94,7 @@ namespace Engine
             }
         }
 
-        private static void OnMouseButton(IntPtr window, GLFW.MouseButton button, GLFW.InputState state, GLFW.ModifierKeys modifiers)
+        private void OnMouseButton(IntPtr window, GLFW.MouseButton button, GLFW.InputState state, GLFW.ModifierKeys modifiers)
         {
             if (button != GLFW.MouseButton.Left) return;
 
@@ -97,7 +111,7 @@ namespace Engine
             }
         }
 
-        private static void OnCursorPos(IntPtr window, double xpos, double ypos)
+        private void OnCursorPos(IntPtr window, double xpos, double ypos)
         {
             if (!dragging) return;
 
@@ -122,7 +136,7 @@ namespace Engine
 
             if (!_isInitialized)
                 return;
-            
+
             Glfw.WindowHint(Hint.OpenglProfile, Profile.Core);
             Glfw.WindowHint(Hint.ContextVersionMajor, 3);
             Glfw.WindowHint(Hint.ContextVersionMinor, 2);
@@ -158,13 +172,11 @@ namespace Engine
             // Glfw.SetCursorPositionCallback(NativeWindow, OnCursorPos);
 
             GL.Import(Glfw.GetProcAddress);
-            Glfw.SetFramebufferSizeCallback(NativeWindow, (win, width, height) =>
-            {
-                Width = width;
-                Height = height;
-                OnWindowChanged?.Invoke(Width, Height);
-                System.Console.WriteLine("Resized frame buffer");
-            });
+
+            _onResizeCallback = FrameBufferSizeCallback;
+            _closeCallback = OnCloseWindow;
+
+            Glfw.SetFramebufferSizeCallback(NativeWindow, _onResizeCallback);
 
             Glfw.SwapInterval(1);
             // Glfw.SetWindowAttribute(NativeWindow, WindowAttribute.Decorated, false);
@@ -177,43 +189,50 @@ namespace Engine
             Glfw.ShowWindow(NativeWindow);
             //Glfw.SetWindowAttribute(NativeWindow, WindowAttribute.Decorated, true);
             Glfw.RequestWindowAttention(NativeWindow);
-            Glfw.SetCloseCallback(NativeWindow, (x) =>
-            {
-                OnWindowClose?.Invoke();
-            });
-            
+            Glfw.SetCloseCallback(NativeWindow, _closeCallback);
+
             Glfw.GetFramebufferSize(NativeWindow, out width, out height);
             Width = width;
             Height = height;
-            
+
         }
 
-        internal static void SwapBuffers()
+        public void SwapBuffers()
         {
             Glfw.SwapBuffers(NativeWindow);
         }
 
-        public static void SetWindowSize(int width, int height)
+        private void OnCloseWindow(IntPtr x)
+        {
+            OnWindowClose?.Invoke();
+        }
+        private void FrameBufferSizeCallback(IntPtr win, int width, int height)
+        {
+            Width = width;
+            Height = height;
+            OnWindowChanged?.Invoke(Width, Height);
+            System.Console.WriteLine("Resized frame buffer");
+        }
+        public void SetWindowSize(int width, int height)
         {
             var mode = Glfw.GetVideoMode(Glfw.PrimaryMonitor);
 
             Glfw.SetWindowSize(NativeWindow, width, height);
-            
+
             Glfw.GetFramebufferSize(NativeWindow, out width, out height);
             Width = width;
             Height = height;
-            
+
             OnWindowChanged?.Invoke(Width, Height);
         }
 
-        public static void SetWindowPosition(int x, int y)
+        public void SetWindowPosition(int x, int y)
         {
             Glfw.SetWindowPosition(NativeWindow, x, y);
         }
 
-        public static void FullScreen(bool fullscreen, int monitorIndex = 0)
+        public void FullScreen(bool fullscreen, int monitorIndex = 0)
         {
-            IsFullScreen = fullscreen;
             // Glfw.SetWindowAttribute(NativeWindow, WindowAttribute.Decorated, !fullscreen);
             if (fullscreen)
             {
@@ -265,7 +284,7 @@ namespace Engine
             }
         }
 
-        public static void CloseWindow()
+        public void CloseWindow()
         {
             Glfw.SetWindowShouldClose(NativeWindow, true);
         }

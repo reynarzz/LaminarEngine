@@ -229,7 +229,7 @@ namespace Game
         protected override void OnUpdate()
         {
 #if DEBUG
-            Window.Name = EngineInfo.RendererInfoToString() + " | FPS: " + ((int)Time.FPS).ToString();
+            WindowManager.Window.Name = EngineInfo.RendererInfoToString() + " | FPS: " + ((int)Time.FPS).ToString();
             // Debug.DrawBox(ForegroundTilemap.Bounds.Center, ForegroundTilemap.Bounds.Size, Color.Red);
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
@@ -252,7 +252,7 @@ namespace Game
 
             if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.F11))
             {
-                Window.FullScreen(!Window.IsFullScreen);
+                Screen.IsFullScreen = !Screen.IsFullScreen;
                 // Window.MouseVisible = !Window.IsFullScreen;
             }
         }

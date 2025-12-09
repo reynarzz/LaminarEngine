@@ -111,9 +111,6 @@ namespace Game
 
         protected override void OnUpdate()
         {
-#if DEBUG
-            Window.Name = $"Game (FPS: {Time.FPS})";
-#endif
 
             if (!_attacking && Input.GetKeyDown(KeyCode.F))
             {
