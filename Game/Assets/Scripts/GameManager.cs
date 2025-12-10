@@ -128,7 +128,7 @@ namespace Game
                 _gameUIManger.Transform.Parent = Transform;
 
                 // Begin from first level.
-                BuildLevel(levelIndex: 0);
+                BuildLevel(levelIndex: 1);
             }
             // StartCoroutine(next());
         }

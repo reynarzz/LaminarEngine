@@ -1,5 +1,6 @@
 ﻿using Android.Opengl;
 using Android.Views;
+using GlmNet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,27 +9,73 @@ using System.Threading.Tasks;
 
 namespace Engine.Android
 {
+ 
     public partial class GLView : GLSurfaceView
     {
+        private void SetTouchState(int id, vec2 position, TouchEvent type)
+        {
+            TouchInput._state[id].Position = position;
+            TouchInput._state[id].Type = type;
+            TouchInput._state[id].PointerId = id;
+        }
+
+        private void ClearTouches()
+        {
+            for (int i = 0; i < TouchInput._state.Length; i++)
+            {
+                TouchInput._state[i].Type = TouchEvent.None;
+                TouchInput._state[i].PointerId = -1;
+                TouchInput._state[i].Position = vec2.Zero;
+            }
+        }
+
         public override bool OnTouchEvent(MotionEvent? e)
         {
-            float x = e.GetX();
-            float y = e.GetY();
+            var action = e.ActionMasked;
+            int index = e.ActionIndex; 
 
-            switch (e.Action)
+            switch (action)
             {
                 case MotionEventActions.Down:
-                    // finger down
-                    break;
+                case MotionEventActions.PointerDown:
+                    {
+                        int id = e.GetPointerId(index);
+                        if (TouchInput._state[id].Type == TouchEvent.None ||
+                            TouchInput._state[id].Type == TouchEvent.Up)
+                        {
+                            TouchInput.TouchCount++;
+                        }
+                        SetTouchState(e.GetPointerId(index), new vec2(e.GetX(index), e.GetY(index)), TouchEvent.Down);
+                        break;
+                    }
+
                 case MotionEventActions.Move:
-                    // finger move
-                    break;
+                    {
+                        for (int i = 0; i < e.PointerCount; i++)
+                        {
+                            SetTouchState(e.GetPointerId(i), new vec2(e.GetX(i), e.GetY(i)), TouchEvent.Move);
+                        }
+                        break;
+                    }
+
                 case MotionEventActions.Up:
-                    // finger up
+                case MotionEventActions.PointerUp:
+                    {
+                        TouchInput.TouchCount = Math.Max(0, TouchInput.TouchCount - 1);
+
+                        SetTouchState(e.GetPointerId(index), new vec2(e.GetX(index), e.GetY(index)), TouchEvent.Up);
+                        break;
+                    }
+                case MotionEventActions.Cancel:
+                    {
+                        TouchInput.TouchCount = 0;
+                        ClearTouches();
+                    }
                     break;
             }
 
             return true;
         }
+
     }
 }
