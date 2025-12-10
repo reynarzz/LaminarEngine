@@ -11,9 +11,13 @@
   </PropertyGroup>
 
 	<PropertyGroup>
-		<OutputType>Exe</OutputType>
+	<OutputType>Exe</OutputType>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(OS)' == 'Windows_NT' AND '$(Configuration)' == 'Release'">
+	  <OutputType>WinExe</OutputType>
+	</PropertyGroup>
+	
 	<!-- Windows -->
 	<PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
 		<DefineConstants>WINDOWS;DESKTOP;$(DefineConstants)</DefineConstants>
