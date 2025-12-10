@@ -20,7 +20,10 @@ namespace Engine.Android
 
             // Render continuously
             RenderMode = Rendermode.Continuously;
-            
+
+            var ptr = GLES30.GlGetString(0x1F02); // GL_VERSION
+            Debug.Log("Openg GLES ver: " + ptr);
+
         }
 
         public string Name { get; set; }

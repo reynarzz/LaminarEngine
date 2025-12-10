@@ -40,7 +40,7 @@ namespace Sandbox
             }
             new GameCooker.AssetsCooker().CookAll(new GameCooker.CookOptions()
             {
-                Type = GameCooker.CookingType.DevMode,
+                Type = GameCooker.CookingType.ReleaseMode,
                 Platform = GameCooker.CookingPlatform.Windows,
                 AssetsFolderPath = Paths.GetAssetsFolderPath(),
                 ExportFolderPath = Paths.GetAssetDatabaseFolder(),

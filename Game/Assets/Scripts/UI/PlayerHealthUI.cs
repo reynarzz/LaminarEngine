@@ -31,7 +31,7 @@ namespace Game
                 image.Transform.Parent = parent.Transform;
                 image.RectTransform.Pivot = new vec2(0.0f, 0.0f);
                 image.RectTransform.Size = size;
-                image.Material = MaterialUtils.UIMaterial;
+                image.Material = MaterialUtils.Instance.UIMaterial;
                 image.Sprite = sprite;
                 image.PreserveAspect = true;
                 image.Transform.LocalPosition = position;

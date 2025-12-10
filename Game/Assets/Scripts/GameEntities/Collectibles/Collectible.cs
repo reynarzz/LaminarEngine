@@ -39,7 +39,7 @@ namespace Game
             RigidBody.Interpolate = false;
             RigidBody.GravityScale = 3;
             RigidBody.AngularDamping = 2;
-            Renderer.Material = MaterialUtils.SpriteMaterial;
+            Renderer.Material = MaterialUtils.Instance.SpriteMaterial;
             Renderer.SortOrder = 2;
 
             Collider.IsTrigger = true;
@@ -58,7 +58,7 @@ namespace Game
             var circleRenderer = new Actor("Circle").AddComponent<SpriteRenderer>();
             circleRenderer.Transform.Parent = worldColliderActor.Transform;
             circleRenderer.Sprite = GameTextures.GetSprite("outlineCircle");
-            circleRenderer.Material = MaterialUtils.SpriteMaterial;
+            circleRenderer.Material = MaterialUtils.Instance.SpriteMaterial;
             circleRenderer.SortOrder = Renderer.SortOrder;
             circleRenderer.Transform.LocalScale = vec3.One * 0.6f;
         }

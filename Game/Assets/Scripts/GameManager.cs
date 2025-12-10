@@ -49,7 +49,6 @@ namespace Game
         public static GameManager Instance { get; private set; }
         //public static vec2 GameResolution { get; } = new vec2(640, 360);
         public static vec2 GameResolution { get; } = new vec2(512, 288);
-        private MaterialUtils _matUtils;
         protected override void OnAwake()
         {
             Instance = this;
@@ -67,7 +66,6 @@ namespace Game
             DefaultFont = Assets.Get<FontAsset>("Fonts/windows-bold[1].ttf");
             _gameEntityManager = new GameEntityManager();
             _tilemapManager = new TilemapWorldBuilderManager("Tilemap/WorldTilemap.ldtk", _gameEntityManager);
-            _matUtils = new MaterialUtils();
         }
 
         private void InitializeActorLayers()

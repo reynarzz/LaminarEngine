@@ -10,15 +10,17 @@ namespace Game
 {
     public class MaterialUtils
     {
-        public static Material SpriteMaterial { get; private set; }
-        public static Material SpriteMaterialOverlay { get; private set; }
-        public static Material SpriteMaterialWorld { get; private set; }
-        public static Material UIMaterial { get; private set; }
-        public static Material FontMaterial { get; private set; }
-        public static Material PortalMaterial { get; private set; }
-        public static Material WobbleMaterial { get; private set; }
+        public Material SpriteMaterial { get; private set; }
+        public Material SpriteMaterialOverlay { get; private set; }
+        public Material SpriteMaterialWorld { get; private set; }
+        public Material UIMaterial { get; private set; }
+        public Material FontMaterial { get; private set; }
+        public Material PortalMaterial { get; private set; }
+        public Material WobbleMaterial { get; private set; }
+        private static MaterialUtils _instance;
+        public static MaterialUtils Instance => _instance ?? (_instance = new());
 
-        public MaterialUtils()
+        private MaterialUtils()
         {
             SpriteMaterial = GetMaterial("SpriteMaterial", "Shaders/SpriteVert.vert", "Shaders/SpriteFrag.frag");
             SpriteMaterialOverlay = GetMaterial("SpriteMaterialOverlay", "Shaders/SpriteVert.vert", "Shaders/SpriteFrag.frag");

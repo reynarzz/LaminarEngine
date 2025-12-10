@@ -55,7 +55,7 @@ namespace Game
                     LayerName = GameConsts.ENEMY,
                     SortOrder = 2,
                     StartPosition = data.Position,
-                    Material = MaterialUtils.SpriteMaterial,
+                    Material = MaterialUtils.Instance.SpriteMaterial,
                     StartingLife = 3,
                     MaxLife = 3,
                     StartLookDir = data.LookDir,

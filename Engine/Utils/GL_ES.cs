@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using System.Text;
 
 namespace OpenGL.ES
 {
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
     public static unsafe class GLES30
     {
 #if ANDROID

@@ -50,7 +50,7 @@ namespace Game
 
             var inventoryImage = UiUtils.NewImage("Inventory image", default, new vec2(320, 240), Color.White, _inventory.Transform);
             _fitter = inventoryImage.AddComponent<ContentSizeFitter>();
-            inventoryImage.Material = MaterialUtils.WobbleMaterial;
+            inventoryImage.Material = MaterialUtils.Instance.WobbleMaterial;
             //inventoryImage.Sprite = new Sprite(Assets.GetTexture("pixel-ui_panel.png"));
             inventoryImage.IsSliced = true;
             inventoryImage.SlicedBorderResolution = 2.5f;
