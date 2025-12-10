@@ -54,7 +54,7 @@ namespace Game
             var canvas = new Actor("Canvas").AddComponent<UICanvas>();
 
             var panel = new Actor("Panel").AddComponent<UIElement>();
-            panel.Material = MaterialUtils.Instance.SpriteMaterial;
+            panel.Material = GameMaterials.Instance.SpriteMaterial;
             panel.Transform.Parent = canvas.Transform;
             panel.Transform.LocalPosition = new vec3(canvas.RectTransform.Size.x / 2, canvas.RectTransform.Size.y / 2);
             panel.RectTransform.Size = canvas.RectTransform.Size;
@@ -80,7 +80,7 @@ namespace Game
         private UIText GetText(string name, Transform parent)
         {
             var text = new Actor("Text label").AddComponent<UIText>();
-            text.Material = MaterialUtils.Instance.SpriteMaterial;
+            text.Material = GameMaterials.Instance.SpriteMaterial;
             text.Font = _defaultFont;
             text.RectTransform.Pivot = vec2.Half;
 

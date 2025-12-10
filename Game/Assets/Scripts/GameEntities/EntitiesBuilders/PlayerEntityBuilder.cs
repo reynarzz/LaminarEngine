@@ -35,7 +35,7 @@ namespace Game
                     LayerName = GameConsts.PLAYER,
                     SortOrder = 2,
                     StartPosition = entityData.WorldPosition,
-                    Material = MaterialUtils.Instance.SpriteMaterial,
+                    Material = GameMaterials.Instance.SpriteMaterial,
                     StartingLife = 4,
                     MaxLife = 4,
                     SpriteLookDirFlip = 1,

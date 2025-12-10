@@ -23,7 +23,7 @@ namespace Game
         {
             base.OnAwake();
             BoxCollider.Size = new vec2(1.7f, BoxCollider.Size.y);
-            SpriteRenderer.Material = MaterialUtils.Instance.SpriteMaterial;
+            SpriteRenderer.Material = GameMaterials.Instance.SpriteMaterial;
             InteractableRenderer.Transform.LocalPosition += vec3.Up * 1.7f;
         }
 

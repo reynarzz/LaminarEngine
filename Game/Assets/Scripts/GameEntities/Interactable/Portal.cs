@@ -40,7 +40,7 @@ namespace Game
             var portal = new Actor<Rotate>("PortalSprite").AddComponent<SpriteRenderer>();
             _renderer = portal.GetComponent<SpriteRenderer>();
             _renderer.SortOrder = 14;
-            _renderer.Material = MaterialUtils.Instance.PortalMaterial;
+            _renderer.Material = GameMaterials.Instance.PortalMaterial;
 
             portal.Transform.LocalScale = new vec3(6, 6);
             portal.Transform.WorldPosition = Transform.WorldPosition;

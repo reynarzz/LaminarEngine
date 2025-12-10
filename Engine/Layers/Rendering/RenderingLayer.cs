@@ -104,8 +104,6 @@ namespace Engine.Layers
 
             var VP = _mainCamera.Projection * _mainCamera.ViewMatrix;
 
-            ClearUniforms(_screenQuadDrawCallData);
-
             var geoBatchesInfo = RenderBatches(batches, ref VP, sceneRenderTarget);
             var uiBatchesInfo = RenderBatches(uibatches, ref UICanvas.UIViewProj, sceneRenderTarget, sceneRenderTarget);
 #if DEBUG
@@ -240,8 +238,13 @@ namespace Engine.Layers
 
                 // Adds extra uniforms needed by renderers.
                 int uniformOffset = 0;
-                foreach (var (name, uniform) in pass.Uniforms)
+                foreach (var uniform in pass.Uniforms.Values)
                 {
+                    if(_drawCallData.Uniforms.Length <= uniformOffset)
+                    {
+                        Debug.Error($"Max uniform per drawcall reached: {_drawCallData.Uniforms.Length}");
+                        break;
+                    }
                     _drawCallData.Uniforms[uniformOffset + (int)Consts.Graphics.Uniforms.COUNT] = uniform;
                     uniformOffset++;
                 }
@@ -254,6 +257,7 @@ namespace Engine.Layers
         private void DrawScreenQuad(Shader shader, mat4 VP, RenderTexture sceneRenderTarget, RenderTexture renderTarget,
                                     UniformValue[] uniforms, Camera camera)
         {
+            ClearUniforms(_screenQuadDrawCallData);
             // Texture 0 is the screen
             _screenQuadDrawCallData.Textures[0] = sceneRenderTarget.NativeResource.SubResources[0];
 

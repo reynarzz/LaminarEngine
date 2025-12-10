@@ -17,8 +17,28 @@ namespace Sandbox
             }
 #if RELEASE
             var libsPath = Path.Combine(AppContext.BaseDirectory, "Data/Assemblies");
+            string extension = string.Empty;
 
-            foreach (var dll in Directory.GetFiles(libsPath, "*.dll"))
+            if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(
+                System.Runtime.InteropServices.OSPlatform.Windows))
+            {
+                extension = ".dll";
+            }
+            else if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(
+                     System.Runtime.InteropServices.OSPlatform.Linux))
+            {
+                extension = ".so";
+            }
+            else if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(
+                     System.Runtime.InteropServices.OSPlatform.OSX))
+            {
+                extension = ".dylib";
+            }
+            else
+            {
+                throw new Exception("Unknown platform");
+            }
+            foreach (var dll in Directory.GetFiles(libsPath, "*" + extension))
             {
                 try
                 {
@@ -55,7 +75,7 @@ namespace Sandbox
             });
 #endif
             new GFSEngine(new Window("GFS | By Reynardo Perez", 1024, 576, Color.Black), new GameApplication()).Run();
-            
+
             _mutex.ReleaseMutex();
         }
     }

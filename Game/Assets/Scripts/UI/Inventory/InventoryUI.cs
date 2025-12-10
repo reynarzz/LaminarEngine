@@ -48,16 +48,15 @@ namespace Game
             _inventory = new Actor<UIElement>("Inventory").GetComponent<UIElement>();
             _inventory.Transform.Parent = _canvas.Transform;
 
-            var inventoryImage = UiUtils.NewImage("Inventory image", default, new vec2(320, 240), Color.White, _inventory.Transform);
+            var inventoryImage = UiUtils.NewImage("Inventory image", new vec2(0, 20), new vec2(320, 240), Color.White, _inventory.Transform);
             _fitter = inventoryImage.AddComponent<ContentSizeFitter>();
-            inventoryImage.Material = MaterialUtils.Instance.WobbleMaterial;
-            //inventoryImage.Sprite = new Sprite(Assets.GetTexture("pixel-ui_panel.png"));
+            //inventoryImage.Material = MaterialUtils.Instance.WobbleMaterial;
             inventoryImage.IsSliced = true;
             inventoryImage.SlicedBorderResolution = 2.5f;
-            //inventoryImage.Color = new Color(0,0,0,  0.1f);
+            inventoryImage.Color = new Color(0,0,0,  0.05f);
 
 
-            var inventoryTitleText = UiUtils.NewText("inventory title", "Inventory", new vec2(0, -52), _inventory.Transform);
+            var inventoryTitleText = UiUtils.NewText("inventory title", "Inventory", new vec2(0, -52), inventoryImage.Transform);
             inventoryTitleText.Fit = TextFit.ExpandToFit;
             inventoryTitleText.FontSize = 30;
             inventoryTitleText.OutlineSize = 0;

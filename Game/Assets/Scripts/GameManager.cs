@@ -135,7 +135,7 @@ namespace Game
         public void BuildLevel(int levelIndex, vec2 playerStartPos = default)
         {
             SceneManager.LoadScene("Level: " + levelIndex);
-            WaterTest();
+            // WaterTest();
 
             var result = _tilemapManager.BuildLevel(new LevelInstantiateInfo()
             {

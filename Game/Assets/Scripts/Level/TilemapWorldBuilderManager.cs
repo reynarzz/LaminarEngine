@@ -84,7 +84,7 @@ namespace Game
                 var tilemapData = levelData.Tilemaps[i];
 
                 var tilemap = new Actor(tilemapData.Name).AddComponent<TilemapRenderer>();
-                tilemap.Material = tilemapData.Material ?? MaterialUtils.Instance.SpriteMaterialWorld;
+                tilemap.Material = tilemapData.Material ?? GameMaterials.Instance.SpriteMaterialWorld;
                 tilemap.Sprite = levelData.TilemapSprites[tilemapData.SpriteIndex];
                 tilemap.SortOrder = tilemapData.SortingOrder;
 

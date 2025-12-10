@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    public class MaterialUtils
+    public class GameMaterials
     {
         public Material SpriteMaterial { get; private set; }
         public Material SpriteMaterialOverlay { get; private set; }
@@ -17,10 +17,10 @@ namespace Game
         public Material FontMaterial { get; private set; }
         public Material PortalMaterial { get; private set; }
         public Material WobbleMaterial { get; private set; }
-        private static MaterialUtils _instance;
-        public static MaterialUtils Instance => _instance ?? (_instance = new());
+        private static GameMaterials _instance;
+        public static GameMaterials Instance => _instance ?? (_instance = new());
 
-        private MaterialUtils()
+        private GameMaterials()
         {
             SpriteMaterial = GetMaterial("SpriteMaterial", "Shaders/SpriteVert.vert", "Shaders/SpriteFrag.frag");
             SpriteMaterialOverlay = GetMaterial("SpriteMaterialOverlay", "Shaders/SpriteVert.vert", "Shaders/SpriteFrag.frag");
@@ -61,7 +61,7 @@ namespace Game
             pass.IsScreenGrabPass = true;
             material.SetProperty("uDistortionAmount", 0.009f);
             material.SetProperty("uOutlineColor", new vec3(1.6f, 1.0f, 1.0f));
-            material.SetProperty("uOutlineThickness", 0.01f);
+            material.SetProperty("uOutlineThickness", 0.02f);
             material.SetProperty("uDotted", 0);
             material.SetProperty("uDotSpacing", 0.15f);
             material.SetProperty("uGlitchMaxOffset", 0.03f);
@@ -71,6 +71,7 @@ namespace Game
             
             return material;
         }
+
         private static Material GetMaterial(string name, string vertexPath, string fragmentPath)
         {
             var material = new Material(new Shader(Assets.GetText(vertexPath).Text, Assets.GetText(fragmentPath).Text, vertexPath, fragmentPath));

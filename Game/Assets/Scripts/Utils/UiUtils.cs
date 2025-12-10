@@ -16,7 +16,7 @@ namespace Game
             var text = new Actor(name).AddComponent<UIText>();
             text.Transform.Parent = parent;
             text.Font = GameManager.DefaultFont;
-            text.Material = MaterialUtils.Instance.SpriteMaterial;
+            text.Material = GameMaterials.Instance.SpriteMaterial;
             text.SetText(value);
             text.Transform.LocalPosition = position;
             text.BlockEvents = false;
@@ -28,7 +28,7 @@ namespace Game
         public static UIImage NewImage(string name, vec2 position, vec2 size, Color color, Transform parent)
         {
             var image = new Actor(name).AddComponent<UIImage>();
-            image.Material = MaterialUtils.Instance.SpriteMaterial;
+            image.Material = GameMaterials.Instance.SpriteMaterial;
             image.Transform.Parent = parent;
             image.RectTransform.Pivot = vec2.Half;
             image.RectTransform.Size = size;

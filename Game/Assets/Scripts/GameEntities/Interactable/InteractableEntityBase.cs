@@ -25,12 +25,12 @@ namespace Game
         protected override void OnAwake()
         {
             BoxCollider.IsTrigger = true;
-            SpriteRenderer.Material = MaterialUtils.Instance.SpriteMaterial;
+            SpriteRenderer.Material = GameMaterials.Instance.SpriteMaterial;
             SpriteRenderer.SortOrder = -1;
 
             InteractableRenderer = new Actor("InteractableIcon").AddComponent<SpriteRenderer>();
             InteractableRenderer.Transform.Parent = Transform;
-            InteractableRenderer.Material = MaterialUtils.Instance.SpriteMaterial;
+            InteractableRenderer.Material = GameMaterials.Instance.SpriteMaterial;
             InteractableRenderer.IsEnabled = true;
             InteractableRenderer.SortOrder = 6;
             InteractableRenderer.Color = Color.Transparent;

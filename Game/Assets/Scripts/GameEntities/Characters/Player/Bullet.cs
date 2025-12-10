@@ -40,7 +40,7 @@ namespace Game
             _shoot = true;
             Transform.WorldScale = new vec3(0.6f, 0.18f);
 
-            _renderer.Material = MaterialUtils.Instance.SpriteMaterial;
+            _renderer.Material = GameMaterials.Instance.SpriteMaterial;
             _timeAlive = 1;
             _particleSystem = GetParticles();
             CheckCollision();
@@ -79,7 +79,7 @@ namespace Game
             particleSystem.VelocityMax = default;
             particleSystem.VelocityMin = default;
             particleSystem.AngularVelocity = 40;
-            particleSystem.Material = MaterialUtils.Instance.SpriteMaterial;
+            particleSystem.Material = GameMaterials.Instance.SpriteMaterial;
             particleSystem.Transform.LocalPosition = default;
             particleSystem.Transform.WorldScale = vec3.One;
             return particleSystem;
