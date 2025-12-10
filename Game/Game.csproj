@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net9.0-windows;net9.0;net9.0-android;</TargetFrameworks>
+		<TargetFrameworks>net9.0-windows;net9.0</TargetFrameworks>
 		<ImplicitUsings>false</ImplicitUsings>
 		<Nullable>disable</Nullable>
 		<BaseIntermediateOutputPath>Library\Build\obj\</BaseIntermediateOutputPath>
@@ -44,14 +44,21 @@
 		<DefineConstants>MACOS;OSX;UNIX;DESKTOP;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>
 
-
+	<ItemGroup>
+		<None Include="Assets\**\*" Visible="true">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</None>
+	</ItemGroup> 
 	<ItemGroup>
 		<Compile Remove="Characters\**" />
 		<Compile Remove="Library\**" />
 		<Compile Remove="obj\**" />
+		<Compile Remove="bin\**" />
+		<EmbeddedResource Remove="bin\**" />
 		<EmbeddedResource Remove="Characters\**" />
 		<EmbeddedResource Remove="Library\**" />
 		<EmbeddedResource Remove="obj\**" />
+		<None Remove="bin\**" />
 		<None Remove="Characters\**" />
 		<None Remove="Library\**" />
 		<None Remove="**\*.mt" />
@@ -79,5 +86,4 @@
 	<ItemGroup>
 	  <Folder Include="Assets\Scripts\ServiceLocator\" />
 	</ItemGroup>
-
 </Project>

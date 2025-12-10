@@ -1,7 +1,6 @@
 ﻿using Engine;
 using Game;
 using SharedTypes;
-using System.Runtime.InteropServices;
 
 namespace Sandbox
 {
@@ -54,7 +53,7 @@ namespace Sandbox
                 MatchingFiles = releaseAssetsList
             });
 #endif
-            new GFSEngine(new Window("GFS | By Reynardo Perez", 1024, 576, Color.Black), typeof(GameApplication)).Run();
+            new GFSEngine(new Window("GFS | By Reynardo Perez", 1024, 576, Color.Black), new GameApplication()).Run();
             
             _mutex.ReleaseMutex();
         }

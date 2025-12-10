@@ -10,11 +10,11 @@ namespace Engine
     {
         private LayersManager _layersManager;
         internal static BinaryReader AssetFileStream { get; private set; }
-        public GFSEngine(IWindow window, Type gameLayerType) : this(window, gameLayerType, null)
+        public GFSEngine(IWindow window, ApplicationLayer appLayer) : this(window, appLayer, null)
         {
 
         }
-        public GFSEngine(IWindow window, Type gameLayerType, BinaryReader assetFileStream)
+        public GFSEngine(IWindow window, ApplicationLayer appLayer, BinaryReader assetFileStream)
         {
             WindowManager.Window = window;
             AssetFileStream = assetFileStream;
@@ -23,15 +23,15 @@ namespace Engine
             window.OnWindowClose += () => { _layersManager.OnClose(); };
             if (window.IsInitialized)
             {
-                _layersManager = new LayersManager([typeof(TimeLayer),
-                                                    typeof(Input),
-                                                    gameLayerType,
-                                                    typeof(MainThreadDispatcher),
-                                                    typeof(SceneLayer),
-                                                    typeof(AudioLayer),
-                                                    typeof(PhysicsLayer),
-                                                    typeof(RenderingLayer),
-                                                    typeof(IOLayer)]);
+                _layersManager = new LayersManager([new TimeLayer(),
+                                                    new Input(),
+                                                    appLayer,
+                                                    new MainThreadDispatcher(),
+                                                    new SceneLayer(),
+                                                    new AudioLayer(),
+                                                    new PhysicsLayer(),
+                                                    new RenderingLayer(),
+                                                    new IOLayer()]);
 
                 _layersManager.Initialize();
             }

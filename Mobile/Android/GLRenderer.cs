@@ -62,7 +62,7 @@ namespace Engine.Android
 
             if (_engine == null)
             {
-                _engine = new GFSEngine(_glView, typeof(GameApplication), _reader);
+                _engine = new GFSEngine(_glView, new GameApplication(), _reader);
             }
 
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -60,19 +61,24 @@ namespace Engine
             return Actor.AddComponent(type);
         }
 
-        public T AddComponent<T>() where T : Component
+        public T AddComponent<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T>() where T : Component
         {
             CheckIfValidObject(this);
             return Actor.AddComponent<T>();
         }
 
-        public void AddComponent<T1, T2>() where T1 : Component where T2 : Component
+        public void AddComponent<
+            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T1,
+            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T2>() where T1 : Component where T2 : Component
         {
             CheckIfValidObject(this);
             Actor.AddComponent<T1, T2>();
         }
 
-        public void AddComponent<T1, T2, T3>() where T1 : Component
+        public void AddComponent<
+            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T1,
+            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T2,
+            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T3>() where T1 : Component
                                                 where T2 : Component
                                                 where T3 : Component
         {
@@ -80,7 +86,11 @@ namespace Engine
             Actor.AddComponent<T1, T2, T3>();
         }
 
-        public void AddComponent<T1, T2, T3, T4>() where T1 : Component
+        public void AddComponent<
+            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T1,
+            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T2,
+            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T3,
+            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T4>() where T1 : Component
                                                     where T2 : Component
                                                     where T3 : Component
                                                     where T4 : Component
@@ -89,7 +99,12 @@ namespace Engine
             Actor.AddComponent<T1, T2, T3, T4>();
         }
 
-        public void AddComponent<T1, T2, T3, T4, T5>() where T1 : Component
+        public void AddComponent<
+            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T1,
+            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T2,
+            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T3,
+            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T4,
+            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T5>() where T1 : Component
                                                         where T2 : Component
                                                         where T3 : Component
                                                         where T4 : Component

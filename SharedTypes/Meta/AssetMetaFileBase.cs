@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SharedTypes
 {
-    public abstract class AssetMetaFileBase
+    public interface AssetMetaFileBase
     {
         public Guid GUID { get; set; }
     }

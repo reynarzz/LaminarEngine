@@ -8,17 +8,17 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    public static class MaterialUtils
+    public class MaterialUtils
     {
-        public static Material SpriteMaterial { get; }
-        public static Material SpriteMaterialOverlay { get; }
-        public static Material SpriteMaterialWorld { get; }
-        public static Material UIMaterial { get; }
-        public static Material FontMaterial { get; }
-        public static Material PortalMaterial { get; }
-        public static Material WobbleMaterial { get; }
+        public static Material SpriteMaterial { get; private set; }
+        public static Material SpriteMaterialOverlay { get; private set; }
+        public static Material SpriteMaterialWorld { get; private set; }
+        public static Material UIMaterial { get; private set; }
+        public static Material FontMaterial { get; private set; }
+        public static Material PortalMaterial { get; private set; }
+        public static Material WobbleMaterial { get; private set; }
 
-        static MaterialUtils()
+        public MaterialUtils()
         {
             SpriteMaterial = GetMaterial("SpriteMaterial", "Shaders/SpriteVert.vert", "Shaders/SpriteFrag.frag");
             SpriteMaterialOverlay = GetMaterial("SpriteMaterialOverlay", "Shaders/SpriteVert.vert", "Shaders/SpriteFrag.frag");

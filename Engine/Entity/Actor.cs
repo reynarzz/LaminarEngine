@@ -2,6 +2,7 @@
 using Engine.Utils;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -119,7 +120,8 @@ namespace Engine
             scene.RegisterRootActor(this);
         }
 
-        public Component AddComponent(Type type)
+        public Component AddComponent([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] 
+                                      Type type)
         {
             CheckIfValidObject(this);
 
@@ -149,7 +151,8 @@ namespace Engine
             }
 
             // Get all attributes from current type, and parent classes
-            IEnumerable<T> GetAllAttributes<T>(Type type) where T : Attribute
+            IEnumerable<T> GetAllAttributes<T>(
+                [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] Type type) where T : Attribute
             {
                 var result = new List<T>();
 
@@ -213,20 +216,27 @@ namespace Engine
         }
 
 
-        public T AddComponent<T>() where T : Component
+        public T AddComponent<
+           [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T
+            >() where T : Component
         {
             CheckIfValidObject(this);
             return AddComponent(typeof(T)) as T;
         }
 
-        public void AddComponent<T1, T2>() where T1 : Component where T2 : Component
+        public void AddComponent<
+           [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T1,
+           [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T2>() where T1 : Component where T2 : Component
         {
             CheckIfValidObject(this);
             AddComponent<T1>();
             AddComponent<T2>();
         }
 
-        public void AddComponent<T1, T2, T3>() where T1 : Component
+        public void AddComponent<
+            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T1,
+            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T2,
+            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T3>() where T1 : Component
                                                 where T2 : Component
                                                 where T3 : Component
         {
@@ -235,7 +245,11 @@ namespace Engine
             AddComponent<T3>();
         }
 
-        public void AddComponent<T1, T2, T3, T4>() where T1 : Component
+        public void AddComponent<
+            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T1,
+            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T2,
+            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T3,
+            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T4>() where T1 : Component
                                                     where T2 : Component
                                                     where T3 : Component
                                                     where T4 : Component
@@ -245,7 +259,12 @@ namespace Engine
             AddComponent<T4>();
         }
 
-        public void AddComponent<T1, T2, T3, T4, T5>() where T1 : Component
+        public void AddComponent<
+            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T1,
+            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T2,
+            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T3,
+            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T4,
+            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T5>() where T1 : Component
                                                         where T2 : Component
                                                         where T3 : Component
                                                         where T4 : Component
@@ -748,35 +767,50 @@ namespace Engine
         }
     }
 
-    public class Actor<T1> : Actor where T1 : Component
+    public class Actor<
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T1> : Actor where T1 : Component
     {
         public Actor() : this(string.Empty, string.Empty) { }
         public Actor(string name) : this(name, string.Empty) { }
         public Actor(string name, string id) : base(name, id) => AddComponent<T1>();
     }
 
-    public class Actor<T1, T2> : Actor where T1 : Component where T2 : Component
+    public class Actor<
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T1,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T2> : Actor where T1 : Component where T2 : Component
     {
         public Actor() : this(string.Empty, string.Empty) { }
         public Actor(string name) : this(name, string.Empty) { }
         public Actor(string name, string id) : base(name, id) => AddComponent<T1, T2>();
     }
 
-    public class Actor<T1, T2, T3> : Actor where T1 : Component where T2 : Component where T3 : Component
+    public class Actor<
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T1,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T2,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T3> : Actor where T1 : Component where T2 : Component where T3 : Component
     {
         public Actor() : this(string.Empty, string.Empty) { }
         public Actor(string name) : this(name, string.Empty) { }
         public Actor(string name, string id) : base(name, id) => AddComponent<T1, T2, T3>();
     }
 
-    public class Actor<T1, T2, T3, T4> : Actor where T1 : Component where T2 : Component where T3 : Component where T4 : Component
+    public class Actor<
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T1,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T2,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T3,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T4> : Actor where T1 : Component where T2 : Component where T3 : Component where T4 : Component
     {
         public Actor() : this(string.Empty, string.Empty) { }
         public Actor(string name) : this(name, string.Empty) { }
         public Actor(string name, string id) : base(name, id) => AddComponent<T1, T2, T3, T4>();
     }
 
-    public class Actor<T1, T2, T3, T4, T5> : Actor where T1 : Component where T2 : Component where T3 : Component where T4 : Component where T5 : Component
+    public class Actor<
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T1,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T2,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T3,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T4,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T5> : Actor where T1 : Component where T2 : Component where T3 : Component where T4 : Component where T5 : Component
     {
         public Actor() : this(string.Empty, string.Empty) { }
         public Actor(string name) : this(name, string.Empty) { }

@@ -21,7 +21,7 @@ namespace Engine.IO
             var imageData = new byte[imageSize];
 
             reader.BaseStream.ReadExactly(imageData);
-            var texMeta = meta as TextureMetaFile;
+            var texMeta = (TextureMetaFile)meta;
             return new Texture2D(info.Path, guid, (TextureMode)texMeta.Config.Mode, width, height, comp, texMeta.Config.PixelPerUnit, imageData);
         }
     }

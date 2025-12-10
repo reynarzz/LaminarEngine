@@ -100,6 +100,9 @@ namespace Engine
 
         public static void DrawRay(vec3 origin, vec3 direction, Color color)
         {
+#if !DEBUG
+            return;
+#endif
             Initialize();
             DrawLine(origin, origin + direction, color);
         }
@@ -120,6 +123,9 @@ namespace Engine
 
         private static void DrawLine(vec3 start, vec3 end, Color color, Span<DebugVertex> vertices, ref int verticesToDraw)
         {
+#if !DEBUG
+            return;
+#endif
             Initialize();
 
             if (verticesToDraw >= vertices.Length)
@@ -135,6 +141,9 @@ namespace Engine
 
         public static void DrawCircle(vec3 origin, float radius, Color color)
         {
+#if !DEBUG
+            return;
+#endif
             Initialize();
 
             float angleStep = 2.0f * MathF.PI / CIRCLE_MAX_SEGMENTS;
@@ -153,6 +162,9 @@ namespace Engine
 
         public static void DrawCapsule2D(vec3 start, vec3 end, float radius, Color color)
         {
+#if !DEBUG
+            return;
+#endif
             Initialize();
 
             // Compute the vector along the capsule's main axis
@@ -174,6 +186,9 @@ namespace Engine
         // semicircle perpendicular to the axis
         private static void DrawSemicircle(vec3 center, vec3 axisDir, float radius, Color color, bool clockwise)
         {
+#if !DEBUG
+            return;
+#endif
             float segments = CIRCLE_MAX_SEGMENTS / 2.0f;
             float angleStep = MathF.PI / segments;
 
@@ -199,12 +214,18 @@ namespace Engine
         }
         public static void DrawBoxUI(vec3 origin, vec3 size, Color color)
         {
+#if !DEBUG
+            return;
+#endif
             _drawUIVertices = true;
             DrawBox(origin, size, color);
             _drawUIVertices = false;
         }
         public static void DrawBox(vec3 origin, vec3 size, Color color)
         {
+#if !DEBUG
+            return;
+#endif
             Initialize();
 
             // Half extents
@@ -242,6 +263,9 @@ namespace Engine
 
         public static void DrawBoxUI(vec3 origin, vec3 size, vec3 eulerAngles, Color color)
         {
+#if !DEBUG
+            return;
+#endif
             _drawUIVertices = true;
             DrawBox(origin, size, eulerAngles, color);
             _drawUIVertices = false;
@@ -249,6 +273,9 @@ namespace Engine
 
         public static void DrawBox(vec3 origin, vec3 size, vec3 eulerAngles, Color color)
         {
+#if !DEBUG
+            return;
+#endif
             Initialize();
 
             vec3 half = size * 0.5f;

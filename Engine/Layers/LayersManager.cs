@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace Engine.Layers
         private LayerBase[] _layers;
         private CleanUpLayer _cleanupLayer;
         private bool _layersInitialized = false;
-        public LayersManager(Type[] layersTypes)
+        public LayersManager([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type[] layersTypes)
         {
             _layers = new LayerBase[layersTypes.Length];
             for (int i = 0; i < layersTypes.Length; i++)

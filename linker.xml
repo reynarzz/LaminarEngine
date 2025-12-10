@@ -1,0 +1,8 @@
+﻿<linker>
+	<assembly fullname="*">
+		<type fullname="*" preserve="public-constructors" />
+	</assembly>
+  <assembly fullname="ldtk">
+    <type fullname="ldtk.*" preserve="all" />
+  </assembly>
+</linker>
