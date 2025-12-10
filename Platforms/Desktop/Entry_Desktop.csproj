@@ -1,0 +1,96 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	<SelfContained>true</SelfContained>
+	<PublishSingleFile>true</PublishSingleFile>
+    <InvariantGlobalization>true</InvariantGlobalization>
+	<ApplicationIcon>Icon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+	<PropertyGroup>
+	<OutputType>Exe</OutputType>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(OS)' == 'Windows_NT' AND '$(Configuration)' == 'Release'">
+	  <OutputType>WinExe</OutputType>
+	</PropertyGroup>
+	
+	<!-- Windows -->
+	<PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
+		<DefineConstants>WINDOWS;DESKTOP;$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
+
+	<!-- Linux -->
+	<PropertyGroup Condition="'$(OS)' == 'Unix' AND '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'True'">
+		<DefineConstants>LINUX;UNIX;DESKTOP;$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
+
+	<!-- macOS -->
+	<PropertyGroup Condition="'$(OS)' == 'Unix' AND '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'True'">
+		<DefineConstants>MACOS;OSX;UNIX;DESKTOP;$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
+
+	<!-- Android -->
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-android' OR '$(TargetFramework)' == 'net8.0-android' OR '$(TargetFramework)' == 'net7.0-android'">
+		<DefineConstants>ANDROID;MOBILE;$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
+
+	<!-- iOS -->
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios' OR '$(TargetFramework)' == 'net8.0-ios' OR '$(TargetFramework)' == 'net7.0-ios'">
+		<DefineConstants>IOS;MOBILE;$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)'=='Release'">
+		<DebugType>none</DebugType>
+		<DebugSymbols>false</DebugSymbols>
+	</PropertyGroup>
+	
+	<ItemGroup>
+    <Content Include="Icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Engine\Engine.csproj" />
+    <ProjectReference Include="..\..\Game\Game.csproj" />
+  </ItemGroup>
+
+	<ItemGroup Condition="'$(Configuration)'!='Release'">
+		<ProjectReference Include="..\..\GameCooker\GameCooker.csproj" />
+	</ItemGroup>
+
+	<Target Name="PostBuild_Windows" AfterTargets="PostBuildEvent" Condition="'$(OS)' == 'Windows_NT'">
+  <Message Text="PostBuild: Windows detected: copying glfw3.dll" Importance="high" />
+  <Copy SourceFiles="$(MSBuildProjectDirectory)/../..//Third/Win/glfw/lib-vc2022/glfw.dll" DestinationFiles="$(TargetDir)glfw.dll" SkipUnchangedFiles="true" />
+</Target>
+
+
+<Target Name="SelectMacLibFolder" BeforeTargets="PostBuild_Mac">
+  <PropertyGroup>
+    <MacLibFolder Condition="$(RuntimeIdentifier.Contains('arm64'))">lib-arm64</MacLibFolder>
+    <MacLibFolder Condition="$(RuntimeIdentifier.Contains('x64'))">lib-x86_64</MacLibFolder>
+    <MacLibFolder Condition="'$(MacLibFolder)' == '' AND $(RuntimeIdentifier.Contains('osx'))">lib-universal</MacLibFolder>
+  </PropertyGroup>
+
+  <Message Text="SelectMacLibFolder: RID=$(RuntimeIdentifier) MacLibFolder=$(MacLibFolder)" Importance="high" />
+</Target>
+
+<Target Name="PostBuild_Mac" AfterTargets="PostBuildEvent" Condition="$(RuntimeIdentifier.Contains('osx'))">
+
+  <Message Text="PostBuild: macOS detected: copying from $(MacLibFolder)" Importance="high" />
+
+  <Copy SourceFiles="$(MSBuildProjectDirectory)/../..//Third/MacOs/glfw/$(MacLibFolder)/libglfw.dylib" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
+</Target>
+
+	<Target Name="MoveAllDllsToLibs" AfterTargets="Publish">
+		<MakeDir Directories="$(TargetDir)Data/Assemblies" />
+		<ItemGroup>
+			<DllsToMove Include="$(TargetDir)*.dll" Exclude="$(TargetDir)$(AssemblyName).dll" />
+		</ItemGroup>
+		<Move SourceFiles="@(DllsToMove)" DestinationFolder="$(TargetDir)Data/Assemblies" />
+	</Target>
+
+	<Import Project="PublishPlatformTargets.targets" />
+</Project>

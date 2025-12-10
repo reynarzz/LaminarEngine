@@ -3,3 +3,5 @@ obj/
 .vs/
 /Game/Library
 *.user
+Platforms/Desktop/Properties/PublishProfiles/FolderProfile.pubxml
+Platforms/Android/Assets/
