@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace SharedTypes
 {
-    public abstract class AssetMetaFileBase
+    public class TilemapWorld
     {
-        public Guid GUID { get; set; }
-    } 
+
+    }
 }

@@ -8,10 +8,7 @@ using System.Threading.Tasks;
 namespace SharedTypes
 {
     [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
-    public struct DefaultMetaFile : AssetMetaFileBase
+    public class DefaultMetaFile : AssetMetaFileBase
     {
-        public Guid GUID { get; set; }
-
-        public DefaultMetaFile() { }
     }
 }

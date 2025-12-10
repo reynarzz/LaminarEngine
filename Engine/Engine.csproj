@@ -1,11 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	  <TargetFrameworks>net9.0-windows;net9.0;net9.0-android</TargetFrameworks> 
+	  <TargetFrameworks>net9.0-windows;net9.0</TargetFrameworks> 
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+	  <IsTrimmable>false</IsTrimmable>
+	  <PublishTrimmed>false</PublishTrimmed>
+	  <TrimMode>partial</TrimMode>
+	  <TrimmerDefaultAction>Preserve</TrimmerDefaultAction>
   </PropertyGroup>
+
+	<PropertyGroup Condition="'$(BuildAndroid)' == 'true'">
+		<TargetFrameworks>$(TargetFrameworks);net9.0-android</TargetFrameworks>
+	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0'">
 		<DefineConstants>DESKTOP;$(DefineConstants)</DefineConstants>
@@ -20,6 +28,10 @@
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
 		<DefineConstants>ANDROID;MOBILE;$(DefineConstants)</DefineConstants>
 		<RuntimeIdentifiers>$(RuntimeIdentifiers)</RuntimeIdentifiers>
+
+		<AndroidLinkMode>None</AndroidLinkMode>
+		<EnableAot>false</EnableAot>
+		<PublishAot>false</PublishAot>
 	</PropertyGroup>
 
 	<!-- iOS -->

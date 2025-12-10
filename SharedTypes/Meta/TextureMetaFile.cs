@@ -18,13 +18,8 @@ namespace SharedTypes
 
     [Serializable]
     [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
-    public struct TextureMetaFile : AssetMetaFileBase
+    public class TextureMetaFile : AssetMetaFileBase
     {
         public TextureConfig Config { get; set; } = new TextureConfig() { PixelPerUnit = 16 };
-        public Guid GUID { get; set; }
-        public TextureMetaFile()
-        {
-            
-        }
     }
 }

@@ -9,8 +9,7 @@ namespace SharedTypes
 {
     [Serializable]
     [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
-    public struct AudioMetaFile : AssetMetaFileBase
+    public class AudioMetaFile : AssetMetaFileBase
     {
-        public Guid GUID { get; set; }
     }
 }

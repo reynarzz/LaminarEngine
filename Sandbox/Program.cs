@@ -21,7 +21,7 @@ namespace Sandbox
             {
                 try
                 {
-                    NativeLibrary.Load(dll);
+                    System.Runtime.InteropServices.NativeLibrary.Load(dll);
                 }
                 catch { }
             }
