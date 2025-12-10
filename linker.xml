@@ -4,5 +4,6 @@
   <assembly fullname="Game" preserve="all"/>	
   <assembly fullname="Entry_Android" preserve="all"/>
   <assembly fullname="Entry_Windows" preserve="all"/>
-  <assembly fullname="CsvHelper" preserve="all"/>	
+  <assembly fullname="CsvHelper" preserve="all"/>
+  <assembly fullname="Newtonsoft.Json" preserve="all"/>	
 </linker>

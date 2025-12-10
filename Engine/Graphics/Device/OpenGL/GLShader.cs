@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 #if DESKTOP
 using static OpenGL.GL;
 #else
-    using static OpenGL.ES.GLES30;
+using static OpenGL.ES.GLES30;
 #endif
 namespace Engine.Graphics.OpenGL
 {
@@ -45,7 +45,6 @@ namespace Engine.Graphics.OpenGL
             glDeleteShader(vertId);
             glDeleteShader(fragId);
 
-
             return ValidateProgram(Handle);
         }
 
@@ -57,8 +56,8 @@ namespace Engine.Graphics.OpenGL
             glShaderSource(shaderId, src);
             glCompileShader(shaderId);
 
+#if DEBUG
             int result = GL_FALSE;
-
             glGetShaderiv(shaderId, GL_COMPILE_STATUS, &result);
 
             if (result == GL_FALSE)
@@ -72,12 +71,15 @@ namespace Engine.Graphics.OpenGL
 
                 return 0;
             }
-
+#endif
             return shaderId;
         }
 
         private unsafe bool ValidateProgram(uint program)
         {
+#if RELEASE
+            return true;
+#endif
             int linkStatus;
             glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
             if (linkStatus == GL_FALSE)
@@ -88,9 +90,7 @@ namespace Engine.Graphics.OpenGL
                 Debug.Error($"Program linking failed: {log}");
                 return false;
             }
-#if DEBUG
             glValidateProgram(program);
-#endif
             int status;
             glGetProgramiv(program, GL_VALIDATE_STATUS, &status);
             if (status == GL_FALSE)
@@ -147,8 +147,8 @@ namespace Engine.Graphics.OpenGL
 
             unsafe
             {
-                fixed(int* v = value)   
-                glUniform1iv(location, value.Length, v);
+                fixed (int* v = value)
+                    glUniform1iv(location, value.Length, v);
             }
         }
 

@@ -15,6 +15,15 @@ namespace OpenGL.ES
 #else
         public const string LIB = "GLESv2";
 #endif
+        private static string PtrToStringUtf8(IntPtr ptr)
+        {
+            var length = 0;
+            while (Marshal.ReadByte(ptr, length) != 0)
+                length++;
+            var buffer = new byte[length];
+            Marshal.Copy(ptr, buffer, 0, length);
+            return Encoding.UTF8.GetString(buffer);
+        }
         private static string PtrToStringUtf8(IntPtr ptr, int length)
         {
             var buffer = new byte[length];
@@ -322,7 +331,13 @@ namespace OpenGL.ES
         public static extern void glGetShaderSource(int shader, int bufSize, int* length, byte* source);
 
         [DllImport(LIB, EntryPoint = "glGetString")]
-        public static extern IntPtr glGetString(int name);
+        private static extern IntPtr _glGetString(int name);
+
+        public static string glGetString(int name)
+        {
+            return PtrToStringUtf8(new IntPtr(_glGetString(name)));
+        }
+
 
         [DllImport(LIB, EntryPoint = "glGetTexParameterfv")]
         public static extern void glGetTexParameterfv(int target, int pname, float* @params);
@@ -407,20 +422,19 @@ namespace OpenGL.ES
         public static extern void glShaderBinary(int count, int* shaders, int binaryformat, void* binary, int length);
 
         [DllImport(LIB, EntryPoint = "glShaderSource")]
-        public static extern void glShaderSource(uint shader, int count, byte** strings, int* lengths);
-        public static void glShaderSource(uint shader, string source)
+        private static extern void glShaderSource_(uint shader, int count, byte** strings, int* lengths);
+
+        public static unsafe void glShaderSource(uint shader, string src)
         {
-            var buffer = Encoding.UTF8.GetBytes(source);
-            fixed (byte* p = &buffer[0])
+            byte[] utf8 = Encoding.UTF8.GetBytes(src + "\0");
+            fixed (byte* pUtf8 = utf8)
             {
-                var sources = new[] { p };
-                fixed (byte** s = &sources[0])
-                {
-                    var length = buffer.Length;
-                    glShaderSource(shader, 1, s, &length);
-                }
+                var ptr = pUtf8;
+                int len = utf8.Length;
+                glShaderSource_(shader, 1, &ptr, &len);
             }
         }
+
 
         [DllImport(LIB, EntryPoint = "glStencilFunc")]
         public static extern void glStencilFunc(int func, int @ref, uint mask);
