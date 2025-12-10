@@ -15,12 +15,6 @@ namespace Engine
         {
         }
 
-
-        internal RenderTexture(GfxResource renderTarget, int width, int height) : 
-            base(string.Empty, Guid.NewGuid(), width, height, 4, renderTarget)
-        {
-        }
-
         public void UpdateTarget(int width, int height)
         {
             Width = width;

@@ -30,21 +30,13 @@ namespace Engine.Layers
 
         public override void Initialize()
         {
-            _defaultSceneRenderTexture = new RenderTexture(GfxDeviceManager.Current.CreateRenderTarget(new RenderTargetDescriptor()
-            {
-                Width = Window.Width,
-                Height = Window.Height,
-            }), Window.Width, Window.Height);
+            _defaultSceneRenderTexture = new RenderTexture(Window.Width, Window.Height);
+            _screenGrabTarget = new RenderTexture(Window.Width, Window.Height);
 
             ClearScreenToColor(Window.StartWindowColor);
 
             _pipelineFeatures = new PipelineFeatures();
             _screenPipelineFeatures = new PipelineFeatures();
-            _screenGrabTarget = new RenderTexture(GfxDeviceManager.Current.CreateRenderTarget(new RenderTargetDescriptor()
-            {
-                Width = Window.Width,
-                Height = Window.Height,
-            }), Window.Width, Window.Height);
 
             _sceneBatches = new Batcher2D(Consts.Graphics.MAX_QUADS_PER_BATCH);
             _uiBatches = new Batcher2D(Consts.Graphics.MAX_QUADS_PER_BATCH);
@@ -64,17 +56,6 @@ namespace Engine.Layers
             };
 
             _screenGeometry = GraphicsHelper.GetScreenQuadGeometry();
-
-            Window.OnWindowChanged += OnUpdateScreenGrabPass;
-        }
-
-        private void OnUpdateScreenGrabPass(int width, int height)
-        {
-            var w = _mainCamera?.RenderTexture?.Width ?? width;
-            var h = _mainCamera?.RenderTexture?.Height ?? height;
-
-            _screenGrabTarget.UpdateTarget(w, h);
-            _defaultSceneRenderTexture.UpdateTarget(w, h);
         }
 
         internal override void UpdateLayer()
@@ -84,11 +65,6 @@ namespace Engine.Layers
             if (!_mainCamera)
             {
                 _mainCamera = SceneManager.FindComponent<Camera>(findDisabled: false);
-
-                if (_mainCamera != null && _mainCamera.RenderTexture)
-                {
-                    OnUpdateScreenGrabPass(_mainCamera.RenderTexture.Width, _mainCamera.RenderTexture.Height);
-                }
             }
 
             if (!_mainCamera || !_mainCamera.IsEnabled)
@@ -101,7 +77,7 @@ namespace Engine.Layers
             var sceneRenderTarget = _mainCamera.RenderTexture ?? _defaultSceneRenderTexture;
             GfxDeviceManager.Current.SetViewport(new vec4(0, 0, sceneRenderTarget.Width, sceneRenderTarget.Height));
 
-            // Clear screen
+            // Clear main render target.
             GfxDeviceManager.Current.Clear(new ClearDeviceConfig()
             {
                 Color = _mainCamera.BackgroundColor,
@@ -174,11 +150,11 @@ namespace Engine.Layers
 
                 if (isScreenGrabPass)
                 {
-                    GfxDeviceManager.Current.Clear(new ClearDeviceConfig()
-                    {
-                        Color = _mainCamera.BackgroundColor,
-                        RenderTarget = _screenGrabTarget.NativeResource
-                    });
+                    //GfxDeviceManager.Current.Clear(new ClearDeviceConfig()
+                    //{
+                    //    Color = _mainCamera.BackgroundColor,
+                    //    RenderTarget = _screenGrabTarget.NativeResource
+                    //});
 
                     if (grabBlitTarget)
                     {
@@ -324,12 +300,6 @@ namespace Engine.Layers
 
             // Draw
             GfxDeviceManager.Current.Draw(_screenQuadDrawCallData);
-        }
-
-        internal static void Test_ClearBatches()
-        {
-            _sceneBatches.Clear();
-            _uiBatches.Clear();
         }
 
         private void ClearScreenToColor(Color color)

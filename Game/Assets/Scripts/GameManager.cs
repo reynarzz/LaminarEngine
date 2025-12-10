@@ -7,6 +7,7 @@ using Engine.GUI;
 using Engine.Utils;
 using ldtk;
 using GlmNet;
+using System.Collections;
 
 namespace Game
 {
@@ -110,20 +111,27 @@ namespace Game
             _fadeInOutManager = new Actor("FadeInOutManager").AddComponent<FadeInOutManager>();
             _fadeInOutManager.Transform.Parent = Transform;
 
-            var music = new Actor<AudioSource>("Music Manager");
-            var musicAudio = music.GetComponent<AudioSource>();
-            musicAudio.Loop = true;
-            // musicAudio.Clip = Assets.GetAudioClip("Audio/music/streamloops/Stream Loops 2024-02-14_L01.wav");
-            musicAudio.Clip = Assets.GetAudioClip("Audio/MinifantasyMusic/Goblins_Dance_(Battle).wav");
-            musicAudio.Mixer = new AudioMixer("Music");
-            musicAudio.Transform.Parent = Transform;
-            musicAudio.Play();
+          //  IEnumerator next()
+            {
+              //  yield return null;
+               // yield return null;
 
-            _gameUIManger = new Actor("GameUIManager").AddComponent<GameUIManager>();
-            _gameUIManger.Transform.Parent = Transform;
+                var music = new Actor<AudioSource>("Music Manager");
+                var musicAudio = music.GetComponent<AudioSource>();
+                musicAudio.Loop = true;
+                // musicAudio.Clip = Assets.GetAudioClip("Audio/music/streamloops/Stream Loops 2024-02-14_L01.wav");
+                musicAudio.Clip = Assets.GetAudioClip("Audio/MinifantasyMusic/Goblins_Dance_(Battle).wav");
+                musicAudio.Mixer = new AudioMixer("Music");
+                musicAudio.Transform.Parent = Transform;
+                musicAudio.Play();
 
-            // Begin from first level.
-            BuildLevel(levelIndex: 0);
+                _gameUIManger = new Actor("GameUIManager").AddComponent<GameUIManager>();
+                _gameUIManger.Transform.Parent = Transform;
+
+                // Begin from first level.
+                BuildLevel(levelIndex: 0);
+            }
+           // StartCoroutine(next());
         }
 
         public void BuildLevel(int levelIndex, vec2 playerStartPos = default)
@@ -177,7 +185,7 @@ namespace Game
 
             ForegroundTilemap = result.Tilemaps[0];
 
-            if(playerStartPos != default)
+            if (playerStartPos != default)
             {
                 Player.Transform.WorldPosition = playerStartPos;
             }
@@ -241,7 +249,7 @@ namespace Game
             {
                 _gameUIManger.PauseMenu.OnPause();
             }
-            
+
             if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.F11))
             {
                 Window.FullScreen(!Window.IsFullScreen);

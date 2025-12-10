@@ -9,6 +9,12 @@
 		<DefineConstants>$(DefineConstants);PROJECT_PATH="$(MSBuildProjectFullPath)"</DefineConstants>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)'=='Release'">
+		<DebugType>none</DebugType>
+		<DebugSymbols>false</DebugSymbols>
+	</PropertyGroup>
+
+	
 	<ItemGroup>
 		<Compile Remove="Characters\**" />
 		<Compile Remove="Library\**" />

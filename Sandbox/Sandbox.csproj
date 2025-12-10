@@ -1,16 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-	  <SelfContained>true</SelfContained>
-	  <PublishSingleFile>true</PublishSingleFile>
+	<SelfContained>true</SelfContained>
+	<PublishSingleFile>true</PublishSingleFile>
     <InvariantGlobalization>true</InvariantGlobalization>
-	  <DefineConstants>$(DefineConstants);PROJECT_DIR="$(MSBuildProjectDirectory)"</DefineConstants>
-	  <ApplicationIcon>Icon.ico</ApplicationIcon>
+	<ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+	</PropertyGroup>
 
 	<!-- Windows -->
 	<PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
@@ -37,23 +39,27 @@
 		<DefineConstants>IOS;MOBILE;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)'=='Release'">
+		<DebugType>none</DebugType>
+		<DebugSymbols>false</DebugSymbols>
+	</PropertyGroup>
+	
 	<ItemGroup>
     <Content Include="Icon.ico" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.csproj" />
-    <ProjectReference Include="..\GameCooker\GameCooker.csproj" />
     <ProjectReference Include="..\Game\Game.csproj" />
   </ItemGroup>
 
-  <Target Name="PostBuild_Windows" AfterTargets="PostBuildEvent"
-        Condition="'$(OS)' == 'Windows_NT'">
+	<ItemGroup Condition="'$(Configuration)'!='Release'">
+		<ProjectReference Include="..\GameCooker\GameCooker.csproj" />
+	</ItemGroup>
+
+	<Target Name="PostBuild_Windows" AfterTargets="PostBuildEvent" Condition="'$(OS)' == 'Windows_NT'">
   <Message Text="PostBuild: Windows detected: copying glfw3.dll" Importance="high" />
-  <Copy
-      SourceFiles="$(SolutionDir)Third\Win\glfw\lib-vc2022\glfw3.dll"
-      DestinationFiles="$(TargetDir)glfw.dll"
-      SkipUnchangedFiles="true" />
+  <Copy SourceFiles="$(MSBuildProjectDirectory)/..//Third/Win/glfw/lib-vc2022/glfw.dll" DestinationFiles="$(TargetDir)glfw.dll" SkipUnchangedFiles="true" />
 </Target>
 
 
@@ -67,15 +73,11 @@
   <Message Text="SelectMacLibFolder: RID=$(RuntimeIdentifier) MacLibFolder=$(MacLibFolder)" Importance="high" />
 </Target>
 
-<Target Name="PostBuild_Mac" AfterTargets="PostBuildEvent"
-        Condition="$(RuntimeIdentifier.Contains('osx'))">
+<Target Name="PostBuild_Mac" AfterTargets="PostBuildEvent" Condition="$(RuntimeIdentifier.Contains('osx'))">
 
   <Message Text="PostBuild: macOS detected: copying from $(MacLibFolder)" Importance="high" />
 
-  <Copy
-      SourceFiles="$(MSBuildProjectDirectory)/..//Third/MacOs/glfw/$(MacLibFolder)/libglfw.dylib"
-      DestinationFolder="$(TargetDir)"
-      SkipUnchangedFiles="true" />
+  <Copy SourceFiles="$(MSBuildProjectDirectory)/..//Third/MacOs/glfw/$(MacLibFolder)/libglfw.dylib" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
 </Target>
 
 	<Target Name="MoveAllDllsToLibs" AfterTargets="Publish">
@@ -85,4 +87,6 @@
 		</ItemGroup>
 		<Move SourceFiles="@(DllsToMove)" DestinationFolder="$(TargetDir)Data/Assemblies" />
 	</Target>
+
+	<Import Project="PublishPlatformTargets.targets" />
 </Project>

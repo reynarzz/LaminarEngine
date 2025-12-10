@@ -1,7 +1,7 @@
 ﻿using Engine;
 using Game;
-using GameCooker;
 using SharedTypes;
+using System.Runtime.InteropServices;
 
 namespace Sandbox
 {
@@ -27,27 +27,28 @@ namespace Sandbox
                 catch { }
             }
 #else
+
             // This will import all the assets without using the GUI tool. Useful for running the project in debug mode.
             var assemblyDir = Paths.ClearPathSeparation(Path.GetDirectoryName(AppContext.BaseDirectory)!);
             var root = Path.Combine(assemblyDir.Substring(0, assemblyDir.LastIndexOf(Paths.SANDBOX_FOLDER_NAME)), Paths.GAME_FOLDER_NAME);
 
-            new GameProject().Initialize(new ProjectConfig() { ProjectFolderRoot = root });
+            new GameCooker.GameProject().Initialize(new GameCooker.ProjectConfig() { ProjectFolderRoot = root });
             var releaseAssetsPath = Paths.GetLibraryFolderPath() + "/_ReleaseAssetsList.txt";
             var releaseAssetsList = default(string[]);
             if (File.Exists(releaseAssetsPath))
             {
                 releaseAssetsList = File.ReadAllText(releaseAssetsPath)?.Split('\n', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
             }
-            new AssetsCooker().CookAll(new CookOptions()
+            new GameCooker.AssetsCooker().CookAll(new GameCooker.CookOptions()
             {
-                Type = CookingType.DevMode,
+                Type = GameCooker.CookingType.ReleaseMode,
                 AssetsFolderPath = Paths.GetAssetsFolderPath(),
                 ExportFolderPath = Paths.GetAssetDatabaseFolder(),
-                FileOptions = new CookFileOptions()
+                FileOptions = new GameCooker.CookFileOptions()
                 {
-                    CompressAllFiles = false,
+                    CompressAllFiles = true,
                     CompressionLevel = 12,
-                    EncryptAllFiles = false,
+                    EncryptAllFiles = true,
                 },
                 MatchingFiles = releaseAssetsList
             });
