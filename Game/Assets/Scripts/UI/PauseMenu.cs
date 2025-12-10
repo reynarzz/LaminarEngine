@@ -65,8 +65,8 @@ namespace Game
             var resume = MenuButton("Resume", new vec2(0, 70));
             resume.button.OnButtonClick += OnResume;
 
-            var quit = MenuButton("Quit", new vec2(0, 130));
-            quit.button.OnButtonClick += OnQuitGame;
+            //var quit = MenuButton("Quit", new vec2(0, 130));
+            //quit.button.OnButtonClick += OnQuitGame;
 
             _graphics.Add(_titleText);
             _graphics.Add(_background);
