@@ -29,7 +29,7 @@ namespace Engine.Layers
 #if DESKTOP
             if (!defaultDevice.IsDefault)
             {
-                throw new Exception("No default playback device found.");
+                Debug.Warn("No default playback device found. Using first available.");
             }
 #endif
             _currentDevice = _engine.InitializePlaybackDevice(defaultDevice, _defaultFormat);

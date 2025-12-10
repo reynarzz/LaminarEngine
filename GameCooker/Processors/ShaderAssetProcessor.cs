@@ -41,7 +41,7 @@ namespace GameCooker
                         }
                         else
                         {
-                            lines[i] = "#version 310";
+                            lines[i] = "#version 330 core";
                             _sb.AppendLine(lines[i]);
 
                         }
