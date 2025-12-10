@@ -46,6 +46,9 @@ namespace Engine.Android
                             TouchInput.TouchCount++;
                         }
                         SetTouchState(e.GetPointerId(index), new vec2(e.GetX(index), e.GetY(index)), TouchEvent.Down);
+
+                        Debug.Log($"Pointer id: '{id}' down");
+
                         break;
                     }
 
@@ -54,6 +57,8 @@ namespace Engine.Android
                         for (int i = 0; i < e.PointerCount; i++)
                         {
                             SetTouchState(e.GetPointerId(i), new vec2(e.GetX(i), e.GetY(i)), TouchEvent.Move);
+                            Debug.Log($"Pointer id: '{e.GetPointerId(i)}' move");
+
                         }
                         break;
                     }
@@ -64,6 +69,8 @@ namespace Engine.Android
                         TouchInput.TouchCount = Math.Max(0, TouchInput.TouchCount - 1);
 
                         SetTouchState(e.GetPointerId(index), new vec2(e.GetX(index), e.GetY(index)), TouchEvent.Up);
+                        Debug.Log($"Pointer id: '{e.GetPointerId(index)}' up");
+
                         break;
                     }
                 case MotionEventActions.Cancel:
