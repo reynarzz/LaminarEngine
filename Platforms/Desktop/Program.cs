@@ -17,6 +17,7 @@ namespace Sandbox
             }
 #if RELEASE
             var libsPath = Path.Combine(AppContext.BaseDirectory, "Data/Assemblies");
+            System.Console.WriteLine("Libs root: " + libsPath);
             string extension = string.Empty;
 
             if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(
@@ -29,8 +30,7 @@ namespace Sandbox
             {
                 extension = ".so";
             }
-            else if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(
-                     System.Runtime.InteropServices.OSPlatform.OSX))
+            else 
             {
                 extension = ".dylib";
             }

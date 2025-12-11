@@ -1,12 +1,19 @@
 ﻿<Project>
 
+      <PropertyGroup>
+            <PublishDir Condition="'$(PublishDir)' == ''">$(MSBuildProjectDirectory)/bin/Publish/</PublishDir>
+      </PropertyGroup>
 
-	<PropertyGroup>
-		<AssembliesDir>$(PublishDir)/Data/Assemblies</AssembliesDir>
-		<DataDir>$(PublishDir)/Data</DataDir>
-		<ProjectRoot>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..'))</ProjectRoot>
-		<GameDir>$([System.IO.Path]::GetFullPath('$(ProjectRoot)\Game'))</GameDir>
-	</PropertyGroup>
+  <PropertyGroup>
+      <PublishDir>$([MSBuild]::EnsureTrailingSlash('$(PublishDir)'))</PublishDir>
+  </PropertyGroup>
+
+  <PropertyGroup>
+      <AssembliesDir>$(PublishDir)Data/Assemblies/</AssembliesDir>
+      <DataDir>$(PublishDir)Data/</DataDir>
+      <ProjectRoot>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..'))</ProjectRoot>
+      <GameDir>$([System.IO.Path]::GetFullPath('$(ProjectRoot)\Game'))</GameDir>
+  </PropertyGroup>
 	
 	<Target Name="PreparePublish"
         BeforeTargets="Publish">
@@ -28,6 +35,24 @@
 	 DestinationFiles="$(AssembliesDir)/miniaudio.dll"/>
   </Target>
 
+  <!-- MACOS -->
+  <Target Name="Publish_macOS"
+          AfterTargets="Publish"
+          Condition="'$(RuntimeIdentifier)' != '' AND 
+                     ($(RuntimeIdentifier.StartsWith('osx')) OR 
+                      $(RuntimeIdentifier.StartsWith('macos')))">
+
+    <Message Text="Publishing for macOS: RID=$(RuntimeIdentifier)" Importance="high" />
+      <Message Text="PublishDir='$(PublishDir)'" Importance="high" />
+
+    <Copy
+        SourceFiles="$(ProjectRoot)/Third/MacOs/glfw/lib-universal/libglfw.dylib"
+        DestinationFiles="$(AssembliesDir)libglfw.dylib"
+        SkipUnchangedFiles="true" />
+
+        <Move SourceFiles="$(PublishDir)libminiaudio.dylib"
+	        DestinationFiles="$(AssembliesDir)/libminiaudio.dylib"/>
+  </Target>
 
   <!-- LINUX -->
   <Target Name="Publish_Linux"
@@ -43,19 +68,6 @@
   </Target>
 
 
-  <!-- MACOS -->
-  <Target Name="Publish_macOS"
-          AfterTargets="Publish"
-          Condition="'$(RuntimeIdentifier)' != '' AND 
-                     ($(RuntimeIdentifier.StartsWith('osx')) OR 
-                      $(RuntimeIdentifier.StartsWith('macos')))">
 
-    <Message Text="Publishing for macOS: RID=$(RuntimeIdentifier)" Importance="high" />
-
-    <Copy
-        SourceFiles="$(MSBuildProjectDirectory)/../Third/MacOs/glfw/lib-universal/libglfw.dylib"
-        DestinationFiles="$(PublishDir)Native/libglfw.dylib"
-        SkipUnchangedFiles="true" />
-  </Target>
 
 </Project>
