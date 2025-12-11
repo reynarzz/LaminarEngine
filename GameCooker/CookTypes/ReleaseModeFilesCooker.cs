@@ -170,7 +170,7 @@ namespace GameCooker
 
                 count++;
 
-                Console.WriteLine($"Building ({count * 100 / files.Length}%): {filePath}");
+                Console.WriteLine($"Building Assets ({count * 100 / files.Length}%): {filePath}");
             }
 
             bufWritter.Flush();
