@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Android
 {
-    // dotnet publish -f net9.0-android -c Release
+    // dotnet build -p:BuildAndroid=true -c Release
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true, 
         ScreenOrientation = ScreenOrientation.Landscape, 
         ConfigurationChanges = ConfigChanges.Orientation 
@@ -27,6 +27,13 @@ namespace Android
             base.OnCreate(savedInstanceState);
             Window.SetFlags(Android.Views.WindowManagerFlags.Fullscreen, Android.Views.WindowManagerFlags.Fullscreen);
             Window.AddFlags(Android.Views.WindowManagerFlags.KeepScreenOn);
+
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.P)
+            {
+                var lp = Window.Attributes;
+                lp.LayoutInDisplayCutoutMode = LayoutInDisplayCutoutMode.ShortEdges;
+                Window.Attributes = lp;
+            }
 
             _glView = new GLView(this);
 

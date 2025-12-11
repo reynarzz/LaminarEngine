@@ -45,6 +45,7 @@ namespace Engine.Android
 
         public void OnDrawFrame(IGL10? gl)
         {
+            // TODO: split rendering, and rest of the loop in two different threads.
             if (_engine != null)
             {
                 _engine.Update();
@@ -53,18 +54,19 @@ namespace Engine.Android
 
         public void OnSurfaceChanged(IGL10? gl, int width, int height)
         {
-
+            _glView.UpdateView(width, height);
         }
 
         public void OnSurfaceCreated(IGL10? gl, Javax.Microedition.Khronos.Egl.EGLConfig? config)
         {
-            // Here manage context loss
-
             if (_engine == null)
             {
                 _engine = new GFSEngine(_glView, new GameApplication(), _reader);
             }
-
+            else
+            {
+                // Here manage context loss
+            }
         }
     }
 }

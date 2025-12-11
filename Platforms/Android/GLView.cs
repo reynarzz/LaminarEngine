@@ -41,14 +41,19 @@ namespace Engine.Android
 
         public event Action<int, int> OnWindowChanged;
         public event Action OnWindowClose;
-        int PhysicalWidth { get; set; }
-        int PhysicalHeight { get; set; }
+        public int PhysicalWidth { get; set; }
+        public int PhysicalHeight { get; set; }
 
-        public void SetWindowSize(int width, int height)
+        public void UpdateView(int width, int height)
         {
             PhysicalWidth = width;
             PhysicalHeight = height;
+
             OnWindowChanged?.Invoke(width, height);
+        }
+        public void SetWindowSize(int width, int height)
+        {
+            // Android doesn't implement this.
         }
 
         public void SwapBuffers()
