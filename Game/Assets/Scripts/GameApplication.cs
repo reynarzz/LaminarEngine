@@ -51,7 +51,6 @@ namespace Game
         // Leave rendering in the main thread, and move all the layers to another one.
         // Android: Manage opengl context loss.
         // Fix MacOs device selection to fix Audio.
-        // Fix canvas input detection for high resolution screen, this problem seem to be because screen width and height being determined by frameBuffer size.
 
         public override void Initialize()
         {

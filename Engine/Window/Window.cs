@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Engine.Graphics;
-using Engine.Graphics.OpenGL;
 using GLFW;
 using OpenGL;
 
@@ -94,6 +92,11 @@ namespace Engine
                 Glfw.SetWindowAttribute(NativeWindow, WindowAttribute.Resizable, _canResize);
             }
         }
+        public int _physicalWidth;
+        public int _physicalHeight;
+
+        public int PhysicalWidth => _physicalWidth;
+        public int PhysicalHeight => _physicalHeight;
 
         private void OnMouseButton(IntPtr window, GLFW.MouseButton button, GLFW.InputState state, GLFW.ModifierKeys modifiers)
         {
@@ -132,6 +135,8 @@ namespace Engine
             _windowName = name;
             _startWidth = width;
             _startHeight = height;
+            _physicalWidth = width;
+            _physicalHeight = height;
 
             _isInitialized = Glfw.Init();
 
@@ -220,6 +225,9 @@ namespace Engine
 
             Glfw.SetWindowSize(NativeWindow, width, height);
 
+            _physicalWidth = width;
+            _physicalHeight = height;
+
             Glfw.GetFramebufferSize(NativeWindow, out width, out height);
             Width = width;
             Height = height;
@@ -257,10 +265,16 @@ namespace Engine
                     mode.RefreshRate
                 );
 
+                
                 Glfw.GetFramebufferSize(NativeWindow, out var width, out var height);
                 Width = width;
                 Height = height;
-
+                _physicalWidth = Width;
+                _physicalHeight = Height;
+                /*
+                _physicalWidth = mode.Width;
+                _physicalHeight = mode.Height;
+                */
                 OnWindowChanged?.Invoke(Width, Height);
 
             }
@@ -276,6 +290,9 @@ namespace Engine
                     _startHeight,
                     0
                 );
+
+                _physicalWidth = _startWidth;
+                _physicalHeight = _startHeight;
 
                 Glfw.GetFramebufferSize(NativeWindow, out var width, out var height);
                 Width = width;

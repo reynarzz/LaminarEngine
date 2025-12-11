@@ -20,6 +20,9 @@ namespace Engine.Android
 
             // Render continuously
             RenderMode = Rendermode.Continuously;
+
+            PhysicalWidth = Width;
+            PhysicalHeight = Height;
         }
 
         public string Name { get; set; }
@@ -38,9 +41,13 @@ namespace Engine.Android
 
         public event Action<int, int> OnWindowChanged;
         public event Action OnWindowClose;
+        int PhysicalWidth { get; set; }
+        int PhysicalHeight { get; set; }
 
         public void SetWindowSize(int width, int height)
         {
+            PhysicalWidth = width;
+            PhysicalHeight = height;
             OnWindowChanged?.Invoke(width, height);
         }
 

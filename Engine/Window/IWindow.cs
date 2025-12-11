@@ -21,6 +21,9 @@ namespace Engine
         int MonitorCount { get; }
         bool IsInitialized { get; }
         bool CanResize { get; }
+        int PhysicalWidth { get; }
+        int PhysicalHeight { get; }
+
         void SwapBuffers();
         void SetWindowSize(int width, int height);
     }
