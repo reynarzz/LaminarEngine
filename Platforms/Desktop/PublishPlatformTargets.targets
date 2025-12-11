@@ -2,18 +2,28 @@
 	<PropertyGroup>
 		<PublishDir Condition="'$(PublishDir)' == ''">$(MSBuildProjectDirectory)/bin/Publish/</PublishDir>
 	</PropertyGroup>
+	
+	<PropertyGroup>
+		<ExeName Condition="'$(OS)'=='Windows_NT'">$(AssemblyName).exe</ExeName>
+		<ExeName Condition="'$(OS)'!='Windows_NT'">$(AssemblyName)</ExeName>
 
+		<ExeNameOutName>Game</ExeNameOutName>
+		<ExeNameOut Condition="'$(OS)'=='Windows_NT'">$(ExeNameOutName).exe</ExeNameOut>
+		<ExeNameOut Condition="'$(OS)'!='Windows_NT'">$(ExeNameOutName)</ExeNameOut>
+	</PropertyGroup>
+	
+	<Target Name="NormalizePublishDir" BeforeTargets="Publish">
 		<PropertyGroup>
 			<ProjectRoot>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..'))</ProjectRoot>
 			<ProjectRoot>$([MSBuild]::EnsureTrailingSlash('$(ProjectRoot)'))</ProjectRoot>
-			<PublishDir>$(ProjectRoot)_Ship/</PublishDir>
-			<DataDir>$(PublishDir)Data/</DataDir>
+			<ShipDir>$(ProjectRoot)_Ship/$(RuntimeIdentifier)/</ShipDir>
+			<DataDir>$(ShipDir)Data/</DataDir>
 			<AssembliesDir>$(DataDir)Assemblies/</AssembliesDir>
 			<GameDir>$([System.IO.Path]::GetFullPath('$(ProjectRoot)\Game\'))</GameDir>
 			<AssetsFolder>$(GameDir)Assets</AssetsFolder>
 		</PropertyGroup>
-
-
+	</Target>
+	
 	<PropertyGroup>
 		<ProjectRoot>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..'))</ProjectRoot>
 		<ProjectRoot>$([MSBuild]::EnsureTrailingSlash('$(ProjectRoot)'))</ProjectRoot>
@@ -61,7 +71,7 @@
     
     <Copy
         SourceFiles="$(MSBuildProjectDirectory)/../Third/Linux/glfw/libglfw.so"
-        DestinationFiles="$(PublishDir)Native/libglfw.so"
+        DestinationFiles="$(ShipDir)Native/libglfw.so"
         SkipUnchangedFiles="true" />
   </Target>
 
@@ -75,30 +85,16 @@
 		</MSBuild>
 	</Target>
 
-
-	<!-- Run GameCooker to build gameData.gfs -->
-	<Target Name="RunGameCooker" AfterTargets="Build">
-		<PropertyGroup>
-			<GC_Framework>$(TargetFramework)</GC_Framework>
-			
-			<!-- Path to GameCooker output directory -->
-			<GameCookerOutDir>$(ProjectRoot)GameCooker/bin/$(Configuration)/$(GC_Framework)/</GameCookerOutDir>
-
-			<!-- Executable name depending on OS -->
-			<GameCookerExe Condition="'$(OS)'=='Windows_NT'">$(GameCookerOutDir)GameCooker.exe</GameCookerExe>
-			<GameCookerExe Condition="'$(OS)'!='Windows_NT'">$(GameCookerOutDir)GameCooker</GameCookerExe>
-
-			<GameCookerArgs>"$(AssetsFolder)" "$(DataDir)" "0" "1"</GameCookerArgs>
-		</PropertyGroup>
-
-		<Message Text="Running Game Cooker: $(GameCookerExe) $(GameCookerArgs)" Importance="high"/>
-
-		<Exec Condition="'$(OS)'=='Windows_NT'"
-			  Command="&quot;$(GameCookerExe)&quot; $(GameCookerArgs)" />
-
-		<Exec Condition="'$(OS)'!='Windows_NT'"
-			  Command="chmod +x &quot;$(GameCookerExe)&quot;; &quot;$(GameCookerExe)&quot; $(GameCookerArgs)" />
+	<Target Name="MoveExecutable" AfterTargets="Publish">
+		<Message Text="Moving executable: $(ExeName)" Importance="high"/>
+		
+		<Move
+			Condition="'$(OS)'=='Windows_NT'"
+			SourceFiles="$(PublishDir)$(ExeName)"
+			DestinationFiles="$(ShipDir)$(ExeNameOut)"
+		 />
 	</Target>
-
-
+	
+	
+	
 </Project>
