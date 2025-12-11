@@ -170,14 +170,7 @@ namespace GameCooker
 
                 count++;
 
-                try
-                {
-                    Console.Write($"\r.gfs package building: {count * 100 / files.Length}%".PadRight(Console.WindowWidth));
-                }
-                catch
-                {
-
-                }
+                Console.WriteLine($"Building ({count * 100 / files.Length}%): {filePath}");
             }
 
             bufWritter.Flush();

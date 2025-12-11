@@ -22,6 +22,28 @@
 			<GameDir>$([System.IO.Path]::GetFullPath('$(ProjectRoot)\Game\'))</GameDir>
 			<AssetsFolder>$(GameDir)Assets</AssetsFolder>
 		</PropertyGroup>
+
+		<!-- Run GameCooker to build gameData.gfs -->
+		<PropertyGroup>
+				<GC_Framework>$(TargetFramework)</GC_Framework>
+
+				<!-- Path to GameCooker output directory -->
+				<GameCookerOutDir>$(ProjectRoot)GameCooker/bin/$(Configuration)/$(GC_Framework)/</GameCookerOutDir>
+
+				<!-- Executable name depending on OS -->
+				<GameCookerExe Condition="'$(OS)'=='Windows_NT'">$(GameCookerOutDir)GameCooker.exe</GameCookerExe>
+				<GameCookerExe Condition="'$(OS)'!='Windows_NT'">$(GameCookerOutDir)GameCooker</GameCookerExe>
+
+				<GameCookerArgs>"$(AssetsFolder)" "$(DataDir)" "0" "1"</GameCookerArgs>
+			</PropertyGroup>
+
+			<Message Text="Running Game Cooker: $(GameCookerExe) $(GameCookerArgs)" Importance="high"/>
+
+			<Exec Condition="'$(OS)'=='Windows_NT'"
+				  Command="&quot;$(GameCookerExe)&quot; $(GameCookerArgs)" />
+
+			<Exec Condition="'$(OS)'!='Windows_NT'"
+				  Command="chmod +x &quot;$(GameCookerExe)&quot;; &quot;$(GameCookerExe)&quot; $(GameCookerArgs)" />
 	</Target>
 	
 	<PropertyGroup>
@@ -94,7 +116,7 @@
 			DestinationFiles="$(ShipDir)$(ExeNameOut)"
 		 />
 	</Target>
-	
-	
-	
+
+
+
 </Project>
