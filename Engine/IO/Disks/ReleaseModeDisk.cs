@@ -29,7 +29,16 @@ namespace Engine.IO
             //Try to check if the file exists alonside the executable.
             if (!File.Exists(executablePath))
             {
-                executablePath = Path.Combine(AppContext.BaseDirectory, Paths.GetAssetBuildDataFilename());
+                var path = Path.Combine(AppContext.BaseDirectory, Paths.GetAssetBuildDataFilename());
+
+                if (File.Exists(path))
+                {
+                    executablePath = path;
+                }
+                else
+                {
+                    Debug.Error("Can't find");
+                }
             }
             _reader = new BinaryReader(new FileStream(executablePath, FileMode.Open, FileAccess.Read));
         }
