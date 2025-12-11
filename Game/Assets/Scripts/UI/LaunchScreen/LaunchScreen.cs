@@ -42,7 +42,7 @@ namespace Game
             scanlines.SetValue("uScanlineSpacing", 2);
             PostProcessingStack.Push(scanlines);
 
-#if !DEBUG
+#if DEBUG
             OnComplete();
 #else
             CreateLaunchScreen();
