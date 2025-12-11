@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-      <AssembliesDir>$(PublishDir)Data/Assemblies/</AssembliesDir>
+      <AssembliesDir>$(AppOutputDir)Data/Assemblies/</AssembliesDir>
       <DataDir>$(PublishDir)Data/</DataDir>
       <ProjectRoot>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..'))</ProjectRoot>
       <GameDir>$([System.IO.Path]::GetFullPath('$(ProjectRoot)\Game'))</GameDir>
@@ -18,13 +18,13 @@
 	<Target Name="PreparePublish"
         BeforeTargets="Publish">
 		<Message Text="Preparing common publish folders in $(PublishDir)" Importance="high" />
-		<MakeDir Directories="$(AssembliesDir)" />
 	</Target>
 	
   <!-- WINDOWS -->
   <Target Name="Publish_Windows"
           AfterTargets="Publish"
           Condition="'$(RuntimeIdentifier)' != '' AND $(RuntimeIdentifier.StartsWith('win'))">
+		<MakeDir Directories="$(AssembliesDir)" />
 
     <Message Text="Publishing for Windows: RID=$(RuntimeIdentifier)" Importance="high" />
     <Copy SourceFiles="$(ProjectRoot)\Third\Win\glfw\lib-vc2022\glfw.dll"
@@ -47,11 +47,8 @@
 
     <Copy
         SourceFiles="$(ProjectRoot)/Third/MacOs/glfw/lib-universal/libglfw.dylib"
-        DestinationFiles="$(AssembliesDir)libglfw.dylib"
+        DestinationFiles="$(PublishDir)libglfw.dylib"
         SkipUnchangedFiles="true" />
-
-        <Move SourceFiles="$(PublishDir)libminiaudio.dylib"
-	        DestinationFiles="$(AssembliesDir)/libminiaudio.dylib"/>
   </Target>
 
   <!-- LINUX -->
@@ -60,7 +57,7 @@
           Condition="'$(RuntimeIdentifier)' != '' AND $(RuntimeIdentifier.StartsWith('linux'))">
 
     <Message Text="Publishing for Linux: RID=$(RuntimeIdentifier)" Importance="high" />
-
+    
     <Copy
         SourceFiles="$(MSBuildProjectDirectory)/../Third/Linux/glfw/libglfw.so"
         DestinationFiles="$(PublishDir)Native/libglfw.so"

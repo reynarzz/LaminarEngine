@@ -17,7 +17,7 @@ namespace Sandbox
             }
 #if RELEASE
             var libsPath = Path.Combine(AppContext.BaseDirectory, "Data/Assemblies");
-            System.Console.WriteLine("Libs root: " + libsPath);
+       
             string extension = string.Empty;
 
             if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(
@@ -30,7 +30,8 @@ namespace Sandbox
             {
                 extension = ".so";
             }
-            else 
+            else if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(
+                     System.Runtime.InteropServices.OSPlatform.OSX))
             {
                 extension = ".dylib";
             }
@@ -38,14 +39,14 @@ namespace Sandbox
             {
                 throw new Exception("Unknown platform");
             }
-            foreach (var dll in Directory.GetFiles(libsPath, "*" + extension))
+            try
             {
-                try
+                foreach (var dll in Directory.GetFiles(libsPath, "*" + extension))
                 {
                     System.Runtime.InteropServices.NativeLibrary.Load(dll);
                 }
-                catch { }
             }
+            catch { }
 #else
 
             // This will import all the assets without using the GUI tool. Useful for running the project in debug mode.
