@@ -9,7 +9,10 @@
 	<RuntimeIdentifiers>win-x64;linux-x64;osx-arm64;osx-x64</RuntimeIdentifiers>
   </PropertyGroup>
 
-
+	<PropertyGroup Condition="'$(ForceConsoleOutput)' == 'true'">
+		<OutputType>Exe</OutputType>
+	</PropertyGroup>
+	
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0'">
 		<DefineConstants>DESKTOP;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>

@@ -56,6 +56,7 @@ namespace GameCooker
                                                     string outFolder)
         {
             var path = Path.Combine(outFolder, Paths.GetAssetBuildDataFilename());
+            Directory.CreateDirectory(outFolder);
             await using var fs = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None, TEMP_BUFFER_SIZE, useAsync: true);
             using var bufWritter = new BinaryWriter(fs, Encoding.UTF8, leaveOpen: true);
 
@@ -168,7 +169,15 @@ namespace GameCooker
                 currentFileIdPosition += fieldIfOffset;
 
                 count++;
-                Console.Write($"\r.gfs package building: {count * 100 / files.Length}%".PadRight(Console.WindowWidth));
+
+                try
+                {
+                    Console.Write($"\r.gfs package building: {count * 100 / files.Length}%".PadRight(Console.WindowWidth));
+                }
+                catch
+                {
+
+                }
             }
 
             bufWritter.Flush();

@@ -3,17 +3,15 @@
 		<PublishDir Condition="'$(PublishDir)' == ''">$(MSBuildProjectDirectory)/bin/Publish/</PublishDir>
 	</PropertyGroup>
 
-	<Target Name="NormalizePublishDir" BeforeTargets="Publish">
 		<PropertyGroup>
-			<PublishDir>$([MSBuild]::EnsureTrailingSlash('$(PublishDir)'))</PublishDir>
-			<AssembliesDir>$(PublishDir)Data/Assemblies/</AssembliesDir>
-			<DataDir>$(PublishDir)Data/</DataDir>
-			<GameDir>$([System.IO.Path]::GetFullPath('$(ProjectRoot)\Game'))</GameDir>
 			<ProjectRoot>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..'))</ProjectRoot>
 			<ProjectRoot>$([MSBuild]::EnsureTrailingSlash('$(ProjectRoot)'))</ProjectRoot>
+			<PublishDir>$(ProjectRoot)_Ship/</PublishDir>
+			<DataDir>$(PublishDir)Data/</DataDir>
+			<AssembliesDir>$(DataDir)Assemblies/</AssembliesDir>
+			<GameDir>$([System.IO.Path]::GetFullPath('$(ProjectRoot)\Game\'))</GameDir>
+			<AssetsFolder>$(GameDir)Assets</AssetsFolder>
 		</PropertyGroup>
-		<Message Text="Normalized PublishDir = $(PublishDir)" Importance="high"/>
-	</Target>
 
 
 	<PropertyGroup>
@@ -32,7 +30,7 @@
           DestinationFiles="$(AssembliesDir)/glfw.dll"
           SkipUnchangedFiles="true" />
 
-	<Move  SourceFiles="$(PublishDir)/miniaudio.dll"
+	<Move SourceFiles="$(PublishDir)/miniaudio.dll"
 	 DestinationFiles="$(AssembliesDir)/miniaudio.dll"/>
   </Target>
 
@@ -42,10 +40,11 @@
           Condition="'$(RuntimeIdentifier)' != '' AND 
                      ($(RuntimeIdentifier.StartsWith('osx')) OR 
                       $(RuntimeIdentifier.StartsWith('macos')))">
+	  <MakeDir Directories="$(AssembliesDir)" />
 
-    <Message Text="Publishing for macOS: RID=$(RuntimeIdentifier)" Importance="high" />
+	  <Message Text="Publishing for macOS: RID=$(RuntimeIdentifier)" Importance="high" />
       <Message Text="PublishDir='$(PublishDir)'" Importance="high" />
-
+	
     <Copy
         SourceFiles="$(ProjectRoot)Third/MacOs/glfw/lib-universal/libglfw.dylib"
         DestinationFiles="$(PublishDir)libglfw.dylib"
@@ -56,8 +55,9 @@
   <Target Name="Publish_Linux"
           AfterTargets="Publish"
           Condition="'$(RuntimeIdentifier)' != '' AND $(RuntimeIdentifier.StartsWith('linux'))">
+	  <MakeDir Directories="$(AssembliesDir)" />
 
-    <Message Text="Publishing for Linux: RID=$(RuntimeIdentifier)" Importance="high" />
+	  <Message Text="Publishing for Linux: RID=$(RuntimeIdentifier)" Importance="high" />
     
     <Copy
         SourceFiles="$(MSBuildProjectDirectory)/../Third/Linux/glfw/libglfw.so"
@@ -75,6 +75,30 @@
 		</MSBuild>
 	</Target>
 
+
+	<!-- Run GameCooker to build gameData.gfs -->
+	<Target Name="RunGameCooker" AfterTargets="Build">
+		<PropertyGroup>
+			<GC_Framework>$(TargetFramework)</GC_Framework>
+			
+			<!-- Path to GameCooker output directory -->
+			<GameCookerOutDir>$(ProjectRoot)GameCooker/bin/$(Configuration)/$(GC_Framework)/</GameCookerOutDir>
+
+			<!-- Executable name depending on OS -->
+			<GameCookerExe Condition="'$(OS)'=='Windows_NT'">$(GameCookerOutDir)GameCooker.exe</GameCookerExe>
+			<GameCookerExe Condition="'$(OS)'!='Windows_NT'">$(GameCookerOutDir)GameCooker</GameCookerExe>
+
+			<GameCookerArgs>"$(AssetsFolder)" "$(DataDir)" "0" "1"</GameCookerArgs>
+		</PropertyGroup>
+
+		<Message Text="Running Game Cooker: $(GameCookerExe) $(GameCookerArgs)" Importance="high"/>
+
+		<Exec Condition="'$(OS)'=='Windows_NT'"
+			  Command="&quot;$(GameCookerExe)&quot; $(GameCookerArgs)" />
+
+		<Exec Condition="'$(OS)'!='Windows_NT'"
+			  Command="chmod +x &quot;$(GameCookerExe)&quot;; &quot;$(GameCookerExe)&quot; $(GameCookerArgs)" />
+	</Target>
 
 
 </Project>
