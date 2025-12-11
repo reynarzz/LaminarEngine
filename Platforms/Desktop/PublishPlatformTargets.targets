@@ -4,15 +4,14 @@
 	<PropertyGroup>
 		<AssembliesDir>$(PublishDir)/Data/Assemblies</AssembliesDir>
 		<DataDir>$(PublishDir)/Data</DataDir>
-		<ProjectRoot>$(MSBuildProjectDirectory)\..</ProjectRoot>
-		<GameDir>$(MSBuildProjectDirectory)\..\Game</GameDir>
+		<ProjectRoot>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..'))</ProjectRoot>
+		<GameDir>$([System.IO.Path]::GetFullPath('$(ProjectRoot)\Game'))</GameDir>
 	</PropertyGroup>
 	
 	<Target Name="PreparePublish"
         BeforeTargets="Publish">
 		<Message Text="Preparing common publish folders in $(PublishDir)" Importance="high" />
 		<MakeDir Directories="$(AssembliesDir)" />
-
 	</Target>
 	
   <!-- WINDOWS -->
@@ -21,7 +20,7 @@
           Condition="'$(RuntimeIdentifier)' != '' AND $(RuntimeIdentifier.StartsWith('win'))">
 
     <Message Text="Publishing for Windows: RID=$(RuntimeIdentifier)" Importance="high" />
-    <Copy SourceFiles="$(MSBuildProjectDirectory)\..\Third\Win\glfw\lib-vc2022\glfw.dll"
+    <Copy SourceFiles="$(ProjectRoot)\Third\Win\glfw\lib-vc2022\glfw.dll"
           DestinationFiles="$(AssembliesDir)/glfw.dll"
           SkipUnchangedFiles="true" />
 
