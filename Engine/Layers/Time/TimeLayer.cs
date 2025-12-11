@@ -9,7 +9,7 @@ namespace Engine.Layers
         private float _lastFrameTime;
         private float _timePast;
         private float _unscaledTimePast;
-        private const float _timeWrapLength = 20;
+        private const float _timeWrapLength = 10;
         public override void Initialize()
         {
             _stopwatch = new Stopwatch();
@@ -42,7 +42,7 @@ namespace Engine.Layers
             Time.UnscaledTime = _unscaledTimePast;
             Time.TimeCurrent = _timePast;
             Time.SinceStarted = currentTime;
-            Time.UnscaledTimeWrap = Mathf.Wrap(unscaledDeltaTime, _timeWrapLength);
+            Time.UnscaledTimeWrap = Mathf.Wrap(_unscaledTimePast, _timeWrapLength);
             Time.TimeCurrentWrap = Mathf.Wrap(_timePast, _timeWrapLength);
 
             Time.FPS = Time.DeltaTime > 0f ? 1f / Time.DeltaTime : 0f;

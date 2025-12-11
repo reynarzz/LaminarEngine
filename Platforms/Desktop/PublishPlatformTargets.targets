@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-      <AssembliesDir>$(AppOutputDir)Data/Assemblies/</AssembliesDir>
+      <AssembliesDir>$(PublishDir)Data/Assemblies/</AssembliesDir>
       <DataDir>$(PublishDir)Data/</DataDir>
       <ProjectRoot>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..'))</ProjectRoot>
       <GameDir>$([System.IO.Path]::GetFullPath('$(ProjectRoot)\Game'))</GameDir>

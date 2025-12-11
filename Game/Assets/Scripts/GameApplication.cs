@@ -49,7 +49,7 @@ namespace Game
         // Port to mac, android, ios, linux.
         // Leave rendering in the main thread, and move all the layers to another one.
         // Android: Manage opengl context loss.
-        // Fix MacOs device selection to fix Audio.
+        
 
         public override void Initialize()
         {
