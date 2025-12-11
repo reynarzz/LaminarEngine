@@ -1,33 +1,34 @@
 ﻿<Project>
+	<PropertyGroup>
+		<PublishDir Condition="'$(PublishDir)' == ''">$(MSBuildProjectDirectory)/bin/Publish/</PublishDir>
+	</PropertyGroup>
 
-      <PropertyGroup>
-            <PublishDir Condition="'$(PublishDir)' == ''">$(MSBuildProjectDirectory)/bin/Publish/</PublishDir>
-      </PropertyGroup>
-
-  <PropertyGroup>
-      <PublishDir>$([MSBuild]::EnsureTrailingSlash('$(PublishDir)'))</PublishDir>
-  </PropertyGroup>
-
-  <PropertyGroup>
-      <AssembliesDir>$(PublishDir)Data/Assemblies/</AssembliesDir>
-      <DataDir>$(PublishDir)Data/</DataDir>
-      <ProjectRoot>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..'))</ProjectRoot>
-      <GameDir>$([System.IO.Path]::GetFullPath('$(ProjectRoot)\Game'))</GameDir>
-  </PropertyGroup>
-	
-	<Target Name="PreparePublish"
-        BeforeTargets="Publish">
-		<Message Text="Preparing common publish folders in $(PublishDir)" Importance="high" />
+	<Target Name="NormalizePublishDir" BeforeTargets="Publish">
+		<PropertyGroup>
+			<PublishDir>$([MSBuild]::EnsureTrailingSlash('$(PublishDir)'))</PublishDir>
+			<AssembliesDir>$(PublishDir)Data/Assemblies/</AssembliesDir>
+			<DataDir>$(PublishDir)Data/</DataDir>
+			<GameDir>$([System.IO.Path]::GetFullPath('$(ProjectRoot)\Game'))</GameDir>
+			<ProjectRoot>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..'))</ProjectRoot>
+			<ProjectRoot>$([MSBuild]::EnsureTrailingSlash('$(ProjectRoot)'))</ProjectRoot>
+		</PropertyGroup>
+		<Message Text="Normalized PublishDir = $(PublishDir)" Importance="high"/>
 	</Target>
-	
-  <!-- WINDOWS -->
+
+
+	<PropertyGroup>
+		<ProjectRoot>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..'))</ProjectRoot>
+		<ProjectRoot>$([MSBuild]::EnsureTrailingSlash('$(ProjectRoot)'))</ProjectRoot>
+	</PropertyGroup>
+
+	<!-- WINDOWS -->
   <Target Name="Publish_Windows"
           AfterTargets="Publish"
           Condition="'$(RuntimeIdentifier)' != '' AND $(RuntimeIdentifier.StartsWith('win'))">
 		<MakeDir Directories="$(AssembliesDir)" />
 
     <Message Text="Publishing for Windows: RID=$(RuntimeIdentifier)" Importance="high" />
-    <Copy SourceFiles="$(ProjectRoot)\Third\Win\glfw\lib-vc2022\glfw.dll"
+    <Copy SourceFiles="$(ProjectRoot)Third\Win\glfw\lib-vc2022\glfw.dll"
           DestinationFiles="$(AssembliesDir)/glfw.dll"
           SkipUnchangedFiles="true" />
 
@@ -46,7 +47,7 @@
       <Message Text="PublishDir='$(PublishDir)'" Importance="high" />
 
     <Copy
-        SourceFiles="$(ProjectRoot)/Third/MacOs/glfw/lib-universal/libglfw.dylib"
+        SourceFiles="$(ProjectRoot)Third/MacOs/glfw/lib-universal/libglfw.dylib"
         DestinationFiles="$(PublishDir)libglfw.dylib"
         SkipUnchangedFiles="true" />
   </Target>
@@ -64,6 +65,15 @@
         SkipUnchangedFiles="true" />
   </Target>
 
+	<Target Name="BuildOtherProject" AfterTargets="Build">
+		<Message Text="Building GameCooker project..." Importance="high" />
+
+		<MSBuild
+			Projects="$(ProjectRoot)GameCooker\GameCooker.csproj"
+			Targets="Build"
+			Properties="Configuration=$(Configuration);ForceConsoleOutput=true">
+		</MSBuild>
+	</Target>
 
 
 

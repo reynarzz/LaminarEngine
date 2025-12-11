@@ -103,9 +103,9 @@ namespace Game
         private void InitializeWorld()
         {
             PostProcessingStack.Clear();
-            //ScreenGrabTest();
-            //PostProcessingStack.Push(new BloomPostProcessing());
-            //ScreenGrabTest3();
+            ScreenGrabTest();
+            PostProcessingStack.Push(new BloomPostProcessing());
+            ScreenGrabTest3();
             _fadeInOutManager = new Actor("FadeInOutManager").AddComponent<FadeInOutManager>();
             _fadeInOutManager.Transform.Parent = Transform;
 
