@@ -103,9 +103,9 @@ namespace Game
         private void InitializeWorld()
         {
             PostProcessingStack.Clear();
-            ScreenGrabTest();
-            PostProcessingStack.Push(new BloomPostProcessing());
-            ScreenGrabTest3();
+            //ScreenGrabTest();
+            //PostProcessingStack.Push(new BloomPostProcessing());
+            //ScreenGrabTest3();
             _fadeInOutManager = new Actor("FadeInOutManager").AddComponent<FadeInOutManager>();
             _fadeInOutManager.Transform.Parent = Transform;
 
@@ -127,7 +127,7 @@ namespace Game
                 _gameUIManger.Transform.Parent = Transform;
 
                 // Begin from first level.
-                BuildLevel(levelIndex: 0);
+                BuildLevel(levelIndex: 1);
             }
             // StartCoroutine(next());
         }

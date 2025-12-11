@@ -45,9 +45,11 @@ namespace Engine.Android
                         {
                             TouchInput.TouchCount++;
                         }
-                        SetTouchState(e.GetPointerId(index), new vec2(e.GetX(index), e.GetY(index)), TouchEvent.Down);
+                        var position = new vec2(e.GetX(index), e.GetY(index));
+                        SetTouchState(e.GetPointerId(index), position, TouchEvent.Down);
 
                         Debug.Log($"Pointer id: '{id}' down");
+                        Input.MousePosition = position;
 
                         break;
                     }

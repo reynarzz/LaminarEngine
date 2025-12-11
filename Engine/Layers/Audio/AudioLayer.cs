@@ -32,8 +32,18 @@ namespace Engine.Layers
                 Debug.Warn("No default playback device found. Using first available.");
             }
 #endif
-            _currentDevice = _engine.InitializePlaybackDevice(defaultDevice, _defaultFormat);
-            _currentDevice.Start();
+
+            try
+            {
+                _currentDevice = _engine.InitializePlaybackDevice(defaultDevice, _defaultFormat);
+                _currentDevice.Start();
+
+               
+            }
+            catch (Exception e)
+            {
+                Debug.Error(e.ToString());
+            }
 
             var mixer = new Mixer(_engine, _defaultFormat, true);
             _masterMixer = new AudioMixer("Master", mixer);
@@ -52,7 +62,14 @@ namespace Engine.Layers
             }
             else
             {
-                _currentDevice.MasterMixer.AddComponent(player);
+                if(_currentDevice != null)
+                {
+                    _currentDevice.MasterMixer.AddComponent(player);
+                }
+                else
+                {
+                    Debug.Error("No Audio device was started");
+                }
             }
 
             return player;
@@ -67,7 +84,14 @@ namespace Engine.Layers
         {
             var mixer = new Mixer(_engine, _defaultFormat);
             
-            _currentDevice.MasterMixer.AddComponent(mixer);
+            if (_currentDevice != null)
+            {
+                _currentDevice.MasterMixer.AddComponent(mixer);
+            }
+            else
+            {
+                Debug.Error("No Audio device was started");
+            }
             return mixer;
         }
 

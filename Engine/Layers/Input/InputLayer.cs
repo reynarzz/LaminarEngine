@@ -143,7 +143,7 @@ public class Input : LayerBase
     private static HashSet<MouseButton> _currentMouse = new();
     private static HashSet<MouseButton> _previousMouse = new();
 
-    public static vec2 MousePosition { get; private set; }
+    public static vec2 MousePosition { get; internal set; }
 
     private KeyCode[] _keyCodesArray;
     private MouseButton[] _mouseButtonsArray;
@@ -167,12 +167,14 @@ public class Input : LayerBase
 
     internal override void UpdateLayer()
     {
-#if DESKTOP
-        // Poll OS events
-        GLFW.Glfw.PollEvents();
 
         CopyKeys(_currentKeys, _previousKeys);
         CopyKeys(_currentMouse, _previousMouse);
+
+
+#if DESKTOP
+        // Poll OS events
+        GLFW.Glfw.PollEvents();
 
         // Update current key states
         foreach (KeyCode key in _keyCodesArray)

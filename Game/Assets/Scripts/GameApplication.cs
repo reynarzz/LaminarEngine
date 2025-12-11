@@ -21,7 +21,6 @@ namespace Game
         // GameIcon, it should be baked into the game data.
         // Fix player getting stuck in wall corners due to ground raycast,
         //     :this can be solved by checking if the player is colliding with a wall, if so, then push him away the wall.
-        // Fix Bloom post processing.
 
 
         // For the game:
