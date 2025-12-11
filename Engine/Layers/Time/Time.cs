@@ -14,6 +14,9 @@ namespace Engine
         public static float TimeScale { get; set; } = 1f;
         public static float TimeCurrent { get; internal set; } = 0;
         public static float UnscaledTime { get; internal set; } = 0f;
+
+        public static float TimeCurrentWrap { get; internal set; } = 0;
+        public static float UnscaledTimeWrap { get; internal set; } = 0f;
         public static float UnscaledDeltaTime { get; internal set; } = 0f;
 
     }

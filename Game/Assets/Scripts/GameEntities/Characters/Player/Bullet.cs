@@ -52,10 +52,10 @@ namespace Game
 
             CheckCollision();
 
-            // TODO: make it distance based instead.
+            // TODO: make it if it goes outside the camera view frustum, the bullet gets destroyed.
             if ((_timeAlive -= Time.DeltaTime) <= 0)
             {
-                PoolObject();
+               // PoolObject();
             }
 
             if(_particleSystem)

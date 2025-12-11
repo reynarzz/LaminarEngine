@@ -19,26 +19,24 @@ namespace Engine.Layers
         private static MiniAudioEngine _engine;
         private static AudioPlaybackDevice _currentDevice;
         private static AudioMixer _masterMixer;
-
+        private const float FIND_DEVICE_RETRY_TIME = 1;
+        private float _currentRetryTime = 0;
         private static readonly AudioFormat _defaultFormat = AudioFormat.DvdHq;
 
         public override void Initialize()
         {
             _engine = new MiniAudioEngine();
             var defaultDevice = _engine.PlaybackDevices.FirstOrDefault();
-#if DESKTOP
+
             if (!defaultDevice.IsDefault)
             {
                 Debug.Warn("No default playback device found. Using first available.");
             }
-#endif
 
             try
             {
                 _currentDevice = _engine.InitializePlaybackDevice(defaultDevice, _defaultFormat);
                 _currentDevice.Start();
-
-               
             }
             catch (Exception e)
             {
@@ -52,45 +50,79 @@ namespace Engine.Layers
             // ParametricEqualizer 
         }
 
+        internal override void UpdateLayer()
+        {
+            base.UpdateLayer();
+
+            if (_currentDevice == null && (_currentRetryTime -= Time.DeltaTime) <= 0)
+            {
+                if (_engine.PlaybackDevices != null)
+                {
+                    for (int i = 0; i < _engine.PlaybackDevices.Length; i++)
+                    {
+                        try
+                        {
+                            _currentDevice = _engine.InitializePlaybackDevice(_engine.PlaybackDevices[i], _defaultFormat);
+                            _currentDevice.Start();
+                            break;
+                        }
+                        catch
+                        {
+                            _currentDevice = null;
+                        }
+                    }
+
+                    if (_currentDevice == null)
+                    {
+                        _currentRetryTime = FIND_DEVICE_RETRY_TIME;
+                        Debug.Error("No audio device found yet.");
+                    }
+                }
+            }
+        }
+
         internal static SoundPlayer CreateSoundPlayer(AudioFormat format, AudioMixer mixer, RawDataProvider provider)
         {
             var player = new SoundPlayer(_engine, format, provider);
 
-            if(mixer != null)
+            if (mixer != null)
             {
                 mixer.AddPlayer(player);
             }
-            else
+            else if (GetDeviceSafe(out var device))
             {
-                if(_currentDevice != null)
-                {
-                    _currentDevice.MasterMixer.AddComponent(player);
-                }
-                else
-                {
-                    Debug.Error("No Audio device was started");
-                }
+                device.MasterMixer.AddComponent(player);
             }
 
             return player;
         }
 
-        internal static AudioPlaybackDevice GetDevice()
+        internal static bool GetDeviceSafe(out AudioPlaybackDevice device)
         {
-            return _currentDevice;
+            device = null;
+            try
+            {
+                if (!_currentDevice.IsDisposed && _currentDevice.IsRunning && _currentDevice.MasterMixer != null)
+                {
+                    device = _currentDevice;
+                }
+            }
+            catch
+            {
+                device = null;
+                Debug.Error("No valid audio device is present.");
+                return false;
+            }
+            return true;
         }
 
         internal static Mixer CreateMixer()
         {
             var mixer = new Mixer(_engine, _defaultFormat);
-            
-            if (_currentDevice != null)
+
+            if (GetDeviceSafe(out var device))
             {
-                _currentDevice.MasterMixer.AddComponent(mixer);
-            }
-            else
-            {
-                Debug.Error("No Audio device was started");
+                device.MasterMixer.AddComponent(mixer);
             }
             return mixer;
         }

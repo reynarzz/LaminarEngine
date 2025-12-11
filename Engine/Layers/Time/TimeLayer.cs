@@ -3,14 +3,13 @@ using System.Diagnostics;
 
 namespace Engine.Layers
 {
-  
-
     internal class TimeLayer : LayerBase
     {
         private Stopwatch _stopwatch;
         private float _lastFrameTime;
         private float _timePast;
         private float _unscaledTimePast;
+        private const float _timeWrapLength = 20;
         public override void Initialize()
         {
             _stopwatch = new Stopwatch();
@@ -41,9 +40,12 @@ namespace Engine.Layers
             Time.DeltaTime = deltaTime;
             Time.UnscaledDeltaTime = unscaledDeltaTime;
             Time.UnscaledTime = _unscaledTimePast;
-            Time.SinceStarted = currentTime;
-            Time.FPS = Time.DeltaTime > 0f ? 1f / Time.DeltaTime : 0f;
             Time.TimeCurrent = _timePast;
+            Time.SinceStarted = currentTime;
+            Time.UnscaledTimeWrap = Mathf.Wrap(unscaledDeltaTime, _timeWrapLength);
+            Time.TimeCurrentWrap = Mathf.Wrap(_timePast, _timeWrapLength);
+
+            Time.FPS = Time.DeltaTime > 0f ? 1f / Time.DeltaTime : 0f;
         }
 
         public override void Close()

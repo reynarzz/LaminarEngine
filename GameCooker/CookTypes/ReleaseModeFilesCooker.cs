@@ -66,7 +66,8 @@ namespace GameCooker
             bufWritter.Write(files.Length);
 
             // creation date
-            bufWritter.Write(DateTime.Now.ToBinary());
+            var creationDate = DateTime.Now.ToBinary();
+            bufWritter.Write(creationDate);
 
             var currentFileIdPosition = bufWritter.BaseStream.Position;
 
@@ -172,6 +173,8 @@ namespace GameCooker
 
             bufWritter.Flush();
             await fs.FlushAsync();
+
+            // File.WriteAllText(Path.Combine(outFolder, Paths.ASSET_BUILD_DATA_FILE_META_NAME), JsonConvert.SerializeObject(new GameDataMetaFile() {  CreationDateBinary = creationDate }));
         }
     }
 }

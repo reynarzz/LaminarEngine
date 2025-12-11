@@ -48,6 +48,23 @@ namespace Engine
             return result;
         }
 
+        public static float PingPong(float t, float length = 1f)
+        {
+            t = t % (2f * length);
+            return length - Math.Abs(t - length);
+        }
+        public static float Wrap(float t, float length)
+        {
+            return t - MathF.Floor(t / length) * length;
+        }
+        public static float SmoothLoop(float t, float length)
+        {
+            // t normalized 
+            float x = (t / length) * MathF.PI * 2f;
+
+            return (MathF.Sin(x) * 0.5f + 0.5f) * length;
+        }
+
         public static quat Slerp(quat a, quat b, float t)
         {
             float dot = Dot(a, b);
@@ -235,12 +252,7 @@ namespace Engine
         }
 
 
-        public static float PingPong(float t, float length = 1f)
-        {
-            t = t % (2f * length);
-            return length - Math.Abs(t - length);
-        }
-
+        
         public static mat4 QuatToMat4(quat q)
         {
             float x = q.x, y = q.y, z = q.z, w = q.w;

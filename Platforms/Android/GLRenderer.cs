@@ -2,6 +2,7 @@
 using Android.Opengl;
 using Game;
 using Javax.Microedition.Khronos.Opengles;
+using SharedTypes;
 using System.Text;
 
 namespace Engine.Android
@@ -19,12 +20,16 @@ namespace Engine.Android
             _reader = LoadGameData();// new BinaryReader(, Encoding.UTF8, leaveOpen: false);
         }
 
+        // TODO: move this to another class.
         private BinaryReader LoadGameData()
         {
             string basePath = Application.Context.GetExternalFilesDir(null).AbsolutePath;
             string gameDataFilePath = Path.Combine(basePath, GameDataFile);
+            
+            // TODO: check gameFile version.
+
             Directory.CreateDirectory(basePath);
-            if (!File.Exists(gameDataFilePath))
+            // --if (!File.Exists(gameDataFilePath))
             {
                 // First launch copy from assets
                 using (var assetStream = Application.Context.Assets.Open(GameDataFile))
@@ -34,10 +39,12 @@ namespace Engine.Android
                 }
                 Console.WriteLine("Create GameDataPath: " + gameDataFilePath);
             }
-            else
-            {
-                Console.WriteLine("Exist GameDataPath: " + gameDataFilePath);
-            }
+            //else
+            //{
+
+
+            //    Console.WriteLine("Exist GameDataPath: " + gameDataFilePath);
+            //}
 
             FileStream stream = File.OpenRead(gameDataFilePath);
             return new BinaryReader(stream, Encoding.UTF8);

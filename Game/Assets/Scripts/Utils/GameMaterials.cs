@@ -50,10 +50,10 @@ namespace Game
             FontMaterial.SetProperty(0, "uAmplitude", 2.0f);
             FontMaterial.SetProperty(0, "uFrequency", 6.0f);
         }
-
+        
         private static Material InitPortalMaterial()
         {
-            var screenShader = new Shader(Assets.GetText("Shaders/VertScreenGrab.vert").Text, Assets.GetText("Shaders/Portal.frag").Text);
+            var screenShader = new Shader(Assets.GetText("Shaders/VertScreenGrab.vert").Text, Assets.GetText("Shaders/Portal_mobile.frag").Text);
             var material = new Material(screenShader);
             material.Name = "Portal Material";
             material.AddTexture("uStarsTex", Assets.GetTexture("stars.png"));

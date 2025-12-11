@@ -21,6 +21,7 @@ namespace SharedTypes
         public const string ASSET_META_EXT_NAME = ".mt";
         public const string ASSET_BUILD_DATA_EXT_NAME = ".gfs"; // "Game from scratch"
         public const string ASSET_BUILD_DATA_FILE_NAME = "GameData"; // "Game from scratch"
+        public const string ASSET_BUILD_DATA_FILE_META_NAME = ASSET_BUILD_DATA_FILE_NAME + ASSET_META_EXT_NAME; 
         public const string RELEASE_BUILD_DATA_FOLDER_NAME = "Data";
 
         private static string _projectRootFolder;
