@@ -91,6 +91,6 @@
 		<ProjectRoot>$([MSBuild]::EnsureTrailingSlash('$(ProjectRoot)'))</ProjectRoot>
 	</PropertyGroup>
 
-	<Import Project="$(ProjectRoot)Configs/GameCooker.targets" />
-	<Import Project="$(ProjectRoot)Configs/Standalone.publish.platforms.targets" />
+	<Import Condition="'$(Configuration)' == 'Release'" Project="$(ProjectRoot)Configs/GameCooker.targets" />
+	<Import Condition="'$(Configuration)' == 'Release'" Project="$(ProjectRoot)Configs/Standalone.publish.platforms.targets" />
 </Project>
