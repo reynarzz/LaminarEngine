@@ -12,7 +12,7 @@ namespace SharedTypes
         public const string BUILD_TEMP_FOLDER_NAME = "BuildTemp";
         public const string ASSETS_FOLDER_NAME = "Assets";
         public const string GAME_FOLDER_NAME = "Game";
-
+        public const string SHIP_ASSETS_LIST_FILE_NAME = "ShipAssets.txt";
         public const string PROJECT_CONFIG_FOLDER_NAME = "ProjectSettings";
 
         public const string ASSET_DATABASE_FOLDER_NAME = "AssetsDatabase";
@@ -20,7 +20,7 @@ namespace SharedTypes
         public const string ASSET_DATABASE_BINARY_EXT_NAME = ".bin";
         public const string ASSET_META_EXT_NAME = ".mt";
         public const string ASSET_BUILD_DATA_EXT_NAME = ".gfs"; // "Game from scratch"
-        public const string ASSET_BUILD_DATA_FILE_NAME = "GameData"; // "Game from scratch"
+        public const string ASSET_BUILD_DATA_FILE_NAME = "GameData"; 
         public const string ASSET_BUILD_DATA_FILE_META_NAME = ASSET_BUILD_DATA_FILE_NAME + ASSET_META_EXT_NAME; 
         public const string RELEASE_BUILD_DATA_FOLDER_NAME = "Data";
 
@@ -57,6 +57,12 @@ namespace SharedTypes
         {
             return ClearPathSeparation(Path.Join(GetAbsolutePathFlag(isRelativePath), PROJECT_CONFIG_FOLDER_NAME));
         }
+
+        public static string GetShipAssetsFilePath(bool isRelativePath = false)
+        {
+            return ClearPathSeparation(Path.Combine(GetProjectSettingsFolder(), SHIP_ASSETS_LIST_FILE_NAME));
+        }
+
         public static string GetAssetDatabaseFilePath(bool isRelativePath = false)
         {
             return ClearPathSeparation(Path.Join(GetAbsolutePathFlag(isRelativePath), GetAssetDatabaseFolder(true), ASSET_DATABASE_FILE_NAME));

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharedTypes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,6 +20,14 @@ namespace GameCooker
 
             Console.WriteLine("Ex: Path/To/OutputFolder 1");
 
+            var matchingAssetsPath = args.ElementAtOrDefault(4); 
+            var releaseAssetsList = default(string[]);
+
+            if (File.Exists(matchingAssetsPath))
+            {
+                releaseAssetsList = File.ReadAllText(matchingAssetsPath)?.Split('\n', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+            }
+
             new AssetsCooker().CookAll(new CookOptions()
             {
                 AssetsFolderPath = args[0],
@@ -30,7 +39,8 @@ namespace GameCooker
                     CompressAllFiles = true,
                     EncryptAllFiles = true,
                     EncryptFilesPath = false
-                }
+                },
+                MatchingFiles = releaseAssetsList
             });
         }
     }

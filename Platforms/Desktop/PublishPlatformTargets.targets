@@ -29,16 +29,20 @@
 
 				<!-- Path to GameCooker output directory -->
 				<GameCookerOutDir>$(ProjectRoot)GameCooker/bin/$(Configuration)/$(GC_Framework)/</GameCookerOutDir>
-
+				
 				<!-- Executable name depending on OS -->
 				<GameCookerExe Condition="'$(OS)'=='Windows_NT'">$(GameCookerOutDir)GameCooker.exe</GameCookerExe>
 				<GameCookerExe Condition="'$(OS)'!='Windows_NT'">$(GameCookerOutDir)GameCooker</GameCookerExe>
-
-				<GameCookerArgs>"$(AssetsFolder)" "$(DataDir)" "0" "1"</GameCookerArgs>
+			<GameCookerTargetPlatform Condition="'$(OS)'=='Windows_NT'">1</GameCookerTargetPlatform>
+			<GameCookerTargetPlatform Condition="'$(RuntimeIdentifier)' != '' AND 
+                     ($(RuntimeIdentifier.StartsWith('osx')) OR 
+                      $(RuntimeIdentifier.StartsWith('macos')))">2</GameCookerTargetPlatform>	
+			
+			<GameCookerArgs>"$(AssetsFolder)" "$(DataDir)" "0" "1" "$(GameDir)ProjectSettings/ShipAssets.txt"</GameCookerArgs>
 			</PropertyGroup>
-
+			
 			<Message Text="Running Game Cooker: $(GameCookerExe) $(GameCookerArgs)" Importance="high"/>
-
+			
 			<Exec Condition="'$(OS)'=='Windows_NT'"
 				  Command="&quot;$(GameCookerExe)&quot; $(GameCookerArgs)" />
 
@@ -62,8 +66,9 @@
           DestinationFiles="$(AssembliesDir)/glfw.dll"
           SkipUnchangedFiles="true" />
 
-	<Move SourceFiles="$(PublishDir)/miniaudio.dll"
-	 DestinationFiles="$(AssembliesDir)/miniaudio.dll"/>
+	<Move 
+		SourceFiles="$(PublishDir)/miniaudio.dll"
+		DestinationFiles="$(AssembliesDir)/miniaudio.dll"/>
   </Target>
 
   <!-- MACOS -->
@@ -116,7 +121,4 @@
 			DestinationFiles="$(ShipDir)$(ExeNameOut)"
 		 />
 	</Target>
-
-
-
 </Project>

@@ -11,6 +11,8 @@ namespace GameCooker
         Invalid,
         Windows,
         MacOS,
-        Android
+        Linux,
+        Android,
+        IOS
     }
 }

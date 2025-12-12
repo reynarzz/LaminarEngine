@@ -68,7 +68,7 @@ namespace Game
 //            {
 //                sb.AppendLine(item);
 //            }
-//            File.WriteAllText(Paths.GetLibraryFolderPath() + "/_ReleaseAssetsList.txt", sb.ToString());
+//            File.WriteAllText(Paths.GetShipAssetsFilePath(), sb.ToString());
 //#endif
         }
     }
