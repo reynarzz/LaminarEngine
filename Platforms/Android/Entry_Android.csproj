@@ -18,7 +18,7 @@
 	<UseLatestAndroidPlatformSdk>true</UseLatestAndroidPlatformSdk>
 	<PublishPlatform>android</PublishPlatform>
 	<GameDataOutDir>$(MSBuildProjectDirectory)/Assets/</GameDataOutDir>
-	<GameCookerBeforeBuildStage>Compile</GameCookerBeforeBuildStage>
+	  
 	  <!--
       Enables trim analyzers and full trimming during Release mode.
       To learn more, see: https://learn.microsoft.com/dotnet/core/deploying/trimming/trimming-options#trimming-granularity
@@ -40,7 +40,10 @@
 		<AndroidAsset Include="Assets\**\*.*" />
 	</ItemGroup>
 
-
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
+		<GameCookerBeforeBuildStage>Compile</GameCookerBeforeBuildStage>
+	</PropertyGroup>
+	
 	<PropertyGroup>
 		<ProjectRoot>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..'))</ProjectRoot>
 		<ProjectRoot>$([MSBuild]::EnsureTrailingSlash('$(ProjectRoot)'))</ProjectRoot>

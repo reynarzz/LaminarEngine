@@ -49,7 +49,7 @@ namespace GameCooker
                         EncryptFilesPath = false
                     },
                     MatchingFiles = releaseAssetsList
-                });
+                }); 
             }
             catch (Exception e)
             {

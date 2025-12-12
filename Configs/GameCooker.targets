@@ -11,7 +11,7 @@
 			<GC_Framework Condition="'$(TargetFramework)' != ''">$(TargetFramework)</GC_Framework>
 			<GC_Framework Condition="'$(GC_Framework)' == ''">net9.0</GC_Framework>
 
-			<GameCookerOutDir>$(ProjectRoot)GameCooker/bin/Debug/net9.0/</GameCookerOutDir>
+			<GameCookerOutDir>$(ProjectRoot)GameCooker/bin/$(Configuration)/net9.0/</GameCookerOutDir>
 
 			<GameCookerExe Condition="'$(OS)' == 'Windows_NT'">$(GameCookerOutDir)GameCooker.exe</GameCookerExe>
 			<GameCookerExe Condition="'$(OS)' != 'Windows_NT'">$(GameCookerOutDir)GameCooker</GameCookerExe>
@@ -33,7 +33,4 @@
 			<StopBuild>true</StopBuild>
 		</PropertyGroup>
 	</Target>
-
-	
-	
 </Project>

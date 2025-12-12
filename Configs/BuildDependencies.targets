@@ -5,9 +5,9 @@
     <MSBuild
       Projects="$(ProjectRoot)GameCooker/GameCooker.csproj"
       Targets="Build"
-      Properties="Configuration=Debug;ForceConsoleOutput=true" />
+	  Properties="Configuration=$(Configuration);ForceConsoleOutput=true" />
   </Target>
-
+ 
 </Project>
 
 <!--
