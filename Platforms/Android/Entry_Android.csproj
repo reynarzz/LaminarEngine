@@ -41,7 +41,7 @@
 	</ItemGroup>
 
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
-		<GameCookerBeforeBuildStage>PrepareForBuild</GameCookerBeforeBuildStage>
+		<GameCookerBeforeBuildStage>GenerateResources</GameCookerBeforeBuildStage>
 	</PropertyGroup>
 	
 	<PropertyGroup>
