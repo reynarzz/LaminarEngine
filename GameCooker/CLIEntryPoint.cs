@@ -37,7 +37,7 @@ namespace GameCooker
                 FileOptions = new CookFileOptions()
                 {
                     CompressAllFiles = true,
-                    EncryptAllFiles = true,
+                    EncryptAllFiles = false,
                     EncryptFilesPath = false
                 },
                 MatchingFiles = releaseAssetsList

@@ -327,13 +327,13 @@ uniform float uOutlineThickness = 0.04f
             pass.SetValue("uCornerTR", 0);
             pass.SetValue("uCornerBL", 0);
             pass.SetValue("uCornerBR", 0);
-            pass.SetValue("uEdgeSoftness", 0.001f);
+            pass.SetValue("uEdgeSoftness", 0.000f);
             pass.SetValue("uScanlineIntensity", 0.4f);
             pass.SetValue("uScanlineSpacing", 4.0f);
             pass.SetValue("uPhosphorGlow", 0.05f);
             pass.SetValue("uRGBOffset", 0.0f);
-            pass.SetValue("uBrightness", 1.6f);
-            pass.SetValue("uContrast", 1.0f);
+            pass.SetValue("uBrightness", 1.52f);
+            pass.SetValue("uContrast", 1.05f);
             pass.SetValue("uRGBBalance", new vec3(1.0f, 0.8f, 0.84f));
             pass.SetValue("uGlassReflectStrength", 0.0f);
             pass.SetValue("uAberrationStrength", 0.00f);
