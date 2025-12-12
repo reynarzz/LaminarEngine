@@ -1,0 +1,36 @@
+<Project>
+
+	<Import Project="$(SolutionDir)Configs/ProjectPaths.targets" />
+	<Import Project="$(SolutionDir)Configs/BuildDependencies.targets" />
+	
+	<Target Name="RunGameCooker"
+			BeforeTargets="Publish"
+			DependsOnTargets="NormalizePublishDir">
+
+		<PropertyGroup>
+			<GC_Framework Condition="'$(TargetFramework)' != ''">$(TargetFramework)</GC_Framework>
+			<GC_Framework Condition="'$(TargetFrameworks)' != ''">$(TargetFrameworks)</GC_Framework>
+			
+			<GameCookerOutDir>$(ProjectRoot)GameCooker/bin/$(Configuration)/$(GC_Framework)/</GameCookerOutDir>
+
+			<GameCookerExe Condition="'$(OS)' == 'Windows_NT'">$(GameCookerOutDir)GameCooker.exe</GameCookerExe>
+			<GameCookerExe Condition="'$(OS)' != 'Windows_NT'">$(GameCookerOutDir)GameCooker</GameCookerExe>
+
+			<GameCookerTargetPlatform Condition="'$(OS)'=='Windows_NT'">1</GameCookerTargetPlatform>
+			<GameCookerTargetPlatform Condition="'$(RuntimeIdentifier)' != '' AND
+												 ($(RuntimeIdentifier.StartsWith('osx')) OR
+												  $(RuntimeIdentifier.StartsWith('macos')))">2</GameCookerTargetPlatform>
+
+			<GameCookerArgs>"$(AssetsFolder)" "$(DataDir)" "0" "1" "$(GameDir)ProjectSettings/ShipAssets.txt"</GameCookerArgs>
+		</PropertyGroup>
+		
+		<Message Text="Running Game Cooker: $(GameCookerExe) $(GameCookerArgs)" Importance="high"/>
+
+		<Exec Condition="'$(OS)' == 'Windows_NT'" Command="&quot;$(GameCookerExe)&quot; $(GameCookerArgs)"/>
+		<Exec Condition="'$(OS)' != 'Windows_NT'" Command="chmod +x &quot;$(GameCookerExe)&quot;; &quot;$(GameCookerExe)&quot; $(GameCookerArgs)"/>
+
+	</Target>
+
+	
+	
+</Project>

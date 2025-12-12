@@ -93,6 +93,8 @@
 		<Move SourceFiles="@(DllsToMove)" DestinationFolder="$(TargetDir)Data/Assemblies" />
 	</Target>
 
+	<Import Project="$(SolutionDir)Configs/GameCooker.targets" />
+	<Import Project="$(SolutionDir)Configs/Standalone.publish.platforms.targets" />
 
-	<Import Project="PublishPlatformTargets.targets" />
+	<!--<Import Project="PublishPlatformTargets.targets" />-->
 </Project>

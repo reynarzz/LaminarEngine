@@ -1,0 +1,13 @@
+<Project>
+  <Target Name="BuildGameCooker"
+          AfterTargets="Build"
+          Condition="'$(EnableGameCooker)' == 'true'">
+
+    <Message Text="Building GameCooker project..." Importance="high" />
+    <MSBuild
+      Projects="$(ProjectRoot)GameCooker/GameCooker.csproj"
+      Targets="Build"
+      Properties="Configuration=$(Configuration);ForceConsoleOutput=true" />
+  </Target>
+
+</Project>
