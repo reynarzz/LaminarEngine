@@ -23,6 +23,24 @@ namespace Game
         private UniformValue[] _horizontalPassUniforms;
         private UniformValue[] _verticalPassUniforms;
 
+        public float BloomStrength
+        {
+            get => _combinePassUniforms[1].FloatValue;
+            set => _combinePassUniforms[1] = UniformValue.AsFloat("uBloomStrength", value);
+        }
+
+        public float BrightPassThreshold
+        {
+            get => _brightPassUniforms[0].FloatValue;
+            set => _brightPassUniforms[0] = UniformValue.AsFloat("uThreshold", value);
+        }
+
+        public float BrightPassKnee
+        {
+            get => _brightPassUniforms[1].FloatValue;
+            set => _brightPassUniforms[1] = UniformValue.AsFloat("uKnee", value);
+        }
+
         public BloomPostProcessing()
         {
             var vertex = Assets.GetText("Shaders/ScreenVert.vert").Text;
@@ -36,7 +54,7 @@ namespace Game
             _blurRenderTexture2 = new RenderTexture(_brightRenderTexture.Width, _brightRenderTexture.Height);
             _combineRenderTexture = new RenderTexture(Screen.Width, Screen.Height);
 
-            _combinePassUniforms = 
+            _combinePassUniforms =
             [
                 UniformValue.AsRenderTexture("uBlurTex", _blurRenderTexture2),
                 UniformValue.AsFloat("uBloomStrength", 0.2f)
