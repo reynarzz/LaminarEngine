@@ -12,20 +12,12 @@
 
 <!--
 Initialize
-  ↓
-PrepareForBuild        ← you used this (earliest safe hook)
-  ↓
+PrepareForBuild  
 ResolveReferences
-  ↓
 ResolvePackageAssets
-  ↓
 GenerateResources
-  ↓
 CoreCompile
-  ↓
 Compile
-  ↓
 Build
-  ↓
 Publish
 -->
