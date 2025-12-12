@@ -1,34 +1,37 @@
 <Project>
 
-	<Import Project="$(SolutionDir)Configs/ProjectPaths.targets" />
-	<Import Project="$(SolutionDir)Configs/BuildDependencies.targets" />
+	<Import Project="$(ProjectRoot)Configs/ProjectPaths.targets" />
+	<Import Project="$(ProjectRoot)Configs/BuildDependencies.targets" />
 	
 	<Target Name="RunGameCooker"
-			BeforeTargets="Publish"
-			DependsOnTargets="NormalizePublishDir">
-
+			BeforeTargets="$(GameCookerBeforeBuildStage)"
+			DependsOnTargets="NormalizePublishDir"
+	Condition="'$(StopBuild)' != 'true'">
 		<PropertyGroup>
 			<GC_Framework Condition="'$(TargetFramework)' != ''">$(TargetFramework)</GC_Framework>
-			<GC_Framework Condition="'$(TargetFrameworks)' != ''">$(TargetFrameworks)</GC_Framework>
-			
-			<GameCookerOutDir>$(ProjectRoot)GameCooker/bin/$(Configuration)/$(GC_Framework)/</GameCookerOutDir>
+			<GC_Framework Condition="'$(GC_Framework)' == ''">net9.0</GC_Framework>
+
+			<GameCookerOutDir>$(ProjectRoot)GameCooker/bin/$(Configuration)/net9.0/</GameCookerOutDir>
 
 			<GameCookerExe Condition="'$(OS)' == 'Windows_NT'">$(GameCookerOutDir)GameCooker.exe</GameCookerExe>
 			<GameCookerExe Condition="'$(OS)' != 'Windows_NT'">$(GameCookerOutDir)GameCooker</GameCookerExe>
-
-			<GameCookerTargetPlatform Condition="'$(OS)'=='Windows_NT'">1</GameCookerTargetPlatform>
-			<GameCookerTargetPlatform Condition="'$(RuntimeIdentifier)' != '' AND
-												 ($(RuntimeIdentifier.StartsWith('osx')) OR
-												  $(RuntimeIdentifier.StartsWith('macos')))">2</GameCookerTargetPlatform>
-
-			<GameCookerArgs>"$(AssetsFolder)" "$(DataDir)" "0" "1" "$(GameDir)ProjectSettings/ShipAssets.txt"</GameCookerArgs>
+			
+			<GameCookerTargetPlatform Condition="'$(PublishPlatform)'=='win32'">1</GameCookerTargetPlatform>
+			<GameCookerTargetPlatform Condition="'$(PublishPlatform)'=='macOS'">2</GameCookerTargetPlatform>
+			<GameCookerTargetPlatform Condition="'$(PublishPlatform)'=='linux'">3</GameCookerTargetPlatform>
+			<GameCookerTargetPlatform Condition="'$(PublishPlatform)'=='android'">4</GameCookerTargetPlatform>
+			<GameCookerTargetPlatform Condition="'$(PublishPlatform)'=='ios'">5</GameCookerTargetPlatform>
+			<GameDataOutDir Condition="'$(GameDataOutDir)' == ''">$(DataDir)</GameDataOutDir>
+			<GameCookerArgs>"$(AssetsFolder)" "$(GameDataOutDir)" "0" "$(GameCookerTargetPlatform)" "$(GameDir)ProjectSettings/ShipAssets.txt"</GameCookerArgs>
 		</PropertyGroup>
 		
-		<Message Text="Running Game Cooker: $(GameCookerExe) $(GameCookerArgs)" Importance="high"/>
+		<Message Text="Running Game Cooker: platform: $(PublishPlatform), rid: $(RuntimeIdentifier), $(GameCookerExe) $(GameCookerArgs)" Importance="high"/>
 
 		<Exec Condition="'$(OS)' == 'Windows_NT'" Command="&quot;$(GameCookerExe)&quot; $(GameCookerArgs)"/>
 		<Exec Condition="'$(OS)' != 'Windows_NT'" Command="chmod +x &quot;$(GameCookerExe)&quot;; &quot;$(GameCookerExe)&quot; $(GameCookerArgs)"/>
-
+		<PropertyGroup>
+			<StopBuild>true</StopBuild>
+		</PropertyGroup>
 	</Target>
 
 	

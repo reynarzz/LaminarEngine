@@ -16,7 +16,9 @@
 	<TargetSdkVersion>34</TargetSdkVersion>
 	<CompileSdkVersion>34</CompileSdkVersion>
 	<UseLatestAndroidPlatformSdk>true</UseLatestAndroidPlatformSdk>
-	  
+	<PublishPlatform>android</PublishPlatform>
+	<GameDataOutDir>$(MSBuildProjectDirectory)/Assets/</GameDataOutDir>
+	<GameCookerBeforeBuildStage>Compile</GameCookerBeforeBuildStage>
 	  <!--
       Enables trim analyzers and full trimming during Release mode.
       To learn more, see: https://learn.microsoft.com/dotnet/core/deploying/trimming/trimming-options#trimming-granularity
@@ -37,4 +39,14 @@
 	<ItemGroup>
 		<AndroidAsset Include="Assets\**\*.*" />
 	</ItemGroup>
+
+
+	<PropertyGroup>
+		<ProjectRoot>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..'))</ProjectRoot>
+		<ProjectRoot>$([MSBuild]::EnsureTrailingSlash('$(ProjectRoot)'))</ProjectRoot>
+	</PropertyGroup>
+
+	
+	<Import Project="$(ProjectRoot)Configs/GameCooker.targets"/>
+	
 </Project>

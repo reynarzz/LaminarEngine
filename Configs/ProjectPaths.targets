@@ -5,6 +5,14 @@
     <ProjectRoot>$([MSBuild]::EnsureTrailingSlash('$(ProjectRoot)'))</ProjectRoot>
   </PropertyGroup>
 
+	<PropertyGroup>
+		<PublishPlatform Condition="'$(RuntimeIdentifier)' != '' AND $(RuntimeIdentifier.StartsWith('win'))">win32</PublishPlatform>
+		<PublishPlatform Condition="'$(RuntimeIdentifier)' != '' AND $(RuntimeIdentifier.StartsWith('linux'))">linux</PublishPlatform>
+		<PublishPlatform Condition="'$(RuntimeIdentifier)' != '' AND ($(RuntimeIdentifier.StartsWith('osx')) OR
+																	  $(RuntimeIdentifier.StartsWith('macos')))">macOS</PublishPlatform>
+		<PublishPlatform Condition="'$(RuntimeIdentifier)' != '' AND $(RuntimeIdentifier.StartsWith('android'))">android</PublishPlatform>
+		<PublishPlatform Condition="'$(RuntimeIdentifier)' != '' AND $(RuntimeIdentifier.StartsWith('ios'))">ios</PublishPlatform>
+	</PropertyGroup>
 
 	<PropertyGroup>
 		<PublishDir Condition="'$(PublishDir)' == ''">
@@ -23,17 +31,17 @@
 	</PropertyGroup>
 
 
-	<Target Name="NormalizePublishDir"
-          BeforeTargets="Publish">
-
+	<Target Name="NormalizePublishDir" BeforeTargets="Publish">
     <PropertyGroup>
-      <ShipDir>$(ProjectRoot)_Ship/$(RuntimeIdentifier)/</ShipDir>
+      <ShipDir>$(ProjectRoot)_Ship/$(PublishPlatform)/</ShipDir>
       <DataDir>$(ShipDir)Data/</DataDir>
       <AssembliesDir>$(DataDir)Assemblies/</AssembliesDir>
       <GameDir>$([System.IO.Path]::GetFullPath('$(ProjectRoot)\Game\'))</GameDir>
       <AssetsFolder>$(GameDir)Assets</AssetsFolder>
     </PropertyGroup>
 
-  </Target>
+	<MakeDir Directories="$(DataDir)" />
+
+	</Target>
 
 </Project>

@@ -8,6 +8,8 @@
 	<PublishSingleFile>true</PublishSingleFile>
     <InvariantGlobalization>true</InvariantGlobalization>
 	<ApplicationIcon>Icon.ico</ApplicationIcon>
+	<GameCookerBeforeBuildStage>Publish</GameCookerBeforeBuildStage>
+
   </PropertyGroup>
 
 	<PropertyGroup>
@@ -37,7 +39,7 @@
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-android' OR '$(TargetFramework)' == 'net8.0-android' OR '$(TargetFramework)' == 'net7.0-android'">
 		<DefineConstants>ANDROID;MOBILE;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>
-
+	
 	<!-- iOS -->
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios' OR '$(TargetFramework)' == 'net8.0-ios' OR '$(TargetFramework)' == 'net7.0-ios'">
 		<DefineConstants>IOS;MOBILE;$(DefineConstants)</DefineConstants>
@@ -46,6 +48,7 @@
 	<PropertyGroup Condition="'$(Configuration)'=='Release'">
 		<DebugType>none</DebugType>
 		<DebugSymbols>false</DebugSymbols>
+
 	</PropertyGroup>
 	
 	<ItemGroup>
@@ -93,8 +96,11 @@
 		<Move SourceFiles="@(DllsToMove)" DestinationFolder="$(TargetDir)Data/Assemblies" />
 	</Target>
 
-	<Import Project="$(SolutionDir)Configs/GameCooker.targets" />
-	<Import Project="$(SolutionDir)Configs/Standalone.publish.platforms.targets" />
+	<PropertyGroup>
+		<ProjectRoot>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..'))</ProjectRoot>
+		<ProjectRoot>$([MSBuild]::EnsureTrailingSlash('$(ProjectRoot)'))</ProjectRoot>
+	</PropertyGroup>
 
-	<!--<Import Project="PublishPlatformTargets.targets" />-->
+	<Import Project="$(PropertyGroup)Configs/GameCooker.targets" />
+	<Import Project="$(PropertyGroup)Configs/Standalone.publish.platforms.targets" />
 </Project>

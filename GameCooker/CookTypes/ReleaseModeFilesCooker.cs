@@ -173,8 +173,15 @@ namespace GameCooker
                 Console.WriteLine($"Building Assets ({count * 100 / files.Length}%): {filePath}");
             }
 
-            bufWritter.Flush();
-            await fs.FlushAsync();
+            try
+            {
+                bufWritter.Flush();
+                await fs.FlushAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
 
             // File.WriteAllText(Path.Combine(outFolder, Paths.ASSET_BUILD_DATA_FILE_META_NAME), JsonConvert.SerializeObject(new GameDataMetaFile() {  CreationDateBinary = creationDate }));
         }

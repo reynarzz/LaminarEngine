@@ -9,8 +9,15 @@ namespace GameCooker
 {
     public static class CLIEntryPoint
     {
+        private static readonly Mutex _mutex = new Mutex(false, "Global\\CLI_GAMECOOKER");
+
         public static void Main(string[] args)
         {
+            if (!_mutex.WaitOne(0, false))
+            {
+                return;
+            }
+
             // AssetsFolderPath outPath cookTypeIndex platformIndex
             Console.WriteLine("Asset cooker");
             Console.WriteLine("Arg 0: entry folder Path");
@@ -27,21 +34,29 @@ namespace GameCooker
             {
                 releaseAssetsList = File.ReadAllText(matchingAssetsPath)?.Split('\n', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
             }
-
-            new AssetsCooker().CookAll(new CookOptions()
+            try
             {
-                AssetsFolderPath = args[0],
-                ExportFolderPath = args[1],
-                Type = (CookingType)int.Parse(args[2]),
-                Platform = (CookingPlatform)int.Parse(args[3]),
-                FileOptions = new CookFileOptions()
+                new AssetsCooker().CookAll(new CookOptions()
                 {
-                    CompressAllFiles = true,
-                    EncryptAllFiles = false,
-                    EncryptFilesPath = false
-                },
-                MatchingFiles = releaseAssetsList
-            });
+                    AssetsFolderPath = args[0],
+                    ExportFolderPath = args[1],
+                    Type = (CookingType)int.Parse(args[2]),
+                    Platform = (CookingPlatform)int.Parse(args[3]),
+                    FileOptions = new CookFileOptions()
+                    {
+                        CompressAllFiles = true,
+                        EncryptAllFiles = false,
+                        EncryptFilesPath = false
+                    },
+                    MatchingFiles = releaseAssetsList
+                });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+
+            _mutex.ReleaseMutex();
         }
     }
 }
