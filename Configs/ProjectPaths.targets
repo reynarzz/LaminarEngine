@@ -15,9 +15,7 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<PublishDir Condition="'$(PublishDir)' == ''">
-			$(MSBuildProjectDirectory)/bin/Publish/
-		</PublishDir>
+		<PublishDir Condition="'$(PublishDir)' == ''">$(MSBuildProjectDirectory)/bin/Publish/</PublishDir>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -39,9 +37,6 @@
       <GameDir>$([System.IO.Path]::GetFullPath('$(ProjectRoot)\Game\'))</GameDir>
       <AssetsFolder>$(GameDir)Assets</AssetsFolder>
     </PropertyGroup>
-
-	<MakeDir Directories="$(DataDir)" />
-
 	</Target>
 
 </Project>

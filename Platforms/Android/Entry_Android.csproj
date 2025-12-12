@@ -46,7 +46,8 @@
 		<ProjectRoot>$([MSBuild]::EnsureTrailingSlash('$(ProjectRoot)'))</ProjectRoot>
 	</PropertyGroup>
 
-	
+
 	<Import Project="$(ProjectRoot)Configs/GameCooker.targets"/>
+	<Import Project="$(ProjectRoot)Configs/Android.publish.platforms.targets"/>
 	
 </Project>
