@@ -1,13 +1,31 @@
 <Project>
   <Target Name="BuildGameCooker"
-          AfterTargets="Build"
-          Condition="'$(EnableGameCooker)' == 'true'">
-
+          BeforeTargets="$(GameCookerBeforeBuildStage)">
     <Message Text="Building GameCooker project..." Importance="high" />
     <MSBuild
       Projects="$(ProjectRoot)GameCooker/GameCooker.csproj"
       Targets="Build"
-      Properties="Configuration=$(Configuration);ForceConsoleOutput=true" />
+      Properties="Configuration=Debug;ForceConsoleOutput=true" />
   </Target>
 
 </Project>
+
+<!--
+Initialize
+  ↓
+PrepareForBuild        ← you used this (earliest safe hook)
+  ↓
+ResolveReferences
+  ↓
+ResolvePackageAssets
+  ↓
+GenerateResources
+  ↓
+CoreCompile
+  ↓
+Compile
+  ↓
+Build
+  ↓
+Publish
+-->
