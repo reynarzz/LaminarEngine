@@ -90,7 +90,8 @@
 		<ProjectRoot>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..'))</ProjectRoot>
 		<ProjectRoot>$([MSBuild]::EnsureTrailingSlash('$(ProjectRoot)'))</ProjectRoot>
 	</PropertyGroup>
-
+	
+	<Import Condition="'$(Configuration)' == 'Release'" Project="$(ProjectRoot)Configs/BuildDependencies.targets" />
 	<Import Condition="'$(Configuration)' == 'Release'" Project="$(ProjectRoot)Configs/GameCooker.targets" />
 	<Import Condition="'$(Configuration)' == 'Release'" Project="$(ProjectRoot)Configs/Standalone.publish.platforms.targets" />
 </Project>

@@ -1,6 +1,8 @@
 <Project>
-  <Target Name="BuildGameCooker"
-          BeforeTargets="$(GameCookerBeforeBuildStage)">
+	<Import Project="$(ProjectRoot)Configs/ProjectPaths.targets" />
+
+	<Target Name="BuildGameCooker"
+          BeforeTargets="Build">
     <Message Text="Building GameCooker project..." Importance="high" />
     <MSBuild
       Projects="$(ProjectRoot)GameCooker/GameCooker.csproj"

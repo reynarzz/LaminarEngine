@@ -1,12 +1,10 @@
 <Project>
 
 	<Import Project="$(ProjectRoot)Configs/ProjectPaths.targets" />
-	<Import Project="$(ProjectRoot)Configs/BuildDependencies.targets" />
 	
 	<Target Name="RunGameCooker"
 			BeforeTargets="$(GameCookerBeforeBuildStage)"
-			DependsOnTargets="NormalizePublishDir"
-	Condition="'$(StopBuild)' != 'true'">
+			DependsOnTargets="NormalizePublishDir">
 		<PropertyGroup>
 			<GC_Framework Condition="'$(TargetFramework)' != ''">$(TargetFramework)</GC_Framework>
 			<GC_Framework Condition="'$(GC_Framework)' == ''">net9.0</GC_Framework>
@@ -29,8 +27,5 @@
 
 		<Exec Condition="'$(OS)' == 'Windows_NT'" Command="&quot;$(GameCookerExe)&quot; $(GameCookerArgs)"/>
 		<Exec Condition="'$(OS)' != 'Windows_NT'" Command="chmod +x &quot;$(GameCookerExe)&quot;; &quot;$(GameCookerExe)&quot; $(GameCookerArgs)"/>
-		<PropertyGroup>
-			<StopBuild>true</StopBuild>
-		</PropertyGroup>
 	</Target>
 </Project>
