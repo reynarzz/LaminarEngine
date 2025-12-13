@@ -8,7 +8,7 @@
 	<PublishSingleFile>true</PublishSingleFile>
     <InvariantGlobalization>true</InvariantGlobalization>
 	<ApplicationIcon>Icon.ico</ApplicationIcon>
-	<GameCookerBeforeBuildStage>Build</GameCookerBeforeBuildStage>
+	<GameCookerBeforeBuildStage>Publish</GameCookerBeforeBuildStage>
 	<PublishPlatform>win32</PublishPlatform>
 
   </PropertyGroup>

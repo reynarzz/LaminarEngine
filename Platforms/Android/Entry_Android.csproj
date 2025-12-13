@@ -11,7 +11,6 @@
 	<RuntimeIdentifiers>android-arm;android-arm64</RuntimeIdentifiers>
 	<DefineConstants>ANDROID;MOBILE;$(DefineConstants)</DefineConstants>
 	<AndroidFastDeploymentEnabled>false</AndroidFastDeploymentEnabled>
-	<AndroidSupportedAbis>armeabi-v7a;arm64-v8a</AndroidSupportedAbis>
 	<MinSdkVersion>23</MinSdkVersion>
 	<TargetSdkVersion>34</TargetSdkVersion>
 	<CompileSdkVersion>34</CompileSdkVersion>
