@@ -26,11 +26,11 @@ namespace Engine.Layers
         public override void Initialize()
         {
             _engine = new MiniAudioEngine();
-            var defaultDevice = _engine.PlaybackDevices.FirstOrDefault();
-
+            var defaultDevice = _engine.PlaybackDevices?.FirstOrDefault(x => x.IsDefault) ?? default;
+            
             if (!defaultDevice.IsDefault)
             {
-                Debug.Warn("No default playback device found. Using first available.");
+                Debug.Warn($"No default playback device found. Using first available, Total: {_engine.PlaybackDevices.Length}");
             }
 
             try
