@@ -260,7 +260,7 @@ namespace Game
             var renderer = waterActor.GetComponent<SpriteRenderer>();
             renderer.SortOrder = 4;
 
-            var mainShader = new Shader(Assets.GetText("Shaders/SpriteVert.vert").Text, Assets.GetText("Shaders/WaterFrag.frag").Text, "Shaders/SpriteVert.vert", "Shaders/WaterFrag.frag");
+            var mainShader = Shader.FromPath("Shaders/SpriteVert.vert", "Shaders/WaterFrag.frag");
 
             renderer.Material = new Material(mainShader);
             renderer.Material.Name = "Water Material";
@@ -318,7 +318,7 @@ uniform float uOutlineThickness = 0.04f
 
         private void ScreenGrabTest()
         {
-            var screenShader = new Shader(Assets.GetText("Shaders/ScreenVert.vert").Text, Assets.GetText("Shaders/CTRTv.frag").Text);
+            var screenShader = Shader.FromPath("Shaders/ScreenVert.vert","Shaders/CTRTv.frag");
             var pass = new PostProcessingSinglePass(screenShader);
 
             pass.SetValue("uBackgroundColor", new vec3(0.07f));

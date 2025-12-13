@@ -36,7 +36,7 @@ namespace Game
         // Implement UI (inventory, pause menu)
         // Enemy life UI
         // Implement more enemies.
-        // Save system.
+        // Save system (custom file format)
         // when a interactable is locked by items show the items needed.
 
         // -Stretch goals:

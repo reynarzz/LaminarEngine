@@ -29,6 +29,13 @@ namespace Engine
             NativeShader = GfxDeviceManager.Current.CreateShader(shaderDescriptor);
         }
 
+        public static Shader FromPath(string vertex, string fragment)
+        {
+            var vertexCode = Assets.GetText(vertex).Text;
+            var fragCode = Assets.GetText(fragment).Text;
+            return new Shader(vertexCode, fragCode, Path.GetFileName(vertex), Path.GetFileName(fragment));
+        }
+
         protected internal override void OnDestroy()
         {
             GfxDeviceManager.Current.DestroyResource(NativeShader);
