@@ -38,6 +38,10 @@
 	<ItemGroup>
 		<AndroidAsset Include="Assets\**\*.*" />
 	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Xamarin.Google.Android.Play.Asset.Delivery" Version="2.3.0.4" />
+		<PackageReference Include="Xamarin.GooglePlayServices.Base" Version="118.9.0" />
+	</ItemGroup>
 
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
 		<GameCookerBeforeBuildStage>GenerateResources</GameCookerBeforeBuildStage>
