@@ -15,6 +15,10 @@
 		<TargetFrameworks>$(TargetFrameworks);net9.0-android</TargetFrameworks>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(BuildIOS)' == 'true'">
+		<TargetFrameworks>$(TargetFrameworks);net8.0-ios</TargetFrameworks>
+	</PropertyGroup>
+
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0'">
 		<DefineConstants>DESKTOP;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>
@@ -35,7 +39,7 @@
 	</PropertyGroup>
 
 	<!-- iOS -->
-	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios'">
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net8.0-ios'">
 		<DefineConstants>IOS;MOBILE;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>
 	<!-- Linux -->

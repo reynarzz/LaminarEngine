@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
     <key>CFBundleDisplayName</key>
-    <string>iOS</string>
+    <string>GFS by Reynardo Perez</string>
     <key>CFBundleIdentifier</key>
     <string>com.reynarzz.gfs</string>
     <key>CFBundleShortVersionString</key>

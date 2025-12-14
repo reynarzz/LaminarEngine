@@ -8,5 +8,11 @@ cd platforms/android
 
 dotnet build -p:BuildAndroid=true -c Release
 
+#cd ..
+#cd platforms/Ios
 
-#dotnet build -t:Run -f net8.0-ios -r ios-arm64 /p:_DeviceName=:v2:device
+#dotnet build -p:BuildIOS=true
+
+#install to device:
+#xcrun devicectl device install app --device 0000 Entry_Ios.app
+

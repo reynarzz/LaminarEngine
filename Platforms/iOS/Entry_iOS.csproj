@@ -15,10 +15,13 @@
 
 <PropertyGroup>
     <ApplicationId>com.reynarzz.gfs</ApplicationId>
-
   <CodesignKey>Apple Development</CodesignKey>
   <CodesignProvision>Automatic</CodesignProvision>
 </PropertyGroup>
+
+<ItemGroup>
+  <BundleResource Include="Assets/**" />
+</ItemGroup>
 
   <ItemGroup>
 		<ProjectReference Include="..\..\Engine\Engine.csproj" />

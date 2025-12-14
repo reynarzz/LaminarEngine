@@ -29,7 +29,7 @@ namespace Engine.IOS
 
             // Init GL state
             // GL.ClearColor(0.2f, 0.3f, 0.4f, 1.0f);
-            glClearColor(1.0f, 0, 0, 1.0f);
+             glClearColor(1.0f, 1.0f, 0, 1.0f);
         }
 
         public override void Update()
@@ -39,7 +39,6 @@ namespace Engine.IOS
 
         public override void DrawInRect(GLKView view, CGRect rect)
         {
-            //GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
             // TODO: draw your OpenGL stuff here
