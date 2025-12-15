@@ -25,12 +25,12 @@ namespace Engine
 
     public class TouchInput
     {
-        public static int TouchCount { get; internal set; } = 0;
-        internal static TouchState[] _state = new TouchState[20];
+        public int TouchCount { get; internal set; } = 0;
+        internal TouchState[] State = new TouchState[20];
 
         public ref TouchState GetTouch(int index)
         {
-            return ref _state[index];
+            return ref State[index];
         }
     }
 

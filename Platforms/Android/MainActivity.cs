@@ -22,6 +22,7 @@ namespace Android
     public partial class MainActivity : Activity
     {
         private GLView? _glView;
+
         protected override void OnCreate(Bundle? savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
