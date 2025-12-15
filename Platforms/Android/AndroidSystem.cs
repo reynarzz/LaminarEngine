@@ -12,7 +12,7 @@ namespace Engine.Android
     public class AndroidSystem
     {
         private GFSEngine _engine;
-        private BinaryReader _reader;
+        private readonly BinaryReader _reader;
         private readonly GLView _view;
         private readonly InputLayerAndroid _input;
         private const string GameDataFile = "GameData.gfs";

@@ -183,7 +183,7 @@ namespace Game
                     EndJump();
                 }
 
-                if(Input.Touch.TouchCount > 0)
+                //if(Input.Touch.TouchCount > 0)
                 {
                     if(Input.Touch.GetTouch(0).Type == TouchEvent.Down)
                     {

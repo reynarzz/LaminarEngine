@@ -9,11 +9,12 @@ namespace Engine
 {
     public enum TouchEvent
     {
-        None = 0,
-        Down = 1,
-        Up = 2,
-        Move = 3,
-        Cancel = 4,
+        None,
+        Down,
+        Pressed,
+        Up,
+        Move,
+        Cancel,
     }
 
     public struct TouchState
@@ -21,6 +22,8 @@ namespace Engine
         public int PointerId;
         public TouchEvent Type;
         public vec2 Position;
+        internal bool IsDownEventConsumed;
+        internal bool IsUpEventConsumed;
     }
 
     public class TouchInput

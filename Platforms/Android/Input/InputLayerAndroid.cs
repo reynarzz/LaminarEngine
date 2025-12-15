@@ -29,34 +29,49 @@ namespace Engine.Android
 
         internal override void UpdateLayer()
         {
-            base.UpdateLayer();
-
             int activeCount = 0;
 
             for (int i = 0; i < _touchInput.State.Length; i++)
             {
-                ref var t = ref _touchInput.State[i];
+                ref var state = ref _touchInput.State[i];
 
-                switch (t.Type)
+                switch (state.Type)
                 {
                     case TouchEvent.Down:
-                        t.Type = TouchEvent.Move;
+                        if (!state.IsDownEventConsumed)
+                        {
+                            state.IsDownEventConsumed = true;
+                        }
+                        else
+                        {
+                            state.Type = TouchEvent.Pressed;
+                        }
                         activeCount++;
                         break;
-
                     case TouchEvent.Move:
                         activeCount++;
                         break;
-
                     case TouchEvent.Up:
-                        t.Type = TouchEvent.None;
-                        t.PointerId = -1;
-                        t.Position = vec2.Zero;
+                        if (!state.IsUpEventConsumed)
+                        {
+                            state.IsUpEventConsumed = true;
+                        }
+                        else
+                        {
+                            state.Type = TouchEvent.None;
+                            state.PointerId = -1;
+                            state.IsUpEventConsumed = false;
+                            state.IsDownEventConsumed = false;
+                            state.Position = vec2.Zero;
+                        }
+                        
                         break;
                 }
             }
 
             _touchInput.TouchCount = activeCount;
+            Debug.Log("Touch count: " + activeCount);
+            Debug.Log("is down 0: " + (_touchInput.GetTouch(0).Type == TouchEvent.Down));
         }
 
         public override bool GetKey(KeyCode key)
@@ -94,8 +109,7 @@ namespace Engine.Android
             for (int i = 0; i < _touchInput.State.Length; i++)
             {
                 if (_touchInput.State[i].Type == TouchEvent.None ||
-                    _touchInput.State[i].Type == TouchEvent.Up ||
-                    _touchInput.State[i].Type == TouchEvent.Cancel)
+                    _touchInput.State[i].Type == TouchEvent.Up)
                 {
                     _pointerToSlot[pointerId] = i;
                     _touchInput.State[i].PointerId = pointerId;
@@ -184,9 +198,10 @@ namespace Engine.Android
                                 state.Type = TouchEvent.Move;
                             }
                         }
+
+                        // TODO: Set mouse position for finger id.
                         break;
                     }
-
                 case MotionEventActions.Up:
                 case MotionEventActions.PointerUp:
                     {
@@ -201,14 +216,12 @@ namespace Engine.Android
                         }
                         break;
                     }
-
                 case MotionEventActions.Cancel:
                     {
                         foreach (var kv in _pointerToSlot)
                         {
                             int slot = kv.Value;
                             _touchInput.State[slot].Type = TouchEvent.Up;
-                            _touchInput.State[slot].PointerId = -1;
                         }
                         _pointerToSlot.Clear();
                         break;
