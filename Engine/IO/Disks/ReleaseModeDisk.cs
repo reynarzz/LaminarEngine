@@ -50,9 +50,10 @@ namespace Engine.IO
 
         public override bool Initialize()
         {
+            _reader.BaseStream.Position = 0;
             var header = _reader.ReadBytes(AssetUtils.GFSFileFormat.HEADER.Length);
 
-            var headerStr = Encoding.UTF8.GetString(header);
+            var headerStr = Encoding.ASCII.GetString(header);
 
             if (!headerStr.Equals(AssetUtils.GFSFileFormat.HEADER))
             {
@@ -101,7 +102,7 @@ namespace Engine.IO
                     IsEncrypted = isEncrypted,
                     Path = Encoding.UTF8.GetString(pathBytes)
                 });
-
+                
                 _assetsLocations.Add(guid, new AssetLocInfo()
                 {
                     AssetDataLoc = assetDataLoc,

@@ -56,7 +56,7 @@ namespace Engine.Utils
 #if DESKTOP
                         lines[i] = "#version 330 core";
                         _sb.AppendLine(lines[i].TrimStart());
-#elif ANDROID
+#elif MOBILE
 
                             lines[i] = "#version 300 es";
                             _sb.AppendLine(lines[i].TrimStart());

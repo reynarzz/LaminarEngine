@@ -52,19 +52,14 @@ namespace Engine.IOS
             // Create an OpenGL ES 3.0 context
             _context = new EAGLContext(EAGLRenderingAPI.OpenGLES3);
 
-            var glkView = new GLKView(View.Frame, _context)
-            {
-                DrawableDepthFormat = GLKViewDrawableDepthFormat.Format24,
-
-            };
-
-            View = glkView;
+            var view = (GLKView)View;
+            view.Context = _context;
+            view.DrawableDepthFormat = GLKViewDrawableDepthFormat.Format24;
 
             EAGLContext.SetCurrentContext(_context);
-            Debug.Suxfix = "com.reynarzz.gfs:CONSOLE ";
-            _reader = OpenBundleBinary("Assets/GameData.gfs");
 
-            var view = (GLKView)View;
+             Debug.Prefix = "com.reynarzz.gfs:CONSOLE ";
+            _reader = OpenBundleBinary("Assets/GameData.gfs");
 
             nfloat widthPoints = view.Bounds.Width;
             nfloat heightPoints = view.Bounds.Height;
@@ -76,12 +71,36 @@ namespace Engine.IOS
 
             PhysicalWidth = Width;
             PhysicalHeight = Height;
+           
+        }
+
+        public override void ViewDidAppear(bool animated)
+        {
+            base.ViewDidAppear(animated);
+
+            EAGLContext.SetCurrentContext(_context);
+
+            try
+            {
+                _engine = new GFSEngine(this, new GameApplication(), _reader);
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e.ToString());
+            }
         }
 
         private BinaryReader OpenBundleBinary(string relativePath)
         {
             var path = Path.Combine(NSBundle.MainBundle.ResourcePath, relativePath);
             return new BinaryReader(File.OpenRead(path));
+        }
+
+        int ReadInt32BE(BinaryReader r)
+        {
+            var b = r.ReadBytes(4);
+            Array.Reverse(b);
+            return BitConverter.ToInt32(b, 0);
         }
         
         public override void Update()
@@ -93,7 +112,8 @@ namespace Engine.IOS
         {
             if (_engine == null)
             {
-                 _engine = new GFSEngine(this, new GameApplication(), _reader);
+               
+
             }
             else
             {
