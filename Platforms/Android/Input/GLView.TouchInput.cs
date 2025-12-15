@@ -49,7 +49,7 @@ namespace Engine.Android
                         SetTouchState(e.GetPointerId(index), position, TouchEvent.Down);
 
                         Debug.Log($"Pointer id: '{id}' down");
-                        Input.MousePosition = position;
+                        // --Input.MousePosition = position;
 
                         break;
                     }

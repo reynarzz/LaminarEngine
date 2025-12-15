@@ -41,8 +41,6 @@ namespace Engine.Android
             }
             //else
             //{
-
-
             //    Console.WriteLine("Exist GameDataPath: " + gameDataFilePath);
             //}
 
@@ -68,7 +66,7 @@ namespace Engine.Android
         {
             if (_engine == null)
             {
-                _engine = new GFSEngine(_glView, new GameApplication(), _reader);
+                _engine = new GFSEngine(_glView, new GameApplication(), new InputLayerAndroid(), _reader);
             }
             else
             {

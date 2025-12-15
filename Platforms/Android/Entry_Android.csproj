@@ -57,7 +57,7 @@
 	</PropertyGroup>
 
 
-	<Import Project="$(ProjectRoot)Configs/GameCooker.targets"/>
-	<Import Project="$(ProjectRoot)Configs/Android.publish.platforms.targets"/>
+	<Import Condition="$(BuildAndroid)=='true'" Project="$(ProjectRoot)Configs/GameCooker.targets"/>
+	<Import Condition="$(BuildAndroid)=='true'" Project="$(ProjectRoot)Configs/Android.publish.platforms.targets"/>
 	
 </Project>

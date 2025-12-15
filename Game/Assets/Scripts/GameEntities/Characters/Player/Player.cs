@@ -183,25 +183,25 @@ namespace Game
                     EndJump();
                 }
 
-                if(TouchInput.TouchCount > 0)
-                {
-                    if(TouchInput.GetTouch(0).Type == TouchEvent.Down)
-                    {
-                        BeginJump();
+                //if(Input.Touch.TouchCount > 0)
+                //{
+                //    if(TouchInput.GetTouch(0).Type == TouchEvent.Down)
+                //    {
+                //        BeginJump();
 
-                        // Remove this, just testing for android.
-                        if (_shootCooldownTime <= 0)
-                        {
-                            _shootCooldownTime = _shootCooldown;
-                            Attack();
-                        }
-                    }
-                    else if(TouchInput.GetTouch(0).Type == TouchEvent.Up)
-                    {
-                        EndJump();
-                    }
+                //        // Remove this, just testing for android.
+                //        if (_shootCooldownTime <= 0)
+                //        {
+                //            _shootCooldownTime = _shootCooldown;
+                //            Attack();
+                //        }
+                //    }
+                //    else if(TouchInput.GetTouch(0).Type == TouchEvent.Up)
+                //    {
+                //        EndJump();
+                //    }
 
-                }
+                //}
 
                 if (Input.GetKey(KeyCode.F) && _shootCooldownTime <= 0)
                 {
