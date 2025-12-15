@@ -25,16 +25,17 @@ namespace Engine.Layers
 
         public override void Initialize()
         {
-            _engine = new MiniAudioEngine();
-            var defaultDevice = _engine.PlaybackDevices?.FirstOrDefault(x => x.IsDefault) ?? default;
-            
-            if (!defaultDevice.IsDefault)
-            {
-                Debug.Warn($"No default playback device found. Using first available, Total: {_engine.PlaybackDevices.Length}");
-            }
-
+          
             try
             {
+                _engine = new MiniAudioEngine();
+                var defaultDevice = _engine.PlaybackDevices?.FirstOrDefault(x => x.IsDefault) ?? default;
+            
+                if (!defaultDevice.IsDefault)
+                {
+                    Debug.Warn($"No default playback device found. Using first available, Total: {_engine.PlaybackDevices.Length}");
+                }
+
                 _currentDevice = _engine.InitializePlaybackDevice(defaultDevice, _defaultFormat);
                 _currentDevice.Start();
             }
@@ -45,11 +46,11 @@ namespace Engine.Layers
 
             var mixer = new Mixer(_engine, _defaultFormat, true);
             _masterMixer = new AudioMixer("Master", mixer);
-
+     
             // Effects:
             // ParametricEqualizer 
         }
-
+            
         internal override void UpdateLayer()
         {
             base.UpdateLayer();

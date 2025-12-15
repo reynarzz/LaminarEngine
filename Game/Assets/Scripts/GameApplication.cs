@@ -57,6 +57,7 @@ namespace Game
             Screen.IsFullScreen = true;
             WindowManager.Window.CursorVisible = false;
 #endif
+            Debug.Log("Init game app");
             new Actor<LaunchScreen>("Launch Screen");
         }
 

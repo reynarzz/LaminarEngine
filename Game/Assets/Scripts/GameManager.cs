@@ -128,6 +128,7 @@ namespace Game
 
                 // Begin from first level.
                 BuildLevel(levelIndex: 0);
+                Debug.Log("level loaded");
             }
             // StartCoroutine(next());
         }

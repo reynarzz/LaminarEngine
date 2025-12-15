@@ -52,17 +52,27 @@ namespace Engine.IOS
             // Create an OpenGL ES 3.0 context
             _context = new EAGLContext(EAGLRenderingAPI.OpenGLES3);
 
-            var view = (GLKView)View;
-            view.Context = _context;
-            view.DrawableDepthFormat = GLKViewDrawableDepthFormat.Format24;
+            var glkView = new GLKView(View.Frame, _context)
+            {
+                DrawableColorFormat = GLKViewDrawableColorFormat.RGBA8888,
+                DrawableDepthFormat = GLKViewDrawableDepthFormat.Format24,
+                DrawableStencilFormat = GLKViewDrawableStencilFormat.Format8
+            };
 
-            EAGLContext.SetCurrentContext(_context);
+            if (!EAGLContext.SetCurrentContext(_context))
+            {
+                Debug.Error("Cannot create opengl context");
+            }
 
+            // Force drawable creation
+            glkView.BindDrawable();
+
+            View = glkView;
              Debug.Prefix = "com.reynarzz.gfs:CONSOLE ";
             _reader = OpenBundleBinary("Assets/GameData.gfs");
 
-            nfloat widthPoints = view.Bounds.Width;
-            nfloat heightPoints = view.Bounds.Height;
+            nfloat widthPoints = glkView.Bounds.Width;
+            nfloat heightPoints = glkView.Bounds.Height;
 
             nfloat scale = UIScreen.MainScreen.Scale;
 
@@ -77,17 +87,13 @@ namespace Engine.IOS
         public override void ViewDidAppear(bool animated)
         {
             base.ViewDidAppear(animated);
+            var glkView = (GLKView)View;
 
             EAGLContext.SetCurrentContext(_context);
 
-            try
-            {
-                _engine = new GFSEngine(this, new GameApplication(), _reader);
-            }
-            catch (Exception e)
-            {
-                Debug.Log(e.ToString());
-            }
+            // Force drawable creation
+            glkView.BindDrawable();
+           
         }
 
         private BinaryReader OpenBundleBinary(string relativePath)
@@ -112,12 +118,28 @@ namespace Engine.IOS
         {
             if (_engine == null)
             {
+                unsafe
+                {
+                     int fbo = 0;
+                glGetIntegerv(GL_FRAMEBUFFER_BINDING, &fbo);
+                glBindFramebuffer(GL_FRAMEBUFFER, (uint)fbo);
+                 glBindFramebuffer(GL_DRAW_FRAMEBUFFER, (uint)fbo);
                
-
+                }
+               
+              
+                try
+                {
+                    _engine = new GFSEngine(this, new GameApplication(), _reader);
+                }
+                catch (Exception e)
+                {
+                    Debug.Log(e.ToString());
+                }
             }
             else
             {
-               // _engine.Update();
+               _engine.Update();
             }
         }
 
