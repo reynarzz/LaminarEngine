@@ -28,7 +28,7 @@ namespace Engine
         public static int TouchCount { get; internal set; } = 0;
         internal static TouchState[] _state = new TouchState[20];
 
-        public static ref TouchState GetTouch(int index)
+        public ref TouchState GetTouch(int index)
         {
             return ref _state[index];
         }

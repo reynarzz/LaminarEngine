@@ -1,4 +1,5 @@
 ﻿using Engine;
+using Engine.Layers.Input;
 using Game;
 using SharedTypes;
 
@@ -74,7 +75,9 @@ namespace Sandbox
                 MatchingFiles = releaseAssetsList
             });
 #endif
-            new GFSEngine(new Window("GFS | By Reynardo Perez", 1024, 576, Color.Black), new GameApplication()).Run();
+            new GFSEngine(new Window("GFS | By Reynardo Perez", 1024, 576, Color.Black), 
+                          new GameApplication(), 
+                          new InputStandAlonePlatform()).Run();
 
             _mutex.ReleaseMutex();
         }

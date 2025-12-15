@@ -1,6 +1,6 @@
 ﻿using Engine.Graphics;
-using Engine.Graphics.OpenGL;
 using Engine.Layers;
+using Engine.Layers.Input;
 using Engine.Utils;
 using System.Text;
 
@@ -10,13 +10,14 @@ namespace Engine
     {
         private LayersManager _layersManager;
         internal static BinaryReader AssetFileStream { get; private set; }
-        public GFSEngine(IWindow window, ApplicationLayer appLayer) : this(window, appLayer, null)
-        {
-
-        }
-        public GFSEngine(IWindow window, ApplicationLayer appLayer, BinaryReader assetFileStream)
+        public GFSEngine(IWindow window, ApplicationLayer appLayer, InputLayerBase input) :
+            this(window, appLayer, input, null)
+        { }
+      
+        public GFSEngine(IWindow window, ApplicationLayer appLayer, InputLayerBase input, BinaryReader assetFileStream)
         {
             WindowManager.Window = window;
+            Input.CurrentInput = input;
             AssetFileStream = assetFileStream;
 
             window.OnWindowChanged += (x, y) => _layersManager.Update();
@@ -24,7 +25,7 @@ namespace Engine
             if (window.IsInitialized)
             {
                 _layersManager = new LayersManager([new TimeLayer(),
-                                                    new Input(),
+                                                    input,
                                                     appLayer,
                                                     new MainThreadDispatcher(),
                                                     new SceneLayer(),
