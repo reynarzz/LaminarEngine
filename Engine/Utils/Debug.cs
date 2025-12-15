@@ -22,7 +22,7 @@ namespace Engine
         }
 
         private static readonly object _lock = new object();
-
+        public static string Suxfix { get; set; } = "";
         public static void Info<T>(T message,
                                 [CallerFilePath] string file = "",
                                 [CallerLineNumber] int line = 0,
@@ -85,7 +85,7 @@ namespace Engine
                 string timestamp = DateTime.Now.ToString("HH:mm:ss");
                 string filename = System.IO.Path.GetFileName(file);
                 //Console.WriteLine($"[{timestamp}] [{level}] {filename}:{line} ({member}) - {message}");
-                Console.WriteLine($"[{timestamp}] [{level}] [{filename}:{line}] {message}");
+                Console.WriteLine($"{Suxfix}[{timestamp}] [{level}] [{filename}:{line}] {message}");
 #if !MOBILE
                 Console.ForegroundColor = prevColor;
 #endif

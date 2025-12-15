@@ -61,7 +61,7 @@ namespace Engine.IOS
             View = glkView;
 
             EAGLContext.SetCurrentContext(_context);
-
+            Debug.Suxfix = "com.reynarzz.gfs:CONSOLE ";
             _reader = OpenBundleBinary("Assets/GameData.gfs");
 
             var view = (GLKView)View;
@@ -80,8 +80,8 @@ namespace Engine.IOS
 
         private BinaryReader OpenBundleBinary(string relativePath)
         {
-            var path = Path.Combine(NSBundle.MainBundle.BundlePath, relativePath);
-            return new BinaryReader(File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read));
+            var path = Path.Combine(NSBundle.MainBundle.ResourcePath, relativePath);
+            return new BinaryReader(File.OpenRead(path));
         }
         
         public override void Update()
@@ -93,11 +93,11 @@ namespace Engine.IOS
         {
             if (_engine == null)
             {
-                _engine = new GFSEngine(this, new GameApplication(), _reader);
+                 _engine = new GFSEngine(this, new GameApplication(), _reader);
             }
             else
             {
-                _engine.Update();
+               // _engine.Update();
             }
         }
 
