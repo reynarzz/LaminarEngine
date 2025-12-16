@@ -12,6 +12,7 @@ namespace Engine
         internal static InputLayerBase CurrentInput { get; set; }
       
         public static TouchInput Touch => CurrentInput.Touch;
+        public static GamepadInput Gamepad => CurrentInput.Gamepad;
         public static vec2 MousePosition => CurrentInput.MousePosition;
 
         public static bool GetKey(KeyCode key)

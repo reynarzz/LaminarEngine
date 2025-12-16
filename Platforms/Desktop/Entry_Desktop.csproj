@@ -9,8 +9,6 @@
     <InvariantGlobalization>true</InvariantGlobalization>
 	<ApplicationIcon>Icon.ico</ApplicationIcon>
 	<GameCookerBeforeBuildStage>Publish</GameCookerBeforeBuildStage>
-	<PublishPlatform>win32</PublishPlatform>
-
   </PropertyGroup>
 
 	<PropertyGroup>

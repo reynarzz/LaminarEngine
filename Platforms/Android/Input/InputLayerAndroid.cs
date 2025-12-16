@@ -183,6 +183,8 @@ namespace Engine.Android
                         {
                             ref var state = ref _touchInput.State[slot];
                             state.Position = new vec2(e.GetX(index), e.GetY(index));
+                            state.Delta = state.Position - state.PrevPosition;
+                            state.PrevPosition = state.Position;
                             state.Type = TouchEvent.Up;
                             _pointerToSlot.Remove(pointerId);
                         }

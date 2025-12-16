@@ -229,6 +229,7 @@ namespace Game
             {
                 HitDamage(this, 1);
             }
+
 #endif
         }
         private int _walkPointerId = -1;
@@ -270,12 +271,9 @@ namespace Game
                     {
                         if (pointerPos.y < 0.5f)
                         {
-
                             if (touch.Type == TouchEvent.Down)
                             {
                                 BeginJump();
-
-
                             }
                             else if (touch.Type == TouchEvent.Up)
                             {
@@ -299,6 +297,7 @@ namespace Game
                 _walkPointerId = -1;
             }
         }
+
         public override bool Attack(int index = 0)
         {
             if (!IsCharacterAlive())

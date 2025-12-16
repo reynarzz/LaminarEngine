@@ -40,6 +40,10 @@
 		<PackageReference Include="Xamarin.GooglePlayServices.Base" Version="118.9.0" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Assets\" />
+	</ItemGroup>
+
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
 		<GameCookerBeforeBuildStage>Compile</GameCookerBeforeBuildStage>
 		<AddAssetsFolder>false</AddAssetsFolder>
@@ -47,7 +51,7 @@
 
 	<Target Name="AddAssets" AfterTargets="$(GameCookerBeforeBuildStage)" Condition="'$(AddAssetsFolder)' == 'true'">
 		<ItemGroup>
-			<AndroidAsset Include="Assets\**\*.*"  />
+			<AndroidAsset Include="Assets\**\*.*" />
 		</ItemGroup>
 	</Target>
 
