@@ -54,6 +54,7 @@ namespace Engine.Android
                     case TouchEvent.Up:
                         if (!state.IsUpEventConsumed)
                         {
+                            activeCount++;
                             state.IsUpEventConsumed = true;
                         }
                         else

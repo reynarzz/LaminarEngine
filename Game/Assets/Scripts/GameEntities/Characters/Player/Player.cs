@@ -24,7 +24,7 @@ namespace Game
         {
             Inventory = new PlayerInventory(config.InventoryMaxSlots, 4);
             GameUIManager.Inventory.InitInventory(Inventory);
-            
+
             base.Init(config);
             var box = AddComponent<BoxCollider2D>();
             box.Size = new vec2(0.95f, 0.6f);
@@ -55,7 +55,7 @@ namespace Game
 
             states.Attack.Events = [new AnimEvent { Time = 0, Callback = PlayAttackSFX }];
             states.Walk.Events = [new AnimEvent { Time = 0, Callback = PlayWalkSFX }, new AnimEvent { Time = (1.0f / fps) * 4, Callback = PlayWalkSFX }];
-          //  states.Jump.Events = [new AnimEvent { Time = 0, Callback = PlayJumpSoundFx }];
+            //  states.Jump.Events = [new AnimEvent { Time = 0, Callback = PlayJumpSoundFx }];
 
             InitAnimationStates(states);
 
@@ -92,7 +92,7 @@ namespace Game
                 return;
             Renderer.IsEnabled = false;
             _canMove = false;
-            
+
             IEnumerator ExitFromDoor()
             {
                 Debug.Log("Open");
@@ -104,6 +104,7 @@ namespace Game
                 yield return new WaitForSeconds(0.4f);
                 door.Close();
                 Animator.Play(IDLE_ANIM_STATE);
+                Walk(0);
                 _canMove = true;
                 IsEnteringThroughDoor = false;
             }
@@ -173,6 +174,7 @@ namespace Game
 
             if (_canMove)
             {
+#if DESKTOP
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
                     BeginJump();
@@ -181,26 +183,6 @@ namespace Game
                 {
 
                     EndJump();
-                }
-
-                //if(Input.Touch.TouchCount > 0)
-                {
-                    if(Input.Touch.GetTouch(0).Type == TouchEvent.Down)
-                    {
-                        BeginJump();
-
-                        // Remove this, just testing for android.
-                        if (_shootCooldownTime <= 0)
-                        {
-                            _shootCooldownTime = _shootCooldown;
-                            Attack();
-                        }
-                    }
-                    else if(Input.Touch.GetTouch(0).Type == TouchEvent.Up)
-                    {
-                        EndJump();
-                    }
-
                 }
 
                 if (Input.GetKey(KeyCode.F) && _shootCooldownTime <= 0)
@@ -221,6 +203,9 @@ namespace Game
                 {
                     Walk(0);
                 }
+#elif MOBILE
+                TouchInput();
+#endif
             }
 
 #if DEBUG
@@ -239,6 +224,67 @@ namespace Game
 #endif
         }
 
+        private void TouchInput()
+        {
+            vec2 Normalize(vec2 pointerPos)
+            {
+                return pointerPos / new vec2(Screen.Width, Screen.Height);
+            }
+            if (Input.Touch.TouchCount > 0)
+            {
+
+                for (int i = 0; i < Input.Touch.TouchCount; i++)
+                {
+                    ref var touch = ref Input.Touch.GetTouch(i);
+                    var pointerPos = Normalize(touch.Position);
+
+                    if (pointerPos.x < 0.2f)
+                    {
+                        Walk(-1);
+                    }
+                    else if (pointerPos.x > 0.2f && pointerPos.x < 0.4f)
+                    {
+                        Walk(1);
+                    }
+                    else
+                    {
+                        Walk(0);
+                    }
+
+                    if (pointerPos.x > 0.8f)
+                    {
+                        if (pointerPos.y < 0.5f)
+                        {
+
+                            if (touch.Type == TouchEvent.Down)
+                            {
+                                BeginJump();
+
+
+                            }
+                            else if (touch.Type == TouchEvent.Up)
+                            {
+                                EndJump();
+                            }
+                        }
+                        else
+                        {
+                            // Remove this, just testing for android.
+                            if (_shootCooldownTime <= 0)
+                            {
+                                _shootCooldownTime = _shootCooldown;
+                                Attack();
+                            }
+                        }
+                    }
+                    
+                }
+            }
+            else
+            {
+                Walk(0);
+            }
+        }
         public override bool Attack(int index = 0)
         {
             if (!IsCharacterAlive())
