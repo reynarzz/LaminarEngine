@@ -244,7 +244,7 @@ namespace Game
                     ref var touch = ref Input.Touch.GetTouch(i);
                     var pointerPos = Normalize(touch.Position);
 
-                    var activellYPressing = (touch.Type == TouchEvent.Down || touch.Type == TouchEvent.Pressed || touch.Type == TouchEvent.Move);
+                    var activellYPressing = (touch.Type == TouchEvent.Down || touch.Type == TouchEvent.Stationary || touch.Type == TouchEvent.Move);
                     if (pointerPos.x < 0.2f && pointerPos.y > 0.5f && activellYPressing)
                     {
                         _walkPointerId = touch.PointerId;

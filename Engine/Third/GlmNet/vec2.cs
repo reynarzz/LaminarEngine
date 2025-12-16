@@ -25,13 +25,8 @@ namespace GlmNet
                 return len > 0f ? this / len : Zero;
             }
         }
-        public float Magnitude
-        {
-            get
-            {
-                return MathF.Sqrt(x * x + y * y);
-            }
-        }
+
+        public float Magnitude => MathF.Sqrt(x * x + y * y);
 
         public float SqrMagnitude
         {

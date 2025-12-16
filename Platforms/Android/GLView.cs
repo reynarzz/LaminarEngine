@@ -41,6 +41,7 @@ namespace Engine.Android
 
             // Render continuously
             RenderMode = Rendermode.Continuously;
+            PreserveEGLContextOnPause = true;
 
             PhysicalWidth = Width;
             PhysicalHeight = Height;
@@ -52,6 +53,17 @@ namespace Engine.Android
             PhysicalHeight = height;
             OnWindowChanged?.Invoke(width, height);
         }
+        public override void OnPause()
+        {
+
+            base.OnPause();
+        }
+
+        public override void OnResume()
+        {
+            base.OnResume();
+        }
+
         public override bool OnTouchEvent(MotionEvent? e)
         {
             return _system.OnTouchEvent(e);

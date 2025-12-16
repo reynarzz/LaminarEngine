@@ -11,7 +11,7 @@ namespace Engine
     {
         None,
         Down,
-        Pressed,
+        Stationary,
         Up,
         Move,
         Cancel,
@@ -22,8 +22,11 @@ namespace Engine
         public int PointerId;
         public TouchEvent Type;
         public vec2 Position;
+        public vec2 Delta;
         internal bool IsDownEventConsumed;
         internal bool IsUpEventConsumed;
+        internal vec2 PrevPosition;
+        internal long LastMoveTimeMs;
     }
 
     public class TouchInput

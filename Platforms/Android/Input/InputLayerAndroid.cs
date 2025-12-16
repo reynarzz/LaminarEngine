@@ -1,4 +1,5 @@
-﻿using Android.Runtime;
+﻿using Android.OS;
+using Android.Runtime;
 using Android.Views;
 using GlmNet;
 using System;
@@ -16,6 +17,7 @@ namespace Engine.Android
         private readonly TouchInput _touchInput;
         private vec2 _mousePosition;
         private readonly Dictionary<int, int> _pointerToSlot = new();
+        private const float _deathZone = 0.001f;
 
         public InputLayerAndroid()
         {
@@ -44,11 +46,24 @@ namespace Engine.Android
                         }
                         else
                         {
-                            state.Type = TouchEvent.Pressed;
+                            state.Type = TouchEvent.Stationary;
                         }
                         activeCount++;
                         break;
+                    case TouchEvent.Stationary:
+                        activeCount++;
+                        break;
                     case TouchEvent.Move:
+
+                        const long MoveStopDelayMs = 80;
+
+                        long now = SystemClock.UptimeMillis();
+
+                        if (now - state.LastMoveTimeMs > MoveStopDelayMs)
+                        {
+                            state.Type = TouchEvent.Stationary;
+                            state.Delta = vec2.Zero;
+                        }
                         activeCount++;
                         break;
                     case TouchEvent.Up:
@@ -64,45 +79,19 @@ namespace Engine.Android
                             state.IsUpEventConsumed = false;
                             state.IsDownEventConsumed = false;
                             state.Position = vec2.Zero;
+                            state.Delta = vec2.Zero;
+                            state.PrevPosition = vec2.Zero;
                         }
-                        
+
                         break;
                 }
             }
 
             _touchInput.TouchCount = activeCount;
-            Debug.Log("Touch count: " + activeCount);
-            Debug.Log("is down 0: " + (_touchInput.GetTouch(0).Type == TouchEvent.Down));
-        }
+            var touch = _touchInput.GetTouch(0);
 
-        public override bool GetKey(KeyCode key)
-        {
-            return false;
-        }
-
-        public override bool GetKeyDown(KeyCode key)
-        {
-            return false;
-        }
-
-        public override bool GetKeyUp(KeyCode key)
-        {
-            return false;
-        }
-
-        public override bool GetMouse(MouseButton button)
-        {
-            return false;
-        }
-
-        public override bool GetMouseDown(MouseButton button)
-        {
-            return false;
-        }
-
-        public override bool GetMouseUp(MouseButton button)
-        {
-            return false;
+            //Debug.Log("Touch count: " + activeCount);
+            Debug.Log("0 state: " + (touch.Type.ToString()) + ", pos: " + touch.Position + ", delta: " + touch.Delta.ToString());
         }
 
         private int AllocateSlot(int pointerId)
@@ -124,28 +113,6 @@ namespace Engine.Android
         private int GetSlot(int pointerId)
         {
             return _pointerToSlot.TryGetValue(pointerId, out var slot) ? slot : -1;
-        }
-
-        public void OnGenericMotionEvent(MotionEvent? e)
-        {
-            if ((e.Source & InputSourceType.Joystick) != 0 &&
-                 e.Action == MotionEventActions.Move)
-            {
-                float lx = e.GetAxisValue(Axis.X);
-                float ly = e.GetAxisValue(Axis.Y);
-                float rx = e.GetAxisValue(Axis.Rx);
-                float ry = e.GetAxisValue(Axis.Ry);
-            }
-        }
-
-        public bool OnKeyDown([GeneratedEnum] Keycode keyCode, KeyEvent? e)
-        {
-            return true;
-        }
-
-        public bool OnKeyUp([GeneratedEnum] Keycode keyCode, KeyEvent? e)
-        {
-            return true;
         }
 
         public bool OnTouchEvent(MotionEvent? e)
@@ -174,6 +141,7 @@ namespace Engine.Android
                         ref var state = ref _touchInput.State[slot];
 
                         state.Position = pos;
+                        state.PrevPosition = pos;
                         state.Type = TouchEvent.Down;
 
                         _mousePosition = pos;
@@ -193,11 +161,15 @@ namespace Engine.Android
 
                             ref var state = ref _touchInput.State[slot];
                             state.Position = new vec2(e.GetX(i), e.GetY(i));
-
-                            if (state.Type != TouchEvent.Down)
+                            state.Delta = state.Position - state.PrevPosition;
+                            state.PrevPosition = state.Position;
+                            state.LastMoveTimeMs = SystemClock.UptimeMillis();
+                            if (state.Type != TouchEvent.Down && state.Delta.Magnitude > _deathZone)
                             {
                                 state.Type = TouchEvent.Move;
                             }
+
+                            _mousePosition = state.Position;
                         }
 
                         // TODO: Set mouse position for finger id.
@@ -231,6 +203,60 @@ namespace Engine.Android
 
             return true;
         }
+
+
+        public void OnGenericMotionEvent(MotionEvent? e)
+        {
+            if ((e.Source & InputSourceType.Joystick) != 0 &&
+                 e.Action == MotionEventActions.Move)
+            {
+                float lx = e.GetAxisValue(Axis.X);
+                float ly = e.GetAxisValue(Axis.Y);
+                float rx = e.GetAxisValue(Axis.Rx);
+                float ry = e.GetAxisValue(Axis.Ry);
+            }
+        }
+
+        public bool OnKeyDown([GeneratedEnum] Keycode keyCode, KeyEvent? e)
+        {
+            return true;
+        }
+
+        public bool OnKeyUp([GeneratedEnum] Keycode keyCode, KeyEvent? e)
+        {
+            return true;
+        }
+
+        public override bool GetKey(KeyCode key)
+        {
+            return false;
+        }
+
+        public override bool GetKeyDown(KeyCode key)
+        {
+            return false;
+        }
+
+        public override bool GetKeyUp(KeyCode key)
+        {
+            return false;
+        }
+
+        public override bool GetMouse(MouseButton button)
+        {
+            return false;
+        }
+
+        public override bool GetMouseDown(MouseButton button)
+        {
+            return false;
+        }
+
+        public override bool GetMouseUp(MouseButton button)
+        {
+            return false;
+        }
+
 
         public override void Close()
         {
