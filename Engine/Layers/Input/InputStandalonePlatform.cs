@@ -18,6 +18,7 @@ namespace Engine.Layers.Input
         public override vec2 MousePosition => _mousePos;
 
         public override TouchInput Touch { get; } = new TouchInput();
+        public override GamepadInput Gamepad { get; } = new GamepadInput();
 
         private KeyCode[] _keyCodesArray;
         private MouseButton[] _mouseButtonsArray;

@@ -124,6 +124,7 @@ namespace Game
                     yield break;
                 }
                 var walkDir = door.Transform.WorldPosition.x - Transform.WorldPosition.x;
+
                 while (Math.Abs(walkDir) > 0.1f)
                 {
                     walkDir = door.Transform.WorldPosition.x - Transform.WorldPosition.x;
@@ -259,8 +260,7 @@ namespace Game
                     {
                         Interact();
                     }
-
-                    if ((touch.Type == TouchEvent.Up && _walkPointerId == touch.PointerId) || _walkPointerId == -1)
+                    else if ((touch.Type == TouchEvent.Up && _walkPointerId == touch.PointerId) || _walkPointerId == -1)
                     {
                         _walkPointerId = -1;
                         Walk(0);
@@ -284,7 +284,6 @@ namespace Game
                         }
                         else
                         {
-                            // Remove this, just testing for android.
                             if (_shootCooldownTime <= 0)
                             {
                                 _shootCooldownTime = _shootCooldown;
@@ -297,6 +296,7 @@ namespace Game
             else
             {
                 Walk(0);
+                _walkPointerId = -1;
             }
         }
         public override bool Attack(int index = 0)

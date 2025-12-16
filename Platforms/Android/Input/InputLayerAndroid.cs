@@ -12,21 +12,24 @@ namespace Engine.Android
     internal class InputLayerAndroid : InputLayerBase
     {
         public override TouchInput Touch => _touchInput;
+        public override GamepadInput Gamepad => _gamepad;
         public override vec2 MousePosition => _mousePosition;
 
         private readonly TouchInput _touchInput;
-        private vec2 _mousePosition;
-        private readonly Dictionary<int, int> _pointerToSlot = new();
+        private readonly GamepadInput _gamepad;
+        private readonly Dictionary<int, int> _pointerToSlot;
         private const float _deathZone = 0.001f;
+        private vec2 _mousePosition;
 
         public InputLayerAndroid()
         {
-            _touchInput = new TouchInput();
+            _touchInput = new();
+            _gamepad = new();
+            _pointerToSlot = new();
         }
 
         public override void Initialize()
         {
-
         }
 
         internal override void UpdateLayer()
@@ -88,10 +91,6 @@ namespace Engine.Android
             }
 
             _touchInput.TouchCount = activeCount;
-            var touch = _touchInput.GetTouch(0);
-
-            //Debug.Log("Touch count: " + activeCount);
-            Debug.Log("0 state: " + (touch.Type.ToString()) + ", pos: " + touch.Position + ", delta: " + touch.Delta.ToString());
         }
 
         private int AllocateSlot(int pointerId)
@@ -205,25 +204,101 @@ namespace Engine.Android
         }
 
 
-        public void OnGenericMotionEvent(MotionEvent? e)
+        public bool OnGenericMotionEvent(MotionEvent e)
         {
-            if ((e.Source & InputSourceType.Joystick) != 0 &&
-                 e.Action == MotionEventActions.Move)
+            const InputSourceType GamepadSources = InputSourceType.Gamepad | InputSourceType.Joystick | InputSourceType.Dpad;
+
+            if ((e.Source & GamepadSources) == 0)
+                return false;
+
+            if (e.Action != MotionEventActions.Move)
+                return false;
+
+            float lx = GetAxis(e, Axis.X);
+            float ly = -GetAxis(e, Axis.Y);
+
+            float rx = GetAxis(e, Axis.Z);
+            float ry = -GetAxis(e, Axis.Rz);
+
+            float lt = GetTrigger(e, Axis.Ltrigger);
+            float rt = GetTrigger(e, Axis.Rtrigger);
+
+            return true;
+        }
+        private float GetAxis(MotionEvent e, Axis axis)
+        {
+            var range = e.Device.GetMotionRange(axis, e.Source);
+            if (range == null)
             {
-                float lx = e.GetAxisValue(Axis.X);
-                float ly = e.GetAxisValue(Axis.Y);
-                float rx = e.GetAxisValue(Axis.Rx);
-                float ry = e.GetAxisValue(Axis.Ry);
+                return 0f;
             }
+
+            float v = e.GetAxisValue(axis);
+
+            if (Math.Abs(v) < range.Flat)
+            {
+                return 0f;
+            }
+
+            return v;
+        }
+
+        private float GetTrigger(MotionEvent e, Axis axis)
+        {
+            var range = e.Device.GetMotionRange(axis, e.Source);
+            if (range == null)
+                return 0f;
+
+            return Math.Max(0f, e.GetAxisValue(axis));
         }
 
         public bool OnKeyDown([GeneratedEnum] Keycode keyCode, KeyEvent? e)
         {
-            return true;
+            HandleGamePadButton(keyCode, e);
+            return false;
+        }
+
+        private bool HandleGamePadButton([GeneratedEnum] Keycode keyCode, KeyEvent? e)
+        {
+            // TODO: Send these button events to class Gamepad.
+
+            if ((e.Source & InputSourceType.Gamepad) == 0)
+                return false;
+
+            var gamepadId = e.DeviceId;
+
+            switch (keyCode)
+            {
+                case Keycode.ButtonA:     // Xbox A / PS Cross
+                case Keycode.ButtonB:     // Xbox B / PS Circle
+                case Keycode.ButtonX:     // Xbox X / PS Square
+                case Keycode.ButtonY:     // Xbox Y / PS Triangle
+
+                case Keycode.ButtonL1:
+                case Keycode.ButtonR1:
+                case Keycode.ButtonL2:
+                case Keycode.ButtonR2:
+
+                case Keycode.ButtonStart:
+                case Keycode.ButtonSelect:
+                case Keycode.ButtonMode:
+                case Keycode.ButtonThumbl:
+                case Keycode.ButtonThumbr:
+
+
+                    // Button down
+                    return true;
+            }
+
+            return false;
         }
 
         public bool OnKeyUp([GeneratedEnum] Keycode keyCode, KeyEvent? e)
         {
+            if ((e.Source & InputSourceType.Gamepad) == 0)
+                return false;
+
+            // TODO: 
             return true;
         }
 
@@ -246,7 +321,6 @@ namespace Engine.Android
         {
             return false;
         }
-
         public override bool GetMouseDown(MouseButton button)
         {
             return false;

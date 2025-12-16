@@ -81,9 +81,7 @@ namespace Engine.Android
 
         public override bool OnGenericMotionEvent(MotionEvent? e)
         {
-            _system.OnGenericMotionEvent(e);
-
-            return base.OnGenericMotionEvent(e);
+            return _system.OnGenericMotionEvent(e);
         }
 
         public void SetWindowSize(int width, int height)

@@ -463,7 +463,6 @@ namespace Game
             if (dir != 0)
             {
                 LookAt(dir);
-                LookDir = dir;
 
                 float targetX = _characterConfig.WalkSpeed * dir;
                 float accel = 100;

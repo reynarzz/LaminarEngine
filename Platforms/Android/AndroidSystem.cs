@@ -68,9 +68,9 @@ namespace Engine.Android
             return _input.OnKeyUp(keyCode, e);
         }
 
-        public void OnGenericMotionEvent(MotionEvent? e)
+        public bool OnGenericMotionEvent(MotionEvent? e)
         {
-            _input.OnGenericMotionEvent(e);
+            return _input.OnGenericMotionEvent(e);
         }
 
         public void OnDrawFrame()
