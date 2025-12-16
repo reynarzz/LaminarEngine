@@ -146,27 +146,34 @@ namespace Game
             StartCoroutine(WalkToDoor());
         }
 
-        protected override void OnUpdate()
+        private void Interact()
         {
-            if (Input.GetKeyDown(KeyCode.E) && IsCharacterAlive())
-            {
-                if (_nearInteractables.Count > 0)
-                {
-                    var interactable = _nearInteractables[^1];
-                    if (interactable.CanInteract(this))
-                    {
-                        _nearInteractables.RemoveAt(_nearInteractables.Count - 1);
+            if (!IsCharacterAlive())
+                return;
 
-                        if (interactable is Door door)
-                        {
-                            MoveToDoor(door);
-                        }
-                        else
-                        {
-                            interactable.TryInteract(this);
-                        }
+            if (_nearInteractables.Count > 0)
+            {
+                var interactable = _nearInteractables[^1];
+                if (interactable.CanInteract(this))
+                {
+                    _nearInteractables.RemoveAt(_nearInteractables.Count - 1);
+
+                    if (interactable is Door door)
+                    {
+                        MoveToDoor(door);
+                    }
+                    else
+                    {
+                        interactable.TryInteract(this);
                     }
                 }
+            }
+        }
+        protected override void OnUpdate()
+        {
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                Interact();
             }
 
             _shootCooldownTime -= Time.DeltaTime;
@@ -223,7 +230,7 @@ namespace Game
             }
 #endif
         }
-
+        private int _walkPointerId = -1;
         private void TouchInput()
         {
             vec2 Normalize(vec2 pointerPos)
@@ -232,22 +239,30 @@ namespace Game
             }
             if (Input.Touch.TouchCount > 0)
             {
-
                 for (int i = 0; i < Input.Touch.TouchCount; i++)
                 {
                     ref var touch = ref Input.Touch.GetTouch(i);
                     var pointerPos = Normalize(touch.Position);
 
-                    if (pointerPos.x < 0.2f)
+                    var activellYPressing = (touch.Type == TouchEvent.Down || touch.Type == TouchEvent.Pressed || touch.Type == TouchEvent.Move);
+                    if (pointerPos.x < 0.2f && pointerPos.y > 0.5f && activellYPressing)
                     {
+                        _walkPointerId = touch.PointerId;
                         Walk(-1);
                     }
-                    else if (pointerPos.x > 0.2f && pointerPos.x < 0.4f)
+                    else if (pointerPos.x > 0.2f && pointerPos.x < 0.4f && pointerPos.y > 0.5f && activellYPressing)
                     {
+                        _walkPointerId = touch.PointerId;
                         Walk(1);
                     }
-                    else
+                    else if (pointerPos.x < 0.2f && pointerPos.y < 0.5f && activellYPressing)
                     {
+                        Interact();
+                    }
+
+                    if ((touch.Type == TouchEvent.Up && _walkPointerId == touch.PointerId) || _walkPointerId == -1)
+                    {
+                        _walkPointerId = -1;
                         Walk(0);
                     }
 
@@ -277,7 +292,6 @@ namespace Game
                             }
                         }
                     }
-                    
                 }
             }
             else

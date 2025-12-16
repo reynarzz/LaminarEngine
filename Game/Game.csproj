@@ -31,15 +31,9 @@
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
 		<DefineConstants>ANDROID;MOBILE;$(DefineConstants)</DefineConstants>
 		<RuntimeIdentifiers>$(RuntimeIdentifiers)</RuntimeIdentifiers>
-		<AndroidUseAapt2>true</AndroidUseAapt2>
+		<AddAssetsFolder>false</AddAssetsFolder>
 	</PropertyGroup>
 
-	<ItemGroup>
-	  <AndroidAsset Include="Assets\**\*.*">
-		<Private>false</Private>
-	  </AndroidAsset>
-	</ItemGroup>
-	
 	<!-- iOS -->
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios'">
 		<DefineConstants>IOS;MOBILE;$(DefineConstants)</DefineConstants>

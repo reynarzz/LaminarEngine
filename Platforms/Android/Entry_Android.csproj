@@ -42,11 +42,12 @@
 
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
 		<GameCookerBeforeBuildStage>Compile</GameCookerBeforeBuildStage>
+		<AddAssetsFolder>false</AddAssetsFolder>
 	</PropertyGroup>
 
-	<Target Name="AddAssets" AfterTargets="$(GameCookerBeforeBuildStage)">
+	<Target Name="AddAssets" AfterTargets="$(GameCookerBeforeBuildStage)" Condition="'$(AddAssetsFolder)' == 'true'">
 		<ItemGroup>
-			<AndroidAsset Include="Assets\**\*.*" />
+			<AndroidAsset Include="Assets\**\*.*"  />
 		</ItemGroup>
 	</Target>
 
