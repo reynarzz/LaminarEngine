@@ -10,6 +10,7 @@ Shaders/ScanLines.frag
 Data/ItemsDatabase.csv
 Tilemap/WorldTilemap.ldtk
 Shaders/CTRTv.frag
+Shaders/CTRTv_Cheap.frag
 Shaders/ChromaticAberration.frag
 Shaders/Fade.frag
 Audio/MinifantasyMusic/Goblins_Dance_(Battle).wav

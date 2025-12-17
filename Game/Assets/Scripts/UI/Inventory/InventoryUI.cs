@@ -24,7 +24,7 @@ namespace Game
         private InventorySlotUI[] _slotsUI;
         private GridLayout _gridLayout;
         private bool _isInitialized;
-
+        private UIText _inventoryLabel;
         protected override void OnAwake()
         {
             base.OnAwake();
@@ -56,11 +56,11 @@ namespace Game
             inventoryImage.Color = new Color(0,0,0,  0.05f);
 
 
-            var inventoryTitleText = UiUtils.NewText("inventory title", "Inventory", new vec2(0, -52), inventoryImage.Transform);
-            inventoryTitleText.Fit = TextFit.ExpandToFit;
-            inventoryTitleText.FontSize = 30;
-            inventoryTitleText.OutlineSize = 0;
-            inventoryTitleText.FontResolution = 10;
+            _inventoryLabel = UiUtils.NewText("inventory title", "Inventory", new vec2(0, -52), inventoryImage.Transform);
+            _inventoryLabel.Fit = TextFit.ExpandToFit;
+            _inventoryLabel.FontSize = 30;
+            _inventoryLabel.OutlineSize = 0;
+            _inventoryLabel.FontResolution = 10;
             //inventoryTitleText.Transform.LocalScale = vec3.One * 0.3f;
 
             _gridLayout = new Actor("HorizontalRect").AddComponent<GridLayout>();
@@ -139,7 +139,11 @@ namespace Game
             _gridLayout.RecalculateLayout();
             _fitter.ResizeToFitChildren();
         }
-
+        protected override void OnLateUpdate()
+        {
+            //_inventoryLabel.FontSize = 40;
+            //_inventoryLabel.SetText(((int)Time.FPS).ToString());
+        }
         private void Show(bool show)
         {
             var hidePos = new vec2(-120, 160);

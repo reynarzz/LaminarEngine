@@ -104,7 +104,9 @@ namespace Game
         {
             PostProcessingStack.Clear();
             ScreenGrabTest();
+#if DESKTOP
             PostProcessingStack.Push(new BloomPostProcessing());
+#endif
             ScreenGrabTest3();
             _fadeInOutManager = new Actor("FadeInOutManager").AddComponent<FadeInOutManager>();
             _fadeInOutManager.Transform.Parent = Transform;
@@ -243,7 +245,8 @@ namespace Game
                 BuildLevel(0);
             }
 #endif
-            if (Input.GetKeyDown(KeyCode.Enter))
+            if (Input.GetKeyDown(KeyCode.Enter) ||
+                Input.Gamepad.Main.GetButtonState(GamePadButton.Start) == InputState.Down)
             {
                 _gameUIManger.PauseMenu.OnPause();
             }
@@ -319,7 +322,7 @@ uniform float uOutlineThickness = 0.04f
 
         private void ScreenGrabTest()
         {
-            var screenShader = Shader.FromPath("Shaders/ScreenVert.vert","Shaders/CTRTv.frag");
+            var screenShader = Shader.FromPath("Shaders/ScreenVert.vert","Shaders/CTRTv_Cheap.frag");
             var pass = new PostProcessingSinglePass(screenShader);
 
             pass.SetValue("uBackgroundColor", new vec3(0.07f));
