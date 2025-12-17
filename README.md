@@ -16,6 +16,7 @@ GFS is a 2D video game and game engine built entirely from scratch with **C#**, 
 - Modular architecture for easy expansion.
 - Post-processing stack system (via framebuffer passes)
 - Custom file system (simplified).
+- Gamepads support.
 - Build assets in dev mode (Unity-like import system) and release mode.
 - Cross-platform: Windows, MacOs
 
