@@ -210,7 +210,8 @@ namespace Game
             if (!Input.Gamepad.Main.IsConnected)
                 return;
 
-            if (Input.Gamepad.Main.GetButtonState(GamePadButton.B) == InputState.Down)
+            if (Input.Gamepad.Main.GetButtonState(GamePadButton.B) == InputState.Down ||
+                Input.Gamepad.Main.GetButtonState(GamePadButton.DpadUp) == InputState.Down)
             {
                 Interact();
             }

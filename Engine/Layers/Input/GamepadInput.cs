@@ -73,57 +73,49 @@ namespace Engine
             if (!IsConnected || button == GamePadButton.None)
                 return InputState.None;
 
-            var value = (InputState)(int)State.GetButtonState((GLFW.GamePadButton)(int)button);
+            var state = (InputState)(int)State.GetButtonState((GLFW.GamePadButton)(int)button);
 
-            if (value == InputState.Press)
-            {
-                if (!_buttonPending[button].IsDown)
-                {
-                    var va = _buttonPending[button];
-                    va.IsDown = true;
-                    value = InputState.Down;
-                    _buttonPending[button] = va;
-                }
-                else if (_buttonSent[button].IsDown)
-                {
-                    value = InputState.Press;
-                }
-            }
-            else
-            {
-                var v = _buttonPending[button];
-                v.IsDown = false;
-                _buttonPending[button] = v;
-            }
+            var pendingState = _buttonPending[button];
+            var sendState = _buttonSent[button];
 
-            if (value == InputState.Release)
+            if (state == InputState.Press)
             {
-                if (!_buttonPending[button].IsReleased)
+                if (!pendingState.IsDown)
                 {
-                    var va = _buttonPending[button];
-                    va.IsReleased = true;
-                    _buttonPending[button] = va;
+                    pendingState.IsDown = true;
+                    state = InputState.Down;
                 }
-                else if (_buttonSent[button].IsReleased)
+                else if (sendState.IsDown)
                 {
-                    value = InputState.None;
+                    state = InputState.Press;
                 }
             }
             else
             {
-                var v = _buttonPending[button];
-                v.IsReleased = false;
-                _buttonPending[button] = v;
+                pendingState.IsDown = false;
             }
 
-            return value;
+            if (state == InputState.Release)
+            {
+                if (!pendingState.IsReleased)
+                {
+                    pendingState.IsReleased = true;
+                }
+                else if (sendState.IsReleased)
+                {
+                    state = InputState.None;
+                }
+            }
+            else
+            {
+                pendingState.IsReleased = false;
+            }
+
+            _buttonPending[button] = pendingState;
+
+            return state;
         }
 
-
-        private void CheckState(InputState state, ref bool value)
-        {
-
-        }
         public override float GetAxis(GamePadAxis axis)
         {
             if (!IsConnected || axis == GamePadAxis.None)
