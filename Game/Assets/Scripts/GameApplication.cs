@@ -36,7 +36,7 @@ namespace Game
         // Implement UI (inventory, pause menu)
         // Enemy life UI
         // Implement more enemies.
-        // Save system (custom file format)
+        // Save system: level state (enemies, chests, items), player inventory (custom file format)
         // when a interactable is locked by items show the items needed.
 
         // -Stretch goals:
@@ -50,6 +50,7 @@ namespace Game
         // Leave rendering in the main thread, and move all the layers to another one.
         // Android: Manage opengl context loss.
         // Implement gamepad
+        // Improve performance of contact dispatcher.
 
         public override void Initialize()
         {
