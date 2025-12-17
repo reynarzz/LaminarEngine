@@ -113,6 +113,7 @@ namespace Engine
             });
         }
 
+        // TODO: This should not happen ever, instead a instancing renderer should be used. This is temporal.
         internal static void CreateQuad(ref QuadVertices vertices, QuadUV uvs, float width, float height, vec2 pivot,
                                          ColorPacketRGBA color, mat4 worldMatrix)
         {
