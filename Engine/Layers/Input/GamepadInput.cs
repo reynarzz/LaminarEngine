@@ -45,18 +45,26 @@ namespace Engine
     internal class GamepadStandalone : Gamepad
     {
         internal GLFW.GamePadState State;
-        private Dictionary<GamePadButton, bool> _releasePending;
-        private Dictionary<GamePadButton, bool> _releaseSent;
+
+        public struct ButtonState
+        {
+            public bool IsReleased;
+            public bool IsDown;
+        }
+
+        private Dictionary<GamePadButton, ButtonState> _buttonPending;
+        private Dictionary<GamePadButton, ButtonState> _buttonSent;
+
         public GamepadStandalone()
         {
-            _releaseSent = new Dictionary<GamePadButton, bool>();
-            _releasePending = new Dictionary<GamePadButton, bool>();
+            _buttonSent = new();
+            _buttonPending = new();
             var max = Enum.GetValues(typeof(GamePadButton)).Cast<GamePadButton>().Max() + 1;
 
             for (int i = 0; i < (int)max; i++)
             {
-                _releaseSent.Add((GamePadButton)i, false);
-                _releasePending.Add((GamePadButton)i, false);
+                _buttonSent.Add((GamePadButton)i, default);
+                _buttonPending.Add((GamePadButton)i, default);
             }
         }
 
@@ -64,29 +72,58 @@ namespace Engine
         {
             if (!IsConnected || button == GamePadButton.None)
                 return InputState.None;
-            var glfwButton = (GLFW.GamePadButton)(int)button;
 
-            var value = (InputState)(int)State.GetButtonState(glfwButton);
+            var value = (InputState)(int)State.GetButtonState((GLFW.GamePadButton)(int)button);
+
+            if (value == InputState.Press)
+            {
+                if (!_buttonPending[button].IsDown)
+                {
+                    var va = _buttonPending[button];
+                    va.IsDown = true;
+                    value = InputState.Down;
+                    _buttonPending[button] = va;
+                }
+                else if (_buttonSent[button].IsDown)
+                {
+                    value = InputState.Press;
+                }
+            }
+            else
+            {
+                var v = _buttonPending[button];
+                v.IsDown = false;
+                _buttonPending[button] = v;
+            }
 
             if (value == InputState.Release)
             {
-                if (!_releasePending[button])
+                if (!_buttonPending[button].IsReleased)
                 {
-                    _releasePending[button] = true;
+                    var va = _buttonPending[button];
+                    va.IsReleased = true;
+                    _buttonPending[button] = va;
                 }
-                else if (_releaseSent[button])
+                else if (_buttonSent[button].IsReleased)
                 {
                     value = InputState.None;
                 }
             }
-            else 
+            else
             {
-                _releasePending[button] = false;
+                var v = _buttonPending[button];
+                v.IsReleased = false;
+                _buttonPending[button] = v;
             }
 
             return value;
         }
 
+
+        private void CheckState(InputState state, ref bool value)
+        {
+
+        }
         public override float GetAxis(GamePadAxis axis)
         {
             if (!IsConnected || axis == GamePadAxis.None)
@@ -97,9 +134,9 @@ namespace Engine
 
         internal void OnUpdate()
         {
-            foreach (var (k, v) in _releasePending)
+            foreach (var (k, v) in _buttonPending)
             {
-                _releaseSent[k] = v;
+                _buttonSent[k] = v;
             }
         }
     }

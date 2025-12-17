@@ -172,11 +172,6 @@ namespace Game
         }
         protected override void OnUpdate()
         {
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                Interact();
-            }
-
             _shootCooldownTime -= Time.DeltaTime;
 
 
@@ -215,7 +210,12 @@ namespace Game
             if (!Input.Gamepad.Main.IsConnected)
                 return;
 
-            if (Input.Gamepad.Main.GetButtonState(GamePadButton.A) == InputState.Press)
+            if (Input.Gamepad.Main.GetButtonState(GamePadButton.B) == InputState.Down)
+            {
+                Interact();
+            }
+
+            if (Input.Gamepad.Main.GetButtonState(GamePadButton.A) == InputState.Down)
             {
                 BeginJump();
             }
@@ -246,6 +246,11 @@ namespace Game
 
         private void KeyboardInput()
         {
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                Interact();
+            }
+
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 BeginJump();
