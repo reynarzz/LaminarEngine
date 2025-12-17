@@ -106,8 +106,8 @@ namespace Game
             ScreenGrabTest();
 #if DESKTOP
             PostProcessingStack.Push(new BloomPostProcessing());
-#endif
             ScreenGrabTest3();
+#endif
             _fadeInOutManager = new Actor("FadeInOutManager").AddComponent<FadeInOutManager>();
             _fadeInOutManager.Transform.Parent = Transform;
             _fadeInOutManager.FadeOut(1);

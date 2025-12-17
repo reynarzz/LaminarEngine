@@ -10,6 +10,7 @@ out vec4 fragColor;
 
 uniform sampler2D uScreenGrabTex;
 uniform sampler2D uStarsTex;
+uniform sampler2D uFrameTex;
 
 uniform vec2  uScreenSize;
 uniform vec3  uTime;
@@ -22,33 +23,6 @@ uniform bool  uDotted;
 uniform float uDotSpacing;
 
 uniform float uPixelationAmount;
-
-vec3 getQuadEdgeOutline(vec2 uv)
-{
-    float left   = step(uv.x, uOutlineThickness);
-    float right  = step(1.0 - uv.x, uOutlineThickness);
-    float bottom = step(uv.y, uOutlineThickness);
-    float top    = step(1.0 - uv.y, uOutlineThickness);
-
-    float edge = max(max(left, right), max(top, bottom));
-
-    if (uDotted)
-    {
-        float pattern = 1.0;
-        float yDot = step(0.5, fract(uv.y / uDotSpacing));
-        float xDot = step(0.5, fract(uv.x / uDotSpacing));
-
-        float vertical = max(left, right);
-        float horizontal = max(top, bottom);
-
-        pattern = mix(pattern, yDot, vertical);
-        pattern = mix(pattern, xDot, horizontal);
-
-        edge *= pattern;
-    }
-
-    return uOutlineColor * edge;
-}
 
 void main()
 {
@@ -77,13 +51,13 @@ void main()
     }
 
     vec3 base = texture(uScreenGrabTex, baseUV).rgb;
+    vec4 outline = texture(uFrameTex, fragUV);
 
-    vec3 outline = getQuadEdgeOutline(fragUV);
+    vec3 stars = vec3(texture(uStarsTex, worldUV * 2.5 + vec2(0, Ty * 0.2)).a);
 
-    vec3 stars = vec3(texture(
-        uStarsTex,
-        worldUV * 2.5 + vec2(0, Ty * 0.2)
-    ).a);
+    vec3 rgb = base.rgb + outline.rgb * outline.a + vec3(stars);
 
-    fragColor = vec4(base + stars + outline, 1.0) * vColor;
+    float alpha = step(0.1, rgb.r);
+
+    fragColor = vec4(rgb, alpha) * vColor;
 }

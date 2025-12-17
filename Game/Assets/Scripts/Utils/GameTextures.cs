@@ -98,6 +98,7 @@ namespace Game
                 { "e_interactable3", new Sprite(Assets.GetTexture("eInteract3.png")) },
                 { "inventory_slot", new Sprite(Assets.GetTexture("InventorySlot.png")) },
                 { "outlineCircle", new Sprite(Assets.GetTexture("outlineCircle.png")) },
+                { "portal_frame", new Sprite(Assets.GetTexture("portal_frame.png")) },
             };
         }
 

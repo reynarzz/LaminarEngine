@@ -48,6 +48,7 @@ pixel-ui_buttons_long_47x14.png
 eInteract.png
 eInteract2.png
 eInteract3.png
+portal_frame.png
 InventorySlot.png
 outlineCircle.png
 Shaders/SpriteVert.vert
@@ -58,6 +59,7 @@ Shaders/Font/FontFrag.frag
 Shaders/SpriteFragOver.frag
 Shaders/Portal.frag
 Shaders/Portal_mobile.frag
+Shaders/Portal_mobile_cheap.frag
 stars.png
 Audio/HALFTONE/UI/1. Buttons/Button_20_adjust.wav
 Audio/HALFTONE/UI/1. Buttons/Button_24.wav

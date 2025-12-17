@@ -41,7 +41,12 @@ namespace Game
             overlayPass.Stencil.Ref = 3;
             overlayPass.Stencil.ZPassOp = StencilOp.Keep;
 
+#if DESKTOP
             PortalMaterial = InitPortalMaterial();
+#else
+            PortalMaterial = InitPortalMobileMaterial();
+#endif
+
             WobbleMaterial.GetPass(0).IsScreenGrabPass = true;
             WobbleMaterial.SetProperty(0, "uDistortionAmount", 0.0003f);
             WobbleMaterial.SetProperty(0, "uColorSplit", 0.0017f);
@@ -57,6 +62,8 @@ namespace Game
             var material = new Material(screenShader);
             material.Name = "Portal Material";
             material.AddTexture("uStarsTex", Assets.GetTexture("stars.png"));
+            material.AddTexture("uFrameTex", GameTextures.GetSprite("portal_frame").Texture);
+
             var pass = material.GetPass(0);
             pass.IsScreenGrabPass = true;
             material.SetProperty("uDistortionAmount", 0.009f);
@@ -69,6 +76,16 @@ namespace Game
             material.SetProperty("uColorSplit", 0.001f);
             material.SetProperty("uPixelationAmount", 2.0f);
             
+            return material;
+        }
+
+        private Material InitPortalMobileMaterial()
+        {
+            var screenShader = new Shader(Assets.GetText("Shaders/VertScreenGrab.vert").Text, Assets.GetText("Shaders/Portal_mobile_cheap.frag").Text);
+            var material = new Material(screenShader);
+            material.Name = "Portal Material";
+            material.AddTexture("uStarsTex", Assets.GetTexture("stars.png"));
+            material.AddTexture("uFrameTex", GameTextures.GetSprite("portal_frame").Texture);
             return material;
         }
 
