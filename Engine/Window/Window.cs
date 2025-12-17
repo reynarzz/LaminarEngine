@@ -188,10 +188,9 @@ namespace Engine
             // Glfw.SetWindowAttribute(NativeWindow, WindowAttribute.Decorated, false);
 
             GL.glClearColor(windowColor.R, windowColor.G, windowColor.B, 1.0f);
-
             GL.glClear(GL.GL_COLOR_BUFFER_BIT);
             SwapBuffers();
-
+            
             Glfw.ShowWindow(NativeWindow);
             //Glfw.SetWindowAttribute(NativeWindow, WindowAttribute.Decorated, true);
             Glfw.RequestWindowAttention(NativeWindow);
@@ -200,7 +199,6 @@ namespace Engine
             Glfw.GetFramebufferSize(NativeWindow, out width, out height);
             Width = width;
             Height = height;
-
         }
 
         public void SwapBuffers()

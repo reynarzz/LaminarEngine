@@ -183,37 +183,15 @@ namespace Game
             if (_canMove)
             {
 #if DESKTOP
-                if (Input.GetKeyDown(KeyCode.Space))
+                if (!Input.Gamepad.Main.IsConnected)
                 {
-                    BeginJump();
-                }
-                else if (Input.GetKeyUp(KeyCode.Space))
-                {
-
-                    EndJump();
-                }
-
-                if (Input.GetKey(KeyCode.F) && _shootCooldownTime <= 0)
-                {
-                    _shootCooldownTime = _shootCooldown;
-                    Attack();
-                }
-
-                if (Input.GetKey(KeyCode.A))
-                {
-                    Walk(-1);
-                }
-                else if (Input.GetKey(KeyCode.D))
-                {
-                    Walk(1);
-                }
-                else
-                {
-                    Walk(0);
+                    KeyboardInput();
                 }
 #elif MOBILE
                 TouchInput();
 #endif
+                GamepadInput();
+
             }
 
 #if DEBUG
@@ -229,8 +207,73 @@ namespace Game
             {
                 HitDamage(this, 1);
             }
-
 #endif
+        }
+
+        public void GamepadInput()
+        {
+            if (!Input.Gamepad.Main.IsConnected)
+                return;
+
+            if (Input.Gamepad.Main.GetButtonState(GamePadButton.A) == InputState.Press)
+            {
+                BeginJump();
+            }
+            else if (Input.Gamepad.Main.GetButtonState(GamePadButton.A) == InputState.Release)
+            {
+                EndJump();
+            }
+
+            if (_shootCooldownTime <= 0 && Input.Gamepad.Main.GetButtonState(GamePadButton.X) == InputState.Press)
+            {
+                _shootCooldownTime = _shootCooldown;
+                Attack();
+            }
+
+            if (Input.Gamepad.Main.GetButtonState(GamePadButton.DpadLeft) == InputState.Press)
+            {
+                Walk(-1);
+            }
+            else if (Input.Gamepad.Main.GetButtonState(GamePadButton.DpadRight) == InputState.Press)
+            {
+                Walk(1);
+            }
+            else
+            {
+                Walk(0);
+            }
+        }
+
+        private void KeyboardInput()
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                BeginJump();
+            }
+            else if (Input.GetKeyUp(KeyCode.Space))
+            {
+
+                EndJump();
+            }
+
+            if (Input.GetKey(KeyCode.F) && _shootCooldownTime <= 0)
+            {
+                _shootCooldownTime = _shootCooldown;
+                Attack();
+            }
+
+            if (Input.GetKey(KeyCode.A))
+            {
+                Walk(-1);
+            }
+            else if (Input.GetKey(KeyCode.D))
+            {
+                Walk(1);
+            }
+            else
+            {
+                Walk(0);
+            }
         }
         private int _walkPointerId = -1;
         private void TouchInput()

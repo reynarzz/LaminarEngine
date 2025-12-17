@@ -406,7 +406,7 @@ namespace Game
         public void EndJump()
         {
             var diff = Transform.WorldPosition.y - _jumpStartY;
-            Debug.Log(diff + ", " + _characterConfig.NormalJumpHeightThreshold);
+            //Debug.Log(diff + ", " + _characterConfig.NormalJumpHeightThreshold);
             var isNormalJump = diff >= _characterConfig.NormalJumpHeightThreshold;
             if (Rigidbody.Velocity.y > 0 && !isNormalJump)
             {

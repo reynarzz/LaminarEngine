@@ -1,7 +1,9 @@
 ﻿#if DESKTOP
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Engine;
+using GLFW;
 using GlmNet;
 
 namespace Engine.Layers.Input
@@ -18,10 +20,23 @@ namespace Engine.Layers.Input
         public override vec2 MousePosition => _mousePos;
 
         public override TouchInput Touch { get; } = new TouchInput();
-        public override GamepadInput Gamepad { get; } = new GamepadInput();
+        private GamepadStandalone[] _gamepads;
+        public override GamepadInput Gamepad { get; }
 
         private KeyCode[] _keyCodesArray;
         private MouseButton[] _mouseButtonsArray;
+        private const int MAX_GAMEPAD_IDS = 12;//(int)GamepadId.Gamepad16;
+
+        public InputStandAlonePlatform()
+        {
+            _gamepads = new GamepadStandalone[MAX_GAMEPAD_IDS];
+            for (int i = 0; i < _gamepads.Length; i++)
+            {
+                _gamepads[i] = new GamepadStandalone();
+            }
+            Gamepad = new GamepadInput(_gamepads);
+        }
+
         public override void Initialize()
         {
             _keyCodesArray = Enum.GetValues<KeyCode>();
@@ -46,10 +61,8 @@ namespace Engine.Layers.Input
             CopyKeys(_currentKeys, _previousKeys);
             CopyKeys(_currentMouse, _previousMouse);
 
-
             // Poll OS events
-            GLFW.Glfw.PollEvents();
-
+            Glfw.PollEvents();
             // Update current key states
             foreach (KeyCode key in _keyCodesArray)
             {
@@ -83,6 +96,50 @@ namespace Engine.Layers.Input
             // Update mouse position
             GLFW.Glfw.GetCursorPosition(Engine.Window.NativeWindow, out double x, out double y);
             _mousePos = new vec2((float)x, (float)y);
+
+            GamepadUpdate();
+        }
+
+        private void GamepadUpdate()
+        {
+            int connectedCount = 0;
+            for (int i = 0; i < MAX_GAMEPAD_IDS; i++)
+            {
+                var gamepad = _gamepads[i];
+                if (Glfw.GetGamepadState(i, out var state))
+                {
+                    connectedCount++;
+                    var wasDisconnected = !gamepad.IsConnected;
+                    gamepad.IsConnected = true;
+                    gamepad.State = state;
+
+                    if (wasDisconnected)
+                    {
+                        gamepad.Name = Glfw.GetGamepadName(i);
+                        Gamepad.OnGamePadChanged(gamepad);
+                    }
+                }
+                else
+                {
+                    var wasConnected = gamepad.IsConnected;
+                    gamepad.State = default;
+                    gamepad.IsConnected = false;
+                    if (wasConnected)
+                    {
+                        gamepad.OnUpdate();
+                        Gamepad.OnGamePadChanged(gamepad);
+                    }
+
+                    gamepad.Name = string.Empty;
+                }
+
+                if (gamepad.IsConnected)
+                {
+                    gamepad.OnUpdate();
+                }
+            }
+
+            Gamepad.ConnectedCount = connectedCount;
         }
 
         public override bool GetKey(KeyCode key)

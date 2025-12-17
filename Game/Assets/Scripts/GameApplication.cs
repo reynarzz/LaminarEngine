@@ -49,7 +49,7 @@ namespace Game
         // Port to mac, android, ios, linux.
         // Leave rendering in the main thread, and move all the layers to another one.
         // Android: Manage opengl context loss.
-        
+        // Implement gamepad
 
         public override void Initialize()
         {
@@ -58,6 +58,13 @@ namespace Game
             WindowManager.Window.CursorVisible = false;
 #endif
             new Actor<LaunchScreen>("Launch Screen");
+
+            Input.Gamepad.OnGamepadChanged += OnGamepadChanged;
+        }
+
+        private void OnGamepadChanged(Gamepad gamepad)
+        {
+            Debug.Log($"Game pad connected {gamepad.IsConnected}: " + gamepad.Name);
         }
 
         public override void Close() 
