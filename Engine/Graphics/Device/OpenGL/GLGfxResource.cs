@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using OpenGL;
 
 namespace Engine.Graphics.OpenGL
 {
@@ -57,6 +58,9 @@ namespace Engine.Graphics.OpenGL
                 return;
             }
             _handleBinder(0);
+#if DEBUG
+            GLUtils.PrintGLErrors();
+#endif
         }
 
         internal bool Create(T descriptor)
@@ -66,7 +70,9 @@ namespace Engine.Graphics.OpenGL
                 CreateHandle();
 
                 IsInitialized = CreateResource(descriptor);
-
+#if DEBUG
+                GLUtils.PrintGLErrors();
+#endif
                 if (!IsInitialized)
                 {
                     Debug.Error($"Could not create resource (returns false): {GetType().Name}");
@@ -86,6 +92,9 @@ namespace Engine.Graphics.OpenGL
             if (IsInitialized)
             {
                 UpdateResource(descriptor);
+#if DEBUG
+                GLUtils.PrintGLErrors();
+#endif
             }
         }
 
@@ -95,11 +104,17 @@ namespace Engine.Graphics.OpenGL
         private void CreateHandle()
         {
             Handle = _handleCreator();
+#if DEBUG
+            GLUtils.PrintGLErrors();
+#endif
         }
 
         private void DestroyHandle()
         {
             _handleDeleter?.Invoke(Handle);
+#if DEBUG
+            GLUtils.PrintGLErrors();
+#endif
             Handle = 0;
         }
 
@@ -112,6 +127,9 @@ namespace Engine.Graphics.OpenGL
                 Debug.Warn("Free gfx resource: " + GetType().Name);
 #endif
                 DestroyHandle();
+#if DEBUG
+                GLUtils.PrintGLErrors();
+#endif
                 IsInitialized = false;
             }
         }

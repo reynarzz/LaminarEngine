@@ -39,6 +39,12 @@ namespace GameCooker
                             _sb.AppendLine(lines[i]);
                             _sb.AppendLine("precision mediump float;");
                         }
+                        else if(platform == CookingPlatform.IOS)
+                        {
+                            lines[i] = "#version 300 es";
+                            _sb.AppendLine(lines[i]);
+                            _sb.AppendLine("precision mediump float;");
+                        }
                         else
                         {
                             lines[i] = "#version 330 core";

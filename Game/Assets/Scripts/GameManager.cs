@@ -243,6 +243,7 @@ namespace Game
                 BuildLevel(0);
             }
 #endif
+            Debug.Log("Running game manager");
             if (Input.GetKeyDown(KeyCode.Enter))
             {
                 _gameUIManger.PauseMenu.OnPause();

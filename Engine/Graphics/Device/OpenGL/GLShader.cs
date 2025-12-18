@@ -1,4 +1,5 @@
 ﻿using GlmNet;
+using OpenGL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,12 +39,26 @@ namespace Engine.Graphics.OpenGL
                 return false;
 
             glAttachShader(Handle, vertId);
+#if DEBUG
+            GLUtils.PrintGLErrors();
+#endif
             glAttachShader(Handle, fragId);
-
+#if DEBUG
+            GLUtils.PrintGLErrors();
+#endif
             glLinkProgram(Handle);
-
+#if DEBUG
+            GLUtils.PrintGLErrors();
+#endif
             glDeleteShader(vertId);
+#if DEBUG
+            GLUtils.PrintGLErrors();
+#endif
             glDeleteShader(fragId);
+#if DEBUG
+            GLUtils.PrintGLErrors();
+#endif
+            Debug.Log($"v:{descriptor.VertName}, f:{descriptor.FragName}");
 
             return ValidateProgram(Handle);
         }
@@ -51,23 +66,43 @@ namespace Engine.Graphics.OpenGL
         private unsafe uint CompileShader(int shaderType, byte[] shaderSource, string name)
         {
             uint shaderId = glCreateShader(shaderType);
+#if DEBUG
+            GLUtils.PrintGLErrors();
+#endif
+
             string src = Encoding.UTF8.GetString(shaderSource);
 
             glShaderSource(shaderId, src);
+#if DEBUG
+            GLUtils.PrintGLErrors();
+#endif
             glCompileShader(shaderId);
+#if DEBUG
+            GLUtils.PrintGLErrors();
+#endif
 
 #if DEBUG
             int result = GL_FALSE;
             glGetShaderiv(shaderId, GL_COMPILE_STATUS, &result);
+#if DEBUG
+            GLUtils.PrintGLErrors();
+#endif
 
             if (result == GL_FALSE)
             {
                 int length = 0;
                 glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &length);
+#if DEBUG
+                GLUtils.PrintGLErrors();
+#endif
+
                 var message = glGetShaderInfoLog(shaderId, length);
 
                 Debug.Error($"failed to compile '{ShaderTypeName(shaderType)}' \n{message}, name: {name}");
                 glDeleteShader(shaderId);
+#if DEBUG
+                GLUtils.PrintGLErrors();
+#endif
 
                 return 0;
             }
@@ -82,6 +117,10 @@ namespace Engine.Graphics.OpenGL
 #endif
             int linkStatus;
             glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
+#if DEBUG
+            GLUtils.PrintGLErrors();
+#endif
+
             if (linkStatus == GL_FALSE)
             {
                 int length;
@@ -91,14 +130,29 @@ namespace Engine.Graphics.OpenGL
                 return false;
             }
             glValidateProgram(program);
+#if DEBUG
+            GLUtils.PrintGLErrors();
+#endif
+
             int status;
             glGetProgramiv(program, GL_VALIDATE_STATUS, &status);
+#if DEBUG
+            GLUtils.PrintGLErrors();
+#endif
+
             if (status == GL_FALSE)
             {
                 int logLength;
                 glGetProgramiv(program, GL_INFO_LOG_LENGTH, &logLength);
+#if DEBUG
+                GLUtils.PrintGLErrors();
+#endif
 
                 var log = glGetProgramInfoLog(program, logLength);
+#if DEBUG
+                GLUtils.PrintGLErrors();
+#endif
+
                 Debug.Error($"Program validation failed: {log}");
 
                 return false;
@@ -122,6 +176,10 @@ namespace Engine.Graphics.OpenGL
                 return;
 
             glUniform1i(location, value);
+
+#if DEBUG
+            GLUtils.PrintGLErrors();
+#endif
         }
 
         internal void SetUniform(string name, uint value)
@@ -130,6 +188,9 @@ namespace Engine.Graphics.OpenGL
                 return;
 
             glUniform1ui(location, value);
+#if DEBUG
+            GLUtils.PrintGLErrors();
+#endif
         }
 
         internal void SetUniformF(string name, float value)
@@ -138,6 +199,9 @@ namespace Engine.Graphics.OpenGL
                 return;
 
             glUniform1f(location, value);
+#if DEBUG
+            GLUtils.PrintGLErrors();
+#endif
         }
 
         internal void SetUniform(string name, int[] value)
@@ -148,7 +212,14 @@ namespace Engine.Graphics.OpenGL
             unsafe
             {
                 fixed (int* v = value)
+                {
                     glUniform1iv(location, value.Length, v);
+
+#if DEBUG
+                    GLUtils.PrintGLErrors();
+#endif
+                }
+
             }
         }
 
@@ -160,6 +231,9 @@ namespace Engine.Graphics.OpenGL
             unsafe
             {
                 glUniform2fv(location, 1, &value.x);
+#if DEBUG
+                GLUtils.PrintGLErrors();
+#endif
             }
         }
 
@@ -171,6 +245,9 @@ namespace Engine.Graphics.OpenGL
             unsafe
             {
                 glUniform3fv(location, 1, &value.x);
+#if DEBUG
+                GLUtils.PrintGLErrors();
+#endif
             }
         }
 
@@ -182,6 +259,9 @@ namespace Engine.Graphics.OpenGL
             unsafe
             {
                 glUniform4fv(location, 1, &value.x);
+#if DEBUG
+                GLUtils.PrintGLErrors();
+#endif
             }
         }
 
@@ -193,6 +273,9 @@ namespace Engine.Graphics.OpenGL
             unsafe
             {
                 glUniformMatrix4fv(location, 1, false, &value.c0.x);
+#if DEBUG
+                GLUtils.PrintGLErrors();
+#endif
             }
         }
 
@@ -205,6 +288,9 @@ namespace Engine.Graphics.OpenGL
                 return location >= 0;
             }
             location = glGetUniformLocation(Handle, name);
+#if DEBUG
+            GLUtils.PrintGLErrors();
+#endif
             _uniformLocations.Add(name, location);
             return false;
         }

@@ -6,12 +6,12 @@ using static OpenGL.ES.GLES30;
 
 namespace Engine.IOS
 {
-
     public class GLViewController : GLKViewController, IWindow
     {
         private EAGLContext _context;
         private BinaryReader _reader;
         private GFSEngine _engine;
+        private GLKView _view;
 
         public string Name { get; set; }
         public bool IsFullScreen { get; set; }
@@ -19,7 +19,7 @@ namespace Engine.IOS
 
         public Color StartWindowColor { get; }
 
-        public bool ShouldClose { get;  }
+        public bool ShouldClose { get; }
 
         public int MonitorCount { get; set; }
 
@@ -49,51 +49,75 @@ namespace Engine.IOS
         {
             base.ViewDidLoad();
 
-            // Create an OpenGL ES 3.0 context
-            _context = new EAGLContext(EAGLRenderingAPI.OpenGLES3);
 
-            var glkView = new GLKView(View.Frame, _context)
+            try
             {
-                DrawableColorFormat = GLKViewDrawableColorFormat.RGBA8888,
-                DrawableDepthFormat = GLKViewDrawableDepthFormat.Format24,
-                DrawableStencilFormat = GLKViewDrawableStencilFormat.Format8
-            };
+                // Create an OpenGL ES 3.0 context
+                _context = new EAGLContext(EAGLRenderingAPI.OpenGLES3);
 
-            if (!EAGLContext.SetCurrentContext(_context))
-            {
-                Debug.Error("Cannot create opengl context");
+                // _view = new GLKView(View.Frame, _context)
+                // {
+                //     DrawableColorFormat = GLKViewDrawableColorFormat.RGBA8888,
+                //     DrawableDepthFormat = GLKViewDrawableDepthFormat.Format24,
+                //     DrawableStencilFormat = GLKViewDrawableStencilFormat.Format8,
+                //     MultipleTouchEnabled = true
+                // };
+
+                _view = (GLKView)View;
+                _view.Context = _context;
+                _view.DrawableColorFormat = GLKViewDrawableColorFormat.RGBA8888;
+                _view.DrawableDepthFormat = GLKViewDrawableDepthFormat.Format24;
+                _view.DrawableStencilFormat = GLKViewDrawableStencilFormat.Format8;
+                _view.Alpha = 1;
+                _view.MultipleTouchEnabled = true;
+                // Hook up the rendering method.
+                //
+
+                // Configure the GLKViewController properties
+                PreferredFramesPerSecond = 60;
+
+                var layer = (CoreAnimation.CAEAGLLayer)_view.Layer;
+                layer.Opaque = true;
+                layer.Opacity = 1;
+                layer.DrawableProperties = new NSDictionary(EAGLDrawableProperty.RetainedBacking, false, EAGLDrawableProperty.ColorFormat, EAGLColorFormat.RGBA8);
+
+
+                try
+                {
+                    //EAGLContext.SetCurrentContext(_context);
+                    _view.BindDrawable();
+                }
+                catch (Exception e)
+                {
+                    Debug.Log(e.ToString());
+                }
+                Debug.Prefix = "com.reynarzz.gfs:CONSOLE ";
+                _reader = OpenBundleBinary("Assets/GameData.gfs");
+
+                nfloat widthPoints = _view.Bounds.Width;
+                nfloat heightPoints = _view.Bounds.Height;
+
+                nfloat scale = UIScreen.MainScreen.Scale;
+
+                Width = (int)(widthPoints * scale);
+                Height = (int)(heightPoints * scale);
+
+                PhysicalWidth = Width;
+                PhysicalHeight = Height;
+
+                Debug.Log($"width: {Width}, Height: {Height}, Pwidth: {PhysicalWidth}, PHeight: {PhysicalHeight}, ");
+
             }
-
-            // Force drawable creation
-            glkView.BindDrawable();
-
-            View = glkView;
-             Debug.Prefix = "com.reynarzz.gfs:CONSOLE ";
-            _reader = OpenBundleBinary("Assets/GameData.gfs");
-
-            nfloat widthPoints = glkView.Bounds.Width;
-            nfloat heightPoints = glkView.Bounds.Height;
-
-            nfloat scale = UIScreen.MainScreen.Scale;
-
-            Width = (int)(widthPoints * scale);
-            Height = (int)(heightPoints * scale);
-
-            PhysicalWidth = Width;
-            PhysicalHeight = Height;
-           
+            catch (Exception e)
+            {
+                Debug.Log(e.ToString());
+            }
         }
 
         public override void ViewDidAppear(bool animated)
         {
             base.ViewDidAppear(animated);
-            var glkView = (GLKView)View;
 
-            EAGLContext.SetCurrentContext(_context);
-
-            // Force drawable creation
-            glkView.BindDrawable();
-           
         }
 
         private BinaryReader OpenBundleBinary(string relativePath)
@@ -102,44 +126,39 @@ namespace Engine.IOS
             return new BinaryReader(File.OpenRead(path));
         }
 
-        int ReadInt32BE(BinaryReader r)
-        {
-            var b = r.ReadBytes(4);
-            Array.Reverse(b);
-            return BitConverter.ToInt32(b, 0);
-        }
-        
         public override void Update()
         {
             // Game update logic here
         }
+        // void Draw(object sender, GLKViewDrawEventArgs args)
+        // {
+
+        // }
 
         public override void DrawInRect(GLKView view, CGRect rect)
         {
-            if (_engine == null)
+            try
             {
-                unsafe
+
+                if (_engine == null)
                 {
-                     int fbo = 0;
-                glGetIntegerv(GL_FRAMEBUFFER_BINDING, &fbo);
-                glBindFramebuffer(GL_FRAMEBUFFER, (uint)fbo);
-                 glBindFramebuffer(GL_DRAW_FRAMEBUFFER, (uint)fbo);
-               
+                    var status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+                        Debug.Log("Is frame buffer ok?: " + (status == GL_FRAMEBUFFER_COMPLETE));
+
+                    if (status == GL_FRAMEBUFFER_COMPLETE)
+                    {
+
+                        _engine = new GFSEngine(this, new GameApplication(), _reader);
+                    }
                 }
-               
-              
-                try
+                else
                 {
-                    _engine = new GFSEngine(this, new GameApplication(), _reader);
-                }
-                catch (Exception e)
-                {
-                    Debug.Log(e.ToString());
+                    _engine.Update();
                 }
             }
-            else
+            catch (Exception e)
             {
-               _engine.Update();
+                Debug.Log(e.ToString());
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using Engine.Utils;
 using GlmNet;
+using OpenGL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 #if DESKTOP
 using static OpenGL.GL;
 #else
-    using static OpenGL.ES.GLES30;
+using static OpenGL.ES.GLES30;
 #endif
 
 namespace Engine.Graphics.OpenGL
@@ -73,11 +74,29 @@ namespace Engine.Graphics.OpenGL
                 target.Bind();
             }
             glClearColor(config.Color.R, config.Color.G, config.Color.B, config.Color.A);
+#if DEBUG
+            GLUtils.PrintGLErrors();
+#endif
+
             glClearStencil(0);
+#if DEBUG
+            GLUtils.PrintGLErrors();
+#endif
+
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+#if DEBUG
+            GLUtils.PrintGLErrors();
+#endif
 
             if (target != null)
+            {
                 glViewport(0, 0, target.Width, target.Height);
+
+#if DEBUG
+                GLUtils.PrintGLErrors();
+#endif
+
+            }
 
             if (target != null)
             {
@@ -135,12 +154,18 @@ namespace Engine.Graphics.OpenGL
             unsafe
             {
                 glDrawElements(GetGLDrawMode(mode), indicesLength, GL_UNSIGNED_INT, null);
+#if DEBUG
+                GLUtils.PrintGLErrors();
+#endif
             }
         }
 
         internal override void DrawArrays(DrawMode mode, int startIndex, int vertexCount)
         {
             glDrawArrays(GetGLDrawMode(mode), startIndex, vertexCount);
+#if DEBUG
+            GLUtils.PrintGLErrors();
+#endif
         }
 
         private int GetGLDrawMode(DrawMode mode)
@@ -191,6 +216,9 @@ namespace Engine.Graphics.OpenGL
         internal override void SetViewport(vec4 viewport)
         {
             glViewport((int)viewport.x, (int)viewport.y, (int)viewport.z, (int)viewport.w);
+#if DEBUG
+            GLUtils.PrintGLErrors();
+#endif
         }
 
         internal override void Present()
@@ -204,6 +232,9 @@ namespace Engine.Graphics.OpenGL
             if (frameBuffer != null)
             {
                 frameBuffer.BlitToScreen(Screen.Width, Screen.Height);
+#if DEBUG
+                GLUtils.PrintGLErrors();
+#endif
             }
 
             Present();
@@ -309,7 +340,7 @@ namespace Engine.Graphics.OpenGL
 
         internal override void DestroyResource(GfxResource resource)
         {
-            if(resource != null && resource.IsInitialized)
+            if (resource != null && resource.IsInitialized)
             {
                 resource.Dispose();
             }

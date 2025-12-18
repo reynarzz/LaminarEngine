@@ -33,7 +33,7 @@ namespace Engine.Layers
             _defaultSceneRenderTexture = new RenderTexture(Screen.Width, Screen.Height);
             _screenGrabTarget = new RenderTexture(Screen.Width, Screen.Height);
 
-            ClearScreenToColor(WindowManager.Window.StartWindowColor);
+            // ClearScreenToColor(WindowManager.Window.StartWindowColor);
 
             _pipelineFeatures = new PipelineFeatures();
             _screenPipelineFeatures = new PipelineFeatures();
