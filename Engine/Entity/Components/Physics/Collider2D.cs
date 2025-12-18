@@ -3,6 +3,7 @@ using Engine.Layers;
 using Engine.Types;
 using Engine.Utils;
 using GlmNet;
+using SharedTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;

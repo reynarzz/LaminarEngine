@@ -1,13 +1,5 @@
 ﻿using Engine;
-using Engine.Graphics;
-using Engine.GUI;
 using Engine.Layers;
-using Engine.Utils;
-using GlmNet;
-using SharedTypes;
-using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace Game
 {
@@ -51,6 +43,7 @@ namespace Game
         // Android: Manage opengl context loss.
         // Implement gamepad
         // Improve performance of contact dispatcher.
+        // Implement instancing rendering.
 
         public override void Initialize()
         {

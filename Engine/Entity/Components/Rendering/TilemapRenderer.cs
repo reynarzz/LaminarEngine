@@ -88,7 +88,7 @@ namespace Engine
 
                 float tilePxX = tile.Px[0];
                 float tilePxY = tile.Px[1];
-
+                
                 float worldX = level.WorldX + tilePxX + layer.PxTotalOffsetX;
                 float worldY = -level.WorldY + -tilePxY + -layer.PxTotalOffsetY;
 

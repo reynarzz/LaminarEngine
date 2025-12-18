@@ -8,6 +8,7 @@ using Engine.Utils;
 using ldtk;
 using GlmNet;
 using System.Collections;
+using SharedTypes;
 
 namespace Game
 {
