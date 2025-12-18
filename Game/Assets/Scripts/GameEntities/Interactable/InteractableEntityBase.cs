@@ -24,6 +24,8 @@ namespace Game
 
         protected override void OnAwake()
         {
+            Actor.Layer = LayerMask.NameToLayer(GameConsts.Interactable);
+
             BoxCollider.IsTrigger = true;
             SpriteRenderer.Material = GameMaterials.Instance.SpriteMaterial;
             SpriteRenderer.SortOrder = -1;

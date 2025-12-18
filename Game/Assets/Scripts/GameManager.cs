@@ -22,6 +22,7 @@ namespace Game
         public const string ENEMY_CONFUSED = "EnemyConfused"; // enemy that attacks other enemies.
         public const string PLATFORM = "Platform";
         public const string COLLECTIBLE = "Collectible";
+        public const string Interactable = "Interactable";
         public const string CHARACTER_IGNORE = "character_Ignore";
         public const string NO_WALKABLE = "no_walkable";
         public const string BULLET = "bullet";

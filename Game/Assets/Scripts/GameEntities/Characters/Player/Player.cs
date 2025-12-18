@@ -1,12 +1,9 @@
 ﻿using Engine;
-using Engine.Utils;
 using GlmNet;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Game
 {
@@ -18,7 +15,6 @@ namespace Game
         private bool _canMove = false;
 
         private readonly List<InteractableEntityBase> _nearInteractables = new();
-
 
         public override void Init(CharacterConfig config)
         {
@@ -203,6 +199,7 @@ namespace Game
                 HitDamage(this, 1);
             }
 #endif
+           
         }
 
         public void GamepadInput()

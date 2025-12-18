@@ -107,6 +107,7 @@ namespace Game
                 OnGroundChanged(value);
             }
         }
+        private bool _isStopBoxHit = false;
         private float _maxFallYVelocity = -20;
 
         public CharacterInventory Inventory { get; protected set; }
@@ -388,8 +389,8 @@ namespace Game
 
         public void BeginJump()
         {
-            if (!CanCharacterMove()) return;
-            if (!IsOnGround || _jumping) return;
+            if (!CanCharacterMove() || !IsOnGround || _jumping)
+                return;
 
             _jumping = true;
             _jumpStartY = Transform.WorldPosition.y;
@@ -435,8 +436,36 @@ namespace Game
 
                 }
             }
+
+            CheckStopWall();
         }
 
+        // Push the character back when is touching a wall, this prevents the collider to slide when jumping.
+        private bool CheckStopWall()
+        {
+            vec3 origin = Transform.WorldPosition + new vec3(Transform.WorldScale.x * _characterConfig.SpriteLookDirFlip * 0.5f, 0.22f);
+            vec3 size = new vec3(0.3f, 1.5f);
+            var boxWallkhit = Physics2D.BoxCast(origin, size, GameConsts.GROUND_MASK);
+
+            if (boxWallkhit.isHit)
+            {
+                Rigidbody.Velocity = new vec2(-(Transform.WorldScale.x * _characterConfig.SpriteLookDirFlip) * 0.55f, Rigidbody.Velocity.y);
+
+                if (Physics2D.DrawColliders)
+                {
+                    Debug.DrawBox(boxWallkhit.Point, vec3.One * 0.1f, Color.Green);
+                }
+
+                var dist = origin - new vec3(boxWallkhit.Point, 0);
+               // Transform.WorldPosition += new vec3(dist.x, 0, 0);
+            }
+            if (Physics2D.DrawColliders)
+            {
+                Debug.DrawBox(origin, size, Color.Red);
+            }
+
+            return boxWallkhit.isHit;
+        }
         public void LookAt(int dir)
         {
             if (dir == 0)
@@ -446,8 +475,8 @@ namespace Game
             }
 
             LookDir = dir;
-            var scaleX = Math.Abs(Transform.LocalScale.x);
-            Transform.LocalScale = new vec3(scaleX * dir * Math.Sign(_characterConfig.SpriteLookDirFlip), Transform.LocalScale.y, Transform.LocalScale.z);
+            var scaleX = Math.Abs(Transform.WorldScale.x);
+            Transform.WorldScale = new vec3(scaleX * dir * Math.Sign(_characterConfig.SpriteLookDirFlip), Transform.WorldScale.y, Transform.WorldScale.z);
         }
 
 
@@ -460,10 +489,14 @@ namespace Game
             if (!CanCharacterMove())
                 return;
             dir *= _characterConfig.SpriteLookDirFlip;
+            if (CheckStopWall())
+            {
+                return;
+            }
             if (dir != 0)
             {
                 LookAt(dir);
-
+                
                 float targetX = _characterConfig.WalkSpeed * dir;
                 float accel = 100;
 
@@ -532,7 +565,7 @@ namespace Game
 
                 yield return null;
             }
-            if(color.A < 0.9)
+            if (color.A < 0.9)
             {
                 Debug.Error("Fix: character color is not being restarted correctly.");
             }
@@ -602,6 +635,7 @@ namespace Game
 
             var dir = Transform.Up * -_characterConfig.Ground.SizeY;
 
+
             uint hitIndex = 0;
             CastHit2D hit = default;
             for (var i = 0; i < raysCount; i++)
@@ -622,6 +656,8 @@ namespace Game
                 if (hit.isHit)
                     break;
             }
+
+
             if (Physics2D.DrawColliders)
             {
                 for (var i = 0; i < raysCount; i++)
@@ -641,6 +677,7 @@ namespace Game
                 var yPos = (hit.Point.y - Collider.AABB.Min.y) + bias;
                 Transform.WorldPosition = new vec3(Transform.WorldPosition.x, yPos, Transform.WorldPosition.z);
             }
+
             IsOnGround = hit.isHit;
         }
 

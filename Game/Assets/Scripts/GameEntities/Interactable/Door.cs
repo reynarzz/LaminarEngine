@@ -66,6 +66,7 @@ namespace Game
             {
                 SpriteRenderer.Sprite = animator.GetSprite("Sprite");
             };
+
         }
 
         public override bool TryInteract(Player player)
