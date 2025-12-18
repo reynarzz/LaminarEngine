@@ -51,7 +51,7 @@ namespace Game
                 { "pig_enemy_attack", SliceSprites("KingsAndPigsSprites/03-Pig/Attack (34x28).png", 34, 28, new vec2(0.58f, 0.34f)) },
 
                 // Full tilesets
-                { "stark_full_tileset", SliceSprites("starkTileset.png", 16, 16, new vec2(0.5f, 0.35f)) },
+                { "stark_full_tileset", SliceSprites("starkTileset.png", 16, 16, new vec2(0.5f, 0.5f)) },
                 { "sunny_land_tileset", SliceSprites("Tilemap/SunnyLand_by_Ansimuz-extended.png", 16, 16, vec2.Half) },
                 { "raven_ui_tileset", SliceSprites("RavenUI/RavenFantasy16x16.png", 16, 16, vec2.Half) },
                 { "keyboard", SliceSprites("Keyboard Letters and Symbols.png", 16, 16, vec2.Half) },

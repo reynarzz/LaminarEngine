@@ -145,7 +145,7 @@ namespace Game
             var result = _tilemapManager.BuildLevel(new LevelInstantiateInfo()
             {
                 LevelIndex = levelIndex,
-                TilemapSprites = GameTextures.GetAtlas("sunny_land_tileset"),
+                TilemapSprites = [GameTextures.GetAtlas("sunny_land_tileset")[0], GameTextures.GetAtlas("stark_full_tileset")[0]],
                 WorldSpacePixelsPerUnit = GameTextures.GetAtlas("sunny_land_tileset")[0].Texture.PixelPerUnit,
                 Tilemaps =
                 {
@@ -153,7 +153,7 @@ namespace Game
                     {
                         Name = "Foreground tilemap",
                         EnableCollision = true,
-                        LayersToDraw = 1 << 3,
+                        LayersToDraw = 1 << 4,
                         SortingOrder = 5,
                         SpriteIndex = 0
                     },
@@ -161,7 +161,7 @@ namespace Game
                     {
                         Name = "Background tilemap",
                         EnableCollision = false,
-                        LayersToDraw = 1 << 4,
+                        LayersToDraw = 1 << 5,
                         SortingOrder = -2,
                         SpriteIndex = 0
                     },
@@ -169,9 +169,19 @@ namespace Game
                     {
                         Name = "Decoration tilemap",
                         EnableCollision = false,
-                        LayersToDraw = 1 << 0,
+                        LayersToDraw = 1 << 1,
                         SortingOrder = 6,
                         SpriteIndex = 0
+                    },
+                    new TilemapData()
+                    {
+                        Name = "Deadly tilemap",
+                        EnableCollision = true,
+                        IsTriggerCollision = false,
+                        LayersToDraw = 1 << 0,
+                        SortingOrder = 6,
+                        SpriteIndex = 1,
+                        ColliderOffset = new vec2(0, -0.8f)
                     },
                 }
             });

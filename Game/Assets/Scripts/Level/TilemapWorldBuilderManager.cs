@@ -101,7 +101,14 @@ namespace Game
 
                 if (tilemapData.EnableCollision)
                 {
-                    tilemap.AddComponent<TilemapCollider2D>();
+                    var collider = tilemap.AddComponent<TilemapCollider2D>();
+
+                    if (tilemapData.IsTriggerCollision)
+                    {
+                        collider.IsTrigger = true;
+                    }
+
+                    collider.Offset = tilemapData.ColliderOffset;
                 }
 
                 var tilemapResult = new TilemapResult()

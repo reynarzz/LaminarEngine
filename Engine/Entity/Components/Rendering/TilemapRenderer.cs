@@ -93,8 +93,8 @@ namespace Engine
                 float worldY = -level.WorldY + -tilePxY + -layer.PxTotalOffsetY;
 
                 var position = new vec3(
-                    MathF.Floor(worldX / Sprite.Texture.PixelPerUnit),
-                    MathF.Floor(worldY / Sprite.Texture.PixelPerUnit),
+                    (worldX / Sprite.Texture.PixelPerUnit),
+                    (worldY / Sprite.Texture.PixelPerUnit),
                     0
                 );
 
@@ -110,6 +110,7 @@ namespace Engine
 
             var level = project.Levels[options.LevelToLoad];
 
+            
             //if (level.WorldDepth != options.WorldDepth)
             //    continue;
 
