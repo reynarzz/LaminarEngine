@@ -438,7 +438,7 @@ namespace Game
                 }
             }
 
-            CheckPushWall();
+            //CheckPushWall();
         }
 
         // Push the character back when is touching a wall, this prevents the collider to slide when jumping.
@@ -493,12 +493,15 @@ namespace Game
             if (!CanCharacterMove())
                 return;
             dir *= _characterConfig.SpriteLookDirFlip;
-            if (CheckPushWall())
-            {
-                return;
-            }
+            
             if (dir != 0)
             {
+
+                //if (CheckPushWall())
+                //{
+                //    return;
+                //}
+
                 LookAt(dir);
                 
                 float targetX = _characterConfig.WalkSpeed * dir;
