@@ -90,7 +90,7 @@ namespace Game
 
                 var castPos = Transform.LocalPosition - vec3.Up * 0.5f;
                 var castSize = Transform.LocalScale + vec3.Right * 0.2f;
-                var hit = Physics2D.BoxCast(castPos, castSize, LayerMask.NameToBit(GameConsts.PLAYER));
+                var hit = Physics2D.BoxCast(castPos, castSize, GameConsts.CHARACTER_MASK);
 
                 // Debug.DrawBox(castPos, castSize, Color.Red);
                 if (!hit.isHit || (_direction > 0 || hit.Collider.Transform.WorldPosition.y > Transform.WorldPosition.y))

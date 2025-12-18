@@ -61,6 +61,7 @@ namespace Game
         public float HitRecoilStrengthScaling;
         public int HitInvincibilityBlinks;
         public bool DisappearOnDead;
+        public bool PushAwayFromWalls;
         public int StartLookDir;
 
     }
@@ -437,12 +438,15 @@ namespace Game
                 }
             }
 
-            CheckStopWall();
+            CheckPushWall();
         }
 
         // Push the character back when is touching a wall, this prevents the collider to slide when jumping.
-        private bool CheckStopWall()
+        private bool CheckPushWall()
         {
+            if (!_characterConfig.PushAwayFromWalls)
+                return false;
+
             vec3 origin = Transform.WorldPosition + new vec3(Transform.WorldScale.x * _characterConfig.SpriteLookDirFlip * 0.5f, 0.22f);
             vec3 size = new vec3(0.3f, 1.5f);
             var boxWallkhit = Physics2D.BoxCast(origin, size, GameConsts.GROUND_MASK);
@@ -489,7 +493,7 @@ namespace Game
             if (!CanCharacterMove())
                 return;
             dir *= _characterConfig.SpriteLookDirFlip;
-            if (CheckStopWall())
+            if (CheckPushWall())
             {
                 return;
             }

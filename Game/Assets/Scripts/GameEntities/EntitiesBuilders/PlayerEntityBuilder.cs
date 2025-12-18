@@ -44,6 +44,7 @@ namespace Game
                     StartLookDir = lookToRight ? 1 : -1,
                     HitRecoilTime = 0.5f,
                     HitRecoilStrengthScaling = 3.5f,
+                    PushAwayFromWalls = true,
                     Ground = new GroundDetectionOptions()
                     {
                         Enabled = true,
