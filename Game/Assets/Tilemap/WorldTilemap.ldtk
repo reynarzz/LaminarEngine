@@ -409,8 +409,8 @@
 			"autoRuleGroups": [],
 			"autoSourceLayerDefUid": null,
 			"tilesetDefUid": 169,
-			"tilePivotX": 0.5,
-			"tilePivotY": 0.5,
+			"tilePivotX": 0,
+			"tilePivotY": 0,
 			"biomeFieldUid": null
 		},
 		{

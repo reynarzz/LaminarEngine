@@ -99,7 +99,7 @@ namespace Game
                         if (TryFindPlayerInRange(out player))
                         {
                             Debug.Log("Attack Player");
-                            player?.HitDamage(Context, 1);
+                            player?.HitDamage(Context.Transform.WorldPosition, 1);
                         }
                     });
                 }

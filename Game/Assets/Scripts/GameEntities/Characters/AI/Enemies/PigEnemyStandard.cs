@@ -69,7 +69,7 @@ namespace Game
 
             if (Input.GetKeyDown(KeyCode.O))
             {
-                HitDamage(this, 1);
+                HitDamage(Transform.WorldPosition, 1);
             }
         }
 

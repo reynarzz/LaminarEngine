@@ -66,7 +66,7 @@ namespace Game
 
     }
 
-    public abstract class Character : GameEntity
+    public abstract class Character : GameEntity, IDamageReceiver
     {
         protected Animator Animator { get; private set; }
         protected SpriteRenderer Renderer { get; private set; }
@@ -554,7 +554,7 @@ namespace Game
                 return;
 
             Rigidbody.Velocity = new vec2(0, Rigidbody.Velocity.y > 0 ? 0 : Rigidbody.Velocity.y);
-            HitDamage(this, MAX_LIFE);
+            HitDamage(Transform.WorldPosition, MAX_LIFE);
         }
 
         private IEnumerator HitEffect(int blinks)
@@ -581,7 +581,7 @@ namespace Game
             IsInvencible = false;
         }
 
-        public virtual bool HitDamage(GameEntity who, int amount)
+        public virtual bool HitDamage(vec3 aggressorPos, int amount)
         {
             if (!IsCharacterAlive() || IsInvencible || IsEnteringThroughDoor)
                 return false;
@@ -589,7 +589,7 @@ namespace Game
             Inventory.Life = Math.Clamp(Inventory.Life - amount, 0, MAX_LIFE);
             Rigidbody.GravityScale = _characterConfig.YGravityScale;
 
-            var damageDir = (Transform.WorldPosition - who.Transform.WorldPosition).Normalized;
+            var damageDir = (Transform.WorldPosition - aggressorPos).Normalized;
             float max = 50;
             if (IsOnGround)
             {

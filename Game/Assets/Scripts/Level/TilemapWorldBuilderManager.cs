@@ -111,6 +111,7 @@ namespace Game
                     collider.Offset = tilemapData.ColliderOffset;
                 }
 
+                tilemapData.TilemapAction?.Invoke(tilemap);
                 var tilemapResult = new TilemapResult()
                 {
                     Bounds = new Bounds()

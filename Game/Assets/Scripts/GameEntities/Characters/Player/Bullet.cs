@@ -104,7 +104,7 @@ namespace Game
                     {
                         if (character.IsCharacterAlive())
                         {
-                            if(character.HitDamage(this, 1))
+                            if(character.HitDamage(Transform.WorldPosition, 1))
                             {
                                 characterWasHit = true;
                             }

@@ -18,6 +18,7 @@ namespace Game
         public int SpriteIndex { get; set; }
         public Material Material { get; set; }
         public ulong LayersToDraw { get; set; }
+        public Action<TilemapRenderer> TilemapAction { get; set; }
     }
 
     public class LevelInstantiateInfo

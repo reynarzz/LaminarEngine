@@ -177,11 +177,18 @@ namespace Game
                     {
                         Name = "Deadly tilemap",
                         EnableCollision = true,
-                        IsTriggerCollision = false,
+                        IsTriggerCollision = true,
                         LayersToDraw = 1 << 0,
                         SortingOrder = 6,
                         SpriteIndex = 1,
-                        ColliderOffset = new vec2(0, -0.8f)
+                        ColliderOffset = new vec2(0, -0.8f),
+                        TilemapAction = x => 
+                        {
+                            var damageTo = x.AddComponent<DamageTo>();
+
+                            damageTo.DamageAmount = 2;
+                            damageTo.Mask = GameConsts.CHARACTER_MASK;
+                        }
                     },
                 }
             });
@@ -334,7 +341,7 @@ uniform float uOutlineThickness = 0.04f
 
         private void ScreenGrabTest()
         {
-            var screenShader = Shader.FromPath("Shaders/ScreenVert.vert","Shaders/CTRTv_Cheap.frag");
+            var screenShader = Shader.FromPath("Shaders/ScreenVert.vert", "Shaders/CTRTv_Cheap.frag");
             var pass = new PostProcessingSinglePass(screenShader);
 
             pass.SetValue("uBackgroundColor", new vec3(0.07f));
