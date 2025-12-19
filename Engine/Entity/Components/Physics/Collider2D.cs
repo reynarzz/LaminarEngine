@@ -104,7 +104,7 @@ namespace Engine
                     B2Shapes.b2Shape_EnableContactEvents(shapeid, !value);
 
                     var shape = B2Shapes.b2GetShape(world, shapeid);
-                    if (_shapeDef.isSensor)
+                    if (_shapeDef.isSensor && shape.sensorIndex >= 0)
                     {
                         B2Sensors.b2DestroySensor(PhysicWorld.World, shape);
                     }
