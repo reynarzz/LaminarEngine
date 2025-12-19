@@ -26,5 +26,6 @@ namespace Game
         }
         public int MaxLife { get; set; }
         public CharacterInventory(int maxSlots) : base(maxSlots) { }
+
     }
 }

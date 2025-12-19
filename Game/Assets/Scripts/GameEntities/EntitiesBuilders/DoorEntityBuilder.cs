@@ -22,7 +22,7 @@ namespace Game
 
 			if (GetInt(entityData, "locked_amount", out var value))
 			{
-				doorData.LockedAmount = value;
+				doorData.LockedByAmount = value;
 			}
 
 			doorData.CurrentLevel = worldData.Levels[entityData.LevelIID].LevelIndex;
@@ -32,7 +32,7 @@ namespace Game
                 doorData.TargetPosition = targetValue.WorldPosition;
                 doorData.TargetLevelIndex = worldData.Levels[targetValue.LevelIID].LevelIndex;
             }
-            doorData.InteractCondition = PlayerHasItem_Condition(doorData.LockedBy, doorData.LockedAmount);
+            doorData.InteractCondition = PlayerHasItem_Condition(doorData.LockedBy, doorData.LockedByAmount);
             return GamePrefabs.World.InstantiateDoor(entityData.WorldPosition, doorData);
         }
     }

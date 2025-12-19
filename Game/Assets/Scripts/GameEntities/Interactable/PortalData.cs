@@ -11,7 +11,5 @@ namespace Game
     {
         public vec2 TargetPos { get; set; }
         public bool IsArriveOnly { get; set; }
-        public ItemId LockedBy { get; internal set; }
-        public int LockedAmount { get; internal set; }
     }
 }

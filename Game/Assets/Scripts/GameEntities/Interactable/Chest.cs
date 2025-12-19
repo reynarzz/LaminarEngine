@@ -18,13 +18,13 @@ namespace Game
 
     public class Chest : AnimatedInteractable<ChestData>
     {
-        private bool _isOpened = false;
         protected override void OnAwake()
         {
             base.OnAwake();
             BoxCollider.Size = new vec2(1.7f, BoxCollider.Size.y);
             SpriteRenderer.Material = GameMaterials.Instance.SpriteMaterial;
             InteractableRenderer.Transform.LocalPosition += vec3.Up * 1.7f;
+            LockedByItemPos = new vec2(0, 1);
         }
 
         protected override void OnStart()
@@ -79,13 +79,13 @@ namespace Game
 
         protected override void OnPlayerInteractZone(bool enter, Player player)
         {
-            base.OnPlayerInteractZone(enter && !_isOpened, player);
+            base.OnPlayerInteractZone(enter && !WasInteracted, player);
         }
         public override bool TryInteract(Player player)
         {
-            if (!_isOpened && CanInteract(player))
+            if (!WasInteracted && CanInteract(player))
             {
-                _isOpened = true;
+                WasInteracted = true;
 
                 IEnumerator Collect()
                 {

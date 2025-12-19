@@ -461,7 +461,7 @@ namespace Game
                 }
 
                 var dist = origin - new vec3(boxWallkhit.Point, 0);
-               // Transform.WorldPosition += new vec3(dist.x, 0, 0);
+                // Transform.WorldPosition += new vec3(dist.x, 0, 0);
             }
             if (Physics2D.DrawColliders)
             {
@@ -493,7 +493,7 @@ namespace Game
             if (!CanCharacterMove())
                 return;
             dir *= _characterConfig.SpriteLookDirFlip;
-            
+
             if (dir != 0)
             {
 
@@ -503,7 +503,7 @@ namespace Game
                 //}
 
                 LookAt(dir);
-                
+
                 float targetX = _characterConfig.WalkSpeed * dir;
                 float accel = 100;
 
@@ -620,6 +620,7 @@ namespace Game
                 Animator.SetState(HIT_ANIM_STATE);
                 Animator.Parameters.SetTrigger(DEATH_ANIM_STATE);
                 OnCharacterDead?.Invoke();
+              //  Actor.Layer = LayerMask.NameToLayer(GameConsts.CHARACTER_DEAD);
             }
 
             PlayHitSFX();
@@ -715,6 +716,7 @@ namespace Game
             {
                 Inventory.Life = _characterConfig.StartingLife;
             }
+            Actor.Layer = LayerMask.NameToLayer(_characterConfig.LayerName);
 
 #if DEBUG
             Renderer.IsEnabled = true;

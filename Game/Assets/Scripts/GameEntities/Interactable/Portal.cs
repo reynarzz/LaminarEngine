@@ -36,6 +36,10 @@ namespace Game
         public override void Init(PortalData data)
         {
             base.Init(data);
+            if (LockedByRenderer)
+            {
+                LockedByRenderer.SortOrder = 15;
+            }
 
             var portal = new Actor<Rotate>("PortalSprite").AddComponent<SpriteRenderer>();
             _renderer = portal.GetComponent<SpriteRenderer>();

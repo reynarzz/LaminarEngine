@@ -8,6 +8,8 @@ namespace Game
 {
     public class InteractableData
     {
+        public ItemId LockedBy { get; set; }
+        public int LockedByAmount { get; set; }
         public Predicate<Player> InteractCondition { get; set; }
     }
 }

@@ -21,7 +21,7 @@ namespace Game
 
         private bool _isPlayerInZone = false;
         private Coroutine _coroutine;
-
+        protected bool WasInteracted { get; set; }
         protected override void OnAwake()
         {
             Actor.Layer = LayerMask.NameToLayer(GameConsts.Interactable);
@@ -39,7 +39,7 @@ namespace Game
             InteractableRenderer.Sprite = GameTextures.GetSprite("e_interactable3");
         }
 
-        protected sealed override void OnTriggerEnter2D(Collider2D collider)
+        protected override void OnTriggerEnter2D(Collider2D collider)
         {
             if (IsPlayerLayer(collider) && !_isPlayerInZone)
             {
@@ -48,7 +48,7 @@ namespace Game
             }
         }
 
-        protected sealed override void OnTriggerExit2D(Collider2D collider)
+        protected override void OnTriggerExit2D(Collider2D collider)
         {
             if (IsPlayerLayer(collider) && _isPlayerInZone)
             {
@@ -73,27 +73,25 @@ namespace Game
         {
             InteractableRenderVisible(enter && CanInteract(player));
         }
-
         protected void InteractableRenderVisible(bool isVisible)
         {
             if (_coroutine != null)
             {
                 StopCoroutine(_coroutine);
             }
-            _coroutine = StartCoroutine(InteractableRendererAnimation(isVisible));
+            _coroutine = StartCoroutine(InteractableRendererAnimation(InteractableRenderer, isVisible));
         }
-
-        private IEnumerator InteractableRendererAnimation(bool show, float speed = 4)
+        protected IEnumerator InteractableRendererAnimation(SpriteRenderer renderer, bool show, float speed = 6)
         {
-            float t = InteractableRenderer.Color.A;
-            while (show?(t < 1.0f):(t > 0.0f))
+            float t = renderer.Color.A;
+            while (show ? (t < 1.0f) : (t > 0.0f))
             {
                 t += (show ? Time.DeltaTime : -Time.DeltaTime) * speed;
                 t = Mathf.Clamp01(t);
 
-                var c = InteractableRenderer.Color;
+                var c = renderer.Color;
                 c.A = t;
-                InteractableRenderer.Color = c;
+                renderer.Color = c;
                 yield return null;
             }
         }
@@ -101,15 +99,84 @@ namespace Game
 
     public abstract class InteractableEntityBase<T> : InteractableEntityBase where T : InteractableData
     {
+        protected SpriteRenderer LockedByRenderer { get; private set; }
         protected T Data { get; private set; }
+        protected vec2 LockedByItemPos { get; set; }
+        private Coroutine _coroutine;
+
         public virtual void Init(T data)
         {
             Data = data;
+
+            if (data != null && data.LockedBy != ItemId.none)
+            {
+                // NOTE: Right now i'm using just one renderer, but in the future interactables will be locked by more than one item,
+                //       For than reason I'm not reusing the interactable renderer,
+                //       however, ideally I would just pool those icons and change the positon on demand.
+                LockedByRenderer = new Actor("LockedByRequested").AddComponent<SpriteRenderer>();
+                LockedByRenderer.Transform.Parent = Transform;
+                LockedByRenderer.Sprite = GameTextures.GetSprite(data.LockedBy.ToString());
+                //LockedByRenderer.Actor.IsActiveSelf = false;
+                LockedByRenderer.Material = GameMaterials.Instance.SpriteMaterial;
+                LockedByRenderer.Transform.LocalPosition = LockedByItemPos;
+                LockedByRenderer.Transform.WorldScale = vec3.One * 2;
+                LockedByRenderer.SortOrder = 6;
+                LockedByRenderer.Color = Color.Transparent;
+            }
+        }
+        protected void LockedByRenderVisible(bool isVisible)
+        {
+            if (!LockedByRenderer)
+                return;
+
+            if (_coroutine != null)
+            {
+                StopCoroutine(_coroutine);
+            }
+            _coroutine = StartCoroutine(InteractableRendererAnimation(LockedByRenderer, isVisible));
         }
 
+        protected override void OnLateUpdate()
+        {
+            base.OnLateUpdate();
+            if (LockedByRenderer)
+                LockedByRenderer.Transform.LocalPosition += vec3.Up * MathF.Sin(Time.TimeCurrent * 5) * Time.DeltaTime;
+
+        }
         public sealed override bool CanInteract(Player player)
         {
             return Data?.InteractCondition?.Invoke(player) ?? true;
+        }
+
+        protected sealed override void OnTriggerEnter2D(Collider2D collider)
+        {
+            base.OnTriggerEnter2D(collider);
+
+            if (collider.Actor.Layer == LayerMask.NameToLayer(GameConsts.PLAYER))
+            {
+                var character = collider.GetComponent<Character>();
+                if (!character)
+                    return;
+
+                if ((!character.Inventory.Contains(Data.LockedBy, Data.LockedByAmount)) && LockedByRenderer
+                    && !WasInteracted)
+                {
+                    // LockedByRenderer.Actor.IsActiveSelf = true;
+                    LockedByRenderVisible(true);
+                }
+            }
+        }
+
+        protected sealed override void OnTriggerExit2D(Collider2D collider)
+        {
+            base.OnTriggerExit2D(collider);
+
+            if (collider.Actor.Layer == LayerMask.NameToLayer(GameConsts.PLAYER) && LockedByRenderer)
+            {
+                // LockedByRenderer.Actor.IsActiveSelf = false;
+
+                LockedByRenderVisible(false);
+            }
         }
     }
 }

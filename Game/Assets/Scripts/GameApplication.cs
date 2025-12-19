@@ -17,7 +17,6 @@ namespace Game
 
         // For the game:
         // Improve game architecture.
-        // ---Add spikes
         // ----Enemy AI
         // Five levels, small, one intro level falling from outside.
         // Water and lava.

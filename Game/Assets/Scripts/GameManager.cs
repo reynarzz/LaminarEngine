@@ -93,8 +93,11 @@ namespace Game
             LayerMask.TurnOff(GameConsts.ENEMY, GameConsts.CHARACTER_IGNORE);
             LayerMask.TurnOff(GameConsts.ENEMY, GameConsts.PLAYER);
             LayerMask.TurnOff(GameConsts.ENEMY, GameConsts.CHARACTER_DEAD);
+            LayerMask.TurnOff(GameConsts.COLLECTIBLE, GameConsts.CHARACTER_DEAD);
+            LayerMask.TurnOff(GameConsts.COLLECTIBLE, GameConsts.ENEMY);
             // LayerMask.TurnOff(GameConsts.ENEMY, GameConsts.ENEMY);
             LayerMask.TurnOff(GameConsts.ENEMY_CONFUSED, GameConsts.CHARACTER_IGNORE);
+            LayerMask.TurnOff(GameConsts.COLLECTIBLE, GameConsts.CHARACTER_IGNORE);
             LayerMask.TurnOff(GameConsts.PLATFORM, GameConsts.COLLECTIBLE);
             LayerMask.TurnOffAll(GameConsts.BULLET);
             LayerMask.TurnOn(GameConsts.BULLET, GameConsts.COLLECTIBLE);
