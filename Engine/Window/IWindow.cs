@@ -20,7 +20,7 @@ namespace Engine
         bool ShouldClose { get; }
         int MonitorCount { get; }
         bool IsInitialized { get; }
-        bool CanResize { get; }
+        bool CanResize { get; set; }
         int PhysicalWidth { get; }
         int PhysicalHeight { get; }
 

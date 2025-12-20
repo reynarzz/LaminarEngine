@@ -82,7 +82,8 @@ namespace Engine
         private bool _canResize = false;
         public bool CanResize
         {
-            get => _canResize; set
+            get => _canResize; 
+            set
             {
                 if (_canResize == value)
                 {

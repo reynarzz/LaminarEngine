@@ -1,17 +1,87 @@
-cd gamecooker
+#!/usr/bin/env bash
+set -e
 
-dotnet build -p:ForceConsoleOutput=true -c Release
+PLATFORM="$1"
+BUILD_TYPE="${2:-Release}"
+PLATFORM_FOLDER_NAME=""
 
-dotnet build -p:ForceConsoleOutput=true -c Debug
+# normalize
+PLATFORM="$(echo "$PLATFORM" | tr '[:upper:]' '[:lower:]')"
+BUILD_TYPE="$(echo "$BUILD_TYPE" | tr '[:lower:]' '[:upper:]')"
 
-cd ..
-cd platforms/android
+if [ -z "$PLATFORM" ]; then
+    echo "Error: platform not specified"
+    echo "Usage: ./build.sh {windows|macos|linux|android|all} {Debug|Release}"
+    exit 1
+fi
 
+dotnet_cmd() 
+{
+    if [ "$BUILD_TYPE" = "RELEASE" ]; then
+        dotnet publish \
+            -c "$BUILD_TYPE" \
+            -p:PublishTrimmed=true \
+            "$@"
+    else
+        dotnet build -c "$BUILD_TYPE" "$@"
+    fi
+}
 
-dotnet build -p:BuildAndroid=true -c Release
+build_gamecooker() 
+{
+    cd gamecooker
+    dotnet_cmd -p:ForceConsoleOutput=true
+    cd ..
+}
 
-cd ../../_Ship/Android
+build_android() 
+{
+    cd platforms/android
+    dotnet_cmd -p:BuildAndroid=true -p:PublishPlatform=android
+    cd ../../_Ship/Android
 
-adb install -r com.reynarzz.gfs-Signed.apk
+    if [ "$BUILD_TYPE" = "RELEASE" ]; then
+        adb install -r com.reynarzz.gfs-Signed.apk
+    else
+        adb install -r com.reynarzz.gfs-Debug.apk
+    fi
 
-adb shell am start -n com.reynarzz.gfs/crc64faceced24a29f4d5.MainActivity
+    adb shell am start -n com.reynarzz.gfs/crc64faceced24a29f4d5.MainActivity
+
+    cd ../../
+}
+
+build_desktop() 
+{
+    cd platforms/Desktop
+    dotnet_cmd -p:ForceConsoleOutput=true -p:PublishPlatform=$PLATFORM_FOLDER_NAME 
+    cd ../../
+}
+
+case "$PLATFORM" in
+    windows)
+	PLATFORM_FOLDER_NAME="win32"
+        build_gamecooker
+        build_desktop
+        ;;
+    macos)
+        PLATFORM_FOLDER_NAME="macOS"
+        build_gamecooker
+        build_desktop
+        ;;
+    linux)
+        PLATFORM_FOLDER_NAME="linux"
+        build_gamecooker
+        build_desktop
+        ;;
+    android)
+        PLATFORM_FOLDER_NAME="android"
+        build_gamecooker
+        build_android
+        ;;
+    *)
+        echo "Unknown platform: $PLATFORM"
+        echo "Usage: ./build.sh {windows|macos|linux|android|all} {Debug|Release}"
+        exit 1
+        ;;
+esac

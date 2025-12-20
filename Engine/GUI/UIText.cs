@@ -96,7 +96,7 @@ namespace Engine.GUI
         internal override void OnCanvasDraw(UICanvas canvas)
         {
             // TODO: Remove this
-            // IsDirty = true;
+            IsDirty = true;
 
             if (!Font)
                 return;

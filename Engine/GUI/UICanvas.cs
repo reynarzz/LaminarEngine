@@ -105,13 +105,13 @@ namespace Engine.GUI
             if (canReceivePointerEvents)
             {
                 // Pointer down event
-                if (Input.GetMouseDown(MouseButton.Left))
+                if (Input.GetMouseDown(MouseButton.Left) || IsAnyTouch(TouchEvent.Down))
                 {
                     _dragElement = element;
                     InvokePointerEvent(element, _pointerDownEvents, eventData, _pointerDownEventInvoker);
                 }
                 // Pointer up event
-                if (Input.GetMouseUp(MouseButton.Left))
+                if (Input.GetMouseUp(MouseButton.Left) || IsAnyTouch(TouchEvent.Up))
                 {
                     _dragElement = null;
                     InvokePointerEvent(element, _pointerUpEvents, eventData, _pointerUpEventInvoker);
@@ -136,17 +136,30 @@ namespace Engine.GUI
             }
 
             // Pointer up event, outside rect
-            if (!canReceivePointerEvents && _dragElement == element && Input.GetMouseUp(MouseButton.Left))
+            if (!canReceivePointerEvents && _dragElement == element && (Input.GetMouseUp(MouseButton.Left) || IsAnyTouch(TouchEvent.Up)))
             {
                 _dragElement = null;
                 InvokePointerEvent(element, _pointerUpOusideRectEvents, eventData, _pointerUpOutsideRectEventInvoker);
             }
 
             // Drag event
-            if (_dragElement == element && Input.GetMouse(MouseButton.Left))
+            if (_dragElement == element && (Input.GetMouse(MouseButton.Left) || IsAnyTouch(TouchEvent.Stationary)))
             {
                 InvokePointerEvent(element, _pointerDragEvents, eventData, _pointerDragEventInvoker);
             }
+        }
+
+        private bool IsAnyTouch(TouchEvent evt)
+        {
+            for (int i = 0; i < Input.Touch.TouchCount; i++)
+            {
+                if(Input.Touch.GetTouch(i).Type == evt)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private void DrawRecursive(UIElement element, RectTransform parent)
