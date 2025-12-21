@@ -251,7 +251,6 @@ namespace Game
         protected override void OnUpdate()
         {
 #if DEBUG
-            WindowManager.Window.Name = EngineInfo.RendererInfoToString() + " | FPS: " + ((int)Time.FPS).ToString();
             // Debug.DrawBox(ForegroundTilemap.Bounds.Center, ForegroundTilemap.Bounds.Size, Color.Red);
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
