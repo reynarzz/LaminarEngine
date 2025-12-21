@@ -4,6 +4,7 @@ using Engine.Layers.Input;
 using Game;
 using ImGuiNET;
 using SharedTypes;
+using System.Numerics;
 
 namespace Editor
 {
@@ -24,7 +25,7 @@ namespace Editor
         {
             _win = new Window("Editor", 1024, 640, Color.Black);
             _win.CanResize = true;
-           
+
             ImguiImplOpenGL3.Init(_win.Width, _win.Height);
             _glfwInput = new ImGuiGLFW(Window.NativeWindow);
             _glfwInput.Init();
@@ -83,9 +84,9 @@ namespace Editor
             ImGui.Text($"{nameof(EngineInfo.Renderer.SavedByBatching)}: {EngineInfo.Renderer.SavedByBatching}");
             ImGui.End();
 
-           
-        }
 
+        }
+        private Actor _selectedActor;
         private void Hierarchy()
         {
             ImGui.Begin("Scene graph");
@@ -96,18 +97,55 @@ namespace Editor
 
                 bool hasChildren = actor.Transform.Children.Count > 0;
 
-                var flags = hasChildren
-                    ? ImGuiTreeNodeFlags.OpenOnArrow
-                    : ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.NoTreePushOnOpen;
+                ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.OpenOnArrow | ImGuiTreeNodeFlags.SpanFullWidth;
+
+                if (!hasChildren)
+                    flags |= ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.NoTreePushOnOpen;
+
+                if (_selectedActor == actor)
+                    flags |= ImGuiTreeNodeFlags.Selected;
+
+                if (!actor.IsActiveSelf)
+                    ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(0.5f));
 
                 bool open = ImGui.TreeNodeEx(actor.Name, flags);
 
+                if (!actor.IsActiveSelf)
+                    ImGui.PopStyleColor();
+
+                // Selection handling
+                if (ImGui.IsItemClicked())
+                    _selectedActor = actor;
+
+                if (ImGui.BeginPopupContextItem("ActorContext"))
+                {
+                    _selectedActor = actor;
+
+                    if (ImGui.MenuItem("Rename")) { }
+                    if (ImGui.MenuItem("Duplicate")) { }
+                    ImGui.Separator();
+                    if (ImGui.MenuItem("Delete"))
+                    {
+
+                        ImGui.EndPopup();
+                        if (open && hasChildren)
+                        {
+                            ImGui.TreePop();
+                        }
+                        ImGui.PopID();
+
+                        Actor.Destroy(_selectedActor);
+                        return;
+                    }
+
+                    ImGui.EndPopup();
+                }
+
                 if (open && hasChildren)
                 {
-                    for (int i = 0; i < actor.Transform.Children.Count; i++)
-                    {
-                        DrawActor(actor.Transform.Children[i].Actor);
-                    }
+                    foreach (var child in actor.Transform.Children)
+                        DrawActor(child.Actor);
+
                     ImGui.TreePop();
                 }
 
@@ -116,10 +154,20 @@ namespace Editor
 
             for (int i = 0; i < SceneManager.Scenes.Count; i++)
             {
-                for (int j = 0; j < SceneManager.Scenes[i].RootActors.Count; j++)
+                ImGui.PushID(SceneManager.Scenes[i].GetID().ToString());
+                ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.OpenOnArrow | ImGuiTreeNodeFlags.SpanFullWidth;
+
+                bool open = ImGui.TreeNodeEx(SceneManager.Scenes[i].Name, flags);
+                if (open && SceneManager.Scenes[i].RootActors.Count > 0)
                 {
-                    DrawActor(SceneManager.Scenes[i].RootActors[j]);
+                    for (int j = 0; j < SceneManager.Scenes[i].RootActors.Count; j++)
+                    {
+                        DrawActor(SceneManager.Scenes[i].RootActors[j]);
+                    }
+
+                    ImGui.TreePop();
                 }
+                ImGui.PopID();
             }
 
             ImGui.End();

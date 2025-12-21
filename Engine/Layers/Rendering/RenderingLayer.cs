@@ -34,6 +34,7 @@ namespace Engine.Layers
             _screenGrabTarget = new RenderTexture(Screen.Width, Screen.Height);
 
             ClearScreenToColor(WindowManager.Window.StartWindowColor);
+            GfxDeviceManager.Current.Present(_defaultSceneRenderTexture.NativeResource);
 
             _pipelineFeatures = new PipelineFeatures();
             _screenPipelineFeatures = new PipelineFeatures();
@@ -71,6 +72,8 @@ namespace Engine.Layers
             {
                 Debug.Warn("No cameras found in scene.");
                 ClearScreenToColor(Color.Black);
+                GfxDeviceManager.Current.Draw(OnDrawOverlay, _defaultSceneRenderTexture.NativeResource);
+                GfxDeviceManager.Current.Present(_defaultSceneRenderTexture.NativeResource);
                 return;
             }
 
@@ -317,7 +320,6 @@ namespace Engine.Layers
                 Color = color,
                 RenderTarget = _defaultSceneRenderTexture.NativeResource
             });
-            GfxDeviceManager.Current.Present(_defaultSceneRenderTexture.NativeResource);
         }
 
         private void ClearUniforms(DrawCallData drawCall)
