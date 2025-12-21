@@ -6,21 +6,17 @@ namespace Editor
     internal class Program
     {
         private static Window _win;
-        private static string _text = "hello world";
         static void Main(string[] args)
         {
             _win = new Window("Editor", 1024, 640, Color.Black);
             _win.CanResize = true;
 
-            //var imgui = new DearImGuiWindow(_win.Width, _win.Height);
-            CreateContext();
-
-
             ImguiImplOpenGL3.Init(_win.Width, _win.Height);
+            ImGuiGLFW.ImGui_ImplGlfw_Init(Window.NativeWindow);
 
             _win.OnWindowChanged += (w, h) =>
             {
-              //  imgui.OnResize(w, h);
+              
             };
 
             while (!_win.ShouldClose)
@@ -33,6 +29,10 @@ namespace Editor
                 ImguiImplOpenGL3.SetPerFrameImGuiData(1, _win.Width, _win.Height);
 
                 ImGui.NewFrame();
+
+                ImGuiGLFW.ImGui_ImplGlfw_UpdateMousePosAndButtons();
+                ImGuiGLFW.ImGui_ImplGlfw_UpdateMouseCursor();
+
                 ImGui.Text("Hello world");
 
                 ImGui.ShowDemoWindow();         
