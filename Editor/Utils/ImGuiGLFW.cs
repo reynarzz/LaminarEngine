@@ -25,7 +25,8 @@ namespace Editor
 
             io.BackendFlags |= ImGuiBackendFlags.HasMouseCursors;
             io.BackendFlags |= ImGuiBackendFlags.HasSetMousePos;
-
+            io.KeyRepeatDelay = 0.35f; // default ~0.25
+            io.KeyRepeatRate = 0.05f; // default ~0.05
             CreateCursors();
 
             if (installCallbacks)
@@ -75,16 +76,22 @@ namespace Editor
         {
             var io = ImGui.GetIO();
 
+            // Ignore repeats: ImGui handles key repeat internally
+            if (state == InputState.Repeat)
+                return;
+
             if (TryMapKey(key, out ImGuiKey imguiKey))
             {
                 io.AddKeyEvent(imguiKey, state == InputState.Press);
             }
 
+            // Modifiers (must be updated every key event)
             io.AddKeyEvent(ImGuiKey.ModCtrl, mods.HasFlag(ModifierKeys.Control));
             io.AddKeyEvent(ImGuiKey.ModShift, mods.HasFlag(ModifierKeys.Shift));
             io.AddKeyEvent(ImGuiKey.ModAlt, mods.HasFlag(ModifierKeys.Alt));
             io.AddKeyEvent(ImGuiKey.ModSuper, mods.HasFlag(ModifierKeys.Super));
         }
+
 
         private void OnChar(IntPtr wnd, uint c)
         {
@@ -142,6 +149,12 @@ namespace Editor
                 Keys.Space => ImGuiKey.Space,
                 Keys.Enter => ImGuiKey.Enter,
                 Keys.Escape => ImGuiKey.Escape,
+                Keys.A => ImGuiKey.A,
+                Keys.C => ImGuiKey.C,
+                Keys.V => ImGuiKey.V,
+                Keys.X => ImGuiKey.X,
+                Keys.Y => ImGuiKey.Y,
+                Keys.Z => ImGuiKey.Z,
                 _ => ImGuiKey.None
             };
 
