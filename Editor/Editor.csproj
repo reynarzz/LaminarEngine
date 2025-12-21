@@ -7,4 +7,41 @@
 	  <Nullable>disable</Nullable>
 	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Engine\Engine.csproj" />
+    <ProjectReference Include="..\GameCooker\GameCooker.csproj" />
+    <ProjectReference Include="..\Game\Game.csproj" />
+    <ProjectReference Include="..\SharedTypes\SharedTypes.csproj" />
+  </ItemGroup>
+
+	<Target Name="PostBuild_Windows" AfterTargets="PostBuildEvent" Condition="'$(OS)' == 'Windows_NT'">
+
+		<PropertyGroup>
+			<GlfwWinSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\Third\Win\glfw\lib-vc2022\glfw.dll'))</GlfwWinSrc>
+			<ImGuiSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\Third\ImGui\cimgui\win-x64\cimgui.dll'))</ImGuiSrc>
+			
+		</PropertyGroup>
+
+		<Message Text="Copying from $(GlfwWinSrc)" Importance="high" />
+
+		<Copy SourceFiles="$(GlfwWinSrc)" DestinationFiles="$(TargetDir)glfw.dll" SkipUnchangedFiles="true" />
+		<Copy SourceFiles="$(ImGuiSrc)" DestinationFiles="$(TargetDir)cimgui.dll" SkipUnchangedFiles="true" />
+
+		
+	</Target>
+
+	<Target Name="PostBuild_Mac" AfterTargets="PostBuildEvent" Condition="$(RuntimeIdentifier.Contains('osx'))">
+
+		<PropertyGroup>
+			<GlfwMacSrc>
+				$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\Third/MacOs/glfw/$(MacLibFolder)/libglfw.dylib'))
+			</GlfwMacSrc>
+		</PropertyGroup>
+
+		<Message Text="Copying from $(GlfwMacSrc)" Importance="high" />
+
+		<Copy SourceFiles="$(GlfwMacSrc)" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
+	</Target>
+
 </Project>

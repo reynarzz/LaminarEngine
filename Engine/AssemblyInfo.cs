@@ -7,4 +7,5 @@ using System.Threading.Tasks;
 
 [assembly: InternalsVisibleTo("Entry_Desktop")]
 [assembly: InternalsVisibleTo("Entry_Android")]
+[assembly: InternalsVisibleTo("Editor")]
 
