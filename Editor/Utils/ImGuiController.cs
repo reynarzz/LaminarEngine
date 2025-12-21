@@ -88,7 +88,7 @@ namespace Editor
         {
             ImGuiIOPtr io = ImGui.GetIO();
             io.DisplaySize = new Vector2(width, height);
-            io.DisplayFramebufferScale = new System.Numerics.Vector2(1, 1);
+            io.DisplayFramebufferScale = new Vector2(1, 1);
             io.DeltaTime = deltaSeconds; // DeltaTime is in seconds.
         }
 
