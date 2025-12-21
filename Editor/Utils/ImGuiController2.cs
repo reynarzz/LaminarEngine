@@ -64,9 +64,6 @@ namespace Editor
             var io = ImGui.GetIO();
             io.Fonts.AddFontDefault();
 
-
-           
-
             RendererData* bd = (RendererData*)NativeMemory.AllocZeroed((uint)sizeof(RendererData));
             bd->GlslVersion = 410;
 
@@ -78,13 +75,12 @@ namespace Editor
 
             InitMultiViewportSupport();
 
-            ImguiImplOpenGL3.NewFrame();
+            NewFrame();
 
             io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
 
             SetPerFrameImGuiData(1f / 60f, width, height);
 
-            ImGui.NewFrame();
 
             return true;
         }

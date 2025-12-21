@@ -6,6 +6,7 @@ namespace Editor
     internal class Program
     {
         private static Window _win;
+        private static string _text = "hello world";
         static void Main(string[] args)
         {
             _win = new Window("Editor", 1024, 640, Color.Black);
@@ -28,15 +29,16 @@ namespace Editor
 
                 OpenGL.GL.glClearColor(1, 0, 0, 1);
                 OpenGL.GL.glClear(OpenGL.GL.GL_COLOR_BUFFER_BIT);
-                ImGui.Text("hello world");
-                //imgui.OnRenderFrame();
-                ImguiImplOpenGL3.SetPerFrameImGuiData(Time.DeltaTime, _win.Width, _win.Height);
 
-                ImguiImplOpenGL3.NewFrame();
+                ImguiImplOpenGL3.SetPerFrameImGuiData(1, _win.Width, _win.Height);
 
-                ImGui.Render();
+                ImGui.NewFrame();
+                ImGui.Text("Hello world");
 
-                ImguiImplOpenGL3.RenderDrawData(ImGui.GetDrawData());
+                ImGui.ShowDemoWindow();         
+
+                ImGui.Render();                 
+                ImguiImplOpenGL3.RenderDrawData(ImGui.GetDrawData()); 
 
                 _win.SwapBuffers();
             }
