@@ -114,5 +114,10 @@ namespace Engine.Graphics
         {
             throw new NotImplementedException();
         }
+
+        internal override void Draw(Action draw, GfxResource renderTarget)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

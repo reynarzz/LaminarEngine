@@ -22,7 +22,7 @@ namespace Engine.Layers
         private List<Renderer2D> _UIElementRenderers;
         private mat4 _viewProjMatrix;
         private readonly Action<Shader, RenderTexture, RenderTexture, UniformValue[]> _drawPostProcessCallback;
-
+        internal static event Action OnDrawOverlay;
         public RenderingLayer() : base()
         {
             _drawPostProcessCallback = PostProcessDraw;
@@ -119,6 +119,9 @@ namespace Engine.Layers
 
             RenderPostProcessing(ref sceneRenderTarget);
 
+            // Draw any overlays such as debug UI
+            GfxDeviceManager.Current.Draw(OnDrawOverlay, sceneRenderTarget.NativeResource);
+            
             GfxDeviceManager.Current.Present(sceneRenderTarget.NativeResource);
         }
 

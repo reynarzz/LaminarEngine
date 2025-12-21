@@ -236,6 +236,13 @@ namespace Engine.Graphics.OpenGL
             }
         }
 
+        internal override void Draw(Action draw, GfxResource renderTarget)
+        {
+            var frameBuffer = renderTarget as GLFrameBuffer;
+            frameBuffer.Bind();
+            draw?.Invoke();
+            frameBuffer.Unbind();
+        }
         internal override void Draw(DrawCallData drawCallData)
         {
             (drawCallData.Geometry as GLGeometry).Bind();
