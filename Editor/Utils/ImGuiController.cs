@@ -79,10 +79,94 @@ namespace Editor
             io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
 
             SetPerFrameImGuiData(1f / 60f, width, height);
-
+            Styles();
 
             return true;
         }
+
+        private static void Styles()
+        {
+            var style = ImGui.GetStyle();
+
+            // Rounding
+            style.WindowRounding = 4.0f;
+            style.ChildRounding = 4.0f;
+            style.FrameRounding = 3.0f;
+            style.PopupRounding = 4.0f;
+            style.ScrollbarRounding = 3.0f;
+            style.GrabRounding = 3.0f;
+            style.TabRounding = 4.0f;
+
+            // Sizes
+            style.WindowPadding = new Vector2(8, 8);
+            style.FramePadding = new Vector2(6, 4);
+            style.ItemSpacing = new Vector2(8, 4);
+            style.ItemInnerSpacing = new Vector2(6, 4);
+            style.IndentSpacing = 18.0f;
+            style.ScrollbarSize = 12.0f;
+            style.GrabMinSize = 10.0f;
+            style.TabMinWidthForCloseButton = 0.0f;
+
+            // Borders
+            style.WindowBorderSize = 1.0f;
+            style.ChildBorderSize = 1.0f;
+            style.PopupBorderSize = 1.0f;
+            style.FrameBorderSize = 1.0f;
+            style.TabBorderSize = 0.0f;
+
+            // Colors
+            var colors = style.Colors;
+
+            // Backgrounds
+            colors[(int)ImGuiCol.WindowBg] = new Vector4(0.1f, 0.1f, 0.1f, 0.4f); 
+            colors[(int)ImGuiCol.ChildBg] = new Vector4(0.12f, 0.12f, 0.12f, 0.6f);
+            colors[(int)ImGuiCol.PopupBg] = new Vector4(0.12f, 0.12f, 0.12f, 0.95f);
+
+            // Frames 
+            colors[(int)ImGuiCol.FrameBg] = new Vector4(0.20f, 0.20f, 0.20f, 1.0f);
+            colors[(int)ImGuiCol.FrameBgHovered] = new Vector4(0.25f, 0.25f, 0.25f, 1.0f);
+            colors[(int)ImGuiCol.FrameBgActive] = new Vector4(0.28f, 0.28f, 0.28f, 1.0f);
+
+            // Titles
+            colors[(int)ImGuiCol.TitleBg] = new Vector4(0.12f, 0.12f, 0.12f, 1.0f);
+            colors[(int)ImGuiCol.TitleBgActive] = new Vector4(0.16f, 0.16f, 0.16f, 1.0f);
+            colors[(int)ImGuiCol.TitleBgCollapsed] = new Vector4(0.10f, 0.10f, 0.10f, 1.0f);
+
+            // Buttons
+            colors[(int)ImGuiCol.Button] = new Vector4(0.22f, 0.22f, 0.22f, 1.0f);
+            colors[(int)ImGuiCol.ButtonHovered] = new Vector4(0.30f, 0.30f, 0.30f, 1.0f);
+            colors[(int)ImGuiCol.ButtonActive] = new Vector4(0.35f, 0.35f, 0.35f, 1.0f);
+
+            // Tabs
+            colors[(int)ImGuiCol.Tab] = new Vector4(0.16f, 0.16f, 0.16f, 1.0f);
+            colors[(int)ImGuiCol.TabHovered] = new Vector4(0.26f, 0.26f, 0.26f, 1.0f);
+
+            // Headers: tree nodes, selectable
+            colors[(int)ImGuiCol.Header] = new Vector4(0.22f, 0.22f, 0.22f, 1.0f);
+            colors[(int)ImGuiCol.HeaderHovered] = new Vector4(0.28f, 0.28f, 0.28f, 1.0f);
+            colors[(int)ImGuiCol.HeaderActive] = new Vector4(0.32f, 0.32f, 0.32f, 1.0f);
+
+            // Selection
+            colors[(int)ImGuiCol.TextSelectedBg] = new Vector4(0.35f, 0.35f, 0.35f, 0.8f);
+
+            // Scrollbar
+            colors[(int)ImGuiCol.ScrollbarBg] = new Vector4(0.10f, 0.10f, 0.10f, 0.6f);
+            colors[(int)ImGuiCol.ScrollbarGrab] = new Vector4(0.30f, 0.30f, 0.30f, 1.0f);
+            colors[(int)ImGuiCol.ScrollbarGrabHovered] =
+                                                     new Vector4(0.40f, 0.40f, 0.40f, 1.0f);
+            colors[(int)ImGuiCol.ScrollbarGrabActive] =
+                                                     new Vector4(0.45f, 0.45f, 0.45f, 1.0f);
+
+            // Text
+            colors[(int)ImGuiCol.Text] = new Vector4(0.95f, 0.95f, 0.95f, 1.0f);
+            colors[(int)ImGuiCol.TextDisabled] = new Vector4(0.55f, 0.55f, 0.55f, 1.0f);
+
+            // Resize grips
+            colors[(int)ImGuiCol.ResizeGrip] = new Vector4(0.30f, 0.30f, 0.30f, 0.3f);
+            colors[(int)ImGuiCol.ResizeGripHovered] = new Vector4(0.40f, 0.40f, 0.40f, 0.6f);
+            colors[(int)ImGuiCol.ResizeGripActive] = new Vector4(0.45f, 0.45f, 0.45f, 0.9f);
+        }
+
 
         public static void SetPerFrameImGuiData(float deltaSeconds, int width, int height)
         {
