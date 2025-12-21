@@ -61,6 +61,7 @@ namespace Editor
             _glfwInput.NewFrame();
 
             RenderingInfoWindow();
+            Hierarchy();
 
             ImGui.Render();
             ImguiImplOpenGL3.RenderDrawData(ImGui.GetDrawData());
@@ -82,6 +83,47 @@ namespace Editor
             ImGui.Text($"{nameof(EngineInfo.Renderer.SavedByBatching)}: {EngineInfo.Renderer.SavedByBatching}");
             ImGui.End();
 
+           
         }
+
+        private void Hierarchy()
+        {
+            ImGui.Begin("Scene graph");
+
+            void DrawActor(Actor actor)
+            {
+                ImGui.PushID(actor.GetID().ToString());
+
+                bool hasChildren = actor.Transform.Children.Count > 0;
+
+                var flags = hasChildren
+                    ? ImGuiTreeNodeFlags.OpenOnArrow
+                    : ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.NoTreePushOnOpen;
+
+                bool open = ImGui.TreeNodeEx(actor.Name, flags);
+
+                if (open && hasChildren)
+                {
+                    for (int i = 0; i < actor.Transform.Children.Count; i++)
+                    {
+                        DrawActor(actor.Transform.Children[i].Actor);
+                    }
+                    ImGui.TreePop();
+                }
+
+                ImGui.PopID();
+            }
+
+            for (int i = 0; i < SceneManager.Scenes.Count; i++)
+            {
+                for (int j = 0; j < SceneManager.Scenes[i].RootActors.Count; j++)
+                {
+                    DrawActor(SceneManager.Scenes[i].RootActors[j]);
+                }
+            }
+
+            ImGui.End();
+        }
+
     }
 }

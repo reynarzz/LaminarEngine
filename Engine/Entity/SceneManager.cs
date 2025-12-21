@@ -16,7 +16,7 @@ namespace Engine
 
         private static readonly List<Scene> _scenesToDestroy = new();
         private static readonly List<Scene> _scenes = new();
-
+        internal static IReadOnlyList<Scene> Scenes => _scenes;
         static SceneManager()
         {
             // First Scene is always the 'dontDestroyOnLoad' scene

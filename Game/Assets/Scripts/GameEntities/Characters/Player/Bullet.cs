@@ -141,7 +141,7 @@ namespace Game
 
             _particleSystem.OnEmitFinished += () =>
             {
-                Actor.Destroy(_particleSystem);
+                Actor.Destroy(_particleSystem.Actor);
             };
 
 
