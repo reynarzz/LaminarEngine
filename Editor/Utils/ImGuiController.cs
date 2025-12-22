@@ -1,4 +1,5 @@
 ﻿using Engine;
+using GLFW;
 using GlmNet;
 using ImGuiNET;
 using SharedTypes;
@@ -59,13 +60,19 @@ namespace Editor
             return ImGui.GetCurrentContext() == 0 ? null : (RendererData*)ImGui.GetIO().BackendRendererUserData;
         }
         static byte[] BackendName = "custom_impl_opengl3"u8.ToArray();
-        public static bool Init(int width, int height)
+        private static WindowStandalone _window;
+
+        public static bool Init(WindowStandalone window)
         {
+            _window = window;
             IntPtr context = ImGui.CreateContext();
             ImGui.SetCurrentContext(context);
             var io = ImGui.GetIO();
             io.Fonts.AddFontDefault();
+            float sx, sy;
+            Glfw.GetWindowContentScale(WindowStandalone.NativeWindow, out sx, out sy);
 
+            io.DisplayFramebufferScale = new Vector2(sx, sy);
             var assemblyDir = Paths.ClearPathSeparation(Path.GetDirectoryName(AppContext.BaseDirectory)!);
             var root = Path.Combine(assemblyDir.Substring(0, assemblyDir.LastIndexOf("Editor")), "Editor/Data");
             
@@ -91,7 +98,7 @@ namespace Editor
             io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
             io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
 
-            SetPerFrameImGuiData(1f / 60f, width, height);
+            SetPerFrameImGuiData(1f / 60f, window.Width, window.Height);
             Styles();
 
             return true;
@@ -208,6 +215,11 @@ namespace Editor
         public static void NewFrame()
         {
             RendererData* bd = GetBackendData();
+             float sx, sy;
+            var io = ImGui.GetIO();
+
+            Glfw.GetWindowContentScale(WindowStandalone.NativeWindow, out sx, out sy);
+            io.DisplayFramebufferScale = new Vector2(sx, sy);
 
             if (bd->ShaderHandle == 0)
             {

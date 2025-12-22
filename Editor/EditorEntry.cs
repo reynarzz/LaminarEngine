@@ -36,7 +36,7 @@ namespace Editor
             RenderingLayer.OverlayOptions.Width = _win.Width;
             RenderingLayer.OverlayOptions.Height = _win.Height;
 
-            ImguiImplOpenGL3.Init(_win.Width, _win.Height);
+            ImguiImplOpenGL3.Init(_win);
             _glfwInput = new ImGuiGLFW(WindowStandalone.NativeWindow);
             _glfwInput.Init();
            // _node = new SimpleNodeEditor();
@@ -73,9 +73,10 @@ namespace Editor
 
         private void Render()
         {
-            ImguiImplOpenGL3.SetPerFrameImGuiData(Time.UnscaledDeltaTime, _win.Width, _win.Height);
+            ImguiImplOpenGL3.SetPerFrameImGuiData(Time.UnscaledDeltaTime, _win.PhysicalWidth, _win.PhysicalHeight);
 
             ImGui.NewFrame();
+            ImguiImplOpenGL3.NewFrame();
             _glfwInput.NewFrame();
 
             // Render ImGui here:
