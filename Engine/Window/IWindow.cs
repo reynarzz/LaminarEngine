@@ -23,6 +23,8 @@ namespace Engine
         bool CanResize { get; set; }
         int PhysicalWidth { get; }
         int PhysicalHeight { get; }
+        int OffsetX { get; }
+        int OffsetY { get; }
 
         void SwapBuffers();
         void SetWindowSize(int width, int height);

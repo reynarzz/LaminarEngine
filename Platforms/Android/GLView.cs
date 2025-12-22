@@ -28,7 +28,8 @@ namespace Engine.Android
         public int PhysicalHeight { get; set; }
         private readonly GLRenderer _renderer;
         private readonly AndroidSystem _system;
-
+        public int OffsetX => 0;
+        public int OffsetY => 0;
         public GLView(Context context) : base(context)
         {
             // Request an OpenGL ES 3.0 context

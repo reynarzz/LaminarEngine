@@ -99,6 +99,9 @@ namespace Engine
         public int PhysicalWidth => _physicalWidth;
         public int PhysicalHeight => _physicalHeight;
 
+        public int OffsetX => 0;
+        public int OffsetY => 0;
+
         private void OnMouseButton(IntPtr window, GLFW.MouseButton button, GLFW.InputState state, GLFW.ModifierKeys modifiers)
         {
             if (button != GLFW.MouseButton.Left) return;

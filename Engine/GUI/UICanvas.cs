@@ -204,8 +204,8 @@ namespace Engine.GUI
 
         public vec2 ScreenToCanvas(vec2 mousePosScreen)
         {
-            float x = (mousePosScreen.x / (float)Screen.PhysicalWidth) * (float)RectTransform.Rect.Width;
-            float y = (mousePosScreen.y / (float)Screen.PhysicalHeight) * (float)RectTransform.Rect.Height;
+            float x =  ((mousePosScreen.x - Screen.OffsetX) / (float)Screen.PhysicalWidth) * (float)RectTransform.Rect.Width;
+            float y =  ((mousePosScreen.y - Screen.OffsetY) / (float)Screen.PhysicalHeight) * (float)RectTransform.Rect.Height;
             return new vec2(x, y);
         }
 

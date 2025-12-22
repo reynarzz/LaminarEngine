@@ -21,13 +21,13 @@ namespace Editor
         private WindowStandalone _win;
         private ImGuiGLFW _glfwInput;
         private const string PROJECT_FOLDER_NAME = "Editor";
-        private ImGuiGameWindow _gameWindow;
+        private EditorGameView _gameWindow;
 
         internal void Init()
         {
             _win = new WindowStandalone("Editor", 1024, 640, Color.Black);
             _win.CanResize = true;
-            _gameWindow = new ImGuiGameWindow(_win);
+            _gameWindow = new EditorGameView(_win);
 
             RenderingLayer.OverlayOptions.Width = _win.Width;
             RenderingLayer.OverlayOptions.Height = _win.Height;
@@ -52,14 +52,15 @@ namespace Editor
             {
                 RenderingLayer.OverlayOptions.Width = w;
                 RenderingLayer.OverlayOptions.Height = h;
+                engine.Update();
+                _gameWindow.Update();
 
             };
-
+            
             _gameWindow.OnWindowChanged += (w, h) =>
             {
                 engine.Update();
             };
-
 
             while (!_win.ShouldClose)
             {
@@ -70,18 +71,15 @@ namespace Editor
 
         private void Render()
         {
-            ImguiImplOpenGL3.SetPerFrameImGuiData(Time.DeltaTime, _win.Width, _win.Height);
+            ImguiImplOpenGL3.SetPerFrameImGuiData(Time.UnscaledDeltaTime, _win.Width, _win.Height);
 
             ImGui.NewFrame();
-
             _glfwInput.NewFrame();
 
             // Render ImGui here:
-            _gameWindow.Render();
 
-            RenderingInfoWindow();
-            Hierarchy();
-
+            DockSpace();
+  
             ImGui.Render();
             ImguiImplOpenGL3.RenderDrawData(ImGui.GetDrawData());
 
@@ -89,9 +87,44 @@ namespace Editor
 
         }
 
+        private void DockSpace()
+        {
+            ImGuiViewportPtr viewport = ImGui.GetMainViewport();
+            ImGui.SetNextWindowPos(viewport.Pos);
+            ImGui.SetNextWindowSize(viewport.Size);
+            ImGui.SetNextWindowViewport(viewport.ID);
+
+            ImGuiWindowFlags flags = ImGuiWindowFlags.NoTitleBar |
+                                     ImGuiWindowFlags.NoCollapse |
+                                     ImGuiWindowFlags.NoResize |
+                                     ImGuiWindowFlags.NoMove |
+                                     ImGuiWindowFlags.NoBringToFrontOnFocus |
+                                     ImGuiWindowFlags.NoNavFocus |
+                                     ImGuiWindowFlags.NoBackground;
+
+            ImGui.PushStyleVar(ImGuiStyleVar.WindowRounding, 0.0f);
+            ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f);
+            ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Vector2.Zero);
+
+            ImGui.PushStyleColor(ImGuiCol.WindowBg, new Vector4(0.1f, 0.1f, 0.1f, 1.0f));
+            ImGui.Begin("DockSpaceHost", flags);
+
+            ImGui.PopStyleVar(3);
+
+            var dockspaceId = ImGui.GetID("MainDockSpace");
+            ImGui.DockSpace(dockspaceId, Vector2.Zero, ImGuiDockNodeFlags.None);
+
+            // call imgui functions here: ---
+            _gameWindow.Render();
+            RenderingInfoWindow();
+            Hierarchy();
+            // ------
+
+            ImGui.End();
+            ImGui.PopStyleColor();
+        }
         private void RenderingInfoWindow()
         {
-
             ImGui.Begin("Rendering Info");
             ImGui.Text($"{nameof(Time.FPS)}: {Time.FPS}");
             ImGui.Text($"{nameof(EngineInfo.Renderer.WBatches)}: {EngineInfo.Renderer.WBatches}");
@@ -104,9 +137,8 @@ namespace Editor
             ImGui.Text($"{nameof(EngineInfo.Renderer.TotalDrawCalls)}: {EngineInfo.Renderer.TotalDrawCalls}");
             ImGui.Text($"{nameof(EngineInfo.Renderer.SavedByBatching)}: {EngineInfo.Renderer.SavedByBatching}");
             ImGui.End();
-
-
         }
+
         private Actor _selectedActor;
         private void Hierarchy()
         {
@@ -176,7 +208,7 @@ namespace Editor
             for (int i = 0; i < SceneManager.Scenes.Count; i++)
             {
                 ImGui.PushID(SceneManager.Scenes[i].GetID().ToString());
-                ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.OpenOnArrow | ImGuiTreeNodeFlags.SpanFullWidth;
+                ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.OpenOnArrow | ImGuiTreeNodeFlags.SpanFullWidth | ImGuiTreeNodeFlags.DefaultOpen;
 
                 bool open = ImGui.TreeNodeEx(SceneManager.Scenes[i].Name, flags);
                 if (open)

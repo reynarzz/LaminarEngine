@@ -16,7 +16,6 @@ namespace Engine.Layers
         private PipelineFeatures _pipelineFeatures;
         private PipelineFeatures _screenPipelineFeatures;
         private RenderTexture _screenGrabTarget;
-        private RenderTexture _overlayRenderTexture;
         private GfxResource _screenGeometry;
         private RenderTexture _defaultSceneRenderTexture;
         private List<Renderer2D> _renderers;
@@ -42,7 +41,6 @@ namespace Engine.Layers
         {
             _defaultSceneRenderTexture = new RenderTexture(Screen.Width, Screen.Height);
             _screenGrabTarget = new RenderTexture(Screen.Width, Screen.Height);
-            _overlayRenderTexture = new RenderTexture(Screen.Width, Screen.Height);
             ClearScreenToColor(WindowManager.Window.StartWindowColor, _defaultSceneRenderTexture);
             GfxDeviceManager.Current.Present(_defaultSceneRenderTexture.NativeResource);
 
@@ -67,13 +65,6 @@ namespace Engine.Layers
             };
 
             _screenGeometry = GraphicsHelper.GetScreenQuadGeometry();
-
-            WindowManager.Window.OnWindowChanged += OnWindowChanged;
-        }
-
-        private void OnWindowChanged(int width, int height)
-        {
-            _overlayRenderTexture?.UpdateTarget(width, height);
         }
 
         internal override void UpdateLayer()
