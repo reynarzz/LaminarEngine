@@ -37,12 +37,12 @@ namespace Editor
                 for (int i = 0; i < actor.Components.Count; i++)
                 {
                     var component = actor.Components[i];
-                    ImGui.Text("---" + component.GetType().Name);
+                    ImGui.Text(component.GetType().Name);
 
                     var properties = component.GetType().GetProperties();
                     for (int j = 0; j < properties.Length; j++)
                     {
-                        PropertyDrawer.DrawVars(component.GetID().ToString(), component, properties[j],0, j, 0);
+                        PropertyDrawer.DrawVars(component.GetID().ToString(), component, properties[j],0, j, 0, true);
                     }
                 }
 

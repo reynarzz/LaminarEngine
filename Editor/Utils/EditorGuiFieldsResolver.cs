@@ -105,14 +105,65 @@ namespace Editor.Utils
                    (!pressEnterToConfirm || ImGui.IsKeyDown(ImGuiKey.Enter));
         }
 
+        private static bool _openColorPicker = false;
+
+        public static bool DrawColorField(string name, ref Color value, float itemWidth = 0, bool pressEnterToConfirm = false)
+        {
+            SetNextItemWidth(itemWidth);
+            ImGui.SameLine();
+
+            // Convert Color to ImVec4
+            var col = new Vector4(value.R, value.G, value.B, value.A);
+
+            // Determine button size
+            Vector2 buttonSize = new Vector2(ImGui.GetContentRegionAvail().X - 5, 20f);
+
+            bool changed = false;
+
+            // Draw the color button
+            if (ImGui.ColorButton(name, col, ImGuiColorEditFlags.NoTooltip | ImGuiColorEditFlags.NoDragDrop, buttonSize))
+            {
+                _openColorPicker = true; // open popup on click
+            }
+
+            // Open popup if requested
+            if (_openColorPicker)
+            {
+                ImGui.OpenPopup("Color Picker");
+                _openColorPicker = false; // reset flag
+            }
+
+            // Draw color picker popup
+            if (ImGui.BeginPopup("Color Picker"))
+            {
+                if (ImGui.ColorPicker4("##picker", ref col, ImGuiColorEditFlags.NoSidePreview | ImGuiColorEditFlags.NoSmallPreview))
+                {
+                    // Update the Color struct
+                    value = new Color(col.X, col.Y, col.Z, col.W);
+                    changed = true;
+                }
+                ImGui.EndPopup();
+            }
+
+            return changed;
+        }
+
+
         public static bool DrawVec2Field(string name, ref vec2 value, float itemWidth = 0, bool pressEnterToConfirm = false)
         {
             SetNextItemWidth(itemWidth);
             Vector2 ve = value.ToVector2();
             ImGui.SameLine();
 
-            return ImGui.DragFloat2($"##{name}", ref ve, 0.1f, 0, 0, "%.4f") &&
-                   (!pressEnterToConfirm || ImGui.IsKeyDown(ImGuiKey.Enter));
+            var changed = ImGui.DragFloat2($"##{name}", ref ve, 0.1f, 0, 0, "%.4f") && (!pressEnterToConfirm || ImGui.IsKeyDown(ImGuiKey.Enter));
+
+            if (changed)
+            {
+                value.x = ve.X;
+                value.y = ve.Y;
+            }
+
+            return changed;
         }
 
         public static bool DrawVec3Field(string name, ref vec3 value, float itemWidth = 0, bool pressEnterToConfirm = false)
@@ -121,8 +172,16 @@ namespace Editor.Utils
             Vector3 ve = new Vector3(value.x, value.y, value.z);
             ImGui.SameLine();
 
-            return ImGui.DragFloat3($"##{name}", ref ve, 0.1f, 0, 0, "%.4f") &&
-                   (!pressEnterToConfirm || ImGui.IsKeyDown(ImGuiKey.Enter));
+            var changed = ImGui.DragFloat3($"##{name}", ref ve, 0.1f, 0, 0, "%.4f") && (!pressEnterToConfirm || ImGui.IsKeyDown(ImGuiKey.Enter));
+
+            if (changed)
+            {
+                value.x = ve.X;
+                value.y = ve.Y;
+                value.z = ve.Z;
+            }
+
+            return changed;
         }
 
         public static bool DrawVec4Field(string name, ref vec4 value, float itemWidth = 0, bool pressEnterToConfirm = false)
@@ -131,8 +190,17 @@ namespace Editor.Utils
             Vector4 ve = new Vector4(value.x, value.y, value.z, value.w);
             ImGui.SameLine();
 
-            return ImGui.InputFloat4($"##{name}", ref ve, "%.4f") &&
-                   (!pressEnterToConfirm || ImGui.IsKeyDown(ImGuiKey.Enter));
+            var changed = ImGui.InputFloat4($"##{name}", ref ve, "%.4f") && (!pressEnterToConfirm || ImGui.IsKeyDown(ImGuiKey.Enter));
+
+            if (changed)
+            {
+                value.x = ve.X;
+                value.y = ve.Y;
+                value.z = ve.Z;
+                value.w = ve.W;
+            }
+
+            return changed;
         }
 
         public static bool DrawCombo(string name, ref int index, string[] values, float itemWidth = 0)
@@ -141,7 +209,7 @@ namespace Editor.Utils
             ImGui.PushStyleColor(ImGuiCol.FrameBg, new Vector4(0.2f, 0.2f, 0.21568628f, 1));
             ImGui.SameLine();
 
-            bool result = ImGui.Combo(name, ref index, values, values.Length);
+            bool result = ImGui.Combo($"##{name}", ref index, values, values.Length);
 
             ImGui.PopStyleColor();
             return result;
@@ -169,6 +237,7 @@ namespace Editor.Utils
                 return null!; // reference type default
             }
         }
+
         public static bool DrawListField(string name, IList value)
         {
             var listType = value.GetType();

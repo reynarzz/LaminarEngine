@@ -73,7 +73,7 @@ namespace Engine
                 }
             }
         }
-
+        [SerializedField("Offset")]
         public vec2 Offset
         {
             get => _offset;
@@ -83,7 +83,7 @@ namespace Engine
                 UpdateShapeSafe();
             }
         }
-
+        [SerializedField("Is Trigger")]
         public bool IsTrigger
         {
             get => _isTrigger;
@@ -136,6 +136,7 @@ namespace Engine
         }
 
         private float _friction;
+        [SerializedField("Friction")]
         public float Friction
         {
             get => AreShapesValid() ? B2Shapes.b2Shape_GetFriction(_shapesID[0]) : -1;
@@ -149,6 +150,7 @@ namespace Engine
             }
         }
         private float _bounciness;
+        [SerializedField("Bounciness")]
         public float Bounciness
         {
             get => AreShapesValid() ? B2Shapes.b2Shape_GetRestitution(_shapesID[0]) : -1;

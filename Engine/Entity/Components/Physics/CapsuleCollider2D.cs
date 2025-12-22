@@ -18,6 +18,8 @@ namespace Engine
     {
         private CapsuleDirection2D _direction = CapsuleDirection2D.Vertical;
         private vec2 _size = new vec2(1, 2);
+
+        [SerializedField("Size")]
         public vec2 Size
         {
             get => _size;
@@ -27,7 +29,8 @@ namespace Engine
                 UpdateShapeSafe();
             }
         }
-
+        
+        [SerializedField("Direction")]
         public CapsuleDirection2D Direction
         {
             get => _direction;

@@ -29,6 +29,7 @@ namespace Engine
         private quat _cachedWorldRotation = quat.Identity;
         private vec3 _cachedWorldScale = new vec3(1, 1, 1);
 
+        [SerializedField("Position")]
         public vec3 LocalPosition
         {
             get => _localPosition;
@@ -49,6 +50,7 @@ namespace Engine
             }
         }
 
+        [SerializedField("Scale")]
         public vec3 LocalScale
         {
             get => _localScale;

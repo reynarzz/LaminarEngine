@@ -11,6 +11,8 @@ namespace Engine
     public class CircleCollider2D : Collider2D
     {
         private float _radius = 0.5f;
+
+        [SerializedField("Radius")]
         public float Radius
         {
             get => _radius;

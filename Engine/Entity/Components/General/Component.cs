@@ -25,6 +25,8 @@ namespace Engine
         public override string Name { get => Actor?.Name ?? GetType().Name; set => Actor.Name = value; }
 
         private bool _isEnabled = true;
+
+        [SerializedField("Enabled")]
         public virtual bool IsEnabled
         {
             get => _isEnabled;

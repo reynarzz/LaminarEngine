@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -10,6 +11,21 @@ namespace Engine.Utils
 {
     internal class ReflectionUtils
     {
+        IEnumerable<T> GetAllAttributes<T>(
+                [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] Type type) where T : Attribute
+        {
+            var result = new List<T>();
+
+            while (type != null && type != typeof(object))
+            {
+                result.AddRange(type.GetCustomAttributes(typeof(T), inherit: false).Cast<T>());
+                type = type.BaseType;
+            }
+
+            return result;
+        }
+
+
         public static IEnumerable<PropertyInfo> GetAllPropertiesWithAttribute<T>(Type type, bool inherit = true) where T : Attribute
         {
             const BindingFlags flags =

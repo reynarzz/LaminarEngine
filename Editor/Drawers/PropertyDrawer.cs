@@ -15,22 +15,35 @@ namespace Editor
     {
         private static object _copiedValue;
         private static float _xPosOffset = 140;
-        public static void DrawVars(string entityID, object obj, PropertyInfo prop, float cursorX, int index, float width)
+        public static void DrawVars(string entityID, object obj, PropertyInfo prop, float cursorX, int index, float width, bool enforceSerializedFieldAttribute)
         {
             if (prop == null || !prop.CanRead)
                 return;
 
             object value = prop.GetValue(obj);
             Type type = prop.PropertyType;
+            string propertyName = prop.Name;
+            if (enforceSerializedFieldAttribute)
+            {
+                var attrib = prop.GetCustomAttribute<SerializedFieldAttribute>();
+                if (attrib == null)
+                {
+                    return;
+                }
+                if (!string.IsNullOrEmpty(attrib.CustomFieldName))
+                {
+                    propertyName = attrib.CustomFieldName;
+                }
+            }
 
             ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.Leaf;
 
-            if (type.GetProperties().Length > 0 || type.IsClass)
+            if (type.GetProperties().Length > 1 && type.IsClass && type != typeof(string) && !ReflectionUtil.IsEObject(type))
             {
                 flags = ImGuiTreeNodeFlags.OpenOnArrow;
             }
 
-            if (!ImGui.TreeNodeEx($"{prop.Name}##{entityID}{index}", flags))
+            if (!ImGui.TreeNodeEx($"{propertyName}##{entityID}{index}", flags))
                 return;
 
             // Context menu
@@ -47,12 +60,14 @@ namespace Editor
 
                 ImGui.EndPopup();
             }
-            ImGui.SetCursorPosX(MathF.Max(_xPosOffset, ImGui.GetCursorPosX()) + 5);
 
             // EObject
             if (ReflectionUtil.IsEObject(type))
             {
-                DrawEObjectSlot(value, type, v =>
+                ImGui.SameLine();
+                ImGui.SetCursorPosX(Math.Max(_xPosOffset, ImGui.GetCursorPosX()));
+
+                DrawEObjectSlot(value as EObject, type, v =>
                 {
                     prop.SetValue(obj, v);
                     return true;
@@ -61,51 +76,108 @@ namespace Editor
             // bool
             else if (type == typeof(bool))
             {
+                ImGui.SameLine();
+                ImGui.SetCursorPosX(Math.Max(_xPosOffset, ImGui.GetCursorPosX()));
+
                 bool v = (bool)value;
-                if (EditorGuiFieldsResolver.DrawBoolField(prop.Name, ref v))
+                if (EditorGuiFieldsResolver.DrawBoolField(propertyName, ref v))
                     prop.SetValue(obj, v);
+            }
+            else if (type == typeof(int))
+            {
+                ImGui.SameLine();
+                ImGui.SetCursorPosX(Math.Max(_xPosOffset, ImGui.GetCursorPosX()));
+
+                var v = (int)value;
+                if (EditorGuiFieldsResolver.DrawIntField(propertyName, ref v))
+                    prop.SetValue(obj, v);
+            }
+            else if (type == typeof(Color))
+            {
+                ImGui.SameLine();
+                ImGui.SetCursorPosX(Math.Max(_xPosOffset, ImGui.GetCursorPosX()));
+
+                var v = (Color)value;
+                if (EditorGuiFieldsResolver.DrawColorField(propertyName, ref v))
+                    prop.SetValue(obj, v);
+            }
+            else if (type == typeof(Color32))
+            {
+                ImGui.SameLine();
+                ImGui.SetCursorPosX(Math.Max(_xPosOffset, ImGui.GetCursorPosX()));
+
+                var v = (Color)value;
+                if (EditorGuiFieldsResolver.DrawColorField(propertyName, ref v))
+                    prop.SetValue(obj, (Color32)v);
             }
             // float
             else if (type == typeof(float))
             {
+                ImGui.SameLine();
+                ImGui.SetCursorPosX(Math.Max(_xPosOffset, ImGui.GetCursorPosX()));
+
                 float v = (float)value;
-                if (EditorGuiFieldsResolver.DrawFloatField(prop.Name, ref v))
+                if (EditorGuiFieldsResolver.DrawFloatField(propertyName, ref v))
                     prop.SetValue(obj, v);
             }
             // string
             else if (type == typeof(string))
             {
+                ImGui.SameLine();
+                ImGui.SetCursorPosX(Math.Max(_xPosOffset, ImGui.GetCursorPosX()));
+
                 string v = (string)value;
-                if (EditorGuiFieldsResolver.DrawStringField(prop.Name, ref v))
+                if (EditorGuiFieldsResolver.DrawStringField(propertyName, ref v))
                     prop.SetValue(obj, v);
             }
             else if (type == typeof(vec2))
             {
+                ImGui.SameLine();
+                ImGui.SetCursorPosX(Math.Max(_xPosOffset, ImGui.GetCursorPosX()));
+
                 vec2 v = (vec2)value;
-                if (EditorGuiFieldsResolver.DrawVec2Field(prop.Name, ref v))
+                if (EditorGuiFieldsResolver.DrawVec2Field(propertyName, ref v))
                     prop.SetValue(obj, v);
             }
             else if (type == typeof(vec3))
             {
+                ImGui.SameLine();
+                ImGui.SetCursorPosX(Math.Max(_xPosOffset, ImGui.GetCursorPosX()));
+
                 vec3 v = (vec3)value;
-                if (EditorGuiFieldsResolver.DrawVec3Field(prop.Name, ref v))
+                if (EditorGuiFieldsResolver.DrawVec3Field(propertyName, ref v))
+                    prop.SetValue(obj, v);
+            }
+            else if (type == typeof(vec4))
+            {
+                ImGui.SameLine();
+                ImGui.SetCursorPosX(Math.Max(_xPosOffset, ImGui.GetCursorPosX()));
+
+                vec4 v = (vec4)value;
+                if (EditorGuiFieldsResolver.DrawVec4Field(propertyName, ref v))
                     prop.SetValue(obj, v);
             }
             // enum
             else if (type.IsEnum)
             {
+                ImGui.SameLine();
+                ImGui.SetCursorPosX(Math.Max(_xPosOffset, ImGui.GetCursorPosX()));
+
                 int idx = (int)value;
                 string[] names = Enum.GetNames(type);
-                if (EditorGuiFieldsResolver.DrawCombo(prop.Name, ref idx, names))
+                if (EditorGuiFieldsResolver.DrawCombo(propertyName, ref idx, names))
                 {
                     prop.SetValue(obj, Enum.Parse(type, names[idx]));
                 }
             }
             else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
             {
+                ImGui.SameLine();
+                ImGui.SetCursorPosX(Math.Max(_xPosOffset, ImGui.GetCursorPosX()));
+
                 if (value is System.Collections.IList list)
                 {
-                    if(EditorGuiFieldsResolver.DrawListField(prop.Name, list))
+                    if (EditorGuiFieldsResolver.DrawListField(propertyName, list))
                     {
                         prop.SetValue(obj, list);
                     }
@@ -113,8 +185,11 @@ namespace Editor
             }
             else if (type.IsArray)
             {
+                ImGui.SameLine();
+                ImGui.SetCursorPosX(Math.Max(_xPosOffset, ImGui.GetCursorPosX()));
+
                 int size = ((Array)obj).Length;
-                EditorGuiFieldsResolver.DrawListField(prop.Name, size, () =>
+                EditorGuiFieldsResolver.DrawListField(propertyName, size, () =>
                 {
                     // Add
                 }, (x) =>
@@ -135,30 +210,37 @@ namespace Editor
             {
                 foreach (var subProp in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
                 {
-                    DrawVars(entityID, value, subProp, cursorX, index++, width);
+                    DrawVars(entityID, value, subProp, cursorX, index++, width, enforceSerializedFieldAttribute);
                 }
             }
 
             ImGui.TreePop();
         }
 
-        private static void DrawEObjectSlot(object value, Type valueType, Func<object, bool> setValue, float width = -1)
+        private static void DrawEObjectSlot(EObject value, Type valueType, Func<object, bool> setValue, float width = -1)
         {
             ImGui.SameLine();
             ImGui.SetCursorPosX(MathF.Max(_xPosOffset, ImGui.GetCursorPosX()) + 5);
 
-            string label = value != null
-                ? $"{((EObject)value).Name} ({valueType.Name})"
-                : $"null ({valueType.Name})";
+            string label = value != null ? $"{(value).Name} ({valueType.Name})" : $"null ({valueType.Name})";
+
+            if (value != null)
+            {
+                if (value is AssetResourceBase res)
+                {
+                    ImGui.SetItemTooltip($"{res.Path}");
+                }
+                else
+                {
+                    ImGui.SetItemTooltip(value.GetID().ToString());
+                }
+            }
 
             var drawList = ImGui.GetWindowDrawList();
             var pos = ImGui.GetCursorScreenPos();
             var size = ImGui.CalcTextSize(label);
 
-            drawList.AddRectFilled(
-                new(pos.X - 5, pos.Y - 3),
-                new(pos.X + ImGui.GetContentRegionAvail().X - 5, pos.Y + size.Y + 3),
-                ImGui.ColorConvertFloat4ToU32(new(0.1f, 0.1f, 0.1f, 1f)));
+            drawList.AddRectFilled(new(pos.X - 5, pos.Y - 3), new(pos.X + ImGui.GetContentRegionAvail().X - 5, pos.Y + size.Y + 3), ImGui.ColorConvertFloat4ToU32(new(0.1f, 0.1f, 0.1f, 1f)));
 
             ImGui.Text(label);
 
@@ -232,7 +314,6 @@ namespace Editor
                     }
                 }
             }
-
             ImGui.EndPopup();
         }
         private static void DrawSceneObjectPropertyPicker(Transform root, Type targetType, Func<object, bool> setValue)
@@ -260,7 +341,14 @@ namespace Editor
                     ImGui.CloseCurrentPopup();
                 }
             }
-
+            else if (typeof(EObject).IsAssignableFrom(targetType))
+            {
+                if (ImGui.Selectable($"{root.Name}##{root.GetID()}"))
+                {
+                    setValue(root.Actor);
+                    ImGui.CloseCurrentPopup();
+                }
+            }
             for (int i = 0; i < root.Children.Count; i++)
             {
                 DrawSceneObjectPropertyPicker(root.Children[i], targetType, setValue);
