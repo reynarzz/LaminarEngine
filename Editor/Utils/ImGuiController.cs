@@ -192,7 +192,17 @@ namespace Editor
             ImGuiIOPtr io = ImGui.GetIO();
             float sx, sy;
             Glfw.GetWindowContentScale(WindowStandalone.NativeWindow, out sx, out sy);
-            io.DisplayFramebufferScale = new Vector2(sx, sy);
+
+            int winW, winH;
+            int fbW, fbH;
+
+            Glfw.GetWindowSize(WindowStandalone.NativeWindow, out winW, out winH);
+            Glfw.GetFramebufferSize(WindowStandalone.NativeWindow, out fbW, out fbH);
+
+            float scaleX = (float)fbW / winW;
+            float scaleY = (float)fbH / winH;
+
+            io.DisplayFramebufferScale = new Vector2(scaleX, scaleY);
             io.DisplaySize = new Vector2(width, height);
             io.DeltaTime = deltaSeconds;
         }
