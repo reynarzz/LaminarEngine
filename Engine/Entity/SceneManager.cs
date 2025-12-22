@@ -30,8 +30,6 @@ namespace Engine
 
         public static void LoadScene(string name)
         {
-            PrintActorsInScene(_activeScene);
-
             ClearScenes();
             OnCleanUpUpdate();
 
@@ -41,25 +39,7 @@ namespace Engine
             ActiveScene = new WeakReference<Scene>(_activeScene);
             _scenes.Add(scene);
         }
-        private static void LogHierarchy(Transform current, int depth = 0)
-        {
-            string indent = new string('-', depth);
-
-            Debug.Log($"{indent}{current.Name}");
-
-            for (int i = 0; i < current.Children.Count; i++)
-            {
-                LogHierarchy(current.Children[i], depth + 1);
-            }
-        }
-        private static void PrintActorsInScene(Scene scene)
-        {
-            for (int i = 0; i < _activeScene.RootActors.Count; i++)
-            {
-                LogHierarchy(_activeScene.RootActors[i].Transform);
-            }
-
-        }
+      
         private static void ClearScenes()
         {
             _scenesToDestroy.Clear();
@@ -125,7 +105,10 @@ namespace Engine
         }
         internal static void OnCleanUpUpdate()
         {
-            _activeScene.DeletePending();
+            for (int i = 0; i < _scenes.Count; i++)
+            {
+                _scenes[i].DeletePending();
+            }
 
             foreach (var scene in _scenesToDestroy)
             {
@@ -134,7 +117,6 @@ namespace Engine
             if (_scenesToDestroy.Count > 0)
             {
                 // Note: this is provisional.
-                // RenderingLayer.Test_ClearBatches();
                 PhysicsLayer.Clear(); // Remove
                 _scenesToDestroy.Clear();
             }
