@@ -1,4 +1,5 @@
-﻿using Engine;
+﻿using Editor.Views;
+using Engine;
 using Engine.Graphics;
 using Engine.Layers;
 using Engine.Layers.Input;
@@ -13,8 +14,6 @@ namespace Editor
     // Hierarchy view
     // Simple object editor: Components(name) (No saving data)
     // Playmode on launch (maybe I implement a proper playmode later: pause, frame step)
-    // Rendering info window.
-    // Game rendering in a full screen window.
 
     internal class EditorEntry
     {
@@ -22,12 +21,14 @@ namespace Editor
         private ImGuiGLFW _glfwInput;
         private const string PROJECT_FOLDER_NAME = "Editor";
         private EditorGameView _gameWindow;
-
+        private SceneGraphWindow _sceneGraphWindow;
+        private GFSEngine _engine;
         internal void Init()
         {
-            _win = new WindowStandalone("Editor", 1324, 640, Color.Black);
+            _win = new WindowStandalone("GFS Editor", 1324, 740, Color.Black);
             _win.CanResize = true;
             _gameWindow = new EditorGameView(_win);
+            _sceneGraphWindow = new SceneGraphWindow();
 
             RenderingLayer.OverlayOptions.Width = _win.Width;
             RenderingLayer.OverlayOptions.Height = _win.Height;
@@ -41,7 +42,7 @@ namespace Editor
 
             new GameCooker.GameProject().Initialize(new GameCooker.ProjectConfig() { ProjectFolderRoot = root });
 
-            var engine = new GFSEngine(_gameWindow, new GameApplication(), new InputStandAlonePlatform());
+            _engine = new GFSEngine(_gameWindow, new GameApplication(), new InputStandAlonePlatform());
 
             RenderingLayer.OnDrawOverlay += () =>
             {
@@ -52,20 +53,17 @@ namespace Editor
             {
                 RenderingLayer.OverlayOptions.Width = w;
                 RenderingLayer.OverlayOptions.Height = h;
-                engine.Update();
-                _gameWindow.Update();
-
+                UpdateAll();
             };
             
             _gameWindow.OnWindowChanged += (w, h) =>
             {
-                engine.Update();
+                _engine.Update();
             };
 
             while (!_win.ShouldClose)
             {
-                _gameWindow.Update();
-                engine.Update();
+                UpdateAll();
             }
         }
 
@@ -116,8 +114,8 @@ namespace Editor
 
             // call imgui functions here: ---
             _gameWindow.Render();
+            _sceneGraphWindow.OnRender();
             RenderingInfoWindow();
-            Hierarchy();
             // ------
 
             ImGui.End();
@@ -139,99 +137,13 @@ namespace Editor
             ImGui.End();
         }
 
-        private Actor _selectedActor;
-        private void Hierarchy()
+       
+
+        private void UpdateAll()
         {
-            ImGui.Begin("Scene graph");
-
-            void DrawActor(Actor actor)
-            {
-                ImGui.PushID(actor.GetID().ToString());
-
-                bool hasChildren = actor.Transform.Children.Count > 0;
-
-                ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.OpenOnArrow | ImGuiTreeNodeFlags.SpanFullWidth;
-
-                if (!hasChildren)
-                    flags |= ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.NoTreePushOnOpen;
-
-                if (_selectedActor == actor)
-                    flags |= ImGuiTreeNodeFlags.Selected;
-
-                if (!actor.IsActiveInHierarchy)
-                    ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(0.5f));
-
-                bool open = ImGui.TreeNodeEx(actor.Name, flags);
-
-                if (!actor.IsActiveInHierarchy)
-                    ImGui.PopStyleColor();
-
-                // Selection handling
-                if (ImGui.IsItemClicked())
-                    _selectedActor = actor;
-
-                if (ImGui.BeginPopupContextItem("ActorContext"))
-                {
-                    _selectedActor = actor;
-
-                    if (ImGui.MenuItem("Rename")) { }
-                    if (ImGui.MenuItem("Duplicate")) { }
-                    ImGui.Separator();
-                    if (ImGui.MenuItem("Delete"))
-                    {
-
-                        ImGui.EndPopup();
-                        if (open && hasChildren)
-                        {
-                            ImGui.TreePop();
-                        }
-                        ImGui.PopID();
-
-                        Actor.Destroy(_selectedActor);
-                        return;
-                    }
-
-                    ImGui.EndPopup();
-                }
-
-                if (open && hasChildren)
-                {
-                    foreach (var child in actor.Transform.Children)
-                        DrawActor(child.Actor);
-
-                    ImGui.TreePop();
-                }
-
-                ImGui.PopID();
-            }
-
-            for (int i = 0; i < SceneManager.Scenes.Count; i++)
-            {
-                ImGui.PushID(SceneManager.Scenes[i].GetID().ToString());
-                ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.OpenOnArrow | ImGuiTreeNodeFlags.SpanFullWidth | ImGuiTreeNodeFlags.DefaultOpen;
-
-                bool open = ImGui.TreeNodeEx(SceneManager.Scenes[i].Name, flags);
-                if (open)
-                {
-                    if(SceneManager.Scenes[i].RootActors.Count > 0)
-                    {
-                        for (int j = 0; j < SceneManager.Scenes[i].RootActors.Count; j++)
-                        {
-                            DrawActor(SceneManager.Scenes[i].RootActors[j]);
-                        }
-                    }
-
-                    ImGui.TreePop();
-                }
-                ImGui.PopID();
-            }
-
-            ImGui.End();
-        }
-
-        private void GameWindow()
-        {
-        
+            _engine.Update();
+            _gameWindow.Update();
+            _sceneGraphWindow.OnUpdate();
         }
     }
 }

@@ -45,7 +45,7 @@ namespace Engine.Layers
             Time.UnscaledTimeWrap = Mathf.Wrap(_unscaledTimePast, _timeWrapLength);
             Time.TimeCurrentWrap = Mathf.Wrap(_timePast, _timeWrapLength);
 
-            Time.FPS = Time.DeltaTime > 0f ? 1f / Time.DeltaTime : 0f;
+            Time.FPS = Time.UnscaledDeltaTime > 0f ? 1f / Time.UnscaledDeltaTime : 0f;
         }
 
         public override void Close()

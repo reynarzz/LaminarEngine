@@ -202,7 +202,15 @@ namespace Engine
             }
             else
             {
-                (component as IAwakeableComponent).OnAwake();
+                try
+                {
+                    (component as IAwakeableComponent).OnAwake();
+                }
+                catch (Exception e)
+                {
+                    Debug.Error(e);
+                }
+               
 
                 // NOTE: All components are enabled by default, so this if is unncessary right now,
                 //       however, in the future I might add a flag to addComponents that are disabled by default.
@@ -670,6 +678,8 @@ namespace Engine
                     }
                 }
 
+                Scene.TryGetTarget(out var scene);
+
                 void OnCleanUpChildren(Actor actor)
                 {
                     for (int i = actor._components.Count - 1; i >= 0; i--)
@@ -683,7 +693,6 @@ namespace Engine
                     }
 
                     actor.IsAlive = false;
-                    actor.Scene.TryGetTarget(out var scene);
                     scene.RemoveActor(actor);
                     // actor.Scene = null;
                 }

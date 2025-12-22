@@ -11,12 +11,13 @@ namespace Engine
     {
         internal static WeakReference<Scene> ActiveScene { get; private set; }
         internal static WeakReference<Scene> DontDestroyOnLoadScene { get; private set; }
-
+        internal static Scene Dont => _scenes[0];
         private static Scene _activeScene;
 
         private static readonly List<Scene> _scenesToDestroy = new();
         private static readonly List<Scene> _scenes = new();
         internal static IReadOnlyList<Scene> Scenes => _scenes;
+
         static SceneManager()
         {
             // First Scene is always the 'dontDestroyOnLoad' scene
@@ -32,19 +33,20 @@ namespace Engine
         {
             ClearScenes();
             OnCleanUpUpdate();
-
+             
             // TODO: Load scene from file (Probably will never be implemented since all scenes are built at runtime, without a editor)
             var scene = new Scene(name);
             _activeScene = scene;
-            ActiveScene = new WeakReference<Scene>(_activeScene);
+            ActiveScene.SetTarget(_activeScene);
             _scenes.Add(scene);
+            DontDestroyOnLoadScene.SetTarget(_scenes[0]);
         }
-      
+
         private static void ClearScenes()
         {
             _scenesToDestroy.Clear();
             // Adds all scenes to destroy, except the 'DontDestroyOnLoadScene'
-            for (int i = _scenes.Count - 1; i >= 1; --i)
+            for (int i = _scenes.Count - 1; i > 0; --i)
             {
                 _scenesToDestroy.Add(_scenes[i]);
                 _scenes.RemoveAt(i);
