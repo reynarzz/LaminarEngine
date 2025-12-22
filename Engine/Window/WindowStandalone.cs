@@ -218,6 +218,11 @@ namespace Engine
         {
             Width = width;
             Height = height;
+
+            Glfw.GetWindowSize(NativeWindow, out int pW, out int pH);
+            _physicalWidth = pW;
+            _physicalHeight = pH;
+
             OnWindowChanged?.Invoke(Width, Height);
         }
         public void SetWindowSize(int width, int height)

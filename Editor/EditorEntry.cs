@@ -33,8 +33,8 @@ namespace Editor
             _sceneGraphWindow = new SceneGraphWindow();
             _objectEditor = new ObjectEditorView();
 
-            RenderingLayer.OverlayOptions.Width = _win.Width;
-            RenderingLayer.OverlayOptions.Height = _win.Height;
+            RenderingLayer.OverlayOptions.Width = _win.PhysicalWidth;
+            RenderingLayer.OverlayOptions.Height = _win.PhysicalHeight;
 
             ImguiImplOpenGL3.Init(_win);
             _glfwInput = new ImGuiGLFW(WindowStandalone.NativeWindow);
@@ -55,8 +55,8 @@ namespace Editor
 
             _win.OnWindowChanged += (w, h) =>
             {
-                RenderingLayer.OverlayOptions.Width = w;
-                RenderingLayer.OverlayOptions.Height = h;
+                RenderingLayer.OverlayOptions.Width = _win.PhysicalWidth;
+                RenderingLayer.OverlayOptions.Height = _win.PhysicalHeight;
                 UpdateAll();
             };
             

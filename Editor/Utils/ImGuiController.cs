@@ -98,7 +98,7 @@ namespace Editor
             io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
             io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
 
-            SetPerFrameImGuiData(1f / 60f, window.Width, window.Height);
+            SetPerFrameImGuiData(1f / 60f, window.PhysicalWidth, window.PhysicalHeight);
             Styles();
 
             return true;
@@ -187,13 +187,14 @@ namespace Editor
             colors[(int)ImGuiCol.ResizeGripActive] = new Vector4(0.45f, 0.45f, 0.45f, 0.9f);
         }
 
-
         public static void SetPerFrameImGuiData(float deltaSeconds, int width, int height)
         {
             ImGuiIOPtr io = ImGui.GetIO();
+            float sx, sy;
+            Glfw.GetWindowContentScale(WindowStandalone.NativeWindow, out sx, out sy);
+            io.DisplayFramebufferScale = new Vector2(sx, sy);
             io.DisplaySize = new Vector2(width, height);
-            io.DisplayFramebufferScale = new Vector2(1, 1);
-            io.DeltaTime = deltaSeconds; // DeltaTime is in seconds.
+            io.DeltaTime = deltaSeconds;
         }
 
         public static void Shutdown()
@@ -215,12 +216,7 @@ namespace Editor
         public static void NewFrame()
         {
             RendererData* bd = GetBackendData();
-             float sx, sy;
-            var io = ImGui.GetIO();
-
-            Glfw.GetWindowContentScale(WindowStandalone.NativeWindow, out sx, out sy);
-            io.DisplayFramebufferScale = new Vector2(sx, sy);
-
+         
             if (bd->ShaderHandle == 0)
             {
                 CreateDeviceObjects();
