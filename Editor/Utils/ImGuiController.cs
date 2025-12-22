@@ -190,12 +190,9 @@ namespace Editor
         public static void SetPerFrameImGuiData(float deltaSeconds, int width, int height)
         {
             ImGuiIOPtr io = ImGui.GetIO();
-            float sx, sy;
-            Glfw.GetWindowContentScale(WindowStandalone.NativeWindow, out sx, out sy);
-
+           
             int winW, winH;
             int fbW, fbH;
-
             Glfw.GetWindowSize(WindowStandalone.NativeWindow, out winW, out winH);
             Glfw.GetFramebufferSize(WindowStandalone.NativeWindow, out fbW, out fbH);
 
