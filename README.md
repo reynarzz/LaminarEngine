@@ -7,9 +7,10 @@ GFS is a 2D video game and game engine built entirely from scratch with **C#**, 
 ## Features
 
 - Custom engine written in C#
+- Editor (ImGui)
 - 2D Rendering (Sprites/Tilemap)
 - 2D Physics (Box2D)
-- Sprite batching
+- Sprite batching.
 - Particle system.
 - Dynamic text rendering.
 - Audio system.
@@ -18,7 +19,7 @@ GFS is a 2D video game and game engine built entirely from scratch with **C#**, 
 - Custom file system (simplified).
 - Gamepads support.
 - Build assets in dev mode (Unity-like import system) and release mode.
-- Cross-platform: Windows, MacOs
+- Cross-platform: Windows, MacOs, Android.
 
 ## Roadmap
 - [x] Implement Audio system.
@@ -29,7 +30,7 @@ GFS is a 2D video game and game engine built entirely from scratch with **C#**, 
 - [x] Implement particle system.
 - [ ] Optimize rendering, and expand it to support complex geometries.
 - [ ] Make the demo game (Proper architecture).
-- [ ] macOS, Android, and IOS platforms deploy.
+- [ ] Linux, and IOS support.
 
 ### Platforms
 - Windows
@@ -42,10 +43,12 @@ GFS is a 2D video game and game engine built entirely from scratch with **C#**, 
 - Windows or macOS: .NET 9.0 SDK or later: https://dotnet.microsoft.com/en-us/download/dotnet/9.0
 - cd platforms/desktop
 - dotnet build
+- For publish builds, find the binaries on: _Ship/<platform_name>
 
 Optional
 --------
 - Use an IDE like Visual Studio 2022+, Rider, or VS Code with C# support.
+- On Visual Studio set "Entry_Desktop" or "Editor" as startup project.
 - Make sure your PATH includes the .NET 9.0 SDK.
 
 ## License
