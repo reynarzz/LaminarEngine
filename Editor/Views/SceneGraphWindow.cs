@@ -18,7 +18,7 @@ namespace Editor.Views
         public void OnOpen()
         {
         }
-        private Actor _selectedActor;
+
         public void OnRender()
         {
             ImGui.Begin("Scene graph");
@@ -34,7 +34,7 @@ namespace Editor.Views
                 if (!hasChildren)
                     flags |= ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.NoTreePushOnOpen;
 
-                if (_selectedActor == actor)
+                if (Selector.Selected == actor)
                     flags |= ImGuiTreeNodeFlags.Selected;
 
                 if (!actor.IsActiveInHierarchy)
@@ -49,15 +49,15 @@ namespace Editor.Views
 
                 // Selection handling
                 if (ImGui.IsItemClicked())
-                    _selectedActor = actor;
+                    Selector.Selected = actor;
 
                 if (ImGui.BeginPopupContextItem("ActorContext"))
                 {
-                    _selectedActor = actor;
+                    Selector.Selected = actor;
 
                     if (ImGui.MenuItem("Create Actor"))
                     {
-                        new Actor("Actor").Transform.Parent = _selectedActor.Transform;
+                        new Actor("Actor").Transform.Parent = actor.Transform;
                     }
 
                     ImGui.Separator();
@@ -83,7 +83,7 @@ namespace Editor.Views
                         }
                         ImGui.PopID();
 
-                        Actor.Destroy(_selectedActor);
+                        Actor.Destroy(actor);
                         return;
                     }
 

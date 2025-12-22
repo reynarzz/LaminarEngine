@@ -1,6 +1,5 @@
 ﻿using Editor.Views;
 using Engine;
-using Engine.Graphics;
 using Engine.Layers;
 using Engine.Layers.Input;
 using Game;
@@ -11,6 +10,7 @@ using System.Numerics;
 namespace Editor
 {
     // TODO:
+    // Refactor.
     // Hierarchy view
     // Simple object editor: Components(name) (No saving data)
     // Playmode on launch (maybe I implement a proper playmode later: pause, frame step)
@@ -23,12 +23,15 @@ namespace Editor
         private EditorGameView _gameWindow;
         private SceneGraphWindow _sceneGraphWindow;
         private GFSEngine _engine;
+        private SimpleNodeEditor _node;
+        private ObjectEditorView _objectEditor;
         internal void Init()
         {
             _win = new WindowStandalone("GFS Editor", 1324, 740, Color.Black);
             _win.CanResize = true;
             _gameWindow = new EditorGameView(_win);
             _sceneGraphWindow = new SceneGraphWindow();
+            _objectEditor = new ObjectEditorView();
 
             RenderingLayer.OverlayOptions.Width = _win.Width;
             RenderingLayer.OverlayOptions.Height = _win.Height;
@@ -36,6 +39,7 @@ namespace Editor
             ImguiImplOpenGL3.Init(_win.Width, _win.Height);
             _glfwInput = new ImGuiGLFW(WindowStandalone.NativeWindow);
             _glfwInput.Init();
+           // _node = new SimpleNodeEditor();
 
             var assemblyDir = Paths.ClearPathSeparation(Path.GetDirectoryName(AppContext.BaseDirectory)!);
             var root = Path.Combine(assemblyDir.Substring(0, assemblyDir.LastIndexOf(PROJECT_FOLDER_NAME)), Paths.GAME_FOLDER_NAME);
@@ -77,7 +81,11 @@ namespace Editor
             // Render ImGui here:
 
             DockSpace();
-  
+
+            //ImGui.Begin("nnnn");
+
+            //_node.Draw();
+            //ImGui.End   ();
             ImGui.Render();
             ImguiImplOpenGL3.RenderDrawData(ImGui.GetDrawData());
 
@@ -115,6 +123,7 @@ namespace Editor
             // call imgui functions here: ---
             _gameWindow.Render();
             _sceneGraphWindow.OnRender();
+            _objectEditor.OnRender();
             RenderingInfoWindow();
             // ------
 
@@ -144,6 +153,7 @@ namespace Editor
             _engine.Update();
             _gameWindow.Update();
             _sceneGraphWindow.OnUpdate();
+            _objectEditor.OnUpdate();
         }
     }
 }

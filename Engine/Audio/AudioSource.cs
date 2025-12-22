@@ -22,7 +22,7 @@ namespace Engine
             get => _audioClip;
             set
             {
-                if (_audioClip == value)
+                if (_audioClip == value || !IsAlive)
                 {
                     return;
                 }
@@ -49,7 +49,7 @@ namespace Engine
             get => _mixer;
             set
             {
-                if (_mixer == value)
+                if (_mixer == value || _soundPlayer == null)
                     return;
 
                 _mixer = value;
@@ -157,6 +157,9 @@ namespace Engine
 
         public void PlayOneShot(AudioClip clip, float volume)
         {
+            if (!IsAlive)
+                return;
+
             if (clip == null)
             {
                 Debug.Error("Clip is null, can't play one shot");
@@ -216,6 +219,8 @@ namespace Engine
 
             _soundPlayer?.Dispose();
             _provider?.Dispose();
+
+            _soundPlayer = null;
         }
     }
 }

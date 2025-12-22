@@ -129,7 +129,7 @@ namespace Game
                 musicAudio.Clip = Assets.GetAudioClip("Audio/MinifantasyMusic/Goblins_Dance_(Battle).wav");
                 musicAudio.Mixer = new AudioMixer("Music");
                 musicAudio.Transform.Parent = Transform;
-                musicAudio.Play();
+                //musicAudio.Play();
 
                 _gameUIManger = new Actor("GameUIManager").AddComponent<GameUIManager>();
                 _gameUIManger.Transform.Parent = Transform;
@@ -269,6 +269,10 @@ namespace Game
             if (Input.GetKeyDown(KeyCode.Enter) ||
                 Input.Gamepad.Main.GetButtonState(GamePadButton.Start) == InputState.Down)
             {
+                if (!_gameUIManger)
+                {
+                    Debug.Log("Is null");
+                }
                 _gameUIManger.PauseMenu.OnPause();
             }
 

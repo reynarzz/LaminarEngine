@@ -7,11 +7,8 @@ using System.Threading.Tasks;
 
 namespace Editor
 {
-    internal class ObjectView
+    internal class Selector
     {
-        public void Render()
-        {
-            
-        }
+        public static EObject Selected { get; set; }
     }
 }
