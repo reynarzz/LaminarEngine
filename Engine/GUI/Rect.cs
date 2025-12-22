@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,6 +12,10 @@ namespace Engine
     {
         public float X, Y, Width, Height;
 
+        public Rect(Vector2 position, Vector2 size) : this(new vec2(position.X, position.Y), new vec2(size.X, size.Y))
+        {
+
+        }
         public Rect(vec2 position, vec2 size)
         {
             X = position.x;

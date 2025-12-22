@@ -1,0 +1,140 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Numerics;
+using ImGuiNET;
+using imnodesNET;
+
+public sealed class SimpleNodeEditor
+{
+    private int _nextId = 1;
+
+    private readonly List<Node> _nodes = new();
+    private readonly List<Link> _links = new();
+
+    private IntPtr _context;
+    public SimpleNodeEditor()
+    {
+        _context = imnodes.EditorContextCreate();
+        imnodes.EditorContextSet(_context);
+
+        imnodes.StyleColorsDark();
+        // Create one demo node
+        var node = new Node(NewId(), "Example Node", new Vector2(100, 100));
+        node.Inputs.Add(NewId());
+        node.Outputs.Add(NewId());
+        _nodes.Add(node);
+
+    }
+
+    public void Dispose()
+    {
+        imnodes.EditorContextFree(_context);
+    }
+
+    public void Draw()
+    {
+        imnodes.EditorContextSet(_context);
+        imnodes.BeginNodeEditor();
+
+        DrawNodes();
+        DrawLinks();
+        HandleLinkCreation();
+        HandleLinkDeletion();
+
+        imnodes.EndNodeEditor();
+    }
+    private readonly HashSet<int> _initializedNodes = new();
+    private void DrawNodes()
+    {
+        foreach (var node in _nodes)
+        {
+            imnodes.BeginNode(node.Id);
+
+            if (_initializedNodes.Add(node.Id))
+            {
+                Vector2 pos = node.InitialPos;
+                imnodes.SetNodeEditorSpacePos(node.Id,  pos);
+            }
+
+            imnodes.BeginNodeTitleBar();
+            ImGui.TextUnformatted(node.Title);
+            imnodes.EndNodeTitleBar();
+
+            foreach (int input in node.Inputs)
+            {
+                imnodes.BeginInputAttribute(input);
+                ImGui.Text("Input");
+                imnodes.EndInputAttribute();
+            }
+
+            foreach (int output in node.Outputs)
+            {
+                imnodes.BeginOutputAttribute(output);
+                ImGui.Text("Output");
+                imnodes.EndOutputAttribute();
+            }
+
+            imnodes.EndNode();
+        }
+    }
+
+    private void DrawLinks()
+    {
+        foreach (var link in _links)
+        {
+            imnodes.Link(link.Id, link.FromAttribute, link.ToAttribute);
+        }
+    }
+
+    private void HandleLinkCreation()
+    {
+        int startAttr = 0;
+        int endAttr = 0;
+        if (imnodes.IsLinkCreated(ref startAttr, ref endAttr))
+        {
+            _links.Add(new Link
+            {
+                Id = NewId(),
+                FromAttribute = startAttr,
+                ToAttribute = endAttr
+            });
+        }
+    }
+
+    private void HandleLinkDeletion()
+    {
+        int linkId = 0;
+        if (imnodes.IsLinkDestroyed(ref linkId))
+        {
+            _links.RemoveAll(l => l.Id == linkId);
+        }
+    }
+
+    private int NewId() => _nextId++;
+
+    // ---------------- DATA ----------------
+
+    private sealed class Node
+    {
+        public int Id;
+        public string Title;
+        public Vector2 InitialPos;
+        public List<int> Inputs = new();
+        public List<int> Outputs = new();
+
+        public Node(int id, string title, Vector2 pos)
+        {
+            Id = id;
+            Title = title;
+            InitialPos = pos;
+        }
+    }
+
+
+    private sealed class Link
+    {
+        public int Id;
+        public int FromAttribute;
+        public int ToAttribute;
+    }
+}

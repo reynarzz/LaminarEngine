@@ -36,8 +36,16 @@ namespace Editor
                 ImGui.Text("-" + actor.Name);
                 for (int i = 0; i < actor.Components.Count; i++)
                 {
-                    ImGui.Text(actor.Components[i].GetType().Name);
+                    var component = actor.Components[i];
+                    ImGui.Text("---" + component.GetType().Name);
+
+                    var properties = component.GetType().GetProperties();
+                    for (int j = 0; j < properties.Length; j++)
+                    {
+                        PropertyDrawer.DrawVars(component.GetID().ToString(), component, properties[j],0, j, ImGui.GetContentRegionAvail().X);
+                    }
                 }
+
             }
 
             ImGui.End();

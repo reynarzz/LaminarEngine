@@ -3,6 +3,7 @@ using GlmNet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -88,7 +89,10 @@ namespace Engine.Utils
         {
             return new B2Vec2(vec.x, vec.y);
         }
-
+        internal static Vector2 ToVector2(this vec2 vec)
+        {
+            return new Vector2(vec.x, vec.y);
+        }
         internal static B2Vec2 ToB2Vec2(this vec3 vec)
         {
             return new B2Vec2(vec.x, vec.y);
