@@ -150,8 +150,8 @@ namespace Editor
             colors[(int)ImGuiCol.TextSelectedBg] = new Vector4(0.35f, 0.35f, 0.35f, 0.8f);
 
             // Scrollbar
-            colors[(int)ImGuiCol.ScrollbarBg] = new Vector4(0.10f, 0.10f, 0.10f, 0.6f);
-            colors[(int)ImGuiCol.ScrollbarGrab] = new Vector4(0.30f, 0.30f, 0.30f, 1.0f);
+            colors[(int)ImGuiCol.ScrollbarBg] = new Vector4(0.10f, 0.10f, 0.10f, 0.2f);
+            colors[(int)ImGuiCol.ScrollbarGrab] = new Vector4(0.30f, 0.30f, 0.30f, 0.5f);
             colors[(int)ImGuiCol.ScrollbarGrabHovered] =
                                                      new Vector4(0.40f, 0.40f, 0.40f, 1.0f);
             colors[(int)ImGuiCol.ScrollbarGrabActive] =

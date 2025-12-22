@@ -66,7 +66,7 @@ namespace Engine.Layers.Input
             // Update current key states
             foreach (KeyCode key in _keyCodesArray)
             {
-                bool down = GLFW.Glfw.GetKey(Engine.Window.NativeWindow, (GLFW.Keys)key) == GLFW.InputState.Press;
+                bool down = GLFW.Glfw.GetKey(Engine.WindowStandalone.NativeWindow, (GLFW.Keys)key) == GLFW.InputState.Press;
 
                 if (down)
                 {
@@ -81,7 +81,7 @@ namespace Engine.Layers.Input
             // Update current mouse button states
             foreach (MouseButton button in _mouseButtonsArray)
             {
-                bool down = GLFW.Glfw.GetMouseButton(Engine.Window.NativeWindow, (GLFW.MouseButton)button) == GLFW.InputState.Press;
+                bool down = GLFW.Glfw.GetMouseButton(Engine.WindowStandalone.NativeWindow, (GLFW.MouseButton)button) == GLFW.InputState.Press;
 
                 if (down)
                 {
@@ -94,7 +94,7 @@ namespace Engine.Layers.Input
             }
 
             // Update mouse position
-            GLFW.Glfw.GetCursorPosition(Engine.Window.NativeWindow, out double x, out double y);
+            GLFW.Glfw.GetCursorPosition(Engine.WindowStandalone.NativeWindow, out double x, out double y);
             _mousePos = new vec2((float)x, (float)y);
 
             GamepadUpdate();

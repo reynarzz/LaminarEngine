@@ -9,7 +9,7 @@ using OpenGL;
 
 namespace Engine
 {
-    public class Window : IWindow
+    public class WindowStandalone : IWindow
     {
         private bool _isFullScreen;
         public bool IsFullScreen
@@ -130,7 +130,7 @@ namespace Engine
 
             Glfw.SetWindowPosition(NativeWindow, newX, newY);
         }
-        internal Window(string name, int width, int height, Color windowColor)
+        internal WindowStandalone(string name, int width, int height, Color windowColor)
         {
             StartWindowColor = windowColor;
             _windowName = name;

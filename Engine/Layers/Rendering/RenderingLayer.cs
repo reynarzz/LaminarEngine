@@ -16,6 +16,7 @@ namespace Engine.Layers
         private PipelineFeatures _pipelineFeatures;
         private PipelineFeatures _screenPipelineFeatures;
         private RenderTexture _screenGrabTarget;
+        private RenderTexture _overlayRenderTexture;
         private GfxResource _screenGeometry;
         private RenderTexture _defaultSceneRenderTexture;
         private List<Renderer2D> _renderers;
@@ -23,6 +24,15 @@ namespace Engine.Layers
         private mat4 _viewProjMatrix;
         private readonly Action<Shader, RenderTexture, RenderTexture, UniformValue[]> _drawPostProcessCallback;
         internal static event Action OnDrawOverlay;
+        internal static bool RenderToScreen { get; set; } = true;
+        private static RenderTexture _screenRenderTexture;
+        internal static RenderTexture ScreenRenderTexture => _screenRenderTexture;
+        internal class DrawOverlayOptions
+        {
+            public int Width { get; set; }
+            public int Height { get; set; }
+        }
+        internal static DrawOverlayOptions OverlayOptions { get; } = new DrawOverlayOptions();
         public RenderingLayer() : base()
         {
             _drawPostProcessCallback = PostProcessDraw;
@@ -32,8 +42,8 @@ namespace Engine.Layers
         {
             _defaultSceneRenderTexture = new RenderTexture(Screen.Width, Screen.Height);
             _screenGrabTarget = new RenderTexture(Screen.Width, Screen.Height);
-
-            ClearScreenToColor(WindowManager.Window.StartWindowColor);
+            _overlayRenderTexture = new RenderTexture(Screen.Width, Screen.Height);
+            ClearScreenToColor(WindowManager.Window.StartWindowColor, _defaultSceneRenderTexture);
             GfxDeviceManager.Current.Present(_defaultSceneRenderTexture.NativeResource);
 
             _pipelineFeatures = new PipelineFeatures();
@@ -57,6 +67,13 @@ namespace Engine.Layers
             };
 
             _screenGeometry = GraphicsHelper.GetScreenQuadGeometry();
+
+            WindowManager.Window.OnWindowChanged += OnWindowChanged;
+        }
+
+        private void OnWindowChanged(int width, int height)
+        {
+            _overlayRenderTexture?.UpdateTarget(width, height);
         }
 
         internal override void UpdateLayer()
@@ -70,21 +87,21 @@ namespace Engine.Layers
 
             if (!_mainCamera || !_mainCamera.IsEnabled)
             {
-                ClearScreenToColor(Color.Black);
+                ClearScreenToColor(Color.Black, _defaultSceneRenderTexture);
                 GfxDeviceManager.Current.Draw(OnDrawOverlay, _defaultSceneRenderTexture.NativeResource);
                 GfxDeviceManager.Current.Present(_defaultSceneRenderTexture.NativeResource);
                 EngineInfo.Renderer.Clear();
                 return;
             }
 
-            var sceneRenderTarget = _mainCamera.RenderTexture ?? _defaultSceneRenderTexture;
-            GfxDeviceManager.Current.SetViewport(new vec4(0, 0, sceneRenderTarget.Width, sceneRenderTarget.Height));
+            _screenRenderTexture = _mainCamera.RenderTexture ?? _defaultSceneRenderTexture;
+            GfxDeviceManager.Current.SetViewport(new vec4(0, 0, _screenRenderTexture.Width, _screenRenderTexture.Height));
 
             // Clear main render target.
             GfxDeviceManager.Current.Clear(new ClearDeviceConfig()
             {
                 Color = _mainCamera.BackgroundColor,
-                RenderTarget = sceneRenderTarget.NativeResource
+                RenderTarget = _screenRenderTexture.NativeResource
             });
 
             SceneManager.OnPreRenderUpdate();
@@ -107,8 +124,8 @@ namespace Engine.Layers
 
             var VP = _mainCamera.Projection * _mainCamera.ViewMatrix;
 
-            var geoBatchesInfo = RenderBatches(batches, ref VP, sceneRenderTarget);
-            var uiBatchesInfo = RenderBatches(uibatches, ref UICanvas.UIViewProj, sceneRenderTarget, sceneRenderTarget);
+            var geoBatchesInfo = RenderBatches(batches, ref VP, _screenRenderTexture);
+            var uiBatchesInfo = RenderBatches(uibatches, ref UICanvas.UIViewProj, _screenRenderTexture, _screenRenderTexture);
 #if DEBUG
             EngineInfo.Renderer.WBatches = geoBatchesInfo.BatchesCount;
             EngineInfo.Renderer.GrabScreenPass = geoBatchesInfo.ScreenGrabPasses;
@@ -117,17 +134,25 @@ namespace Engine.Layers
             EngineInfo.Renderer.PostProcessingPasses = PostProcessingStack.Passes.Count;
             EngineInfo.Renderer.SavedByBatching = (geoBatchesInfo.TotalRenderers - geoBatchesInfo.BatchesCount) * (uiBatchesInfo.ScreenGrabPasses + 1);
             SceneManager.OnDrawGizmos();
-            Debug.DrawGeometries(VP, UICanvas.UIViewProj, sceneRenderTarget.NativeResource);
+            Debug.DrawGeometries(VP, UICanvas.UIViewProj, _screenRenderTexture.NativeResource);
 #endif
 
-            RenderPostProcessing(ref sceneRenderTarget);
+            RenderPostProcessing(ref _screenRenderTexture);
 
-            // Draw any overlays such as debug UI
-            GfxDeviceManager.Current.Draw(OnDrawOverlay, sceneRenderTarget.NativeResource);
-            
-            GfxDeviceManager.Current.Present(sceneRenderTarget.NativeResource);
+
+            if (RenderToScreen)
+            {
+                // Draw any overlays such as debug UI
+                GfxDeviceManager.Current.Draw(OnDrawOverlay, _screenRenderTexture.NativeResource);
+                GfxDeviceManager.Current.Present(_screenRenderTexture.NativeResource);
+            }
+            else
+            {
+                ClearScreenToColor(Color.Black, null, OverlayOptions.Width, OverlayOptions.Height);
+                GfxDeviceManager.Current.Draw(OnDrawOverlay, null);
+                GfxDeviceManager.Current.Present();
+            }
         }
-
 
         private void RenderPostProcessing(ref RenderTexture screenRenderTexture)
         {
@@ -136,7 +161,7 @@ namespace Engine.Layers
                 screenRenderTexture = pass.Render(screenRenderTexture, _drawPostProcessCallback);
             }
         }
-      
+
         private RenderingBatchesInfo RenderBatches(List<Batch2D> batches, ref mat4 VP, RenderTexture sceneRenderTarget, RenderTexture grabBlitTarget = null)
         {
             RenderingBatchesInfo info = default;
@@ -147,7 +172,7 @@ namespace Engine.Layers
                     break;
                 }
                 info.BatchesCount++;
-                info.TotalRenderers += batch.RenderersCount; 
+                info.TotalRenderers += batch.RenderersCount;
                 batch.Flush();
 
                 var isScreenGrabPass = batch.Material.Passes.Any(x => x.IsScreenGrabPass);
@@ -246,7 +271,7 @@ namespace Engine.Layers
                 int uniformOffset = 0;
                 foreach (var uniform in pass.Uniforms.Values)
                 {
-                    if(_drawCallData.Uniforms.Length <= uniformOffset)
+                    if (_drawCallData.Uniforms.Length <= uniformOffset)
                     {
                         Debug.Error($"Max uniform per drawcall reached: {_drawCallData.Uniforms.Length}");
                         break;
@@ -312,13 +337,19 @@ namespace Engine.Layers
             GfxDeviceManager.Current.Draw(_screenQuadDrawCallData);
         }
 
-        private void ClearScreenToColor(Color color)
+
+        private void ClearScreenToColor(Color color, RenderTexture texture)
         {
-            GfxDeviceManager.Current.SetViewport(new vec4(0, 0, Screen.Width, Screen.Height));
+            ClearScreenToColor(color, texture, Screen.Width, Screen.Height);
+        }
+
+        private void ClearScreenToColor(Color color, RenderTexture texture, int width, int height)
+        {
+            GfxDeviceManager.Current.SetViewport(new vec4(0, 0, width, height));
             GfxDeviceManager.Current.Clear(new ClearDeviceConfig()
             {
                 Color = color,
-                RenderTarget = _defaultSceneRenderTexture.NativeResource
+                RenderTarget = texture?.NativeResource
             });
         }
 

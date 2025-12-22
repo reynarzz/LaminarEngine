@@ -1,4 +1,5 @@
 ﻿using Engine;
+using Engine.Graphics;
 using Engine.Layers;
 using Engine.Layers.Input;
 using Game;
@@ -17,17 +18,22 @@ namespace Editor
 
     internal class EditorEntry
     {
-        private Window _win;
+        private WindowStandalone _win;
         private ImGuiGLFW _glfwInput;
         private const string PROJECT_FOLDER_NAME = "Editor";
+        private ImGuiGameWindow _gameWindow;
 
         internal void Init()
         {
-            _win = new Window("Editor", 1024, 640, Color.Black);
+            _win = new WindowStandalone("Editor", 1024, 640, Color.Black);
             _win.CanResize = true;
+            _gameWindow = new ImGuiGameWindow(_win);
+
+            RenderingLayer.OverlayOptions.Width = _win.Width;
+            RenderingLayer.OverlayOptions.Height = _win.Height;
 
             ImguiImplOpenGL3.Init(_win.Width, _win.Height);
-            _glfwInput = new ImGuiGLFW(Window.NativeWindow);
+            _glfwInput = new ImGuiGLFW(WindowStandalone.NativeWindow);
             _glfwInput.Init();
 
             var assemblyDir = Paths.ClearPathSeparation(Path.GetDirectoryName(AppContext.BaseDirectory)!);
@@ -35,7 +41,7 @@ namespace Editor
 
             new GameCooker.GameProject().Initialize(new GameCooker.ProjectConfig() { ProjectFolderRoot = root });
 
-            var engine = new GFSEngine(_win, new GameApplication(), new InputStandAlonePlatform());
+            var engine = new GFSEngine(_gameWindow, new GameApplication(), new InputStandAlonePlatform());
 
             RenderingLayer.OnDrawOverlay += () =>
             {
@@ -44,11 +50,20 @@ namespace Editor
 
             _win.OnWindowChanged += (w, h) =>
             {
+                RenderingLayer.OverlayOptions.Width = w;
+                RenderingLayer.OverlayOptions.Height = h;
+
+            };
+
+            _gameWindow.OnWindowChanged += (w, h) =>
+            {
                 engine.Update();
             };
 
+
             while (!_win.ShouldClose)
             {
+                _gameWindow.Update();
                 engine.Update();
             }
         }
@@ -61,11 +76,17 @@ namespace Editor
 
             _glfwInput.NewFrame();
 
+            // Render ImGui here:
+            _gameWindow.Render();
+
             RenderingInfoWindow();
             Hierarchy();
 
             ImGui.Render();
             ImguiImplOpenGL3.RenderDrawData(ImGui.GetDrawData());
+
+            _win.SwapBuffers();
+
         }
 
         private void RenderingInfoWindow()
@@ -105,12 +126,12 @@ namespace Editor
                 if (_selectedActor == actor)
                     flags |= ImGuiTreeNodeFlags.Selected;
 
-                if (!actor.IsActiveSelf)
+                if (!actor.IsActiveInHierarchy)
                     ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(0.5f));
 
                 bool open = ImGui.TreeNodeEx(actor.Name, flags);
 
-                if (!actor.IsActiveSelf)
+                if (!actor.IsActiveInHierarchy)
                     ImGui.PopStyleColor();
 
                 // Selection handling
@@ -176,5 +197,9 @@ namespace Editor
             ImGui.End();
         }
 
+        private void GameWindow()
+        {
+        
+        }
     }
 }

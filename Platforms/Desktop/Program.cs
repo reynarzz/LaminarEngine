@@ -75,7 +75,7 @@ namespace Sandbox
                 MatchingFiles = releaseAssetsList
             });
 #endif
-            new GFSEngine(new Window("GFS | By Reynardo Perez", 1024, 576, Color.Black), 
+            new GFSEngine(new WindowStandalone("GFS | By Reynardo Perez", 1024, 576, Color.Black), 
                           new GameApplication(), 
                           new InputStandAlonePlatform()).Run();
 
