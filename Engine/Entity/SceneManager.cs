@@ -42,6 +42,15 @@ namespace Engine
             DontDestroyOnLoadScene.SetTarget(_scenes[0]);
         }
 
+        internal static void UnloadScene(Scene scene)
+        {
+            if (!_scenes.Contains(scene) || scene == _scenes[0])
+                return;
+
+            _scenesToDestroy.Add(scene);
+            _scenes.Remove(scene);
+        }
+
         private static void ClearScenes()
         {
             _scenesToDestroy.Clear();

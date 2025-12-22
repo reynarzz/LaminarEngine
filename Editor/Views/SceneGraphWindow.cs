@@ -101,12 +101,30 @@ namespace Editor.Views
                 ImGui.PopID();
             }
 
-            for (int i = 0; i < SceneManager.Scenes.Count; i++)
+            for (int i = SceneManager.Scenes.Count - 1; i >= 0; i--)
             {
                 ImGui.PushID(SceneManager.Scenes[i].GetID().ToString());
                 ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.OpenOnArrow | ImGuiTreeNodeFlags.SpanFullWidth | ImGuiTreeNodeFlags.DefaultOpen;
 
                 bool open = ImGui.TreeNodeEx(SceneManager.Scenes[i].Name, flags);
+                if (ImGui.BeginPopupContextItem("SceneContext"))
+                {
+                    if (i > 0 && ImGui.MenuItem("Unload Scene"))
+                    {
+                        SceneManager.UnloadScene(SceneManager.Scenes[i]);
+                        ImGui.EndPopup();
+
+                        if (open)
+                        {
+                            ImGui.TreePop();
+                        }
+                        ImGui.PopID();
+
+                        break;
+                    }
+
+                    ImGui.EndPopup();
+                }
                 if (open)
                 {
                     if (SceneManager.Scenes[i].RootActors.Count > 0)
