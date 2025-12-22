@@ -219,7 +219,6 @@ namespace Engine
             Width = width;
             Height = height;
             OnWindowChanged?.Invoke(Width, Height);
-            System.Console.WriteLine("Resized frame buffer");
         }
         public void SetWindowSize(int width, int height)
         {

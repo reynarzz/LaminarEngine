@@ -25,7 +25,7 @@ namespace Editor
 
         internal void Init()
         {
-            _win = new WindowStandalone("Editor", 1024, 640, Color.Black);
+            _win = new WindowStandalone("Editor", 1324, 640, Color.Black);
             _win.CanResize = true;
             _gameWindow = new EditorGameView(_win);
 

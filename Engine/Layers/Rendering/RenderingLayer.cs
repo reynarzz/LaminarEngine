@@ -26,6 +26,7 @@ namespace Engine.Layers
         internal static bool RenderToScreen { get; set; } = true;
         private static RenderTexture _screenRenderTexture;
         internal static RenderTexture ScreenRenderTexture => _screenRenderTexture;
+        internal static bool IsAnyCameraAvailable { get; private set; }
         internal class DrawOverlayOptions
         {
             public int Width { get; set; }
@@ -76,15 +77,27 @@ namespace Engine.Layers
                 _mainCamera = SceneManager.FindComponent<Camera>(findDisabled: false);
             }
 
-            if (!_mainCamera || !_mainCamera.IsEnabled)
+            IsAnyCameraAvailable = _mainCamera && _mainCamera.IsEnabled;
+
+            if (!IsAnyCameraAvailable)
             {
-                ClearScreenToColor(Color.Black, _defaultSceneRenderTexture);
-                GfxDeviceManager.Current.Draw(OnDrawOverlay, _defaultSceneRenderTexture.NativeResource);
-                GfxDeviceManager.Current.Present(_defaultSceneRenderTexture.NativeResource);
+                if (RenderToScreen)
+                {
+                    ClearScreenToColor(Color.Black, _defaultSceneRenderTexture);
+                    GfxDeviceManager.Current.Draw(OnDrawOverlay, _defaultSceneRenderTexture.NativeResource);
+                    GfxDeviceManager.Current.Present(_defaultSceneRenderTexture.NativeResource);
+                }
+                else
+                {
+                    ClearScreenToColor(Color.Black, _screenRenderTexture);
+                    RenderOverlayToScreen();
+                }
+
                 EngineInfo.Renderer.Clear();
+                IsAnyCameraAvailable = false;
                 return;
             }
-
+         
             _screenRenderTexture = _mainCamera.RenderTexture ?? _defaultSceneRenderTexture;
             GfxDeviceManager.Current.SetViewport(new vec4(0, 0, _screenRenderTexture.Width, _screenRenderTexture.Height));
 
@@ -139,12 +152,17 @@ namespace Engine.Layers
             }
             else
             {
-                ClearScreenToColor(Color.Black, null, OverlayOptions.Width, OverlayOptions.Height);
-                GfxDeviceManager.Current.Draw(OnDrawOverlay, null);
-                GfxDeviceManager.Current.Present();
+                RenderOverlayToScreen();
             }
         }
 
+
+        private void RenderOverlayToScreen()
+        {
+            ClearScreenToColor(Color.Black, null, OverlayOptions.Width, OverlayOptions.Height);
+            GfxDeviceManager.Current.Draw(OnDrawOverlay, null);
+            GfxDeviceManager.Current.Present();
+        }
         private void RenderPostProcessing(ref RenderTexture screenRenderTexture)
         {
             foreach (var pass in PostProcessingStack.Passes)

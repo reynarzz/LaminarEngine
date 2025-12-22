@@ -64,6 +64,7 @@ namespace Editor
             ImGuiWindowFlags flags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.NoCollapse;
 
             ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Vector2.Zero);
+            ImGui.PushStyleColor(ImGuiCol.WindowBg, new Vector4(0, 0, 0, 1));
             ImGui.PushID("GameVIew");
             ImGui.Begin("Game", flags);
             var size = ImGui.GetWindowSize();
@@ -73,9 +74,24 @@ namespace Editor
             RenderingLayer.RenderToScreen = false;
             var frameBuffer = (RenderingLayer.ScreenRenderTexture.NativeResource as GLFrameBuffer);
 
-            ImGui.Image((nint)frameBuffer.ColorTexture.Handle, ImGui.GetContentRegionAvail(), new Vector2(0, 1), new Vector2(1, 0));
+            if (RenderingLayer.IsAnyCameraAvailable)
+            {
+                ImGui.Image((nint)frameBuffer.ColorTexture.Handle, ImGui.GetContentRegionAvail(), new Vector2(0, 1), new Vector2(1, 0));
+            }
+            else
+            {
+                // TODO: move this to be calculated just once.
+                string text = "No valid cameras were found/enabled.";
+                Vector2 textSize = ImGui.CalcTextSize(text);
+                Vector2 windowSize = ImGui.GetContentRegionAvail();
+
+                ImGui.SetCursorPos(new Vector2((windowSize.X - textSize.X) * 0.5f, (windowSize.Y - textSize.Y) * 0.5f));
+
+                ImGui.Text(text);
+            }
             ImGui.End();
             ImGui.PopID();
+            ImGui.PopStyleColor();
             ImGui.PopStyleVar();
 
             if (_width != (int)size.X || _height != (int)size.Y)
