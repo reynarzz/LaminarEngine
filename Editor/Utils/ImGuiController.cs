@@ -1,9 +1,12 @@
-﻿using GlmNet;
+﻿using Engine;
+using GlmNet;
 using ImGuiNET;
+using SharedTypes;
 using System;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Text;
 using static OpenGL.GL;
 
 namespace Editor
@@ -63,7 +66,17 @@ namespace Editor
             var io = ImGui.GetIO();
             io.Fonts.AddFontDefault();
 
-            RendererData* bd = (RendererData*)NativeMemory.AllocZeroed((uint)sizeof(RendererData));
+            var assemblyDir = Paths.ClearPathSeparation(Path.GetDirectoryName(AppContext.BaseDirectory)!);
+            var root = Path.Combine(assemblyDir.Substring(0, assemblyDir.LastIndexOf("Editor")), "Editor/Data");
+            
+            var path = $"{root}/imgui.ini";
+            byte[] bytes = Encoding.UTF8.GetBytes(path + '\0');
+
+            byte* iniPath = (byte*)NativeMemory.Alloc((nuint)bytes.Length);
+            bytes.CopyTo(new Span<byte>(iniPath, bytes.Length));
+            io.NativePtr->IniFilename = iniPath;
+
+            RendererData * bd = (RendererData*)NativeMemory.AllocZeroed((uint)sizeof(RendererData));
             bd->GlslVersion = 410;
 
             io.BackendRendererUserData = (IntPtr)bd;
