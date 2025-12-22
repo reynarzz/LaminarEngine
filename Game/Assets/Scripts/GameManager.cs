@@ -57,9 +57,9 @@ namespace Game
             Actor.DontDestroyOnLoad(this);
 
             InitializeActorLayers();
+
             InitializeData();
             InitializeWorld();
-
         }
 
         private void InitializeData()
@@ -117,6 +117,8 @@ namespace Game
             _fadeInOutManager.Transform.Parent = Transform;
             _fadeInOutManager.FadeOut(1);
 
+
+
             //  IEnumerator next()
             {
                 //  yield return null;
@@ -144,6 +146,7 @@ namespace Game
         {
             SceneManager.LoadScene("Level: " + levelIndex);
             // WaterTest();
+            new Actor<TestScript>("Test Editor script");
 
             var result = _tilemapManager.BuildLevel(new LevelInstantiateInfo()
             {

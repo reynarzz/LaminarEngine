@@ -42,7 +42,7 @@ namespace Editor
                     var properties = component.GetType().GetProperties();
                     for (int j = 0; j < properties.Length; j++)
                     {
-                        PropertyDrawer.DrawVars(component.GetID().ToString(), component, properties[j],0, j, ImGui.GetContentRegionAvail().X);
+                        PropertyDrawer.DrawVars(component.GetID().ToString(), component, properties[j],0, j, 0);
                     }
                 }
 

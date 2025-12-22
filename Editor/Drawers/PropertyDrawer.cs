@@ -25,9 +25,7 @@ namespace Editor
 
             ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.Leaf;
 
-            if (ReflectionUtil.IsEnumerable(type) ||
-                (type.IsClass && type.GetProperties().Length > 0 &&
-                 type.Namespace != "glm"))
+            if (type.GetProperties().Length > 0 || type.IsClass)
             {
                 flags = ImGuiTreeNodeFlags.OpenOnArrow;
             }
@@ -49,6 +47,7 @@ namespace Editor
 
                 ImGui.EndPopup();
             }
+            ImGui.SetCursorPosX(MathF.Max(_xPosOffset, ImGui.GetCursorPosX()) + 5);
 
             // EObject
             if (ReflectionUtil.IsEObject(type))
@@ -98,27 +97,50 @@ namespace Editor
                 int idx = (int)value;
                 string[] names = Enum.GetNames(type);
                 if (EditorGuiFieldsResolver.DrawCombo(prop.Name, ref idx, names))
+                {
                     prop.SetValue(obj, Enum.Parse(type, names[idx]));
+                }
             }
-            else if (type.IsGenericType &&
-                     type.GetGenericTypeDefinition() == typeof(List<>))
+            else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
             {
-
+                if (value is System.Collections.IList list)
+                {
+                    if(EditorGuiFieldsResolver.DrawListField(prop.Name, list))
+                    {
+                        prop.SetValue(obj, list);
+                    }
+                }
             }
             else if (type.IsArray)
             {
+                int size = ((Array)obj).Length;
+                EditorGuiFieldsResolver.DrawListField(prop.Name, size, () =>
+                {
+                    // Add
+                }, (x) =>
+                {
+                    // Remove
+                }, (x, y) =>
+                {
+                    // Draw callback
+
+                    return false;
+                }, false);
+
+                // prop.SetValue(obj, list);
 
             }
             // class
             else if (type.IsClass)
             {
                 foreach (var subProp in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+                {
                     DrawVars(entityID, value, subProp, cursorX, index++, width);
+                }
             }
 
             ImGui.TreePop();
         }
-
 
         private static void DrawEObjectSlot(object value, Type valueType, Func<object, bool> setValue, float width = -1)
         {
