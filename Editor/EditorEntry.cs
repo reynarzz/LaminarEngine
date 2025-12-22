@@ -23,7 +23,7 @@ namespace Editor
         private EditorGameView _gameWindow;
         private SceneGraphWindow _sceneGraphWindow;
         private GFSEngine _engine;
-        private SimpleNodeEditor _node;
+        // private SimpleNodeEditor _node;
         private ObjectEditorView _objectEditor;
         internal void Init()
         {

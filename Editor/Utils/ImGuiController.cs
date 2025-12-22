@@ -71,14 +71,14 @@ namespace Editor
             
             var path = $"{root}/imgui.ini";
             byte[] bytes = Encoding.UTF8.GetBytes(path + '\0');
-
+            
             byte* iniPath = (byte*)NativeMemory.Alloc((nuint)bytes.Length);
             bytes.CopyTo(new Span<byte>(iniPath, bytes.Length));
             io.NativePtr->IniFilename = iniPath;
 
             RendererData * bd = (RendererData*)NativeMemory.AllocZeroed((uint)sizeof(RendererData));
-            bd->GlslVersion = 410;
-
+            bd->GlslVersion = 330;
+ 
             io.BackendRendererUserData = (IntPtr)bd;
             io.NativePtr->BackendRendererName = (byte*)Unsafe.AsPointer(ref BackendName);
 
@@ -250,7 +250,7 @@ namespace Editor
             mat4 mvp = glm.ortho(L, R, B, T, -1, 1);
             glUseProgram((uint)bd->ShaderHandle);
             glUniform1i(bd->UniformLocationTex, 0);
-            glUniformMatrix4fv(bd->UniformLocationProjMtx, 1, true, mvp.to_array());
+            glUniformMatrix4fv(bd->UniformLocationProjMtx, 1, false, mvp.to_array());
 
             glBindSampler(0, 0);
 
@@ -286,18 +286,7 @@ namespace Editor
             last_viewport[0] = glGetInteger(GL_VIEWPORT);
             Span<int> last_scissor_box = stackalloc int[4];
             last_scissor_box[0] = glGetInteger(GL_SCISSOR_BOX);
-            //int last_blend_src_rgb = glGetInteger(GetPName.BlendSrcRgb);
-            //int last_blend_dst_rgb = glGetInteger(GetPName.BlendDstRgb);
-            //int last_blend_src_alpha = glGetInteger(GetPName.BlendSrcAlpha);
-            //int last_blend_dst_alpha = glGetInteger(GetPName.BlendDstAlpha);
-            //int last_blend_equation_rgb = glGetInteger(GetPName.BlendEquationRgb);
-            //int last_blend_equation_alpha = glGetInteger(GetPName.BlendEquationAlpha);
-            //bool last_enable_blend = glIsEnabled(EnableCap.Blend);
-            //bool last_enable_cull_face = glIsEnabled(EnableCap.CullFace);
-            //bool last_enable_depth_test = glIsEnabled(EnableCap.DepthTest);
-            //bool last_enable_stencil_test = glIsEnabled(EnableCap.StencilTest);
-            //bool last_enable_scissor_test = glIsEnabled(EnableCap.ScissorTest);
-
+       
             int last_blend_src_rgb;
             glGetIntegerv(GL_BLEND_SRC_RGB, &last_blend_src_rgb);
 
@@ -607,6 +596,41 @@ namespace Editor
                 }
                 """;
 
+
+            string fragment_330 = @"#version 330 core
+            in vec2 Frag_UV;
+            in vec4 Frag_Color;
+
+            uniform sampler2D Texture;
+
+            out vec4 Out_Color;
+
+            void main()
+            {
+                Out_Color = Frag_Color * texture(Texture, Frag_UV);
+            }
+            ";
+
+            string vertex_330 = @"#version 330 core
+
+            layout (location = 0) in vec2 Position;
+            layout (location = 1) in vec2 UV;
+            layout (location = 2) in vec4 Color;
+
+            uniform mat4 ProjMtx;
+
+            out vec2 Frag_UV;
+            out vec4 Frag_Color;
+
+            void main()
+            {
+                Frag_UV = UV;
+                Frag_Color = Color;
+                gl_Position = ProjMtx * vec4(Position.xy, 0.0, 1.0);
+            }
+
+            ";
+            
             string vertex_shader;
             string fragment_shader;
             if (bd->GlslVersion < 130)
@@ -624,15 +648,23 @@ namespace Editor
                 vertex_shader = vertex_shader_glsl_300_es;
                 fragment_shader = fragment_shader_glsl_300_es;
             }
+            else if (bd->GlslVersion == 330)
+            {
+                 vertex_shader = vertex_330;
+                fragment_shader = fragment_330;
+            }
             else
             {
-                vertex_shader = vertex_shader_glsl_130;
-                fragment_shader = fragment_shader_glsl_130;
+                vertex_shader = vertex_330;
+                fragment_shader = fragment_330;
             }
 
-            vertex_shader = vertex_shader.Insert(0, $"#version {bd->GlslVersion}{Environment.NewLine}");
-            fragment_shader = fragment_shader.Insert(0, $"#version {bd->GlslVersion}{Environment.NewLine}");
-
+            if (bd->GlslVersion != 330)
+            {
+               vertex_shader = vertex_shader.Insert(0, $"#version {bd->GlslVersion}{Environment.NewLine}");
+               fragment_shader = fragment_shader.Insert(0, $"#version {bd->GlslVersion}{Environment.NewLine}");
+            }
+           
             uint vert = glCreateShader(GL_VERTEX_SHADER);
             // FIXME: Version string...
             glShaderSource(vert, vertex_shader);

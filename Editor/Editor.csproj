@@ -10,7 +10,13 @@
 
   </PropertyGroup>
 
-  <ItemGroup>
+	<PropertyGroup Condition="'$(OS)' == 'Unix' AND
+'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform(
+   $([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'True'">
+  <MacLibFolder>lib-universal</MacLibFolder>
+</PropertyGroup>
+
+  <ItemGroup> 
     <ProjectReference Include="..\Engine\Engine.csproj" />
     <ProjectReference Include="..\GameCooker\GameCooker.csproj" />
     <ProjectReference Include="..\Game\Game.csproj" />
@@ -29,21 +35,24 @@
 
 		<Copy SourceFiles="$(GlfwWinSrc)" DestinationFiles="$(TargetDir)glfw.dll" SkipUnchangedFiles="true" />
 		<Copy SourceFiles="$(ImGuiSrc)" DestinationFiles="$(TargetDir)cimgui.dll" SkipUnchangedFiles="true" />
-
+</Target>
 		
-	</Target>
 
-	<Target Name="PostBuild_Mac" AfterTargets="PostBuildEvent" Condition="$(RuntimeIdentifier.Contains('osx'))">
 
-		<PropertyGroup>
-			<GlfwMacSrc>
-				$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\Third/MacOs/glfw/$(MacLibFolder)/libglfw.dylib'))
-			</GlfwMacSrc>
-		</PropertyGroup>
+	<Target Name="PostBuild_Mac"
+    AfterTargets="PostBuildEvent"
+    Condition="'$(OS)' == 'Unix' AND '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'True'">
 
-		<Message Text="Copying from $(GlfwMacSrc)" Importance="high" />
+  <PropertyGroup> 
+  <GlfwMacSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)/../Third/MacOs/glfw/$(MacLibFolder)/libglfw.dylib'))</GlfwMacSrc>
+			<ImGuiSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\Third\ImGui\cimgui\osx\cimgui.dylib'))</ImGuiSrc>
 
-		<Copy SourceFiles="$(GlfwMacSrc)" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
-	</Target>
+  </PropertyGroup>
+
+  <Copy SourceFiles="$(GlfwMacSrc)" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
+		<Copy SourceFiles="$(ImGuiSrc)" DestinationFiles="$(TargetDir)cimgui.dylib" SkipUnchangedFiles="true" />
+
+</Target>
+
 
 </Project>
