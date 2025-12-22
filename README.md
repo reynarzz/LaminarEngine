@@ -7,7 +7,7 @@ GFS is a 2D video game and game engine built entirely from scratch with **C#**, 
 ## Features
 
 - Custom engine written in C#
-- Editor (ImGui)
+- Editor (ImGui): Windows, MacOs.
 - 2D Rendering (Sprites/Tilemap)
 - 2D Physics (Box2D)
 - Sprite batching.
