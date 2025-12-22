@@ -158,11 +158,14 @@ namespace Editor
                 ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.OpenOnArrow | ImGuiTreeNodeFlags.SpanFullWidth;
 
                 bool open = ImGui.TreeNodeEx(SceneManager.Scenes[i].Name, flags);
-                if (open && SceneManager.Scenes[i].RootActors.Count > 0)
+                if (open)
                 {
-                    for (int j = 0; j < SceneManager.Scenes[i].RootActors.Count; j++)
+                    if(SceneManager.Scenes[i].RootActors.Count > 0)
                     {
-                        DrawActor(SceneManager.Scenes[i].RootActors[j]);
+                        for (int j = 0; j < SceneManager.Scenes[i].RootActors.Count; j++)
+                        {
+                            DrawActor(SceneManager.Scenes[i].RootActors[j]);
+                        }
                     }
 
                     ImGui.TreePop();

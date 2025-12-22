@@ -70,10 +70,10 @@ namespace Engine.Layers
 
             if (!_mainCamera || !_mainCamera.IsEnabled)
             {
-                Debug.Warn("No cameras found in scene.");
                 ClearScreenToColor(Color.Black);
                 GfxDeviceManager.Current.Draw(OnDrawOverlay, _defaultSceneRenderTexture.NativeResource);
                 GfxDeviceManager.Current.Present(_defaultSceneRenderTexture.NativeResource);
+                EngineInfo.Renderer.Clear();
                 return;
             }
 
