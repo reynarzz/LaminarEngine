@@ -81,7 +81,7 @@ namespace Engine
         [ExposeEditorField]
         public float Volume
         {
-            get => _soundPlayer?.Volume ?? -1;
+            get => _soundPlayer?.Volume ?? 1;
             set
             {
                 if (_soundPlayer == null)
@@ -93,7 +93,7 @@ namespace Engine
         [ExposeEditorField]
         public float Pan
         {
-            get => _soundPlayer?.Pan ?? -1;
+            get => _soundPlayer?.Pan ?? 0;
             set
             {
                 if (_soundPlayer == null)
@@ -105,7 +105,7 @@ namespace Engine
         [ExposeEditorField]
         public float PlaybackSpeed
         {
-            get => _soundPlayer?.PlaybackSpeed ?? -1;
+            get => _soundPlayer?.PlaybackSpeed ?? 1;
             set
             {
                 if (_soundPlayer == null)

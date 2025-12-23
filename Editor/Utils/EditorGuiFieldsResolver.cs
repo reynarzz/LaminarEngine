@@ -8,6 +8,7 @@ using GlmNet;
 using Engine.Utils;
 using System.Collections;
 using Engine;
+using System.Reflection;
 
 namespace Editor.Utils
 {
@@ -353,6 +354,11 @@ namespace Editor.Utils
                 {
                     // sometimes the list can be null.
                     item = value[index];
+
+                    if(item == null)
+                    {
+                        item = GetDefault(itemType);
+                    }
                 }
                 catch (Exception e)
                 {
@@ -411,24 +417,31 @@ namespace Editor.Utils
                     changed = DrawVec4Field(fieldId, ref v, width);
                     item = v;
                 }
-                else if (item.GetType() == typeof(mat2))
+                else if (itemType == typeof(mat2))
                 {
                     var v = (mat2)item;
                     changed = DrawMatrix(fieldId, ref v);
                     item = v;
                 }
-                //else if (item.GetType() == typeof(mat3))
-                //{
-                //    var v = (mat3)(object)item!;
-                //    changed = DrawMatrix(fieldId, ref v);
-                //    item = v;
-                //}
-                //else if (item.GetType() == typeof(mat4))
-                //{
-                //    var v = (mat4)(object)item!;
-                //    changed = DrawMatrix(fieldId, ref v);
-                //    item = v;
-                //}
+                else if (itemType == typeof(mat3))
+                {
+                    var v = (mat3)item!;
+                    changed = DrawMatrix(fieldId, ref v);
+                    item = v;
+                }
+                else if (itemType == typeof(mat4))
+                {
+                    var v = (mat4)item!;
+                    changed = DrawMatrix(fieldId, ref v);
+                    item = v;
+                }
+                else if (itemType.IsClass)
+                {
+                    //foreach (var subProp in itemType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+                    //{
+                    //    DrawItem(index++, width);
+                    //}
+                }
 
                 value[index] = item;
                 return changed;
@@ -450,7 +463,8 @@ namespace Editor.Utils
             return DrawListField(name, value.Count, OnAdd, OnRemove, DrawItem, false);
         }
 
-        public static bool DrawListField(string name, int size, Action onAddCallback, Action<int> onRemoveCallback, Func<int, float, bool> drawCallback, bool itemAsTree)
+        public static bool DrawListField(string name, int size, Action onAddCallback, Action<int> onRemoveCallback, 
+                                         Func<int, float, bool> drawCallback, bool itemAsTree)
         {
             ImGui.SameLine();
             ImGui.SetCursorPosX(ImGui.GetWindowWidth() - 120);

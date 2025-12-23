@@ -1,5 +1,6 @@
 ﻿using Editor.Utils;
 using Engine;
+using Engine.Utils;
 using GlmNet;
 using ImGuiNET;
 using System;
@@ -18,7 +19,7 @@ namespace Editor
 
         private delegate bool DrawSimpleFieldDelegate<T>(string fieldName, ref T v);
 
-        private static void DrawSimpleProperty<T>(string propertyName, object target, object value, bool isReadOnly, PropertyInfo prop, DrawSimpleFieldDelegate<T> drawField, bool sameLine = true, Func<T, object> valueConverter = null)
+        private static void DrawSimpleProperty<T>(string propertyName, object target, object value, bool isReadOnly, MemberInfo prop, DrawSimpleFieldDelegate<T> drawField, bool sameLine = true, Func<T, object> valueConverter = null)
         {
             if (sameLine)
             {
@@ -32,23 +33,23 @@ namespace Editor
             {
                 if (valueConverter == null)
                 {
-                    prop.SetValue(target, v);
+                    ReflectionUtils.SetMemberValue(target, prop, v);
                 }
                 else
                 {
-                    prop.SetValue(target, valueConverter.Invoke(v));
+                    ReflectionUtils.SetMemberValue(target, prop, valueConverter.Invoke(v));
                 }
             }
             ImGui.EndDisabled();
         }
 
-        public static void DrawVars(string entityID, object obj, PropertyInfo prop, float cursorX, int index, float width, bool enforceSerializedFieldAttribute)
+        public static void DrawVars(string entityID, object obj, MemberInfo prop, float cursorX, int index, float width, bool enforceSerializedFieldAttribute)
         {
-            if (prop == null || !prop.CanRead)
+            if (prop == null)
                 return;
 
-            object value = prop.GetValue(obj);
-            Type type = prop.PropertyType;
+            object value = ReflectionUtils.GetMemberValue(obj, prop);
+            Type type = ReflectionUtils.GetMemberType(prop);
             string propertyName = prop.Name;
             // NOTE: I will enforce that any property that needs to be exposed in the editor should have the SerializedField attribute
 
@@ -87,10 +88,15 @@ namespace Editor
                     _copiedValue = value;
 
                 if (ImGui.Selectable("Paste") && _copiedValue?.GetType() == type)
-                    prop.SetValue(obj, _copiedValue);
+                {
+                    ReflectionUtils.SetMemberValue(obj, prop, _copiedValue);
+                }
 
                 if (ImGui.Selectable("Clear"))
-                    prop.SetValue(obj, type.IsValueType ? Activator.CreateInstance(type) : null);
+                {
+                    var valueClear = type.IsValueType ? Activator.CreateInstance(type) : null;
+                    ReflectionUtils.SetMemberValue(obj, prop, valueClear);
+                }
 
                 ImGui.EndPopup();
             }
@@ -103,7 +109,7 @@ namespace Editor
 
                 DrawEObjectSlot(value as EObject, type, v =>
                 {
-                    prop.SetValue(obj, v);
+                    ReflectionUtils.SetMemberValue(obj, prop, v);
                     return true;
                 }, width);
             }
@@ -166,7 +172,8 @@ namespace Editor
                 string[] names = Enum.GetNames(type);
                 if (EditorGuiFieldsResolver.DrawCombo(propertyName, ref idx, names))
                 {
-                    prop.SetValue(obj, Enum.Parse(type, names[idx]));
+                    ReflectionUtils.SetMemberValue(obj, prop, Enum.Parse(type, names[idx]));
+
                 }
             }
             else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
@@ -178,7 +185,7 @@ namespace Editor
                 {
                     if (EditorGuiFieldsResolver.DrawListField(propertyName, list))
                     {
-                        prop.SetValue(obj, list);
+                        ReflectionUtils.SetMemberValue(obj, prop, list);
                     }
                 }
             }
@@ -207,7 +214,8 @@ namespace Editor
             // class
             else if (type.IsClass)
             {
-                foreach (var subProp in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+                var members = ReflectionUtils.GetAllMembersWithAttribute<ExposeEditorFieldAttribute>(type, true, true);
+                foreach (var subProp in members)
                 {
                     DrawVars(entityID, value, subProp, cursorX, index++, width, enforceSerializedFieldAttribute);
                 }

@@ -41,13 +41,15 @@ namespace Game
             [ExposeEditorField] public mat4 mat4Test { get; set; }
             [ExposeEditorField] public TestClassSub SubObject { get; set; } = new TestClassSub();
         }
-        [ExposeEditorField] public TestClass TestClassObj { get; set; } = new TestClass();
+        [ExposeEditorField] public TestClass TestClassObj = new TestClass();
         [ExposeEditorField] public List<string> StringTest { get; set; } = new();
         [ExposeEditorField] public List<int> IntTest { get; set; } = new();
         [ExposeEditorField] public List<Body2DType> EnumList { get; set; } = new();
         [ExposeEditorField] public mat2 mat2Test { get; set; }
         [ExposeEditorField] public mat3 mat3Test { get; set; }
         [ExposeEditorField] public mat4 mat4Test { get; set; }
+        [ExposeEditorField] public List<TestClass> _TestCLassList { get; set; } = new();
+
         public Body2DType[] EnumArray { get; set; } = new Body2DType[5];
     }
 }

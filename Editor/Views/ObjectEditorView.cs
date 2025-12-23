@@ -42,15 +42,19 @@ namespace Editor
                 for (int i = 0; i < actor.Components.Count; i++)
                 {
                     var component = actor.Components[i];
-                    var properties = component.GetType().GetProperties();
+                    var members = ReflectionUtils.GetAllMembersWithAttribute<ExposeEditorFieldAttribute>(component.GetType(), true, true);
                     DrawComponentTree(component, i, x =>
                     {
                         if (component)
                         {
-                            for (int j = 0; j < properties.Length; j++)
+                            int index = 0;
+                            foreach (var member in members)
                             {
-                                PropertyDrawer.DrawVars(x.GetID().ToString(), component, properties[j], 0, j, 0, true);
+                                PropertyDrawer.DrawVars(x.GetID().ToString(), component, member, 0, index, 0, true);
+
+                                index++;
                             }
+
                         }
                     });
                 }

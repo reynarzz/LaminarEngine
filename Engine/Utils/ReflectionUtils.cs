@@ -11,8 +11,8 @@ namespace Engine.Utils
 {
     internal class ReflectionUtils
     {
-        IEnumerable<T> GetAllAttributes<T>(
-                [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] Type type) where T : Attribute
+        IEnumerable<T> GetAllAttributes<T>([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
+                                            Type type) where T : Attribute
         {
             var result = new List<T>();
 
@@ -46,7 +46,7 @@ namespace Engine.Utils
             }
         }
 
-        public static IEnumerable<MemberInfo> GetAllMembersWithAttribute<T>(Type type, bool inherit = true) where T : Attribute
+        public static IEnumerable<MemberInfo> GetAllMembersWithAttribute<T>(Type type, bool inherit = true, bool order = false) where T : Attribute
         {
             const BindingFlags flags =
                 BindingFlags.Instance |
@@ -56,21 +56,20 @@ namespace Engine.Utils
 
             while (type != null && type != typeof(object))
             {
-                foreach (var prop in type.GetProperties(flags))
+                var members = type
+                    .GetMembers(flags)
+                    .Where(m =>
+                        (m.MemberType == MemberTypes.Field ||
+                         m.MemberType == MemberTypes.Property) &&
+                        m.IsDefined(typeof(T), inherit));
+
+                if (order)
                 {
-                    if (prop.IsDefined(typeof(T), inherit))
-                    {
-                        yield return prop;
-                    }
+                    members = members.OrderBy(m => m.MetadataToken);
                 }
-                    
-                foreach (var field in type.GetFields(flags))
-                {
-                    if (field.IsDefined(typeof(T), inherit))
-                    {
-                        yield return field;
-                    }
-                }
+
+                foreach (var member in members)
+                    yield return member;
 
                 type = type.BaseType;
             }
@@ -86,25 +85,40 @@ namespace Engine.Utils
                         if (setter == null)
                             throw new InvalidOperationException($"{prop.Name} has no setter.");
 
-                        setter.Invoke(
-                            obj,
-                            BindingFlags.InvokeMethod,
-                            Type.DefaultBinder,
-                            new object[] { value },
-                            CultureInfo.InvariantCulture
-                        );
+                        setter.Invoke(obj, BindingFlags.InvokeMethod, Type.DefaultBinder, new object[] { value }, CultureInfo.InvariantCulture);
                         break;
                     }
 
                 case FieldInfo field:
                     {
-                        field.SetValue(obj, value,
-                            BindingFlags.Instance |
+                        var flags = BindingFlags.Instance |
                             BindingFlags.Public |
-                            BindingFlags.NonPublic,
-                            Type.DefaultBinder,
-                            CultureInfo.InvariantCulture);
+                            BindingFlags.NonPublic;
+
+                        field.SetValue(obj, value, flags, Type.DefaultBinder, CultureInfo.InvariantCulture);
                         break;
+                    }
+
+                default:
+                    throw new NotSupportedException("Unsupported member type: " + member.GetType());
+            }
+        }
+        public static object GetMemberValue(object obj, MemberInfo member)
+        {
+            switch (member)
+            {
+                case PropertyInfo prop:
+                    {
+                        var getter = prop.GetMethod ?? prop.GetGetMethod(true);
+                        if (getter == null)
+                            throw new InvalidOperationException($"{prop.Name} has no getter.");
+
+                        return getter.Invoke(obj, BindingFlags.InvokeMethod, Type.DefaultBinder, Array.Empty<object>(), CultureInfo.InvariantCulture);
+                    }
+
+                case FieldInfo field:
+                    {
+                        return field.GetValue(obj);
                     }
 
                 default:
