@@ -23,7 +23,7 @@ namespace Editor.Utils
         {
             if (width > 0)
             {
-                ImGui.SetNextItemWidth(width);
+                ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X - width);
             }
             else
             {
@@ -239,19 +239,8 @@ namespace Editor.Utils
             ImGui.PopStyleColor();
             return result;
         }
-        public static bool DrawMatrix(string name, ref mat2 value)
-        {
-            return DrawMatrix(name, ref value, 0);
-        }
-        public static bool DrawMatrix(string name, ref mat3 value)
-        {
-            return DrawMatrix(name, ref value, 0);
-        }
-        public static bool DrawMatrix(string name, ref mat4 value)
-        {
-            return DrawMatrix(name, ref value, 0);
-        }
-        public static bool DrawMatrix(string name, ref mat2 value, int itemWidth)
+
+        public static bool DrawMatrix(string name, ref mat2 value, float itemWidth = 0, bool pressEnterToConfirm = false)
         {
             float xpos = ImGui.GetCursorPosX();
             bool changed = false;
@@ -279,7 +268,7 @@ namespace Editor.Utils
             return changed;
         }
 
-        public static bool DrawMatrix(string name, ref mat3 value, int itemWidth)
+        public static bool DrawMatrix(string name, ref mat3 value, float itemWidth = 0, bool pressEnterToConfirm = false)
         {
             bool changed = false;
             float cursorX = ImGui.GetCursorPosX();
@@ -306,7 +295,7 @@ namespace Editor.Utils
             return changed;
         }
 
-        public static bool DrawMatrix(string name, ref mat4 value, int itemWidth)
+        public static bool DrawMatrix(string name, ref mat4 value, float itemWidth = 0, bool pressEnterToConfirm = false)
         {
             bool changed = false;
             float cursorX = ImGui.GetCursorPosX();
@@ -333,162 +322,11 @@ namespace Editor.Utils
 
             return changed;
         }
-        //public static bool DrawListField(string name, IList value)
-        //{
-        //    var listType = value.GetType();
-        //    var itemType = default(Type);
 
-        //    if (listType.IsGenericType)
-        //    {
-        //        Type genericDef = listType.GetGenericTypeDefinition();
-        //        if (typeof(IList<>).IsAssignableFrom(genericDef) || genericDef == typeof(List<>))
-        //        {
-        //            itemType = listType.GetGenericArguments()[0];
-        //        }
-        //    }
-
-        //    bool DrawItem(int index, float width, object item)
-        //    {
-        //        if(item == null)
-        //        try
-        //        {
-        //            // sometimes the list can be null.
-        //            item = value[index];
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            return false;
-        //        }
-        //        if (item == null)
-        //        {
-        //            item = GetDefault(itemType);
-        //        }
-        //        bool changed = false;
-
-        //        string fieldId = $"##_{name}{index}";
-
-        //        if (itemType == typeof(string))
-        //        {
-        //            string v = (string)item!;
-        //            changed = DrawStringField(fieldId, ref v, width);
-        //            item = v;
-        //        }
-        //        if (itemType.IsEnum)
-        //        {
-        //            Array values = Enum.GetValues(itemType);
-        //            int idx = Array.IndexOf(values, item);
-
-        //            string[] names = Enum.GetNames(itemType);
-
-        //            if (DrawCombo(fieldId, ref idx, names))
-        //            {
-        //                item = Enum.ToObject(itemType, values.GetValue(idx)!);
-        //            }
-        //        }
-        //        else if (itemType == typeof(float))
-        //        {
-        //            float v = (float)item!;
-        //            changed = DrawFloatField(fieldId, ref v, width);
-        //            item = v;
-        //        }
-        //        else if (itemType == typeof(int))
-        //        {
-        //            int v = (int)item!;
-        //            changed = DrawIntField(fieldId, ref v, width);
-        //            item = v;
-        //        }
-        //        else if (itemType == typeof(vec2))
-        //        {
-        //            vec2 v = (vec2)item!;
-        //            changed = DrawVec2Field(fieldId, ref v, width);
-        //            item = v;
-        //        }
-        //        else if (itemType == typeof(vec3))
-        //        {
-        //            vec3 v = (vec3)item!;
-        //            changed = DrawVec3Field(fieldId, ref v, width);
-        //            item = v;
-        //        }
-        //        else if (itemType == typeof(vec4))
-        //        {
-        //            vec4 v = (vec4)item!;
-        //            changed = DrawVec4Field(fieldId, ref v, width);
-        //            item = v;
-        //        }
-        //        else if (itemType == typeof(mat2))
-        //        {
-        //            var v = (mat2)item;
-        //            changed = DrawMatrix(fieldId, ref v);
-        //            item = v;
-        //        }
-        //        else if (itemType == typeof(mat3))
-        //        {
-        //            var v = (mat3)item!;
-        //            changed = DrawMatrix(fieldId, ref v);
-        //            item = v;
-        //        }
-        //        else if (itemType == typeof(mat4))
-        //        {
-        //            var v = (mat4)item!;
-        //            changed = DrawMatrix(fieldId, ref v);
-        //            item = v;
-        //        }
-        //        //else if (itemType.IsGenericType && itemType.GetGenericTypeDefinition() == typeof(List<>))
-        //        //{
-        //        //    if (value is IList list)
-        //        //    {
-        //        //        DrawListField(name, value);
-        //        //    }
-        //        //}
-        //        //else if (itemType.IsClass)
-        //        //{
-        //        //    int subIndex = 0;
-        //        //    var prevType = itemType;
-
-        //        //    var members = ReflectionUtils.GetAllMembersWithAttribute<ExposeEditorFieldAttribute>(itemType, true, true);
-        //        //    if (item == null)
-        //        //    {
-        //        //        item = GetDefault(itemType);
-        //        //    }
-        //        //    foreach (var member in members)
-        //        //    {
-        //        //        var v = ReflectionUtils.GetMemberValue(item, member);
-        //        //        if (v == null)
-        //        //        {
-        //        //            continue;
-        //        //            v = GetDefault(ReflectionUtils.GetMemberType(member));
-        //        //        }
-        //        //        itemType = v.GetType();
-
-        //        //        DrawItem(subIndex++, width, v);
-        //        //    }
-
-        //        //    itemType = prevType;
-        //        //}
-
-        //        value[index] = item;
-        //        return changed;
-        //    }
-
-        //    void OnAdd()
-        //    {
-        //        value.Add(GetDefault(itemType));
-        //    }
-
-        //    void OnRemove(int index)
-        //    {
-        //        if (value.Count > 0)
-        //        {
-        //            value.RemoveAt(index);
-        //        }
-        //    }
-
-        //    return DrawListField(name, value.Count, OnAdd, OnRemove, DrawItem, false);
-        //}
-
-        public static bool DrawListField(string name, IList list, Action onAddCallback, Action<int> onRemoveCallback, 
-                                         Func<int, float, object, bool> drawCallback, bool itemAsTree)
+        public static bool DrawListField(string name, IList list, bool itemAsTree, Action onAddCallback, Action<int> onRemoveCallback,
+                                         Func<int, float, object, bool> drawCallback)
         {
+
             ImGui.SameLine();
             ImGui.SetCursorPosX(ImGui.GetWindowWidth() - 120);
 
@@ -515,32 +353,40 @@ namespace Editor.Utils
 
             if (DrawStringField($"##_size_{name}", ref lenText))
             {
-                int val = Math.Max(0, int.Parse(lenText));
-
-                if (size < val)
+                if (int.TryParse(lenText, out var val) && val >= 0)
                 {
-                    for (int i = size; i < val; i++)
+                    if (size < val)
                     {
-                        onAddCallback();
+                        for (int i = size; i < val; i++)
+                        {
+                            onAddCallback();
+                        }
                     }
-                }
-                else if (size > val)
-                {
-                    onRemoveCallback(val);
-                }
+                    else if (size > val)
+                    {
+                        onRemoveCallback(val);
+                    }
 
-                size = val;
-                changed = true;
+                    size = val;
+                    changed = true;
+                }
+                changed = false;
             }
 
             for (int i = 0; i < list.Count; i++)
             {
                 float prevCursorY = ImGui.GetCursorPosY();
                 bool show;
-
+                if (ImGui.Button($"X##_DELETE_BUTTON_{i}_{name}"))
+                {
+                    onRemoveCallback(i);
+                    changed = true;
+                    break;
+                }
+                ImGui.SameLine();
                 if (itemAsTree)
                 {
-                    show = ImGui.TreeNode($"item {i}");
+                    show = ImGui.TreeNode($"item {i}_{name}");
                 }
                 else
                 {
@@ -552,21 +398,11 @@ namespace Editor.Utils
 
                 if (show)
                 {
-                    if (drawCallback(i, ImGui.GetContentRegionAvail().X - 24f, list[i]))
+                    if (drawCallback(i, 0, list[i]))
                         changed = true;
 
                     if (itemAsTree)
                         ImGui.TreePop();
-                }
-
-                ImGui.SameLine();
-                ImGui.SetCursorPosY(prevCursorY);
-                ImGui.SetCursorPosX(ImGui.GetWindowSize().X - 30);
-
-                if (ImGui.Button($"X##_{i}"))
-                {
-                    onRemoveCallback(i);
-                    changed = true;
                 }
             }
 
@@ -593,7 +429,7 @@ namespace Editor.Utils
                 {
                     return string.Empty;
                 }
-                else if(type.IsClass)
+                else if (type.IsClass)
                 {
                     try
                     {
