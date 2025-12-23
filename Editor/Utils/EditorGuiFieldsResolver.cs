@@ -8,7 +8,6 @@ using GlmNet;
 using Engine.Utils;
 using System.Collections;
 using Engine;
-using System.Reflection;
 
 namespace Editor.Utils
 {
@@ -110,8 +109,7 @@ namespace Editor.Utils
         {
             SetNextItemWidth(itemWidth);
 
-            return ImGui.InputInt($"##{name}", ref value) &&
-                   (!pressEnterToConfirm || ImGui.IsKeyDown(ImGuiKey.Enter));
+            return ImGui.InputInt($"##{name}", ref value) && (!pressEnterToConfirm || ImGui.IsKeyDown(ImGuiKey.Enter));
         }
 
         private static bool _openColorPicker = false;
@@ -323,8 +321,8 @@ namespace Editor.Utils
             return changed;
         }
 
-        public static bool DrawListField(string name, IList list, bool itemAsTree, Action onAddCallback, Action<int> onRemoveCallback,
-                                         Func<int, float, object, bool> drawCallback)
+        public static bool DrawListField(string name, IList list, bool itemAsTree, Action onAddCallback, Action<int> onRemoveCallback, 
+                                         Action<int> removeCount, Func<int, float, object, bool> drawCallback)
         {
 
             ImGui.SameLine();
@@ -351,7 +349,7 @@ namespace Editor.Utils
             string lenText = size.ToString();
             ImGui.SetNextItemWidth(53);
 
-            if (DrawStringField($"##_size_{name}", ref lenText))
+            if (DrawStringField($"##_size_{name}", ref lenText, 0, true))
             {
                 if (int.TryParse(lenText, out var val) && val >= 0)
                 {
@@ -364,7 +362,7 @@ namespace Editor.Utils
                     }
                     else if (size > val)
                     {
-                        onRemoveCallback(val);
+                        removeCount(val);
                     }
 
                     size = val;
@@ -407,41 +405,6 @@ namespace Editor.Utils
             }
 
             return changed;
-        }
-
-        private static object GetDefault(Type type)
-        {
-            if (type.IsValueType)
-            {
-                if (type.IsEnum)
-                {
-                    Array values = Enum.GetValues(type);
-                    return values.Length > 0 ? values.GetValue(0)! : Activator.CreateInstance(type)!;
-                }
-                else
-                {
-                    return Activator.CreateInstance(type)!;
-                }
-            }
-            else
-            {
-                if (type == typeof(string))
-                {
-                    return string.Empty;
-                }
-                else if (type.IsClass)
-                {
-                    try
-                    {
-                        return Activator.CreateInstance(type)!;
-                    }
-                    catch (Exception e)
-                    {
-                        return null;
-                    }
-                }
-                return null!;
-            }
         }
     }
 }

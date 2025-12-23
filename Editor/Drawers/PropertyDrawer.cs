@@ -221,7 +221,8 @@ namespace Editor
                             }
                         }
 
-                        EditorGuiFieldsResolver.DrawListField(propertyName, list, false, OnAdd, OnRemove, (index, itemWidth, item) =>
+                        EditorGuiFieldsResolver.DrawListField(propertyName, list, false, OnAdd, OnRemove, OnRemoveCount, 
+                        (index, itemWidth, item) =>
                         {
                             if (item == null)
                             {
@@ -238,11 +239,19 @@ namespace Editor
                             list.Add(GetDefaultValue(arg));
                         }
 
-                        void OnRemove(int index)
+                        void OnRemove(int itemIndex)
                         {
                             if (list.Count > 0)
                             {
-                                list.RemoveAt(index);
+                                list.RemoveAt(itemIndex);
+                            }
+                        }
+
+                        void OnRemoveCount(int count)
+                        {
+                            for (int i = list.Count - 1; i >= count; --i)
+                            {
+                                list.RemoveAt(i);
                             }
                         }
                     }
