@@ -64,28 +64,40 @@ namespace Editor
 
         public static bool Init(WindowStandalone window)
         {
+            var assemblyDir = Paths.ClearPathSeparation(Path.GetDirectoryName(AppContext.BaseDirectory)!);
+            var root = Path.Combine(assemblyDir.Substring(0, assemblyDir.LastIndexOf("Editor")), "Editor/Data");
+
             _window = window;
             IntPtr context = ImGui.CreateContext();
             ImGui.SetCurrentContext(context);
             var io = ImGui.GetIO();
-            io.Fonts.AddFontDefault();
+
+            var fontFilePath = $"{root}/NotoSansDisplay-VariableFont_wdth,wght.ttf";
+
+            if (File.Exists(fontFilePath))
+            {
+                io.Fonts.AddFontFromFileTTF(fontFilePath, 18.3f);
+            }
+            else
+            {
+                io.Fonts.AddFontDefault();
+            }
+
             float sx, sy;
             Glfw.GetWindowContentScale(WindowStandalone.NativeWindow, out sx, out sy);
 
             io.DisplayFramebufferScale = new Vector2(sx, sy);
-            var assemblyDir = Paths.ClearPathSeparation(Path.GetDirectoryName(AppContext.BaseDirectory)!);
-            var root = Path.Combine(assemblyDir.Substring(0, assemblyDir.LastIndexOf("Editor")), "Editor/Data");
-            
+
             var path = $"{root}/imgui.ini";
             byte[] bytes = Encoding.UTF8.GetBytes(path + '\0');
-            
+
             byte* iniPath = (byte*)NativeMemory.Alloc((nuint)bytes.Length);
             bytes.CopyTo(new Span<byte>(iniPath, bytes.Length));
             io.NativePtr->IniFilename = iniPath;
 
-            RendererData * bd = (RendererData*)NativeMemory.AllocZeroed((uint)sizeof(RendererData));
+            RendererData* bd = (RendererData*)NativeMemory.AllocZeroed((uint)sizeof(RendererData));
             bd->GlslVersion = 330;
- 
+
             io.BackendRendererUserData = (IntPtr)bd;
             io.NativePtr->BackendRendererName = (byte*)Unsafe.AsPointer(ref BackendName);
 
@@ -140,7 +152,7 @@ namespace Editor
             var colors = style.Colors;
 
             // Backgrounds
-            colors[(int)ImGuiCol.WindowBg] = new Vector4(0.1f, 0.1f, 0.1f, 1.0f); 
+            colors[(int)ImGuiCol.WindowBg] = new Vector4(0.1f, 0.1f, 0.1f, 1.0f);
             colors[(int)ImGuiCol.ChildBg] = new Vector4(0.12f, 0.12f, 0.12f, 1.0f);
             colors[(int)ImGuiCol.PopupBg] = new Vector4(0.12f, 0.12f, 0.12f, 1.0f);
 
@@ -188,7 +200,7 @@ namespace Editor
 
             // Docking splitter 
             colors[(int)ImGuiCol.DockingEmptyBg] = new Vector4(0.1f, 0.1f, 0.1f, 1.0f);
-            colors[(int)ImGuiCol.DockingPreview] = new Vector4(0.3f, 0.3f, 0.3f, 0.7f); 
+            colors[(int)ImGuiCol.DockingPreview] = new Vector4(0.3f, 0.3f, 0.3f, 0.7f);
 
             // For the actual splitter lines
             colors[(int)ImGuiCol.Separator] = new Vector4(0.35f, 0.35f, 0.35f, 1.0f);
@@ -199,7 +211,7 @@ namespace Editor
         public static void SetPerFrameImGuiData(float deltaSeconds, int width, int height)
         {
             ImGuiIOPtr io = ImGui.GetIO();
-           
+
             int winW, winH;
             int fbW, fbH;
             Glfw.GetWindowSize(WindowStandalone.NativeWindow, out winW, out winH);
@@ -232,7 +244,7 @@ namespace Editor
         public static void NewFrame()
         {
             RendererData* bd = GetBackendData();
-         
+
             if (bd->ShaderHandle == 0)
             {
                 CreateDeviceObjects();
@@ -310,7 +322,7 @@ namespace Editor
             last_viewport[0] = glGetInteger(GL_VIEWPORT);
             Span<int> last_scissor_box = stackalloc int[4];
             last_scissor_box[0] = glGetInteger(GL_SCISSOR_BOX);
-       
+
             int last_blend_src_rgb;
             glGetIntegerv(GL_BLEND_SRC_RGB, &last_blend_src_rgb);
 
@@ -654,7 +666,7 @@ namespace Editor
             }
 
             ";
-            
+
             string vertex_shader;
             string fragment_shader;
             if (bd->GlslVersion < 130)
@@ -674,7 +686,7 @@ namespace Editor
             }
             else if (bd->GlslVersion == 330)
             {
-                 vertex_shader = vertex_330;
+                vertex_shader = vertex_330;
                 fragment_shader = fragment_330;
             }
             else
@@ -685,10 +697,10 @@ namespace Editor
 
             if (bd->GlslVersion != 330)
             {
-               vertex_shader = vertex_shader.Insert(0, $"#version {bd->GlslVersion}{Environment.NewLine}");
-               fragment_shader = fragment_shader.Insert(0, $"#version {bd->GlslVersion}{Environment.NewLine}");
+                vertex_shader = vertex_shader.Insert(0, $"#version {bd->GlslVersion}{Environment.NewLine}");
+                fragment_shader = fragment_shader.Insert(0, $"#version {bd->GlslVersion}{Environment.NewLine}");
             }
-           
+
             uint vert = glCreateShader(GL_VERTEX_SHADER);
             // FIXME: Version string...
             glShaderSource(vert, vertex_shader);

@@ -7,6 +7,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Reflection;
 using System.Security.Principal;
 using System.Text;
@@ -324,7 +325,12 @@ namespace Editor
             var pos = ImGui.GetCursorScreenPos();
             var size = ImGui.CalcTextSize(label);
 
-            drawList.AddRectFilled(new(pos.X - 5, pos.Y - 3), new(pos.X + ImGui.GetContentRegionAvail().X - 5, pos.Y + size.Y + 3), ImGui.ColorConvertFloat4ToU32(new(0.1f, 0.1f, 0.1f, 1f)));
+            var min = new Vector2(pos.X - 5, pos.Y - 3);
+            var max = new Vector2(pos.X + ImGui.GetContentRegionAvail().X - 5, pos.Y + size.Y - 1);
+            var length = max.X - min.X;
+
+            drawList.AddRectFilled(min, max, ImGui.ColorConvertFloat4ToU32(new(0.06f, 0.06f, 0.06f, 1f)));
+            ImGui.CalcTextSize(label);
 
             ImGui.Text(label);
 
