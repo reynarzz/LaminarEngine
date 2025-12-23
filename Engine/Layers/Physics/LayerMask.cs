@@ -13,6 +13,7 @@ namespace Engine
         private static Dictionary<string, int> Names;
         private const int ARRAY_SIZE = sizeof(ulong) * 8;
         public const ulong All = ulong.MaxValue;
+        private static readonly string[] _validNames = new string[ARRAY_SIZE];
 
         static LayerMask()
         {
@@ -22,6 +23,7 @@ namespace Engine
             for (int i = 0; i < MaskBits.Length; i++)
             {
                 MaskBits[i] = ulong.MaxValue;
+                _validNames[i] = string.Empty;
             }
         }
 
@@ -131,6 +133,21 @@ namespace Engine
             }
 
             return validNames;
+        }
+
+        public static string[] GetLayerNames()
+        {
+            int i = 0;
+            foreach (var kvp in Names)
+            {
+                if (!string.IsNullOrEmpty(kvp.Key))
+                {
+                    _validNames[i] = kvp.Key;
+                    i++;
+                }
+            }
+
+            return _validNames;
         }
 
         public static string LayerToName(int layer)

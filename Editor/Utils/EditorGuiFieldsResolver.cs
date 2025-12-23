@@ -215,6 +215,19 @@ namespace Editor.Utils
 
             return changed;
         }
+        public static bool DrawEnum<T>(string name, ref T value) where T : Enum
+        {
+            Array values = Enum.GetValues(typeof(T));
+            int idx = Array.IndexOf(values, value);
+            string[] names = Enum.GetNames(typeof(T));
+            var changed = DrawCombo(name, ref idx, names);
+
+            if (changed)
+            {
+                value = (T)values.GetValue(idx);
+            }
+            return changed;
+        }
 
         public static bool DrawCombo(string name, ref int index, string[] values, float itemWidth = 0)
         {
@@ -251,7 +264,7 @@ namespace Editor.Utils
                 var row = value[i];
                 string id = $"##_mat_{name}{typeof(mat2).Name}_{i}";
 
-                Vector2 v = row.ToVector2(); 
+                Vector2 v = row.ToVector2();
                 if (ImGui.DragFloat2($"##{id}", ref v, 0.1f, 0, 0, "%.4f"))
                 {
                     row.x = v.X;
@@ -264,7 +277,7 @@ namespace Editor.Utils
 
             return changed;
         }
-       
+
         public static bool DrawMatrix(string name, ref mat3 value, int itemWidth)
         {
             bool changed = false;

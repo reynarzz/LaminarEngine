@@ -109,13 +109,15 @@ namespace Editor
             var style = ImGui.GetStyle();
 
             // Rounding
-            style.WindowRounding = 4.0f;
-            style.ChildRounding = 4.0f;
-            style.FrameRounding = 3.0f;
-            style.PopupRounding = 4.0f;
-            style.ScrollbarRounding = 3.0f;
-            style.GrabRounding = 3.0f;
-            style.TabRounding = 4.0f;
+
+            float rounding = 2.0f;
+            style.WindowRounding = rounding;
+            style.ChildRounding = rounding;
+            style.FrameRounding = rounding;
+            style.PopupRounding = rounding;
+            style.ScrollbarRounding = rounding;
+            style.GrabRounding = rounding;
+            style.TabRounding = rounding;
 
             // Sizes
             style.WindowPadding = new Vector2(8, 8);
@@ -124,7 +126,7 @@ namespace Editor
             style.ItemInnerSpacing = new Vector2(6, 4);
             style.IndentSpacing = 18.0f;
             style.ScrollbarSize = 12.0f;
-            style.GrabMinSize = 10.0f;
+            style.GrabMinSize = 15.0f;
             style.TabMinWidthForCloseButton = 0.0f;
 
             // Borders
@@ -138,9 +140,9 @@ namespace Editor
             var colors = style.Colors;
 
             // Backgrounds
-            colors[(int)ImGuiCol.WindowBg] = new Vector4(0.1f, 0.1f, 0.1f, 0.2f); 
-            colors[(int)ImGuiCol.ChildBg] = new Vector4(0.12f, 0.12f, 0.12f, 0.6f);
-            colors[(int)ImGuiCol.PopupBg] = new Vector4(0.12f, 0.12f, 0.12f, 0.95f);
+            colors[(int)ImGuiCol.WindowBg] = new Vector4(0.1f, 0.1f, 0.1f, 1.0f); 
+            colors[(int)ImGuiCol.ChildBg] = new Vector4(0.12f, 0.12f, 0.12f, 1.0f);
+            colors[(int)ImGuiCol.PopupBg] = new Vector4(0.12f, 0.12f, 0.12f, 1.0f);
 
             // Frames 
             colors[(int)ImGuiCol.FrameBg] = new Vector4(0.20f, 0.20f, 0.20f, 1.0f);
@@ -172,24 +174,21 @@ namespace Editor
             // Scrollbar
             colors[(int)ImGuiCol.ScrollbarBg] = new Vector4(0.10f, 0.10f, 0.10f, 0.2f);
             colors[(int)ImGuiCol.ScrollbarGrab] = new Vector4(0.30f, 0.30f, 0.30f, 0.5f);
-            colors[(int)ImGuiCol.ScrollbarGrabHovered] =
-                                                     new Vector4(0.40f, 0.40f, 0.40f, 1.0f);
-            colors[(int)ImGuiCol.ScrollbarGrabActive] =
-                                                     new Vector4(0.45f, 0.45f, 0.45f, 1.0f);
+            colors[(int)ImGuiCol.ScrollbarGrabHovered] = new Vector4(0.40f, 0.40f, 0.40f, 1.0f);
+            colors[(int)ImGuiCol.ScrollbarGrabActive] = new Vector4(0.45f, 0.45f, 0.45f, 1.0f);
 
             // Text
             colors[(int)ImGuiCol.Text] = new Vector4(0.95f, 0.95f, 0.95f, 1.0f);
             colors[(int)ImGuiCol.TextDisabled] = new Vector4(0.55f, 0.55f, 0.55f, 1.0f);
 
             // Resize grips
-            colors[(int)ImGuiCol.ResizeGrip] = new Vector4(0.30f, 0.30f, 0.30f, 0.3f);
-            colors[(int)ImGuiCol.ResizeGripHovered] = new Vector4(0.40f, 0.40f, 0.40f, 0.6f);
-            colors[(int)ImGuiCol.ResizeGripActive] = new Vector4(0.45f, 0.45f, 0.45f, 0.9f);
+            colors[(int)ImGuiCol.ResizeGrip] = new Vector4(-1.0f, -1.0f, -1.0f, 1.0f);
+            colors[(int)ImGuiCol.ResizeGripHovered] = new Vector4(0.0f, 0.0f, 0.0f, 1.0f);
+            colors[(int)ImGuiCol.ResizeGripActive] = new Vector4(0.0f, 0.0f, 0.0f, 1.0f);
 
-            // Docking splitter (grab lines)
-            colors[(int)ImGuiCol.DockingEmptyBg] = new Vector4(0.1f, 0.1f, 0.1f, 0.2f);
-            colors[(int)ImGuiCol.DockingPreview] = new Vector4(0.3f, 0.3f, 0.7f, 0.7f); // preview when dragging
-            colors[(int)ImGuiCol.DockingEmptyBg] = new Vector4(0.15f, 0.15f, 0.15f, 1.0f);
+            // Docking splitter 
+            colors[(int)ImGuiCol.DockingEmptyBg] = new Vector4(0.1f, 0.1f, 0.1f, 1.0f);
+            colors[(int)ImGuiCol.DockingPreview] = new Vector4(0.3f, 0.3f, 0.3f, 0.7f); 
 
             // For the actual splitter lines
             colors[(int)ImGuiCol.Separator] = new Vector4(0.35f, 0.35f, 0.35f, 1.0f);
