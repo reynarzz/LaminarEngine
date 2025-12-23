@@ -306,7 +306,7 @@ namespace Editor
             ImGui.SameLine();
             ImGui.SetCursorPosX(MathF.Max(_xPosOffset, ImGui.GetCursorPosX()) + 5);
 
-            string label = value != null ? $"{(value).Name} ({valueType.Name})" : $"null ({valueType.Name})";
+            string label = value != null ? $"{(value).Name} ({valueType.Name})" : $"Null ({valueType.Name})";
 
             if (value != null)
             {
@@ -459,7 +459,7 @@ namespace Editor
                 {
                     return string.Empty;
                 }
-                else if (type.IsClass)
+                else if (type.IsClass && !type.IsAssignableTo(typeof(EObject)))
                 {
                     try
                     {
