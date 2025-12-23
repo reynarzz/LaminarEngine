@@ -12,7 +12,7 @@ namespace Engine
     {
         private float _radius = 0.5f;
 
-        [SerializedField("Radius")]
+        [ExposeEditorField("Radius")]
         public float Radius
         {
             get => _radius;

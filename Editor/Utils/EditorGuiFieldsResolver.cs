@@ -29,7 +29,10 @@ namespace Editor.Utils
                 ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X - 5);
             }
         }
-
+        public static bool DrawStringField(string name, ref string value)
+        {
+            return DrawStringField(name, ref value, 0, false);
+        }
         public static bool DrawStringField(string name, ref string value, float itemWidth = 0, bool pressEnterToConfirm = false)
         {
             int bufferSize = Math.Max(257, value?.Length + 1 ?? 257);
@@ -38,13 +41,12 @@ namespace Editor.Utils
             if (!string.IsNullOrEmpty(value))
                 System.Text.Encoding.UTF8.GetBytes(value, 0, value.Length, buffer, 0);
 
-            if (ImGui.CalcTextSize(name).X + 10 > ImGui.GetContentRegionAvail().X)
-                SetNextItemWidth(itemWidth);
+            // if (ImGui.CalcTextSize(name).X + 10 > ImGui.GetContentRegionAvail().X)
+            SetNextItemWidth(itemWidth);
 
             bool changed;
             unsafe
             {
-                ImGui.SameLine();
                 changed = ImGui.InputText("##" + name, buffer, (uint)buffer.Length);
             }
 
@@ -56,12 +58,14 @@ namespace Editor.Utils
 
             return false;
         }
-
+        public static bool DrawFloatField(string name, ref float value)
+        {
+            return DrawFloatField(name, ref value, 0, false);
+        }
         public static bool DrawFloatField(string name, ref float value, float itemWidth = 0, bool pressEnterToConfirm = false)
         {
             SetNextItemWidth(itemWidth);
             ImGui.PushStyleVar(ImGuiStyleVar.IndentSpacing, 0f);
-            ImGui.SameLine();
 
             bool changed = ImGui.DragFloat($"##{name}", ref value, 0.1f, 0, 0, "%.4f") &&
                            (!pressEnterToConfirm || ImGui.IsKeyDown(ImGuiKey.Enter));
@@ -69,7 +73,10 @@ namespace Editor.Utils
             ImGui.PopStyleVar();
             return changed;
         }
-
+        public static bool DrawBoolField(string name, ref bool value)
+        {
+            return DrawBoolField(name, ref value, 0, false);
+        }
         public static bool DrawBoolField(string name, ref bool value, float itemWidth = 0, bool pressEnterToConfirm = false)
         {
             SetNextItemWidth(itemWidth);
@@ -86,7 +93,6 @@ namespace Editor.Utils
             style.FrameBorderSize = 0;
             style.FramePadding = new Vector2(0.6f, 0.6f);
 
-            ImGui.SameLine();
             bool result = ImGui.Checkbox($"##{name}", ref value);
 
             // ImGui.PopStyleColor(4);
@@ -95,24 +101,27 @@ namespace Editor.Utils
 
             return result;
         }
-
+        public static bool DrawIntField(string name, ref int value)
+        {
+            return DrawIntField(name, ref value, 0, false);
+        }
         public static bool DrawIntField(string name, ref int value, float itemWidth = 0, bool pressEnterToConfirm = false)
         {
             SetNextItemWidth(itemWidth);
-            ImGui.SameLine();
 
             return ImGui.InputInt($"##{name}", ref value) &&
                    (!pressEnterToConfirm || ImGui.IsKeyDown(ImGuiKey.Enter));
         }
 
         private static bool _openColorPicker = false;
-
+        public static bool DrawColorField(string name, ref Color value)
+        {
+            return DrawColorField(name, ref value, 0, false);
+        }
         public static bool DrawColorField(string name, ref Color value, float itemWidth = 0, bool pressEnterToConfirm = false)
         {
             SetNextItemWidth(itemWidth);
-            ImGui.SameLine();
 
-            // Convert Color to ImVec4
             var col = new Vector4(value.R, value.G, value.B, value.A);
 
             // Determine button size
@@ -133,12 +142,10 @@ namespace Editor.Utils
                 _openColorPicker = false; // reset flag
             }
 
-            // Draw color picker popup
             if (ImGui.BeginPopup("Color Picker"))
             {
                 if (ImGui.ColorPicker4("##picker", ref col, ImGuiColorEditFlags.NoSidePreview | ImGuiColorEditFlags.NoSmallPreview))
                 {
-                    // Update the Color struct
                     value = new Color(col.X, col.Y, col.Z, col.W);
                     changed = true;
                 }
@@ -148,12 +155,14 @@ namespace Editor.Utils
             return changed;
         }
 
-
+        public static bool DrawVec2Field(string name, ref vec2 value)
+        {
+            return DrawVec2Field(name, ref value, 0, false);
+        }
         public static bool DrawVec2Field(string name, ref vec2 value, float itemWidth = 0, bool pressEnterToConfirm = false)
         {
             SetNextItemWidth(itemWidth);
             Vector2 ve = value.ToVector2();
-            ImGui.SameLine();
 
             var changed = ImGui.DragFloat2($"##{name}", ref ve, 0.1f, 0, 0, "%.4f") && (!pressEnterToConfirm || ImGui.IsKeyDown(ImGuiKey.Enter));
 
@@ -165,12 +174,14 @@ namespace Editor.Utils
 
             return changed;
         }
-
+        public static bool DrawVec3Field(string name, ref vec3 value)
+        {
+            return DrawVec3Field(name, ref value, 0, false);
+        }
         public static bool DrawVec3Field(string name, ref vec3 value, float itemWidth = 0, bool pressEnterToConfirm = false)
         {
             SetNextItemWidth(itemWidth);
             Vector3 ve = new Vector3(value.x, value.y, value.z);
-            ImGui.SameLine();
 
             var changed = ImGui.DragFloat3($"##{name}", ref ve, 0.1f, 0, 0, "%.4f") && (!pressEnterToConfirm || ImGui.IsKeyDown(ImGuiKey.Enter));
 
@@ -183,14 +194,16 @@ namespace Editor.Utils
 
             return changed;
         }
-
+        public static bool DrawVec4Field(string name, ref vec4 value)
+        {
+            return DrawVec4Field(name, ref value, 0, false);
+        }
         public static bool DrawVec4Field(string name, ref vec4 value, float itemWidth = 0, bool pressEnterToConfirm = false)
         {
             SetNextItemWidth(itemWidth);
             Vector4 ve = new Vector4(value.x, value.y, value.z, value.w);
-            ImGui.SameLine();
 
-            var changed = ImGui.InputFloat4($"##{name}", ref ve, "%.4f") && (!pressEnterToConfirm || ImGui.IsKeyDown(ImGuiKey.Enter));
+            var changed = ImGui.DragFloat4($"##{name}", ref ve, 0.1f, 0, 0, "%.4f") && (!pressEnterToConfirm || ImGui.IsKeyDown(ImGuiKey.Enter));
 
             if (changed)
             {
@@ -207,37 +220,105 @@ namespace Editor.Utils
         {
             SetNextItemWidth(itemWidth);
             ImGui.PushStyleColor(ImGuiCol.FrameBg, new Vector4(0.2f, 0.2f, 0.21568628f, 1));
-            ImGui.SameLine();
-
             bool result = ImGui.Combo($"##{name}", ref index, values, values.Length);
 
             ImGui.PopStyleColor();
             return result;
         }
-        private static object GetDefault(Type type)
+        public static bool DrawMatrix(string name, ref mat2 value)
         {
-            if (type.IsValueType)
-            {
-                if (type.IsEnum)
-                {
-                    // Return first enum value
-                    Array values = Enum.GetValues(type);
-                    return values.Length > 0 ? values.GetValue(0)! : Activator.CreateInstance(type)!;
-                }
-                else
-                {
-                    return Activator.CreateInstance(type)!;
-                }
-            }
-            else
-            {
-                if (type == typeof(string))
-                    return string.Empty; // default string as empty
+            return DrawMatrix(name, ref value, 0);
+        }
+        public static bool DrawMatrix(string name, ref mat3 value)
+        {
+            return DrawMatrix(name, ref value, 0);
+        }
+        public static bool DrawMatrix(string name, ref mat4 value)
+        {
+            return DrawMatrix(name, ref value, 0);
+        }
+        public static bool DrawMatrix(string name, ref mat2 value, int itemWidth)
+        {
+            float xpos = ImGui.GetCursorPosX();
+            bool changed = false;
+            var cursorPosX = ImGui.GetCursorPosX();
 
-                return null!; // reference type default
+            for (int i = 0; i < 2; i++)
+            {
+                ImGui.SetCursorPosX(cursorPosX);
+
+                SetNextItemWidth(itemWidth);
+                var row = value[i];
+                string id = $"##_mat_{name}{typeof(mat2).Name}_{i}";
+
+                Vector2 v = row.ToVector2(); 
+                if (ImGui.DragFloat2($"##{id}", ref v, 0.1f, 0, 0, "%.4f"))
+                {
+                    row.x = v.X;
+                    row.y = v.Y;
+
+                    value[i] = row;
+                    changed = true;
+                }
             }
+
+            return changed;
+        }
+       
+        public static bool DrawMatrix(string name, ref mat3 value, int itemWidth)
+        {
+            bool changed = false;
+            float cursorX = ImGui.GetCursorPosX();
+
+            for (int i = 0; i < 3; i++)
+            {
+                ImGui.SetCursorPosX(cursorX);
+                SetNextItemWidth(itemWidth);
+
+                var row = value[i];
+                Vector3 v = row.ToVector3();
+                string id = $"##_mat_{name}{typeof(mat3).Name}_{i}";
+
+                if (ImGui.DragFloat3($"##{id}", ref v, 0.1f, 0, 0, "%.4f"))
+                {
+                    row.x = v.X;
+                    row.y = v.Y;
+                    row.z = v.Z;
+                    value[i] = row;
+                    changed = true;
+                }
+            }
+
+            return changed;
         }
 
+        public static bool DrawMatrix(string name, ref mat4 value, int itemWidth)
+        {
+            bool changed = false;
+            float cursorX = ImGui.GetCursorPosX();
+
+            for (int i = 0; i < 4; i++)
+            {
+                ImGui.SetCursorPosX(cursorX);
+                SetNextItemWidth(itemWidth);
+
+                var row = value[i];
+                Vector4 v = row.ToVector4();
+                string id = $"##_mat_{name}{typeof(mat4).Name}_{i}";
+
+                if (ImGui.DragFloat4($"##{id}", ref v, 0.1f, 0, 0, "%.4f"))
+                {
+                    row.x = v.X;
+                    row.y = v.Y;
+                    row.z = v.Z;
+                    row.w = v.W;
+                    value[i] = row;
+                    changed = true;
+                }
+            }
+
+            return changed;
+        }
         public static bool DrawListField(string name, IList value)
         {
             var listType = value.GetType();
@@ -271,7 +352,7 @@ namespace Editor.Utils
 
                 if (itemType == typeof(string))
                 {
-                    string v = (string)(object)item!;
+                    string v = (string)item!;
                     changed = DrawStringField(fieldId, ref v, width);
                     item = v;
                 }
@@ -289,40 +370,40 @@ namespace Editor.Utils
                 }
                 else if (itemType == typeof(float))
                 {
-                    float v = (float)(object)item!;
+                    float v = (float)item!;
                     changed = DrawFloatField(fieldId, ref v, width);
                     item = v;
                 }
                 else if (itemType == typeof(int))
                 {
-                    int v = (int)(object)item!;
+                    int v = (int)item!;
                     changed = DrawIntField(fieldId, ref v, width);
                     item = v;
                 }
                 else if (itemType == typeof(vec2))
                 {
-                    vec2 v = (vec2)(object)item!;
+                    vec2 v = (vec2)item!;
                     changed = DrawVec2Field(fieldId, ref v, width);
                     item = v;
                 }
                 else if (itemType == typeof(vec3))
                 {
-                    vec3 v = (vec3)(object)item!;
+                    vec3 v = (vec3)item!;
                     changed = DrawVec3Field(fieldId, ref v, width);
                     item = v;
                 }
                 else if (itemType == typeof(vec4))
                 {
-                    vec4 v = (vec4)(object)item!;
+                    vec4 v = (vec4)item!;
                     changed = DrawVec4Field(fieldId, ref v, width);
                     item = v;
                 }
-                //else if (item.GetType() == typeof(Matrix2x2))
-                //{
-                //    var v = (Matrix2x2)(object)item!;
-                //    changed = DrawMatrix(fieldId, ref v);
-                //    item = v;
-                //}
+                else if (item.GetType() == typeof(mat2))
+                {
+                    var v = (mat2)item;
+                    changed = DrawMatrix(fieldId, ref v);
+                    item = v;
+                }
                 //else if (item.GetType() == typeof(mat3))
                 //{
                 //    var v = (mat3)(object)item!;
@@ -348,7 +429,9 @@ namespace Editor.Utils
             void OnRemove(int index)
             {
                 if (value.Count > 0)
+                {
                     value.RemoveAt(index);
+                }
             }
 
             return DrawListField(name, value.Count, OnAdd, OnRemove, DrawItem, false);
@@ -385,10 +468,16 @@ namespace Editor.Utils
                 int val = Math.Max(0, int.Parse(lenText));
 
                 if (size < val)
+                {
                     for (int i = size; i < val; i++)
+                    {
                         onAddCallback();
+                    }
+                }
                 else if (size > val)
+                {
                     onRemoveCallback(val);
+                }
 
                 size = val;
                 changed = true;
@@ -400,7 +489,9 @@ namespace Editor.Utils
                 bool show;
 
                 if (itemAsTree)
+                {
                     show = ImGui.TreeNode($"item {i}");
+                }
                 else
                 {
                     ImGui.Text($"item {i}");
@@ -431,6 +522,30 @@ namespace Editor.Utils
 
             return changed;
         }
-    }
 
+        private static object GetDefault(Type type)
+        {
+            if (type.IsValueType)
+            {
+                if (type.IsEnum)
+                {
+                    Array values = Enum.GetValues(type);
+                    return values.Length > 0 ? values.GetValue(0)! : Activator.CreateInstance(type)!;
+                }
+                else
+                {
+                    return Activator.CreateInstance(type)!;
+                }
+            }
+            else
+            {
+                if (type == typeof(string))
+                {
+                    return string.Empty;
+                }
+
+                return null!;
+            }
+        }
+    }
 }

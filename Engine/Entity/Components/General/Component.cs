@@ -26,7 +26,7 @@ namespace Engine
 
         private bool _isEnabled = true;
 
-        [SerializedField("Enabled")]
+        [ExposeEditorField("Enabled")]
         public virtual bool IsEnabled
         {
             get => _isEnabled;

@@ -14,7 +14,7 @@ namespace Engine
     {
         private vec2 _size = new vec2(1, 1);
         private float _cornerRadius = 0;
-        [SerializedField("Size")]
+        [ExposeEditorField("Size")]
         public vec2 Size
         {
             get => _size;
@@ -24,7 +24,7 @@ namespace Engine
                 UpdateShapeSafe();
             }
         }
-        [SerializedField("Corner Radius")]
+        [ExposeEditorField("Corner Radius")]
         public float CornerRadius
         {
             get => _cornerRadius;

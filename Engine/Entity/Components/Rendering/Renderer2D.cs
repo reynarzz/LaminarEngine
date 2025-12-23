@@ -9,6 +9,8 @@ namespace Engine
     public abstract class Renderer2D : Renderer
     {
         private int _sortingOrder = 0;
+
+        [ExposeEditorField]
         public int SortOrder
         {
             get => _sortingOrder;
@@ -22,6 +24,8 @@ namespace Engine
             }
         }
         private uint _colorpacket = Color.White;
+
+        [ExposeEditorField]
         public Color Color
         {
             get => _colorpacket;
@@ -37,6 +41,8 @@ namespace Engine
         }
 
         private Sprite _sprite;
+
+        [ExposeEditorField]
         public Sprite Sprite
         {
             get => _sprite;
@@ -50,7 +56,10 @@ namespace Engine
             }
         }
 
+        [ExposeEditorField]
         public virtual bool FlipX { get; set; }
+
+        [ExposeEditorField]
         public virtual bool FlipY { get; set; }
     }
 }

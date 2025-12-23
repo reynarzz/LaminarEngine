@@ -19,6 +19,8 @@ namespace Engine
         private float _transitionTime;
         private float _transitionDuration;
         public event Action<Animator> OnUpdate;
+
+        [ExposeEditorField]
         public AnimationState CurrentState => _currentState;
         public AnimatorParameters Parameters { get; } = new AnimatorParameters();
 

@@ -93,6 +93,14 @@ namespace Engine.Utils
         {
             return new Vector2(vec.x, vec.y);
         }
+        internal static Vector3 ToVector3(this vec3 vec)
+        {
+            return new Vector3(vec.x, vec.y, vec.z);
+        }
+        internal static Vector4 ToVector4(this vec4 vec)
+        {
+            return new Vector4(vec.x, vec.y, vec.z, vec.w);
+        }
         internal static B2Vec2 ToB2Vec2(this vec3 vec)
         {
             return new B2Vec2(vec.x, vec.y);

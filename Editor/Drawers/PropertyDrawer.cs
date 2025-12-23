@@ -14,7 +14,34 @@ namespace Editor
     internal class PropertyDrawer
     {
         private static object _copiedValue;
-        private static float _xPosOffset = 140;
+        private static float _xPosOffset = 180;
+
+        private delegate bool DrawSimpleFieldDelegate<T>(string fieldName, ref T v);
+
+        private static void DrawSimpleProperty<T>(string propertyName, object target, object value, bool isReadOnly, PropertyInfo prop, DrawSimpleFieldDelegate<T> drawField, bool sameLine = true, Func<T, object> valueConverter = null)
+        {
+            if (sameLine)
+            {
+                ImGui.SameLine();
+            }
+            ImGui.SetCursorPosX(Math.Max(_xPosOffset, ImGui.GetCursorPosX()));
+
+            ImGui.BeginDisabled(isReadOnly);
+            var v = (T)value;
+            if (drawField(propertyName, ref v))
+            {
+                if (valueConverter == null)
+                {
+                    prop.SetValue(target, v);
+                }
+                else
+                {
+                    prop.SetValue(target, valueConverter.Invoke(v));
+                }
+            }
+            ImGui.EndDisabled();
+        }
+
         public static void DrawVars(string entityID, object obj, PropertyInfo prop, float cursorX, int index, float width, bool enforceSerializedFieldAttribute)
         {
             if (prop == null || !prop.CanRead)
@@ -23,13 +50,20 @@ namespace Editor
             object value = prop.GetValue(obj);
             Type type = prop.PropertyType;
             string propertyName = prop.Name;
+            // NOTE: I will enforce that any property that needs to be exposed in the editor should have the SerializedField attribute
+
+            bool isReadOnly = false;
+
             if (enforceSerializedFieldAttribute)
             {
-                var attrib = prop.GetCustomAttribute<SerializedFieldAttribute>();
+                var attrib = prop.GetCustomAttribute<ExposeEditorFieldAttribute>();
                 if (attrib == null)
                 {
                     return;
                 }
+
+                isReadOnly = attrib.IsReadOnly;
+
                 if (!string.IsNullOrEmpty(attrib.CustomFieldName))
                 {
                     propertyName = attrib.CustomFieldName;
@@ -76,86 +110,51 @@ namespace Editor
             // bool
             else if (type == typeof(bool))
             {
-                ImGui.SameLine();
-                ImGui.SetCursorPosX(Math.Max(_xPosOffset, ImGui.GetCursorPosX()));
-
-                bool v = (bool)value;
-                if (EditorGuiFieldsResolver.DrawBoolField(propertyName, ref v))
-                    prop.SetValue(obj, v);
+                DrawSimpleProperty<bool>(propertyName, obj, value, isReadOnly, prop, EditorGuiFieldsResolver.DrawBoolField);
             }
             else if (type == typeof(int))
             {
-                ImGui.SameLine();
-                ImGui.SetCursorPosX(Math.Max(_xPosOffset, ImGui.GetCursorPosX()));
-
-                var v = (int)value;
-                if (EditorGuiFieldsResolver.DrawIntField(propertyName, ref v))
-                    prop.SetValue(obj, v);
+                DrawSimpleProperty<int>(propertyName, obj, value, isReadOnly, prop, EditorGuiFieldsResolver.DrawIntField);
             }
             else if (type == typeof(Color))
             {
-                ImGui.SameLine();
-                ImGui.SetCursorPosX(Math.Max(_xPosOffset, ImGui.GetCursorPosX()));
-
-                var v = (Color)value;
-                if (EditorGuiFieldsResolver.DrawColorField(propertyName, ref v))
-                    prop.SetValue(obj, v);
+                DrawSimpleProperty<Color>(propertyName, obj, value, isReadOnly, prop, EditorGuiFieldsResolver.DrawColorField);
             }
             else if (type == typeof(Color32))
             {
-                ImGui.SameLine();
-                ImGui.SetCursorPosX(Math.Max(_xPosOffset, ImGui.GetCursorPosX()));
-
-                var v = (Color)value;
-                if (EditorGuiFieldsResolver.DrawColorField(propertyName, ref v))
-                    prop.SetValue(obj, (Color32)v);
+                DrawSimpleProperty<Color>(propertyName, obj, value, isReadOnly, prop, EditorGuiFieldsResolver.DrawColorField, true, v => (Color32)v);
             }
-            // float
             else if (type == typeof(float))
             {
-                ImGui.SameLine();
-                ImGui.SetCursorPosX(Math.Max(_xPosOffset, ImGui.GetCursorPosX()));
-
-                float v = (float)value;
-                if (EditorGuiFieldsResolver.DrawFloatField(propertyName, ref v))
-                    prop.SetValue(obj, v);
+                DrawSimpleProperty<float>(propertyName, obj, value, isReadOnly, prop, EditorGuiFieldsResolver.DrawFloatField);
             }
-            // string
             else if (type == typeof(string))
             {
-                ImGui.SameLine();
-                ImGui.SetCursorPosX(Math.Max(_xPosOffset, ImGui.GetCursorPosX()));
-
-                string v = (string)value;
-                if (EditorGuiFieldsResolver.DrawStringField(propertyName, ref v))
-                    prop.SetValue(obj, v);
+                DrawSimpleProperty<string>(propertyName, obj, value, isReadOnly, prop, EditorGuiFieldsResolver.DrawStringField);
             }
             else if (type == typeof(vec2))
             {
-                ImGui.SameLine();
-                ImGui.SetCursorPosX(Math.Max(_xPosOffset, ImGui.GetCursorPosX()));
-
-                vec2 v = (vec2)value;
-                if (EditorGuiFieldsResolver.DrawVec2Field(propertyName, ref v))
-                    prop.SetValue(obj, v);
+                DrawSimpleProperty<vec2>(propertyName, obj, value, isReadOnly, prop, EditorGuiFieldsResolver.DrawVec2Field);
             }
             else if (type == typeof(vec3))
             {
-                ImGui.SameLine();
-                ImGui.SetCursorPosX(Math.Max(_xPosOffset, ImGui.GetCursorPosX()));
-
-                vec3 v = (vec3)value;
-                if (EditorGuiFieldsResolver.DrawVec3Field(propertyName, ref v))
-                    prop.SetValue(obj, v);
+                DrawSimpleProperty<vec3>(propertyName, obj, value, isReadOnly, prop, EditorGuiFieldsResolver.DrawVec3Field);
             }
             else if (type == typeof(vec4))
             {
-                ImGui.SameLine();
-                ImGui.SetCursorPosX(Math.Max(_xPosOffset, ImGui.GetCursorPosX()));
-
-                vec4 v = (vec4)value;
-                if (EditorGuiFieldsResolver.DrawVec4Field(propertyName, ref v))
-                    prop.SetValue(obj, v);
+                DrawSimpleProperty<vec4>(propertyName, obj, value, isReadOnly, prop, EditorGuiFieldsResolver.DrawVec4Field);
+            }
+            else if (type == typeof(mat2))
+            {
+                DrawSimpleProperty<mat2>(propertyName, obj, value, isReadOnly, prop, EditorGuiFieldsResolver.DrawMatrix);
+            }
+            else if (type == typeof(mat3))
+            {
+                DrawSimpleProperty<mat3>(propertyName, obj, value, isReadOnly, prop, EditorGuiFieldsResolver.DrawMatrix);
+            }
+            else if (type == typeof(mat4))
+            {
+                DrawSimpleProperty<mat4>(propertyName, obj, value, isReadOnly, prop, EditorGuiFieldsResolver.DrawMatrix);
             }
             // enum
             else if (type.IsEnum)
@@ -341,14 +340,14 @@ namespace Editor
                     ImGui.CloseCurrentPopup();
                 }
             }
-            else if (typeof(EObject).IsAssignableFrom(targetType))
-            {
-                if (ImGui.Selectable($"{root.Name}##{root.GetID()}"))
-                {
-                    setValue(root.Actor);
-                    ImGui.CloseCurrentPopup();
-                }
-            }
+            //else if (typeof(EObject).IsAssignableFrom(targetType))
+            //{
+            //    if (ImGui.Selectable($"{root.Name}##{root.GetID()}"))
+            //    {
+            //        setValue(root.Actor);
+            //        ImGui.CloseCurrentPopup();
+            //    }
+            //}
             for (int i = 0; i < root.Children.Count; i++)
             {
                 DrawSceneObjectPropertyPicker(root.Children[i], targetType, setValue);

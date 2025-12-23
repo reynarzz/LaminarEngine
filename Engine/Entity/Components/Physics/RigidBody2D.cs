@@ -40,6 +40,8 @@ namespace Engine
         internal B2BodyId BodyId => _bodyId;
 
         private vec2 _velocity;
+
+        [ExposeEditorField(isReadOnly: true)]
         public vec2 Velocity
         {
             get => B2Bodies.b2Body_GetLinearVelocity(_bodyId).ToVec2();
@@ -55,6 +57,7 @@ namespace Engine
         //    }
         //}
 
+        [ExposeEditorField(isReadOnly: true)]
         public float AngularVelovity
         {
             get
@@ -68,6 +71,7 @@ namespace Engine
         }
 
         private bool _interpolate = false;
+        [ExposeEditorField]
         public bool Interpolate
         {
             get => _interpolate;
@@ -95,7 +99,7 @@ namespace Engine
                 base.IsEnabled = value;
             }
         }
-
+        [ExposeEditorField]
         public bool CanSleep
         {
             get => _canSleep;
@@ -108,7 +112,7 @@ namespace Engine
                 B2Bodies.b2Body_EnableSleep(_bodyId, _canSleep);
             }
         }
-
+        [ExposeEditorField]
         public bool IsAutoMass
         {
             get => _isAutoMass;
@@ -125,7 +129,7 @@ namespace Engine
                 }
             }
         }
-
+        [ExposeEditorField]
         public float Mass
         {
             get => _userMassValue;
@@ -141,7 +145,7 @@ namespace Engine
                 B2Bodies.b2Body_SetMassData(_bodyId, currentMassData);
             }
         }
-
+        [ExposeEditorField]
         public float GravityScale
         {
             get => _gravityScale;
@@ -151,7 +155,7 @@ namespace Engine
                 B2Bodies.b2Body_SetGravityScale(_bodyId, _gravityScale);
             }
         }
-
+        [ExposeEditorField]
         public float AngularDamping
         {
             get => _angularDamping;
@@ -162,7 +166,7 @@ namespace Engine
             }
         }
 
-
+        [ExposeEditorField]
         public bool LockZRotation
         {
             get => _isZRotationLocked;
@@ -170,11 +174,11 @@ namespace Engine
             {
                 if (_isZRotationLocked == value)
                     return;
-
+                _isZRotationLocked = value;
                 B2Bodies.b2Body_SetMotionLocks(_bodyId, new B2MotionLocks() { angularZ = value });
             }
         }
-
+        [ExposeEditorField]
         public Body2DType BodyType
         {
             get => _bodyType;
@@ -186,7 +190,7 @@ namespace Engine
                 B2Bodies.b2Body_SetType(_bodyId, (B2BodyType)_bodyType);
             }
         }
-
+        [ExposeEditorField]
         public bool IsContinuos
         {
             get => _isContinuos;
