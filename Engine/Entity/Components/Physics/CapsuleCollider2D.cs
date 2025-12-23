@@ -19,16 +19,7 @@ namespace Engine
         private CapsuleDirection2D _direction = CapsuleDirection2D.Vertical;
         private vec2 _size = new vec2(1, 2);
 
-        [ExposeEditorField("Size")]
-        public vec2 Size
-        {
-            get => _size;
-            set
-            {
-                _size = new vec2(Math.Clamp(value.x, 1.0f, float.MaxValue), Math.Clamp(value.y, 1.001f, float.MaxValue));
-                UpdateShapeSafe();
-            }
-        }
+    
         
         [ExposeEditorField("Direction")]
         public CapsuleDirection2D Direction
@@ -40,7 +31,16 @@ namespace Engine
                 UpdateShapeSafe();
             }
         }
-
+        [ExposeEditorField("Size")]
+        public vec2 Size
+        {
+            get => _size;
+            set
+            {
+                _size = new vec2(Math.Clamp(value.x, 1.0f, float.MaxValue), Math.Clamp(value.y, 1.001f, float.MaxValue));
+                UpdateShapeSafe();
+            }
+        }
         protected override B2ShapeId[] CreateShape(B2BodyId bodyId)
         {
             var capsule = GetCapsule();

@@ -26,7 +26,6 @@ namespace Engine
 
         private bool _isEnabled = true;
 
-        [ExposeEditorField("Enabled")]
         public virtual bool IsEnabled
         {
             get => _isEnabled;

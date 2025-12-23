@@ -14,16 +14,19 @@ namespace Engine
 
         public Sprite() : this(0, Texture2D.White)
         {
+            Name = "Sprite";
         }
         public Sprite(Texture2D texture) : this(0, texture)
         {
+            Name = texture?.Name;
         }
         public Sprite(int atlasIndex, Texture2D texture)
         {
             AtlasIndex = atlasIndex;
             Texture = texture;
+            Name = texture?.Name;
         }
-       
+
         public AtlasChunk GetAtlasChunk()
         {
             if (Texture)

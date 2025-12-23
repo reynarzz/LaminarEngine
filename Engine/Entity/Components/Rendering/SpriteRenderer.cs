@@ -40,7 +40,7 @@ namespace Engine
                 }
 
                 base.FlipY = value;
-                Sprite.Texture.Atlas.UpdateUvs(Sprite.AtlasIndex, QuadUV.FlipUV(Sprite.GetAtlasChunk().Uvs, FlipX, value));
+                Sprite?.Texture?.Atlas?.UpdateUvs(Sprite.AtlasIndex, QuadUV.FlipUV(Sprite.GetAtlasChunk().Uvs, FlipX, value));
                 IsDirty = true;
             }
         }

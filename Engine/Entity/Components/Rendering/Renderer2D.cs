@@ -8,21 +8,6 @@ namespace Engine
 {
     public abstract class Renderer2D : Renderer
     {
-        private int _sortingOrder = 0;
-
-        [ExposeEditorField]
-        public int SortOrder
-        {
-            get => _sortingOrder;
-            set
-            {
-                if (_sortingOrder == value)
-                    return;
-
-                _sortingOrder = value;
-                IsDirty = true;
-            }
-        }
         private uint _colorpacket = Color.White;
 
         [ExposeEditorField]
@@ -53,6 +38,23 @@ namespace Engine
 
                 IsDirty = true;
                 _sprite = value;
+            }
+        }
+
+
+        private int _sortingOrder = 0;
+
+        [ExposeEditorField]
+        public int SortOrder
+        {
+            get => _sortingOrder;
+            set
+            {
+                if (_sortingOrder == value)
+                    return;
+
+                _sortingOrder = value;
+                IsDirty = true;
             }
         }
 

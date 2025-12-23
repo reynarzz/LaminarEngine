@@ -50,6 +50,20 @@ namespace Engine
             }
         }
 
+        [ExposeEditorField("Rotation")]
+        public vec3 LocalEulerAngles
+        {
+            get
+            {
+                return QuaternionToEuler(LocalRotation);
+            }
+            set
+            {
+                LocalRotation = EulerToQuaternion(value);
+            }
+        }
+
+
         [ExposeEditorField("Scale")]
         public vec3 LocalScale
         {
@@ -178,19 +192,7 @@ namespace Engine
             }
         }
 
-        // Euler angles
-        public vec3 LocalEulerAngles
-        {
-            get
-            {
-                return QuaternionToEuler(LocalRotation);
-            }
-            set
-            {
-                LocalRotation = EulerToQuaternion(value);
-            }
-        }
-
+       
         public vec3 WorldEulerAngles
         {
             get => QuaternionToEuler(WorldRotation);

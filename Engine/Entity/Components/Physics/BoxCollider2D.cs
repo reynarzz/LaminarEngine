@@ -14,16 +14,7 @@ namespace Engine
     {
         private vec2 _size = new vec2(1, 1);
         private float _cornerRadius = 0;
-        [ExposeEditorField("Size")]
-        public vec2 Size
-        {
-            get => _size;
-            set
-            {
-                _size = value;
-                UpdateShapeSafe();
-            }
-        }
+    
         [ExposeEditorField("Corner Radius")]
         public float CornerRadius
         {
@@ -34,7 +25,16 @@ namespace Engine
                 UpdateShapeSafe();
             }
         }
-
+        [ExposeEditorField("Size")]
+        public vec2 Size
+        {
+            get => _size;
+            set
+            {
+                _size = value;
+                UpdateShapeSafe();
+            }
+        }
         protected override void OnAwake()
         {
             // TODO: instead of using the scale, use the bounds of the sprite

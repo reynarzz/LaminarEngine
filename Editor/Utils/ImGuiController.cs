@@ -128,10 +128,10 @@ namespace Editor
             style.TabMinWidthForCloseButton = 0.0f;
 
             // Borders
-            style.WindowBorderSize = 1.0f;
-            style.ChildBorderSize = 1.0f;
-            style.PopupBorderSize = 1.0f;
-            style.FrameBorderSize = 1.0f;
+            style.WindowBorderSize = 0.0f;
+            style.ChildBorderSize = 0.0f;
+            style.PopupBorderSize = 0.0f;
+            style.FrameBorderSize = 0.0f;
             style.TabBorderSize = 0.0f;
 
             // Colors
@@ -185,6 +185,16 @@ namespace Editor
             colors[(int)ImGuiCol.ResizeGrip] = new Vector4(0.30f, 0.30f, 0.30f, 0.3f);
             colors[(int)ImGuiCol.ResizeGripHovered] = new Vector4(0.40f, 0.40f, 0.40f, 0.6f);
             colors[(int)ImGuiCol.ResizeGripActive] = new Vector4(0.45f, 0.45f, 0.45f, 0.9f);
+
+            // Docking splitter (grab lines)
+            colors[(int)ImGuiCol.DockingEmptyBg] = new Vector4(0.1f, 0.1f, 0.1f, 0.2f);
+            colors[(int)ImGuiCol.DockingPreview] = new Vector4(0.3f, 0.3f, 0.7f, 0.7f); // preview when dragging
+            colors[(int)ImGuiCol.DockingEmptyBg] = new Vector4(0.15f, 0.15f, 0.15f, 1.0f);
+
+            // For the actual splitter lines
+            colors[(int)ImGuiCol.Separator] = new Vector4(0.35f, 0.35f, 0.35f, 1.0f);
+            colors[(int)ImGuiCol.SeparatorHovered] = new Vector4(0.45f, 0.45f, 0.45f, 1.0f);
+            colors[(int)ImGuiCol.SeparatorActive] = new Vector4(0.55f, 0.55f, 0.55f, 1.0f);
         }
 
         public static void SetPerFrameImGuiData(float deltaSeconds, int width, int height)

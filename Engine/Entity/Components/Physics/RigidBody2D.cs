@@ -39,34 +39,16 @@ namespace Engine
         private readonly static mat4 _identity = mat4.identity();
         internal B2BodyId BodyId => _bodyId;
 
-        private vec2 _velocity;
-
-        [ExposeEditorField(isReadOnly: true)]
-        public vec2 Velocity
+        [ExposeEditorField]
+        public Body2DType BodyType
         {
-            get => B2Bodies.b2Body_GetLinearVelocity(_bodyId).ToVec2();
-            set => B2Bodies.b2Body_SetLinearVelocity(_bodyId, value.ToB2Vec2());
-        }
-        //public vec2 Velocity
-        //{
-        //    get => _velocity;
-        //    set
-        //    {
-        //        _velocity = value;
-        //        B2Bodies.b2Body_SetLinearVelocity(_bodyId, _velocity.ToB2Vec2());
-        //    }
-        //}
-
-        [ExposeEditorField(isReadOnly: true)]
-        public float AngularVelovity
-        {
-            get
-            {
-                return B2Bodies.b2Body_GetAngularVelocity(_bodyId);
-            }
+            get => _bodyType;
             set
             {
-                B2Bodies.b2Body_SetAngularVelocity(_bodyId, value);
+                if (_bodyType == value) return;
+                _bodyType = value;
+
+                B2Bodies.b2Body_SetType(_bodyId, (B2BodyType)_bodyType);
             }
         }
 
@@ -99,6 +81,32 @@ namespace Engine
                 base.IsEnabled = value;
             }
         }
+
+        [ExposeEditorField]
+        public bool LockZRotation
+        {
+            get => _isZRotationLocked;
+            set
+            {
+                if (_isZRotationLocked == value)
+                    return;
+                _isZRotationLocked = value;
+                B2Bodies.b2Body_SetMotionLocks(_bodyId, new B2MotionLocks() { angularZ = value });
+            }
+        }
+
+        [ExposeEditorField]
+        public bool IsContinuos
+        {
+            get => _isContinuos;
+            set
+            {
+                if (_isContinuos == value) return;
+                _isContinuos = value;
+                B2Bodies.b2Body_SetBullet(_bodyId, _isContinuos);
+            }
+        }
+
         [ExposeEditorField]
         public bool CanSleep
         {
@@ -166,39 +174,34 @@ namespace Engine
             }
         }
 
-        [ExposeEditorField]
-        public bool LockZRotation
-        {
-            get => _isZRotationLocked;
-            set
-            {
-                if (_isZRotationLocked == value)
-                    return;
-                _isZRotationLocked = value;
-                B2Bodies.b2Body_SetMotionLocks(_bodyId, new B2MotionLocks() { angularZ = value });
-            }
-        }
-        [ExposeEditorField]
-        public Body2DType BodyType
-        {
-            get => _bodyType;
-            set
-            {
-                if (_bodyType == value) return;
-                _bodyType = value;
+        private vec2 _velocity;
 
-                B2Bodies.b2Body_SetType(_bodyId, (B2BodyType)_bodyType);
-            }
-        }
-        [ExposeEditorField]
-        public bool IsContinuos
+        [ExposeEditorField(isReadOnly: true)]
+        public vec2 Velocity
         {
-            get => _isContinuos;
+            get => B2Bodies.b2Body_GetLinearVelocity(_bodyId).ToVec2();
+            set => B2Bodies.b2Body_SetLinearVelocity(_bodyId, value.ToB2Vec2());
+        }
+        //public vec2 Velocity
+        //{
+        //    get => _velocity;
+        //    set
+        //    {
+        //        _velocity = value;
+        //        B2Bodies.b2Body_SetLinearVelocity(_bodyId, _velocity.ToB2Vec2());
+        //    }
+        //}
+
+        [ExposeEditorField(isReadOnly: true)]
+        public float AngularVelovity
+        {
+            get
+            {
+                return B2Bodies.b2Body_GetAngularVelocity(_bodyId);
+            }
             set
             {
-                if (_isContinuos == value) return;
-                _isContinuos = value;
-                B2Bodies.b2Body_SetBullet(_bodyId, _isContinuos);
+                B2Bodies.b2Body_SetAngularVelocity(_bodyId, value);
             }
         }
 
