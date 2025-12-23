@@ -65,6 +65,7 @@ namespace Engine
             }
         }
 
+        [ExposeEditorField]
         public bool Loop
         {
             get => _isLooping;
@@ -77,7 +78,7 @@ namespace Engine
                 _soundPlayer.IsLooping = value;
             }
         }
-
+        [ExposeEditorField]
         public float Volume
         {
             get => _soundPlayer?.Volume ?? -1;
@@ -89,7 +90,7 @@ namespace Engine
                 _soundPlayer.Volume = value;
             }
         }
-
+        [ExposeEditorField]
         public float Pan
         {
             get => _soundPlayer?.Pan ?? -1;
@@ -101,7 +102,7 @@ namespace Engine
                 _soundPlayer.Pan = value;
             }
         }
-
+        [ExposeEditorField]
         public float PlaybackSpeed
         {
             get => _soundPlayer?.PlaybackSpeed ?? -1;
@@ -126,6 +127,7 @@ namespace Engine
             }
         }
 
+        [ExposeEditorField(isReadOnly: true)]
         public bool IsPlaying => _soundPlayer?.State == PlaybackState.Playing;
         public bool IsPaused => _soundPlayer?.State == PlaybackState.Paused;
         public bool IsStopped => _soundPlayer?.State == PlaybackState.Stopped;

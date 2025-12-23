@@ -15,7 +15,6 @@ namespace Engine
         private vec2 _size = new vec2(1, 1);
         private float _cornerRadius = 0;
     
-        [ExposeEditorField("Corner Radius")]
         public float CornerRadius
         {
             get => _cornerRadius;
