@@ -333,144 +333,167 @@ namespace Editor.Utils
 
             return changed;
         }
-        public static bool DrawListField(string name, IList value)
-        {
-            var listType = value.GetType();
-            var itemType = default(Type);
+        //public static bool DrawListField(string name, IList value)
+        //{
+        //    var listType = value.GetType();
+        //    var itemType = default(Type);
 
-            if (listType.IsGenericType)
-            {
-                Type genericDef = listType.GetGenericTypeDefinition();
-                if (typeof(IList<>).IsAssignableFrom(genericDef) || genericDef == typeof(List<>))
-                {
-                    itemType = listType.GetGenericArguments()[0];
-                }
-            }
+        //    if (listType.IsGenericType)
+        //    {
+        //        Type genericDef = listType.GetGenericTypeDefinition();
+        //        if (typeof(IList<>).IsAssignableFrom(genericDef) || genericDef == typeof(List<>))
+        //        {
+        //            itemType = listType.GetGenericArguments()[0];
+        //        }
+        //    }
 
-            bool DrawItem(int index, float width)
-            {
-                object item = null;
-                try
-                {
-                    // sometimes the list can be null.
-                    item = value[index];
+        //    bool DrawItem(int index, float width, object item)
+        //    {
+        //        if(item == null)
+        //        try
+        //        {
+        //            // sometimes the list can be null.
+        //            item = value[index];
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            return false;
+        //        }
+        //        if (item == null)
+        //        {
+        //            item = GetDefault(itemType);
+        //        }
+        //        bool changed = false;
 
-                    if(item == null)
-                    {
-                        item = GetDefault(itemType);
-                    }
-                }
-                catch (Exception e)
-                {
-                    return false;
-                }
+        //        string fieldId = $"##_{name}{index}";
 
-                bool changed = false;
+        //        if (itemType == typeof(string))
+        //        {
+        //            string v = (string)item!;
+        //            changed = DrawStringField(fieldId, ref v, width);
+        //            item = v;
+        //        }
+        //        if (itemType.IsEnum)
+        //        {
+        //            Array values = Enum.GetValues(itemType);
+        //            int idx = Array.IndexOf(values, item);
 
-                string fieldId = $"##_{name}{index}";
+        //            string[] names = Enum.GetNames(itemType);
 
-                if (itemType == typeof(string))
-                {
-                    string v = (string)item!;
-                    changed = DrawStringField(fieldId, ref v, width);
-                    item = v;
-                }
-                if (itemType.IsEnum)
-                {
-                    Array values = Enum.GetValues(itemType);
-                    int idx = Array.IndexOf(values, item);
+        //            if (DrawCombo(fieldId, ref idx, names))
+        //            {
+        //                item = Enum.ToObject(itemType, values.GetValue(idx)!);
+        //            }
+        //        }
+        //        else if (itemType == typeof(float))
+        //        {
+        //            float v = (float)item!;
+        //            changed = DrawFloatField(fieldId, ref v, width);
+        //            item = v;
+        //        }
+        //        else if (itemType == typeof(int))
+        //        {
+        //            int v = (int)item!;
+        //            changed = DrawIntField(fieldId, ref v, width);
+        //            item = v;
+        //        }
+        //        else if (itemType == typeof(vec2))
+        //        {
+        //            vec2 v = (vec2)item!;
+        //            changed = DrawVec2Field(fieldId, ref v, width);
+        //            item = v;
+        //        }
+        //        else if (itemType == typeof(vec3))
+        //        {
+        //            vec3 v = (vec3)item!;
+        //            changed = DrawVec3Field(fieldId, ref v, width);
+        //            item = v;
+        //        }
+        //        else if (itemType == typeof(vec4))
+        //        {
+        //            vec4 v = (vec4)item!;
+        //            changed = DrawVec4Field(fieldId, ref v, width);
+        //            item = v;
+        //        }
+        //        else if (itemType == typeof(mat2))
+        //        {
+        //            var v = (mat2)item;
+        //            changed = DrawMatrix(fieldId, ref v);
+        //            item = v;
+        //        }
+        //        else if (itemType == typeof(mat3))
+        //        {
+        //            var v = (mat3)item!;
+        //            changed = DrawMatrix(fieldId, ref v);
+        //            item = v;
+        //        }
+        //        else if (itemType == typeof(mat4))
+        //        {
+        //            var v = (mat4)item!;
+        //            changed = DrawMatrix(fieldId, ref v);
+        //            item = v;
+        //        }
+        //        //else if (itemType.IsGenericType && itemType.GetGenericTypeDefinition() == typeof(List<>))
+        //        //{
+        //        //    if (value is IList list)
+        //        //    {
+        //        //        DrawListField(name, value);
+        //        //    }
+        //        //}
+        //        //else if (itemType.IsClass)
+        //        //{
+        //        //    int subIndex = 0;
+        //        //    var prevType = itemType;
 
-                    string[] names = Enum.GetNames(itemType);
+        //        //    var members = ReflectionUtils.GetAllMembersWithAttribute<ExposeEditorFieldAttribute>(itemType, true, true);
+        //        //    if (item == null)
+        //        //    {
+        //        //        item = GetDefault(itemType);
+        //        //    }
+        //        //    foreach (var member in members)
+        //        //    {
+        //        //        var v = ReflectionUtils.GetMemberValue(item, member);
+        //        //        if (v == null)
+        //        //        {
+        //        //            continue;
+        //        //            v = GetDefault(ReflectionUtils.GetMemberType(member));
+        //        //        }
+        //        //        itemType = v.GetType();
 
-                    if (DrawCombo(fieldId, ref idx, names))
-                    {
-                        item = Enum.ToObject(itemType, values.GetValue(idx)!);
-                    }
-                }
-                else if (itemType == typeof(float))
-                {
-                    float v = (float)item!;
-                    changed = DrawFloatField(fieldId, ref v, width);
-                    item = v;
-                }
-                else if (itemType == typeof(int))
-                {
-                    int v = (int)item!;
-                    changed = DrawIntField(fieldId, ref v, width);
-                    item = v;
-                }
-                else if (itemType == typeof(vec2))
-                {
-                    vec2 v = (vec2)item!;
-                    changed = DrawVec2Field(fieldId, ref v, width);
-                    item = v;
-                }
-                else if (itemType == typeof(vec3))
-                {
-                    vec3 v = (vec3)item!;
-                    changed = DrawVec3Field(fieldId, ref v, width);
-                    item = v;
-                }
-                else if (itemType == typeof(vec4))
-                {
-                    vec4 v = (vec4)item!;
-                    changed = DrawVec4Field(fieldId, ref v, width);
-                    item = v;
-                }
-                else if (itemType == typeof(mat2))
-                {
-                    var v = (mat2)item;
-                    changed = DrawMatrix(fieldId, ref v);
-                    item = v;
-                }
-                else if (itemType == typeof(mat3))
-                {
-                    var v = (mat3)item!;
-                    changed = DrawMatrix(fieldId, ref v);
-                    item = v;
-                }
-                else if (itemType == typeof(mat4))
-                {
-                    var v = (mat4)item!;
-                    changed = DrawMatrix(fieldId, ref v);
-                    item = v;
-                }
-                else if (itemType.IsClass)
-                {
-                    //foreach (var subProp in itemType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
-                    //{
-                    //    DrawItem(index++, width);
-                    //}
-                }
+        //        //        DrawItem(subIndex++, width, v);
+        //        //    }
 
-                value[index] = item;
-                return changed;
-            }
+        //        //    itemType = prevType;
+        //        //}
 
-            void OnAdd()
-            {
-                value.Add(GetDefault(itemType));
-            }
+        //        value[index] = item;
+        //        return changed;
+        //    }
 
-            void OnRemove(int index)
-            {
-                if (value.Count > 0)
-                {
-                    value.RemoveAt(index);
-                }
-            }
+        //    void OnAdd()
+        //    {
+        //        value.Add(GetDefault(itemType));
+        //    }
 
-            return DrawListField(name, value.Count, OnAdd, OnRemove, DrawItem, false);
-        }
+        //    void OnRemove(int index)
+        //    {
+        //        if (value.Count > 0)
+        //        {
+        //            value.RemoveAt(index);
+        //        }
+        //    }
 
-        public static bool DrawListField(string name, int size, Action onAddCallback, Action<int> onRemoveCallback, 
-                                         Func<int, float, bool> drawCallback, bool itemAsTree)
+        //    return DrawListField(name, value.Count, OnAdd, OnRemove, DrawItem, false);
+        //}
+
+        public static bool DrawListField(string name, IList list, Action onAddCallback, Action<int> onRemoveCallback, 
+                                         Func<int, float, object, bool> drawCallback, bool itemAsTree)
         {
             ImGui.SameLine();
             ImGui.SetCursorPosX(ImGui.GetWindowWidth() - 120);
 
             bool changed = false;
-
+            var size = list.Count;
             if (ImGui.Button("-"))
             {
                 changed = true;
@@ -510,7 +533,7 @@ namespace Editor.Utils
                 changed = true;
             }
 
-            for (int i = 0; i < size; i++)
+            for (int i = 0; i < list.Count; i++)
             {
                 float prevCursorY = ImGui.GetCursorPosY();
                 bool show;
@@ -529,7 +552,7 @@ namespace Editor.Utils
 
                 if (show)
                 {
-                    if (drawCallback(i, ImGui.GetContentRegionAvail().X - 24f))
+                    if (drawCallback(i, ImGui.GetContentRegionAvail().X - 24f, list[i]))
                         changed = true;
 
                     if (itemAsTree)
@@ -570,7 +593,17 @@ namespace Editor.Utils
                 {
                     return string.Empty;
                 }
-
+                else if(type.IsClass)
+                {
+                    try
+                    {
+                        return Activator.CreateInstance(type)!;
+                    }
+                    catch (Exception e)
+                    {
+                        return null;
+                    }
+                }
                 return null!;
             }
         }

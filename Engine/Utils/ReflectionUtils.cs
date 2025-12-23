@@ -75,7 +75,7 @@ namespace Engine.Utils
             }
         }
 
-        public static void SetMemberValue(object obj, MemberInfo member, object value)
+        public static void SetMemberValue(object target, MemberInfo member, object value)
         {
             switch (member)
             {
@@ -85,7 +85,7 @@ namespace Engine.Utils
                         if (setter == null)
                             throw new InvalidOperationException($"{prop.Name} has no setter.");
 
-                        setter.Invoke(obj, BindingFlags.InvokeMethod, Type.DefaultBinder, new object[] { value }, CultureInfo.InvariantCulture);
+                        setter.Invoke(target, BindingFlags.InvokeMethod, Type.DefaultBinder, new object[] { value }, CultureInfo.InvariantCulture);
                         break;
                     }
 
@@ -95,7 +95,7 @@ namespace Engine.Utils
                             BindingFlags.Public |
                             BindingFlags.NonPublic;
 
-                        field.SetValue(obj, value, flags, Type.DefaultBinder, CultureInfo.InvariantCulture);
+                        field.SetValue(target, value, flags, Type.DefaultBinder, CultureInfo.InvariantCulture);
                         break;
                     }
 

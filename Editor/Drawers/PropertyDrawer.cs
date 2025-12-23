@@ -31,24 +31,29 @@ namespace Editor
             var v = (T)value;
             if (drawField(propertyName, ref v))
             {
-                if (valueConverter == null)
-                {
-                    ReflectionUtils.SetMemberValue(target, prop, v);
-                }
-                else
-                {
-                    ReflectionUtils.SetMemberValue(target, prop, valueConverter.Invoke(v));
-                }
+                //if (valueConverter == null)
+                //{
+                //    ReflectionUtils.SetMemberValue(target, prop, v);
+                //}
+                //else
+                //{
+                //    ReflectionUtils.SetMemberValue(target, prop, valueConverter.Invoke(v));
+                //}
             }
             ImGui.EndDisabled();
         }
-
-        public static void DrawVars(string entityID, object obj, MemberInfo prop, float cursorX, int index, float width, bool enforceSerializedFieldAttribute)
+        private static bool IsUserDefinedStruct(Type t)
+        {
+            return t.IsValueType &&
+                   !t.IsPrimitive &&
+                   !t.IsEnum;
+        }
+        public static void DrawVars(string entityID, object target, MemberInfo prop, float cursorX, int index, float width, bool enforceSerializedFieldAttribute)
         {
             if (prop == null)
                 return;
 
-            object value = ReflectionUtils.GetMemberValue(obj, prop);
+            object value = ReflectionUtils.GetMemberValue(target, prop);
             Type type = ReflectionUtils.GetMemberType(prop);
             string propertyName = prop.Name;
             // NOTE: I will enforce that any property that needs to be exposed in the editor should have the SerializedField attribute
@@ -71,6 +76,10 @@ namespace Editor
                 }
             }
 
+            DrawVars(entityID, target, value, type, propertyName, isReadOnly, prop, cursorX, index, width);
+        }
+        public static void DrawVars(string entityID, object target, object value, Type type, string propertyName, bool isReadOnly, MemberInfo prop, float cursorX, int index, float width)
+        {
             ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.Leaf;
 
             if (type.GetProperties().Length > 1 && type.IsClass && type != typeof(string) && !ReflectionUtil.IsEObject(type))
@@ -89,13 +98,13 @@ namespace Editor
 
                 if (ImGui.Selectable("Paste") && _copiedValue?.GetType() == type)
                 {
-                    ReflectionUtils.SetMemberValue(obj, prop, _copiedValue);
+                    ReflectionUtils.SetMemberValue(target, prop, _copiedValue);
                 }
 
                 if (ImGui.Selectable("Clear"))
                 {
                     var valueClear = type.IsValueType ? Activator.CreateInstance(type) : null;
-                    ReflectionUtils.SetMemberValue(obj, prop, valueClear);
+                    ReflectionUtils.SetMemberValue(target, prop, valueClear);
                 }
 
                 ImGui.EndPopup();
@@ -109,58 +118,58 @@ namespace Editor
 
                 DrawEObjectSlot(value as EObject, type, v =>
                 {
-                    ReflectionUtils.SetMemberValue(obj, prop, v);
+                    ReflectionUtils.SetMemberValue(target, prop, v);
                     return true;
                 }, width);
             }
             // bool
             else if (type == typeof(bool))
             {
-                DrawSimpleProperty<bool>(propertyName, obj, value, isReadOnly, prop, EditorGuiFieldsResolver.DrawBoolField);
+                DrawSimpleProperty<bool>(propertyName, target, value, isReadOnly, prop, EditorGuiFieldsResolver.DrawBoolField);
             }
             else if (type == typeof(int))
             {
-                DrawSimpleProperty<int>(propertyName, obj, value, isReadOnly, prop, EditorGuiFieldsResolver.DrawIntField);
+                DrawSimpleProperty<int>(propertyName, target, value, isReadOnly, prop, EditorGuiFieldsResolver.DrawIntField);
             }
             else if (type == typeof(Color))
             {
-                DrawSimpleProperty<Color>(propertyName, obj, value, isReadOnly, prop, EditorGuiFieldsResolver.DrawColorField);
+                DrawSimpleProperty<Color>(propertyName, target, value, isReadOnly, prop, EditorGuiFieldsResolver.DrawColorField);
             }
             else if (type == typeof(Color32))
             {
-                DrawSimpleProperty<Color>(propertyName, obj, value, isReadOnly, prop, EditorGuiFieldsResolver.DrawColorField, true, v => (Color32)v);
+                DrawSimpleProperty<Color>(propertyName, target, value, isReadOnly, prop, EditorGuiFieldsResolver.DrawColorField, true, v => (Color32)v);
             }
             else if (type == typeof(float))
             {
-                DrawSimpleProperty<float>(propertyName, obj, value, isReadOnly, prop, EditorGuiFieldsResolver.DrawFloatField);
+                DrawSimpleProperty<float>(propertyName, target, value, isReadOnly, prop, EditorGuiFieldsResolver.DrawFloatField);
             }
             else if (type == typeof(string))
             {
-                DrawSimpleProperty<string>(propertyName, obj, value, isReadOnly, prop, EditorGuiFieldsResolver.DrawStringField);
+                DrawSimpleProperty<string>(propertyName, target, value, isReadOnly, prop, EditorGuiFieldsResolver.DrawStringField);
             }
             else if (type == typeof(vec2))
             {
-                DrawSimpleProperty<vec2>(propertyName, obj, value, isReadOnly, prop, EditorGuiFieldsResolver.DrawVec2Field);
+                DrawSimpleProperty<vec2>(propertyName, target, value, isReadOnly, prop, EditorGuiFieldsResolver.DrawVec2Field);
             }
             else if (type == typeof(vec3))
             {
-                DrawSimpleProperty<vec3>(propertyName, obj, value, isReadOnly, prop, EditorGuiFieldsResolver.DrawVec3Field);
+                DrawSimpleProperty<vec3>(propertyName, target, value, isReadOnly, prop, EditorGuiFieldsResolver.DrawVec3Field);
             }
             else if (type == typeof(vec4))
             {
-                DrawSimpleProperty<vec4>(propertyName, obj, value, isReadOnly, prop, EditorGuiFieldsResolver.DrawVec4Field);
+                DrawSimpleProperty<vec4>(propertyName, target, value, isReadOnly, prop, EditorGuiFieldsResolver.DrawVec4Field);
             }
             else if (type == typeof(mat2))
             {
-                DrawSimpleProperty<mat2>(propertyName, obj, value, isReadOnly, prop, EditorGuiFieldsResolver.DrawMatrix);
+                DrawSimpleProperty<mat2>(propertyName, target, value, isReadOnly, prop, EditorGuiFieldsResolver.DrawMatrix);
             }
             else if (type == typeof(mat3))
             {
-                DrawSimpleProperty<mat3>(propertyName, obj, value, isReadOnly, prop, EditorGuiFieldsResolver.DrawMatrix);
+                DrawSimpleProperty<mat3>(propertyName, target, value, isReadOnly, prop, EditorGuiFieldsResolver.DrawMatrix);
             }
             else if (type == typeof(mat4))
             {
-                DrawSimpleProperty<mat4>(propertyName, obj, value, isReadOnly, prop, EditorGuiFieldsResolver.DrawMatrix);
+                DrawSimpleProperty<mat4>(propertyName, target, value, isReadOnly, prop, EditorGuiFieldsResolver.DrawMatrix);
             }
             // enum
             else if (type.IsEnum)
@@ -172,20 +181,60 @@ namespace Editor
                 string[] names = Enum.GetNames(type);
                 if (EditorGuiFieldsResolver.DrawCombo(propertyName, ref idx, names))
                 {
-                    ReflectionUtils.SetMemberValue(obj, prop, Enum.Parse(type, names[idx]));
+                    ReflectionUtils.SetMemberValue(target, prop, Enum.Parse(type, names[idx]));
 
                 }
             }
             else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
             {
-                ImGui.SameLine();
-                ImGui.SetCursorPosX(Math.Max(_xPosOffset, ImGui.GetCursorPosX()));
-
                 if (value is System.Collections.IList list)
                 {
-                    if (EditorGuiFieldsResolver.DrawListField(propertyName, list))
+                    var arg = list.GetType().GetGenericArguments().FirstOrDefault();
+
+                    if (arg == null || !arg.IsGenericType)
                     {
-                        ReflectionUtils.SetMemberValue(obj, prop, list);
+                        ImGui.SameLine();
+                        ImGui.SetCursorPosX(Math.Max(_xPosOffset, ImGui.GetCursorPosX()));
+
+                        var listType = value.GetType();
+                        var itemType = default(Type);
+
+                        if (listType.IsGenericType)
+                        {
+                            Type genericDef = listType.GetGenericTypeDefinition();
+                            if (typeof(IList<>).IsAssignableFrom(genericDef) || genericDef == typeof(List<>))
+                            {
+                                itemType = listType.GetGenericArguments()[0];
+                            }
+                        }
+
+                        EditorGuiFieldsResolver.DrawListField(propertyName, list, OnAdd, OnRemove, (index, width, item) =>
+                        {
+                            int listIndex = 0;
+
+                            if (item == null)
+                            {
+                                item = GetDefaultValue(itemType);
+                            }
+                            DrawVars(entityID, list, item, itemType, $"##__{index}_item", false, prop, cursorX, listIndex++, width);
+
+                            return false;
+                        }, false);
+
+                        void OnAdd()
+                        {
+                            list.Add(GetDefaultValue(arg));
+                        }
+
+                        void OnRemove(int index)
+                        {
+                            if (list.Count > 0 && list.Count > index)
+                            {
+                                list.RemoveAt(index);
+                            }
+
+                            Debug.Log(index);
+                        }
                     }
                 }
             }
@@ -194,30 +243,30 @@ namespace Editor
                 ImGui.SameLine();
                 ImGui.SetCursorPosX(Math.Max(_xPosOffset, ImGui.GetCursorPosX()));
 
-                int size = ((Array)obj).Length;
-                EditorGuiFieldsResolver.DrawListField(propertyName, size, () =>
-                {
-                    // Add
-                }, (x) =>
-                {
-                    // Remove
-                }, (x, y) =>
-                {
-                    // Draw callback
+                int size = ((Array)target).Length;
+                //EditorGuiFieldsResolver.DrawListField(propertyName, size, () =>
+                //{
+                //    // Add
+                //}, (x) =>
+                //{
+                //    // Remove
+                //}, (x, y, item) =>
+                //{
+                //    // Draw callback
 
-                    return false;
-                }, false);
+                //    return false;
+                //}, false);
 
                 // prop.SetValue(obj, list);
 
             }
             // class
-            else if (type.IsClass)
+            else if (type.IsClass || IsUserDefinedStruct(type))
             {
                 var members = ReflectionUtils.GetAllMembersWithAttribute<ExposeEditorFieldAttribute>(type, true, true);
                 foreach (var subProp in members)
                 {
-                    DrawVars(entityID, value, subProp, cursorX, index++, width, enforceSerializedFieldAttribute);
+                     DrawVars(entityID, value, subProp, cursorX, index++, width, true);
                 }
             }
 
@@ -361,5 +410,41 @@ namespace Editor
                 DrawSceneObjectPropertyPicker(root.Children[i], targetType, setValue);
             }
         }
+
+        private static object GetDefaultValue(Type type)
+        {
+            if (type.IsValueType)
+            {
+                if (type.IsEnum)
+                {
+                    Array values = Enum.GetValues(type);
+                    return values.Length > 0 ? values.GetValue(0)! : Activator.CreateInstance(type)!;
+                }
+                else
+                {
+                    return Activator.CreateInstance(type)!;
+                }
+            }
+            else
+            {
+                if (type == typeof(string))
+                {
+                    return string.Empty;
+                }
+                else if (type.IsClass)
+                {
+                    try
+                    {
+                        return Activator.CreateInstance(type)!;
+                    }
+                    catch (Exception e)
+                    {
+                        return null;
+                    }
+                }
+                return null!;
+            }
+        }
+
     }
 }

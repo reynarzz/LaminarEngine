@@ -41,6 +41,13 @@ namespace Game
             [ExposeEditorField] public mat4 mat4Test { get; set; }
             [ExposeEditorField] public TestClassSub SubObject { get; set; } = new TestClassSub();
         }
+
+        public struct AStruct
+        {
+            public int Value;
+        }
+        [ExposeEditorField] public AStruct StructType { get; set; }
+        [ExposeEditorField] public List<TestClass> _TestCLassList { get; set; } = new();
         [ExposeEditorField] public TestClass TestClassObj = new TestClass();
         [ExposeEditorField] public List<string> StringTest { get; set; } = new();
         [ExposeEditorField] public List<int> IntTest { get; set; } = new();
@@ -48,7 +55,7 @@ namespace Game
         [ExposeEditorField] public mat2 mat2Test { get; set; }
         [ExposeEditorField] public mat3 mat3Test { get; set; }
         [ExposeEditorField] public mat4 mat4Test { get; set; }
-        [ExposeEditorField] public List<TestClass> _TestCLassList { get; set; } = new();
+        [ExposeEditorField] private List<List<int>> _nestedList;
 
         public Body2DType[] EnumArray { get; set; } = new Body2DType[5];
     }

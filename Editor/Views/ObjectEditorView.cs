@@ -141,29 +141,53 @@ namespace Editor
 
         private static readonly List<Type> _componentTypes = new();
 
-        // NOTE: This will be always be called after hot reloading the game dll, for now, for quick test I'm calling it every frame,
-        public static Type[] GetAllComponentTypes()
+        // NOTE: This will always be called after hot reloading the game dll, for now, for quick test I'm calling it every frame,
+        public static IReadOnlyList<Type> GetAllComponentTypes()
         {
             Type baseType = typeof(Component);
-
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
             _componentTypes.Clear();
 
-            foreach (var assembly in assemblies)
+            for (int i = 0; i < assemblies.Length; i++)
             {
+                Type[] types;
+
                 try
                 {
-                    var types = assembly.GetTypes().Where(t => t.IsClass && !t.IsAbstract && baseType.IsAssignableFrom(t));
-                    _componentTypes.AddRange(types);
+                    types = assemblies[i].GetTypes();
                 }
-                catch (ReflectionTypeLoadException ex)
+                catch (ReflectionTypeLoadException e)
                 {
-                    _componentTypes.AddRange(ex.Types.Where(t => t != null && t.IsClass && !t.IsAbstract && baseType.IsAssignableFrom(t)));
+                    types = e.Types;
+                }
+
+                if (types == null)
+                    continue;
+
+                for (int j = 0; j < types.Length; j++)
+                {
+                    Type t = types[j];
+                    if (t == null)
+                        continue;
+
+                    if (!t.IsClass)
+                        continue;
+
+                    if (t.IsAbstract)
+                        continue;
+
+                    if (!baseType.IsAssignableFrom(t))
+                        continue;
+
+                    _componentTypes.Add(t);
                 }
             }
 
-            return _componentTypes.OrderBy(x => x.Name).ToArray();
+            _componentTypes.Sort(static (a, b) => string.Compare(a.Name, b.Name, StringComparison.OrdinalIgnoreCase));
+
+            return _componentTypes;
         }
+
         private static object _componentClipboard;
 
         public static void DrawComponentTree(Component component, int componentIndex, Action<Component> drawProperties)
