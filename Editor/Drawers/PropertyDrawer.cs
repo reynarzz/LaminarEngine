@@ -301,23 +301,38 @@ namespace Editor
 
             ImGui.TreePop();
         }
+        private static int CalcMaxTextLengthFast(string text, float maxWidth)
+        {
+            float width = 0f;
+            int count = 0;
 
-        private static void DrawEObjectSlot(EObject value, Type valueType, Func<object, bool> setValue, float width = -1)
+            foreach (char c in text)
+            {
+                float charWidth = ImGui.CalcTextSize(c.ToString()).X;
+                if (width + charWidth > maxWidth)
+                    break;
+
+                width += charWidth;
+                count++;
+            }
+            return count;
+        }
+        private static void DrawEObjectSlot(EObject eObject, Type valueType, Func<object, bool> setValue, float width = -1)
         {
             ImGui.SameLine();
             ImGui.SetCursorPosX(MathF.Max(_xPosOffset, ImGui.GetCursorPosX()) + 5);
 
-            string label = value != null ? $"{(value).Name} ({valueType.Name})" : $"Null ({valueType.Name})";
+            string label = eObject != null ? $"{eObject.Name}" : $"Null";
 
-            if (value != null)
+            if (eObject != null)
             {
-                if (value is AssetResourceBase res)
+                if (eObject is AssetResourceBase res)
                 {
                     ImGui.SetItemTooltip($"{res.Path}");
                 }
                 else
                 {
-                    ImGui.SetItemTooltip(value.GetID().ToString());
+                    ImGui.SetItemTooltip(eObject.GetID().ToString());
                 }
             }
 
@@ -327,17 +342,53 @@ namespace Editor
 
             var min = new Vector2(pos.X - 5, pos.Y - 3);
             var max = new Vector2(pos.X + ImGui.GetContentRegionAvail().X - 5, pos.Y + size.Y - 1);
-            var length = max.X - min.X;
 
-            drawList.AddRectFilled(min, max, ImGui.ColorConvertFloat4ToU32(new(0.06f, 0.06f, 0.06f, 1f)));
-            ImGui.CalcTextSize(label);
+            drawList.AddRectFilled(min, max, ImGui.ColorConvertFloat4ToU32(new(0.1f, 0.1f, 0.1f, 1f)));
 
-            ImGui.Text(label);
+            string suffix = $"({valueType.Name})";
+            float suffixWidth = ImGui.CalcTextSize(suffix).X;
+
+            const float offset = 6;
+            var length = (max.X - min.X) - offset;
+            float availableLabelWidth = length - suffixWidth;
+            if (availableLabelWidth < 0)
+                availableLabelWidth = 0;
+
+            string displayLabel = label;
+
+            float labelWidth = ImGui.CalcTextSize(label).X;
+            if (labelWidth > availableLabelWidth)
+            {
+                const string ellipsis = "...";
+                float ellipsisWidth = ImGui.CalcTextSize(ellipsis).X;
+
+                int count = 0;
+                float wwidth = 0f;
+
+                foreach (char c in label)
+                {
+                    float w = ImGui.CalcTextSize(c.ToString()).X;
+                    if (wwidth + w + ellipsisWidth > availableLabelWidth)
+                        break;
+
+                    wwidth += w;
+                    count++;
+                }
+
+                displayLabel = label.Substring(0, count) + ellipsis;
+
+                ImGui.Text($"{displayLabel}{suffix}");
+            }
+            else
+            {
+                ImGui.Text($"{displayLabel} {suffix}");
+            }
+
 
             if (ImGui.IsItemClicked())
             {
                 _openPopup = true;
-                _selectedValue = value;
+                _selectedValue = eObject;
                 _selectedSetter = setValue;
             }
 

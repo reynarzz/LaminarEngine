@@ -84,7 +84,10 @@ namespace Engine.Utils
                     {
                         var setter = prop.SetMethod ?? prop.GetSetMethod(true);
                         if (setter == null)
-                            throw new InvalidOperationException($"{prop.Name} has no setter.");
+                        {
+                            Debug.Warn($"Set method for property: '{prop.Name}' was not found.");
+                            return;
+                        }
 
                         setter.Invoke(target, BindingFlags.InvokeMethod, Type.DefaultBinder, new object[] { value }, CultureInfo.InvariantCulture);
                         break;

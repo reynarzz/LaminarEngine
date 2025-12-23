@@ -113,7 +113,7 @@ namespace Editor
             ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f);
             ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Vector2.Zero);
 
-            ImGui.PushStyleColor(ImGuiCol.WindowBg, new Vector4(0.1f, 0.1f, 0.1f, 1.0f));
+            //ImGui.PushStyleColor(ImGuiCol.WindowBg, new Vector4(0.1f, 0.1f, 0.1f, 1.0f));
             ImGui.Begin("DockSpaceHost", flags);
 
             ImGui.PopStyleVar(3);
@@ -129,7 +129,7 @@ namespace Editor
             // ------
 
             ImGui.End();
-            ImGui.PopStyleColor();
+            //ImGui.PopStyleColor();
         }
         private void RenderingInfoWindow()
         {
