@@ -20,6 +20,24 @@ namespace Editor
 
         private delegate bool DrawSimpleFieldDelegate<T>(string fieldName, ref T v);
 
+        private static void SetMemberValueSafe<T>(object target, T value, MemberInfo prop, int index, Func<T, object> valueConverter = null)
+        {
+            if (target is IList list)
+            {
+                list[index] = value;
+            }
+            else
+            {
+                if (valueConverter == null)
+                {
+                    ReflectionUtils.SetMemberValue(target, prop, value);
+                }
+                else
+                {
+                    ReflectionUtils.SetMemberValue(target, prop, valueConverter.Invoke(value));
+                }
+            }
+        }
         private static void DrawSimpleProperty<T>(string propertyName, object target, object value, bool isReadOnly, MemberInfo prop, int index, DrawSimpleFieldDelegate<T> drawField, bool sameLine = true, Func<T, object> valueConverter = null)
         {
             if (sameLine)
@@ -32,21 +50,7 @@ namespace Editor
             var v = (T)value;
             if (drawField(propertyName, ref v))
             {
-                if (target is IList list)
-                {
-                    list[index] = v;
-                }
-                else
-                {
-                    if (valueConverter == null)
-                    {
-                        ReflectionUtils.SetMemberValue(target, prop, v);
-                    }
-                    else
-                    {
-                        ReflectionUtils.SetMemberValue(target, prop, valueConverter.Invoke(v));
-                    }
-                }
+                SetMemberValueSafe(target, v, prop, index, valueConverter);
             }
             ImGui.EndDisabled();
         }
@@ -189,8 +193,7 @@ namespace Editor
                 string[] names = Enum.GetNames(type);
                 if (EditorGuiFieldsResolver.DrawCombo(propertyName, ref idx, names))
                 {
-                    ReflectionUtils.SetMemberValue(target, prop, Enum.Parse(type, names[idx]));
-
+                    SetMemberValueSafe(target, Enum.Parse(type, names[idx]), prop, index);
                 }
             }
             else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
@@ -239,8 +242,6 @@ namespace Editor
                             {
                                 list.RemoveAt(index);
                             }
-
-                            Debug.Log(index);
                         }
                     }
                 }
