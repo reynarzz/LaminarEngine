@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -94,6 +95,12 @@ namespace Editor
         }
         public static void DrawVars(string entityID, object target, object value, Type type, string propertyName, bool isReadOnly, MemberInfo prop, float cursorX, int index, float width)
         {
+            if (value == null)
+            {
+                value = GetDefaultValue(type);
+                SetMemberValueSafe(target, value, prop, 0);
+            }
+
             ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.Leaf;
 
             if (type.GetProperties().Length > 1 && type.IsClass && type != typeof(string) && !ReflectionUtil.IsEObject(type))
@@ -221,7 +228,7 @@ namespace Editor
                             }
                         }
 
-                        EditorGuiFieldsResolver.DrawListField(propertyName, list, false, OnAdd, OnRemove, OnRemoveCount, 
+                        EditorGuiFieldsResolver.DrawListField(propertyName, list, false, OnAdd, OnRemove, OnRemoveCount,
                         (index, itemWidth, item) =>
                         {
                             if (item == null)
@@ -277,16 +284,18 @@ namespace Editor
                 //}, false);
 
                 // prop.SetValue(obj, list);
-
             }
             // class
             else if (type.IsClass || IsUserDefinedStruct(type))
             {
                 var members = ReflectionUtils.GetAllMembersWithAttribute<ExposeEditorFieldAttribute>(type, true, true);
+
+                var propIndex = index;
                 foreach (var subProp in members)
                 {
                     DrawVars(entityID, value, subProp, cursorX, index++, width, true);
                 }
+                SetMemberValueSafe(target, value, prop, propIndex);
             }
 
             ImGui.TreePop();
