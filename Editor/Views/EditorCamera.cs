@@ -12,8 +12,8 @@ namespace Editor
         private vec3 _pivot = new vec3(0, 0, 0);
         private float _distance = 5.0f;
 
-        private float _yaw = 0.0f;
-        private float _pitch = 0.0f;
+        private Quaternion _rotation = Quaternion.Identity;
+
         private Vector2 _screenSize;
         private const float MinDistance = 0.1f;
         private const float MaxDistance = 1000.0f;
@@ -27,7 +27,6 @@ namespace Editor
 
         public RenderTexture RenderTexture { get; set; }
         RenderTexture ICamera.OutRenderTexture { get; set; }
-
 
         public EditorCamera(float aspect = 16f / 9f)
         {
@@ -44,25 +43,33 @@ namespace Editor
                 _screenSize.X = (int)size.X;
                 _screenSize.Y = (int)size.Y;
 
-                Projection = MathUtils.Perspective(glm.radians(60.0f), size.X / size.Y, 0.1f, 1000.0f);
+                Projection = MathUtils.Perspective(
+                    glm.radians(60.0f),
+                    size.X / size.Y,
+                    0.1f,
+                    1000.0f);
             }
 
             var io = ImGui.GetIO();
             if (!ImGui.IsWindowHovered() && !ImGui.IsWindowFocused())
                 return;
 
-            Vector2 fbScale = new Vector2(1, 1);// io.DisplayFramebufferScale;
-
-            vec2 mouseDelta = new vec2(io.MouseDelta.X * fbScale.X, io.MouseDelta.Y * fbScale.Y);
+            vec2 mouseDelta = new vec2(io.MouseDelta.X, io.MouseDelta.Y);
 
             if (ImGui.IsMouseDown(ImGuiMouseButton.Right))
             {
-                float sensitivity = 0.005f;
+                const float sensitivity = 0.005f;
 
-                _yaw += mouseDelta.x * sensitivity;
-                _pitch -= mouseDelta.y * sensitivity;
+                float dx = mouseDelta.x * sensitivity;
+                float dy = mouseDelta.y * sensitivity;
 
-                _pitch = Mathf.Clamp(_pitch, -1.55f, 1.55f);
+                Vector3 worldUp = Vector3.UnitY;
+                Vector3 right = Vector3.Transform(Vector3.UnitX, _rotation);
+
+                Quaternion qYaw = Quaternion.CreateFromAxisAngle(worldUp, dx);
+                Quaternion qPitch = Quaternion.CreateFromAxisAngle(right, dy);
+
+                _rotation = Quaternion.Normalize(qYaw * qPitch * _rotation);
             }
 
             if (ImGui.IsMouseDown(ImGuiMouseButton.Middle))
@@ -84,7 +91,7 @@ namespace Editor
 
             if (io.MouseWheel != 0)
             {
-                float zoomSpeed = 0.1f;
+                const float zoomSpeed = 0.1f;
                 _distance *= 1.0f - io.MouseWheel * zoomSpeed;
                 _distance = Mathf.Clamp(_distance, MinDistance, MaxDistance);
             }
@@ -94,34 +101,29 @@ namespace Editor
 
         private void UpdateView()
         {
-            vec3 direction = new vec3(MathF.Cos(_pitch) * MathF.Sin(_yaw),
-                                      MathF.Sin(_pitch),
-                                      MathF.Cos(_pitch) * MathF.Cos(_yaw));
-            vec3 position = _pivot - direction * _distance;
-            ViewMatrix = MathUtils.LookAt(position, _pivot, new vec3(0, 1, 0));
-        }
+            vec3 forward = GetForward();
+            vec3 up = GetUp();
 
-        private vec3 GetRight()
-        {
-            return glm.normalize(glm.cross(new vec3(0, 1, 0), GetForward()));
-        }
-
-        private vec3 GetUp()
-        {
-            return glm.normalize(glm.cross(GetForward(), GetRight()));
+            vec3 position = _pivot - forward * _distance;
+            ViewMatrix = MathUtils.LookAt(position, _pivot, up);
         }
 
         private vec3 GetForward()
         {
-            return glm.normalize(_pivot - GetPosition());
+            Vector3 f = Vector3.Transform(Vector3.UnitZ, _rotation);
+            return glm.normalize(new vec3(f.X, f.Y, f.Z));
         }
 
-        private vec3 GetPosition()
+        private vec3 GetRight()
         {
-            vec3 direction = new vec3(MathF.Cos(_pitch) * MathF.Sin(_yaw),
-                                       MathF.Sin(_pitch),
-                                       MathF.Cos(_pitch) * MathF.Cos(_yaw));
-            return _pivot - direction * _distance;
+            Vector3 r = Vector3.Transform(Vector3.UnitX, _rotation);
+            return glm.normalize(new vec3(r.X, r.Y, r.Z));
+        }
+
+        private vec3 GetUp()
+        {
+            Vector3 u = Vector3.Transform(Vector3.UnitY, _rotation);
+            return glm.normalize(new vec3(u.X, u.Y, u.Z));
         }
     }
 }
