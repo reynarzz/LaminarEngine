@@ -25,6 +25,10 @@ namespace Editor
         private GFSEngine _engine;
         // private SimpleNodeEditor _node;
         private ObjectEditorView _objectEditor;
+        private RenderingLayer.RenderingSurface _gameSurface;
+        private RenderingLayer.RenderingSurface _editorSurface;
+        private EditorCamera _editorCamera;
+
         internal void Init()
         {
             _win = new WindowStandalone("GFS Editor", 1324, 740, Color.Black);
@@ -45,26 +49,26 @@ namespace Editor
 
             new GameCooker.GameProject().Initialize(new GameCooker.ProjectConfig() { ProjectFolderRoot = root });
 
-            var editorCamera = new EditorCamera();
+            _editorCamera = new EditorCamera();
 
-            var gameSurface = new RenderingLayer.RenderingSurface()
+            _gameSurface = new RenderingLayer.RenderingSurface()
             {
                 PickCameraFromSceneGraph = true,
                 RenderPostProcessing = true,
             };
 
-            var editorSurface = new RenderingLayer.RenderingSurface()
+            _editorSurface = new RenderingLayer.RenderingSurface()
             {
-                Cameras = [editorCamera],
+                Cameras = [_editorCamera],
                 RenderDebug = true,
                 RenderPostProcessing = false,
                 BlitToScreen = false
             };
 
-            _gameWindow = new EditorGameView(_win, gameSurface);
+            _gameWindow = new EditorGameView(_win, _gameSurface);
             _engine = new GFSEngine(_gameWindow, new GameApplication(), new InputStandAlonePlatform());
 
-            RenderingLayer.InitializeTargets([gameSurface, editorSurface]);
+            RenderingLayer.InitializeTargets([_gameSurface, _editorSurface]);
             RenderingLayer.OnDrawOverlay += () =>
             {
                 Render();
@@ -139,7 +143,7 @@ namespace Editor
             ImGui.DockSpace(dockspaceId, Vector2.Zero, ImGuiDockNodeFlags.None);
 
             // call imgui functions here: ---
-            _gameWindow.Render();
+            _gameWindow.OnRender();
             _sceneGraphWindow.OnRender();
             _objectEditor.OnRender();
             RenderingInfoWindow();
