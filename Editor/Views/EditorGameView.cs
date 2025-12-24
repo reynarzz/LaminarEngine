@@ -37,11 +37,13 @@ namespace Editor
         private int _offsetY = 0;
         public int OffsetX => _offsetX;
         public int OffsetY => _offsetY;
-        public EditorGameView(WindowStandalone window)
+        private readonly RenderingLayer.RenderingSurface _surface;
+        public EditorGameView(WindowStandalone window, RenderingLayer.RenderingSurface surface)
         {
             _window = window;
             _width = _window.Width;
             _height = _window.Height;
+            _surface = surface;
             //_window.OnWindowChanged += OnWindowWasChanged;
         }
 
@@ -71,11 +73,11 @@ namespace Editor
             var pos = ImGui.GetWindowPos();
             _offsetX = (int)pos.X;
             _offsetY = (int)pos.Y + (int)ImGui.GetFrameHeight() / 2;
-            RenderingLayer.RenderToScreen = false;
-            var frameBuffer = (RenderingLayer.ScreenRenderTexture.NativeResource as GLFrameBuffer);
 
-            if (RenderingLayer.IsAnyCameraAvailable)
+
+            if (_surface.Cameras != null && _surface.Cameras.Length > 0)
             {
+                var frameBuffer = _surface.RenderTexture.NativeResource as GLFrameBuffer;
                 ImGui.Image((nint)frameBuffer.ColorTexture.Handle, ImGui.GetContentRegionAvail(), new Vector2(0, 1), new Vector2(1, 0));
             }
             else
@@ -89,6 +91,7 @@ namespace Editor
 
                 ImGui.Text(text);
             }
+
             ImGui.End();
             ImGui.PopID();
             ImGui.PopStyleColor();

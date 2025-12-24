@@ -29,7 +29,6 @@ namespace Editor
         {
             _win = new WindowStandalone("GFS Editor", 1324, 740, Color.Black);
             _win.CanResize = true;
-            _gameWindow = new EditorGameView(_win);
             _sceneGraphWindow = new SceneGraphWindow();
             _objectEditor = new ObjectEditorView();
 
@@ -39,15 +38,29 @@ namespace Editor
             ImguiImplOpenGL3.Init(_win);
             _glfwInput = new ImGuiGLFW(WindowStandalone.NativeWindow);
             _glfwInput.Init();
-           // _node = new SimpleNodeEditor();
+            // _node = new SimpleNodeEditor();
 
             var assemblyDir = Paths.ClearPathSeparation(Path.GetDirectoryName(AppContext.BaseDirectory)!);
             var root = Path.Combine(assemblyDir.Substring(0, assemblyDir.LastIndexOf(PROJECT_FOLDER_NAME)), Paths.GAME_FOLDER_NAME);
 
             new GameCooker.GameProject().Initialize(new GameCooker.ProjectConfig() { ProjectFolderRoot = root });
 
+            var gameSurface = new RenderingLayer.RenderingSurface();
+
+            _gameWindow = new EditorGameView(_win, gameSurface);
             _engine = new GFSEngine(_gameWindow, new GameApplication(), new InputStandAlonePlatform());
 
+            var editorCamera = new EditorCamera();
+
+            var editorSurface = new RenderingLayer.RenderingSurface()
+            {
+                Cameras = [editorCamera],
+                RenderDebug = true,
+                RenderPostProcessing = false,
+                BlitToScreen = false
+            };
+
+            RenderingLayer.InitializeTargets([gameSurface, editorSurface]);
             RenderingLayer.OnDrawOverlay += () =>
             {
                 Render();
@@ -59,7 +72,7 @@ namespace Editor
                 RenderingLayer.OverlayOptions.Height = _win.PhysicalHeight;
                 UpdateAll();
             };
-            
+
             _gameWindow.OnWindowChanged += (w, h) =>
             {
                 _engine.Update();
@@ -147,7 +160,7 @@ namespace Editor
             ImGui.End();
         }
 
-       
+
 
         private void UpdateAll()
         {

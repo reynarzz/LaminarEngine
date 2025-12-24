@@ -128,6 +128,10 @@ namespace Engine
             }
         }
 
+        bool ICamera.IsAlive => IsAlive;
+
+        RenderTexture ICamera.RenderTexture => throw new NotImplementedException();
+
         protected override void OnAwake()
         {
             base.OnAwake();
