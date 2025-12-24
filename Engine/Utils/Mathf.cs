@@ -18,6 +18,11 @@ namespace Engine
         public static float Clamp(float value, float min, float max)
            => value < min ? min : (value > max ? max : value);
 
+        public static int Clamp(int value, int min, int max)
+        {
+            return value < min ? min : (value > max ? max : value);
+        }
+
         public static float Clamp01(float v) => Clamp(v, 0f, 1f);
 
         public static float Lerp(float a, float b, float t)
@@ -126,7 +131,32 @@ namespace Engine
         {
             return new vec3(MathF.Floor(v.x), MathF.Floor(v.y), MathF.Floor(v.z));
         }
+        public static float Floor(float v)
+        {
+            return MathF.Floor(v);
+        }
 
+        public static int Floor(int v)
+        {
+            return Floor(v);
+        }
+        public static int FloorToInt(float v)
+        {
+            return (int)Floor(v);
+        }
+        public static int RoundToInt(float v)
+        {
+            return (int)MathF.Round(v);
+        }
+        public static int CeilToInt(float v)
+        {
+            return (int)MathF.Ceiling(v);
+        }
+
+        public static int RoundToInt(double v)
+        {
+            return (int)Math.Round(v);
+        }
         public static vec3 Ceil(vec3 v)
         {
             return new vec3(MathF.Ceiling(v.x), MathF.Ceiling(v.y), MathF.Ceiling(v.z));
@@ -368,23 +398,23 @@ namespace Engine
             return Normalize(result);
         }
 
-        private static quat Normalize(quat value)
+        public static quat Normalize(quat value)
         {
             float length = MathF.Sqrt(value.x * value.x + value.y * value.y + value.z * value.z + value.w * value.w);
             return length > 0f ? value / length : value;
         }
 
-        internal static vec3 Min(vec3 a, vec3 b)
+        public static vec3 Min(vec3 a, vec3 b)
         {
             return new vec3(MathF.Min(a.x, b.x), MathF.Min(a.y, b.y), MathF.Min(a.z, b.z));
         }
 
-        internal static vec3 Max(vec3 a, vec3 b)
+        public static vec3 Max(vec3 a, vec3 b)
         {
             return new vec3(MathF.Max(a.x, b.x), MathF.Max(a.y, b.y), MathF.Max(a.z, b.z));
         }
 
-        private static float SmoothNoise1D(float x)
+        public static float SmoothNoise1D(float x)
         {
             int i = (int)MathF.Floor(x);
             float f = x - i;

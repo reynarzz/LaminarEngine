@@ -15,6 +15,7 @@ namespace Editor
     {
         private readonly RenderingLayer.RenderingSurface _surface;
         protected RenderingLayer.RenderingSurface Surface { get; }
+        public Vector2 WindowPositionRender { get; private set; }
         public Vector2 WindowPosition { get; private set; }
         public Vector2 WindowSize { get; private set; }
         private readonly string _viewName;
@@ -55,8 +56,8 @@ namespace Editor
             ImGui.Begin(_viewName, flags);
             WindowSize = ImGui.GetWindowSize();
             var pos = ImGui.GetWindowPos();
-
-            WindowPosition = new Vector2((int)pos.X, (int)pos.Y + (int)ImGui.GetFrameHeight() / 2);
+            WindowPosition = pos;
+            WindowPositionRender = new Vector2((int)pos.X, (int)pos.Y + (int)ImGui.GetFrameHeight() / 2);
             if (_surface.Cameras != null && _surface.Cameras.Length > 0)
             {
                 var cameraRenderTarget = _surface.Cameras[0].OutRenderTexture?.NativeResource;

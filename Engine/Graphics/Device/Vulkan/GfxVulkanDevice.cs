@@ -95,7 +95,7 @@ namespace Engine.Graphics
             throw new NotImplementedException();
         }
 
-        internal override byte[] ReadRenderTargetColors(GfxResource nativeResource)
+        internal override byte[] ReadRenderTargetColors(GfxResource nativeResource, int x, int y, int width, int height)
         {
             throw new NotImplementedException();
         }

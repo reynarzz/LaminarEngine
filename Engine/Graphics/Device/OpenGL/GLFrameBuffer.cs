@@ -59,12 +59,15 @@ namespace Engine.Graphics
         /// <summary>
         /// Read pixels from the framebuffer (useful for screenshots or pixel effects)
         /// </summary>
-        internal byte[] ReadPixels()
+        internal byte[] ReadPixels(int x, int y, int width, int height)
         {
-            byte[] pixels = new byte[Width * Height * 4]; // RGBA8
+            byte[] pixels = new byte[width * height * 4]; 
             glBindFramebuffer(GL_FRAMEBUFFER, Handle);
             GCHandle handle = GCHandle.Alloc(pixels, GCHandleType.Pinned);
-            glReadPixels(0, 0, Width, Height, GL_RGBA, GL_UNSIGNED_BYTE, handle.AddrOfPinnedObject());
+
+           // int flippedY = Height - y - height;
+            glReadPixels(x, y, width, height, GL_RGBA, GL_UNSIGNED_BYTE, handle.AddrOfPinnedObject());
+
             handle.Free();
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
             return pixels;

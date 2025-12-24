@@ -30,7 +30,6 @@ namespace Engine.Layers
             public ICamera[] Cameras { get; set; }
             public bool PickCameraFromSceneGraph { get; set; }
             public RenderTexture RenderTexture { get; set; }
-            public RenderTexture UIRenderTexture { get; set; }
             public bool RenderPostProcessing { get; set; }
             public bool RenderDebug { get; set; }
             public bool BlitToScreen { get; set; }

@@ -11,7 +11,7 @@ namespace GlmNet
         public float x;
         public float y;
         public float z;
-
+        public vec2 xy => new vec2(x, y);
         public static vec3 One { get; } = new vec3(1, 1, 1);
         public static vec3 Zero { get; } = new vec3(0, 0, 0);
         public static vec3 Up { get; } = new vec3(0, 1, 0);

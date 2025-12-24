@@ -298,11 +298,11 @@ namespace Engine.Graphics.OpenGL
             (drawCallData.Geometry as GLGeometry).Unbind();
         }
 
-        internal override byte[] ReadRenderTargetColors(GfxResource nativeResource)
+        internal override byte[] ReadRenderTargetColors(GfxResource nativeResource, int x, int y, int width, int height)
         {
             if (nativeResource is GLFrameBuffer buffer)
             {
-                return buffer.ReadPixels();
+                return buffer.ReadPixels(x, y, width, height);
             }
 
             return null;

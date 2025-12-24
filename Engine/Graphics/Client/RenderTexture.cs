@@ -35,7 +35,9 @@ namespace Engine
 
         public byte[] ReadColorsRGBA()
         {
-            return GfxDeviceManager.Current.ReadRenderTargetColors(NativeResource);
+            //return GfxDeviceManager.Current.ReadRenderTargetColors(NativeResource);
+
+            return null;
         }
     }
 }

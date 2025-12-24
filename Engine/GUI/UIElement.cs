@@ -23,7 +23,15 @@ namespace Engine
 #if DEBUG
             if (Debug.DrawUILines)
             {
-                Debug.DrawBoxUI(RectTransform.Rect.Center, RectTransform.Rect.Size, Color.Red);
+
+
+                vec2 pivotOffset = new vec2(RectTransform.Rect.Width * (0.5f - RectTransform.Pivot.x),
+                                            RectTransform.Rect.Height * (0.5f - RectTransform.Pivot.y));
+
+                vec2 centerWS = new vec2(Transform.WorldPosition.x + pivotOffset.x,
+                                         Transform.WorldPosition.y + pivotOffset.y);
+
+                Debug.DrawBoxUI(centerWS, RectTransform.Rect.Size, Transform.WorldEulerAngles, Color.Red);
             }
 #endif
         }

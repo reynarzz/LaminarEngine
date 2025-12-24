@@ -84,7 +84,10 @@ namespace GlmNet
         {
             return new vec4(lhs.x - rhs, lhs.y - rhs, lhs.z - rhs, lhs.w - rhs);
         }
-
+        public static vec4 operator -(vec4 vec)
+        {
+            return new vec4(-vec.x, -vec.y, -vec.z, -vec.w);
+        }
         public static vec4 operator -(vec4 lhs, vec4 rhs)
         {
             return new vec4(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z, lhs.w - rhs.w);

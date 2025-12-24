@@ -65,8 +65,8 @@ namespace Editor
         {
             base.OnRender();
 
-            _offsetX = (int)WindowPosition.X;
-            _offsetY = (int)WindowPosition.Y;
+            _offsetX = (int)WindowPositionRender.X;
+            _offsetY = (int)WindowPositionRender.Y;
 
             if (_width != (int)WindowSize.X || _height != (int)WindowSize.Y)
             {
