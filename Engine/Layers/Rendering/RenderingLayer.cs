@@ -72,10 +72,24 @@ namespace Engine.Layers
             };
 
             _screenGeometry = GraphicsHelper.GetScreenQuadGeometry();
+
+            // Default surface
+            InitializeSurfaces([new RenderingSurface()
+            {
+               PickCameraFromSceneGraph = true,
+               RenderPostProcessing = true,
+               BlitToScreen = true,
+#if DEBUG
+               RenderDebug = true,
+#endif
+
+            }]);
         }
 
-        internal static void InitializeTargets(RenderingSurface[] configs)
+        internal static void InitializeSurfaces(RenderingSurface[] configs)
         {
+            _renderingSurfaces.Clear();
+
             for (int i = 0; i < configs.Length; i++)
             {
                 var config = configs[i];
@@ -108,9 +122,9 @@ namespace Engine.Layers
                             _sceneCamera = SceneManager.FindComponent<Camera>(findDisabled: false);
                         }
 
-                        if(_sceneCamera != null && _sceneCamera.IsAlive && _sceneCamera.IsEnabled)
+                        if (_sceneCamera != null && _sceneCamera.IsAlive && _sceneCamera.IsEnabled)
                         {
-                            if(surface.Cameras == null)
+                            if (surface.Cameras == null)
                             {
                                 surface.Cameras = new ICamera[1];
                             }
@@ -225,7 +239,7 @@ namespace Engine.Layers
             GfxDeviceManager.Current.Draw(OnDrawOverlay, null);
             GfxDeviceManager.Current.Present();
         }
-      
+
         private RenderingBatchesInfo RenderBatches(ICamera camera, List<Batch2D> batches, ref mat4 VP, RenderTexture sceneRenderTarget, RenderTexture grabBlitTarget = null)
         {
             RenderingBatchesInfo info = default;
@@ -273,7 +287,7 @@ namespace Engine.Layers
 
             return info;
         }
-      
+
         private void RenderPass(Batch2D batch, ref mat4 VP, RenderTexture renderTarget, RenderTexture screenGrabTarget, ICamera camera)
         {
             foreach (var pass in batch.Material.Passes)

@@ -73,7 +73,7 @@ namespace Editor
 
             _editorSceneView = new EditorSceneView("Scene", _editorSurface);
 
-            RenderingLayer.InitializeTargets([_gameSurface, _editorSurface]);
+            RenderingLayer.InitializeSurfaces([_gameSurface, _editorSurface]);
             RenderingLayer.OnDrawOverlay += () =>
             {
                 Render();
