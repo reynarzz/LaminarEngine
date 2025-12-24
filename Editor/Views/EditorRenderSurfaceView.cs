@@ -14,7 +14,7 @@ namespace Editor
     internal class EditorRenderSurfaceView : IEditorWindow
     {
         private readonly RenderingLayer.RenderingSurface _surface;
-
+        protected RenderingLayer.RenderingSurface Surface { get; }
         public Vector2 WindowPosition { get; private set; }
         public Vector2 WindowSize { get; private set; }
         private readonly string _viewName;
@@ -22,8 +22,10 @@ namespace Editor
         public EditorRenderSurfaceView(string viewName, RenderingLayer.RenderingSurface surface)
         {
             _surface = surface;
+            Surface = surface;
             _viewName = viewName;
             _surfaceViewId = $"__SURFACE_VIEW__ID__{_viewName}";
+
         }
 
         public virtual void OnClose()
@@ -36,6 +38,11 @@ namespace Editor
 
         public virtual void OnUpdate()
         {
+        }
+
+        protected virtual void OnWindowRender()
+        {
+
         }
 
         public virtual void OnRender()
@@ -73,6 +80,8 @@ namespace Editor
 
                 ImGui.Text(text);
             }
+
+            OnWindowRender();
 
             ImGui.End();
             ImGui.PopID();

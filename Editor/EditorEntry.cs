@@ -71,7 +71,7 @@ namespace Editor
                 RenderTexture = new RenderTexture(Screen.Width, Screen.Height) { Name = "Editor Render Texture" }
             };
 
-            _editorSceneView = new EditorSceneView("Scene", _editorSurface);
+            _editorSceneView = new EditorSceneView("Scene", _editorSurface, _editorCamera);
 
             RenderingLayer.InitializeSurfaces([_gameSurface, _editorSurface]);
             RenderingLayer.OnDrawOverlay += () =>
