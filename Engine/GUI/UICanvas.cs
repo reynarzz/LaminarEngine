@@ -54,13 +54,15 @@ namespace Engine.GUI
         private readonly Action<IPointerUpOutsideRectEvent, PointerEventData> _pointerUpOutsideRectEventInvoker = (p, d) => p.OnPointerUpOutsideRect(d);
         private readonly Action<IPointerDragEvent, PointerEventData> _pointerDragEventInvoker = (p, d) => p.OnPointerDrag(d);
 
-        public static mat4 UIViewProj;
+        public static float CanvasWidth = 512 * 3;
+        public static float CanvasHeight = 288 * 3;
+        public static mat4 UIViewProj { get; } = MathUtils.Ortho(0, CanvasWidth, CanvasHeight , 0, 0, -1);
         private static bool _staticInitialized = false;
         protected override void OnAwake()
         {
             base.OnAwake();
             RectTransform = AddComponent<RectTransform>();
-            RectTransform.Size = new vec2(512 * 3, 288 * 3);
+            RectTransform.Size = new vec2(CanvasWidth, CanvasHeight);
             RectTransform.Pivot = default;
             RectTransform.Recalculate(null);
             // Window.OnWindowChanged += Window_OnWindowChanged;
@@ -79,7 +81,7 @@ namespace Engine.GUI
 
         private void CanvasValues()
         {
-            UIViewProj = MathUtils.Ortho(0, RectTransform.Size.x, RectTransform.Size.y, 0, 0, -1);
+            //UIViewProj = MathUtils.Ortho(0, RectTransform.Size.x, RectTransform.Size.y, 0, 0, -1);
         }
 
         private void EventRecursive(UIElement element, RectTransform parent, ref bool mouseEventHandled)

@@ -13,7 +13,7 @@ namespace Game
         // GameIcon, it should be baked into the game data.
         // Fix player getting stuck in wall corners due to ground raycast,
         //     :this can be solved by checking if the player is colliding with a wall, if so, then push him away the wall.
-        // Refactor rendering layer to render to any number of windows, with a config struct (use a list of windows targets)
+        // Refactor renderingLayer to use renderData.
 
         // For the game:
         // Improve game architecture.

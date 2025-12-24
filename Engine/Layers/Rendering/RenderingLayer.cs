@@ -30,11 +30,14 @@ namespace Engine.Layers
             public ICamera[] Cameras { get; set; }
             public bool PickCameraFromSceneGraph { get; set; }
             public RenderTexture RenderTexture { get; set; }
+            public RenderTexture UIRenderTexture { get; set; }
             public bool RenderPostProcessing { get; set; }
             public bool RenderDebug { get; set; }
             public bool BlitToScreen { get; set; }
-
+            public bool RenderUI { get; set; }
+            public mat4 UIViewProj;
         }
+
         internal static DrawOverlayOptions OverlayOptions { get; } = new DrawOverlayOptions();
 
         private static readonly List<RenderingSurface> _renderingSurfaces = new();
@@ -79,10 +82,11 @@ namespace Engine.Layers
                PickCameraFromSceneGraph = true,
                RenderPostProcessing = true,
                BlitToScreen = true,
+               RenderUI = true,
+               UIViewProj = UICanvas.UIViewProj,
 #if DEBUG
                RenderDebug = true,
 #endif
-
             }]);
         }
 
@@ -107,7 +111,6 @@ namespace Engine.Layers
         {
             EngineInfo.Renderer.Clear();
 
-            bool isSceneGraphCollected = false;
             var batches = default(List<Batch2D>);
             var uibatches = default(List<Batch2D>);
 
@@ -176,10 +179,8 @@ namespace Engine.Layers
                 RenderTarget = finalRenderTexture.NativeResource
             });
 
-
             if (batches == null)
             {
-
                 SceneManager.OnPreRenderUpdate();
 
                 // TODO: improve this, don't ask for renderers but add/remove with events.
@@ -201,19 +202,25 @@ namespace Engine.Layers
             var VP = camera.Projection * camera.ViewMatrix;
 
             var geoBatchesInfo = RenderBatches(camera, batches, ref VP, finalRenderTexture);
-            var uiBatchesInfo = RenderBatches(camera, uibatches, ref UICanvas.UIViewProj, finalRenderTexture, finalRenderTexture);
+
+            var uiBatchesInfo = default(RenderingBatchesInfo);
+            if (surface.RenderUI)
+            {
+                RenderBatches(camera, uibatches, ref surface.UIViewProj, finalRenderTexture, finalRenderTexture);
+                EngineInfo.Renderer.UIBatches = uiBatchesInfo.BatchesCount;
+                EngineInfo.Renderer.UIGrabScreenPass = uiBatchesInfo.ScreenGrabPasses;
+            }
 #if DEBUG
             EngineInfo.Renderer.WBatches = geoBatchesInfo.BatchesCount;
             EngineInfo.Renderer.GrabScreenPass = geoBatchesInfo.ScreenGrabPasses;
-            EngineInfo.Renderer.UIBatches = uiBatchesInfo.BatchesCount;
-            EngineInfo.Renderer.UIGrabScreenPass = uiBatchesInfo.ScreenGrabPasses;
+
             EngineInfo.Renderer.PostProcessingPasses = PostProcessingStack.Passes.Count;
             EngineInfo.Renderer.SavedByBatching = (geoBatchesInfo.TotalRenderers - geoBatchesInfo.BatchesCount) * (uiBatchesInfo.ScreenGrabPasses + 1);
 
             if (surface.RenderDebug)
             {
                 SceneManager.OnDrawGizmos();
-                Debug.DrawGeometries(VP, UICanvas.UIViewProj, finalRenderTexture.NativeResource);
+                Debug.DrawGeometries(VP, surface.UIViewProj, finalRenderTexture.NativeResource);
             }
 #endif
             if (surface.RenderPostProcessing)

@@ -43,7 +43,7 @@ namespace Editor
                 _screenSize.X = (int)size.X;
                 _screenSize.Y = (int)size.Y;
 
-                Projection = MathUtils.Perspective(glm.radians(60.0f),size.X / size.Y,0.01f,1000.0f);
+                Projection = MathUtils.Perspective(glm.radians(60.0f),size.X / size.Y,0.01f, 1000.0f);
             }
 
             var io = ImGui.GetIO();

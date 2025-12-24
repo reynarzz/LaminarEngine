@@ -1,5 +1,6 @@
 ﻿using Editor.Views;
 using Engine;
+using Engine.GUI;
 using Engine.Layers;
 using Engine.Layers.Input;
 using Game;
@@ -56,6 +57,8 @@ namespace Editor
             {
                 PickCameraFromSceneGraph = true,
                 RenderPostProcessing = true,
+                RenderUI = true,
+                UIViewProj = UICanvas.UIViewProj
             };
 
             _gameWindow = new EditorGameView(_win, _gameSurface);
@@ -66,6 +69,7 @@ namespace Editor
                 Cameras = [_editorCamera],
                 RenderDebug = true,
                 RenderPostProcessing = false,
+                RenderUI = true,
                 BlitToScreen = false,
                 RenderTexture = new RenderTexture(1920, 1080) { Name = "Editor Render Texture" }
             };
