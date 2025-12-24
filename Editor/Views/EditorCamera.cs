@@ -63,13 +63,15 @@ namespace Editor
 
             if (ImGui.IsMouseDown(ImGuiMouseButton.Middle))
             {
-                float panSpeed = 0.002f * _distance;
+                float fovY = glm.radians(60.0f);
+                float worldHeight = 2.0f * _distance * MathF.Tan(fovY * 0.5f);
+                float unitsPerPixel = worldHeight / _screenSize.Y;
 
                 vec3 right = GetRight();
                 vec3 up = GetUp();
 
-                _pivot -= right * mouseDelta.x * panSpeed;
-                _pivot += up * mouseDelta.y * panSpeed;
+                _pivot -= right * mouseDelta.x * unitsPerPixel;
+                _pivot += up * mouseDelta.y * unitsPerPixel;
             }
 
             if (io.MouseWheel != 0)
