@@ -1,4 +1,5 @@
 ﻿using Engine;
+using Engine.Utils;
 using GlmNet;
 using ImGuiNET;
 using System;
@@ -30,7 +31,7 @@ namespace Editor
 
         public EditorCamera(float aspect = 16f / 9f)
         {
-            Projection = glm.perspective(glm.radians(60.0f), aspect, 0.1f, 1000.0f);
+            Projection = MathUtils.Perspective(glm.radians(60.0f), aspect, 0.1f, 1000.0f);
             UpdateView();
         }
 
@@ -43,19 +44,22 @@ namespace Editor
                 _screenSize.X = (int)size.X;
                 _screenSize.Y = (int)size.Y;
 
-                Projection = glm.perspective(glm.radians(60.0f), size.X / size.Y, 0.1f, 1000.0f);
+                Projection = MathUtils.Perspective(glm.radians(60.0f), size.X / size.Y, 0.1f, 1000.0f);
             }
 
             var io = ImGui.GetIO();
             if (!ImGui.IsWindowHovered() && !ImGui.IsWindowFocused())
                 return;
 
-            vec2 mouseDelta = new vec2(io.MouseDelta.X, io.MouseDelta.Y);
+            Vector2 fbScale = new Vector2(1, 1);// io.DisplayFramebufferScale;
+
+            vec2 mouseDelta = new vec2(io.MouseDelta.X * fbScale.X, io.MouseDelta.Y * fbScale.Y);
 
             if (ImGui.IsMouseDown(ImGuiMouseButton.Right))
             {
                 float sensitivity = 0.005f;
-                _yaw -= mouseDelta.x * sensitivity;
+
+                _yaw += mouseDelta.x * sensitivity;
                 _pitch -= mouseDelta.y * sensitivity;
 
                 _pitch = Mathf.Clamp(_pitch, -1.55f, 1.55f);
@@ -64,14 +68,18 @@ namespace Editor
             if (ImGui.IsMouseDown(ImGuiMouseButton.Middle))
             {
                 float fovY = glm.radians(60.0f);
+
                 float worldHeight = 2.0f * _distance * MathF.Tan(fovY * 0.5f);
-                float unitsPerPixel = worldHeight / _screenSize.Y;
+                float worldWidth = worldHeight * (_screenSize.X / _screenSize.Y);
+
+                float unitsPerPixelY = worldHeight / _screenSize.Y;
+                float unitsPerPixelX = worldWidth / _screenSize.X;
 
                 vec3 right = GetRight();
                 vec3 up = GetUp();
 
-                _pivot -= right * mouseDelta.x * unitsPerPixel;
-                _pivot += up * mouseDelta.y * unitsPerPixel;
+                _pivot -= right * mouseDelta.x * unitsPerPixelX;
+                _pivot += up * mouseDelta.y * unitsPerPixelY;
             }
 
             if (io.MouseWheel != 0)
@@ -89,19 +97,18 @@ namespace Editor
             vec3 direction = new vec3(MathF.Cos(_pitch) * MathF.Sin(_yaw),
                                       MathF.Sin(_pitch),
                                       MathF.Cos(_pitch) * MathF.Cos(_yaw));
-
             vec3 position = _pivot - direction * _distance;
-            ViewMatrix = glm.lookAt(position, _pivot, new vec3(0, 1, 0));
+            ViewMatrix = MathUtils.LookAt(position, _pivot, new vec3(0, 1, 0));
         }
 
         private vec3 GetRight()
         {
-            return glm.normalize(glm.cross(GetForward(), new vec3(0, 1, 0)));
+            return glm.normalize(glm.cross(new vec3(0, 1, 0), GetForward()));
         }
 
         private vec3 GetUp()
         {
-            return glm.normalize(glm.cross(GetRight(), GetForward()));
+            return glm.normalize(glm.cross(GetForward(), GetRight()));
         }
 
         private vec3 GetForward()
@@ -111,11 +118,10 @@ namespace Editor
 
         private vec3 GetPosition()
         {
-            vec3 dir = new vec3(MathF.Cos(_pitch) * MathF.Sin(_yaw),
-                                MathF.Sin(_pitch),
-                                MathF.Cos(_pitch) * MathF.Cos(_yaw));
-
-            return _pivot - dir * _distance;
+            vec3 direction = new vec3(MathF.Cos(_pitch) * MathF.Sin(_yaw),
+                                       MathF.Sin(_pitch),
+                                       MathF.Cos(_pitch) * MathF.Cos(_yaw));
+            return _pivot - direction * _distance;
         }
     }
 }

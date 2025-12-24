@@ -125,5 +125,22 @@ namespace Engine.Utils
         {
             return new vec3(vec.X, vec.Y, 0);
         }
+
+        public static mat4 LookAt(vec3 eye, vec3 target, vec3 up)
+        {
+            vec3 zaxis = glm.normalize(target - eye);      
+            vec3 xaxis = glm.normalize(glm.cross(up, zaxis));
+            vec3 yaxis = glm.cross(zaxis, xaxis);
+
+            mat4 m = new mat4(1.0f);
+            m[0, 0] = xaxis.x; m[1, 0] = xaxis.y; m[2, 0] = xaxis.z;
+            m[0, 1] = yaxis.x; m[1, 1] = yaxis.y; m[2, 1] = yaxis.z;
+            m[0, 2] = zaxis.x; m[1, 2] = zaxis.y; m[2, 2] = zaxis.z;
+
+            m[3, 0] = -glm.dot(xaxis, eye);
+            m[3, 1] = -glm.dot(yaxis, eye);
+            m[3, 2] = -glm.dot(zaxis, eye);
+            return m;
+        }
     }
 }
