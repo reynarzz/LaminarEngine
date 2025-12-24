@@ -94,7 +94,8 @@ namespace Editor
 
             DrawVars(entityID, target, value, type, propertyName, isReadOnly, prop, cursorX, index, width);
         }
-        public static void DrawVars(string objectId, object target, object value, Type type, string propertyName, bool isReadOnly, MemberInfo prop, float cursorX, int index, float width)
+        public static void DrawVars(string objectId, object target, object value, Type type, string propertyName,
+                                    bool isReadOnly, MemberInfo prop, float cursorX, int index, float width)
         {
             if (value == null)
             {

@@ -332,7 +332,7 @@ namespace Editor.Utils
             var size = list.Count;
 
             ImGui.BeginDisabled(size - 1 < 0);
-            if (ImGui.Button("-"))
+            if (ImGui.Button("-", new Vector2(22, 22)))
             {
                 changed = true;
 
@@ -343,8 +343,7 @@ namespace Editor.Utils
             }
             ImGui.EndDisabled();
             ImGui.SameLine();
-
-            if (ImGui.Button("+"))
+            if (ImGui.Button("+", new Vector2(22, 22)))
             {
                 changed = true;
                 onAddCallback(list, size + 1);
@@ -378,7 +377,7 @@ namespace Editor.Utils
             {
                 float prevCursorY = ImGui.GetCursorPosY();
                 bool show;
-                if (ImGui.Button($"X##_DELETE_BUTTON_{i}_{name}"))
+                if (ImGui.Button($"X##_DELETE_BUTTON_{i}_{name}", new Vector2(22, 22)))
                 {
                     onRemoveCallback(list, i);
                     changed = true;

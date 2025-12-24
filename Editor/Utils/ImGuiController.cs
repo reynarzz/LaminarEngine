@@ -128,7 +128,7 @@ namespace Editor
             style.WindowPadding = new Vector2(4.0f, 5.0f);
             style.WindowRounding = rounding;
             style.WindowBorderSize = 0.0f;
-            style.WindowMinSize = new Vector2(32.0f, 32.0f);
+            style.WindowMinSize = new Vector2(300.0f, 100.0f);
             style.WindowTitleAlign = new Vector2(0.0f, 0.5f);
             style.WindowMenuButtonPosition = ImGuiDir.None;
             style.ChildRounding = rounding;
