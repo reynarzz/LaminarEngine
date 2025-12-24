@@ -60,10 +60,10 @@ namespace Game
                 
             }
         }
-        [ExposeEditorField] public AStruct StructType { get; set; }
-        [ExposeEditorField] public List<TestClass> _TestCLassList { get; set; } = new();
-        //[ExposeEditorField] public TestClass TestClassObj = new TestClass();
-        //[ExposeEditorField] public List<string> StringTest { get; set; } = new();
+        //[ExposeEditorField] public AStruct StructType { get; set; }
+        [ExposeEditorField] public List<TestClass> _TestCLassList { get; set; }
+        [ExposeEditorField] public TestClass TestClassObj;
+        [ExposeEditorField] public List<string> StringTest;
         //[ExposeEditorField] public List<int> IntTest { get; set; } = new();
         //[ExposeEditorField] public List<Body2DType> EnumList { get; set; } = new();
         //[ExposeEditorField] public mat2 mat2Test { get; set; }
@@ -71,6 +71,7 @@ namespace Game
         //[ExposeEditorField] public mat4 mat4Test { get; set; }
         //[ExposeEditorField] private List<List<int>> _nestedList;
 
-        //public Body2DType[] EnumArray { get; set; } = new Body2DType[5];
+        [ExposeEditorField] public Body2DType[] EnumArray { get; set; }
+        [ExposeEditorField] public TestClass[] ClassArray { get; set; } 
     }
 }

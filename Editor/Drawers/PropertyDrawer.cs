@@ -94,7 +94,7 @@ namespace Editor
 
             DrawVars(entityID, target, value, type, propertyName, isReadOnly, prop, cursorX, index, width);
         }
-        public static void DrawVars(string entityID, object target, object value, Type type, string propertyName, bool isReadOnly, MemberInfo prop, float cursorX, int index, float width)
+        public static void DrawVars(string objectId, object target, object value, Type type, string propertyName, bool isReadOnly, MemberInfo prop, float cursorX, int index, float width)
         {
             if (value == null)
             {
@@ -109,7 +109,7 @@ namespace Editor
                 flags = ImGuiTreeNodeFlags.OpenOnArrow;
             }
 
-            if (!ImGui.TreeNodeEx($"{propertyName}##{entityID}{index}", flags))
+            if (!ImGui.TreeNodeEx($"{propertyName}##{objectId}{index}", flags))
                 return;
 
             // Context menu
@@ -208,85 +208,92 @@ namespace Editor
             }
             else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
             {
-                if (value is IList list)
+                if (value == null)
                 {
-                    var arg = list.GetType().GetGenericArguments().FirstOrDefault();
+                    value = GetDefaultValue(type);
+                }
 
-                    if (arg == null || !arg.IsGenericType)
+                var list = value as IList;
+
+                var elementType = type.GetGenericArguments().FirstOrDefault();
+
+                DrawList(objectId, propertyName, list, value, elementType, prop, cursorX, OnAdd, OnRemove, OnRemoveCount);
+
+                void OnAdd(IList list, int totalLength)
+                {
+                    while (list.Count < totalLength)
                     {
-                        ImGui.SameLine();
-                        ImGui.SetCursorPosX(Math.Max(_xPosOffset, ImGui.GetCursorPosX()));
+                        list.Add(GetDefaultValue(elementType));
+                    }
+                }
 
-                        var listType = value.GetType();
-                        var itemType = default(Type);
+                void OnRemove(IList list, int itemIndex)
+                {
+                    if (list.Count > 0)
+                    {
+                        list.RemoveAt(itemIndex);
+                    }
+                }
 
-                        if (listType.IsGenericType)
-                        {
-                            Type genericDef = listType.GetGenericTypeDefinition();
-                            if (typeof(IList<>).IsAssignableFrom(genericDef) || genericDef == typeof(List<>))
-                            {
-                                itemType = listType.GetGenericArguments()[0];
-                            }
-                        }
-
-                        EditorGuiFieldsResolver.DrawListField(propertyName, list, false, OnAdd, OnRemove, OnRemoveCount,
-                        (index, itemWidth, item) =>
-                        {
-                            if (item == null)
-                            {
-                                item = GetDefaultValue(itemType);
-                            }
-
-                            DrawVars(entityID, list, item, itemType, $"##__{index}_item", false, prop, cursorX, index, itemWidth);
-
-                            return false;
-                        });
-
-                        void OnAdd()
-                        {
-                            list.Add(GetDefaultValue(arg));
-                        }
-
-                        void OnRemove(int itemIndex)
-                        {
-                            if (list.Count > 0)
-                            {
-                                list.RemoveAt(itemIndex);
-                            }
-                        }
-
-                        void OnRemoveCount(int count)
-                        {
-                            for (int i = list.Count - 1; i >= count; --i)
-                            {
-                                list.RemoveAt(i);
-                            }
-                        }
+                void OnRemoveCount(IList list, int totalLength)
+                {
+                    for (int i = list.Count - 1; i >= totalLength; --i)
+                    {
+                        list.RemoveAt(i);
                     }
                 }
             }
             else if (type.IsArray)
             {
-                ImGui.SameLine();
-                ImGui.SetCursorPosX(Math.Max(_xPosOffset, ImGui.GetCursorPosX()));
+                if (value == null)
+                {
+                    value = Array.CreateInstance(type.GetElementType(), 0);
+                }
 
-                int size = ((Array)target).Length;
-                //EditorGuiFieldsResolver.DrawListField(propertyName, size, () =>
-                //{
-                //    // Add
-                //}, (x) =>
-                //{
-                //    // Remove
-                //}, (x, y, item) =>
-                //{
-                //    // Draw callback
+                var array = value as Array;
 
-                //    return false;
-                //}, false);
+                var elementType = type.GetElementType();
 
-                // prop.SetValue(obj, list);
+                DrawList(objectId, propertyName, array, value, elementType, prop, cursorX, OnAdd, OnRemove, OnRemoveCount);
+
+                void OnAdd(IList list, int totalLength)
+                {
+                    var array = list as Array;
+
+                    var copy = Array.CreateInstance(elementType, totalLength);
+                    Array.Copy(array, copy, array.Length);
+                    value = copy;
+                    SetMemberValueSafe(target, value, prop, index);
+                }
+
+                void OnRemove(IList list, int itemIndex)
+                {
+                    var array = list as Array;
+                    var copy = Array.CreateInstance(elementType, array.Length - 1);
+
+                    int copyIndex = 0;
+                    for (int i = 0; i < list.Count; i++)
+                    {
+                        if (i != itemIndex)
+                        {
+                            copy.SetValue(array.GetValue(i), copyIndex);
+                            copyIndex++;
+                        }
+                    }
+
+                    value = copy;
+                    SetMemberValueSafe(target, value, prop, index);
+                }
+
+                void OnRemoveCount(IList list, int totalLength)
+                {
+                    var array = list as Array;
+                    var copy = Array.CreateInstance(elementType, totalLength);
+                    Array.Copy(array, copy, totalLength);
+                    value = copy;
+                    SetMemberValueSafe(target, value, prop, index);
+                }
             }
-            // class
             else if (type.IsClass || IsUserDefinedStruct(type))
             {
                 var members = ReflectionUtils.GetAllMembersWithAttribute<ExposeEditorFieldAttribute>(type, true, true);
@@ -294,29 +301,41 @@ namespace Editor
                 var propIndex = index;
                 foreach (var subProp in members)
                 {
-                    DrawVars(entityID, value, subProp, cursorX, index++, width, true);
+                    DrawVars(objectId, value, subProp, cursorX, index++, width, true);
                 }
                 SetMemberValueSafe(target, value, prop, propIndex);
             }
 
             ImGui.TreePop();
         }
-        private static int CalcMaxTextLengthFast(string text, float maxWidth)
+
+        private static void DrawList(string objectId, string propertyName, IList list, object value, Type elemenType,
+                                     MemberInfo prop, float cursorX, Action<IList, int> onAddCallback, Action<IList, int> onRemoveCallback,
+                                     Action<IList, int> removeCount)
         {
-            float width = 0f;
-            int count = 0;
-
-            foreach (char c in text)
+            if (elemenType == null || !elemenType.IsGenericType)
             {
-                float charWidth = ImGui.CalcTextSize(c.ToString()).X;
-                if (width + charWidth > maxWidth)
-                    break;
+                ImGui.SameLine();
+                ImGui.SetCursorPosX(Math.Max(_xPosOffset, ImGui.GetCursorPosX()));
 
-                width += charWidth;
-                count++;
+                var listType = value.GetType();
+
+                EditorGuiFieldsResolver.DrawListField(propertyName, list, false, onAddCallback, onRemoveCallback, removeCount,
+                (index, itemWidth, item) =>
+                {
+                    if (item == null)
+                    {
+                        item = GetDefaultValue(elemenType);
+                    }
+
+                    DrawVars(objectId, list, item, elemenType, $"##__{index}_item", false, prop, cursorX, index, itemWidth);
+
+                    return false;
+                });
+
             }
-            return count;
         }
+
         private static void DrawEObjectSlot(EObject eObject, Type valueType, Func<object, bool> setValue, float width = -1)
         {
             ImGui.SameLine();
@@ -520,14 +539,14 @@ namespace Editor
                 {
                     try
                     {
-                        return Activator.CreateInstance(type)!;
+                        return Activator.CreateInstance(type);
                     }
                     catch (Exception e)
                     {
                         return null;
                     }
                 }
-                return null!;
+                return null;
             }
         }
 

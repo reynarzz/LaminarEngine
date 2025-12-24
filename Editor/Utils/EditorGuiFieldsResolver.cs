@@ -321,8 +321,8 @@ namespace Editor.Utils
             return changed;
         }
 
-        public static bool DrawListField(string name, IList list, bool itemAsTree, Action onAddCallback, Action<int> onRemoveCallback, 
-                                         Action<int> removeCount, Func<int, float, object, bool> drawCallback)
+        public static bool DrawListField(string name, IList list, bool itemAsTree, Action<IList, int> onAddCallback, Action<IList, int> onRemoveCallback,
+                                         Action<IList, int> removeCount, Func<int, float, object, bool> drawCallback)
         {
 
             ImGui.SameLine();
@@ -330,18 +330,24 @@ namespace Editor.Utils
 
             bool changed = false;
             var size = list.Count;
+
+            ImGui.BeginDisabled(size - 1 < 0);
             if (ImGui.Button("-"))
             {
                 changed = true;
-                onRemoveCallback(size - 1);
-            }
 
+                if(size - 1 >= 0)
+                {
+                    onRemoveCallback(list, size - 1);
+                }
+            }
+            ImGui.EndDisabled();
             ImGui.SameLine();
 
             if (ImGui.Button("+"))
             {
                 changed = true;
-                onAddCallback();
+                onAddCallback(list, size + 1);
             }
 
             ImGui.SameLine();
@@ -355,14 +361,11 @@ namespace Editor.Utils
                 {
                     if (size < val)
                     {
-                        for (int i = size; i < val; i++)
-                        {
-                            onAddCallback();
-                        }
+                        onAddCallback(list, val);
                     }
                     else if (size > val)
                     {
-                        removeCount(val);
+                        removeCount(list, val);
                     }
 
                     size = val;
@@ -377,7 +380,7 @@ namespace Editor.Utils
                 bool show;
                 if (ImGui.Button($"X##_DELETE_BUTTON_{i}_{name}"))
                 {
-                    onRemoveCallback(i);
+                    onRemoveCallback(list, i);
                     changed = true;
                     break;
                 }
