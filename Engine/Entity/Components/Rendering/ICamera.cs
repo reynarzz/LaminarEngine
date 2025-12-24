@@ -15,5 +15,6 @@ namespace Engine
         internal bool IsAlive { get;  }
         public Color BackgroundColor { get; }
         public RenderTexture RenderTexture { get; }
+        public RenderTexture OutRenderTexture { get; internal set; }
     }
 }

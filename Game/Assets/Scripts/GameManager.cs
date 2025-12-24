@@ -242,6 +242,7 @@ namespace Game
                 Camera.OrthographicSize = GameResolution.y / 2.0f / 16.0f;
                 Camera.ProjectionMode = CameraProjectionMode.Orthographic;
                 Camera.RenderTexture = new RenderTexture((int)GameResolution.x * 2, (int)GameResolution.y * 2);
+                Camera.RenderTexture.Name = "Game Camera RenderTexture";
                 Camera.Transform.Parent = Transform;
             }
 

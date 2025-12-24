@@ -74,10 +74,16 @@ namespace Editor
             _offsetX = (int)pos.X;
             _offsetY = (int)pos.Y + (int)ImGui.GetFrameHeight() / 2;
 
-
             if (_surface.Cameras != null && _surface.Cameras.Length > 0)
             {
-                var frameBuffer = _surface.RenderTexture.NativeResource as GLFrameBuffer;
+                var cameraRenderTarget = _surface.Cameras[0].OutRenderTexture?.NativeResource;
+
+                if(cameraRenderTarget == null)
+                {
+                    cameraRenderTarget = _surface.RenderTexture.NativeResource;
+                }
+
+                var frameBuffer = cameraRenderTarget as GLFrameBuffer;
                 ImGui.Image((nint)frameBuffer.ColorTexture.Handle, ImGui.GetContentRegionAvail(), new Vector2(0, 1), new Vector2(1, 0));
             }
             else

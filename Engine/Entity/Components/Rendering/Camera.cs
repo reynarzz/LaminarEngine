@@ -108,6 +108,8 @@ namespace Engine
         [ExposeEditorField] public float NearPlane { get; set; } = 0.1f;
         [ExposeEditorField] public float FarPlane { get; set; } = 100;
         [ExposeEditorField] public RenderTexture RenderTexture { get; set; }
+        RenderTexture ICamera.OutRenderTexture { get; set; }
+
         [ExposeEditorField] public int Priority { get; set; } = 0;
 
       
@@ -129,8 +131,6 @@ namespace Engine
         }
 
         bool ICamera.IsAlive => IsAlive;
-
-        RenderTexture ICamera.RenderTexture => throw new NotImplementedException();
 
         protected override void OnAwake()
         {

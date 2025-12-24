@@ -45,12 +45,13 @@ namespace Editor
 
             new GameCooker.GameProject().Initialize(new GameCooker.ProjectConfig() { ProjectFolderRoot = root });
 
-            var gameSurface = new RenderingLayer.RenderingSurface();
-
-            _gameWindow = new EditorGameView(_win, gameSurface);
-            _engine = new GFSEngine(_gameWindow, new GameApplication(), new InputStandAlonePlatform());
-
             var editorCamera = new EditorCamera();
+
+            var gameSurface = new RenderingLayer.RenderingSurface()
+            {
+                PickCameraFromSceneGraph = true,
+                RenderPostProcessing = true,
+            };
 
             var editorSurface = new RenderingLayer.RenderingSurface()
             {
@@ -59,6 +60,9 @@ namespace Editor
                 RenderPostProcessing = false,
                 BlitToScreen = false
             };
+
+            _gameWindow = new EditorGameView(_win, gameSurface);
+            _engine = new GFSEngine(_gameWindow, new GameApplication(), new InputStandAlonePlatform());
 
             RenderingLayer.InitializeTargets([gameSurface, editorSurface]);
             RenderingLayer.OnDrawOverlay += () =>

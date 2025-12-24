@@ -9,8 +9,9 @@ namespace Editor
         public mat4 Projection => mat4.identity();
         public mat4 ViewMatrix => mat4.identity();
         public Color BackgroundColor => Color.Red;
-        public RenderTexture RenderTexture => null;
+        public RenderTexture RenderTexture { get; set; }
         public bool IsAlive { get; } = true;
+        RenderTexture ICamera.OutRenderTexture { get; set; }
 
         public void Update()
         {
