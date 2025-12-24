@@ -117,7 +117,7 @@ namespace Engine.Layers
                 {
                     if (surface.PickCameraFromSceneGraph)
                     {
-                        if (_sceneCamera == null)
+                        if (_sceneCamera == null || !_sceneCamera.IsAlive)
                         {
                             _sceneCamera = SceneManager.FindComponent<Camera>(findDisabled: false);
                         }

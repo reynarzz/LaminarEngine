@@ -61,14 +61,13 @@ namespace Editor
             _gameWindow = new EditorGameView(_win, _gameSurface);
             _engine = new GFSEngine(_gameWindow, new GameApplication(), new InputStandAlonePlatform());
 
-
             _editorSurface = new RenderingLayer.RenderingSurface()
             {
                 Cameras = [_editorCamera],
                 RenderDebug = true,
                 RenderPostProcessing = false,
                 BlitToScreen = false,
-                RenderTexture = new RenderTexture(Screen.Width, Screen.Height) { Name = "Editor Render Texture" }
+                RenderTexture = new RenderTexture(1920, 1080) { Name = "Editor Render Texture" }
             };
 
             _editorSceneView = new EditorSceneView("Scene", _editorSurface, _editorCamera);
@@ -108,8 +107,6 @@ namespace Editor
             // Render ImGui here:
 
             DockSpace();
-
-            //ImGui.Begin("nnnn");
 
             //_node.Draw();
             //ImGui.End   ();

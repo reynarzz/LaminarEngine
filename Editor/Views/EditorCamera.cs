@@ -30,7 +30,7 @@ namespace Editor
 
         public EditorCamera(float aspect = 16f / 9f)
         {
-            Projection = MathUtils.Perspective(glm.radians(60.0f), aspect, 0.1f, 1000.0f);
+            Projection = MathUtils.Perspective(glm.radians(60.0f), aspect, 0.01f, 1000.0f);
             UpdateView();
         }
 
@@ -43,11 +43,7 @@ namespace Editor
                 _screenSize.X = (int)size.X;
                 _screenSize.Y = (int)size.Y;
 
-                Projection = MathUtils.Perspective(
-                    glm.radians(60.0f),
-                    size.X / size.Y,
-                    0.1f,
-                    1000.0f);
+                Projection = MathUtils.Perspective(glm.radians(60.0f),size.X / size.Y,0.01f,1000.0f);
             }
 
             var io = ImGui.GetIO();
@@ -71,7 +67,7 @@ namespace Editor
 
                 _rotation = Quaternion.Normalize(qYaw * qPitch * _rotation);
             }
-
+           
             if (ImGui.IsMouseDown(ImGuiMouseButton.Middle))
             {
                 float fovY = glm.radians(60.0f);
@@ -98,7 +94,28 @@ namespace Editor
 
             UpdateView();
         }
+        public void MoveThirdPerson(float deltaTime, float speed = 5.0f)
+        {
+            vec3 move = new vec3(0, 0, 0);
 
+            var io = ImGui.GetIO();
+
+            // Build movement vector from keys
+            if (ImGui.IsKeyDown(ImGuiKey.W)) move += GetForward();
+            if (ImGui.IsKeyDown(ImGuiKey.S)) move -= GetForward();
+            if (ImGui.IsKeyDown(ImGuiKey.D)) move += GetRight();
+            if (ImGui.IsKeyDown(ImGuiKey.A)) move -= GetRight();
+
+            if (move.length() > 0.0f)
+            {
+                // Flatten movement to XZ plane (ground-aligned)
+                move.y = 0.0f;
+                move = glm.normalize(move);
+
+                _pivot += move * speed * deltaTime;
+                UpdateView();
+            }
+        }
         private void UpdateView()
         {
             vec3 forward = GetForward();
