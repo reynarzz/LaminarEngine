@@ -32,7 +32,16 @@ namespace Engine.Layers
             public int Width { get; set; }
             public int Height { get; set; }
         }
+        internal class RenderingSurfaceConfig
+        {
+            public ICamera[] Cameras { get; set; }
+            public bool RenderPostProcessing { get; set; }
+            public bool RenderDebugLines { get; set; }
+        }
+
         internal static DrawOverlayOptions OverlayOptions { get; } = new DrawOverlayOptions();
+        private static readonly List<RenderingSurfaceConfig> _renderingSurfaces = new();
+
         public RenderingLayer() : base()
         {
             _drawPostProcessCallback = PostProcessDraw;
@@ -66,6 +75,11 @@ namespace Engine.Layers
             };
 
             _screenGeometry = GraphicsHelper.GetScreenQuadGeometry();
+        }
+
+        internal static void InitializeTargets(RenderingSurfaceConfig[] configs)
+        {
+            _renderingSurfaces.AddRange(configs);
         }
 
         internal override void UpdateLayer()

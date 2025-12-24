@@ -43,6 +43,9 @@ namespace Engine.Utils
             return view;
         }
 
+        /// <summary>
+        /// Left hand orthographic projection.
+        /// </summary>
         public static mat4 Ortho(float left, float right, float bottom, float top, float near, float far)
         {
             mat4 result = mat4.identity();
@@ -57,16 +60,18 @@ namespace Engine.Utils
             return result;
         }
 
+        /// <summary>
+        /// Left hand perspective projection.
+        /// </summary>
         public static mat4 Perspective(float fovY, float aspect, float near, float far)
         {
-            float f = 1.0f / (float)Math.Tan(fovY / 2.0f);
+            float f = 1.0f / (float)Math.Tan(fovY * 0.5f);
             mat4 result = mat4.identity();
-
             result[0, 0] = f / aspect;
             result[1, 1] = f;
-            result[2, 2] = (far + near) / (near - far);
-            result[2, 3] = -1;
-            result[3, 2] = (2 * far * near) / (near - far);
+            result[2, 2] = far / (far - near);
+            result[2, 3] = 1.0f;
+            result[3, 2] = (-near * far) / (far - near);
 
             return result;
         }

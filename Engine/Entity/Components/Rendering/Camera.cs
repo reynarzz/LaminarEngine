@@ -62,17 +62,14 @@ namespace Engine
     }
 
     [UniqueComponent]
-    public class Camera : Component
+    public class Camera : Component, ICamera
     {
         public mat4 Projection { get; private set; }
         public mat4 ViewMatrix => glm.inverse(Transform.WorldMatrix);
-        public int Priority { get; set; } = 0;
-        public float NearPlane { get; set; } = 0.1f;
-        public float FarPlane { get; set; } = 100;
-        public Color BackgroundColor { get; set; } = Color.Black;
-        public RenderTexture RenderTexture { get; set; }
 
+        [ExposeEditorField] public Color BackgroundColor { get; set; } = Color.Black;
         private CameraProjectionMode _projectionMode;
+        [ExposeEditorField("Projection")]
         public CameraProjectionMode ProjectionMode
         {
             get => _projectionMode;
@@ -85,8 +82,19 @@ namespace Engine
                 UpdateCurrent();
             }
         }
-
+        private float _fov = 60;
+        [ExposeEditorField("Field of view")]
+        public float Fov
+        {
+            get => _fov;
+            set
+            {
+                _fov = value;
+                UpdateCurrent();
+            }
+        }
         private float _orthoSize;
+        [ExposeEditorField]
         public float OrthographicSize
         {
             get => _orthoSize;
@@ -97,8 +105,12 @@ namespace Engine
             }
         }
 
-        public float Fov { get; set; }
+        [ExposeEditorField] public float NearPlane { get; set; } = 0.1f;
+        [ExposeEditorField] public float FarPlane { get; set; } = 100;
+        [ExposeEditorField] public RenderTexture RenderTexture { get; set; }
+        [ExposeEditorField] public int Priority { get; set; } = 0;
 
+      
         public vec4 _viewport;
         public vec4 Viewport
         {
@@ -150,7 +162,7 @@ namespace Engine
             }
             else
             {
-                Projection = MathUtils.Perspective(Fov, aspect, NearPlane, FarPlane);
+                Projection = MathUtils.Perspective(glm.radians(Fov), aspect, NearPlane, FarPlane);
             }
         }
 
