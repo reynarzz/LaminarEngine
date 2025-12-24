@@ -21,6 +21,8 @@ namespace Editor
         private ImGuiGLFW _glfwInput;
         private const string PROJECT_FOLDER_NAME = "Editor";
         private EditorGameView _gameWindow;
+        private EditorSceneView _editorSceneView;
+
         private SceneGraphWindow _sceneGraphWindow;
         private GFSEngine _engine;
         // private SimpleNodeEditor _node;
@@ -28,7 +30,6 @@ namespace Editor
         private RenderingLayer.RenderingSurface _gameSurface;
         private RenderingLayer.RenderingSurface _editorSurface;
         private EditorCamera _editorCamera;
-
         internal void Init()
         {
             _win = new WindowStandalone("GFS Editor", 1324, 740, Color.Black);
@@ -57,16 +58,20 @@ namespace Editor
                 RenderPostProcessing = true,
             };
 
+            _gameWindow = new EditorGameView(_win, _gameSurface);
+            _engine = new GFSEngine(_gameWindow, new GameApplication(), new InputStandAlonePlatform());
+
+
             _editorSurface = new RenderingLayer.RenderingSurface()
             {
                 Cameras = [_editorCamera],
                 RenderDebug = true,
                 RenderPostProcessing = false,
-                BlitToScreen = false
+                BlitToScreen = false,
+                RenderTexture = new RenderTexture(Screen.Width, Screen.Height) { Name = "Editor Render Texture" }
             };
 
-            _gameWindow = new EditorGameView(_win, _gameSurface);
-            _engine = new GFSEngine(_gameWindow, new GameApplication(), new InputStandAlonePlatform());
+            _editorSceneView = new EditorSceneView("Scene", _editorSurface);
 
             RenderingLayer.InitializeTargets([_gameSurface, _editorSurface]);
             RenderingLayer.OnDrawOverlay += () =>
@@ -144,6 +149,8 @@ namespace Editor
 
             // call imgui functions here: ---
             _gameWindow.OnRender();
+            _editorSceneView.OnRender();
+
             _sceneGraphWindow.OnRender();
             _objectEditor.OnRender();
             RenderingInfoWindow();
