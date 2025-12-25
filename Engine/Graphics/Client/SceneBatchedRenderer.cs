@@ -31,7 +31,7 @@ namespace Engine.Graphics
             _pipelineFeatures = new PipelineFeatures();
         }
 
-        protected override void OnPrepareRendering(List<Renderer2D> worldRenderers, List<Renderer2D> uiRenderers)
+        protected override void OnPrepareRendering(List<RendererData2D> worldRenderers, List<RendererData2D> uiRenderers)
         {
             _worldBatches = _worldBatcher.GetBatches(worldRenderers);
             _uiBatches = _uiBatcher.GetBatches(uiRenderers);

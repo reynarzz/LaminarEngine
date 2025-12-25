@@ -1,4 +1,5 @@
 ﻿using Box2D.NET;
+using Engine.Graphics;
 using Engine.Types;
 using Engine.Utils;
 using GlmNet;
@@ -32,14 +33,15 @@ namespace Engine
     {
         public IReadOnlyList<vec2> TilesPositions => _tilesPositions;
         private List<vec2> _tilesPositions = new();
-
+        private RendererData2D _rendererData;
         protected override void OnAwake()
         {
             base.OnAwake();
 
-            Mesh = new Mesh();
-            Mesh.IndicesToDrawCount = 0;
-            PrivateBatch = true;
+            _rendererData =  (RendererData as RendererData2D);
+            _rendererData.Mesh = new Mesh();
+            _rendererData.Mesh.IndicesToDrawCount = 0;
+            _rendererData.PrivateBatch = true;
         }
 
         public void AddTile(Tile tile, vec3 position, float rot = 0)
@@ -59,14 +61,14 @@ namespace Engine
 
             GraphicsHelper.CreateQuad(ref vertices, chunk.Uvs, width, height, chunk.Pivot, Color, tileMatrix);
 
-            Mesh.Vertices.Add(vertices.v0);
-            Mesh.Vertices.Add(vertices.v1);
-            Mesh.Vertices.Add(vertices.v2);
-            Mesh.Vertices.Add(vertices.v3);
+            _rendererData.Mesh.Vertices.Add(vertices.v0);
+            _rendererData.Mesh.Vertices.Add(vertices.v1);
+            _rendererData.Mesh.Vertices.Add(vertices.v2);
+            _rendererData.Mesh.Vertices.Add(vertices.v3);
 
-            Mesh.IndicesToDrawCount += 6;
+            _rendererData.Mesh.IndicesToDrawCount += 6;
 
-            IsDirty = true;
+            RendererData.IsDirty = true;
 
             //var index = (uint)Mesh.Vertices.Count - 4;
             //Mesh.Indices.Add(index + 0);

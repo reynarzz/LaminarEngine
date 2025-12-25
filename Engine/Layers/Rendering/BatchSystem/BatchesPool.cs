@@ -21,7 +21,7 @@ namespace Engine.Rendering
             _batches = new List<Batch2D>();
         }
 
-        internal bool GetCurrentBatch(Renderer2D renderer, Texture texture, out Batch2D batchOut)
+        internal bool GetCurrentBatch(RendererData2D renderer, Texture texture, out Batch2D batchOut)
         {
             batchOut = null;
             foreach (var batch in _batches)
@@ -50,7 +50,7 @@ namespace Engine.Rendering
             return false;
         }
 
-        internal Batch2D Get(Renderer2D renderer, int vertexToAdd, int maxVertexSize, Texture texture, Material mat, uint[] rawIndices = null)
+        internal Batch2D Get(RendererData2D renderer, int vertexToAdd, int maxVertexSize, Texture texture, Material mat, uint[] rawIndices = null)
         {
             {
                 if (GetCurrentBatch(renderer, texture, out var batch))

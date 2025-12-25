@@ -14,6 +14,10 @@ namespace Engine.Layers
         private GfxResource _screenGeometry;
         private List<Renderer2D> _renderers;
         private List<Renderer2D> _UIElementRenderers;
+
+        private List<RendererData2D> _renderersData;
+        private List<RendererData2D> _UIElementRenderersData;
+
         internal static DrawOverlayOptions OverlayOptions { get; } = new DrawOverlayOptions();
 
         private static readonly List<RenderingSurface> _renderingSurfaces = new();
@@ -84,7 +88,7 @@ namespace Engine.Layers
             {
                 foreach (var renderer in surface.SceneRenderers)
                 {
-                    renderer.OnPrepare(_renderers, _UIElementRenderers);
+                    renderer.OnPrepare(_renderersData, _UIElementRenderersData);
                 }
 
                 if (surface.Cameras == null || surface.Cameras.Length == 0 || surface.Cameras[0] == null || !surface.Cameras[0].IsAlive)
@@ -137,6 +141,9 @@ namespace Engine.Layers
                 return x.IsEnabled && x is UIGraphicsElement;
             });
 
+            // TODO: This is too slow, this is here for quick tests.
+            _renderersData = _renderers.Select(x => x.RendererData as RendererData2D).ToList();
+            _UIElementRenderersData = _UIElementRenderers.Select(x => x.RendererData as RendererData2D).ToList();
         }
 
         private void RenderScene(RenderingSurface surface, ICamera camera)

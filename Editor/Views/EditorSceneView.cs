@@ -127,7 +127,7 @@ namespace Editor
             uint colorid = (ColorPacketRGBA)new Color32(colors[0], colors[1], colors[2], colors[3]);
             if (_mousePickerRenderer.RenderersIDs.TryGetValue(colorid, out var renderer))
             {
-                Selector.Selected = renderer.Actor;
+                Selector.Selected = renderer.Transform.Actor;
             }
             else
             {

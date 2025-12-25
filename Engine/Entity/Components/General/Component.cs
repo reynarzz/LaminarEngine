@@ -166,5 +166,9 @@ namespace Engine
             CheckIfValidObject(this);
             return Actor.GetComponentInParent<T>();
         }
+
+        internal virtual void OnInternalInitialize()
+        {
+        }
     }
 }

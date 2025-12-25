@@ -24,7 +24,7 @@ namespace Engine
 
                 base.FlipX = value;
                 Sprite?.Texture?.Atlas?.UpdateUvs(Sprite.AtlasIndex, QuadUV.FlipUV(Sprite.GetAtlasChunk().Uvs, value, FlipY));
-                IsDirty = true;
+                RendererData.IsDirty = true;
             }
         }
 
@@ -41,7 +41,7 @@ namespace Engine
 
                 base.FlipY = value;
                 Sprite?.Texture?.Atlas?.UpdateUvs(Sprite.AtlasIndex, QuadUV.FlipUV(Sprite.GetAtlasChunk().Uvs, FlipX, value));
-                IsDirty = true;
+                RendererData.IsDirty = true;
             }
         }
     }

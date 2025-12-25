@@ -189,6 +189,8 @@ namespace Engine
             }
 
             _components.Add(component);
+            
+            component.OnInternalInitialize();
 
             if (component is IStartableComponent start)
             {

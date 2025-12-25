@@ -37,7 +37,7 @@ namespace Engine.Graphics
         {
 
         }
-        public void OnPrepare(List<Renderer2D> worldRenderers, List<Renderer2D> uiRenderers)
+        public void OnPrepare(List<RendererData2D> worldRenderers, List<RendererData2D> uiRenderers)
         {
             if (!_isPrepared)
             {
@@ -46,7 +46,7 @@ namespace Engine.Graphics
             }
         }
 
-        protected abstract void OnPrepareRendering(List<Renderer2D> worldRenderers, List<Renderer2D> uiRenderers);
+        protected abstract void OnPrepareRendering(List<RendererData2D> worldRenderers, List<RendererData2D> uiRenderers);
         public abstract RenderTexture OnRenderScene(RenderingSurface surface, ICamera camera, RenderTexture targetRenderTexture);
         public void OnEnd()
         {

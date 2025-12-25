@@ -1,4 +1,5 @@
-﻿using GlmNet;
+﻿using Engine.Graphics;
+using GlmNet;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -34,19 +35,25 @@ namespace Engine
         public bool Prewarm { get; set; }
         private bool _canEmit = true;
         private bool _emitEventSent;
+        private RendererData2D _rendererData;
+
         public event Action OnEmitFinished;
         protected override void OnAwake()
         {
             base.OnAwake();
 
-            Mesh = new Mesh();
-            Mesh.IndicesToDrawCount = 0;
+            _rendererData = (RendererData as RendererData2D);
+            _rendererData.Mesh = new Mesh();
+
+
+            _rendererData.Mesh = new Mesh();
+            _rendererData.Mesh.IndicesToDrawCount = 0;
             const float bufferOffset = 1.2f;
 
             _particles.Capacity = (int)MathF.Ceiling(EmitRate * ParticleLife * bufferOffset);
-            Mesh.Vertices.Capacity = _particles.Capacity * 4;
+            _rendererData.Mesh.Vertices.Capacity = _particles.Capacity * 4;
             Sprite = new Sprite();
-            PrivateBatch = true; // TODO: Remove this
+            _rendererData.PrivateBatch = true; // TODO: Remove this
         }
 
         void IStartableComponent.OnStart()
@@ -99,7 +106,7 @@ namespace Engine
 
         private void EmitParticle()
         {
-            IsDirty = true;
+            RendererData.IsDirty = true;
 
             if (!_canEmit)
                 return;
@@ -162,19 +169,19 @@ namespace Engine
                 int baseIndex = i * 4;
 
                 // Resize if needed
-                while (Mesh.Vertices.Count < baseIndex + 4)
+                while (_rendererData.Mesh.Vertices.Count < baseIndex + 4)
                 {
-                    Mesh.Vertices.Add(default);
+                    _rendererData.Mesh.Vertices.Add(default);
                 }
 
                 // Update vertex data
-                Mesh.Vertices[baseIndex + 0] = quad.v0;
-                Mesh.Vertices[baseIndex + 1] = quad.v1;
-                Mesh.Vertices[baseIndex + 2] = quad.v2;
-                Mesh.Vertices[baseIndex + 3] = quad.v3;
+                _rendererData.Mesh.Vertices[baseIndex + 0] = quad.v0;
+                _rendererData.Mesh.Vertices[baseIndex + 1] = quad.v1;
+                _rendererData.Mesh.Vertices[baseIndex + 2] = quad.v2;
+                _rendererData.Mesh.Vertices[baseIndex + 3] = quad.v3;
             }
 
-            Mesh.IndicesToDrawCount = _particles.Count * 6;
+            _rendererData.Mesh.IndicesToDrawCount = _particles.Count * 6;
         }
 
         protected internal override void OnDestroy()

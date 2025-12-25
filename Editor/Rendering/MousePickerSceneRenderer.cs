@@ -7,15 +7,15 @@ namespace Editor.Rendering
 {
     internal class MousePickerSceneRenderer : SceneRendererBase
     {
-        private List<Renderer2D> _worldRenderers;
-        private List<Renderer2D> _uiRenderers;
+        private List<RendererData2D> _worldRenderers;
+        private List<RendererData2D> _uiRenderers;
         private readonly DrawCallData _drawCallData;
         private readonly PipelineFeatures _pipelineFeatures;
         private GfxResource _quadGeometry;
         private GeometryDescriptor _geoDesc;
 
         private readonly Shader _idPickerShader;
-        private static readonly Comparison<Renderer2D> _sortingOrderComparer = (a, b) => a.SortOrder.CompareTo(b.SortOrder);
+        private static readonly Comparison<RendererData2D> _sortingOrderComparer = (a, b) => a.SortOrder.CompareTo(b.SortOrder);
 
         private string _mousePickerVertShader = @"
           #version 330 core
@@ -70,8 +70,8 @@ namespace Editor.Rendering
         ";
         private readonly List<(int verticesCount, GfxResource geometry, GeometryDescriptor desc)> _geometries = new();
 
-        private Dictionary<uint, Renderer2D> _renderersByColors = new();
-        internal IReadOnlyDictionary<uint, Renderer2D> RenderersIDs => _renderersByColors;
+        private Dictionary<uint, RendererData2D> _renderersByColors = new();
+        internal IReadOnlyDictionary<uint, RendererData2D> RenderersIDs => _renderersByColors;
 
         private uint _currentColorId = 0;
         public MousePickerSceneRenderer()
@@ -98,7 +98,7 @@ namespace Editor.Rendering
             RenderTextureIndex = 1;
         }
 
-        protected override void OnPrepareRendering(List<Renderer2D> worldRenderers, List<Renderer2D> uiRenderers)
+        protected override void OnPrepareRendering(List<RendererData2D> worldRenderers, List<RendererData2D> uiRenderers)
         {
             _worldRenderers = worldRenderers;
             _uiRenderers = uiRenderers;
@@ -120,14 +120,14 @@ namespace Editor.Rendering
             _drawCallData.Viewport = new vec4(0, 0, targetRenderTexture.Width, targetRenderTexture.Height);
 
 
-            void DrawRenderers(List<Renderer2D> renderers, mat4 projM, mat4 viewM, mat4 viewProjM, bool discardAlphaWithTexture)
+            void DrawRenderers(List<RendererData2D> renderers, mat4 projM, mat4 viewM, mat4 viewProjM, bool discardAlphaWithTexture)
             {
                 _drawCallData.Uniforms[0].SetMat4(Consts.VIEW_PROJ_UNIFORM_NAME, viewProjM);
                 _drawCallData.Uniforms[1].SetMat4(Consts.VIEW_UNIFORM_NAME, viewM);
                 _drawCallData.Uniforms[2].SetMat4(Consts.PROJECTION_UNIFORM_NAME, projM);
                 _drawCallData.Uniforms[3].SetInt("uDiscard", discardAlphaWithTexture ? 1 : 0);
 
-                foreach (Renderer2D renderer in renderers)
+                foreach (RendererData2D renderer in renderers)
                 {
                     _currentColorId++;
                     _renderersByColors.Add(_currentColorId, renderer);

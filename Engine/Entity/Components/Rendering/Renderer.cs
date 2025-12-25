@@ -13,40 +13,37 @@ namespace Engine
     /// </summary>
     public abstract class Renderer : Component
     {
-        public Material Material { get; set; }
-        public Mesh Mesh { get; set; }
-        protected internal virtual bool IsDirty { get; protected set; } = true;
-        internal event Action<Renderer> OnDestroyRenderer;
-        internal protected bool PrivateBatch { get; protected set; }
+        internal abstract RendererData RendererData { get; protected private set; } 
+        public Material Material { get => RendererData.Material; set => RendererData.Material = value; }
 
         protected override void OnAwake()
         {
             Transform.OnChanged += Transform_OnChanged;
-            IsDirty = true;
+            RendererData.IsDirty = true;
         }
 
         protected virtual void Transform_OnChanged(Transform obj)
         {
             // TODO: Careful with this, it could cause renderers to be dirty even when no meaningful transformation happens
-            IsDirty = true; 
+            RendererData.IsDirty = true;
         }
 
         internal void MarkNotDirty()
         {
-            IsDirty = false;
+            RendererData.IsDirty = false;
         }
 
         public override void OnEnabled()
         {
             base.OnEnabled();
-            IsDirty = true;
+            RendererData.IsDirty = true;
         }
 
         public override void OnDisabled()
         {
             base.OnDisabled();
-            IsDirty = true;
-            OnDestroyRenderer?.Invoke(this);
+            RendererData.IsDirty = true;
+            RendererData.OnDestroy();
         }
 
         internal virtual void Draw() { }
@@ -56,8 +53,7 @@ namespace Engine
             base.OnDestroy();
 
             Transform.OnChanged -= Transform_OnChanged;
-            OnDestroyRenderer?.Invoke(this);
-            OnDestroyRenderer = null;
+            RendererData.OnDestroy();
         }
     }
 }

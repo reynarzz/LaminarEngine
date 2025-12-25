@@ -30,13 +30,14 @@ namespace Engine.GUI
         public float LineSpacing { get; set; }
         public int OutlineSize { get; set; }
         public Thickness Padding = new Thickness(0);
-        public TextVerticalAlignment Vertical { get => _verticalAlignment; set { if (_verticalAlignment != value) IsDirty = true; _verticalAlignment = value; } }
-        public TextHorizontalAlignment Horizontal { get => _horizontalAlignment; set { if (_horizontalAlignment != value) IsDirty = true; _horizontalAlignment = value; } }
+        public TextVerticalAlignment Vertical { get => _verticalAlignment; set { if (_verticalAlignment != value) RendererData.IsDirty = true; _verticalAlignment = value; } }
+        public TextHorizontalAlignment Horizontal { get => _horizontalAlignment; set { if (_horizontalAlignment != value) RendererData.IsDirty = true; _horizontalAlignment = value; } }
         public TextOverflow Overflow { get; set; } = TextOverflow.None;
         public TextWrap Wrap { get; set; } = TextWrap.None;
         public TextFit Fit { get; set; } = TextFit.None;
         private TextHorizontalAlignment _horizontalAlignment = TextHorizontalAlignment.Center;
         private TextVerticalAlignment _verticalAlignment = TextVerticalAlignment.Center;
+        private RendererData2D _rendererData;
         private readonly StringBuilder _text = new();
         public int Length => _text.Length;
         ITexture2DManager IFontStashRenderer2.TextureManager => FontManager.Instance.TextureManager;
@@ -44,8 +45,11 @@ namespace Engine.GUI
         protected override void OnAwake()
         {
             base.OnAwake();
-            Mesh = new Mesh();
-            Mesh.Vertices.Capacity = Consts.Graphics.MAX_QUADS_PER_BATCH * 4;
+            _rendererData = (RendererData as RendererData2D);
+            _rendererData.Mesh = new Mesh();
+
+
+            _rendererData.Mesh.Vertices.Capacity = Consts.Graphics.MAX_QUADS_PER_BATCH * 4;
         }
 
         public void DrawQuad(object texture, ref VertexPositionColorTexture topLeft,
@@ -53,27 +57,27 @@ namespace Engine.GUI
                                              ref VertexPositionColorTexture bottomLeft,
                                              ref VertexPositionColorTexture bottomRight)
         {
-            if (IsDirty)
+            if (RendererData.IsDirty)
             {
                 var tex = texture as Texture2D;
                 if (Sprite == null || Sprite.Texture != tex)
                 {
                     Sprite = new Sprite(0, tex);
                 }
-                var vertIndex = (Mesh.IndicesToDrawCount / 6) * 4;
-                if (Mesh.Vertices.Count < vertIndex + 4)
+                var vertIndex = (_rendererData.Mesh.IndicesToDrawCount / 6) * 4;
+                if (_rendererData.Mesh.Vertices.Count < vertIndex + 4)
                 {
-                    Mesh.Vertices.Add(default);
-                    Mesh.Vertices.Add(default);
-                    Mesh.Vertices.Add(default);
-                    Mesh.Vertices.Add(default);
+                    _rendererData.Mesh.Vertices.Add(default);
+                    _rendererData.Mesh.Vertices.Add(default);
+                    _rendererData.Mesh.Vertices.Add(default);
+                    _rendererData.Mesh.Vertices.Add(default);
                 }
-                var verts = CollectionsMarshal.AsSpan(Mesh.Vertices);
+                var verts = CollectionsMarshal.AsSpan(_rendererData.Mesh.Vertices);
                 SetFontVertex(verts, ref bottomLeft, vertIndex + 0);
                 SetFontVertex(verts, ref topLeft, vertIndex + 1);
                 SetFontVertex(verts, ref topRight, vertIndex + 2);
                 SetFontVertex(verts, ref bottomRight, vertIndex + 3);
-                Mesh.IndicesToDrawCount += 6;
+                _rendererData.Mesh.IndicesToDrawCount += 6;
             }
         }
         private uint ARGBtoRGBA(uint packed)
@@ -96,7 +100,7 @@ namespace Engine.GUI
         internal override void OnCanvasDraw(UICanvas canvas)
         {
             // TODO: Remove this
-            IsDirty = true;
+            RendererData.IsDirty = true;
 
             if (!Font)
                 return;
@@ -193,9 +197,9 @@ namespace Engine.GUI
 
         private void SendTextToDraw(StringBuilder text, DynamicSpriteFont font, int lineHeight)
         {
-            if (IsDirty)
+            if (RendererData.IsDirty)
             {
-                Mesh.IndicesToDrawCount = 0;
+                _rendererData.Mesh.IndicesToDrawCount = 0;
             }
 
             var padded = GetPaddedRect();
@@ -255,6 +259,6 @@ namespace Engine.GUI
         public void Append(char value) { AppendText(value); }
         public void Append(float value) { AppendText(value); }
         public void Append(int value) { AppendText(value); }
-        private void AppendText<T>(T value) { IsDirty = true; _text.Append(value); }
+        private void AppendText<T>(T value) { RendererData.IsDirty = true; _text.Append(value); }
     }
 }

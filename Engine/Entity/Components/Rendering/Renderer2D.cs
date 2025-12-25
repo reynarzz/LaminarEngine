@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Engine.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,52 +10,60 @@ namespace Engine
     public abstract class Renderer2D : Renderer
     {
         private uint _colorpacket = Color.White;
+        private RendererData2D _renderData;
+        internal override RendererData RendererData
+        {
+            get => _renderData;
+            private protected set
+            {
+                _renderData = value as RendererData2D;
+            }
+        }
+
+        internal override void OnInternalInitialize()
+        {
+           _renderData = new RendererData2D(GetID(), Transform, Draw, () => IsEnabled && Actor.IsActiveInHierarchy);
+        }
 
         [ExposeEditorField]
         public Color Color
         {
-            get => _colorpacket;
+            get => _renderData.Color;
             set
             {
-                if (_colorpacket == value)
+                if (_renderData.Color == value)
                 {
                     return;
                 }
-                _colorpacket = value;
-                IsDirty = true;
+                _renderData.Color = value;
             }
         }
 
-        private Sprite _sprite;
 
         [ExposeEditorField]
         public Sprite Sprite
         {
-            get => _sprite;
+            get => _renderData.Sprite;
             set
             {
-                if (_sprite != null && _sprite.Equals(value))
+                if (_renderData.Sprite != null && _renderData.Sprite.Equals(value))
                     return;
 
-                IsDirty = true;
-                _sprite = value;
+                _renderData.Sprite = value;
+
             }
         }
-
-
-        private int _sortingOrder = 0;
 
         [ExposeEditorField]
         public int SortOrder
         {
-            get => _sortingOrder;
+            get => _renderData.SortOrder;
             set
             {
-                if (_sortingOrder == value)
+                if (_renderData.SortOrder == value)
                     return;
 
-                _sortingOrder = value;
-                IsDirty = true;
+                _renderData.SortOrder = value;
             }
         }
 

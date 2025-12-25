@@ -62,23 +62,10 @@ namespace Engine.Rendering
         public int RenderersCount => _renderers.Count;
         private GeometryDescriptor _geoDescriptor;
         private Vertex[] _verticesData;
-        public string RenderersNames
-        {
-            get
-            {
-                var str = new StringBuilder();
-
-                foreach (var item in _renderers.Values)
-                {
-                    str.Append("\n" + item.Renderer.Name);
-                }
-
-                return str.ToString();
-            }
-        }
+     
         private struct RendererIds
         {
-            public Renderer Renderer;
+            public RendererData2D Renderer;
             public int RendererId;
             public int TextureId;
             public int VertexCount;
@@ -127,7 +114,7 @@ namespace Engine.Rendering
             Geometry = GfxDeviceManager.Current.CreateGeometry(_geoDescriptor);
         }
 
-        internal bool Initialize(Renderer2D renderer)
+        internal bool Initialize(RendererData2D renderer)
         {
             if (IsActive)
             {
@@ -177,7 +164,7 @@ namespace Engine.Rendering
 
             return textureIndex >= 0;
         }
-        internal void PushGeometry(Renderer renderer, Material material, Texture texture, int indicesCount, Span<Vertex> vertices)
+        internal void PushGeometry(RendererData2D renderer, Material material, Texture texture, int indicesCount, Span<Vertex> vertices)
         {
             _isDirty = true;
             IsActive = true;
@@ -230,7 +217,7 @@ namespace Engine.Rendering
                 _vertexOffset = Math.Min(_vertexOffset, startIndex + i);
             }
         }
-        internal bool ReplaceTexture(Renderer renderer, Texture texture)
+        internal bool ReplaceTexture(RendererData2D renderer, Texture texture)
         {
             if (_renderers.TryGetValue(renderer.GetID(), out var currentRendererId))
             {
@@ -260,7 +247,7 @@ namespace Engine.Rendering
             return false;
         }
 
-        public void RemoveRenderer(Renderer renderer)
+        public void RemoveRenderer(RendererData renderer)
         {
             renderer.OnDestroyRenderer -= RemoveRenderer;
             // If renderer doesn't exist, do nothing
@@ -399,7 +386,7 @@ namespace Engine.Rendering
             GfxDeviceManager.Current.UpdateResouce(Geometry, _geoDescriptor);
         }
 
-        internal bool CanPushGeometry(Renderer2D renderer, int vertexCount, int neededBatchVertexSize, Texture texture, Material mat)
+        internal bool CanPushGeometry(RendererData2D renderer, int vertexCount, int neededBatchVertexSize, Texture texture, Material mat)
         {
             var isMaxSizeEnough = MaxVertexSize >= neededBatchVertexSize;
             var hasSpaceLeftForAnother = (MaxVertexSize - VertexCount) >= vertexCount;
@@ -467,7 +454,7 @@ namespace Engine.Rendering
 
         }
 
-        internal bool Contains(Renderer renderer)
+        internal bool Contains(RendererData2D renderer)
         {
             return _renderers.ContainsKey(renderer.GetID());
         }

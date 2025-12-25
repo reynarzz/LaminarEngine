@@ -20,12 +20,12 @@ namespace Engine.Rendering
 
         private const int IndicesPerQuad = 6;
         private const int VerticesPerQuad = 4;
-        private Dictionary<BucketKey, List<Renderer2D>> _renderBuckets;
+        private Dictionary<BucketKey, List<RendererData2D>> _renderBuckets;
         private BatchesPool _batchesPool;
         private Material _pinkMaterial;
         private readonly Vertex[] _quadVertexArray = new Vertex[4];
-        private readonly List<List<Renderer2D>> _sortedBuckets = new();
-        private static readonly Comparison<List<Renderer2D>> _bucketSorter =
+        private readonly List<List<RendererData2D>> _sortedBuckets = new();
+        private static readonly Comparison<List<RendererData2D>> _bucketSorter =
             (a, b) => a[0].SortOrder.CompareTo(b[0].SortOrder);
 
         private struct BucketKey : IEquatable<BucketKey>
@@ -59,7 +59,7 @@ namespace Engine.Rendering
         public Batcher2D(int maxQuadsPerBatch)
         {
             MaxQuadsPerBatch = maxQuadsPerBatch;
-            _renderBuckets = new Dictionary<BucketKey, List<Renderer2D>>();
+            _renderBuckets = new Dictionary<BucketKey, List<RendererData2D>>();
 
             _pinkMaterial = new Material(InternalShaderUtils.GetShaderPink());
             _pinkMaterial.Name = "Pink Material";
@@ -72,16 +72,14 @@ namespace Engine.Rendering
             _batchesPool = new BatchesPool(_sharedIndexBuffer);
         }
 
-
-        internal List<Batch2D> GetBatches<T>(List<T> renderers) where T : Renderer2D
+        internal List<Batch2D> GetBatches<T>(List<T> renderers) where T : RendererData2D
         {
             // TODO: Do frustum culling
-
             _renderBuckets.Clear();
 
             foreach (var renderer in renderers)
             {
-                if (!renderer.IsEnabled || !renderer.Actor.IsActiveInHierarchy)
+                if (!renderer.IsEnabled)
                 {
                     // TODO: notify if need to be removed from a batch
                     continue;
@@ -91,7 +89,7 @@ namespace Engine.Rendering
 
                 if (!_renderBuckets.ContainsKey(key))
                 {
-                    _renderBuckets.Add(key, new List<Renderer2D>());
+                    _renderBuckets.Add(key, new List<RendererData2D>());
                 }
 
                 _renderBuckets[key].Add(renderer);
@@ -121,7 +119,7 @@ namespace Engine.Rendering
                     var texture = renderer.Sprite?.Texture ?? Texture2D.White;
                     var material = renderer.Material ?? _pinkMaterial;
 
-                    if(material != null && !material.Shader.NativeShader.IsInitialized)
+                    if (material != null && !material.Shader.NativeShader.IsInitialized)
                     {
                         material = _pinkMaterial;
                     }
