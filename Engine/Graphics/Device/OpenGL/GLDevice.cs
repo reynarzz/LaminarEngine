@@ -104,7 +104,6 @@ namespace Engine.Graphics.OpenGL
 
         internal override GfxResource CreateShader(ShaderDescriptor desc)
         {
-            glBindVertexArray(_defaultVAO); // Note: Some platforms need a vertex array to be bound in order to create shaders.
             var shader = new GLShader();
             shader.Create(desc);
             return shader;
