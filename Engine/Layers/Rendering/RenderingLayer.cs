@@ -168,15 +168,14 @@ namespace Engine.Layers
                 isCameraAvailable = false;
                 return;
             }
-           
+
             foreach (var sceneRenderer in surface.SceneRenderers)
             {
-                bool IsCameraRenderTexture = camera.RenderTexture;
-                var targetRenderTexture = IsCameraRenderTexture ? camera.RenderTexture : surface.RenderTextures != null ? surface.RenderTextures[sceneRenderer.RenderTextureIndex] : _defaultRenderTexture;
+                var targetRenderTexture = GetCurrentRenderTexture(surface, camera, sceneRenderer);
 
-                if (targetRenderTexture)
+                if (!targetRenderTexture)
                 {
-                    targetRenderTexture = _defaultRenderTexture;
+                    continue;
                 }
 
                 GfxDeviceManager.Current.SetViewport(new vec4(0, 0, targetRenderTexture.Width, targetRenderTexture.Height));
@@ -206,13 +205,14 @@ namespace Engine.Layers
                     RenderPostProcessing(ref processedRenderTexture);
                 }
 
+                bool IsCameraRenderTexture = camera.RenderTexture;
                 if (IsCameraRenderTexture)
                 {
                     camera.OutRenderTexture = processedRenderTexture;
                 }
                 else
                 {
-                    if(surface.RenderTextures != null && surface.RenderTextures.Length > 0)
+                    if (surface.RenderTextures != null && surface.RenderTextures.Length > 0)
                     {
                         surface.RenderTextures[sceneRenderer.RenderTextureIndex] = processedRenderTexture;
                     }
@@ -231,6 +231,22 @@ namespace Engine.Layers
 
                 sceneRenderer.OnEnd();
             }
+        }
+
+        private RenderTexture GetCurrentRenderTexture(RenderingSurface surface, ICamera camera, SceneRendererBase sceneRenderer)
+        {
+            bool IsCameraRenderTexture = camera.RenderTexture;
+
+            if (IsCameraRenderTexture)
+            {
+                return camera.RenderTexture;
+            }
+            else if (surface.RenderTextures != null && surface.RenderTextures.Length > 0)
+            {
+                return surface.RenderTextures[sceneRenderer.RenderTextureIndex];
+            }
+
+            return _defaultRenderTexture;
         }
 
         private void RenderOverlayToScreen()
