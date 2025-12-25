@@ -164,13 +164,17 @@ namespace Engine.GUI
             return false;
         }
 
+        private static int _globalSortOrder = 0;
         private void DrawRecursive(UIElement element, RectTransform parent)
         {
+            // TODO: This is a quick dirty hack, please remove it, and manage proper global canvas sortOrder.
+            _globalSortOrder++;
+
             if (!element || !element.IsEnabled || !element.Actor.IsActiveSelf)
                 return;
 
             element.RectTransform.Recalculate(parent);
-
+            element.SortOrder = _globalSortOrder;
             if (element is UIGraphicsElement graphics)
             {
                 graphics.OnCanvasDraw(this);
@@ -187,6 +191,7 @@ namespace Engine.GUI
 
         void IUpdatableComponent.OnUpdate()
         {
+            _globalSortOrder = 0;
             _mouseCanvasPos = ScreenToCanvas(Input.MousePosition);
             _mouseDeltaPos = _mouseCanvasPos - _prevMousePos;
             _mouseNormalizedPosition = _mouseCanvasPos / RectTransform.Rect.Size;
