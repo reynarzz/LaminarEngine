@@ -59,11 +59,10 @@ namespace Engine.Graphics.OpenGL
             return true;
         }
 
-        internal override void UpdateResource(BufferDataDescriptor desc)
+        internal unsafe override void UpdateResource(BufferDataDescriptor desc)
         {
-
             int prevBuffer;
-            prevBuffer = glGetInteger(Target);
+            glGetIntegerv(Target, &prevBuffer);
 
             Bind();
             unsafe

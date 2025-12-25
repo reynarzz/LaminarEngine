@@ -12,7 +12,7 @@ using static OpenGL.GL;
 
 namespace Engine.Graphics.OpenGL
 {
-    internal class GLGeometry : GLGfxResource<GeometryDescriptor>
+    internal unsafe class GLGeometry : GLGfxResource<GeometryDescriptor>
     {
         private readonly GLVertexBuffer _vertBuffer;
         private GLIndexBuffer _indexBuffer;
@@ -85,8 +85,8 @@ namespace Engine.Graphics.OpenGL
 
         internal override void UpdateResource(GeometryDescriptor descriptor)
         {
-            int prevBuffer;
-            prevBuffer = glGetInteger((int)Handle);
+            int prevVAO = 0;
+            glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &prevVAO);
 
             Bind();
             _vertBuffer.Update(descriptor.VertexDesc.BufferDesc);
@@ -107,9 +107,7 @@ namespace Engine.Graphics.OpenGL
                 _indexBuffer.Bind();
             }
 
-            glBindVertexArray((uint)prevBuffer);
-
-            //  Unbind();
+            glBindVertexArray((uint)prevVAO);
         }
 
         protected override void FreeResource()

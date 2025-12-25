@@ -35,7 +35,7 @@ namespace Editor
         {
             ImGui.Begin("Object Editor");
 
-            if (Selector.Selected && Selector.Selected is Actor actor)
+            if (Selector.Selected && Selector.Selected.IsAlive && Selector.Selected is Actor actor)
             {
                 DrawActor(actor);
 

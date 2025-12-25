@@ -34,7 +34,7 @@ namespace Editor.Views
                 if (!hasChildren)
                     flags |= ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.NoTreePushOnOpen;
 
-                if (Selector.Selected != null && Selector.Selected == actor)
+                if (Selector.Selected && Selector.Selected == actor)
                     flags |= ImGuiTreeNodeFlags.Selected;
 
                 if (!actor.IsActiveInHierarchy)
