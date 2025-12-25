@@ -25,8 +25,8 @@ namespace Engine.Graphics.OpenGL
 
         protected override bool CreateResource(GeometryDescriptor descriptor)
         {
-            int prevBuffer;
-            prevBuffer = glGetInteger((int)Handle);
+            int prevVAO = 0;
+            glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &prevVAO);
 
             Bind();
             if (!_vertBuffer.Create(descriptor.VertexDesc.BufferDesc))
@@ -78,7 +78,7 @@ namespace Engine.Graphics.OpenGL
             }
 
             //  Unbind();
-            glBindVertexArray((uint)prevBuffer);
+            glBindVertexArray((uint)prevVAO);
 
             return true;
         }
