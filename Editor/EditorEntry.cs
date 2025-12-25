@@ -18,6 +18,7 @@ namespace Editor
     // Simple object editor: Components(name) (No saving data)
     // Playmode on launch (maybe I implement a proper playmode later: pause, frame step)
     // Add mouse picker the ability to pick the object behind the current picked object.
+    // Draw gizmos (camera icon (and any other object too), arrows handle, object selected)
 
     internal class EditorEntry
     {
@@ -76,12 +77,14 @@ namespace Editor
                 RenderPostProcessing = false,
                 RenderUI = true,
                 BlitToScreen = false,
+                DrawGizmos = true,
+                GizmosRenderer = new GizmosRenderer(),
                 RenderTextures = [new RenderTexture(1920, 1080) { Name = "Scene view Render Texture" },
                                   new RenderTexture(1920, 1080) { Name = "Mouse picker Render Texture" }],
                 SceneRenderers = 
                 { 
                     sceneBatcher,
-                }
+                },
             };
 
             _editorSceneView = new EditorSceneView("Scene", _editorSurface, _editorCamera);
@@ -91,7 +94,7 @@ namespace Editor
             {
                 Render();
             };
-
+        
             _win.OnWindowChanged += (w, h) =>
             {
                 RenderingLayer.OverlayOptions.Width = _win.PhysicalWidth;

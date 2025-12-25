@@ -1,0 +1,15 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Engine.Graphics.Client
+{
+    internal interface IGizmosRenderer
+    {
+        void OnBegin();
+        RenderTexture OnRender(ICamera camera, RenderTexture target);
+        void OnEnd();
+    }
+}

@@ -1,4 +1,5 @@
-﻿using GlmNet;
+﻿using Engine.Graphics.Client;
+using GlmNet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,8 @@ namespace Engine.Graphics
         public bool RenderDebug { get; set; }
         public bool BlitToScreen { get; set; }
         public bool RenderUI { get; set; }
+        public IGizmosRenderer GizmosRenderer { get; set; }
+        public bool DrawGizmos { get; set; }
         public mat4 UIViewProj;
         public mat4 UIView;
         public mat4 UIProj;

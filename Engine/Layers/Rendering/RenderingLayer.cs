@@ -7,7 +7,6 @@ namespace Engine.Layers
 {
     internal class RenderingLayer : LayerBase
     {
-        internal static event Action OnDrawOverlay;
 
         private DrawCallData _screenQuadDrawCallData;
         private PipelineFeatures _screenPipelineFeatures;
@@ -24,6 +23,7 @@ namespace Engine.Layers
         private Action<Shader, RenderTexture, RenderTexture, UniformValue[]> _drawPostProcessCallback;
         private ICamera _sceneCamera;
         internal static event Action OnRenderingEnd;
+        internal static event Action OnDrawOverlay;
         private RenderTexture _defaultRenderTexture;
         public RenderingLayer() : base()
         {
@@ -176,6 +176,11 @@ namespace Engine.Layers
                 return;
             }
 
+            if (surface.DrawGizmos)
+            {
+                surface.GizmosRenderer?.OnBegin();
+            }
+
             foreach (var sceneRenderer in surface.SceneRenderers)
             {
                 var targetRenderTexture = GetCurrentRenderTexture(surface, camera, sceneRenderer);
@@ -199,14 +204,18 @@ namespace Engine.Layers
 
                 var processedRenderTexture = sceneRenderer.OnRenderScene(surface, camera, targetRenderTexture);
 
-#if DEBUG
                 if (surface.RenderDebug)
                 {
+#if DEBUG
                     SceneManager.OnDrawGizmos();
                     var VP = camera.Projection * camera.ViewMatrix;
                     Debug.DrawGeometries(VP, surface.UIViewProj, processedRenderTexture.NativeResource);
-                }
 #endif
+                    if (surface.DrawGizmos)
+                    {
+                        processedRenderTexture = surface?.GizmosRenderer?.OnRender(camera, processedRenderTexture);
+                    }
+                }
                 if (surface.RenderPostProcessing)
                 {
                     RenderPostProcessing(ref processedRenderTexture);
@@ -235,7 +244,10 @@ namespace Engine.Layers
                 {
                     RenderOverlayToScreen();
                 }
-
+                if (surface.DrawGizmos)
+                {
+                    surface?.GizmosRenderer?.OnEnd();
+                }
                 sceneRenderer.OnEnd();
             }
         }
