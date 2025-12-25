@@ -60,7 +60,7 @@ namespace Editor.Rendering
         uniform sampler2D uTex;
         void main()
         {
-            fragColor = texture2D(uTex, _UV).a * vColor;
+            fragColor = step(0.01, texture2D(uTex, _UV).a) * vColor;
 
             if(fragColor.a <= 0.0001)
             {
@@ -121,7 +121,6 @@ namespace Editor.Rendering
                 _drawCallData.Uniforms[(int)Consts.Graphics.Uniforms.VIEW_MATRIX].SetMat4(Consts.VIEW_UNIFORM_NAME, viewM);
                 _drawCallData.Uniforms[(int)Consts.Graphics.Uniforms.PROJECTION_MATRIX].SetMat4(Consts.PROJECTION_UNIFORM_NAME, projM);
 
-                int TestColorIndex = 0;
                 foreach (Renderer2D renderer in renderers)
                 {
                     if (!_colorId.TryGetValue(renderer.GetID(), out var color))
@@ -132,8 +131,6 @@ namespace Editor.Rendering
                         //--color = _currentId;
                         //--_colorId.Add(renderer.GetID(), _currentId);
                         //--_currentId++; 
-
-                        TestColorIndex++;
                     }
 
                     var texture = renderer.Sprite?.Texture ?? Texture2D.White;
@@ -209,10 +206,10 @@ namespace Editor.Rendering
                         }
                         vertex.Buffer = vertices;
 
-                        GfxDeviceManager.Current.UpdateResouce(geometry, desc);
                         _drawCallData.Geometry = geometry;
                         _drawCallData.IndexedDraw.IndexCount = indicesCount;
-                        
+
+                        GfxDeviceManager.Current.UpdateResouce(geometry, desc);
                         GfxDeviceManager.Current.Draw(_drawCallData);
                     }
                 }
