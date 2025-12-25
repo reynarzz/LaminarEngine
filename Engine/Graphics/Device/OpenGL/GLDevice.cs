@@ -16,7 +16,7 @@ namespace Engine.Graphics.OpenGL
     internal class GLDevice : GfxDevice
     {
         private readonly GfxDeviceInfo _gfxDeviceInfo;
-        private static uint _defaultVAO;
+        private readonly uint _defaultVAO;
         public GLDevice()
         {
             int maxTextureUnits;
@@ -49,20 +49,14 @@ namespace Engine.Graphics.OpenGL
             Debug.Log("OpenGL Renderer: " + _gfxDeviceInfo.Renderer);
             Debug.Log("OpenGL MaxTextureUnits: " + _gfxDeviceInfo.MaxValidTextureUnits);
             Debug.Log("OpenGL MaxUniformsCount: " + _gfxDeviceInfo.MaxUniformsCount);
-#if MACOS
+
+
             _defaultVAO = glGenVertexArray();
             glBindVertexArray(_defaultVAO);
-            System.Console.WriteLine("MacOs default vao.");
-#endif
         }
 
-        internal override void Initialize()
-        {
-        }
-
-        internal override void Close()
-        {
-        }
+        internal override void Initialize() { }
+        internal override void Close() { }
 
         internal override void Clear(ClearDeviceConfig config)
         {
@@ -181,11 +175,6 @@ namespace Engine.Graphics.OpenGL
         internal override GfxDeviceInfo GetDeviceInfo()
         {
             return _gfxDeviceInfo;
-        }
-
-        internal override void UpdateGeometry(GfxResource resource, GeometryDescriptor desc)
-        {
-            (resource as GLGeometry).UpdateResource(desc);
         }
 
         internal override void SetViewport(vec4 viewport)

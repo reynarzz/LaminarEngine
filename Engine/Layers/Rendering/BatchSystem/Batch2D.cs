@@ -396,7 +396,7 @@ namespace Engine.Rendering
 
             //(vertDataDescriptor as BufferDataDescriptor<Vertex>).Buffer = _verticesData;
 
-            GfxDeviceManager.Current.UpdateGeometry(Geometry, _geoDescriptor);
+            GfxDeviceManager.Current.UpdateResouce(Geometry, _geoDescriptor);
         }
 
         internal bool CanPushGeometry(Renderer2D renderer, int vertexCount, int neededBatchVertexSize, Texture texture, Material mat)

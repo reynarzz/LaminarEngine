@@ -25,6 +25,9 @@ namespace Engine.Graphics.OpenGL
 
         protected override bool CreateResource(GeometryDescriptor descriptor)
         {
+            int prevBuffer;
+            prevBuffer = glGetInteger((int)Handle);
+
             Bind();
             if (!_vertBuffer.Create(descriptor.VertexDesc.BufferDesc))
             {
@@ -46,20 +49,23 @@ namespace Engine.Graphics.OpenGL
 
                 _indexBuffer.Bind();
             }
-            else if(descriptor.SharedIndexBuffer != null)
+            else if (descriptor.SharedIndexBuffer != null)
             {
                 (descriptor.SharedIndexBuffer as GLIndexBuffer).Bind();
 
                 _sharedBuffer = descriptor.SharedIndexBuffer as GLIndexBuffer;
             }
-
+            else
+            {
+                Debug.EngineError("No Index buffer bound.");
+            }
             _vertBuffer.Bind();
 
             for (uint i = 0; i < descriptor.VertexDesc.Attribs.Length; i++)
             {
                 var attrib = descriptor.VertexDesc.Attribs[(int)i];
 
-                if(attrib.Type == GfxValueType.Int || attrib.Type == GfxValueType.Uint)
+                if (attrib.Type == GfxValueType.Int || attrib.Type == GfxValueType.Uint)
                 {
                     glVertexAttribIPointer(i, attrib.Count, attrib.Type.ToGL(), attrib.Stride, attrib.Offset);
                 }
@@ -71,17 +77,21 @@ namespace Engine.Graphics.OpenGL
                 glEnableVertexAttribArray(i);
             }
 
-          //  Unbind();
+            //  Unbind();
+            glBindVertexArray((uint)prevBuffer);
 
             return true;
         }
 
         internal override void UpdateResource(GeometryDescriptor descriptor)
         {
+            int prevBuffer;
+            prevBuffer = glGetInteger((int)Handle);
+
             Bind();
             _vertBuffer.Update(descriptor.VertexDesc.BufferDesc);
             _vertBuffer.Bind();
-         
+
             if (descriptor.SharedIndexBuffer != null && descriptor.SharedIndexBuffer != _sharedBuffer)
             {
                 Debug.Error("Shared index buffer error");
@@ -96,7 +106,10 @@ namespace Engine.Graphics.OpenGL
                 _indexBuffer.Update(descriptor.IndexDesc);
                 _indexBuffer.Bind();
             }
-          //  Unbind();
+
+            glBindVertexArray((uint)prevBuffer);
+
+            //  Unbind();
         }
 
         protected override void FreeResource()

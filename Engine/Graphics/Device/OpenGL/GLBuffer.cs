@@ -46,21 +46,36 @@ namespace Engine.Graphics.OpenGL
                 return false;
             }
 
+            int prevBuffer;
+            prevBuffer = glGetInteger(Target);
+
             Bind();
             glBufferData(Target, desc.BufferLength, desc.GetBufferUnsafePtr().ToPointer(), usage);
             Unbind();
+
+            if(prevBuffer >= 0)
+            glBindBuffer(Target, (uint)prevBuffer);
 
             return true;
         }
 
         internal override void UpdateResource(BufferDataDescriptor desc)
         {
+
+            int prevBuffer;
+            prevBuffer = glGetInteger(Target);
+
             Bind();
             unsafe
             {
                 glBufferSubData(Target, desc.Offset, desc.Count, desc.GetBufferUnsafePtr().ToPointer());
             }
             Unbind();
+
+
+            if (prevBuffer >= 0)
+                glBindBuffer(Target, (uint)prevBuffer);
+
         }
     }
 }

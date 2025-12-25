@@ -1,6 +1,5 @@
 ﻿using Engine.Graphics;
 using Engine.GUI;
-using Engine.Rendering;
 using Engine.Utils;
 using GlmNet;
 
@@ -18,8 +17,8 @@ namespace Engine.Layers
         internal static DrawOverlayOptions OverlayOptions { get; } = new DrawOverlayOptions();
 
         private static readonly List<RenderingSurface> _renderingSurfaces = new();
-        private ICamera _sceneCamera;
         private Action<Shader, RenderTexture, RenderTexture, UniformValue[]> _drawPostProcessCallback;
+        private ICamera _sceneCamera;
 
         public RenderingLayer() : base()
         {
@@ -28,21 +27,16 @@ namespace Engine.Layers
 
         public override void Initialize()
         {
-            ClearScreenToColor(WindowManager.Window.StartWindowColor, null);
-            GfxDeviceManager.Current.Present();
-
             _screenPipelineFeatures = new PipelineFeatures();
 
             _renderers = new();
             _UIElementRenderers = new();
-           
+
             _screenQuadDrawCallData = new DrawCallData()
             {
                 Textures = new GfxResource[GfxDeviceManager.Current.GetDeviceInfo().MaxValidTextureUnits],
                 Uniforms = new UniformValue[GfxDeviceManager.Current.GetDeviceInfo().MaxUniformsCount],
             };
-
-            _screenGeometry = GraphicsHelper.GetScreenQuadGeometry();
 
             // Default surface
             InitializeSurfaces([new RenderingSurface()
@@ -57,6 +51,7 @@ namespace Engine.Layers
                RenderDebug = true,
 #endif
             }]);
+            _screenGeometry = GraphicsHelper.GetScreenQuadGeometry();
         }
 
         internal static void InitializeSurfaces(RenderingSurface[] configs)
@@ -188,7 +183,7 @@ namespace Engine.Layers
 #endif
                 if (surface.RenderPostProcessing)
                 {
-                   // RenderPostProcessing(ref targetRenderTexture);
+                    RenderPostProcessing(ref processedRenderTexture);
                     camera.OutRenderTexture = processedRenderTexture;
                 }
 
