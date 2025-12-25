@@ -270,8 +270,7 @@ namespace Game
                 BuildLevel(0);
             }
 #endif
-            if (Input.GetKeyDown(KeyCode.Enter) ||
-                Input.Gamepad.Main.GetButtonState(GamePadButton.Start) == InputState.Down)
+            if (Input.GetKeyDown(KeyCode.Enter) || Input.Gamepad.Main.GetButtonState(GamePadButton.Start) == InputState.Down)
             {
                 if (!_gameUIManger)
                 {

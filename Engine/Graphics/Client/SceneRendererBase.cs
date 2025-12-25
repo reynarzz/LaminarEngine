@@ -25,6 +25,8 @@ namespace Engine.Graphics
         public bool BlitToScreen { get; set; }
         public bool RenderUI { get; set; }
         public mat4 UIViewProj;
+        public mat4 UIView;
+        public mat4 UIProj;
     }
 
     internal abstract class SceneRendererBase

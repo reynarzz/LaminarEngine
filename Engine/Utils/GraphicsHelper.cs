@@ -45,14 +45,19 @@ namespace Engine
 
             return GfxDeviceManager.Current.CreateGeometry(geoDesc);
         }
+        internal static GfxResource CreateQuadGeometry()
+        {
+            var geoDesc = default(GeometryDescriptor);
 
-        internal static GfxResource GetScreenQuadGeometry()
+            return CreateQuadGeometry(ref geoDesc);
+        }
+
+        internal static GfxResource CreateQuadGeometry(ref GeometryDescriptor geoDesc)
         {
             QuadVertices vertices = default;
             CreateQuad(ref vertices, QuadUV.DefaultUVs, 2, 2, new vec2(0.5f), Color.White, mat4.identity());
 
-
-            var geoDesc = new GeometryDescriptor()
+            geoDesc = new GeometryDescriptor()
             {
                 IndexDesc = new BufferDataDescriptor<uint>()
                 {

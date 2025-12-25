@@ -10,9 +10,7 @@
 
   </PropertyGroup>
 
-	<PropertyGroup Condition="'$(OS)' == 'Unix' AND
-'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform(
-   $([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'True'">
+	<PropertyGroup Condition="'$(OS)' == 'Unix' AND&#xD;&#xA;'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform(&#xD;&#xA;   $([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'True'">
   <MacLibFolder>lib-universal</MacLibFolder>
 </PropertyGroup>
 
@@ -39,9 +37,7 @@
 		
 
 
-	<Target Name="PostBuild_Mac"
-    AfterTargets="PostBuildEvent"
-    Condition="'$(OS)' == 'Unix' AND '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'True'">
+	<Target Name="PostBuild_Mac" AfterTargets="PostBuildEvent" Condition="'$(OS)' == 'Unix' AND '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'True'">
 
   <PropertyGroup> 
   <GlfwMacSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)/../Third/MacOs/glfw/$(MacLibFolder)/libglfw.dylib'))</GlfwMacSrc>

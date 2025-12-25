@@ -58,7 +58,9 @@ namespace Editor
             var pos = ImGui.GetWindowPos();
             WindowPosition = pos;
             WindowPositionRender = new Vector2((int)pos.X, (int)pos.Y + (int)ImGui.GetFrameHeight() / 2);
-            if (_surface.Cameras != null && _surface.Cameras.Length > 0)
+
+            var surfaceCamerasInUse = (_surface.Cameras != null && _surface.Cameras.Length > 0);
+            if (surfaceCamerasInUse)
             {
                 var cameraRenderTarget = _surface.Cameras[0].OutRenderTexture?.NativeResource;
 

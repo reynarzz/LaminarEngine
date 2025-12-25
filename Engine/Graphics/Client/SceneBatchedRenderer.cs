@@ -1,11 +1,6 @@
 ﻿using Engine.Rendering;
 using Engine.Utils;
 using GlmNet;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Engine.Graphics
 {
@@ -51,7 +46,7 @@ namespace Engine.Graphics
             var uiBatchesInfo = default(RenderingBatchesInfo);
             if (surface.RenderUI)
             {
-                RenderBatches(camera, _uiBatches, ref surface.UIViewProj, targetRenderTexture, targetRenderTexture);
+                uiBatchesInfo = RenderBatches(camera, _uiBatches, ref surface.UIViewProj, targetRenderTexture, targetRenderTexture);
                 EngineInfo.Renderer.UIBatches = uiBatchesInfo.BatchesCount;
                 EngineInfo.Renderer.UIGrabScreenPass = uiBatchesInfo.ScreenGrabPasses;
             }

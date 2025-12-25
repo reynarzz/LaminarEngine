@@ -51,7 +51,7 @@ namespace Engine.Layers
                RenderDebug = true,
 #endif
             }]);
-            _screenGeometry = GraphicsHelper.GetScreenQuadGeometry();
+            _screenGeometry = GraphicsHelper.CreateQuadGeometry();
         }
 
         internal static void InitializeSurfaces(RenderingSurface[] configs)
@@ -93,6 +93,7 @@ namespace Engine.Layers
                             _sceneCamera = SceneManager.FindComponent<Camera>(findDisabled: false);
                         }
 
+                        // TODO: maybe putting a camera in the array can cause problems
                         if (_sceneCamera != null && _sceneCamera.IsAlive && _sceneCamera.IsEnabled)
                         {
                             if (surface.Cameras == null)
@@ -135,29 +136,30 @@ namespace Engine.Layers
 
         private void RenderScene(RenderingSurface surface, ICamera camera)
         {
-            foreach (var renderer in surface.SceneRenderers)
+            var isCameraAvailable = camera.IsAlive && camera.IsEnabled;
+
+            if (!isCameraAvailable)
             {
-                var isCameraAvailable = camera.IsAlive && camera.IsEnabled;
-
-                if (!isCameraAvailable)
+                if (surface.BlitToScreen)
                 {
-                    if (surface.BlitToScreen)
-                    {
-                        //ClearScreenToColor(Color.Black, _defaultSceneRenderTexture);
-                        //GfxDeviceManager.Current.Draw(OnDrawOverlay, _defaultSceneRenderTexture.NativeResource);
-                        //GfxDeviceManager.Current.Present(_defaultSceneRenderTexture.NativeResource);
-                    }
-                    else
-                    {
-                        ClearScreenToColor(Color.Black, surface.RenderTexture);
-                        RenderOverlayToScreen();
-                    }
-
-                    EngineInfo.Renderer.Clear();
-                    isCameraAvailable = false;
-                    return;
+                    //ClearScreenToColor(Color.Black, _defaultSceneRenderTexture);
+                    //GfxDeviceManager.Current.Draw(OnDrawOverlay, _defaultSceneRenderTexture.NativeResource);
+                    //GfxDeviceManager.Current.Present(_defaultSceneRenderTexture.NativeResource);
+                }
+                else
+                {
+                    ClearScreenToColor(Color.Black, surface.RenderTexture);
+                    RenderOverlayToScreen();
                 }
 
+                EngineInfo.Renderer.Clear();
+                isCameraAvailable = false;
+                return;
+            }
+
+            foreach (var renderer in surface.SceneRenderers)
+            {
+                
                 var targetRenderTexture = camera.RenderTexture ?? surface.RenderTexture;
                 GfxDeviceManager.Current.SetViewport(new vec4(0, 0, targetRenderTexture.Width, targetRenderTexture.Height));
 

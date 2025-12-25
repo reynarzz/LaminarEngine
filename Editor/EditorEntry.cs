@@ -1,4 +1,5 @@
-﻿using Editor.Views;
+﻿using Editor.Rendering;
+using Editor.Views;
 using Engine;
 using Engine.Graphics;
 using Engine.GUI;
@@ -76,7 +77,11 @@ namespace Editor
                 RenderUI = true,
                 BlitToScreen = false,
                 RenderTexture = new RenderTexture(1920, 1080) { Name = "Editor Render Texture" },
-                SceneRenderers = { sceneBatcher }
+                SceneRenderers = 
+                { 
+                    //sceneBatcher,
+                    new MousePickerSceneRenderer()
+                }
             };
 
             _editorSceneView = new EditorSceneView("Scene", _editorSurface, _editorCamera);

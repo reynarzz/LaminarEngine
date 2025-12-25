@@ -15,6 +15,29 @@ namespace Engine
         public Vertex v1;
         public Vertex v2;
         public Vertex v3;
+        public const int Count = 4;
+        public Vertex this[int index]
+        {
+            get
+            {
+                switch (index)
+                {
+                    case 0:
+                        return v0;
+                        case 1:
+                            return v1;
+                        case 2:
+                            return v2;
+                        case 3:
+                            return v3;
+                    default:
+                        {
+                            Debug.Error($"Index out of range: {index}");
+                            return default;
+                        }
+                }
+            }
+        }
     }
 
     internal struct QuadVertices<T> where T : unmanaged, IVertex<T>

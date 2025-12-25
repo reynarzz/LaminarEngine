@@ -64,7 +64,10 @@ namespace Editor
             translation = new vec4(translation.x, -translation.y, translation.z, translation.w);
             viewM[3] = translation;
 
-            Surface.UIViewProj = _uiProj * viewM * glm.translate(mat4.identity(), new vec3(0, -UICanvas.CanvasHeight));
+            var viewTransformed = viewM * glm.translate(mat4.identity(), new vec3(0, -UICanvas.CanvasHeight));
+            Surface.UIViewProj = _uiProj * viewTransformed;
+            Surface.UIView = viewTransformed;
+            Surface.UIProj = _uiProj;
 
             GetPixelMousePicker();
         }
