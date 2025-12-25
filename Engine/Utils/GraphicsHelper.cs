@@ -11,7 +11,9 @@ namespace Engine
 {
     internal static class GraphicsHelper
     {
-        internal static GfxResource GetEmptyGeometry<T>(int vertCount, int indexCount, ref GeometryDescriptor geoDesc, GfxResource indexBuffer = null) where T : unmanaged, IVertex<T>
+        internal static GfxResource GetEmptyGeometry<T>(int vertCount, int indexCount, ref GeometryDescriptor geoDesc,
+                                                        GfxResource indexBuffer = null, bool isSharedIndexBuffer = true) 
+                                                        where T : unmanaged, IVertex<T>
         {
             if (geoDesc == null)
             {
