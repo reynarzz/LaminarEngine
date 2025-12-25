@@ -19,7 +19,7 @@ namespace Engine.Layers
         private static readonly List<RenderingSurface> _renderingSurfaces = new();
         private Action<Shader, RenderTexture, RenderTexture, UniformValue[]> _drawPostProcessCallback;
         private ICamera _sceneCamera;
-
+        internal static event Action OnRenderingEnd;
         public RenderingLayer() : base()
         {
             _drawPostProcessCallback = PostProcessDraw;
@@ -113,6 +113,8 @@ namespace Engine.Layers
                     RenderScene(surface, camera);
                 }
             }
+
+            OnRenderingEnd?.Invoke();
         }
 
         private void CollectRenderers()

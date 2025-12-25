@@ -20,6 +20,7 @@ namespace Engine.Graphics
         public List<SceneRendererBase> SceneRenderers { get; set; } = new();
         public bool PickCameraFromSceneGraph { get; set; }
         public RenderTexture RenderTexture { get; set; }
+        public RenderTexture[] RenderTextures { get; set; }
         public bool RenderPostProcessing { get; set; }
         public bool RenderDebug { get; set; }
         public bool BlitToScreen { get; set; }
@@ -50,6 +51,12 @@ namespace Engine.Graphics
         public void OnEnd()
         {
             _isPrepared = false;
+            OnRenderingEnd();
+        }
+
+        protected virtual void OnRenderingEnd()
+        {
+
         }
     }
 }

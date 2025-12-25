@@ -1,4 +1,5 @@
-﻿using Engine;
+﻿using Editor.Rendering;
+using Engine;
 using Engine.Graphics;
 using Engine.Graphics.OpenGL;
 using Engine.GUI;
@@ -22,6 +23,8 @@ namespace Editor
         private Texture texture;
         private TextureDescriptor _textDesc;
         private byte[] _blackPixel = [0, 0, 0, 0xFF];
+        internal bool IsMouseClicked { get; private set; }
+        private readonly MousePickerSceneRenderer _mousePickerRenderer;
         public EditorSceneView(string viewName, RenderingSurface surface, EditorCamera camera) : base(viewName, surface)
         {
             _camera = camera;
@@ -36,7 +39,22 @@ namespace Editor
                 Mode = TextureMode.Clamp,
 
             };
+
+            RenderingLayer.OnRenderingEnd += OnRenderingEnd;
+            _mousePickerRenderer = new MousePickerSceneRenderer();
         }
+
+        private void OnRenderingEnd()
+        {
+            if (IsMouseClicked)
+            {
+                SelecteObject();
+                Surface.SceneRenderers.Remove(_mousePickerRenderer);
+            }
+
+            IsMouseClicked = false;
+        }
+
         public override void OnUpdate()
         {
 
@@ -69,7 +87,12 @@ namespace Editor
             Surface.UIView = viewTransformed;
             Surface.UIProj = _uiProj;
 
-            GetPixelMousePicker();
+
+            if (ImGui.IsMouseClicked(ImGuiMouseButton.Left))
+            {
+                IsMouseClicked = true;
+                Surface.SceneRenderers.Add(_mousePickerRenderer);
+            }
         }
 
         public override void OnRender()
@@ -83,7 +106,7 @@ namespace Editor
             ImGui.End();
         }
 
-        private void GetPixelMousePicker()
+        private void SelecteObject()
         {
             Vector2 mousePos = ImGui.GetMousePos();
 
@@ -99,8 +122,8 @@ namespace Editor
             if (mouseInContent.X < 0 || mouseInContent.X >= contentSize.X ||
                 mouseInContent.Y < 0 || mouseInContent.Y >= contentSize.Y)
             {
-                _textDesc.Buffer = _blackPixel;
-                GfxDeviceManager.Current.UpdateResouce(texture.NativeResource, _textDesc);
+                // _textDesc.Buffer = _blackPixel;
+              //  GfxDeviceManager.Current.UpdateResouce(texture.NativeResource, _textDesc);
                 return;
             }
 
@@ -111,12 +134,19 @@ namespace Editor
             float scaleY = (float)rtHeight / contentSize.Y;
 
             int x = Mathf.Clamp(Mathf.RoundToInt(mouseInContent.X * scaleX), 0, rtWidth - 1);
-            int y = Mathf.Clamp(rtHeight - 1 - Mathf.RoundToInt(mouseInContent.Y * scaleY), 0, rtHeight - 1);
+            int y = Mathf.Clamp(rtHeight - 1 - Mathf.RoundToInt(mouseInContent.Y * scaleY), 0, rtHeight - 1) - 1;
 
             byte[] colors = GfxDeviceManager.Current.ReadRenderTargetColors(Surface.RenderTexture.NativeResource, x, y, 1, 1);
 
-            _textDesc.Buffer = colors;
-            GfxDeviceManager.Current.UpdateResouce(texture.NativeResource, _textDesc);
+            uint colorid = (ColorPacketRGBA)new Color32(colors[0], colors[1], colors[2], colors[3]);
+            if (_mousePickerRenderer.RenderersIDs.TryGetValue(colorid, out var renderer))
+            {
+                Selector.Selected = renderer.Actor;
+                Debug.Log(renderer.Actor.Name);
+            }
+
+           // _textDesc.Buffer = colors;
+            // GfxDeviceManager.Current.UpdateResouce(texture.NativeResource, _textDesc);
         }
     }
 }

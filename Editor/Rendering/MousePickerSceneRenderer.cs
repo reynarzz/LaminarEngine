@@ -2,11 +2,6 @@
 using Engine.Graphics;
 using Engine.Utils;
 using GlmNet;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Editor.Rendering
 {
@@ -14,7 +9,6 @@ namespace Editor.Rendering
     {
         private List<Renderer2D> _worldRenderers;
         private List<Renderer2D> _uiRenderers;
-
         private readonly DrawCallData _drawCallData;
         private readonly PipelineFeatures _pipelineFeatures;
         private GfxResource _quadGeometry;
@@ -68,10 +62,14 @@ namespace Editor.Rendering
             }
         }
         ";
+        private readonly List<(int verticesCount, GfxResource geometry, GeometryDescriptor desc)> _geometries = new();
 
         private Dictionary<Guid, uint> _colorId = new();
+        private Dictionary<uint, Renderer2D> _renderersByColors = new();
+        internal IReadOnlyDictionary<uint, Renderer2D> RenderersIDs => _renderersByColors;
+
+        // private Stack<uint> _freeIds;
         private uint _currentId = 0x10000000;
-        private readonly List<(int verticesCount, GfxResource geometry, GeometryDescriptor desc)> _geometries = new();
         public MousePickerSceneRenderer()
         {
             _drawCallData = new DrawCallData()
@@ -126,12 +124,10 @@ namespace Editor.Rendering
                     if (!_colorId.TryGetValue(renderer.GetID(), out var color))
                     {
                         // TODO: add list of releasedIds to, reuse.
-                        color = (uint)Random.Shared.Next(); // demove this
-                        _colorId.Add(renderer.GetID(), (uint)Random.Shared.Next()); // demove this
-
+                        _currentId++;
                         color = _currentId;
-                        //--_colorId.Add(renderer.GetID(), _currentId);
-                        //--_currentId++; 
+                        _colorId.Add(renderer.GetID(), _currentId);
+                        _renderersByColors.Add(_currentId, renderer);
                     }
                     _drawCallData.Uniforms[3].SetUInt("uColor", color);
                     var texture = renderer.Sprite?.Texture ?? Texture2D.White;
@@ -198,7 +194,7 @@ namespace Editor.Rendering
                         {
                             vertex.Count = sizeof(Vertex) * renderer.Mesh.Vertices.Count;
                         }
-                        
+
                         vertex.Buffer = renderer.Mesh.Vertices.ToArray();
 
                         _drawCallData.Geometry = geometry;
@@ -214,6 +210,11 @@ namespace Editor.Rendering
             DrawRenderers(_uiRenderers, surface.UIProj, surface.UIView, surface.UIViewProj);
 
             return targetRenderTexture;
+        }
+
+        protected override void OnRenderingEnd()
+        {
+            
         }
     }
 }

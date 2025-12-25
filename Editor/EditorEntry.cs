@@ -53,8 +53,6 @@ namespace Editor
 
             new GameCooker.GameProject().Initialize(new GameCooker.ProjectConfig() { ProjectFolderRoot = root });
 
-            _editorCamera = new EditorCamera();
-
 
             _gameSurface = new RenderingSurface()
             {
@@ -69,6 +67,7 @@ namespace Editor
 
             var sceneBatcher = new SceneBatchedRenderer();
             _gameSurface.SceneRenderers = new() { sceneBatcher };
+            _editorCamera = new EditorCamera();
             _editorSurface = new RenderingSurface()
             {
                 Cameras = [_editorCamera],
@@ -79,12 +78,12 @@ namespace Editor
                 RenderTexture = new RenderTexture(1920, 1080) { Name = "Editor Render Texture" },
                 SceneRenderers = 
                 { 
-                    //sceneBatcher,
-                    new MousePickerSceneRenderer()
+                    sceneBatcher,
                 }
             };
 
             _editorSceneView = new EditorSceneView("Scene", _editorSurface, _editorCamera);
+
 
             RenderingLayer.InitializeSurfaces([_gameSurface, _editorSurface]);
             RenderingLayer.OnDrawOverlay += () =>
