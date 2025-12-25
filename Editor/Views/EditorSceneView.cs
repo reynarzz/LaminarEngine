@@ -22,7 +22,7 @@ namespace Editor
         private Texture texture;
         private TextureDescriptor _textDesc;
         private byte[] _blackPixel = [0, 0, 0, 0xFF];
-        public EditorSceneView(string viewName, RenderingLayer.RenderingSurface surface, EditorCamera camera) : base(viewName, surface)
+        public EditorSceneView(string viewName, RenderingSurface surface, EditorCamera camera) : base(viewName, surface)
         {
             _camera = camera;
 
@@ -39,7 +39,7 @@ namespace Editor
         }
         public override void OnUpdate()
         {
-            
+
         }
         protected override void OnWindowRender()
         {
@@ -66,32 +66,28 @@ namespace Editor
 
             Surface.UIViewProj = _uiProj * viewM * glm.translate(mat4.identity(), new vec3(0, -UICanvas.CanvasHeight));
 
-
             GetPixelMousePicker();
-
-
         }
+
         public override void OnRender()
         {
             base.OnRender();
             ImGui.Begin("Image testt");
-
             // Draw the image and get the region it occupies
             Vector2 imageSize = new Vector2(10, 10);
-            ImGui.Image((nint)(texture.NativeResource as GLTexture).Handle, imageSize,
-                new Vector2(0, 1), new Vector2(1, 0));
+            ImGui.Image((nint)(texture.NativeResource as GLTexture).Handle, imageSize, new Vector2(0, 1), new Vector2(1, 0));
 
             ImGui.End();
-
         }
+
         private void GetPixelMousePicker()
         {
             Vector2 mousePos = ImGui.GetMousePos();
 
-            Vector2 windowPos = WindowPosition; 
-            Vector2 windowSize = WindowSize;    
+            Vector2 windowPos = WindowPosition;
+            Vector2 windowSize = WindowSize;
 
-            float titleBarHeight = ImGui.GetFrameHeightWithSpacing(); 
+            float titleBarHeight = ImGui.GetFrameHeightWithSpacing();
 
             Vector2 mouseInContent = mousePos - new Vector2(windowPos.X, windowPos.Y + titleBarHeight);
 
@@ -100,12 +96,11 @@ namespace Editor
             if (mouseInContent.X < 0 || mouseInContent.X >= contentSize.X ||
                 mouseInContent.Y < 0 || mouseInContent.Y >= contentSize.Y)
             {
-                _textDesc.Buffer = _blackPixel; 
+                _textDesc.Buffer = _blackPixel;
                 GfxDeviceManager.Current.UpdateResouce(texture.NativeResource, _textDesc);
                 return;
             }
 
-         
             int rtWidth = Surface.RenderTexture.Width;
             int rtHeight = Surface.RenderTexture.Height;
 
@@ -120,7 +115,5 @@ namespace Editor
             _textDesc.Buffer = colors;
             GfxDeviceManager.Current.UpdateResouce(texture.NativeResource, _textDesc);
         }
-
-
     }
 }

@@ -37,8 +37,8 @@ namespace Editor
         private int _offsetY = 0;
         public int OffsetX => _offsetX;
         public int OffsetY => _offsetY;
-        private readonly RenderingLayer.RenderingSurface _surface;
-        public EditorGameView(WindowStandalone window, RenderingLayer.RenderingSurface surface) : base("Game", surface)
+        private readonly RenderingSurface _surface;
+        public EditorGameView(WindowStandalone window, RenderingSurface surface) : base("Game", surface)
         {
             _window = window;
             _width = _window.Width;

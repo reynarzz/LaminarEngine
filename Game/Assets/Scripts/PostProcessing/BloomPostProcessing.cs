@@ -49,6 +49,10 @@ namespace Game
             _blurPassShader = new Shader(vertex, Assets.GetText("Shaders/Bloom/Bloom_GaussianBlur.frag").Text);
             _combinePassShader = new Shader(vertex, Assets.GetText("Shaders/Bloom/Bloom_Combine.frag").Text);
 
+            _brightPassShader.Name = "Bloom_BrightPass";
+            _blurPassShader.Name = "Bloom_GaussianBlur";
+            _combinePassShader.Name = "Bloom/Bloom_Combine";
+
             _brightRenderTexture = new RenderTexture(Screen.Width / 3, Screen.Height / 3);
             _blurRenderTexture = new RenderTexture(_brightRenderTexture.Width, _brightRenderTexture.Height);
             _blurRenderTexture2 = new RenderTexture(_brightRenderTexture.Width, _brightRenderTexture.Height);

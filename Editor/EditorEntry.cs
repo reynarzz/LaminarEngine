@@ -1,5 +1,6 @@
 ﻿using Editor.Views;
 using Engine;
+using Engine.Graphics;
 using Engine.GUI;
 using Engine.Layers;
 using Engine.Layers.Input;
@@ -28,8 +29,8 @@ namespace Editor
         private GFSEngine _engine;
         // private SimpleNodeEditor _node;
         private ObjectEditorView _objectEditor;
-        private RenderingLayer.RenderingSurface _gameSurface;
-        private RenderingLayer.RenderingSurface _editorSurface;
+        private RenderingSurface _gameSurface;
+        private RenderingSurface _editorSurface;
         private EditorCamera _editorCamera;
         internal void Init()
         {
@@ -53,25 +54,29 @@ namespace Editor
 
             _editorCamera = new EditorCamera();
 
-            _gameSurface = new RenderingLayer.RenderingSurface()
+
+            _gameSurface = new RenderingSurface()
             {
                 PickCameraFromSceneGraph = true,
                 RenderPostProcessing = true,
                 RenderUI = true,
-                UIViewProj = UICanvas.UIViewProj
+                UIViewProj = UICanvas.UIViewProj,
             };
 
             _gameWindow = new EditorGameView(_win, _gameSurface);
             _engine = new GFSEngine(_gameWindow, new GameApplication(), new InputStandAlonePlatform());
 
-            _editorSurface = new RenderingLayer.RenderingSurface()
+            var sceneBatcher = new SceneBatchedRenderer();
+            _gameSurface.SceneRenderers = new() { sceneBatcher };
+            _editorSurface = new RenderingSurface()
             {
                 Cameras = [_editorCamera],
                 RenderDebug = true,
                 RenderPostProcessing = false,
                 RenderUI = true,
                 BlitToScreen = false,
-                RenderTexture = new RenderTexture(1920, 1080) { Name = "Editor Render Texture" }
+                RenderTexture = new RenderTexture(1920, 1080) { Name = "Editor Render Texture" },
+                SceneRenderers = { sceneBatcher }
             };
 
             _editorSceneView = new EditorSceneView("Scene", _editorSurface, _editorCamera);

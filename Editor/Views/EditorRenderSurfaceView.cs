@@ -13,14 +13,14 @@ namespace Editor
 {
     internal class EditorRenderSurfaceView : IEditorWindow
     {
-        private readonly RenderingLayer.RenderingSurface _surface;
-        protected RenderingLayer.RenderingSurface Surface { get; }
+        private readonly RenderingSurface _surface;
+        protected RenderingSurface Surface { get; }
         public Vector2 WindowPositionRender { get; private set; }
         public Vector2 WindowPosition { get; private set; }
         public Vector2 WindowSize { get; private set; }
         private readonly string _viewName;
         private readonly string _surfaceViewId;
-        public EditorRenderSurfaceView(string viewName, RenderingLayer.RenderingSurface surface)
+        public EditorRenderSurfaceView(string viewName, RenderingSurface surface)
         {
             _surface = surface;
             Surface = surface;

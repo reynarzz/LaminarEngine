@@ -8,39 +8,18 @@ namespace Engine.Layers
 {
     internal class RenderingLayer : LayerBase
     {
-        private static Batcher2D _sceneBatches;
-        private static Batcher2D _uiBatches;
-        private DrawCallData _drawCallData;
+        internal static event Action OnDrawOverlay;
+
         private DrawCallData _screenQuadDrawCallData;
-        private PipelineFeatures _pipelineFeatures;
         private PipelineFeatures _screenPipelineFeatures;
-        private RenderTexture _screenGrabTarget;
         private GfxResource _screenGeometry;
         private List<Renderer2D> _renderers;
         private List<Renderer2D> _UIElementRenderers;
-        private readonly Action<Shader, RenderTexture, RenderTexture, UniformValue[]> _drawPostProcessCallback;
-        internal static event Action OnDrawOverlay;
-        internal class DrawOverlayOptions
-        {
-            public int Width { get; set; }
-            public int Height { get; set; }
-        }
-        internal class RenderingSurface
-        {
-            public ICamera[] Cameras { get; set; }
-            public bool PickCameraFromSceneGraph { get; set; }
-            public RenderTexture RenderTexture { get; set; }
-            public bool RenderPostProcessing { get; set; }
-            public bool RenderDebug { get; set; }
-            public bool BlitToScreen { get; set; }
-            public bool RenderUI { get; set; }
-            public mat4 UIViewProj;
-        }
-
         internal static DrawOverlayOptions OverlayOptions { get; } = new DrawOverlayOptions();
 
         private static readonly List<RenderingSurface> _renderingSurfaces = new();
         private ICamera _sceneCamera;
+        private Action<Shader, RenderTexture, RenderTexture, UniformValue[]> _drawPostProcessCallback;
 
         public RenderingLayer() : base()
         {
@@ -49,24 +28,14 @@ namespace Engine.Layers
 
         public override void Initialize()
         {
-            _screenGrabTarget = new RenderTexture(Screen.Width, Screen.Height);
             ClearScreenToColor(WindowManager.Window.StartWindowColor, null);
             GfxDeviceManager.Current.Present();
 
-            _pipelineFeatures = new PipelineFeatures();
             _screenPipelineFeatures = new PipelineFeatures();
-
-            _sceneBatches = new Batcher2D(Consts.Graphics.MAX_QUADS_PER_BATCH);
-            _uiBatches = new Batcher2D(Consts.Graphics.MAX_QUADS_PER_BATCH);
 
             _renderers = new();
             _UIElementRenderers = new();
-            _drawCallData = new DrawCallData()
-            {
-                Textures = new GfxResource[GfxDeviceManager.Current.GetDeviceInfo().MaxValidTextureUnits],
-                Uniforms = new UniformValue[GfxDeviceManager.Current.GetDeviceInfo().MaxUniformsCount],
-            };
-
+           
             _screenQuadDrawCallData = new DrawCallData()
             {
                 Textures = new GfxResource[GfxDeviceManager.Current.GetDeviceInfo().MaxValidTextureUnits],
@@ -83,6 +52,7 @@ namespace Engine.Layers
                BlitToScreen = true,
                RenderUI = true,
                UIViewProj = UICanvas.UIViewProj,
+               SceneRenderers = { new SceneBatchedRenderer() },
 #if DEBUG
                RenderDebug = true,
 #endif
@@ -110,11 +80,15 @@ namespace Engine.Layers
         {
             EngineInfo.Renderer.Clear();
 
-            var batches = default(List<Batch2D>);
-            var uibatches = default(List<Batch2D>);
+            CollectRenderers();
 
             foreach (var surface in _renderingSurfaces)
             {
+                foreach (var renderer in surface.SceneRenderers)
+                {
+                    renderer.OnPrepare(_renderers, _UIElementRenderers);
+                }
+
                 if (surface.Cameras == null || surface.Cameras.Length == 0 || surface.Cameras[0] == null || !surface.Cameras[0].IsAlive)
                 {
                     if (surface.PickCameraFromSceneGraph)
@@ -132,7 +106,7 @@ namespace Engine.Layers
                             }
 
                             surface.Cameras[0] = _sceneCamera;
-                            RenderScene(surface, _sceneCamera, ref batches, ref uibatches);
+                            RenderScene(surface, _sceneCamera);
                         }
                     }
                     continue;
@@ -140,105 +114,99 @@ namespace Engine.Layers
 
                 foreach (var camera in surface.Cameras)
                 {
-                    RenderScene(surface, camera, ref batches, ref uibatches);
+                    RenderScene(surface, camera);
                 }
             }
         }
 
-        private void RenderScene(RenderingSurface surface, ICamera camera, ref List<Batch2D> batches, ref List<Batch2D> uibatches)
+        private void CollectRenderers()
         {
-            var isCameraAvailable = camera.IsAlive && camera.IsEnabled;
+            // TODO: improve this, don't ask for renderers but add/remove with events.
+            SceneManager.OnPreRenderUpdate();
 
-            if (!isCameraAvailable)
+            _renderers.Clear();
+            _UIElementRenderers.Clear();
+            SceneManager.FindAll(_renderers, x =>
             {
+                return x.IsEnabled && x is not UIElement;
+            });
+
+            SceneManager.FindAll(_UIElementRenderers, x =>
+            {
+                return x.IsEnabled && x is UIGraphicsElement;
+            });
+
+        }
+
+        private void RenderScene(RenderingSurface surface, ICamera camera)
+        {
+            foreach (var renderer in surface.SceneRenderers)
+            {
+                var isCameraAvailable = camera.IsAlive && camera.IsEnabled;
+
+                if (!isCameraAvailable)
+                {
+                    if (surface.BlitToScreen)
+                    {
+                        //ClearScreenToColor(Color.Black, _defaultSceneRenderTexture);
+                        //GfxDeviceManager.Current.Draw(OnDrawOverlay, _defaultSceneRenderTexture.NativeResource);
+                        //GfxDeviceManager.Current.Present(_defaultSceneRenderTexture.NativeResource);
+                    }
+                    else
+                    {
+                        ClearScreenToColor(Color.Black, surface.RenderTexture);
+                        RenderOverlayToScreen();
+                    }
+
+                    EngineInfo.Renderer.Clear();
+                    isCameraAvailable = false;
+                    return;
+                }
+
+                var targetRenderTexture = camera.RenderTexture ?? surface.RenderTexture;
+                GfxDeviceManager.Current.SetViewport(new vec4(0, 0, targetRenderTexture.Width, targetRenderTexture.Height));
+
+                // Clear main render target.
+                GfxDeviceManager.Current.Clear(new ClearDeviceConfig()
+                {
+                    Color = camera.BackgroundColor,
+                    RenderTarget = targetRenderTexture.NativeResource
+                });
+
+                // TODO: begin
+                renderer.OnBegin();
+
+                var processedRenderTexture = renderer.OnRenderScene(surface, camera, targetRenderTexture);
+
+#if DEBUG
+                if (surface.RenderDebug)
+                {
+                    SceneManager.OnDrawGizmos();
+                    var VP = camera.Projection * camera.ViewMatrix;
+                    Debug.DrawGeometries(VP, surface.UIViewProj, processedRenderTexture.NativeResource);
+                }
+#endif
+                if (surface.RenderPostProcessing)
+                {
+                   // RenderPostProcessing(ref targetRenderTexture);
+                    camera.OutRenderTexture = processedRenderTexture;
+                }
+
                 if (surface.BlitToScreen)
                 {
-                    //ClearScreenToColor(Color.Black, _defaultSceneRenderTexture);
-                    //GfxDeviceManager.Current.Draw(OnDrawOverlay, _defaultSceneRenderTexture.NativeResource);
-                    //GfxDeviceManager.Current.Present(_defaultSceneRenderTexture.NativeResource);
+                    // Draw any overlays such as debug UI
+                    GfxDeviceManager.Current.Draw(OnDrawOverlay, processedRenderTexture.NativeResource);
+                    GfxDeviceManager.Current.Present(processedRenderTexture.NativeResource);
                 }
                 else
                 {
-                    ClearScreenToColor(Color.Black, surface.RenderTexture);
                     RenderOverlayToScreen();
                 }
 
-                EngineInfo.Renderer.Clear();
-                isCameraAvailable = false;
-                return;
-            }
-
-            var finalRenderTexture = camera.RenderTexture ?? surface.RenderTexture;
-            GfxDeviceManager.Current.SetViewport(new vec4(0, 0, finalRenderTexture.Width, finalRenderTexture.Height));
-
-            // Clear main render target.
-            GfxDeviceManager.Current.Clear(new ClearDeviceConfig()
-            {
-                Color = camera.BackgroundColor,
-                RenderTarget = finalRenderTexture.NativeResource
-            });
-
-            if (batches == null)
-            {
-                SceneManager.OnPreRenderUpdate();
-
-                // TODO: improve this, don't ask for renderers but add/remove with events.
-                _renderers.Clear();
-                _UIElementRenderers.Clear();
-                SceneManager.FindAll(_renderers, x =>
-                {
-                    return x.IsEnabled && x is not UIElement;
-                });
-
-                SceneManager.FindAll(_UIElementRenderers, x =>
-                {
-                    return x.IsEnabled && x is UIGraphicsElement;
-                });
-
-                batches = _sceneBatches.GetBatches(_renderers);
-                uibatches = _uiBatches.GetBatches(_UIElementRenderers);
-            }
-            var VP = camera.Projection * camera.ViewMatrix;
-
-            var geoBatchesInfo = RenderBatches(camera, batches, ref VP, finalRenderTexture);
-
-            var uiBatchesInfo = default(RenderingBatchesInfo);
-            if (surface.RenderUI)
-            {
-                RenderBatches(camera, uibatches, ref surface.UIViewProj, finalRenderTexture, finalRenderTexture);
-                EngineInfo.Renderer.UIBatches = uiBatchesInfo.BatchesCount;
-                EngineInfo.Renderer.UIGrabScreenPass = uiBatchesInfo.ScreenGrabPasses;
-            }
-#if DEBUG
-            EngineInfo.Renderer.WBatches = geoBatchesInfo.BatchesCount;
-            EngineInfo.Renderer.GrabScreenPass = geoBatchesInfo.ScreenGrabPasses;
-
-            EngineInfo.Renderer.PostProcessingPasses = PostProcessingStack.Passes.Count;
-            EngineInfo.Renderer.SavedByBatching = (geoBatchesInfo.TotalRenderers - geoBatchesInfo.BatchesCount) * (uiBatchesInfo.ScreenGrabPasses + 1);
-
-            if (surface.RenderDebug)
-            {
-                SceneManager.OnDrawGizmos();
-                Debug.DrawGeometries(VP, surface.UIViewProj, finalRenderTexture.NativeResource);
-            }
-#endif
-            if (surface.RenderPostProcessing)
-            {
-                RenderPostProcessing(ref finalRenderTexture);
-                camera.OutRenderTexture = finalRenderTexture;
-            }
-
-            if (surface.BlitToScreen)
-            {
-                // Draw any overlays such as debug UI
-                GfxDeviceManager.Current.Draw(OnDrawOverlay, finalRenderTexture.NativeResource);
-                GfxDeviceManager.Current.Present(finalRenderTexture.NativeResource);
-            }
-            else
-            {
-                RenderOverlayToScreen();
+                renderer.OnEnd();
             }
         }
+
         private void RenderOverlayToScreen()
         {
             ClearScreenToColor(Color.Black, null, OverlayOptions.Width, OverlayOptions.Height);
@@ -246,123 +214,6 @@ namespace Engine.Layers
             GfxDeviceManager.Current.Present();
         }
 
-        private RenderingBatchesInfo RenderBatches(ICamera camera, List<Batch2D> batches, ref mat4 VP, RenderTexture sceneRenderTarget, RenderTexture grabBlitTarget = null)
-        {
-            RenderingBatchesInfo info = default;
-            foreach (var batch in batches)
-            {
-                if (!batch.IsActive)
-                {
-                    break;
-                }
-                info.BatchesCount++;
-                info.TotalRenderers += batch.RenderersCount;
-                batch.Flush();
-
-                var isScreenGrabPass = batch.Material.Passes.Any(x => x.IsScreenGrabPass);
-
-                if (isScreenGrabPass)
-                {
-                    //GfxDeviceManager.Current.Clear(new ClearDeviceConfig()
-                    //{
-                    //    Color = _mainCamera.BackgroundColor,
-                    //    RenderTarget = _screenGrabTarget.NativeResource
-                    //});
-
-                    if (grabBlitTarget)
-                    {
-                        GfxDeviceManager.Current.BlitRenderTargetTo(grabBlitTarget.NativeResource, _screenGrabTarget.NativeResource);
-                    }
-
-                    info.ScreenGrabPasses++;
-
-                    foreach (var batchGrab in batches)
-                    {
-                        if (!batchGrab.IsActive || batchGrab == batch)
-                        {
-                            break;
-                        }
-
-                        batchGrab.Flush();
-                        RenderPass(batchGrab, ref VP, _screenGrabTarget, _screenGrabTarget, camera);
-                    }
-                }
-
-                RenderPass(batch, ref VP, sceneRenderTarget, _screenGrabTarget, camera);
-            }
-
-            return info;
-        }
-
-        private void RenderPass(Batch2D batch, ref mat4 VP, RenderTexture renderTarget, RenderTexture screenGrabTarget, ICamera camera)
-        {
-            foreach (var pass in batch.Material.Passes)
-            {
-                int boundTex = 0;
-                for (; boundTex < batch.Textures.Length; boundTex++)
-                {
-                    var tex = batch.Textures[boundTex];
-
-                    if (tex == null)
-                        break;
-
-                    _drawCallData.Textures[boundTex] = tex.NativeResource;
-                }
-
-                // Set material's texture
-                foreach (var (uniformName, texture) in batch.Material.Textures)
-                {
-                    _drawCallData.NamedTextures[uniformName] = texture.NativeResource;
-                }
-
-                int screenGrabIndex = boundTex;
-
-                // Grab the color texture
-                _drawCallData.Textures[screenGrabIndex] = pass.IsScreenGrabPass ? screenGrabTarget.NativeResource.SubResources[0] : null;
-
-                // Pipeline
-                _pipelineFeatures.Blending = pass.Blending;
-                _pipelineFeatures.Stencil = pass.Stencil;
-
-                _drawCallData.DrawType = batch.DrawType;
-                _drawCallData.DrawMode = batch.DrawMode;
-                _drawCallData.IndexedDraw.IndexCount = batch.IndexCount;
-                _drawCallData.Shader = pass.Shader.NativeShader;
-                _drawCallData.Geometry = batch.Geometry;
-                _drawCallData.Features = _pipelineFeatures;
-                _drawCallData.RenderTarget = renderTarget.NativeResource;
-                _drawCallData.Viewport = new vec4(0, 0, renderTarget.Width, renderTarget.Height);
-
-                // Uniforms
-                _drawCallData.Uniforms[(int)Consts.Graphics.Uniforms.VP_MATRIX].SetMat4(Consts.VIEW_PROJ_UNIFORM_NAME, VP);
-                _drawCallData.Uniforms[(int)Consts.Graphics.Uniforms.VIEW_MATRIX].SetMat4(Consts.VIEW_UNIFORM_NAME, camera.ViewMatrix);
-                _drawCallData.Uniforms[(int)Consts.Graphics.Uniforms.PROJECTION_MATRIX].SetMat4(Consts.PROJECTION_UNIFORM_NAME, camera.Projection);
-                _drawCallData.Uniforms[(int)Consts.Graphics.Uniforms.TEXTURES_ARRAY].SetIntArr(Consts.TEX_ARRAY_UNIFORM_NAME, Batch2D.TextureSlotArray);
-                _drawCallData.Uniforms[(int)Consts.Graphics.Uniforms.MODEL_MATRIX].SetMat4(Consts.MODEL_UNIFORM_NAME, batch.WorldMatrix);
-                _drawCallData.Uniforms[(int)Consts.Graphics.Uniforms.SCREEN_RENDER_TARGET_GRAB].SetInt(Consts.SCREEN_GRAB_TEX_UNIFORM_NAME, screenGrabIndex);
-                _drawCallData.Uniforms[(int)Consts.Graphics.Uniforms.SCREEN_SIZE].SetVec2(Consts.SCREEN_SIZE_UNIFORM_NAME, new vec2(renderTarget.Width, renderTarget.Height));
-                _drawCallData.Uniforms[(int)Consts.Graphics.Uniforms.APP_TIME].SetVec3(Consts.TIME_UNIFORM_NAME, new vec3(Time.UnscaledTimeWrap, Time.TimeCurrentWrap, Time.DeltaTime));
-
-                // Clears Next unused uniform, so the device does not send more data than necessary.
-                _drawCallData.Uniforms[(int)Consts.Graphics.Uniforms.COUNT] = default;
-
-                // Adds extra uniforms needed by renderers.
-                int uniformOffset = 0;
-                foreach (var uniform in pass.Uniforms.Values)
-                {
-                    if (_drawCallData.Uniforms.Length <= uniformOffset)
-                    {
-                        Debug.Error($"Max uniform per drawcall reached: {_drawCallData.Uniforms.Length}");
-                        break;
-                    }
-                    _drawCallData.Uniforms[uniformOffset + (int)Consts.Graphics.Uniforms.COUNT] = uniform;
-                    uniformOffset++;
-                }
-
-                // Draw
-                GfxDeviceManager.Current.Draw(_drawCallData);
-            }
-        }
         private void RenderPostProcessing(ref RenderTexture screenRenderTexture)
         {
             foreach (var pass in PostProcessingStack.Passes)
@@ -370,6 +221,7 @@ namespace Engine.Layers
                 screenRenderTexture = pass.Render(screenRenderTexture, _drawPostProcessCallback);
             }
         }
+
         private void PostProcessDraw(Shader shader, RenderTexture inTex, RenderTexture outTex, UniformValue[] uniforms)
         {
             // TODO: Fix selecting the current rendering camera from the surface, for now its using the scene camera.
@@ -428,7 +280,6 @@ namespace Engine.Layers
             GfxDeviceManager.Current.Draw(_screenQuadDrawCallData);
         }
 
-
         private void ClearScreenToColor(Color color, RenderTexture texture)
         {
             ClearScreenToColor(color, texture, Screen.Width, Screen.Height);
@@ -457,11 +308,5 @@ namespace Engine.Layers
 
         }
 
-        private struct RenderingBatchesInfo
-        {
-            public int BatchesCount { get; set; }
-            public int ScreenGrabPasses { get; set; }
-            public int TotalRenderers { get; set; }
-        }
     }
 }
