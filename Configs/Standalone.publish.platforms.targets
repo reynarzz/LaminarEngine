@@ -21,7 +21,7 @@
           DestinationFiles="$(AssembliesDir)/glfw.dll"
           SkipUnchangedFiles="true" />
 
-    <Move SourceFiles="$(PublishDir)/miniaudio.dll"
+    <Copy SourceFiles="$(ProjectRoot)Third\SoundFlow\win-x64\native\miniaudio.dll"
           DestinationFiles="$(AssembliesDir)/miniaudio.dll" />
   </Target>
 

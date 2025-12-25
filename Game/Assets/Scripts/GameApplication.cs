@@ -14,8 +14,7 @@ namespace Game
         // Fix player getting stuck in wall corners due to ground raycast,
         //     :this can be solved by checking if the player is colliding with a wall, if so, then push him away the wall.
         // Refactor renderingLayer to use renderData.
-        // There is a bug related to bind/unbing of geometry
-
+            
 
         // For the game:
         // Improve game architecture.

@@ -168,14 +168,16 @@ namespace Engine.Layers
                 isCameraAvailable = false;
                 return;
             }
-
+           
             foreach (var sceneRenderer in surface.SceneRenderers)
             {
                 bool IsCameraRenderTexture = camera.RenderTexture;
                 var targetRenderTexture = IsCameraRenderTexture ? camera.RenderTexture : surface.RenderTextures != null ? surface.RenderTextures[sceneRenderer.RenderTextureIndex] : _defaultRenderTexture;
 
-                if (!targetRenderTexture)
-                    continue;
+                if (targetRenderTexture)
+                {
+                    targetRenderTexture = _defaultRenderTexture;
+                }
 
                 GfxDeviceManager.Current.SetViewport(new vec4(0, 0, targetRenderTexture.Width, targetRenderTexture.Height));
 
@@ -190,6 +192,7 @@ namespace Engine.Layers
                 sceneRenderer.OnBegin();
 
                 var processedRenderTexture = sceneRenderer.OnRenderScene(surface, camera, targetRenderTexture);
+
 #if DEBUG
                 if (surface.RenderDebug)
                 {
@@ -209,7 +212,10 @@ namespace Engine.Layers
                 }
                 else
                 {
-                    surface.RenderTextures[sceneRenderer.RenderTextureIndex] = processedRenderTexture;
+                    if(surface.RenderTextures != null && surface.RenderTextures.Length > 0)
+                    {
+                        surface.RenderTextures[sceneRenderer.RenderTextureIndex] = processedRenderTexture;
+                    }
                 }
 
                 if (surface.BlitToScreen)

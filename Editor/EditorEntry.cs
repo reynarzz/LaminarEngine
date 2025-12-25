@@ -17,6 +17,7 @@ namespace Editor
     // Hierarchy view
     // Simple object editor: Components(name) (No saving data)
     // Playmode on launch (maybe I implement a proper playmode later: pause, frame step)
+    // Add mouse picker the ability to pick the object behind the current picked object.
 
     internal class EditorEntry
     {
@@ -84,7 +85,6 @@ namespace Editor
             };
 
             _editorSceneView = new EditorSceneView("Scene", _editorSurface, _editorCamera);
-
 
             RenderingLayer.InitializeSurfaces([_gameSurface, _editorSurface]);
             RenderingLayer.OnDrawOverlay += () =>
