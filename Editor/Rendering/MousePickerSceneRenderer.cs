@@ -59,7 +59,7 @@ namespace Editor.Rendering
             
             if(uDiscard == 1)
             {
-                fragColor = step(0.01, texture2D(uTex, _UV).a) * vColor;
+                fragColor = step(0.01, texture(uTex, _UV).a) * vColor;
             
                 if(fragColor.a <= 0.0001)
                 {
