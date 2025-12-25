@@ -20,33 +20,18 @@ namespace Editor
         private readonly EditorCamera _camera;
         private Vector2 _screenSize;
         private mat4 _uiProj;
-        private Texture texture;
-        private TextureDescriptor _textDesc;
-        private byte[] _blackPixel = [0, 0, 0, 0xFF];
         internal bool IsMouseClicked { get; private set; }
         private readonly MousePickerSceneRenderer _mousePickerRenderer;
         public EditorSceneView(string viewName, RenderingSurface surface, EditorCamera camera) : base(viewName, surface)
         {
             _camera = camera;
-
-            texture = new Texture2D(TextureMode.Clamp, 1, 1, 4, [0xFF, 0xFF, 0xFF, 0xFF]);
-
-            _textDesc = new TextureDescriptor()
-            {
-                Width = 1,
-                Height = 1,
-                Channels = 1,
-                Mode = TextureMode.Clamp,
-
-            };
-
             RenderingLayer.OnRenderingEnd += OnRenderingEnd;
             _mousePickerRenderer = new MousePickerSceneRenderer();
         }
 
         private void OnRenderingEnd()
         {
-            if (IsMouseClicked)
+            if (IsMouseClicked && IsMouseInsideWindow())
             {
                 SelecteObject();
                 Surface.SceneRenderers.Remove(_mousePickerRenderer);
@@ -88,22 +73,28 @@ namespace Editor
             Surface.UIProj = _uiProj;
 
 
-            if (ImGui.IsMouseClicked(ImGuiMouseButton.Left))
+            if (ImGui.IsMouseClicked(ImGuiMouseButton.Left) && IsMouseInsideWindow())
             {
                 IsMouseClicked = true;
                 Surface.SceneRenderers.Add(_mousePickerRenderer);
             }
         }
 
-        public override void OnRender()
+        private bool IsMouseInsideWindow()
         {
-            base.OnRender();
-            ImGui.Begin("Image testt");
-            // Draw the image and get the region it occupies
-            Vector2 imageSize = new Vector2(10, 10);
-            ImGui.Image((nint)(texture.NativeResource as GLTexture).Handle, imageSize, new Vector2(0, 1), new Vector2(1, 0));
+            Vector2 mousePos = ImGui.GetMousePos();
 
-            ImGui.End();
+            Vector2 windowPos = WindowPosition;
+            Vector2 windowSize = WindowSize;
+
+            float titleBarHeight = ImGui.GetFrameHeightWithSpacing();
+
+            Vector2 mouseInContent = mousePos - new Vector2(windowPos.X, windowPos.Y + titleBarHeight);
+
+            Vector2 contentSize = new Vector2(windowSize.X, windowSize.Y - titleBarHeight);
+
+            return !(mouseInContent.X < 0 || mouseInContent.X >= contentSize.X ||
+                   mouseInContent.Y < 0 || mouseInContent.Y >= contentSize.Y);
         }
 
         private void SelecteObject()
@@ -119,16 +110,11 @@ namespace Editor
 
             Vector2 contentSize = new Vector2(windowSize.X, windowSize.Y - titleBarHeight);
 
-            if (mouseInContent.X < 0 || mouseInContent.X >= contentSize.X ||
-                mouseInContent.Y < 0 || mouseInContent.Y >= contentSize.Y)
-            {
-                // _textDesc.Buffer = _blackPixel;
-              //  GfxDeviceManager.Current.UpdateResouce(texture.NativeResource, _textDesc);
+            if (!IsMouseInsideWindow())
                 return;
-            }
 
-            int rtWidth = Surface.RenderTexture.Width;
-            int rtHeight = Surface.RenderTexture.Height;
+            int rtWidth = Surface.RenderTextures[0].Width;
+            int rtHeight = Surface.RenderTextures[0].Height;
 
             float scaleX = (float)rtWidth / contentSize.X;
             float scaleY = (float)rtHeight / contentSize.Y;
@@ -136,17 +122,17 @@ namespace Editor
             int x = Mathf.Clamp(Mathf.RoundToInt(mouseInContent.X * scaleX), 0, rtWidth - 1);
             int y = Mathf.Clamp(rtHeight - 1 - Mathf.RoundToInt(mouseInContent.Y * scaleY), 0, rtHeight - 1) - 1;
 
-            byte[] colors = GfxDeviceManager.Current.ReadRenderTargetColors(Surface.RenderTexture.NativeResource, x, y, 1, 1);
+            var colors = GfxDeviceManager.Current.ReadRenderTargetColors(Surface.RenderTextures[1].NativeResource, x, y, 1, 1);
 
             uint colorid = (ColorPacketRGBA)new Color32(colors[0], colors[1], colors[2], colors[3]);
             if (_mousePickerRenderer.RenderersIDs.TryGetValue(colorid, out var renderer))
             {
                 Selector.Selected = renderer.Actor;
-                Debug.Log(renderer.Actor.Name);
             }
-
-           // _textDesc.Buffer = colors;
-            // GfxDeviceManager.Current.UpdateResouce(texture.NativeResource, _textDesc);
+            else
+            {
+                Selector.Selected = null;
+            }
         }
     }
 }

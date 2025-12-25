@@ -85,7 +85,7 @@ namespace Editor
                 _pivot += up * mouseDelta.y * unitsPerPixelY;
             }
 
-            if (io.MouseWheel != 0)
+            if (io.MouseWheel != 0 && ImGui.IsWindowHovered())
             {
                 const float zoomSpeed = 0.1f;
                 _distance *= 1.0f - io.MouseWheel * zoomSpeed;

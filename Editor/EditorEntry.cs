@@ -75,7 +75,8 @@ namespace Editor
                 RenderPostProcessing = false,
                 RenderUI = true,
                 BlitToScreen = false,
-                RenderTexture = new RenderTexture(1920, 1080) { Name = "Editor Render Texture" },
+                RenderTextures = [new RenderTexture(1920, 1080) { Name = "Scene view Render Texture" },
+                                  new RenderTexture(1920, 1080) { Name = "Mouse picker Render Texture" }],
                 SceneRenderers = 
                 { 
                     sceneBatcher,

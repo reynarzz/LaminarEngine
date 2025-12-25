@@ -20,6 +20,7 @@ namespace Engine.Layers
         private Action<Shader, RenderTexture, RenderTexture, UniformValue[]> _drawPostProcessCallback;
         private ICamera _sceneCamera;
         internal static event Action OnRenderingEnd;
+        private RenderTexture _defaultRenderTexture;
         public RenderingLayer() : base()
         {
             _drawPostProcessCallback = PostProcessDraw;
@@ -28,6 +29,7 @@ namespace Engine.Layers
         public override void Initialize()
         {
             _screenPipelineFeatures = new PipelineFeatures();
+            _defaultRenderTexture = new RenderTexture(Screen.Width, Screen.Height);
 
             _renderers = new();
             _UIElementRenderers = new();
@@ -52,6 +54,12 @@ namespace Engine.Layers
 #endif
             }]);
             _screenGeometry = GraphicsHelper.CreateQuadGeometry();
+            WindowManager.Window.OnWindowChanged += OnWindowsChanged;
+        }
+
+        private void OnWindowsChanged(int w, int h)
+        {
+            _defaultRenderTexture.UpdateTarget(w, h);
         }
 
         internal static void InitializeSurfaces(RenderingSurface[] configs)
@@ -61,11 +69,6 @@ namespace Engine.Layers
             for (int i = 0; i < configs.Length; i++)
             {
                 var config = configs[i];
-
-                if (config.RenderTexture == null)
-                {
-                    config.RenderTexture = new RenderTexture(Screen.Width, Screen.Height);
-                }
             }
 
             _renderingSurfaces.AddRange(configs);
@@ -150,7 +153,14 @@ namespace Engine.Layers
                 }
                 else
                 {
-                    ClearScreenToColor(Color.Black, surface.RenderTexture);
+                    if (surface.RenderTextures != null && surface.RenderTextures.Length > 0)
+                    {
+                        for (int i = 0; i < surface.RenderTextures.Length; i++)
+                        {
+                            ClearScreenToColor(Color.Black, surface.RenderTextures[i]);
+                        }
+                    }
+
                     RenderOverlayToScreen();
                 }
 
@@ -159,10 +169,14 @@ namespace Engine.Layers
                 return;
             }
 
-            foreach (var renderer in surface.SceneRenderers)
+            foreach (var sceneRenderer in surface.SceneRenderers)
             {
-                
-                var targetRenderTexture = camera.RenderTexture ?? surface.RenderTexture;
+                bool IsCameraRenderTexture = camera.RenderTexture;
+                var targetRenderTexture = IsCameraRenderTexture ? camera.RenderTexture : surface.RenderTextures != null ? surface.RenderTextures[sceneRenderer.RenderTextureIndex] : _defaultRenderTexture;
+
+                if (!targetRenderTexture)
+                    continue;
+
                 GfxDeviceManager.Current.SetViewport(new vec4(0, 0, targetRenderTexture.Width, targetRenderTexture.Height));
 
                 // Clear main render target.
@@ -173,10 +187,9 @@ namespace Engine.Layers
                 });
 
                 // TODO: begin
-                renderer.OnBegin();
+                sceneRenderer.OnBegin();
 
-                var processedRenderTexture = renderer.OnRenderScene(surface, camera, targetRenderTexture);
-
+                var processedRenderTexture = sceneRenderer.OnRenderScene(surface, camera, targetRenderTexture);
 #if DEBUG
                 if (surface.RenderDebug)
                 {
@@ -188,7 +201,15 @@ namespace Engine.Layers
                 if (surface.RenderPostProcessing)
                 {
                     RenderPostProcessing(ref processedRenderTexture);
+                }
+
+                if (IsCameraRenderTexture)
+                {
                     camera.OutRenderTexture = processedRenderTexture;
+                }
+                else
+                {
+                    surface.RenderTextures[sceneRenderer.RenderTextureIndex] = processedRenderTexture;
                 }
 
                 if (surface.BlitToScreen)
@@ -202,7 +223,7 @@ namespace Engine.Layers
                     RenderOverlayToScreen();
                 }
 
-                renderer.OnEnd();
+                sceneRenderer.OnEnd();
             }
         }
 

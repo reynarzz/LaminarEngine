@@ -58,6 +58,7 @@ namespace Editor
             var pos = ImGui.GetWindowPos();
             WindowPosition = pos;
             WindowPositionRender = new Vector2((int)pos.X, (int)pos.Y + (int)ImGui.GetFrameHeight() / 2);
+            ImGui.GetMousePos();
 
             var surfaceCamerasInUse = (_surface.Cameras != null && _surface.Cameras.Length > 0);
             if (surfaceCamerasInUse)
@@ -66,7 +67,7 @@ namespace Editor
 
                 if (cameraRenderTarget == null)
                 {
-                    cameraRenderTarget = _surface.RenderTexture.NativeResource;
+                    cameraRenderTarget = _surface.RenderTextures[0].NativeResource;
                 }
 
                 var frameBuffer = cameraRenderTarget as GLFrameBuffer;

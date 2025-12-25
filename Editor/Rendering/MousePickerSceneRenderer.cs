@@ -52,24 +52,28 @@ namespace Editor.Rendering
 
         out vec4 fragColor;
         uniform sampler2D uTex;
+        uniform int uDiscard;
         void main()
         {
-            fragColor = step(0.01, texture2D(uTex, _UV).a) * vColor;
-
-            if(fragColor.a <= 0.0001)
+            fragColor = vColor;
+            
+            if(uDiscard == 1)
             {
-                discard;
+                fragColor = step(0.01, texture2D(uTex, _UV).a) * vColor;
+            
+                if(fragColor.a <= 0.0001)
+                {
+                    discard;
+                }
             }
         }
         ";
         private readonly List<(int verticesCount, GfxResource geometry, GeometryDescriptor desc)> _geometries = new();
 
-        private Dictionary<Guid, uint> _colorId = new();
         private Dictionary<uint, Renderer2D> _renderersByColors = new();
         internal IReadOnlyDictionary<uint, Renderer2D> RenderersIDs => _renderersByColors;
 
-        // private Stack<uint> _freeIds;
-        private uint _currentId = 0x10000000;
+        private uint _currentColorId = 0;
         public MousePickerSceneRenderer()
         {
             _drawCallData = new DrawCallData()
@@ -91,6 +95,7 @@ namespace Editor.Rendering
 
             _idPickerShader = new Shader(_mousePickerVertShader, _mousePickerFrag);
             _idPickerShader.Name = "Mouse picker ID";
+            RenderTextureIndex = 1;
         }
 
         protected override void OnPrepareRendering(List<Renderer2D> worldRenderers, List<Renderer2D> uiRenderers)
@@ -102,9 +107,11 @@ namespace Editor.Rendering
             _uiRenderers.Sort(_sortingOrderComparer);
         }
 
-
         public override RenderTexture OnRenderScene(RenderingSurface surface, ICamera camera, RenderTexture targetRenderTexture)
         {
+            _renderersByColors.Clear();
+            _currentColorId = 0;
+
             _drawCallData.DrawType = DrawType.Indexed;
             _drawCallData.DrawMode = DrawMode.Triangles;
             _drawCallData.Shader = _idPickerShader.NativeShader;
@@ -113,23 +120,19 @@ namespace Editor.Rendering
             _drawCallData.Viewport = new vec4(0, 0, targetRenderTexture.Width, targetRenderTexture.Height);
 
 
-            void DrawRenderers(List<Renderer2D> renderers, mat4 projM, mat4 viewM, mat4 viewProjM)
+            void DrawRenderers(List<Renderer2D> renderers, mat4 projM, mat4 viewM, mat4 viewProjM, bool discardAlphaWithTexture)
             {
                 _drawCallData.Uniforms[0].SetMat4(Consts.VIEW_PROJ_UNIFORM_NAME, viewProjM);
                 _drawCallData.Uniforms[1].SetMat4(Consts.VIEW_UNIFORM_NAME, viewM);
                 _drawCallData.Uniforms[2].SetMat4(Consts.PROJECTION_UNIFORM_NAME, projM);
+                _drawCallData.Uniforms[3].SetInt("uDiscard", discardAlphaWithTexture ? 1 : 0);
 
                 foreach (Renderer2D renderer in renderers)
                 {
-                    if (!_colorId.TryGetValue(renderer.GetID(), out var color))
-                    {
-                        // TODO: add list of releasedIds to, reuse.
-                        _currentId++;
-                        color = _currentId;
-                        _colorId.Add(renderer.GetID(), _currentId);
-                        _renderersByColors.Add(_currentId, renderer);
-                    }
-                    _drawCallData.Uniforms[3].SetUInt("uColor", color);
+                    _currentColorId++;
+                    _renderersByColors.Add(_currentColorId, renderer);
+
+                    _drawCallData.Uniforms[4].SetUInt("uColor", _currentColorId);
                     var texture = renderer.Sprite?.Texture ?? Texture2D.White;
                     _drawCallData.Textures[0] = texture.NativeResource;
 
@@ -146,7 +149,7 @@ namespace Editor.Rendering
                         var height = (float)chunk.Height / ppu;
 
                         QuadVertices quadVertices = default;
-                        GraphicsHelper.CreateQuad(ref quadVertices, chunk.Uvs, width, height, chunk.Pivot, color, worldMatrix);
+                        GraphicsHelper.CreateQuad(ref quadVertices, chunk.Uvs, width, height, chunk.Pivot, _currentColorId, worldMatrix);
 
                         var vertex = _geoDesc.VertexDesc.BufferDesc as BufferDataDescriptor<Vertex>;
                         for (int i = 0; i < QuadVertices.Count; i++)
@@ -206,15 +209,18 @@ namespace Editor.Rendering
                 }
             }
 
-            DrawRenderers(_worldRenderers, camera.Projection, camera.ViewMatrix, camera.Projection * camera.ViewMatrix);
-            DrawRenderers(_uiRenderers, surface.UIProj, surface.UIView, surface.UIViewProj);
+            DrawRenderers(_worldRenderers, camera.Projection, camera.ViewMatrix, camera.Projection * camera.ViewMatrix, true);
+
+            // Note: UI do not discard using texture so it can render whole block of geometry and is easier to pick up for things like text.
+            
+            DrawRenderers(_uiRenderers, surface.UIProj, surface.UIView, surface.UIViewProj, false);
 
             return targetRenderTexture;
         }
 
         protected override void OnRenderingEnd()
         {
-            
+
         }
     }
 }

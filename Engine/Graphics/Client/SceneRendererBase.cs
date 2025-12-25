@@ -19,7 +19,6 @@ namespace Engine.Graphics
         public ICamera[] Cameras { get; set; }
         public List<SceneRendererBase> SceneRenderers { get; set; } = new();
         public bool PickCameraFromSceneGraph { get; set; }
-        public RenderTexture RenderTexture { get; set; }
         public RenderTexture[] RenderTextures { get; set; }
         public bool RenderPostProcessing { get; set; }
         public bool RenderDebug { get; set; }
@@ -33,6 +32,7 @@ namespace Engine.Graphics
     internal abstract class SceneRendererBase
     {
         private bool _isPrepared = false;
+        public int RenderTextureIndex { get; set; }
         public void OnBegin()
         {
 
