@@ -33,7 +33,7 @@ namespace Editor.Rendering
           out vec2 _UV;
 
           uniform mat4 uVP;
-
+          uniform uint uColor;
           vec4 unpackColor(uint c) 
           {
               float r = float((c >> 24) & 0xFFu) / 255.0;
@@ -45,7 +45,7 @@ namespace Editor.Rendering
   
           void main() 
           {
-              vColor = unpackColor(color);
+              vColor = unpackColor(uColor);
               _UV = uv;
               gl_Position = uVP * vec4(position, 1.0);
           }
@@ -117,22 +117,23 @@ namespace Editor.Rendering
 
             void DrawRenderers(List<Renderer2D> renderers, mat4 projM, mat4 viewM, mat4 viewProjM)
             {
-                _drawCallData.Uniforms[(int)Consts.Graphics.Uniforms.VP_MATRIX].SetMat4(Consts.VIEW_PROJ_UNIFORM_NAME, viewProjM);
-                _drawCallData.Uniforms[(int)Consts.Graphics.Uniforms.VIEW_MATRIX].SetMat4(Consts.VIEW_UNIFORM_NAME, viewM);
-                _drawCallData.Uniforms[(int)Consts.Graphics.Uniforms.PROJECTION_MATRIX].SetMat4(Consts.PROJECTION_UNIFORM_NAME, projM);
+                _drawCallData.Uniforms[0].SetMat4(Consts.VIEW_PROJ_UNIFORM_NAME, viewProjM);
+                _drawCallData.Uniforms[1].SetMat4(Consts.VIEW_UNIFORM_NAME, viewM);
+                _drawCallData.Uniforms[2].SetMat4(Consts.PROJECTION_UNIFORM_NAME, projM);
 
                 foreach (Renderer2D renderer in renderers)
                 {
                     if (!_colorId.TryGetValue(renderer.GetID(), out var color))
                     {
                         // TODO: add list of releasedIds to, reuse.
-                        _colorId.Add(renderer.GetID(), (uint)Random.Shared.Next());
+                        color = (uint)Random.Shared.Next(); // demove this
+                        _colorId.Add(renderer.GetID(), (uint)Random.Shared.Next()); // demove this
 
-                        //--color = _currentId;
+                        color = _currentId;
                         //--_colorId.Add(renderer.GetID(), _currentId);
                         //--_currentId++; 
                     }
-
+                    _drawCallData.Uniforms[3].SetUInt("uColor", color);
                     var texture = renderer.Sprite?.Texture ?? Texture2D.White;
                     _drawCallData.Textures[0] = texture.NativeResource;
 
@@ -197,14 +198,8 @@ namespace Editor.Rendering
                         {
                             vertex.Count = sizeof(Vertex) * renderer.Mesh.Vertices.Count;
                         }
-                        var vertices = new Vertex[renderer.Mesh.Vertices.Count];
-                        for (int i = 0; i < renderer.Mesh.Vertices.Count; i++)
-                        {
-                            var cvertex = renderer.Mesh.Vertices[i];
-                            cvertex.Color = color;
-                            vertices[i] = cvertex;
-                        }
-                        vertex.Buffer = vertices;
+                        
+                        vertex.Buffer = renderer.Mesh.Vertices.ToArray();
 
                         _drawCallData.Geometry = geometry;
                         _drawCallData.IndexedDraw.IndexCount = indicesCount;
