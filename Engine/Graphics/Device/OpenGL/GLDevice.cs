@@ -222,6 +222,14 @@ namespace Engine.Graphics.OpenGL
             {
                 glDisable(GL_STENCIL_TEST);
             }
+            if (features.DepthBuffer)
+            {
+                glEnable(GL_DEPTH_TEST);
+            }
+            else
+            {
+                glDisable(GL_DEPTH_TEST);
+            }
         }
 
         internal override void Draw(Action draw, GfxResource renderTarget)

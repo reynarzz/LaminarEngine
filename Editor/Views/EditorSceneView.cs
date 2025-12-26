@@ -128,6 +128,7 @@ namespace Editor
             if (_mousePickerRenderer.RenderersIDs.TryGetValue(colorid, out var renderer))
             {
                 Selector.Selected = renderer.Transform.Actor;
+                Debug.Log(renderer.Transform.Name);
             }
             else
             {

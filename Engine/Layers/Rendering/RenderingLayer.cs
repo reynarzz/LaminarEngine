@@ -211,10 +211,10 @@ namespace Engine.Layers
                     var VP = camera.Projection * camera.ViewMatrix;
                     Debug.DrawGeometries(VP, surface.UIViewProj, processedRenderTexture.NativeResource);
 #endif
-                    if (surface.DrawGizmos)
-                    {
-                        processedRenderTexture = surface?.GizmosRenderer?.OnRender(camera, processedRenderTexture);
-                    }
+                }
+                if (surface.DrawGizmos)
+                {
+                    processedRenderTexture = surface?.GizmosRenderer?.OnRender(camera, processedRenderTexture);
                 }
                 if (surface.RenderPostProcessing)
                 {

@@ -9,17 +9,11 @@ namespace Engine.Graphics
 {
     internal class RendererData
     {
-        public virtual bool IsEnabled { get; }
+        internal event Action<RendererData> OnDestroyRenderer;
         public Material Material { get; set; }
         public Mesh Mesh { get; set; }
         protected internal virtual bool IsDirty { get; set; } = true;
-        internal event Action<RendererData> OnDestroyRenderer;
-
-        internal void OnDestroy()
-        {
-            OnDestroyRenderer?.Invoke(this);
-        }
-        public mat4 ModelMatrix { get; set; }
+        public virtual bool IsEnabled { get; }
         public bool PrivateBatch { get; set; }
         private readonly Guid _guid;
         private Action _onDraw;
@@ -43,28 +37,34 @@ namespace Engine.Graphics
         {
             _onDraw?.Invoke();
         }
-
+        internal void OnDestroy()
+        {
+            OnDestroyRenderer?.Invoke(this);
+        }
     }
 
     internal class RendererData2D : RendererData
     {
         private uint _colorpacket = Color.White;
         public bool IsBillboard { get; set; }
-        public Transform Transform { get; }
-   
+        public Transform Transform { get; set; }
+
         private Func<bool> _isEnabled;
-        public override bool IsEnabled => _isEnabled?.Invoke() ?? false;
+        public override bool IsEnabled => _isEnabled?.Invoke() ?? true;
 
         //public RendererData2D(Guid id, Transform transform, Func<bool> isEnabled)
         //{
 
         //}
+        public RendererData2D(Guid id, Transform transform) : this(id, transform, null, null)
+        {
+        }
         public RendererData2D(Guid id, Transform transform, Action onDraw, Func<bool> isEnabled) : base(id, onDraw)
         {
             Transform = transform;
             _isEnabled = isEnabled;
         }
-     
+
         public Color Color
         {
             get => _colorpacket;

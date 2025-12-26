@@ -8,11 +8,8 @@ namespace Engine.Graphics
     {
         private readonly Batcher2D _worldBatcher;
         private readonly Batcher2D _uiBatcher;
-
         private List<Batch2D> _worldBatches;
         private List<Batch2D> _uiBatches;
-
-        private readonly Action<Shader, RenderTexture, RenderTexture, UniformValue[]> _drawPostProcessCallback;
         private readonly DrawCallData _drawCallData;
         private readonly RenderTexture _screenGrabTarget;
         private readonly PipelineFeatures _pipelineFeatures;
