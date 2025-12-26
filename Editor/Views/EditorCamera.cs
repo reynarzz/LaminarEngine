@@ -28,14 +28,17 @@ namespace Editor
 
         public RenderTexture RenderTexture { get; set; }
         RenderTexture ICamera.OutRenderTexture { get; set; }
-        public vec3 Forward => GetForward();
-        public vec3 Right => GetRight();
-        public vec3 Up => GetUp();
-        public vec3 WorldPosition => _worldPosition;
 
+        public vec3 Forward => GetAxis(Vector3.UnitZ, _rotation);
+        public vec3 Right => GetAxis(Vector3.UnitX, _rotation);
+        public vec3 Up => GetAxis(Vector3.UnitY, _rotation);
+        public vec3 WorldPosition => _worldPosition;
+        public float NearPlane { get; set; } = 0.001f;
+        public float FarPlane { get; set; } = 1000.0f;
+        public float Fov { get; set; } = 60;
         public EditorCamera(float aspect = 16f / 9f)
         {
-            Projection = MathUtils.Perspective(glm.radians(60.0f), aspect, 0.001f, 1000.0f);
+            Projection = MathUtils.Perspective(glm.radians(Fov), aspect, NearPlane, FarPlane);
             UpdateView();
         }
 
@@ -48,7 +51,7 @@ namespace Editor
                 _screenSize.X = (int)size.X;
                 _screenSize.Y = (int)size.Y;
 
-                Projection = MathUtils.Perspective(glm.radians(60.0f),size.X / size.Y, 0.001f, 1000.0f);
+                Projection = MathUtils.Perspective(glm.radians(Fov),size.X / size.Y, NearPlane, FarPlane);
             }
 
             var io = ImGui.GetIO();
@@ -60,6 +63,7 @@ namespace Editor
             if (ImGui.IsMouseDown(ImGuiMouseButton.Right))
             {
                 const float sensitivity = 0.005f;
+
 
                 float dx = mouseDelta.x * sensitivity;
                 float dy = mouseDelta.y * sensitivity;
@@ -83,11 +87,8 @@ namespace Editor
                 float unitsPerPixelY = worldHeight / _screenSize.Y;
                 float unitsPerPixelX = worldWidth / _screenSize.X;
 
-                vec3 right = GetRight();
-                vec3 up = GetUp();
-
-                _pivot -= right * mouseDelta.x * unitsPerPixelX;
-                _pivot += up * mouseDelta.y * unitsPerPixelY;
+                _pivot -= Right * mouseDelta.x * unitsPerPixelX;
+                _pivot += Up * mouseDelta.y * unitsPerPixelY;
             }
 
             if (io.MouseWheel != 0 && ImGui.IsWindowHovered())
@@ -106,10 +107,10 @@ namespace Editor
             var io = ImGui.GetIO();
 
             // Build movement vector from keys
-            if (ImGui.IsKeyDown(ImGuiKey.W)) move += GetForward();
-            if (ImGui.IsKeyDown(ImGuiKey.S)) move -= GetForward();
-            if (ImGui.IsKeyDown(ImGuiKey.D)) move += GetRight();
-            if (ImGui.IsKeyDown(ImGuiKey.A)) move -= GetRight();
+            if (ImGui.IsKeyDown(ImGuiKey.W)) move += Forward;
+            if (ImGui.IsKeyDown(ImGuiKey.S)) move -= Forward;
+            if (ImGui.IsKeyDown(ImGuiKey.D)) move += Right;
+            if (ImGui.IsKeyDown(ImGuiKey.A)) move -= Right;
 
             if (move.length() > 0.0f)
             {
@@ -123,29 +124,15 @@ namespace Editor
         }
         private void UpdateView()
         {
-            vec3 forward = GetForward();
-            vec3 up = GetUp();
-
-            _worldPosition = _pivot - forward * _distance;
-            ViewMatrix = MathUtils.LookAt(_worldPosition, _pivot, up);
+            _worldPosition = _pivot - Forward * _distance;
+            ViewMatrix = MathUtils.LookAt(_worldPosition, _pivot, Up);
         }
 
-        private vec3 GetForward()
+        private vec3 GetAxis(Vector3 unit, Quaternion rot)
         {
-            Vector3 f = Vector3.Transform(Vector3.UnitZ, _rotation);
+            Vector3 f = Vector3.Transform(unit, rot);
             return glm.normalize(new vec3(f.X, f.Y, f.Z));
         }
-
-        private vec3 GetRight()
-        {
-            Vector3 r = Vector3.Transform(Vector3.UnitX, _rotation);
-            return glm.normalize(new vec3(r.X, r.Y, r.Z));
-        }
-
-        private vec3 GetUp()
-        {
-            Vector3 u = Vector3.Transform(Vector3.UnitY, _rotation);
-            return glm.normalize(new vec3(u.X, u.Y, u.Z));
-        }
+      
     }
 }
