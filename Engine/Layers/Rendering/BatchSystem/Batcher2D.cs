@@ -72,7 +72,7 @@ namespace Engine.Rendering
             _batchesPool = new BatchesPool(_sharedIndexBuffer);
         }
 
-        internal List<Batch2D> GetBatches<T>(List<T> renderers) where T : RendererData2D
+        internal List<Batch2D> GetBatches<T>(IReadOnlyCollection<T> renderers) where T : RendererData2D
         {
             // TODO: Do frustum culling
             _renderBuckets.Clear();

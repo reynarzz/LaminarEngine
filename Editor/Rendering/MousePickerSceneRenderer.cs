@@ -9,6 +9,8 @@ namespace Editor.Rendering
     {
         private List<RendererData2D> _worldRenderers;
         private List<RendererData2D> _uiRenderers;
+        private List<RendererData2D> _gizmosRenderers;
+
         private readonly DrawCallData _drawCallData;
         private readonly PipelineFeatures _pipelineFeatures;
         private GfxResource _quadGeometry;
@@ -102,6 +104,8 @@ namespace Editor.Rendering
         {
             _worldRenderers = worldRenderers;
             _uiRenderers = uiRenderers;
+
+
 
             _worldRenderers.Sort(_sortingOrderComparer);
             _uiRenderers.Sort(_sortingOrderComparer);

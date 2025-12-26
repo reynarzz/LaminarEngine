@@ -13,17 +13,17 @@ using System.Threading.Tasks;
 
 namespace Editor.Rendering
 {
+    // TODO: remove from dictionary when the component is destroyed.
     internal class GizmosRenderer : IGizmosRenderer
     {
         private readonly Batcher2D _batcher;
         private readonly DrawCallData _drawCallData;
-        private readonly Dictionary<GizmoType, RendererData2D> _renderDatasByType;
+        private readonly Dictionary<Guid, RendererData2D> _renderDatasByType;
         private List<Batch2D> _batches;
         private PipelineFeatures _pipelineFeatures;
 
-        private List<RendererData2D> _renderDatas;
         private Shader _gizmosShader;
-        public int PixelsPerUnit { get; set; }
+        public int PixelsPerUnit { get; set; } = 64;
         private enum GizmoType
         {
             Camera,
@@ -110,24 +110,18 @@ namespace Editor.Rendering
         void main()
         {
             fragColor = SampleIndexedTexture(fragTexIndex, fragUV) * vColor;
-
-            if(fragColor.a <= 0.000001)
-            {
-                discard;
-            }
         }
 ";
         public GizmosRenderer()
         {
             _batcher = new Batcher2D(Consts.Graphics.MAX_QUADS_PER_BATCH);
-            _renderDatasByType = new Dictionary<GizmoType, RendererData2D>();
+            _renderDatasByType = new Dictionary<Guid, RendererData2D>();
             _drawCallData = new DrawCallData()
             {
                 Textures = new GfxResource[GfxDeviceManager.Current.GetDeviceInfo().MaxValidTextureUnits],
                 Uniforms = new UniformValue[10],
             };
 
-            _renderDatas = new List<RendererData2D>();
             _pipelineFeatures = new PipelineFeatures();
             // _pipelineFeatures.DepthBuffer = true;
             _pipelineFeatures.Blending = Blending.Transparent;
@@ -146,34 +140,33 @@ namespace Editor.Rendering
             {
                 StbImage.stbi_set_flip_vertically_on_load(1);
                 var image = ImageResult.FromStream(File.OpenRead(Path.Combine(EditorPaths.DataRoot, "Resources", pathInResources)));
-                return new Sprite(new Texture2D(TextureMode.Clamp, image.Width, image.Height, 4, 16, image.Data));
+                return new Sprite(new Texture2D(TextureMode.Clamp, image.Width, image.Height, 4, PixelsPerUnit, image.Data));
             }
 
             _cameraSprite = LoadSprite("cameraIcon.png");
-            _audioSprite = LoadSprite("audioIcon.png");
-
+            _audioSprite = LoadSprite("audioIcon2.png");
         }
-
-
 
         public void OnBegin()
         {
-            var cameras = SceneManager.FindAll<Camera>(true);
-            var audio = SceneManager.FindAll<AudioSource>(true);
+            // TODO:This is slow, it creates a new instance every frame,
+            var cameras = SceneManager.FindAll<Camera>(false);
+            var audio = SceneManager.FindAll<AudioSource>(false);
 
-            // GetRenderData(cameras, _renderDatas, _cameraSprite);
-            GetRenderData(audio, _renderDatas, _audioSprite);
-
-            _batches = _batcher.GetBatches(_renderDatas);
+            GetRenderData(cameras, _renderDatasByType, _cameraSprite);
+            GetRenderData(audio, _renderDatasByType, _audioSprite);
+         
+            _batches = _batcher.GetBatches(_renderDatasByType.Values);
         }
-        private void GetRenderData<T>(List<T> components, List<RendererData2D> renderDatas, Sprite sprite) where T : Component
+
+        private void GetRenderData<T>(List<T> components, Dictionary<Guid, RendererData2D> renderDatas, Sprite sprite) where T : Component
         {
             for (int i = 0; i < components.Count; i++)
             {
                 var component = components[i];
-                if (renderDatas.Count <= i)
+                if (!renderDatas.ContainsKey(component.GetID()))
                 {
-                    renderDatas.Add(new RendererData2D(component.GetID(), component.Transform)
+                    renderDatas.Add(component.GetID(), new RendererData2D(component.GetID(), new Transform())
                     {
                         IsBillboard = true,
                         SortOrder = 20,
@@ -182,13 +175,13 @@ namespace Editor.Rendering
                 }
                 else
                 {
-                    renderDatas[i].Transform = component.Transform;
-                    renderDatas[i].IsDirty = true;
-                    renderDatas[i].ID = component.GetID();
+                    var renderData = renderDatas[component.GetID()];
+                    renderData.Transform.WorldPosition = component.Transform.WorldPosition;
+                    renderData.IsDirty = true;
                 }
             }
-
         }
+
         public RenderTexture OnRender(ICamera camera, RenderTexture renderTarget)
         {
             foreach (var batch in _batches)
