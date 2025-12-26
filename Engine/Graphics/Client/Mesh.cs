@@ -70,6 +70,7 @@ namespace Engine
         public uint Color;
         private int _textureIndex;
         public int VertexIndex;
+        public vec3 WorldCenter;
 
         public int TextureIndex { get => _textureIndex; set => _textureIndex = value; }
 
@@ -80,6 +81,7 @@ namespace Engine
             new() { Count = 1, Normalized = false, Type = GfxValueType.Uint,  Stride = sizeof(Vertex), Offset = sizeof(uint)  * 5 },  // Color
             new() { Count = 1, Normalized = false, Type = GfxValueType.Int,   Stride = sizeof(Vertex), Offset = sizeof(int)   * 6 },  // TextureIndex
             new() { Count = 1, Normalized = false, Type = GfxValueType.Int,   Stride = sizeof(Vertex), Offset = sizeof(int)   * 7 },  // VertexIndex
+            new() { Count = 3, Normalized = false, Type = GfxValueType.Float,   Stride = sizeof(Vertex), Offset = sizeof(int)   * 8 },  // VertexIndex
         ];
 
         static VertexAtrib[] IVertex<Vertex>.GetVertexAttributes()
