@@ -25,8 +25,7 @@ namespace Engine.Rendering
         private Material _pinkMaterial;
         private readonly Vertex[] _quadVertexArray = new Vertex[4];
         private readonly List<List<RendererData2D>> _sortedBuckets = new();
-        private static readonly Comparison<List<RendererData2D>> _bucketSorter =
-            (a, b) => a[0].SortOrder.CompareTo(b[0].SortOrder);
+        private static readonly Comparison<List<RendererData2D>> _bucketSorter = (a, b) => a[0].SortOrder.CompareTo(b[0].SortOrder);
 
         private struct BucketKey : IEquatable<BucketKey>
         {

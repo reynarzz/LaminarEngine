@@ -24,6 +24,18 @@ namespace GlmNet
         }
 
         /// <summary>
+        /// Constructs a 3x3 matrix from 9 scalars (column-major).
+        /// </summary>
+        public mat3(
+            float m00, float m01, float m02,
+            float m10, float m11, float m12,
+            float m20, float m21, float m22)
+        {
+            c0 = new vec3(m00, m10, m20);
+            c1 = new vec3(m01, m11, m21);
+            c2 = new vec3(m02, m12, m22);
+        }
+        /// <summary>
         /// Initializes a new instance of the <see cref="mat3"/> struct.
         /// The matrix is initialised with the <paramref name="cols"/>.
         /// </summary>

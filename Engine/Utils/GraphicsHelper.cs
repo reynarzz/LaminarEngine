@@ -200,11 +200,12 @@ namespace Engine
             return q;
         }
 
-        public static LineMesh2D CreateLineMesh(IList<vec3> points, float halfWidth, uint color = 0xFFFFFFFF)
+
+        public static LineMesh CreateLineMesh2D(IList<vec3> points, float halfWidth, uint color = 0xFFFFFFFF)
         {
             if (points == null || points.Count < 2)
             {
-                return new LineMesh2D
+                return new LineMesh
                 {
                     Vertices = Array.Empty<Vertex>(),
                     Indices = Array.Empty<uint>()
@@ -220,51 +221,162 @@ namespace Engine
                 vec3 p0 = points[i];
                 vec3 p1 = points[i + 1];
 
-                vec2 dir = glm.normalize(p1 - p0);
-                vec2 normal = new vec2(-dir.y, dir.x) * halfWidth;
-
-                vec3 v0 = new vec3(p0.xy + normal, p0.z);
-                vec3 v1 = new vec3(p0.xy - normal, p0.z);
-                vec3 v2 = new vec3(p1.xy - normal, p1.z);
-                vec3 v3 = new vec3(p1.xy + normal, p1.z);
-
-                vec3 center = new vec3((p0 + p1) * 0.5f);
-
+                vec3 dir = glm.normalize(p1 - p0);
                 int baseIndex = vertices.Count;
 
-                vertices.Add(MakeVertex(v0, center, color, vertexIndex++));
-                vertices.Add(MakeVertex(v1, center, color, vertexIndex++));
-                vertices.Add(MakeVertex(v2, center, color, vertexIndex++));
-                vertices.Add(MakeVertex(v3, center, color, vertexIndex++));
+                vertices.Add(MakeVertex(p0, dir, -1f, color, vertexIndex++));
+                vertices.Add(MakeVertex(p0, dir, +1f, color, vertexIndex++));
+                vertices.Add(MakeVertex(p1, dir, +1f, color, vertexIndex++));
+                vertices.Add(MakeVertex(p1, dir, -1f, color, vertexIndex++));
 
-                // CCW
                 indices.Add((uint)(baseIndex + 0));
-                indices.Add((uint)(baseIndex + 3));
-                indices.Add((uint)(baseIndex + 2));
-                indices.Add((uint)(baseIndex + 2));
                 indices.Add((uint)(baseIndex + 1));
+                indices.Add((uint)(baseIndex + 2));
+                indices.Add((uint)(baseIndex + 2));
+                indices.Add((uint)(baseIndex + 3));
                 indices.Add((uint)(baseIndex + 0));
             }
 
-            Vertex MakeVertex(vec3 position, vec3 worldCenter, uint color, int vertexIndex)
+            Vertex MakeVertex(
+                vec3 position,
+                vec3 dir,
+                float side,
+                uint color,
+                int vertexIndex)
             {
                 return new Vertex
                 {
                     Position = position,
-                    UV = vec2.Zero,
+                    UV = new vec2(side, 0),
                     Color = color,
                     VertexIndex = vertexIndex,
-                    WorldCenter = worldCenter
+                    WorldCenter = dir.Normalized
                 };
             }
 
-            return new LineMesh2D
+            return new LineMesh
             {
                 Vertices = vertices.ToArray(),
                 Indices = indices.ToArray()
             };
         }
 
+        public static LineMesh CreateLineMesh3D(IList<vec3> points, float halfWidth, uint color = 0xFFFFFFFF)
+        {
+            if (points == null || points.Count < 2)
+            {
+                return new LineMesh
+                {
+                    Vertices = Array.Empty<Vertex>(),
+                    Indices = Array.Empty<uint>()
+                };
+            }
 
+            const int radialSegments = 16; // 8–32 depending on quality
+            float radius = halfWidth;
+
+            var vertices = new List<Vertex>();
+            var indices = new List<uint>();
+
+            int ringCount = points.Count;
+
+            // Compute tangents
+            vec3[] tangents = new vec3[ringCount];
+            for (int i = 0; i < ringCount; i++)
+            {
+                if (i == 0)
+                    tangents[i] = glm.normalize(points[1] - points[0]);
+                else if (i == ringCount - 1)
+                    tangents[i] = glm.normalize(points[i] - points[i - 1]);
+                else
+                    tangents[i] = glm.normalize(points[i + 1] - points[i - 1]);
+            }
+
+            // Initial frame
+            vec3 n = AnyPerpendicular(tangents[0]);
+            vec3 b = glm.normalize(glm.cross(tangents[0], n));
+            n = glm.normalize(glm.cross(b, tangents[0]));
+
+            // Generate rings
+            for (int i = 0; i < ringCount; i++)
+            {
+                if (i > 0)
+                    TransportFrame(tangents[i - 1], tangents[i], ref n, ref b);
+
+                vec3 center = points[i];
+
+                for (int s = 0; s < radialSegments; s++)
+                {
+                    float angle = (float)(s * Math.PI * 2.0 / radialSegments);
+                    float c = MathF.Cos(angle);
+                    float sn = MathF.Sin(angle);
+
+                    vec3 offset = n * c + b * sn;
+                    vec3 pos = center + offset * radius;
+
+                    vertices.Add(new Vertex
+                    {
+                        Position = pos,
+                        // Normal = glm.normalize(offset),
+                        Color = color
+                    });
+                }
+            }
+
+            // Indices
+            for (int i = 0; i < ringCount - 1; i++)
+            {
+                int base0 = i * radialSegments;
+                int base1 = (i + 1) * radialSegments;
+
+                for (int s = 0; s < radialSegments; s++)
+                {
+                    int a = base0 + s;
+                    int b0 = base0 + (s + 1) % radialSegments;
+                    int c0 = base1 + (s + 1) % radialSegments;
+                    int d = base1 + s;
+
+                    indices.Add((uint)a);
+                    indices.Add((uint)b0);
+                    indices.Add((uint)c0);
+
+                    indices.Add((uint)c0);
+                    indices.Add((uint)d);
+                    indices.Add((uint)a);
+                }
+            }
+
+            return new LineMesh
+            {
+                Vertices = vertices.ToArray(),
+                Indices = indices.ToArray()
+            };
+        }
+
+        private static void TransportFrame(vec3 prevT, vec3 currT, ref vec3 n, ref vec3 b)
+        {
+            vec3 v = glm.cross(prevT, currT);
+            float c = glm.dot(prevT, currT);
+
+            if (v.length() < 1e-6f)
+                return;
+
+            float k = 1.0f / (1.0f + c);
+
+            mat3 R = new mat3(v.x * v.x * k + c, v.x * v.y * k - v.z, v.x * v.z * k + v.y,
+                              v.y * v.x * k + v.z, v.y * v.y * k + c, v.y * v.z * k - v.x,
+                              v.z * v.x * k - v.y, v.z * v.y * k + v.x, v.z * v.z * k + c);
+
+            n = glm.normalize(R * n);
+            b = glm.normalize(glm.cross(currT, n));
+        }
+
+        private static vec3 AnyPerpendicular(vec3 v)
+        {
+            if (MathF.Abs(v.x) < 0.9f)
+                return glm.normalize(glm.cross(v, new vec3(1, 0, 0)));
+            else
+                return glm.normalize(glm.cross(v, new vec3(0, 1, 0)));
+        }
     }
 }

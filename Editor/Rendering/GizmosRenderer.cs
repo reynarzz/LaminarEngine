@@ -113,13 +113,60 @@ namespace Editor.Rendering
             fragColor = SampleIndexedTexture(fragTexIndex, fragUV) * vColor;
         }
 ";
+        string _gizmosLineVert = @"
+      #version 330 core
+
+layout(location = 0) in vec3 position;
+layout(location = 1) in vec2 uv;      
+layout(location = 2) in uint color;
+layout(location = 5) in vec3 lineDir; 
+
+out vec4 vColor;
+
+uniform mat4 uVP;
+uniform mat4 uViewMatrix;
+ float uHalfWidth = 0.1f;
+uniform mat4 uProjectionMatrix;
+vec4 unpackColor(uint c)
+{
+    return vec4(
+        float((c >> 24) & 0xFFu) / 255.0,
+        float((c >> 16) & 0xFFu) / 255.0,
+        float((c >>  8) & 0xFFu) / 255.0,
+        float( c        & 0xFFu) / 255.0
+    );
+}
+
+void main()
+{
+      vColor = unpackColor(color);
+
+    // World → View
+    vec3 viewPos = (uViewMatrix * vec4(position, 1.0)).xyz;
+    vec3 viewDir = normalize((uViewMatrix * vec4(lineDir, 0.0)).xyz);
+
+    // Camera looks down -Z in view space
+    vec3 side = normalize(cross(viewDir, vec3(0.0, 0.0, -1.0)));
+
+    // Extrude in view space
+    viewPos += side * uv.x * uHalfWidth;
+
+    // View → Clip (projection ONLY)
+    gl_Position = uProjectionMatrix * vec4(viewPos, 1.0);
+}
+
+
+";
+
+        private Material _lineMat;
         public GizmosRenderer()
         {
             _batcher = new Batcher2D(Consts.Graphics.MAX_QUADS_PER_BATCH);
             _renderDatasByType = new Dictionary<Guid, RendererData2D>();
-            _gizmosShader = new Shader(_gizmosVert, _gizmosFrag);
 
-            _mat = new Material(_gizmosShader);
+            _mat = new Material(new Shader(_gizmosVert, _gizmosFrag));
+            _lineMat = new Material(new Shader(_gizmosLineVert, _gizmosFrag));
+
             _drawCallData = new DrawCallData()
             {
                 Textures = new GfxResource[GfxDeviceManager.Current.GetDeviceInfo().MaxValidTextureUnits],
@@ -168,7 +215,7 @@ namespace Editor.Rendering
             {
                 var transform = new Transform();
                 var points = new List<vec3>() { new vec3(0, 0, -10), new vec3(0, 5, -10), new vec3(5, 5, -10) };
-                var line = GraphicsHelper.CreateLineMesh(points, 0.1f);
+                var line = GraphicsHelper.CreateLineMesh2D(points, 0.1f);
 
                 _lineRenderData = new RendererData2D(_testLineGuid, transform)
                 {
@@ -176,7 +223,8 @@ namespace Editor.Rendering
                     {
                         Vertices = line.Vertices.ToList(),
                         IndicesToDrawCount = line.Indices.Length
-                    }
+                    },
+                    Material = _lineMat,
                 };
 
                 _renderDatasByType.Add(_testLineGuid, _lineRenderData);
@@ -249,7 +297,7 @@ namespace Editor.Rendering
                 _drawCallData.DrawType = batch.DrawType;
                 _drawCallData.DrawMode = batch.DrawMode;
                 _drawCallData.IndexedDraw.IndexCount = batch.IndexCount;
-                _drawCallData.Shader = _gizmosShader.NativeShader;//batch.Material.Shader.NativeShader;
+                _drawCallData.Shader = batch.Material.Shader.NativeShader;
                 _drawCallData.Geometry = batch.Geometry;
                 _drawCallData.Features = _pipelineFeatures;
                 _drawCallData.RenderTarget = renderTarget.NativeResource;
