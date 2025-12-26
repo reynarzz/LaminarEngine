@@ -1,5 +1,5 @@
 ﻿using SharedTypes;
-using StbImageSharp;
+using StbImageSharp_Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;

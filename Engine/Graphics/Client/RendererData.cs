@@ -15,17 +15,17 @@ namespace Engine.Graphics
         protected internal virtual bool IsDirty { get; set; } = true;
         public virtual bool IsEnabled { get; }
         public bool PrivateBatch { get; set; }
-        private readonly Guid _guid;
+        public Guid ID { get; set; }
         private Action _onDraw;
 
         public RendererData(Guid id, Action onDraw)
         {
-            _guid = id;
+            ID = id;
             _onDraw = onDraw;
         }
         public Guid GetID()
         {
-            return _guid;
+            return ID;
         }
 
         internal void MarkNotDirty()

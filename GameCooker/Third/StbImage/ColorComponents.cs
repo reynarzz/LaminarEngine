@@ -1,4 +1,4 @@
-﻿namespace StbImageSharp
+﻿namespace StbImageSharp_Internal
 {
 #if !STBSHARP_INTERNAL
 	public

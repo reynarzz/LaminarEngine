@@ -70,10 +70,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Include="Assets\Scripts\Inventory\Items\PoisonAmmoItem.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <PackageReference Include="CsvHelper" Version="33.1.0" />
 	</ItemGroup>
 

@@ -3,7 +3,7 @@
 using Hebron.Runtime;
 using System.Runtime.InteropServices;
 
-namespace StbImageSharp
+namespace StbImageSharp_Internal
 {
 	unsafe partial class StbImage
 	{
