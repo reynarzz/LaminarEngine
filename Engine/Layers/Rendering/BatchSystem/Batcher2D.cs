@@ -151,7 +151,16 @@ namespace Engine.Rendering
 
                         if (!_batchesPool.GetCurrentBatch(renderer, texture, out var currentBatch))
                         {
-                            var indices = GraphicsHelper.GetQuadIndices(vertexCount / VerticesPerQuad);
+                            var indices = default(uint[]);
+
+                            if (renderer.Mesh.Indices == null)
+                            {
+                                indices = GraphicsHelper.GetQuadIndices(vertexCount / VerticesPerQuad);
+                            }
+                            else
+                            {
+                                indices = renderer.Mesh.Indices;
+                            }
                             currentBatch = _batchesPool.Get(renderer, renderer.Mesh.Vertices.Count, vertexCount, texture, material, indices);
                         }
 

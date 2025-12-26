@@ -114,48 +114,35 @@ namespace Editor.Rendering
         }
 ";
         string _gizmosLineVert = @"
-      #version 330 core
+  #version 330 core
+  layout(location = 0) in vec3 position;
+  layout(location = 1) in vec2 uv;
+  layout(location = 2) in uint color; 
+  layout(location = 3) in int texIndex; 
+  
+  out vec2 fragUV;
+  flat out int fragTexIndex;            // flat = no interpolation between vertices
+  out vec4 vColor;
+  uniform mat4 uVP;
+  out vec2 worldUV;
 
-layout(location = 0) in vec3 position;
-layout(location = 1) in vec2 uv;      
-layout(location = 2) in uint color;
-layout(location = 5) in vec3 lineDir; 
-
-out vec4 vColor;
-
-uniform mat4 uVP;
-uniform mat4 uViewMatrix;
- float uHalfWidth = 0.1f;
-uniform mat4 uProjectionMatrix;
-vec4 unpackColor(uint c)
-{
-    return vec4(
-        float((c >> 24) & 0xFFu) / 255.0,
-        float((c >> 16) & 0xFFu) / 255.0,
-        float((c >>  8) & 0xFFu) / 255.0,
-        float( c        & 0xFFu) / 255.0
-    );
-}
-
-void main()
-{
+  vec4 unpackColor(uint c) 
+  {
+      float r = float((c >> 24) & 0xFFu) / 255.0;
+      float g = float((c >> 16) & 0xFFu) / 255.0;
+      float b = float((c >>  8) & 0xFFu) / 255.0;
+      float a = float( c        & 0xFFu) / 255.0;
+      return vec4(r,g,b,a);
+  }
+  
+  void main() 
+  {
+      fragUV = uv;
+      worldUV = position.xy * 0.1;
+      fragTexIndex = texIndex; 
       vColor = unpackColor(color);
-
-    // World → View
-    vec3 viewPos = (uViewMatrix * vec4(position, 1.0)).xyz;
-    vec3 viewDir = normalize((uViewMatrix * vec4(lineDir, 0.0)).xyz);
-
-    // Camera looks down -Z in view space
-    vec3 side = normalize(cross(viewDir, vec3(0.0, 0.0, -1.0)));
-
-    // Extrude in view space
-    viewPos += side * uv.x * uHalfWidth;
-
-    // View → Clip (projection ONLY)
-    gl_Position = uProjectionMatrix * vec4(viewPos, 1.0);
-}
-
-
+      gl_Position = uVP * vec4(position, 1.0);
+  }
 ";
 
         private Material _lineMat;
@@ -215,16 +202,18 @@ void main()
             {
                 var transform = new Transform();
                 var points = new List<vec3>() { new vec3(0, 0, -10), new vec3(0, 5, -10), new vec3(5, 5, -10) };
-                var line = GraphicsHelper.CreateLineMesh2D(points, 0.1f);
+                var line = GraphicsHelper.CreateLineMesh3D(points, 0.1f);
 
                 _lineRenderData = new RendererData2D(_testLineGuid, transform)
                 {
                     Mesh = new Mesh()
                     {
                         Vertices = line.Vertices.ToList(),
+                        Indices = line.Indices,
                         IndicesToDrawCount = line.Indices.Length
                     },
                     Material = _lineMat,
+                    PrivateBatch = true
                 };
 
                 _renderDatasByType.Add(_testLineGuid, _lineRenderData);

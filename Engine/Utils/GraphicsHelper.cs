@@ -378,5 +378,62 @@ namespace Engine
             else
                 return glm.normalize(glm.cross(v, new vec3(0, 1, 0)));
         }
+
+
+        public static List<vec3> CreateFrustumLines(vec3 position, vec3 forward, vec3 right, vec3 up,
+                                                      float fovYRadians, float aspect, float nearPlane, float farPlane)
+        {
+            var lines = new List<vec3>(24);
+
+            float tanHalfFov = MathF.Tan(fovYRadians * 0.5f);
+
+            float nearHeight = nearPlane * tanHalfFov;
+            float nearWidth = nearHeight * aspect;
+
+            float farHeight = farPlane * tanHalfFov;
+            float farWidth = farHeight * aspect;
+
+            // LH: forward is +Z
+            vec3 nc = position + forward * nearPlane;
+            vec3 fc = position + forward * farPlane;
+
+            // Near plane
+            vec3 n0 = nc - right * nearWidth + up * nearHeight; // top-left
+            vec3 n1 = nc + right * nearWidth + up * nearHeight; // top-right
+            vec3 n2 = nc + right * nearWidth - up * nearHeight; // bottom-right
+            vec3 n3 = nc - right * nearWidth - up * nearHeight; // bottom-left
+
+            // Far plane
+            vec3 f0 = fc - right * farWidth + up * farHeight;
+            vec3 f1 = fc + right * farWidth + up * farHeight;
+            vec3 f2 = fc + right * farWidth - up * farHeight;
+            vec3 f3 = fc - right * farWidth - up * farHeight;
+
+            // Near rectangle
+            AddLine(lines, n0, n1);
+            AddLine(lines, n1, n2);
+            AddLine(lines, n2, n3);
+            AddLine(lines, n3, n0);
+
+            // Far rectangle
+            AddLine(lines, f0, f1);
+            AddLine(lines, f1, f2);
+            AddLine(lines, f2, f3);
+            AddLine(lines, f3, f0);
+
+            // Connecting edges
+            AddLine(lines, n0, f0);
+            AddLine(lines, n1, f1);
+            AddLine(lines, n2, f2);
+            AddLine(lines, n3, f3);
+
+            void AddLine(List<vec3> list, vec3 a, vec3 b)
+            {
+                list.Add(a);
+                list.Add(b);
+            }
+
+            return lines;
+        }
     }
 }
