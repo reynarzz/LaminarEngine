@@ -67,9 +67,9 @@ namespace Engine
         public mat4 Projection { get; private set; }
         public mat4 ViewMatrix => glm.inverse(Transform.WorldMatrix);
 
-        [ExposeEditorField] public Color BackgroundColor { get; set; } = Color.Black;
+        [SerializedField] public Color BackgroundColor { get; set; } = Color.Black;
         private CameraProjectionMode _projectionMode;
-        [ExposeEditorField("Projection")]
+        [SerializedField("Projection")]
         public CameraProjectionMode ProjectionMode
         {
             get => _projectionMode;
@@ -83,7 +83,7 @@ namespace Engine
             }
         }
         private float _fov = 60;
-        [ExposeEditorField("Field of view")]
+        [SerializedField("Field of view")]
         public float Fov
         {
             get => _fov;
@@ -94,7 +94,7 @@ namespace Engine
             }
         }
         private float _orthoSize;
-        [ExposeEditorField]
+        [SerializedField]
         public float OrthographicSize
         {
             get => _orthoSize;
@@ -105,12 +105,12 @@ namespace Engine
             }
         }
 
-        [ExposeEditorField] public float NearPlane { get; set; } = 0.1f;
-        [ExposeEditorField] public float FarPlane { get; set; } = 100;
-        [ExposeEditorField] public RenderTexture RenderTexture { get; set; }
+        [SerializedField] public float NearPlane { get; set; } = 0.1f;
+        [SerializedField] public float FarPlane { get; set; } = 100;
+        [SerializedField] public RenderTexture RenderTexture { get; set; }
         RenderTexture ICamera.OutRenderTexture { get; set; }
 
-        [ExposeEditorField] public int Priority { get; set; } = 0;
+        [SerializedField] public int Priority { get; set; } = 0;
         public vec3 WorldPosition => Transform.WorldPosition;
         public vec3 Forward => Transform.Forward;
         public vec3 Right => Transform.Right;

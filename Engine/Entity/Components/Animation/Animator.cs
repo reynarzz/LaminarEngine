@@ -20,7 +20,7 @@ namespace Engine
         private float _transitionDuration;
         public event Action<Animator> OnUpdate;
 
-        [ExposeEditorField]
+        [SerializedField]
         public AnimationState CurrentState => _currentState;
         public AnimatorParameters Parameters { get; } = new AnimatorParameters();
 

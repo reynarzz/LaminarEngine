@@ -21,7 +21,7 @@ namespace Engine
 
     
         
-        [ExposeEditorField("Direction")]
+        [SerializedField("Direction")]
         public CapsuleDirection2D Direction
         {
             get => _direction;
@@ -31,7 +31,7 @@ namespace Engine
                 UpdateShapeSafe();
             }
         }
-        [ExposeEditorField("Size")]
+        [SerializedField("Size")]
         public vec2 Size
         {
             get => _size;

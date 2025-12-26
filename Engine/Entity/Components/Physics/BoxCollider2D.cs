@@ -24,7 +24,7 @@ namespace Engine
                 UpdateShapeSafe();
             }
         }
-        [ExposeEditorField("Size")]
+        [SerializedField("Size")]
         public vec2 Size
         {
             get => _size;

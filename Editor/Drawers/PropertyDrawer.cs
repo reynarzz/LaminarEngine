@@ -78,7 +78,7 @@ namespace Editor
 
             if (enforceSerializedFieldAttribute)
             {
-                var attrib = prop.GetCustomAttribute<ExposeEditorFieldAttribute>();
+                var attrib = prop.GetCustomAttribute<SerializedFieldAttribute>();
                 if (attrib == null)
                 {
                     return;
@@ -153,6 +153,18 @@ namespace Editor
             else if (type == typeof(int))
             {
                 DrawSimpleProperty<int>(propertyName, target, value, isReadOnly, prop, index, width, EditorGuiFieldsResolver.DrawIntField);
+            }
+            else if (type == typeof(uint))
+            {
+                DrawSimpleProperty<uint>(propertyName, target, value, isReadOnly, prop, index, width, EditorGuiFieldsResolver.DrawUIntField);
+            }
+            else if (type == typeof(long))
+            {
+                DrawSimpleProperty<long>(propertyName, target, value, isReadOnly, prop, index, width, EditorGuiFieldsResolver.DrawLongField);
+            }
+            else if (type == typeof(ulong))
+            {
+                DrawSimpleProperty<ulong>(propertyName, target, value, isReadOnly, prop, index, width, EditorGuiFieldsResolver.DrawULongField);
             }
             else if (type == typeof(Color))
             {
@@ -297,7 +309,7 @@ namespace Editor
             }
             else if (type.IsClass || IsUserDefinedStruct(type))
             {
-                var members = ReflectionUtils.GetAllMembersWithAttribute<ExposeEditorFieldAttribute>(type, true, true);
+                var members = ReflectionUtils.GetAllMembersWithAttribute<SerializedFieldAttribute>(type, true, true);
 
                 var propIndex = index;
                 foreach (var subProp in members)

@@ -101,15 +101,35 @@ namespace Editor.Utils
 
             return result;
         }
-        public static bool DrawIntField(string name, ref int value)
-        {
-            return DrawIntField(name, ref value, 0, false);
-        }
         public static bool DrawIntField(string name, ref int value, float itemWidth = 0, bool pressEnterToConfirm = false)
+        {
+            return DrawScalarField(name, ref value, ImGuiDataType.S32, itemWidth, pressEnterToConfirm);
+        }
+        public static bool DrawUIntField(string name, ref uint value, float itemWidth = 0, bool pressEnterToConfirm = false)
+        {
+            return DrawScalarField(name, ref value, ImGuiDataType.U32, itemWidth, pressEnterToConfirm);
+        }
+        public static bool DrawLongField(string name, ref long value, float itemWidth = 0, bool pressEnterToConfirm = false)
+        {
+            return DrawScalarField(name, ref value, ImGuiDataType.S64, itemWidth, pressEnterToConfirm);
+        }
+        public static bool DrawULongField(string name, ref ulong value, float itemWidth = 0, bool pressEnterToConfirm = false)
+        {
+            return DrawScalarField(name, ref value, ImGuiDataType.U64, itemWidth, pressEnterToConfirm);
+        }
+        public static bool DrawScalarField<T>(string name, ref T value, ImGuiDataType type, float itemWidth = 0, bool pressEnterToConfirm = false)
         {
             SetNextItemWidth(itemWidth);
 
-            return ImGui.InputInt($"##{name}", ref value) && (!pressEnterToConfirm || ImGui.IsKeyDown(ImGuiKey.Enter));
+            unsafe
+            {
+                T v = value;
+                nint ptr = (nint)(&v);
+
+                var result = ImGui.InputScalar($"##{name}", type, ptr) && (!pressEnterToConfirm || ImGui.IsKeyDown(ImGuiKey.Enter));
+                value = *(T*)ptr;
+                return result;
+            }
         }
 
         private static bool _openColorPicker = false;

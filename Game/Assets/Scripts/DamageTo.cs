@@ -11,8 +11,8 @@ namespace Game
     public class DamageTo : ScriptBehavior
     {
         public int DamageAmount { get; set; }
-        public ulong Mask { get; set; }
-
+        [SerializedField] public ulong Mask { get; set; }
+         
         protected override void OnTriggerStay2D(Collider2D collider)
         {
             if (LayerMask.AreValid(collider.Actor.Layer, Mask))

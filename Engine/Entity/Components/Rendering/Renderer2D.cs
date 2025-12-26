@@ -25,7 +25,7 @@ namespace Engine
            _renderData = new RendererData2D(GetID(), Transform, Draw, () => IsEnabled && Actor.IsActiveInHierarchy);
         }
 
-        [ExposeEditorField]
+        [SerializedField]
         public Color Color
         {
             get => _renderData.Color;
@@ -40,7 +40,7 @@ namespace Engine
         }
 
 
-        [ExposeEditorField]
+        [SerializedField]
         public Sprite Sprite
         {
             get => _renderData.Sprite;
@@ -54,7 +54,7 @@ namespace Engine
             }
         }
 
-        [ExposeEditorField]
+        [SerializedField]
         public int SortOrder
         {
             get => _renderData.SortOrder;
@@ -67,10 +67,10 @@ namespace Engine
             }
         }
 
-        [ExposeEditorField]
+        [SerializedField]
         public virtual bool FlipX { get; set; }
 
-        [ExposeEditorField]
+        [SerializedField]
         public virtual bool FlipY { get; set; }
     }
 }

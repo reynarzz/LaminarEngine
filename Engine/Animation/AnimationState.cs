@@ -8,7 +8,7 @@ namespace Engine
 {
     public class AnimationState
     {
-        [ExposeEditorField(isReadOnly: true)]
+        [SerializedField(isReadOnly: true)]
         public string Name { get; }
         public AnimationClip Clip { get; }
         private List<AnimatorTransition> _transitions = new();

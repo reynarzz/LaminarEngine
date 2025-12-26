@@ -29,7 +29,7 @@ namespace Engine
         private quat _cachedWorldRotation = quat.Identity;
         private vec3 _cachedWorldScale = new vec3(1, 1, 1);
 
-        [ExposeEditorField("Position")]
+        [SerializedField("Position")]
         public vec3 LocalPosition
         {
             get => _localPosition;
@@ -50,7 +50,7 @@ namespace Engine
             }
         }
 
-        [ExposeEditorField("Rotation")]
+        [SerializedField("Rotation")]
         public vec3 LocalEulerAngles
         {
             get
@@ -64,7 +64,7 @@ namespace Engine
         }
 
 
-        [ExposeEditorField("Scale")]
+        [SerializedField("Scale")]
         public vec3 LocalScale
         {
             get => _localScale;

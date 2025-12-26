@@ -42,7 +42,7 @@ namespace Editor
                 for (int i = 0; i < actor.Components.Count; i++)
                 {
                     var component = actor.Components[i];
-                    var members = ReflectionUtils.GetAllMembersWithAttribute<ExposeEditorFieldAttribute>(component.GetType(), true, true);
+                    var members = ReflectionUtils.GetAllMembersWithAttribute<SerializedFieldAttribute>(component.GetType(), true, true);
                     DrawComponentTree(component, i, x =>
                     {
                         if (component)

@@ -7,22 +7,22 @@ using System.Threading.Tasks;
 namespace Engine
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
-    public class ExposeEditorFieldAttribute : Attribute
+    public class SerializedFieldAttribute : Attribute
     {
         public string CustomFieldName { get; } = string.Empty;
         public bool IsReadOnly { get; }
-        public ExposeEditorFieldAttribute()
+        public SerializedFieldAttribute()
         {
         }
 
-        public ExposeEditorFieldAttribute(bool isReadOnly) : this(string.Empty, isReadOnly)
+        public SerializedFieldAttribute(bool isReadOnly) : this(string.Empty, isReadOnly)
         {
         }
-        public ExposeEditorFieldAttribute(string fieldName) : this(fieldName, false)
+        public SerializedFieldAttribute(string fieldName) : this(fieldName, false)
         {
 
         }
-        public ExposeEditorFieldAttribute(string fieldName, bool isReadOnly)
+        public SerializedFieldAttribute(string fieldName, bool isReadOnly)
         {
             CustomFieldName = fieldName;
             IsReadOnly = isReadOnly;

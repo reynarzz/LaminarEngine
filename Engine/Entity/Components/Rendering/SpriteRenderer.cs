@@ -11,7 +11,7 @@ namespace Engine
     [UniqueComponent]
     public class SpriteRenderer : Renderer2D
     {
-        [ExposeEditorField]
+        [SerializedField]
         public override bool FlipX
         {
             get => base.FlipX;
@@ -28,7 +28,7 @@ namespace Engine
             }
         }
 
-        [ExposeEditorField]
+        [SerializedField]
         public override bool FlipY
         {
             get => base.FlipY;

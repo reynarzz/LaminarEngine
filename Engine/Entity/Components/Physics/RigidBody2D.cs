@@ -39,7 +39,7 @@ namespace Engine
         private readonly static mat4 _identity = mat4.identity();
         internal B2BodyId BodyId => _bodyId;
 
-        [ExposeEditorField]
+        [SerializedField]
         public Body2DType BodyType
         {
             get => _bodyType;
@@ -53,7 +53,7 @@ namespace Engine
         }
 
         private bool _interpolate = false;
-        [ExposeEditorField]
+        [SerializedField]
         public bool Interpolate
         {
             get => _interpolate;
@@ -82,7 +82,7 @@ namespace Engine
             }
         }
 
-        [ExposeEditorField]
+        [SerializedField]
         public bool LockZRotation
         {
             get => _isZRotationLocked;
@@ -95,7 +95,7 @@ namespace Engine
             }
         }
 
-        [ExposeEditorField]
+        [SerializedField]
         public bool IsContinuos
         {
             get => _isContinuos;
@@ -107,7 +107,7 @@ namespace Engine
             }
         }
 
-        [ExposeEditorField]
+        [SerializedField]
         public bool CanSleep
         {
             get => _canSleep;
@@ -120,7 +120,7 @@ namespace Engine
                 B2Bodies.b2Body_EnableSleep(_bodyId, _canSleep);
             }
         }
-        [ExposeEditorField]
+        [SerializedField]
         public bool IsAutoMass
         {
             get => _isAutoMass;
@@ -137,7 +137,7 @@ namespace Engine
                 }
             }
         }
-        [ExposeEditorField]
+        [SerializedField]
         public float Mass
         {
             get => _userMassValue;
@@ -153,7 +153,7 @@ namespace Engine
                 B2Bodies.b2Body_SetMassData(_bodyId, currentMassData);
             }
         }
-        [ExposeEditorField]
+        [SerializedField]
         public float GravityScale
         {
             get => _gravityScale;
@@ -163,7 +163,7 @@ namespace Engine
                 B2Bodies.b2Body_SetGravityScale(_bodyId, _gravityScale);
             }
         }
-        [ExposeEditorField]
+        [SerializedField]
         public float AngularDamping
         {
             get => _angularDamping;
@@ -176,7 +176,7 @@ namespace Engine
 
         private vec2 _velocity;
 
-        [ExposeEditorField(isReadOnly: true)]
+        [SerializedField(isReadOnly: true)]
         public vec2 Velocity
         {
             get => B2Bodies.b2Body_GetLinearVelocity(_bodyId).ToVec2();
@@ -192,7 +192,7 @@ namespace Engine
         //    }
         //}
 
-        [ExposeEditorField(isReadOnly: true)]
+        [SerializedField(isReadOnly: true)]
         public float AngularVelovity
         {
             get

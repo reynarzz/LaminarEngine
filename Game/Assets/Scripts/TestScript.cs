@@ -12,43 +12,46 @@ namespace Game
     {
         public class TestClassSub
         {
-            [ExposeEditorField] public int ValueTest { get; set; }
-            [ExposeEditorField] public string StringTest { get; set; }
-            [ExposeEditorField] public TypeCode EnumTest { get; set; }
-            [ExposeEditorField] public vec2 vec2Test { get; set; }
-            [ExposeEditorField] public vec3 vec3Test { get; set; }
-            [ExposeEditorField] public vec4 vec4Test { get; set; }
-            [ExposeEditorField] public mat2 mat2Test { get; set; }
-            [ExposeEditorField] public mat3 mat3Test { get; set; }
-            [ExposeEditorField] public mat4 mat4Test { get; set; }
-            [ExposeEditorField] public List<vec2> Vec2List { get; set; } = new List<vec2>();
-            [ExposeEditorField] public List<Body2DType> EnumList { get; set; } = new();
+            [SerializedField] public int ValueTest { get; set; }
+            [SerializedField] public string StringTest { get; set; }
+            [SerializedField] public TypeCode EnumTest { get; set; }
+            [SerializedField] public vec2 vec2Test { get; set; }
+            [SerializedField] public vec3 vec3Test { get; set; }
+            [SerializedField] public vec4 vec4Test { get; set; }
+            [SerializedField] public mat2 mat2Test { get; set; }
+            [SerializedField] public mat3 mat3Test { get; set; }
+            [SerializedField] public mat4 mat4Test { get; set; }
+            [SerializedField] public List<vec2> Vec2List { get; set; } = new List<vec2>();
+            [SerializedField] public List<Body2DType> EnumList { get; set; } = new();
 
-            [ExposeEditorField] public EObject AnyEObjectTest { get; set; }
-            [ExposeEditorField] public Actor ActorTest { get; set; }
-            [ExposeEditorField] public SpriteRenderer RendererTest { get; set; }
-            [ExposeEditorField] public RigidBody2D RigidBodyTest { get; set; }
-            [ExposeEditorField] public Component AnyComponentTest { get; set; }
+            [SerializedField] public EObject AnyEObjectTest { get; set; }
+            [SerializedField] public Actor ActorTest { get; set; }
+            [SerializedField] public SpriteRenderer RendererTest { get; set; }
+            [SerializedField] public RigidBody2D RigidBodyTest { get; set; }
+            [SerializedField] public Component AnyComponentTest { get; set; }
         }
         public class TestClass
         {
-            [ExposeEditorField] public int ValueTest { get; set; }
-            [ExposeEditorField] public string StringTest { get; set; }
-            [ExposeEditorField] public TypeCode EnumTest { get; set; }
-            [ExposeEditorField] public vec2 vec2Test { get; set; }
-            [ExposeEditorField] public vec3 vec3Test { get; set; }
-            [ExposeEditorField] public vec4 vec4Test { get; set; }
-            [ExposeEditorField] public mat2 mat2Test { get; set; }
-            [ExposeEditorField] public mat3 mat3Test { get; set; }
-            [ExposeEditorField] public mat4 mat4Test { get; set; }
-            [ExposeEditorField] public TestClassSub SubObject { get; set; } = new TestClassSub();
+            [SerializedField] public int IntTest { get; set; }
+            [SerializedField] public uint UIntTest { get; set; }
+            [SerializedField] long LongTest = 987654321012345678;
+            [SerializedField] ulong ULongTest = 18446744073709551615UL;
+            [SerializedField] public string StringTest { get; set; }
+            [SerializedField] public TypeCode EnumTest { get; set; }
+            [SerializedField] public vec2 vec2Test { get; set; }
+            [SerializedField] public vec3 vec3Test { get; set; }
+            [SerializedField] public vec4 vec4Test { get; set; }
+            [SerializedField] public mat2 mat2Test { get; set; }
+            [SerializedField] public mat3 mat3Test { get; set; }
+            [SerializedField] public mat4 mat4Test { get; set; }
+            [SerializedField] public TestClassSub SubObject { get; set; } = new TestClassSub();
         }
 
         public struct AStruct
         {
-            [ExposeEditorField] public int Value;
-            [ExposeEditorField] public List<TestClass> _TestCLassList { get; set; } = new();
-            [ExposeEditorField] public TestClass TestClassObj = new TestClass();
+            [SerializedField] public int Value;
+            [SerializedField] public List<TestClass> _TestCLassList { get; set; } = new();
+            [SerializedField] public TestClass TestClassObj = new TestClass();
             //[ExposeEditorField] public List<string> StringTest { get; set; } = new();
             //[ExposeEditorField] public List<int> IntTest { get; set; } = new();
             //[ExposeEditorField] public List<Body2DType> EnumList { get; set; } = new();
@@ -61,9 +64,9 @@ namespace Game
             }
         }
         //[ExposeEditorField] public AStruct StructType { get; set; }
-        [ExposeEditorField] public List<TestClass> _TestCLassList { get; set; }
-        [ExposeEditorField] public TestClass TestClassObj;
-        [ExposeEditorField] public List<string> StringTest;
+        [SerializedField] public List<TestClass> _TestCLassList { get; set; }
+        [SerializedField] public TestClass TestClassObj;
+        [SerializedField] public List<string> StringTest;
         //[ExposeEditorField] public List<int> IntTest { get; set; } = new();
         //[ExposeEditorField] public List<Body2DType> EnumList { get; set; } = new();
         //[ExposeEditorField] public mat2 mat2Test { get; set; }
@@ -71,7 +74,7 @@ namespace Game
         //[ExposeEditorField] public mat4 mat4Test { get; set; }
         //[ExposeEditorField] private List<List<int>> _nestedList;
 
-        [ExposeEditorField] public Body2DType[] EnumArray { get; set; }
-        [ExposeEditorField] public TestClass[] ClassArray { get; set; } 
+        [SerializedField] public Body2DType[] EnumArray { get; set; }
+        [SerializedField] public TestClass[] ClassArray { get; set; } 
     }
 }
