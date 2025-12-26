@@ -24,6 +24,7 @@ namespace Editor.Rendering
 
         private Shader _gizmosShader;
         public int PixelsPerUnit { get; set; } = 64;
+        private Material _mat;
         private enum GizmoType
         {
             Camera,
@@ -116,6 +117,9 @@ namespace Editor.Rendering
         {
             _batcher = new Batcher2D(Consts.Graphics.MAX_QUADS_PER_BATCH);
             _renderDatasByType = new Dictionary<Guid, RendererData2D>();
+            _gizmosShader = new Shader(_gizmosVert, _gizmosFrag);
+
+            _mat = new Material(_gizmosShader);
             _drawCallData = new DrawCallData()
             {
                 Textures = new GfxResource[GfxDeviceManager.Current.GetDeviceInfo().MaxValidTextureUnits],
@@ -126,7 +130,6 @@ namespace Editor.Rendering
             // _pipelineFeatures.DepthBuffer = true;
             _pipelineFeatures.Blending = Blending.Transparent;
 
-            _gizmosShader = new Shader(_gizmosVert, _gizmosFrag);
 
             InitIcons();
         }
@@ -143,23 +146,24 @@ namespace Editor.Rendering
                 return new Sprite(new Texture2D(TextureMode.Clamp, image.Width, image.Height, 4, PixelsPerUnit, image.Data));
             }
 
-            _cameraSprite = LoadSprite("cameraIcon.png");
+            _cameraSprite = LoadSprite("cameraIcon3.png");
             _audioSprite = LoadSprite("audioIcon2.png");
         }
 
-        public void OnBegin()
+        public void OnBegin(ICamera camera)
         {
             // TODO:This is slow, it creates a new instance every frame,
             var cameras = SceneManager.FindAll<Camera>(false);
             var audio = SceneManager.FindAll<AudioSource>(false);
 
-            GetRenderData(cameras, _renderDatasByType, _cameraSprite);
-            GetRenderData(audio, _renderDatasByType, _audioSprite);
+            GetRenderData(cameras, _renderDatasByType, _cameraSprite, camera);
+            GetRenderData(audio, _renderDatasByType, _audioSprite, camera);
          
             _batches = _batcher.GetBatches(_renderDatasByType.Values);
         }
 
-        private void GetRenderData<T>(List<T> components, Dictionary<Guid, RendererData2D> renderDatas, Sprite sprite) where T : Component
+        private void GetRenderData<T>(List<T> components, Dictionary<Guid, RendererData2D> renderDatas,
+            Sprite sprite, ICamera camera) where T : Component
         {
             for (int i = 0; i < components.Count; i++)
             {
@@ -170,7 +174,8 @@ namespace Editor.Rendering
                     {
                         IsBillboard = true,
                         SortOrder = 20,
-                        Sprite = sprite
+                        Sprite = sprite,
+                        Material = _mat
                     });
                 }
                 else
@@ -178,6 +183,8 @@ namespace Editor.Rendering
                     var renderData = renderDatas[component.GetID()];
                     renderData.Transform.WorldPosition = component.Transform.WorldPosition;
                     renderData.IsDirty = true;
+                    const int scaling = 100;
+                    renderData.SortOrder = -(int)(glm.dot(component.Transform.WorldPosition - camera.WorldPosition, camera.Forward) * scaling);
                 }
             }
         }
@@ -186,6 +193,11 @@ namespace Editor.Rendering
         {
             foreach (var batch in _batches)
             {
+                if (!batch.IsActive)
+                {
+                    break;
+                }
+
                 batch.Flush();
 
                 int boundTex = 0;

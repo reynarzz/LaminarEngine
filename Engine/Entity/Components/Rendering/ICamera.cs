@@ -14,6 +14,10 @@ namespace Engine
         public mat4 ViewMatrix { get; }
         internal bool IsAlive { get;  }
         public Color BackgroundColor { get; }
+        public vec3 WorldPosition { get; }
+        public vec3 Forward { get; }
+        public vec3 Right { get; }
+        public vec3 Up { get; }
         public RenderTexture RenderTexture { get; }
         public RenderTexture OutRenderTexture { get; internal set; }
     }

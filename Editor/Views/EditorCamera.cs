@@ -15,6 +15,7 @@ namespace Editor
         private Quaternion _rotation = Quaternion.Identity;
 
         private Vector2 _screenSize;
+        private vec3 _worldPosition;
         private const float MinDistance = 0.1f;
         private const float MaxDistance = 1000.0f;
 
@@ -27,6 +28,10 @@ namespace Editor
 
         public RenderTexture RenderTexture { get; set; }
         RenderTexture ICamera.OutRenderTexture { get; set; }
+        public vec3 Forward => GetForward();
+        public vec3 Right => GetRight();
+        public vec3 Up => GetUp();
+        public vec3 WorldPosition => _worldPosition;
 
         public EditorCamera(float aspect = 16f / 9f)
         {
@@ -121,8 +126,8 @@ namespace Editor
             vec3 forward = GetForward();
             vec3 up = GetUp();
 
-            vec3 position = _pivot - forward * _distance;
-            ViewMatrix = MathUtils.LookAt(position, _pivot, up);
+            _worldPosition = _pivot - forward * _distance;
+            ViewMatrix = MathUtils.LookAt(_worldPosition, _pivot, up);
         }
 
         private vec3 GetForward()

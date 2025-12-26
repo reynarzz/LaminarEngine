@@ -111,8 +111,11 @@ namespace Engine
         RenderTexture ICamera.OutRenderTexture { get; set; }
 
         [ExposeEditorField] public int Priority { get; set; } = 0;
+        public vec3 WorldPosition => Transform.WorldPosition;
+        public vec3 Forward => Transform.Forward;
+        public vec3 Right => Transform.Right;
+        public vec3 Up => Transform.Up;
 
-      
         public vec4 _viewport;
         public vec4 Viewport
         {

@@ -178,7 +178,7 @@ namespace Engine.Layers
 
             if (surface.DrawGizmos)
             {
-                surface.GizmosRenderer?.OnBegin();
+                surface.GizmosRenderer?.OnBegin(camera);
             }
 
             foreach (var sceneRenderer in surface.SceneRenderers)
@@ -206,7 +206,7 @@ namespace Engine.Layers
 
                 if (surface.RenderDebug)
                 {
-#if DEBUG
+#if DEBUG || EDITOR
                     SceneManager.OnDrawGizmos();
                     var VP = camera.Projection * camera.ViewMatrix;
                     Debug.DrawGeometries(VP, surface.UIViewProj, processedRenderTexture.NativeResource);
