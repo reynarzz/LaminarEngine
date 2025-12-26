@@ -124,7 +124,7 @@ namespace Engine
     public class Mesh : EObject
     {
         internal bool IsDirty { get; private set; }
-        public List<Vertex> Vertices { get; }
+        public List<Vertex> Vertices { get; set; }
         public uint[] Indices { get; set; }
         public int IndicesToDrawCount { get; set; }
 

@@ -12,7 +12,7 @@ namespace Engine
     internal static class GraphicsHelper
     {
         internal static GfxResource GetEmptyGeometry<T>(int vertCount, int indexCount, ref GeometryDescriptor geoDesc,
-                                                        GfxResource indexBuffer = null, bool isSharedIndexBuffer = true) 
+                                                        GfxResource indexBuffer = null, bool isSharedIndexBuffer = true)
                                                         where T : unmanaged, IVertex<T>
         {
             if (geoDesc == null)
@@ -199,5 +199,72 @@ namespace Engine
 
             return q;
         }
+
+        public static LineMesh2D CreateLineMesh(IList<vec3> points, float halfWidth, uint color = 0xFFFFFFFF)
+        {
+            if (points == null || points.Count < 2)
+            {
+                return new LineMesh2D
+                {
+                    Vertices = Array.Empty<Vertex>(),
+                    Indices = Array.Empty<uint>()
+                };
+            }
+
+            var vertices = new List<Vertex>();
+            var indices = new List<uint>();
+            int vertexIndex = 0;
+
+            for (int i = 0; i < points.Count - 1; i++)
+            {
+                vec3 p0 = points[i];
+                vec3 p1 = points[i + 1];
+
+                vec2 dir = glm.normalize(p1 - p0);
+                vec2 normal = new vec2(-dir.y, dir.x) * halfWidth;
+
+                vec3 v0 = new vec3(p0.xy + normal, p0.z);
+                vec3 v1 = new vec3(p0.xy - normal, p0.z);
+                vec3 v2 = new vec3(p1.xy - normal, p1.z);
+                vec3 v3 = new vec3(p1.xy + normal, p1.z);
+
+                vec3 center = new vec3((p0 + p1) * 0.5f);
+
+                int baseIndex = vertices.Count;
+
+                vertices.Add(MakeVertex(v0, center, color, vertexIndex++));
+                vertices.Add(MakeVertex(v1, center, color, vertexIndex++));
+                vertices.Add(MakeVertex(v2, center, color, vertexIndex++));
+                vertices.Add(MakeVertex(v3, center, color, vertexIndex++));
+
+                // CCW
+                indices.Add((uint)(baseIndex + 0));
+                indices.Add((uint)(baseIndex + 3));
+                indices.Add((uint)(baseIndex + 2));
+                indices.Add((uint)(baseIndex + 2));
+                indices.Add((uint)(baseIndex + 1));
+                indices.Add((uint)(baseIndex + 0));
+            }
+
+            Vertex MakeVertex(vec3 position, vec3 worldCenter, uint color, int vertexIndex)
+            {
+                return new Vertex
+                {
+                    Position = position,
+                    UV = vec2.Zero,
+                    Color = color,
+                    VertexIndex = vertexIndex,
+                    WorldCenter = worldCenter
+                };
+            }
+
+            return new LineMesh2D
+            {
+                Vertices = vertices.ToArray(),
+                Indices = indices.ToArray()
+            };
+        }
+
+
     }
 }

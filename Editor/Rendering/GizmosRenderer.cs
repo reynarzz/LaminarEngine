@@ -150,6 +150,11 @@ namespace Editor.Rendering
             _audioSprite = LoadSprite("audioIcon2.png");
         }
 
+        private static Guid _testLineGuid = Guid.NewGuid();
+
+        private static RendererData2D _lineRenderData;
+
+
         public void OnBegin(ICamera camera)
         {
             // TODO:This is slow, it creates a new instance every frame,
@@ -158,7 +163,25 @@ namespace Editor.Rendering
 
             GetRenderData(cameras, _renderDatasByType, _cameraSprite, camera);
             GetRenderData(audio, _renderDatasByType, _audioSprite, camera);
-         
+
+            if (_lineRenderData == null)
+            {
+                var transform = new Transform();
+                var points = new List<vec3>() { new vec3(0, 0, -10), new vec3(0, 5, -10), new vec3(5, 5, -10) };
+                var line = GraphicsHelper.CreateLineMesh(points, 0.1f);
+
+                _lineRenderData = new RendererData2D(_testLineGuid, transform)
+                {
+                    Mesh = new Mesh()
+                    {
+                        Vertices = line.Vertices.ToList(),
+                        IndicesToDrawCount = line.Indices.Length
+                    }
+                };
+
+                _renderDatasByType.Add(_testLineGuid, _lineRenderData);
+            }
+
             _batches = _batcher.GetBatches(_renderDatasByType.Values);
         }
 

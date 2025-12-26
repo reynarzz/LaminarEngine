@@ -34,8 +34,9 @@ namespace Game
         {
             [SerializedField] public int IntTest { get; set; }
             [SerializedField] public uint UIntTest { get; set; }
-            [SerializedField] long LongTest = 987654321012345678;
-            [SerializedField] ulong ULongTest = 18446744073709551615UL;
+            [SerializedField] private long LongTest = 987654321012345678;
+            [SerializedField] private ulong ULongTest = 18446744073709551615UL;
+            [SerializedField] private double DoubleTest = 0;
             [SerializedField] public string StringTest { get; set; }
             [SerializedField] public TypeCode EnumTest { get; set; }
             [SerializedField] public vec2 vec2Test { get; set; }
