@@ -149,11 +149,14 @@ namespace Engine
 
 #if WINDOWS
             Glfw.WindowHint(Hint.OpenglProfile, Profile.Compatibility);
+            Glfw.WindowHint(Hint.ContextVersionMajor, 3);
+            Glfw.WindowHint(Hint.ContextVersionMinor, 3);
 #else
             Glfw.WindowHint(Hint.OpenglProfile, Profile.Core);
-#endif
             Glfw.WindowHint(Hint.ContextVersionMajor, 3);
             Glfw.WindowHint(Hint.ContextVersionMinor, 2);
+#endif
+
             Glfw.WindowHint(Hint.Resizable, false);
             Glfw.WindowHint(Hint.Visible, false);
             Glfw.WindowHint(Hint.OpenglForwardCompatible, Constants.True);

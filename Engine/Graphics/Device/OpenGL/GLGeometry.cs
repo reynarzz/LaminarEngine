@@ -55,10 +55,7 @@ namespace Engine.Graphics.OpenGL
 
                 _sharedBuffer = descriptor.SharedIndexBuffer as GLIndexBuffer;
             }
-            else
-            {
-                Debug.EngineError("No Index buffer bound.");
-            }
+           
             _vertBuffer.Bind();
 
             for (uint i = 0; i < descriptor.VertexDesc.Attribs.Length; i++)

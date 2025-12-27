@@ -376,8 +376,11 @@ namespace Engine
                 var shader = (_shader.NativeShader as GLShader);
                 var renderTexture = texture as GLFrameBuffer;
                 GL.glDisable(GL.GL_STENCIL_TEST);
-                //GL.glLineWidth(4);
-                //GL.glEnable(GL.GL_LINE_SMOOTH);
+
+#if WINDOWS
+                GL.glLineWidth(4);
+                GL.glEnable(GL.GL_LINE_SMOOTH);
+#endif
 
                 shader.Bind();
 
