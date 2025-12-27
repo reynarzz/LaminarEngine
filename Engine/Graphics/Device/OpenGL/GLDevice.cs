@@ -16,7 +16,8 @@ namespace Engine.Graphics.OpenGL
     internal class GLDevice : GfxDevice
     {
         private readonly GfxDeviceInfo _gfxDeviceInfo;
-        private readonly uint _defaultVAO;
+        private static uint _defaultVAO;
+        internal static uint DefaultVAO => _defaultVAO;
         public GLDevice()
         {
             int maxTextureUnits;
@@ -54,7 +55,6 @@ namespace Engine.Graphics.OpenGL
             Debug.Log("OpenGL Renderer: " + _gfxDeviceInfo.Renderer);
             Debug.Log("OpenGL MaxTextureUnits: " + _gfxDeviceInfo.MaxValidTextureUnits);
             Debug.Log("OpenGL MaxUniformsCount: " + _gfxDeviceInfo.MaxUniformsCount);
-
 
             _defaultVAO = glGenVertexArray();
             glBindVertexArray(_defaultVAO);
@@ -109,11 +109,12 @@ namespace Engine.Graphics.OpenGL
 
         internal override GfxResource CreateShader(ShaderDescriptor desc)
         {
+            glBindVertexArray(DefaultVAO);
             var shader = new GLShader();
             shader.Create(desc);
             return shader;
         }
-
+        
         internal override GfxResource CreateTexture(TextureDescriptor desc)
         {
             var texture = new GLTexture();

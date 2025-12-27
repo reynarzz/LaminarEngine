@@ -27,7 +27,7 @@ namespace Engine.Graphics.OpenGL
         {
             int prevVAO = 0;
             glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &prevVAO);
-
+            
             Bind();
             if (!_vertBuffer.Create(descriptor.VertexDesc.BufferDesc))
             {

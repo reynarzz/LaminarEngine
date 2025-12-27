@@ -147,9 +147,13 @@ namespace Engine
             if (!_isInitialized)
                 return;
 
+#if WINDOWS
             Glfw.WindowHint(Hint.OpenglProfile, Profile.Compatibility);
+#else
+            Glfw.WindowHint(Hint.OpenglProfile, Profile.Core);
+#endif
             Glfw.WindowHint(Hint.ContextVersionMajor, 3);
-            Glfw.WindowHint(Hint.ContextVersionMinor, 3);
+            Glfw.WindowHint(Hint.ContextVersionMinor, 2);
             Glfw.WindowHint(Hint.Resizable, false);
             Glfw.WindowHint(Hint.Visible, false);
             Glfw.WindowHint(Hint.OpenglForwardCompatible, Constants.True);
