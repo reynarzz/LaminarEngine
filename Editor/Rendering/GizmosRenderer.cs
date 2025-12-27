@@ -151,7 +151,10 @@ namespace Editor.Rendering
         {
             _batcher = new Batcher2D(Consts.Graphics.MAX_QUADS_PER_BATCH);
             _renderDatasByType = new Dictionary<Guid, RendererData2D>();
-            _renderTexture = new RenderTexture(1920, 1080, TextureFilter.Linear);
+
+            _renderTexture = new RenderTexture(1920, 1080, TextureFilter.Linear, true,
+                Math.Min(GfxDeviceManager.Current.GetDeviceInfo().MaxSamples, 4));
+            // _renderTexture = new RenderTexture(1920, 1080, TextureFilter.Linear, true);
 
             _mat = new Material(new Shader(_gizmosVert, _gizmosFrag));
             _lineMat = new Material(new Shader(_gizmosLineVert, _gizmosFrag));
@@ -163,7 +166,7 @@ namespace Editor.Rendering
             };
 
             _pipelineFeatures = new PipelineFeatures();
-             _pipelineFeatures.DepthTesting = false;
+            _pipelineFeatures.DepthTesting = false;
             _pipelineFeatures.Blending = Blending.Transparent;
 
             InitIcons();
@@ -208,38 +211,23 @@ namespace Editor.Rendering
 
         private void CameraFrustum(Camera camera)
         {
-            if (_lineRenderData == null)
+            var points = default(List<vec3>);
+
+            if (camera.ProjectionMode == CameraProjectionMode.Perspective)
             {
-                _lineRenderData = new RendererData2D(_testLineGuid, new Transform())
-                {
-                    Mesh = new Mesh(),
-                    Material = _lineMat,
-                    PrivateBatch = true
-                };
-                _renderDatasByType.Add(_testLineGuid, _lineRenderData);
+                points = GraphicsHelper.CreatePerspectiveFrustumLines(camera.WorldPosition, camera.Forward, camera.Right, camera.Up,
+                                                                      glm.radians(camera.Fov), camera.Aspect, camera.NearPlane, camera.FarPlane);
+
             }
             else
             {
-                var points = default(List<vec3>);
+                points = GraphicsHelper.CreateOrthoFrustumLines(camera.WorldPosition, camera.Forward, camera.Right, camera.Up,
+                                                                camera.OrthographicSize * 2.0f, camera.Aspect, camera.NearPlane, camera.FarPlane);
+            }
 
-                if (camera.ProjectionMode == CameraProjectionMode.Perspective)
-                {
-                    points = GraphicsHelper.CreatePerspectiveFrustumLines(camera.WorldPosition, camera.Forward, camera.Right, camera.Up,
-                                                                          glm.radians(camera.Fov), camera.Aspect, camera.NearPlane, camera.FarPlane);
-
-                }
-                else
-                {
-                    points = GraphicsHelper.CreateOrthoFrustumLines(camera.WorldPosition, camera.Forward, camera.Right, camera.Up,
-                                                                    camera.OrthographicSize * 2.0f, camera.Aspect, camera.NearPlane, camera.FarPlane);
-                }
-
-                var mesh = GraphicsHelper.CreateNonContiguousLines(points, 0.09f);
-
-                _lineRenderData.Mesh.Vertices = mesh.Vertices.ToList();
-                _lineRenderData.Mesh.Indices = mesh.Indices;
-                _lineRenderData.Mesh.IndicesToDrawCount = mesh.Indices.Length;
-                _lineRenderData.IsDirty = true;
+            for (int i = 0; i < points.Count - 1; i += 2)
+            {
+                Debug.DrawLine(points[i], points[i + 1], Color.White);
             }
         }
 
@@ -270,8 +258,12 @@ namespace Editor.Rendering
             }
         }
 
-        public RenderTexture OnRender(ICamera camera, RenderTexture renderTarget)
+        public RenderTexture OnRender(ICamera camera, RenderingSurface surface, RenderTexture renderTarget)
         {
+            GfxDeviceManager.Current.BlitRenderTargetTo(renderTarget.NativeResource, _renderTexture.NativeResource);
+
+            Debug.DrawGeometries(camera.Projection * camera.ViewMatrix, surface.UIViewProj, renderTarget.NativeResource);
+
             foreach (var batch in _batches)
             {
                 if (!batch.IsActive)
@@ -329,7 +321,7 @@ namespace Editor.Rendering
             }
 
             GfxDeviceManager.Current.BlitRenderTargetTo(_renderTexture.NativeResource, renderTarget.NativeResource);
-            return _renderTexture;
+            return renderTarget;
         }
 
         public void OnEnd()

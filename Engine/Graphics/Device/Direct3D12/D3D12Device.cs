@@ -95,11 +95,6 @@ namespace Engine.Graphics
             throw new NotImplementedException();
         }
 
-        internal override void BlitRenderTargetTo(GfxResource source, GfxResource target, bool color = true, bool depth = true)
-        {
-            throw new NotImplementedException();
-        }
-
         internal override void DestroyResource(GfxResource resource)
         {
             throw new NotImplementedException();
@@ -111,6 +106,11 @@ namespace Engine.Graphics
         }
 
         internal override void Draw(Action draw, GfxResource renderTarget)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal override void BlitRenderTargetTo(GfxResource source, GfxResource target, bool color = true, bool depth = true, bool linear = false)
         {
             throw new NotImplementedException();
         }

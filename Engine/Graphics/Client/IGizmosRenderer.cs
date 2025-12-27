@@ -9,7 +9,7 @@ namespace Engine.Graphics.Client
     internal interface IGizmosRenderer
     {
         void OnBegin(ICamera camera);
-        RenderTexture OnRender(ICamera camera, RenderTexture target);
+        RenderTexture OnRender(ICamera camera, RenderingSurface surface, RenderTexture target);
         void OnEnd();
     }
 }

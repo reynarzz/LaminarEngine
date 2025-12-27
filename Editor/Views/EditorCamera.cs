@@ -34,7 +34,7 @@ namespace Editor
         public vec3 Up => GetAxis(Vector3.UnitY, _rotation);
         public vec3 WorldPosition => _worldPosition;
         public float NearPlane { get; set; } = 0.001f;
-        public float FarPlane { get; set; } = 1000.0f;
+        public float FarPlane { get; set; } = 10000.0f;
         public float Fov { get; set; } = 60;
         public float Aspect => _screenSize.X / _screenSize.Y;
         public float OrthographicSize { get; } = 32;

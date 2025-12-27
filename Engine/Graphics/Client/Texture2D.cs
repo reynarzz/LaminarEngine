@@ -32,21 +32,26 @@ namespace Engine
                 throw new ArgumentOutOfRangeException($"Invalid Pixels per unit '{pixelsPerUnit}' for texture: {path}");
             }
             _pixelsPerUnit = pixelsPerUnit;
+
+            Create();
         }
 
         public Texture2D(TextureMode mode, TextureFilter filter, int width, int height, int channels, int pixelsPerUnit, byte[] data) : 
             this(string.Empty, Guid.NewGuid(), mode, filter, width, height, channels, pixelsPerUnit, data)
         {
+            Create();
+
         }
 
         public Texture2D(TextureMode mode, TextureFilter filter, int width, int height, int channels, byte[] data) : 
             this(mode, filter, width, height, channels, 1, data)
         {
+
         }
 
-        protected override IResourceHandle Create()
+        protected override void Create()
         {
-            return GfxDeviceManager.Current.CreateTexture(new TextureDescriptor()
+            NativeResource = GfxDeviceManager.Current.CreateTexture(new TextureDescriptor()
             {
                 Width = Width,
                 Height = Height,

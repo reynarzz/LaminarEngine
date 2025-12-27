@@ -33,6 +33,11 @@ namespace Engine.Graphics.OpenGL
                 glGetIntegerv(GL_MAX_FRAGMENT_UNIFORM_COMPONENTS, &maxFragmentUniforms);
 
                 _gfxDeviceInfo.MaxUniformsCount = (int)MathF.Min(Consts.Graphics.MAX_UNIFORMS_PER_DRAWCALL, MathF.Min(maxFragmentUniforms, maxFragmentUniforms));
+
+                int maxSamples;
+                glGetIntegerv(GL_MAX_SAMPLES, &maxSamples);
+                _gfxDeviceInfo.MaxSamples = maxSamples;
+
                 //int maxUniformBlocks = 0;
                 //glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &maxUniformBlocks);
             }
@@ -304,10 +309,10 @@ namespace Engine.Graphics.OpenGL
             return null;
         }
 
-        internal override void BlitRenderTargetTo(GfxResource source, GfxResource target, bool color = true, bool depth = false)
+        internal override void BlitRenderTargetTo(GfxResource source, GfxResource target, bool color = true, bool depth = false, bool linear = false)
         {
             var sourceFB = (source as GLFrameBuffer);
-            sourceFB.BlitTo(target as GLFrameBuffer, color, depth);
+            sourceFB.BlitTo(target as GLFrameBuffer, color, depth, linear);
         }
 
         internal override void DestroyResource(GfxResource resource)

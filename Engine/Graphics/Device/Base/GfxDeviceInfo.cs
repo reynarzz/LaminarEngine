@@ -9,6 +9,7 @@ namespace Engine.Graphics
     internal struct GfxDeviceInfo
     {
         public int MaxUniformsCount { get; internal set; }
+        public int MaxSamples { get; internal set; }
         internal int MaxTexAccessInVertexShader { get; set; }
         internal int MaxHardwareTextureUnits { get; set; }
         internal int MaxValidTextureUnits { get; set; }

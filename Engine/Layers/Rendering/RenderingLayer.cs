@@ -214,8 +214,9 @@ namespace Engine.Layers
                 }
                 if (surface.DrawGizmos)
                 {
-                    processedRenderTexture = surface?.GizmosRenderer?.OnRender(camera, processedRenderTexture);
+                    processedRenderTexture = surface?.GizmosRenderer?.OnRender(camera, surface, processedRenderTexture);
                 }
+
                 if (surface.RenderPostProcessing)
                 {
                     RenderPostProcessing(ref processedRenderTexture);

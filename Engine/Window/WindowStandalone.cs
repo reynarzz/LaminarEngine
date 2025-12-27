@@ -147,12 +147,14 @@ namespace Engine
             if (!_isInitialized)
                 return;
 
-            Glfw.WindowHint(Hint.OpenglProfile, Profile.Core);
+            Glfw.WindowHint(Hint.OpenglProfile, Profile.Compatibility);
             Glfw.WindowHint(Hint.ContextVersionMajor, 3);
-            Glfw.WindowHint(Hint.ContextVersionMinor, 2);
+            Glfw.WindowHint(Hint.ContextVersionMinor, 3);
             Glfw.WindowHint(Hint.Resizable, false);
             Glfw.WindowHint(Hint.Visible, false);
             Glfw.WindowHint(Hint.OpenglForwardCompatible, Constants.True);
+            Glfw.WindowHint(Hint.Samples, 4);
+            
             //Glfw.WindowHint(Hint.SrgbCapable, Constants.True);
             //Glfw.WindowHint(Hint.Doublebuffer, Constants.True);
 

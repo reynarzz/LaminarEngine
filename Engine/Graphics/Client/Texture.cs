@@ -16,7 +16,7 @@ namespace Engine
         public int Channels { get; }
         internal protected byte[] Data { get; internal set; }
 
-        internal GfxResource NativeResource { get; }
+        internal GfxResource NativeResource { get; protected private set; }
 
         internal Texture(string path, Guid guid, TextureMode mode, TextureFilter filter, int width, int height, int channels, byte[] data) : base(path, guid)
         {
@@ -28,7 +28,6 @@ namespace Engine
             Filter = filter;
 
 
-            NativeResource = Create() as GfxResource;
         }
 
         internal Texture(string path, Guid guid, int width, int height, int channels, GfxResource nativeResource) : base(path, guid)
@@ -44,6 +43,6 @@ namespace Engine
         {
             NativeResource.Dispose();
         }
-        protected abstract IResourceHandle Create();
+        protected abstract void Create();
     }
 }

@@ -9,16 +9,32 @@ namespace Engine
 {
     public class RenderTexture : Texture
     {
-        private static readonly RenderTargetDescriptor _desc = new();
+        private readonly RenderTargetDescriptor _desc = new();
         public RenderTexture(int width, int height) :
             base(string.Empty, Guid.NewGuid(), TextureMode.Clamp, TextureFilter.Nearest, width, height, 4, null)
         {
+            Create();
+
         }
 
-        public RenderTexture(int width, int height, TextureFilter filter) :
+        public RenderTexture(int width, int height, TextureFilter filter, bool enableMipMaps) :
           base(string.Empty, Guid.NewGuid(), TextureMode.Clamp, filter, width, height, 4, null)
         {
+            _desc.ColorTextureDescriptor.EnableMipMaps = enableMipMaps;
+            Create();
+
         }
+
+        public RenderTexture(int width, int height, TextureFilter filter, bool enableMipMaps, int samples) :
+         base(string.Empty, Guid.NewGuid(), TextureMode.Clamp, filter, width, height, 4, null)
+        {
+            _desc.IsMultiSample = samples > 0;
+            _desc.SamplesCount = samples;
+            _desc.ColorTextureDescriptor.EnableMipMaps = enableMipMaps;
+
+            Create();
+        }
+
 
         public void UpdateTarget(int width, int height)
         {
@@ -31,7 +47,7 @@ namespace Engine
             GfxDeviceManager.Current.UpdateResouce(NativeResource, _desc);
         }
 
-        protected override IResourceHandle Create()
+        protected override void Create()
         {
             _desc.Width = Width;
             _desc.Height = Height;
@@ -40,7 +56,7 @@ namespace Engine
             _desc.ColorTextureDescriptor.Mode = Mode;
             _desc.ColorTextureDescriptor.Filter = Filter;
 
-            return GfxDeviceManager.Current.CreateRenderTarget(_desc);
+            NativeResource = GfxDeviceManager.Current.CreateRenderTarget(_desc);
         }
 
         public byte[] ReadColorsRGBA()
