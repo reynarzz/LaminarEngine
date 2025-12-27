@@ -13,6 +13,11 @@ namespace Engine
         public mat4 Projection { get; }
         public mat4 ViewMatrix { get; }
         internal bool IsAlive { get;  }
+        public float NearPlane { get; }
+        public float FarPlane { get; }
+        public float Fov { get; }
+        public float Aspect { get; }
+        public float OrthographicSize { get; }
         public Color BackgroundColor { get; }
         public vec3 WorldPosition { get; }
         public vec3 Forward { get; }

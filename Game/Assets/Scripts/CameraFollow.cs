@@ -22,6 +22,7 @@ namespace Game
         public Bounds LevelBounds { get; set; }
         [RequiredProperty] private Camera _camera;
         private readonly float _zPosition = -10;
+        [SerializedField] private bool _clampBounds = true;
         protected override void OnAwake()
         {
             Actor.DontDestroyOnLoad(this);
@@ -62,9 +63,18 @@ namespace Game
 
             var targetCameraPos = new vec3(newX, newY, camPos.z);
 
-            Transform.WorldPosition = AdjustPositionInsideBounds(Mathf.SmoothDamp(camPos, AdjustPositionInsideBounds(targetCameraPos), ref velocity, smoothTime));
+            var smoothPos = Mathf.SmoothDamp(camPos, targetCameraPos, ref velocity, smoothTime);
+
+            if (_clampBounds)
+            {
+                Transform.WorldPosition = AdjustPositionInsideBounds(Mathf.SmoothDamp(camPos, AdjustPositionInsideBounds(targetCameraPos), ref velocity, smoothTime));
+            }
+            else
+            {
+                Transform.WorldPosition = smoothPos;
+            }
             //Transform.WorldPosition = Easing.Apply(EasingType.EaseOutElastic, Transform.WorldPosition, AdjustPositionInsideBounds(targetCameraPos), Time.DeltaTime);
-            
+
             if (Physics2D.DrawColliders)
             {
                 Debug.DrawBox(new vec3(Transform.WorldPosition.x, Transform.WorldPosition.y, 0), new vec3(deadZoneSize.x, deadZoneSize.y, 0), Color.Green);

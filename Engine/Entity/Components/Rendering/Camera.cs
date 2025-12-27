@@ -105,8 +105,11 @@ namespace Engine
             }
         }
 
-        [SerializedField] public float NearPlane { get; set; } = 0.1f;
-        [SerializedField] public float FarPlane { get; set; } = 100;
+        private float _nearPlane = 0.1f;
+        private float _farPlane = 100.0f;
+        [SerializedField] public float NearPlane { get => _nearPlane; set { _nearPlane = value; UpdateCurrent(); } } 
+        [SerializedField] public float FarPlane { get => _farPlane; set { _farPlane = value; UpdateCurrent(); } }
+        public float Aspect => Viewport.z / Viewport.w;
         [SerializedField] public RenderTexture RenderTexture { get; set; }
         RenderTexture ICamera.OutRenderTexture { get; set; }
 

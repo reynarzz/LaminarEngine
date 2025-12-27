@@ -198,27 +198,67 @@ namespace Editor.Rendering
             GetRenderData(cameras, _renderDatasByType, _cameraSprite, camera);
             GetRenderData(audio, _renderDatasByType, _audioSprite, camera);
 
-            if (_lineRenderData == null)
+            if (cameras.Count > 0)
             {
-                var transform = new Transform();
-                var points = new List<vec3>() { new vec3(0, 0, -10), new vec3(0, 5, -10), new vec3(5, 5, -10) };
-                var line = GraphicsHelper.CreateLineMesh3D(points, 0.1f);
 
-                _lineRenderData = new RendererData2D(_testLineGuid, transform)
+                var cameraGame = cameras.ElementAt(0);
+
+                if (_lineRenderData == null)
                 {
-                    Mesh = new Mesh()
+                    var transform = new Transform();
+                    var pointsTest = new List<vec3>() { new vec3(0, 0, -10), new vec3(0, 5, -10), new vec3(5, 5, -10),
+                new vec3(5, -5, -10), new vec3(-5, -5, -10), new vec3(-5, -5, -5), new vec3(-5, -10, -5)};
+                    var line = GraphicsHelper.CreateLineMesh3D(pointsTest, 0.1f);
+
+                    _lineRenderData = new RendererData2D(_testLineGuid, transform)
                     {
-                        Vertices = line.Vertices.ToList(),
-                        Indices = line.Indices,
-                        IndicesToDrawCount = line.Indices.Length
-                    },
-                    Material = _lineMat,
-                    PrivateBatch = true
-                };
+                        Mesh = new Mesh()
+                        {
+                            Vertices = line.Vertices.ToList(),
+                            Indices = line.Indices,
+                            IndicesToDrawCount = line.Indices.Length
+                        },
+                        Material = _lineMat,
+                        PrivateBatch = true
+                    };
 
-                _renderDatasByType.Add(_testLineGuid, _lineRenderData);
+
+                    var points = GraphicsHelper.CreatePerspectiveFrustumLines(cameraGame.WorldPosition, cameraGame.Forward, cameraGame.Right, cameraGame.Up,
+                                                                 glm.radians(17), cameraGame.Aspect, cameraGame.NearPlane, cameraGame.FarPlane);
+
+                    var mesh = GraphicsHelper.CreateNonContiguousLines(points, 0.2f);
+
+                    _lineRenderData.Mesh.Vertices = mesh.Vertices.ToList();
+                    _lineRenderData.Mesh.Indices = mesh.Indices;
+                    _lineRenderData.Mesh.IndicesToDrawCount = mesh.Indices.Length;
+                    _lineRenderData.IsDirty = true;
+
+                    _renderDatasByType.Add(_testLineGuid, _lineRenderData);
+                }
+                else
+                {
+                    var points = default(List<vec3>);
+
+                    if (cameraGame.ProjectionMode == CameraProjectionMode.Perspective)
+                    {
+                        points = GraphicsHelper.CreatePerspectiveFrustumLines(cameraGame.WorldPosition, cameraGame.Forward, cameraGame.Right, cameraGame.Up,
+                                                                              glm.radians(cameraGame.Fov), cameraGame.Aspect, cameraGame.NearPlane, cameraGame.FarPlane);
+
+                    }
+                    else
+                    {
+                        points = GraphicsHelper.CreateOrthoFrustumLines(cameraGame.WorldPosition, cameraGame.Forward, cameraGame.Right, cameraGame.Up,
+                                                                        cameraGame.OrthographicSize, cameraGame.Aspect, cameraGame.NearPlane, cameraGame.FarPlane);
+                    }
+
+                    var mesh = GraphicsHelper.CreateNonContiguousLines(points, 0.09f);
+
+                    _lineRenderData.Mesh.Vertices = mesh.Vertices.ToList();
+                    _lineRenderData.Mesh.Indices = mesh.Indices;
+                    _lineRenderData.Mesh.IndicesToDrawCount = mesh.Indices.Length;
+                    _lineRenderData.IsDirty = true;
+                }
             }
-
             _batches = _batcher.GetBatches(_renderDatasByType.Values);
         }
 

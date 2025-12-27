@@ -36,6 +36,9 @@ namespace Editor
         public float NearPlane { get; set; } = 0.001f;
         public float FarPlane { get; set; } = 1000.0f;
         public float Fov { get; set; } = 60;
+        public float Aspect => _screenSize.X / _screenSize.Y;
+        public float OrthographicSize { get; } = 32;
+
         public EditorCamera(float aspect = 16f / 9f)
         {
             Projection = MathUtils.Perspective(glm.radians(Fov), aspect, NearPlane, FarPlane);

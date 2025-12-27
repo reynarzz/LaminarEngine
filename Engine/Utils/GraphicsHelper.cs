@@ -260,6 +260,57 @@ namespace Engine
                 Indices = indices.ToArray()
             };
         }
+        public static LineMesh CreateNonContiguousLines(IList<vec3> points, float halfWidth, uint color = 0xFFFFFFFF)
+        {
+            if (points == null || points.Count < 2)
+            {
+                return new LineMesh
+                {
+                    Vertices = Array.Empty<Vertex>(),
+                    Indices = Array.Empty<uint>()
+                };
+            }
+
+            if ((points.Count & 1) != 0)
+                throw new ArgumentException("Line list must contain an even number of points");
+
+            var vertices = new List<Vertex>();
+            var indices = new List<uint>();
+
+            uint indexOffset = 0;
+
+            for (int i = 0; i < points.Count; i += 2)
+            {
+                vec3 a = points[i];
+                vec3 b = points[i + 1];
+
+                // Skip degenerate segments
+                if ((b - a).length() < 1e-8f)
+                    continue;
+
+                // Generate tube for this single segment
+                var segmentMesh = CreateLineMesh3D(
+                    new vec3[] { a, b },
+                    halfWidth,
+                    color);
+
+                // Append vertices
+                foreach (var v in segmentMesh.Vertices)
+                    vertices.Add(v);
+
+                // Append indices with offset
+                foreach (var idx in segmentMesh.Indices)
+                    indices.Add(idx + indexOffset);
+
+                indexOffset += (uint)segmentMesh.Vertices.Length;
+            }
+
+            return new LineMesh
+            {
+                Vertices = vertices.ToArray(),
+                Indices = indices.ToArray()
+            };
+        }
 
         public static LineMesh CreateLineMesh3D(IList<vec3> points, float halfWidth, uint color = 0xFFFFFFFF)
         {
@@ -380,7 +431,7 @@ namespace Engine
         }
 
 
-        public static List<vec3> CreateFrustumLines(vec3 position, vec3 forward, vec3 right, vec3 up,
+        public static List<vec3> CreatePerspectiveFrustumLines(vec3 position, vec3 forward, vec3 right, vec3 up,
                                                       float fovYRadians, float aspect, float nearPlane, float farPlane)
         {
             var lines = new List<vec3>(24);
@@ -432,6 +483,57 @@ namespace Engine
                 list.Add(a);
                 list.Add(b);
             }
+
+            return lines;
+        }
+
+        public static List<vec3> CreateOrthoFrustumLines(vec3 position, vec3 forward, vec3 right, vec3 up,
+                                                         float orthoHeight, float aspect, float nearPlane, float farPlane)
+        {
+            var lines = new List<vec3>(24);
+
+            float halfHeight = orthoHeight * 0.5f;
+            float halfWidth = halfHeight * aspect;
+
+            // Centers of near and far planes
+            vec3 nc = position + forward * nearPlane;
+            vec3 fc = position + forward * farPlane;
+
+            // Near plane corners
+            vec3 n0 = nc - right * halfWidth + up * halfHeight; // top-left
+            vec3 n1 = nc + right * halfWidth + up * halfHeight; // top-right
+            vec3 n2 = nc + right * halfWidth - up * halfHeight; // bottom-right
+            vec3 n3 = nc - right * halfWidth - up * halfHeight; // bottom-left
+
+            // Far plane corners
+            vec3 f0 = fc - right * halfWidth + up * halfHeight;
+            vec3 f1 = fc + right * halfWidth + up * halfHeight;
+            vec3 f2 = fc + right * halfWidth - up * halfHeight;
+            vec3 f3 = fc - right * halfWidth - up * halfHeight;
+
+            void AddLine(vec3 a, vec3 b)
+            {
+                lines.Add(a);
+                lines.Add(b);
+            }
+
+            // Near rectangle
+            AddLine(n0, n1);
+            AddLine(n1, n2);
+            AddLine(n2, n3);
+            AddLine(n3, n0);
+
+            // Far rectangle
+            AddLine(f0, f1);
+            AddLine(f1, f2);
+            AddLine(f2, f3);
+            AddLine(f3, f0);
+
+            // Connecting edges
+            AddLine(n0, f0);
+            AddLine(n1, f1);
+            AddLine(n2, f2);
+            AddLine(n3, f3);
 
             return lines;
         }
