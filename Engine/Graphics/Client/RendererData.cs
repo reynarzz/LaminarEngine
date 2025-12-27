@@ -1,4 +1,5 @@
 ﻿using GlmNet;
+using SharedTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,8 @@ namespace Engine.Graphics
         public virtual bool IsEnabled { get; }
         public bool PrivateBatch { get; set; }
         public Guid ID { get; set; }
+        public Bounds Bounds;
+
         private Action _onDraw;
 
         public RendererData(Guid id, Action onDraw)

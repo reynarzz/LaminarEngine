@@ -536,5 +536,37 @@ namespace Engine
 
             return lines;
         }
+        public static List<vec3> CreateGrid(int gridX, int gridY, float tileSize, float y = 0.0f)
+        {
+            var points = new List<vec3>();
+
+            float width = gridX * tileSize;
+            float height = gridY * tileSize;
+
+            float halfW = width * 0.5f;
+            float halfH = height * 0.5f;
+
+            // Vertical lines
+            for (int x = 0; x <= gridX; x++)
+            {
+                float px = x * tileSize - halfW;
+
+                points.Add(new vec3(px, y, -halfH));
+                points.Add(new vec3(px, y, halfH));
+            }
+
+            // Horizontal lines
+            for (int yIdx = 0; yIdx <= gridY; yIdx++)
+            {
+                float py = yIdx * tileSize - halfH;
+
+                points.Add(new vec3(-halfW, y, py));
+                points.Add(new vec3(halfW, y, py));
+            }
+
+            return points;
+        }
+
+
     }
 }

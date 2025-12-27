@@ -1,4 +1,5 @@
 ﻿using Engine.Graphics;
+using SharedTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,6 +52,24 @@ namespace Engine
 
                 _renderData.Sprite = value;
 
+                if (value)
+                {
+                    var chunk = value.GetAtlasChunk();
+
+                    float ppu = value.Texture.PixelPerUnit;
+                    var width = (float)chunk.Width / ppu;
+                    var height = (float)chunk.Height / ppu;
+
+                    _renderData.Bounds = new Bounds()
+                    {
+                        Max = new GlmNet.vec3(width * 0.5f, height * 0.5f, 0),
+                        Min = new GlmNet.vec3(-width * 0.5f, -height * 0.5f, 0),
+                    };
+                }
+                else
+                {
+                    _renderData.Bounds = default;
+                }
             }
         }
 

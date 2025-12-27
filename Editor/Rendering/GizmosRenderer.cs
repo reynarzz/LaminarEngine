@@ -111,7 +111,10 @@ namespace Editor.Rendering
 
         void main()
         {
-            fragColor = SampleIndexedTexture(fragTexIndex, fragUV) * vColor;
+            vec4 c = SampleIndexedTexture(fragTexIndex, fragUV) * vColor;
+            c.rgb *= c.a;
+
+            fragColor = c;
         }
 ";
         string _gizmosLineVert = @"
@@ -168,6 +171,7 @@ namespace Editor.Rendering
             _pipelineFeatures = new PipelineFeatures();
             _pipelineFeatures.DepthTesting = false;
             _pipelineFeatures.Blending = Blending.Transparent;
+            _pipelineFeatures.Blending.SrcFactor = BlendFactor.One;
 
             InitIcons();
         }
@@ -206,7 +210,35 @@ namespace Editor.Rendering
                 var cameraGame = cameras.ElementAt(0);
                 CameraFrustum(cameraGame);
             }
+
+            DrawSelected();
             _batches = _batcher.GetBatches(_renderDatasByType.Values);
+        }
+
+        private void DrawSelected()
+        {
+            if (Selector.SelectedTransform())
+            {
+                var renderer = Selector.SelectedTransform().GetComponent<Renderer>();
+
+                //if(renderer is TilemapRenderer tilemap)
+                //{
+                //    var lines = GraphicsHelper.CreateGrid((int)tilemap.GridSize.x, (int)tilemap.GridSize.y, 16);
+
+                //    for (int i = 0; i < lines.Count-1; i+= 2)
+                //    {
+                //        Debug.DrawLine(lines[0], lines[1], Color.White);
+                //    }
+                //}
+                //else
+                if (renderer)
+                {
+                    var s = MathF.Sin(Time.UnscaledTime * 10) * 0.5f + 0.5f;
+                    var size = renderer.RendererData.Bounds.Size;// + new vec3(s, s) * 0.5f;
+                    Debug.DrawBox(Selector.SelectedTransform().WorldPosition + renderer.RendererData.Bounds.Center, size, new Color(1, 1, 1, 0.6f));
+
+                }
+            }
         }
 
         private void CameraFrustum(Camera camera)

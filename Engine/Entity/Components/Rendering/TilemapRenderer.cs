@@ -3,6 +3,7 @@ using Engine.Graphics;
 using Engine.Types;
 using Engine.Utils;
 using GlmNet;
+using SharedTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,14 +35,20 @@ namespace Engine
         public IReadOnlyList<vec2> TilesPositions => _tilesPositions;
         private List<vec2> _tilesPositions = new();
         private RendererData2D _rendererData;
+        public vec2 GridSize { get; private set; }
         protected override void OnAwake()
         {
             base.OnAwake();
 
-            _rendererData =  (RendererData as RendererData2D);
+            _rendererData = (RendererData as RendererData2D);
             _rendererData.Mesh = new Mesh();
             _rendererData.Mesh.IndicesToDrawCount = 0;
             _rendererData.PrivateBatch = true;
+            _rendererData.Bounds = new Bounds()
+            {
+                Min = vec3.One * int.MaxValue,
+                Max = vec3.One * int.MinValue
+            };
         }
 
         public void AddTile(Tile tile, vec3 position, float rot = 0)
@@ -70,6 +77,12 @@ namespace Engine
 
             RendererData.IsDirty = true;
 
+            var max = _rendererData.Bounds.Max;
+            var min = _rendererData.Bounds.Min;
+            _rendererData.Bounds.Max = new vec3(Math.Max(max.x, position.x), Math.Max(max.y, position.y), 0);
+            _rendererData.Bounds.Min = new vec3(Math.Min(min.x, position.x), Math.Min(min.y, position.y), 0);
+         
+
             //var index = (uint)Mesh.Vertices.Count - 4;
             //Mesh.Indices.Add(index + 0);
             //Mesh.Indices.Add(index + 1);
@@ -90,7 +103,7 @@ namespace Engine
 
                 float tilePxX = tile.Px[0];
                 float tilePxY = tile.Px[1];
-                
+
                 float worldX = level.WorldX + tilePxX + layer.PxTotalOffsetX;
                 float worldY = -level.WorldY + -tilePxY + -layer.PxTotalOffsetY;
 
@@ -104,6 +117,12 @@ namespace Engine
 
                 AddTile(new Tile((int)tile.T, isFlippedX, isFlippedY), position);
             }
+
+            _rendererData.Bounds.Min -= vec3.One * 0.5f;
+            _rendererData.Bounds.Max += vec3.One * 0.5f;
+
+            _rendererData.Bounds.Min.z = 0;
+            _rendererData.Bounds.Max.z = 0;
         }
 
         public void SetTilemapLDtk(ldtk.LdtkJson project, LDtkOptions options)
@@ -112,7 +131,6 @@ namespace Engine
 
             var level = project.Levels[options.LevelToLoad];
 
-            
             //if (level.WorldDepth != options.WorldDepth)
             //    continue;
 
@@ -121,7 +139,9 @@ namespace Engine
                 if (((options.LayersToLoadMask & (1UL << j)) == 0) && options.LayersToLoadMask != 0)
                     continue;
 
+
                 var layer = level.LayerInstances[j];
+                GridSize = new vec2(layer.CWid, layer.CHei);
 
                 if (!layer.Visible)
                     continue;

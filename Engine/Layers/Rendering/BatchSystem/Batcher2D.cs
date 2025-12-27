@@ -126,13 +126,14 @@ namespace Engine.Rendering
                     if (renderer.Mesh == null)
                     {
                         var chunk = renderer.Sprite?.GetAtlasChunk() ?? AtlasChunk.DefaultChunk;
-                        var worldMatrix = renderer.Transform.GetRenderingWorldMatrix();
 
                         float ppu = texture.PixelPerUnit;
                         var width = (float)chunk.Width / ppu;
                         var height = (float)chunk.Height / ppu;
 
                         var currentBatch = _batchesPool.Get(renderer, VerticesPerQuad, MaxBatchVertexSize, texture, material);
+
+                        var worldMatrix = renderer.Transform.GetRenderingWorldMatrix();
 
                         QuadVertices quad = default;
                         GraphicsHelper.CreateQuad(ref quad, chunk.Uvs, width, height, chunk.Pivot, renderer.Color, worldMatrix);
