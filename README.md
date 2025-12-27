@@ -1,6 +1,8 @@
 # GFS (Game From Scratch)
 
-![Gameplay](Intro.gif)
+<p align="center">
+  <img src="Engine.gif" alt="Gameplay" width="400">
+</p>
 
 GFS is a 2D video game and game engine built entirely from scratch with **C#**, heavily inspired by the **Unity3D C# API**.
 

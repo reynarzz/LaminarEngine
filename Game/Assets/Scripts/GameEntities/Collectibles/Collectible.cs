@@ -26,7 +26,7 @@ namespace Game
             public ItemId Item { get; set; }
             public int Amount { get; set; }
             public Sprite Sprite { get; set; }
-            public AudioClip CollectedAudioClip { get;  set; }
+            public AudioClip CollectedAudioClip { get; set; }
             public vec2 TriggerSize { get; set; }
             public vec2 ForceDir { get; set; }
         }
@@ -86,10 +86,19 @@ namespace Game
 
         protected sealed override void OnTriggerEnter2D(Collider2D collider)
         {
+            Collect(collider);
+        }
+
+        protected sealed override void OnTriggerStay2D(Collider2D collider)
+        {
+            Collect(collider);
+        }
+
+        private void Collect(Collider2D collider)
+        {
             if (collider.Actor.Layer == _config.TargetLayer)
             {
                 var character = collider.GetComponent<Character>();
-
                 if (character && character.IsCharacterAlive())
                 {
                     character.Inventory.Add(_config.Item, _config.Amount);

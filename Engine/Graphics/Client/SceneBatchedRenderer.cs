@@ -59,8 +59,9 @@ namespace Engine.Graphics
         private RenderingBatchesInfo RenderBatches(ICamera camera, List<Batch2D> batches, ref mat4 VP, RenderTexture sceneRenderTarget, RenderTexture grabBlitTarget = null)
         {
             RenderingBatchesInfo info = default;
-            foreach (var batch in batches)
+            for (int i = 0; i < batches.Count; i++)
             {
+                var batch = batches[i];
                 if (!batch.IsActive)
                 {
                     break;
@@ -86,15 +87,23 @@ namespace Engine.Graphics
 
                     info.ScreenGrabPasses++;
 
-                    foreach (var batchGrab in batches)
+                    try
                     {
-                        if (!batchGrab.IsActive || batchGrab == batch)
+                        for (int j = 0; j < batches.Count; j++)
                         {
-                            break;
-                        }
+                            var batchGrab = batches[j];
+                            if (!batchGrab.IsActive || batchGrab == batch)
+                            {
+                                break;
+                            }
 
-                        batchGrab.Flush();
-                        RenderPass(batchGrab, ref VP, _screenGrabTarget, _screenGrabTarget, camera);
+                            batchGrab.Flush();
+                            RenderPass(batchGrab, ref VP, _screenGrabTarget, _screenGrabTarget, camera);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.EngineError(e);
                     }
                 }
 
@@ -106,8 +115,9 @@ namespace Engine.Graphics
 
         private void RenderPass(Batch2D batch, ref mat4 VP, RenderTexture renderTarget, RenderTexture screenGrabTarget, ICamera camera)
         {
-            foreach (var pass in batch.Material.Passes)
+            for (int i = 0; i < batch.Material.Passes.Count; i++)
             {
+                var pass = batch.Material.Passes[i];
                 int boundTex = 0;
                 for (; boundTex < batch.Textures.Length; boundTex++)
                 {

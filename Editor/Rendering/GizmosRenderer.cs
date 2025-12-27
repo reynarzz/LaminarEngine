@@ -187,7 +187,6 @@ namespace Editor.Rendering
 
         private static RendererData2D _lineRenderData;
 
-
         public void OnBegin(ICamera camera)
         {
             // TODO:This is slow, it creates a new instance every frame,

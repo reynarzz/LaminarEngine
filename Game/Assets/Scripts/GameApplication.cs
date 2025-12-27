@@ -15,6 +15,8 @@ namespace Game
         //     :this can be solved by checking if the player is colliding with a wall, if so, then push him away the wall.
         // Refactor renderingLayer to use renderData.
         // Remove the use of glGetIntegerv, and store prev buffer attached using GLDevice
+        // use perspective camera with FOV of 70, and rotate +14 and -14 degrees to where the player is facing.
+
 
         // For the game:
         // Improve game architecture.
