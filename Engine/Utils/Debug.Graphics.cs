@@ -110,6 +110,8 @@ namespace Engine
         public static void DrawLine(vec3 start, vec3 end, Color color)
         {
 #if DEBUG
+            Initialize();
+
             if (!_drawUIVertices)
             {
                 DrawLine(start, end, color, _linesVertexPositions, ref _totalLinesVerticesToDraw);
