@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
+	  <TargetFrameworks>net9.0-windows;net9.0</TargetFrameworks>
+	  <ImplicitUsings>enable</ImplicitUsings>
 	  <Nullable>disable</Nullable>
 	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	  <DefineConstants>DESKTOP;$(DefineConstants)</DefineConstants>
@@ -14,12 +14,17 @@
   <MacLibFolder>lib-universal</MacLibFolder>
 </PropertyGroup>
 
-  <ItemGroup> 
-    <ProjectReference Include="..\Engine\Engine.csproj" />
-    <ProjectReference Include="..\GameCooker\GameCooker.csproj" />
-    <ProjectReference Include="..\Game\Game.csproj" />
-    <ProjectReference Include="..\SharedTypes\SharedTypes.csproj" />
-  </ItemGroup>
+	<!-- Windows -->
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-windows'">
+		<DefineConstants>WINDOWS;DESKTOP;$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Engine\Engine.csproj" />
+		<ProjectReference Include="..\GameCooker\GameCooker.csproj" />
+		<ProjectReference Include="..\Game\Game.csproj" />
+		<ProjectReference Include="..\SharedTypes\SharedTypes.csproj" />
+	</ItemGroup>
 
 	<Target Name="PostBuild_Windows" AfterTargets="PostBuildEvent" Condition="'$(OS)' == 'Windows_NT'">
 
