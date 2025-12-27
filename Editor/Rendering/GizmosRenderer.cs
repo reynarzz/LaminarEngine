@@ -164,7 +164,6 @@ namespace Editor.Rendering
             // _pipelineFeatures.DepthBuffer = true;
             _pipelineFeatures.Blending = Blending.Transparent;
 
-
             InitIcons();
         }
 
@@ -200,66 +199,47 @@ namespace Editor.Rendering
 
             if (cameras.Count > 0)
             {
-
                 var cameraGame = cameras.ElementAt(0);
+                CameraFrustum(cameraGame);
+            }
+            _batches = _batcher.GetBatches(_renderDatasByType.Values);
+        }
 
-                if (_lineRenderData == null)
+        private void CameraFrustum(Camera camera)
+        {
+            if (_lineRenderData == null)
+            {
+                _lineRenderData = new RendererData2D(_testLineGuid, new Transform())
                 {
-                    var transform = new Transform();
-                    var pointsTest = new List<vec3>() { new vec3(0, 0, -10), new vec3(0, 5, -10), new vec3(5, 5, -10),
-                new vec3(5, -5, -10), new vec3(-5, -5, -10), new vec3(-5, -5, -5), new vec3(-5, -10, -5)};
-                    var line = GraphicsHelper.CreateLineMesh3D(pointsTest, 0.1f);
+                    Mesh = new Mesh(),
+                    Material = _lineMat,
+                    PrivateBatch = true
+                };
+                _renderDatasByType.Add(_testLineGuid, _lineRenderData);
+            }
+            else
+            {
+                var points = default(List<vec3>);
 
-                    _lineRenderData = new RendererData2D(_testLineGuid, transform)
-                    {
-                        Mesh = new Mesh()
-                        {
-                            Vertices = line.Vertices.ToList(),
-                            Indices = line.Indices,
-                            IndicesToDrawCount = line.Indices.Length
-                        },
-                        Material = _lineMat,
-                        PrivateBatch = true
-                    };
+                if (camera.ProjectionMode == CameraProjectionMode.Perspective)
+                {
+                    points = GraphicsHelper.CreatePerspectiveFrustumLines(camera.WorldPosition, camera.Forward, camera.Right, camera.Up,
+                                                                          glm.radians(camera.Fov), camera.Aspect, camera.NearPlane, camera.FarPlane);
 
-
-                    var points = GraphicsHelper.CreatePerspectiveFrustumLines(cameraGame.WorldPosition, cameraGame.Forward, cameraGame.Right, cameraGame.Up,
-                                                                 glm.radians(17), cameraGame.Aspect, cameraGame.NearPlane, cameraGame.FarPlane);
-
-                    var mesh = GraphicsHelper.CreateNonContiguousLines(points, 0.2f);
-
-                    _lineRenderData.Mesh.Vertices = mesh.Vertices.ToList();
-                    _lineRenderData.Mesh.Indices = mesh.Indices;
-                    _lineRenderData.Mesh.IndicesToDrawCount = mesh.Indices.Length;
-                    _lineRenderData.IsDirty = true;
-
-                    _renderDatasByType.Add(_testLineGuid, _lineRenderData);
                 }
                 else
                 {
-                    var points = default(List<vec3>);
-
-                    if (cameraGame.ProjectionMode == CameraProjectionMode.Perspective)
-                    {
-                        points = GraphicsHelper.CreatePerspectiveFrustumLines(cameraGame.WorldPosition, cameraGame.Forward, cameraGame.Right, cameraGame.Up,
-                                                                              glm.radians(cameraGame.Fov), cameraGame.Aspect, cameraGame.NearPlane, cameraGame.FarPlane);
-
-                    }
-                    else
-                    {
-                        points = GraphicsHelper.CreateOrthoFrustumLines(cameraGame.WorldPosition, cameraGame.Forward, cameraGame.Right, cameraGame.Up,
-                                                                        cameraGame.OrthographicSize, cameraGame.Aspect, cameraGame.NearPlane, cameraGame.FarPlane);
-                    }
-
-                    var mesh = GraphicsHelper.CreateNonContiguousLines(points, 0.09f);
-
-                    _lineRenderData.Mesh.Vertices = mesh.Vertices.ToList();
-                    _lineRenderData.Mesh.Indices = mesh.Indices;
-                    _lineRenderData.Mesh.IndicesToDrawCount = mesh.Indices.Length;
-                    _lineRenderData.IsDirty = true;
+                    points = GraphicsHelper.CreateOrthoFrustumLines(camera.WorldPosition, camera.Forward, camera.Right, camera.Up,
+                                                                    camera.OrthographicSize * 2.0f, camera.Aspect, camera.NearPlane, camera.FarPlane);
                 }
+
+                var mesh = GraphicsHelper.CreateNonContiguousLines(points, 0.09f);
+
+                _lineRenderData.Mesh.Vertices = mesh.Vertices.ToList();
+                _lineRenderData.Mesh.Indices = mesh.Indices;
+                _lineRenderData.Mesh.IndicesToDrawCount = mesh.Indices.Length;
+                _lineRenderData.IsDirty = true;
             }
-            _batches = _batcher.GetBatches(_renderDatasByType.Values);
         }
 
         private void GetRenderData<T>(List<T> components, Dictionary<Guid, RendererData2D> renderDatas,

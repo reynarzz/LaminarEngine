@@ -140,7 +140,7 @@ namespace Engine.Rendering
                 Textures[i] = null;
             }
 
-            SendGeometryUpdate();
+            // SendGeometryUpdate();
         }
 
         private bool SetTextureToEmptySlot(Texture texture, out int textureIndex)

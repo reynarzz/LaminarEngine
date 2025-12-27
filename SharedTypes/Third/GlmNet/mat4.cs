@@ -39,6 +39,17 @@ namespace GlmNet
             );
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static mat4 zero()
+        {
+            return new mat4(
+                new vec4(0, 0, 0, 0),
+                new vec4(0, 0, 0, 0),
+                new vec4(0, 0, 0, 0),
+                new vec4(0, 0, 0, 0)
+            );
+        }
+
         #endregion
 
         #region Index Access

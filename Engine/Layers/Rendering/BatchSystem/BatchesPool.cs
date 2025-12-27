@@ -28,9 +28,15 @@ namespace Engine.Rendering
             {
                 if (batch.Contains(renderer))
                 {
-                    if (batch.Material != renderer.Material || batch.SortOrder != renderer.SortOrder)
+                    if (batch.Material != renderer.Material || batch.SortOrder != renderer.SortOrder 
+                        || (renderer.Mesh?.Indices != null && renderer.Mesh.IndicesToDrawCount != batch.IndexCount))
                     {
                         batch.RemoveRenderer(renderer);
+
+                        if (renderer.PrivateBatch)
+                        {
+                            DestroyBatch(batch);
+                        }
                         return false;
                     }
                     else if (!batch.Textures.Contains(texture))
@@ -126,6 +132,13 @@ namespace Engine.Rendering
             }
         }
 
+        private void DestroyBatch(Batch2D batch)
+        {
+            if (_batches.Remove(batch))
+            {
+                batch.Dispose();
+            }
+        }
         private void SortBatches()
         {
             _batches.Sort((x, y) =>

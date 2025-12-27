@@ -107,7 +107,7 @@ namespace Engine
 
         private float _nearPlane = 0.1f;
         private float _farPlane = 100.0f;
-        [SerializedField] public float NearPlane { get => _nearPlane; set { _nearPlane = value; UpdateCurrent(); } } 
+        [SerializedField] public float NearPlane { get => _nearPlane; set { _nearPlane = Math.Clamp(value, 0.0001f, FarPlane - 1); UpdateCurrent(); } }
         [SerializedField] public float FarPlane { get => _farPlane; set { _farPlane = value; UpdateCurrent(); } }
         public float Aspect => Viewport.z / Viewport.w;
         [SerializedField] public RenderTexture RenderTexture { get; set; }
@@ -148,7 +148,7 @@ namespace Engine
             UpdateCurrent();
             //UpdatePerspective();
         }
-       
+
         private void OnWindowChanged(int width, int height)
         {
             UpdateCurrent();
@@ -176,7 +176,7 @@ namespace Engine
             }
         }
 
-        private FrustumCorners GetOrthoFrustumCornersViewSpace(float left, float right, float bottom, 
+        private FrustumCorners GetOrthoFrustumCornersViewSpace(float left, float right, float bottom,
                                                                 float top, float near, float far)
         {
             FrustumCorners c;
