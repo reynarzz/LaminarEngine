@@ -79,7 +79,7 @@ namespace Engine.Graphics
             _height = descriptor.Height;
 
             Bind();
-            // Create color texture (nearest-neighbor filtering)
+            // Create color texture (nearest neighbor filtering)
 
             ColorTexture = new GLTexture();
             ColorTexture.Create(new TextureDescriptor()
@@ -87,7 +87,9 @@ namespace Engine.Graphics
                 Buffer = null,
                 Width = descriptor.Width,
                 Height = descriptor.Height,
-                Channels = 4
+                Channels = 4,
+                Filter = descriptor.ColorTextureDescriptor.Filter,
+                Mode = descriptor.ColorTextureDescriptor.Mode,
             });
 
             ColorTexture.Bind();

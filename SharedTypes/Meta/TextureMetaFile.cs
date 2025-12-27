@@ -13,6 +13,7 @@ namespace SharedTypes
         public bool IsNearest { get; set; }
         public bool IsAtlas { get; set; }
         public int Mode { get; set; }
+        public int Filter { get; set; }
         public int PixelPerUnit { get; set; }
     }
 

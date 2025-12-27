@@ -222,7 +222,7 @@ namespace Engine.Graphics.OpenGL
             {
                 glDisable(GL_STENCIL_TEST);
             }
-            if (features.DepthBuffer)
+            if (features.DepthTesting)
             {
                 glEnable(GL_DEPTH_TEST);
             }

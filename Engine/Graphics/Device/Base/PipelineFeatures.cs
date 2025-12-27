@@ -8,7 +8,7 @@ namespace Engine
 {
     internal class PipelineFeatures
     {
-        internal bool DepthBuffer { get; set; } = false;
+        internal bool DepthTesting { get; set; } = false;
         internal Blending Blending { get; set; } = new();
         internal Stencil Stencil { get; set; } = new();
     }

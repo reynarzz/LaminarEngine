@@ -431,44 +431,32 @@ namespace Engine
         }
 
 
-        public static List<vec3> CreatePerspectiveFrustumLines(
-    vec3 position,
-    vec3 forward,
-    vec3 right,
-    vec3 up,
-    float fovYRadians,
-    float aspect,
-    float nearPlane,
-    float farPlane)
+        public static List<vec3> CreatePerspectiveFrustumLines(vec3 position, vec3 forward, vec3 right, vec3 up,
+                                                               float fovYRadians, float aspect, float nearPlane, float farPlane)
         {
             var lines = new List<vec3>(24);
 
-            // 1. Orthonormalize frame
-            forward = glm.normalize(forward);
-            right = glm.normalize(glm.cross(forward, up));
-            up = glm.cross(right, forward);
-
-            // 2. Centers of near and far planes
+            // Centers of near and far planes
             vec3 nc = position + forward * nearPlane;
             vec3 fc = position + forward * farPlane;
 
-            // 3. Half sizes of planes
+            //  Half sizes of planes
             float nearHeight = nearPlane * MathF.Tan(fovYRadians * 0.5f);
             float nearWidth = nearHeight * aspect;
             float farHeight = farPlane * MathF.Tan(fovYRadians * 0.5f);
             float farWidth = farHeight * aspect;
 
-            // 4. Corners of near plane
-            vec3 n0 = nc + up * nearHeight - right * nearWidth; // top-left
-            vec3 n1 = nc + up * nearHeight + right * nearWidth; // top-right
-            vec3 n2 = nc - up * nearHeight + right * nearWidth; // bottom-right
-            vec3 n3 = nc - up * nearHeight - right * nearWidth; // bottom-left
+            // Corners of near plane
+            vec3 n0 = nc + up * nearHeight - right * nearWidth; // top left
+            vec3 n1 = nc + up * nearHeight + right * nearWidth; // top right
+            vec3 n2 = nc - up * nearHeight + right * nearWidth; // bottom right
+            vec3 n3 = nc - up * nearHeight - right * nearWidth; // bottom left
 
-            // 5. Corners of far plane
-            vec3 f0 = fc + up * farHeight - right * farWidth; // top-left
-            vec3 f1 = fc + up * farHeight + right * farWidth; // top-right
-            vec3 f2 = fc - up * farHeight + right * farWidth; // bottom-right
-            vec3 f3 = fc - up * farHeight - right * farWidth; // bottom-left
+            // Corners of far plane
+            vec3 f0 = fc + up * farHeight - right * farWidth; // top left
+            vec3 f1 = fc + up * farHeight + right * farWidth; // top right
+            vec3 f2 = fc - up * farHeight + right * farWidth; // bottom right
+            vec3 f3 = fc - up * farHeight - right * farWidth; // bottom left
 
             // Helper to add line segment
             void AddLine(vec3 a, vec3 b)
@@ -477,19 +465,19 @@ namespace Engine
                 lines.Add(b);
             }
 
-            // 6. Near plane rectangle
+            // Near plane rectangle
             AddLine(n0, n1);
             AddLine(n1, n2);
             AddLine(n2, n3);
             AddLine(n3, n0);
 
-            // 7. Far plane rectangle
+            // Far plane rectangle
             AddLine(f0, f1);
             AddLine(f1, f2);
             AddLine(f2, f3);
             AddLine(f3, f0);
 
-            // 8. Connecting edges
+            // Connecting edges
             AddLine(n0, f0);
             AddLine(n1, f1);
             AddLine(n2, f2);
@@ -511,10 +499,10 @@ namespace Engine
             vec3 fc = position + forward * farPlane;
 
             // Near plane corners
-            vec3 n0 = nc - right * halfWidth + up * halfHeight; // top-left
-            vec3 n1 = nc + right * halfWidth + up * halfHeight; // top-right
-            vec3 n2 = nc + right * halfWidth - up * halfHeight; // bottom-right
-            vec3 n3 = nc - right * halfWidth - up * halfHeight; // bottom-left
+            vec3 n0 = nc - right * halfWidth + up * halfHeight; // top left
+            vec3 n1 = nc + right * halfWidth + up * halfHeight; // top right
+            vec3 n2 = nc + right * halfWidth - up * halfHeight; // bottom right
+            vec3 n3 = nc - right * halfWidth - up * halfHeight; // bottom left
 
             // Far plane corners
             vec3 f0 = fc - right * halfWidth + up * halfHeight;

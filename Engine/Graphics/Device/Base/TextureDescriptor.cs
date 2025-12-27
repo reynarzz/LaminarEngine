@@ -11,6 +11,11 @@ namespace Engine.Graphics
         Clamp,
         Repeat
     }
+    public enum TextureFilter
+    {
+        Nearest,
+        Linear
+    }
 
     internal class TextureDescriptor : IGfxResourceDescriptor
     {
@@ -21,5 +26,6 @@ namespace Engine.Graphics
         internal int Channels { get; set; }
         internal byte[] Buffer { get; set; }
         internal TextureMode Mode { get; set; } = TextureMode.Clamp;
+        internal TextureFilter Filter { get; set; } = TextureFilter.Nearest;
     }
 }

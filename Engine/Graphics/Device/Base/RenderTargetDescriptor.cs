@@ -10,5 +10,6 @@ namespace Engine.Graphics
     {
         public int Width { get; set; }
         public int Height { get; set; }
+        public TextureDescriptor ColorTextureDescriptor { get; } = new(); 
     }
 }

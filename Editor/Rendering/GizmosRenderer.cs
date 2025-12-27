@@ -21,6 +21,7 @@ namespace Editor.Rendering
         private readonly Dictionary<Guid, RendererData2D> _renderDatasByType;
         private List<Batch2D> _batches;
         private PipelineFeatures _pipelineFeatures;
+        private RenderTexture _renderTexture;
 
         private Shader _gizmosShader;
         public int PixelsPerUnit { get; set; } = 64;
@@ -150,6 +151,7 @@ namespace Editor.Rendering
         {
             _batcher = new Batcher2D(Consts.Graphics.MAX_QUADS_PER_BATCH);
             _renderDatasByType = new Dictionary<Guid, RendererData2D>();
+            _renderTexture = new RenderTexture(1920, 1080, TextureFilter.Linear);
 
             _mat = new Material(new Shader(_gizmosVert, _gizmosFrag));
             _lineMat = new Material(new Shader(_gizmosLineVert, _gizmosFrag));
@@ -161,7 +163,7 @@ namespace Editor.Rendering
             };
 
             _pipelineFeatures = new PipelineFeatures();
-            // _pipelineFeatures.DepthBuffer = true;
+             _pipelineFeatures.DepthTesting = false;
             _pipelineFeatures.Blending = Blending.Transparent;
 
             InitIcons();
@@ -176,7 +178,7 @@ namespace Editor.Rendering
             {
                 StbImage.stbi_set_flip_vertically_on_load(1);
                 var image = ImageResult.FromStream(File.OpenRead(Path.Combine(EditorPaths.DataRoot, "Resources", pathInResources)));
-                return new Sprite(new Texture2D(TextureMode.Clamp, image.Width, image.Height, 4, PixelsPerUnit, image.Data));
+                return new Sprite(new Texture2D(TextureMode.Clamp, TextureFilter.Linear, image.Width, image.Height, 4, PixelsPerUnit, image.Data));
             }
 
             _cameraSprite = LoadSprite("cameraIcon3.png");
@@ -308,8 +310,8 @@ namespace Editor.Rendering
                 _drawCallData.Shader = batch.Material.Shader.NativeShader;
                 _drawCallData.Geometry = batch.Geometry;
                 _drawCallData.Features = _pipelineFeatures;
-                _drawCallData.RenderTarget = renderTarget.NativeResource;
-                _drawCallData.Viewport = new vec4(0, 0, renderTarget.Width, renderTarget.Height);
+                _drawCallData.RenderTarget = _renderTexture.NativeResource;
+                _drawCallData.Viewport = new vec4(0, 0, _renderTexture.Width, _renderTexture.Height);
 
                 var VP = camera.Projection * camera.ViewMatrix;
 
@@ -319,13 +321,15 @@ namespace Editor.Rendering
                 _drawCallData.Uniforms[2].SetMat4(Consts.PROJECTION_UNIFORM_NAME, camera.Projection);
                 _drawCallData.Uniforms[3].SetIntArr(Consts.TEX_ARRAY_UNIFORM_NAME, Batch2D.TextureSlotArray);
                 _drawCallData.Uniforms[4].SetMat4(Consts.MODEL_UNIFORM_NAME, batch.WorldMatrix);
-                _drawCallData.Uniforms[5].SetVec2(Consts.SCREEN_SIZE_UNIFORM_NAME, new vec2(renderTarget.Width, renderTarget.Height));
+                _drawCallData.Uniforms[5].SetVec2(Consts.SCREEN_SIZE_UNIFORM_NAME, new vec2(_renderTexture.Width, _renderTexture.Height));
                 _drawCallData.Uniforms[6].SetVec3(Consts.TIME_UNIFORM_NAME, new vec3(Time.UnscaledTimeWrap, Time.TimeCurrentWrap, Time.DeltaTime));
 
 
                 GfxDeviceManager.Current.Draw(_drawCallData);
             }
-            return renderTarget;
+
+            GfxDeviceManager.Current.BlitRenderTargetTo(_renderTexture.NativeResource, renderTarget.NativeResource);
+            return _renderTexture;
         }
 
         public void OnEnd()

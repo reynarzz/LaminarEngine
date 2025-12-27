@@ -22,7 +22,7 @@ namespace Engine.IO
 
             reader.BaseStream.ReadExactly(imageData);
             var texMeta = (TextureMetaFile)meta;
-            return new Texture2D(info.Path, guid, (TextureMode)texMeta.Config.Mode, width, height, comp, texMeta.Config.PixelPerUnit, imageData);
+            return new Texture2D(info.Path, guid, (TextureMode)texMeta.Config.Mode, (TextureFilter)texMeta.Config.Filter, width, height, comp, texMeta.Config.PixelPerUnit, imageData);
         }
     }
 }

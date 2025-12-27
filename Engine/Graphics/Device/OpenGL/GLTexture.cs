@@ -29,8 +29,23 @@ namespace Engine.Graphics.OpenGL
                              GL_RGBA, GL_UNSIGNED_BYTE, data);
             }
 
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            int minFilter = 0;
+            int magFilter = 0;
+            switch (descriptor.Filter)
+            {
+                case TextureFilter.Nearest:
+                    minFilter = GL_NEAREST;
+                    magFilter = GL_NEAREST;
+                    break;
+                case TextureFilter.Linear:
+                    minFilter = GL_LINEAR;
+                    magFilter = GL_LINEAR;
+                    break;
+                default:
+                    throw new Exception("GL filter not implemented");
+            }
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilter);
 
             int texMode = 0;
             switch (descriptor.Mode)
