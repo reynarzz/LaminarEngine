@@ -10,7 +10,7 @@ namespace Editor
     internal class EditorCamera : ICamera
     {
         private vec3 _pivot = new vec3(0, 0, 0);
-        private float _distance = 5.0f;
+        private float _distance = 45.0f;
 
         private Quaternion _rotation = Quaternion.Identity;
 

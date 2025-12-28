@@ -7,3 +7,6 @@ Platforms/Desktop/Properties/PublishProfiles/FolderProfile.pubxml
 Platforms/Android/Assets/
 Platforms/Android/Properties/PublishProfiles/FolderProfile.pubxml
 _Ship/
+Editor/Third/native/cimnodes/_build/
+Editor/Third/native/cimnodes/cimgui/imgui/
+Editor/Third/native/cimnodes/imnodes/vcpkg/
