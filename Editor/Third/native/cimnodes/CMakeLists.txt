@@ -10,13 +10,18 @@ set(IMGUI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../imgui-1.91.6)
 project(cimnodes LANGUAGES C CXX)
 
 add_subdirectory(cimgui)
+add_subdirectory(imnodes)
 
-add_library(cimnodes
+add_library(cimnodes SHARED
     cimnodes.cpp
     cimnodes.h
 )
 
-target_link_libraries(cimnodes PRIVATE cimgui)
+target_link_libraries(cimnodes PRIVATE cimgui imnodes)
+
+target_link_libraries(cimnodes PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/_build/imnodes/imnodes.lib"
+)
 
 # Define IMNODES_NAMESPACE as imnodes
 target_compile_definitions(cimnodes PRIVATE IMNODES_NAMESPACE=imnodes

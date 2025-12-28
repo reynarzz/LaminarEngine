@@ -8,7 +8,7 @@
 #endif
 
 #ifndef IMNODES_NAMESPACE
-#define IMNODES_NAMESPACE ImNodes
+#define IMNODES_NAMESPACE imnodes
 #endif
 
 typedef int ImNodesCol;             // -> enum ImNodesCol_

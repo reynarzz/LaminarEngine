@@ -18,10 +18,22 @@ endif()
 # cmake options
 option(IMNODES_EXAMPLES "Build examples" ${IMNODES_STANDALONE_PROJECT})
 
+set(IMGUI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../imgui-1.91.6)
+
+add_library(imgui STATIC
+    ${IMGUI_DIR}/imgui.cpp
+    ${IMGUI_DIR}/imgui_draw.cpp
+    ${IMGUI_DIR}/imgui_tables.cpp
+    ${IMGUI_DIR}/imgui_widgets.cpp
+)
+
+target_include_directories(imgui PUBLIC
+    ${IMGUI_DIR}
+)
+
 # allow custom imgui target name since this can vary because imgui doesn't natively include a CMakeLists.txt
 if(NOT DEFINED IMNODES_IMGUI_TARGET_NAME)
-    find_package(imgui CONFIG REQUIRED)
-    set(IMNODES_IMGUI_TARGET_NAME imgui::imgui)
+   set(IMNODES_IMGUI_TARGET_NAME imgui)
 endif()
 
 
@@ -40,7 +52,7 @@ endif()
 
 # Imnodes
 
-add_library(imnodes)
+add_library(imnodes STATIC)
 target_sources(imnodes PRIVATE
     imnodes.h
     imnodes_internal.h
