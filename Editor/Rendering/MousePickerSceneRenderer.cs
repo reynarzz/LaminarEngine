@@ -122,7 +122,6 @@ namespace Editor.Rendering
 
         public void ClearPickedList()
         {
-            Debug.Log("Clear");
             _pickedRendererLayerList.Clear();
         }
 
@@ -146,8 +145,9 @@ namespace Editor.Rendering
                 _drawCallData.Uniforms[2].SetMat4(Consts.PROJECTION_UNIFORM_NAME, projM);
                 _drawCallData.Uniforms[3].SetInt("uDiscard", discardAlphaWithTexture ? 1 : 0);
 
-                foreach (RendererData2D renderer in renderers)
+                for (int i = 0; i < renderers.Count; i++)
                 {
+                    var renderer = renderers[i];
                     if (_pickedRendererLayerList.Contains(renderer.GetID()))
                     {
                         continue;
@@ -176,9 +176,9 @@ namespace Editor.Rendering
                         GraphicsHelper.CreateQuad(ref quadVertices, chunk.Uvs, width, height, chunk.Pivot, _currentColorId, worldMatrix);
 
                         var vertex = _geoDesc.VertexDesc.BufferDesc as BufferDataDescriptor<Vertex>;
-                        for (int i = 0; i < QuadVertices.Count; i++)
+                        for (int j = 0; j < QuadVertices.Count; j++)
                         {
-                            vertex.Buffer[i] = quadVertices[i];
+                            vertex.Buffer[j] = quadVertices[j];
                         }
 
                         GfxDeviceManager.Current.UpdateResouce(_quadGeometry, _geoDesc);
@@ -236,7 +236,7 @@ namespace Editor.Rendering
             DrawRenderers(_worldRenderers, camera.Projection, camera.ViewMatrix, camera.Projection * camera.ViewMatrix, true);
 
             // Note: UI do not discard using texture so it can render whole block of geometry and is easier to pick up for things like text.
-            
+
             DrawRenderers(_uiRenderers, surface.UIProj, surface.UIView, surface.UIViewProj, false);
 
             return targetRenderTexture;

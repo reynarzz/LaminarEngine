@@ -81,7 +81,8 @@ namespace Editor
                 DrawGizmos = true,
                 GizmosRenderer = new GizmosRenderer(),
                 RenderTextures = [new RenderTexture(1920, 1080) { Name = "Scene view Render Texture" },
-                                  new RenderTexture(1920, 1080) { Name = "Mouse picker Render Texture" }],
+                                  new RenderTexture(1920, 1080) { Name = "Mouse picker Render Texture" },
+                                  new RenderTexture(1920, 1080) { Name = "Backup Mouse picker Render Texture" }],
                 SceneRenderers = 
                 { 
                     sceneBatcher,

@@ -21,10 +21,9 @@ namespace Editor
         private readonly EditorCamera _camera;
         private Vector2 _screenSize;
         private mat4 _uiProj;
-        private RendererData2D _firstPickedRenderer;
-        private RendererData2D _lastPickedRenderer;
         internal bool IsMouseClicked { get; private set; }
         private readonly MousePickerSceneRenderer _mousePickerRenderer;
+        private readonly MousePickerSceneRenderer _mousePickerRendererBackup;
         private vec2 _mouseFirstPickedPosition;
         private const float _maxPickedMouseDistance = 1.5f;
 
@@ -33,6 +32,9 @@ namespace Editor
             _camera = camera;
             RenderingLayer.OnRenderingEnd += OnRenderingEnd;
             _mousePickerRenderer = new MousePickerSceneRenderer();
+            _mousePickerRendererBackup = new MousePickerSceneRenderer();
+            _mousePickerRenderer.RenderTextureIndex = 1;
+            _mousePickerRendererBackup.RenderTextureIndex = 2;
         }
 
         private void OnRenderingEnd()
@@ -43,6 +45,8 @@ namespace Editor
 
                 // No need to keep rendering the id for objects since the mouse click finished.
                 Surface.SceneRenderers.Remove(_mousePickerRenderer);
+                Surface.SceneRenderers.Remove(_mousePickerRendererBackup);
+
             }
 
             IsMouseClicked = false;
@@ -88,8 +92,10 @@ namespace Editor
                 {
                     _mousePickerRenderer.ClearPickedList();
                 }
-                    IsMouseClicked = true;
+                IsMouseClicked = true;
                 Surface.SceneRenderers.Add(_mousePickerRenderer);
+                Surface.SceneRenderers.Add(_mousePickerRendererBackup);
+
             }
         }
 
@@ -118,7 +124,7 @@ namespace Editor
             return !(mouseInContent.X < 0 || mouseInContent.X >= contentSize.X ||
                      mouseInContent.Y < 0 || mouseInContent.Y >= contentSize.Y);
         }
-        private RendererData2D GetMousePickedRenderer()
+        private RendererData2D GetMousePickedRenderer(MousePickerSceneRenderer picker, int renderTexIndex)
         {
             Vector2 mousePos = ImGui.GetMousePos();
 
@@ -143,10 +149,10 @@ namespace Editor
             int x = Mathf.Clamp(Mathf.RoundToInt(mouseInContent.X * scaleX), 0, rtWidth - 1);
             int y = Mathf.Clamp(rtHeight - 1 - Mathf.RoundToInt(mouseInContent.Y * scaleY), 0, rtHeight - 1) - 1;
 
-            var colors = GfxDeviceManager.Current.ReadRenderTargetColors(Surface.RenderTextures[1].NativeResource, x, y, 1, 1);
+            var colors = GfxDeviceManager.Current.ReadRenderTargetColors(Surface.RenderTextures[renderTexIndex].NativeResource, x, y, 1, 1);
 
             uint colorid = (ColorPacketRGBA)new Color32(colors[0], colors[1], colors[2], colors[3]);
-            if (_mousePickerRenderer.RenderersIDs.TryGetValue(colorid, out var renderer))
+            if (picker.RenderersIDs.TryGetValue(colorid, out var renderer))
             {
                 return renderer;
             }
@@ -155,7 +161,7 @@ namespace Editor
         }
         private void SelecteObject()
         {
-            var renderer = GetMousePickedRenderer();
+            var renderer = GetMousePickedRenderer(_mousePickerRenderer, 1);
             if (renderer != null)
             {
                 Selector.Selected = renderer.Transform.Actor;
@@ -163,39 +169,22 @@ namespace Editor
                 if (_mousePickerRenderer.PickedRenderersCount == 0)
                 {
                     _mouseFirstPickedPosition = ImGui.GetMousePos().ToVec2();
-                    _firstPickedRenderer = renderer;
                 }
 
-                _lastPickedRenderer = renderer;
                 _mousePickerRenderer.OnPickRenderer(renderer.GetID());
-                // Debug.Log(renderer.Transform.Name);
             }
             else
             {
-                if (_mousePickerRenderer.PickedRenderersCount != 0)
+                var pickedCount = _mousePickerRenderer.PickedRenderersCount;
+                _mousePickerRenderer.ClearPickedList();
+
+                if (pickedCount != 0)
                 {
-                    renderer = _firstPickedRenderer;
+                    // Use backup buffer to check if the topmost renderer is still there.
+                    renderer = GetMousePickedRenderer(_mousePickerRendererBackup, 2);
+                    _mousePickerRenderer.OnPickRenderer(renderer.GetID());
 
-                    _mousePickerRenderer.ClearPickedList();
-
-                    if (renderer != null && renderer.Transform)
-                    {
-                        var mousePickedDist = (_mouseFirstPickedPosition - ImGui.GetMousePos().ToVec2()).Magnitude;
-                        if (mousePickedDist > _maxPickedMouseDistance && _lastPickedRenderer != null)
-                        {
-                            renderer = _lastPickedRenderer;
-                            Debug.Log("Last: " + _lastPickedRenderer.Transform.Name);
-                        }
-
-                        _lastPickedRenderer = null;
-
-                        _mousePickerRenderer.OnPickRenderer(renderer.GetID());
-                        Selector.Selected = renderer?.Transform?.Actor;
-                    }
-                    else
-                    {
-                        Selector.Selected = null;
-                    }
+                    Selector.Selected = renderer?.Transform?.Actor;
                 }
                 else
                 {
