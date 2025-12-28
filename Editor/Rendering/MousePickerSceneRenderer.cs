@@ -21,6 +21,8 @@ namespace Editor.Rendering
 
         private readonly Shader _idPickerShader;
         private static readonly Comparison<RendererData2D> _sortingOrderComparer = (a, b) => a.SortOrder.CompareTo(b.SortOrder);
+        private RenderTexture _backBuffer;
+        public RenderTexture PickedBackBuffer => _backBuffer;
 
         private string _mousePickerVertShader = @"
           #version 330 core
@@ -76,7 +78,9 @@ namespace Editor.Rendering
         private readonly List<(int verticesCount, GfxResource geometry, GeometryDescriptor desc)> _geometries = new();
 
         private Dictionary<uint, RendererData2D> _renderersByColors = new();
+        private Dictionary<uint, RendererData2D> _renderersByColorsBackBuffer = new();
         internal IReadOnlyDictionary<uint, RendererData2D> RenderersIDs => _renderersByColors;
+        internal IReadOnlyDictionary<uint, RendererData2D> RenderersIDsBackBuffer => _renderersByColorsBackBuffer;
 
         private uint _currentColorId = 0;
         public MousePickerSceneRenderer()
@@ -101,6 +105,7 @@ namespace Editor.Rendering
             _idPickerShader = new Shader(_mousePickerVertShader, _mousePickerFrag);
             _idPickerShader.Name = "Mouse picker ID";
             RenderTextureIndex = 1;
+            _backBuffer = new RenderTexture(1920, 1080);
         }
 
         protected override void OnPrepareRendering(List<RendererData2D> worldRenderers, List<RendererData2D> uiRenderers)
@@ -127,117 +132,122 @@ namespace Editor.Rendering
 
         public override RenderTexture OnRenderScene(RenderingSurface surface, ICamera camera, RenderTexture targetRenderTexture)
         {
-            _renderersByColors.Clear();
-            _currentColorId = 0;
-
-            _drawCallData.DrawType = DrawType.Indexed;
-            _drawCallData.DrawMode = DrawMode.Triangles;
-            _drawCallData.Shader = _idPickerShader.NativeShader;
-            _drawCallData.Features = _pipelineFeatures;
-            _drawCallData.RenderTarget = targetRenderTexture.NativeResource;
-            _drawCallData.Viewport = new vec4(0, 0, targetRenderTexture.Width, targetRenderTexture.Height);
-
-
-            void DrawRenderers(List<RendererData2D> renderers, mat4 projM, mat4 viewM, mat4 viewProjM, bool discardAlphaWithTexture)
+            // Note: This code can be heavily improved, but right now is not a priority.
+            void RenderAll(RenderTexture currentRenderTarget, Dictionary<uint, RendererData2D> colorsId, bool discardWithPickerList)
             {
-                _drawCallData.Uniforms[0].SetMat4(Consts.VIEW_PROJ_UNIFORM_NAME, viewProjM);
-                _drawCallData.Uniforms[1].SetMat4(Consts.VIEW_UNIFORM_NAME, viewM);
-                _drawCallData.Uniforms[2].SetMat4(Consts.PROJECTION_UNIFORM_NAME, projM);
-                _drawCallData.Uniforms[3].SetInt("uDiscard", discardAlphaWithTexture ? 1 : 0);
+                colorsId.Clear();
+                _currentColorId = 0;
 
-                for (int i = 0; i < renderers.Count; i++)
+                _drawCallData.DrawType = DrawType.Indexed;
+                _drawCallData.DrawMode = DrawMode.Triangles;
+                _drawCallData.Shader = _idPickerShader.NativeShader;
+                _drawCallData.Features = _pipelineFeatures;
+                _drawCallData.RenderTarget = currentRenderTarget.NativeResource;
+                _drawCallData.Viewport = new vec4(0, 0, currentRenderTarget.Width, currentRenderTarget.Height);
+
+                void DrawRenderers(List<RendererData2D> renderers, mat4 projM, mat4 viewM, mat4 viewProjM, bool discardAlphaWithTexture, bool discardWithPickedList)
                 {
-                    var renderer = renderers[i];
-                    if (_pickedRendererLayerList.Contains(renderer.GetID()))
+                    _drawCallData.Uniforms[0].SetMat4(Consts.VIEW_PROJ_UNIFORM_NAME, viewProjM);
+                    _drawCallData.Uniforms[1].SetMat4(Consts.VIEW_UNIFORM_NAME, viewM);
+                    _drawCallData.Uniforms[2].SetMat4(Consts.PROJECTION_UNIFORM_NAME, projM);
+                    _drawCallData.Uniforms[3].SetInt("uDiscard", discardAlphaWithTexture ? 1 : 0);
+
+                    for (int i = 0; i < renderers.Count; i++)
                     {
-                        continue;
-                    }
-
-                    _currentColorId++;
-                    _renderersByColors.Add(_currentColorId, renderer);
-
-                    _drawCallData.Uniforms[4].SetUInt("uColor", _currentColorId);
-                    var texture = renderer.Sprite?.Texture ?? Texture2D.White;
-                    _drawCallData.Textures[0] = texture.NativeResource;
-
-                    if (renderer.Mesh == null)
-                    {
-                        _drawCallData.Geometry = _quadGeometry;
-                        _drawCallData.IndexedDraw.IndexCount = 6;
-
-                        var chunk = renderer.Sprite?.GetAtlasChunk() ?? AtlasChunk.DefaultChunk;
-                        var worldMatrix = renderer.Transform.GetRenderingWorldMatrix();
-
-                        float ppu = texture.PixelPerUnit;
-                        var width = (float)chunk.Width / ppu;
-                        var height = (float)chunk.Height / ppu;
-
-                        QuadVertices quadVertices = default;
-                        GraphicsHelper.CreateQuad(ref quadVertices, chunk.Uvs, width, height, chunk.Pivot, _currentColorId, worldMatrix);
-
-                        var vertex = _geoDesc.VertexDesc.BufferDesc as BufferDataDescriptor<Vertex>;
-                        for (int j = 0; j < QuadVertices.Count; j++)
+                        var renderer = renderers[i];
+                        if (discardWithPickedList && _pickedRendererLayerList.Contains(renderer.GetID()))
                         {
-                            vertex.Buffer[j] = quadVertices[j];
+                            continue;
                         }
 
-                        GfxDeviceManager.Current.UpdateResouce(_quadGeometry, _geoDesc);
-                        GfxDeviceManager.Current.Draw(_drawCallData);
-                    }
-                    else
-                    {
-                        var bestGeometryMatchPair = _geometries.FirstOrDefault(x => x.verticesCount >= renderer.Mesh.Vertices.Count);
+                        _currentColorId++;
+                        colorsId.Add(_currentColorId, renderer);
 
-                        var geometry = default(GfxResource);
-                        var desc = default(GeometryDescriptor);
-                        var indicesCount = 0;
+                        _drawCallData.Uniforms[4].SetUInt("uColor", _currentColorId);
+                        var texture = renderer.Sprite?.Texture ?? Texture2D.White;
+                        _drawCallData.Textures[0] = texture.NativeResource;
 
-                        if (bestGeometryMatchPair == default || bestGeometryMatchPair.geometry == null)
+                        if (renderer.Mesh == null)
                         {
-                            if (renderer.Mesh.Indices != null && renderer.Mesh.Indices.Length > 0)
+                            _drawCallData.Geometry = _quadGeometry;
+                            _drawCallData.IndexedDraw.IndexCount = 6;
+
+                            var chunk = renderer.Sprite?.GetAtlasChunk() ?? AtlasChunk.DefaultChunk;
+                            var worldMatrix = renderer.Transform.GetRenderingWorldMatrix();
+
+                            float ppu = texture.PixelPerUnit;
+                            var width = (float)chunk.Width / ppu;
+                            var height = (float)chunk.Height / ppu;
+
+                            QuadVertices quadVertices = default;
+                            GraphicsHelper.CreateQuad(ref quadVertices, chunk.Uvs, width, height, chunk.Pivot, _currentColorId, worldMatrix);
+
+                            var vertex = _geoDesc.VertexDesc.BufferDesc as BufferDataDescriptor<Vertex>;
+                            for (int j = 0; j < QuadVertices.Count; j++)
                             {
-                                indicesCount = renderer.Mesh.Indices.Length;
-                            }
-                            else
-                            {
-                                indicesCount = renderer.Mesh.IndicesToDrawCount;
-
+                                vertex.Buffer[j] = quadVertices[j];
                             }
 
-                            var indexBuffer = GraphicsHelper.CreateQuadIndexBuffer(indicesCount);
-                            geometry = GraphicsHelper.GetEmptyGeometry<Vertex>(renderer.Mesh.Vertices.Count, 0, ref desc, indexBuffer);
-
-                            _geometries.Add((renderer.Mesh.Vertices.Count, geometry, desc));
+                            GfxDeviceManager.Current.UpdateResouce(_quadGeometry, _geoDesc);
+                            GfxDeviceManager.Current.Draw(_drawCallData);
                         }
                         else
                         {
-                            geometry = bestGeometryMatchPair.geometry;
-                            desc = bestGeometryMatchPair.desc;
-                            indicesCount = renderer.Mesh.IndicesToDrawCount;
+                            var bestGeometryMatchPair = _geometries.FirstOrDefault(x => x.verticesCount >= renderer.Mesh.Vertices.Count);
+
+                            var geometry = default(GfxResource);
+                            var desc = default(GeometryDescriptor);
+                            var indicesCount = 0;
+
+                            if (bestGeometryMatchPair == default || bestGeometryMatchPair.geometry == null)
+                            {
+                                if (renderer.Mesh.Indices != null && renderer.Mesh.Indices.Length > 0)
+                                {
+                                    indicesCount = renderer.Mesh.Indices.Length;
+                                }
+                                else
+                                {
+                                    indicesCount = renderer.Mesh.IndicesToDrawCount;
+
+                                }
+
+                                var indexBuffer = GraphicsHelper.CreateQuadIndexBuffer(indicesCount);
+                                geometry = GraphicsHelper.GetEmptyGeometry<Vertex>(renderer.Mesh.Vertices.Count, 0, ref desc, indexBuffer);
+
+                                _geometries.Add((renderer.Mesh.Vertices.Count, geometry, desc));
+                            }
+                            else
+                            {
+                                geometry = bestGeometryMatchPair.geometry;
+                                desc = bestGeometryMatchPair.desc;
+                                indicesCount = renderer.Mesh.IndicesToDrawCount;
+                            }
+                            var vertex = desc.VertexDesc.BufferDesc as BufferDataDescriptor<Vertex>;
+
+                            unsafe
+                            {
+                                vertex.Count = sizeof(Vertex) * renderer.Mesh.Vertices.Count;
+                            }
+
+                            vertex.Buffer = renderer.Mesh.Vertices.ToArray();
+
+                            _drawCallData.Geometry = geometry;
+                            _drawCallData.IndexedDraw.IndexCount = indicesCount;
+
+                            GfxDeviceManager.Current.UpdateResouce(geometry, desc);
+                            GfxDeviceManager.Current.Draw(_drawCallData);
                         }
-                        var vertex = desc.VertexDesc.BufferDesc as BufferDataDescriptor<Vertex>;
-
-                        unsafe
-                        {
-                            vertex.Count = sizeof(Vertex) * renderer.Mesh.Vertices.Count;
-                        }
-
-                        vertex.Buffer = renderer.Mesh.Vertices.ToArray();
-
-                        _drawCallData.Geometry = geometry;
-                        _drawCallData.IndexedDraw.IndexCount = indicesCount;
-
-                        GfxDeviceManager.Current.UpdateResouce(geometry, desc);
-                        GfxDeviceManager.Current.Draw(_drawCallData);
                     }
                 }
+
+                DrawRenderers(_worldRenderers, camera.Projection, camera.ViewMatrix, camera.Projection * camera.ViewMatrix, true, discardWithPickerList);
+
+                // Note: UI do not discard using texture so it can render whole block of geometry and is easier to pick up for things like text.
+                DrawRenderers(_uiRenderers, surface.UIProj, surface.UIView, surface.UIViewProj, false, discardWithPickerList);
             }
 
-            DrawRenderers(_worldRenderers, camera.Projection, camera.ViewMatrix, camera.Projection * camera.ViewMatrix, true);
-
-            // Note: UI do not discard using texture so it can render whole block of geometry and is easier to pick up for things like text.
-
-            DrawRenderers(_uiRenderers, surface.UIProj, surface.UIView, surface.UIViewProj, false);
+            RenderAll(targetRenderTexture, _renderersByColors, true);
+            RenderAll(_backBuffer, _renderersByColorsBackBuffer, false);
 
             return targetRenderTexture;
         }

@@ -23,7 +23,6 @@ namespace Editor
         private mat4 _uiProj;
         internal bool IsMouseClicked { get; private set; }
         private readonly MousePickerSceneRenderer _mousePickerRenderer;
-        private readonly MousePickerSceneRenderer _mousePickerRendererBackup;
         private vec2 _mouseFirstPickedPosition;
         private const float _maxPickedMouseDistance = 1.5f;
 
@@ -32,9 +31,7 @@ namespace Editor
             _camera = camera;
             RenderingLayer.OnRenderingEnd += OnRenderingEnd;
             _mousePickerRenderer = new MousePickerSceneRenderer();
-            _mousePickerRendererBackup = new MousePickerSceneRenderer();
             _mousePickerRenderer.RenderTextureIndex = 1;
-            _mousePickerRendererBackup.RenderTextureIndex = 2;
         }
 
         private void OnRenderingEnd()
@@ -45,7 +42,6 @@ namespace Editor
 
                 // No need to keep rendering the id for objects since the mouse click finished.
                 Surface.SceneRenderers.Remove(_mousePickerRenderer);
-                Surface.SceneRenderers.Remove(_mousePickerRendererBackup);
 
             }
 
@@ -94,8 +90,6 @@ namespace Editor
                 }
                 IsMouseClicked = true;
                 Surface.SceneRenderers.Add(_mousePickerRenderer);
-                Surface.SceneRenderers.Add(_mousePickerRendererBackup);
-
             }
         }
 
@@ -124,7 +118,7 @@ namespace Editor
             return !(mouseInContent.X < 0 || mouseInContent.X >= contentSize.X ||
                      mouseInContent.Y < 0 || mouseInContent.Y >= contentSize.Y);
         }
-        private RendererData2D GetMousePickedRenderer(MousePickerSceneRenderer picker, int renderTexIndex)
+        private RendererData2D GetMousePickedRenderer(IReadOnlyDictionary<uint, RendererData2D> colorIds, RenderTexture renderTexture)
         {
             Vector2 mousePos = ImGui.GetMousePos();
 
@@ -149,10 +143,10 @@ namespace Editor
             int x = Mathf.Clamp(Mathf.RoundToInt(mouseInContent.X * scaleX), 0, rtWidth - 1);
             int y = Mathf.Clamp(rtHeight - 1 - Mathf.RoundToInt(mouseInContent.Y * scaleY), 0, rtHeight - 1) - 1;
 
-            var colors = GfxDeviceManager.Current.ReadRenderTargetColors(Surface.RenderTextures[renderTexIndex].NativeResource, x, y, 1, 1);
+            var colors = GfxDeviceManager.Current.ReadRenderTargetColors(renderTexture.NativeResource, x, y, 1, 1);
 
             uint colorid = (ColorPacketRGBA)new Color32(colors[0], colors[1], colors[2], colors[3]);
-            if (picker.RenderersIDs.TryGetValue(colorid, out var renderer))
+            if (colorIds.TryGetValue(colorid, out var renderer))
             {
                 return renderer;
             }
@@ -161,7 +155,7 @@ namespace Editor
         }
         private void SelecteObject()
         {
-            var renderer = GetMousePickedRenderer(_mousePickerRenderer, 1);
+            var renderer = GetMousePickedRenderer(_mousePickerRenderer.RenderersIDs, Surface.RenderTextures[1]);
             if (renderer != null)
             {
                 Selector.Selected = renderer.Transform.Actor;
@@ -180,8 +174,8 @@ namespace Editor
 
                 if (pickedCount != 0)
                 {
-                    // Use backup buffer to check if the topmost renderer is still there.
-                    renderer = GetMousePickedRenderer(_mousePickerRendererBackup, 2);
+                    // Use back buffer to check if the topmost renderer is still there.
+                    renderer = GetMousePickedRenderer(_mousePickerRenderer.RenderersIDsBackBuffer, _mousePickerRenderer.PickedBackBuffer);
                     _mousePickerRenderer.OnPickRenderer(renderer.GetID());
 
                     Selector.Selected = renderer?.Transform?.Actor;
