@@ -11,8 +11,9 @@ namespace Editor.Rendering
     {
         private List<RendererData2D> _worldRenderers;
         private List<RendererData2D> _uiRenderers;
-        private List<RendererData2D> _gizmosRenderers;
-
+        private List<RendererData2D> _gizmosRenderers; // TODO: include gizmos
+        private HashSet<Guid> _pickedRendererLayerList = new();
+        public int PickedRenderersCount => _pickedRendererLayerList.Count;
         private readonly DrawCallData _drawCallData;
         private readonly PipelineFeatures _pipelineFeatures;
         private GfxResource _quadGeometry;
@@ -113,6 +114,18 @@ namespace Editor.Rendering
             _uiRenderers.Sort(_sortingOrderComparer);
         }
 
+
+        public void OnPickRenderer(Guid guid)
+        {
+            _pickedRendererLayerList.Add(guid);
+        }
+
+        public void ClearPickedList()
+        {
+            Debug.Log("Clear");
+            _pickedRendererLayerList.Clear();
+        }
+
         public override RenderTexture OnRenderScene(RenderingSurface surface, ICamera camera, RenderTexture targetRenderTexture)
         {
             _renderersByColors.Clear();
@@ -135,6 +148,11 @@ namespace Editor.Rendering
 
                 foreach (RendererData2D renderer in renderers)
                 {
+                    if (_pickedRendererLayerList.Contains(renderer.GetID()))
+                    {
+                        continue;
+                    }
+
                     _currentColorId++;
                     _renderersByColors.Add(_currentColorId, renderer);
 

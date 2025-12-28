@@ -4,6 +4,7 @@ using Engine.Graphics;
 using Engine.Graphics.OpenGL;
 using Engine.GUI;
 using Engine.Layers;
+using Engine.Utils;
 using GlmNet;
 using ImGuiNET;
 using System;
@@ -20,8 +21,13 @@ namespace Editor
         private readonly EditorCamera _camera;
         private Vector2 _screenSize;
         private mat4 _uiProj;
+        private RendererData2D _firstPickedRenderer;
+        private RendererData2D _lastPickedRenderer;
         internal bool IsMouseClicked { get; private set; }
         private readonly MousePickerSceneRenderer _mousePickerRenderer;
+        private vec2 _mouseFirstPickedPosition;
+        private const float _maxPickedMouseDistance = 1.5f;
+
         public EditorSceneView(string viewName, RenderingSurface surface, EditorCamera camera) : base(viewName, surface)
         {
             _camera = camera;
@@ -34,6 +40,8 @@ namespace Editor
             if (IsMouseClicked && IsMouseInsideWindow())
             {
                 SelecteObject();
+
+                // No need to keep rendering the id for objects since the mouse click finished.
                 Surface.SceneRenderers.Remove(_mousePickerRenderer);
             }
 
@@ -72,10 +80,15 @@ namespace Editor
             Surface.UIView = viewTransformed;
             Surface.UIProj = _uiProj;
 
-
             if (ImGui.IsMouseClicked(ImGuiMouseButton.Left) && IsMouseInsideWindow())
             {
-                IsMouseClicked = true;
+                var mousePickedDist = (_mouseFirstPickedPosition - ImGui.GetMousePos().ToVec2()).Magnitude;
+
+                if (mousePickedDist > _maxPickedMouseDistance)
+                {
+                    _mousePickerRenderer.ClearPickedList();
+                }
+                    IsMouseClicked = true;
                 Surface.SceneRenderers.Add(_mousePickerRenderer);
             }
         }
@@ -88,16 +101,24 @@ namespace Editor
             Vector2 windowSize = WindowSize;
 
             float titleBarHeight = ImGui.GetFrameHeightWithSpacing();
+            float windowPadding = ImGui.GetStyle().WindowPadding.X;
 
-            Vector2 mouseInContent = mousePos - new Vector2(windowPos.X, windowPos.Y + titleBarHeight);
+            // Offset mouse into content space, accounting for grab padding
+            Vector2 mouseInContent = mousePos - new Vector2(
+                windowPos.X + windowPadding,
+                windowPos.Y + titleBarHeight + windowPadding
+            );
 
-            Vector2 contentSize = new Vector2(windowSize.X, windowSize.Y - titleBarHeight);
+            // Shrink content size by grab padding on both sides
+            Vector2 contentSize = new Vector2(
+                windowSize.X - windowPadding * 2.0f,
+                windowSize.Y - titleBarHeight - windowPadding * 2.0f
+            );
 
             return !(mouseInContent.X < 0 || mouseInContent.X >= contentSize.X ||
-                   mouseInContent.Y < 0 || mouseInContent.Y >= contentSize.Y);
+                     mouseInContent.Y < 0 || mouseInContent.Y >= contentSize.Y);
         }
-
-        private void SelecteObject()
+        private RendererData2D GetMousePickedRenderer()
         {
             Vector2 mousePos = ImGui.GetMousePos();
 
@@ -111,7 +132,7 @@ namespace Editor
             Vector2 contentSize = new Vector2(windowSize.X, windowSize.Y - titleBarHeight);
 
             if (!IsMouseInsideWindow())
-                return;
+                return null;
 
             int rtWidth = Surface.RenderTextures[0].Width;
             int rtHeight = Surface.RenderTextures[0].Height;
@@ -127,12 +148,59 @@ namespace Editor
             uint colorid = (ColorPacketRGBA)new Color32(colors[0], colors[1], colors[2], colors[3]);
             if (_mousePickerRenderer.RenderersIDs.TryGetValue(colorid, out var renderer))
             {
+                return renderer;
+            }
+
+            return null;
+        }
+        private void SelecteObject()
+        {
+            var renderer = GetMousePickedRenderer();
+            if (renderer != null)
+            {
                 Selector.Selected = renderer.Transform.Actor;
-                Debug.Log(renderer.Transform.Name);
+
+                if (_mousePickerRenderer.PickedRenderersCount == 0)
+                {
+                    _mouseFirstPickedPosition = ImGui.GetMousePos().ToVec2();
+                    _firstPickedRenderer = renderer;
+                }
+
+                _lastPickedRenderer = renderer;
+                _mousePickerRenderer.OnPickRenderer(renderer.GetID());
+                // Debug.Log(renderer.Transform.Name);
             }
             else
             {
-                Selector.Selected = null;
+                if (_mousePickerRenderer.PickedRenderersCount != 0)
+                {
+                    renderer = _firstPickedRenderer;
+
+                    _mousePickerRenderer.ClearPickedList();
+
+                    if (renderer != null && renderer.Transform)
+                    {
+                        var mousePickedDist = (_mouseFirstPickedPosition - ImGui.GetMousePos().ToVec2()).Magnitude;
+                        if (mousePickedDist > _maxPickedMouseDistance && _lastPickedRenderer != null)
+                        {
+                            renderer = _lastPickedRenderer;
+                            Debug.Log("Last: " + _lastPickedRenderer.Transform.Name);
+                        }
+
+                        _lastPickedRenderer = null;
+
+                        _mousePickerRenderer.OnPickRenderer(renderer.GetID());
+                        Selector.Selected = renderer?.Transform?.Actor;
+                    }
+                    else
+                    {
+                        Selector.Selected = null;
+                    }
+                }
+                else
+                {
+                    Selector.Selected = null;
+                }
             }
         }
     }
