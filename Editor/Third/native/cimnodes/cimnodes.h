@@ -2,8 +2,11 @@
 //based on imnodes.h file version XXX from https://github.com/Nelarius/imnodes
 #ifndef CIMNODES_INCLUDED
 #define CIMNODES_INCLUDED
-
 #include "cimgui.h"
+struct ImVec2_c 
+{
+    float x, y;
+};
 
 #ifdef CIMGUI_DEFINE_ENUMS_AND_STRUCTS
 
