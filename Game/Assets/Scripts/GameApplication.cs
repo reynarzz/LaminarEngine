@@ -16,7 +16,7 @@ namespace Game
         // Refactor renderingLayer to use renderData.
         // Remove the use of glGetIntegerv, and store prev buffer attached using GLDevice
         // use perspective camera with FOV of 70, and rotate +14 and -14 degrees to where the player is facing.
-
+        // Resizing leave dangling resources causing frame drops.
 
         // For the game:
         // Improve game architecture.

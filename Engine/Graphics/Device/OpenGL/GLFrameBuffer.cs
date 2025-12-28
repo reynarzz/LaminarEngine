@@ -110,7 +110,6 @@ namespace Engine.Graphics
 
             ColorTexture?.Dispose();
             glDeleteRenderbuffer(_depthStencilRBO);
-
             CreateResource(descriptor);
         }
 
@@ -148,18 +147,20 @@ namespace Engine.Graphics
         /// <summary>
         /// Read pixels from the framebuffer (useful for screenshots or pixel effects)
         /// </summary>
-        internal byte[] ReadPixels(int x, int y, int width, int height)
+        internal unsafe byte[] ReadPixels(int x, int y, int width, int height)
         {
             byte[] pixels = new byte[width * height * 4];
+
             glBindFramebuffer(GL_FRAMEBUFFER, Handle);
-            GCHandle handle = GCHandle.Alloc(pixels, GCHandleType.Pinned);
 
-            // int flippedY = Height - y - height;
-            glReadPixels(x, y, width, height, GL_RGBA, GL_UNSIGNED_BYTE, handle.AddrOfPinnedObject());
+            fixed (byte* ptr = pixels)
+            {
+                glReadPixels(x, y, width, height,GL_RGBA, GL_UNSIGNED_BYTE,(IntPtr)ptr);
+            }
 
-            handle.Free();
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
             return pixels;
         }
+
     }
 }

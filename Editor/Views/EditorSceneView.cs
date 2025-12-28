@@ -176,7 +176,11 @@ namespace Editor
                 {
                     // Use back buffer to check if the topmost renderer is still there.
                     renderer = GetMousePickedRenderer(_mousePickerRenderer.RenderersIDsBackBuffer, _mousePickerRenderer.PickedBackBuffer);
-                    _mousePickerRenderer.OnPickRenderer(renderer.GetID());
+
+                    if (renderer != null)
+                    {
+                        _mousePickerRenderer.OnPickRenderer(renderer.GetID());
+                    }
 
                     Selector.Selected = renderer?.Transform?.Actor;
                 }
