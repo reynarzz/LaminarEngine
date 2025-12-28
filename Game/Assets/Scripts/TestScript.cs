@@ -65,7 +65,7 @@ namespace Game
             }
         }
         //[ExposeEditorField] public AStruct StructType { get; set; }
-        [SerializedField] public List<TestClass> _TestCLassList { get; set; }
+        [SerializedField] [HideFromInspector] public List<TestClass> _TestCLassList { get; set; }
         [SerializedField] public TestClass TestClassObj;
         [SerializedField] public List<string> StringTest;
         //[ExposeEditorField] public List<int> IntTest { get; set; } = new();

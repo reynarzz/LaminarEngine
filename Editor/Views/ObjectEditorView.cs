@@ -15,6 +15,7 @@ namespace Editor
 {
     internal class ObjectEditorView : IEditorWindow
     {
+        private IReadOnlyList<Type> _allComponentTypes;
         public ObjectEditorView()
         {
             // TODO: factory for all the EOjects types.
@@ -84,7 +85,7 @@ namespace Editor
 
             ImGui.Text("Layer");
             ImGui.SameLine();
-            var layerNames = LayerMask.GetLayerNames();
+            var layerNames = LayerMask.GetAllLayerNames();
             int layerIndex = Array.IndexOf(layerNames, LayerMask.LayerToName(actor.Layer));
 
             if (EditorGuiFieldsResolver.DrawCombo("Layers", ref layerIndex, layerNames))
@@ -93,6 +94,7 @@ namespace Editor
             }
             if (ImGui.Button("Add Component", new Vector2(ImGui.GetContentRegionAvail().X, 23)))
             {
+                _allComponentTypes = GetAllComponentTypes();
                 ImGui.OpenPopup("DropdownPopup");
             }
 
@@ -119,8 +121,7 @@ namespace Editor
 
                 ImGui.BeginChild("##ComponentListChild", Vector2.Zero, ImGuiChildFlags.None, ImGuiWindowFlags.None);
 
-                var allComponentTypes = GetAllComponentTypes();
-                foreach (var componentType in allComponentTypes)
+                foreach (var componentType in _allComponentTypes)
                 {
                     // ImGui.Image(EditorIcons.GetIcon(EditorIconType.ScriptIcon), new Vector2(15, 15));
                     // ImGui.SameLine();

@@ -12,6 +12,8 @@ namespace Engine.Utils
 {
     internal class ReflectionUtils
     {
+        private const BindingFlags _flags = BindingFlags.Instance | BindingFlags.Public
+                                         | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
         IEnumerable<T> GetAllAttributes<T>([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
                                             Type type) where T : Attribute
         {
@@ -47,14 +49,10 @@ namespace Engine.Utils
             }
         }
 
-        public static IEnumerable<MemberInfo> GetAllMembersWithAttribute<T>(Type type, bool inherit = true, bool order = false) where T : Attribute
+       
+        public static IEnumerable<MemberInfo> GetAllMembersWithAttribute<T>(Type type, bool inherit = true, bool order = false,
+                                                                             BindingFlags flags = _flags) where T : Attribute
         {
-            const BindingFlags flags =
-                BindingFlags.Instance |
-                BindingFlags.Public |
-                BindingFlags.NonPublic |
-                BindingFlags.DeclaredOnly;
-
             while (type != null && type != typeof(object))
             {
                 var members = type
@@ -138,6 +136,37 @@ namespace Engine.Utils
                 FieldInfo f => f.FieldType,
                 _ => throw new NotSupportedException($"Unsupported member: {member.MemberType}")
             };
+        }
+
+        public static int GetPropertiesCount(MemberInfo member, BindingFlags flags = _flags, params Attribute[] attributes)
+        {
+            switch (member)
+            {
+                case PropertyInfo prop:
+                    {
+                        return prop?.PropertyType?.GetProperties(flags)?.Length ?? 0;
+                    }
+                case FieldInfo field:
+                    {
+                        return field?.FieldType?.GetFields(flags)?.Length ?? 0;
+                    }
+                default:
+                    throw new NotSupportedException("Unsupported member type: " + member.GetType());
+            }
+        }
+
+        public static bool IsCollection(MemberInfo member)
+        {
+            var type = GetMemberType(member);
+
+            return (type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(List<>) ||
+                                           type.GetGenericTypeDefinition() == typeof(Dictionary<,>)))
+                 || type.IsArray;
+        }
+
+        public static bool IsEObject(Type t)
+        {
+            return typeof(EObject).IsAssignableFrom(t);
         }
     }
 }

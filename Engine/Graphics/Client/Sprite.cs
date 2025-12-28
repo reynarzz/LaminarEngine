@@ -16,6 +16,12 @@ namespace Engine
         {
             Name = "Sprite";
         }
+
+        public Sprite(string name, int atlasIndex, Texture2D texture) : this(atlasIndex, texture)
+        {
+            Name = name;
+        }
+
         public Sprite(Texture2D texture) : this(0, texture)
         {
             Name = texture?.Name;

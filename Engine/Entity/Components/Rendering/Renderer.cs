@@ -13,8 +13,8 @@ namespace Engine
     /// </summary>
     public abstract class Renderer : Component
     {
-        internal abstract RendererData RendererData { get; protected private set; } 
-        public Material Material { get => RendererData.Material; set => RendererData.Material = value; }
+        internal abstract RendererData RendererData { get; protected private set; }
+        [SerializedField] public Material Material { get => RendererData.Material; set => RendererData.Material = value; }
 
         protected override void OnAwake()
         {

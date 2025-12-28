@@ -5,6 +5,8 @@ using GlmNet;
 
 namespace Editor.Rendering
 {
+    // TODO: if the user picks a renderer, it should be added to the list, and calculate if the mouse moved a certain length.
+    //      if mouse is moved, the list is cleared, if the user picks null, the list is cleared.
     internal class MousePickerSceneRenderer : SceneRendererBase
     {
         private List<RendererData2D> _worldRenderers;

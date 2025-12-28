@@ -86,10 +86,7 @@ namespace Engine
             }
         }
 
-        [SerializedField]
         public virtual bool FlipX { get; set; }
-
-        [SerializedField]
         public virtual bool FlipY { get; set; }
     }
 }

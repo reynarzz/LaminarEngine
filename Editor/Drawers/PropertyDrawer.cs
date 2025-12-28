@@ -79,7 +79,7 @@ namespace Editor
             if (enforceSerializedFieldAttribute)
             {
                 var attrib = prop.GetCustomAttribute<SerializedFieldAttribute>();
-                if (attrib == null)
+                if (attrib == null || prop.GetCustomAttribute<HideFromInspectorAttribute>() != null)
                 {
                     return;
                 }
@@ -105,7 +105,8 @@ namespace Editor
 
             ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.Leaf;
 
-            if (type.GetProperties().Length > 1 && type.IsClass && type != typeof(string) && !ReflectionUtil.IsEObject(type))
+            if ((ReflectionUtils.GetPropertiesCount(prop) > 1 && type.IsClass && type != typeof(string) && 
+                !ReflectionUtils.IsEObject(type)) || ReflectionUtils.IsCollection(prop))
             {
                 flags = ImGuiTreeNodeFlags.OpenOnArrow;
             }
@@ -134,7 +135,7 @@ namespace Editor
             }
 
             // EObject
-            if (ReflectionUtil.IsEObject(type))
+            if (ReflectionUtils.IsEObject(type))
             {
                 ImGui.SameLine();
                 ImGui.SetCursorPosX(Math.Max(_xPosOffset, ImGui.GetCursorPosX()));

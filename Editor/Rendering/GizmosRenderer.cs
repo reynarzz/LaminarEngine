@@ -22,7 +22,7 @@ namespace Editor.Rendering
         private List<Batch2D> _batches;
         private PipelineFeatures _pipelineFeatures;
         private RenderTexture _renderTexture;
-
+        private readonly Color SemiTransparent = new Color(1, 1, 1, 0.7f);
         private Shader _gizmosShader;
         public int PixelsPerUnit { get; set; } = 64;
         private Material _mat;
@@ -235,7 +235,7 @@ namespace Editor.Rendering
                 {
                     var s = MathF.Sin(Time.UnscaledTime * 10) * 0.5f + 0.5f;
                     var size = renderer.RendererData.Bounds.Size;// + new vec3(s, s) * 0.5f;
-                    Debug.DrawBox(Selector.SelectedTransform().WorldPosition + renderer.RendererData.Bounds.Center, size, new Color(1, 1, 1, 0.6f));
+                    Debug.DrawBox(Selector.SelectedTransform().WorldPosition + renderer.RendererData.Bounds.Center, size, SemiTransparent);
 
                 }
             }
@@ -259,7 +259,7 @@ namespace Editor.Rendering
 
             for (int i = 0; i < points.Count - 1; i += 2)
             {
-                Debug.DrawLine(points[i], points[i + 1], Color.White);
+                Debug.DrawLine(points[i], points[i + 1], SemiTransparent);
             }
         }
 

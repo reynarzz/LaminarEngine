@@ -16,8 +16,8 @@ namespace Editor
 
         private Vector2 _screenSize;
         private vec3 _worldPosition;
-        private const float MinDistance = 0.1f;
-        private const float MaxDistance = 1000.0f;
+        private const float MinDistance = 0.01f;
+        private const float MaxDistance = 3000.0f;
 
         public mat4 Projection { get; private set; }
         public mat4 ViewMatrix { get; private set; }
@@ -37,24 +37,44 @@ namespace Editor
         public float FarPlane { get; set; } = 10000.0f;
         public float Fov { get; set; } = 60;
         public float Aspect => _screenSize.X / _screenSize.Y;
-        public float OrthographicSize { get; } = 32;
+        public float OrthographicSize { get; set; } = 32;
+        public CameraProjectionMode ProjectionMode { get; set; } = CameraProjectionMode.Perspective;
 
         public EditorCamera(float aspect = 16f / 9f)
         {
-            Projection = MathUtils.Perspective(glm.radians(Fov), aspect, NearPlane, FarPlane);
+            _screenSize = new Vector2(Screen.Width, Screen.Height);
+            UpdateProjection();
             UpdateView();
         }
 
+        private void UpdateProjection()
+        {
+            if (ProjectionMode == CameraProjectionMode.Perspective)
+            {
+                Projection = MathUtils.Perspective(glm.radians(Fov), _screenSize.X / _screenSize.Y, NearPlane, FarPlane);
+            }
+            else
+            {
+                float orthoHeight = OrthographicSize;
+                float orthoWidth = orthoHeight * (_screenSize.X / _screenSize.Y);
+
+                float left = -orthoWidth;
+                float right = orthoWidth;
+                float bottom = -orthoHeight;
+                float top = orthoHeight;
+
+                Projection = MathUtils.Ortho(left, right, bottom, top, NearPlane, FarPlane);
+            }
+        }
         public void Update()
         {
             var size = ImGui.GetWindowSize();
 
             if ((int)_screenSize.X != (int)size.X || (int)_screenSize.Y != (int)size.Y)
             {
-                _screenSize.X = (int)size.X;
-                _screenSize.Y = (int)size.Y;
-
-                Projection = MathUtils.Perspective(glm.radians(Fov),size.X / size.Y, NearPlane, FarPlane);
+                _screenSize.X = size.X;
+                _screenSize.Y = size.Y;
+                UpdateProjection();
             }
 
             var io = ImGui.GetIO();
@@ -79,7 +99,7 @@ namespace Editor
 
                 _rotation = Quaternion.Normalize(qYaw * qPitch * _rotation);
             }
-           
+
             if (ImGui.IsMouseDown(ImGuiMouseButton.Middle))
             {
                 float fovY = glm.radians(60.0f);
@@ -99,6 +119,12 @@ namespace Editor
                 const float zoomSpeed = 0.1f;
                 _distance *= 1.0f - io.MouseWheel * zoomSpeed;
                 _distance = Mathf.Clamp(_distance, MinDistance, MaxDistance);
+
+                if(ProjectionMode == CameraProjectionMode.Orthographic)
+                {
+                    OrthographicSize = _distance;
+                    UpdateProjection();
+                }
             }
 
             UpdateView();
@@ -136,6 +162,6 @@ namespace Editor
             Vector3 f = Vector3.Transform(unit, rot);
             return glm.normalize(new vec3(f.X, f.Y, f.Z));
         }
-      
+
     }
 }

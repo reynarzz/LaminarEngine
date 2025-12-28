@@ -103,7 +103,7 @@ namespace Engine.Utils
                 atlasChunks[i] = CreateTileBounds(x * tileWidth, y * tileHeight, tileWidth, tileHeight,
                                                   pivot.x, pivot.y, texture.Width, texture.Height);
 
-                sprites[i] = new Sprite(i, texture);
+                sprites[i] = new Sprite($"{texture.Name} ({i})", i, texture);
             }
 
             return sprites;
