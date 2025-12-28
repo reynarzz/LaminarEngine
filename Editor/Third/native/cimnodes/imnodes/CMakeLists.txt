@@ -18,8 +18,8 @@ endif()
 # cmake options
 option(IMNODES_EXAMPLES "Build examples" ${IMNODES_STANDALONE_PROJECT})
 
-set(IMGUI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../imgui-1.91.6)
-
+#set(IMGUI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../imgui-1.91.6)
+set(IMGUI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../cimgui/imgui)
 add_library(imgui STATIC
     ${IMGUI_DIR}/imgui.cpp
     ${IMGUI_DIR}/imgui_draw.cpp

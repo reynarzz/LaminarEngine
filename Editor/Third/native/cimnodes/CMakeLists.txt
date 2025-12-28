@@ -5,7 +5,8 @@ if (WIN32)
     set(CMAKE_CXX_COMPILER clang++ CACHE STRING "" FORCE)
 endif()
 
-set(IMGUI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../imgui-1.91.6)
+#set(IMGUI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../imgui-1.91.6)
+set(IMGUI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/cimgui/imgui)
 
 project(cimnodes LANGUAGES C CXX)
 
