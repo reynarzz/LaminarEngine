@@ -14,6 +14,7 @@ set(IMGUI_DIR "${CIMGUI_DIR}/imgui")
 
 add_subdirectory(cimgui)
 add_subdirectory(cimnodes)
+add_subdirectory(cimguizmo)
 
 add_library(ImAllGui SHARED
 ImAllGui.cpp
@@ -23,6 +24,7 @@ target_sources(ImAllGui PRIVATE
     $<TARGET_OBJECTS:cimgui_obj>
     $<TARGET_OBJECTS:imnodes_obj>
     $<TARGET_OBJECTS:cimnodes_obj>
+    $<TARGET_OBJECTS:cimguizmo_obj>
 )
 
 # Export include dirs from subtargets
@@ -32,6 +34,7 @@ target_include_directories(ImAllGui PUBLIC
     # Subprojects
     $<BUILD_INTERFACE:${IMALLGUI_ROOT_DIR}/cimgui>
     $<BUILD_INTERFACE:${IMALLGUI_ROOT_DIR}/cimnodes>
+    $<BUILD_INTERFACE:${IMALLGUI_ROOT_DIR}/cimguizmo>
     $<BUILD_INTERFACE:${IMGUI_DIR}>
     # Install interface
     $<INSTALL_INTERFACE:include>

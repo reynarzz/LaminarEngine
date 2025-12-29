@@ -11,6 +11,6 @@ namespace Editor.Views
         void OnOpen();
         void OnClose();
         void OnUpdate();
-        void OnRender();
+        void OnDraw();
     }
 }

@@ -4,6 +4,10 @@
 #define CIMGUIZMO_INCLUDED
 
 #include "cimgui.h"
+struct ImVec2_c
+{
+    float x, y;
+};
 
 #ifdef CIMGUI_DEFINE_ENUMS_AND_STRUCTS
 

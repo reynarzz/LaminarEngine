@@ -126,8 +126,6 @@ namespace Editor
 
             DockSpace();
 
-            _node.Draw();
-            //ImGui.End   ();
             ImGui.Render();
             ImguiImplOpenGL3.RenderDrawData(ImGui.GetDrawData());
 
@@ -163,11 +161,13 @@ namespace Editor
             ImGui.DockSpace(dockspaceId, Vector2.Zero, ImGuiDockNodeFlags.None);
 
             // call imgui functions here: ---
-            _gameWindow.OnRender();
-            _editorSceneView.OnRender();
+            _gameWindow.OnDraw();
+            _editorSceneView.OnDraw();
 
-            _sceneGraphWindow.OnRender();
-            _objectEditor.OnRender();
+            _sceneGraphWindow.OnDraw();
+            _objectEditor.OnDraw();
+            _node.OnRender();
+
             RenderingInfoWindow();
             // ------
 

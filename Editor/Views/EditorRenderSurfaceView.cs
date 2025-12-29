@@ -46,7 +46,7 @@ namespace Editor
 
         }
 
-        public virtual void OnRender()
+        public virtual void OnDraw()
         {
             ImGuiWindowFlags flags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.NoCollapse;
 

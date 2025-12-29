@@ -19,7 +19,7 @@ namespace Editor.Views
         {
         }
 
-        public void OnRender()
+        public void OnDraw()
         {
             ImGui.Begin("Scene graph");
 

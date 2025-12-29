@@ -25,9 +25,9 @@ add_library(imnodes_obj OBJECT
 
 # Include directories for imnodes_obj
 target_include_directories(imnodes_obj PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>   # imnodes headers
-    $<BUILD_INTERFACE:${CIMGUI_DIR}>                 # cimgui headers (for #include <cimgui.h>)
-    $<BUILD_INTERFACE:${IMGUI_DIR}>                  # imgui headers
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>  
+    $<BUILD_INTERFACE:${CIMGUI_DIR}>                
+    $<BUILD_INTERFACE:${IMGUI_DIR}>                 
     $<INSTALL_INTERFACE:include>
 )
 

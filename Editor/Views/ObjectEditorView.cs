@@ -32,7 +32,7 @@ namespace Editor
         {
         }
 
-        public void OnRender()
+        public void OnDraw()
         {
             ImGui.Begin("Object Editor");
 

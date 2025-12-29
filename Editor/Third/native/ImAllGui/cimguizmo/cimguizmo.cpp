@@ -2,7 +2,7 @@
 //based on ImGuizmo.h file version 1.91.3 WIP from https://github.com/CedricGuillemet/ImGuizmo
 #include "imgui.h"
 #include "imgui_internal.h"
-#include "./ImGuizmo/ImGuizmo.h"
+#include "imguizmo/ImGuizmo.h"
 #include "cimguizmo.h"
 
 

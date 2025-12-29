@@ -7,6 +7,7 @@ using Engine.Layers;
 using Engine.Utils;
 using GlmNet;
 using ImGuiNET;
+using ImGuizmoNET;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,6 +53,50 @@ namespace Editor
         {
 
         }
+
+        private void RenderGuizmo()
+        {
+            ImGuizmo.SetDrawlist(ImGui.GetWindowDrawList());
+
+            ImGuizmo.SetOrthographic(false); 
+
+            mat4 view = _camera.ViewMatrix; // TODO: Change to ui matrix if a UI component is selected.
+            mat4 projection = _camera.Projection;
+
+            if (Selector.SelectedTransform())
+            {
+                mat4 model = Selector.SelectedTransform().WorldMatrix;
+
+                ImGuizmo.SetRect(WindowPosition.X, WindowPosition.Y, WindowSize.X, WindowSize.Y);
+
+                // 6. Manipulate the object
+                Manipulate(ref view, ref projection,
+                                     OPERATION.TRANSLATE,   // could be ROTATE or SCALE
+                                      MODE.LOCAL,       // LOCAL or WORLD space
+                                     ref model);
+
+            }
+        }
+
+        public static unsafe bool Manipulate(ref mat4 view, ref mat4 projection, OPERATION operation, MODE mode, ref mat4 matrix)
+        {
+            float* deltaMatrix = null;
+            float* snap = null;
+            float* localBounds = null;
+            float* boundsSnap = null;
+            fixed (float* native_view = &view.c0.x)
+            {
+                fixed (float* native_projection = &projection.c0.x)
+                {
+                    fixed (float* native_matrix = &matrix.c0.x)
+                    {
+                        byte ret = ImGuizmoNative.ImGuizmo_Manipulate(native_view, native_projection, operation, mode, native_matrix, deltaMatrix, snap, localBounds, boundsSnap);
+                        return ret != 0;
+                    }
+                }
+            }
+        }
+
         protected override void OnWindowRender()
         {
             _camera.Update();
@@ -91,6 +136,8 @@ namespace Editor
                 IsMouseClicked = true;
                 Surface.SceneRenderers.Add(_mousePickerRenderer);
             }
+
+            RenderGuizmo();
         }
 
         private bool IsMouseInsideWindow()

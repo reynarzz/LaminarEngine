@@ -59,9 +59,9 @@ namespace Editor
         {
         }
 
-        public override void OnRender()
+        public override void OnDraw()
         {
-            base.OnRender();
+            base.OnDraw();
 
             _offsetX = (int)WindowPositionRender.X;
             _offsetY = (int)WindowPositionRender.Y;

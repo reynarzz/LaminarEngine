@@ -34,7 +34,7 @@ public sealed class SimpleNodeEditor
     {
     }
 
-    public void Draw()
+    public void OnRender()
     {
         ImGui.Begin("Animator");
         HandleLinkCreation();
