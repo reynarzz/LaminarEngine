@@ -12,12 +12,18 @@ namespace Engine
     public class SpriteRenderer : Renderer2D
     {
         [SerializedField]
+        public override int SortOrder { get => base.SortOrder; set => base.SortOrder = value; }
+
+        [SerializedField]
+        public override Color Color { get => base.Color; set => base.Color = value; }
+
+        [SerializedField]
         public override bool FlipX
         {
             get => base.FlipX;
             set
             {
-                if(base.FlipX == value)
+                if (base.FlipX == value)
                 {
                     return;
                 }

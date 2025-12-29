@@ -32,6 +32,13 @@ namespace Engine
     [UniqueComponent]
     public class TilemapRenderer : Renderer2D
     {
+        [SerializedField]
+        public override Color Color { get => base.Color; set => base.Color = value; }
+
+        [SerializedField]
+        public override int SortOrder { get => base.SortOrder; set => base.SortOrder = value; }
+
+
         public IReadOnlyList<vec2> TilesPositions => _tilesPositions;
         private List<vec2> _tilesPositions = new();
         private RendererData2D _rendererData;
@@ -81,7 +88,7 @@ namespace Engine
             var min = _rendererData.Bounds.Min;
             _rendererData.Bounds.Max = new vec3(Math.Max(max.x, position.x), Math.Max(max.y, position.y), 0);
             _rendererData.Bounds.Min = new vec3(Math.Min(min.x, position.x), Math.Min(min.y, position.y), 0);
-         
+
 
             //var index = (uint)Mesh.Vertices.Count - 4;
             //Mesh.Indices.Add(index + 0);

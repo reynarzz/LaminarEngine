@@ -21,27 +21,27 @@ namespace Engine.GUI
 
     public class UIText : UIGraphicsElement, IFontStashRenderer2
     {
-        public FontAsset Font { get; set; }
-        public int FontResolution { get; set; } = 5;
-        public int FontSize { get; set; } = 32;
+        [SerializedField] public FontAsset Font { get; set; }
+        [SerializedField] public int FontResolution { get; set; } = 5;
+        [SerializedField] public int FontSize { get; set; } = 32;
         public int MinFontSize { get; set; } = 8;
         public int MaxFontSize { get; set; } = 72;
-        public float CharacterSpacing { get; set; }
-        public float LineSpacing { get; set; }
-        public int OutlineSize { get; set; }
+        [SerializedField] public float CharacterSpacing { get; set; }
+        [SerializedField] public float LineSpacing { get; set; }
+        [SerializedField] public int OutlineSize { get; set; }
         public Thickness Padding = new Thickness(0);
-        public TextVerticalAlignment Vertical { get => _verticalAlignment; set { if (_verticalAlignment != value) RendererData.IsDirty = true; _verticalAlignment = value; } }
-        public TextHorizontalAlignment Horizontal { get => _horizontalAlignment; set { if (_horizontalAlignment != value) RendererData.IsDirty = true; _horizontalAlignment = value; } }
-        public TextOverflow Overflow { get; set; } = TextOverflow.None;
-        public TextWrap Wrap { get; set; } = TextWrap.None;
-        public TextFit Fit { get; set; } = TextFit.None;
+        [SerializedField] public TextVerticalAlignment Vertical { get => _verticalAlignment; set { if (_verticalAlignment != value) RendererData.IsDirty = true; _verticalAlignment = value; } }
+        [SerializedField] public TextHorizontalAlignment Horizontal { get => _horizontalAlignment; set { if (_horizontalAlignment != value) RendererData.IsDirty = true; _horizontalAlignment = value; } }
+        [SerializedField] public TextOverflow Overflow { get; set; } = TextOverflow.None;
+        [SerializedField] public TextWrap Wrap { get; set; } = TextWrap.None;
+        [SerializedField] public TextFit Fit { get; set; } = TextFit.None;
         private TextHorizontalAlignment _horizontalAlignment = TextHorizontalAlignment.Center;
         private TextVerticalAlignment _verticalAlignment = TextVerticalAlignment.Center;
         private RendererData2D _rendererData;
         private readonly StringBuilder _text = new();
         public int Length => _text.Length;
         ITexture2DManager IFontStashRenderer2.TextureManager => FontManager.Instance.TextureManager;
-
+        [SerializedField] public string Text { get => _text.ToString(); set => SetText(value); }
         protected override void OnAwake()
         {
             base.OnAwake();

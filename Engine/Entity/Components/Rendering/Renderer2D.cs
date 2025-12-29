@@ -26,8 +26,7 @@ namespace Engine
            _renderData = new RendererData2D(GetID(), Transform, Draw, () => IsEnabled && Actor.IsActiveInHierarchy);
         }
 
-        [SerializedField]
-        public Color Color
+        public virtual Color Color
         {
             get => _renderData.Color;
             set
@@ -73,8 +72,7 @@ namespace Engine
             }
         }
 
-        [SerializedField]
-        public int SortOrder
+        public virtual int SortOrder
         {
             get => _renderData.SortOrder;
             set
