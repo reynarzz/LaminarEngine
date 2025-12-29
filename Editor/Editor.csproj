@@ -33,7 +33,7 @@
 
 		<PropertyGroup>
 			<GlfwWinSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\Third\Win\glfw\lib-vc2022\glfw.dll'))</GlfwWinSrc>
-			<!--<ImGuiSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\Third\ImGui\cimgui\win-x64\cimgui.dll'))</ImGuiSrc>-->
+			<ImGuiSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\Third\ImGui\cimgui\win-x64\cimgui.dll'))</ImGuiSrc>
 			
 		</PropertyGroup>
 
@@ -49,12 +49,12 @@
 
   <PropertyGroup> 
   <GlfwMacSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)/../Third/MacOs/glfw/$(MacLibFolder)/libglfw.dylib'))</GlfwMacSrc>
-			<ImGuiSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\Third\ImGui\cimgui\osx\cimgui.dylib'))</ImGuiSrc>
+  <ImGuiSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\Third\ImAllGui\bins\osx\libImAllGui.dylib'))</ImGuiSrc>
 
   </PropertyGroup>
 
   <Copy SourceFiles="$(GlfwMacSrc)" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
-		<Copy SourceFiles="$(ImGuiSrc)" DestinationFiles="$(TargetDir)cimgui.dylib" SkipUnchangedFiles="true" />
+		<Copy SourceFiles="$(ImGuiSrc)" DestinationFiles="$(TargetDir)libImAllGui.dylib" SkipUnchangedFiles="true" />
 
 </Target>
 

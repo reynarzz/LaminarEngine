@@ -379,7 +379,7 @@ namespace Engine
                 var renderTexture = texture as GLFrameBuffer;
                 GL.glDisable(GL.GL_STENCIL_TEST);
 
-                // if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
                     GL.glLineWidth(4);
                     GL.glEnable(GL.GL_LINE_SMOOTH);
