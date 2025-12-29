@@ -33,7 +33,7 @@
 
 		<PropertyGroup>
 			<GlfwWinSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\Third\Win\glfw\lib-vc2022\glfw.dll'))</GlfwWinSrc>
-			<ImGuiSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\Third\ImGui\cimgui\win-x64\cimgui.dll'))</ImGuiSrc>
+			<!--<ImGuiSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\Third\ImGui\cimgui\win-x64\cimgui.dll'))</ImGuiSrc>-->
 			
 		</PropertyGroup>
 
