@@ -11,3 +11,7 @@ Editor/Third/native/cimnodes/_build/
 Editor/Third/native/cimnodes/cimgui/imgui/
 Editor/Third/native/cimnodes/imnodes/vcpkg/
 Editor/Third/native/cimnodes/out/
+Editor/Third/native/ImAllGui/cimnodes/cimgui/imgui/examples/
+Editor/Third/native/ImAllGui/imgui/backends/
+Editor/Third/native/ImAllGui/imgui/examples/
+Editor/Third/native/ImAllGui/cimnodes/cimgui/imgui/
