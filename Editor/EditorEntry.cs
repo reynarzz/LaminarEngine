@@ -126,7 +126,7 @@ namespace Editor
 
             DockSpace();
 
-            //_node.Draw();
+            _node.Draw();
             //ImGui.End   ();
             ImGui.Render();
             ImguiImplOpenGL3.RenderDrawData(ImGui.GetDrawData());

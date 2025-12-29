@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Reflection.Metadata;
 using ImGuiNET;
 using imnodesNET;
 
@@ -13,13 +14,20 @@ public sealed class SimpleNodeEditor
 
     public SimpleNodeEditor()
     {
-        imnodes.StyleColorsDark();
+        //imnodes.StyleColorsDark();
         // Create one demo node
-        var node = new Node(NewId(), "Example Node", new Vector2(100, 100));
+        var entry = CreateNode("Entry", new Vector2(100, 200), null);
+        CreateNode("Second node", new Vector2(200, 300), entry);
+    }
+
+    private Node CreateNode(string name, Vector2 pos, Node link)
+    {
+        var node = new Node(NewId(), name, pos);
         node.Inputs.Add(NewId());
         node.Outputs.Add(NewId());
+        
         _nodes.Add(node);
-
+        return node;
     }
 
     public void Dispose()
@@ -28,14 +36,17 @@ public sealed class SimpleNodeEditor
 
     public void Draw()
     {
+        ImGui.Begin("Animator");
+        HandleLinkCreation();
+        HandleLinkDeletion();
+
         imnodes.BeginNodeEditor();
 
         DrawNodes();
         DrawLinks();
-        HandleLinkCreation();
-        HandleLinkDeletion();
 
         imnodes.EndNodeEditor();
+        ImGui.End();
     }
     private readonly HashSet<int> _initializedNodes = new();
     private void DrawNodes()
@@ -47,7 +58,7 @@ public sealed class SimpleNodeEditor
             if (_initializedNodes.Add(node.Id))
             {
                 Vector2 pos = node.InitialPos;
-                imnodes.SetNodeEditorSpacePos(node.Id,  pos);
+                imnodes.SetNodeEditorSpacePos(node.Id, pos);
             }
 
             imnodes.BeginNodeTitleBar();
@@ -98,6 +109,7 @@ public sealed class SimpleNodeEditor
     private void HandleLinkDeletion()
     {
         int linkId = 0;
+
         if (imnodes.IsLinkDestroyed(ref linkId))
         {
             _links.RemoveAll(l => l.Id == linkId);

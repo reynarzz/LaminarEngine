@@ -13,7 +13,7 @@
 
 CIMGUI_API void InitImAllGui()
 {
-	ImGui::CreateContext(nullptr);
+	auto context = ImGui::CreateContext(nullptr);
 	imnodes::CreateContext();
-	imnodes::EditorContextSet(imnodes::EditorContextCreate());
+	imnodes::StyleColorsDark();
 }
