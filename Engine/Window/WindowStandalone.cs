@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using GLFW;
@@ -82,7 +83,7 @@ namespace Engine
         private bool _canResize = false;
         public bool CanResize
         {
-            get => _canResize; 
+            get => _canResize;
             set
             {
                 if (_canResize == value)
@@ -147,21 +148,31 @@ namespace Engine
             if (!_isInitialized)
                 return;
 
-#if WINDOWS
-            Glfw.WindowHint(Hint.OpenglProfile, Profile.Compatibility);
-            Glfw.WindowHint(Hint.ContextVersionMajor, 3);
-            Glfw.WindowHint(Hint.ContextVersionMinor, 3);
-#else
-            Glfw.WindowHint(Hint.OpenglProfile, Profile.Core);
-            Glfw.WindowHint(Hint.ContextVersionMajor, 3);
-            Glfw.WindowHint(Hint.ContextVersionMinor, 2);
-#endif
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                Glfw.WindowHint(Hint.OpenglProfile, Profile.Compatibility);
+                Glfw.WindowHint(Hint.ContextVersionMajor, 3);
+                Glfw.WindowHint(Hint.ContextVersionMinor, 3);
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                // NOTE: test this
+                Glfw.WindowHint(Hint.OpenglProfile, Profile.Compatibility);
+                Glfw.WindowHint(Hint.ContextVersionMajor, 3);
+                Glfw.WindowHint(Hint.ContextVersionMinor, 3);
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                Glfw.WindowHint(Hint.OpenglProfile, Profile.Core);
+                Glfw.WindowHint(Hint.ContextVersionMajor, 3);
+                Glfw.WindowHint(Hint.ContextVersionMinor, 2);
+            }
 
             Glfw.WindowHint(Hint.Resizable, false);
             Glfw.WindowHint(Hint.Visible, false);
             Glfw.WindowHint(Hint.OpenglForwardCompatible, Constants.True);
             Glfw.WindowHint(Hint.Samples, 4);
-            
+
             //Glfw.WindowHint(Hint.SrgbCapable, Constants.True);
             //Glfw.WindowHint(Hint.Doublebuffer, Constants.True);
 
@@ -203,7 +214,7 @@ namespace Engine
             GL.glClearColor(windowColor.R, windowColor.G, windowColor.B, 1.0f);
             GL.glClear(GL.GL_COLOR_BUFFER_BIT);
             SwapBuffers();
-            
+
             Glfw.ShowWindow(NativeWindow);
             //Glfw.SetWindowAttribute(NativeWindow, WindowAttribute.Decorated, true);
             Glfw.RequestWindowAttention(NativeWindow);
@@ -280,7 +291,7 @@ namespace Engine
                     mode.RefreshRate
                 );
 
-                
+
                 Glfw.GetFramebufferSize(NativeWindow, out var width, out var height);
                 Width = width;
                 Height = height;
