@@ -15,3 +15,5 @@ Editor/Third/native/ImAllGui/cimnodes/cimgui/imgui/examples/
 Editor/Third/native/ImAllGui/imgui/backends/
 Editor/Third/native/ImAllGui/imgui/examples/
 Editor/Third/native/ImAllGui/cimnodes/cimgui/imgui/
+Editor/Third/native/ImAllGui/_build/
+Editor/Third/native/ImAllGui/out/
