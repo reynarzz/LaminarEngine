@@ -31,7 +31,7 @@ namespace Editor
 
         private SceneGraphWindow _sceneGraphWindow;
         private GFSEngine _engine;
-        // private SimpleNodeEditor _node;
+        private SimpleNodeEditor _node;
         private ObjectEditorView _objectEditor;
         private RenderingSurface _gameSurface;
         private RenderingSurface _editorSurface;
@@ -49,7 +49,7 @@ namespace Editor
             ImguiImplOpenGL3.Init(_win);
             _glfwInput = new ImGuiGLFW(WindowStandalone.NativeWindow);
             _glfwInput.Init();
-            // _node = new SimpleNodeEditor();
+            _node = new SimpleNodeEditor();
 
             var assemblyDir = Paths.ClearPathSeparation(Path.GetDirectoryName(AppContext.BaseDirectory)!);
             var root = Path.Combine(assemblyDir.Substring(0, assemblyDir.LastIndexOf(PROJECT_FOLDER_NAME)), Paths.GAME_FOLDER_NAME);

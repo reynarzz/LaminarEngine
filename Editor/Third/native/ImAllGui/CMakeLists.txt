@@ -15,7 +15,9 @@ set(IMGUI_DIR "${CIMGUI_DIR}/imgui")
 add_subdirectory(cimgui)
 add_subdirectory(cimnodes)
 
-add_library(ImAllGui SHARED)
+add_library(ImAllGui SHARED
+ImAllGui.cpp
+ImAllGui.h)
 
 target_sources(ImAllGui PRIVATE
     $<TARGET_OBJECTS:cimgui_obj>

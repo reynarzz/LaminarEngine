@@ -11,12 +11,8 @@ public sealed class SimpleNodeEditor
     private readonly List<Node> _nodes = new();
     private readonly List<Link> _links = new();
 
-    private IntPtr _context;
     public SimpleNodeEditor()
     {
-        _context = imnodes.EditorContextCreate();
-        imnodes.EditorContextSet(_context);
-
         imnodes.StyleColorsDark();
         // Create one demo node
         var node = new Node(NewId(), "Example Node", new Vector2(100, 100));
@@ -28,12 +24,10 @@ public sealed class SimpleNodeEditor
 
     public void Dispose()
     {
-        imnodes.EditorContextFree(_context);
     }
 
     public void Draw()
     {
-        imnodes.EditorContextSet(_context);
         imnodes.BeginNodeEditor();
 
         DrawNodes();

@@ -68,8 +68,8 @@ namespace Editor
             var root = Path.Combine(assemblyDir.Substring(0, assemblyDir.LastIndexOf("Editor")), "Editor/Data");
 
             _window = window;
-            IntPtr context = ImGui.CreateContext();
-            ImGui.SetCurrentContext(context);
+            ImAllGui.InitImAllGui();
+
             var io = ImGui.GetIO();
 
             var fontFilePath = $"{root}/NotoSansDisplay-VariableFont_wdth,wght.ttf";
