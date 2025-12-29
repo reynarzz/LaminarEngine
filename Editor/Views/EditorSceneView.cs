@@ -69,6 +69,18 @@ namespace Editor
             var offset = ImGui.GetFrameHeight();// + ImGui.GetStyle().FrameBorderSize;
 
             var windowAdjustSize = new vec2(WindowSize.X, WindowSize.Y - offset);
+            
+
+            bool _isDefaultGizmosEnabled = true;
+            var gizmoPos = ImGui.GetCursorScreenPos();
+            var gizmoSize = WindowSize;
+            if ((ImGuizmo.IsOver() || ImGuizmo.IsUsing()))
+            {
+                WindowFlags = ImGuiWindowFlags.NoMove;
+            }
+            else{
+                WindowFlags = default;
+            }
             ImGuizmo.SetRect(WindowPosition.X, WindowPosition.Y + offset, windowAdjustSize.x, windowAdjustSize.y);
             ImGuizmo.BeginFrame();
 

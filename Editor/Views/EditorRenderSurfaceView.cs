@@ -20,6 +20,7 @@ namespace Editor
         public Vector2 WindowSize { get; private set; }
         private readonly string _viewName;
         private readonly string _surfaceViewId;
+        protected ImGuiWindowFlags WindowFlags { get; set; }
         public EditorRenderSurfaceView(string viewName, RenderingSurface surface)
         {
             _surface = surface;
@@ -48,7 +49,9 @@ namespace Editor
 
         public virtual void OnDraw()
         {
-            ImGuiWindowFlags flags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.NoCollapse;
+            ImGuiWindowFlags flags = ImGuiWindowFlags.NoScrollbar |
+                                     ImGuiWindowFlags.NoScrollWithMouse |
+                                     ImGuiWindowFlags.NoCollapse | WindowFlags;
 
             ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Vector2.Zero);
             ImGui.PushStyleColor(ImGuiCol.WindowBg, new Vector4(0, 0, 0, 1));

@@ -281,8 +281,9 @@ namespace Editor.Rendering
                 }
                 else
                 {
+                    var translation = component.Transform.GetRenderingWorldMatrix()[3];
                     var renderData = renderDatas[component.GetID()];
-                    renderData.Transform.WorldPosition = component.Transform.WorldPosition;
+                    renderData.Transform.WorldPosition = new vec3(translation);
                     renderData.IsDirty = true;
                     const int scaling = 100;
                     renderData.SortOrder = -(int)(glm.dot(component.Transform.WorldPosition - camera.WorldPosition, camera.Forward) * scaling);
