@@ -158,7 +158,7 @@ namespace Editor
             ImGui.PopStyleVar(3);
 
             var dockspaceId = ImGui.GetID("MainDockSpace");
-            ImGui.DockSpace(dockspaceId, Vector2.Zero, ImGuiDockNodeFlags.None);
+            ImGui.DockSpace(dockspaceId, Vector2.Zero, ImGuiDockNodeFlags.PassthruCentralNode);
 
             // call imgui functions here: ---
             _gameWindow.OnDraw();

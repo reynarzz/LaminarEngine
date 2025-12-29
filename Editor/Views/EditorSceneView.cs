@@ -54,52 +54,77 @@ namespace Editor
 
         }
 
+        private void Focuswindow()
+        {
+            if (ImGui.IsMouseHoveringRect(ImGui.GetWindowPos(), ImGui.GetWindowSize()) && ImGui.IsAnyMouseDown())
+            {
+                // TODO:
+                // ImGui.FocusWindow(ImGui.GetCurrentWindow());
+            }
+        }
+
         private void RenderGuizmo()
         {
-            ImGuizmo.SetDrawlist(ImGui.GetWindowDrawList());
+            ImGuizmo.Enable(true);
+            var offset = ImGui.GetFrameHeight();// + ImGui.GetStyle().FrameBorderSize;
 
-            ImGuizmo.SetOrthographic(false); 
+            var windowAdjustSize = new vec2(WindowSize.X, WindowSize.Y - offset);
+            ImGuizmo.SetRect(WindowPosition.X, WindowPosition.Y + offset, windowAdjustSize.x, windowAdjustSize.y);
+            ImGuizmo.BeginFrame();
+
+            ImGuizmo.SetDrawlist(ImGui.GetWindowDrawList());
+            ImGuizmo.AllowAxisFlip(false);
+            ImGuizmo.SetOrthographic(false);
 
             mat4 view = _camera.ViewMatrix; // TODO: Change to ui matrix if a UI component is selected.
             mat4 projection = _camera.Projection;
 
+            float titleBarHeight = ImGui.GetFrameHeightWithSpacing();
+            float windowPadding = ImGui.GetStyle().WindowPadding.X;
+
+            ImGui.SetCursorScreenPos(ImGui.GetItemRectMin());
+          
             if (Selector.SelectedTransform())
             {
-                mat4 model = Selector.SelectedTransform().WorldMatrix;
+                var selectedTransform = Selector.SelectedTransform();
 
-                ImGuizmo.SetRect(WindowPosition.X, WindowPosition.Y, WindowSize.X, WindowSize.Y);
+                mat4 model = selectedTransform.GetRenderingWorldMatrix();
+                mat4 delta = default;
+                OPERATION operation = OPERATION.TRANSLATE;
+                MODE mode = MODE.LOCAL;
 
-                // 6. Manipulate the object
-                Manipulate(ref view, ref projection,
-                                     OPERATION.TRANSLATE,   // could be ROTATE or SCALE
-                                      MODE.LOCAL,       // LOCAL or WORLD space
-                                     ref model);
-
-            }
-        }
-
-        public static unsafe bool Manipulate(ref mat4 view, ref mat4 projection, OPERATION operation, MODE mode, ref mat4 matrix)
-        {
-            float* deltaMatrix = null;
-            float* snap = null;
-            float* localBounds = null;
-            float* boundsSnap = null;
-            fixed (float* native_view = &view.c0.x)
-            {
-                fixed (float* native_projection = &projection.c0.x)
+                if (ImGuizmo.Manipulate(ref view.c0.x, ref projection.c0.x, operation, mode, ref model.c0.x, ref delta.c0.x))
                 {
-                    fixed (float* native_matrix = &matrix.c0.x)
+                    vec3 translation = default;
+                    vec3 rotation = default;
+                    vec3 scale = default;
+
+                    ImGuizmo.DecomposeMatrixToComponents(ref model.c0.x, ref translation.x, ref rotation.x, ref scale.x);
+
+                    if(mode == MODE.LOCAL)
                     {
-                        byte ret = ImGuizmoNative.ImGuizmo_Manipulate(native_view, native_projection, operation, mode, native_matrix, deltaMatrix, snap, localBounds, boundsSnap);
-                        return ret != 0;
+                        selectedTransform.LocalPosition = translation;
+                        selectedTransform.LocalEulerAngles = rotation;
+                        selectedTransform.LocalScale = scale;
                     }
+                    else
+                    {
+                        selectedTransform.WorldPosition = translation;
+                        selectedTransform.WorldEulerAngles = rotation;
+                        selectedTransform.WorldScale = scale;
+                    }
+                    
                 }
+
             }
+
+            ImGuizmo.ViewManipulate(ref view.c0.x, 30, new Vector2(WindowPosition.X + WindowSize.X - 90, 10), new Vector2(100, 100), 0);
         }
 
         protected override void OnWindowRender()
         {
             _camera.Update();
+            RenderGuizmo();
 
             var size = ImGui.GetWindowSize();
             if ((int)_screenSize.X != (int)size.X || (int)_screenSize.Y != (int)size.Y)
@@ -137,7 +162,6 @@ namespace Editor
                 Surface.SceneRenderers.Add(_mousePickerRenderer);
             }
 
-            RenderGuizmo();
         }
 
         private bool IsMouseInsideWindow()
@@ -162,8 +186,10 @@ namespace Editor
                 windowSize.Y - titleBarHeight - windowPadding * 2.0f
             );
 
-            return !(mouseInContent.X < 0 || mouseInContent.X >= contentSize.X ||
-                     mouseInContent.Y < 0 || mouseInContent.Y >= contentSize.Y);
+            var isInsideRect = !(mouseInContent.X < 0 || mouseInContent.X >= contentSize.X ||
+                                 mouseInContent.Y < 0 || mouseInContent.Y >= contentSize.Y);
+
+            return isInsideRect && !ImGuizmo.IsUsing() && !ImGuizmo.IsOver();
         }
         private RendererData2D GetMousePickedRenderer(IReadOnlyDictionary<uint, RendererData2D> colorIds, RenderTexture renderTexture)
         {

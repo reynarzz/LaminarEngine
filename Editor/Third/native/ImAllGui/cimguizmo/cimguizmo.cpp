@@ -32,7 +32,7 @@ CIMGUI_API void ImGuizmo_SetImGuiContext(ImGuiContext* ctx)
 {
     return ImGuizmo::SetImGuiContext(ctx);
 }
-CIMGUI_API bool ImGuizmo_IsOver_Nil()
+CIMGUI_API bool ImGuizmo_IsOverNil()
 {
     return ImGuizmo::IsOver();
 }

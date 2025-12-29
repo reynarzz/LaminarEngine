@@ -85,7 +85,7 @@ typedef ImGuizmo::OPERATION OPERATION;
 CIMGUI_API void ImGuizmo_SetDrawlist(ImDrawList* drawlist);
 CIMGUI_API void ImGuizmo_BeginFrame(void);
 CIMGUI_API void ImGuizmo_SetImGuiContext(ImGuiContext* ctx);
-CIMGUI_API bool ImGuizmo_IsOver_Nil(void);
+CIMGUI_API bool ImGuizmo_IsOverNil(void);
 CIMGUI_API bool ImGuizmo_IsUsing(void);
 CIMGUI_API bool ImGuizmo_IsUsingViewManipulate(void);
 CIMGUI_API bool ImGuizmo_IsViewManipulateHovered(void);

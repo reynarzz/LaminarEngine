@@ -10,10 +10,21 @@
 #include <cimnodes.h>
 
 #include "ImAllGui.h"
+#include <imguizmo/ImGuizmo.h>
 
 CIMGUI_API void InitImAllGui()
 {
 	auto context = ImGui::CreateContext(nullptr);
 	imnodes::CreateContext();
 	imnodes::StyleColorsDark();
+}
+
+CIMGUI_API void SetCurrentWindowHitTestHole(float posX, float posY, float sizeX, float sizeY)
+{
+	return ImGui::SetWindowHitTestHole(ImGui::GetCurrentWindow(), { posX, posY }, { sizeX, sizeY });
+}
+
+CIMGUI_API void ImGuizmo_SetCurrentWindowDrawList()
+{
+	ImGuizmo::SetDrawlist(ImGui::GetWindowDrawList());
 }

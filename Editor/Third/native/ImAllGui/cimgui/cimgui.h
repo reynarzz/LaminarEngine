@@ -5017,6 +5017,7 @@ CIMGUI_API void igImFontAtlasBuildRender8bppRectFromString(ImFontAtlas* atlas,in
 CIMGUI_API void igImFontAtlasBuildRender32bppRectFromString(ImFontAtlas* atlas,int x,int y,int w,int h,const char* in_str,char in_marker_char,unsigned int in_marker_pixel_value);
 CIMGUI_API void igImFontAtlasBuildMultiplyCalcLookupTable(unsigned char out_table[256],float in_multiply_factor);
 CIMGUI_API void igImFontAtlasBuildMultiplyRectAlpha8(const unsigned char table[256],unsigned char* pixels,int x,int y,int w,int h,int stride);
+
 #ifdef IMGUI_ENABLE_FREETYPE
 CIMGUI_API const ImFontBuilderIO* ImGuiFreeType_GetBuilderForFreeType(void);
 CIMGUI_API void ImGuiFreeType_SetAllocatorFunctions(void*(*alloc_func)(size_t sz,void* user_data),void(*free_func)(void* ptr,void* user_data),void* user_data);

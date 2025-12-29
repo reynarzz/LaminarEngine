@@ -240,7 +240,7 @@ namespace ImGuizmoNET
         {
             fixed (float* native_view = &view)
             {
-                ImGuizmoNative.ImGuizmo_ViewManipulate(native_view, length, position, size, backgroundColor);
+                ImGuizmoNative.ImGuizmo_ViewManipulate_Float(native_view, length, position, size, backgroundColor);
             }
         }
     }
