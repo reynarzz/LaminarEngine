@@ -14,7 +14,7 @@
 
 CIMGUI_API void InitImAllGui()
 {
-	auto context = ImGui::CreateContext(nullptr);
+	ImGui::CreateContext();
 	imnodes::CreateContext();
 	imnodes::StyleColorsDark();
 }
@@ -27,4 +27,9 @@ CIMGUI_API void SetCurrentWindowHitTestHole(float posX, float posY, float sizeX,
 CIMGUI_API void ImGuizmo_SetCurrentWindowDrawList()
 {
 	ImGuizmo::SetDrawlist(ImGui::GetWindowDrawList());
+}
+
+CIMGUI_API void imgui_NewFrame()
+{
+	ImGui::NewFrame();
 }

@@ -69,7 +69,7 @@ namespace Editor
             var offset = ImGui.GetFrameHeight();// + ImGui.GetStyle().FrameBorderSize;
 
             var windowAdjustSize = new vec2(WindowSize.X, WindowSize.Y - offset);
-            
+
 
             bool _isDefaultGizmosEnabled = true;
             var gizmoPos = ImGui.GetCursorScreenPos();
@@ -78,7 +78,8 @@ namespace Editor
             {
                 WindowFlags = ImGuiWindowFlags.NoMove;
             }
-            else{
+            else
+            {
                 WindowFlags = default;
             }
             ImGuizmo.SetRect(WindowPosition.X, WindowPosition.Y + offset, windowAdjustSize.x, windowAdjustSize.y);
@@ -95,7 +96,7 @@ namespace Editor
             float windowPadding = ImGui.GetStyle().WindowPadding.X;
 
             ImGui.SetCursorScreenPos(ImGui.GetItemRectMin());
-          
+
             if (Selector.SelectedTransform())
             {
                 var selectedTransform = Selector.SelectedTransform();
@@ -107,31 +108,69 @@ namespace Editor
 
                 if (ImGuizmo.Manipulate(ref view.c0.x, ref projection.c0.x, operation, mode, ref model.c0.x, ref delta.c0.x))
                 {
-                    vec3 translation = default;
+                    vec3 position = default;
                     vec3 rotation = default;
                     vec3 scale = default;
 
-                    ImGuizmo.DecomposeMatrixToComponents(ref model.c0.x, ref translation.x, ref rotation.x, ref scale.x);
-
-                    if(mode == MODE.LOCAL)
-                    {
-                        selectedTransform.LocalPosition = translation;
-                        selectedTransform.LocalEulerAngles = rotation;
-                        selectedTransform.LocalScale = scale;
-                    }
-                    else
-                    {
-                        selectedTransform.WorldPosition = translation;
-                        selectedTransform.WorldEulerAngles = rotation;
-                        selectedTransform.WorldScale = scale;
-                    }
-                    
+                    ImGuizmo.DecomposeMatrixToComponents(ref delta.c0.x, ref position.x, ref rotation.x, ref scale.x);
+                    SetTransform(operation, mode, selectedTransform, position, rotation, scale);
                 }
-
             }
 
             ImGuizmo.ViewManipulate(ref view.c0.x, 30, new Vector2(WindowPosition.X + WindowSize.X - 90, 10), new Vector2(100, 100), 0);
         }
+
+
+
+        private void SetTransform(OPERATION operation, MODE mode, Transform selectedTransform, vec3 position, vec3 rotation, vec3 scale)
+        {
+            switch (operation)
+            {
+                case OPERATION.TRANSLATE_X:
+                    break;
+                case OPERATION.TRANSLATE_Y:
+                    break;
+                case OPERATION.TRANSLATE_Z:
+                    break;
+                case OPERATION.ROTATE_X:
+                    break;
+                case OPERATION.ROTATE_Y:
+                    break;
+                case OPERATION.ROTATE_Z:
+                    break;
+                case OPERATION.ROTATE_SCREEN:
+                    break;
+                case OPERATION.SCALE_X:
+                    break;
+                case OPERATION.SCALE_Y:
+                    break;
+                case OPERATION.SCALE_Z:
+                    break;
+                case OPERATION.BOUNDS:
+                    break;
+                case OPERATION.TRANSLATE:
+                    if (mode == MODE.LOCAL)
+                        selectedTransform.LocalPosition += position;
+                    else
+                        selectedTransform.WorldPosition += position;
+                    break;
+                case OPERATION.ROTATE:
+                    if (mode == MODE.LOCAL)
+                        selectedTransform.LocalEulerAngles += rotation;
+                    else
+                        selectedTransform.WorldEulerAngles += rotation;
+                    break;
+                case OPERATION.SCALE:
+                    if (mode == MODE.LOCAL)
+                        selectedTransform.LocalScale += scale;
+                    else
+                        selectedTransform.WorldScale += scale;
+                    break;
+                default:
+                    break;
+            }
+        }
+
 
         protected override void OnWindowRender()
         {

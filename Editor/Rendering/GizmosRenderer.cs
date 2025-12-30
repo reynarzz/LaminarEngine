@@ -192,10 +192,6 @@ namespace Editor.Rendering
             _audioSprite = LoadSprite("audioIcon2.png");
         }
 
-        private static Guid _testLineGuid = Guid.NewGuid();
-
-        private static RendererData2D _lineRenderData;
-
         public void OnBegin(ICamera camera)
         {
             // TODO:This is slow, it creates a new instance every frame,
@@ -249,7 +245,6 @@ namespace Editor.Rendering
             {
                 points = GraphicsHelper.CreatePerspectiveFrustumLines(camera.WorldPosition, camera.Forward, camera.Right, camera.Up,
                                                                       glm.radians(camera.Fov), camera.Aspect, camera.NearPlane, camera.FarPlane);
-
             }
             else
             {
@@ -264,7 +259,7 @@ namespace Editor.Rendering
         }
 
         private void GetRenderData<T>(List<T> components, Dictionary<Guid, RendererData2D> renderDatas,
-            Sprite sprite, ICamera camera) where T : Component
+                                      Sprite sprite, ICamera camera) where T : Component
         {
             for (int i = 0; i < components.Count; i++)
             {

@@ -63,19 +63,21 @@ public sealed class SimpleNodeEditor
 
             imnodes.BeginNodeTitleBar();
             ImGui.TextUnformatted(node.Title);
+
             imnodes.EndNodeTitleBar();
 
             foreach (int input in node.Inputs)
             {
                 imnodes.BeginInputAttribute(input);
-                ImGui.Text("Input");
+                ImGui.Dummy(new Vector2(10,10));
                 imnodes.EndInputAttribute();
             }
-
+            ImGui.SameLine();
             foreach (int output in node.Outputs)
             {
                 imnodes.BeginOutputAttribute(output);
-                ImGui.Text("Output");
+                ImGui.Dummy(new Vector2(10, 10));
+
                 imnodes.EndOutputAttribute();
             }
 

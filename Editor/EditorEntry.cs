@@ -118,7 +118,8 @@ namespace Editor
         {
             ImguiImplOpenGL3.SetPerFrameImGuiData(Time.UnscaledDeltaTime, _win.PhysicalWidth, _win.PhysicalHeight);
 
-            ImGui.NewFrame();
+            //ImGui.NewFrame();
+            ImAllGui.imgui_NewFrame();
             ImguiImplOpenGL3.NewFrame();
             _glfwInput.NewFrame();
 
