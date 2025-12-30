@@ -11,6 +11,9 @@ project(ImAllGui LANGUAGES C CXX)
 set(IMALLGUI_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 set(CIMGUI_DIR "${IMALLGUI_ROOT_DIR}/cimgui")
 set(IMGUI_DIR "${CIMGUI_DIR}/imgui")
+set(OUTPUT_DIR ${IMALLGUI_ROOT_DIR}../../../ImAllGui/bins)
+
+
 
 add_subdirectory(cimgui)
 add_subdirectory(cimnodes)
@@ -19,6 +22,13 @@ add_subdirectory(cimguizmo)
 add_library(ImAllGui SHARED
 ImAllGui.cpp
 ImAllGui.h)
+
+set_target_properties(ImAllGui PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${OUTPUT_DIR}/win"   # Windows DLL
+    LIBRARY_OUTPUT_DIRECTORY "${OUTPUT_DIR}/osx"   # .so / .dylib
+    ARCHIVE_OUTPUT_DIRECTORY "${OUTPUT_DIR}/lib"   # .lib / .a
+)
+
 
 target_sources(ImAllGui PRIVATE
     $<TARGET_OBJECTS:cimgui_obj>
@@ -39,3 +49,4 @@ target_include_directories(ImAllGui PUBLIC
     # Install interface
     $<INSTALL_INTERFACE:include>
 )
+
