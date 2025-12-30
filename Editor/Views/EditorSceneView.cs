@@ -133,27 +133,31 @@ namespace Editor
                     s.z = minValue;
                     model[2] = s;
                 }
-
+                
                 if (ImGuizmo.Manipulate(ref view.c0.x, ref projection.c0.x, operation, mode, ref model.c0.x, ref delta.c0.x))
                 {
-                    vec3 position = default;
-                    vec3 rotation = default;
-                    vec3 scale = default;
-                    vec3 deltaPosition = default;
-                    vec3 deltaRotation = default;
-                    vec3 deltaScale = default;
+                    if (ImGui.IsWindowHovered())
+                    {
 
-                    ImGuizmo.DecomposeMatrixToComponents(ref model.c0.x, ref position.x, ref rotation.x, ref scale.x);
-                    ImGuizmo.DecomposeMatrixToComponents(ref delta.c0.x, ref deltaPosition.x, ref deltaRotation.x, ref deltaScale.x);
+                        vec3 position = default;
+                        vec3 rotation = default;
+                        vec3 scale = default;
+                        vec3 deltaPosition = default;
+                        vec3 deltaRotation = default;
+                        vec3 deltaScale = default;
 
-                    SetTransform(operation, mode, selectedTransform, position, rotation, scale,
-                                 deltaPosition, deltaRotation, deltaScale);
-                }
+                        ImGuizmo.DecomposeMatrixToComponents(ref model.c0.x, ref position.x, ref rotation.x, ref scale.x);
+                        ImGuizmo.DecomposeMatrixToComponents(ref delta.c0.x, ref deltaPosition.x, ref deltaRotation.x, ref deltaScale.x);
+
+                        SetTransform(operation, mode, selectedTransform, position, rotation, scale,
+                                     deltaPosition, deltaRotation, deltaScale);
+                    }
+                } 
             }
 
             ImGuizmo.ViewManipulate(ref view.c0.x, 30, new Vector2(WindowPosition.X + WindowSize.X - 90, 10), new Vector2(100, 100), 0);
         }
-
+          
         private void SetTransform(OPERATION operation, MODE mode, Transform selectedTransform,
             vec3 position, vec3 rotation, vec3 scale,
             vec3 deltaPosition, vec3 deltaRotation, vec3 deltaScale)
@@ -235,7 +239,7 @@ namespace Editor
             Surface.UIView = viewTransformed;
             Surface.UIProj = _uiProj;
 
-            if (ImGui.IsMouseClicked(ImGuiMouseButton.Left) && IsMouseInsideWindow())
+            if (ImGui.IsMouseClicked(ImGuiMouseButton.Left) && IsMouseInsideWindow() && ImGui.IsWindowHovered())
             {
                 var mousePickedDist = (_mouseFirstPickedPosition - ImGui.GetMousePos().ToVec2()).Magnitude;
 

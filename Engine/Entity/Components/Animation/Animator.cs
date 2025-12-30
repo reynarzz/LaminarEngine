@@ -26,6 +26,7 @@ namespace Engine
         public AnimationState CurrentState => _currentState;
         public AnimatorParameters Parameters { get; } = new AnimatorParameters();
 
+        internal float CurrentStateTime => _animPlayer.CurrentTime;
 
         public void AddState(AnimationState state)
         {

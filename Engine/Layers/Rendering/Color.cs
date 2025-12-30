@@ -9,7 +9,7 @@ namespace Engine
 {
     public struct Color
     {
-        public float R,G,B,A;
+        public float R, G, B, A;
         public readonly static Color Transparent = new Color(1, 1, 1, 0);
         public readonly static Color Red = new Color(1, 0, 0, 1);
         public readonly static Color Green = new Color(0, 1, 0, 1);
@@ -56,7 +56,7 @@ namespace Engine
 
         public static implicit operator uint(Color c)
         {
-            return (ColorPacketRGBA)c;
+            return (ColorPacketRGBA)(Color32)c;
         }
 
         public static implicit operator Color(uint packet)
@@ -121,9 +121,20 @@ namespace Engine
             );
         }
 
-        public static Color operator*(Color col, float scale)
+        public static Color RandomRGB()
+        {
+            return new Color(Random.Shared.NextSingle(), Random.Shared.NextSingle(), Random.Shared.NextSingle(), 1.0f);
+        }
+
+        public static Color operator *(Color col, float scale)
         {
             return new Color(col.R * scale, col.G * scale, col.B * scale, col.A * scale);
+        }
+
+        public uint ToARGB_U32()
+        {
+            var color = (Color32)this;
+            return ((uint)color.A << 24) | ((uint)color.R << 16) | ((uint)color.G << 8) | color.B;
         }
     }
 
