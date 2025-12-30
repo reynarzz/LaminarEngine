@@ -5,14 +5,14 @@ using System.Reflection.Metadata;
 using ImGuiNET;
 using imnodesNET;
 
-public sealed class SimpleNodeEditor
+public class AnimatorEditorView
 {
     private int _nextId = 1;
 
     private readonly List<Node> _nodes = new();
     private readonly List<Link> _links = new();
 
-    public SimpleNodeEditor()
+    public AnimatorEditorView()
     {
         //imnodes.StyleColorsDark();
         // Create one demo node
@@ -39,8 +39,11 @@ public sealed class SimpleNodeEditor
         ImGui.Begin("Animator");
         HandleLinkCreation();
         HandleLinkDeletion();
-
         imnodes.BeginNodeEditor();
+        
+        imnodes.Minimap(0.2f,  MinimapLocation.BottomRight);
+
+        ImGui.Text("Some text");
 
         DrawNodes();
         DrawLinks();

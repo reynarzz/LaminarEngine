@@ -106,23 +106,57 @@ namespace Editor
                 OPERATION operation = OPERATION.TRANSLATE;
                 MODE mode = MODE.LOCAL;
 
+                const float EPS = 1e-6f;
+
+                bool IsAlmostZero(float x)
+                {
+                    return MathF.Abs(x) < EPS;
+                }
+
+                // This prevents the guizmo from disappearing due when a scale axis is zero.
+                const float minValue = 0.01f;
+                var s = model[0];
+                if (IsAlmostZero(s.x))
+                {
+                    s.x = minValue;
+                    model[0] = s;
+                }
+                s = model[1];
+                if (IsAlmostZero(s.y))
+                {
+                    s.y = minValue;
+                    model[1] = s;
+                }
+                s = model[2];
+                if (IsAlmostZero(s.z))
+                {
+                    s.z = minValue;
+                    model[2] = s;
+                }
+
                 if (ImGuizmo.Manipulate(ref view.c0.x, ref projection.c0.x, operation, mode, ref model.c0.x, ref delta.c0.x))
                 {
                     vec3 position = default;
                     vec3 rotation = default;
                     vec3 scale = default;
+                    vec3 deltaPosition = default;
+                    vec3 deltaRotation = default;
+                    vec3 deltaScale = default;
 
-                    ImGuizmo.DecomposeMatrixToComponents(ref delta.c0.x, ref position.x, ref rotation.x, ref scale.x);
-                    SetTransform(operation, mode, selectedTransform, position, rotation, scale);
+                    ImGuizmo.DecomposeMatrixToComponents(ref model.c0.x, ref position.x, ref rotation.x, ref scale.x);
+                    ImGuizmo.DecomposeMatrixToComponents(ref delta.c0.x, ref deltaPosition.x, ref deltaRotation.x, ref deltaScale.x);
+
+                    SetTransform(operation, mode, selectedTransform, position, rotation, scale,
+                                 deltaPosition, deltaRotation, deltaScale);
                 }
             }
 
             ImGuizmo.ViewManipulate(ref view.c0.x, 30, new Vector2(WindowPosition.X + WindowSize.X - 90, 10), new Vector2(100, 100), 0);
         }
 
-
-
-        private void SetTransform(OPERATION operation, MODE mode, Transform selectedTransform, vec3 position, vec3 rotation, vec3 scale)
+        private void SetTransform(OPERATION operation, MODE mode, Transform selectedTransform,
+            vec3 position, vec3 rotation, vec3 scale,
+            vec3 deltaPosition, vec3 deltaRotation, vec3 deltaScale)
         {
             switch (operation)
             {
@@ -150,21 +184,21 @@ namespace Editor
                     break;
                 case OPERATION.TRANSLATE:
                     if (mode == MODE.LOCAL)
-                        selectedTransform.LocalPosition += position;
+                        selectedTransform.LocalPosition += deltaPosition;
                     else
-                        selectedTransform.WorldPosition += position;
+                        selectedTransform.WorldPosition += deltaPosition;
                     break;
                 case OPERATION.ROTATE:
                     if (mode == MODE.LOCAL)
-                        selectedTransform.LocalEulerAngles += rotation;
+                        selectedTransform.LocalEulerAngles = rotation;
                     else
-                        selectedTransform.WorldEulerAngles += rotation;
+                        selectedTransform.WorldEulerAngles = rotation;
                     break;
                 case OPERATION.SCALE:
                     if (mode == MODE.LOCAL)
-                        selectedTransform.LocalScale += scale;
+                        selectedTransform.LocalScale = scale;
                     else
-                        selectedTransform.WorldScale += scale;
+                        selectedTransform.WorldScale = scale;
                     break;
                 default:
                     break;

@@ -84,11 +84,13 @@ namespace Engine.Layers
 
             CollectRenderers();
 
-            foreach (var surface in _renderingSurfaces)
+            for (int i = 0; i < _renderingSurfaces.Count; i++)
             {
-                foreach (var renderer in surface.SceneRenderers)
+                var surface = _renderingSurfaces[i];
+                for (int j = 0; j < surface.SceneRenderers.Count; j++)
                 {
-                    renderer.OnPrepare(_renderersData, _UIElementRenderersData);
+                    var sceneRenderer = surface.SceneRenderers[j];
+                    sceneRenderer.OnPrepare(_renderersData, _UIElementRenderersData);
                 }
 
                 if (surface.Cameras == null || surface.Cameras.Length == 0 || surface.Cameras[0] == null || !surface.Cameras[0].IsAlive)
@@ -115,8 +117,9 @@ namespace Engine.Layers
                     continue;
                 }
 
-                foreach (var camera in surface.Cameras)
+                for (int j = 0; j < surface.Cameras.Length; j++)
                 {
+                    var camera = surface.Cameras[j];
                     RenderScene(surface, camera);
                 }
             }
@@ -181,8 +184,9 @@ namespace Engine.Layers
                 surface.GizmosRenderer?.OnBegin(camera);
             }
 
-            foreach (var sceneRenderer in surface.SceneRenderers)
+            for (int i = 0; i < surface.SceneRenderers.Count; i++)
             {
+                var sceneRenderer = surface.SceneRenderers[i];
                 var targetRenderTexture = GetCurrentRenderTexture(surface, camera, sceneRenderer);
 
                 if (!targetRenderTexture)

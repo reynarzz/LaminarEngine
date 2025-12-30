@@ -136,6 +136,10 @@ CIMGUI_API void imnodes_MiniMap(const float minimap_size_fraction,const ImNodesM
 {
     return imnodes::MiniMap(minimap_size_fraction,location,node_hovering_callback,node_hovering_callback_data);
 }
+CIMGUI_API void imnodes_MiniMapSimple(const float minimap_size_fraction, const ImNodesMiniMapLocation location)
+{
+    return imnodes::MiniMap(minimap_size_fraction, location, nullptr, nullptr);
+}
 CIMGUI_API void imnodes_PushColorStyle(ImNodesCol item,unsigned int color)
 {
     return imnodes::PushColorStyle(item,color);

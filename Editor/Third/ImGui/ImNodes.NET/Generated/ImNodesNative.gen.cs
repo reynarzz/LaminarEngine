@@ -155,5 +155,9 @@ namespace imnodesNET
         public static extern void Style_destroy(Style* self);
         [DllImport("ImAllGui", CallingConvention = CallingConvention.Cdecl)]
         public static extern Style* Style_Style();
+
+        // Custom:
+        [DllImport("ImAllGui", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void imnodes_MiniMapSimple(float minimap_size_fraction, int location);
     }
 }

@@ -733,5 +733,21 @@ namespace imnodesNET
         {
             imnodesNative.imnodes_StyleColorsLight();
         }
+
+        // Custom added:
+        
+        public static void Minimap(float size, MinimapLocation location)
+        {
+            imnodesNative.imnodes_MiniMapSimple(size, (int)location);
+        }
+    }
+
+    // Custom
+    public enum MinimapLocation
+    {
+        BottomLeft,
+        BottomRight,
+        TopLeft,
+        TopRight,
     }
 }
