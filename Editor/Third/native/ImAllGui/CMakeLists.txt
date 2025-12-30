@@ -6,13 +6,16 @@ if (WIN32)
     set(CMAKE_CXX_COMPILER clang++ CACHE STRING "" FORCE)
 endif()
 
+if(APPLE)
+    set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64" CACHE STRING "" FORCE)
+endif()
+
 project(ImAllGui LANGUAGES C CXX)
 
 set(IMALLGUI_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 set(CIMGUI_DIR "${IMALLGUI_ROOT_DIR}/cimgui")
 set(IMGUI_DIR "${CIMGUI_DIR}/imgui")
 set(OUTPUT_DIR ${IMALLGUI_ROOT_DIR}../../../ImAllGui/bins)
-
 
 add_subdirectory(cimgui)
 add_subdirectory(cimnodes)
