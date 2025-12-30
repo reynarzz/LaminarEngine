@@ -47,16 +47,7 @@ endif()
 # always disable obsolete functions
 target_compile_definitions(cimgui_obj PUBLIC IMGUI_DISABLE_OBSOLETE_FUNCTIONS=1)
 
-# Windows export macro
-if(WIN32)
-    target_compile_definitions(cimgui_obj PUBLIC
-        IMGUI_IMPL_API="__declspec(dllexport)"
-    )
-else()
-    target_compile_definitions(cimgui_obj PUBLIC
-        IMGUI_IMPL_API=""
-    )
-endif()
+
 # includes
 target_include_directories(cimgui_obj PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}

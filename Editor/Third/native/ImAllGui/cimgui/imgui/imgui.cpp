@@ -1,5 +1,3 @@
-#include "../Logger.h"
-
 // dear imgui, v1.91.6
 // (main code and documentation)
 
@@ -5282,7 +5280,6 @@ static void SetupDrawListSharedData()
 
 void ImGui::NewFrame()
 {
-    _Log("init new frame");
     IM_ASSERT(GImGui != NULL && "No current context. Did you call ImGui::CreateContext() and ImGui::SetCurrentContext() ?");
     ImGuiContext& g = *GImGui;
 
