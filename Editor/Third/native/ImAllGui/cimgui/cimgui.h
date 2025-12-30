@@ -7,25 +7,21 @@
 #define CIMGUI_INCLUDED
 #include <stdio.h>
 #include <stdint.h>
-#if defined _WIN32 || defined __CYGWIN__
-    #ifdef CIMGUI_NO_EXPORT
+#if defined(_WIN32)
+    #if defined(CIMGUI_NO_EXPORT)
         #define API
     #else
         #define API __declspec(dllexport)
     #endif
+#elif defined(__APPLE__) || defined(__linux__)
+    #define API __attribute__((visibility("default")))
 #else
-    #ifdef __GNUC__
-        #define API  __attribute__((__visibility__("default")))
-    #else
-        #define API
-    #endif
+    #define API
 #endif
 
-#if defined __cplusplus
+#ifdef __cplusplus
     #define EXTERN extern "C"
 #else
-    #include <stdarg.h>
-    #include <stdbool.h>
     #define EXTERN extern
 #endif
 
@@ -36,7 +32,7 @@
 #ifdef _MSC_VER
 typedef unsigned __int64 ImU64;
 #else
-//typedef unsigned long long ImU64;
+// typedef unsigned long long ImU64;
 #endif
 
 

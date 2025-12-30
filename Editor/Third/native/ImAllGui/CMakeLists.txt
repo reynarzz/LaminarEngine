@@ -14,7 +14,6 @@ set(IMGUI_DIR "${CIMGUI_DIR}/imgui")
 set(OUTPUT_DIR ${IMALLGUI_ROOT_DIR}../../../ImAllGui/bins)
 
 
-
 add_subdirectory(cimgui)
 add_subdirectory(cimnodes)
 add_subdirectory(cimguizmo)
@@ -29,7 +28,11 @@ set_target_properties(ImAllGui PROPERTIES
     ARCHIVE_OUTPUT_DIRECTORY "${OUTPUT_DIR}/lib"   # .lib / .a
 )
 
-
+set_target_properties(ImAllGui PROPERTIES
+    C_VISIBILITY_PRESET default
+    CXX_VISIBILITY_PRESET default
+    VISIBILITY_INLINES_HIDDEN OFF
+)
 target_sources(ImAllGui PRIVATE
     $<TARGET_OBJECTS:cimgui_obj>
     $<TARGET_OBJECTS:imnodes_obj>
