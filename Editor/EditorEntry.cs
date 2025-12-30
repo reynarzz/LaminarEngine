@@ -38,6 +38,9 @@ namespace Editor
         private EditorCamera _editorCamera;
         internal void Init()
         {
+#if DEBUG
+            Utils.NativeLogger.Init();
+#endif
             _win = new WindowStandalone("GFS Editor", 1324, 740, Color.Black);
             _win.CanResize = true;
             _sceneGraphWindow = new SceneGraphWindow();

@@ -11,12 +11,17 @@
 
 #include "ImAllGui.h"
 #include <imguizmo/ImGuizmo.h>
+#include <stdio.h>
+#include "Logger.h"
+
+LogCallback _Log = nullptr;
 
 CIMGUI_API void InitImAllGui()
 {
 	ImGui::CreateContext();
 	imnodes::CreateContext();
 	imnodes::StyleColorsDark();
+	_Log("Init imgui native");
 }
 
 CIMGUI_API void SetCurrentWindowHitTestHole(float posX, float posY, float sizeX, float sizeY)
@@ -32,4 +37,15 @@ CIMGUI_API void ImGuizmo_SetCurrentWindowDrawList()
 CIMGUI_API void imgui_NewFrame()
 {
 	ImGui::NewFrame();
+}
+
+IMALLGUI void RegisterLogCallback(LogCallback callback)
+{
+	_Log = callback;
+}
+
+void NativeLogSomething()
+{
+	if (_Log)
+		_Log("Hello from native code");
 }

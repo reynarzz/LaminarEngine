@@ -16,5 +16,11 @@ namespace Editor
 
         [DllImport("ImAllGui", CallingConvention = CallingConvention.Cdecl)]
         public static extern void imgui_NewFrame();
+
+        [DllImport("ImAllGui", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void RegisterLogCallback(LogCallback callback);
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void LogCallback(IntPtr message);
     }
 }
