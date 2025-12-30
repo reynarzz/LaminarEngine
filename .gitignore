@@ -17,3 +17,4 @@ Editor/Third/native/ImAllGui/imgui/examples/
 Editor/Third/native/ImAllGui/cimnodes/cimgui/imgui/
 Editor/Third/native/ImAllGui/_build/
 Editor/Third/native/ImAllGui/out/
+*.pdb

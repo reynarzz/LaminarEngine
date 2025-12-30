@@ -421,7 +421,12 @@ namespace Editor
             glVertexAttribPointer((uint)bd->AttribLocationVtxColor, 4, GL_UNSIGNED_BYTE, true, sizeof(ImDrawVert), 16);
         }
 
-        public static void RenderDrawData(ImDrawDataPtr drawData)
+        struct array4
+        {
+            public int _0, _1, _2, _3;
+        }
+
+        public static unsafe void RenderDrawData(ImDrawDataPtr drawData)
         {
             int fbWidth = (int)(drawData.DisplaySize.X * drawData.FramebufferScale.X);
             int fbHeight = (int)(drawData.DisplaySize.Y * drawData.FramebufferScale.Y);
@@ -435,13 +440,16 @@ namespace Editor
             int last_sampler = glGetInteger(GL_SAMPLER_BINDING);
             int last_array_buffer = glGetInteger(GL_ARRAY_BUFFER_BINDING);
             int last_vao = glGetInteger(GL_VERTEX_ARRAY_BINDING);
+
             // OpenGL 3.0 & 3.1 have separate polygon modes for front and back.
-            Span<int> last_polygon_mode = stackalloc int[2];
-            last_polygon_mode[0] = glGetInteger(GL_POLYGON_MODE);
-            Span<int> last_viewport = stackalloc int[4];
-            last_viewport[0] = glGetInteger(GL_VIEWPORT);
-            Span<int> last_scissor_box = stackalloc int[4];
-            last_scissor_box[0] = glGetInteger(GL_SCISSOR_BOX);
+            array4 last_polygon_mode = default;
+            glGetIntegerv(GL_POLYGON_MODE, &last_polygon_mode._0);
+
+            array4 last_viewport = default;
+            glGetIntegerv(GL_VIEWPORT, &last_viewport._0);
+
+            array4 last_scissor_box = default;
+            glGetIntegerv(GL_SCISSOR_BOX, &last_scissor_box._0);
 
             int last_blend_src_rgb;
             glGetIntegerv(GL_BLEND_SRC_RGB, &last_blend_src_rgb);
@@ -475,6 +483,8 @@ namespace Editor
 
             var clipOff = drawData.DisplayPos;
             var clipScale = drawData.FramebufferScale;
+
+
             for (int n = 0; n < drawData.CmdListsCount; n++)
             {
                 ImDrawListPtr drawList = drawData.CmdLists[n];
@@ -546,11 +556,11 @@ namespace Editor
                 //          glPolygonMode(GL_FRONT_AND_BACK, (GLenum)last_polygon_mode[0]);
                 //     }
                 // }
-                glPolygonMode(GL_FRONT_AND_BACK, last_polygon_mode[0]);
+                glPolygonMode(GL_FRONT_AND_BACK, last_polygon_mode._0);
             }
 
-            glViewport(last_viewport[0], last_viewport[1], last_viewport[2], last_viewport[3]);
-            glScissor(last_scissor_box[0], last_scissor_box[1], last_scissor_box[2], last_scissor_box[3]);
+            glViewport(last_viewport._0, last_viewport._1, last_viewport._2, last_viewport._3);
+            glScissor(last_scissor_box._0, last_scissor_box._1, last_scissor_box._2, last_scissor_box._3);
         }
 
         static void CreateFontsTexture()

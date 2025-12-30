@@ -33,14 +33,14 @@
 
 		<PropertyGroup>
 			<GlfwWinSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\Third\Win\glfw\lib-vc2022\glfw.dll'))</GlfwWinSrc>
-			<ImGuiSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\Third\ImGui\cimgui\win-x64\cimgui.dll'))</ImGuiSrc>
+			<ImGuiSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\Third\ImAllGui\bins\win\ImAllGui.dll'))</ImGuiSrc>
 			
 		</PropertyGroup>
 
 		<Message Text="Copying from $(GlfwWinSrc)" Importance="high" />
 
 		<Copy SourceFiles="$(GlfwWinSrc)" DestinationFiles="$(TargetDir)glfw.dll" SkipUnchangedFiles="true" />
-		<Copy SourceFiles="$(ImGuiSrc)" DestinationFiles="$(TargetDir)cimgui.dll" SkipUnchangedFiles="true" />
+		<Copy SourceFiles="$(ImGuiSrc)" DestinationFiles="$(TargetDir)ImAllGui.dll" SkipUnchangedFiles="true" />
 </Target>
 		
 
