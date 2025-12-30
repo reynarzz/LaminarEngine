@@ -2919,230 +2919,472 @@ namespace IMGUIZMO_NAMESPACE
    }
    static const vec_t directionUnary_flippedZ[3] = { makeVect(1.f, 0.f, 0.f), makeVect(0.f, 1.f, 0.f), makeVect(0.f, 0.f, -1.f) };
 
-   void ViewManipulate(float* view, float length, ImVec2 position, ImVec2 size, ImU32 backgroundColor)
+   //void ViewManipulate(float* view, float length, ImVec2 position, ImVec2 size, ImU32 backgroundColor)
+   //{
+   //   static bool isDraging = false;
+   //   static bool isClicking = false;
+   //   static vec_t interpolationUp;
+   //   static vec_t interpolationDir;
+   //   static int interpolationFrames = 0;
+   //   const vec_t referenceUp = makeVect(0.f, 1.f, 0.f);
+
+   //   matrix_t svgView, svgProjection;
+   //   svgView = gContext.mViewMat;
+   //   svgProjection = gContext.mProjectionMat;
+
+   //   ImGuiIO& io = ImGui::GetIO();
+   //   gContext.mDrawList->AddRectFilled(position, position + size, backgroundColor);
+   //   matrix_t viewInverse;
+   //   viewInverse.Inverse(*(matrix_t*)view);
+
+   //   const vec_t camTarget = viewInverse.v.position - viewInverse.v.dir * length;
+
+   //   // view/projection matrices
+   //   const float distance = 3.f;
+   //   matrix_t cubeProjection, cubeView;
+   //   float fov = acosf(distance / (sqrtf(distance * distance + 3.f))) * RAD2DEG;
+   //   Perspective(fov / sqrtf(2.f), size.x / size.y, 0.01f, 1000.f, cubeProjection.m16);
+
+   //   vec_t dir = makeVect(viewInverse.m[2][0], viewInverse.m[2][1], viewInverse.m[2][2]);
+   //   vec_t up = makeVect(viewInverse.m[1][0], viewInverse.m[1][1], viewInverse.m[1][2]);
+   //   vec_t eye = dir * distance;
+   //   vec_t zero = makeVect(0.f, 0.f);
+   //   LookAt(&eye.x, &zero.x, &up.x, cubeView.m16);
+
+   //   // set context
+   //   gContext.mViewMat = cubeView;
+   //   gContext.mProjectionMat = cubeProjection;
+   //   ComputeCameraRay(gContext.mRayOrigin, gContext.mRayVector, position, size);
+
+   //   const matrix_t res = cubeView * cubeProjection;
+
+   //   // panels
+   //   static const ImVec2 panelPosition[9] = { ImVec2(0.75f,0.75f), ImVec2(0.25f, 0.75f), ImVec2(0.f, 0.75f),
+   //      ImVec2(0.75f, 0.25f), ImVec2(0.25f, 0.25f), ImVec2(0.f, 0.25f),
+   //      ImVec2(0.75f, 0.f), ImVec2(0.25f, 0.f), ImVec2(0.f, 0.f) };
+
+   //   static const ImVec2 panelSize[9] = { ImVec2(0.25f,0.25f), ImVec2(0.5f, 0.25f), ImVec2(0.25f, 0.25f),
+   //      ImVec2(0.25f, 0.5f), ImVec2(0.5f, 0.5f), ImVec2(0.25f, 0.5f),
+   //      ImVec2(0.25f, 0.25f), ImVec2(0.5f, 0.25f), ImVec2(0.25f, 0.25f) };
+
+   //   // tag faces
+   //   bool boxes[27]{};
+   //   static int overBox = -1;
+
+   //   for (int iPass = 0; iPass < 2; iPass++)
+   //   {
+   //      for (int iFace = 0; iFace < 6; iFace++)
+   //      {
+   //         const int normalIndex = (iFace % 3);
+   //         const int perpXIndex = (normalIndex + 1) % 3;
+   //         const int perpYIndex = (normalIndex + 2) % 3;
+   //         const float invert = (iFace > 2) ? -1.f : 1.f;
+   //         const vec_t indexVectorX = directionUnary_flippedZ[perpXIndex] * invert;
+   //         const vec_t indexVectorY = directionUnary_flippedZ[perpYIndex] * invert;
+   //         const vec_t boxOrigin = directionUnary_flippedZ[normalIndex] * -invert - indexVectorX - indexVectorY;
+
+   //         // plan local space
+   //         const vec_t n = directionUnary_flippedZ[normalIndex] * invert;
+   //         vec_t viewSpaceNormal = n;
+   //         vec_t viewSpacePoint = n * 0.5f;
+   //         viewSpaceNormal.TransformVector(cubeView);
+   //         viewSpaceNormal.Normalize();
+   //         viewSpacePoint.TransformPoint(cubeView);
+   //         const vec_t viewSpaceFacePlan = BuildPlan(viewSpacePoint, viewSpaceNormal);
+
+   //         // back face culling
+   //         if (viewSpaceFacePlan.w > 0.f)
+   //         {
+   //            continue;
+   //         }
+
+   //         const vec_t facePlan = BuildPlan(n * 0.5f, n);
+
+   //         const float len = IntersectRayPlane(gContext.mRayOrigin, gContext.mRayVector, facePlan);
+   //         vec_t posOnPlan = gContext.mRayOrigin + gContext.mRayVector * len - (n * 0.5f);
+
+   //         float localx = Dot(directionUnary_flippedZ[perpXIndex], posOnPlan) * invert + 0.5f;
+   //         float localy = Dot(directionUnary_flippedZ[perpYIndex], posOnPlan) * invert + 0.5f;
+
+   //         // panels
+   //         const vec_t dx = directionUnary_flippedZ[perpXIndex];
+   //         const vec_t dy = directionUnary_flippedZ[perpYIndex];
+   //         const vec_t origin = directionUnary_flippedZ[normalIndex] - dx - dy;
+   //         for (int iPanel = 0; iPanel < 9; iPanel++)
+   //         {
+   //            vec_t boxCoord = boxOrigin + indexVectorX * float(iPanel % 3) + indexVectorY * float(iPanel / 3) + makeVect(1.f, 1.f, 1.f);
+   //            const ImVec2 p = panelPosition[iPanel] * 2.f;
+   //            const ImVec2 s = panelSize[iPanel] * 2.f;
+   //            ImVec2 faceCoordsScreen[4];
+   //            vec_t panelPos[4] = { dx * p.x + dy * p.y,
+   //                                  dx * p.x + dy * (p.y + s.y),
+   //                                  dx * (p.x + s.x) + dy * (p.y + s.y),
+   //                                  dx * (p.x + s.x) + dy * p.y };
+
+   //            for (unsigned int iCoord = 0; iCoord < 4; iCoord++)
+   //            {
+   //               faceCoordsScreen[iCoord] = worldToPos((panelPos[iCoord] + origin) * 0.5f * invert, res, position, size);
+   //            }
+
+   //            const ImVec2 panelCorners[2] = { panelPosition[iPanel], panelPosition[iPanel] + panelSize[iPanel] };
+   //            bool insidePanel = localx > panelCorners[0].x && localx < panelCorners[1].x && localy > panelCorners[0].y && localy < panelCorners[1].y;
+   //            int boxCoordInt = int(boxCoord.x * 9.f + boxCoord.y * 3.f + boxCoord.z);
+   //            IM_ASSERT(boxCoordInt < 27);
+   //            boxes[boxCoordInt] |= insidePanel && (!isDraging) && gContext.mbMouseOver;
+
+   //            // draw face with lighter color
+   //            if (iPass)
+   //            {
+   //               ImU32 directionColor = GetColorU32(DIRECTION_X + normalIndex);
+   //               auto lighterColor = invert == -1? IM_COL32(0x80, 0x80, 0x80, 0x80): 0;
+
+   //               gContext.mDrawList->AddConvexPolyFilled(faceCoordsScreen, 4, (directionColor | lighterColor) | (gContext.mIsViewManipulatorHovered ? IM_COL32(0x08, 0x08, 0x08, 0) : 0));
+   //               if (boxes[boxCoordInt])
+   //               {
+   //                  gContext.mDrawList->AddConvexPolyFilled(faceCoordsScreen, 4, IM_COL32(0xF0, 0xA0, 0x60, 0x80));
+
+   //                  if (io.MouseDown[0] && !isClicking && !isDraging && GImGui->ActiveId == 0) {
+   //                     overBox = boxCoordInt;
+   //                     isClicking = true;
+   //                     isDraging = true;
+   //                  }
+   //               }
+   //            }
+   //         }
+   //      }
+   //   }
+   //   if (interpolationFrames)
+   //   {
+   //      interpolationFrames--;
+   //      vec_t newDir = viewInverse.v.dir;
+   //      newDir.Lerp(interpolationDir, 0.2f);
+   //      newDir.Normalize();
+
+   //      vec_t newUp = viewInverse.v.up;
+   //      newUp.Lerp(interpolationUp, 0.3f);
+   //      newUp.Normalize();
+   //      newUp = interpolationUp;
+   //      vec_t newEye = camTarget + newDir * length;
+   //      LookAt(&newEye.x, &camTarget.x, &newUp.x, view);
+   //   }
+   //   gContext.mIsViewManipulatorHovered = gContext.mbMouseOver && ImRect(position, position + size).Contains(io.MousePos);
+
+   //   if (io.MouseDown[0] && (fabsf(io.MouseDelta[0]) || fabsf(io.MouseDelta[1])) && isClicking)
+   //   {
+   //      isClicking = false;
+   //   }
+
+   //   if (!io.MouseDown[0])
+   //   {
+   //      if (isClicking)
+   //      {
+   //         // apply new view direction
+   //         int cx = overBox / 9;
+   //         int cy = (overBox - cx * 9) / 3;
+   //         int cz = overBox % 3;
+   //         interpolationDir = makeVect(1.f - (float)cx, 1.f - (float)cy, 1.f - (float)cz);
+   //         interpolationDir.Normalize();
+
+   //         if (fabsf(Dot(interpolationDir, referenceUp)) > 1.0f - 0.01f)
+   //         {
+   //            vec_t right = viewInverse.v.right;
+   //            if (fabsf(right.x) > fabsf(right.z))
+   //            {
+   //               right.z = 0.f;
+   //            }
+   //            else
+   //            {
+   //               right.x = 0.f;
+   //            }
+   //            right.Normalize();
+   //            interpolationUp = Cross(interpolationDir, right);
+   //            interpolationUp.Normalize();
+   //         }
+   //         else
+   //         {
+   //            interpolationUp = referenceUp;
+   //         }
+   //         interpolationFrames = 40;
+
+   //      }
+   //      isClicking = false;
+   //      isDraging = false;
+   //   }
+
+
+   //   if (isDraging)
+   //   {
+   //      matrix_t rx, ry, roll;
+
+   //      rx.RotationAxis(referenceUp, -io.MouseDelta.x * 0.01f);
+   //      ry.RotationAxis(viewInverse.v.right, -io.MouseDelta.y * 0.01f);
+
+   //      roll = rx * ry;
+
+   //      vec_t newDir = viewInverse.v.dir;
+   //      newDir.TransformVector(roll);
+   //      newDir.Normalize();
+
+   //      // clamp
+   //      vec_t planDir = Cross(viewInverse.v.right, referenceUp);
+   //      planDir.y = 0.f;
+   //      planDir.Normalize();
+   //      float dt = Dot(planDir, newDir);
+   //      if (dt < 0.0f)
+   //      {
+   //         newDir += planDir * dt;
+   //         newDir.Normalize();
+   //      }
+
+   //      vec_t newEye = camTarget + newDir * length;
+   //      LookAt(&newEye.x, &camTarget.x, &referenceUp.x, view);
+   //   }
+
+   //   gContext.mbUsingViewManipulate = (interpolationFrames != 0) || isDraging;
+
+   //   // restore view/projection because it was used to compute ray
+   //   ComputeContext(svgView.m16, svgProjection.m16, gContext.mModelSource.m16, gContext.mMode);
+   //}
+
+   struct AxisArrow
    {
-      static bool isDraging = false;
-      static bool isClicking = false;
-      static vec_t interpolationUp;
-      static vec_t interpolationDir;
-      static int interpolationFrames = 0;
-      const vec_t referenceUp = makeVect(0.f, 1.f, 0.f);
+       vec_t dir;
+       ImU32 color;
+   };
 
-      matrix_t svgView, svgProjection;
-      svgView = gContext.mViewMat;
-      svgProjection = gContext.mProjectionMat;
+   static AxisArrow gAxes[6] =
+   {
+       { makeVect(1, 0, 0), IM_COL32(255,  80,  80, 255) }, // +X
+       { makeVect(-1, 0, 0), IM_COL32(160,  40,  40, 255) }, // -X
+       { makeVect(0, 1, 0), IM_COL32(80, 255,  80, 255) }, // +Y
+       { makeVect(0,-1, 0), IM_COL32(40, 160,  40, 255) }, // -Y
+       { makeVect(0, 0, 1), IM_COL32(80,  80, 255, 255) }, // +Z
+       { makeVect(0, 0,-1), IM_COL32(40,  40, 160, 255) }, // -Z
+   };
 
-      ImGuiIO& io = ImGui::GetIO();
-      gContext.mDrawList->AddRectFilled(position, position + size, backgroundColor);
-      matrix_t viewInverse;
-      viewInverse.Inverse(*(matrix_t*)view);
+   constexpr float ARROW_SHAFT_LEN = 0.35f;
+   constexpr float ARROW_HEAD_LEN = 0.18f;
+   constexpr float PICK_RADIUS = 0.10f;
 
-      const vec_t camTarget = viewInverse.v.position - viewInverse.v.dir * length;
+   static void DrawArrowShaft(const vec_t& a, const vec_t& b,
+       const matrix_t& res,
+       ImDrawList* dl,
+       ImU32 col,
+       ImVec2 pos, ImVec2 size)
+   {
+       ImVec2 p0 = worldToPos(a, res, pos, size);
+       ImVec2 p1 = worldToPos(b, res, pos, size);
 
-      // view/projection matrices
-      const float distance = 3.f;
-      matrix_t cubeProjection, cubeView;
-      float fov = acosf(distance / (sqrtf(distance * distance + 3.f))) * RAD2DEG;
-      Perspective(fov / sqrtf(2.f), size.x / size.y, 0.01f, 1000.f, cubeProjection.m16);
+       ImVec2 d = p1 - p0;
+       float len = sqrtf(d.x * d.x + d.y * d.y);
+       if (len < 1e-3f)
+           return;
 
-      vec_t dir = makeVect(viewInverse.m[2][0], viewInverse.m[2][1], viewInverse.m[2][2]);
-      vec_t up = makeVect(viewInverse.m[1][0], viewInverse.m[1][1], viewInverse.m[1][2]);
-      vec_t eye = dir * distance;
-      vec_t zero = makeVect(0.f, 0.f);
-      LookAt(&eye.x, &zero.x, &up.x, cubeView.m16);
+       d /= len;
+       ImVec2 n(-d.y, d.x);
+       n *= 3.0f;
 
-      // set context
-      gContext.mViewMat = cubeView;
-      gContext.mProjectionMat = cubeProjection;
-      ComputeCameraRay(gContext.mRayOrigin, gContext.mRayVector, position, size);
+       ImVec2 quad[4] =
+       {
+           p0 + n,
+           p0 - n,
+           p1 - n,
+           p1 + n
+       };
 
-      const matrix_t res = cubeView * cubeProjection;
-
-      // panels
-      static const ImVec2 panelPosition[9] = { ImVec2(0.75f,0.75f), ImVec2(0.25f, 0.75f), ImVec2(0.f, 0.75f),
-         ImVec2(0.75f, 0.25f), ImVec2(0.25f, 0.25f), ImVec2(0.f, 0.25f),
-         ImVec2(0.75f, 0.f), ImVec2(0.25f, 0.f), ImVec2(0.f, 0.f) };
-
-      static const ImVec2 panelSize[9] = { ImVec2(0.25f,0.25f), ImVec2(0.5f, 0.25f), ImVec2(0.25f, 0.25f),
-         ImVec2(0.25f, 0.5f), ImVec2(0.5f, 0.5f), ImVec2(0.25f, 0.5f),
-         ImVec2(0.25f, 0.25f), ImVec2(0.5f, 0.25f), ImVec2(0.25f, 0.25f) };
-
-      // tag faces
-      bool boxes[27]{};
-      static int overBox = -1;
-
-      for (int iPass = 0; iPass < 2; iPass++)
-      {
-         for (int iFace = 0; iFace < 6; iFace++)
-         {
-            const int normalIndex = (iFace % 3);
-            const int perpXIndex = (normalIndex + 1) % 3;
-            const int perpYIndex = (normalIndex + 2) % 3;
-            const float invert = (iFace > 2) ? -1.f : 1.f;
-            const vec_t indexVectorX = directionUnary_flippedZ[perpXIndex] * invert;
-            const vec_t indexVectorY = directionUnary_flippedZ[perpYIndex] * invert;
-            const vec_t boxOrigin = directionUnary_flippedZ[normalIndex] * -invert - indexVectorX - indexVectorY;
-
-            // plan local space
-            const vec_t n = directionUnary_flippedZ[normalIndex] * invert;
-            vec_t viewSpaceNormal = n;
-            vec_t viewSpacePoint = n * 0.5f;
-            viewSpaceNormal.TransformVector(cubeView);
-            viewSpaceNormal.Normalize();
-            viewSpacePoint.TransformPoint(cubeView);
-            const vec_t viewSpaceFacePlan = BuildPlan(viewSpacePoint, viewSpaceNormal);
-
-            // back face culling
-            if (viewSpaceFacePlan.w > 0.f)
-            {
-               continue;
-            }
-
-            const vec_t facePlan = BuildPlan(n * 0.5f, n);
-
-            const float len = IntersectRayPlane(gContext.mRayOrigin, gContext.mRayVector, facePlan);
-            vec_t posOnPlan = gContext.mRayOrigin + gContext.mRayVector * len - (n * 0.5f);
-
-            float localx = Dot(directionUnary_flippedZ[perpXIndex], posOnPlan) * invert + 0.5f;
-            float localy = Dot(directionUnary_flippedZ[perpYIndex], posOnPlan) * invert + 0.5f;
-
-            // panels
-            const vec_t dx = directionUnary_flippedZ[perpXIndex];
-            const vec_t dy = directionUnary_flippedZ[perpYIndex];
-            const vec_t origin = directionUnary_flippedZ[normalIndex] - dx - dy;
-            for (int iPanel = 0; iPanel < 9; iPanel++)
-            {
-               vec_t boxCoord = boxOrigin + indexVectorX * float(iPanel % 3) + indexVectorY * float(iPanel / 3) + makeVect(1.f, 1.f, 1.f);
-               const ImVec2 p = panelPosition[iPanel] * 2.f;
-               const ImVec2 s = panelSize[iPanel] * 2.f;
-               ImVec2 faceCoordsScreen[4];
-               vec_t panelPos[4] = { dx * p.x + dy * p.y,
-                                     dx * p.x + dy * (p.y + s.y),
-                                     dx * (p.x + s.x) + dy * (p.y + s.y),
-                                     dx * (p.x + s.x) + dy * p.y };
-
-               for (unsigned int iCoord = 0; iCoord < 4; iCoord++)
-               {
-                  faceCoordsScreen[iCoord] = worldToPos((panelPos[iCoord] + origin) * 0.5f * invert, res, position, size);
-               }
-
-               const ImVec2 panelCorners[2] = { panelPosition[iPanel], panelPosition[iPanel] + panelSize[iPanel] };
-               bool insidePanel = localx > panelCorners[0].x && localx < panelCorners[1].x && localy > panelCorners[0].y && localy < panelCorners[1].y;
-               int boxCoordInt = int(boxCoord.x * 9.f + boxCoord.y * 3.f + boxCoord.z);
-               IM_ASSERT(boxCoordInt < 27);
-               boxes[boxCoordInt] |= insidePanel && (!isDraging) && gContext.mbMouseOver;
-
-               // draw face with lighter color
-               if (iPass)
-               {
-                  ImU32 directionColor = GetColorU32(DIRECTION_X + normalIndex);
-                  auto lighterColor = invert == -1? IM_COL32(0x80, 0x80, 0x80, 0x80): 0;
-
-                  gContext.mDrawList->AddConvexPolyFilled(faceCoordsScreen, 4, (directionColor | lighterColor) | (gContext.mIsViewManipulatorHovered ? IM_COL32(0x08, 0x08, 0x08, 0) : 0));
-                  if (boxes[boxCoordInt])
-                  {
-                     gContext.mDrawList->AddConvexPolyFilled(faceCoordsScreen, 4, IM_COL32(0xF0, 0xA0, 0x60, 0x80));
-
-                     if (io.MouseDown[0] && !isClicking && !isDraging && GImGui->ActiveId == 0) {
-                        overBox = boxCoordInt;
-                        isClicking = true;
-                        isDraging = true;
-                     }
-                  }
-               }
-            }
-         }
-      }
-      if (interpolationFrames)
-      {
-         interpolationFrames--;
-         vec_t newDir = viewInverse.v.dir;
-         newDir.Lerp(interpolationDir, 0.2f);
-         newDir.Normalize();
-
-         vec_t newUp = viewInverse.v.up;
-         newUp.Lerp(interpolationUp, 0.3f);
-         newUp.Normalize();
-         newUp = interpolationUp;
-         vec_t newEye = camTarget + newDir * length;
-         LookAt(&newEye.x, &camTarget.x, &newUp.x, view);
-      }
-      gContext.mIsViewManipulatorHovered = gContext.mbMouseOver && ImRect(position, position + size).Contains(io.MousePos);
-
-      if (io.MouseDown[0] && (fabsf(io.MouseDelta[0]) || fabsf(io.MouseDelta[1])) && isClicking)
-      {
-         isClicking = false;
-      }
-
-      if (!io.MouseDown[0])
-      {
-         if (isClicking)
-         {
-            // apply new view direction
-            int cx = overBox / 9;
-            int cy = (overBox - cx * 9) / 3;
-            int cz = overBox % 3;
-            interpolationDir = makeVect(1.f - (float)cx, 1.f - (float)cy, 1.f - (float)cz);
-            interpolationDir.Normalize();
-
-            if (fabsf(Dot(interpolationDir, referenceUp)) > 1.0f - 0.01f)
-            {
-               vec_t right = viewInverse.v.right;
-               if (fabsf(right.x) > fabsf(right.z))
-               {
-                  right.z = 0.f;
-               }
-               else
-               {
-                  right.x = 0.f;
-               }
-               right.Normalize();
-               interpolationUp = Cross(interpolationDir, right);
-               interpolationUp.Normalize();
-            }
-            else
-            {
-               interpolationUp = referenceUp;
-            }
-            interpolationFrames = 40;
-
-         }
-         isClicking = false;
-         isDraging = false;
-      }
-
-
-      if (isDraging)
-      {
-         matrix_t rx, ry, roll;
-
-         rx.RotationAxis(referenceUp, -io.MouseDelta.x * 0.01f);
-         ry.RotationAxis(viewInverse.v.right, -io.MouseDelta.y * 0.01f);
-
-         roll = rx * ry;
-
-         vec_t newDir = viewInverse.v.dir;
-         newDir.TransformVector(roll);
-         newDir.Normalize();
-
-         // clamp
-         vec_t planDir = Cross(viewInverse.v.right, referenceUp);
-         planDir.y = 0.f;
-         planDir.Normalize();
-         float dt = Dot(planDir, newDir);
-         if (dt < 0.0f)
-         {
-            newDir += planDir * dt;
-            newDir.Normalize();
-         }
-
-         vec_t newEye = camTarget + newDir * length;
-         LookAt(&newEye.x, &camTarget.x, &referenceUp.x, view);
-      }
-
-      gContext.mbUsingViewManipulate = (interpolationFrames != 0) || isDraging;
-
-      // restore view/projection because it was used to compute ray
-      ComputeContext(svgView.m16, svgProjection.m16, gContext.mModelSource.m16, gContext.mMode);
+       dl->AddConvexPolyFilled(quad, 4, col);
    }
+
+   static void DrawArrowHead(const vec_t& base,
+       const vec_t& tip,
+       const vec_t& right,
+       const vec_t& up,
+       const matrix_t& res,
+       ImDrawList* dl,
+       ImU32 col,
+       ImVec2 pos, ImVec2 size)
+   {
+       const float r = 0.08f;
+       vec_t R = right * r;
+       vec_t U = up * r;
+
+       vec_t b[4] =
+       {
+           base + R + U,
+           base - R + U,
+           base - R - U,
+           base + R - U
+       };
+
+       ImVec2 tip2 = worldToPos(tip, res, pos, size);
+
+       for (int i = 0; i < 4; i++)
+       {
+           ImVec2 p0 = worldToPos(b[i], res, pos, size);
+           ImVec2 p1 = worldToPos(b[(i + 1) & 3], res, pos, size);
+           dl->AddTriangleFilled(p0, p1, tip2, col);
+       }
+   }
+
+   static bool HitSegment(const vec_t& ro, const vec_t& rd,
+       const vec_t& a, const vec_t& b, float r)
+   {
+       vec_t ab = b - a;
+       vec_t ao = ro - a;
+
+       float ab2 = Dot(ab, ab);
+       float t = Dot(ao, ab) / ab2;
+       t = ImClamp(t, 0.f, 1.f);
+
+       vec_t p = a + ab * t;
+       vec_t q = ro + rd * Dot(p - ro, rd);
+
+       vec_t d = q - p;
+       return Dot(d, d) <= r * r;
+   }
+
+   static bool HitSphere(const vec_t& ro, const vec_t& rd,
+       const vec_t& c, float r)
+   {
+       vec_t oc = ro - c;
+       float b = Dot(oc, rd);
+       float c2 = Dot(oc, oc) - r * r;
+       return b * b - c2 > 0.f;
+   }
+
+   void ViewManipulate(float* view, float length,ImVec2 position, ImVec2 size, ImU32 backgroundColor)
+   {
+       static bool isDraging = false;
+       static bool isClicking = false;
+       static vec_t interpolationUp;
+       static vec_t interpolationDir;
+       static int interpolationFrames = 0;
+
+       const vec_t referenceUp = makeVect(0.f, 1.f, 0.f);
+
+       matrix_t svgView = gContext.mViewMat;
+       matrix_t svgProjection = gContext.mProjectionMat;
+
+       ImGuiIO& io = ImGui::GetIO();
+       gContext.mDrawList->AddRectFilled(position, position + size, backgroundColor);
+
+       matrix_t viewInverse;
+       viewInverse.Inverse(*(matrix_t*)view);
+
+       const vec_t camTarget = viewInverse.v.position - viewInverse.v.dir * length;
+
+       // mini camera
+       const float distance = 3.f;
+       matrix_t cubeProjection, cubeView;
+
+       float fov = acosf(distance / sqrtf(distance * distance + 3.f)) * RAD2DEG;
+       Perspective(fov / sqrtf(2.f), size.x / size.y, 0.01f, 1000.f, cubeProjection.m16);
+
+       vec_t dir = viewInverse.v.dir;
+       vec_t up = viewInverse.v.up;
+       vec_t eye = dir * distance;
+       vec_t zero = makeVect(0.f, 0.f, 0.f);
+
+       LookAt(&eye.x, &zero.x, &up.x, cubeView.m16);
+
+       gContext.mViewMat = cubeView;
+       gContext.mProjectionMat = cubeProjection;
+
+       ComputeCameraRay(gContext.mRayOrigin, gContext.mRayVector, position, size);
+
+       matrix_t res = cubeView * cubeProjection;
+
+       int hoveredAxis = -1;
+
+       for (int i = 0; i < 6; i++)
+       {
+           vec_t d = gAxes[i].dir;
+
+           vec_t shaftA = d * 0.1f;
+           vec_t shaftB = d * ARROW_SHAFT_LEN;
+           vec_t headBase = shaftB;
+           vec_t headTip = shaftB + d * ARROW_HEAD_LEN;
+
+           vec_t right = Cross(d, referenceUp);
+           if (right.LengthSq() < 0.001f)
+               right = Cross(d, makeVect(1, 0, 0));
+           right.Normalize();
+
+           vec_t up2 = Cross(right, d);
+           up2.Normalize();
+
+           bool hit =
+               HitSegment(gContext.mRayOrigin, gContext.mRayVector,
+                   shaftA, shaftB, PICK_RADIUS) ||
+               HitSphere(gContext.mRayOrigin, gContext.mRayVector,
+                   headTip, PICK_RADIUS);
+
+           if (hit && hoveredAxis == -1)
+               hoveredAxis = i;
+
+           ImU32 col = gAxes[i].color;
+           if (hit)
+               col = IM_COL32(240, 160, 96, 255);
+
+           DrawArrowShaft(shaftA, shaftB, res, gContext.mDrawList, col, position, size);
+           DrawArrowHead(headBase, headTip, right, up2, res, gContext.mDrawList, col, position, size);
+       }
+
+       gContext.mIsViewManipulatorHovered =
+           gContext.mbMouseOver &&
+           ImRect(position, position + size).Contains(io.MousePos);
+
+       if (io.MouseDown[0] && hoveredAxis != -1 && !isClicking && !isDraging)
+       {
+           isClicking = true;
+           isDraging = true;
+       }
+
+       if (!io.MouseDown[0])
+       {
+           if (isClicking && hoveredAxis != -1)
+           {
+               interpolationDir = gAxes[hoveredAxis].dir;
+               interpolationUp = referenceUp;
+               interpolationFrames = 40;
+           }
+
+           isClicking = false;
+           isDraging = false;
+       }
+
+       if (interpolationFrames)
+       {
+           interpolationFrames--;
+
+           vec_t newDir = viewInverse.v.dir;
+           newDir.Lerp(interpolationDir, 0.2f);
+           newDir.Normalize();
+
+           vec_t newEye = camTarget + newDir * length;
+           LookAt(&newEye.x, &camTarget.x, &referenceUp.x, view);
+       }
+
+       if (isDraging)
+       {
+           matrix_t rx, ry;
+           rx.RotationAxis(referenceUp, -io.MouseDelta.x * 0.01f);
+           ry.RotationAxis(viewInverse.v.right, -io.MouseDelta.y * 0.01f);
+
+           matrix_t roll = rx * ry;
+
+           vec_t newDir = viewInverse.v.dir;
+           newDir.TransformVector(roll);
+           newDir.Normalize();
+
+           vec_t newEye = camTarget + newDir * length;
+           LookAt(&newEye.x, &camTarget.x, &referenceUp.x, view);
+       }
+
+       gContext.mbUsingViewManipulate = (interpolationFrames != 0) || isDraging;
+
+       ComputeContext(svgView.m16, svgProjection.m16,
+           gContext.mModelSource.m16, gContext.mMode);
+   }
+
 };
