@@ -735,10 +735,13 @@ namespace imnodesNET
         }
 
         // Custom added:
-        
         public static void Minimap(float size, MinimapLocation location)
         {
             imnodesNative.imnodes_MiniMapSimple(size, (int)location);
+        }
+        public static bool IsLinkSelected(int id)
+        {
+            return imnodesNative.imnodes_IsLinkSelected(id) != 0;
         }
     }
 

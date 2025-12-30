@@ -159,5 +159,8 @@ namespace imnodesNET
         // Custom:
         [DllImport("ImAllGui", CallingConvention = CallingConvention.Cdecl)]
         public static extern void imnodes_MiniMapSimple(float minimap_size_fraction, int location);
+        
+        [DllImport("ImAllGui", CallingConvention = CallingConvention.Cdecl)]
+        public static extern byte imnodes_IsLinkSelected(int id);
     }
 }

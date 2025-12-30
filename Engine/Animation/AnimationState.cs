@@ -12,6 +12,7 @@ namespace Engine
         public string Name { get; }
         public AnimationClip Clip { get; }
         private List<AnimatorTransition> _transitions = new();
+        internal IReadOnlyList<AnimatorTransition> Transitions => _transitions;
 
         public AnimationState(string name, AnimationClip clip)
         {

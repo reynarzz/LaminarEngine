@@ -12,6 +12,8 @@ namespace Engine
     public class Animator : Component, ILateUpdatableComponent
     {
         private Dictionary<string, AnimationState> _states = new();
+        internal IDictionary<string, AnimationState> States => _states;
+
         private AnimationPlayer _animPlayer = new();
         private AnimationState _currentState;
         private AnimationState _nextState;
@@ -23,6 +25,7 @@ namespace Engine
         [SerializedField]
         public AnimationState CurrentState => _currentState;
         public AnimatorParameters Parameters { get; } = new AnimatorParameters();
+
 
         public void AddState(AnimationState state)
         {

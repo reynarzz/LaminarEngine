@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.Numerics;
 using System.Reflection.Metadata;
+using Editor;
+using Engine;
+using Engine.Utils;
+using GlmNet;
 using ImGuiNET;
 using imnodesNET;
 
@@ -11,21 +15,19 @@ public class AnimatorEditorView
 
     private readonly List<Node> _nodes = new();
     private readonly List<Link> _links = new();
+    private Animator _selectedAnimator;
 
     public AnimatorEditorView()
     {
-        //imnodes.StyleColorsDark();
-        // Create one demo node
-        var entry = CreateNode("Entry", new Vector2(100, 200), null);
-        CreateNode("Second node", new Vector2(200, 300), entry);
+
     }
 
-    private Node CreateNode(string name, Vector2 pos, Node link)
+    private Node CreateNode(string name, vec2 pos)
     {
         var node = new Node(NewId(), name, pos);
-        node.Inputs.Add(NewId());
-        node.Outputs.Add(NewId());
-        
+        node.InputAttrib = NewId();
+        node.OutputAttrib = NewId();
+
         _nodes.Add(node);
         return node;
     }
@@ -34,14 +36,60 @@ public class AnimatorEditorView
     {
     }
 
+    private void InitAnimatorSelected(Animator animator)
+    {
+        if (animator == null)
+            return;
+        _nodes.Clear();
+
+        int yPos = 0;
+        int xPos = 0;
+
+        var nodes = new Dictionary<string, Node>();
+
+        foreach (var (currentStateName, state) in animator.States)
+        {
+            var node = CreateNode(currentStateName, new vec2(xPos, yPos));
+            node.State = state;
+
+            nodes.Add(currentStateName, node);
+            yPos += 3;
+            xPos += 3;
+        }
+
+
+        foreach (var (name, node) in nodes)
+        {
+            var transitions = node.State.Transitions;
+
+            foreach (var transition in transitions)
+            {
+                var toNode = nodes[transition.ToState];
+
+                _links.Add(new Link() { Id = NewId(), FromAttribute = node.OutputAttrib, ToAttribute = toNode.InputAttrib });
+            }
+        }
+    }
     public void OnRender()
     {
+        if (Selector.SelectedTransform())
+        {
+            var animator = Selector.SelectedTransform().GetComponent<Animator>();
+
+            if (animator != _selectedAnimator)
+            {
+                _selectedAnimator = animator;
+
+                InitAnimatorSelected(animator);
+            }
+        }
+
         ImGui.Begin("Animator");
         HandleLinkCreation();
         HandleLinkDeletion();
         imnodes.BeginNodeEditor();
-        
-        imnodes.Minimap(0.2f,  MinimapLocation.BottomRight);
+
+        imnodes.Minimap(0.2f, MinimapLocation.BottomRight);
 
         ImGui.Text("Some text");
 
@@ -60,8 +108,8 @@ public class AnimatorEditorView
 
             if (_initializedNodes.Add(node.Id))
             {
-                Vector2 pos = node.InitialPos;
-                imnodes.SetNodeEditorSpacePos(node.Id, pos);
+                var pos = node.InitialPos;
+                imnodes.SetNodeEditorSpacePos(node.Id, pos.ToVector2());
             }
 
             imnodes.BeginNodeTitleBar();
@@ -69,20 +117,22 @@ public class AnimatorEditorView
 
             imnodes.EndNodeTitleBar();
 
-            foreach (int input in node.Inputs)
-            {
-                imnodes.BeginInputAttribute(input);
-                ImGui.Dummy(new Vector2(10,10));
-                imnodes.EndInputAttribute();
-            }
+            // Input
+            imnodes.BeginInputAttribute(node.InputAttrib);
+            ImGui.Dummy(new Vector2(10, 10));
+            imnodes.EndInputAttribute();
+
             ImGui.SameLine();
-            foreach (int output in node.Outputs)
+            // Output
             {
-                imnodes.BeginOutputAttribute(output);
+                imnodes.BeginOutputAttribute(node.OutputAttrib);
                 ImGui.Dummy(new Vector2(10, 10));
 
                 imnodes.EndOutputAttribute();
+
+
             }
+
 
             imnodes.EndNode();
         }
@@ -92,6 +142,10 @@ public class AnimatorEditorView
     {
         foreach (var link in _links)
         {
+            if (imnodes.IsLinkSelected(link.Id))
+            {
+                Debug.Log($"Link select: {link.Id}");
+            }
             imnodes.Link(link.Id, link.FromAttribute, link.ToAttribute);
         }
     }
@@ -129,11 +183,12 @@ public class AnimatorEditorView
     {
         public int Id;
         public string Title;
-        public Vector2 InitialPos;
-        public List<int> Inputs = new();
-        public List<int> Outputs = new();
+        public vec2 InitialPos;
+        public int InputAttrib;
+        public int OutputAttrib;
+        public AnimationState State;
 
-        public Node(int id, string title, Vector2 pos)
+        public Node(int id, string title, vec2 pos)
         {
             Id = id;
             Title = title;
