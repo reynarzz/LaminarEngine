@@ -2917,6 +2917,7 @@ namespace IMGUIZMO_NAMESPACE
       ComputeContext(view, projection, matrix, (operation & SCALE) ? LOCAL : mode);
       ViewManipulate(view, length, position, size, backgroundColor);
    }
+   static const vec_t directionUnary_flippedZ[3] = { makeVect(1.f, 0.f, 0.f), makeVect(0.f, 1.f, 0.f), makeVect(0.f, 0.f, -1.f) };
 
    void ViewManipulate(float* view, float length, ImVec2 position, ImVec2 size, ImU32 backgroundColor)
    {
@@ -2969,6 +2970,7 @@ namespace IMGUIZMO_NAMESPACE
       // tag faces
       bool boxes[27]{};
       static int overBox = -1;
+
       for (int iPass = 0; iPass < 2; iPass++)
       {
          for (int iFace = 0; iFace < 6; iFace++)
@@ -2977,12 +2979,12 @@ namespace IMGUIZMO_NAMESPACE
             const int perpXIndex = (normalIndex + 1) % 3;
             const int perpYIndex = (normalIndex + 2) % 3;
             const float invert = (iFace > 2) ? -1.f : 1.f;
-            const vec_t indexVectorX = directionUnary[perpXIndex] * invert;
-            const vec_t indexVectorY = directionUnary[perpYIndex] * invert;
-            const vec_t boxOrigin = directionUnary[normalIndex] * -invert - indexVectorX - indexVectorY;
+            const vec_t indexVectorX = directionUnary_flippedZ[perpXIndex] * invert;
+            const vec_t indexVectorY = directionUnary_flippedZ[perpYIndex] * invert;
+            const vec_t boxOrigin = directionUnary_flippedZ[normalIndex] * -invert - indexVectorX - indexVectorY;
 
             // plan local space
-            const vec_t n = directionUnary[normalIndex] * invert;
+            const vec_t n = directionUnary_flippedZ[normalIndex] * invert;
             vec_t viewSpaceNormal = n;
             vec_t viewSpacePoint = n * 0.5f;
             viewSpaceNormal.TransformVector(cubeView);
@@ -3001,13 +3003,13 @@ namespace IMGUIZMO_NAMESPACE
             const float len = IntersectRayPlane(gContext.mRayOrigin, gContext.mRayVector, facePlan);
             vec_t posOnPlan = gContext.mRayOrigin + gContext.mRayVector * len - (n * 0.5f);
 
-            float localx = Dot(directionUnary[perpXIndex], posOnPlan) * invert + 0.5f;
-            float localy = Dot(directionUnary[perpYIndex], posOnPlan) * invert + 0.5f;
+            float localx = Dot(directionUnary_flippedZ[perpXIndex], posOnPlan) * invert + 0.5f;
+            float localy = Dot(directionUnary_flippedZ[perpYIndex], posOnPlan) * invert + 0.5f;
 
             // panels
-            const vec_t dx = directionUnary[perpXIndex];
-            const vec_t dy = directionUnary[perpYIndex];
-            const vec_t origin = directionUnary[normalIndex] - dx - dy;
+            const vec_t dx = directionUnary_flippedZ[perpXIndex];
+            const vec_t dy = directionUnary_flippedZ[perpYIndex];
+            const vec_t origin = directionUnary_flippedZ[normalIndex] - dx - dy;
             for (int iPanel = 0; iPanel < 9; iPanel++)
             {
                vec_t boxCoord = boxOrigin + indexVectorX * float(iPanel % 3) + indexVectorY * float(iPanel / 3) + makeVect(1.f, 1.f, 1.f);
