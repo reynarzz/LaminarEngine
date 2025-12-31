@@ -660,9 +660,10 @@ namespace IMGUIZMO_NAMESPACE
         Colors[SCALE_LINE] = ImVec4(0.250f, 0.250f, 0.250f, 1.000f);
         Colors[ROTATION_USING_BORDER] = ImVec4(1.000f, 0.500f, 0.062f, 1.000f);
         Colors[ROTATION_USING_FILL] = ImVec4(1.000f, 0.500f, 0.062f, 0.500f);
-        Colors[HATCHED_AXIS_LINES] = ImVec4(0.000f, 0.000f, 0.000f, 0.500f);
+        Colors[HATCHED_AXIS_LINES] = ImVec4(1.000f, 1.000f, 1.000f, 0.500f);
         Colors[TEXT] = ImVec4(1.000f, 1.000f, 1.000f, 1.000f);
         Colors[TEXT_SHADOW] = ImVec4(0.000f, 0.000f, 0.000f, 1.000f);
+        Colors[NON_GRABBED_ARROW] = ImVec4(0.500f, 0.500f, 0.500f, 0.500f);
     }
 
     struct Context
@@ -1569,6 +1570,25 @@ namespace IMGUIZMO_NAMESPACE
         ImU32 colors[7];
         ComputeColors(colors, type, TRANSLATE);
 
+        // Custom added----
+        for (int i = 0; i < 3; ++i)
+        {
+            if (gContext.mbUsing && gContext.GetCurrentID() == gContext.mEditingID)
+            {
+                bool active = (type == MT_MOVE_X + i);
+
+                if (!active)
+                {
+                    colors[i + 1] = GetColorU32(NON_GRABBED_ARROW);
+                }
+                else
+                {
+                    // Optional highlight
+                    colors[i + 1] = IM_COL32(255, 220, 0, 255);
+                }
+            }
+        }
+
         const ImVec2 origin = worldToPos(gContext.mModel.v.position, gContext.mViewProjection);
 
         // draw
@@ -1579,10 +1599,10 @@ namespace IMGUIZMO_NAMESPACE
             vec_t dirPlaneX, dirPlaneY, dirAxis;
             ComputeTripodAxisAndVisibility(i, dirAxis, dirPlaneX, dirPlaneY, belowAxisLimit, belowPlaneLimit);
 
-            if (!gContext.mbUsing || (gContext.mbUsing && type == MT_MOVE_X + i))
+            //if (!gContext.mbUsing || (gContext.mbUsing && type == MT_MOVE_X + i)) // Disables arrows when grab happens
             {
                 // draw axis
-                if (belowAxisLimit && Intersects(op, static_cast<OPERATION>(TRANSLATE_X << i)))
+              //  if (belowAxisLimit && Intersects(op, static_cast<OPERATION>(TRANSLATE_X << i))) // Disables arrows when grab happens
                 {
                     ImVec2 baseSSpace = worldToPos(dirAxis * 0.1f * gContext.mScreenFactor, gContext.mMVP);
                     ImVec2 worldDirSSpace = worldToPos(dirAxis * gContext.mScreenFactor, gContext.mMVP);
@@ -1608,7 +1628,7 @@ namespace IMGUIZMO_NAMESPACE
                 }
             }
             // draw plane
-            if (!gContext.mbUsing || (gContext.mbUsing && type == MT_MOVE_YZ + i))
+            //if (!gContext.mbUsing || (gContext.mbUsing && type == MT_MOVE_YZ + i)) // Disables squares when grab happens
             {
                 if (belowPlaneLimit && Contains(op, TRANSLATE_PLANS[i]))
                 {

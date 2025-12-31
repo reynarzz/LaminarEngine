@@ -283,6 +283,7 @@ namespace IMGUIZMO_NAMESPACE
       HATCHED_AXIS_LINES,
       TEXT,
       TEXT_SHADOW,
+      NON_GRABBED_ARROW,
       COUNT
    };
 
