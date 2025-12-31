@@ -77,7 +77,7 @@ namespace Editor
                         Id = NewId(),
                         FromAttribute = node.OutputAttrib,
                         ToAttribute = toNode.InputAttrib,
-                        Color = Color.LightGray.ToARGB_U32()
+                        Color = Color.RandomRGB().ToARGB_U32()
                     };
                     var color = link.Color;
                     // color.R = 1;

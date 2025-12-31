@@ -57,6 +57,10 @@ namespace Editor
                     Set(transform);
                 }
             }
+            else
+            {
+                _transform.SetTarget(null);
+            }
         }
 
         public static Transform SelectedTransform()
