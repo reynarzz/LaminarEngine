@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Editor
 {
-    internal class EditorSceneView : EditorRenderSurfaceView
+    internal class SceneEditorView : EditorRenderSurfaceView
     {
         private readonly EditorCamera _camera;
         private Vector2 _screenSize;
@@ -27,7 +27,7 @@ namespace Editor
         private vec2 _mouseFirstPickedPosition;
         private const float _maxPickedMouseDistance = 1.5f;
 
-        public EditorSceneView(string viewName, RenderingSurface surface, EditorCamera camera) : base(viewName, surface)
+        public SceneEditorView(string viewName, RenderingSurface surface, EditorCamera camera) : base(viewName, surface)
         {
             _camera = camera;
             RenderingLayer.OnRenderingEnd += OnRenderingEnd;
@@ -113,7 +113,7 @@ namespace Editor
                     return MathF.Abs(x) < EPS;
                 }
 
-                // This prevents the guizmo from disappearing due when a scale axis is zero.
+                // This prevents the guizmo from disappearing when any scale scale component is zero.
                 const float minValue = 0.01f;
                 var s = model[0];
                 if (IsAlmostZero(s.x))
@@ -278,7 +278,7 @@ namespace Editor
             var isInsideRect = !(mouseInContent.X < 0 || mouseInContent.X >= contentSize.X ||
                                  mouseInContent.Y < 0 || mouseInContent.Y >= contentSize.Y);
 
-            return isInsideRect && !ImGuizmo.IsUsing() && !ImGuizmo.IsOver();
+            return isInsideRect && !ImGuizmo.IsUsing();
         }
         private RendererData2D GetMousePickedRenderer(IReadOnlyDictionary<uint, RendererData2D> colorIds, RenderTexture renderTexture)
         {
@@ -338,7 +338,6 @@ namespace Editor
                 {
                     // Use back buffer to check if the topmost renderer is still there.
                     renderer = GetMousePickedRenderer(_mousePickerRenderer.RenderersIDsBackBuffer, _mousePickerRenderer.PickedBackBuffer);
-
                     if (renderer != null)
                     {
                         _mousePickerRenderer.OnPickRenderer(renderer.GetID());

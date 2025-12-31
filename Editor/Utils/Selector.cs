@@ -9,23 +9,62 @@ namespace Editor
 {
     internal class Selector
     {
-        public static EObject Selected { get; set; }
+        private static WeakReference<EObject> _selected;
+        private static WeakReference<Transform> _transform;
+
+        public static EObject Selected
+        {
+            get
+            {
+                if (_selected == null)
+                    return null;
+
+                _selected.TryGetTarget(out var target);
+                return target;
+            }
+            set
+            {
+                if(_selected == null)
+                {
+                    _selected = new WeakReference<EObject>(value);
+                }
+                else
+                {
+                    _selected.SetTarget(value);
+                }
+                SetTransform(value);
+            }
+        }
+
+        private static void SetTransform(EObject obj)
+        {
+            void Set(Transform transform)
+            {
+                if (_transform == null)
+                    _transform = new WeakReference<Transform>(transform);
+                else
+                    _transform.SetTarget(transform);
+            }
+
+            if (obj)
+            {
+                if (obj is Actor actor)
+                {
+                    Set(actor.Transform);
+                }
+                else if (obj is Transform transform)
+                {
+                    Set(transform);
+                }
+            }
+        }
 
         public static Transform SelectedTransform()
         {
-            if(Selected)
-            {
-                if(Selected is Actor actor)
-                {
-                    return actor.Transform;
-                }
-                else if (Selected is Transform transform)
-                {
-                    return transform;
-                }
-            }
-
-            return null;
+            if (_transform == null)
+                return null;
+            _transform.TryGetTarget(out var transform);
+            return transform;
         }
     }
 }

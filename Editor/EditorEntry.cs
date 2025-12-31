@@ -27,7 +27,7 @@ namespace Editor
         private ImGuiGLFW _glfwInput;
         private const string PROJECT_FOLDER_NAME = "Editor";
         private EditorGameView _gameWindow;
-        private EditorSceneView _editorSceneView;
+        private SceneEditorView _editorSceneView;
 
         private SceneGraphWindow _sceneGraphWindow;
         private GFSEngine _engine;
@@ -91,7 +91,7 @@ namespace Editor
                 },
             };
 
-            _editorSceneView = new EditorSceneView("Scene", _editorSurface, _editorCamera);
+            _editorSceneView = new SceneEditorView("Scene", _editorSurface, _editorCamera);
 
             RenderingLayer.InitializeSurfaces([_gameSurface, _editorSurface]);
             RenderingLayer.OnDrawOverlay += () =>

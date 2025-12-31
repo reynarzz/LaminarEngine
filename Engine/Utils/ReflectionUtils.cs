@@ -28,7 +28,11 @@ namespace Engine.Utils
             return result;
         }
 
-
+        public static Type NormalizeType(object obj)
+        {
+            var type = obj.GetType();
+            return type.IsGenericType ? type.GetGenericTypeDefinition() : type;
+        }
         public static IEnumerable<PropertyInfo> GetAllPropertiesWithAttribute<T>(Type type, bool inherit = true) where T : Attribute
         {
             const BindingFlags flags =
