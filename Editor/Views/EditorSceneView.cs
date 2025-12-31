@@ -145,7 +145,7 @@ namespace Editor
                         vec3 deltaPosition = default;
                         vec3 deltaRotation = default;
                         vec3 deltaScale = default;
-                         
+
                         ImGuizmo.DecomposeMatrixToComponents(ref model.c0.x, ref position.x, ref rotation.x, ref scale.x);
                         ImGuizmo.DecomposeMatrixToComponents(ref delta.c0.x, ref deltaPosition.x, ref deltaRotation.x, ref deltaScale.x);
 
@@ -155,16 +155,7 @@ namespace Editor
                 }
             }
 
-            mat4 FlipZ = new mat4(
-                new vec4(1, 0, 0, 0),
-                new vec4(0, 1, 0, 0),
-                new vec4(0, 0, -1, 0),
-                new vec4(0, 0, 0, 1)
-            );
-            mat4 viewRH = FlipZ * view * FlipZ;
-            ImGuizmo.ViewManipulate(ref viewRH.c0.x, 30, new Vector2(WindowPosition.X + WindowSize.X - 90, 10), new Vector2(100, 100), 0);
-
-            var viewLH = FlipZ * viewRH * FlipZ;
+            ImGuizmo.ViewManipulate(ref view.c0.x, 30, new Vector2(WindowPosition.X + WindowSize.X - 90, 10), new Vector2(100, 100), 0);
         }
 
         private void SetTransform(OPERATION operation, MODE mode, Transform selectedTransform,
