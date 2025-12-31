@@ -155,7 +155,7 @@ namespace Editor
                 }
             }
 
-            ImGuizmo.ViewManipulate(ref view.c0.x, 30, new Vector2(WindowPosition.X + WindowSize.X - 90, 10), new Vector2(100, 100), 0);
+            ImGuizmo.ViewManipulate(ref view.c0.x, 30, new Vector2(WindowPosition.X + WindowSize.X - 90, WindowPosition.Y+ 10), new Vector2(100, 100), 0);
         }
 
         private void SetTransform(OPERATION operation, MODE mode, Transform selectedTransform,

@@ -57,7 +57,7 @@ namespace Editor
                     Set(transform);
                 }
             }
-            else
+            else if(_transform != null)
             {
                 _transform.SetTarget(null);
             }
