@@ -1628,7 +1628,7 @@ namespace IMGUIZMO_NAMESPACE
                 }
             }
             // draw plane
-            //if (!gContext.mbUsing || (gContext.mbUsing && type == MT_MOVE_YZ + i)) // Disables squares when grab happens
+            if (!gContext.mbUsing || (gContext.mbUsing && type == MT_MOVE_YZ + i)) // Disables squares when grab happens
             {
                 if (belowPlaneLimit && Contains(op, TRANSLATE_PLANS[i]))
                 {
