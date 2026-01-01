@@ -106,29 +106,25 @@ namespace Editor
                 OPERATION operation = OPERATION.TRANSLATE;
                 MODE mode = MODE.LOCAL;
 
-                const float EPS = 1e-6f;
 
-                bool IsAlmostZero(float x)
-                {
-                    return MathF.Abs(x) < EPS;
-                }
+                
 
                 // This prevents the guizmo from disappearing when any scale scale component is zero.
                 const float minValue = 0.01f;
                 var s = model[0];
-                if (IsAlmostZero(s.x))
+                if (Mathf.IsAlmostZero(s.x))
                 {
                     s.x = minValue;
                     model[0] = s;
                 }
                 s = model[1];
-                if (IsAlmostZero(s.y))
+                if (Mathf.IsAlmostZero(s.y))
                 {
                     s.y = minValue;
                     model[1] = s;
                 }
                 s = model[2];
-                if (IsAlmostZero(s.z))
+                if (Mathf.IsAlmostZero(s.z))
                 {
                     s.z = minValue;
                     model[2] = s;

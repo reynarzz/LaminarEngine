@@ -109,7 +109,7 @@ namespace Editor
             NewFrame();
             io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
             io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
-            io.MouseDoubleClickTime = 0.5f;
+            io.MouseDoubleClickTime = 0.8f;
             SetPerFrameImGuiData(1f / 60f, window.PhysicalWidth, window.PhysicalHeight);
             //Styles();
             Styles2();

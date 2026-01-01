@@ -166,7 +166,12 @@ namespace Editor
 
                 if (isCurrentState)
                 {
-                    var percent = _selectedAnimator.CurrentStateTime / _selectedAnimator.CurrentState.Clip.Duration;
+                    var percent = 1.0f;
+                    var duration = _selectedAnimator.CurrentState.Clip.Duration;
+                    if (!Mathf.IsAlmostZero(duration))
+                    {
+                        percent = _selectedAnimator.CurrentStateTime / duration;
+                    }
 
                     //  ImGui.SetCursorPos(new Vector2(prevPos.X, prevPos.Y));
                     ImGui.SetNextItemWidth(rectSize.X);

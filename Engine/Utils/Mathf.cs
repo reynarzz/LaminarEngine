@@ -15,6 +15,8 @@ namespace Engine
         public const float PI = 3.14159265358979323846f;
 
         public const float Tau = 6.283185307179586476925f;
+        public const float Epsilon = 1e-6f;
+
         public static float Clamp(float value, float min, float max)
            => value < min ? min : (value > max ? max : value);
 
@@ -52,7 +54,10 @@ namespace Engine
 
             return result;
         }
-
+        public static bool IsAlmostZero(float x)
+        {
+            return MathF.Abs(x) < Mathf.Epsilon;
+        }
         public static float PingPong(float t, float length = 1f)
         {
             t = t % (2f * length);
