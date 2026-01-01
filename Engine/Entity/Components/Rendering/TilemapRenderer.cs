@@ -43,10 +43,10 @@ namespace Engine
         private List<vec2> _tilesPositions = new();
         private RendererData2D _rendererData;
         public vec2 GridSize { get; private set; }
-        protected override void OnAwake()
-        {
-            base.OnAwake();
 
+        internal override void OnInternalInitialize()
+        {
+            base.OnInternalInitialize();
             _rendererData = (RendererData as RendererData2D);
             _rendererData.Mesh = new Mesh();
             _rendererData.Mesh.IndicesToDrawCount = 0;
@@ -56,6 +56,11 @@ namespace Engine
                 Min = vec3.One * int.MaxValue,
                 Max = vec3.One * int.MinValue
             };
+        }
+        protected override void OnAwake()
+        {
+            base.OnAwake();
+
         }
 
         public void AddTile(Tile tile, vec3 position, float rot = 0)
@@ -154,7 +159,7 @@ namespace Engine
                     continue;
 
                 var type = layer.Type;
-                Debug.Log(type);
+
                 switch (type)
                 {
                     case "AutoLayer":

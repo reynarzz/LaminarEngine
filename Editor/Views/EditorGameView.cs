@@ -8,11 +8,14 @@ namespace Editor
 {
     internal class EditorGameView : EditorRenderSurfaceView, IWindow
     {
-        public string Name { get; set; } = "Editor";
+        private readonly InputLayerBase _inputLayer;
+
+        public string Name { get; set; } = "Game View";
         public bool IsFullScreen { get; set; }
 
         private int _width = 100;
         private int _height = 100;
+
         public int Width => _width;
         public int Height => _height;
 
@@ -37,11 +40,12 @@ namespace Editor
         private int _offsetY = 0;
         public int OffsetX => _offsetX;
         public int OffsetY => _offsetY;
-        public EditorGameView(WindowStandalone window, RenderingSurface surface) : base("Game", surface)
+        public EditorGameView(WindowStandalone window, RenderingSurface surface, InputLayerBase inputLayer) : base("Game", surface)
         {
             _window = window;
             _width = _window.Width;
             _height = _window.Height;
+            _inputLayer = inputLayer;
             //_window.OnWindowChanged += OnWindowWasChanged;
         }
 
@@ -59,6 +63,10 @@ namespace Editor
         {
         }
 
+        protected override void OnWindowRender()
+        {
+            _inputLayer.IsEnabled = ImGui.IsWindowFocused();
+        }
         public override void OnDraw()
         {
             base.OnDraw();

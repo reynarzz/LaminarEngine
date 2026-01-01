@@ -10,6 +10,7 @@ namespace Engine
 {
     public abstract class InputLayerBase : LayerBase
     {
+        internal bool IsEnabled { get; set; } = true;
         public abstract TouchInput Touch { get; }
         public abstract GamepadInput Gamepad { get; }
         public abstract vec2 MousePosition { get; }

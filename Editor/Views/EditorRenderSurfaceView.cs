@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Editor
 {
-    internal class EditorRenderSurfaceView : IEditorWindow
+    internal abstract class EditorRenderSurfaceView : IEditorWindow
     {
         private readonly RenderingSurface _surface;
         protected RenderingSurface Surface { get; }

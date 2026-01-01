@@ -57,12 +57,22 @@ namespace Engine.Layers.Input
 
         internal override void UpdateLayer()
         {
+            // Poll OS events
+            Glfw.PollEvents();
+
+            if (!IsEnabled)
+            {
+                _previousKeys.Clear();
+                _previousMouse.Clear();
+
+                _currentKeys.Clear();
+                _currentMouse.Clear();
+                return;
+            }
 
             CopyKeys(_currentKeys, _previousKeys);
             CopyKeys(_currentMouse, _previousMouse);
 
-            // Poll OS events
-            Glfw.PollEvents();
             // Update current key states
             foreach (KeyCode key in _keyCodesArray)
             {

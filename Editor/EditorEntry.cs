@@ -36,6 +36,8 @@ namespace Editor
         private RenderingSurface _gameSurface;
         private RenderingSurface _editorSurface;
         private EditorCamera _editorCamera;
+        private InputStandAlonePlatform _inputLayer;
+
         internal void Init()
         {
 #if DEBUG
@@ -68,9 +70,11 @@ namespace Editor
                 UIViewProj = UICanvas.UIViewProj,
             };
 
-            _gameWindow = new EditorGameView(_win, _gameSurface);
-            _engine = new GFSEngine(_gameWindow, new GameApplication(), new InputStandAlonePlatform());
+            _inputLayer = new InputStandAlonePlatform();
+            _gameWindow = new EditorGameView(_win, _gameSurface, _inputLayer);
 
+            _engine = new GFSEngine(_gameWindow, new GameApplication(), _inputLayer);
+            
             var sceneBatcher = new SceneBatchedRenderer();
             _gameSurface.SceneRenderers = new() { sceneBatcher };
             _editorCamera = new EditorCamera();
