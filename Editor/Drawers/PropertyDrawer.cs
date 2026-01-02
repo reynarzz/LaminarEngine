@@ -138,78 +138,94 @@ namespace Editor
                 ImGui.SameLine();
                 ImGui.SetCursorPosX(Math.Max(_xPosOffset, ImGui.GetCursorPosX()));
 
-                var eObject = value as EObject;
+                var eObject = value as IObject;
                 var eObjectType = eObject != null ? eObject.GetType() : type;
 
                 DrawEObjectSlot(eObject, eObjectType, v =>
                 {
-                    if (v != null)
-                    {
-                        int a = 0;
-                    }
                     SetMemberValueSafe(target, v, prop, index);
                     return true;
                 }, width);
             }
             else if (type == typeof(bool))
             {
-                DrawSimpleProperty<bool>(propertyName, target, value, isReadOnly, prop, index, width, EditorGuiFieldsResolver.DrawBoolField);
+                DrawSimpleProperty<bool>(propertyName, target, value, isReadOnly, prop, index, width, 
+                    EditorGuiFieldsResolver.DrawBoolField);
             }
             else if (type == typeof(int))
             {
-                DrawSimpleProperty<int>(propertyName, target, value, isReadOnly, prop, index, width, EditorGuiFieldsResolver.DrawIntField);
+                DrawSimpleProperty<int>(propertyName, target, value, isReadOnly, prop, index, width, 
+                    EditorGuiFieldsResolver.DrawIntField);
             }
             else if (type == typeof(uint))
             {
-                DrawSimpleProperty<uint>(propertyName, target, value, isReadOnly, prop, index, width, EditorGuiFieldsResolver.DrawUIntField);
+                DrawSimpleProperty<uint>(propertyName, target, value, isReadOnly, prop, index, width, 
+                    EditorGuiFieldsResolver.DrawUIntField);
             }
             else if (type == typeof(long))
             {
-                DrawSimpleProperty<long>(propertyName, target, value, isReadOnly, prop, index, width, EditorGuiFieldsResolver.DrawLongField);
+                DrawSimpleProperty<long>(propertyName, target, value, isReadOnly, prop, index, width, 
+                    EditorGuiFieldsResolver.DrawLongField);
             }
             else if (type == typeof(ulong))
             {
-                DrawSimpleProperty<ulong>(propertyName, target, value, isReadOnly, prop, index, width, EditorGuiFieldsResolver.DrawULongField);
+                DrawSimpleProperty<ulong>(propertyName, target, value, isReadOnly, prop, index, width, 
+                    EditorGuiFieldsResolver.DrawULongField);
             }
             else if (type == typeof(Color))
             {
-                DrawSimpleProperty<Color>(propertyName, target, value, isReadOnly, prop, index, width, EditorGuiFieldsResolver.DrawColorField);
+                DrawSimpleProperty<Color>(propertyName, target, value, isReadOnly, prop, index, width, 
+                    EditorGuiFieldsResolver.DrawColorField);
             }
             else if (type == typeof(Color32))
             {
-                DrawSimpleProperty<Color>(propertyName, target, value, isReadOnly, prop, index, width, EditorGuiFieldsResolver.DrawColorField, true, v => (Color32)v);
+                DrawSimpleProperty<Color>(propertyName, target, value, isReadOnly, prop, index, width, 
+                    EditorGuiFieldsResolver.DrawColorField, true, v => (Color32)v);
             }
             else if (type == typeof(float))
             {
-                DrawSimpleProperty<float>(propertyName, target, value, isReadOnly, prop, index, width, EditorGuiFieldsResolver.DrawFloatField);
+                DrawSimpleProperty<float>(propertyName, target, value, isReadOnly, prop, index, width, 
+                    EditorGuiFieldsResolver.DrawFloatField);
+            }
+            else if (type == typeof(double))
+            {
+                DrawSimpleProperty<double>(propertyName, target, value, isReadOnly, prop, index, width, 
+                    EditorGuiFieldsResolver.DrawDoubleField);
             }
             else if (type == typeof(string))
             {
-                DrawSimpleProperty<string>(propertyName, target, value, isReadOnly, prop, index, width, EditorGuiFieldsResolver.DrawStringField);
+                DrawSimpleProperty<string>(propertyName, target, value, isReadOnly, prop, index, width, 
+                    EditorGuiFieldsResolver.DrawStringField);
             }
             else if (type == typeof(vec2))
             {
-                DrawSimpleProperty<vec2>(propertyName, target, value, isReadOnly, prop, index, width, EditorGuiFieldsResolver.DrawVec2Field);
+                DrawSimpleProperty<vec2>(propertyName, target, value, isReadOnly, prop, index, width, 
+                    EditorGuiFieldsResolver.DrawVec2Field);
             }
             else if (type == typeof(vec3))
             {
-                DrawSimpleProperty<vec3>(propertyName, target, value, isReadOnly, prop, index, width, EditorGuiFieldsResolver.DrawVec3Field);
+                DrawSimpleProperty<vec3>(propertyName, target, value, isReadOnly, prop, index, width, 
+                    EditorGuiFieldsResolver.DrawVec3Field);
             }
             else if (type == typeof(vec4))
             {
-                DrawSimpleProperty<vec4>(propertyName, target, value, isReadOnly, prop, index, width, EditorGuiFieldsResolver.DrawVec4Field);
+                DrawSimpleProperty<vec4>(propertyName, target, value, isReadOnly, prop, index, width, 
+                    EditorGuiFieldsResolver.DrawVec4Field);
             }
             else if (type == typeof(mat2))
             {
-                DrawSimpleProperty<mat2>(propertyName, target, value, isReadOnly, prop, index, width, EditorGuiFieldsResolver.DrawMatrix);
+                DrawSimpleProperty<mat2>(propertyName, target, value, isReadOnly, prop, index, width, 
+                    EditorGuiFieldsResolver.DrawMatrix);
             }
             else if (type == typeof(mat3))
             {
-                DrawSimpleProperty<mat3>(propertyName, target, value, isReadOnly, prop, index, width, EditorGuiFieldsResolver.DrawMatrix);
+                DrawSimpleProperty<mat3>(propertyName, target, value, isReadOnly, prop, index, width, 
+                    EditorGuiFieldsResolver.DrawMatrix);
             }
             else if (type == typeof(mat4))
             {
-                DrawSimpleProperty<mat4>(propertyName, target, value, isReadOnly, prop, index, width, EditorGuiFieldsResolver.DrawMatrix);
+                DrawSimpleProperty<mat4>(propertyName, target, value, isReadOnly, prop, index, width, 
+                    EditorGuiFieldsResolver.DrawMatrix);
             }
             // enum
             else if (type.IsEnum)
@@ -240,6 +256,8 @@ namespace Editor
 
                 void OnAdd(IList list, int totalLength)
                 {
+                    Debug.Log(totalLength);
+
                     while (list.Count < totalLength)
                     {
                         list.Add(GetDefaultValue(elementType));
@@ -355,7 +373,7 @@ namespace Editor
             }
         }
 
-        private static void DrawEObjectSlot(EObject eObject, Type valueType, Func<object, bool> setValue, float width = -1)
+        private static void DrawEObjectSlot(IObject eObject, Type valueType, Func<object, bool> setValue, float width = -1)
         {
             ImGui.SameLine();
             ImGui.SetCursorPosX(MathF.Max(_xPosOffset, ImGui.GetCursorPosX()) + 5);
@@ -378,8 +396,8 @@ namespace Editor
             var pos = ImGui.GetCursorScreenPos();
             var size = ImGui.CalcTextSize(label);
 
-            var min = new Vector2(pos.X - 5, pos.Y - 3);
-            var max = new Vector2(pos.X + ImGui.GetContentRegionAvail().X - 5, pos.Y + size.Y - 1);
+            var min = new Vector2(pos.X - 5, pos.Y);
+            var max = new Vector2(pos.X + ImGui.GetContentRegionAvail().X - 5, pos.Y + size.Y + 2);
 
             drawList.AddRectFilled(min, max, ImGui.ColorConvertFloat4ToU32(new(0.1f, 0.1f, 0.1f, 1f)));
 
@@ -457,30 +475,33 @@ namespace Editor
                 return;
             }
 
-            // Asset picking
-            if (valueType == typeof(Material))
+            if (valueType.IsAssignableFrom(typeof(AssetResourceBase)))
             {
-                //foreach (var guid in Assets.GetGuids(AssetType.Material))
-                //{
-                //    var path = Assets.ResolvePath(guid);
-                //    if (ImGui.Selectable($"{System.IO.Path.GetFileName(path)}##{guid}"))
-                //    {
-                //        setValue(Assets.GetMaterial(path));
-                //        ImGui.CloseCurrentPopup();
-                //    }
-                //}
-            }
-            else if (valueType == typeof(Texture))
-            {
-                //foreach (var guid in Assets.GetGuids(AssetType.Texture))
-                //{
-                //    var path = Assets.ResolvePath(guid);
-                //    if (ImGui.Selectable($"{System.IO.Path.GetFileName(path)}##{guid}"))
-                //    {
-                //        setValue(Assets.GetTexture(path));
-                //        ImGui.CloseCurrentPopup();
-                //    }
-                //}
+                // Asset picking
+                if (valueType == typeof(Material))
+                {
+                    //foreach (var guid in Assets.GetGuids(AssetType.Material))
+                    //{
+                    //    var path = Assets.ResolvePath(guid);
+                    //    if (ImGui.Selectable($"{System.IO.Path.GetFileName(path)}##{guid}"))
+                    //    {
+                    //        setValue(Assets.GetMaterial(path));
+                    //        ImGui.CloseCurrentPopup();
+                    //    }
+                    //}
+                }
+                else if (valueType == typeof(Texture))
+                {
+                    //foreach (var guid in Assets.GetGuids(AssetType.Texture))
+                    //{
+                    //    var path = Assets.ResolvePath(guid);
+                    //    if (ImGui.Selectable($"{System.IO.Path.GetFileName(path)}##{guid}"))
+                    //    {
+                    //        setValue(Assets.GetTexture(path));
+                    //        ImGui.CloseCurrentPopup();
+                    //    }
+                    //}
+                }
             }
             else
             {
@@ -505,7 +526,7 @@ namespace Editor
                     ImGui.CloseCurrentPopup();
                 }
             }
-            else if (typeof(Component).IsAssignableFrom(targetType))
+            else if (typeof(IComponent).IsAssignableFrom(targetType))
             {
                 if (ImGui.Selectable($"{root.Name}##{root.GetID()}"))
                 {
@@ -541,11 +562,11 @@ namespace Editor
                 if (type.IsEnum)
                 {
                     Array values = Enum.GetValues(type);
-                    return values.Length > 0 ? values.GetValue(0)! : Activator.CreateInstance(type)!;
+                    return values.Length > 0 ? values.GetValue(0)! : Activator.CreateInstance(type);
                 }
                 else
                 {
-                    return Activator.CreateInstance(type)!;
+                    return Activator.CreateInstance(type);
                 }
             }
             else

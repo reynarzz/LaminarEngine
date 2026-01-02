@@ -71,13 +71,15 @@ namespace Game
         [SerializedField] public List<string> StringTest;
         [SerializedField] public List<int> IntTest { get; set; } = new();
         [SerializedField] public List<Component> _TestComponentList { get; set; }
-
+        [SerializedField] public double DoubleField { get; set; }
         //[ExposeEditorField] public List<Body2DType> EnumList { get; set; } = new();
         //[ExposeEditorField] public mat2 mat2Test { get; set; }
         //[ExposeEditorField] public mat3 mat3Test { get; set; }
         //[ExposeEditorField] public mat4 mat4Test { get; set; }
         //[ExposeEditorField] private List<List<int>> _nestedList;
-
+        [SerializedField] public string String { get; set; }
+        [SerializedField] public IComponent ComponentInterface { get; set; }
+        [SerializedField] public IObject ObjectInterface { get; set; }
         [SerializedField] public Body2DType[] EnumArray { get; set; }
         [SerializedField] public TestClass[] ClassArray { get; set; } 
     }

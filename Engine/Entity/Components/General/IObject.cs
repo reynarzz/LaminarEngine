@@ -9,5 +9,7 @@ namespace Engine
     public interface IObject
     {
         bool IsValid();
+        string Name { get; set; }
+        Guid GetID();
     }
 }

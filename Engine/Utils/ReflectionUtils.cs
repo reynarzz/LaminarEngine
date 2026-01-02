@@ -191,7 +191,7 @@ namespace Engine.Utils
 
         public static bool IsEObject(Type t)
         {
-            return typeof(EObject).IsAssignableFrom(t) || typeof(IObject).IsAssignableFrom(t);
+            return typeof(EObject).IsAssignableFrom(t);// || typeof(IObject).IsAssignableFrom(t);
         }
     }
 }

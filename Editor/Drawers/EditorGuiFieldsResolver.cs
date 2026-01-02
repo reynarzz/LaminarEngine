@@ -58,10 +58,12 @@ namespace Editor.Utils
 
             return false;
         }
-        public static bool DrawFloatField(string name, ref float value)
+         
+        public static bool DrawDoubleField(string name, ref double value, float itemWidth = 0, bool pressEnterToConfirm = false)
         {
-            return DrawFloatField(name, ref value, 0, false);
+            return DrawScalarField(name, ref value, ImGuiDataType.Double, 0, false);
         }
+
         public static bool DrawFloatField(string name, ref float value, float itemWidth = 0, bool pressEnterToConfirm = false)
         {
             SetNextItemWidth(itemWidth);
@@ -125,8 +127,9 @@ namespace Editor.Utils
             {
                 T v = value;
                 nint ptr = (nint)(&v);
+                var a = ImGuiKey.GetValues(typeof(ImGuiKey));
 
-                var result = ImGui.InputScalar($"##{name}", type, ptr) && (!pressEnterToConfirm || ImGui.IsKeyDown(ImGuiKey.Enter));
+                var result = ImGui.DragScalar($"##{name}", type, ptr) && (!pressEnterToConfirm || ImGui.IsKeyDown(ImGuiKey.Enter));
                 value = *(T*)ptr;
                 return result;
             }
@@ -234,16 +237,16 @@ namespace Editor.Utils
 
             return changed;
         }
-        public static bool DrawEnum<T>(string name, ref T value) where T : Enum
+        public static bool DrawEnum<T>(string name, ref T value) where T : unmanaged, Enum 
         {
-            Array values = Enum.GetValues(typeof(T));
+            var values = Enum.GetValues<T>();
             int idx = Array.IndexOf(values, value);
-            string[] names = Enum.GetNames(typeof(T));
+            string[] names = Enum.GetNames<T>();
             var changed = DrawCombo(name, ref idx, names);
 
             if (changed)
             {
-                value = (T)values.GetValue(idx);
+                value = values[idx];
             }
             return changed;
         }
@@ -356,7 +359,7 @@ namespace Editor.Utils
             {
                 changed = true;
 
-                if(size - 1 >= 0)
+                if (size - 1 >= 0)
                 {
                     onRemoveCallback(list, size - 1);
                 }
