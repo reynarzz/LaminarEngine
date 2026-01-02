@@ -95,7 +95,7 @@ namespace Editor
             if (value == null)
             {
                 value = GetDefaultValue(type);
-                SetMemberValueSafe(target, value, prop, 0);
+                SetMemberValueSafe(target, value, prop, index);
             }
 
             ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.Leaf;

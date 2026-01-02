@@ -145,7 +145,7 @@ namespace Engine.Utils
             if (type != null)
             {
                 return type.IsValueType && !type.IsPrimitive && !type.IsEnum &&
-                    !type.Namespace.Equals(typeof(vec2).Namespace);
+                    !type.Namespace.Equals(typeof(vec2).Namespace) && type != typeof(Color) && type != typeof(Color32);
             }
             return false;
         }
