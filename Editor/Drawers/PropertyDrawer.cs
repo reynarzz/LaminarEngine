@@ -60,7 +60,7 @@ namespace Editor
             ImGui.EndDisabled();
         }
 
-        public static void DrawVars(string entityID, object target, MemberInfo prop, float cursorX, int index, float width, bool enforceSerializedFieldAttribute)
+        public static void DrawVars(string objectId, object target, MemberInfo prop, float cursorX, int index, float width, bool enforceSerializedFieldAttribute)
         {
             if (prop == null)
                 return;
@@ -88,6 +88,15 @@ namespace Editor
                 }
             }
 
+
+
+            DrawVars(objectId, target, value, type, propertyName, isReadOnly, prop, cursorX, index, width);
+        }
+
+
+        public static void DrawVars(string objectId, object target, object value, Type type, string propertyName,
+                                    bool isReadOnly, MemberInfo prop, float cursorX, int index, float width)
+        {
             var header = prop.GetCustomAttribute<PropertyHeaderAttribute>();
             if (header != null)
             {
@@ -96,11 +105,6 @@ namespace Editor
                 ImGui.Unindent();
             }
 
-            DrawVars(entityID, target, value, type, propertyName, isReadOnly, prop, cursorX, index, width);
-        }
-        public static void DrawVars(string objectId, object target, object value, Type type, string propertyName,
-                                    bool isReadOnly, MemberInfo prop, float cursorX, int index, float width)
-        {
             if (value == null)
             {
                 value = GetDefaultValue(type);
@@ -361,8 +365,10 @@ namespace Editor
                     DrawVars(objectId, value, subProp, cursorX, index++, width, true);
                 }
                 SetMemberValueSafe(target, value, prop, propIndex);
-            }
+                DrawMethods(value, objectId);
 
+            }
+            
             ImGui.TreePop();
         }
 
@@ -527,7 +533,7 @@ namespace Editor
 
                     foreach (var asset in audios)
                     {
-                        if (ImGui.Selectable($"{System.IO.Path.GetFileName(asset.Value.Path)}##{asset.Key}"))
+                        if (ImGui.Selectable($"{Path.GetFileName(asset.Value.Path)}##{asset.Key}"))
                         {
                             setValue(Assets.GetAudioClip(asset.Value.Path));
                             ImGui.CloseCurrentPopup();
@@ -587,6 +593,52 @@ namespace Editor
             for (int i = 0; i < root.Children.Count; i++)
             {
                 DrawSceneObjectPropertyPicker(root.Children[i], targetType, setValue);
+            }
+        }
+        private static readonly List<(MethodInfo method, bool nextSameLine)> _invokableMethods = new();
+        public static void DrawMethods(object target, string objectId)
+        {
+            if (target == null)
+                return;
+            _invokableMethods.Clear();
+            var methods = target.GetType().GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            if (methods.Length > 0)
+            {
+                for (var i = 0; i < methods.Length; i++)
+                {
+                    var method = methods[i];
+                    var showMethod = method.GetCustomAttribute<ShowMethodInEditorAttribute>();
+                    if (showMethod != null && method.GetParameters().Length == 0 && !method.ContainsGenericParameters)
+                    {
+
+                        _invokableMethods.Add((method, showMethod.SameLineNextFunction));
+                       
+                    }
+                }
+                bool needNewLine = false;
+                var buttonSizeX = ImGui.GetContentRegionAvail().X - ImGui.GetStyle().FramePadding.X * _invokableMethods.Count;
+
+                var buttonSize = new Vector2(buttonSizeX / _invokableMethods.Count, 23);
+                for (var i = 0; i < _invokableMethods.Count; i++)
+                {
+                    var method = _invokableMethods[i];
+
+                    needNewLine = false;
+                    if (ImGui.Button(method.method.Name + $"##_METHOD_{objectId}_{i}", buttonSize))
+                    {
+                        method.method.Invoke(target, null);
+                    }
+
+                    if (method.nextSameLine)
+                    {
+                        needNewLine = true;
+                        ImGui.SameLine();
+                    }
+                }
+                if (needNewLine)
+                {
+                    ImGui.NewLine();
+                }
             }
         }
 

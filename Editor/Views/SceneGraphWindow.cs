@@ -22,6 +22,7 @@ namespace Editor.Views
         public void OnDraw()
         {
             ImGui.Begin("Scene graph");
+            ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2());
 
             void DrawActor(Actor actor)
             {
@@ -138,10 +139,12 @@ namespace Editor.Views
                 }
                 ImGui.PopID();
             }
+            ImGui.PopStyleVar();
 
             ImGui.End();
+
         }
-     
+
 
         public void OnUpdate()
         {

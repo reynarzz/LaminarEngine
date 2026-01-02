@@ -64,6 +64,13 @@ namespace Game
             {
                 
             }
+
+
+            [ShowMethodInEditor]
+            public void PrintDebugLog()
+            {
+                Debug.Log("Called from editor");
+            }
         }
         [SerializedField] public AStruct StructType { get; set; }
         [SerializedField] [HideFromInspector] public List<TestClass> _TestCLassList { get; set; }
@@ -82,6 +89,14 @@ namespace Game
         [SerializedField] public IComponent ComponentInterface { get; set; }
         [SerializedField] public IObject ObjectInterface { get; set; }
         [SerializedField] public Body2DType[] EnumArray { get; set; }
-        [SerializedField] public TestClass[] ClassArray { get; set; } 
+        [SerializedField] public TestClass[] ClassArray { get; set; }
+
+
+        [ShowMethodInEditor]
+        public void AMethodCallingFromEditor()
+        {
+            Debug.Log("Called from editor");
+        }
+
     }
 }

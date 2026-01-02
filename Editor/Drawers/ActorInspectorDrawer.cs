@@ -24,7 +24,6 @@ namespace Editor
 
         public void OnDraw()
         {
-
             if (Selector.Selected && Selector.Selected.IsAlive && Selector.Selected is Actor actor)
             {
                 DrawActor(actor);
@@ -44,6 +43,8 @@ namespace Editor
 
                                 index++;
                             }
+
+                            PropertyDrawer.DrawMethods(component, x.GetID().ToString());
 
                         }
                     });

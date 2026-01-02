@@ -134,6 +134,7 @@ namespace Engine
         public bool IsPaused => _soundPlayer?.State == PlaybackState.Paused;
         public bool IsStopped => _soundPlayer?.State == PlaybackState.Stopped;
 
+        [ShowMethodInEditor(true)]
         public void Play()
         {
             if (_soundPlayer == null)
@@ -185,14 +186,16 @@ namespace Engine
             sound.Play();
         }
 
+        [ShowMethodInEditor(true)]
         public void Pause()
         {
             if (_soundPlayer == null)
                 return;
 
             _soundPlayer.Pause();
-        }
 
+        }
+        [ShowMethodInEditor]
         public void Stop()
         {
             if (_soundPlayer == null)
