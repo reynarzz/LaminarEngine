@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Engine.Types
+namespace Engine
 {
     /// <summary>
     /// Points a property whose value will be automatically resolved. Works alongside the "RequiredComponent" attribute.

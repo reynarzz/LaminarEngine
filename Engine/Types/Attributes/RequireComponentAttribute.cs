@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Engine.Types
+namespace Engine
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public class RequireComponentAttribute : Attribute

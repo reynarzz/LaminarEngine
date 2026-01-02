@@ -12,7 +12,7 @@ namespace Engine.Layers
     internal class IOLayer : LayerBase
     {
         private static AssetDatabase _assetDatabase;
-
+        internal static AssetDatabase Database => _assetDatabase; // Remove this.
         // Refactor: (factory)
         public override void Initialize()
         {

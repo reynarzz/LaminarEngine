@@ -27,6 +27,8 @@ namespace Editor
             io.BackendFlags |= ImGuiBackendFlags.HasSetMousePos;
             io.KeyRepeatDelay = 0.35f; // default ~0.25
             io.KeyRepeatRate = 0.05f; // default ~0.05
+            io.MouseDoubleClickTime = 0.8f;
+
             CreateCursors();
 
             if (installCallbacks)

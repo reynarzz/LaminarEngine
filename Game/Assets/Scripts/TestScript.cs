@@ -77,6 +77,7 @@ namespace Game
         //[ExposeEditorField] public mat3 mat3Test { get; set; }
         //[ExposeEditorField] public mat4 mat4Test { get; set; }
         //[ExposeEditorField] private List<List<int>> _nestedList;
+        [PropertyHeader("Important fields")]
         [SerializedField] public string String { get; set; }
         [SerializedField] public IComponent ComponentInterface { get; set; }
         [SerializedField] public IObject ObjectInterface { get; set; }

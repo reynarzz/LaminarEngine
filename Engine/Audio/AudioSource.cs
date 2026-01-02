@@ -17,6 +17,8 @@ namespace Engine
         private bool _isLooping = false;
 
         internal SoundPlayer SoundPlayer => _soundPlayer;
+
+        [SerializedField]
         public AudioClip Clip
         {
             get => _audioClip;

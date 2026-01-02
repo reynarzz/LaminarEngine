@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    public class Sprite : EObject
+    public class Sprite : AssetResourceBase
     {
         public Texture2D Texture { get; }
         public int AtlasIndex { get; }
@@ -26,7 +26,7 @@ namespace Engine
         {
             Name = texture?.Name;
         }
-        public Sprite(int atlasIndex, Texture2D texture)
+        public Sprite(int atlasIndex, Texture2D texture) : base(texture.Path, Guid.NewGuid())
         {
             AtlasIndex = atlasIndex;
             Texture = texture;

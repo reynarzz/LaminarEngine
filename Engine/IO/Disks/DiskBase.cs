@@ -13,6 +13,7 @@ namespace Engine.IO
         public AssetsDatabaseInfo AssetDatabaseInfo { get; protected set; } = new();
         protected Dictionary<Guid, byte[]> AssetsData { get; private set; } = new();
 
+
         public abstract bool Initialize();
 
         public struct RawAssetContent
@@ -44,6 +45,11 @@ namespace Engine.IO
             }
 
             return default;
+        }
+
+        internal KeyValuePair<Guid, AssetInfo>[] GetAssetsInfo(AssetType assetType)
+        {
+            return AssetDatabaseInfo.Assets.Where(x => x.Value.Type == assetType).ToArray();
         }
 
         public AssetMetaFileBase GetAssetMeta(Guid guid)

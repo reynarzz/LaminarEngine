@@ -1,5 +1,6 @@
 ﻿using Editor.Utils;
 using Engine;
+using Engine.Layers;
 using Engine.Utils;
 using GlmNet;
 using ImGuiNET;
@@ -87,6 +88,14 @@ namespace Editor
                 }
             }
 
+            var header = prop.GetCustomAttribute<PropertyHeaderAttribute>();
+            if (header != null)
+            {
+                ImGui.Indent();
+                ImGui.Text(header.HeaderText);
+                ImGui.Unindent();
+            }
+
             DrawVars(entityID, target, value, type, propertyName, isReadOnly, prop, cursorX, index, width);
         }
         public static void DrawVars(string objectId, object target, object value, Type type, string propertyName,
@@ -109,8 +118,21 @@ namespace Editor
                 flags = ImGuiTreeNodeFlags.OpenOnArrow;
             }
 
-            if (!ImGui.TreeNodeEx($"{propertyName}##{objectId}{index}", flags))
+            unsafe
+            {
+
+                ImGui.PushStyleColor(ImGuiCol.HeaderHovered, new Vector4(0));
+                ImGui.PushStyleColor(ImGuiCol.HeaderActive, new Vector4(0));
+            }
+
+            var show = ImGui.TreeNodeEx($"{propertyName}##{objectId}{index}", flags);
+            if (!show)
+            {
+                ImGui.PopStyleColor(2); 
                 return;
+            }
+
+            ImGui.PopStyleColor(2);
 
             // Context menu
             if (ImGui.BeginPopupContextItem())
@@ -149,85 +171,84 @@ namespace Editor
             }
             else if (type == typeof(bool))
             {
-                DrawSimpleProperty<bool>(propertyName, target, value, isReadOnly, prop, index, width, 
+                DrawSimpleProperty<bool>(propertyName, target, value, isReadOnly, prop, index, width,
                     EditorGuiFieldsResolver.DrawBoolField);
             }
             else if (type == typeof(int))
             {
-                DrawSimpleProperty<int>(propertyName, target, value, isReadOnly, prop, index, width, 
+                DrawSimpleProperty<int>(propertyName, target, value, isReadOnly, prop, index, width,
                     EditorGuiFieldsResolver.DrawIntField);
             }
             else if (type == typeof(uint))
             {
-                DrawSimpleProperty<uint>(propertyName, target, value, isReadOnly, prop, index, width, 
+                DrawSimpleProperty<uint>(propertyName, target, value, isReadOnly, prop, index, width,
                     EditorGuiFieldsResolver.DrawUIntField);
             }
             else if (type == typeof(long))
             {
-                DrawSimpleProperty<long>(propertyName, target, value, isReadOnly, prop, index, width, 
+                DrawSimpleProperty<long>(propertyName, target, value, isReadOnly, prop, index, width,
                     EditorGuiFieldsResolver.DrawLongField);
             }
             else if (type == typeof(ulong))
             {
-                DrawSimpleProperty<ulong>(propertyName, target, value, isReadOnly, prop, index, width, 
+                DrawSimpleProperty<ulong>(propertyName, target, value, isReadOnly, prop, index, width,
                     EditorGuiFieldsResolver.DrawULongField);
             }
             else if (type == typeof(Color))
             {
-                DrawSimpleProperty<Color>(propertyName, target, value, isReadOnly, prop, index, width, 
+                DrawSimpleProperty<Color>(propertyName, target, value, isReadOnly, prop, index, width,
                     EditorGuiFieldsResolver.DrawColorField);
             }
             else if (type == typeof(Color32))
             {
-                DrawSimpleProperty<Color>(propertyName, target, value, isReadOnly, prop, index, width, 
+                DrawSimpleProperty<Color>(propertyName, target, value, isReadOnly, prop, index, width,
                     EditorGuiFieldsResolver.DrawColorField, true, v => (Color32)v);
             }
             else if (type == typeof(float))
             {
-                DrawSimpleProperty<float>(propertyName, target, value, isReadOnly, prop, index, width, 
+                DrawSimpleProperty<float>(propertyName, target, value, isReadOnly, prop, index, width,
                     EditorGuiFieldsResolver.DrawFloatField);
             }
             else if (type == typeof(double))
             {
-                DrawSimpleProperty<double>(propertyName, target, value, isReadOnly, prop, index, width, 
+                DrawSimpleProperty<double>(propertyName, target, value, isReadOnly, prop, index, width,
                     EditorGuiFieldsResolver.DrawDoubleField);
             }
             else if (type == typeof(string))
             {
-                DrawSimpleProperty<string>(propertyName, target, value, isReadOnly, prop, index, width, 
+                DrawSimpleProperty<string>(propertyName, target, value, isReadOnly, prop, index, width,
                     EditorGuiFieldsResolver.DrawStringField);
             }
             else if (type == typeof(vec2))
             {
-                DrawSimpleProperty<vec2>(propertyName, target, value, isReadOnly, prop, index, width, 
+                DrawSimpleProperty<vec2>(propertyName, target, value, isReadOnly, prop, index, width,
                     EditorGuiFieldsResolver.DrawVec2Field);
             }
             else if (type == typeof(vec3))
             {
-                DrawSimpleProperty<vec3>(propertyName, target, value, isReadOnly, prop, index, width, 
+                DrawSimpleProperty<vec3>(propertyName, target, value, isReadOnly, prop, index, width,
                     EditorGuiFieldsResolver.DrawVec3Field);
             }
             else if (type == typeof(vec4))
             {
-                DrawSimpleProperty<vec4>(propertyName, target, value, isReadOnly, prop, index, width, 
+                DrawSimpleProperty<vec4>(propertyName, target, value, isReadOnly, prop, index, width,
                     EditorGuiFieldsResolver.DrawVec4Field);
             }
             else if (type == typeof(mat2))
             {
-                DrawSimpleProperty<mat2>(propertyName, target, value, isReadOnly, prop, index, width, 
+                DrawSimpleProperty<mat2>(propertyName, target, value, isReadOnly, prop, index, width,
                     EditorGuiFieldsResolver.DrawMatrix);
             }
             else if (type == typeof(mat3))
             {
-                DrawSimpleProperty<mat3>(propertyName, target, value, isReadOnly, prop, index, width, 
+                DrawSimpleProperty<mat3>(propertyName, target, value, isReadOnly, prop, index, width,
                     EditorGuiFieldsResolver.DrawMatrix);
             }
             else if (type == typeof(mat4))
             {
-                DrawSimpleProperty<mat4>(propertyName, target, value, isReadOnly, prop, index, width, 
+                DrawSimpleProperty<mat4>(propertyName, target, value, isReadOnly, prop, index, width,
                     EditorGuiFieldsResolver.DrawMatrix);
             }
-            // enum
             else if (type.IsEnum)
             {
                 ImGui.SameLine();
@@ -256,8 +277,6 @@ namespace Editor
 
                 void OnAdd(IList list, int totalLength)
                 {
-                    Debug.Log(totalLength);
-
                     while (list.Count < totalLength)
                     {
                         list.Add(GetDefaultValue(elementType));
@@ -475,7 +494,7 @@ namespace Editor
                 return;
             }
 
-            if (valueType.IsAssignableFrom(typeof(AssetResourceBase)))
+            if (typeof(AssetResourceBase).IsAssignableFrom(valueType))
             {
                 // Asset picking
                 if (valueType == typeof(Material))
@@ -501,6 +520,19 @@ namespace Editor
                     //        ImGui.CloseCurrentPopup();
                     //    }
                     //}
+                }
+                else if (valueType == typeof(AudioClip))
+                {
+                    var audios = IOLayer.Database.Disk.GetAssetsInfo(SharedTypes.AssetType.Audio);
+
+                    foreach (var asset in audios)
+                    {
+                        if (ImGui.Selectable($"{System.IO.Path.GetFileName(asset.Value.Path)}##{asset.Key}"))
+                        {
+                            setValue(Assets.GetAudioClip(asset.Value.Path));
+                            ImGui.CloseCurrentPopup();
+                        }
+                    }
                 }
             }
             else

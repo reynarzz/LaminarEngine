@@ -15,7 +15,7 @@ namespace Engine.IO
         private readonly AssetDatabaseCache _databaseCache;
         private BiDictionary<Guid, string> _guidPathDict;
         private DiskBase _disk;
-        private DiskBase Disk => _disk;
+        internal DiskBase Disk => _disk;
         public AssetDatabase()
         {
             _assetbuilder = new()
