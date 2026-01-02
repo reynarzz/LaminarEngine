@@ -17,6 +17,9 @@ namespace Editor
     {
         private readonly Dictionary<Type, IDrawerEditor> _drawers;
         private IDrawerEditor _prevSelected;
+        private const string NothingSelectedLabel = "Nothing is selected.";
+        private bool _isTextSizeCalculated;
+        private Vector2 _textSize;
 
         public ObjectEditorView()
         {
@@ -82,11 +85,15 @@ namespace Editor
             }
 
             var size = ImGui.GetContentRegionAvail();
-            var label = "Nothing is selected.";
 
-            var textSize = ImGui.CalcTextSize(label);
-            ImGui.SetCursorPos(new Vector2(size.X / 2.0f - textSize.X / 2.0f, size.Y / 2.0f - textSize.Y / 2.0f));
-            ImGui.Text(label);
+            if (!_isTextSizeCalculated)
+            {
+                _isTextSizeCalculated = true;
+                _textSize = ImGui.CalcTextSize(NothingSelectedLabel);
+            }
+
+            ImGui.SetCursorPos(new Vector2(size.X / 2.0f - _textSize.X / 2.0f, size.Y / 2.0f - _textSize.Y / 2.0f));
+            ImGui.Text(NothingSelectedLabel);
         }
 
         public void OnUpdate()
