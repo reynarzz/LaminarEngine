@@ -128,7 +128,7 @@ namespace Editor
             var show = ImGui.TreeNodeEx($"{propertyName}##{objectId}{index}", flags);
             if (!show)
             {
-                ImGui.PopStyleColor(2); 
+                ImGui.PopStyleColor(2);
                 return;
             }
 
@@ -560,9 +560,12 @@ namespace Editor
             }
             else if (typeof(IComponent).IsAssignableFrom(targetType))
             {
-                if (ImGui.Selectable($"{root.Name}##{root.GetID()}"))
+                // TODO: this is slow, it should be cached.
+                var components = root.Actor.Components.Where(x => x.GetType().IsAssignableTo(targetType)).ToArray();
+
+                if (components.Length > 0 && ImGui.Selectable($"{root.Name}##{root.GetID()}"))
                 {
-                    foreach (var comp in root.Actor.Components)
+                    foreach (var comp in components)
                     {
                         if (targetType.IsAssignableFrom(comp.GetType()))
                         {
