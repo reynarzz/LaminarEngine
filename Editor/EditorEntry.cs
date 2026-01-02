@@ -1,4 +1,5 @@
 ﻿using Editor.Rendering;
+using Editor.Utils;
 using Editor.Views;
 using Engine;
 using Engine.Graphics;
@@ -20,7 +21,7 @@ namespace Editor
     // Add mouse picker the ability to pick the object behind the current picked object.
     // Draw gizmos (camera icon (and any other object too), arrows handle, object selected)
     // Remove the sides of the screen for the mouse picker, so an object doesn't get picked when dragging a window.
-    
+
     internal class EditorEntry
     {
         private WindowStandalone _win;
@@ -43,7 +44,14 @@ namespace Editor
 #if DEBUG
             Utils.NativeLogger.Init();
 #endif
-            _win = new WindowStandalone("GFS Editor", 1324, 740, Color.Black);
+            var windowIcon = new TextureDescriptor()
+            {
+                Width = EditorIcon.Width,
+                Height = EditorIcon.Height,
+                Buffer = EditorIcon.Icon
+            };
+
+            _win = new WindowStandalone("GFS Editor", 1324, 740, Color.Black, windowIcon);
             _win.CanResize = true;
             _sceneGraphWindow = new SceneGraphWindow();
             _objectEditor = new ObjectEditorView();
@@ -74,7 +82,7 @@ namespace Editor
             _gameWindow = new EditorGameView(_win, _gameSurface, _inputLayer);
 
             _engine = new GFSEngine(_gameWindow, new GameApplication(), _inputLayer);
-            
+
             var sceneBatcher = new SceneBatchedRenderer();
             _gameSurface.SceneRenderers = new() { sceneBatcher };
             _editorCamera = new EditorCamera();
@@ -89,8 +97,8 @@ namespace Editor
                 GizmosRenderer = new GizmosRenderer(),
                 RenderTextures = [new RenderTexture(1920, 1080) { Name = "Scene view Render Texture" },
                                   new RenderTexture(1920, 1080) { Name = "Mouse picker Render Texture" }],
-                SceneRenderers = 
-                { 
+                SceneRenderers =
+                {
                     sceneBatcher,
                 },
             };
@@ -102,7 +110,7 @@ namespace Editor
             {
                 Render();
             };
-        
+
             _win.OnWindowChanged += (w, h) =>
             {
                 RenderingLayer.OverlayOptions.Width = _win.PhysicalWidth;

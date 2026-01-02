@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Engine.Graphics;
 using GLFW;
 using OpenGL;
 
@@ -134,7 +135,11 @@ namespace Engine
 
             Glfw.SetWindowPosition(NativeWindow, newX, newY);
         }
-        internal WindowStandalone(string name, int width, int height, Color windowColor)
+        internal WindowStandalone(string name, int width, int height, Color windowColor) : this(name, width, height, windowColor, null)
+        {
+
+        }
+        internal WindowStandalone(string name, int width, int height, Color windowColor, TextureDescriptor image)
         {
             StartWindowColor = windowColor;
             _windowName = name;
@@ -223,8 +228,22 @@ namespace Engine
             Glfw.GetFramebufferSize(NativeWindow, out width, out height);
             Width = width;
             Height = height;
-        }
 
+            LoadIconRandom(image);
+        }
+        private void LoadIconRandom(TextureDescriptor image)
+        {
+            if (image == null)
+                return;
+
+            unsafe
+            {
+                fixed (byte* col = image.Buffer)
+                {
+                    Glfw.SetWindowIcon(NativeWindow, 1, [new Image(image.Width, image.Height, (nint)col)]);
+                }
+            }
+        }
         public void SwapBuffers()
         {
             Glfw.SwapBuffers(NativeWindow);
