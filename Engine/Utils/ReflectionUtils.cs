@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GlmNet;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -132,13 +133,29 @@ namespace Engine.Utils
             }
         }
 
+        public static bool IsUserDefinedStruct(MemberInfo member)
+        {
+            var type = GetMemberType(member);
+
+            return IsUserDefinedStruct(type);
+        }
+
+        public static bool IsUserDefinedStruct(Type type)
+        {
+            if (type != null)
+            {
+                return type.IsValueType && !type.IsPrimitive && !type.IsEnum &&
+                    !type.Namespace.Equals(typeof(vec2).Namespace);
+            }
+            return false;
+        }
         public static Type GetMemberType(MemberInfo member)
         {
             return member switch
             {
                 PropertyInfo p => p.PropertyType,
                 FieldInfo f => f.FieldType,
-                _ => throw new NotSupportedException($"Unsupported member: {member.MemberType}")
+                _ => null
             };
         }
 
@@ -155,14 +172,18 @@ namespace Engine.Utils
                         return field?.FieldType?.GetFields(flags)?.Length ?? 0;
                     }
                 default:
-                    throw new NotSupportedException("Unsupported member type: " + member.GetType());
+                    return 0;
             }
         }
 
         public static bool IsCollection(MemberInfo member)
         {
             var type = GetMemberType(member);
+            return IsCollection(type);
+        }
 
+        public static bool IsCollection(Type type)
+        {
             return (type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(List<>) ||
                                            type.GetGenericTypeDefinition() == typeof(Dictionary<,>)))
                  || type.IsArray;
@@ -170,7 +191,7 @@ namespace Engine.Utils
 
         public static bool IsEObject(Type t)
         {
-            return typeof(EObject).IsAssignableFrom(t);
+            return typeof(EObject).IsAssignableFrom(t) || typeof(IObject).IsAssignableFrom(t);
         }
     }
 }

@@ -52,6 +52,7 @@ namespace Game
         {
             [SerializedField] public int Value;
             [SerializedField] public List<TestClass> _TestCLassList { get; set; } = new();
+            [SerializedField] public List<Component> _TestComponentList { get; set; } 
             [SerializedField] public TestClass TestClassObj = new TestClass();
             //[ExposeEditorField] public List<string> StringTest { get; set; } = new();
             //[ExposeEditorField] public List<int> IntTest { get; set; } = new();
@@ -64,11 +65,13 @@ namespace Game
                 
             }
         }
-        //[ExposeEditorField] public AStruct StructType { get; set; }
+        [SerializedField] public AStruct StructType { get; set; }
         [SerializedField] [HideFromInspector] public List<TestClass> _TestCLassList { get; set; }
         [SerializedField] public TestClass TestClassObj;
         [SerializedField] public List<string> StringTest;
-        //[ExposeEditorField] public List<int> IntTest { get; set; } = new();
+        [SerializedField] public List<int> IntTest { get; set; } = new();
+        [SerializedField] public List<Component> _TestComponentList { get; set; }
+
         //[ExposeEditorField] public List<Body2DType> EnumList { get; set; } = new();
         //[ExposeEditorField] public mat2 mat2Test { get; set; }
         //[ExposeEditorField] public mat3 mat3Test { get; set; }

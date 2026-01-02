@@ -58,12 +58,7 @@ namespace Editor
             }
             ImGui.EndDisabled();
         }
-        private static bool IsUserDefinedStruct(Type t)
-        {
-            return t.IsValueType &&
-                   !t.IsPrimitive &&
-                   !t.IsEnum;
-        }
+
         public static void DrawVars(string entityID, object target, MemberInfo prop, float cursorX, int index, float width, bool enforceSerializedFieldAttribute)
         {
             if (prop == null)
@@ -105,8 +100,11 @@ namespace Editor
 
             ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.Leaf;
 
-            if ((ReflectionUtils.GetPropertiesCount(prop) > 1 && type.IsClass && type != typeof(string) && 
-                !ReflectionUtils.IsEObject(type)) || ReflectionUtils.IsCollection(prop))
+            var isValidClass = (type.IsClass) && type != typeof(string);
+            if ((ReflectionUtils.GetPropertiesCount(prop) > 1 && (isValidClass) &&
+                !ReflectionUtils.IsEObject(type)) ||
+                (ReflectionUtils.IsCollection(prop) && isValidClass && !ReflectionUtils.IsEObject(type)) ||
+                ReflectionUtils.IsUserDefinedStruct(prop))
             {
                 flags = ImGuiTreeNodeFlags.OpenOnArrow;
             }
@@ -140,13 +138,19 @@ namespace Editor
                 ImGui.SameLine();
                 ImGui.SetCursorPosX(Math.Max(_xPosOffset, ImGui.GetCursorPosX()));
 
-                DrawEObjectSlot(value as EObject, type, v =>
+                var eObject = value as EObject;
+                var eObjectType = eObject != null ? eObject.GetType() : type;
+
+                DrawEObjectSlot(eObject, eObjectType, v =>
                 {
-                    ReflectionUtils.SetMemberValue(target, prop, v);
+                    if (v != null)
+                    {
+                        int a = 0;
+                    }
+                    SetMemberValueSafe(target, v, prop, index);
                     return true;
                 }, width);
             }
-            // bool
             else if (type == typeof(bool))
             {
                 DrawSimpleProperty<bool>(propertyName, target, value, isReadOnly, prop, index, width, EditorGuiFieldsResolver.DrawBoolField);
@@ -232,6 +236,7 @@ namespace Editor
                 var elementType = type.GetGenericArguments().FirstOrDefault();
 
                 DrawList(objectId, propertyName, list, value, elementType, prop, cursorX, OnAdd, OnRemove, OnRemoveCount);
+                SetMemberValueSafe(target, value, prop, index);
 
                 void OnAdd(IList list, int totalLength)
                 {
@@ -269,6 +274,7 @@ namespace Editor
                 var elementType = type.GetElementType();
 
                 DrawList(objectId, propertyName, array, value, elementType, prop, cursorX, OnAdd, OnRemove, OnRemoveCount);
+                SetMemberValueSafe(target, value, prop, index);
 
                 void OnAdd(IList list, int totalLength)
                 {
@@ -308,7 +314,7 @@ namespace Editor
                     SetMemberValueSafe(target, value, prop, index);
                 }
             }
-            else if (type.IsClass || IsUserDefinedStruct(type))
+            else if (type.IsClass || ReflectionUtils.IsUserDefinedStruct(type))
             {
                 var members = ReflectionUtils.GetAllMembersWithAttribute<SerializedFieldAttribute>(type, true, true);
 
@@ -335,18 +341,17 @@ namespace Editor
                 var listType = value.GetType();
 
                 EditorGuiFieldsResolver.DrawListField(propertyName, list, false, onAddCallback, onRemoveCallback, removeCount,
-                (index, itemWidth, item) =>
-                {
-                    if (item == null)
-                    {
-                        item = GetDefaultValue(elemenType);
-                    }
+                  (index, itemWidth, item) =>
+                  {
+                      if (item == null)
+                      {
+                          item = GetDefaultValue(elemenType);
+                      }
 
-                    DrawVars(objectId, list, item, elemenType, $"##__{index}_item", false, prop, cursorX, index, itemWidth);
+                      DrawVars(objectId, list, item, elemenType, $"##__{index}_item", false, prop, cursorX, index, itemWidth);
 
-                    return false;
-                });
-
+                      return false;
+                  });
             }
         }
 
@@ -549,7 +554,7 @@ namespace Editor
                 {
                     return string.Empty;
                 }
-                else if (type.IsClass && !type.IsAssignableTo(typeof(EObject)))
+                else if (type.IsClass && !type.IsAssignableTo(typeof(IObject)))
                 {
                     try
                     {
