@@ -3,6 +3,7 @@
     "IsNearest": false,
     "IsAtlas": false,
     "Mode": 0,
+    "Filter": 0,
     "PixelPerUnit": 16
   },
   "GUID": "2f779d6a-a4bb-4860-b3d7-9a2ed747698b"

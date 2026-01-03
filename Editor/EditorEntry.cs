@@ -64,11 +64,7 @@ namespace Editor
             _glfwInput.Init();
             _node = new AnimatorEditorView();
 
-            var assemblyDir = Paths.ClearPathSeparation(Path.GetDirectoryName(AppContext.BaseDirectory)!);
-            var root = Path.Combine(assemblyDir.Substring(0, assemblyDir.LastIndexOf(PROJECT_FOLDER_NAME)), Paths.GAME_FOLDER_NAME);
-
-            new GameCooker.GameProject().Initialize(new GameCooker.ProjectConfig() { ProjectFolderRoot = root });
-
+            ImportAssets();
 
             _gameSurface = new RenderingSurface()
             {
@@ -127,6 +123,34 @@ namespace Editor
             {
                 UpdateAll();
             }
+        }
+
+        private void ImportAssets()
+        {
+            // This will import all the assets without using the GUI tool. Useful for running the project in debug mode.
+            var assemblyDir = Paths.ClearPathSeparation(Path.GetDirectoryName(AppContext.BaseDirectory)!);
+            var root = Path.Combine(assemblyDir.Substring(0, assemblyDir.LastIndexOf(PROJECT_FOLDER_NAME)), Paths.GAME_FOLDER_NAME);
+
+            new GameCooker.GameProject().Initialize(new GameCooker.ProjectConfig() { ProjectFolderRoot = root });
+            var releaseAssetsList = default(string[]);
+            if (File.Exists(Paths.GetShipAssetsFilePath()))
+            {
+                releaseAssetsList = File.ReadAllText(Paths.GetShipAssetsFilePath())?.Split('\n', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+            }
+            new GameCooker.AssetsCooker().CookAll(new GameCooker.CookOptions()
+            {
+                Type = GameCooker.CookingType.DevMode,
+                Platform = GameCooker.CookingPlatform.Windows,
+                AssetsFolderPath = Paths.GetAssetsFolderPath(),
+                ExportFolderPath = Paths.GetAssetDatabaseFolder(),
+                FileOptions = new GameCooker.CookFileOptions()
+                {
+                    CompressAllFiles = false,
+                    CompressionLevel = 12,
+                    EncryptAllFiles = false,
+                },
+                MatchingFiles = releaseAssetsList
+            });
         }
 
         private void Render()
