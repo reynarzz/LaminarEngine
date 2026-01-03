@@ -14,6 +14,7 @@ using System.Numerics;
 namespace Editor
 {
     // TODO:
+    // Current code is very slow, most of it is in 'prototype' phase, a nice (big) refactor is on the way.
     // Refactor.
     // Hierarchy view
     // Simple object editor: Components(name) (No saving data)

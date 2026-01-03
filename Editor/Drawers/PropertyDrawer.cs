@@ -598,7 +598,8 @@ namespace Editor
         private static readonly List<(MethodInfo method, bool nextSameLine)> _invokableMethods = new();
         public static void DrawMethods(object target, string objectId)
         {
-            if (target == null)
+            // TODO: This is very slow, so slow that I will comment it to implement it better once the hot reloading system is implemented.
+            /*if (target == null)
                 return;
             _invokableMethods.Clear();
             var methods = target.GetType().GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
@@ -639,7 +640,7 @@ namespace Editor
                 {
                     ImGui.NewLine();
                 }
-            }
+            }*/
         }
 
         private static object GetDefaultValue(Type type)
