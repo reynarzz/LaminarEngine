@@ -51,7 +51,7 @@ namespace Editor
                 Buffer = EditorIcon.Icon
             };
 
-            _win = new WindowStandalone("GFS Editor", 1324, 740, Color.Black);
+            _win = new WindowStandalone("GFS Editor", 1324, 740, Color.Black, windowIcon);
             _win.CanResize = true;
             _sceneGraphWindow = new SceneGraphWindow();
             _objectEditor = new ObjectEditorView();
