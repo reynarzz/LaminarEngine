@@ -37,7 +37,7 @@ namespace Editor
 
         internal override void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Enter))
+            if (Input.GetKeyDown(KeyCode.P))
             {
                 _time.Initialize();
                 PushLayer(new PhysicsLayer(), 6);

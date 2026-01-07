@@ -145,13 +145,13 @@ namespace Editor.Rendering
 
                 void DrawRenderers(List<RendererData2D> renderers, mat4 projM, mat4 viewM, mat4 viewProjM, bool discardAlphaWithTexture, bool discardWithPickedList)
                 {
+                    if (renderers == null || renderers.Count == 0)
+                        return;
+
                     _drawCallData.Uniforms[0].SetMat4(Consts.VIEW_PROJ_UNIFORM_NAME, viewProjM);
                     _drawCallData.Uniforms[1].SetMat4(Consts.VIEW_UNIFORM_NAME, viewM);
                     _drawCallData.Uniforms[2].SetMat4(Consts.PROJECTION_UNIFORM_NAME, projM);
                     _drawCallData.Uniforms[3].SetInt("uDiscard", discardAlphaWithTexture ? 1 : 0);
-
-                    if (renderers == null || renderers.Count == 0)
-                        return;
 
                     for (int i = 0; i < renderers.Count; i++)
                     {

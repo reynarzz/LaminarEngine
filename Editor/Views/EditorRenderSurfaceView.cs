@@ -1,4 +1,5 @@
 ﻿using Editor.Views;
+using Engine;
 using Engine.Graphics;
 using Engine.Layers;
 using ImGuiNET;
@@ -63,25 +64,20 @@ namespace Editor
             WindowPositionRender = new Vector2((int)pos.X, (int)pos.Y + (int)ImGui.GetFrameHeight() / 2);
             ImGui.GetMousePos();
 
-            var surfaceCamerasInUse = (_surface.Cameras != null && _surface.Cameras.Length > 0);
+            ICamera camera = null;
+            var surfaceCamerasInUse = _surface.Cameras != null && _surface.Cameras.Length > 0 &&
+                                      (_surface.Cameras[0]?.TryGetTarget(out camera) ?? false) && camera != null && camera.IsAlive;
             if (surfaceCamerasInUse)
             {
-                if (_surface.Cameras[0].TryGetTarget(out var camera) && camera != null && camera.IsAlive)
-                {
-                    var cameraRenderTarget = camera.OutRenderTexture?.NativeResource;
+                var cameraRenderTarget = camera.OutRenderTexture?.NativeResource;
 
-                    if (cameraRenderTarget == null)
-                    {
-                        cameraRenderTarget = _surface.RenderTextures[0].NativeResource;
-                    }
-
-                    var frameBuffer = cameraRenderTarget as GLFrameBuffer;
-                    ImGui.Image((nint)frameBuffer.ColorTexture.Handle, ImGui.GetContentRegionAvail(), new Vector2(0, 1), new Vector2(1, 0));
-                }
-                else
+                if (cameraRenderTarget == null)
                 {
-                    DefaultNoCamerasFound();
+                    cameraRenderTarget = _surface.RenderTextures[0].NativeResource;
                 }
+
+                var frameBuffer = cameraRenderTarget as GLFrameBuffer;
+                ImGui.Image((nint)frameBuffer.ColorTexture.Handle, ImGui.GetContentRegionAvail(), new Vector2(0, 1), new Vector2(1, 0));
             }
             else
             {
