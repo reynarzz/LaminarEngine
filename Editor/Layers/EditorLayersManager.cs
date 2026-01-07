@@ -2,6 +2,7 @@
 using Engine.Layers;
 using Engine.Layers.Input;
 using Game;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,7 +45,8 @@ namespace Editor
                 PushLayer(new SceneLayer(), 4);
                 PushLayer(new GameApplication(), 2);
             }
-            if(Input.GetKeyDown(KeyCode.Backspace)) 
+
+            if (Input.GetKeyDown(KeyCode.Backspace))
             {
                 PopLayer(2);
                 PopLayer(4);
@@ -52,6 +54,16 @@ namespace Editor
 
                 //
             }
+
+            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.S))
+            {
+                Debug.Log("Save");
+
+                var sceneActors = SceneEditorSerializer.SerializeScene(SceneManager.Scenes[0]);
+
+                File.WriteAllText("D:/Scene.txt", JsonConvert.SerializeObject(sceneActors, Formatting.Indented));
+            }
+
 
             base.Update();
         }

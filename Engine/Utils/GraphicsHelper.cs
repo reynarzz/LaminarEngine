@@ -237,12 +237,7 @@ namespace Engine
                 indices.Add((uint)(baseIndex + 0));
             }
 
-            Vertex MakeVertex(
-                vec3 position,
-                vec3 dir,
-                float side,
-                uint color,
-                int vertexIndex)
+            Vertex MakeVertex(vec3 position, vec3 dir, float side, uint color, int vertexIndex)
             {
                 return new Vertex
                 {

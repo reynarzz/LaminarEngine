@@ -8,28 +8,28 @@ namespace Editor
 {
     internal class ActorDataSceneAsset
     {
-        internal string Name { get; set; }
-        internal Guid ParentID { get; set; } = Guid.Empty;
-        internal int ParentIndex { get; set; } = 0;
-        internal int Index { get; set; } = 0;
-        internal Guid ID { get; set; }
-        internal int Layer { get; set; }
-        public List<ComponentDataSceneAsset> ComponentsData { get; private set; } = new();
+        public string Name { get; set; }
+        public Guid ParentID { get; set; } = Guid.Empty;
+        public int ParentIndex { get; set; } = 0;
+        public int Index { get; set; } = 0;
+        public Guid ID { get; set; }
+        public int Layer { get; set; }
+        public List<ComponentDataSceneAsset> ComponentsData { get; set; }
     }
 
     internal class ComponentDataSceneAsset
     {
-        internal string TypeName { get; set; }
-        internal int ComponentIndex { get; set; }
-        internal Guid ID { get; set; }
-        internal List<ComponentSerializedProperty> SerializedProperties { get; private set; } = new();
+        public string TypeName { get; set; }
+        public int ComponentIndex { get; set; }
+        public Guid ID { get; set; }
+        public List<ComponentSerializedProperty> SerializedProperties { get; set; }
     }
 
     internal class ComponentSerializedProperty
     {
-        internal string Name { get; set; }
-        internal PropertyType Type { get; set; }
-        internal ComponentPropertyData Data { get; set; }
+        public string Name { get; set; }
+        public PropertyType Type { get; set; }
+        public ComponentPropertyData Data { get; set; }
     }
 
     internal class ComponentPropertyData
@@ -39,7 +39,7 @@ namespace Editor
 
     internal class EObjectTargetPropertyType : ComponentPropertyData
     {
-        internal Guid ID { get; set; }
+        public Guid ID { get; set; }
     }
 
     internal enum PropertyType

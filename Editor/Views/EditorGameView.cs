@@ -7,7 +7,6 @@ namespace Editor
     internal class EditorGameView : EditorRenderSurfaceView, IWindow
     {
         private readonly InputLayerBase _inputLayer;
-
         public string Name { get; set; } = "Game View";
         public bool IsFullScreen { get; set; }
 
