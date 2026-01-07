@@ -66,26 +66,26 @@ namespace Editor
             var surfaceCamerasInUse = (_surface.Cameras != null && _surface.Cameras.Length > 0);
             if (surfaceCamerasInUse)
             {
-                var cameraRenderTarget = _surface.Cameras[0].OutRenderTexture?.NativeResource;
-
-                if (cameraRenderTarget == null)
+                if (_surface.Cameras[0].TryGetTarget(out var camera) && camera != null && camera.IsAlive)
                 {
-                    cameraRenderTarget = _surface.RenderTextures[0].NativeResource;
-                }
+                    var cameraRenderTarget = camera.OutRenderTexture?.NativeResource;
 
-                var frameBuffer = cameraRenderTarget as GLFrameBuffer;
-                ImGui.Image((nint)frameBuffer.ColorTexture.Handle, ImGui.GetContentRegionAvail(), new Vector2(0, 1), new Vector2(1, 0));
+                    if (cameraRenderTarget == null)
+                    {
+                        cameraRenderTarget = _surface.RenderTextures[0].NativeResource;
+                    }
+
+                    var frameBuffer = cameraRenderTarget as GLFrameBuffer;
+                    ImGui.Image((nint)frameBuffer.ColorTexture.Handle, ImGui.GetContentRegionAvail(), new Vector2(0, 1), new Vector2(1, 0));
+                }
+                else
+                {
+                    DefaultNoCamerasFound();
+                }
             }
             else
             {
-                // TODO: move this to be calculated just once.
-                string text = "No valid cameras were found/enabled.";
-                Vector2 textSize = ImGui.CalcTextSize(text);
-                Vector2 windowSize = ImGui.GetContentRegionAvail();
-
-                ImGui.SetCursorPos(new Vector2((windowSize.X - textSize.X) * 0.5f, (windowSize.Y - textSize.Y) * 0.5f));
-
-                ImGui.Text(text);
+                DefaultNoCamerasFound();
             }
 
             OnWindowRender();
@@ -94,6 +94,18 @@ namespace Editor
             ImGui.PopID();
             ImGui.PopStyleColor();
             ImGui.PopStyleVar();
+        }
+
+        private void DefaultNoCamerasFound()
+        {
+            // TODO: move this to be calculated just once.
+            string text = "No valid cameras were found/enabled.";
+            Vector2 textSize = ImGui.CalcTextSize(text);
+            Vector2 windowSize = ImGui.GetContentRegionAvail();
+
+            ImGui.SetCursorPos(new Vector2((windowSize.X - textSize.X) * 0.5f, (windowSize.Y - textSize.Y) * 0.5f));
+
+            ImGui.Text(text);
         }
     }
 }

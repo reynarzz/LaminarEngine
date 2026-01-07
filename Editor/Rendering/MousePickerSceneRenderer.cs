@@ -150,6 +150,9 @@ namespace Editor.Rendering
                     _drawCallData.Uniforms[2].SetMat4(Consts.PROJECTION_UNIFORM_NAME, projM);
                     _drawCallData.Uniforms[3].SetInt("uDiscard", discardAlphaWithTexture ? 1 : 0);
 
+                    if (renderers == null || renderers.Count == 0)
+                        return;
+
                     for (int i = 0; i < renderers.Count; i++)
                     {
                         var renderer = renderers[i];

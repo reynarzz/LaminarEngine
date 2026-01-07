@@ -84,7 +84,7 @@ namespace Editor
             _editorCamera = new EditorCamera();
             _editorSurface = new RenderingSurface()
             {
-                Cameras = [_editorCamera],
+                Cameras = [new WeakReference<ICamera>(_editorCamera)],
                 RenderDebug = true,
                 RenderPostProcessing = false,
                 RenderUI = true,

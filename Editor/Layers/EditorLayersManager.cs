@@ -12,36 +12,46 @@ namespace Editor
 {
     internal class EditorLayersManager : LayersManager
     {
+        private static TimeLayer _time = new();
+        private SceneLayer _editorSceneLayer;
 
-        private InputStandAlonePlatform _editorInput;
-
-
-
-        public EditorLayersManager(InputLayerBase inputLayer) : base([
-                                          new TimeLayer(), inputLayer,
-                                          new MainThreadDispatcher(),
-                                          // new SceneLayer(),
-                                          new AudioLayer(),
-                                          // new PhysicsLayer(),
-                                          new RenderingLayer(),
-                                          new IOLayer()
-                                            ])
+        public EditorLayersManager(InputLayerBase inputLayer) :
+            base([_time, inputLayer,
+                  null, // AppLayer
+                  new MainThreadDispatcher(),
+                  null, // SceneLayer
+                  new AudioLayer(),
+                  null, // PhysicsLayer,
+                  new RenderingLayer(),
+                  new IOLayer()])
         {
-            
+            _editorSceneLayer = new SceneLayer();
         }
 
         internal override void Initialize()
         {
             base.Initialize();
 
-            // new GameApplication()
-            // new TimeLayer()
-            // new SceneLayer()
+
         }
 
         internal override void Update()
         {
+            if (Input.GetKeyDown(KeyCode.Enter))
+            {
+                _time.Initialize();
+                PushLayer(new PhysicsLayer(), 6);
+                PushLayer(new SceneLayer(), 4);
+                PushLayer(new GameApplication(), 2);
+            }
+            if(Input.GetKeyDown(KeyCode.Backspace)) 
+            {
+                PopLayer(2);
+                PopLayer(4);
+                PopLayer(6);
 
+                //
+            }
 
             base.Update();
         }

@@ -18,12 +18,15 @@ namespace Engine.Layers
         internal static ContactsDispatcher ContactsDispatcher => _contactDispatcher;
 
         private static float _accumulator = 0f;
-        private const float fixedTimeStep = 0.02f;
-        private static List<RigidBody2D> _rigidbody = new();
+        private const float _fixedTimeStep = 0.02f;
+        private static List<RigidBody2D> _rigidbodies = new();
         public override void Initialize()
         {
+            PhysicWorld.Initialize();
             _contactDispatcher = new ContactsDispatcher();
             B2Worlds.b2World_SetCustomFilterCallback(PhysicWorld.WorldID, CustomFilter, this);
+            _accumulator = 0;
+            _rigidbodies.Clear();
         }
 
         public bool CustomFilter(B2ShapeId shapeIdA, B2ShapeId shapeIdB, object context)
@@ -39,31 +42,31 @@ namespace Engine.Layers
             _accumulator = Math.Min(_accumulator + Time.DeltaTime, 0.25f);
 
             // TODO: refactor, this is for fast prototyping
-            _rigidbody.Clear();
-            SceneManager.FindAll(_rigidbody, findDisabled: false);
+            _rigidbodies.Clear();
+            SceneManager.FindAll(_rigidbodies, findDisabled: false);
 
-            foreach (var rigidbody in _rigidbody)
+            foreach (var rigidbody in _rigidbodies)
             {
                 rigidbody.PreUpdateBody();
             }
 
-            while (_accumulator >= fixedTimeStep)
+            while (_accumulator >= _fixedTimeStep)
             {
                 _contactDispatcher.Update();
 
                 SceneManager.FixedUpdate();
 
-                foreach (var rigidbody in _rigidbody)
+                foreach (var rigidbody in _rigidbodies)
                 {
                     rigidbody.PreUpdateBody();
                     rigidbody.PrevLocalPosition = rigidbody.Transform.LocalPosition;
                     rigidbody.PrevLocalRotation = rigidbody.Transform.LocalRotation;
                 }
 
-                B2Worlds.b2World_Step(PhysicWorld.WorldID, fixedTimeStep, 3);
-                _accumulator -= fixedTimeStep;
+                B2Worlds.b2World_Step(PhysicWorld.WorldID, _fixedTimeStep, 3);
+                _accumulator -= _fixedTimeStep;
 
-                foreach (var rigidbody in _rigidbody)
+                foreach (var rigidbody in _rigidbodies)
                 {
                     if (rigidbody)
                     {
@@ -72,9 +75,9 @@ namespace Engine.Layers
                 }
             }
 
-            float alpha = _accumulator / fixedTimeStep;
+            float alpha = _accumulator / _fixedTimeStep;
 
-            foreach (var rigidbody in _rigidbody)
+            foreach (var rigidbody in _rigidbodies)
             {
                 rigidbody.CalculatePhysicsInterpolation(rigidbody.Transform, rigidbody.PrevLocalPosition, rigidbody.PrevLocalRotation, alpha);
             }
@@ -82,9 +85,13 @@ namespace Engine.Layers
         internal static void Clear()
         {
             _accumulator = 0;
-            _rigidbody.Clear();
+            _rigidbodies.Clear();
             _contactDispatcher.ClearCollisions();
         }
-        public override void Close() { }
+        public override void Close() 
+        {
+            _rigidbodies.Clear();
+            PhysicWorld.Clear();
+        }
     }
 }

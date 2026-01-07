@@ -9,17 +9,17 @@ namespace Engine.Layers
 {
     internal class LayersManager
     {
-        protected List<LayerBase> _layers;
+        protected LayerBase[] _layers;
         private CleanUpLayer _cleanupLayer;
         private bool _layersInitialized = false;
-        public int Count => _layers.Count;
+        public int Count => _layers.Length;
 
         public LayersManager([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type[] layersTypes)
         {
-            _layers = new List<LayerBase>();
+            _layers = new LayerBase[layersTypes.Length];
             for (int i = 0; i < layersTypes.Length; i++)
             {
-                _layers.Add((LayerBase)Activator.CreateInstance(layersTypes[i]));
+                _layers[i] = (LayerBase)Activator.CreateInstance(layersTypes[i]);
             }
 
             _cleanupLayer = new CleanUpLayer();
@@ -27,7 +27,7 @@ namespace Engine.Layers
 
         public LayersManager(LayerBase[] layers)
         {
-            _layers = layers.ToList();
+            _layers = layers;
             _cleanupLayer = new CleanUpLayer();
         }
 
@@ -35,9 +35,9 @@ namespace Engine.Layers
         {
             _cleanupLayer.Initialize();
 
-            for (int i = _layers.Count - 1; i >= 0; i--)
+            for (int i = _layers.Length - 1; i >= 0; i--)
             {
-                _layers[i].Initialize();
+                _layers[i]?.Initialize();
 
                 //#if DEBUG
                 //                try
@@ -56,21 +56,23 @@ namespace Engine.Layers
             _layersInitialized = true;
         }
 
-        internal void PushLayer(LayerBase layer, int index = -1)
+        internal void PushLayer(LayerBase layer, int index)
         {
-            if(index < 0)
+            if(index < 0 || index >= _layers.Length)
             {
-                _layers.Add(layer);
+                Debug.Error("Wrong layer index: " + index);
+                return;
             }
-            else
-            {
-                _layers.Insert(index, layer);
-            }
+
+            _layers[index] = layer;
+
+            layer.Initialize();
         }
 
-        internal void PopLayer(LayerBase layer)
+        internal void PopLayer(int index)
         {
-            _layers.Remove(layer);
+            _layers[index]?.Close();
+            _layers[index] = null;
         }
 
         internal virtual void Update()
@@ -78,9 +80,9 @@ namespace Engine.Layers
             if (!_layersInitialized)
                 return;
 
-            for (int i = 0; i < _layers.Count; i++)
+            for (int i = 0; i < _layers.Length; i++)
             {
-                _layers[i].UpdateLayer();
+                _layers[i]?.UpdateLayer();
             }
 
             _cleanupLayer.UpdateLayer();
@@ -88,17 +90,17 @@ namespace Engine.Layers
 
         internal virtual void PublishEvent(LayerEvent currentEvent)
         {
-            for (int i = 0; i < _layers.Count; i++)
+            for (int i = 0; i < _layers.Length; i++)
             {
-                _layers[i].OnEvent(currentEvent);
+                _layers[i]?.OnEvent(currentEvent);
             }
         }
 
         internal virtual void OnClose()
         {
-            for (int i = 0; i < _layers.Count; i++)
+            for (int i = 0; i < _layers.Length; i++)
             {
-                _layers[i].Close();
+                _layers[i]?.Close();
             }
         }
     }

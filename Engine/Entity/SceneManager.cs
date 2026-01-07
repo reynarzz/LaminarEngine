@@ -18,8 +18,9 @@ namespace Engine
         private static readonly List<Scene> _scenes = new();
         internal static IReadOnlyList<Scene> Scenes => _scenes;
 
-        static SceneManager()
+        internal static void Initialize()
         {
+            _scenes.Clear();
             // First Scene is always the 'dontDestroyOnLoad' scene
             LoadSceneAdditive("DontDestroyOnLoad");
             LoadSceneAdditive("DefaultScene");
@@ -32,8 +33,8 @@ namespace Engine
         public static void LoadScene(string name)
         {
             ClearScenes();
-            OnCleanUpUpdate();
-             
+            OnCleanupUpdate();
+
             // TODO: Load scene from file (Probably will never be implemented since all scenes are built at runtime, without a editor)
             var scene = new Scene(name);
             _activeScene = scene;
@@ -49,6 +50,18 @@ namespace Engine
 
             _scenesToDestroy.Add(scene);
             _scenes.Remove(scene);
+        }
+
+        internal static void UnloadAll()
+        {
+            _activeScene = null;
+            for (int i = 0; i < _scenes.Count; i++)
+            {
+                _scenesToDestroy.Add(_scenes[i]);
+            }
+
+            OnCleanupUpdate();
+            _scenes.Clear();
         }
 
         private static void ClearScenes()
@@ -114,7 +127,7 @@ namespace Engine
                 _scenes[i].OnPreRender();
             }
         }
-        internal static void OnCleanUpUpdate()
+        internal static void OnCleanupUpdate()
         {
             for (int i = 0; i < _scenes.Count; i++)
             {

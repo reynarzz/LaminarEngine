@@ -17,7 +17,7 @@ namespace Engine.Graphics
 
     internal class RenderingSurface
     {
-        public ICamera[] Cameras { get; set; }
+        public WeakReference<ICamera>[] Cameras { get; set; }
         public List<SceneRendererBase> SceneRenderers { get; set; } = new();
         public bool PickCameraFromSceneGraph { get; set; }
         public RenderTexture[] RenderTextures { get; set; }

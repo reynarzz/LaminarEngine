@@ -21,7 +21,7 @@ namespace Engine.Layers
 
         private static readonly List<RenderingSurface> _renderingSurfaces = new();
         private Action<Shader, RenderTexture, RenderTexture, UniformValue[]> _drawPostProcessCallback;
-        private ICamera _sceneCamera;
+        private WeakReference<ICamera> _sceneCamera = new WeakReference<ICamera>(null);
         internal static event Action OnRenderingEnd;
         internal static event Action OnDrawOverlay;
         private RenderTexture _defaultRenderTexture;
@@ -78,6 +78,16 @@ namespace Engine.Layers
             _renderingSurfaces.AddRange(configs);
         }
 
+        private bool IsValidCamera(WeakReference<ICamera> camera)
+        {
+            if(camera.TryGetTarget(out var target))
+            {
+                return target != null && target.IsAlive;
+            }
+
+            return false;
+        }
+
         internal override void UpdateLayer()
         {
             EngineInfo.Renderer.Clear();
@@ -93,25 +103,27 @@ namespace Engine.Layers
                     sceneRenderer.OnPrepare(_renderersData, _UIElementRenderersData);
                 }
 
-                if (surface.Cameras == null || surface.Cameras.Length == 0 || surface.Cameras[0] == null || !surface.Cameras[0].IsAlive)
+                if (surface.Cameras == null || surface.Cameras.Length == 0 || !IsValidCamera(surface.Cameras[0]))
                 {
                     if (surface.PickCameraFromSceneGraph)
                     {
-                        if (_sceneCamera == null || !_sceneCamera.IsAlive)
+                        if (_sceneCamera == null || (!_sceneCamera.TryGetTarget(out var cam) || cam == null || !cam.IsAlive))
                         {
-                            _sceneCamera = SceneManager.FindComponent<Camera>(findDisabled: false);
+                            _sceneCamera.SetTarget(SceneManager.FindComponent<Camera>(findDisabled: false));
                         }
 
                         // TODO: maybe putting a camera in the array can cause problems
-                        if (_sceneCamera != null && _sceneCamera.IsAlive && _sceneCamera.IsEnabled)
+                        var existCamera = _sceneCamera.TryGetTarget(out var camera);
+
+                        if (existCamera && camera != null && camera.IsAlive && camera.IsEnabled)
                         {
                             if (surface.Cameras == null)
                             {
-                                surface.Cameras = new ICamera[1];
+                                surface.Cameras = new WeakReference<ICamera>[1];
                             }
 
-                            surface.Cameras[0] = _sceneCamera;
-                            RenderScene(surface, _sceneCamera);
+                            surface.Cameras[0] = new WeakReference<ICamera>(camera);
+                            RenderScene(surface, camera);
                         }
                     }
                     continue;
@@ -119,11 +131,11 @@ namespace Engine.Layers
 
                 for (int j = 0; j < surface.Cameras.Length; j++)
                 {
-                    var camera = surface.Cameras[j];
+                    surface.Cameras[j].TryGetTarget(out var camera);
                     RenderScene(surface, camera);
                 }
             }
-
+             
             OnRenderingEnd?.Invoke();
         }
 
@@ -151,7 +163,7 @@ namespace Engine.Layers
 
         private void RenderScene(RenderingSurface surface, ICamera camera)
         {
-            var isCameraAvailable = camera.IsAlive && camera.IsEnabled;
+            var isCameraAvailable = camera != null && camera.IsAlive && camera.IsEnabled;
 
             if (!isCameraAvailable)
             {
@@ -291,7 +303,10 @@ namespace Engine.Layers
         private void PostProcessDraw(Shader shader, RenderTexture inTex, RenderTexture outTex, UniformValue[] uniforms)
         {
             // TODO: Fix selecting the current rendering camera from the surface, for now its using the scene camera.
-            DrawScreenQuad(shader, inTex, outTex, uniforms, _sceneCamera);
+            if(_sceneCamera.TryGetTarget(out var camera))
+            {
+                DrawScreenQuad(shader, inTex, outTex, uniforms, camera);
+            }
         }
 
         private void DrawScreenQuad(Shader shader, RenderTexture sceneRenderTarget, RenderTexture renderTarget,
