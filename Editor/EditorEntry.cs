@@ -77,7 +77,7 @@ namespace Editor
             _inputLayer = new InputStandAlonePlatform();
             _gameWindow = new EditorGameView(_win, _gameSurface, _inputLayer);
 
-            _engine = new GFSEngine(_gameWindow, new GameApplication(), _inputLayer);
+            _engine = new GFSEngine(_gameWindow, _inputLayer, new EditorLayersManager(_inputLayer), null);
 
             var sceneBatcher = new SceneBatchedRenderer();
             _gameSurface.SceneRenderers = new() { sceneBatcher };

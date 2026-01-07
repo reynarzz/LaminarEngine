@@ -29,6 +29,40 @@ namespace Engine.Utils
             return result;
         }
 
+        public static object GetDefaultValue(Type type)
+        {
+            if (type.IsValueType)
+            {
+                if (type.IsEnum)
+                {
+                    Array values = Enum.GetValues(type);
+                    return values.Length > 0 ? values.GetValue(0)! : Activator.CreateInstance(type);
+                }
+                else
+                {
+                    return Activator.CreateInstance(type);
+                }
+            }
+            else
+            {
+                if (type == typeof(string))
+                {
+                    return string.Empty;
+                }
+                else if (type.IsClass && !type.IsAssignableTo(typeof(IObject)))
+                {
+                    try
+                    {
+                        return Activator.CreateInstance(type);
+                    }
+                    catch (Exception e)
+                    {
+                        return null;
+                    }
+                }
+                return null;
+            }
+        }
         public static Type NormalizeType(object obj)
         {
             var type = obj.GetType();

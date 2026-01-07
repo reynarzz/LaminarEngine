@@ -12,37 +12,39 @@ namespace Engine
         public GFSEngine(IWindow window, ApplicationLayer appLayer, InputLayerBase input) :
             this(window, appLayer, input, null)
         { }
-      
+
         public GFSEngine(IWindow window, ApplicationLayer appLayer, InputLayerBase input, BinaryReader assetFileStream)
+            : this(window, input, new LayersManager([new TimeLayer(), input,
+                                                   appLayer,
+                                                   new MainThreadDispatcher(),
+                                                   new SceneLayer(),
+                                                   new AudioLayer(),
+                                                   new PhysicsLayer(),
+                                                   new RenderingLayer(),
+                                                   new IOLayer()]), assetFileStream)
+        {
+        }
+
+        internal GFSEngine(IWindow window, InputLayerBase input, LayersManager layerManager, BinaryReader assetFileStream)
         {
             WindowManager.Window = window;
             Input.CurrentInput = input;
             AssetFileStream = assetFileStream;
 
-            window.OnWindowChanged += (x, y) => _layersManager.Update();
-            window.OnWindowClose += () => { _layersManager.OnClose(); };
+            window.OnWindowChanged += (x, y) => layerManager.Update();
+            window.OnWindowClose += () => { layerManager.OnClose(); };
             if (window.IsInitialized)
             {
-                _layersManager = new LayersManager([new TimeLayer(),
-                                                    input,
-                                                    appLayer,
-                                                    new MainThreadDispatcher(),
-                                                    new SceneLayer(),
-                                                    new AudioLayer(),
-                                                    new PhysicsLayer(),
-                                                    new RenderingLayer(),
-                                                    new IOLayer()]);
-
+                _layersManager = layerManager; 
                 _layersManager.Initialize();
             }
-
         }
-        
+
         public void Run()
         {
             if (_layersManager == null)
             {
-                Debug.EngineError("FATAL: Engine couldn't not be initialized correctly.");
+                Debug.EngineError("FATAL: Engine layers couldn't be initialized.");
                 return;
             }
 

@@ -119,7 +119,7 @@ namespace Editor.Utils
         {
             return DrawScalarField(name, ref value, ImGuiDataType.U64, itemWidth, pressEnterToConfirm);
         }
-        public static bool DrawScalarField<T>(string name, ref T value, ImGuiDataType type, float itemWidth = 0, bool pressEnterToConfirm = false)
+        public static bool DrawScalarField<T>(string name, ref T value, ImGuiDataType type, float itemWidth = 0, bool pressEnterToConfirm = false) where T : unmanaged
         {
             SetNextItemWidth(itemWidth);
 
@@ -127,8 +127,6 @@ namespace Editor.Utils
             {
                 T v = value;
                 nint ptr = (nint)(&v);
-                var a = ImGuiKey.GetValues(typeof(ImGuiKey));
-
                 var result = ImGui.DragScalar($"##{name}", type, ptr) && (!pressEnterToConfirm || ImGui.IsKeyDown(ImGuiKey.Enter));
                 value = *(T*)ptr;
                 return result;
@@ -147,7 +145,7 @@ namespace Editor.Utils
             var col = new Vector4(value.R, value.G, value.B, value.A);
 
             // Determine button size
-            Vector2 buttonSize = new Vector2(ImGui.GetContentRegionAvail().X - 5, 20f);
+            Vector2 buttonSize = new Vector2(ImGui.GetContentRegionAvail().X - 5, 22f);
 
             bool changed = false;
 
@@ -273,7 +271,7 @@ namespace Editor.Utils
 
                 SetNextItemWidth(itemWidth);
                 var row = value[i];
-                string id = $"##_mat_{name}{typeof(mat2).Name}_{i}";
+                string id = $"##_mat_{name}mat2_{i}";
 
                 Vector2 v = row.ToVector2();
                 if (ImGui.DragFloat2($"##{id}", ref v, 0.1f, 0, 0, "%.4f"))
@@ -301,7 +299,7 @@ namespace Editor.Utils
 
                 var row = value[i];
                 Vector3 v = row.ToVector3();
-                string id = $"##_mat_{name}{typeof(mat3).Name}_{i}";
+                string id = $"##_mat_{name}mat3_{i}";
 
                 if (ImGui.DragFloat3($"##{id}", ref v, 0.1f, 0, 0, "%.4f"))
                 {
@@ -328,7 +326,7 @@ namespace Editor.Utils
 
                 var row = value[i];
                 Vector4 v = row.ToVector4();
-                string id = $"##_mat_{name}{typeof(mat4).Name}_{i}";
+                string id = $"##_mat_{name}mat4_{i}";
 
                 if (ImGui.DragFloat4($"##{id}", ref v, 0.1f, 0, 0, "%.4f"))
                 {
@@ -398,7 +396,6 @@ namespace Editor.Utils
 
             for (int i = 0; i < list.Count; i++)
             {
-                float prevCursorY = ImGui.GetCursorPosY();
                 bool show;
                 if (ImGui.Button($"X##_DELETE_BUTTON_{i}_{name}", new Vector2(22, 22)))
                 {

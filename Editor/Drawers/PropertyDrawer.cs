@@ -19,7 +19,7 @@ namespace Editor
     internal class PropertyDrawer
     {
         private static object _copiedValue;
-        private static float _xPosOffset = 180;
+        private const float _xPosOffset = 180;
 
         private delegate bool DrawSimpleFieldDelegate<T>(string fieldName, ref T v, float width = 0, bool pressEnterToConfirm = false);
 
@@ -107,7 +107,7 @@ namespace Editor
 
             if (value == null)
             {
-                value = GetDefaultValue(type);
+                value = ReflectionUtils.GetDefaultValue(type);
                 SetMemberValueSafe(target, value, prop, index);
             }
 
@@ -122,12 +122,8 @@ namespace Editor
                 flags = ImGuiTreeNodeFlags.OpenOnArrow;
             }
 
-            unsafe
-            {
-
-                ImGui.PushStyleColor(ImGuiCol.HeaderHovered, new Vector4(0));
-                ImGui.PushStyleColor(ImGuiCol.HeaderActive, new Vector4(0));
-            }
+            ImGui.PushStyleColor(ImGuiCol.HeaderHovered, new Vector4(0));
+            ImGui.PushStyleColor(ImGuiCol.HeaderActive, new Vector4(0));
 
             var show = ImGui.TreeNodeEx($"{propertyName}##{objectId}{index}", flags);
             if (!show)
@@ -171,7 +167,7 @@ namespace Editor
                 {
                     SetMemberValueSafe(target, v, prop, index);
                     return true;
-                }, width);
+                });
             }
             else if (type == typeof(bool))
             {
@@ -269,7 +265,7 @@ namespace Editor
             {
                 if (value == null)
                 {
-                    value = GetDefaultValue(type);
+                    value = ReflectionUtils.GetDefaultValue(type);
                 }
 
                 var list = value as IList;
@@ -283,7 +279,7 @@ namespace Editor
                 {
                     while (list.Count < totalLength)
                     {
-                        list.Add(GetDefaultValue(elementType));
+                        list.Add(ReflectionUtils.GetDefaultValue(elementType));
                     }
                 }
 
@@ -368,7 +364,7 @@ namespace Editor
                 DrawMethods(value, objectId);
 
             }
-            
+
             ImGui.TreePop();
         }
 
@@ -388,7 +384,7 @@ namespace Editor
                   {
                       if (item == null)
                       {
-                          item = GetDefaultValue(elemenType);
+                          item = ReflectionUtils.GetDefaultValue(elemenType);
                       }
 
                       DrawVars(objectId, list, item, elemenType, $"##__{index}_item", false, prop, cursorX, index, itemWidth);
@@ -398,7 +394,7 @@ namespace Editor
             }
         }
 
-        private static void DrawEObjectSlot(IObject eObject, Type valueType, Func<object, bool> setValue, float width = -1)
+        private static void DrawEObjectSlot(IObject eObject, Type valueType, Func<object, bool> setValue)
         {
             ImGui.SameLine();
             ImGui.SetCursorPosX(MathF.Max(_xPosOffset, ImGui.GetCursorPosX()) + 5);
@@ -643,40 +639,6 @@ namespace Editor
             }*/
         }
 
-        private static object GetDefaultValue(Type type)
-        {
-            if (type.IsValueType)
-            {
-                if (type.IsEnum)
-                {
-                    Array values = Enum.GetValues(type);
-                    return values.Length > 0 ? values.GetValue(0)! : Activator.CreateInstance(type);
-                }
-                else
-                {
-                    return Activator.CreateInstance(type);
-                }
-            }
-            else
-            {
-                if (type == typeof(string))
-                {
-                    return string.Empty;
-                }
-                else if (type.IsClass && !type.IsAssignableTo(typeof(IObject)))
-                {
-                    try
-                    {
-                        return Activator.CreateInstance(type);
-                    }
-                    catch (Exception e)
-                    {
-                        return null;
-                    }
-                }
-                return null;
-            }
-        }
 
     }
 }

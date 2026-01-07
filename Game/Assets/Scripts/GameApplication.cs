@@ -54,13 +54,6 @@ namespace Game
             WindowManager.Window.CursorVisible = false;
 #endif
             new Actor<LaunchScreen>("Launch Screen");
-
-            Input.Gamepad.OnGamepadChanged += OnGamepadChanged;
-        }
-
-        private void OnGamepadChanged(Gamepad gamepad)
-        {
-            Debug.Log($"Game pad connected {gamepad.IsConnected}: " + gamepad.Name);
         }
 
         public override void Close() 

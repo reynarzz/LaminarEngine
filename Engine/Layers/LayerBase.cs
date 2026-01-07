@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace Engine.Layers
 {
-    public class LayerEvent 
+    public class LayerEvent
     {
         public EventType Type { get; internal set; }
+        public object Arg { get; set; }
     }
 
     public enum EventType
