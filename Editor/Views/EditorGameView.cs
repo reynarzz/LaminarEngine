@@ -1,8 +1,6 @@
 ﻿using Engine;
 using Engine.Graphics;
-using Engine.Layers;
 using ImGuiNET;
-using System.Numerics;
 
 namespace Editor
 {
