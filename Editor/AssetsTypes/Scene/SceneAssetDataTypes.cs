@@ -10,8 +10,6 @@ namespace Editor
     {
         public string Name { get; set; }
         public int Layer { get; set; }
-        public int ParentIndex { get; set; } = 0;
-        public int Index { get; set; } = 0;
         public Guid ID { get; set; }
         public Guid ParentID { get; set; } = Guid.Empty;
         public List<ComponentDataSceneAsset> Components { get; set; }

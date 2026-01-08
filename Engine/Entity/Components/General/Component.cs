@@ -22,6 +22,10 @@ namespace Engine
         internal Component()
         {
         }
+
+        internal Component(Guid id) : base(string.Empty, id)
+        {
+        }
         public override string Name { get => Actor?.Name ?? GetType().Name; set => Actor.Name = value; }
 
         private bool _isEnabled = true;
@@ -60,6 +64,12 @@ namespace Engine
         {
             CheckIfValidObject(this);
             return Actor.AddComponent(type);
+        }
+
+        internal Component AddComponent(Type type, Guid id)
+        {
+            CheckIfValidObject(this);
+            return Actor.AddComponent(type, id);
         }
 
         public T AddComponent<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T>() where T : Component

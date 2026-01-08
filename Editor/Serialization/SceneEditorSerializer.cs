@@ -49,9 +49,7 @@ namespace Editor
                 Name = actor.Name,
                 Layer = actor.Layer,
                 ID = actor.GetID(),
-                Index = index,
-                ParentIndex = parentIndex,
-                ParentID = actor.Transform?.Parent?.GetID() ?? Guid.Empty,
+                ParentID = actor.Transform?.Parent?.Actor?.GetID() ?? Guid.Empty,
                 Components = GetAllComponentsData(actor),
             };
         }

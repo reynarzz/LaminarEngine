@@ -15,6 +15,7 @@ namespace Editor
     {
         private static TimeLayer _time = new();
         private SceneLayer _editorSceneLayer;
+        private List<ActorDataSceneAsset> _actors;
 
         public EditorLayersManager(InputLayerBase inputLayer) :
             base([_time, inputLayer,
@@ -59,12 +60,17 @@ namespace Editor
             {
                 Debug.Log("Save");
 
-                var sceneActors = SceneEditorSerializer.SerializeScene(SceneManager.Scenes[1]);
+                _actors = SceneEditorSerializer.SerializeScene(SceneManager.Scenes[1]);
 
-                File.WriteAllText("D:/Scene.txt", JsonConvert.SerializeObject(sceneActors, Formatting.Indented));
+                File.WriteAllText("D:/Scene.txt", JsonConvert.SerializeObject(_actors, Formatting.Indented));
             }
 
-
+            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.R))
+            {
+                SceneManager.UnloadAll();
+                SceneManager.LoadScene("Reload scene");
+                SceneEditorDeserializer.DeserializeScene(_actors, SceneManager.ActiveScene);
+            }
             base.Update();
         }
     }
