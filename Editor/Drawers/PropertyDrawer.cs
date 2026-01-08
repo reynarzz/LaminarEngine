@@ -358,7 +358,10 @@ namespace Editor
                 var propIndex = index;
                 foreach (var subProp in members)
                 {
-                    DrawVars(objectId, value, subProp, cursorX, index++, width, true);
+                    if(value != null)
+                    {
+                        DrawVars(objectId, value, subProp, cursorX, index++, width, true);
+                    }
                 }
                 SetMemberValueSafe(target, value, prop, propIndex);
                 DrawMethods(value, objectId);

@@ -162,6 +162,9 @@ namespace Engine.Utils
         }
         public static object GetMemberValue(object obj, MemberInfo member)
         {
+            if (obj == null)
+                return null;
+
             switch (member)
             {
                 case PropertyInfo prop:
