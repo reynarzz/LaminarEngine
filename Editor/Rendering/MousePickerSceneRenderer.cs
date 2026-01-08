@@ -168,7 +168,7 @@ namespace Editor.Rendering
                         var texture = renderer.Sprite?.Texture ?? Texture2D.White;
                         _drawCallData.Textures[0] = texture.NativeResource;
 
-                        if (renderer.Mesh == null)
+                        if (renderer.Mesh == null || renderer.Mesh.Vertices.Count == 0)
                         {
                             _drawCallData.Geometry = _quadGeometry;
                             _drawCallData.IndexedDraw.IndexCount = 6;
