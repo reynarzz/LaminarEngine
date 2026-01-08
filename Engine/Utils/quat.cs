@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace GlmNet
 {
@@ -9,7 +10,7 @@ namespace GlmNet
         public float z;
         public float w;
 
-        public quat Conjugate => new quat(-x, -y, -z, w);
+        [JsonIgnore] public quat Conjugate => new quat(-x, -y, -z, w);
         public static quat Identity => new quat(0, 0, 0, 1);
         public quat(float x, float y, float z, float w)
         {

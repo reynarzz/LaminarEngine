@@ -17,7 +17,18 @@ namespace Engine
         private readonly OrderedDictionary<string, Texture> _textures;
         internal OrderedDictionary<string, Texture> Textures => _textures;
         public Shader Shader { get; }
-        public Material(string name, Shader shader) : base(name)
+
+        private const string _defaultTypeName = "Material";
+
+        public Material(string name, Shader shader) : this(Guid.Empty, name, shader)
+        {
+        }
+
+        public Material(Shader shader) : this(_defaultTypeName, shader)
+        {
+        }
+
+        public Material(Guid guid, string name, Shader shader) : base(name, guid)
         {
             Shader = shader;
             _textures = new();
@@ -26,10 +37,6 @@ namespace Engine
                 new RenderPass(shader)
             };
         }
-        public Material(Shader shader) : this("Material", shader)
-        {
-        }
-
         public RenderPass PushPass(Shader shader)
         {
             var pass = new RenderPass(shader);

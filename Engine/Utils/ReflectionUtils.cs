@@ -174,6 +174,13 @@ namespace Engine.Utils
             return IsUserDefinedStruct(type);
         }
 
+        public static bool IsInternalValueType(MemberInfo member)
+        {
+            var type = GetMemberType(member);
+
+            return IsInternalValueType(type);
+        }
+
         public static bool IsUserDefinedStruct(Type type)
         {
             if (type != null)
@@ -183,6 +190,17 @@ namespace Engine.Utils
             }
             return false;
         }
+
+        public static bool IsInternalValueType(Type type)
+        {
+            if (type != null)
+            {
+                return type.IsValueType && (type.IsPrimitive || type.IsEnum ||
+                       type.Namespace.Equals(typeof(vec2).Namespace) || type == typeof(Color) || type == typeof(Color32));
+            }
+            return false;
+        }
+
         public static Type GetMemberType(MemberInfo member)
         {
             return member switch

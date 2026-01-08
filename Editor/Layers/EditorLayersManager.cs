@@ -59,7 +59,7 @@ namespace Editor
             {
                 Debug.Log("Save");
 
-                var sceneActors = SceneEditorSerializer.SerializeScene(SceneManager.Scenes[0]);
+                var sceneActors = SceneEditorSerializer.SerializeScene(SceneManager.Scenes[1]);
 
                 File.WriteAllText("D:/Scene.txt", JsonConvert.SerializeObject(sceneActors, Formatting.Indented));
             }

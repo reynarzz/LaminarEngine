@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Runtime.CompilerServices;
 
@@ -12,7 +13,9 @@ namespace GlmNet
         public float y;
         public float z;
         public float w;
-        public vec3 xyz => new vec3(x, y, z);
+
+        [JsonIgnore] public vec3 xyz => new vec3(x, y, z);
+        [JsonIgnore]
         public float this[int index]
         {
             get

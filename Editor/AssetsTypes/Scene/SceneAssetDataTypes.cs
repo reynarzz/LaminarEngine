@@ -9,40 +9,56 @@ namespace Editor
     internal class ActorDataSceneAsset
     {
         public string Name { get; set; }
-        public Guid ParentID { get; set; } = Guid.Empty;
+        public int Layer { get; set; }
         public int ParentIndex { get; set; } = 0;
         public int Index { get; set; } = 0;
         public Guid ID { get; set; }
-        public int Layer { get; set; }
-        public List<ComponentDataSceneAsset> ComponentsData { get; set; }
+        public Guid ParentID { get; set; } = Guid.Empty;
+        public List<ComponentDataSceneAsset> Components { get; set; }
     }
 
     internal class ComponentDataSceneAsset
     {
-        public string TypeName { get; set; }
+        public EObjectDataHeader Header { get; set; }
         public int ComponentIndex { get; set; }
-        public Guid ID { get; set; }
         public List<ComponentSerializedProperty> SerializedProperties { get; set; }
     }
 
     internal class ComponentSerializedProperty
     {
         public string Name { get; set; }
-        public PropertyType Type { get; set; }
-        public ComponentPropertyData Data { get; set; }
+        public SerializableType Type { get; set; }
+        public SerializedPropertyData Data { get; set; }
     }
 
-    internal class ComponentPropertyData
+    internal abstract class SerializedPropertyData
     {
-
     }
 
-    internal class EObjectTargetPropertyType : ComponentPropertyData
+    internal class TypeHeader
+    {
+        public string FullTypeName { get; set; }
+        public string AssemblyName { get; set; }
+        public SerializableType Type { get; set; }
+    }
+
+    internal class EObjectDataHeader : TypeHeader
     {
         public Guid ID { get; set; }
     }
 
-    internal enum PropertyType
+    internal class EObjectSerializedProperty : SerializedPropertyData
+    {
+        public EObjectDataHeader Header { get; set; }
+    }
+
+    internal class SimpleSerializedProperty : SerializedPropertyData
+    {
+        public TypeHeader Header { get; set; }
+        public object Value { get; set; }
+    }
+
+    internal enum SerializableType
     {
         None,
         EObject, // Reference to a generic EObject...

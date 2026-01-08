@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Runtime.CompilerServices;
 
@@ -11,12 +12,14 @@ namespace GlmNet
         public float x;
         public float y;
 
-        public static vec2 One { get; } = new vec2(1, 1);
-        public static vec2 Zero { get; } = new vec2(0, 0);
-        public static vec2 Right { get; } = new vec2(1, 0);
-        public static vec2 Up { get; } = new vec2(0, 1);
-        public static vec2 Half { get; } = new vec2(0.5f, 0.5f);
 
+        [JsonIgnore] public static vec2 One { get; } = new vec2(1, 1);
+        [JsonIgnore] public static vec2 Zero { get; } = new vec2(0, 0);
+        [JsonIgnore] public static vec2 Right { get; } = new vec2(1, 0);
+        [JsonIgnore] public static vec2 Up { get; } = new vec2(0, 1);
+        [JsonIgnore] public static vec2 Half { get; } = new vec2(0.5f, 0.5f);
+
+        [JsonIgnore]
         public vec2 Normalized
         {
             get
@@ -26,8 +29,9 @@ namespace GlmNet
             }
         }
 
-        public float Magnitude => MathF.Sqrt(x * x + y * y);
+        [JsonIgnore] public float Magnitude => MathF.Sqrt(x * x + y * y);
 
+        [JsonIgnore]
         public float SqrMagnitude
         {
             get
@@ -37,6 +41,7 @@ namespace GlmNet
         }
 
 
+        [JsonIgnore]
         public float this[int index]
         {
             get

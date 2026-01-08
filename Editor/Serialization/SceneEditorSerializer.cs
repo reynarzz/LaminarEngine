@@ -1,8 +1,10 @@
 ﻿using Engine;
+using Engine.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,37 +17,40 @@ namespace Editor
             int actorIndex = 0;
             var actors = new List<ActorDataSceneAsset>();
 
-            void SerializeActors(Actor actor)
+            void SerializeActors(Actor actor, int parentIndex)
             {
                 if (!actor)
                     return;
 
-                actors.Add(GetActor(actor, ref actorIndex));
+                actors.Add(GetActor(actor, actorIndex, parentIndex));
+                parentIndex = actorIndex;
+                actorIndex++;
 
                 foreach (var child in actor.Transform.Children)
                 {
-                    SerializeActors(child.Actor);
+                    SerializeActors(child.Actor, parentIndex);
                 }
             }
-            
+
             foreach (var actor in scene.RootActors)
             {
-                SerializeActors(actor);
+                SerializeActors(actor, 0);
             }
 
             return actors;
         }
 
-        internal static ActorDataSceneAsset GetActor(Actor actor, ref int index)
+        internal static ActorDataSceneAsset GetActor(Actor actor, int index, int parentIndex)
         {
             return new ActorDataSceneAsset()
             {
                 Name = actor.Name,
                 Layer = actor.Layer,
                 ID = actor.GetID(),
-                Index = index++,
+                Index = index,
+                ParentIndex = parentIndex,
                 ParentID = actor.Transform?.Parent?.GetID() ?? Guid.Empty,
-                ComponentsData = GetAllComponentsData(actor),
+                Components = GetAllComponentsData(actor),
             };
         }
 
@@ -64,11 +69,85 @@ namespace Editor
         {
             return new ComponentDataSceneAsset()
             {
+                Header = new EObjectDataHeader()
+                {
+                    FullTypeName = component.GetType().FullName,
+                    AssemblyName = component.GetType().Assembly.GetName().Name,
+                    Type = SerializableType.Component,
+                    ID = component.GetID()
+                },
                 ComponentIndex = index,
-                ID = component.GetID(),
-                TypeName = component.GetType().Name,
-
+                SerializedProperties = GetSerializedProperties(component)
             };
+        }
+
+        public static List<ComponentSerializedProperty> GetSerializedProperties(object obj)
+        {
+            var serializedMembers = ReflectionUtils.GetAllMembersWithAttribute<SerializedFieldAttribute>(obj.GetType());
+            var properties = new List<ComponentSerializedProperty>();
+
+            foreach (var member in serializedMembers)
+            {
+                var value = ReflectionUtils.GetMemberValue(obj, member);
+
+                properties.Add(new ComponentSerializedProperty()
+                {
+                    Name = member.Name,
+                    Type = GetSerializedType(member),
+                    Data = GetPropertyData(member, value)
+                });
+            }
+
+            return properties;
+        }
+
+        public static SerializableType GetSerializedType(MemberInfo member)
+        {
+            return SerializableType.None;
+        }
+
+        public static SerializedPropertyData GetPropertyData(MemberInfo member, object value)
+        {
+            // Note: runtime-created assets such as Materials, Shaders, textures maybe should have a empty guid, so the serializer,
+            //       does not point to a invalid physical asset.
+            var type = ReflectionUtils.GetMemberType(member);
+
+            if (type.IsAssignableTo(typeof(IObject)))
+            {
+                return new EObjectSerializedProperty()
+                {
+                    Header = new EObjectDataHeader()
+                    {
+                        FullTypeName = type.FullName,
+                        AssemblyName = type.Assembly.GetName().Name,
+                        Type = GetSerializedType(member),
+                        ID = value != null ? (value as IObject).GetID() : Guid.Empty
+                    }
+                };
+            }
+            else if (ReflectionUtils.IsCollection(type))
+            {
+
+            }
+            else if (ReflectionUtils.IsInternalValueType(member) || type == typeof(string))
+            {
+                return new SimpleSerializedProperty()
+                {
+                    Header = new TypeHeader()
+                    {
+                        AssemblyName = type.Assembly.GetName().Name,
+                        FullTypeName = type.FullName,
+                        Type = GetSerializedType(member),
+                    },
+                    Value = value
+                };
+            }
+            else if (type.IsClass)
+            {
+
+            }
+
+            return null;
         }
     }
 }

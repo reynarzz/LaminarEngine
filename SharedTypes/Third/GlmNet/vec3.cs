@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Runtime.CompilerServices;
 
@@ -11,14 +12,42 @@ namespace GlmNet
         public float x;
         public float y;
         public float z;
-        public vec2 xy => new vec2(x, y);
-        public static vec3 One { get; } = new vec3(1, 1, 1);
-        public static vec3 Zero { get; } = new vec3(0, 0, 0);
-        public static vec3 Up { get; } = new vec3(0, 1, 0);
-        public static vec3 Right { get; } = new vec3(1, 0, 0);
-        public static vec3 Forward { get; } = new vec3(0, 0, 1);
-        public static vec3 Half { get; } = new vec3(0.5f, 0.5f, 0.5f);
+        [JsonIgnore] public vec2 xy => new vec2(x, y);
+        [JsonIgnore] public static vec3 One { get; } = new vec3(1, 1, 1);
+        [JsonIgnore] public static vec3 Zero { get; } = new vec3(0, 0, 0);
+        [JsonIgnore] public static vec3 Up { get; } = new vec3(0, 1, 0);
+        [JsonIgnore] public static vec3 Right { get; } = new vec3(1, 0, 0);
+        [JsonIgnore] public static vec3 Forward { get; } = new vec3(0, 0, 1);
+        [JsonIgnore] public static vec3 Half { get; } = new vec3(0.5f, 0.5f, 0.5f);
+        [JsonIgnore]
+        public vec3 Normalized
+        {
+            get
+            {
+                float len = Magnitude;
+                return len > 0f ? this / len : Zero;
+            }
+        }
 
+        [JsonIgnore]
+        public float Magnitude
+        {
+            get
+            {
+                return MathF.Sqrt(x * x + y * y + z * z);
+            }
+        }
+
+        [JsonIgnore]
+        public float SqrMagnitude
+        {
+            get
+            {
+                return x * x + y * y + z * z;
+            }
+        }
+
+        [JsonIgnore]
         public float this[int index]
         {
             get
@@ -137,31 +166,7 @@ namespace GlmNet
         {
             return new vec3(v.x, v.y, 0);
         }
-        public vec3 Normalized
-        {
-            get
-            {
-                float len = Magnitude;
-                return len > 0f ? this / len : Zero;
-            }
-        }
-
-        public float Magnitude
-        {
-            get
-            {
-                return MathF.Sqrt(x * x + y * y + z * z);
-            }
-        }
-
-        public float SqrMagnitude
-        {
-            get
-            {
-                return x * x + y * y + z * z;
-            }
-        }
-
+   
 
         public float[] to_array()
         {

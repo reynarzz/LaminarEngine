@@ -40,6 +40,7 @@ namespace Engine
             }
         }
 
+        [SerializedField, HideFromInspector]
         public quat LocalRotation
         {
             get => _localRotation;
