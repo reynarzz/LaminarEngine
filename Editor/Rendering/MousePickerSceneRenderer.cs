@@ -168,7 +168,7 @@ namespace Editor.Rendering
                         var texture = renderer.Sprite?.Texture ?? Texture2D.White;
                         _drawCallData.Textures[0] = texture.NativeResource;
 
-                        if (renderer.Mesh == null || renderer.Mesh.Vertices.Count == 0)
+                        if (renderer.Mesh == null)
                         {
                             _drawCallData.Geometry = _quadGeometry;
                             _drawCallData.IndexedDraw.IndexCount = 6;
@@ -194,6 +194,10 @@ namespace Editor.Rendering
                         }
                         else
                         {
+                            // Empty meshes cannot be picked
+                            if (renderer.Mesh.Vertices.Count == 0 || renderer.Mesh.IndicesToDrawCount == 0)
+                                continue;
+
                             var bestGeometryMatchPair = _geometries.FirstOrDefault(x => x.verticesCount >= renderer.Mesh.Vertices.Count);
 
                             var geometry = default(GfxResource);
