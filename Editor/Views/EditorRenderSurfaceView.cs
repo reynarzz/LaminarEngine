@@ -73,11 +73,21 @@ namespace Editor
 
                 if (cameraRenderTarget == null)
                 {
-                    cameraRenderTarget = _surface.RenderTextures[0].NativeResource;
+                    if (_surface.RenderTextures != null && _surface.RenderTextures.Length > 0)
+                    {
+                        cameraRenderTarget = _surface.RenderTextures[0].NativeResource;
+                    }
                 }
 
-                var frameBuffer = cameraRenderTarget as GLFrameBuffer;
-                ImGui.Image((nint)frameBuffer.ColorTexture.Handle, ImGui.GetContentRegionAvail(), new Vector2(0, 1), new Vector2(1, 0));
+                if (cameraRenderTarget != null)
+                {
+                    var frameBuffer = cameraRenderTarget as GLFrameBuffer;
+                    ImGui.Image((nint)frameBuffer.ColorTexture.Handle, ImGui.GetContentRegionAvail(), new Vector2(0, 1), new Vector2(1, 0));
+                }
+                else
+                {
+                    DefaultNoCamerasFound();
+                }
             }
             else
             {

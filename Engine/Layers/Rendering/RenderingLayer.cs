@@ -277,7 +277,8 @@ namespace Engine.Layers
             {
                 return camera.RenderTexture;
             }
-            else if (surface.RenderTextures != null && surface.RenderTextures.Length > 0)
+            else if (surface.RenderTextures != null && surface.RenderTextures.Length > sceneRenderer.RenderTextureIndex &&
+                     surface.RenderTextures[sceneRenderer.RenderTextureIndex])
             {
                 return surface.RenderTextures[sceneRenderer.RenderTextureIndex];
             }

@@ -70,6 +70,7 @@ namespace Editor
             {
                 PickCameraFromSceneGraph = true,
                 RenderPostProcessing = true,
+                RenderTextures = new RenderTexture[1],
                 RenderUI = true,
                 UIViewProj = UICanvas.UIViewProj,
             };
