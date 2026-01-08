@@ -107,7 +107,7 @@ namespace Engine.Layers
                 {
                     if (surface.PickCameraFromSceneGraph)
                     {
-                        if (_sceneCamera == null || (!_sceneCamera.TryGetTarget(out var cam) || cam == null || !cam.IsAlive))
+                        if (_sceneCamera == null || !_sceneCamera.TryGetTarget(out var cam) || cam == null || !cam.IsAlive)
                         {
                             _sceneCamera.SetTarget(SceneManager.FindComponent<Camera>(findDisabled: false));
                         }
@@ -135,7 +135,7 @@ namespace Engine.Layers
                     RenderScene(surface, camera);
                 }
             }
-             
+            
             OnRenderingEnd?.Invoke();
         }
 

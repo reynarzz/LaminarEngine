@@ -48,7 +48,10 @@ namespace Engine
                 if (_bodyType == value) return;
                 _bodyType = value;
 
-                B2Bodies.b2Body_SetType(_bodyId, (B2BodyType)_bodyType);
+                if (!IsValidBody())
+                    return;
+
+                    B2Bodies.b2Body_SetType(_bodyId, (B2BodyType)_bodyType);
             }
         }
 
@@ -69,13 +72,16 @@ namespace Engine
             get => base.IsEnabled;
             set
             {
-                if (value)
+                if (IsValidBody())
                 {
-                    B2Bodies.b2Body_Enable(_bodyId);
-                }
-                else
-                {
-                    B2Bodies.b2Body_Disable(_bodyId);
+                    if (value)
+                    {
+                        B2Bodies.b2Body_Enable(_bodyId);
+                    }
+                    else
+                    {
+                        B2Bodies.b2Body_Disable(_bodyId);
+                    }
                 }
 
                 base.IsEnabled = value;
@@ -91,6 +97,10 @@ namespace Engine
                 if (_isZRotationLocked == value)
                     return;
                 _isZRotationLocked = value;
+
+                if (!IsValidBody())
+                    return;
+
                 B2Bodies.b2Body_SetMotionLocks(_bodyId, new B2MotionLocks() { angularZ = value });
             }
         }
@@ -103,6 +113,10 @@ namespace Engine
             {
                 if (_isContinuos == value) return;
                 _isContinuos = value;
+
+                if (!IsValidBody())
+                    return;
+
                 B2Bodies.b2Body_SetBullet(_bodyId, _isContinuos);
             }
         }
@@ -117,6 +131,9 @@ namespace Engine
                     return;
                 _canSleep = value;
 
+                if (!IsValidBody())
+                    return;
+
                 B2Bodies.b2Body_EnableSleep(_bodyId, _canSleep);
             }
         }
@@ -127,6 +144,10 @@ namespace Engine
             set
             {
                 _isAutoMass = value;
+
+                if (!IsValidBody())
+                    return;
+
                 if (_isAutoMass)
                 {
                     B2Bodies.b2Body_ApplyMassFromShapes(_bodyId);
@@ -148,6 +169,9 @@ namespace Engine
 
                 _userMassValue = value;
 
+                if (!IsValidBody())
+                    return;
+
                 var currentMassData = B2Bodies.b2Body_GetMassData(_bodyId);
                 currentMassData.mass = _userMassValue;
                 B2Bodies.b2Body_SetMassData(_bodyId, currentMassData);
@@ -159,6 +183,9 @@ namespace Engine
             get => _gravityScale;
             set
             {
+                if (!IsValidBody())
+                    return;
+
                 _gravityScale = value;
                 B2Bodies.b2Body_SetGravityScale(_bodyId, _gravityScale);
             }
@@ -169,6 +196,9 @@ namespace Engine
             get => _angularDamping;
             set
             {
+                if (!IsValidBody())
+                    return;
+
                 _angularDamping = value;
                 B2Bodies.b2Body_SetAngularDamping(_bodyId, _angularDamping);
             }
@@ -179,8 +209,20 @@ namespace Engine
         [SerializedField(isReadOnly: true)]
         public vec2 Velocity
         {
-            get => B2Bodies.b2Body_GetLinearVelocity(_bodyId).ToVec2();
-            set => B2Bodies.b2Body_SetLinearVelocity(_bodyId, value.ToB2Vec2());
+            get
+            {
+                if (!IsValidBody())
+                    return default;
+
+                return B2Bodies.b2Body_GetLinearVelocity(_bodyId).ToVec2();
+            }
+            set
+            {
+                if (!IsValidBody())
+                    return;
+
+                B2Bodies.b2Body_SetLinearVelocity(_bodyId, value.ToB2Vec2());
+            }
         }
         //public vec2 Velocity
         //{
@@ -197,11 +239,19 @@ namespace Engine
         {
             get
             {
-                return B2Bodies.b2Body_GetAngularVelocity(_bodyId);
+                if (IsValidBody())
+                {
+                    return B2Bodies.b2Body_GetAngularVelocity(_bodyId);
+                }
+
+                return 0;
             }
             set
             {
-                B2Bodies.b2Body_SetAngularVelocity(_bodyId, value);
+                if (IsValidBody())
+                {
+                    B2Bodies.b2Body_SetAngularVelocity(_bodyId, value);
+                }
             }
         }
 
@@ -388,12 +438,16 @@ namespace Engine
                 }
             }
 
-            if (B2Worlds.b2Body_IsValid(_bodyId))
+            if (IsValidBody())
             {
                 B2Bodies.b2DestroyBody(_bodyId);
             }
         }
 
+        private bool IsValidBody()
+        {
+            return B2Worlds.b2Body_IsValid(_bodyId);
+        }
         public override void OnEnabled()
         {
             base.OnEnabled();

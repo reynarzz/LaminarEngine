@@ -66,6 +66,7 @@ namespace Engine
     {
         public mat4 Projection { get; private set; }
         public mat4 ViewMatrix => glm.inverse(Transform.WorldMatrix);
+        bool ICamera.IsEnabled => IsEnabled && Actor && Actor.IsActiveInHierarchy;
 
         [SerializedField] public Color BackgroundColor { get; set; } = Color.Gray;
         private CameraProjectionMode _projectionMode;

@@ -31,6 +31,7 @@ namespace Engine.Layers
             if (!defaultDevice.IsDefault)
             {
                 Debug.Warn($"No default playback device found. Using first available, Total: {_engine.PlaybackDevices.Length}");
+                defaultDevice = _engine.PlaybackDevices.FirstOrDefault();
             }
 
             try
@@ -102,9 +103,13 @@ namespace Engine.Layers
             device = null;
             try
             {
-                if (!_currentDevice.IsDisposed && _currentDevice.IsRunning && _currentDevice.MasterMixer != null)
+                if (_currentDevice != null && !_currentDevice.IsDisposed && _currentDevice.IsRunning && _currentDevice.MasterMixer != null)
                 {
                     device = _currentDevice;
+                }
+                else
+                {
+                    return false;
                 }
             }
             catch

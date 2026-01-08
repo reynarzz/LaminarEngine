@@ -41,6 +41,7 @@ namespace Editor
         {
             if (Input.GetKeyDown(KeyCode.P))
             {
+                SceneManager.UnloadAll();
                 _time.Initialize();
                 PushLayer(new PhysicsLayer(), 6);
                 PushLayer(new SceneLayer(), 4);

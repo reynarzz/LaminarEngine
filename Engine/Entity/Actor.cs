@@ -133,15 +133,17 @@ namespace Engine
             }
             else
             {
-                Debug.EngineError("Scene is non existent!");
+                Debug.EngineError("Not a valid scene was found!");
             }
         }
+
         public Component AddComponent([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
                                       Type type)
         {
             return AddComponent(type, Guid.Empty);
         }
-        public Component AddComponent([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
+
+        internal Component AddComponent([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
                                       Type type, Guid id)
         {
             CheckIfValidObject(this);
@@ -189,12 +191,12 @@ namespace Engine
             var component = Activator.CreateInstance(type) as Component;
             component.Actor = this;
 
-            if (id != Guid.Empty)
+            if(id != Guid.Empty)
             {
-                (component as EObject).GetType().GetField("_id", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(component, id);
+                component._SetID(id); // Remove this
             }
 
-            // TODO: component deserialization might conflict with this created component without a constant guid.
+            // Note: adding required components might conflict with component data deserialization.
             var required = GetAllAttributes<RequireComponentAttribute>(type);
             if (required != null)
             {

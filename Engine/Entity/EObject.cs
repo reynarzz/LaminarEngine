@@ -77,5 +77,12 @@ namespace Engine
         {
             return this;
         }
+
+
+        // Remove this.
+        internal void _SetID(Guid id)
+        {
+            _id = id;
+        }
     }
 }

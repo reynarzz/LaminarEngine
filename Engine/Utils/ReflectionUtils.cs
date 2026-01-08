@@ -29,6 +29,22 @@ namespace Engine.Utils
             return result;
         }
 
+        public static bool TryGetTypeFromName(string name, out Type type)
+        {
+            type = null;
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                type = assembly.GetType(name);
+
+                if (type != null)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public static object GetDefaultValue(Type type)
         {
             if (type.IsValueType)
@@ -88,7 +104,7 @@ namespace Engine.Utils
             }
         }
 
-       
+
         public static IEnumerable<MemberInfo> GetAllMembersWithAttribute<T>(Type type, bool inherit = true, bool order = false,
                                                                              BindingFlags flags = _flags) where T : Attribute
         {
