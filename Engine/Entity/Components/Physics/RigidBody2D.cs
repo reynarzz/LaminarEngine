@@ -451,6 +451,9 @@ namespace Engine
         public override void OnEnabled()
         {
             base.OnEnabled();
+
+            if (!IsValidBody())
+                return;
             if (IsEnabled)
             {
                 B2Bodies.b2Body_Enable(_bodyId);
@@ -460,7 +463,11 @@ namespace Engine
         public override void OnDisabled()
         {
             base.OnDisabled();
-            B2Bodies.b2Body_Disable(_bodyId);
+
+            if (!IsValidBody())
+                return;
+
+                B2Bodies.b2Body_Disable(_bodyId);
         }
     }
 }

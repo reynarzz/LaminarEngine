@@ -47,6 +47,7 @@ namespace Editor
             return new ActorDataSceneAsset()
             {
                 Name = actor.Name,
+                IsActiveSelf = actor.IsActiveSelf,
                 Layer = actor.Layer,
                 ID = actor.GetID(),
                 ParentID = actor.Transform?.Parent?.Actor?.GetID() ?? Guid.Empty,
@@ -70,6 +71,7 @@ namespace Editor
             return new ComponentDataSceneAsset()
             {
                 ID = component.GetID(),
+                IsEnabled = component.IsEnabled,
                 TypeName = component.GetType().FullName,
                 ComponentIndex = index,
                 SerializedProperties = GetSerializedProperties(component)

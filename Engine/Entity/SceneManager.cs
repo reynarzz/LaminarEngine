@@ -20,7 +20,7 @@ namespace Engine
 
         internal static void Initialize()
         {
-            _scenes.Clear();
+            UnloadAll();
             // First Scene is always the 'dontDestroyOnLoad' scene
             LoadSceneAdditive("DontDestroyOnLoad");
             LoadSceneAdditive("DefaultScene");

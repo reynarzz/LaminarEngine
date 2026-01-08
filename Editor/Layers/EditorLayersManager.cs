@@ -41,11 +41,13 @@ namespace Editor
         {
             if (Input.GetKeyDown(KeyCode.P))
             {
-                SceneManager.UnloadAll();
                 _time.Initialize();
+                Application.IsInPlayMode = true;
+
                 PushLayer(new PhysicsLayer(), 6);
                 PushLayer(new SceneLayer(), 4);
                 PushLayer(new GameApplication(), 2);
+
             }
 
             if (Input.GetKeyDown(KeyCode.Backspace))
@@ -54,7 +56,7 @@ namespace Editor
                 PopLayer(4);
                 PopLayer(6);
 
-                //
+                Application.IsInPlayMode = false;
             }
 
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.S))

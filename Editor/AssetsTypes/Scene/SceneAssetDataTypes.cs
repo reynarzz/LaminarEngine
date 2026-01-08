@@ -10,6 +10,7 @@ namespace Editor
     {
         public string Name { get; set; }
         public int Layer { get; set; }
+        public bool IsActiveSelf { get; set; }
         public Guid ID { get; set; }
         public Guid ParentID { get; set; } = Guid.Empty;
         public List<ComponentDataSceneAsset> Components { get; set; }
@@ -18,6 +19,7 @@ namespace Editor
     internal class ComponentDataSceneAsset
     {
         public string TypeName { get; set; }
+        public bool IsEnabled { get; set; }
         public Guid ID { get; set; }
         public int ComponentIndex { get; set; }
         public List<ComponentSerializedProperty> SerializedProperties { get; set; }

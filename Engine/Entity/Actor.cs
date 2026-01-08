@@ -226,29 +226,32 @@ namespace Engine
                 _onStartPendingComponents.Add(start);
             }
 
-            if (!IsActiveInHierarchy || !IsActiveSelf)
+            if (Application.IsInPlayMode)
             {
-                _onAwakePendingComponents.Add(component);
-                _onEnablePendingComponents.Add(component);
-            }
-            else
-            {
-                try
+                if (!IsActiveInHierarchy || !IsActiveSelf)
                 {
-                    (component as IAwakeableComponent).OnAwake();
+                    _onAwakePendingComponents.Add(component);
+                    _onEnablePendingComponents.Add(component);
                 }
-                catch (Exception e)
+                else
                 {
-                    Debug.Error(e);
-                }
+                    try
+                    {
+                        (component as IAwakeableComponent).OnAwake();
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.Error(e);
+                    }
 
 
-                // NOTE: All components are enabled by default, so this if is unncessary right now,
-                //       however, in the future I might add a flag to addComponents that are disabled by default.
-                //if (component.IsEnabled) // Remove from here
-                //{
-                //    (component as IEnabledComponent).OnEnabled();
-                //}
+                    // NOTE: All components are enabled by default, so this if is unncessary right now,
+                    //       however, in the future I might add a flag to addComponents that are disabled by default.
+                    //if (component.IsEnabled) // Remove from here
+                    //{
+                    //    (component as IEnabledComponent).OnEnabled();
+                    //}
+                }
             }
 
             return component;

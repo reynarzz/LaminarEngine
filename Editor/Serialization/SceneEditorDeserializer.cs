@@ -25,6 +25,8 @@ namespace Editor
 
                 var actor = new Actor(actorData.Name, actorData.ID, scene);
                 actor.Layer = actorData.Layer;
+                actor.IsActiveSelf = actorData.IsActiveSelf;
+
                 // actor.AddComponent(typeof());
                 _actorsByID.Add(actor.GetID(), actor);
 
@@ -36,6 +38,8 @@ namespace Editor
                     if (ReflectionUtils.TryGetTypeFromName(componentData.TypeName, out var componentType))
                     {
                         var component = actor.AddComponent(componentType, componentData.ID);
+                        component.IsEnabled = componentData.IsEnabled;
+
                         _componentsByID.Add(componentData.ID, (component, componentData));
                     }
                 }
