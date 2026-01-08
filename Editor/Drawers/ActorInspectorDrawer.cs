@@ -14,6 +14,8 @@ namespace Editor
     public class ActorInspectorDrawer : IDrawerEditor
     {
         private IReadOnlyList<Type> _allComponentTypes;
+        private readonly static Type[] _visibilityAttributes = [typeof(SerializedFieldAttribute), typeof(ShowFieldNoSerialize)];
+
         public ActorInspectorDrawer()
         {
         }
@@ -31,7 +33,7 @@ namespace Editor
                 for (int i = 0; i < actor.Components.Count; i++)
                 {
                     var component = actor.Components[i];
-                    var members = ReflectionUtils.GetAllMembersWithAttribute<SerializedFieldAttribute>(component.GetType(), true, true);
+                    var members = ReflectionUtils.GetAllMembersWithAttributes(component.GetType(), _visibilityAttributes, true, true);
                     DrawComponentTree(component, i, x =>
                     {
                         if (component)

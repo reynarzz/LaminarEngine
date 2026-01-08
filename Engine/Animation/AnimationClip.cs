@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    public class AnimationClip : EObject
+    public class AnimationClip : AssetResourceBase
     {
         public float Duration
         {
@@ -47,7 +47,7 @@ namespace Engine
 
        
 
-        public AnimationClip(string name, bool loop = true)
+        public AnimationClip(string name, bool loop = true) : base(string.Empty, Guid.NewGuid()) // TODO: animation clip
         {
             Name = name;
             Loop = loop;

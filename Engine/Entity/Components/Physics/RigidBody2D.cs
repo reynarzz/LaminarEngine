@@ -206,7 +206,7 @@ namespace Engine
 
         private vec2 _velocity;
 
-        [SerializedField(isReadOnly: true)]
+        [ShowFieldNoSerialize(isReadOnly: true)]
         public vec2 Velocity
         {
             get
@@ -234,7 +234,7 @@ namespace Engine
         //    }
         //}
 
-        [SerializedField(isReadOnly: true)]
+        [ShowFieldNoSerialize(isReadOnly: true)]
         public float AngularVelovity
         {
             get

@@ -44,16 +44,20 @@ namespace Editor
         EObject, // Reference to a generic EObject...
         Component,
         Actor,
-        Number,
         Class,
-        Array,
-        Dictionary,
+        Collection,
         Asset,
         TextureAsset,
-        RenderTexture,
+        RenderTextureAsset,
+        AudioClipAsset,
         MaterialAsset,
         AnimationAsset,
         AnimatorAsset,
-        ScriptableObject
+        ScriptableObject,
+
+        /// <summary>
+        /// Internal engine types: int, string, Color32, enums etc...
+        /// </summary>
+        Simple,
     }
 }

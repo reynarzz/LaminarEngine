@@ -22,6 +22,11 @@ namespace Editor
         private const float _xPosOffset = 180;
 
         private delegate bool DrawSimpleFieldDelegate<T>(string fieldName, ref T v, float width = 0, bool pressEnterToConfirm = false);
+        private readonly static Type[] _visibilityAttributes = [typeof(SerializedFieldAttribute), typeof(ShowFieldNoSerialize)];
+
+        private static bool _openPopup;
+        private static object _selectedValue;
+        private static Func<object, bool> _selectedSetter;
 
         private static void SetMemberValueSafe<T>(object target, T value, MemberInfo prop, int index, Func<T, object> valueConverter = null)
         {
@@ -68,14 +73,25 @@ namespace Editor
             object value = ReflectionUtils.GetMemberValue(target, prop);
             Type type = ReflectionUtils.GetMemberType(prop);
             string propertyName = prop.Name;
-            // NOTE: I will enforce that any property that needs to be exposed in the editor should have the SerializedField attribute
+            // NOTE: I will enforce that any property that needs to be exposed in the editor should have the
+            //       SerializedField/ShowFieldNoSerialize attribute
 
             bool isReadOnly = false;
 
             if (enforceSerializedFieldAttribute)
             {
-                var attrib = prop.GetCustomAttribute<SerializedFieldAttribute>();
-                if (attrib == null || prop.GetCustomAttribute<HideFromInspectorAttribute>() != null)
+                PropertyVisibilityAttribute attrib = prop.GetCustomAttribute<SerializedFieldAttribute>();
+
+                if (attrib == null)
+                {
+                    attrib = prop.GetCustomAttribute<ShowFieldNoSerialize>();
+                    if (attrib == null)
+                    {
+                        return;
+                    }
+                }
+
+                if(prop.GetCustomAttribute<HideFromInspectorAttribute>() != null)
                 {
                     return;
                 }
@@ -88,11 +104,8 @@ namespace Editor
                 }
             }
 
-
-
             DrawVars(objectId, target, value, type, propertyName, isReadOnly, prop, cursorX, index, width);
         }
-
 
         public static void DrawVars(string objectId, object target, object value, Type type, string propertyName,
                                     bool isReadOnly, MemberInfo prop, float cursorX, int index, float width)
@@ -353,7 +366,7 @@ namespace Editor
             }
             else if (type.IsClass || ReflectionUtils.IsUserDefinedStruct(type))
             {
-                var members = ReflectionUtils.GetAllMembersWithAttribute<SerializedFieldAttribute>(type, true, true);
+                var members = ReflectionUtils.GetAllMembersWithAttributes(type, _visibilityAttributes, true, true);
 
                 var propIndex = index;
                 foreach (var subProp in members)
@@ -370,6 +383,7 @@ namespace Editor
 
             ImGui.TreePop();
         }
+
 
         private static void DrawList(string objectId, string propertyName, IList list, object value, Type elemenType,
                                      MemberInfo prop, float cursorX, Action<IList, int> onAddCallback, Action<IList, int> onRemoveCallback,
@@ -474,10 +488,6 @@ namespace Editor
 
             PickObjectPopup(valueType, setValue);
         }
-
-        static bool _openPopup;
-        static object _selectedValue;
-        static Func<object, bool> _selectedSetter;
 
         private static void PickObjectPopup(Type valueType, Func<object, bool> setValue)
         {

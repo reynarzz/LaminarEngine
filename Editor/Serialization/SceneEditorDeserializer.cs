@@ -1,5 +1,6 @@
 ﻿using Engine;
 using Engine.Utils;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,13 +12,16 @@ namespace Editor
 {
     internal static class SceneEditorDeserializer
     {
-        private readonly static Dictionary<Guid, Actor> _actorsByID = new();
-        private readonly static Dictionary<Guid, (Component component, ComponentDataSceneAsset data)> _componentsByID = new();
+        private readonly static Dictionary<Guid, (Actor value, ActorDataSceneAsset data)> _actorsByID = new();
+        private readonly static Dictionary<Guid, (Component value, ComponentDataSceneAsset data)> _componentsByID = new();
 
         public static void DeserializeScene(IReadOnlyList<ActorDataSceneAsset> actors, WeakReference<Scene> scene)
         {
             _actorsByID.Clear();
             _componentsByID.Clear();
+
+            if (actors == null || actors.Count == 0)
+                return;
 
             for (int i = 0; i < actors.Count; i++)
             {
@@ -28,7 +32,7 @@ namespace Editor
                 actor.IsActiveSelf = actorData.IsActiveSelf;
 
                 // actor.AddComponent(typeof());
-                _actorsByID.Add(actor.GetID(), actor);
+                _actorsByID.Add(actor.GetID(), (actor, actorData));
 
                 // Add components, but no deserialize yet.
                 for (int j = 0; j < actorData.Components.Count; j++)
@@ -52,21 +56,70 @@ namespace Editor
 
                 if (actorData.ParentID != Guid.Empty)
                 {
-                    _actorsByID[actorData.ID].Transform.Parent = _actorsByID[actorData.ParentID].Transform;
+                    _actorsByID[actorData.ID].value.Transform.Parent = _actorsByID[actorData.ParentID].value.Transform;
                 }
             }
 
             // Deserialize components data, and resolve references.
             foreach (var (id, componentValue) in _componentsByID)
             {
-                DeserializeComponent(componentValue.component, componentValue.data);
+                DeserializeComponent(componentValue.value, componentValue.data);
             }
         }
 
         private static void DeserializeComponent(Component component, ComponentDataSceneAsset data)
         {
-
+            foreach (var property in data.SerializedProperties)
+            {
+                if (property.Type == SerializableType.Simple)
+                {
+                    DeserializeSimpleProperty(component, property);
+                }
+                else if (property.Type == SerializableType.Component)
+                {
+                    DeserializeReferencedProperty(_componentsByID, component, property);
+                }
+                else if (property.Type == SerializableType.Actor)
+                {
+                    DeserializeReferencedProperty(_actorsByID, component, property);
+                }
+            }
         }
+
+        private static void DeserializeReferencedProperty<V, D>(Dictionary<Guid, (V value, D data)> ids, object target, ComponentSerializedProperty property)
+        {
+            if (property.Data == null)
+            {
+                Debug.EngineError("Serialization error: property data is null.");
+                return;
+            }
+
+            var guid = (Guid)property.Data;
+
+            if (ids.TryGetValue(guid, out var component))
+            {
+                ReflectionUtils.SetMemberValue(target, property.Name, component.value);
+            }
+            else
+            {
+                Debug.Error($"Could not deserialize value for component: {target.GetType().Name}, Property: {property.Name}");
+            }
+        }
+        
+        private static void DeserializeSimpleProperty(object target, ComponentSerializedProperty property)
+        {
+            var simpleProperty = property.Data as SimpleSerializedProperty;
+            if (simpleProperty == null)
+            {
+                Debug.EngineError("Serialization error: property data is null.");
+                return;
+            }
+            if (ReflectionUtils.TryGetTypeFromName(simpleProperty.TypeName, out var type))
+            {
+                ReflectionUtils.SetMemberValue(target, property.Name, simpleProperty.Value);
+            }
+        }
+
         private static void InstantiateActor()
         {
 

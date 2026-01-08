@@ -100,6 +100,50 @@ namespace Editor
 
         public static SerializableType GetSerializedType(MemberInfo member)
         {
+            var type = ReflectionUtils.GetMemberType(member);
+
+            if (type.IsAssignableTo(typeof(IObject)))
+            {
+                if (type.IsAssignableTo(typeof(IComponent)))
+                {
+                    return SerializableType.Component;
+                }
+                else if (type.IsAssignableTo(typeof(Actor)))
+                {
+                    return SerializableType.Actor;
+                }
+                else if (type.IsAssignableTo(typeof(AssetResourceBase)))
+                {
+                    if (type.IsAssignableTo(typeof(Texture)))
+                    {
+                        return SerializableType.TextureAsset;
+                    }
+                    else if (type.IsAssignableTo(typeof(AudioClip)))
+                    {
+                        return SerializableType.AudioClipAsset;
+                    }
+                    else if (type.IsAssignableTo(typeof(AnimationClip)))
+                    {
+                        return SerializableType.AnimationAsset;
+                    }
+                }
+                else
+                {
+                    return SerializableType.EObject;
+                }
+            }
+            else if (ReflectionUtils.IsCollection(type))
+            {
+                return SerializableType.Collection;
+            }
+            else if (ReflectionUtils.IsInternalValueType(member) || type == typeof(string))
+            {
+                return SerializableType.Simple;
+            }
+            else if (type.IsClass) // Serializable class
+            {
+                return SerializableType.Class;
+            }
             return SerializableType.None;
         }
 
@@ -111,7 +155,12 @@ namespace Editor
 
             if (type.IsAssignableTo(typeof(IObject)))
             {
-                return value != null ? (value as IObject).GetID() : Guid.Empty;
+                if (value != null)
+                {
+                    Debug.Log("Serialize: " + value.GetType().Name + ", id: " + (value as IObject).GetID());
+                    return (value as IObject).GetID();
+                }
+                return Guid.Empty;
             }
             else if (ReflectionUtils.IsCollection(type))
             {

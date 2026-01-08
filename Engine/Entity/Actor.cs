@@ -154,6 +154,11 @@ namespace Engine
             }
             else if (type.IsAssignableFrom(typeof(Transform)) && _components.Count > 0)
             {
+                if (id != Guid.Empty)
+                {
+                    Transform._SetID(id); // Remove this
+                }
+
                 return Transform;
             }
 

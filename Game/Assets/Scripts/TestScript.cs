@@ -80,6 +80,7 @@ namespace Game
         [SerializedField] public List<Component> _TestComponentList { get; set; }
         [SerializedField] public double DoubleField { get; set; }
         [SerializedField] public Component ComponentTest { get; set; }
+        [SerializedField] public Actor ActorTest { get; set; }
         //[ExposeEditorField] public List<Body2DType> EnumList { get; set; } = new();
         //[ExposeEditorField] public mat2 mat2Test { get; set; }
         //[ExposeEditorField] public mat3 mat3Test { get; set; }

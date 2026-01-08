@@ -129,9 +129,13 @@ namespace Engine
             }
         }
 
-        [SerializedField(isReadOnly: true)]
+        [ShowFieldNoSerialize(isReadOnly: true)]
         public bool IsPlaying => _soundPlayer?.State == PlaybackState.Playing;
+
+        [ShowFieldNoSerialize(isReadOnly: true)]
         public bool IsPaused => _soundPlayer?.State == PlaybackState.Paused;
+
+        [ShowFieldNoSerialize(isReadOnly: true)]
         public bool IsStopped => _soundPlayer?.State == PlaybackState.Stopped;
 
         [ShowMethodInEditor(true)]

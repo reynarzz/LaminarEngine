@@ -129,6 +129,78 @@ namespace Engine.Utils
             }
         }
 
+        public static IEnumerable<MemberInfo> GetAllMembersWithAttributes(Type type, Type[] attributeTypes, bool inherit = true,
+                                                                          bool order = false, BindingFlags flags = _flags)
+        {
+            if (type == null)
+                throw new ArgumentNullException(nameof(type));
+
+            if (attributeTypes == null || attributeTypes.Length == 0)
+                throw new ArgumentException("At least one attribute type must be provided.", nameof(attributeTypes));
+
+            foreach (var attrType in attributeTypes)
+            {
+                if (!typeof(Attribute).IsAssignableFrom(attrType))
+                    throw new ArgumentException($"{attrType} is not an Attribute type.");
+            }
+
+            while (type != null && type != typeof(object))
+            {
+                var members = type.GetMembers(flags | BindingFlags.DeclaredOnly)
+                                  .Where(m => (m.MemberType == MemberTypes.Field ||
+                                              m.MemberType == MemberTypes.Property) &&
+                                              attributeTypes.Any(a => m.IsDefined(a, inherit)));
+
+                if (order)
+                {
+                    members = members.OrderBy(m => m.MetadataToken);
+                }
+
+                foreach (var member in members)
+                {
+                    yield return member;
+                }
+
+                type = type.BaseType;
+            }
+        }
+
+
+        public static void SetMemberValue(object target, string memberName, object value)
+        {
+            if (target == null)
+                throw new ArgumentNullException(nameof(target));
+
+            var type = target.GetType();
+
+            while (type != null)
+            {
+                const BindingFlags flags =
+                    BindingFlags.Instance |
+                    BindingFlags.Public |
+                    BindingFlags.NonPublic |
+                    BindingFlags.DeclaredOnly;
+
+                var prop = type.GetProperty(memberName, flags);
+                if (prop != null)
+                {
+                    SetMemberValue(target, prop, value);
+                    return;
+                }
+
+                var field = type.GetField(memberName, flags);
+                if (field != null)
+                {
+                    SetMemberValue(target, field, value);
+                    return;
+                }
+
+                type = type.BaseType;
+            }
+
+            Debug.Error($"Could not find member named: {memberName}");
+        }
+
         public static void SetMemberValue(object target, MemberInfo member, object value)
         {
             switch (member)
@@ -193,12 +265,6 @@ namespace Engine.Utils
             return IsUserDefinedStruct(type);
         }
 
-        public static bool IsInternalValueType(MemberInfo member)
-        {
-            var type = GetMemberType(member);
-
-            return IsInternalValueType(type);
-        }
 
         public static bool IsUserDefinedStruct(Type type)
         {
@@ -210,12 +276,19 @@ namespace Engine.Utils
             return false;
         }
 
+        public static bool IsInternalValueType(MemberInfo member)
+        {
+            var type = GetMemberType(member);
+            return IsInternalValueType(type);
+        }
+
         public static bool IsInternalValueType(Type type)
         {
             if (type != null)
             {
                 return type.IsValueType && (type.IsPrimitive || type.IsEnum ||
-                       type.Namespace.Equals(typeof(vec2).Namespace) || type == typeof(Color) || type == typeof(Color32));
+                       type.Namespace.Equals(typeof(vec2).Namespace) ||
+                       type == typeof(Color) || type == typeof(Color32));
             }
             return false;
         }

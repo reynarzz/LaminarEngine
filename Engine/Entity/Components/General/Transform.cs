@@ -40,7 +40,7 @@ namespace Engine
             }
         }
 
-        [SerializedField, HideFromInspector]
+        [SerializedField("Rotation"), HideFromInspector]
         public quat LocalRotation
         {
             get => _localRotation;
@@ -51,7 +51,7 @@ namespace Engine
             }
         }
 
-        [SerializedField("Rotation")]
+        [ShowFieldNoSerialize("Rotation")]
         public vec3 LocalEulerAngles
         {
             get
