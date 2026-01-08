@@ -29,21 +29,12 @@ namespace Editor
     {
         public string Name { get; set; }
         public SerializableType Type { get; set; }
-        public SerializedPropertyData Data { get; set; }
+        public object Data { get; set; }
     }
 
-    internal abstract class SerializedPropertyData
+    internal class SimpleSerializedProperty 
     {
         public string TypeName { get; set; }
-    }
-
-    internal class EObjectSerializedProperty : SerializedPropertyData
-    {
-        public Guid ID { get; set; }
-    }
-
-    internal class SimpleSerializedProperty : SerializedPropertyData
-    {
         public object Value { get; set; }
     }
 

@@ -103,7 +103,7 @@ namespace Editor
             return SerializableType.None;
         }
 
-        public static SerializedPropertyData GetPropertyData(MemberInfo member, object value)
+        public static object GetPropertyData(MemberInfo member, object value)
         {
             // Note: runtime-created assets such as Materials, Shaders, textures maybe should have a empty guid, so the serializer,
             //       does not point to a invalid physical asset.
@@ -111,11 +111,7 @@ namespace Editor
 
             if (type.IsAssignableTo(typeof(IObject)))
             {
-                return new EObjectSerializedProperty()
-                {
-                    ID = value != null ? (value as IObject).GetID() : Guid.Empty,
-                    TypeName = type.FullName,
-                };
+                return value != null ? (value as IObject).GetID() : Guid.Empty;
             }
             else if (ReflectionUtils.IsCollection(type))
             {
