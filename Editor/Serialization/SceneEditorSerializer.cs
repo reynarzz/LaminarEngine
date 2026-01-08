@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 
 namespace Editor
 {
+    // Note: This is a very naive serializaton, renaming types, changing to another assembly will cause references to break.
+    //       But for this development stage, this is fine, and will not be difficult to change later.
     internal static class SceneEditorSerializer
     {
         internal static List<ActorDataSceneAsset> SerializeScene(Scene scene)
@@ -69,13 +71,8 @@ namespace Editor
         {
             return new ComponentDataSceneAsset()
             {
-                Header = new EObjectDataHeader()
-                {
-                    FullTypeName = component.GetType().FullName,
-                    AssemblyName = component.GetType().Assembly.GetName().Name,
-                    Type = SerializableType.Component,
-                    ID = component.GetID()
-                },
+                ID = component.GetID(),
+                TypeName = component.GetType().FullName,
                 ComponentIndex = index,
                 SerializedProperties = GetSerializedProperties(component)
             };
@@ -116,13 +113,8 @@ namespace Editor
             {
                 return new EObjectSerializedProperty()
                 {
-                    Header = new EObjectDataHeader()
-                    {
-                        FullTypeName = type.FullName,
-                        AssemblyName = type.Assembly.GetName().Name,
-                        Type = GetSerializedType(member),
-                        ID = value != null ? (value as IObject).GetID() : Guid.Empty
-                    }
+                    ID = value != null ? (value as IObject).GetID() : Guid.Empty,
+                    TypeName = type.FullName,
                 };
             }
             else if (ReflectionUtils.IsCollection(type))
@@ -133,12 +125,7 @@ namespace Editor
             {
                 return new SimpleSerializedProperty()
                 {
-                    Header = new TypeHeader()
-                    {
-                        AssemblyName = type.Assembly.GetName().Name,
-                        FullTypeName = type.FullName,
-                        Type = GetSerializedType(member),
-                    },
+                    TypeName = type.FullName,
                     Value = value
                 };
             }

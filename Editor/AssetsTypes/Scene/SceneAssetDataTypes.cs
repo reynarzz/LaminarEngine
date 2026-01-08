@@ -19,7 +19,8 @@ namespace Editor
 
     internal class ComponentDataSceneAsset
     {
-        public EObjectDataHeader Header { get; set; }
+        public string TypeName { get; set; }
+        public Guid ID { get; set; }
         public int ComponentIndex { get; set; }
         public List<ComponentSerializedProperty> SerializedProperties { get; set; }
     }
@@ -33,28 +34,16 @@ namespace Editor
 
     internal abstract class SerializedPropertyData
     {
-    }
-
-    internal class TypeHeader
-    {
-        public string FullTypeName { get; set; }
-        public string AssemblyName { get; set; }
-        public SerializableType Type { get; set; }
-    }
-
-    internal class EObjectDataHeader : TypeHeader
-    {
-        public Guid ID { get; set; }
+        public string TypeName { get; set; }
     }
 
     internal class EObjectSerializedProperty : SerializedPropertyData
     {
-        public EObjectDataHeader Header { get; set; }
+        public Guid ID { get; set; }
     }
 
     internal class SimpleSerializedProperty : SerializedPropertyData
     {
-        public TypeHeader Header { get; set; }
         public object Value { get; set; }
     }
 
