@@ -22,6 +22,7 @@ namespace Editor
     // Add mouse picker the ability to pick the object behind the current picked object.
     // Draw gizmos (camera icon (and any other object too), arrows handle, object selected)
     // Remove the sides of the screen for the mouse picker, so an object doesn't get picked when dragging a window.
+    // Changing cameras causes to render prevCamera.
 
     internal class EditorEntry
     {

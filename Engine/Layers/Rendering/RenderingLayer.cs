@@ -122,7 +122,7 @@ namespace Engine.Layers
                                 surface.Cameras = new WeakReference<ICamera>[1];
                             }
 
-                            surface.Cameras[0] = new WeakReference<ICamera>(camera);
+                            surface.Cameras[0] = _sceneCamera;
                             RenderScene(surface, camera);
                         }
                     }

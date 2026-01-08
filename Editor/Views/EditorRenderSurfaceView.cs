@@ -71,12 +71,9 @@ namespace Editor
             {
                 var cameraRenderTarget = camera.OutRenderTexture?.NativeResource;
 
-                if (cameraRenderTarget == null)
+                if (cameraRenderTarget == null && _surface.RenderTextures != null && _surface.RenderTextures.Length > 0)
                 {
-                    if (_surface.RenderTextures != null && _surface.RenderTextures.Length > 0)
-                    {
-                        cameraRenderTarget = _surface.RenderTextures[0].NativeResource;
-                    }
+                    cameraRenderTarget = _surface.RenderTextures[0].NativeResource;
                 }
 
                 if (cameraRenderTarget != null)

@@ -67,7 +67,7 @@ namespace Engine
         public mat4 Projection { get; private set; }
         public mat4 ViewMatrix => glm.inverse(Transform.WorldMatrix);
 
-        [SerializedField] public Color BackgroundColor { get; set; } = Color.Black;
+        [SerializedField] public Color BackgroundColor { get; set; } = Color.Gray;
         private CameraProjectionMode _projectionMode;
         [SerializedField("Projection")]
         public CameraProjectionMode ProjectionMode
