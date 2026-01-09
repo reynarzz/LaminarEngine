@@ -262,13 +262,13 @@ namespace Engine.Utils
             return false;
         }
 
-        public static bool IsInternalValueType(MemberInfo member)
+        public static bool IsInternalType(MemberInfo member)
         {
             var type = GetMemberType(member);
-            return IsInternalValueType(type);
+            return IsInternalType(type);
         }
 
-        public static bool IsInternalValueType(Type type)
+        public static bool IsInternalType(Type type)
         {
             if (type != null)
             {
@@ -289,10 +289,10 @@ namespace Engine.Utils
 
             if (collectionType == CollectionType.Dictionary)
             {
-                return IsInternalValueType(types[0]) && IsInternalValueType(types[1]);
+                return IsInternalType(types[0]) && IsInternalType(types[1]);
             }
 
-            return IsInternalValueType(types[0]);
+            return IsInternalType(types[0]);
         }
 
         public static Type[] GetCollectionElementsType(Type type)

@@ -99,48 +99,48 @@ namespace Editor.Serialization
             return properties;
         }
 
-        public static SerializableType GetSerializedType(Type type)
+        public static SerializedType GetSerializedType(Type type)
         {
             if (type == null)
             {
-                return SerializableType.None;
+                return SerializedType.None;
             }
 
             if (type.IsAssignableTo(typeof(IObject)))
             {
                 if (type.IsAssignableTo(typeof(IComponent)))
                 {
-                    return SerializableType.Component;
+                    return SerializedType.Component;
                 }
                 else if (type.IsAssignableTo(typeof(Actor)))
                 {
-                    return SerializableType.Actor;
+                    return SerializedType.Actor;
                 }
                 else if (type.IsAssignableTo(typeof(AssetResourceBase)))
                 {
                     if (type.IsAssignableTo(typeof(Texture)))
                     {
-                        return SerializableType.TextureAsset;
+                        return SerializedType.TextureAsset;
                     }
                     else if (type.IsAssignableTo(typeof(AudioClip)))
                     {
-                        return SerializableType.AudioClipAsset;
+                        return SerializedType.AudioClipAsset;
                     }
                     else if (type.IsAssignableTo(typeof(AnimationClip)))
                     {
-                        return SerializableType.AnimationAsset;
+                        return SerializedType.AnimationAsset;
                     }
                 }
                 else
                 {
-                    return SerializableType.EObject;
+                    return SerializedType.EObject;
                 }
             }
             else if (ReflectionUtils.IsCollection(type, out var collectionType))
             {
                 if (ReflectionUtils.IsCollectionOfInternalTypes(type))
                 {
-                    return SerializableType.SimpleCollection;
+                    return SerializedType.SimpleCollection;
                 }
 
                 var elementsTypes = ReflectionUtils.GetCollectionElementsType(type);
@@ -148,26 +148,26 @@ namespace Editor.Serialization
 
                 if (isFirstElementTypeAReference)
                 {
-                    return SerializableType.ReferenceCollection;
+                    return SerializedType.ReferenceCollection;
                 }
 
                 if (collectionType == ReflectionUtils.CollectionType.Dictionary &&
                     elementsTypes[1].IsAssignableTo(typeof(IObject)))
                 {
-                    return SerializableType.ReferenceCollection;
+                    return SerializedType.ReferenceCollection;
                 }
 
-                return SerializableType.Collection;
+                return SerializedType.Collection;
             }
-            else if (ReflectionUtils.IsInternalValueType(type))
+            else if (ReflectionUtils.IsInternalType(type))
             {
-                return SerializableType.Simple;
+                return SerializedType.Simple;
             }
             else if (type.IsClass) // Serializable class
             {
-                return SerializableType.Class;
+                return SerializedType.Class;
             }
-            return SerializableType.None;
+            return SerializedType.None;
         }
 
         public static object GetPropertyData(MemberInfo member, object value)
@@ -221,7 +221,7 @@ namespace Editor.Serialization
                     return referenced;
                 }
             }
-            else if (ReflectionUtils.IsInternalValueType(member))
+            else if (ReflectionUtils.IsInternalType(member))
             {
                 return value;
             }

@@ -72,55 +72,58 @@ namespace Editor.Serialization
         {
             foreach (var property in data.SerializedProperties)
             {
-                if (property.Type == SerializableType.Simple ||
-                    property.Type == SerializableType.SimpleCollection)
+                switch (property.Type)
                 {
-                    DeserializeSimpleProperty(component, property);
-                }
-                else if (property.Type == SerializableType.Component)
-                {
-                    DeserializeReferencedProperty(_componentsByID, component, property);
-                }
-                else if (property.Type == SerializableType.Actor)
-                {
-                    DeserializeReferencedProperty(_actorsByID, component, property);
-                }
-                else if (property.Type == SerializableType.ReferenceCollection)
-                {
-                    DeserializeReferenceCollectionProperty(component, property);
+                    case SerializedType.None:
+                        break;
+                    case SerializedType.EObject:
+                    case SerializedType.Component:
+                    case SerializedType.Actor:
+                    case SerializedType.Asset:
+                    case SerializedType.TextureAsset:
+                    case SerializedType.RenderTextureAsset:
+                    case SerializedType.AudioClipAsset:
+                    case SerializedType.MaterialAsset:
+                    case SerializedType.AnimationAsset:
+                    case SerializedType.AnimatorControllerAsset:
+                    case SerializedType.ScriptableObject:
+                        DeserializeReferencedProperty(property.Type, component, property);
+                        break;
+                    case SerializedType.Simple:
+                    case SerializedType.SimpleCollection:
+                        DeserializeSimpleProperty(component, property);
+                        break;
+                    case SerializedType.Collection:
+                        break;
+                    case SerializedType.ReferenceCollection:
+                        DeserializeReferenceCollectionProperty(component, property);
+                        break;
+                    case SerializedType.Class:
+                        break;
+                    default:
+                        Debug.Error($"Cannot deserialize property of type: {property.Type}, please implement it.");
+                        break;
                 }
             }
         }
 
-        private static void DeserializeReferencedProperty<V, D>(Dictionary<Guid, (V value, D data)> ids,
-                                                                object target, ComponentSerializedProperty property)
+        private static void DeserializeReferencedProperty(SerializedType serializableType, object target,
+                                                          ComponentSerializedProperty property)
         {
             if (property.Data == null)
             {
-                Debug.EngineError("Serialization error: property data is null.");
+                Debug.EngineError($"Deserialization error: property '{property.Name}' data is null.");
                 return;
             }
             var guid = (Guid)property.Data;
-            var referenceValue = GetReferenceValue(ids, guid);
+            var referenceValue = GetReferenceValue(serializableType, guid);
 
             if (referenceValue != null)
             {
                 ReflectionUtils.SetMemberValue(target, property.Name, referenceValue);
             }
-            else
-            {
-                Debug.Error($"Could not deserialize value for component: {target.GetType().Name}, Property: {property.Name}");
-            }
         }
-        private static object GetReferenceValue<V, D>(Dictionary<Guid, (V value, D data)> ids, Guid guid)
-        {
-            if (ids.TryGetValue(guid, out var data))
-            {
-                return data.value;
-            }
 
-            return null;
-        }
         private static void DeserializeSimpleProperty(object target, ComponentSerializedProperty property)
         {
             if (property.Data == null)
@@ -133,27 +136,12 @@ namespace Editor.Serialization
 
         private static void DeserializeReferenceCollectionProperty(object target, ComponentSerializedProperty property)
         {
-            if (property.Data == null)
-            {
-                return;
-            }
-
             var ids = property.Data as ICollection;
 
             if (ids == null)
                 return;
 
             var collectionPropertyType = ReflectionUtils.GetMemberType(target.GetType(), property.Name);
-
-            object GetItemReferenceValue(object item)
-            {
-                var referenceElement = item as SerializedCollectionElement<Guid>;
-
-                if (referenceElement == null)
-                    return null;
-
-                return GetReferenceValue(referenceElement.Type, referenceElement.Value);
-            }
 
             if (ReflectionUtils.IsCollection(collectionPropertyType, out var collectionType))
             {
@@ -181,6 +169,16 @@ namespace Editor.Serialization
                 }
             }
 
+            object GetItemReferenceValue(object item)
+            {
+                var referenceElement = item as SerializedCollectionElement<Guid>;
+
+                if (referenceElement == null)
+                    return null;
+
+                return GetReferenceValue(referenceElement.Type, referenceElement.Value);
+            }
+
             void SetValueToProperty(object collectionInstance, Action<object, int> setCollectionValueCallback)
             {
                 int index = 0;
@@ -194,13 +192,15 @@ namespace Editor.Serialization
             }
         }
 
-        private static object GetReferenceValue(SerializableType type, Guid guid)
+        private static object GetReferenceValue(SerializedType type, Guid guid)
         {
             switch (type)
             {
-                case SerializableType.Component:
+                case SerializedType.None:
+                    return null;
+                case SerializedType.Component:
                     return GetReferenceValue(_componentsByID, guid);
-                case SerializableType.Actor:
+                case SerializedType.Actor:
                     return GetReferenceValue(_actorsByID, guid);
                 //case SerializableType.Asset:
                 //    break;
@@ -218,7 +218,7 @@ namespace Editor.Serialization
                 //    break;
                 //case SerializableType.ScriptableObject:
                 //    break;
-                case SerializableType.EObject:
+                case SerializedType.EObject:
                     break;
                 default:
                     Debug.Error($"Can't deserialize reference: '{type}' is not implemented.");
@@ -227,7 +227,15 @@ namespace Editor.Serialization
 
             return null;
         }
+        private static object GetReferenceValue<V, D>(Dictionary<Guid, (V value, D data)> ids, Guid guid)
+        {
+            if (ids.TryGetValue(guid, out var data))
+            {
+                return data.value;
+            }
 
+            return null;
+        }
         private static void InstantiateActor()
         {
 

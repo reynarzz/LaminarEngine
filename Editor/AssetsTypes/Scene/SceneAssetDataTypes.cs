@@ -30,7 +30,7 @@ namespace Editor
     internal class ComponentSerializedProperty
     {
         public string Name { get; set; }
-        public SerializableType Type { get; set; }
+        public SerializedType Type { get; set; }
 
         [JsonConverter(typeof(GFSDataProperty))]
         public object Data { get; set; }
@@ -42,7 +42,7 @@ namespace Editor
         public object Value { get; set; }
     }
 
-    internal enum SerializableType
+    internal enum SerializedType
     {
         None,
         EObject, // Reference to a generic EObject...
@@ -56,7 +56,7 @@ namespace Editor
         AudioClipAsset,
         MaterialAsset,
         AnimationAsset,
-        AnimatorAsset,
+        AnimatorControllerAsset,
         ScriptableObject,
 
         /// <summary>

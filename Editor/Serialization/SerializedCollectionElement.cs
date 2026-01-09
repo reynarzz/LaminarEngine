@@ -8,7 +8,7 @@ namespace Editor.Serialization
 {
     internal class SerializedCollectionElement
     {
-        public SerializableType Type { get; set; }
+        public SerializedType Type { get; set; }
     }
 
     internal class SerializedCollectionElement<T> : SerializedCollectionElement
