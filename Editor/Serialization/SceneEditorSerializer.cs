@@ -134,9 +134,16 @@ namespace Editor.Serialization
             }
             else if (ReflectionUtils.IsCollection(type))
             {
-                return SerializableType.Collection;
+                if (ReflectionUtils.IsCollectionOfInternalTypes(type))
+                {
+                    return SerializableType.Simple;
+                }
+                else
+                {
+                    return SerializableType.Collection;
+                }
             }
-            else if (ReflectionUtils.IsInternalValueType(member) || type == typeof(string))
+            else if (ReflectionUtils.IsInternalValueType(member))
             {
                 return SerializableType.Simple;
             }
@@ -161,11 +168,14 @@ namespace Editor.Serialization
                 }
                 return Guid.Empty;
             }
-            else if (ReflectionUtils.IsCollection(type))
+            else if (ReflectionUtils.IsCollection(type, out var collectionType))
             {
-
+                if (ReflectionUtils.IsCollectionOfInternalTypes(type))
+                {
+                    return value;
+                }
             }
-            else if (ReflectionUtils.IsInternalValueType(member) || type == typeof(string))
+            else if (ReflectionUtils.IsInternalValueType(member))
             {
                 return value;
             }

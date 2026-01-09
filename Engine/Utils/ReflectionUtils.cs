@@ -15,20 +15,6 @@ namespace Engine.Utils
     {
         private const BindingFlags _flags = BindingFlags.Instance | BindingFlags.Public
                                          | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
-        IEnumerable<T> GetAllAttributes<T>([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
-                                            Type type) where T : Attribute
-        {
-            var result = new List<T>();
-
-            while (type != null && type != typeof(object))
-            {
-                result.AddRange(type.GetCustomAttributes(typeof(T), inherit: false).Cast<T>());
-                type = type.BaseType;
-            }
-
-            return result;
-        }
-
         public static bool TryGetTypeFromName(string name, out Type type)
         {
             type = null;
@@ -288,11 +274,33 @@ namespace Engine.Utils
             {
                 return type.IsValueType && (type.IsPrimitive || type.IsEnum ||
                        type.Namespace.Equals(typeof(vec2).Namespace) ||
-                       type == typeof(Color) || type == typeof(Color32));
+                       type == typeof(Color) || type == typeof(Color32)) || 
+                       type == typeof(string);
             }
             return false;
         }
 
+        public static bool IsCollectionOfInternalTypes(Type type)
+        {
+            if (!IsCollection(type, out var collectionType))
+                return false;
+
+            switch (collectionType)
+            {
+                case CollectionType.Array:
+                    return IsInternalValueType(type.GetElementType());
+                case CollectionType.List:
+                case CollectionType.Stack:
+                case CollectionType.Queue:
+                case CollectionType.Hashset:
+                    return IsInternalValueType(type.GetGenericArguments()[0]);
+                case CollectionType.Dictionary:
+                    return IsInternalValueType(type.GetGenericArguments()[0]) &&
+                           IsInternalValueType(type.GetGenericArguments()[1]);
+            }
+
+            return false;
+        }
         public static Type GetMemberType(MemberInfo member)
         {
             return member switch
@@ -326,11 +334,60 @@ namespace Engine.Utils
             return IsCollection(type);
         }
 
+        internal enum CollectionType
+        {
+            None,
+            Array,
+            List,
+            Dictionary,
+            Stack,
+            Queue,
+            Hashset
+        }
+
         public static bool IsCollection(Type type)
         {
-            return (type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(List<>) ||
-                                           type.GetGenericTypeDefinition() == typeof(Dictionary<,>)))
-                 || type.IsArray;
+            return IsCollection(type, out _);
+        }
+
+        public static bool IsCollection(Type type, out CollectionType collectionType)
+        {
+            collectionType = CollectionType.None;
+
+            if (type.IsGenericType)
+            {
+                if (type.GetGenericTypeDefinition() == typeof(List<>))
+                {
+                    collectionType = CollectionType.List;
+                    return true;
+                }
+                else if (type.GetGenericTypeDefinition() == typeof(Dictionary<,>))
+                {
+                    collectionType = CollectionType.Dictionary;
+                    return true;
+                }
+                else if (type.GetGenericTypeDefinition() == typeof(Stack<>))
+                {
+                    collectionType = CollectionType.Stack;
+                    return true;
+                }
+                else if (type.GetGenericTypeDefinition() == typeof(Queue<>))
+                {
+                    collectionType = CollectionType.Queue;
+                    return true;
+                }
+                else if (type.GetGenericTypeDefinition() == typeof(HashSet<>))
+                {
+                    collectionType = CollectionType.Hashset;
+                    return true;
+                }
+            }
+            else
+            {
+                collectionType = CollectionType.Array;
+                return type.IsArray;
+            }
+            return false;
         }
 
         public static bool IsEObject(Type t)

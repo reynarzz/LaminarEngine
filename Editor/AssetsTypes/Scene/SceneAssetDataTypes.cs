@@ -63,5 +63,6 @@ namespace Editor
         /// Internal engine types: int, string, Color32, enums etc...
         /// </summary>
         Simple,
+        SimpleCollection
     }
 }

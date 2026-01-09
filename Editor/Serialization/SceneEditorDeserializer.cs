@@ -71,7 +71,8 @@ namespace Editor.Serialization
         {
             foreach (var property in data.SerializedProperties)
             {
-                if (property.Type == SerializableType.Simple)
+                if (property.Type == SerializableType.Simple ||
+                    property.Type == SerializableType.SimpleCollection)
                 {
                     DeserializeSimpleProperty(component, property);
                 }
@@ -116,8 +117,6 @@ namespace Editor.Serialization
 
             ReflectionUtils.SetMemberValue(target, property.Name, property.Data);
         }
-
-
 
         private static void InstantiateActor()
         {

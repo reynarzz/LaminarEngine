@@ -11,8 +11,8 @@ namespace Editor.Serialization
 {
     public class GFSDataProperty : JsonConverter
     {
-        private readonly string _typeTag = "$type";
-        private readonly string _valueTag = "$value";
+        private const string _typeTag = "$type";
+        private const string _valueTag = "$value";
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
@@ -40,29 +40,21 @@ namespace Editor.Serialization
             if (reader.TokenType == JsonToken.Null)
                 return null;
 
-            var wrapper = JObject.Load(reader);
-
-            var typeName = wrapper[_typeTag]?.ToString();
-            if (typeName == null)
+            if (reader.TokenType != JsonToken.StartObject)
             {
-                throw new JsonSerializationException("Missing $type");
+                return serializer.Deserialize(reader);
             }
 
-            // Try fast path first
-            var type = Type.GetType(typeName);
+            JObject wrapper = JObject.Load(reader);
 
-            // Fallback: search loaded assemblies
-            if (type == null)
+            if (!wrapper.TryGetValue(_typeTag, out var typeToken))
             {
-                var shortName = typeName.Split(',')[0];
-                type = AppDomain.CurrentDomain.GetAssemblies().Select(a => a.GetType(shortName)).FirstOrDefault(t => t != null);
+                return wrapper.ToObject(objectType, serializer);
             }
 
-            if (type == null)
-            {
-                throw new JsonSerializationException($"Type not found: {typeName}");
-            }
+            string typeName = typeToken.ToString();
 
+            Type type = Type.GetType(typeName, throwOnError: true);
             //return new SerializedPropertyData()
             //{
             //    TypeName = type.FullName,
