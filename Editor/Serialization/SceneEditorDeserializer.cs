@@ -138,9 +138,9 @@ namespace Editor.Serialization
                 return;
             }
 
-            var collection = property.Data as IEnumerable;
+            var ids = property.Data as ICollection;
 
-            if (collection == null)
+            if (ids == null)
                 return;
 
             var collectionPropertyType = ReflectionUtils.GetMemberType(target.GetType(), property.Name);
@@ -155,7 +155,6 @@ namespace Editor.Serialization
                 return GetReferenceValue(referenceElement.Type, referenceElement.Value);
             }
 
-            object propertyValue = null;
             if (ReflectionUtils.IsCollection(collectionPropertyType, out var collectionType))
             {
                 if (collectionType == ReflectionUtils.CollectionType.Dictionary)
@@ -166,31 +165,33 @@ namespace Editor.Serialization
                 {
                     var list = (IList)ReflectionUtils.GetDefaultValue(collectionPropertyType);
 
-                    foreach (var item in collection)
+                    SetValueToProperty(list, (item, _) =>
                     {
                         list.Add(GetItemReferenceValue(item));
-                    }
-                    propertyValue = list;
+                    });
                 }
                 else if (collectionType == ReflectionUtils.CollectionType.Array)
                 {
-                    int arraySize = 0;
-                    foreach (var item in collection)
-                    {
-                        arraySize++;
-                    }
+                    var array = Array.CreateInstance(collectionPropertyType.GetElementType(), ids.Count);
 
-                    var emptyArray = Array.CreateInstance(collectionPropertyType.GetElementType(), arraySize);
-                    int index = 0;
-                    foreach (var item in collection)
+                    SetValueToProperty(array, (item, index) =>
                     {
-                        emptyArray.SetValue(GetItemReferenceValue(item), index++);
-                    }
-                    propertyValue = emptyArray;
+                        array.SetValue(GetItemReferenceValue(item), index);
+                    });
                 }
             }
 
-            ReflectionUtils.SetMemberValue(target, property.Name, propertyValue);
+            void SetValueToProperty(object collectionInstance, Action<object, int> setCollectionValueCallback)
+            {
+                int index = 0;
+                foreach (var item in ids)
+                {
+                    setCollectionValueCallback(item, index);
+                    index++;
+                }
+
+                ReflectionUtils.SetMemberValue(target, property.Name, collectionInstance);
+            }
         }
 
         private static object GetReferenceValue(SerializableType type, Guid guid)
