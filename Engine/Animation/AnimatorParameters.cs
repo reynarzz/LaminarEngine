@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,10 +9,10 @@ namespace Engine
 {
     public class AnimatorParameters
     {
-        private readonly Dictionary<string, float> _floats = new();
-        private readonly Dictionary<string, int> _ints = new();
-        private readonly Dictionary<string, bool> _bools = new();
-        private readonly HashSet<string> _triggers = new();
+        [SerializedField, HideFromInspector, JsonProperty] private Dictionary<string, float> _floats = new();
+        [SerializedField, HideFromInspector, JsonProperty] private Dictionary<string, int> _ints = new();
+        [SerializedField, HideFromInspector, JsonProperty] private Dictionary<string, bool> _bools = new();
+        [SerializedField, HideFromInspector, JsonProperty] private HashSet<string> _triggers = new();
 
         public void SetInt(string name, int value) { _ints[name] = value; }
         public int GetInt(string name) => _ints.TryGetValue(name, out var v) ? v : 0;

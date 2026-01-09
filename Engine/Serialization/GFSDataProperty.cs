@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Editor.Serialization
+namespace Engine.Serialization
 {
-    public class GFSDataProperty : JsonConverter
+    internal class GFSDataProperty : JsonConverter
     {
         private const string _typeTag = "$type";
         private const string _valueTag = "$value";
@@ -53,14 +53,20 @@ namespace Editor.Serialization
 
             string typeName = typeToken.ToString();
 
-            Type type = Type.GetType(typeName, throwOnError: true);
+            Type type = Type.GetType(typeName);
             //return new SerializedPropertyData()
             //{
             //    TypeName = type.FullName,
             //    Value = wrapper[_valueTag].ToObject(type, serializer)
             //};
 
-            return wrapper[_valueTag].ToObject(type, serializer);
+            if (type != null)
+            {
+                return wrapper[_valueTag].ToObject(type, serializer);
+            }
+
+            Debug.Error($"Type name: '{typeName}' cannot be found, can't deserialize data");
+            return null;
         }
 
         public override bool CanConvert(Type objectType)

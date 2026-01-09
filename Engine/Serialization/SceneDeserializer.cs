@@ -1,6 +1,5 @@
 ﻿using Engine;
 using Engine.Utils;
-using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Editor.Serialization
 {
-    internal static class SceneEditorDeserializer
+    internal static class SceneDeserializer
     {
         private readonly static Dictionary<Guid, (Actor value, ActorDataSceneAsset data)> _actorsByID = new();
         private readonly static Dictionary<Guid, (Component value, ComponentDataSceneAsset data)> _componentsByID = new();

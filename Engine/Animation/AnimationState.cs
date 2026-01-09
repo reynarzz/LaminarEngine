@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,10 +9,9 @@ namespace Engine
 {
     public class AnimationState
     {
-        [SerializedField(isReadOnly: true)]
-        public string Name { get; }
-        public AnimationClip Clip { get; }
-        private List<AnimatorTransition> _transitions = new();
+        [SerializedField, HideFromInspector, JsonProperty] public string Name { get; set; }
+        [SerializedField, HideFromInspector, JsonProperty] public AnimationClip Clip { get; set; }
+        [SerializedField, HideFromInspector, JsonProperty] private List<AnimatorTransition> _transitions = new();
         internal IReadOnlyList<AnimatorTransition> Transitions => _transitions;
 
         public AnimationState(string name, AnimationClip clip)

@@ -64,7 +64,7 @@ namespace Editor
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.S))
             {
                 Debug.Log("Save");
-                var actor = SceneEditorSerializer.SerializeScene(SceneManager.Scenes[^1]);
+                var actor = SceneSerializer.SerializeScene(SceneManager.Scenes[^1]);
 
                 var settings = new JsonSerializerSettings();
                 settings.Converters.Add(new GFSObjectReferenceConverter());
@@ -86,7 +86,7 @@ namespace Editor
                 SceneManager.Initialize();
                 SceneManager.UnloadAll();
                 SceneManager.LoadScene("Reload scene");
-                SceneEditorDeserializer.DeserializeScene(actors, SceneManager.ActiveScene);
+                SceneDeserializer.DeserializeScene(actors, SceneManager.ActiveScene);
             }
             base.Update();
         }

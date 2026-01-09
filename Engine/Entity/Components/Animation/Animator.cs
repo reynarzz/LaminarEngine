@@ -1,17 +1,21 @@
 ﻿using Engine.Types;
 using GlmNet;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Engine.Serialization;
 
 namespace Engine
 {
     [UniqueComponent]
     public class Animator : Component, ILateUpdatableComponent
     {
+        [SerializedField, HideFromInspector, JsonProperty] 
         private Dictionary<string, AnimationState> _states = new();
+
         internal IDictionary<string, AnimationState> States => _states;
 
         private AnimationPlayer _animPlayer = new();
@@ -24,7 +28,7 @@ namespace Engine
 
         [ShowFieldNoSerialize]
         public AnimationState CurrentState => _currentState;
-        public AnimatorParameters Parameters { get; } = new AnimatorParameters();
+        [SerializedField] public AnimatorParameters Parameters { get; private set; } = new AnimatorParameters();
 
         internal float CurrentStateTime => _animPlayer.CurrentTime;
 
@@ -32,7 +36,7 @@ namespace Engine
         {
             _states[state.Name] = state;
 
-            if(_currentState == null)
+            if (_currentState == null)
             {
                 SetState(state);
             }

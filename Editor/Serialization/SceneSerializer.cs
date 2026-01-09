@@ -1,6 +1,5 @@
 ﻿using Engine;
 using Engine.Utils;
-using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,7 +12,7 @@ namespace Editor.Serialization
 {
     // Note: This is a very naive serializaton, renaming types, changing to another assembly will cause references to break.
     //       But for this development stage, this is fine, and will not be difficult to change later.
-    internal static class SceneEditorSerializer
+    internal static class SceneSerializer
     {
         internal static List<ActorDataSceneAsset> SerializeScene(Scene scene)
         {
@@ -195,6 +194,10 @@ namespace Editor.Serialization
                 {
                     return value;
                 }
+                else
+                {
+
+                }
 
                 var collection = (IEnumerable)value;
                 var elementsType = ReflectionUtils.GetCollectionElementsType(type);
@@ -216,6 +219,10 @@ namespace Editor.Serialization
                                 Type = GetSerializedType(item?.GetType() ?? null),
                                 Value = (item as IObject)?.GetID() ?? Guid.Empty
                             });
+                        }
+                        else
+                        {
+                            // TODO: is using raw classes.
                         }
                     }
                     return referenced;

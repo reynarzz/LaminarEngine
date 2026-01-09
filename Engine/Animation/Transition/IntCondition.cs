@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,8 +19,8 @@ namespace Engine
 
     public class IntCondition : TransitionCondition
     {
-        private readonly IntOp _op;
-        private readonly float _compare;
+        [SerializedField, HideFromInspector, JsonProperty] private IntOp _op;
+        [SerializedField, HideFromInspector, JsonProperty] private float _compare;
         public IntCondition(string property, int compare, IntOp op) : base(property)
         {
             _op = op;
