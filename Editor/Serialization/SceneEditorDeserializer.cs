@@ -86,7 +86,8 @@ namespace Editor
             }
         }
 
-        private static void DeserializeReferencedProperty<V, D>(Dictionary<Guid, (V value, D data)> ids, object target, ComponentSerializedProperty property)
+        private static void DeserializeReferencedProperty<V, D>(Dictionary<Guid, (V value, D data)> ids, 
+                                                                object target, ComponentSerializedProperty property)
         {
             if (property.Data == null)
             {
@@ -119,6 +120,8 @@ namespace Editor
                 ReflectionUtils.SetMemberValue(target, property.Name, simpleProperty.Value);
             }
         }
+
+
 
         private static void InstantiateActor()
         {

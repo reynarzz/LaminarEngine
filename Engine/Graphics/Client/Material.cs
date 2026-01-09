@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    public class Material : EObject
+    public class Material : AssetResourceBase
     {
         private readonly List<RenderPass> _passes;
         internal List<RenderPass> Passes => _passes;

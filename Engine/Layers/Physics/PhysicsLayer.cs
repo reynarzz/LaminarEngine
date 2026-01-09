@@ -14,12 +14,13 @@ namespace Engine.Layers
     {
         // Samples: https://github.com/ikpil/Box2D.NET/tree/e68c8ff1fb9da8bd87a71159b13010c25eed76f8/src/Box2D.NET.Samples/Samples
 
-        private static ContactsDispatcher _contactDispatcher;
+        private static ContactsDispatcher _contactDispatcher = new();
         internal static ContactsDispatcher ContactsDispatcher => _contactDispatcher;
+        private static List<RigidBody2D> _rigidbodies = new();
 
         private static float _accumulator = 0f;
         private const float _fixedTimeStep = 0.02f;
-        private static List<RigidBody2D> _rigidbodies = new();
+
         public override void Initialize()
         {
             PhysicWorld.Initialize();

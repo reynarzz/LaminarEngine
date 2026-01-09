@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,12 +30,16 @@ namespace Editor
     {
         public string Name { get; set; }
         public SerializableType Type { get; set; }
+
+        [JsonConverter(typeof(GFSDataProperty))]
         public object Data { get; set; }
     }
 
     internal class SimpleSerializedProperty 
     {
         public string TypeName { get; set; }
+
+        [JsonConverter(typeof(GFSDataProperty))]
         public object Value { get; set; }
     }
 

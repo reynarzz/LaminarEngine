@@ -51,6 +51,8 @@ namespace Editor
                 Height = EditorIcon.Height,
                 Buffer = EditorIcon.Icon
             };
+            
+            Application.IsInPlayMode = false;
 
             _win = new WindowStandalone("GFS Editor", 1324, 740, Color.Black, windowIcon);
             _win.CanResize = true;

@@ -59,20 +59,28 @@ namespace Editor
                 Application.IsInPlayMode = false;
             }
 
+            string TestfilePath = "D:/Scene.txt";
+
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.S))
             {
                 Debug.Log("Save");
 
                 _actors = SceneEditorSerializer.SerializeScene(SceneManager.Scenes[1]);
 
-                File.WriteAllText("D:/Scene.txt", JsonConvert.SerializeObject(_actors, Formatting.Indented));
+                File.WriteAllText(TestfilePath, JsonConvert.SerializeObject(_actors, Formatting.Indented));
             }
 
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.R))
             {
+                Application.IsInPlayMode = false;
+
+                var file = File.ReadAllText(TestfilePath);
+                var actors = JsonConvert.DeserializeObject<List<ActorDataSceneAsset>>(file);
+
+                SceneManager.Initialize();
                 SceneManager.UnloadAll();
                 SceneManager.LoadScene("Reload scene");
-                SceneEditorDeserializer.DeserializeScene(_actors, SceneManager.ActiveScene);
+                SceneEditorDeserializer.DeserializeScene(actors, SceneManager.ActiveScene);
             }
             base.Update();
         }

@@ -139,7 +139,7 @@ namespace Engine
         [SerializedField("Friction")]
         public float Friction
         {
-            get => AreShapesValid() ? B2Shapes.b2Shape_GetFriction(_shapesID[0]) : -1;
+            get => AreShapesValid() ? B2Shapes.b2Shape_GetFriction(_shapesID[0]) : _friction;
             set
             {
                 _friction = value;
@@ -153,7 +153,7 @@ namespace Engine
         [SerializedField("Bounciness")]
         public float Bounciness
         {
-            get => AreShapesValid() ? B2Shapes.b2Shape_GetRestitution(_shapesID[0]) : -1;
+            get => AreShapesValid() ? B2Shapes.b2Shape_GetRestitution(_shapesID[0]) : _bounciness;
             set
             {
                 _bounciness = value;

@@ -8,15 +8,16 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    public class Shader : EObject
+    public class Shader : AssetResourceBase
     {
         internal GfxResource NativeShader { get; }
-        public Shader(string vertexCode, string fragmentCode) : this(vertexCode, fragmentCode, string.Empty, string.Empty)
+        public Shader(string vertexCode, string fragmentCode) : this(vertexCode, fragmentCode, string.Empty, string.Empty) 
         {
           
         }
 
-        public Shader(string vertexCode, string fragmentCode, string vertName, string fragName)
+        public Shader(string vertexCode, string fragmentCode, string vertName, string fragName) : 
+            base(string.Empty, Guid.NewGuid()) // TODO: load shaders from file.
         {
             var shaderDescriptor = new ShaderDescriptor()
             {
@@ -33,7 +34,7 @@ namespace Engine
         {
             var vertexCode = Assets.GetText(vertex).Text;
             var fragCode = Assets.GetText(fragment).Text;
-            return new Shader(vertexCode, fragCode, Path.GetFileName(vertex), Path.GetFileName(fragment));
+            return new Shader(vertexCode, fragCode, System.IO.Path.GetFileName(vertex), System.IO.Path.GetFileName(fragment));
         }
 
         protected internal override void OnDestroy()
