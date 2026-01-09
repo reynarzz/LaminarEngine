@@ -11,10 +11,8 @@ namespace Editor.Serialization
 {
     public class GFSDataProperty : JsonConverter
     {
-        public override bool CanConvert(Type objectType)
-        {
-            return objectType == typeof(object);
-        }
+        private readonly string _typeTag = "$type";
+        private readonly string _valueTag = "$value";
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
@@ -25,15 +23,12 @@ namespace Editor.Serialization
             }
 
             var type = value.GetType();
+            var typeId = $"{type.FullName}, {type.Assembly.GetName().Name}";
 
-            string typeId =
-                type.FullName + ", " +
-                type.Assembly.GetName().Name;
-
-            var wrapper = new JObject
+            var wrapper = new JObject()
             {
-                ["$type"] = typeId,
-                ["$value"] = JToken.FromObject(value, serializer)
+                [_typeTag] = typeId,
+                [_valueTag] = JToken.FromObject(value, serializer)
             };
 
             wrapper.WriteTo(writer);
@@ -47,7 +42,7 @@ namespace Editor.Serialization
 
             var wrapper = JObject.Load(reader);
 
-            var typeName = wrapper["$type"]?.ToString();
+            var typeName = wrapper[_typeTag]?.ToString();
             if (typeName == null)
             {
                 throw new JsonSerializationException("Missing $type");
@@ -68,12 +63,20 @@ namespace Editor.Serialization
                 throw new JsonSerializationException($"Type not found: {typeName}");
             }
 
-            return new SerializedPropertyData()
-            {
-                TypeName = type.FullName,
-                Value = wrapper["$value"].ToObject(type, serializer)
-            };
+            //return new SerializedPropertyData()
+            //{
+            //    TypeName = type.FullName,
+            //    Value = wrapper[_valueTag].ToObject(type, serializer)
+            //};
+
+            return wrapper[_valueTag].ToObject(type, serializer);
         }
+
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType == typeof(object);
+        }
+
     }
 }
 

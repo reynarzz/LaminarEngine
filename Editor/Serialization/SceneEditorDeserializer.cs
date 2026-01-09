@@ -86,7 +86,7 @@ namespace Editor.Serialization
             }
         }
 
-        private static void DeserializeReferencedProperty<V, D>(Dictionary<Guid, (V value, D data)> ids, 
+        private static void DeserializeReferencedProperty<V, D>(Dictionary<Guid, (V value, D data)> ids,
                                                                 object target, ComponentSerializedProperty property)
         {
             if (property.Data == null)
@@ -95,7 +95,7 @@ namespace Editor.Serialization
                 return;
             }
 
-            var guid = (Guid)(property.Data as SerializedPropertyData).Value;
+            var guid = (Guid)property.Data;
 
             if (ids.TryGetValue(guid, out var component))
             {
@@ -106,19 +106,15 @@ namespace Editor.Serialization
                 Debug.Error($"Could not deserialize value for component: {target.GetType().Name}, Property: {property.Name}");
             }
         }
-        
+
         private static void DeserializeSimpleProperty(object target, ComponentSerializedProperty property)
         {
-            var simpleProperty = property.Data as SerializedPropertyData;
-            if (simpleProperty == null)
+            if (property.Data == null)
             {
                 return;
             }
 
-            if (ReflectionUtils.TryGetTypeFromName(simpleProperty.TypeName, out var type))
-            {
-                ReflectionUtils.SetMemberValue(target, property.Name, simpleProperty.Value);
-            }
+            ReflectionUtils.SetMemberValue(target, property.Name, property.Data);
         }
 
 
