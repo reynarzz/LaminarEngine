@@ -140,17 +140,17 @@ namespace Engine
         public Component AddComponent([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
                                       Type type)
         {
-            return AddComponent(type, Guid.Empty);
+            return AddComponent(type, Guid.Empty, true);
         }
 
         internal Component AddComponent([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
-                                      Type type, Guid id)
+                                      Type type, Guid id, bool autoAddRequiredComponents)
         {
             CheckIfValidObject(this);
 
             if (!IsValidComponent(type))
             {
-                return default;
+                return null;
             }
             else if (type.IsAssignableFrom(typeof(Transform)) && _components.Count > 0)
             {
@@ -201,21 +201,23 @@ namespace Engine
                 component._SetID(id); // Remove this
             }
 
-            // Note: adding required components might conflict with component data deserialization.
-            var required = GetAllAttributes<RequireComponentAttribute>(type);
-            if (required != null)
+            if (autoAddRequiredComponents)
             {
-                foreach (var requiredAttrib in required)
+                var required = GetAllAttributes<RequireComponentAttribute>(type);
+                if (required != null)
                 {
-                    foreach (var componentsTypes in requiredAttrib.RequiredComponents)
+                    foreach (var requiredAttrib in required)
                     {
-                        var requiredComponent = AddComponent(componentsTypes, Guid.Empty);
-
-                        foreach (var property in ReflectionUtils.GetAllMembersWithAttribute<RequiredPropertyAttribute>(type))
+                        foreach (var componentsTypes in requiredAttrib.RequiredComponents)
                         {
-                            if (ReflectionUtils.GetMemberType(property) == requiredComponent.GetType())
+                            var requiredComponent = AddComponent(componentsTypes);
+
+                            foreach (var property in ReflectionUtils.GetAllMembersWithAttribute<RequiredPropertyAttribute>(type))
                             {
-                                ReflectionUtils.SetMemberValue(component, property, requiredComponent);
+                                if (ReflectionUtils.GetMemberType(property) == requiredComponent.GetType())
+                                {
+                                    ReflectionUtils.SetMemberValue(component, property, requiredComponent);
+                                }
                             }
                         }
                     }

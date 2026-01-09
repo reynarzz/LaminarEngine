@@ -1,4 +1,5 @@
-﻿using Engine;
+﻿using Editor.Serialization;
+using Engine;
 using Engine.Layers;
 using Engine.Layers.Input;
 using Game;
@@ -15,7 +16,6 @@ namespace Editor
     {
         private static TimeLayer _time = new();
         private SceneLayer _editorSceneLayer;
-        private List<ActorDataSceneAsset> _actors;
 
         public EditorLayersManager(InputLayerBase inputLayer) :
             base([_time, inputLayer,
@@ -64,10 +64,8 @@ namespace Editor
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.S))
             {
                 Debug.Log("Save");
-
-                _actors = SceneEditorSerializer.SerializeScene(SceneManager.Scenes[1]);
-
-                File.WriteAllText(TestfilePath, JsonConvert.SerializeObject(_actors, Formatting.Indented));
+                var actor = SceneEditorSerializer.SerializeScene(SceneManager.Scenes[^1]);
+                File.WriteAllText(TestfilePath, JsonConvert.SerializeObject(actor, Formatting.Indented));
             }
 
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.R))
@@ -76,7 +74,7 @@ namespace Editor
 
                 var file = File.ReadAllText(TestfilePath);
                 var actors = JsonConvert.DeserializeObject<List<ActorDataSceneAsset>>(file);
-
+                Debug.Log("Total actors in scene: " + actors.Count);
                 SceneManager.Initialize();
                 SceneManager.UnloadAll();
                 SceneManager.LoadScene("Reload scene");

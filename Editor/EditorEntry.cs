@@ -1,4 +1,5 @@
 ﻿using Editor.Rendering;
+using Editor.Serialization;
 using Editor.Utils;
 using Editor.Views;
 using Engine;
@@ -7,6 +8,7 @@ using Engine.GUI;
 using Engine.Layers;
 using Engine.Layers.Input;
 using Game;
+using GlmNet;
 using ImGuiNET;
 using SharedTypes;
 using System.Numerics;
@@ -44,6 +46,7 @@ namespace Editor
         internal void Init()
         {
             NativeLogger.Init();
+            RegistryTypes();
 
             var windowIcon = new TextureDescriptor()
             {
@@ -51,7 +54,7 @@ namespace Editor
                 Height = EditorIcon.Height,
                 Buffer = EditorIcon.Icon
             };
-            
+
             Application.IsInPlayMode = false;
 
             _win = new WindowStandalone("GFS Editor", 1324, 740, Color.Black, windowIcon);
@@ -127,6 +130,36 @@ namespace Editor
             {
                 UpdateAll();
             }
+        }
+
+        // TODO: move to another place, and complete it.
+        private void RegistryTypes()
+        {
+            GfsTypeRegistry.Register<bool>("bool");
+            GfsTypeRegistry.Register<byte>("byte");
+            GfsTypeRegistry.Register<int>("int");
+            GfsTypeRegistry.Register<uint>("uint");
+            GfsTypeRegistry.Register<long>("long");
+            GfsTypeRegistry.Register<ulong>("ulong");
+            GfsTypeRegistry.Register<short>("short");
+            GfsTypeRegistry.Register<ushort>("ushort");
+            GfsTypeRegistry.Register<float>("float");
+            GfsTypeRegistry.Register<double>("double");
+            GfsTypeRegistry.Register<string>("string");
+
+            GfsTypeRegistry.Register<vec2>("vec2");
+            GfsTypeRegistry.Register<vec3>("vec3");
+            GfsTypeRegistry.Register<vec4>("vec4");
+            GfsTypeRegistry.Register<quat>("quat");
+            GfsTypeRegistry.Register<mat2>("mat2");
+            GfsTypeRegistry.Register<mat3>("mat3");
+            GfsTypeRegistry.Register<mat4>("mat4");
+            GfsTypeRegistry.Register<Guid>("id");
+            GfsTypeRegistry.Register<Color>("color");
+            GfsTypeRegistry.Register<Color32>("color32");
+            GfsTypeRegistry.Register<Body2DType>("color32");
+            
+            GfsTypeRegistry.Register<SerializedPropertyData>("simple_property");
         }
 
         private void ImportAssets()

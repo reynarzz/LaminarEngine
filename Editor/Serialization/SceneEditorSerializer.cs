@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Editor
+namespace Editor.Serialization
 {
     // Note: This is a very naive serializaton, renaming types, changing to another assembly will cause references to break.
     //       But for this development stage, this is fine, and will not be difficult to change later.
@@ -149,7 +149,7 @@ namespace Editor
 
         public static object GetPropertyData(MemberInfo member, object value)
         {
-            // Note: runtime-created assets such as Materials, Shaders, textures maybe should have a empty guid, so the serializer,
+            // Note: For runtime-created resource assets such as Materials, Shaders, Textures etc... maybe should have a empty guid, so the serializer,
             //       does not point to a invalid physical asset.
             var type = ReflectionUtils.GetMemberType(member);
 
@@ -157,7 +157,6 @@ namespace Editor
             {
                 if (value != null)
                 {
-                    Debug.Log("Serialize: " + value.GetType().Name + ", id: " + (value as IObject).GetID());
                     return (value as IObject).GetID();
                 }
                 return Guid.Empty;
@@ -168,11 +167,7 @@ namespace Editor
             }
             else if (ReflectionUtils.IsInternalValueType(member) || type == typeof(string))
             {
-                return new SimpleSerializedProperty()
-                {
-                    TypeName = type.FullName,
-                    Value = value
-                };
+                return value;
             }
             else if (type.IsClass)
             {

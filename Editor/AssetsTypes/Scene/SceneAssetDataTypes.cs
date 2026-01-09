@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Editor.Serialization;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,11 +36,9 @@ namespace Editor
         public object Data { get; set; }
     }
 
-    internal class SimpleSerializedProperty 
+    internal class SerializedPropertyData 
     {
         public string TypeName { get; set; }
-
-        [JsonConverter(typeof(GFSDataProperty))]
         public object Value { get; set; }
     }
 

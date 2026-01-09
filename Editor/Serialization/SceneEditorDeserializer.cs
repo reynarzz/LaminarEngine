@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Editor
+namespace Editor.Serialization
 {
     internal static class SceneEditorDeserializer
     {
@@ -41,7 +41,7 @@ namespace Editor
 
                     if (ReflectionUtils.TryGetTypeFromName(componentData.TypeName, out var componentType))
                     {
-                        var component = actor.AddComponent(componentType, componentData.ID);
+                        var component = actor.AddComponent(componentType, componentData.ID, false);
                         component.IsEnabled = componentData.IsEnabled;
 
                         _componentsByID.Add(componentData.ID, (component, componentData));
@@ -95,7 +95,7 @@ namespace Editor
                 return;
             }
 
-            var guid = (Guid)property.Data;
+            var guid = (Guid)(property.Data as SerializedPropertyData).Value;
 
             if (ids.TryGetValue(guid, out var component))
             {
@@ -109,12 +109,12 @@ namespace Editor
         
         private static void DeserializeSimpleProperty(object target, ComponentSerializedProperty property)
         {
-            var simpleProperty = property.Data as SimpleSerializedProperty;
+            var simpleProperty = property.Data as SerializedPropertyData;
             if (simpleProperty == null)
             {
-                Debug.EngineError("Serialization error: property data is null.");
                 return;
             }
+
             if (ReflectionUtils.TryGetTypeFromName(simpleProperty.TypeName, out var type))
             {
                 ReflectionUtils.SetMemberValue(target, property.Name, simpleProperty.Value);
