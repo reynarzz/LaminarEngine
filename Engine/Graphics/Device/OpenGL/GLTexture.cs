@@ -91,8 +91,10 @@ namespace Engine.Graphics.OpenGL
             }
             else
             {
-                glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, descriptor.SamplesCount, GL_RGBA8,
-                                         descriptor.Width, descriptor.Height, true);
+                //glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, descriptor.SamplesCount, GL_RGBA8,
+                //                         descriptor.Width, descriptor.Height, true);
+
+                throw new Exception("Not multiplatorm");
             }
 
 

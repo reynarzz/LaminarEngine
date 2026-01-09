@@ -6,7 +6,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Engine.Utils
@@ -70,14 +69,8 @@ namespace Engine.Utils
             var type = obj.GetType();
             return type.IsGenericType ? type.GetGenericTypeDefinition() : type;
         }
-        public static IEnumerable<PropertyInfo> GetAllPropertiesWithAttribute<T>(Type type, bool inherit = true) where T : Attribute
+        public static IEnumerable<PropertyInfo> GetAllPropertiesWithAttribute<T>(Type type, bool inherit = true, BindingFlags flags = _flags) where T : Attribute
         {
-            const BindingFlags flags =
-                BindingFlags.Instance |
-                BindingFlags.Public |
-                BindingFlags.NonPublic |
-                BindingFlags.DeclaredOnly;
-
             while (type != null && type != typeof(object))
             {
                 foreach (var prop in type.GetProperties(flags))
@@ -85,23 +78,18 @@ namespace Engine.Utils
                     if (prop.IsDefined(typeof(T), inherit) && prop.SetMethod != null)
                         yield return prop;
                 }
-
                 type = type.BaseType;
             }
         }
 
-
         public static IEnumerable<MemberInfo> GetAllMembersWithAttribute<T>(Type type, bool inherit = true, bool order = false,
-                                                                             BindingFlags flags = _flags) where T : Attribute
+                                                                            BindingFlags flags = _flags) where T : Attribute
         {
             while (type != null && type != typeof(object))
             {
-                var members = type
-                    .GetMembers(flags)
-                    .Where(m =>
-                        (m.MemberType == MemberTypes.Field ||
-                         m.MemberType == MemberTypes.Property) &&
-                        m.IsDefined(typeof(T), inherit));
+                var members = type.GetMembers(flags)
+                                  .Where(m =>(m.MemberType == MemberTypes.Field || m.MemberType == MemberTypes.Property) &&
+                                         m.IsDefined(typeof(T), inherit));
 
                 if (order)
                 {

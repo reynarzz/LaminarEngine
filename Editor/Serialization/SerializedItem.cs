@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Editor.Serialization
 {
-    internal class SerializedCollectionElement
+    internal class SerializedItem
     {
         public SerializedType Type { get; set; }
     }
 
-    internal class SerializedCollectionElement<T> : SerializedCollectionElement
+    internal class SerializedItem<T> : SerializedItem
     {
         public T Value { get; set; }
     }

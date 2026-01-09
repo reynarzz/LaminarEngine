@@ -65,7 +65,11 @@ namespace Editor
             {
                 Debug.Log("Save");
                 var actor = SceneEditorSerializer.SerializeScene(SceneManager.Scenes[^1]);
-                File.WriteAllText(TestfilePath, JsonConvert.SerializeObject(actor, Formatting.Indented));
+
+                var settings = new JsonSerializerSettings();
+                settings.Converters.Add(new GFSObjectReferenceConverter());
+
+                File.WriteAllText(TestfilePath, JsonConvert.SerializeObject(actor, Formatting.Indented, settings));
             }
 
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.R))
@@ -73,7 +77,11 @@ namespace Editor
                 Application.IsInPlayMode = false;
 
                 var file = File.ReadAllText(TestfilePath);
-                var actors = JsonConvert.DeserializeObject<List<ActorDataSceneAsset>>(file);
+
+                var settings = new JsonSerializerSettings();
+                settings.Converters.Add(new GFSObjectReferenceConverter());
+
+                var actors = JsonConvert.DeserializeObject<List<ActorDataSceneAsset>>(file, settings);
                 Debug.Log("Total actors in scene: " + actors.Count);
                 SceneManager.Initialize();
                 SceneManager.UnloadAll();

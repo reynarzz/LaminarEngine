@@ -65,7 +65,6 @@ namespace Game
                 
             }
 
-
             [ShowMethodInEditor]
             public void PrintDebugLog()
             {
@@ -102,6 +101,5 @@ namespace Game
         {
             Debug.Log("Called from editor");
         }
-
     }
 }

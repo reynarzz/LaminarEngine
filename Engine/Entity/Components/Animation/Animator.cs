@@ -22,7 +22,7 @@ namespace Engine
         private float _transitionDuration;
         public event Action<Animator> OnUpdate;
 
-        [SerializedField]
+        [ShowFieldNoSerialize]
         public AnimationState CurrentState => _currentState;
         public AnimatorParameters Parameters { get; } = new AnimatorParameters();
 

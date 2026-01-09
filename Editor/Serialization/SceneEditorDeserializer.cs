@@ -171,7 +171,7 @@ namespace Editor.Serialization
 
             object GetItemReferenceValue(object item)
             {
-                var referenceElement = item as SerializedCollectionElement<Guid>;
+                var referenceElement = item as SerializedItem<Guid>;
 
                 if (referenceElement == null)
                     return null;

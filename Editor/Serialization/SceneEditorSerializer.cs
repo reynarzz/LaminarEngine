@@ -163,7 +163,7 @@ namespace Editor.Serialization
             {
                 return SerializedType.Simple;
             }
-            else if (type.IsClass) // Serializable class
+            else if (type.IsClass || ReflectionUtils.IsUserDefinedStruct(type))
             {
                 return SerializedType.Class;
             }
@@ -206,12 +206,12 @@ namespace Editor.Serialization
                 else
                 {
                     var elementType = elementsType[0];
-                    var referenced = new List<SerializedCollectionElement<Guid>>();
+                    var referenced = new List<SerializedItem<Guid>>();
                     foreach (var item in collection)
                     {
                         if (elementType.IsAssignableTo(typeof(IObject)))
                         {
-                            referenced.Add(new SerializedCollectionElement<Guid>()
+                            referenced.Add(new SerializedItem<Guid>()
                             {
                                 Type = GetSerializedType(item?.GetType() ?? null),
                                 Value = (item as IObject)?.GetID() ?? Guid.Empty
@@ -225,9 +225,9 @@ namespace Editor.Serialization
             {
                 return value;
             }
-            else if (type.IsClass)
+            else if (type.IsClass || ReflectionUtils.IsUserDefinedStruct(type))
             {
-
+                return value;
             }
 
             return null;

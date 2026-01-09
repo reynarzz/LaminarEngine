@@ -46,15 +46,29 @@ namespace Engine.Graphics.OpenGL
                 return false;
             }
 
-            int prevBuffer;
-            prevBuffer = glGetInteger(Target);
+            int bindingEnum = 0;
+            switch (Target)
+            {
+                case GL_ARRAY_BUFFER:
+                    bindingEnum = GL_ARRAY_BUFFER_BINDING;
+                    break;
+                case GL_ELEMENT_ARRAY_BUFFER:
+                    bindingEnum = GL_ELEMENT_ARRAY_BUFFER_BINDING;
+                    break;
+                case GL_UNIFORM_BUFFER:
+                    bindingEnum = GL_UNIFORM_BUFFER_BINDING;
+                    break;
+            }
+
+            int prevBuffer = 0;
+            glGetIntegerv(bindingEnum, &prevBuffer);
 
             Bind();
             glBufferData(Target, desc.BufferLength, desc.GetBufferUnsafePtr().ToPointer(), usage);
             Unbind();
 
-            if(prevBuffer >= 0)
-            glBindBuffer(Target, (uint)prevBuffer);
+            if (prevBuffer >= 0)
+                glBindBuffer(Target, (uint)prevBuffer);
 
             return true;
         }

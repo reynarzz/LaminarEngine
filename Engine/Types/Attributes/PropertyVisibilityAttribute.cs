@@ -8,12 +8,12 @@ namespace Engine
 {
     public class PropertyVisibilityAttribute : Attribute
     {
-        public string CustomFieldName { get; } = string.Empty;
-        public bool IsReadOnly { get; }
-        public PropertyVisibilityAttribute() { }
-        public PropertyVisibilityAttribute(bool isReadOnly) : this(string.Empty, isReadOnly) { }
-        public PropertyVisibilityAttribute(string fieldName) : this(fieldName, false) { }
-        public PropertyVisibilityAttribute(string fieldName, bool isReadOnly)
+        internal string CustomFieldName { get; } = string.Empty;
+        internal bool IsReadOnly { get; }
+        internal PropertyVisibilityAttribute() { }
+        internal PropertyVisibilityAttribute(bool isReadOnly) : this(string.Empty, isReadOnly) { }
+        internal PropertyVisibilityAttribute(string fieldName) : this(fieldName, false) { }
+        internal PropertyVisibilityAttribute(string fieldName, bool isReadOnly)
         {
             CustomFieldName = fieldName;
             IsReadOnly = isReadOnly;

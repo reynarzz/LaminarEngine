@@ -27,7 +27,7 @@ namespace Engine.Android
         // TODO: move this to another class.
         private BinaryReader LoadGameData()
         {
-            string basePath = Application.Context.GetExternalFilesDir(null).AbsolutePath;
+            string basePath = global::Android.App.Application.Context.GetExternalFilesDir(null).AbsolutePath;
             string gameDataFilePath = Path.Combine(basePath, GameDataFile);
 
             // TODO: check gameFile version.
@@ -36,7 +36,7 @@ namespace Engine.Android
             // --if (!File.Exists(gameDataFilePath))
             {
                 // First launch copy from assets
-                using (var assetStream = Application.Context.Assets.Open(GameDataFile))
+                using (var assetStream = global::Android.App.Application.Context.Assets.Open(GameDataFile))
                 using (var outStream = File.Create(gameDataFilePath))
                 {
                     assetStream.CopyTo(outStream);
