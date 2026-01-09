@@ -78,6 +78,9 @@ namespace Game
         [SerializedField] public List<string> StringTest;
         [SerializedField] public List<int> IntTest { get; set; } = new();
         [SerializedField] public List<Component> _TestComponentList { get; set; }
+        [SerializedField] public List<Component> _TestComponentArray { get; set; }
+        [SerializedField] public List<Actor> _TestActorList { get; set; }
+        [SerializedField] public Actor[] _TestActorArray { get; set; }
         [SerializedField] public double DoubleField { get; set; }
         [SerializedField] public Component ComponentTest { get; set; }
         [SerializedField] public Actor ActorTest { get; set; }

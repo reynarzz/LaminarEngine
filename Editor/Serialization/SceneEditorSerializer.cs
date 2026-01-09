@@ -2,6 +2,7 @@
 using Engine.Utils;
 using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -90,7 +91,7 @@ namespace Editor.Serialization
                 properties.Add(new ComponentSerializedProperty()
                 {
                     Name = member.Name,
-                    Type = GetSerializedType(member),
+                    Type = GetSerializedType(ReflectionUtils.GetMemberType(member)),
                     Data = GetPropertyData(member, value)
                 });
             }
@@ -98,9 +99,12 @@ namespace Editor.Serialization
             return properties;
         }
 
-        public static SerializableType GetSerializedType(MemberInfo member)
+        public static SerializableType GetSerializedType(Type type)
         {
-            var type = ReflectionUtils.GetMemberType(member);
+            if (type == null)
+            {
+                return SerializableType.None;
+            }
 
             if (type.IsAssignableTo(typeof(IObject)))
             {
@@ -132,18 +136,30 @@ namespace Editor.Serialization
                     return SerializableType.EObject;
                 }
             }
-            else if (ReflectionUtils.IsCollection(type))
+            else if (ReflectionUtils.IsCollection(type, out var collectionType))
             {
                 if (ReflectionUtils.IsCollectionOfInternalTypes(type))
                 {
-                    return SerializableType.Simple;
+                    return SerializableType.SimpleCollection;
                 }
-                else
+
+                var elementsTypes = ReflectionUtils.GetCollectionElementsType(type);
+                var isFirstElementTypeAReference = elementsTypes[0].IsAssignableTo(typeof(IObject));
+
+                if (isFirstElementTypeAReference)
                 {
-                    return SerializableType.Collection;
+                    return SerializableType.ReferenceCollection;
                 }
+
+                if (collectionType == ReflectionUtils.CollectionType.Dictionary &&
+                    elementsTypes[1].IsAssignableTo(typeof(IObject)))
+                {
+                    return SerializableType.ReferenceCollection;
+                }
+
+                return SerializableType.Collection;
             }
-            else if (ReflectionUtils.IsInternalValueType(member))
+            else if (ReflectionUtils.IsInternalValueType(type))
             {
                 return SerializableType.Simple;
             }
@@ -170,9 +186,39 @@ namespace Editor.Serialization
             }
             else if (ReflectionUtils.IsCollection(type, out var collectionType))
             {
+                if (value == null)
+                {
+                    return null;
+                }
+
                 if (ReflectionUtils.IsCollectionOfInternalTypes(type))
                 {
                     return value;
+                }
+
+                var collection = (IEnumerable)value;
+                var elementsType = ReflectionUtils.GetCollectionElementsType(type);
+
+                if (collectionType == ReflectionUtils.CollectionType.Dictionary)
+                {
+                    // TODO:
+                }
+                else
+                {
+                    var elementType = elementsType[0];
+                    var referenced = new List<SerializedCollectionElement<Guid>>();
+                    foreach (var item in collection)
+                    {
+                        if (elementType.IsAssignableTo(typeof(IObject)))
+                        {
+                            referenced.Add(new SerializedCollectionElement<Guid>()
+                            {
+                                Type = GetSerializedType(item?.GetType() ?? null),
+                                Value = (item as IObject)?.GetID() ?? Guid.Empty
+                            });
+                        }
+                    }
+                    return referenced;
                 }
             }
             else if (ReflectionUtils.IsInternalValueType(member))

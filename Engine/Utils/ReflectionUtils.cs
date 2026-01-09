@@ -274,7 +274,7 @@ namespace Engine.Utils
             {
                 return type.IsValueType && (type.IsPrimitive || type.IsEnum ||
                        type.Namespace.Equals(typeof(vec2).Namespace) ||
-                       type == typeof(Color) || type == typeof(Color32)) || 
+                       type == typeof(Color) || type == typeof(Color32)) ||
                        type == typeof(string);
             }
             return false;
@@ -285,22 +285,36 @@ namespace Engine.Utils
             if (!IsCollection(type, out var collectionType))
                 return false;
 
+            var types = GetCollectionElementsType(type);
+
+            if (collectionType == CollectionType.Dictionary)
+            {
+                return IsInternalValueType(types[0]) && IsInternalValueType(types[1]);
+            }
+
+            return IsInternalValueType(types[0]);
+        }
+
+        public static Type[] GetCollectionElementsType(Type type)
+        {
+            if (!IsCollection(type, out var collectionType))
+                return null;
+
             switch (collectionType)
             {
                 case CollectionType.Array:
-                    return IsInternalValueType(type.GetElementType());
+                    return [type.GetElementType()];
                 case CollectionType.List:
                 case CollectionType.Stack:
                 case CollectionType.Queue:
                 case CollectionType.Hashset:
-                    return IsInternalValueType(type.GetGenericArguments()[0]);
                 case CollectionType.Dictionary:
-                    return IsInternalValueType(type.GetGenericArguments()[0]) &&
-                           IsInternalValueType(type.GetGenericArguments()[1]);
+                    return type.GetGenericArguments();
             }
 
-            return false;
+            return null;
         }
+
         public static Type GetMemberType(MemberInfo member)
         {
             return member switch
@@ -309,6 +323,28 @@ namespace Engine.Utils
                 FieldInfo f => f.FieldType,
                 _ => null
             };
+        }
+
+        public static Type GetMemberType(Type type, string name, BindingFlags flags = _flags)
+        {
+            while (type != null)
+            {
+                var prop = type.GetProperty(name, flags);
+                if (prop != null)
+                {
+                    return prop.PropertyType;
+                }
+
+                var field = type.GetField(name, flags);
+                if (field != null)
+                {
+                    return field.FieldType;
+                }
+
+                type = type.BaseType;
+            }
+
+            return null;
         }
 
         public static int GetPropertiesCount(MemberInfo member, BindingFlags flags = _flags, params Attribute[] attributes)
