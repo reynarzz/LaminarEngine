@@ -136,9 +136,9 @@ namespace Editor.Serialization
 
         private static void DeserializeReferenceCollectionProperty(object target, ComponentSerializedProperty property)
         {
-            var ids = property.Data as ICollection;
+            var collectionData = property.Data as CollectionPropertyData;
 
-            if (ids == null)
+            if (collectionData == null || collectionData.Collection == null)
                 return;
 
             var collectionPropertyType = ReflectionUtils.GetMemberType(target.GetType(), property.Name);
@@ -147,7 +147,18 @@ namespace Editor.Serialization
             {
                 if (collectionType == ReflectionUtils.CollectionType.Dictionary)
                 {
-                    // TODO: deserialize dictionary
+                    var args = collectionPropertyType.GetGenericArguments();
+                    var dictType = typeof(Dictionary<,>).MakeGenericType(args[0], args[1]);
+
+                    var dictionary = (IDictionary)Activator.CreateInstance(dictType);
+                    foreach (var item in collectionData.Collection)
+                    {
+                        var serializedItem = (SerializedItem<KeyValuePair<object, object>>)item;
+                        var guid = serializedItem.Value.Value != null? (Guid)serializedItem.Value.Value: Guid.Empty;
+                        dictionary.Add(serializedItem.Value.Key, GetReferenceValue(serializedItem.Type, guid));
+                    }
+
+                    ReflectionUtils.SetMemberValue(target, property.Name, dictionary);
                 }
                 else if (collectionType == ReflectionUtils.CollectionType.List)
                 {
@@ -160,7 +171,7 @@ namespace Editor.Serialization
                 }
                 else if (collectionType == ReflectionUtils.CollectionType.Array)
                 {
-                    var array = Array.CreateInstance(collectionPropertyType.GetElementType(), ids.Count);
+                    var array = Array.CreateInstance(collectionPropertyType.GetElementType(), collectionData.Collection.Count);
 
                     SetValueToProperty(array, (item, index) =>
                     {
@@ -182,7 +193,7 @@ namespace Editor.Serialization
             void SetValueToProperty(object collectionInstance, Action<object, int> setCollectionValueCallback)
             {
                 int index = 0;
-                foreach (var item in ids)
+                foreach (var item in collectionData.Collection)
                 {
                     setCollectionValueCallback(item, index);
                     index++;
@@ -194,10 +205,11 @@ namespace Editor.Serialization
 
         private static object GetReferenceValue(SerializedType type, Guid guid)
         {
+            if(type == SerializedType.None || guid == Guid.Empty) 
+                return null;
+
             switch (type)
             {
-                case SerializedType.None:
-                    return null;
                 case SerializedType.Component:
                     return GetReferenceValue(_componentsByID, guid);
                 case SerializedType.Actor:

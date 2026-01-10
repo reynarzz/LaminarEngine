@@ -61,19 +61,18 @@ namespace Editor.Serialization
 
             for (int i = 0; i < actor.Components.Count; i++)
             {
-                componentsData.Add(GetComponentData(actor.Components[i], i));
+                componentsData.Add(GetComponentData(actor.Components[i]));
             }
             return componentsData;
         }
 
-        internal static ComponentDataSceneAsset GetComponentData(Component component, int index)
+        internal static ComponentDataSceneAsset GetComponentData(Component component)
         {
             return new ComponentDataSceneAsset()
             {
                 ID = component.GetID(),
                 IsEnabled = component.IsEnabled,
                 TypeName = component.GetType().FullName,
-                ComponentIndex = index,
                 SerializedProperties = GetSerializedProperties(component)
             };
         }
@@ -239,51 +238,55 @@ namespace Editor.Serialization
                     return null;
                 }
 
-                var collection = (ICollection)value;
                 var elementsType = ReflectionUtils.GetCollectionElementsType(type);
 
                 if (collectionType == ReflectionUtils.CollectionType.Dictionary)
                 {
+                    var referenced = new CollectionPropertyData();
+                    var dictionary = (IDictionary)value;
+
                     if (serializedMemberType == SerializedType.ReferenceCollection)
                     {
-                        var referenced = new List<SerializedItem<KeyValuePair<object, object>>>();
                         var isKeyEObject = elementsType[0].IsAssignableTo(typeof(IObject));
                         var isValueEObject = elementsType[1].IsAssignableTo(typeof(IObject));
-
-                        foreach (var item in ReflectionUtils.IterateDictionary(collection))
+                        
+                        foreach (var dKey in dictionary.Keys)
                         {
-                            var k = isKeyEObject ? (item.Key as IObject)?.GetID() ?? Guid.Empty : item.Key;
-                            var v = isValueEObject ? (item.Value as IObject)?.GetID() ?? Guid.Empty : item.Value;
-                            var referenceType = isKeyEObject ? item.Key?.GetType() : item.Value?.GetType();
+                            var dValue = dictionary[dKey];
 
-                            referenced.Add(new SerializedItem<KeyValuePair<object, object>>()
+                            var k = isKeyEObject ? (dKey as IObject)?.GetID() ?? Guid.Empty : dKey;
+                            var v = isValueEObject ? (dValue as IObject)?.GetID() ?? Guid.Empty : dValue;
+                            var referenceType = isKeyEObject ? dKey?.GetType() : dValue?.GetType();
+
+                            referenced.Collection.Add(new SerializedItem<KeyValuePair<object, object>>()
                             {
                                 Type = GetSerializedType(referenceType),
                                 Value = new KeyValuePair<object, object>(k, v)
                             });
                         }
-
-                        return referenced;
                     }
                     else
                     {
                         Debug.Log("TODO: Complex dictionary: " + type.FullName);
                     }
+
+                    return referenced;
                 }
                 else
                 {
+                    var referenced = new CollectionPropertyData();
+                    var collection = (ICollection)value;
+
                     if (serializedMemberType == SerializedType.ReferenceCollection)
                     {
-                        var referenced = new List<SerializedItem<Guid>>();
                         foreach (var item in collection)
                         {
-                            referenced.Add(new SerializedItem<Guid>()
+                            referenced.Collection.Add(new SerializedItem<Guid>()
                             {
                                 Type = GetSerializedType(item?.GetType()), // Note: Get the type of the item reference.
                                 Value = (item as IObject)?.GetID() ?? Guid.Empty
                             });
                         }
-                        return referenced;
                     }
                     else
                     {
@@ -291,7 +294,7 @@ namespace Editor.Serialization
                         // Maybe I should
                         Debug.Log("TODO: Complex collection: " + type.FullName);
                     }
-                    return null;
+                    return referenced;
                 }
             }
 

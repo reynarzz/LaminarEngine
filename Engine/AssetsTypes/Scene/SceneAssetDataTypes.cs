@@ -1,4 +1,5 @@
-﻿using Engine.Serialization;
+﻿using Editor.Serialization;
+using Engine.Serialization;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,6 @@ namespace Editor
         public string TypeName { get; set; }
         public bool IsEnabled { get; set; }
         public Guid ID { get; set; }
-        public int ComponentIndex { get; set; }
         public List<ComponentSerializedProperty> SerializedProperties { get; set; }
     }
 
@@ -32,6 +32,17 @@ namespace Editor
         public string Name { get; set; }
         public SerializedType Type { get; set; }
         public object Data { get; set; }
+    }
+
+    internal class CollectionPropertyData
+    {
+        public object Metadata { get; set; }
+        public List<object> Collection { get; set; } = new();
+    }
+
+    internal class DictionaryMetadata
+    {
+
     }
 
     internal enum SerializedType

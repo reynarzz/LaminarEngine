@@ -97,11 +97,11 @@ namespace Game
 
         [SerializedField]
         private Dictionary<int, EObject> _eObjectDictionary =
-            new Dictionary<int, EObject> { { 1, null }, { 35, GameManager.Instance?.Transform ?? null } };
+            new Dictionary<int, EObject> { { 1, null }, { 35, null } };
 
         [SerializedField]
         private Dictionary<int, AssetResourceBase> _assetDictionary =
-           new Dictionary<int, AssetResourceBase> { { 1, null }, { 35, GameManager.DefaultFont ?? null } };
+           new Dictionary<int, AssetResourceBase> { { 1, null }, { 22, new Sprite() } };
 
 
         [SerializedField]

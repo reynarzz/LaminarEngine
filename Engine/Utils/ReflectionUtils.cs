@@ -29,18 +29,7 @@ namespace Engine.Utils
 
             return false;
         }
-        public static IEnumerable<(object Key, object Value)> IterateDictionary(object collection)
-        {
-            foreach (var item in (IEnumerable)collection)
-            {
-                var type = item.GetType();
-                yield return
-                (
-                    type.GetProperty("Key")!.GetValue(item),
-                    type.GetProperty("Value")!.GetValue(item)
-                );
-            }
-        }
+       
         public static object GetDefaultValue(Type type)
         {
             if (type.IsValueType)
