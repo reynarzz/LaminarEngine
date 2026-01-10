@@ -45,7 +45,6 @@ namespace Game
             [SerializedField] public mat2 mat2Test { get; set; }
             [SerializedField] public mat3 mat3Test { get; set; }
             [SerializedField] public mat4 mat4Test { get; set; }
-            [SerializedField] public TestClassSub SubObject { get; set; } = new TestClassSub();
         }
 
         public struct AStruct
@@ -54,6 +53,8 @@ namespace Game
             [SerializedField] public List<TestClass> _TestCLassList { get; set; } = new();
             [SerializedField] public List<Component> _TestComponentList { get; set; } 
             [SerializedField] public TestClass TestClassObj = new TestClass();
+            [SerializedField] public TestClassSub SubObject { get; set; } = new TestClassSub();
+
             //[ExposeEditorField] public List<string> StringTest { get; set; } = new();
             //[ExposeEditorField] public List<int> IntTest { get; set; } = new();
             //[ExposeEditorField] public List<Body2DType> EnumList { get; set; } = new();
@@ -72,6 +73,7 @@ namespace Game
             }
         }
         [SerializedField] public AStruct StructType { get; set; }
+        [SerializedField] public List<AStruct> AStructTypeList { get; set; }
         [SerializedField] [HideFromInspector] public List<TestClass> _TestCLassList { get; set; }
         [SerializedField] public TestClass TestClassObj;
         [SerializedField] public List<string> StringTest;
@@ -93,7 +95,7 @@ namespace Game
         [SerializedField] public IComponent ComponentInterface { get; set; }
         [SerializedField] public IObject ObjectInterface { get; set; }
         [SerializedField] public Body2DType[] EnumArray { get; set; }
-        [SerializedField] public TestClass[] ClassArray { get; set; }
+        [SerializedField] public TestClass[] TestClassArray { get; set; }
 
 
         [ShowMethodInEditor]

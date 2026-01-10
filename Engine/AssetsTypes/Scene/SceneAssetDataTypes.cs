@@ -40,8 +40,11 @@ namespace Editor
         EObject, // Reference to a generic EObject...
         Component,
         Actor,
-        Class,
-        Collection,
+        ComplexClass,
+        /// <summary>
+        /// Has multiple classes (any deep) and IObjects: classA -> classB -> reference.
+        /// </summary>
+        ComplexCollection,
         Asset,
         TextureAsset,
         RenderTextureAsset,
@@ -55,6 +58,7 @@ namespace Editor
         /// Internal engine types: int, string, Color32, enums etc...
         /// </summary>
         Simple,
+        SimpleClass,
         SimpleCollection,
         ReferenceCollection
     }

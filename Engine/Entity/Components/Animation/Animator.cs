@@ -13,7 +13,7 @@ namespace Engine
     [UniqueComponent]
     public class Animator : Component, ILateUpdatableComponent
     {
-        [SerializedField, HideFromInspector, JsonProperty] 
+        [SerializedField]
         private Dictionary<string, AnimationState> _states = new();
 
         internal IDictionary<string, AnimationState> States => _states;

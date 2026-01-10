@@ -88,7 +88,7 @@ namespace Engine.Utils
             while (type != null && type != typeof(object))
             {
                 var members = type.GetMembers(flags)
-                                  .Where(m =>(m.MemberType == MemberTypes.Field || m.MemberType == MemberTypes.Property) &&
+                                  .Where(m => (m.MemberType == MemberTypes.Field || m.MemberType == MemberTypes.Property) &&
                                          m.IsDefined(typeof(T), inherit));
 
                 if (order)
@@ -285,7 +285,12 @@ namespace Engine.Utils
 
         public static Type[] GetCollectionElementsType(Type type)
         {
-            if (!IsCollection(type, out var collectionType))
+            return GetCollectionElementsType(type, out _);
+        }
+
+        public static Type[] GetCollectionElementsType(Type type, out CollectionType collectionType)
+        {
+            if (!IsCollection(type, out collectionType))
                 return null;
 
             switch (collectionType)
@@ -302,6 +307,7 @@ namespace Engine.Utils
 
             return null;
         }
+
 
         public static Type GetMemberType(MemberInfo member)
         {
@@ -417,6 +423,82 @@ namespace Engine.Utils
         public static bool IsEObject(Type t)
         {
             return typeof(EObject).IsAssignableFrom(t);// || typeof(IObject).IsAssignableFrom(t);
+        }
+
+        internal static bool HasAnySerializedMemberWithType(Type target, Type searchedType)
+        {
+            if (ContainsType(target, searchedType))
+            {
+                return true;
+            }
+
+            IEnumerable<MemberInfo> members = GetAllMembersWithAttribute<SerializedFieldAttribute>(target);
+
+            foreach (var member in members)
+            {
+                var memberType = GetMemberType(member);
+
+                if (ContainsType(memberType, searchedType))
+                    return true;
+            }
+
+            return false;
+        }
+
+        private static bool ContainsType(Type current, Type searched)
+        {
+            if (searched.IsAssignableFrom(current))
+                return true;
+
+            // Array
+            if (current.IsArray)
+            {
+                return ContainsType(current.GetElementType(), searched);
+            }
+
+            // Nullable
+            if (Nullable.GetUnderlyingType(current) is Type nullableType)
+            {
+                return ContainsType(nullableType, searched);
+            }
+
+            // Generic types
+            if (current.IsGenericType)
+            {
+                foreach (var arg in current.GetGenericArguments())
+                {
+                    if (ContainsType(arg, searched))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            // Stop on simple types
+            if (IsSimpleType(current))
+            {
+                return false;
+            }
+
+            var serializedFields = GetAllMembersWithAttribute<SerializedFieldAttribute>(current);
+
+            foreach (var member in serializedFields)
+            {
+                var memberType = GetMemberType(member);
+
+                if (ContainsType(memberType, searched))
+                    return true;
+            }
+
+            return false;
+        }
+        private static bool IsSimpleType(Type type)
+        {
+            return type.IsPrimitive
+                || type.IsEnum
+                || type == typeof(string)
+                || type == typeof(decimal)
+                || type == typeof(Guid);
         }
     }
 }

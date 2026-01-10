@@ -90,15 +90,16 @@ namespace Editor.Serialization
                         break;
                     case SerializedType.Simple:
                     case SerializedType.SimpleCollection:
+                    case SerializedType.SimpleClass:
                         DeserializeSimpleProperty(component, property);
                         break;
-                    case SerializedType.Collection:
-                        break;
+                    //case SerializedType.ComplexCollection:
+                    //    break;
                     case SerializedType.ReferenceCollection:
                         DeserializeReferenceCollectionProperty(component, property);
                         break;
-                    case SerializedType.Class:
-                        break;
+                    //case SerializedType.ComplexClass:
+                    //    break;
                     default:
                         Debug.Error($"Cannot deserialize property of type: {property.Type}, please implement it.");
                         break;

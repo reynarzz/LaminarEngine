@@ -86,12 +86,22 @@ namespace Editor.Serialization
             foreach (var member in serializedMembers)
             {
                 var value = ReflectionUtils.GetMemberValue(obj, member);
+                var serializedType = GetSerializedType(ReflectionUtils.GetMemberType(member));
+
+                object data = value;
+                // TODO: use enum flags
+                if (serializedType != SerializedType.Simple &&
+                    serializedType != SerializedType.SimpleClass &&
+                    serializedType != SerializedType.SimpleCollection)
+                {
+                    data = GetPropertyData(member, value);
+                }
 
                 properties.Add(new ComponentSerializedProperty()
                 {
                     Name = member.Name,
-                    Type = GetSerializedType(ReflectionUtils.GetMemberType(member)),
-                    Data = GetPropertyData(member, value)
+                    Type = serializedType,
+                    Data = data
                 });
             }
 
@@ -129,6 +139,8 @@ namespace Editor.Serialization
                     {
                         return SerializedType.AnimationAsset;
                     }
+
+                    return SerializedType.Asset;
                 }
                 else
                 {
@@ -137,26 +149,26 @@ namespace Editor.Serialization
             }
             else if (ReflectionUtils.IsCollection(type, out var collectionType))
             {
-                if (ReflectionUtils.IsCollectionOfInternalTypes(type))
+                if (ReflectionUtils.IsCollectionOfInternalTypes(type) ||
+                    !ReflectionUtils.HasAnySerializedMemberWithType(type, typeof(IObject)))
                 {
                     return SerializedType.SimpleCollection;
                 }
 
                 var elementsTypes = ReflectionUtils.GetCollectionElementsType(type);
-                var isFirstElementTypeAReference = elementsTypes[0].IsAssignableTo(typeof(IObject));
-
-                if (isFirstElementTypeAReference)
+                if (elementsTypes.Length == 1 && elementsTypes[0].IsAssignableTo(typeof(IObject)))
                 {
                     return SerializedType.ReferenceCollection;
                 }
-
+                // TODO: maybe this is error prone?----
                 if (collectionType == ReflectionUtils.CollectionType.Dictionary &&
                     elementsTypes[1].IsAssignableTo(typeof(IObject)))
                 {
                     return SerializedType.ReferenceCollection;
                 }
+                //------------
 
-                return SerializedType.Collection;
+                return SerializedType.ComplexCollection;
             }
             else if (ReflectionUtils.IsInternalType(type))
             {
@@ -164,7 +176,11 @@ namespace Editor.Serialization
             }
             else if (type.IsClass || ReflectionUtils.IsUserDefinedStruct(type))
             {
-                return SerializedType.Class;
+                if (ReflectionUtils.HasAnySerializedMemberWithType(type, typeof(IObject)))
+                {
+                    return SerializedType.ComplexClass;
+                }
+                return SerializedType.SimpleClass;
             }
             return SerializedType.None;
         }
@@ -173,6 +189,7 @@ namespace Editor.Serialization
         {
             // Note: For runtime-created resource assets such as Materials, Shaders, Textures etc... maybe should have a empty guid, so the serializer,
             //       does not point to a invalid physical asset.
+
             var type = ReflectionUtils.GetMemberType(member);
 
             if (type.IsAssignableTo(typeof(IObject)))
@@ -190,15 +207,6 @@ namespace Editor.Serialization
                     return null;
                 }
 
-                if (ReflectionUtils.IsCollectionOfInternalTypes(type))
-                {
-                    return value;
-                }
-                else
-                {
-
-                }
-
                 var collection = (ICollection)value;
                 var elementsType = ReflectionUtils.GetCollectionElementsType(type);
 
@@ -209,10 +217,10 @@ namespace Editor.Serialization
                 else
                 {
                     var elementType = elementsType[0];
-                    var referenced = new List<SerializedItem<Guid>>();
-                    foreach (var item in collection)
+                    if (elementType.IsAssignableTo(typeof(IObject)))
                     {
-                        if (elementType.IsAssignableTo(typeof(IObject)))
+                        var referenced = new List<SerializedItem<Guid>>();
+                        foreach (var item in collection)
                         {
                             referenced.Add(new SerializedItem<Guid>()
                             {
@@ -220,21 +228,16 @@ namespace Editor.Serialization
                                 Value = (item as IObject)?.GetID() ?? Guid.Empty
                             });
                         }
-                        else
-                        {
-                            // TODO: is using raw classes.
-                        }
+                        return referenced;
                     }
-                    return referenced;
+                    else
+                    {
+                        // TODO: Complex class.
+                        // Maybe I should
+                        Debug.Log("TODO: Complex class: " + type.FullName);
+                    }
+                    return null;
                 }
-            }
-            else if (ReflectionUtils.IsInternalType(member))
-            {
-                return value;
-            }
-            else if (type.IsClass || ReflectionUtils.IsUserDefinedStruct(type))
-            {
-                return value;
             }
 
             return null;
