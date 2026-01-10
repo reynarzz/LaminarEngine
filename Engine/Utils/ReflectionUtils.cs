@@ -29,7 +29,7 @@ namespace Engine.Utils
 
             return false;
         }
-       
+
         public static object GetDefaultValue(Type type)
         {
             if (type.IsValueType)
@@ -263,7 +263,7 @@ namespace Engine.Utils
                 return type.IsValueType && (type.IsPrimitive || type.IsEnum ||
                        type.Namespace.Equals(typeof(vec2).Namespace) ||
                        type == typeof(Color) || type == typeof(Color32)) ||
-                       type == typeof(string) || (type.Namespace.StartsWith(nameof(Engine)) && !type.IsAssignableTo(typeof(IObject)));
+                       type == typeof(string);
             }
             return false;
         }
@@ -427,78 +427,53 @@ namespace Engine.Utils
 
         internal static bool HasAnySerializedMemberWithType(Type target, Type searchedType)
         {
-            if (ContainsType(target, searchedType))
-            {
-                return true;
-            }
-
-            IEnumerable<MemberInfo> members = GetAllMembersWithAttribute<SerializedFieldAttribute>(target);
-
-            foreach (var member in members)
-            {
-                var memberType = GetMemberType(member);
-
-                if (ContainsType(memberType, searchedType))
-                    return true;
-            }
-
-            return false;
+            var visited = new HashSet<Type>();
+            return ContainsType(target, searchedType, visited);
         }
 
-        private static bool ContainsType(Type current, Type searched)
+        private static bool ContainsType(Type current, Type searched, HashSet<Type> visited)
         {
-            if (searched.IsAssignableFrom(current))
+            if (current == null)
+                return false;
+
+            // Prevent infinite recursion on cyclic graphs
+            if (!visited.Add(current))
+                return false;
+
+            // Exact or assignable match
+            if (current == searched || searched.IsAssignableFrom(current))
                 return true;
 
             // Array
             if (current.IsArray)
-            {
-                return ContainsType(current.GetElementType(), searched);
-            }
+                return ContainsType(current.GetElementType(), searched, visited);
 
-            // Nullable
-            if (Nullable.GetUnderlyingType(current) is Type nullableType)
-            {
-                return ContainsType(nullableType, searched);
-            }
+            // Nullabl
+            if (Nullable.GetUnderlyingType(current) is Type nullable)
+                return ContainsType(nullable, searched, visited);
 
-            // Generic types
+            // Generic arguments
             if (current.IsGenericType)
             {
                 foreach (var arg in current.GetGenericArguments())
                 {
-                    if (ContainsType(arg, searched))
-                    {
+                    if (ContainsType(arg, searched, visited))
                         return true;
-                    }
                 }
             }
 
-            // Stop on simple types
-            if (IsSimpleType(current))
-            {
+            // Stop on internal types
+            if (IsInternalType(current))
                 return false;
-            }
 
-            var serializedFields = GetAllMembersWithAttribute<SerializedFieldAttribute>(current);
-
-            foreach (var member in serializedFields)
+            foreach (var member in GetAllMembersWithAttribute<SerializedFieldAttribute>(current))
             {
                 var memberType = GetMemberType(member);
-
-                if (ContainsType(memberType, searched))
+                if (ContainsType(memberType, searched, visited))
                     return true;
             }
 
             return false;
-        }
-        private static bool IsSimpleType(Type type)
-        {
-            return type.IsPrimitive
-                || type.IsEnum
-                || type == typeof(string)
-                || type == typeof(decimal)
-                || type == typeof(Guid);
         }
     }
 }
