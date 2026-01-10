@@ -2,6 +2,7 @@
 using Engine;
 using Engine.Layers;
 using Engine.Layers.Input;
+using Engine.Utils;
 using Game;
 using Newtonsoft.Json;
 using System;
@@ -71,7 +72,8 @@ namespace Editor
                     Converters =
                     {
                         new GFSObjectReferenceConverter(),
-                        new StringEnumConverter<SerializedType>()
+                        new StringEnumConverter<SerializedType>(),
+                        new StringEnumConverter<ReflectionUtils.CollectionType>()
                     },
                     NullValueHandling = NullValueHandling.Ignore,
                     DefaultValueHandling = DefaultValueHandling.Ignore

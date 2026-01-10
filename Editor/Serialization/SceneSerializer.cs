@@ -148,13 +148,8 @@ namespace Editor.Serialization
                 var elementsTypes = ReflectionUtils.GetCollectionElementsType(type);
                 var isSingleArgCollectionAEObject = elementsTypes.Length == 1 && elementsTypes[0].IsAssignableTo(typeof(IObject));
 
-                if (isSingleArgCollectionAEObject)
-                {
-                    return SerializedType.ReferenceCollection;
-                }
-                var isPureRefDictionary = collectionType == ReflectionUtils.CollectionType.Dictionary && IsPureReferenceDictionary(elementsTypes);
-
-                if (isPureRefDictionary)
+                if (isSingleArgCollectionAEObject ||
+                    (collectionType == ReflectionUtils.CollectionType.Dictionary && IsPureReferenceDictionary(elementsTypes)))
                 {
                     return SerializedType.ReferenceCollection;
                 }
@@ -237,15 +232,17 @@ namespace Editor.Serialization
             else if (ReflectionUtils.IsCollection(type, out var collectionType))
             {
                 var elementsType = ReflectionUtils.GetCollectionElementsType(type);
+                var referenced = new CollectionPropertyData()
+                {
+                    Metadata = collectionType
+                };
 
                 if (collectionType == ReflectionUtils.CollectionType.Dictionary)
                 {
-                    var referenced = new CollectionPropertyData();
-                    var dictionary = (IDictionary)value;
-
-
                     var isKeyEObject = elementsType[0].IsAssignableTo(typeof(IObject));
                     var isValueEObject = elementsType[1].IsAssignableTo(typeof(IObject));
+
+                    var dictionary = (IDictionary)value;
 
                     foreach (var dKey in dictionary.Keys)
                     {
@@ -267,11 +264,10 @@ namespace Editor.Serialization
                         {
                             var complexKey = CreateComplexType(k?.GetType(), k, serializedMemberType);
                             var complexValue = CreateComplexType(v?.GetType(), v, serializedMemberType);
-
-                            referenced.Collection.Add(new SerializedItem<KeyValuePair<object, object>>()
+                            referenced.Collection.Add(new SerializedItem<KeyValuePair<ComplexTypeData, ComplexTypeData>>()
                             {
                                 Type = GetSerializedType(referenceType),
-                                Data = new KeyValuePair<object, object>(complexKey, complexValue)
+                                Data = new KeyValuePair<ComplexTypeData, ComplexTypeData>(complexKey, complexValue)
                             });
                         }
                     }
@@ -280,7 +276,6 @@ namespace Editor.Serialization
                 }
                 else
                 {
-                    var referenced = new CollectionPropertyData();
                     var collection = (ICollection)value;
 
                     foreach (var item in collection)

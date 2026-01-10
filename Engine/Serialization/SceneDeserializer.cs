@@ -63,13 +63,13 @@ namespace Editor.Serialization
             // Deserialize components data, and resolve references.
             foreach (var (id, componentValue) in _componentsByID)
             {
-                DeserializeComponent(componentValue.value, componentValue.data);
+                DeserializeTarget(componentValue.value, componentValue.data.SerializedProperties);
             }
         }
 
-        private static void DeserializeComponent(Component component, ComponentDataSceneAsset data)
+        private static void DeserializeTarget(object target, IReadOnlyList<SerializedPropertyData> properties)
         {
-            foreach (var property in data.SerializedProperties)
+            foreach (var property in properties)
             {
                 switch (property.Type)
                 {
@@ -86,17 +86,17 @@ namespace Editor.Serialization
                     case SerializedType.AnimationAsset:
                     case SerializedType.AnimatorControllerAsset:
                     case SerializedType.ScriptableObject:
-                        DeserializeReferencedProperty(property.Type, component, property);
+                        DeserializeReferencedProperty(property.Type, target, property);
                         break;
                     case SerializedType.Simple:
                     case SerializedType.SimpleCollection:
                     case SerializedType.SimpleClass:
-                        DeserializeSimpleProperty(component, property);
+                        DeserializeSimpleProperty(target, property);
                         break;
                     //case SerializedType.ComplexCollection:
                     //    break;
                     case SerializedType.ReferenceCollection:
-                        DeserializeReferenceCollectionProperty(component, property);
+                        DeserializeReferenceCollectionProperty(target, property);
                         break;
                     //case SerializedType.ComplexClass:
                     //    break;
