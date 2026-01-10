@@ -45,8 +45,10 @@ namespace Engine
 
         private EventCurve _eventCurve = new();
 
-       
-
+        // The serializer needs this.
+        private AnimationClip() : base(string.Empty, Guid.NewGuid()) // TODO: animation clip
+        {
+        }
         public AnimationClip(string name, bool loop = true) : base(string.Empty, Guid.NewGuid()) // TODO: animation clip
         {
             Name = name;

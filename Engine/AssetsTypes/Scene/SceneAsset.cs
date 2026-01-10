@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Editor
+namespace Engine
 {
     internal class SceneAsset : AssetResourceBase
     {

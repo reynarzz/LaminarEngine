@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Engine.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Editor
+namespace Engine
 {
     internal class ActorDataSceneAsset
     {
@@ -28,23 +29,41 @@ namespace Editor
     {
         public string Name { get; set; }
         public SerializedType Type { get; set; }
+        public string InternalType { get; set; }
+        public string Assembly { get; set; }
         public object Data { get; set; }
     }
 
     internal class CollectionPropertyData
     {
-        public object Metadata { get; set; }
+        public ReflectionUtils.CollectionType CollectionType { get; set; }
         public List<object> Collection { get; set; } = new();
     }
 
-    internal class DictionaryMetadata
+    internal class DictionaryData<K, V> : SerializedItem
     {
-
+        public SerializedType keyType { get; set; }
+        public SerializedType ValueType { get; set; }
+        public K Key { get; set; }
+        public V Value { get; set; }
     }
+
+    internal class ComplexDictionaryData<K, V> : SerializedItem
+    {
+        public K Key { get; set; }
+        public V Value { get; set; }
+    }
+
+    internal class CollectionData<V> : SerializedItem
+    {
+        public V Value { get; set; }
+    }
+
 
     internal class ComplexTypeData
     {
         public string TargetTypeName { get; set; }
+        public string Assembly { get; set; }
         public SerializedType ComplexType { get; set; }
         public List<SerializedPropertyData> Properties { get; set; }
     }

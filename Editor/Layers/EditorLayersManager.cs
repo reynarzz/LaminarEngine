@@ -2,6 +2,7 @@
 using Engine;
 using Engine.Layers;
 using Engine.Layers.Input;
+using Engine.Serialization;
 using Engine.Utils;
 using Game;
 using Newtonsoft.Json;
@@ -38,6 +39,18 @@ namespace Editor
 
 
         }
+        JsonSerializerSettings _jsonSettings = new JsonSerializerSettings()
+        {
+            Converters =
+                    {
+                        new GFSObjectReferenceConverter(),
+                        new GFSDataProperty(),
+                        new StringEnumConverter<SerializedType>(),
+                        new StringEnumConverter<ReflectionUtils.CollectionType>()
+                    },
+            NullValueHandling = NullValueHandling.Ignore,
+            DefaultValueHandling = DefaultValueHandling.Ignore
+        };
 
         internal override void Update()
         {
@@ -67,30 +80,17 @@ namespace Editor
             {
                 Debug.Log("Save");
                 _actors = SceneSerializer.SerializeScene(SceneManager.Scenes[^1]);
-                var settings = new JsonSerializerSettings()
-                {
-                    Converters =
-                    {
-                        new GFSObjectReferenceConverter(),
-                        new StringEnumConverter<SerializedType>(),
-                        new StringEnumConverter<ReflectionUtils.CollectionType>()
-                    },
-                    NullValueHandling = NullValueHandling.Ignore,
-                    DefaultValueHandling = DefaultValueHandling.Ignore
-                };
-
-                File.WriteAllText(TestfilePath, JsonConvert.SerializeObject(_actors, Formatting.Indented, settings));
+              
+                File.WriteAllText(TestfilePath, JsonConvert.SerializeObject(_actors, Formatting.Indented, _jsonSettings));
             }
 
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.R))
             {
                 Application.IsInPlayMode = false;
 
-                //var file = File.ReadAllText(TestfilePath);
-                //var settings = new JsonSerializerSettings();
-                //settings.Converters.Add(new GFSObjectReferenceConverter());
-
-                var actors = _actors;// JsonConvert.DeserializeObject<List<ActorDataSceneAsset>>(file, settings);
+                var file = File.ReadAllText(TestfilePath);
+                var actors = JsonConvert.DeserializeObject<List<ActorDataSceneAsset>>(file, _jsonSettings);
+                // var actors = _actors;
                 Debug.Log("Total actors in scene: " + actors.Count);
                 SceneManager.Initialize();
                 SceneManager.UnloadAll();
