@@ -154,8 +154,8 @@ namespace Editor.Serialization
                     foreach (var item in collectionData.Collection)
                     {
                         var serializedItem = (SerializedItem<KeyValuePair<object, object>>)item;
-                        var guid = serializedItem.Value.Value != null? (Guid)serializedItem.Value.Value: Guid.Empty;
-                        dictionary.Add(serializedItem.Value.Key, GetReferenceValue(serializedItem.Type, guid));
+                        var guid = serializedItem.Data.Value != null? (Guid)serializedItem.Data.Value: Guid.Empty;
+                        dictionary.Add(serializedItem.Data.Key, GetReferenceValue(serializedItem.Type, guid));
                     }
 
                     ReflectionUtils.SetMemberValue(target, property.Name, dictionary);
@@ -187,7 +187,7 @@ namespace Editor.Serialization
                 if (referenceElement == null)
                     return null;
 
-                return GetReferenceValue(referenceElement.Type, referenceElement.Value);
+                return GetReferenceValue(referenceElement.Type, referenceElement.Data);
             }
 
             void SetValueToProperty(object collectionInstance, Action<object, int> setCollectionValueCallback)

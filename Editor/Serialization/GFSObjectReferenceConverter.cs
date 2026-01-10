@@ -28,7 +28,7 @@ namespace Editor.Serialization
             var serializedItem = new SerializedItem<Guid>()
             {
                 Type = SceneSerializer.GetSerializedType(value?.GetType()),
-                Value = obj?.GetID() ?? Guid.Empty
+                Data = obj?.GetID() ?? Guid.Empty
             };
 
             serializer.Serialize(writer, serializedItem);

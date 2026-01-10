@@ -115,9 +115,14 @@ namespace Game
         //   new Dictionary<int, AssetResourceBase> { { 1, null }, { 22, new Sprite() } };
 
 
-        //[SerializedField]
-        //private Dictionary<int, AStruct> _complexDictionary =
-        //   new Dictionary<int, AStruct> { { 1, default }, { 51, new AStruct() { Value = 100 } } };
+        [SerializedField]
+        private Dictionary<int, AStruct> _complexDictionary =
+           new Dictionary<int, AStruct> { { 1, default }, { 51, new AStruct() { Value = 100 } } };
+
+        [SerializedField]
+        private Dictionary<int, string> _intStringDictionary =
+           new Dictionary<int, string> { { 3, "first value" }, { 51, "Second value"} };
+
 
         [ShowMethodInEditor]
         public void AMethodCallingFromEditor()

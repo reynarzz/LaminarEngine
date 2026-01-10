@@ -13,6 +13,6 @@ namespace Editor.Serialization
 
     internal class SerializedItem<T> : SerializedItem
     {
-        public T Value { get; set; }
+        public T Data { get; set; }
     }
 }

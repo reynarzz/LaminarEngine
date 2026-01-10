@@ -260,12 +260,19 @@ namespace Editor.Serialization
                             referenced.Collection.Add(new SerializedItem<KeyValuePair<object, object>>()
                             {
                                 Type = GetSerializedType(referenceType),
-                                Value = new KeyValuePair<object, object>(k, v)
+                                Data = new KeyValuePair<object, object>(k, v)
                             });
                         }
                         else
                         {
-                            Debug.Log("TODO: Complex dictionary: " + type.FullName);
+                            var complexKey = CreateComplexType(k?.GetType(), k, serializedMemberType);
+                            var complexValue = CreateComplexType(v?.GetType(), v, serializedMemberType);
+
+                            referenced.Collection.Add(new SerializedItem<KeyValuePair<object, object>>()
+                            {
+                                Type = GetSerializedType(referenceType),
+                                Data = new KeyValuePair<object, object>(complexKey, complexValue)
+                            });
                         }
                     }
 
@@ -282,26 +289,19 @@ namespace Editor.Serialization
                         {
                             referenced.Collection.Add(new SerializedItem<Guid>()
                             {
-                                Type = GetSerializedType(item?.GetType()), // Note: Get the type of the item reference.
-                                Value = (item as IObject)?.GetID() ?? Guid.Empty
+                                Type = GetSerializedType(item?.GetType()),
+                                Data = (item as IObject)?.GetID() ?? Guid.Empty
                             });
                         }
                         else
                         {
-                            ComplexTypeData complex = null;
-
-                            if(item != null)
-                            {
-                                complex = CreateComplexType(item.GetType(), item, serializedMemberType);
-                            }
+                            var complex = CreateComplexType(item?.GetType(), item, serializedMemberType);
 
                             referenced.Collection.Add(new SerializedItem<ComplexTypeData>()
                             {
-                                Type = GetSerializedType(item?.GetType()), // Note: Get the type of the item reference.
-                                Value = complex
+                                Type = GetSerializedType(item?.GetType()),
+                                Data = complex
                             });
-
-                            Debug.Log("TODO: Complex collection: " + type.FullName);
                         }
                     }
 
@@ -310,20 +310,15 @@ namespace Editor.Serialization
             }
             else if (serializedMemberType == SerializedType.ComplexClass)
             {
-                var complex = CreateComplexType(type, value, serializedMemberType);
-
-                return complex;
+                return CreateComplexType(type, value, serializedMemberType);
             }
             return null;
         }
 
         public static ComplexTypeData CreateComplexType(Type complexType, object value, SerializedType serializedType)
         {
-            var complexClass = new ComplexTypeData();
-            complexClass.ComplexType = serializedType;
-            complexClass.TargetTypeName = complexType.FullName;
-            complexClass.Properties = new List<SerializedPropertyData>();
-
+            if (complexType == null)
+                return null;
 
             SerializedPropertyData GetPropertyGraph(MemberInfo currentType, object target)
             {
@@ -336,6 +331,13 @@ namespace Editor.Serialization
                     Data = GetPropertyData(currentType, serializedType, ReflectionUtils.GetMemberValue(target, currentType)),
                 };
             }
+
+            var complexClass = new ComplexTypeData()
+            {
+                ComplexType = serializedType,
+                TargetTypeName = complexType.FullName,
+                Properties = new List<SerializedPropertyData>()
+            };
 
             var rootSerializedFields = ReflectionUtils.GetAllMembersWithAttribute<SerializedFieldAttribute>(complexType);
 
