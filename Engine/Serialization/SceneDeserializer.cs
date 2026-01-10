@@ -147,7 +147,7 @@ namespace Editor.Serialization
             {
                 if (collectionType == ReflectionUtils.CollectionType.Dictionary)
                 {
-
+                    // TODO: deserialize dictionary
                 }
                 else if (collectionType == ReflectionUtils.CollectionType.List)
                 {

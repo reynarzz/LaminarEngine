@@ -29,7 +29,18 @@ namespace Engine.Utils
 
             return false;
         }
-
+        public static IEnumerable<(object Key, object Value)> IterateDictionary(object collection)
+        {
+            foreach (var item in (IEnumerable)collection)
+            {
+                var type = item.GetType();
+                yield return
+                (
+                    type.GetProperty("Key")!.GetValue(item),
+                    type.GetProperty("Value")!.GetValue(item)
+                );
+            }
+        }
         public static object GetDefaultValue(Type type)
         {
             if (type.IsValueType)
@@ -263,7 +274,7 @@ namespace Engine.Utils
                 return type.IsValueType && (type.IsPrimitive || type.IsEnum ||
                        type.Namespace.Equals(typeof(vec2).Namespace) ||
                        type == typeof(Color) || type == typeof(Color32)) ||
-                       type == typeof(string) || type.Namespace.StartsWith(nameof(Engine));
+                       type == typeof(string) || (type.Namespace.StartsWith(nameof(Engine)) && !type.IsAssignableTo(typeof(IObject)));
             }
             return false;
         }

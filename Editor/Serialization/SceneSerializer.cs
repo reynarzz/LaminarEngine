@@ -94,7 +94,7 @@ namespace Editor.Serialization
                     serializedType != SerializedType.SimpleClass &&
                     serializedType != SerializedType.SimpleCollection)
                 {
-                    data = GetPropertyData(member, value);
+                    data = GetPropertyData(member, serializedType, value);
                 }
 
                 properties.Add(new ComponentSerializedProperty()
@@ -156,17 +156,18 @@ namespace Editor.Serialization
                 }
 
                 var elementsTypes = ReflectionUtils.GetCollectionElementsType(type);
-                if (elementsTypes.Length == 1 && elementsTypes[0].IsAssignableTo(typeof(IObject)))
+                var isSingleArgCollectionAEObject = elementsTypes.Length == 1 && elementsTypes[0].IsAssignableTo(typeof(IObject));
+
+                if (isSingleArgCollectionAEObject)
                 {
                     return SerializedType.ReferenceCollection;
                 }
-                // TODO: maybe this is error prone?----
-                if (collectionType == ReflectionUtils.CollectionType.Dictionary &&
-                    elementsTypes[1].IsAssignableTo(typeof(IObject)))
+                var isPureRefDictionary = collectionType == ReflectionUtils.CollectionType.Dictionary && IsPureReferenceDictionary(elementsTypes);
+
+                if (isPureRefDictionary)
                 {
                     return SerializedType.ReferenceCollection;
                 }
-                //------------
 
                 return SerializedType.ComplexCollection;
             }
@@ -185,7 +186,38 @@ namespace Editor.Serialization
             return SerializedType.None;
         }
 
-        public static object GetPropertyData(MemberInfo member, object value)
+        /// <summary>
+        /// Checks if the dictionary has not IObject deep in the graph, but only on the key or value generic args.
+        /// </summary>
+        private static bool IsPureReferenceDictionary(Type[] genericArgs)
+        {
+            if (genericArgs.Length != 2)
+            {
+                Debug.Error("Invalid number of generic arguments.");
+                return false;
+            }
+
+            void Check(Type argType, out bool hasAny, out bool isTopLevel)
+            {
+                if (argType.IsAssignableTo(typeof(IObject)))
+                {
+                    hasAny = true;
+                    isTopLevel = true;
+                    return;
+                }
+
+                hasAny = ReflectionUtils.HasAnySerializedMemberWithType(argType, typeof(IObject));
+                isTopLevel = false;
+            }
+
+            Check(genericArgs[0], out bool aHasAny, out bool aTop);
+            Check(genericArgs[1], out bool bHasAny, out bool bTop);
+
+            return (aTop && (!bHasAny || bTop)) || (bTop && (!aHasAny || aTop));
+        }
+
+        // This only returns reference ids and complex property data, simple data should be taken care of elsewhere.
+        public static object GetPropertyData(MemberInfo member, SerializedType serializedMemberType, object value)
         {
             // Note: For runtime-created resource assets such as Materials, Shaders, Textures etc... maybe should have a empty guid, so the serializer,
             //       does not point to a invalid physical asset.
@@ -212,19 +244,42 @@ namespace Editor.Serialization
 
                 if (collectionType == ReflectionUtils.CollectionType.Dictionary)
                 {
-                    // TODO:
+                    if (serializedMemberType == SerializedType.ReferenceCollection)
+                    {
+                        var referenced = new List<SerializedItem<KeyValuePair<object, object>>>();
+                        var isKeyEObject = elementsType[0].IsAssignableTo(typeof(IObject));
+                        var isValueEObject = elementsType[1].IsAssignableTo(typeof(IObject));
+
+                        foreach (var item in ReflectionUtils.IterateDictionary(collection))
+                        {
+                            var k = isKeyEObject ? (item.Key as IObject)?.GetID() ?? Guid.Empty : item.Key;
+                            var v = isValueEObject ? (item.Value as IObject)?.GetID() ?? Guid.Empty : item.Value;
+                            var referenceType = isKeyEObject ? item.Key?.GetType() : item.Value?.GetType();
+
+                            referenced.Add(new SerializedItem<KeyValuePair<object, object>>()
+                            {
+                                Type = GetSerializedType(referenceType),
+                                Value = new KeyValuePair<object, object>(k, v)
+                            });
+                        }
+
+                        return referenced;
+                    }
+                    else
+                    {
+                        Debug.Log("TODO: Complex dictionary: " + type.FullName);
+                    }
                 }
                 else
                 {
-                    var elementType = elementsType[0];
-                    if (elementType.IsAssignableTo(typeof(IObject)))
+                    if (serializedMemberType == SerializedType.ReferenceCollection)
                     {
                         var referenced = new List<SerializedItem<Guid>>();
                         foreach (var item in collection)
                         {
                             referenced.Add(new SerializedItem<Guid>()
                             {
-                                Type = GetSerializedType(item?.GetType() ?? null),
+                                Type = GetSerializedType(item?.GetType()), // Note: Get the type of the item reference.
                                 Value = (item as IObject)?.GetID() ?? Guid.Empty
                             });
                         }
@@ -232,9 +287,9 @@ namespace Editor.Serialization
                     }
                     else
                     {
-                        // TODO: Complex class.
+                        // TODO: Complex class, create complete object graph.
                         // Maybe I should
-                        Debug.Log("TODO: Complex class: " + type.FullName);
+                        Debug.Log("TODO: Complex collection: " + type.FullName);
                     }
                     return null;
                 }
