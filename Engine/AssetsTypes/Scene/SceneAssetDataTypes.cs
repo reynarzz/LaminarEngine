@@ -24,10 +24,10 @@ namespace Editor
         public string TypeName { get; set; }
         public bool IsEnabled { get; set; }
         public Guid ID { get; set; }
-        public List<ComponentSerializedProperty> SerializedProperties { get; set; }
+        public List<SerializedPropertyData> SerializedProperties { get; set; }
     }
 
-    internal class ComponentSerializedProperty
+    internal class SerializedPropertyData
     {
         public string Name { get; set; }
         public SerializedType Type { get; set; }
@@ -43,6 +43,13 @@ namespace Editor
     internal class DictionaryMetadata
     {
 
+    }
+
+    internal class ComplexTypeData
+    {
+        public string TargetTypeName { get; set; }
+        public SerializedType ComplexType { get; set; }
+        public List<SerializedPropertyData> Properties { get; set; }
     }
 
     internal enum SerializedType

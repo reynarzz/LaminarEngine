@@ -77,30 +77,21 @@ namespace Editor.Serialization
             };
         }
 
-        public static List<ComponentSerializedProperty> GetSerializedProperties(object obj)
+        public static List<SerializedPropertyData> GetSerializedProperties(object obj)
         {
             var serializedMembers = ReflectionUtils.GetAllMembersWithAttribute<SerializedFieldAttribute>(obj.GetType());
-            var properties = new List<ComponentSerializedProperty>();
+            var properties = new List<SerializedPropertyData>();
 
             foreach (var member in serializedMembers)
             {
                 var value = ReflectionUtils.GetMemberValue(obj, member);
                 var serializedType = GetSerializedType(ReflectionUtils.GetMemberType(member));
 
-                object data = value;
-                // TODO: use enum flags
-                if (serializedType != SerializedType.Simple &&
-                    serializedType != SerializedType.SimpleClass &&
-                    serializedType != SerializedType.SimpleCollection)
-                {
-                    data = GetPropertyData(member, serializedType, value);
-                }
-
-                properties.Add(new ComponentSerializedProperty()
+                properties.Add(new SerializedPropertyData()
                 {
                     Name = member.Name,
                     Type = serializedType,
-                    Data = data
+                    Data = GetPropertyData(member, serializedType, value)
                 });
             }
 
@@ -221,6 +212,18 @@ namespace Editor.Serialization
             // Note: For runtime-created resource assets such as Materials, Shaders, Textures etc... maybe should have a empty guid, so the serializer,
             //       does not point to a invalid physical asset.
 
+            if (value == null)
+            {
+                return null;
+            }
+
+            if (serializedMemberType == SerializedType.Simple ||
+                serializedMemberType == SerializedType.SimpleClass ||
+                serializedMemberType == SerializedType.SimpleCollection)
+            {
+                return value;
+            }
+
             var type = ReflectionUtils.GetMemberType(member);
 
             if (type.IsAssignableTo(typeof(IObject)))
@@ -233,11 +236,6 @@ namespace Editor.Serialization
             }
             else if (ReflectionUtils.IsCollection(type, out var collectionType))
             {
-                if (value == null)
-                {
-                    return null;
-                }
-
                 var elementsType = ReflectionUtils.GetCollectionElementsType(type);
 
                 if (collectionType == ReflectionUtils.CollectionType.Dictionary)
@@ -249,7 +247,7 @@ namespace Editor.Serialization
                     {
                         var isKeyEObject = elementsType[0].IsAssignableTo(typeof(IObject));
                         var isValueEObject = elementsType[1].IsAssignableTo(typeof(IObject));
-                        
+
                         foreach (var dKey in dictionary.Keys)
                         {
                             var dValue = dictionary[dKey];
@@ -290,15 +288,51 @@ namespace Editor.Serialization
                     }
                     else
                     {
-                        // TODO: Complex class, create complete object graph.
+                        // TODO: Complex collection, create complete object graph.
                         // Maybe I should
                         Debug.Log("TODO: Complex collection: " + type.FullName);
                     }
                     return referenced;
                 }
             }
+            else if (serializedMemberType == SerializedType.ComplexClass)
+            {
+                // TODO: Complex class, create complete object graph.
+                var complex = CreateComplexType(type, value, serializedMemberType);
 
+                return complex;
+            }
             return null;
+        }
+
+        public static ComplexTypeData CreateComplexType(Type complexType, object value, SerializedType serializedType)
+        {
+            var complexClass = new ComplexTypeData();
+            complexClass.ComplexType = serializedType;
+            complexClass.TargetTypeName = complexType.FullName;
+            complexClass.Properties = new List<SerializedPropertyData>();
+
+
+            SerializedPropertyData GetPropertyGraph(MemberInfo currentType, object target)
+            {
+                var currentMemberType = ReflectionUtils.GetMemberType(currentType);
+                var serializedType = GetSerializedType(currentMemberType);
+                return new SerializedPropertyData()
+                {
+                    Name = currentType.Name,
+                    Type = serializedType,
+                    Data = GetPropertyData(currentType, serializedType, ReflectionUtils.GetMemberValue(target, currentType)),
+                };
+            }
+
+            var rootSerializedFields = ReflectionUtils.GetAllMembersWithAttribute<SerializedFieldAttribute>(complexType);
+
+            foreach (var field in rootSerializedFields)
+            {
+                complexClass.Properties.Add(GetPropertyGraph(field, value));
+            }
+
+            return complexClass;
         }
     }
 }

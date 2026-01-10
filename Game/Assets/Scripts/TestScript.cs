@@ -50,8 +50,8 @@ namespace Game
         public struct AStruct
         {
             [SerializedField] public int Value;
-            [SerializedField] public List<TestClass> _TestCLassList { get; set; } = new();
-            // [SerializedField] public List<Component> _TestComponentList { get; set; } 
+            [SerializedField] public List<TestClass> _TestCLassList2 { get; set; } = new();
+            [SerializedField] public List<Component> _TestComponentList { get; set; }
             [SerializedField] public TestClass TestClassObj = new TestClass();
             [SerializedField] public TestClassSub SubObject { get; set; } = new TestClassSub();
 
@@ -61,6 +61,17 @@ namespace Game
             //[ExposeEditorField] public mat2 mat2Test { get; set; }
             //[ExposeEditorField] public mat3 mat3Test { get; set; }
             //[ExposeEditorField] public mat4 mat4Test { get; set; }
+            private static Sprite sp = new Sprite("Sprite in dictionary", 0, Texture2D.White);
+            [SerializedField]
+            private Dictionary<int, EObject> _InStructeObjectDictionary =
+                new Dictionary<int, EObject> { { 2, null }, { 346, null } };
+
+            [SerializedField]
+            private Dictionary<int, AssetResourceBase> _InStructassetDictionary =
+               new Dictionary<int, AssetResourceBase> { { 11, null }, { 71, sp } };
+
+
+
             public AStruct()
             {
 
@@ -72,17 +83,17 @@ namespace Game
                 Debug.Log("Called from editor");
             }
         }
-        //[SerializedField] public AStruct StructType { get; set; }
-        //[SerializedField] public List<AStruct> AStructTypeList { get; set; }
-        //[SerializedField] public AStruct[] AStructTypeArray { get; set; }
-        //[SerializedField] [HideFromInspector] public List<TestClass> _TestCLassList { get; set; }
-        //[SerializedField] public TestClass TestClassObj;
+        [SerializedField] public AStruct StructType { get; set; }
+        [SerializedField] public List<AStruct> AStructTypeList { get; set; }
+        [SerializedField] public AStruct[] AStructTypeArray { get; set; }
+        [SerializedField][HideFromInspector] public List<TestClass> _TestCLassList { get; set; }
+        [SerializedField] public TestClass TestClassObj;
         //[SerializedField] public List<string> StringTest;
-        //[SerializedField] public List<int> IntTest { get; set; } = new();
-        //[SerializedField] public List<Component> _TestComponentList { get; set; }
-        //[SerializedField] public List<Component> _TestComponentArray { get; set; }
-        //[SerializedField] public List<Actor> _TestActorList { get; set; }
-        //[SerializedField] public Actor[] _TestActorArray { get; set; }
+        // [SerializedField] public List<int> IntTest { get; set; } = new();
+        // [SerializedField] public List<Component> _TestComponentList { get; set; }
+        // [SerializedField] public List<Component> _TestComponentArray { get; set; }
+        // [SerializedField] public List<Actor> _TestActorList { get; set; }
+        [SerializedField] public Actor[] _TestActorArray { get; set; }
         //[SerializedField] public double DoubleField { get; set; }
         //[SerializedField] public Component ComponentTest { get; set; }
         // [SerializedField] public Actor ActorTest { get; set; }
@@ -92,21 +103,21 @@ namespace Game
         //[SerializedField] public IComponent ComponentInterface { get; set; }
         //[SerializedField] public IObject ObjectInterface { get; set; }
         //[SerializedField] public Body2DType[] EnumArray { get; set; }
-        //[SerializedField] public TestClass[] TestClassArray { get; set; }
+        [SerializedField] public TestClass[] TestClassArray { get; set; }
 
 
-        [SerializedField]
-        private Dictionary<int, EObject> _eObjectDictionary =
-            new Dictionary<int, EObject> { { 1, null }, { 35, null } };
+        //[SerializedField]
+        //private Dictionary<int, EObject> _eObjectDictionary =
+        //    new Dictionary<int, EObject> { { 1, null }, { 35, null } };
 
-        [SerializedField]
-        private Dictionary<int, AssetResourceBase> _assetDictionary =
-           new Dictionary<int, AssetResourceBase> { { 1, null }, { 22, new Sprite() } };
+        //[SerializedField]
+        //private Dictionary<int, AssetResourceBase> _assetDictionary =
+        //   new Dictionary<int, AssetResourceBase> { { 1, null }, { 22, new Sprite() } };
 
 
-        [SerializedField]
-        private Dictionary<int, AStruct> _complexDictionary =
-           new Dictionary<int, AStruct> { { 1, default }, { 51, new AStruct() { Value = 100 } } };
+        //[SerializedField]
+        //private Dictionary<int, AStruct> _complexDictionary =
+        //   new Dictionary<int, AStruct> { { 1, default }, { 51, new AStruct() { Value = 100 } } };
 
         [ShowMethodInEditor]
         public void AMethodCallingFromEditor()

@@ -108,7 +108,7 @@ namespace Editor.Serialization
         }
 
         private static void DeserializeReferencedProperty(SerializedType serializableType, object target,
-                                                          ComponentSerializedProperty property)
+                                                          SerializedPropertyData property)
         {
             if (property.Data == null)
             {
@@ -124,7 +124,7 @@ namespace Editor.Serialization
             }
         }
 
-        private static void DeserializeSimpleProperty(object target, ComponentSerializedProperty property)
+        private static void DeserializeSimpleProperty(object target, SerializedPropertyData property)
         {
             if (property.Data == null)
             {
@@ -134,7 +134,7 @@ namespace Editor.Serialization
             ReflectionUtils.SetMemberValue(target, property.Name, property.Data);
         }
 
-        private static void DeserializeReferenceCollectionProperty(object target, ComponentSerializedProperty property)
+        private static void DeserializeReferenceCollectionProperty(object target, SerializedPropertyData property)
         {
             var collectionData = property.Data as CollectionPropertyData;
 
