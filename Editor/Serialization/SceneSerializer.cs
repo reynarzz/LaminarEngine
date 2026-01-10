@@ -243,29 +243,30 @@ namespace Editor.Serialization
                     var referenced = new CollectionPropertyData();
                     var dictionary = (IDictionary)value;
 
-                    if (serializedMemberType == SerializedType.ReferenceCollection)
+
+                    var isKeyEObject = elementsType[0].IsAssignableTo(typeof(IObject));
+                    var isValueEObject = elementsType[1].IsAssignableTo(typeof(IObject));
+
+                    foreach (var dKey in dictionary.Keys)
                     {
-                        var isKeyEObject = elementsType[0].IsAssignableTo(typeof(IObject));
-                        var isValueEObject = elementsType[1].IsAssignableTo(typeof(IObject));
+                        var dValue = dictionary[dKey];
 
-                        foreach (var dKey in dictionary.Keys)
+                        var k = isKeyEObject ? (dKey as IObject)?.GetID() ?? Guid.Empty : dKey;
+                        var v = isValueEObject ? (dValue as IObject)?.GetID() ?? Guid.Empty : dValue;
+                        var referenceType = isKeyEObject ? dKey?.GetType() : dValue?.GetType();
+
+                        if (serializedMemberType == SerializedType.ReferenceCollection)
                         {
-                            var dValue = dictionary[dKey];
-
-                            var k = isKeyEObject ? (dKey as IObject)?.GetID() ?? Guid.Empty : dKey;
-                            var v = isValueEObject ? (dValue as IObject)?.GetID() ?? Guid.Empty : dValue;
-                            var referenceType = isKeyEObject ? dKey?.GetType() : dValue?.GetType();
-
                             referenced.Collection.Add(new SerializedItem<KeyValuePair<object, object>>()
                             {
                                 Type = GetSerializedType(referenceType),
                                 Value = new KeyValuePair<object, object>(k, v)
                             });
                         }
-                    }
-                    else
-                    {
-                        Debug.Log("TODO: Complex dictionary: " + type.FullName);
+                        else
+                        {
+                            Debug.Log("TODO: Complex dictionary: " + type.FullName);
+                        }
                     }
 
                     return referenced;
@@ -275,9 +276,9 @@ namespace Editor.Serialization
                     var referenced = new CollectionPropertyData();
                     var collection = (ICollection)value;
 
-                    if (serializedMemberType == SerializedType.ReferenceCollection)
+                    foreach (var item in collection)
                     {
-                        foreach (var item in collection)
+                        if (serializedMemberType == SerializedType.ReferenceCollection)
                         {
                             referenced.Collection.Add(new SerializedItem<Guid>()
                             {
@@ -285,19 +286,30 @@ namespace Editor.Serialization
                                 Value = (item as IObject)?.GetID() ?? Guid.Empty
                             });
                         }
+                        else
+                        {
+                            ComplexTypeData complex = null;
+
+                            if(item != null)
+                            {
+                                complex = CreateComplexType(item.GetType(), item, serializedMemberType);
+                            }
+
+                            referenced.Collection.Add(new SerializedItem<ComplexTypeData>()
+                            {
+                                Type = GetSerializedType(item?.GetType()), // Note: Get the type of the item reference.
+                                Value = complex
+                            });
+
+                            Debug.Log("TODO: Complex collection: " + type.FullName);
+                        }
                     }
-                    else
-                    {
-                        // TODO: Complex collection, create complete object graph.
-                        // Maybe I should
-                        Debug.Log("TODO: Complex collection: " + type.FullName);
-                    }
+
                     return referenced;
                 }
             }
             else if (serializedMemberType == SerializedType.ComplexClass)
             {
-                // TODO: Complex class, create complete object graph.
                 var complex = CreateComplexType(type, value, serializedMemberType);
 
                 return complex;

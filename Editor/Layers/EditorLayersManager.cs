@@ -66,11 +66,18 @@ namespace Editor
             {
                 Debug.Log("Save");
                 _actors = SceneSerializer.SerializeScene(SceneManager.Scenes[^1]);
+                var settings = new JsonSerializerSettings()
+                {
+                    Converters =
+                    {
+                        new GFSObjectReferenceConverter(),
+                        new StringEnumConverter<SerializedType>()
+                    },
+                    NullValueHandling = NullValueHandling.Ignore,
+                    DefaultValueHandling = DefaultValueHandling.Ignore
+                };
 
-                //var settings = new JsonSerializerSettings();
-                //settings.Converters.Add(new GFSObjectReferenceConverter());
-
-                // File.WriteAllText(TestfilePath, JsonConvert.SerializeObject(_actors, Formatting.Indented, settings));
+                File.WriteAllText(TestfilePath, JsonConvert.SerializeObject(_actors, Formatting.Indented, settings));
             }
 
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.R))
