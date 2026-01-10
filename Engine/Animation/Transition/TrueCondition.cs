@@ -8,10 +8,7 @@ namespace Engine
 {
     public class TrueCondition : TransitionCondition
     {
-        public TrueCondition() : base(null)
-        {
-        }
-
+        public TrueCondition() : base(null) { }
         public override bool IsCondition(AnimatorParameters parameters)
         {
             return true;

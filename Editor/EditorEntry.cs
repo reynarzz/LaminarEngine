@@ -158,8 +158,6 @@ namespace Editor
             GfsTypeRegistry.Register<Color>("color");
             GfsTypeRegistry.Register<Color32>("color32");
             GfsTypeRegistry.Register<Body2DType>("color32");
-            
-            GfsTypeRegistry.Register<SerializedPropertyData>("simple_property");
         }
 
         private void ImportAssets()

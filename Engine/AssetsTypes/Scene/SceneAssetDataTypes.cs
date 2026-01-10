@@ -31,15 +31,7 @@ namespace Editor
     {
         public string Name { get; set; }
         public SerializedType Type { get; set; }
-
-        [JsonConverter(typeof(GFSDataProperty))]
         public object Data { get; set; }
-    }
-
-    internal class SerializedPropertyData 
-    {
-        public string TypeName { get; set; }
-        public object Value { get; set; }
     }
 
     internal enum SerializedType

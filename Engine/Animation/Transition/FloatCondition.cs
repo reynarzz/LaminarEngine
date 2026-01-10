@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,8 +16,8 @@ namespace Engine
 
     public class FloatCondition : TransitionCondition
     {
-        [SerializedField, HideFromInspector, JsonProperty] private FloatOp _op;
-        [SerializedField, HideFromInspector, JsonProperty] private float _compare;
+        [SerializedField] private FloatOp _op;
+        [SerializedField] private float _compare;
         public FloatCondition(string property, float compare, FloatOp op) : base(property)
         {
             _op = op;

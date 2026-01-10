@@ -16,6 +16,7 @@ namespace Editor
     {
         private static TimeLayer _time = new();
         private SceneLayer _editorSceneLayer;
+        private List<ActorDataSceneAsset> _actors;
 
         public EditorLayersManager(InputLayerBase inputLayer) :
             base([_time, inputLayer,
@@ -64,24 +65,23 @@ namespace Editor
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.S))
             {
                 Debug.Log("Save");
-                var actor = SceneSerializer.SerializeScene(SceneManager.Scenes[^1]);
+                _actors = SceneSerializer.SerializeScene(SceneManager.Scenes[^1]);
 
-                var settings = new JsonSerializerSettings();
-                settings.Converters.Add(new GFSObjectReferenceConverter());
+                //var settings = new JsonSerializerSettings();
+                //settings.Converters.Add(new GFSObjectReferenceConverter());
 
-                File.WriteAllText(TestfilePath, JsonConvert.SerializeObject(actor, Formatting.Indented, settings));
+                // File.WriteAllText(TestfilePath, JsonConvert.SerializeObject(_actors, Formatting.Indented, settings));
             }
 
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.R))
             {
                 Application.IsInPlayMode = false;
 
-                var file = File.ReadAllText(TestfilePath);
+                //var file = File.ReadAllText(TestfilePath);
+                //var settings = new JsonSerializerSettings();
+                //settings.Converters.Add(new GFSObjectReferenceConverter());
 
-                var settings = new JsonSerializerSettings();
-                settings.Converters.Add(new GFSObjectReferenceConverter());
-
-                var actors = JsonConvert.DeserializeObject<List<ActorDataSceneAsset>>(file, settings);
+                var actors = _actors;// JsonConvert.DeserializeObject<List<ActorDataSceneAsset>>(file, settings);
                 Debug.Log("Total actors in scene: " + actors.Count);
                 SceneManager.Initialize();
                 SceneManager.UnloadAll();

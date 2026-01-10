@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using Engine.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +9,14 @@ namespace Engine
 {
     public class AnimatorTransition
     {
-        [SerializedField, HideFromInspector, JsonProperty] public string ToState { get; }
-        [SerializedField, HideFromInspector, JsonProperty] public TransitionCondition[] Conditions { get; }
-        [SerializedField, HideFromInspector, JsonProperty] public float BlendTime { get; set; }
+        [SerializedField] public string ToState { get; set; }
+        [SerializedField] public TransitionCondition[] Conditions { get; set; }
+        [SerializedField] public float BlendTime { get; set; }
 
+        // Deserializer needs this.
+        private AnimatorTransition()
+        {
+        }
         public AnimatorTransition(AnimatorTransition copy)
         {
             ToState = copy.ToState;

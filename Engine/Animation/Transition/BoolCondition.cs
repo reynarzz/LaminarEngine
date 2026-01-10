@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +8,7 @@ namespace Engine
 {
     public class BoolCondition : TransitionCondition
     {
-        [SerializedField, HideFromInspector, JsonProperty] private bool _compare;
+        [SerializedField] private bool _compare;
         public BoolCondition(string property, bool compare) : base(property)
         {
             _compare = compare;

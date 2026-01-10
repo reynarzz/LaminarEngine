@@ -199,7 +199,7 @@ namespace Editor.Serialization
 
                 }
 
-                var collection = (IEnumerable)value;
+                var collection = (ICollection)value;
                 var elementsType = ReflectionUtils.GetCollectionElementsType(type);
 
                 if (collectionType == ReflectionUtils.CollectionType.Dictionary)
