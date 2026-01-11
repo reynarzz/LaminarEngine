@@ -42,7 +42,8 @@ namespace Editor
         }
         private JsonSerializerSettings _jsonSettings = new JsonSerializerSettings()
         {
-            TypeNameHandling = TypeNameHandling.Auto
+            TypeNameHandling = TypeNameHandling.Auto,
+            ContractResolver = new SerializedFieldContractResolver()
         };
 
         internal override void Update()

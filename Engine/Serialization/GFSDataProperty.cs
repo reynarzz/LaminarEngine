@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Engine.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -22,11 +23,10 @@ namespace Engine.Serialization
             }
 
             var type = value.GetType();
-            var typeId = $"{type.FullName}, {type.Assembly.GetName().Name}";
 
             var wrapper = new JObject()
             {
-                [_typeTag] = typeId,
+                [_typeTag] = ReflectionUtils.GetFullTypeName(type),
                 [_valueTag] = JToken.FromObject(value, serializer)
             };
 
