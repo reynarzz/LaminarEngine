@@ -16,28 +16,32 @@ namespace Engine
 
     public class FloatCondition : TransitionCondition
     {
-        [SerializedField] private FloatOp _op;
-        [SerializedField] private float _compare;
+        [SerializedField] public FloatOp Op { get; set; }
+        [SerializedField] public float Compare { get; set; }
+        // Deserializer needs this
+        private FloatCondition() : base(null)
+        {
+        }
         public FloatCondition(string property, float compare, FloatOp op) : base(property)
         {
-            _op = op;
-            _compare = compare;
+            Op = op;
+            Compare = compare;
         }
 
         public override bool IsCondition(AnimatorParameters parameters)
         {
             var aValue = parameters.GetFloat(Property);
 
-            switch (_op)
+            switch (Op)
             {
                 case FloatOp.LessThan:
-                    return aValue < _compare;
+                    return aValue < Compare;
                 case FloatOp.GreaterThan:
-                    return aValue > _compare;
+                    return aValue > Compare;
                 case FloatOp.LessThanOrEqual:
-                    return aValue <= _compare;
+                    return aValue <= Compare;
                 case FloatOp.GreaterThanOrEqual:
-                    return aValue >= _compare;
+                    return aValue >= Compare;
             }
 
             return false;

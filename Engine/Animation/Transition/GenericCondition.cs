@@ -9,6 +9,10 @@ namespace Engine
     public class GenericCondition : TransitionCondition
     {
         private readonly Func<AnimatorParameters, bool> _compare;
+        // Deserializer needs this
+        private GenericCondition() : base(null)
+        {
+        }
         public GenericCondition(Func<AnimatorParameters, bool> compare) : base(null)
         {
             _compare = compare;

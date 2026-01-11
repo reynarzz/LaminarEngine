@@ -42,14 +42,17 @@ namespace Editor
         JsonSerializerSettings _jsonSettings = new JsonSerializerSettings()
         {
             Converters =
-                    {
-                        new GFSObjectReferenceConverter(),
-                        new GFSDataProperty(),
-                        new StringEnumConverter<SerializedType>(),
-                        new StringEnumConverter<ReflectionUtils.CollectionType>()
-                    },
+            {
+                new GFSObjectReferenceConverter(),
+                new StringEnumConverter<SerializedType>(),
+                new StringEnumConverter<ReflectionUtils.CollectionType>(),
+                new StringEnumConverter<FloatOp>(),
+                new StringEnumConverter<IntOp>(),
+                new PolymorphicConverter<TransitionCondition>()
+            },
             NullValueHandling = NullValueHandling.Ignore,
-            DefaultValueHandling = DefaultValueHandling.Ignore
+            DefaultValueHandling = DefaultValueHandling.Ignore,
+            TypeNameHandling = TypeNameHandling.Auto
         };
 
         internal override void Update()
@@ -80,7 +83,7 @@ namespace Editor
             {
                 Debug.Log("Save");
                 _actors = SceneSerializer.SerializeScene(SceneManager.Scenes[^1]);
-              
+
                 File.WriteAllText(TestfilePath, JsonConvert.SerializeObject(_actors, Formatting.Indented, _jsonSettings));
             }
 

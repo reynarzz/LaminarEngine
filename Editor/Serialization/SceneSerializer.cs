@@ -72,7 +72,7 @@ namespace Editor.Serialization
             {
                 ID = component.GetID(),
                 IsEnabled = component.IsEnabled,
-                TypeName = component.GetType().FullName,
+                TypeName = GetTypeName(component.GetType()),
                 SerializedProperties = GetSerializedProperties(component)
             };
         }
@@ -89,10 +89,11 @@ namespace Editor.Serialization
                 var serializedType = GetSerializedType(memberType);
                 var valueType = value?.GetType() ?? memberType;
 
+
                 properties.Add(new SerializedPropertyData()
                 {
                     Name = member.Name,
-                    InternalType = valueType.FullName,
+                    InternalType = GetTypeName(valueType),
                     Assembly = valueType.Assembly.GetName().Name,
                     Type = serializedType,
                     Data = GetPropertyData(member, serializedType, value)
@@ -102,6 +103,10 @@ namespace Editor.Serialization
             return properties;
         }
 
+        private static string GetTypeName(Type type)
+        {
+            return $"{type.Namespace}.{type.Name}";
+        }
         public static SerializedType GetSerializedType(Type type)
         {
             if (type == null)
@@ -215,6 +220,7 @@ namespace Editor.Serialization
             {
                 return null;
             }
+            var nameTest = member.Name;
 
             if (serializedMemberType == SerializedType.Simple ||
                 serializedMemberType == SerializedType.SimpleClass ||
@@ -339,7 +345,7 @@ namespace Editor.Serialization
                 {
                     Name = currentType.Name,
                     Type = serializedType,
-                    InternalType = valueType.FullName,
+                    InternalType = GetTypeName(valueType),
                     Assembly = valueType.Assembly.GetName().Name,
                     Data = GetPropertyData(currentType, serializedType, value),
                 };
@@ -348,7 +354,7 @@ namespace Editor.Serialization
             var complexClass = new ComplexTypeData()
             {
                 ComplexType = GetSerializedType(complexType),
-                TargetTypeName = complexType.FullName,
+                TargetTypeName = GetTypeName(complexType),
                 Assembly = complexType.Assembly.GetName().Name,
                 Properties = new List<SerializedPropertyData>()
             };
