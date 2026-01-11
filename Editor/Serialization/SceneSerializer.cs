@@ -72,7 +72,7 @@ namespace Editor.Serialization
             {
                 ID = component.GetID(),
                 IsEnabled = component.IsEnabled,
-                TypeName = GetTypeName(component.GetType()),
+                TypeName = ReflectionUtils.GetFullTypeName(component.GetType()),
                 SerializedProperties = GetSerializedProperties(component)
             };
         }
@@ -93,8 +93,7 @@ namespace Editor.Serialization
                 properties.Add(new SerializedPropertyData()
                 {
                     Name = member.Name,
-                    InternalType = GetTypeName(valueType),
-                    Assembly = valueType.Assembly.GetName().Name,
+                    InternalType = ReflectionUtils.GetFullTypeName(valueType),
                     Type = serializedType,
                     Data = GetPropertyData(member, serializedType, value)
                 });
@@ -103,10 +102,7 @@ namespace Editor.Serialization
             return properties;
         }
 
-        private static string GetTypeName(Type type)
-        {
-            return $"{type.Namespace}.{type.Name}";
-        }
+        
         public static SerializedType GetSerializedType(Type type)
         {
             if (type == null)
@@ -345,8 +341,7 @@ namespace Editor.Serialization
                 {
                     Name = currentType.Name,
                     Type = serializedType,
-                    InternalType = GetTypeName(valueType),
-                    Assembly = valueType.Assembly.GetName().Name,
+                    InternalType = ReflectionUtils.GetFullTypeName(valueType),
                     Data = GetPropertyData(currentType, serializedType, value),
                 };
             }
@@ -354,8 +349,7 @@ namespace Editor.Serialization
             var complexClass = new ComplexTypeData()
             {
                 ComplexType = GetSerializedType(complexType),
-                TargetTypeName = GetTypeName(complexType),
-                Assembly = complexType.Assembly.GetName().Name,
+                TargetTypeName = ReflectionUtils.GetFullTypeName(complexType),
                 Properties = new List<SerializedPropertyData>()
             };
 

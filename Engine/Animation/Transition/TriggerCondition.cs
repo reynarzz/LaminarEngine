@@ -9,7 +9,7 @@ namespace Engine
     public class TriggerCondition : TransitionCondition
     {
         // Deserializer needs this
-        private TriggerCondition() : base(null)
+        public TriggerCondition() : base(null)
         {
         }
         public TriggerCondition(string property) : base(property) { }

@@ -6,6 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Engine.Utils
@@ -14,22 +15,6 @@ namespace Engine.Utils
     {
         private const BindingFlags _flags = BindingFlags.Instance | BindingFlags.Public
                                          | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
-        public static bool TryGetTypeFromName(string name, out Type type)
-        {
-            type = null;
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                type = assembly.GetType(name);
-
-                if (type != null)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
         public static object GetDefaultValue(Type type)
         {
             if (type.IsValueType)
@@ -206,6 +191,43 @@ namespace Engine.Utils
                     throw new NotSupportedException("Unsupported member type: " + member.GetType());
             }
         }
+
+        public static bool ResolveType(string name, out Type type)
+        {
+            type = Type.GetType(name);
+            if (type != null)
+            {
+                return true;
+            }
+
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                type = assembly.GetType(name, throwOnError: false);
+                if (type != null)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public static string GetFullTypeName(Type type)
+        {
+            if (type == null)
+                return string.Empty;
+
+            return StripAssemblyMetadata(type.AssemblyQualifiedName);
+        }
+
+        public static string StripAssemblyMetadata(string typeName)
+        {
+            if (string.IsNullOrEmpty(typeName))
+                return typeName;
+
+            return Regex.Replace(typeName, @",\s*Version=[^,\]]+|\s*,\s*Culture=[^,\]]+|\s*,\s*PublicKeyToken=[^,\]]+", string.Empty);
+        }
+
         public static object GetMemberValue(object obj, MemberInfo member)
         {
             if (obj == null)

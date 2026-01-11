@@ -39,7 +39,7 @@ namespace Engine.Serialization
                 {
                     var componentData = actorData.Components[j];
 
-                    if (ReflectionUtils.TryGetTypeFromName(componentData.TypeName, out var componentType))
+                    if (ReflectionUtils.ResolveType(componentData.TypeName, out var componentType))
                     {
                         var component = actor.AddComponent(componentType, componentData.ID, false);
                         component.IsEnabled = componentData.IsEnabled;
@@ -115,12 +115,16 @@ namespace Engine.Serialization
                 Debug.EngineError($"Deserialization error: property '{property.Name}' data is null.");
                 return;
             }
+            //if(Guid.TryParse((string)property.Data, out var guid))
             var guid = (Guid)property.Data;
-            var referenceValue = GetReferenceValue(serializableType, guid);
 
-            if (referenceValue != null)
             {
-                ReflectionUtils.SetMemberValue(target, property.Name, referenceValue);
+                var referenceValue = GetReferenceValue(serializableType, guid);
+
+                if (referenceValue != null)
+                {
+                    ReflectionUtils.SetMemberValue(target, property.Name, referenceValue);
+                }
             }
         }
 

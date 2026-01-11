@@ -10,8 +10,6 @@ namespace Editor.Serialization
 {
     sealed class PolymorphicConverter<TBase> : JsonConverter
     {
-        readonly Func<int, TBase> factory;
-
         public override bool CanConvert(Type objectType)
         {
             return typeof(TBase).IsAssignableFrom(objectType);
@@ -22,7 +20,7 @@ namespace Editor.Serialization
         {
             var jo = JObject.Load(reader);
             var typeName = jo["$type"].Value<string>();
-            object instance = null;// factory(type);
+            object instance = Activator.CreateInstance(Type.GetType(typeName));
             serializer.Populate(jo["$data"].CreateReader(), instance);
             return instance;
         }

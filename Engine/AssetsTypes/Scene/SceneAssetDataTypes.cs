@@ -1,4 +1,6 @@
-﻿using Engine.Utils;
+﻿using Engine.Serialization;
+using Engine.Utils;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +32,7 @@ namespace Engine
         public string Name { get; set; }
         public SerializedType Type { get; set; }
         public string InternalType { get; set; }
-        public string Assembly { get; set; }
+        [JsonConverter(typeof(GFSDataProperty))]
         public object Data { get; set; }
     }
 
@@ -63,7 +65,6 @@ namespace Engine
     internal class ComplexTypeData
     {
         public string TargetTypeName { get; set; }
-        public string Assembly { get; set; }
         public SerializedType ComplexType { get; set; }
         public List<SerializedPropertyData> Properties { get; set; }
     }

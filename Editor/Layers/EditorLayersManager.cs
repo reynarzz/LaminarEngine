@@ -6,6 +6,7 @@ using Engine.Serialization;
 using Engine.Utils;
 using Game;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,19 +40,8 @@ namespace Editor
 
 
         }
-        JsonSerializerSettings _jsonSettings = new JsonSerializerSettings()
+        private JsonSerializerSettings _jsonSettings = new JsonSerializerSettings()
         {
-            Converters =
-            {
-                new GFSObjectReferenceConverter(),
-                new StringEnumConverter<SerializedType>(),
-                new StringEnumConverter<ReflectionUtils.CollectionType>(),
-                new StringEnumConverter<FloatOp>(),
-                new StringEnumConverter<IntOp>(),
-                new PolymorphicConverter<TransitionCondition>()
-            },
-            NullValueHandling = NullValueHandling.Ignore,
-            DefaultValueHandling = DefaultValueHandling.Ignore,
             TypeNameHandling = TypeNameHandling.Auto
         };
 
