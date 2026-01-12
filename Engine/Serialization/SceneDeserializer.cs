@@ -63,11 +63,11 @@ namespace Engine.Serialization
             // Deserialize components data, and resolve references.
             foreach (var (id, componentValue) in _componentsByID)
             {
-                DeserializeTarget(componentValue.value, componentValue.data.SerializedProperties, 0);
+                DeserializeTarget(componentValue.value, componentValue.data.SerializedProperties);
             }
         }
 
-        private static void DeserializeTarget(object target, IReadOnlyList<SerializedPropertyData> properties, int index)
+        private static void DeserializeTarget(object target, IReadOnlyList<SerializedPropertyData> properties)
         {
             foreach (var property in properties)
             {
@@ -86,21 +86,21 @@ namespace Engine.Serialization
                     case SerializedType.AnimationAsset:
                     case SerializedType.AnimatorControllerAsset:
                     case SerializedType.ScriptableObject:
-                        DeserializeReferencedProperty(target, property, index);
+                        DeserializeReferencedProperty(target, property);
                         break;
                     case SerializedType.Simple:
                     case SerializedType.SimpleCollection:
                     case SerializedType.SimpleClass:
-                        DeserializeSimpleProperty(target, property, index);
+                        DeserializeSimpleProperty(target, property);
                         break;
                     case SerializedType.ReferenceCollection:
-                        DeserializeReferenceCollectionProperty(target, property, index);
+                        DeserializeReferenceCollectionProperty(target, property);
                         break;
                     case SerializedType.ComplexClass:
-                        DeserializeComplexClass(target, property, index);
+                        DeserializeComplexClass(target, property);
                         break;
                     case SerializedType.ComplexCollection:
-                        DeserializeComplexCollection(target, property, index);
+                        DeserializeComplexCollection(target, property);
                         break;
                     default:
                         Debug.Error($"Cannot deserialize property of type: {property.Type}, please implement it.");
@@ -109,7 +109,7 @@ namespace Engine.Serialization
             }
         }
 
-        private static void DeserializeReferencedProperty(object target, SerializedPropertyData property, int index)
+        private static void DeserializeReferencedProperty(object target, SerializedPropertyData property)
         {
             if (property.Data == null)
             {
@@ -124,22 +124,22 @@ namespace Engine.Serialization
 
                 if (referenceValue != null)
                 {
-                    ReflectionUtils.SetMemberValueSafe(target, referenceValue, property.Name, index);
+                    ReflectionUtils.SetMemberValue(target, referenceValue, property.Name);
                 }
             }
         }
 
-        private static void DeserializeSimpleProperty(object target, SerializedPropertyData property, int index)
+        private static void DeserializeSimpleProperty(object target, SerializedPropertyData property)
         {
             if (property.Data == null)
             {
                 return;
             }
 
-            ReflectionUtils.SetMemberValueSafe(target, property.Data, property.Name, index);
+            ReflectionUtils.SetMemberValue(target, property.Data, property.Name);
         }
 
-        private static void DeserializeReferenceCollectionProperty(object target, SerializedPropertyData property, int index)
+        private static void DeserializeReferenceCollectionProperty(object target, SerializedPropertyData property)
         {
             if (property.Data == null)
                 return;
@@ -199,7 +199,7 @@ namespace Engine.Serialization
                     dictionary.Add(serializedItem.Key, GetReferenceValue(serializedItem.Type, guid));
                 }
 
-                ReflectionUtils.SetMemberValueSafe(target, dictionary, property.Name, index);
+                ReflectionUtils.SetMemberValue(target, dictionary, property.Name);
 
             }
             else if (collectionData.CollectionType == ReflectionUtils.CollectionType.List)
@@ -233,19 +233,24 @@ namespace Engine.Serialization
 
             void SetValueToProperty(object collectionInstance, Action<object, int> setCollectionValueCallback)
             {
-                int index = 0;
+                int collIndex = 0;
                 foreach (var item in collectionData.Collection)
                 {
-                    setCollectionValueCallback(item, index);
-                    index++;
+                    setCollectionValueCallback(item, collIndex);
+                    collIndex++;
                 }
 
-                ReflectionUtils.SetMemberValueSafe(target, collectionInstance, property.Name, index);
+                ReflectionUtils.SetMemberValue(target, collectionInstance, property.Name);
             }
         }
 
         private static Guid GetGuidSafe(object guid)
         {
+            if(guid == null)
+            {
+                return Guid.Empty;
+            }
+
             if (guid?.GetType() == typeof(string))
             {
                 Guid.TryParse((string)guid, out var guidValue);
@@ -254,7 +259,8 @@ namespace Engine.Serialization
 
             return (Guid)guid;
         }
-        private static void DeserializeComplexClass(object target, SerializedPropertyData property, int index)
+
+        private static void DeserializeComplexClass(object target, SerializedPropertyData property)
         {
             if (target == null || property == null || property.Data == null)
                 return;
@@ -263,12 +269,12 @@ namespace Engine.Serialization
             if (ReflectionUtils.ResolveType(complexData.TargetTypeName, out Type type))
             {
                 var inst = Activator.CreateInstance(type);
-                DeserializeTarget(inst, complexData.Properties, 0);
-                ReflectionUtils.SetMemberValueSafe(target, inst, property.Name, index);
+                DeserializeTarget(inst, complexData.Properties);
+                ReflectionUtils.SetMemberValue(target, inst, property.Name);
             }
         }
 
-        private static void DeserializeComplexCollection(object target, SerializedPropertyData property, int index)
+        private static void DeserializeComplexCollection(object target, SerializedPropertyData property)
         {
 
             if (target == null || property == null || property.Data == null)
@@ -293,7 +299,7 @@ namespace Engine.Serialization
                 if (ReflectionUtils.ResolveType(property.InternalType, out Type type))
                 {
                     var collectionInstance = ReflectionUtils.GetDefaultValueInstance(type, collectionData.Collection.Count);
-
+                    collectionInstance = ReflectionUtils.EnsureCount(collectionInstance, collectionData.Collection.Count);
                     for (int i = 0; i < collectionData.Collection.Count; i++)
                     {
                         var complexItem = collectionData.Collection[i] as CollectionData<ComplexTypeData>;
@@ -302,28 +308,13 @@ namespace Engine.Serialization
                         {
                             var itemInstance = Activator.CreateInstance(itemType);
 
-                            DeserializeTarget(collectionInstance, complexItem.Value.Properties, i);
+                            DeserializeTarget(itemInstance, complexItem.Value.Properties);
+
+                            ReflectionUtils.SetMemberValueSafe(collectionInstance, itemInstance, default(MemberInfo), i);
                         }
                     }
 
-                    ReflectionUtils.SetMemberValueSafe(target, collectionInstance, property.Name, index);
-                }
-
-                // ReflectionUtils.SetMemberValueSafe(target, collectionInstance, property.Name, index);
-            }
-        }
-
-        private static void SetItemValueToCollection(object target, object value, int index)
-        {
-            if (target is IList list)
-            {
-                if (list.Count > index && index >= 0)
-                {
-                    list[index] = value;
-                }
-                else if (index < 0 || list.Count <= index)
-                {
-                    list.Add(value);
+                    ReflectionUtils.SetMemberValue(target, collectionInstance, property.Name);
                 }
             }
         }

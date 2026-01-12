@@ -26,7 +26,7 @@ namespace Engine.Utils
                 }
                 else
                 {
-                    return Activator.CreateInstance(type);
+                   return Activator.CreateInstance(type);
                 }
             }
             else
@@ -92,6 +92,39 @@ namespace Engine.Utils
             }
         }
 
+        public static object EnsureCount(object collection, int targetCount)
+        {
+            if (collection is Array array)
+            {
+                var elementType = array.GetType().GetElementType()!;
+                int oldCount = array.Length;
+
+                if (oldCount >= targetCount)
+                    return array;
+
+                var newArray = Array.CreateInstance(elementType, targetCount);
+                Array.Copy(array, newArray, oldCount);
+                return newArray;
+            }
+
+            if (collection is IList list)
+            {
+                var type = list.GetType();
+                var elementType = type.IsGenericType ? type.GetGenericArguments()[0] : throw new InvalidOperationException("Non-generic IList not supported");
+
+                object empty = elementType.IsValueType ? Activator.CreateInstance(elementType)! : null;
+
+                while (list.Count < targetCount)
+                {
+                    list.Add(empty);
+                }
+
+                return list;
+            }
+
+            return collection;
+        }
+
         public static IEnumerable<MemberInfo> GetAllMembersWithAttributes(Type type, Type[] attributeTypes, bool inherit = true,
                                                                           bool order = false, BindingFlags flags = _flags)
         {
@@ -129,7 +162,7 @@ namespace Engine.Utils
         }
 
 
-        public static void SetMemberValue(object target, string memberName, object value, BindingFlags flags = _flags)
+        public static void SetMemberValue(object target, object value, string memberName, BindingFlags flags = _flags)
         {
             if (target == null)
                 throw new ArgumentNullException(nameof(target));
@@ -231,7 +264,10 @@ namespace Engine.Utils
             {
                 if (member == null)
                 {
-                    list[index] = value;
+                    if (list.Count > index)
+                    {
+                        list[index] = value;
+                    }
                 }
                 else
                 {
