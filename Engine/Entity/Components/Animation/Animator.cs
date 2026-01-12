@@ -19,7 +19,6 @@ namespace Engine
         internal IDictionary<string, AnimationState> States => _states;
 
         private AnimationPlayer _animPlayer = new();
-        private AnimationState _currentState;
         private AnimationState _nextState;
 
         private float _transitionTime;
@@ -27,7 +26,7 @@ namespace Engine
         public event Action<Animator> OnUpdate;
 
         [ShowFieldNoSerialize]
-        public AnimationState CurrentState => _currentState;
+        public AnimationState CurrentState { get; private set; }
         [SerializedField] public AnimatorParameters Parameters { get; private set; } = new AnimatorParameters();
 
         internal float CurrentStateTime => _animPlayer.CurrentTime;
@@ -36,7 +35,7 @@ namespace Engine
         {
             _states[state.Name] = state;
 
-            if (_currentState == null)
+            if (CurrentState == null)
             {
                 SetState(state);
             }
@@ -46,7 +45,7 @@ namespace Engine
         {
             if (_states.TryGetValue(name, out var state))
             {
-                _currentState = state;
+                CurrentState = state;
                 _animPlayer.Play(state.Clip);
             }
         }
@@ -64,7 +63,7 @@ namespace Engine
                 AddState(state);
             }
 
-            _currentState = state;
+            CurrentState = state;
             _animPlayer.Play(state.Clip);
         }
 
@@ -75,12 +74,12 @@ namespace Engine
 
         private void UpdateFrames()
         {
-            if (_currentState == null)
+            if (CurrentState == null)
             {
                 return;
             }
 
-            var transition = _currentState.CheckTransitions(Parameters);
+            var transition = CurrentState.CheckTransitions(Parameters);
             if (transition != null && _nextState == null)
             {
                 if (_states.TryGetValue(transition.ToState, out _nextState))
@@ -96,11 +95,11 @@ namespace Engine
 
                 if (_transitionTime >= _transitionDuration)
                 {
-                    _currentState = _nextState;
+                    CurrentState = _nextState;
                     _nextState = null;
                     _transitionDuration = 0;
                     _transitionTime = 0;
-                    _animPlayer.Play(_currentState.Clip);
+                    _animPlayer.Play(CurrentState.Clip);
                 }
             }
 
@@ -158,7 +157,7 @@ namespace Engine
         public void Clear()
         {
             _states.Clear();
-            _currentState = null;
+            CurrentState = null;
             _nextState = null;
             _transitionTime = 0;
             _transitionDuration = 0;

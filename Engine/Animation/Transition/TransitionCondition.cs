@@ -10,6 +10,9 @@ namespace Engine
     {
         [SerializedField] internal string Property { get; set; }
 
+        protected TransitionCondition()
+        {
+        }
         protected TransitionCondition(string property)
         {
             Property = property;

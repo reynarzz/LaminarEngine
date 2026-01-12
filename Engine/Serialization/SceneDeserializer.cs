@@ -113,7 +113,7 @@ namespace Engine.Serialization
         {
             if (property.Data == null)
             {
-                Debug.EngineError($"Deserialization error: property '{property.Name}' data is null.");
+                // Debug.Warn($"Deserialization error: property '{property.Name}' data is null.");
                 return;
             }
             //if(Guid.TryParse((string)property.Data, out var guid))
@@ -187,7 +187,7 @@ namespace Engine.Serialization
                 foreach (var item in collectionData.Collection)
                 {
                     var serializedItem = (DictionaryData<object, object>)item;
-                    var guid = serializedItem.Value != null ? GetGuidSafe(serializedItem.Value) : Guid.Empty;
+                    var guid = GetGuidSafe(serializedItem.Value);
                     if ((serializedItem.keyType == SerializedType.Simple ||
                         serializedItem.keyType == SerializedType.SimpleClass ||
                         serializedItem.keyType == SerializedType.SimpleCollection) && serializedItem.Key != null
@@ -246,12 +246,12 @@ namespace Engine.Serialization
 
         private static Guid GetGuidSafe(object guid)
         {
-            if(guid == null)
+            if (guid == null)
             {
                 return Guid.Empty;
             }
 
-            if (guid?.GetType() == typeof(string))
+            if (guid.GetType() == typeof(string))
             {
                 Guid.TryParse((string)guid, out var guidValue);
                 return guidValue;
@@ -288,30 +288,75 @@ namespace Engine.Serialization
                 return;
             }
 
-            var complexCollecton = property.Data as DictionaryData<ComplexTypeData, ComplexTypeData>;
-
-            if (collectionData.CollectionType == ReflectionUtils.CollectionType.Dictionary)
+            void DeserializeItem(ComplexTypeData complexItem, Action<object> setValueCallback)
             {
-
-            }
-            else
-            {
-                if (ReflectionUtils.ResolveType(property.InternalType, out Type type))
+                if (complexItem == null)
                 {
-                    var collectionInstance = ReflectionUtils.GetDefaultValueInstance(type, collectionData.Collection.Count);
+                    setValueCallback(null);
+                    return;
+                }
+                if (ReflectionUtils.ResolveType(complexItem.TargetTypeName, out Type itemType))
+                {
+                    var itemInstance = ReflectionUtils.GetDefaultValueInstance(itemType);
+                    DeserializeTarget(itemInstance, complexItem.Properties);
+                    setValueCallback(itemInstance);
+                }
+            }
+
+            if (ReflectionUtils.ResolveType(property.InternalType, out Type type))
+            {
+                var collectionInstance = ReflectionUtils.GetDefaultValueInstance(type, collectionData.Collection.Count);
+
+                if (collectionData.CollectionType == ReflectionUtils.CollectionType.Dictionary)
+                {
+                    var dictionary = collectionInstance as IDictionary;
+                    for (int i = 0; i < collectionData.Collection.Count; i++)
+                    {
+                        object DeserializeArgValue(ComplexTypeData complexArg)
+                        {
+                            object deserializedArgValue = null;
+
+                            if (complexArg.ComplexType == SerializedType.Simple ||
+                                complexArg.ComplexType == SerializedType.SimpleClass ||
+                                complexArg.ComplexType == SerializedType.SimpleCollection)
+                            {
+                                deserializedArgValue = complexArg.Properties?[0].Data ?? null;
+                            }
+                            else
+                            {
+                                DeserializeItem(complexArg, item =>
+                                {
+                                    deserializedArgValue = item;
+                                });
+                            }
+
+                            return deserializedArgValue;
+                        }
+
+                        var complexItem = collectionData.Collection[i] as ComplexDictionaryData<ComplexTypeData, ComplexTypeData>;
+
+                        var key = DeserializeArgValue(complexItem.Key);
+                        var value = DeserializeArgValue(complexItem.Value);
+
+                        if (key != null && !dictionary.Contains(key))
+                        {
+                            dictionary.Add(key, value);
+                        }
+                    }
+
+                    ReflectionUtils.SetMemberValue(target, dictionary, property.Name);
+                }
+                else
+                {
                     collectionInstance = ReflectionUtils.EnsureCount(collectionInstance, collectionData.Collection.Count);
                     for (int i = 0; i < collectionData.Collection.Count; i++)
                     {
                         var complexItem = collectionData.Collection[i] as CollectionData<ComplexTypeData>;
 
-                        if (ReflectionUtils.ResolveType(complexItem.Value.TargetTypeName, out Type itemType))
+                        DeserializeItem(complexItem.Value, item =>
                         {
-                            var itemInstance = Activator.CreateInstance(itemType);
-
-                            DeserializeTarget(itemInstance, complexItem.Value.Properties);
-
-                            ReflectionUtils.SetMemberValueSafe(collectionInstance, itemInstance, default(MemberInfo), i);
-                        }
+                            ReflectionUtils.SetMemberValueSafe(collectionInstance, item, default(MemberInfo), i);
+                        });
                     }
 
                     ReflectionUtils.SetMemberValue(target, collectionInstance, property.Name);

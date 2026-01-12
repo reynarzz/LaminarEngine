@@ -70,19 +70,20 @@ namespace Editor
 
                 foreach (var transition in transitions)
                 {
-                    var toNode = nodes[transition.ToState];
-
-                    var link = new Link()
+                    if (nodes.TryGetValue(transition.ToState, out var toNode))
                     {
-                        Id = NewId(),
-                        FromAttribute = node.OutputAttrib,
-                        ToAttribute = toNode.InputAttrib,
-                        Color = Color.RandomRGB().ToARGB_U32()
-                    };
-                    var color = link.Color;
-                    // color.R = 1;
-                    link.Color = color;
-                    _links.Add(link);
+                        var link = new Link()
+                        {
+                            Id = NewId(),
+                            FromAttribute = node.OutputAttrib,
+                            ToAttribute = toNode.InputAttrib,
+                            Color = Color.RandomRGB().ToARGB_U32()
+                        };
+                        var color = link.Color;
+                        // color.R = 1;
+                        link.Color = color;
+                        _links.Add(link);
+                    }
                 }
             }
         }

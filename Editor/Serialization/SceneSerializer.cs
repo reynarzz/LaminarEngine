@@ -102,7 +102,7 @@ namespace Editor.Serialization
             return properties;
         }
 
-        
+
         public static SerializedType GetSerializedType(Type type)
         {
             if (type == null)
@@ -258,6 +258,8 @@ namespace Editor.Serialization
                         var v = isValueEObject ? (dValue as IObject)?.GetID() ?? Guid.Empty : dValue;
                         var referenceType = isKeyEObject ? dKey?.GetType() : dValue?.GetType();
                         var serializedType = GetSerializedType(referenceType);
+                        var keySerializedType = dKey != null ? GetSerializedType(dKey?.GetType()) : GetSerializedType(elementsType[0]);
+                        var ValueSerializedType = dValue != null ? GetSerializedType(dValue?.GetType()) : GetSerializedType(elementsType[1]);
 
                         if (serializedMemberType == SerializedType.ReferenceCollection)
                         {
@@ -266,19 +268,50 @@ namespace Editor.Serialization
                                 Type = serializedType,
                                 Key = k,
                                 Value = v,
-                                keyType = dKey != null ? GetSerializedType(dKey?.GetType()) : GetSerializedType(elementsType[0]),
-                                ValueType = dValue != null ? GetSerializedType(dValue?.GetType()) : GetSerializedType(elementsType[1])
+                                keyType = keySerializedType,
+                                ValueType = ValueSerializedType
                             });
                         }
                         else
                         {
-                            var complexKey = CreateComplexType(k?.GetType(), k, serializedMemberType);
-                            var complexValue = CreateComplexType(v?.GetType(), v, serializedMemberType);
+                            ComplexTypeData GetComplexTypeData(SerializedType argSerializedType, object argValue, string argName)
+                            {
+                                ComplexTypeData complexKey = null;
+
+                                if (argSerializedType == SerializedType.Simple ||
+                                    argSerializedType == SerializedType.SimpleClass ||
+                                     argSerializedType == SerializedType.SimpleCollection)
+                                {
+                                    var internalType = ReflectionUtils.GetFullTypeName(argValue?.GetType());
+                                    complexKey = new ComplexTypeData()
+                                    {
+                                        ComplexType = argSerializedType,
+                                        TargetTypeName = internalType,
+                                        Properties = new List<SerializedPropertyData>()
+                                        {
+                                            new SerializedPropertyData()
+                                            {
+                                               Data = argValue,
+                                               InternalType =internalType,
+                                               Type = argSerializedType,
+                                               Name = argName
+                                            }
+                                        }
+                                    };
+                                }
+                                else
+                                {
+                                    complexKey = CreateComplexType(argValue?.GetType(), argValue, serializedMemberType);
+                                }
+
+                                return complexKey;
+                            }
+
                             referenced.Collection.Add(new ComplexDictionaryData<ComplexTypeData, ComplexTypeData>()
                             {
                                 Type = serializedType,
-                                Key = complexKey,
-                                Value = complexValue,
+                                Key = GetComplexTypeData(keySerializedType, k, "DictionaryKey"),
+                                Value = GetComplexTypeData(ValueSerializedType, v, "DictionaryValue"),
                             });
                         }
                     }
