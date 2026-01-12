@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Engine.Utils;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -10,40 +11,50 @@ namespace Editor.Serialization
 {
     sealed class PolymorphicConverter<TBase> : JsonConverter
     {
+        private JsonSerializer _innerSerializer;
+
         public override bool CanConvert(Type objectType)
         {
             return typeof(TBase).IsAssignableFrom(objectType);
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType,
-                                        object existingValue, JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            var jo = JObject.Load(reader);
-            var typeName = jo["$type"].Value<string>();
-            object instance = Activator.CreateInstance(Type.GetType(typeName));
-            serializer.Populate(jo["$data"].CreateReader(), instance);
+            var jObj = JObject.Load(reader);
+            var typeName = jObj["$type"].Value<string>();
+            object instance = null;
+            if (ReflectionUtils.ResolveType(typeName, out var type))
+            {
+                instance = Activator.CreateInstance(type);
+                serializer.Populate(jObj["$data"].CreateReader(), instance);
+            }
             return instance;
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            // Clone serializer WITHOUT this converter
-            var innerSerializer = new JsonSerializer();
-            foreach (var c in serializer.Converters)
+            // Clone serializer without this converter
+            if (_innerSerializer == null)
             {
-                if (c != this)
-                    innerSerializer.Converters.Add(c);
+                _innerSerializer = new JsonSerializer();
+                foreach (var converter in serializer.Converters)
+                {
+                    if (converter != this)
+                    {
+                        _innerSerializer.Converters.Add(converter);
+                    }
+                }
             }
 
-            var data = JObject.FromObject(value, innerSerializer);
+            var data = JObject.FromObject(value, _innerSerializer);
 
-            var jo = new JObject
+            var jObj = new JObject
             {
                 ["$type"] = $"{value?.GetType().FullName}, {value?.GetType().Assembly.GetName().Name}",
                 ["$data"] = data
             };
 
-            jo.WriteTo(writer);
+            jObj.WriteTo(writer);
         }
     }
 }

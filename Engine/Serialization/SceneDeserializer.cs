@@ -86,7 +86,7 @@ namespace Engine.Serialization
                     case SerializedType.AnimationAsset:
                     case SerializedType.AnimatorControllerAsset:
                     case SerializedType.ScriptableObject:
-                        DeserializeReferencedProperty(property.Type, target, property);
+                        DeserializeReferencedProperty(target, property);
                         break;
                     case SerializedType.Simple:
                     case SerializedType.SimpleCollection:
@@ -98,8 +98,9 @@ namespace Engine.Serialization
                     case SerializedType.ReferenceCollection:
                         DeserializeReferenceCollectionProperty(target, property);
                         break;
-                    //case SerializedType.ComplexClass:
-                    //    break;
+                    case SerializedType.ComplexClass:
+                        DeserializeComplexClass(target, property);
+                        break;
                     default:
                         Debug.Error($"Cannot deserialize property of type: {property.Type}, please implement it.");
                         break;
@@ -107,8 +108,7 @@ namespace Engine.Serialization
             }
         }
 
-        private static void DeserializeReferencedProperty(SerializedType serializableType, object target,
-                                                          SerializedPropertyData property)
+        private static void DeserializeReferencedProperty(object target, SerializedPropertyData property)
         {
             if (property.Data == null)
             {
@@ -116,10 +116,10 @@ namespace Engine.Serialization
                 return;
             }
             //if(Guid.TryParse((string)property.Data, out var guid))
-            var guid = (Guid)property.Data;
+            var guid = GetGuidSafe(property.Data);
 
             {
-                var referenceValue = GetReferenceValue(serializableType, guid);
+                var referenceValue = GetReferenceValue(property.Type, guid);
 
                 if (referenceValue != null)
                 {
@@ -157,9 +157,17 @@ namespace Engine.Serialization
                     var dictionary = (IDictionary)Activator.CreateInstance(dictType);
                     foreach (var item in collectionData.Collection)
                     {
-                        var serializedItem = (SerializedItem<KeyValuePair<object, object>>)item;
-                        var guid = serializedItem.Data.Value != null? (Guid)serializedItem.Data.Value: Guid.Empty;
-                        dictionary.Add(serializedItem.Data.Key, GetReferenceValue(serializedItem.Type, guid));
+                        var serializedItem = (DictionaryData<object, object>)item;
+                        var guid = serializedItem.Value != null ? GetGuidSafe(serializedItem.Value) : Guid.Empty;
+                        if ((serializedItem.keyType == SerializedType.Simple ||
+                            serializedItem.keyType == SerializedType.SimpleClass ||
+                            serializedItem.keyType == SerializedType.SimpleCollection) && serializedItem.Key != null
+                            && serializedItem.Key.GetType() != args[0].GetType())
+                        {
+                            serializedItem.Key = Convert.ChangeType(serializedItem.Key, args[0]);
+                        }
+
+                        dictionary.Add(serializedItem.Key, GetReferenceValue(serializedItem.Type, guid));
                     }
 
                     ReflectionUtils.SetMemberValue(target, property.Name, dictionary);
@@ -186,12 +194,12 @@ namespace Engine.Serialization
 
             object GetItemReferenceValue(object item)
             {
-                var referenceElement = item as SerializedItem<Guid>;
+                var referenceElement = item as CollectionData<Guid>;
 
                 if (referenceElement == null)
                     return null;
 
-                return GetReferenceValue(referenceElement.Type, referenceElement.Data);
+                return GetReferenceValue(referenceElement.Type, referenceElement.Value);
             }
 
             void SetValueToProperty(object collectionInstance, Action<object, int> setCollectionValueCallback)
@@ -207,9 +215,35 @@ namespace Engine.Serialization
             }
         }
 
+        private static Guid GetGuidSafe(object guid)
+        {
+            if (guid?.GetType() == typeof(string))
+            {
+                Guid.TryParse((string)guid, out var guidValue);
+                return guidValue;
+            }
+
+            return (Guid)guid;
+        }
+        private static void DeserializeComplexClass(object target, SerializedPropertyData property)
+        {
+            if (target == null || property == null || property.Data == null)
+                return;
+
+            var complexData = property.Data as ComplexTypeData;
+            if (ReflectionUtils.ResolveType(complexData.TargetTypeName, out Type type))
+            {
+                var inst = Activator.CreateInstance(type);
+
+                DeserializeTarget(inst, complexData.Properties);
+                ReflectionUtils.SetMemberValue(target, property.Name, inst);
+
+            }
+        }
+
         private static object GetReferenceValue(SerializedType type, Guid guid)
         {
-            if(type == SerializedType.None || guid == Guid.Empty) 
+            if (type == SerializedType.None || guid == Guid.Empty)
                 return null;
 
             switch (type)

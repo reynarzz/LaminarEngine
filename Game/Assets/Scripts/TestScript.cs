@@ -45,6 +45,13 @@ namespace Game
             [SerializedField] public mat2 mat2Test { get; set; }
             [SerializedField] public mat3 mat3Test { get; set; }
             [SerializedField] public mat4 mat4Test { get; set; }
+            [SerializedField] public Actor Actor { get; set; }
+            [SerializedField] public Component Component { get; set; }
+            [SerializedField] public TestClassSub TestClassSub { get; set; }
+            [SerializedField] public List<Component> _TestComponentList { get; set; }
+            [SerializedField] public List<Actor> _TestActorList { get; set; }
+
+
         }
 
         public struct AStruct
@@ -69,6 +76,11 @@ namespace Game
             [SerializedField]
             private Dictionary<int, AssetResourceBase> _InStructassetDictionary =
                new Dictionary<int, AssetResourceBase> { { 11, null }, { 71, sp } };
+
+
+            //[SerializedField]
+            //private Dictionary<string, AssetResourceBase> _InStructassetDictionary =
+            //   new Dictionary<string, AssetResourceBase> { { "asd", null }, { "adkaj", sp } };
 
 
 

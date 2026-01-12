@@ -46,6 +46,7 @@ namespace Engine
     {
         public SerializedType keyType { get; set; }
         public SerializedType ValueType { get; set; }
+
         public K Key { get; set; }
         public V Value { get; set; }
     }

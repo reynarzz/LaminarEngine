@@ -43,6 +43,10 @@ namespace Editor
         private JsonSerializerSettings _jsonSettings = new JsonSerializerSettings()
         {
             TypeNameHandling = TypeNameHandling.Auto,
+            Converters = 
+            {
+                new StringEnumConverter(),
+            },
             ContractResolver = new SerializedFieldContractResolver()
         };
 
