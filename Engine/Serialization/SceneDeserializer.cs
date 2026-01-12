@@ -63,11 +63,11 @@ namespace Engine.Serialization
             // Deserialize components data, and resolve references.
             foreach (var (id, componentValue) in _componentsByID)
             {
-                DeserializeTarget(componentValue.value, componentValue.data.SerializedProperties);
+                DeserializeTarget(componentValue.value, componentValue.data.SerializedProperties, 0);
             }
         }
 
-        private static void DeserializeTarget(object target, IReadOnlyList<SerializedPropertyData> properties)
+        private static void DeserializeTarget(object target, IReadOnlyList<SerializedPropertyData> properties, int index)
         {
             foreach (var property in properties)
             {
@@ -86,20 +86,21 @@ namespace Engine.Serialization
                     case SerializedType.AnimationAsset:
                     case SerializedType.AnimatorControllerAsset:
                     case SerializedType.ScriptableObject:
-                        DeserializeReferencedProperty(target, property);
+                        DeserializeReferencedProperty(target, property, index);
                         break;
                     case SerializedType.Simple:
                     case SerializedType.SimpleCollection:
                     case SerializedType.SimpleClass:
-                        DeserializeSimpleProperty(target, property);
+                        DeserializeSimpleProperty(target, property, index);
                         break;
-                    //case SerializedType.ComplexCollection:
-                    //    break;
                     case SerializedType.ReferenceCollection:
-                        DeserializeReferenceCollectionProperty(target, property);
+                        DeserializeReferenceCollectionProperty(target, property, index);
                         break;
                     case SerializedType.ComplexClass:
-                        DeserializeComplexClass(target, property);
+                        DeserializeComplexClass(target, property, index);
+                        break;
+                    case SerializedType.ComplexCollection:
+                        DeserializeComplexCollection(target, property, index);
                         break;
                     default:
                         Debug.Error($"Cannot deserialize property of type: {property.Type}, please implement it.");
@@ -108,7 +109,7 @@ namespace Engine.Serialization
             }
         }
 
-        private static void DeserializeReferencedProperty(object target, SerializedPropertyData property)
+        private static void DeserializeReferencedProperty(object target, SerializedPropertyData property, int index)
         {
             if (property.Data == null)
             {
@@ -123,73 +124,101 @@ namespace Engine.Serialization
 
                 if (referenceValue != null)
                 {
-                    ReflectionUtils.SetMemberValue(target, property.Name, referenceValue);
+                    ReflectionUtils.SetMemberValueSafe(target, referenceValue, property.Name, index);
                 }
             }
         }
 
-        private static void DeserializeSimpleProperty(object target, SerializedPropertyData property)
+        private static void DeserializeSimpleProperty(object target, SerializedPropertyData property, int index)
         {
             if (property.Data == null)
             {
                 return;
             }
 
-            ReflectionUtils.SetMemberValue(target, property.Name, property.Data);
+            ReflectionUtils.SetMemberValueSafe(target, property.Data, property.Name, index);
         }
 
-        private static void DeserializeReferenceCollectionProperty(object target, SerializedPropertyData property)
+        private static void DeserializeReferenceCollectionProperty(object target, SerializedPropertyData property, int index)
         {
-            var collectionData = property.Data as CollectionPropertyData;
-
-            if (collectionData == null || collectionData.Collection == null)
+            if (property.Data == null)
                 return;
 
-            var collectionPropertyType = ReflectionUtils.GetMemberType(target.GetType(), property.Name);
+            Type collectionPropertyType = null;
+            CollectionPropertyData collectionData = null;
 
-            if (ReflectionUtils.IsCollection(collectionPropertyType, out var collectionType))
+            if (ReflectionUtils.IsCollection(target?.GetType(), out var colType))
             {
-                if (collectionType == ReflectionUtils.CollectionType.Dictionary)
+                // Note: Nested collections
+                if (colType == ReflectionUtils.CollectionType.Dictionary)
                 {
-                    var args = collectionPropertyType.GetGenericArguments();
-                    var dictType = typeof(Dictionary<,>).MakeGenericType(args[0], args[1]);
+                    // NOTE: This assumes that the reference is in the value side, so keys that are references will not be supported.
+                    collectionPropertyType = ReflectionUtils.GetMemberType(target.GetType().GetGenericArguments()[1], property.Name);
+                }
+                else if (colType == ReflectionUtils.CollectionType.Array)
+                {
+                    collectionPropertyType = ReflectionUtils.GetMemberType(target.GetType().GetElementType(), property.Name);
+                }
+                else
+                {
+                    collectionPropertyType = ReflectionUtils.GetMemberType(target.GetType().GetGenericArguments()[0], property.Name);
+                }
 
-                    var dictionary = (IDictionary)Activator.CreateInstance(dictType);
-                    foreach (var item in collectionData.Collection)
+                // throw new Exception("Implement: Get value of collectionData.Collection");
+                collectionData = property.Data as CollectionPropertyData;
+            }
+            else
+            {
+                collectionPropertyType = ReflectionUtils.GetMemberType(target.GetType(), property.Name);
+                collectionData = property.Data as CollectionPropertyData;
+            }
+
+            if (collectionData == null || collectionData.Collection == null)
+            {
+                return;
+            }
+
+            if (collectionData.CollectionType == ReflectionUtils.CollectionType.Dictionary)
+            {
+                var args = collectionPropertyType.GetGenericArguments();
+                var dictType = typeof(Dictionary<,>).MakeGenericType(args[0], args[1]);
+
+                var dictionary = (IDictionary)Activator.CreateInstance(dictType);
+                foreach (var item in collectionData.Collection)
+                {
+                    var serializedItem = (DictionaryData<object, object>)item;
+                    var guid = serializedItem.Value != null ? GetGuidSafe(serializedItem.Value) : Guid.Empty;
+                    if ((serializedItem.keyType == SerializedType.Simple ||
+                        serializedItem.keyType == SerializedType.SimpleClass ||
+                        serializedItem.keyType == SerializedType.SimpleCollection) && serializedItem.Key != null
+                        && serializedItem.Key.GetType() != args[0].GetType())
                     {
-                        var serializedItem = (DictionaryData<object, object>)item;
-                        var guid = serializedItem.Value != null ? GetGuidSafe(serializedItem.Value) : Guid.Empty;
-                        if ((serializedItem.keyType == SerializedType.Simple ||
-                            serializedItem.keyType == SerializedType.SimpleClass ||
-                            serializedItem.keyType == SerializedType.SimpleCollection) && serializedItem.Key != null
-                            && serializedItem.Key.GetType() != args[0].GetType())
-                        {
-                            serializedItem.Key = Convert.ChangeType(serializedItem.Key, args[0]);
-                        }
-
-                        dictionary.Add(serializedItem.Key, GetReferenceValue(serializedItem.Type, guid));
+                        serializedItem.Key = Convert.ChangeType(serializedItem.Key, args[0]);
                     }
 
-                    ReflectionUtils.SetMemberValue(target, property.Name, dictionary);
+                    dictionary.Add(serializedItem.Key, GetReferenceValue(serializedItem.Type, guid));
                 }
-                else if (collectionType == ReflectionUtils.CollectionType.List)
-                {
-                    var list = (IList)ReflectionUtils.GetDefaultValue(collectionPropertyType);
 
-                    SetValueToProperty(list, (item, _) =>
-                    {
-                        list.Add(GetItemReferenceValue(item));
-                    });
-                }
-                else if (collectionType == ReflectionUtils.CollectionType.Array)
-                {
-                    var array = Array.CreateInstance(collectionPropertyType.GetElementType(), collectionData.Collection.Count);
+                ReflectionUtils.SetMemberValueSafe(target, dictionary, property.Name, index);
 
-                    SetValueToProperty(array, (item, index) =>
-                    {
-                        array.SetValue(GetItemReferenceValue(item), index);
-                    });
-                }
+            }
+            else if (collectionData.CollectionType == ReflectionUtils.CollectionType.List)
+            {
+                var list = (IList)ReflectionUtils.GetDefaultValueInstance(collectionPropertyType);
+
+                SetValueToProperty(list, (item, _) =>
+                {
+                    list.Add(GetItemReferenceValue(item));
+                });
+            }
+            else if (collectionData.CollectionType == ReflectionUtils.CollectionType.Array)
+            {
+                var array = Array.CreateInstance(collectionPropertyType.GetElementType(), collectionData.Collection.Count);
+
+                SetValueToProperty(array, (item, index) =>
+                {
+                    array.SetValue(GetItemReferenceValue(item), index);
+                });
             }
 
             object GetItemReferenceValue(object item)
@@ -211,7 +240,7 @@ namespace Engine.Serialization
                     index++;
                 }
 
-                ReflectionUtils.SetMemberValue(target, property.Name, collectionInstance);
+                ReflectionUtils.SetMemberValueSafe(target, collectionInstance, property.Name, index);
             }
         }
 
@@ -225,7 +254,7 @@ namespace Engine.Serialization
 
             return (Guid)guid;
         }
-        private static void DeserializeComplexClass(object target, SerializedPropertyData property)
+        private static void DeserializeComplexClass(object target, SerializedPropertyData property, int index)
         {
             if (target == null || property == null || property.Data == null)
                 return;
@@ -234,10 +263,68 @@ namespace Engine.Serialization
             if (ReflectionUtils.ResolveType(complexData.TargetTypeName, out Type type))
             {
                 var inst = Activator.CreateInstance(type);
+                DeserializeTarget(inst, complexData.Properties, 0);
+                ReflectionUtils.SetMemberValueSafe(target, inst, property.Name, index);
+            }
+        }
 
-                DeserializeTarget(inst, complexData.Properties);
-                ReflectionUtils.SetMemberValue(target, property.Name, inst);
+        private static void DeserializeComplexCollection(object target, SerializedPropertyData property, int index)
+        {
 
+            if (target == null || property == null || property.Data == null)
+                return;
+
+            var collectionData = property.Data as CollectionPropertyData;
+
+            if (collectionData == null)
+            {
+                Debug.EngineError("FATAL: Not a collection to deserialize!");
+                return;
+            }
+
+            var complexCollecton = property.Data as DictionaryData<ComplexTypeData, ComplexTypeData>;
+
+            if (collectionData.CollectionType == ReflectionUtils.CollectionType.Dictionary)
+            {
+
+            }
+            else
+            {
+                if (ReflectionUtils.ResolveType(property.InternalType, out Type type))
+                {
+                    var collectionInstance = ReflectionUtils.GetDefaultValueInstance(type, collectionData.Collection.Count);
+
+                    for (int i = 0; i < collectionData.Collection.Count; i++)
+                    {
+                        var complexItem = collectionData.Collection[i] as CollectionData<ComplexTypeData>;
+
+                        if (ReflectionUtils.ResolveType(complexItem.Value.TargetTypeName, out Type itemType))
+                        {
+                            var itemInstance = Activator.CreateInstance(itemType);
+
+                            DeserializeTarget(collectionInstance, complexItem.Value.Properties, i);
+                        }
+                    }
+
+                    ReflectionUtils.SetMemberValueSafe(target, collectionInstance, property.Name, index);
+                }
+
+                // ReflectionUtils.SetMemberValueSafe(target, collectionInstance, property.Name, index);
+            }
+        }
+
+        private static void SetItemValueToCollection(object target, object value, int index)
+        {
+            if (target is IList list)
+            {
+                if (list.Count > index && index >= 0)
+                {
+                    list[index] = value;
+                }
+                else if (index < 0 || list.Count <= index)
+                {
+                    list.Add(value);
+                }
             }
         }
 

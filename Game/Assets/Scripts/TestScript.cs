@@ -70,12 +70,12 @@ namespace Game
             //[ExposeEditorField] public mat4 mat4Test { get; set; }
             private static Sprite sp = new Sprite("Sprite in dictionary", 0, Texture2D.White);
             [SerializedField]
-            private Dictionary<int, EObject> _InStructeObjectDictionary =
-                new Dictionary<int, EObject> { { 2, null }, { 346, null } };
+            private Dictionary<int, EObject> _InStructeObjectDictionary;
+                // = new Dictionary<int, EObject> { { 2, null }, { 346, null } };
 
             [SerializedField]
-            private Dictionary<int, AssetResourceBase> _InStructassetDictionary =
-               new Dictionary<int, AssetResourceBase> { { 11, null }, { 71, sp } };
+            private Dictionary<int, AssetResourceBase> _InStructassetDictionary;
+                //= new Dictionary<int, AssetResourceBase> { { 11, null }, { 71, sp } };
 
 
             //[SerializedField]

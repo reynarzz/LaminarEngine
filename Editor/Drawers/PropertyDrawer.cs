@@ -28,24 +28,7 @@ namespace Editor
         private static object _selectedValue;
         private static Func<object, bool> _selectedSetter;
 
-        private static void SetMemberValueSafe<T>(object target, T value, MemberInfo prop, int index, Func<T, object> valueConverter = null)
-        {
-            if (target is IList list)
-            {
-                list[index] = value;
-            }
-            else
-            {
-                if (valueConverter == null)
-                {
-                    ReflectionUtils.SetMemberValue(target, prop, value);
-                }
-                else
-                {
-                    ReflectionUtils.SetMemberValue(target, prop, valueConverter.Invoke(value));
-                }
-            }
-        }
+       
         private static void DrawSimpleProperty<T>(string propertyName, object target, object value, bool isReadOnly,
                                                   MemberInfo prop, int index, float width, DrawSimpleFieldDelegate<T> drawField,
                                                   bool sameLine = true, Func<T, object> valueConverter = null)
@@ -60,7 +43,7 @@ namespace Editor
             var v = (T)value;
             if (drawField(propertyName, ref v, width, false))
             {
-                SetMemberValueSafe(target, v, prop, index, valueConverter);
+               ReflectionUtils.SetMemberValueSafe(target, v, prop, index, valueConverter);
             }
             ImGui.EndDisabled();
         }
@@ -120,8 +103,8 @@ namespace Editor
 
             if (value == null)
             {
-                value = ReflectionUtils.GetDefaultValue(type);
-                SetMemberValueSafe(target, value, prop, index);
+                value = ReflectionUtils.GetDefaultValueInstance(type);
+                ReflectionUtils.SetMemberValueSafe(target, value, prop, index);
             }
 
             ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.Leaf;
@@ -178,7 +161,7 @@ namespace Editor
 
                 DrawEObjectSlot(eObject, eObjectType, v =>
                 {
-                    SetMemberValueSafe(target, v, prop, index);
+                    ReflectionUtils.SetMemberValueSafe(target, v, prop, index);
                     return true;
                 });
             }
@@ -271,14 +254,14 @@ namespace Editor
                 string[] names = Enum.GetNames(type);
                 if (EditorGuiFieldsResolver.DrawCombo(propertyName, ref idx, names, width))
                 {
-                    SetMemberValueSafe(target, Enum.Parse(type, names[idx]), prop, index);
+                    ReflectionUtils.SetMemberValueSafe(target, Enum.Parse(type, names[idx]), prop, index);
                 }
             }
             else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
             {
                 if (value == null)
                 {
-                    value = ReflectionUtils.GetDefaultValue(type);
+                    value = ReflectionUtils.GetDefaultValueInstance(type);
                 }
 
                 var list = value as IList;
@@ -286,13 +269,13 @@ namespace Editor
                 var elementType = type.GetGenericArguments().FirstOrDefault();
 
                 DrawList(objectId, propertyName, list, value, elementType, prop, cursorX, OnAdd, OnRemove, OnRemoveCount);
-                SetMemberValueSafe(target, value, prop, index);
+                ReflectionUtils.SetMemberValueSafe(target, value, prop, index);
 
                 void OnAdd(IList list, int totalLength)
                 {
                     while (list.Count < totalLength)
                     {
-                        list.Add(ReflectionUtils.GetDefaultValue(elementType));
+                        list.Add(ReflectionUtils.GetDefaultValueInstance(elementType));
                     }
                 }
 
@@ -316,7 +299,7 @@ namespace Editor
             {
                 if (value == null)
                 {
-                    value = Array.CreateInstance(type.GetElementType(), 0);
+                    value = ReflectionUtils.GetDefaultValueInstance(type);
                 }
 
                 var array = value as Array;
@@ -324,7 +307,7 @@ namespace Editor
                 var elementType = type.GetElementType();
 
                 DrawList(objectId, propertyName, array, value, elementType, prop, cursorX, OnAdd, OnRemove, OnRemoveCount);
-                SetMemberValueSafe(target, value, prop, index);
+                ReflectionUtils.SetMemberValueSafe(target, value, prop, index);
 
                 void OnAdd(IList list, int totalLength)
                 {
@@ -333,7 +316,7 @@ namespace Editor
                     var copy = Array.CreateInstance(elementType, totalLength);
                     Array.Copy(array, copy, array.Length);
                     value = copy;
-                    SetMemberValueSafe(target, value, prop, index);
+                    ReflectionUtils.SetMemberValueSafe(target, value, prop, index);
                 }
 
                 void OnRemove(IList list, int itemIndex)
@@ -352,7 +335,7 @@ namespace Editor
                     }
 
                     value = copy;
-                    SetMemberValueSafe(target, value, prop, index);
+                    ReflectionUtils.SetMemberValueSafe(target, value, prop, index);
                 }
 
                 void OnRemoveCount(IList list, int totalLength)
@@ -361,7 +344,7 @@ namespace Editor
                     var copy = Array.CreateInstance(elementType, totalLength);
                     Array.Copy(array, copy, totalLength);
                     value = copy;
-                    SetMemberValueSafe(target, value, prop, index);
+                    ReflectionUtils.SetMemberValueSafe(target, value, prop, index);
                 }
             }
             else if (type.IsClass || ReflectionUtils.IsUserDefinedStruct(type))
@@ -376,7 +359,7 @@ namespace Editor
                         DrawVars(objectId, value, subProp, cursorX, index++, width, true);
                     }
                 }
-                SetMemberValueSafe(target, value, prop, propIndex);
+                ReflectionUtils.SetMemberValueSafe(target, value, prop, propIndex);
                 DrawMethods(value, objectId);
 
             }
@@ -401,7 +384,7 @@ namespace Editor
                   {
                       if (item == null)
                       {
-                          item = ReflectionUtils.GetDefaultValue(elemenType);
+                          item = ReflectionUtils.GetDefaultValueInstance(elemenType);
                       }
 
                       DrawVars(objectId, list, item, elemenType, $"##__{index}_item", false, prop, cursorX, index, itemWidth);

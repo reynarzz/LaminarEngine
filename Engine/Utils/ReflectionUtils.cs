@@ -15,7 +15,7 @@ namespace Engine.Utils
     {
         private const BindingFlags _flags = BindingFlags.Instance | BindingFlags.Public
                                          | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
-        public static object GetDefaultValue(Type type)
+        public static object GetDefaultValueInstance(Type type, int length = 0)
         {
             if (type.IsValueType)
             {
@@ -34,6 +34,10 @@ namespace Engine.Utils
                 if (type == typeof(string))
                 {
                     return string.Empty;
+                }
+                if (type.IsArray)
+                {
+                    return Array.CreateInstance(type.GetElementType(), length);
                 }
                 else if (type.IsClass && !type.IsAssignableTo(typeof(IObject)))
                 {
@@ -125,7 +129,7 @@ namespace Engine.Utils
         }
 
 
-        public static void SetMemberValue(object target, string memberName, object value)
+        public static void SetMemberValue(object target, string memberName, object value, BindingFlags flags = _flags)
         {
             if (target == null)
                 throw new ArgumentNullException(nameof(target));
@@ -134,12 +138,6 @@ namespace Engine.Utils
 
             while (type != null)
             {
-                const BindingFlags flags =
-                    BindingFlags.Instance |
-                    BindingFlags.Public |
-                    BindingFlags.NonPublic |
-                    BindingFlags.DeclaredOnly;
-
                 var prop = type.GetProperty(memberName, flags);
                 if (prop != null)
                 {
@@ -158,6 +156,28 @@ namespace Engine.Utils
             }
 
             Debug.Error($"Could not find member named: {memberName}");
+        }
+
+        public static MemberInfo GetMember(Type type, string name, BindingFlags flags = _flags)
+        {
+            while (type != null)
+            {
+                var prop = type.GetProperty(name, flags);
+                if (prop != null)
+                {
+                    return prop;
+                }
+
+                var field = type.GetField(name, flags);
+                if (field != null)
+                {
+                    return field;
+                }
+
+                type = type.BaseType;
+            }
+
+            return null;
         }
 
         public static void SetMemberValue(object target, MemberInfo member, object value)
@@ -189,6 +209,78 @@ namespace Engine.Utils
 
                 default:
                     throw new NotSupportedException("Unsupported member type: " + member.GetType());
+            }
+        }
+
+        public static void SetMemberValueSafe<T>(object target, T value, string propertyName, int index, Func<T, object> valueConverter = null)
+        {
+            MemberInfo member = null;
+            if (target is IList listV)
+            {
+                if (listV.Count > index)
+                {
+                    member = GetMember(listV[index]?.GetType(), propertyName);
+                }
+            }
+            else
+            {
+                member = GetMember(target?.GetType(), propertyName);
+            }
+
+            if (target is IList list)
+            {
+                if (member == null)
+                {
+                    list[index] = value;
+                }
+                else
+                {
+                    var obj = list[index];
+                    SetMemberValue(obj, member, value);
+                    list[index] = obj;
+                }
+            }
+            else
+            {
+                if (member == null)
+                {
+                    Debug.Error("Property is null, can't set member value.");
+                    return;
+                }
+
+                if (valueConverter == null)
+                {
+                    SetMemberValue(target, member, value);
+                }
+                else
+                {
+                    SetMemberValue(target, member, valueConverter.Invoke(value));
+                }
+            }
+        }
+
+        public static void SetMemberValueSafe<T>(object target, T value, MemberInfo prop, int index, Func<T, object> valueConverter = null)
+        {
+            if (target is IList list)
+            {
+                list[index] = value;
+            }
+            else
+            {
+                if (prop == null)
+                {
+                    Debug.Error("Property is null, can't set member value.");
+                    return;
+                }
+
+                if (valueConverter == null)
+                {
+                    SetMemberValue(target, prop, value);
+                }
+                else
+                {
+                    SetMemberValue(target, prop, valueConverter.Invoke(value));
+                }
             }
         }
 
