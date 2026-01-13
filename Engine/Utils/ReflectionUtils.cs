@@ -142,7 +142,7 @@ namespace Engine.Utils
 
             while (type != null && type != typeof(object))
             {
-                var members = type.GetMembers(flags | BindingFlags.DeclaredOnly)
+                var members = type.GetMembers(flags)
                                   .Where(m => (m.MemberType == MemberTypes.Field ||
                                               m.MemberType == MemberTypes.Property) &&
                                               attributeTypes.Any(a => m.IsDefined(a, inherit)));

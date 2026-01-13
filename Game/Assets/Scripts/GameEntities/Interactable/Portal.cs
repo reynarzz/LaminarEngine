@@ -22,6 +22,9 @@ namespace Game
             BoxCollider.IsEnabled = false;
 
             _circle = GetComponent<CircleCollider2D>();
+
+            if(_circle == null)
+                _circle = AddComponent<CircleCollider2D>();
             _circle.IsTrigger = true;
             InteractableRenderer.SortOrder = 15;
             // InteractableRenderer.Transform.LocalPosition += vec3.Up * 4;

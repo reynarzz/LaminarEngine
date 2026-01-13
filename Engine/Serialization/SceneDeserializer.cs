@@ -65,13 +65,16 @@ namespace Engine.Serialization
                         var component = actor.AddComponent(componentType, componentData.ID, false,
                                                            componentData.IsEnabled, true, out var isPendingToInitialize);
 
-                        if (!isPendingToInitialize && Application.IsInPlayMode)
+                        if (!isPendingToInitialize)
                         {
-                            _initializationComponents.Add(component);
-                        }
-                        else
-                        {
-                            Debug.Log(component.GetType() + " Not adding, pending for later");
+                            if (Application.IsInPlayMode)
+                            {
+                                _initializationComponents.Add(component);
+                            }
+                            else
+                            {
+                                Debug.Log(component.GetType() + " Not adding, pending for later");
+                            }
                         }
 
                         _componentsByID.Add(componentData.ID, (component, componentData));
