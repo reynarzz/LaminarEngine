@@ -244,9 +244,10 @@ namespace Editor
                     _mousePickerRenderer.ClearPickedList();
                 }
                 IsMouseClicked = true;
+
+                // Adds the mouse picker scene renderer to the queue so it will be rendered next frame.
                 Surface.SceneRenderers.Add(_mousePickerRenderer);
             }
-
         }
 
         private bool IsMouseInsideWindow()
@@ -292,8 +293,8 @@ namespace Editor
             if (!IsMouseInsideWindow())
                 return null;
 
-            int rtWidth = Surface.RenderTextures[0].Width;
-            int rtHeight = Surface.RenderTextures[0].Height;
+            int rtWidth = renderTexture.Width;
+            int rtHeight = renderTexture.Height;
 
             float scaleX = (float)rtWidth / contentSize.X;
             float scaleY = (float)rtHeight / contentSize.Y;

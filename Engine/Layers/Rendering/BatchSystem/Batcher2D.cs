@@ -22,7 +22,7 @@ namespace Engine.Rendering
         private const int VerticesPerQuad = 4;
         private Dictionary<BucketKey, List<RendererData2D>> _renderBuckets;
         private BatchesPool _batchesPool;
-        private Material _pinkMaterial;
+        private static Material _pinkMaterial;
         private readonly Vertex[] _quadVertexArray = new Vertex[4];
         private readonly List<List<RendererData2D>> _sortedBuckets = new();
         private static readonly Comparison<List<RendererData2D>> _bucketSorter = (a, b) => a[0].SortOrder.CompareTo(b[0].SortOrder);
@@ -60,8 +60,12 @@ namespace Engine.Rendering
             MaxQuadsPerBatch = maxQuadsPerBatch;
             _renderBuckets = new Dictionary<BucketKey, List<RendererData2D>>();
 
-            _pinkMaterial = new Material(InternalShaderUtils.GetShaderPink());
-            _pinkMaterial.Name = "Pink Material";
+            if(_pinkMaterial == null)
+            {
+                _pinkMaterial = new Material(InternalShaderUtils.GetShaderPink());
+                _pinkMaterial.Name = "Pink Material";
+            }
+            
             Initialize();
         }
 

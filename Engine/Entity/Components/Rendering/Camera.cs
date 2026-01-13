@@ -94,7 +94,7 @@ namespace Engine
                 UpdateCurrent();
             }
         }
-        private float _orthoSize;
+        private float _orthoSize = 32;
         [SerializedField]
         public float OrthographicSize
         {

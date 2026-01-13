@@ -66,7 +66,7 @@ namespace Editor
 
             ICamera camera = null;
             var surfaceCamerasInUse = _surface.Cameras != null && _surface.Cameras.Length > 0 &&
-                                      (_surface.Cameras[0]?.TryGetTarget(out camera) ?? false) && camera != null && 
+                                      (_surface.Cameras?[0]?.TryGetTarget(out camera) ?? false) && camera != null && 
                                       camera.IsAlive && camera.IsEnabled;
             if (surfaceCamerasInUse)
             {

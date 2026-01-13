@@ -142,7 +142,11 @@ namespace Editor.Rendering
                 _drawCallData.Features = _pipelineFeatures;
                 _drawCallData.RenderTarget = currentRenderTarget.NativeResource;
                 _drawCallData.Viewport = new vec4(0, 0, currentRenderTarget.Width, currentRenderTarget.Height);
-
+                GfxDeviceManager.Current.Clear(new ClearDeviceConfig()
+                {
+                     Color = Color.Black,
+                     RenderTarget = currentRenderTarget.NativeResource
+                });
                 void DrawRenderers(List<RendererData2D> renderers, mat4 projM, mat4 viewM, mat4 viewProjM, bool discardAlphaWithTexture, bool discardWithPickedList)
                 {
                     if (renderers == null || renderers.Count == 0)
@@ -247,7 +251,7 @@ namespace Editor.Rendering
 
                 DrawRenderers(_worldRenderers, camera.Projection, camera.ViewMatrix, camera.Projection * camera.ViewMatrix, true, discardWithPickerList);
 
-                // Note: UI do not discard using texture so it can render whole block of geometry and is easier to pick up for things like text.
+                // Note: UI does not discard the alpha of the current 2D renderer's texture so it can render a whole block of geometry and is easier to pick up for things like text.
                 DrawRenderers(_uiRenderers, surface.UIProj, surface.UIView, surface.UIViewProj, false, discardWithPickerList);
             }
 

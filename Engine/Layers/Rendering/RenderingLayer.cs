@@ -80,7 +80,7 @@ namespace Engine.Layers
 
         private bool IsValidCamera(WeakReference<ICamera> camera)
         {
-            if(camera.TryGetTarget(out var target))
+            if(camera != null && camera.TryGetTarget(out var target))
             {
                 return target != null && target.IsAlive;
             }
@@ -97,11 +97,12 @@ namespace Engine.Layers
             for (int i = 0; i < _renderingSurfaces.Count; i++)
             {
                 var surface = _renderingSurfaces[i];
-                for (int j = 0; j < surface.SceneRenderers.Count; j++)
-                {
-                    var sceneRenderer = surface.SceneRenderers[j];
-                    sceneRenderer.OnPrepare(_renderersData, _UIElementRenderersData);
-                }
+                //for (int j = 0; j < surface.SceneRenderers.Count; j++)
+                //{
+                //    var sceneRenderer = surface.SceneRenderers[j];
+                //    sceneRenderer.OnPrepare(_renderersData, _UIElementRenderersData);
+                //    Debug.Log(surface.SceneRenderers[j].GetType().Name);
+                //}
 
                 if (surface.Cameras == null || surface.Cameras.Length == 0 || !IsValidCamera(surface.Cameras[0]))
                 {
@@ -112,7 +113,7 @@ namespace Engine.Layers
                             _sceneCamera.SetTarget(SceneManager.FindComponent<Camera>(findDisabled: false));
                         }
 
-                        // TODO: maybe putting a camera in the array can cause problems
+                        // TODO: Putting a camera in the array can cause problems
                         var existCamera = _sceneCamera.TryGetTarget(out var camera);
 
                         if (existCamera && camera != null && camera.IsAlive && camera.IsEnabled)
@@ -183,7 +184,7 @@ namespace Engine.Layers
                         }
                     }
 
-                    RenderOverlayToScreen();
+                    // RenderOverlayToScreen();
                 }
 
                 EngineInfo.Renderer.Clear();
@@ -214,7 +215,7 @@ namespace Engine.Layers
                     Color = camera.BackgroundColor,
                     RenderTarget = targetRenderTexture.NativeResource
                 });
-
+                sceneRenderer.OnPrepare(_renderersData, _UIElementRenderersData);
                 // TODO: begin
                 sceneRenderer.OnBegin();
 
