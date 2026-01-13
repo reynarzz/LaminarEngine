@@ -120,9 +120,9 @@ namespace Engine.Rendering
                     }
 
                     var texture = renderer.Sprite?.Texture ?? Texture2D.White;
-                    var material = renderer.Material ?? _pinkMaterial;
+                    var material = renderer.Material;
 
-                    if (material != null && !material.Shader.NativeShader.IsInitialized)
+                    if (!material /*|| !material.Shader.NativeShader.IsInitialized*/)
                     {
                         material = _pinkMaterial;
                     }
