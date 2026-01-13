@@ -14,39 +14,23 @@ namespace Engine.Serialization
     {
         private readonly static Dictionary<Guid, (Actor value, ActorDataSceneAsset data)> _actorsByID = new();
         private readonly static Dictionary<Guid, (Component value, ComponentDataSceneAsset data)> _componentsByID = new();
-
+        private static List<Component> _initializationComponents = new();
         public static void DeserializeScene(IReadOnlyList<ActorDataSceneAsset> actors, WeakReference<Scene> scene)
         {
             _actorsByID.Clear();
             _componentsByID.Clear();
-
+            _initializationComponents.Clear();
             if (actors == null || actors.Count == 0)
                 return;
 
+            // Instantiate all the actors.
             for (int i = 0; i < actors.Count; i++)
             {
                 var actorData = actors[i];
-
                 var actor = new Actor(actorData.Name, actorData.ID, scene);
                 actor.Layer = actorData.Layer;
                 actor.IsActiveSelf = actorData.IsActiveSelf;
-
-                // actor.AddComponent(typeof());
                 _actorsByID.Add(actor.GetID(), (actor, actorData));
-
-                // Add components, but no deserialize yet.
-                for (int j = 0; j < actorData.Components.Count; j++)
-                {
-                    var componentData = actorData.Components[j];
-
-                    if (ReflectionUtils.ResolveType(componentData.TypeName, out var componentType))
-                    {
-                        var component = actor.AddComponent(componentType, componentData.ID, false);
-                        component.IsEnabled = componentData.IsEnabled;
-
-                        _componentsByID.Add(componentData.ID, (component, componentData));
-                    }
-                }
             }
 
             // Resolve parent-child relationship
@@ -60,11 +44,99 @@ namespace Engine.Serialization
                 }
             }
 
+            // Note: loops through the actors again after the hierarchy is completed to add the components.
+            //      This is important in playmode since components could be added to a "enable later" queue, if actors are disabled
+            //      by itself or in the hierarchy.
+            for (int i = 0; i < actors.Count; i++)
+            {
+                var actorData = actors[i];
+                var actor = _actorsByID[actorData.ID].value;
+
+                // Add components, but no deserialize yet.
+                for (int j = 0; j < actorData.Components.Count; j++)
+                {
+                    var componentData = actorData.Components[j];
+
+                    if (ReflectionUtils.ResolveType(componentData.TypeName, out var componentType))
+                    {
+                        // TODO: fix the component initialization for the ones that auto add other required components.
+                        // When 'Application.IsInPlayMode' is on, it will auto add components, making this not usable.
+
+                        var component = actor.AddComponent(componentType, componentData.ID, false,
+                                                           componentData.IsEnabled, true, out var isPendingToInitialize);
+
+                        if (!isPendingToInitialize && Application.IsInPlayMode)
+                        {
+                            _initializationComponents.Add(component);
+                        }
+                        else
+                        {
+                            Debug.Log(component.GetType() + " Not adding, pending for later");
+                        }
+
+                        _componentsByID.Add(componentData.ID, (component, componentData));
+                    }
+                }
+
+                // Resolve required properties
+                for (int j = 0; j < actorData.Components.Count; j++)
+                {
+                    var componentData = actorData.Components[j];
+
+                    if (_componentsByID.TryGetValue(componentData.ID, out var comp))
+                    {
+                        var component = comp.value;
+
+                        var reqProperties = ReflectionUtils.GetAllMembersWithAttribute<RequiredPropertyAttribute>(component.GetType())?.ToList();
+
+                        if (reqProperties != null && reqProperties.Count > 0)
+                        {
+                            for (int k = 0; k < reqProperties.Count; k++)
+                            {
+                                var prop = reqProperties[k];
+                                var reqComponent = component.GetComponent(ReflectionUtils.GetMemberType(prop));
+                                ReflectionUtils.SetMemberValue(component, prop, reqComponent);
+                            }
+                        }
+                    }
+                }
+            }
+
+
             // Deserialize components data, and resolve references.
             foreach (var (id, componentValue) in _componentsByID)
             {
                 DeserializeTarget(componentValue.value, componentValue.data.SerializedProperties);
             }
+
+            if (Application.IsInPlayMode)
+            {
+                foreach (var component in _initializationComponents)
+                {
+                    try
+                    {
+                        (component as IAwakeableComponent).OnAwake();
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.Error(e);
+                    }
+
+                    try
+                    {
+                        if (component.IsEnabled)
+                        {
+                            (component as IEnabledComponent).OnEnabled();
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.Error(e);
+                    }
+                }
+                _initializationComponents.Clear();
+            }
+
         }
 
         private static void DeserializeTarget(object target, IReadOnlyList<SerializedPropertyData> properties)

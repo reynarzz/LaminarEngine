@@ -56,7 +56,7 @@ namespace Game
         }
         protected override void OnUpdate()
         {
-            _stateMachine.OnUpdate();
+            _stateMachine?.OnUpdate();
         }
     }
 }

@@ -80,6 +80,9 @@ namespace Game
         protected override void OnUpdate()
         {
             base.OnUpdate();
+            if (_positions == null)
+                return;
+
             if (_animator != null)
             {
                 Transform.WorldPosition = _animator.GetVec2("Move");

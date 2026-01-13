@@ -21,7 +21,7 @@ namespace Game
             SpriteRenderer.IsEnabled = false;
             BoxCollider.IsEnabled = false;
 
-            _circle = AddComponent<CircleCollider2D>();
+            _circle = GetComponent<CircleCollider2D>();
             _circle.IsTrigger = true;
             InteractableRenderer.SortOrder = 15;
             // InteractableRenderer.Transform.LocalPosition += vec3.Up * 4;
@@ -86,6 +86,9 @@ namespace Game
 
         protected override void OnPlayerInteractZone(bool enter, Player player)
         {
+            if (Data == null)
+                return;
+
             if (!Data.IsArriveOnly)
             {
                 base.OnPlayerInteractZone(enter, player);

@@ -32,6 +32,7 @@ namespace Game
 
             InteractableRenderer = new Actor("InteractableIcon").AddComponent<SpriteRenderer>();
             InteractableRenderer.Transform.Parent = Transform;
+            InteractableRenderer.Transform.LocalPosition = default;
             InteractableRenderer.Material = GameMaterials.Instance.SpriteMaterial;
             InteractableRenderer.IsEnabled = true;
             InteractableRenderer.SortOrder = 6;

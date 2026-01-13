@@ -29,6 +29,7 @@ namespace Engine
         public override string Name { get => Actor?.Name ?? GetType().Name; set => Actor.Name = value; }
 
         private bool _isEnabled = true;
+        internal virtual bool IsEnabledDontNotify { get => _isEnabled; set => _isEnabled = value; }
 
         public virtual bool IsEnabled
         {
@@ -117,6 +118,12 @@ namespace Engine
         {
             CheckIfValidObject(this);
             Actor.AddComponent<T1, T2, T3, T4, T5>();
+        }
+
+        public Component GetComponent(Type type)
+        {
+            CheckIfValidObject(this);
+            return Actor.GetComponent(type);
         }
 
         public T GetComponent<T>() where T : class

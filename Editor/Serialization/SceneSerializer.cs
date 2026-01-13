@@ -276,14 +276,12 @@ namespace Editor.Serialization
                         {
                             ComplexTypeData GetComplexTypeData(SerializedType argSerializedType, object argValue, string argName)
                             {
-                                ComplexTypeData complexKey = null;
-
                                 if (argSerializedType == SerializedType.Simple ||
                                     argSerializedType == SerializedType.SimpleClass ||
-                                     argSerializedType == SerializedType.SimpleCollection)
+                                    argSerializedType == SerializedType.SimpleCollection)
                                 {
                                     var internalType = ReflectionUtils.GetFullTypeName(argValue?.GetType());
-                                    complexKey = new ComplexTypeData()
+                                    return new ComplexTypeData()
                                     {
                                         ComplexType = argSerializedType,
                                         TargetTypeName = internalType,
@@ -299,12 +297,8 @@ namespace Editor.Serialization
                                         }
                                     };
                                 }
-                                else
-                                {
-                                    complexKey = CreateComplexType(argValue?.GetType(), argValue, serializedMemberType);
-                                }
 
-                                return complexKey;
+                                return CreateComplexType(argValue?.GetType(), argValue, serializedMemberType);
                             }
 
                             referenced.Collection.Add(new ComplexDictionaryData<ComplexTypeData, ComplexTypeData>()

@@ -14,7 +14,7 @@ namespace Engine
     }
     public abstract class AnimationCurveBase<T> : AnimationCurveBase
     {
-         internal abstract T Evaluate(float time);
+        internal abstract T Evaluate(float time);
         protected void SortKeyframes<TKey>(List<TKey> keyframes) where TKey : IKeyFrame
         {
             keyframes.Sort((a, b) => a.Time.CompareTo(b.Time));

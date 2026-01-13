@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-
     public class EventCurve : AnimationCurveBase<Action>
     {
         private struct EventKeyFrame : IKeyFrame<Action>
@@ -14,7 +13,9 @@ namespace Engine
             internal bool Raised;
             public Action Value { get; }
             public float Time { get; }
-
+            public EventKeyFrame()
+            {
+            }
             internal EventKeyFrame(float time, Action value)
             {
                 Time = time;

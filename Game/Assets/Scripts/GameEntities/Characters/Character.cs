@@ -331,6 +331,9 @@ namespace Game
 
         protected sealed override void OnLateUpdate()
         {
+            if (Animator == null)
+                return;
+
             Renderer.Sprite = Animator.GetSprite(SPRITE_PROPERTY_NAME);
             Animator.Parameters.SetFloat(VEL_X_PROP_NAME, Rigidbody.Velocity.x);
             Animator.Parameters.SetFloat(VEL_Y_PROP_NAME, Rigidbody.Velocity.y);
@@ -420,6 +423,9 @@ namespace Game
 
         protected override void OnFixedUpdate()
         {
+            if (Rigidbody == null)
+                return;
+
             if (_characterConfig.Ground.Enabled)
             {
                 CheckGround();
@@ -631,7 +637,7 @@ namespace Game
 
         public bool IsCharacterAlive()
         {
-            return Inventory.Life > 0;
+            return Inventory?.Life > 0;
         }
 
 

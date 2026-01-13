@@ -62,14 +62,14 @@ namespace Editor.Views
 
                     ImGui.Separator();
 
-                    if (ImGui.MenuItem("Rename")) 
+                    if (ImGui.MenuItem("Rename"))
                     {
-                        
+
                     }
-                    
-                    if (ImGui.MenuItem("Duplicate")) 
+
+                    if (ImGui.MenuItem("Duplicate"))
                     {
-                        
+
                     }
 
                     ImGui.Separator();
@@ -121,6 +121,10 @@ namespace Editor.Views
                         ImGui.PopID();
 
                         break;
+                    }
+                    else if (ImGui.MenuItem("Create Actor"))
+                    {
+                        new Actor("Actor");
                     }
 
                     ImGui.EndPopup();

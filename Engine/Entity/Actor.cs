@@ -140,12 +140,14 @@ namespace Engine
         public Component AddComponent([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
                                       Type type)
         {
-            return AddComponent(type, Guid.Empty, true);
+            return AddComponent(type, Guid.Empty, true, true, false, out _);
         }
 
         internal Component AddComponent([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
-                                      Type type, Guid id, bool autoAddRequiredComponents)
+                                         Type type, Guid id, bool autoAddRequiredComponents, bool enabledByDefault, bool isDeserializing,
+            out bool isPendingToInitialize)
         {
+            isPendingToInitialize = false;
             CheckIfValidObject(this);
 
             if (!IsValidComponent(type))
@@ -195,8 +197,9 @@ namespace Engine
 
             var component = Activator.CreateInstance(type) as Component;
             component.Actor = this;
+            component.IsEnabledDontNotify = enabledByDefault;
 
-            if(id != Guid.Empty)
+            if (id != Guid.Empty)
             {
                 component._SetID(id); // Remove this
             }
@@ -235,22 +238,25 @@ namespace Engine
 
             if (Application.IsInPlayMode)
             {
-                if (!IsActiveInHierarchy || !IsActiveSelf)
+                if (!IsActiveInHierarchy || !IsActiveSelf || !enabledByDefault)
                 {
+                    isPendingToInitialize = true;
                     _onAwakePendingComponents.Add(component);
                     _onEnablePendingComponents.Add(component);
                 }
                 else
                 {
-                    try
+                    if (!isDeserializing)
                     {
-                        (component as IAwakeableComponent).OnAwake();
+                        try
+                        {
+                            (component as IAwakeableComponent).OnAwake();
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.Error(e);
+                        }
                     }
-                    catch (Exception e)
-                    {
-                        Debug.Error(e);
-                    }
-
 
                     // NOTE: All components are enabled by default, so this if is unncessary right now,
                     //       however, in the future I might add a flag to addComponents that are disabled by default.

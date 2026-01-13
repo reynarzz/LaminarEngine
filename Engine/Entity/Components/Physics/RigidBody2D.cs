@@ -334,6 +334,8 @@ namespace Engine
         {
             if (_shouldUpdatePreTransformation)
             {
+                if (!IsValidBody())
+                    return;
                 _shouldUpdatePreTransformation = false;
                 B2Bodies.b2Body_SetTransform(_bodyId, Transform.WorldPosition.ToB2Vec2(), Transform.WorldRotation.QuatToB2Rot());
             }
@@ -343,6 +345,9 @@ namespace Engine
         {
             if (_bodyType == Body2DType.Dynamic)
             {
+                if (!IsValidBody())
+                    return;
+
                 var position = B2Bodies.b2Body_GetPosition(_bodyId);
                 _velocity = B2Bodies.b2Body_GetLinearVelocity(_bodyId).ToVec2();
 
@@ -353,6 +358,9 @@ namespace Engine
 
         public void AddForce(vec2 force, ForceMode2D mode)
         {
+            if (!IsValidBody())
+                return;
+
             switch (mode)
             {
                 case ForceMode2D.Force:
@@ -369,6 +377,9 @@ namespace Engine
 
         public void AddForce(vec2 force, vec2 point, ForceMode2D mode)
         {
+            if (!IsValidBody())
+                return;
+
             switch (mode)
             {
                 case ForceMode2D.Force:
@@ -388,6 +399,9 @@ namespace Engine
 
         public void AddAngularForce(float force, ForceMode2D mode)
         {
+            if (!IsValidBody())
+                return;
+
             switch (mode)
             {
                 case ForceMode2D.Force:

@@ -40,7 +40,7 @@ namespace Editor
 
 
         }
-        private JsonSerializerSettings _jsonSettings = new JsonSerializerSettings()
+        private JsonSerializerSettings _jsonSettings = new()
         {
             TypeNameHandling = TypeNameHandling.Auto,
             Converters = 
@@ -59,7 +59,7 @@ namespace Editor
 
                 PushLayer(new PhysicsLayer(), 6);
                 PushLayer(new SceneLayer(), 4);
-                PushLayer(new GameApplication(), 2);
+                //PushLayer(new GameApplication(), 2);
 
             }
 
@@ -70,6 +70,14 @@ namespace Editor
                 PopLayer(6);
 
                 Application.IsInPlayMode = false;
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                Physics2D.DrawColliders = !Physics2D.DrawColliders;
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                Debug.DrawUILines = !Debug.DrawUILines;
             }
 
             string TestfilePath = "D:/Scene.txt";
@@ -84,7 +92,7 @@ namespace Editor
 
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.R))
             {
-                Application.IsInPlayMode = false;
+                // Application.IsInPlayMode = false;
 
                 var file = File.ReadAllText(TestfilePath);
                 var actors = JsonConvert.DeserializeObject<List<ActorDataSceneAsset>>(file, _jsonSettings);
@@ -96,6 +104,11 @@ namespace Editor
                 SceneDeserializer.DeserializeScene(actors, SceneManager.ActiveScene);
             }
             base.Update();
+        }
+
+        private void LoadScene()
+        {
+
         }
     }
 }
