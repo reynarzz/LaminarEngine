@@ -245,7 +245,7 @@ namespace Engine.Utils
             }
         }
 
-        public static void SetMemberValueSafe<T>(object target, T value, string propertyName, int index, Func<T, object> valueConverter = null)
+        public static void SetMemberValueSafe(object target, object value, string propertyName, int index, Func<object, object> valueConverter = null)
         {
             MemberInfo member = null;
             if (target is IList listV)
@@ -295,15 +295,17 @@ namespace Engine.Utils
             }
         }
 
-        public static void SetMemberValueSafe<T>(object target, T value, MemberInfo prop, object key, Func<T, object> valueConverter = null)
+        public static void SetMemberValueSafe(object target, object value, MemberInfo prop, object collectionData, Func<object, object> valueConverter = null)
         {
             if (target is IList list)
             {
-                list[(int)key] = value;
+                list[(int)collectionData] = value;
             }
             else if (target is IDictionary dictionary)
             {
-                dictionary[key] = value;
+                var kv = (KeyValuePair<object, object>)collectionData;
+
+                dictionary[kv.Key] = kv.Value;
             }
             else
             {

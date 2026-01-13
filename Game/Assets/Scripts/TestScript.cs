@@ -56,7 +56,7 @@ namespace Game
 
         public struct AStruct
         {
-            [SerializedField] public int Value;
+            [SerializedField] public int IntValue;
             [SerializedField] public List<TestClass> _TestCLassList2 { get; set; } = new();
             [SerializedField] public List<Component> _TestComponentList { get; set; }
             [SerializedField] public TestClass TestClassObj = new TestClass();
@@ -130,7 +130,7 @@ namespace Game
 
         [SerializedField]
         private Dictionary<int, AStruct> _complexDictionary =
-           new Dictionary<int, AStruct> { { 1, default }, { 51, new AStruct() { Value = 100 } } };
+           new Dictionary<int, AStruct> { { 1, default }, { 51, new AStruct() { IntValue = 100 } } };
 
         [SerializedField]
         private Dictionary<int, string> _intStringDictionary =

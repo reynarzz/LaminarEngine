@@ -683,7 +683,7 @@ namespace Editor.Utils
         }
 
         internal static bool DrawDictionaryField(string name, IDictionary dictionary,
-            Func<Type, string, object, (object valueOut, bool result)> onDrawArgCallback = null, bool drawElementsAsTrees = false)
+            Func<Type, string, bool, object, object, (object valueOut, bool result)> onDrawArgCallback = null, bool drawElementsAsTrees = false)
         {
             ImGui.SameLine();
             ImGui.SetCursorPosX(ImGui.GetWindowWidth() - 120);
@@ -779,11 +779,12 @@ namespace Editor.Utils
                     var valueArgName = $"##{name}_{i}__DICT_VALUE__";
                     if (onDrawArgCallback != null)
                     {
-                        var res = onDrawArgCallback(dictionary?.GetType().GetGenericArguments()[0], keyArgName, keyOut);
+                        var res = onDrawArgCallback(dictionary?.GetType().GetGenericArguments()[0], keyArgName, true, keyOut, valueOut);
 
                         if (res.result)
                         {
-                            keyOut = res.valueOut;
+                            var kv = (KeyValuePair<object, object>)res.valueOut;
+                            keyOut = kv.Key;
                             SetKeyValue(res.valueOut);
                             break;
                         }
@@ -819,13 +820,13 @@ namespace Editor.Utils
 
                     if (onDrawArgCallback != null)
                     {
-                        var res = onDrawArgCallback(dictionary?.GetType().GetGenericArguments()[1], valueArgName, valueOut);
+                        var res = onDrawArgCallback(dictionary?.GetType().GetGenericArguments()[1], valueArgName, false, keyOut, valueOut);
 
                         if (res.result)
                         {
-                            valueOut = res.valueOut;
+                            var kv = (KeyValuePair<object, object>)res.valueOut;
+                            valueOut = kv.Value;
                             dictionary[keyOut] = valueOut;
-
                             break;
 
                         }
