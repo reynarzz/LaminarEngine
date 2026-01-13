@@ -73,7 +73,7 @@ namespace Engine.Serialization
                             }
                             else
                             {
-                                Debug.Log(component.GetType() + " Not adding, pending for later");
+                               // Debug.Log(component.GetType() + " Not adding, pending for later");
                             }
                         }
 
@@ -178,7 +178,7 @@ namespace Engine.Serialization
                         DeserializeComplexCollection(target, property);
                         break;
                     default:
-                        Debug.Error($"Cannot deserialize property of type: {property.Type}, please implement it.");
+                       // Debug.Error($"Cannot deserialize property of type: {property.Type}, please implement it.");
                         break;
                 }
             }
@@ -456,8 +456,8 @@ namespace Engine.Serialization
                 //    break;
                 //case SerializableType.RenderTextureAsset:
                 //    break;
-                //case SerializableType.AudioClipAsset:
-                //    break;
+                case SerializedType.AudioClipAsset:
+                    return Assets.GetAssetFromGuid(guid) as AudioClip;
                 //case SerializableType.MaterialAsset:
                 //    break;
                 //case SerializableType.AnimationAsset:
@@ -466,10 +466,8 @@ namespace Engine.Serialization
                 //    break;
                 //case SerializableType.ScriptableObject:
                 //    break;
-                case SerializedType.EObject:
-                    break;
                 default:
-                    Debug.Error($"Can't deserialize reference: '{type}' is not implemented.");
+                    // Debug.Error($"Can't deserialize reference: '{type}' is not implemented.");
                     break;
             }
 

@@ -20,6 +20,7 @@ namespace Editor
         private static TimeLayer _time = new();
         private SceneLayer _editorSceneLayer;
         private List<ActorDataSceneAsset> _actors;
+        private string TestfilePath { get; } = $"{EditorPaths.AppRoot}Scene.bin";
 
         public EditorLayersManager(InputLayerBase inputLayer) :
             base([_time, inputLayer,
@@ -43,7 +44,7 @@ namespace Editor
         private JsonSerializerSettings _jsonSettings = new()
         {
             TypeNameHandling = TypeNameHandling.Auto,
-            Converters = 
+            Converters =
             {
                 new StringEnumConverter(),
             },
@@ -54,22 +55,12 @@ namespace Editor
         {
             if (Input.GetKeyDown(KeyCode.P))
             {
-                _time.Initialize();
-                Application.IsInPlayMode = true;
-
-                PushLayer(new PhysicsLayer(), 6);
-                PushLayer(new SceneLayer(), 4);
-                PushLayer(new GameApplication(), 2);
-
+                PlayModeOn();
             }
 
             if (Input.GetKeyDown(KeyCode.Backspace))
             {
-                PopLayer(2);
-                PopLayer(4);
-                PopLayer(6);
-
-                Application.IsInPlayMode = false;
+                PlayModeOff();
             }
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
@@ -79,15 +70,22 @@ namespace Editor
             {
                 Debug.DrawUILines = !Debug.DrawUILines;
             }
-            
-            string TestfilePath = $"{EditorPaths.AppRoot}Scene.bin";
+
 
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.S))
             {
-                Debug.Log("Saving scene to: " + TestfilePath);
-                _actors = SceneSerializer.SerializeScene(SceneManager.Scenes[^1]);
+                if (!Application.IsInPlayMode)
+                {
+                    Debug.Log("Saving scene to: " + TestfilePath);
+                    _actors = SceneSerializer.SerializeScene(SceneManager.Scenes[^1]);
 
-                File.WriteAllText(TestfilePath, JsonConvert.SerializeObject(_actors, Formatting.Indented, _jsonSettings));
+                    File.WriteAllText(TestfilePath, JsonConvert.SerializeObject(_actors, Formatting.Indented, _jsonSettings));
+                }
+                else
+                {
+                    Debug.Warn("Can't save in playmode.");
+                }
+              
             }
 
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.R))
@@ -103,12 +101,51 @@ namespace Editor
                 SceneManager.LoadScene("Reload scene");
                 SceneDeserializer.DeserializeScene(actors, SceneManager.ActiveScene);
             }
+            if (Input.GetKeyDown(KeyCode.O))
+            {
+                if (Application.IsInPlayMode)
+                {
+                    PlayModeOff();
+                }
+                else
+                {
+                    PlayModeOn();
+                }
+
+                LoadScene();
+            }
             base.Update();
         }
 
+        private void PlayModeOn()
+        {
+            _time.Initialize();
+            Application.IsInPlayMode = true;
+
+            PushLayer(new PhysicsLayer(), 6);
+            PushLayer(new SceneLayer(), 4);
+            //PushLayer(new GameApplication(), 2);
+
+        }
+
+        private void PlayModeOff()
+        {
+            PopLayer(2);
+            PopLayer(4);
+            PopLayer(6);
+
+            Application.IsInPlayMode = false;
+        }
         private void LoadScene()
         {
-
+            var file = File.ReadAllText(TestfilePath);
+            var actors = JsonConvert.DeserializeObject<List<ActorDataSceneAsset>>(file, _jsonSettings);
+            // var actors = _actors;
+            Debug.Log("Total actors in scene: " + actors.Count);
+            SceneManager.Initialize();
+            //SceneManager.UnloadAll();
+            //SceneManager.LoadScene("Reload scene");
+            SceneDeserializer.DeserializeScene(actors, SceneManager.ActiveScene);
         }
     }
 }

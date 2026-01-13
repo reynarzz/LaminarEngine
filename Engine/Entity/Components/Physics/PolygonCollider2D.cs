@@ -13,6 +13,7 @@ namespace Engine
 {
     public class PolygonCollider2D : Collider2D
     {
+        [SerializedField]
         public vec2[] Points { get; set; } =
         [
             new vec2(0f, 0f),   
@@ -21,9 +22,10 @@ namespace Engine
         ];
         private List<B2Hull> _hulls = new List<B2Hull>();
 
+        [ShowMethodInEditor]
         public void Generate()
         {
-            if (Points.Length > 0)
+            if (Points.Length >= 3)
             {
                 Create();
             }

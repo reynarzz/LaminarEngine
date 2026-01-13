@@ -3,6 +3,7 @@ using Engine.Graphics;
 using Engine.Types;
 using Engine.Utils;
 using GlmNet;
+using ldtk;
 using SharedTypes;
 using System;
 using System.Collections.Generic;
@@ -38,6 +39,9 @@ namespace Engine
         [SerializedField]
         public override int SortOrder { get => base.SortOrder; set => base.SortOrder = value; }
 
+        [SerializedField] public LDtkOptions LDtkOptions { get; set; }
+
+        [SerializedField] public LdtkJson Ldtk { get; set; } 
 
         public IReadOnlyList<vec2> TilesPositions => _tilesPositions;
         private List<vec2> _tilesPositions = new();
@@ -137,7 +141,7 @@ namespace Engine
             _rendererData.Bounds.Max.z = 0;
         }
 
-        public void SetTilemapLDtk(ldtk.LdtkJson project, LDtkOptions options)
+        public void SetTilemapLDtk(LdtkJson project, LDtkOptions options)
         {
             _tilesPositions.Clear();
 
@@ -176,23 +180,15 @@ namespace Engine
                 }
             }
         }
-
-        public void SetTilemapLDtk(string json, LDtkOptions options)
-        {
-            if (!string.IsNullOrEmpty(json))
-            {
-                SetTilemapLDtk(ldtk.LdtkJson.FromJson(json), options);
-            }
-        }
     }
 
     public struct LDtkOptions
     {
-        public bool RenderIntGridLayer { get; set; }
-        public bool RenderTilesLayer { get; set; }
-        public bool RenderAutoLayer { get; set; }
-        public int LevelToLoad { get; set; }
-        public ulong LayersToLoadMask { get; set; }
-        public int WorldDepth { get; set; }
+        [SerializedField] public bool RenderIntGridLayer { get; set; }
+        [SerializedField] public bool RenderTilesLayer { get; set; }
+        [SerializedField] public bool RenderAutoLayer { get; set; }
+        [SerializedField] public int LevelToLoad { get; set; }
+        [SerializedField] public ulong LayersToLoadMask { get; set; }
+        [SerializedField] public int WorldDepth { get; set; }
     }
 }

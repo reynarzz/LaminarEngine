@@ -95,6 +95,7 @@ namespace Game
                 Debug.Log("Called from editor");
             }
         }
+        [SerializedField] private quat Orientation;
         [SerializedField] public AStruct StructType { get; set; }
         [SerializedField] public List<AStruct> AStructTypeList { get; set; }
         [SerializedField] public AStruct[] AStructTypeArray { get; set; }
@@ -134,6 +135,10 @@ namespace Game
         [SerializedField]
         private Dictionary<int, string> _intStringDictionary =
            new Dictionary<int, string> { { 3, "first value" }, { 51, "Second value"} };
+
+        [SerializedField]
+        private Dictionary<int, Component> _compStringDictionary =
+           new Dictionary<int, Component> { { 3, default }, { 51, default } };
 
 
         [ShowMethodInEditor]

@@ -393,7 +393,10 @@ namespace Engine
 
                 foreach (var child in actor.Transform.Children)
                 {
-                    GetComponents(ref elements, child.Actor);
+                    if (child.Actor)
+                    {
+                        GetComponents(ref elements, child.Actor);
+                    }
                 }
             }
 

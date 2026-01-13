@@ -10,12 +10,14 @@ namespace Game
     public class Rotate : ScriptBehavior
     {
         private float _zOffset;
-        private float _rotateSpeed = 0;
+        private float _rotateSpeed = 30;
 
         protected override void OnStart()
         {
-            _zOffset = new Random().NextSingle() * 360;
-            _rotateSpeed = RandomRange(30, 50);
+            //_zOffset = new Random().NextSingle() * 360;
+            // _rotateSpeed = RandomRange(30, 50);
+
+            _zOffset = Transform.WorldEulerAngles.z;
         }
 
         private float RandomRange(float min, float max)

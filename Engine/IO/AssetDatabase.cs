@@ -84,8 +84,11 @@ namespace Engine.IO
             return null;
         }
 
-        private T GetAsset<T>(Guid guid) where T : AssetResourceBase
+        internal T GetAsset<T>(Guid guid) where T : AssetResourceBase
         {
+            if (guid == Guid.Empty)
+                return null;
+
             if (_databaseCache.GetAsset<T>(guid, out var asset))
             {
                 return asset;

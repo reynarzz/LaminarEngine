@@ -91,7 +91,7 @@ namespace Engine.Layers
         }
         public override void Close() 
         {
-            _rigidbodies.Clear();
+            Clear();
             PhysicWorld.Clear();
         }
     }

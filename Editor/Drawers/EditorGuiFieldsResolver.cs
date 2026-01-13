@@ -8,11 +8,18 @@ using GlmNet;
 using Engine.Utils;
 using System.Collections;
 using Engine;
+using Engine.Layers;
 
 namespace Editor.Utils
 {
     public class EditorGuiFieldsResolver
     {
+        public const float XPosOffset = 180;
+        private static bool _openPopup;
+
+        private static object _selectedValue;
+        private static Func<object, bool> _selectedSetter;
+
         public EditorGuiFieldsResolver()
         {
 
@@ -58,7 +65,7 @@ namespace Editor.Utils
 
             return false;
         }
-         
+
         public static bool DrawDoubleField(string name, ref double value, float itemWidth = 0, bool pressEnterToConfirm = false)
         {
             return DrawScalarField(name, ref value, ImGuiDataType.Double, 0, false);
@@ -235,18 +242,21 @@ namespace Editor.Utils
 
             return changed;
         }
-        public static bool DrawEnum<T>(string name, ref T value) where T : unmanaged, Enum 
+        public static bool DrawEnum(string name, Type type, ref object value, float itemWidth = 0, bool pressEnterToConfirm = false)
         {
-            var values = Enum.GetValues<T>();
-            int idx = Array.IndexOf(values, value);
-            string[] names = Enum.GetNames<T>();
-            var changed = DrawCombo(name, ref idx, names);
+            ImGui.SameLine();
+            ImGui.SetCursorPosX(Math.Max(XPosOffset, ImGui.GetCursorPosX()));
 
-            if (changed)
+            int idx = (int)value;
+            string[] names = Enum.GetNames(type);
+            if (DrawCombo(name, ref idx, names, itemWidth))
             {
-                value = values[idx];
+                value = Enum.Parse(type, names[idx]);
+
+                return true;
             }
-            return changed;
+
+            return false;
         }
 
         public static bool DrawCombo(string name, ref int index, string[] values, float itemWidth = 0)
@@ -342,6 +352,249 @@ namespace Editor.Utils
             return changed;
         }
 
+        private static T CastSafe<T>(object obj)
+        {
+            if (obj == null)
+            {
+                return default;
+            }
+
+            return (T)obj;
+        }
+        public static bool DrawField(Type type, string name, ref object value, float itemWidth = 0, bool pressEnterToConfirm = false)
+        {
+            if (type.IsAssignableTo(typeof(IObject)))
+            {
+                var eObject = value as IObject;
+                var eObjectType = eObject != null ? eObject.GetType() : type;
+
+                object vOut = null;
+                DrawEObjectSlot(eObject, eObjectType, x =>
+                {
+                    vOut = x;
+                    return true;
+                });
+                value = vOut;
+
+                return true;
+            }
+            else if (type == typeof(string))
+            {
+                string refValue = CastSafe<string>(value);
+                bool result = false;
+
+                if (result = DrawStringField(name, ref refValue, itemWidth, pressEnterToConfirm))
+                {
+                    value = refValue;
+                }
+                return result;
+            }
+            else if (type == typeof(bool))
+            {
+                bool refValue = CastSafe<bool>(value);
+                bool result = false;
+
+                if (result = DrawBoolField(name, ref refValue, itemWidth, pressEnterToConfirm))
+                {
+                    value = refValue;
+                }
+                return result;
+            }
+            else if (type.IsEnum)
+            {
+                object refValue = value;
+                bool result = false;
+
+                if (result = DrawEnum(name, type, ref refValue, itemWidth, pressEnterToConfirm))
+                {
+                    value = refValue;
+                }
+                return result;
+            }
+            else if (type == typeof(uint))
+            {
+                uint refValue = CastSafe<uint>(value);
+
+                bool result = false;
+
+                if (result = DrawUIntField(name, ref refValue, itemWidth, pressEnterToConfirm))
+                {
+                    value = refValue;
+                }
+                return result;
+            }
+            else if (type == typeof(int))
+            {
+                int refValue = CastSafe<int>(value);
+
+                bool result = false;
+
+                if (result = DrawIntField(name, ref refValue, itemWidth, pressEnterToConfirm))
+                {
+                    value = refValue;
+                }
+                return result;
+            }
+            else if (type == typeof(long))
+            {
+                long refValue = CastSafe<long>(value);
+
+                bool result = false;
+
+                if (result = DrawLongField(name, ref refValue, itemWidth, pressEnterToConfirm))
+                {
+                    value = refValue;
+                }
+                return result;
+            }
+            else if (type == typeof(ulong))
+            {
+                ulong refValue = CastSafe<ulong>(value);
+
+                bool result = false;
+
+                if (result = DrawULongField(name, ref refValue, itemWidth, pressEnterToConfirm))
+                {
+                    value = refValue;
+                }
+                return result;
+            }
+            else if (type == typeof(float))
+            {
+                float refValue = CastSafe<float>(value);
+
+                bool result = false;
+
+                if (result = DrawFloatField(name, ref refValue, itemWidth, pressEnterToConfirm))
+                {
+                    value = refValue;
+                }
+                return result;
+            }
+            else if (type == typeof(double))
+            {
+                double refValue = CastSafe<double>(value);
+
+                bool result = false;
+
+                if (result = DrawDoubleField(name, ref refValue, itemWidth, pressEnterToConfirm))
+                {
+                    value = refValue;
+                }
+                return result;
+            }
+            else if (type == typeof(Color))
+            {
+                Color refValue = CastSafe<Color>(value);
+
+                bool result = false;
+
+                if (result = DrawColorField(name, ref refValue, itemWidth, pressEnterToConfirm))
+                {
+                    value = refValue;
+                }
+                return result;
+            }
+            else if (type == typeof(Color32))
+            {
+                Color refValue = CastSafe<Color32>(value);
+
+                bool result = false;
+
+                if (result = DrawColorField(name, ref refValue, itemWidth, pressEnterToConfirm))
+                {
+                    value = (Color32)refValue;
+                }
+                return result;
+            }
+            else if (type == typeof(vec2))
+            {
+                vec2 refValue = CastSafe<vec2>(value);
+
+                bool result = false;
+
+                if (result = DrawVec2Field(name, ref refValue, itemWidth, pressEnterToConfirm))
+                {
+                    value = refValue;
+                }
+                return result;
+            }
+            else if (type == typeof(vec3))
+            {
+                vec3 refValue = CastSafe<vec3>(value);
+
+                bool result = false;
+
+                if (result = DrawVec3Field(name, ref refValue, itemWidth, pressEnterToConfirm))
+                {
+                    value = refValue;
+                }
+                return result;
+            }
+            else if (type == typeof(vec4))
+            {
+                vec4 refValue = CastSafe<vec4>(value);
+
+                bool result = false;
+
+                if (result = DrawVec4Field(name, ref refValue, itemWidth, pressEnterToConfirm))
+                {
+                    value = refValue;
+                }
+                return result;
+            }
+            else if (type == typeof(quat))
+            {
+                vec4 refValue = (vec4)CastSafe<quat>(value);
+
+                bool result = false;
+
+                if (result = DrawVec4Field(name, ref refValue, itemWidth, pressEnterToConfirm))
+                {
+                    value = new quat(refValue.x, refValue.y, refValue.z, refValue.w);
+                }
+                return result;
+            }
+            else if (type == typeof(mat2))
+            {
+                mat2 refValue = CastSafe<mat2>(value);
+
+                bool result = false;
+
+                if (result = DrawMatrix(name, ref refValue, itemWidth, pressEnterToConfirm))
+                {
+                    value = refValue;
+                }
+                return result;
+            }
+            else if (type == typeof(mat3))
+            {
+                mat3 refValue = CastSafe<mat3>(value);
+
+                bool result = false;
+
+                if (result = DrawMatrix(name, ref refValue, itemWidth, pressEnterToConfirm))
+                {
+                    value = refValue;
+                }
+                return result;
+            }
+            else if (type == typeof(mat4))
+            {
+                mat4 refValue = CastSafe<mat4>(value);
+
+                bool result = false;
+
+                if (result = DrawMatrix(name, ref refValue, itemWidth, pressEnterToConfirm))
+                {
+                    value = refValue;
+                }
+
+                return result;
+            }
+            return false;
+        }
+
         public static bool DrawListField(string name, IList list, bool itemAsTree, Action<IList, int> onAddCallback, Action<IList, int> onRemoveCallback,
                                          Action<IList, int> removeCount, Func<int, float, object, bool> drawCallback)
         {
@@ -427,6 +680,326 @@ namespace Editor.Utils
             }
 
             return changed;
+        }
+
+        internal static bool DrawDictionaryField(string name, IDictionary dictionary, bool drawElementsAsTrees)
+        {
+            ImGui.SameLine();
+            ImGui.SetCursorPosX(ImGui.GetWindowWidth() - 120);
+
+            bool changed = false;
+            var size = dictionary.Count;
+
+            ImGui.BeginDisabled(size - 1 < 0);
+            if (ImGui.Button("-", new Vector2(22, 22)))
+            {
+                changed = true;
+
+                if (size - 1 >= 0)
+                {
+                    //--onRemoveCallback(dictionary, size - 1);
+                }
+            }
+            ImGui.EndDisabled();
+            ImGui.SameLine();
+            if (ImGui.Button("+", new Vector2(22, 22)))
+            {
+                changed = true;
+                //--onAddCallback(dictionary, size + 1);
+                // dictionary.Add(ReflectionUtils.GetDefaultValueInstance());
+            }
+
+            //ImGui.SameLine();
+
+            // string lenText = size.ToString();
+            // ImGui.SetNextItemWidth(53);
+
+            //if (DrawStringField($"##_size_{name}", ref lenText, 0, true))
+            //{
+            //    if (int.TryParse(lenText, out var val) && val >= 0)
+            //    {
+            //        if (size < val)
+            //        {
+            //            onAddCallback(dictionary, val);
+            //        }
+            //        else if (size > val)
+            //        {
+            //            removeCount(dictionary, val);
+            //        }
+
+            //        size = val;
+            //        changed = true;
+            //    }
+            //    changed = false;
+            //}
+
+            int i = 0;
+            foreach (var key in dictionary.Keys)
+            {
+                var value = dictionary[key];
+
+                bool show;
+                if (ImGui.Button($"X##_DELETE_BUTTON_{i}_{name}", new Vector2(22, 22)))
+                {
+                    //--onRemoveCallback(dictionary, i);
+                    changed = true;
+                    break;
+                }
+                ImGui.SameLine();
+                var itemTitleCursorX = ImGui.GetCursorPosX();
+
+                if (drawElementsAsTrees)
+                {
+                    show = ImGui.TreeNode($"key {i}_{name}");
+                }
+                else
+                {
+                    ImGui.Text($"key {i}");
+                    show = true;
+                }
+
+                ImGui.SameLine();
+
+                if (show)
+                {
+                    var xCursor = ImGui.GetCursorPosX();
+                    var keyOut = key;
+                    var valueOut = value;
+                    ImGui.SetCursorPosX(itemTitleCursorX + 50);
+
+                    if (DrawField(dictionary?.GetType().GetGenericArguments()[0], $"##{name}_{i}__DICT_KEY__", ref keyOut))
+                    {
+                        changed = true;
+                        if(keyOut != key && !dictionary.Contains(keyOut))
+                        {
+                            dictionary.Remove(key);
+                            dictionary[keyOut] = valueOut;
+                            break;
+                        }
+                    }
+
+                    ImGui.SetCursorPosX(itemTitleCursorX);
+                    if (drawElementsAsTrees)
+                    {
+                        show = ImGui.TreeNode($"value {i}_{name}");
+                    }
+                    else
+                    {
+                        ImGui.Text($"value {i}");
+                        ImGui.SameLine();
+                        show = true;
+                    }
+                    ImGui.SetCursorPosX(itemTitleCursorX + 50);
+                    if (DrawField(dictionary?.GetType().GetGenericArguments()[1], $"##{name}_{i}__DICT_VALUE__", ref valueOut))
+                    {
+                        changed = true;
+                    }
+
+                    dictionary[keyOut] = valueOut;
+
+                    if (drawElementsAsTrees)
+                        ImGui.TreePop();
+                }
+
+                i++;
+            }
+
+            return changed;
+        }
+
+
+        public static void DrawEObjectSlot(IObject eObject, Type valueType, Func<object, bool> setValue)
+        {
+            ImGui.SameLine();
+            ImGui.SetCursorPosX(MathF.Max(XPosOffset, ImGui.GetCursorPosX()) + 5);
+
+            string label = eObject != null ? $"{eObject.Name}" : $"Null";
+
+            if (eObject != null)
+            {
+                if (eObject is AssetResourceBase res)
+                {
+                    ImGui.SetItemTooltip($"{res.Path}");
+                }
+                else
+                {
+                    ImGui.SetItemTooltip(eObject.GetID().ToString());
+                }
+            }
+
+            var drawList = ImGui.GetWindowDrawList();
+            var pos = ImGui.GetCursorScreenPos();
+            var size = ImGui.CalcTextSize(label);
+
+            var min = new Vector2(pos.X - 5, pos.Y);
+            var max = new Vector2(pos.X + ImGui.GetContentRegionAvail().X - 5, pos.Y + size.Y + 2);
+
+            drawList.AddRectFilled(min, max, ImGui.ColorConvertFloat4ToU32(new(0.1f, 0.1f, 0.1f, 1f)));
+
+            string suffix = $"({valueType.Name})";
+            float suffixWidth = ImGui.CalcTextSize(suffix).X;
+
+            const float offset = 6;
+            var length = (max.X - min.X) - offset;
+            float availableLabelWidth = length - suffixWidth;
+            if (availableLabelWidth < 0)
+                availableLabelWidth = 0;
+
+            string displayLabel = label;
+
+            float labelWidth = ImGui.CalcTextSize(label).X;
+            if (labelWidth > availableLabelWidth)
+            {
+                const string ellipsis = "...";
+                float ellipsisWidth = ImGui.CalcTextSize(ellipsis).X;
+
+                int count = 0;
+                float wwidth = 0f;
+
+                foreach (char c in label)
+                {
+                    float w = ImGui.CalcTextSize(c.ToString()).X;
+                    if (wwidth + w + ellipsisWidth > availableLabelWidth)
+                        break;
+
+                    wwidth += w;
+                    count++;
+                }
+
+                displayLabel = label.Substring(0, count) + ellipsis;
+
+                ImGui.Text($"{displayLabel}{suffix}");
+            }
+            else
+            {
+                ImGui.Text($"{displayLabel} {suffix}");
+            }
+
+
+            if (ImGui.IsItemClicked())
+            {
+                _openPopup = true;
+                _selectedValue = eObject;
+                _selectedSetter = setValue;
+            }
+
+            PickObjectPopup(valueType, setValue);
+        }
+
+        private static void PickObjectPopup(Type valueType, Func<object, bool> setValue)
+        {
+            if (_openPopup)
+            {
+                _openPopup = false;
+                ImGui.CloseCurrentPopup();
+                ImGui.OpenPopup("ObjectPickPopup");
+            }
+
+            if (!ImGui.BeginPopup("ObjectPickPopup"))
+                return;
+
+            if (ImGui.Selectable("None"))
+            {
+                setValue(null);
+                ImGui.CloseCurrentPopup();
+                ImGui.EndPopup();
+                return;
+            }
+
+            if (typeof(AssetResourceBase).IsAssignableFrom(valueType))
+            {
+                // Asset picking
+                if (valueType == typeof(Material))
+                {
+                    //foreach (var guid in Assets.GetGuids(AssetType.Material))
+                    //{
+                    //    var path = Assets.ResolvePath(guid);
+                    //    if (ImGui.Selectable($"{System.IO.Path.GetFileName(path)}##{guid}"))
+                    //    {
+                    //        setValue(Assets.GetMaterial(path));
+                    //        ImGui.CloseCurrentPopup();
+                    //    }
+                    //}
+                }
+                else if (valueType == typeof(Texture))
+                {
+                    //foreach (var guid in Assets.GetGuids(AssetType.Texture))
+                    //{
+                    //    var path = Assets.ResolvePath(guid);
+                    //    if (ImGui.Selectable($"{System.IO.Path.GetFileName(path)}##{guid}"))
+                    //    {
+                    //        setValue(Assets.GetTexture(path));
+                    //        ImGui.CloseCurrentPopup();
+                    //    }
+                    //}
+                }
+                else if (valueType == typeof(AudioClip))
+                {
+                    var audios = IOLayer.Database.Disk.GetAssetsInfo(SharedTypes.AssetType.Audio);
+
+                    foreach (var asset in audios)
+                    {
+                        if (ImGui.Selectable($"{Path.GetFileName(asset.Value.Path)}##{asset.Key}"))
+                        {
+                            setValue(Assets.GetAudioClip(asset.Value.Path));
+                            ImGui.CloseCurrentPopup();
+                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach (var scene in SceneManager.Scenes)
+                {
+                    var root = scene.RootActors;
+                    for (int i = 0; i < root.Count; i++)
+                    {
+                        DrawSceneObjectPropertyPicker(root[i].Transform, valueType, setValue);
+                    }
+                }
+            }
+            ImGui.EndPopup();
+        }
+        private static void DrawSceneObjectPropertyPicker(Transform root, Type targetType, Func<object, bool> setValue)
+        {
+            if (typeof(Actor).IsAssignableFrom(targetType))
+            {
+                if (ImGui.Selectable($"{root.Name}##{root.GetID()}"))
+                {
+                    setValue(root.Actor);
+                    ImGui.CloseCurrentPopup();
+                }
+            }
+            else if (typeof(IComponent).IsAssignableFrom(targetType))
+            {
+                // TODO: this is slow, it should be cached.
+                var components = root.Actor.Components.Where(x => x.GetType().IsAssignableTo(targetType)).ToArray();
+
+                if (components.Length > 0 && ImGui.Selectable($"{root.Name}##{root.GetID()}"))
+                {
+                    foreach (var comp in components)
+                    {
+                        if (targetType.IsAssignableFrom(comp.GetType()))
+                        {
+                            if (setValue(comp))
+                                break;
+                        }
+                    }
+                    ImGui.CloseCurrentPopup();
+                }
+            }
+            //else if (typeof(EObject).IsAssignableFrom(targetType))
+            //{
+            //    if (ImGui.Selectable($"{root.Name}##{root.GetID()}"))
+            //    {
+            //        setValue(root.Actor);
+            //        ImGui.CloseCurrentPopup();
+            //    }
+            //}
+            for (int i = 0; i < root.Children.Count; i++)
+            {
+                DrawSceneObjectPropertyPicker(root.Children[i], targetType, setValue);
+            }
         }
     }
 }

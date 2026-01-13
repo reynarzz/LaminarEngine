@@ -26,6 +26,11 @@ namespace Engine
             return Get<TextAsset>(path);
         }
 
+        internal static AssetResourceBase GetAssetFromGuid(Guid guid)
+        {
+            return IOLayer.GetDatabase().GetAsset<AssetResourceBase>(guid);
+        }
+
         public static FontAsset GetFont(string path)
         {
             return Get<FontAsset>(path);

@@ -442,13 +442,16 @@ namespace Engine
             }
 
             // Makes collider to use the default body. TODO: it shold link to the next available rigidbody in the hierarchy.
-            var colliders = GetComponentsInChildren<Collider2D>(); //TODO: This caused a crash when changin scenes, why?
-            foreach (var collider in colliders)
+            if (Actor)
             {
-                if (collider && collider.AttachedRigidbody == this)
+                var colliders = GetComponentsInChildren<Collider2D>(); //TODO: This caused a crash when changin scenes, why?
+                foreach (var collider in colliders)
                 {
-                    collider.AttachedRigidbody = null;
-                    collider.Create();
+                    if (collider && collider.AttachedRigidbody == this)
+                    {
+                        collider.AttachedRigidbody = null;
+                        collider.Create();
+                    }
                 }
             }
 
