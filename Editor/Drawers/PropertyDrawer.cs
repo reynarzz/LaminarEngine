@@ -25,8 +25,8 @@ namespace Editor
 
 
 
-        private static void DrawSimpleProperty<T>(string propertyName, object target, object value, bool isReadOnly,
-                                                  MemberInfo prop, int index, float width, DrawSimpleFieldDelegate<T> drawField,
+        private static bool DrawSimpleProperty<T>(string propertyName, object target, object value, bool isReadOnly,
+                                                  MemberInfo prop, object index, float width, DrawSimpleFieldDelegate<T> drawField,
                                                   bool sameLine = true, Func<T, object> valueConverter = null)
         {
             if (sameLine)
@@ -37,17 +37,21 @@ namespace Editor
 
             ImGui.BeginDisabled(isReadOnly);
             var v = (T)value;
+            var result = false;
             if (drawField(propertyName, ref v, width, false))
             {
                 ReflectionUtils.SetMemberValueSafe(target, v, prop, index, valueConverter);
+                result = true;
             }
             ImGui.EndDisabled();
+
+            return result;
         }
 
-        public static void DrawVars(string objectId, object target, MemberInfo prop, float cursorX, int index, float width, bool enforceSerializedFieldAttribute)
+        public static bool DrawVars(string objectId, object target, MemberInfo prop, float cursorX, object index, float width, bool enforceSerializedFieldAttribute)
         {
             if (prop == null)
-                return;
+                return false;
 
             object value = ReflectionUtils.GetMemberValue(target, prop);
             Type type = ReflectionUtils.GetMemberType(prop);
@@ -66,13 +70,13 @@ namespace Editor
                     attrib = prop.GetCustomAttribute<ShowFieldNoSerialize>();
                     if (attrib == null)
                     {
-                        return;
+                        return false;
                     }
                 }
 
                 if (prop.GetCustomAttribute<HideFromInspectorAttribute>() != null)
                 {
-                    return;
+                    return false;
                 }
 
                 isReadOnly = attrib.IsReadOnly;
@@ -83,11 +87,11 @@ namespace Editor
                 }
             }
 
-            DrawVars(objectId, target, value, type, propertyName, isReadOnly, prop, cursorX, index, width);
+            return DrawVars(objectId, target, value, type, propertyName, isReadOnly, prop, cursorX, index, width);
         }
 
-        public static void DrawVars(string objectId, object target, object value, Type type, string propertyName,
-                                    bool isReadOnly, MemberInfo prop, float cursorX, int index, float width)
+        public static bool DrawVars(string objectId, object target, object value, Type type, string propertyName,
+                                    bool isReadOnly, MemberInfo prop, float cursorX, object index, float width)
         {
             var header = prop.GetCustomAttribute<PropertyHeaderAttribute>();
             if (header != null)
@@ -121,7 +125,7 @@ namespace Editor
             if (!show)
             {
                 ImGui.PopStyleColor(2);
-                return;
+                return false;
             }
 
             ImGui.PopStyleColor(2);
@@ -146,6 +150,7 @@ namespace Editor
                 ImGui.EndPopup();
             }
 
+            bool resultChanged = false;
             // EObject
             if (ReflectionUtils.IsEObject(type))
             {
@@ -160,92 +165,94 @@ namespace Editor
                     ReflectionUtils.SetMemberValueSafe(target, v, prop, index);
                     return true;
                 });
+
+                resultChanged = true;
             }
             else if (type == typeof(bool))
             {
-                DrawSimpleProperty<bool>(propertyName, target, value, isReadOnly, prop, index, width,
+                resultChanged = DrawSimpleProperty<bool>(propertyName, target, value, isReadOnly, prop, index, width,
                     EditorGuiFieldsResolver.DrawBoolField);
             }
             else if (type == typeof(int))
             {
-                DrawSimpleProperty<int>(propertyName, target, value, isReadOnly, prop, index, width,
+                resultChanged = DrawSimpleProperty<int>(propertyName, target, value, isReadOnly, prop, index, width,
                     EditorGuiFieldsResolver.DrawIntField);
             }
             else if (type == typeof(uint))
             {
-                DrawSimpleProperty<uint>(propertyName, target, value, isReadOnly, prop, index, width,
+                resultChanged = DrawSimpleProperty<uint>(propertyName, target, value, isReadOnly, prop, index, width,
                     EditorGuiFieldsResolver.DrawUIntField);
             }
             else if (type == typeof(long))
             {
-                DrawSimpleProperty<long>(propertyName, target, value, isReadOnly, prop, index, width,
+                resultChanged = DrawSimpleProperty<long>(propertyName, target, value, isReadOnly, prop, index, width,
                     EditorGuiFieldsResolver.DrawLongField);
             }
             else if (type == typeof(ulong))
             {
-                DrawSimpleProperty<ulong>(propertyName, target, value, isReadOnly, prop, index, width,
+                resultChanged = DrawSimpleProperty<ulong>(propertyName, target, value, isReadOnly, prop, index, width,
                     EditorGuiFieldsResolver.DrawULongField);
             }
             else if (type == typeof(Color))
             {
-                DrawSimpleProperty<Color>(propertyName, target, value, isReadOnly, prop, index, width,
+                resultChanged = DrawSimpleProperty<Color>(propertyName, target, value, isReadOnly, prop, index, width,
                     EditorGuiFieldsResolver.DrawColorField);
             }
             else if (type == typeof(Color32))
             {
-                DrawSimpleProperty<Color>(propertyName, target, value, isReadOnly, prop, index, width,
+                resultChanged = DrawSimpleProperty<Color>(propertyName, target, value, isReadOnly, prop, index, width,
                     EditorGuiFieldsResolver.DrawColorField, true, v => (Color32)v);
             }
             else if (type == typeof(float))
             {
-                DrawSimpleProperty<float>(propertyName, target, value, isReadOnly, prop, index, width,
+                resultChanged = DrawSimpleProperty<float>(propertyName, target, value, isReadOnly, prop, index, width,
                     EditorGuiFieldsResolver.DrawFloatField);
             }
             else if (type == typeof(double))
             {
-                DrawSimpleProperty<double>(propertyName, target, value, isReadOnly, prop, index, width,
+                resultChanged = DrawSimpleProperty<double>(propertyName, target, value, isReadOnly, prop, index, width,
                     EditorGuiFieldsResolver.DrawDoubleField);
             }
             else if (type == typeof(string))
             {
-                DrawSimpleProperty<string>(propertyName, target, value, isReadOnly, prop, index, width,
+                resultChanged = DrawSimpleProperty<string>(propertyName, target, value, isReadOnly, prop, index, width,
                     EditorGuiFieldsResolver.DrawStringField);
             }
             else if (type == typeof(quat))
             {
                 var q = (quat)value; ;
                 vec4 v = new vec4(q.x, q.y, q.z, q.w);
-                DrawSimpleProperty<vec4>(propertyName, target, v, isReadOnly, prop, index, width,
+                resultChanged = DrawSimpleProperty<vec4>(propertyName, target, v, isReadOnly, prop, index, width,
                     EditorGuiFieldsResolver.DrawVec4Field, true, v => value = new quat(v.x, v.y, v.z, v.w));
             }
             else if (type == typeof(vec2))
             {
-                DrawSimpleProperty<vec2>(propertyName, target, value, isReadOnly, prop, index, width,
+                resultChanged = DrawSimpleProperty<vec2>(propertyName, target, value, isReadOnly, prop, index, width,
                     EditorGuiFieldsResolver.DrawVec2Field);
             }
             else if (type == typeof(vec3))
             {
-                DrawSimpleProperty<vec3>(propertyName, target, value, isReadOnly, prop, index, width,
+                resultChanged = DrawSimpleProperty<vec3>(propertyName, target, value, isReadOnly, prop, index, width,
                     EditorGuiFieldsResolver.DrawVec3Field);
             }
             else if (type == typeof(vec4))
             {
-                DrawSimpleProperty<vec4>(propertyName, target, value, isReadOnly, prop, index, width,
+                resultChanged = DrawSimpleProperty<vec4>(propertyName, target, value, isReadOnly, prop, index, width,
                     EditorGuiFieldsResolver.DrawVec4Field);
             }
             else if (type == typeof(mat2))
             {
-                DrawSimpleProperty<mat2>(propertyName, target, value, isReadOnly, prop, index, width,
+                resultChanged = DrawSimpleProperty<mat2>(propertyName, target, value, isReadOnly, prop, index, width,
                     EditorGuiFieldsResolver.DrawMatrix);
             }
             else if (type == typeof(mat3))
             {
-                DrawSimpleProperty<mat3>(propertyName, target, value, isReadOnly, prop, index, width,
+                resultChanged = DrawSimpleProperty<mat3>(propertyName, target, value, isReadOnly, prop, index, width,
                     EditorGuiFieldsResolver.DrawMatrix);
             }
             else if (type == typeof(mat4))
             {
-                DrawSimpleProperty<mat4>(propertyName, target, value, isReadOnly, prop, index, width,
+                resultChanged = DrawSimpleProperty<mat4>(propertyName, target, value, isReadOnly, prop, index, width,
                     EditorGuiFieldsResolver.DrawMatrix);
             }
             else if (type.IsEnum)
@@ -255,7 +262,7 @@ namespace Editor
 
                 int idx = (int)value;
                 string[] names = Enum.GetNames(type);
-                if (EditorGuiFieldsResolver.DrawCombo(propertyName, ref idx, names, width))
+                if (resultChanged = EditorGuiFieldsResolver.DrawCombo(propertyName, ref idx, names, width))
                 {
                     ReflectionUtils.SetMemberValueSafe(target, Enum.Parse(type, names[idx]), prop, index);
                 }
@@ -271,7 +278,7 @@ namespace Editor
 
                 var elementType = type.GetGenericArguments().FirstOrDefault();
 
-                DrawList(objectId, propertyName, list, value, elementType, prop, cursorX, OnAdd, OnRemove, OnRemoveCount);
+                resultChanged = DrawList(objectId, propertyName, list, value, elementType, prop, cursorX, OnAdd, OnRemove, OnRemoveCount);
                 ReflectionUtils.SetMemberValueSafe(target, value, prop, index);
 
                 void OnAdd(IList list, int totalLength)
@@ -309,7 +316,7 @@ namespace Editor
 
                 var elementType = type.GetElementType();
 
-                DrawList(objectId, propertyName, array, value, elementType, prop, cursorX, OnAdd, OnRemove, OnRemoveCount);
+                resultChanged = DrawList(objectId, propertyName, array, value, elementType, prop, cursorX, OnAdd, OnRemove, OnRemoveCount);
                 ReflectionUtils.SetMemberValueSafe(target, value, prop, index);
 
                 void OnAdd(IList list, int totalLength)
@@ -357,27 +364,32 @@ namespace Editor
                     value = ReflectionUtils.GetDefaultValueInstance(type);
                 }
 
-                var dictionary = value as IDictionary;
-                var keyDictType = type.GetGenericArguments()[0];
-                var valueDictType = type.GetGenericArguments()[1];
-
-                if (EditorGuiFieldsResolver.DrawDictionaryField(propertyName, dictionary, false))
+                resultChanged = EditorGuiFieldsResolver.DrawDictionaryField(propertyName, value as IDictionary, (Type type, string argName, object val) =>
                 {
+                    var changed = DrawVars(propertyName, value, val, type, argName, false, prop, cursorX, index, width);
 
-                }
-
-                //DrawList(objectId, propertyName, list, value, elementType, prop, cursorX, OnAdd, OnRemove, OnRemoveCount);
+                    return (val, changed);
+                });
             }
             else if (type.IsClass || ReflectionUtils.IsUserDefinedStruct(type))
             {
                 var members = ReflectionUtils.GetAllMembersWithAttributes(type, _visibilityAttributes, true, true);
 
-                var propIndex = index;
+                var propIndex = (int)index;
                 foreach (var subProp in members)
                 {
                     if (value != null)
                     {
-                        DrawVars(objectId, value, subProp, cursorX, index++, width, true);
+                        var changed = DrawVars(objectId, value, subProp, cursorX, index, width, true);
+
+                        if (changed)
+                        {
+                            resultChanged = true;
+                        }
+
+                        var idx = (int)index;
+                        idx++;
+                        index = idx;
                     }
                 }
                 ReflectionUtils.SetMemberValueSafe(target, value, prop, propIndex);
@@ -386,10 +398,12 @@ namespace Editor
             }
 
             ImGui.TreePop();
+
+            return resultChanged;
         }
 
 
-        private static void DrawList(string objectId, string propertyName, IList list, object value, Type elemenType,
+        private static bool DrawList(string objectId, string propertyName, IList list, object value, Type elemenType,
                                      MemberInfo prop, float cursorX, Action<IList, int> onAddCallback, Action<IList, int> onRemoveCallback,
                                      Action<IList, int> removeCount)
         {
@@ -400,19 +414,21 @@ namespace Editor
 
                 var listType = value.GetType();
 
-                EditorGuiFieldsResolver.DrawListField(propertyName, list, false, onAddCallback, onRemoveCallback, removeCount,
-                  (index, itemWidth, item) =>
-                  {
-                      if (item == null)
-                      {
-                          item = ReflectionUtils.GetDefaultValueInstance(elemenType);
-                      }
+                return EditorGuiFieldsResolver.DrawListField(propertyName, list, false, onAddCallback, onRemoveCallback, removeCount,
+                        (index, itemWidth, item) =>
+                        {
+                            if (item == null)
+                            {
+                                item = ReflectionUtils.GetDefaultValueInstance(elemenType);
+                            }
 
-                      DrawVars(objectId, list, item, elemenType, $"##__{index}_item", false, prop, cursorX, index, itemWidth);
+                            DrawVars(objectId, list, item, elemenType, $"##__{index}_item", false, prop, cursorX, index, itemWidth);
 
-                      return false;
-                  });
+                            return false;
+                        });
             }
+
+            return false;
         }
 
         private static readonly List<(MethodInfo method, bool nextSameLine)> _invokableMethods = new();

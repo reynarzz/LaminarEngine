@@ -682,7 +682,8 @@ namespace Editor.Utils
             return changed;
         }
 
-        internal static bool DrawDictionaryField(string name, IDictionary dictionary, bool drawElementsAsTrees)
+        internal static bool DrawDictionaryField(string name, IDictionary dictionary,
+            Func<Type, string, object, (object valueOut, bool result)> onDrawArgCallback = null, bool drawElementsAsTrees = false)
         {
             ImGui.SameLine();
             ImGui.SetCursorPosX(ImGui.GetWindowWidth() - 120);
@@ -733,10 +734,17 @@ namespace Editor.Utils
             //    changed = false;
             //}
 
-            int i = 0;
+            var keys = dictionary.Keys;
+            var keysList = new List<object>(dictionary.Count);
             foreach (var key in dictionary.Keys)
             {
-                var value = dictionary[key];
+                keysList.Add(key);
+            }
+
+            for (int i = 0; i < keysList.Count; i++)
+            {
+                var key = keysList[i];
+                var value = dictionary[keysList[i]];
 
                 bool show;
                 if (ImGui.Button($"X##_DELETE_BUTTON_{i}_{name}", new Vector2(22, 22)))
@@ -767,14 +775,32 @@ namespace Editor.Utils
                     var valueOut = value;
                     ImGui.SetCursorPosX(itemTitleCursorX + 50);
 
-                    if (DrawField(dictionary?.GetType().GetGenericArguments()[0], $"##{name}_{i}__DICT_KEY__", ref keyOut))
+                    var keyArgName = $"##{name}_{i}__DICT_KEY__";
+                    var valueArgName = $"##{name}_{i}__DICT_VALUE__";
+                    if (onDrawArgCallback != null)
+                    {
+                        var res = onDrawArgCallback(dictionary?.GetType().GetGenericArguments()[0], keyArgName, keyOut);
+
+                        if (res.result)
+                        {
+                            keyOut = res.valueOut;
+                            SetKeyValue(res.valueOut);
+                            break;
+                        }
+                    }
+                    else if (DrawField(dictionary?.GetType().GetGenericArguments()[0], keyArgName, ref keyOut))
                     {
                         changed = true;
-                        if(keyOut != key && !dictionary.Contains(keyOut))
+                        SetKeyValue(keyOut);
+                        break;
+                    }
+
+                    void SetKeyValue(object keyVal)
+                    {
+                        if (keyOut != key && !dictionary.Contains(keyOut))
                         {
                             dictionary.Remove(key);
                             dictionary[keyOut] = valueOut;
-                            break;
                         }
                     }
 
@@ -790,12 +816,26 @@ namespace Editor.Utils
                         show = true;
                     }
                     ImGui.SetCursorPosX(itemTitleCursorX + 50);
-                    if (DrawField(dictionary?.GetType().GetGenericArguments()[1], $"##{name}_{i}__DICT_VALUE__", ref valueOut))
+
+                    if (onDrawArgCallback != null)
+                    {
+                        var res = onDrawArgCallback(dictionary?.GetType().GetGenericArguments()[1], valueArgName, valueOut);
+
+                        if (res.result)
+                        {
+                            valueOut = res.valueOut;
+                            dictionary[keyOut] = valueOut;
+
+                            break;
+
+                        }
+                    }
+                    else if (DrawField(dictionary?.GetType().GetGenericArguments()[1], valueArgName, ref valueOut))
                     {
                         changed = true;
+                        dictionary[keyOut] = valueOut;
                     }
 
-                    dictionary[keyOut] = valueOut;
 
                     if (drawElementsAsTrees)
                         ImGui.TreePop();

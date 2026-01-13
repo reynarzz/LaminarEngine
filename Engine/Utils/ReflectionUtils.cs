@@ -295,11 +295,15 @@ namespace Engine.Utils
             }
         }
 
-        public static void SetMemberValueSafe<T>(object target, T value, MemberInfo prop, int index, Func<T, object> valueConverter = null)
+        public static void SetMemberValueSafe<T>(object target, T value, MemberInfo prop, object key, Func<T, object> valueConverter = null)
         {
             if (target is IList list)
             {
-                list[index] = value;
+                list[(int)key] = value;
+            }
+            else if (target is IDictionary dictionary)
+            {
+                dictionary[key] = value;
             }
             else
             {
