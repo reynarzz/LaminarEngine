@@ -59,7 +59,7 @@ namespace Editor
 
                 PushLayer(new PhysicsLayer(), 6);
                 PushLayer(new SceneLayer(), 4);
-                //PushLayer(new GameApplication(), 2);
+                PushLayer(new GameApplication(), 2);
 
             }
 
@@ -79,12 +79,12 @@ namespace Editor
             {
                 Debug.DrawUILines = !Debug.DrawUILines;
             }
-
-            string TestfilePath = "D:/Scene.txt";
+            
+            string TestfilePath = $"{EditorPaths.AppRoot}Scene.bin";
 
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.S))
             {
-                Debug.Log("Save");
+                Debug.Log("Saving scene to: " + TestfilePath);
                 _actors = SceneSerializer.SerializeScene(SceneManager.Scenes[^1]);
 
                 File.WriteAllText(TestfilePath, JsonConvert.SerializeObject(_actors, Formatting.Indented, _jsonSettings));

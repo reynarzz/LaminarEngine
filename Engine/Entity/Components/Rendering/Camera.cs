@@ -139,15 +139,10 @@ namespace Engine
 
         bool ICamera.IsAlive => IsAlive;
 
-        protected override void OnAwake()
+        internal override void OnInternalInitialize()
         {
-            base.OnAwake();
-
-            OrthographicSize = 32;
-            Fov = 60.0f;
             WindowManager.Window.OnWindowChanged += OnWindowChanged;
             UpdateCurrent();
-            //UpdatePerspective();
         }
 
         private void OnWindowChanged(int width, int height)
