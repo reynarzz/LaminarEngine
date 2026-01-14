@@ -13,7 +13,8 @@ namespace Engine
         [SerializedField] private List<AnimatorTransition> _transitions = new();
         internal IReadOnlyList<AnimatorTransition> Transitions => _transitions;
 
-        public AnimationState()
+        // Serializer
+        private AnimationState()
         {
         }
         public AnimationState(string name, AnimationClip clip)

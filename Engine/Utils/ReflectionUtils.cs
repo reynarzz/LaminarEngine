@@ -26,7 +26,7 @@ namespace Engine.Utils
                 }
                 else
                 {
-                   return Activator.CreateInstance(type);
+                    return Activator.CreateInstance(type);
                 }
             }
             else
@@ -577,13 +577,13 @@ namespace Engine.Utils
         /// <summary>
         /// Walks the complete object graph of 'target' to make sure that it has at least one member (field/property) with the 'searchedType'
         /// </summary>
-        internal static bool HasAnySerializedMemberWithType(Type target, Type searchedType)
+        internal static bool HasAnySerializedMemberWithType(Type target, Type searchedType, bool checkOnlySerialized = true)
         {
             var visited = new HashSet<Type>();
-            return ContainsType(target, searchedType, visited);
+            return ContainsType(target, searchedType, visited, checkOnlySerialized);
         }
 
-        private static bool ContainsType(Type current, Type searched, HashSet<Type> visited)
+        private static bool ContainsType(Type current, Type searched, HashSet<Type> visited, bool checkOnlySerialized = true)
         {
             if (current == null)
                 return false;
@@ -598,18 +598,18 @@ namespace Engine.Utils
 
             // Array
             if (current.IsArray)
-                return ContainsType(current.GetElementType(), searched, visited);
+                return ContainsType(current.GetElementType(), searched, visited, checkOnlySerialized);
 
             // Nullabl
             if (Nullable.GetUnderlyingType(current) is Type nullable)
-                return ContainsType(nullable, searched, visited);
+                return ContainsType(nullable, searched, visited, checkOnlySerialized);
 
             // Generic arguments
             if (current.IsGenericType)
             {
                 foreach (var arg in current.GetGenericArguments())
                 {
-                    if (ContainsType(arg, searched, visited))
+                    if (ContainsType(arg, searched, visited, checkOnlySerialized))
                         return true;
                 }
             }
@@ -618,10 +618,20 @@ namespace Engine.Utils
             if (IsInternalType(current))
                 return false;
 
-            foreach (var member in GetAllMembersWithAttribute<SerializedFieldAttribute>(current))
+            IEnumerable<MemberInfo> members = null;
+            if (checkOnlySerialized)
+            {
+                members = GetAllMembersWithAttribute<SerializedFieldAttribute>(current);
+            }
+            else
+            {
+                members = current.GetMembers(_flags);
+            }
+
+            foreach (var member in members)
             {
                 var memberType = GetMemberType(member);
-                if (ContainsType(memberType, searched, visited))
+                if (ContainsType(memberType, searched, visited, checkOnlySerialized))
                     return true;
             }
 

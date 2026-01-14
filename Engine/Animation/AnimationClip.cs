@@ -42,7 +42,7 @@ namespace Engine
         [SerializedField] private Dictionary<string, AnimationCurveBase<quat>> _quatCurves = new();
         [SerializedField] private Dictionary<string, AnimationCurveBase<Color>> _colorCurves = new();
         [SerializedField] private Dictionary<string, AnimationCurveBase<Sprite>> _spriteCurves = new();
-        [SerializedField] private Dictionary<string, AnimationCurveBase> _curves = new();
+        //[SerializedField] private Dictionary<string, AnimationCurveBase> _curves = new();
 
         [SerializedField] private EventCurve _eventCurve = new();
 

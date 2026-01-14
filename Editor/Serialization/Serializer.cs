@@ -67,6 +67,14 @@ namespace Editor.Serialization
                     {
                         return SerializedType.AnimationAsset;
                     }
+                    else if (type.IsAssignableTo(typeof(Material)))
+                    {
+                        return SerializedType.MaterialAsset;
+                    }
+                    else if (type.IsAssignableTo(typeof(AnimatorController)))
+                    {
+                        return SerializedType.AnimatorControllerAsset;
+                    }
 
                     return SerializedType.Asset;
                 }
@@ -77,10 +85,22 @@ namespace Editor.Serialization
             }
             else if (ReflectionUtils.IsCollection(type, out var collectionType))
             {
+                // NOTE: ugly 'if/else' to avoid unnecessary computations.
                 if (ReflectionUtils.IsCollectionOfInternalTypes(type) ||
-                    !ReflectionUtils.HasAnySerializedMemberWithType(type, typeof(IObject)))
+                   !ReflectionUtils.HasAnySerializedMemberWithType(type, typeof(IObject)))
                 {
-                    return SerializedType.SimpleCollection;
+                    if (!ReflectionUtils.HasAnySerializedMemberWithType(type, typeof(Delegate), false))
+                    {
+                        return SerializedType.SimpleCollection;
+                    }
+                    else
+                    {
+                        return SerializedType.ComplexCollection;
+                    }
+                }
+                else if (ReflectionUtils.HasAnySerializedMemberWithType(type, typeof(Delegate), false))
+                {
+                    return SerializedType.ComplexCollection;
                 }
 
                 var elementsTypes = ReflectionUtils.GetCollectionElementsType(type);
@@ -100,10 +120,12 @@ namespace Editor.Serialization
             }
             else if (type.IsClass || ReflectionUtils.IsUserDefinedStruct(type))
             {
-                if (ReflectionUtils.HasAnySerializedMemberWithType(type, typeof(IObject)))
+                if (ReflectionUtils.HasAnySerializedMemberWithType(type, typeof(IObject)) ||
+                    ReflectionUtils.HasAnySerializedMemberWithType(type, typeof(Delegate), false))
                 {
                     return SerializedType.ComplexClass;
                 }
+
                 return SerializedType.SimpleClass;
             }
             return SerializedType.None;
@@ -139,7 +161,7 @@ namespace Editor.Serialization
             return (aTop && (!bHasAny || bTop)) || (bTop && (!aHasAny || aTop));
         }
 
-        // This only returns reference ids and complex property data, simple data should be taken care of elsewhere.
+        // This only returns reference ids, simple and complex property data.
         internal static object GetPropertyData(MemberInfo member, SerializedType serializedMemberType, object value)
         {
             // Note: For runtime-created resource assets such as Materials, Shaders, Textures etc... maybe should have a empty guid, so the serializer,
@@ -149,6 +171,7 @@ namespace Editor.Serialization
             {
                 return null;
             }
+
             var nameTest = member.Name;
 
             if (serializedMemberType == SerializedType.Simple ||
@@ -160,7 +183,13 @@ namespace Editor.Serialization
 
             var type = ReflectionUtils.GetMemberType(member);
 
-            if (type.IsAssignableTo(typeof(IObject)))
+            if (type.IsAssignableTo(typeof(Delegate)))
+            {
+                // TODO: handle delegates.
+                Debug.Warn($"TODO: Can't serialize delegate: {type.Name}");
+                return null;
+            }
+            else if (type.IsAssignableTo(typeof(IObject)))
             {
                 if (value != null)
                 {

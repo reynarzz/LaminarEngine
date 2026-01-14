@@ -20,11 +20,11 @@ namespace Engine
 
         private const string _defaultTypeName = "Material";
 
-        public Material(string name, Shader shader) : this(Guid.Empty, name, shader)
+        public Material(Shader shader) : this(_defaultTypeName, shader)
         {
         }
 
-        public Material(Shader shader) : this(_defaultTypeName, shader)
+        public Material(string name, Shader shader) : this(Guid.Empty, name, shader)
         {
         }
 

@@ -13,10 +13,7 @@ namespace Engine
     [UniqueComponent]
     public class Animator : Component, ILateUpdatableComponent
     {
-        [SerializedField]
-        private Dictionary<string, AnimationState> _states = new();
-
-        internal IDictionary<string, AnimationState> States => _states;
+        internal IDictionary<string, AnimationState> States => Controller.States;
 
         private AnimationPlayer _animPlayer = new();
         private AnimationState _nextState;
@@ -24,6 +21,11 @@ namespace Engine
         private float _transitionTime;
         private float _transitionDuration;
         public event Action<Animator> OnUpdate;
+
+        [SerializedField("Controller")]
+        public AnimatorController Controller { get; set; } = new(); // TODO: remove the instance creation,
+                                                                    //       this is only done to not break the game.
+                                                                    //       since it is done completely in code, no editor.
 
         [ShowFieldNoSerialize]
         public AnimationState CurrentState { get; private set; }
@@ -33,7 +35,7 @@ namespace Engine
 
         public void AddState(AnimationState state)
         {
-            _states[state.Name] = state;
+            Controller.States[state.Name] = state;
 
             if (CurrentState == null)
             {
@@ -43,7 +45,7 @@ namespace Engine
 
         public void SetState(string name)
         {
-            if (_states.TryGetValue(name, out var state))
+            if (Controller.States.TryGetValue(name, out var state))
             {
                 CurrentState = state;
                 _animPlayer.Play(state.Clip);
@@ -52,13 +54,13 @@ namespace Engine
 
         public AnimationState GetState(string name)
         {
-            _states.TryGetValue(name, out var state);
+            Controller.States.TryGetValue(name, out var state);
             return state;
         }
 
         public void SetState(AnimationState state)
         {
-            if (!_states.ContainsKey(state.Name))
+            if (!Controller.States.ContainsKey(state.Name))
             {
                 AddState(state);
             }
@@ -82,7 +84,7 @@ namespace Engine
             var transition = CurrentState.CheckTransitions(Parameters);
             if (transition != null && _nextState == null)
             {
-                if (_states.TryGetValue(transition.ToState, out _nextState))
+                if (Controller.States.TryGetValue(transition.ToState, out _nextState))
                 {
                     _transitionTime = 0f;
                     _transitionDuration = transition.BlendTime;
@@ -110,7 +112,7 @@ namespace Engine
 
         public void Play(string state)
         {
-            _states.TryGetValue(state, out _nextState);
+            Controller.States.TryGetValue(state, out _nextState);
             _transitionDuration = 0;
             _transitionTime = 0;
             UpdateFrames();
@@ -156,7 +158,7 @@ namespace Engine
         /// </summary>
         public void Clear()
         {
-            _states.Clear();
+            Controller.States.Clear();
             CurrentState = null;
             _nextState = null;
             _transitionTime = 0;

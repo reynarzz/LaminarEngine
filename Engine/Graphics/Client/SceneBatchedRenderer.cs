@@ -70,44 +70,51 @@ namespace Engine.Graphics
                 info.TotalRenderers += batch.RenderersCount;
                 batch.Flush();
 
-                var isScreenGrabPass = batch.Material.Passes.Any(x => x.IsScreenGrabPass);
-
-                if (isScreenGrabPass)
+                if (batch.Material)
                 {
-                    //GfxDeviceManager.Current.Clear(new ClearDeviceConfig()
-                    //{
-                    //    Color = _mainCamera.BackgroundColor,
-                    //    RenderTarget = _screenGrabTarget.NativeResource
-                    //});
+                    var isScreenGrabPass = batch.Material.Passes.Any(x => x.IsScreenGrabPass);
 
-                    if (grabBlitTarget)
+                    if (isScreenGrabPass)
                     {
-                        GfxDeviceManager.Current.BlitRenderTargetTo(grabBlitTarget.NativeResource, _screenGrabTarget.NativeResource);
-                    }
+                        //GfxDeviceManager.Current.Clear(new ClearDeviceConfig()
+                        //{
+                        //    Color = _mainCamera.BackgroundColor,
+                        //    RenderTarget = _screenGrabTarget.NativeResource
+                        //});
 
-                    info.ScreenGrabPasses++;
-
-                    try
-                    {
-                        for (int j = 0; j < batches.Count; j++)
+                        if (grabBlitTarget)
                         {
-                            var batchGrab = batches[j];
-                            if (!batchGrab.IsActive || batchGrab == batch)
-                            {
-                                break;
-                            }
+                            GfxDeviceManager.Current.BlitRenderTargetTo(grabBlitTarget.NativeResource, _screenGrabTarget.NativeResource);
+                        }
 
-                            batchGrab.Flush();
-                            RenderPass(batchGrab, ref VP, _screenGrabTarget, _screenGrabTarget, camera);
+                        info.ScreenGrabPasses++;
+
+                        try
+                        {
+                            for (int j = 0; j < batches.Count; j++)
+                            {
+                                var batchGrab = batches[j];
+                                if (!batchGrab.IsActive || batchGrab == batch)
+                                {
+                                    break;
+                                }
+
+                                batchGrab.Flush();
+                                RenderPass(batchGrab, ref VP, _screenGrabTarget, _screenGrabTarget, camera);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.EngineError(e);
                         }
                     }
-                    catch (Exception e)
-                    {
-                        Debug.EngineError(e);
-                    }
+                }
+                else
+                {
+                    Debug.EngineError("Fatal batch doesn't have material");
                 }
 
-                RenderPass(batch, ref VP, sceneRenderTarget, _screenGrabTarget, camera);
+                    RenderPass(batch, ref VP, sceneRenderTarget, _screenGrabTarget, camera);
             }
 
             return info;

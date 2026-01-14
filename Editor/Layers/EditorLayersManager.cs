@@ -14,7 +14,9 @@ namespace Editor
         private SceneLayer _editorSceneLayer;
         private List<ActorDataSceneAsset> _actors;
         private string TestfilePath => $"{EditorPaths.AppRoot}Scene.bin";
-        private string AnimClip => $"{EditorPaths.AppRoot}AnimClip.txt";
+        private string AnimClipPath => $"{EditorPaths.AppRoot}AnimClip.bin";
+        private string AnimControllerPath => $"{EditorPaths.AppRoot}AnimController.bin";
+
 
         private readonly List<(LayerBase layer, int priorityIndex)> _playmodeLayers;
      
@@ -72,11 +74,14 @@ namespace Editor
                     Debug.Log("Saving scene to: " + TestfilePath);
                     _actors = SceneSerializer.SerializeScene(SceneManager.Scenes[^1]);
 
-                    var pig = Actor.Find("Pig Enemy");
-                    var animClip = pig.GetComponent<Animator>().CurrentState.Clip;
-                    var propertiesIR = Serializer.Serialize(animClip);
+                    var pig = Actor.Find("Player");
+                    var animator = pig.GetComponent<Animator>();
+                    var animIR = Serializer.Serialize(animator.CurrentState.Clip);
+                    var animControlerIR = Serializer.Serialize(animator.Controller);
 
-                    File.WriteAllText(AnimClip, EditorJsonUtils.Serialize(propertiesIR));
+                    File.WriteAllText(AnimClipPath, EditorJsonUtils.Serialize(animIR));
+                    File.WriteAllText(AnimControllerPath, EditorJsonUtils.Serialize(animControlerIR));
+
                     File.WriteAllText(TestfilePath, EditorJsonUtils.Serialize(_actors));
                 }
                 //else
@@ -88,7 +93,7 @@ namespace Editor
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.A))
             {
                 var anim = new AnimationClip("Name");
-                var ir = EditorJsonUtils.Deserialize<List<SerializedPropertyData>>(File.ReadAllText(AnimClip));
+                var ir = EditorJsonUtils.Deserialize<List<SerializedPropertyData>>(File.ReadAllText(AnimClipPath));
 
                 Deserializer.Deserialize(anim, ir);
                 var anim2 = Deserializer.Deserialize<AnimationClip>(ir);

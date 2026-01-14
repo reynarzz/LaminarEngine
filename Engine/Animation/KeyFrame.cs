@@ -13,7 +13,7 @@ namespace Engine
 
     public interface IKeyFrame<T> : IKeyFrame
     {
-        [SerializedField] public T Value { get; set; }
+        public T Value { get; set; }
     }
     public struct Keyframe<T> : IKeyFrame<T>
     {
