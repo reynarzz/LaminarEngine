@@ -1,6 +1,8 @@
-﻿using Engine;
+﻿using Box2D.NET;
+using Engine;
 using GlmNet;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -78,6 +80,7 @@ namespace Game
                 //= new Dictionary<int, AssetResourceBase> { { 11, null }, { 71, sp } };
 
 
+
             //[SerializedField]
             //private Dictionary<string, AssetResourceBase> _InStructassetDictionary =
             //   new Dictionary<string, AssetResourceBase> { { "asd", null }, { "adkaj", sp } };
@@ -95,6 +98,17 @@ namespace Game
                 Debug.Log("Called from editor");
             }
         }
+
+        public class AAA<T>
+        {
+            [SerializedField] public T TValue;
+            [SerializedField] public EnumerablePartitionerOptions Enumn;
+        }
+        [SerializedField] AAA<int> AAAClass;
+        [SerializedField] List<AAA<int>> AAAIntList;
+        [SerializedField] List<AAA<string>> AAAStringList;
+        [SerializedField] List<AAA<AStruct>> AAAStructList;
+
         [SerializedField] private quat Orientation;
         [SerializedField] public AStruct StructType { get; set; }
         [SerializedField] public List<AStruct> AStructTypeList { get; set; }

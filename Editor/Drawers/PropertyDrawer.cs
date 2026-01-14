@@ -439,15 +439,14 @@ namespace Editor
 
 
         private static bool DrawList(string objectId, string propertyName, IList list, object value, Type elemenType,
-                                     MemberInfo prop, float cursorX, Action<IList, int> onAddCallback, Action<IList, int> onRemoveCallback,
-                                     Action<IList, int> removeCount, SetMemberValueSafeCallBack setMemberCallback)
+                                     MemberInfo prop, float cursorX, Action<IList, int> onAddCallback, 
+                                     Action<IList, int> onRemoveCallback, Action<IList, int> removeCount, 
+                                     SetMemberValueSafeCallBack setMemberCallback)
         {
-            if (elemenType == null || !elemenType.IsGenericType)
+            if (elemenType == null || !elemenType.IsGenericType || (elemenType.IsGenericType && !ReflectionUtils.IsCollection(elemenType)))
             {
                 ImGui.SameLine();
                 ImGui.SetCursorPosX(Math.Max(EditorGuiFieldsResolver.XPosOffset, ImGui.GetCursorPosX()));
-
-                var listType = value.GetType();
 
                 return EditorGuiFieldsResolver.DrawListField(propertyName, list, false, onAddCallback, onRemoveCallback, removeCount,
                         (index, itemWidth, item) =>
