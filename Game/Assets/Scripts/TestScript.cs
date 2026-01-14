@@ -140,6 +140,10 @@ namespace Game
         private Dictionary<int, Component> _compStringDictionary =
            new Dictionary<int, Component> { { 3, default }, { 51, default } };
 
+        [SerializedField]
+        private Dictionary<int, quat> _quatDictionary =
+          new Dictionary<int, quat> { { 3, default }, { 51, default } };
+
 
         [ShowMethodInEditor]
         public void AMethodCallingFromEditor()

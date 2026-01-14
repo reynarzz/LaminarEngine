@@ -48,9 +48,9 @@ namespace GlmNet
             );
         }
 
-        public static explicit operator vec4(quat q)
+        public vec4 ToVec4()
         {
-            return new vec4(q.x, q.y, q.z, q.w);
+            return new vec4(x, y, z, w);
         }
         /// <summary>Converts quaternion to 4x4 rotation matrix (column-major)</summary>
         public mat4 ToMat4()

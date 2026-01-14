@@ -63,7 +63,7 @@ namespace Editor
             if (prop == null)
                 return false;
 
-            if(setMemberCallBack == null)
+            if (setMemberCallBack == null)
             {
                 setMemberCallBack = ReflectionUtils.SetMemberValueSafe;
             }
@@ -101,13 +101,13 @@ namespace Editor
                 }
             }
 
-            return DrawVars(objectId, target, value, type, propertyName, isReadOnly, prop, 
-                            cursorX, index, setMemberCallBack, width);
+            return DrawVars(objectId, target, value, type, propertyName, isReadOnly, prop,
+                            cursorX, index, width, setMemberCallBack);
         }
 
         public static bool DrawVars(string objectId, object target, object value, Type type, string propertyName,
-                                    bool isReadOnly, MemberInfo prop, float cursorX, int index,
-                                    SetMemberValueSafeCallBack setMemberValueCallBack, float width)
+                                    bool isReadOnly, MemberInfo prop, float cursorX, int index, float width,
+                                    SetMemberValueSafeCallBack setMemberValueCallBack)
         {
             var header = prop.GetCustomAttribute<PropertyHeaderAttribute>();
             if (header != null)
@@ -216,8 +216,8 @@ namespace Editor
             }
             else if (type == typeof(Color32))
             {
-                resultChanged = DrawSimpleProperty<Color>(propertyName, target, value, isReadOnly, prop, index, width,
-                    EditorGuiFieldsResolver.DrawColorField, setMemberValueCallBack, true, v => (Color32)v);
+                resultChanged = DrawSimpleProperty<Color32>(propertyName, target, value, isReadOnly, prop, index, width,
+                    EditorGuiFieldsResolver.DrawColor32Field, setMemberValueCallBack, true);
             }
             else if (type == typeof(float))
             {
@@ -234,13 +234,6 @@ namespace Editor
                 resultChanged = DrawSimpleProperty<string>(propertyName, target, value, isReadOnly, prop, index, width,
                     EditorGuiFieldsResolver.DrawStringField, setMemberValueCallBack);
             }
-            else if (type == typeof(quat))
-            {
-                var q = (quat)value;
-                vec4 v = new vec4(q.x, q.y, q.z, q.w);
-                resultChanged = DrawSimpleProperty<vec4>(propertyName, target, v, isReadOnly, prop, index, width,
-                    EditorGuiFieldsResolver.DrawVec4Field, setMemberValueCallBack, true, v => value = new quat(v.x, v.y, v.z, v.w));
-            }
             else if (type == typeof(vec2))
             {
                 resultChanged = DrawSimpleProperty<vec2>(propertyName, target, value, isReadOnly, prop, index, width,
@@ -255,6 +248,11 @@ namespace Editor
             {
                 resultChanged = DrawSimpleProperty<vec4>(propertyName, target, value, isReadOnly, prop, index, width,
                     EditorGuiFieldsResolver.DrawVec4Field, setMemberValueCallBack);
+            }
+            else if (type == typeof(quat))
+            {
+                resultChanged = DrawSimpleProperty<quat>(propertyName, target, value, isReadOnly, prop, index, width,
+                    EditorGuiFieldsResolver.DrawQuatField, setMemberValueCallBack, true);
             }
             else if (type == typeof(mat2))
             {
@@ -382,13 +380,13 @@ namespace Editor
                 {
                     value = ReflectionUtils.GetDefaultValueInstance(type);
                 }
-                
+
                 resultChanged = EditorGuiFieldsResolver.DrawDictionaryField(propertyName, value as IDictionary,
                     (Type type, string argName, object argValue) =>
                 {
                     object sendData = argValue;
                     var changed = DrawVars(propertyName, value, argValue, type, argName, isReadOnly, prop,
-                        cursorX, index, (__target, __value, x, y, valueConverter) =>
+                        cursorX, index, width, (__target, __value, property, idx, valueConverter) =>
                         {
                             if (__target is IDictionary)
                             {
@@ -396,9 +394,9 @@ namespace Editor
                             }
                             else
                             {
-                                ReflectionUtils.SetMemberValueSafe(__target, __value, x, y, valueConverter);
+                                ReflectionUtils.SetMemberValueSafe(__target, __value, property, idx, valueConverter);
                             }
-                        }, width);
+                        });
 
                     return (sendData, changed);
                 });
@@ -458,7 +456,7 @@ namespace Editor
                                 item = ReflectionUtils.GetDefaultValueInstance(elemenType);
                             }
 
-                            DrawVars(objectId, list, item, elemenType, $"##__{index}_item", false, prop, cursorX, index, setMemberCallback, itemWidth);
+                            DrawVars(objectId, list, item, elemenType, $"##__{index}_item", false, prop, cursorX, index, itemWidth, setMemberCallback);
 
                             return false;
                         });

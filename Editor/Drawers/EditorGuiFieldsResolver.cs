@@ -19,10 +19,10 @@ namespace Editor.Utils
 
         private static object _selectedValue;
         private static Func<object, bool> _selectedSetter;
+        public delegate (object valueOut, bool result) onDrawDictionaryArgCallback(Type argKey, string argName, object argValue);
 
         public EditorGuiFieldsResolver()
         {
-
         }
 
         private static void SetNextItemWidth(float width)
@@ -141,9 +141,18 @@ namespace Editor.Utils
         }
 
         private static bool _openColorPicker = false;
-        public static bool DrawColorField(string name, ref Color value)
+       
+        public static bool DrawColor32Field(string name, ref Color32 value, float itemWidth = 0, bool pressEnterToConfirm = false)
         {
-            return DrawColorField(name, ref value, 0, false);
+            Color col = (Color)value;
+            var result = DrawColorField(name, ref col, itemWidth, pressEnterToConfirm);
+
+            if (result)
+            {
+                value = (Color32)col;
+            }
+
+            return result;
         }
         public static bool DrawColorField(string name, ref Color value, float itemWidth = 0, bool pressEnterToConfirm = false)
         {
@@ -224,6 +233,20 @@ namespace Editor.Utils
         public static bool DrawVec4Field(string name, ref vec4 value)
         {
             return DrawVec4Field(name, ref value, 0, false);
+        }
+
+        public static bool DrawQuatField(string name, ref quat value, float itemWidth = 0, bool pressEnterToConfirm = false)
+        {
+            var vecValue = value.ToVec4();
+
+            var result = DrawVec4Field(name,ref vecValue, itemWidth,pressEnterToConfirm);
+
+            if (result)
+            {
+                value = new quat(vecValue.x, vecValue.y, vecValue.z, vecValue.w);
+            }
+
+            return result;
         }
         public static bool DrawVec4Field(string name, ref vec4 value, float itemWidth = 0, bool pressEnterToConfirm = false)
         {
@@ -545,11 +568,11 @@ namespace Editor.Utils
             }
             else if (type == typeof(quat))
             {
-                vec4 refValue = (vec4)CastSafe<quat>(value);
+                quat refValue = CastSafe<quat>(value);
 
                 bool result = false;
 
-                if (result = DrawVec4Field(name, ref refValue, itemWidth, pressEnterToConfirm))
+                if (result = DrawQuatField(name, ref refValue, itemWidth, pressEnterToConfirm))
                 {
                     value = new quat(refValue.x, refValue.y, refValue.z, refValue.w);
                 }
@@ -681,9 +704,9 @@ namespace Editor.Utils
 
             return changed;
         }
-
         internal static bool DrawDictionaryField(string name, IDictionary dictionary,
-            Func<Type, string, object, (object valueOut, bool result)> onDrawArgCallback = null, bool drawElementsAsTrees = false)
+                                                 onDrawDictionaryArgCallback onDrawArgCallback = null, 
+                                                 bool drawElementsAsTrees = false)
         {
             if (dictionary == null)
                 return false;
@@ -740,6 +763,7 @@ namespace Editor.Utils
                 {
                     dictionary.Remove(key);
                     Debug.Log("remove from dictionary");
+                    changed = true;
 
                     return true;
                 }
@@ -815,6 +839,7 @@ namespace Editor.Utils
 
                         if (res.result)
                         {
+                            Debug.Log(res.valueOut.GetType());
                             valueOut = res.valueOut;
                         }
                     }
