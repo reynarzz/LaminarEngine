@@ -46,6 +46,7 @@ namespace Engine
             get => _localRotation;
             set
             {
+                _eulerCacheValid = false;
                 _localRotation = Mathf.Normalize(value);
                 MarkDirty();
             }
@@ -60,10 +61,53 @@ namespace Engine
             }
             set
             {
-                LocalRotation = EulerToQuaternion(value);
+                var currentEuler = QuaternionToEuler(LocalRotation);
+                var delta = value - currentEuler;
+                var deltaQ = quat.FromEulerAngles(glm.radians(delta.x), glm.radians(delta.y), glm.radians(delta.z));
+
+                LocalRotation = Mathf.Normalize(deltaQ * LocalRotation);
             }
         }
 
+        private vec3 _eulerDeltaCache;
+        private bool _eulerCacheValid = false;
+
+        internal void SyncLocalEulerDelta(bool force = false)
+        {
+            if (!_eulerCacheValid || force)
+            {
+                _eulerCacheValid = true;
+                _eulerDeltaCache = QuaternionToEuler(_localRotation);
+            }
+        }
+        // [ShowFieldNoSerialize("Rotation")]
+        private vec3 LocalEulerDelta
+        {
+            get
+            {
+               // if (Application.IsInPlayMode)
+                {
+                    SyncLocalEulerDelta();
+                }
+                return _eulerDeltaCache;
+            }
+            set
+            {
+                vec3 delta = value - _eulerDeltaCache;
+                _eulerDeltaCache = value;
+
+                if (delta == vec3.Zero)
+                    return;
+
+                var qx = delta.x != 0 ? quat.FromAxisAngle(new vec3(1, 0, 0), glm.radians(delta.x)) : quat.Identity;
+                var qy = delta.y != 0 ? quat.FromAxisAngle(new vec3(0, 1, 0), glm.radians(delta.y)) : quat.Identity;
+                var qz = delta.z != 0 ? quat.FromAxisAngle(new vec3(0, 0, 1), glm.radians(delta.z)) : quat.Identity;
+
+                quat deltaQ = qz * qy * qx;
+
+                LocalRotation = Mathf.Normalize(deltaQ * LocalRotation);
+            }
+        }
 
         [SerializedField("Scale")]
         public vec3 LocalScale

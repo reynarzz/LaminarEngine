@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Engine;
+using Newtonsoft.Json;
 using System;
 
 namespace GlmNet
@@ -116,7 +117,7 @@ namespace GlmNet
         }
 
         /// <summary>Quaternion from Euler angles (radians)</summary>
-        public static quat FromEulerAngles(vec3 euler)
+        public static quat FromEulerAngles(float v, vec3 euler)
         {
             float cy = MathF.Cos(euler.z * 0.5f);
             float sy = MathF.Sin(euler.z * 0.5f);
@@ -131,6 +132,16 @@ namespace GlmNet
                 cr * cp * sy - sr * sp * cy,
                 cr * cp * cy + sr * sp * sy
             );
+        }
+
+        public static quat FromEulerAngles(float xRad, float yRad, float zRad)
+        {
+            quat qx = FromAxisAngle(new vec3(1, 0, 0), xRad);
+            quat qy = FromAxisAngle(new vec3(0, 1, 0), yRad);
+            quat qz = FromAxisAngle(new vec3(0, 0, 1), zRad);
+
+            // XYZ order
+            return Mathf.Normalize(qz * qy * qx);
         }
 
         public static quat operator *(quat q, float scalar)
