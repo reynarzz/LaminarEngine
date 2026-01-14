@@ -683,62 +683,51 @@ namespace Editor.Utils
         }
 
         internal static bool DrawDictionaryField(string name, IDictionary dictionary,
-            Func<Type, string, bool, object, object, (object valueOut, bool result)> onDrawArgCallback = null, bool drawElementsAsTrees = false)
+            Func<Type, string, object, (object valueOut, bool result)> onDrawArgCallback = null, bool drawElementsAsTrees = false)
         {
+            if (dictionary == null)
+                return false;
+
             ImGui.SameLine();
             ImGui.SetCursorPosX(ImGui.GetWindowWidth() - 120);
 
             bool changed = false;
-            var size = dictionary.Count;
 
-            ImGui.BeginDisabled(size - 1 < 0);
-            if (ImGui.Button("-", new Vector2(22, 22)))
-            {
-                changed = true;
-
-                if (size - 1 >= 0)
-                {
-                    //--onRemoveCallback(dictionary, size - 1);
-                }
-            }
-            ImGui.EndDisabled();
-            ImGui.SameLine();
-            if (ImGui.Button("+", new Vector2(22, 22)))
-            {
-                changed = true;
-                //--onAddCallback(dictionary, size + 1);
-                // dictionary.Add(ReflectionUtils.GetDefaultValueInstance());
-            }
-
-            //ImGui.SameLine();
-
-            // string lenText = size.ToString();
-            // ImGui.SetNextItemWidth(53);
-
-            //if (DrawStringField($"##_size_{name}", ref lenText, 0, true))
-            //{
-            //    if (int.TryParse(lenText, out var val) && val >= 0)
-            //    {
-            //        if (size < val)
-            //        {
-            //            onAddCallback(dictionary, val);
-            //        }
-            //        else if (size > val)
-            //        {
-            //            removeCount(dictionary, val);
-            //        }
-
-            //        size = val;
-            //        changed = true;
-            //    }
-            //    changed = false;
-            //}
 
             var keys = dictionary.Keys;
             var keysList = new List<object>(dictionary.Count);
             foreach (var key in dictionary.Keys)
             {
                 keysList.Add(key);
+            }
+
+            ImGui.BeginDisabled(dictionary.Count - 1 < 0);
+            if (ImGui.Button("-", new Vector2(22, 22)))
+            {
+                if (dictionary.Count - 1 >= 0)
+                {
+                    dictionary.Remove(keysList[^1]);
+                    changed = true;
+                    keysList.RemoveAt(keysList.Count - 1);
+                }
+            }
+            ImGui.EndDisabled();
+            ImGui.SameLine();
+            if (ImGui.Button("+", new Vector2(22, 22)))
+            {
+                object GetDefaultArgValue(IDictionary dict, int argIndex)
+                {
+                    return ReflectionUtils.GetDefaultValueInstance(dict.GetType().GetGenericArguments()[argIndex]);
+                }
+
+                var newKey = GetDefaultArgValue(dictionary, 0);
+
+                if (!dictionary.Contains(newKey))
+                {
+                    dictionary.Add(newKey, GetDefaultArgValue(dictionary, 1));
+                    changed = true;
+                    keysList.Add(newKey);
+                }
             }
 
             for (int i = 0; i < keysList.Count; i++)
@@ -749,9 +738,10 @@ namespace Editor.Utils
                 bool show;
                 if (ImGui.Button($"X##_DELETE_BUTTON_{i}_{name}", new Vector2(22, 22)))
                 {
-                    //--onRemoveCallback(dictionary, i);
-                    changed = true;
-                    break;
+                    dictionary.Remove(key);
+                    Debug.Log("remove from dictionary");
+
+                    return true;
                 }
                 ImGui.SameLine();
                 var itemTitleCursorX = ImGui.GetCursorPosX();
@@ -779,30 +769,31 @@ namespace Editor.Utils
                     var valueArgName = $"##{name}_{i}__DICT_VALUE__";
                     if (onDrawArgCallback != null)
                     {
-                        var res = onDrawArgCallback(dictionary?.GetType().GetGenericArguments()[0], keyArgName, true, keyOut, valueOut);
+                        var res = onDrawArgCallback(dictionary?.GetType().GetGenericArguments()[0], keyArgName, key);
 
-                        if (res.result)
+                        if (res.result && TryRemoveKey(res.valueOut))
                         {
-                            var kv = (KeyValuePair<object, object>)res.valueOut;
-                            keyOut = kv.Key;
-                            SetKeyValue(res.valueOut);
-                            break;
+                            keyOut = res.valueOut;
                         }
                     }
                     else if (DrawField(dictionary?.GetType().GetGenericArguments()[0], keyArgName, ref keyOut))
                     {
                         changed = true;
-                        SetKeyValue(keyOut);
-                        break;
+                        if (!TryRemoveKey(key))
+                        {
+                            keyOut = key;
+                        }
                     }
 
-                    void SetKeyValue(object keyVal)
+                    bool TryRemoveKey(object keyVal)
                     {
-                        if (keyOut != key && !dictionary.Contains(keyOut))
+                        if (keyVal != key && !dictionary.Contains(keyVal))
                         {
                             dictionary.Remove(key);
-                            dictionary[keyOut] = valueOut;
+                            return true;
                         }
+
+                        return false;
                     }
 
                     ImGui.SetCursorPosX(itemTitleCursorX);
@@ -820,15 +811,11 @@ namespace Editor.Utils
 
                     if (onDrawArgCallback != null)
                     {
-                        var res = onDrawArgCallback(dictionary?.GetType().GetGenericArguments()[1], valueArgName, false, keyOut, valueOut);
+                        var res = onDrawArgCallback(dictionary?.GetType().GetGenericArguments()[1], valueArgName, value);
 
                         if (res.result)
                         {
-                            var kv = (KeyValuePair<object, object>)res.valueOut;
-                            valueOut = kv.Value;
-                            dictionary[keyOut] = valueOut;
-                            break;
-
+                            valueOut = res.valueOut;
                         }
                     }
                     else if (DrawField(dictionary?.GetType().GetGenericArguments()[1], valueArgName, ref valueOut))
@@ -837,6 +824,7 @@ namespace Editor.Utils
                         dictionary[keyOut] = valueOut;
                     }
 
+                    dictionary[keyOut] = valueOut;
 
                     if (drawElementsAsTrees)
                         ImGui.TreePop();

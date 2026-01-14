@@ -57,7 +57,6 @@ namespace Editor
 
             return result;
         }
-        private static SetMemberValueSafeCallBack setMemberCallBack;
         public static bool DrawVars(string objectId, object target, MemberInfo prop, float cursorX, int index, float width,
                                      bool enforceSerializedFieldAttribute, SetMemberValueSafeCallBack setMemberCallBack = null)
         {
@@ -385,31 +384,29 @@ namespace Editor
                 }
                 
                 resultChanged = EditorGuiFieldsResolver.DrawDictionaryField(propertyName, value as IDictionary,
-                    (Type type, string argName, bool isKey, object key, object val) =>
+                    (Type type, string argName, object argValue) =>
                 {
-                    var send = new KeyValuePair<object, object>(key, val);
-                    var changed = DrawVars(propertyName, value, isKey ? key : val, type, argName, false, prop,
-                        cursorX, index, (__target, __value, z, k, setValCallback) =>
+                    object sendData = argValue;
+                    var changed = DrawVars(propertyName, value, argValue, type, argName, isReadOnly, prop,
+                        cursorX, index, (__target, __value, x, y, valueConverter) =>
                         {
                             if (__target is IDictionary)
                             {
-                                if (isKey)
-                                {
-                                    send = new KeyValuePair<object, object>(__value, val);
-                                }
-                                else
-                                {
-                                    send = new KeyValuePair<object, object>(key, __value);
-                                }
+                                sendData = __value;
                             }
                             else
                             {
-                                ReflectionUtils.SetMemberValueSafe(__target, __value, z, k, setValCallback);
+                                ReflectionUtils.SetMemberValueSafe(__target, __value, x, y, valueConverter);
                             }
                         }, width);
 
-                    return (send, changed);
+                    return (sendData, changed);
                 });
+
+                if (resultChanged)
+                {
+                    setMemberValueCallBack(target, value, prop, index);
+                }
             }
             else if (type.IsClass || ReflectionUtils.IsUserDefinedStruct(type))
             {
