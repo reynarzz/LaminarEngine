@@ -70,11 +70,11 @@ namespace Game
             //[ExposeEditorField] public mat4 mat4Test { get; set; }
             private static Sprite sp = new Sprite("Sprite in dictionary", 0, Texture2D.White);
             [SerializedField]
-            private Dictionary<int, EObject> _InStructeObjectDictionary;
+            private Dictionary<int, Actor> _InStructeActorDictionary;
                 // = new Dictionary<int, EObject> { { 2, null }, { 346, null } };
 
             [SerializedField]
-            private Dictionary<int, AssetResourceBase> _InStructassetDictionary;
+            private Dictionary<int, Component> _InStructComponentDictionary;
                 //= new Dictionary<int, AssetResourceBase> { { 11, null }, { 71, sp } };
 
 
@@ -142,7 +142,7 @@ namespace Game
 
         [SerializedField]
         private Dictionary<int, quat> _quatDictionary =
-          new Dictionary<int, quat> { { 3, default }, { 51, default } };
+          new Dictionary<int, quat> { { 3, default }, { 51, new quat(1, 0,0,0) } };
 
 
         [ShowMethodInEditor]

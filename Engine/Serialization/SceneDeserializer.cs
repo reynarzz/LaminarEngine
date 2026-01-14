@@ -248,7 +248,7 @@ namespace Engine.Serialization
                 collectionData = property.Data as CollectionPropertyData;
             }
 
-            if (collectionData == null || collectionData.Collection == null)
+            if (collectionPropertyType == null || collectionData == null || collectionData.Collection == null)
             {
                 return;
             }

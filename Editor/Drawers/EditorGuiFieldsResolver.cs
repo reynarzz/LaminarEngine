@@ -43,27 +43,17 @@ namespace Editor.Utils
         public static bool DrawStringField(string name, ref string value, float itemWidth = 0, bool pressEnterToConfirm = false)
         {
             int bufferSize = Math.Max(257, value?.Length + 1 ?? 257);
-            byte[] buffer = new byte[bufferSize];
-
-            if (!string.IsNullOrEmpty(value))
-                System.Text.Encoding.UTF8.GetBytes(value, 0, value.Length, buffer, 0);
-
-            // if (ImGui.CalcTextSize(name).X + 10 > ImGui.GetContentRegionAvail().X)
             SetNextItemWidth(itemWidth);
 
-            bool changed;
-            unsafe
-            {
-                changed = ImGui.InputText("##" + name, buffer, (uint)buffer.Length);
-            }
+            var refStr = value;
+            var changed = ImGui.InputText("##" + name, ref refStr, (uint)bufferSize);
 
             if (changed && (!pressEnterToConfirm || ImGui.IsKeyDown(ImGuiKey.Enter)))
             {
-                value = System.Text.Encoding.UTF8.GetString(buffer).TrimEnd('\0');
-                return true;
+                value = refStr;
             }
 
-            return false;
+            return changed;
         }
 
         public static bool DrawDoubleField(string name, ref double value, float itemWidth = 0, bool pressEnterToConfirm = false)
@@ -141,7 +131,7 @@ namespace Editor.Utils
         }
 
         private static bool _openColorPicker = false;
-       
+
         public static bool DrawColor32Field(string name, ref Color32 value, float itemWidth = 0, bool pressEnterToConfirm = false)
         {
             Color col = (Color)value;
@@ -230,16 +220,12 @@ namespace Editor.Utils
 
             return changed;
         }
-        public static bool DrawVec4Field(string name, ref vec4 value)
-        {
-            return DrawVec4Field(name, ref value, 0, false);
-        }
 
         public static bool DrawQuatField(string name, ref quat value, float itemWidth = 0, bool pressEnterToConfirm = false)
         {
             var vecValue = value.ToVec4();
 
-            var result = DrawVec4Field(name,ref vecValue, itemWidth,pressEnterToConfirm);
+            var result = DrawVec4Field(name, ref vecValue, itemWidth, pressEnterToConfirm);
 
             if (result)
             {
@@ -669,14 +655,17 @@ namespace Editor.Utils
                 }
                 changed = false;
             }
+            bool skip = false;
 
             for (int i = 0; i < list.Count; i++)
             {
                 bool show;
+                skip = false;
                 if (ImGui.Button($"X##_DELETE_BUTTON_{i}_{name}", new Vector2(22, 22)))
                 {
                     onRemoveCallback(list, i);
                     changed = true;
+                    skip = true;
                     break;
                 }
                 ImGui.SameLine();
@@ -694,8 +683,14 @@ namespace Editor.Utils
 
                 if (show)
                 {
-                    if (drawCallback(i, 0, list[i]))
-                        changed = true;
+                   // if (!skip)
+                    {
+                        if (drawCallback(i, 0, list[i]))
+                            changed = true;
+
+                       // i++;
+                    }
+                    
 
                     if (itemAsTree)
                         ImGui.TreePop();
@@ -705,7 +700,7 @@ namespace Editor.Utils
             return changed;
         }
         internal static bool DrawDictionaryField(string name, IDictionary dictionary,
-                                                 onDrawDictionaryArgCallback onDrawArgCallback = null, 
+                                                 onDrawDictionaryArgCallback onDrawArgCallback = null,
                                                  bool drawElementsAsTrees = false)
         {
             if (dictionary == null)
@@ -753,23 +748,24 @@ namespace Editor.Utils
                 }
             }
 
+            bool skip = false;
             for (int i = 0; i < keysList.Count; i++)
             {
                 var key = keysList[i];
                 var value = dictionary[keysList[i]];
+                skip = false;
 
-                bool show;
                 if (ImGui.Button($"X##_DELETE_BUTTON_{i}_{name}", new Vector2(22, 22)))
                 {
                     dictionary.Remove(key);
                     Debug.Log("remove from dictionary");
                     changed = true;
-
-                    return true;
+                    skip = true;
                 }
                 ImGui.SameLine();
                 var itemTitleCursorX = ImGui.GetCursorPosX();
 
+                bool show;
                 if (drawElementsAsTrees)
                 {
                     show = ImGui.TreeNode($"key {i}_{name}");
@@ -839,7 +835,6 @@ namespace Editor.Utils
 
                         if (res.result)
                         {
-                            Debug.Log(res.valueOut.GetType());
                             valueOut = res.valueOut;
                         }
                     }
@@ -849,13 +844,16 @@ namespace Editor.Utils
                         dictionary[keyOut] = valueOut;
                     }
 
-                    dictionary[keyOut] = valueOut;
+                    if (!skip)
+                    {
+                        dictionary[keyOut] = valueOut;
+                    }
 
                     if (drawElementsAsTrees)
+                    {
                         ImGui.TreePop();
+                    }
                 }
-
-                i++;
             }
 
             return changed;
