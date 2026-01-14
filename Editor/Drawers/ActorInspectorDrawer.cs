@@ -41,9 +41,7 @@ namespace Editor
                             int index = 0;
                             foreach (var member in members)
                             {
-                                PropertyDrawer.DrawVars(x.GetID().ToString(), component, member, 0, index, null, 0, 
-                                                        ReflectionUtils.SetMemberValueSafe, true);
-
+                                PropertyDrawer.DrawVars(x.GetID().ToString(), component, member, 0, index, 0, true);
                                 index++;
                             }
 
