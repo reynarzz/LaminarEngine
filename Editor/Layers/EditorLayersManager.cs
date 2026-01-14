@@ -22,25 +22,7 @@ namespace Editor
         private List<ActorDataSceneAsset> _actors;
         private string TestfilePath { get; } = $"{EditorPaths.AppRoot}Scene.bin";
 
-        public EditorLayersManager(InputLayerBase inputLayer) :
-            base([_time, inputLayer,
-                  null, // AppLayer
-                  new MainThreadDispatcher(),
-                  null, // SceneLayer
-                  new AudioLayer(),
-                  null, // PhysicsLayer,
-                  new RenderingLayer(),
-                  new IOLayer()])
-        {
-            _editorSceneLayer = new SceneLayer();
-        }
-
-        internal override void Initialize()
-        {
-            base.Initialize();
-
-
-        }
+        private readonly List<(LayerBase layer, int priorityIndex)> _playmodeLayers;
         private JsonSerializerSettings _jsonSettings = new()
         {
             TypeNameHandling = TypeNameHandling.Auto,
@@ -51,6 +33,33 @@ namespace Editor
             ContractResolver = new SerializedFieldContractResolver()
         };
 
+        public EditorLayersManager(InputLayerBase inputLayer) :
+            base([_time,                           // 0
+                  inputLayer,                      // 1
+                  null, // AppLayer                // 2
+                  new MainThreadDispatcher(),      // 3
+                  null, // SceneLayer              // 4
+                  new AudioLayer(),                // 5
+                  null, // PhysicsLayer,           // 6
+                  new RenderingLayer(),            // 7
+                  new IOLayer()])                  // 8
+        {
+            _editorSceneLayer = new SceneLayer();
+
+            _playmodeLayers = new List<(LayerBase layer, int priorityIndex)>()
+            {
+                //(new GameApplication(), 2),
+                (new SceneLayer(), 4),
+                (new PhysicsLayer(), 6),
+            };
+
+        }
+
+        internal override void Initialize()
+        {
+            base.Initialize();
+        }
+        
         internal override void Update()
         {
             if (Input.GetKeyDown(KeyCode.P))
@@ -122,17 +131,19 @@ namespace Editor
             _time.Initialize();
             Application.IsInPlayMode = true;
 
-            PushLayer(new PhysicsLayer(), 6);
-            PushLayer(new SceneLayer(), 4);
-            //PushLayer(new GameApplication(), 2);
-
+            for (int i = _playmodeLayers.Count - 1; i >= 0; --i)
+            {
+                var layerData = _playmodeLayers[i];
+                PushLayer(layerData.layer, layerData.priorityIndex);
+            }
         }
 
         private void PlayModeOff()
         {
-            PopLayer(2);
-            PopLayer(4);
-            PopLayer(6);
+            foreach (var layerData in _playmodeLayers)
+            {
+                PopLayer(layerData.priorityIndex);
+            }
 
             Application.IsInPlayMode = false;
         }

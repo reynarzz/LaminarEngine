@@ -9,7 +9,12 @@ namespace Engine
     public class EasingCurve<T> : DefaultKeyframeCurve<T>
     {
         private readonly Func<EasingType, T, T, float, T> _easing;
-        public EasingType EasingType { get; set; }
+        [SerializedField] public EasingType EasingType { get; set; }
+
+        // Serializer needs this.
+        private EasingCurve()
+        {
+        }
         public EasingCurve(Func<EasingType, T, T, float, T> easing)
         {
             _easing = easing ?? throw new ArgumentNullException(nameof(easing));

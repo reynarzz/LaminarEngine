@@ -18,14 +18,10 @@ namespace Editor
     // TODO:
     // Current code is very slow, most of it is in 'prototype' phase, a nice (big) refactor is on the way.
     // Refactor.
-    // Hierarchy view
-    // Simple object editor: Components(name) (No saving data)
     // Playmode on launch (maybe I implement a proper playmode later: pause, frame step)
-    // Add mouse picker the ability to pick the object behind the current picked object.
-    // Draw gizmos (camera icon (and any other object too), arrows handle, object selected)
-    // Remove the sides of the screen for the mouse picker, so an object doesn't get picked when dragging a window.
     // Changing cameras causes to render prevCamera.
     // Weird rendering issue, related to mouse picking pink materials, is it the RenderingSystem, batcher?
+    // Implement Asset files for: Scene, animationClip, animatorController, Tilemap.
 
     internal class EditorEntry
     {

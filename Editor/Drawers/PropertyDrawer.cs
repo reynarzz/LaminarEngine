@@ -289,11 +289,9 @@ namespace Editor
                     value = ReflectionUtils.GetDefaultValueInstance(type);
                 }
 
-                var list = value as IList;
-
                 var elementType = type.GetGenericArguments().FirstOrDefault();
 
-                resultChanged = DrawList(objectId, propertyName, list, value, elementType, prop,
+                resultChanged = DrawList(objectId, propertyName, value as IList, value, isReadOnly, elementType, prop,
                                          cursorX, OnAdd, OnRemove, OnRemoveCount, setMemberValueCallBack);
                 setMemberValueCallBack(target, value, prop, index);
 
@@ -332,7 +330,7 @@ namespace Editor
 
                 var elementType = type.GetElementType();
 
-                resultChanged = DrawList(objectId, propertyName, array, value, elementType, prop,
+                resultChanged = DrawList(objectId, propertyName, array, value, isReadOnly, elementType, prop,
                                          cursorX, OnAdd, OnRemove, OnRemoveCount, setMemberValueCallBack);
 
                 setMemberValueCallBack(target, value, prop, index);
@@ -438,12 +436,12 @@ namespace Editor
         }
 
 
-        private static bool DrawList(string objectId, string propertyName, IList list, object value, Type elemenType,
-                                     MemberInfo prop, float cursorX, Action<IList, int> onAddCallback, 
-                                     Action<IList, int> onRemoveCallback, Action<IList, int> removeCount, 
+        private static bool DrawList(string objectId, string propertyName, IList list, object value, bool isReadOnly, Type elementType,
+                                     MemberInfo prop, float cursorX, Action<IList, int> onAddCallback,
+                                     Action<IList, int> onRemoveCallback, Action<IList, int> removeCount,
                                      SetMemberValueSafeCallBack setMemberCallback)
         {
-            if (elemenType == null || !elemenType.IsGenericType || (elemenType.IsGenericType && !ReflectionUtils.IsCollection(elemenType)))
+            if (elementType == null || !elementType.IsGenericType || (elementType.IsGenericType && !ReflectionUtils.IsCollection(elementType)))
             {
                 ImGui.SameLine();
                 ImGui.SetCursorPosX(Math.Max(EditorGuiFieldsResolver.XPosOffset, ImGui.GetCursorPosX()));
@@ -453,10 +451,11 @@ namespace Editor
                         {
                             if (item == null)
                             {
-                                item = ReflectionUtils.GetDefaultValueInstance(elemenType);
+                                item = ReflectionUtils.GetDefaultValueInstance(elementType);
                             }
 
-                            return DrawVars(objectId, list, item, item != null ? item.GetType() : elemenType, $"##__{index}_item", false, prop, cursorX, index, itemWidth, setMemberCallback);
+                            return DrawVars(objectId, list, item, item != null ? item.GetType() : elementType, $"##__{index}_item",
+                                            isReadOnly, prop, cursorX, index, itemWidth, setMemberCallback);
                         });
             }
 

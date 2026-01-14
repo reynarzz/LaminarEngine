@@ -683,14 +683,14 @@ namespace Editor.Utils
 
                 if (show)
                 {
-                   // if (!skip)
+                    // if (!skip)
                     {
                         if (drawCallback(i, 0, list[i]))
                             changed = true;
 
-                       // i++;
+                        // i++;
                     }
-                    
+
 
                     if (itemAsTree)
                         ImGui.TreePop();
@@ -748,6 +748,13 @@ namespace Editor.Utils
                 }
             }
 
+            ImGui.SameLine();
+
+            ImGui.SetNextItemWidth(53);
+
+            // Display count
+            ImGui.Text($"{dictionary.Count}");
+
             bool skip = false;
             for (int i = 0; i < keysList.Count; i++)
             {
@@ -758,7 +765,6 @@ namespace Editor.Utils
                 if (ImGui.Button($"X##_DELETE_BUTTON_{i}_{name}", new Vector2(22, 22)))
                 {
                     dictionary.Remove(key);
-                    Debug.Log("remove from dictionary");
                     changed = true;
                     skip = true;
                 }

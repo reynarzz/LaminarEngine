@@ -39,9 +39,9 @@ namespace Engine
         [SerializedField]
         public override int SortOrder { get => base.SortOrder; set => base.SortOrder = value; }
 
-        [SerializedField] public LDtkOptions LDtkOptions { get; set; }
+        [SerializedField] public LDtkOptions Options { get; set; }
 
-        [SerializedField] public LdtkJson Ldtk { get; set; } 
+        [SerializedField] public LdtkJson Map { get; set; } 
 
         public IReadOnlyList<vec2> TilesPositions => _tilesPositions;
         private List<vec2> _tilesPositions = new();

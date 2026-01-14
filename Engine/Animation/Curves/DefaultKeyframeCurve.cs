@@ -8,7 +8,7 @@ namespace Engine
 {
     public abstract class DefaultKeyframeCurve<T> : AnimationCurveBase<T>
     {
-        protected List<Keyframe<T>> Keyframes { get; } = new();
+        [SerializedField] protected List<Keyframe<T>> Keyframes { get; private set; } = new();
         public override float Duration => Keyframes.Count > 0 ? Keyframes[^1].Time : 0;
         public override void AddKeyFrame(float time, T value)
         {
