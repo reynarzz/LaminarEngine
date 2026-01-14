@@ -67,8 +67,9 @@ namespace Editor
             {
                 setMemberCallBack = ReflectionUtils.SetMemberValueSafe;
             }
-            object value = ReflectionUtils.GetMemberValue(target, prop);
-            Type type = ReflectionUtils.GetMemberType(prop);
+            var value = ReflectionUtils.GetMemberValue(target, prop);
+            var type = value != null ? value.GetType() : ReflectionUtils.GetMemberType(prop);
+
             string propertyName = prop.Name;
             // NOTE: I will enforce that any property that needs to be exposed in the editor should have the
             //       SerializedField/ShowFieldNoSerialize attribute
@@ -332,7 +333,7 @@ namespace Editor
                 var elementType = type.GetElementType();
 
                 resultChanged = DrawList(objectId, propertyName, array, value, elementType, prop,
-                    cursorX, OnAdd, OnRemove, OnRemoveCount, setMemberValueCallBack);
+                                         cursorX, OnAdd, OnRemove, OnRemoveCount, setMemberValueCallBack);
 
                 setMemberValueCallBack(target, value, prop, index);
 
@@ -456,9 +457,7 @@ namespace Editor
                                 item = ReflectionUtils.GetDefaultValueInstance(elemenType);
                             }
 
-                            DrawVars(objectId, list, item, elemenType, $"##__{index}_item", false, prop, cursorX, index, itemWidth, setMemberCallback);
-
-                            return false;
+                            return DrawVars(objectId, list, item, item != null ? item.GetType() : elemenType, $"##__{index}_item", false, prop, cursorX, index, itemWidth, setMemberCallback);
                         });
             }
 

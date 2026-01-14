@@ -787,16 +787,20 @@ namespace Editor.Utils
 
                     var keyArgName = $"##{name}_{i}__DICT_KEY__";
                     var valueArgName = $"##{name}_{i}__DICT_VALUE__";
+
+                    var keyType = keyOut != null ? keyOut.GetType() : dictionary?.GetType().GetGenericArguments()[0];
+                    var valueType = valueOut != null ? valueOut.GetType() : dictionary?.GetType().GetGenericArguments()[1];
+
                     if (onDrawArgCallback != null)
                     {
-                        var res = onDrawArgCallback(dictionary?.GetType().GetGenericArguments()[0], keyArgName, key);
+                        var res = onDrawArgCallback(keyType, keyArgName, key);
 
                         if (res.result && TryRemoveKey(res.valueOut))
                         {
                             keyOut = res.valueOut;
                         }
                     }
-                    else if (DrawField(dictionary?.GetType().GetGenericArguments()[0], keyArgName, ref keyOut))
+                    else if (DrawField(keyType, keyArgName, ref keyOut))
                     {
                         changed = true;
                         if (!TryRemoveKey(key))
@@ -831,7 +835,7 @@ namespace Editor.Utils
 
                     if (onDrawArgCallback != null)
                     {
-                        var res = onDrawArgCallback(dictionary?.GetType().GetGenericArguments()[1], valueArgName, value);
+                        var res = onDrawArgCallback(valueType, valueArgName, value);
 
                         if (res.result)
                         {
