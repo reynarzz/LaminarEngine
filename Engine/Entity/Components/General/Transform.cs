@@ -46,7 +46,7 @@ namespace Engine
             get => _localRotation;
             set
             {
-                _localRotation = value;
+                _localRotation = Mathf.Normalize(value);
                 MarkDirty();
             }
         }
@@ -92,7 +92,7 @@ namespace Engine
                 vec3 oldWorldScale = WorldScale;
 
                 Actor.Scene.TryGetTarget(out var scene);
-          
+
                 if (value == null)
                     scene.RegisterRootActor(Actor);
                 else
@@ -193,7 +193,7 @@ namespace Engine
             }
         }
 
-       
+
         public vec3 WorldEulerAngles
         {
             get => QuaternionToEuler(WorldRotation);
@@ -206,9 +206,9 @@ namespace Engine
             }
         }
 
-        public vec3 Right => WorldRotation * vec3.Right;
-        public vec3 Up => WorldRotation * vec3.Up;
-        public vec3 Forward => WorldRotation * vec3.Forward;
+        public vec3 Right => new vec3(WorldMatrix[0, 0], WorldMatrix[0, 1], WorldMatrix[0, 2]).Normalized;
+        public vec3 Up => new vec3(WorldMatrix[1, 0], WorldMatrix[1, 1], WorldMatrix[1, 2]).Normalized;
+        public vec3 Forward => new vec3(WorldMatrix[2, 0], WorldMatrix[2, 1], WorldMatrix[2, 2]).Normalized;
 
         internal bool NeedsInterpolation { get; set; }
         internal mat4 InterpolatedWorldMatrix { get; set; }
@@ -229,7 +229,7 @@ namespace Engine
             _cachedWorldMatrix[3, 1],
             _cachedWorldMatrix[3, 2]
         );
-            _cachedWorldRotation = Parent != null ? Parent.WorldRotation * LocalRotation : LocalRotation;
+            _cachedWorldRotation = Mathf.Normalize(Parent != null ? Parent.WorldRotation * LocalRotation : LocalRotation);
             _cachedWorldScale = Parent != null ? Parent.WorldScale * LocalScale : LocalScale;
 
             _isDirty = false;
@@ -243,6 +243,7 @@ namespace Engine
         private static vec3 QuaternionToEuler(quat q)
         {
             vec3 euler;
+            q = Mathf.Normalize(q);
             float ysqr = q.y * q.y;
 
             float t0 = +2.0f * (q.w * q.x + q.y * q.z);

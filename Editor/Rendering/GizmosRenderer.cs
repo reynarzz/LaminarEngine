@@ -251,7 +251,7 @@ namespace Editor.Rendering
                 points = GraphicsHelper.CreateOrthoFrustumLines(camera.WorldPosition, camera.Forward, camera.Right, camera.Up,
                                                                 camera.OrthographicSize * 2.0f, camera.Aspect, camera.NearPlane, camera.FarPlane);
             }
-
+            
             for (int i = 0; i < points.Count - 1; i += 2)
             {
                 Debug.DrawLine(points[i], points[i + 1], SemiTransparent);
@@ -274,15 +274,13 @@ namespace Editor.Rendering
                         Material = _mat
                     });
                 }
-                else
-                {
-                    var translation = component.Transform.GetRenderingWorldMatrix()[3];
-                    var renderData = renderDatas[component.GetID()];
-                    renderData.Transform.WorldPosition = new vec3(translation);
-                    renderData.IsDirty = true;
-                    const int scaling = 100;
-                    renderData.SortOrder = -(int)(glm.dot(component.Transform.WorldPosition - camera.WorldPosition, camera.Forward) * scaling);
-                }
+
+                var translation = component.Transform.GetRenderingWorldMatrix()[3];
+                var renderData = renderDatas[component.GetID()];
+                renderData.Transform.WorldPosition = new vec3(translation);
+                renderData.IsDirty = true;
+                const int scaling = 100;
+                renderData.SortOrder = -(int)(glm.dot(component.Transform.WorldPosition - camera.WorldPosition, camera.Forward) * scaling);
             }
         }
 
