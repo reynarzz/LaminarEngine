@@ -70,6 +70,11 @@ namespace Editor
 
                 foreach (var transition in transitions)
                 {
+                    if(transition == null)
+                    {
+                        Debug.Error("Transition is null");
+                        continue;
+                    }
                     if (nodes.TryGetValue(transition.ToState, out var toNode))
                     {
                         var link = new Link()

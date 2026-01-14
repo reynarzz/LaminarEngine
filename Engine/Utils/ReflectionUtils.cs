@@ -574,7 +574,9 @@ namespace Engine.Utils
         {
             return typeof(EObject).IsAssignableFrom(t);// || typeof(IObject).IsAssignableFrom(t);
         }
-
+        /// <summary>
+        /// Walks the complete object graph of 'target' to make sure that it has at least one member (field/property) with the 'searchedType'
+        /// </summary>
         internal static bool HasAnySerializedMemberWithType(Type target, Type searchedType)
         {
             var visited = new HashSet<Type>();

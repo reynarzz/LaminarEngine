@@ -27,7 +27,7 @@ namespace Editor.Serialization
             Debug.Log("Reference converted: " + value.GetType().Name);
             var serializedItem = new SerializedItem<Guid>()
             {
-                Type = SceneSerializer.GetSerializedType(value?.GetType()),
+                Type = Serializer.GetSerializedType(value?.GetType()),
                 Data = obj?.GetID() ?? Guid.Empty
             };
 

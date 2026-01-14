@@ -14,7 +14,7 @@ namespace Engine.Graphics
         public Material Material { get; set; }
         public Mesh Mesh { get; set; }
         protected internal virtual bool IsDirty { get; set; } = true;
-        public virtual bool IsEnabled { get; }
+        public virtual bool IsEnabled { get; set; }
         public bool PrivateBatch { get; set; }
         public Guid ID { get; set; }
         public Bounds Bounds;
@@ -52,8 +52,22 @@ namespace Engine.Graphics
         public bool IsBillboard { get; set; }
         public Transform Transform { get; set; }
 
-        private Func<bool> _isEnabled;
-        public override bool IsEnabled => _isEnabled?.Invoke() ?? true;
+        private Func<bool> _isEnabledFunc;
+        private bool _isEnabled = true;
+        public override bool IsEnabled
+        {
+            get
+            {
+                return _isEnabledFunc?.Invoke() ?? _isEnabled;
+            }
+            set
+            {
+                if(_isEnabledFunc == null)
+                {
+                    _isEnabled = value;
+                }
+            }
+        }
 
         //public RendererData2D(Guid id, Transform transform, Func<bool> isEnabled)
         //{
@@ -65,7 +79,7 @@ namespace Engine.Graphics
         public RendererData2D(Guid id, Transform transform, Action onDraw, Func<bool> isEnabled) : base(id, onDraw)
         {
             Transform = transform;
-            _isEnabled = isEnabled;
+            _isEnabledFunc = isEnabled;
         }
 
         public Color Color

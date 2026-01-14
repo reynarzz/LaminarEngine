@@ -1,17 +1,10 @@
 ﻿using Editor.Serialization;
+using Editor.Utils;
 using Engine;
 using Engine.Layers;
-using Engine.Layers.Input;
 using Engine.Serialization;
-using Engine.Utils;
-using Game;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Editor
 {
@@ -20,19 +13,11 @@ namespace Editor
         private static TimeLayer _time = new();
         private SceneLayer _editorSceneLayer;
         private List<ActorDataSceneAsset> _actors;
-        private string TestfilePath { get; } = $"{EditorPaths.AppRoot}Scene.bin";
+        private string TestfilePath => $"{EditorPaths.AppRoot}Scene.bin";
+        private string AnimClip => $"{EditorPaths.AppRoot}AnimClip.txt";
 
         private readonly List<(LayerBase layer, int priorityIndex)> _playmodeLayers;
-        private JsonSerializerSettings _jsonSettings = new()
-        {
-            TypeNameHandling = TypeNameHandling.Auto,
-            Converters =
-            {
-                new StringEnumConverter(),
-            },
-            ContractResolver = new SerializedFieldContractResolver()
-        };
-
+     
         public EditorLayersManager(InputLayerBase inputLayer) :
             base([_time,                           // 0
                   inputLayer,                      // 1
@@ -48,18 +33,17 @@ namespace Editor
 
             _playmodeLayers = new List<(LayerBase layer, int priorityIndex)>()
             {
-                //(new GameApplication(), 2),
+                (new Game.GameApplication(), 2),
                 (new SceneLayer(), 4),
                 (new PhysicsLayer(), 6),
             };
-
         }
 
         internal override void Initialize()
         {
             base.Initialize();
         }
-        
+
         internal override void Update()
         {
             if (Input.GetKeyDown(KeyCode.P))
@@ -83,18 +67,32 @@ namespace Editor
 
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.S))
             {
-                if (!Application.IsInPlayMode)
+                //if (!Application.IsInPlayMode)
                 {
                     Debug.Log("Saving scene to: " + TestfilePath);
                     _actors = SceneSerializer.SerializeScene(SceneManager.Scenes[^1]);
 
-                    File.WriteAllText(TestfilePath, JsonConvert.SerializeObject(_actors, Formatting.Indented, _jsonSettings));
+                    var pig = Actor.Find("Pig Enemy");
+                    var animClip = pig.GetComponent<Animator>().CurrentState.Clip;
+                    var propertiesIR = Serializer.Serialize(animClip);
+
+                    File.WriteAllText(AnimClip, EditorJsonUtils.Serialize(propertiesIR));
+                    File.WriteAllText(TestfilePath, EditorJsonUtils.Serialize(_actors));
                 }
-                else
-                {
-                    Debug.Warn("Can't save in playmode.");
-                }
-              
+                //else
+                //{
+                //    Debug.Warn("Can't save in playmode.");
+                //}
+
+            }
+            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.A))
+            {
+                var anim = new AnimationClip("Name");
+                var ir = EditorJsonUtils.Deserialize<List<SerializedPropertyData>>(File.ReadAllText(AnimClip));
+
+                Deserializer.Deserialize(anim, ir);
+                var anim2 = Deserializer.Deserialize<AnimationClip>(ir);
+
             }
 
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.R))
@@ -102,9 +100,10 @@ namespace Editor
                 // Application.IsInPlayMode = false;
 
                 var file = File.ReadAllText(TestfilePath);
-                var actors = JsonConvert.DeserializeObject<List<ActorDataSceneAsset>>(file, _jsonSettings);
-                // var actors = _actors;
+                var actors = EditorJsonUtils.Deserialize<List<ActorDataSceneAsset>>(file);
                 Debug.Log("Total actors in scene: " + actors.Count);
+
+
                 SceneManager.Initialize();
                 SceneManager.UnloadAll();
                 SceneManager.LoadScene("Reload scene");
@@ -150,7 +149,7 @@ namespace Editor
         private void LoadScene()
         {
             var file = File.ReadAllText(TestfilePath);
-            var actors = JsonConvert.DeserializeObject<List<ActorDataSceneAsset>>(file, _jsonSettings);
+            var actors = EditorJsonUtils.Deserialize<List<ActorDataSceneAsset>>(file);
             // var actors = _actors;
             Debug.Log("Total actors in scene: " + actors.Count);
             SceneManager.Initialize();
