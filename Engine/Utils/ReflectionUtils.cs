@@ -625,7 +625,7 @@ namespace Engine.Utils
             }
             else
             {
-                members = current.GetMembers(_flags);
+                members = current.GetMembers(BindingFlags.Instance | BindingFlags.Public);
             }
 
             foreach (var member in members)

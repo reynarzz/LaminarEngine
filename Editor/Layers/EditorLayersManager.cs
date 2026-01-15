@@ -19,7 +19,7 @@ namespace Editor
 
 
         private readonly List<(LayerBase layer, int priorityIndex)> _playmodeLayers;
-     
+
         public EditorLayersManager(InputLayerBase inputLayer) :
             base([_time,                           // 0
                   inputLayer,                      // 1
@@ -74,13 +74,16 @@ namespace Editor
                     Debug.Log("Saving scene to: " + TestfilePath);
                     _actors = SceneSerializer.SerializeScene(SceneManager.Scenes[^1]);
 
-                    var pig = Actor.Find("Player");
-                    var animator = pig.GetComponent<Animator>();
-                    var animIR = Serializer.Serialize(animator.CurrentState.Clip);
-                    var animControlerIR = Serializer.Serialize(animator.Controller);
+                    var obj = Actor.Find("Player");
+                    if (obj)
+                    {
+                        var animator = obj.GetComponent<Animator>();
+                        var animIR = Serializer.Serialize(animator.CurrentState.Clip);
+                        var animControlerIR = Serializer.Serialize(animator.Controller);
 
-                    File.WriteAllText(AnimClipPath, EditorJsonUtils.Serialize(animIR));
-                    File.WriteAllText(AnimControllerPath, EditorJsonUtils.Serialize(animControlerIR));
+                        File.WriteAllText(AnimClipPath, EditorJsonUtils.Serialize(animIR));
+                        File.WriteAllText(AnimControllerPath, EditorJsonUtils.Serialize(animControlerIR));
+                    }
 
                     File.WriteAllText(TestfilePath, EditorJsonUtils.Serialize(_actors));
                 }

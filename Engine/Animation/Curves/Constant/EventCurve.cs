@@ -11,7 +11,10 @@ namespace Engine
         private struct EventKeyFrame : IKeyFrame<Action>
         {
             internal bool Raised; // NOTE: Do not serialize.
+            // TODO: Check if the target is part of the actor that has the Animator that has the animationController,
+            // if so, it can serialize the function name? or If is not found create a event dispatcher: stateName + eventTime.
             [SerializedField] public Action Value { get; set; }
+
             [SerializedField] public float Time { get; set; }
             public EventKeyFrame()
             {

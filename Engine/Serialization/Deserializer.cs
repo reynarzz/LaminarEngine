@@ -17,7 +17,7 @@ namespace Engine.Serialization
         {
             var target = Activator.CreateInstance(typeof(T), true);
             Deserialize(target, properties);
-            if(target == default)
+            if (target == default)
             {
                 return default;
             }
@@ -278,7 +278,10 @@ namespace Engine.Serialization
                                 complexArg.ComplexType == SerializedType.SimpleClass ||
                                 complexArg.ComplexType == SerializedType.SimpleCollection)
                             {
-                                deserializedArgValue = complexArg.Properties?[0].Data ?? null;
+                               // if (complexArg.Properties != null && complexArg.Properties.Count > 0)
+                                {
+                                    deserializedArgValue = complexArg.Properties?[0].Data ?? null;
+                                }
                             }
                             else
                             {
