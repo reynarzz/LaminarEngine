@@ -16,6 +16,7 @@ namespace SharedTypes
         Font,
         AnimationClip,
         AnimationController,
-        Material
+        Material,
+        SlangShader
     }
 }

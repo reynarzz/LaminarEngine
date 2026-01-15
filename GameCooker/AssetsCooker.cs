@@ -45,6 +45,8 @@ namespace GameCooker
                 { ".frag", AssetType.Shader },
                 { ".fragment", AssetType.Shader },
 
+                { ".slang", AssetType.SlangShader },
+
                 // Font
                 { ".ttf", AssetType.Font },
                 { ".otf", AssetType.Font },
@@ -79,6 +81,7 @@ namespace GameCooker
                 { AssetType.Audio, new AudioAssetProcessor() },
                 { AssetType.Text, new TextAssetProcessor() },
                 { AssetType.Shader, new ShaderAssetProcessor() },
+                { AssetType.SlangShader, new SlangShaderAssetProcessor() },
                 { AssetType.Font, new RawBytesAssetProcessor() },
                 { AssetType.AnimationClip, new AnimClipAssetProcessorDevMode() },
                 { AssetType.AnimationController, new AnimControllerClipAssetProcessorDevMode() },
@@ -90,6 +93,7 @@ namespace GameCooker
                 { AssetType.Audio, new AudioAssetProcessor() },
                 { AssetType.Text, new TextAssetProcessor() },
                 { AssetType.Shader, new ShaderAssetProcessor() },
+                { AssetType.SlangShader, new SlangShaderAssetProcessor() },
                 { AssetType.Font, new RawBytesAssetProcessor() },
                 { AssetType.AnimationClip, new RawBytesAssetProcessor() }, // TODO: binary serialization
                 { AssetType.AnimationController, new RawBytesAssetProcessor() }, // TODO: binary serialization
