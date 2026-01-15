@@ -6,7 +6,6 @@ namespace GameCooker
     public class AssetsCooker
     {
         private Dictionary<string, AssetType> _assetsTypes;
-        private Dictionary<AssetType, IAssetProcessor> _assetsProcessors;
         private Dictionary<CookingType, AssetsCookerBase> _assetCookers;
 
         private AssetsDatabaseInfo _databaseInfo;
@@ -49,17 +48,18 @@ namespace GameCooker
                 // Font
                 { ".ttf", AssetType.Font },
                 { ".otf", AssetType.Font },
+
+                { ".anim", AssetType.AnimationClip },
+                { ".animcontroller", AssetType.AnimationController },
+
             };
 
-            _assetsProcessors = new Dictionary<AssetType, IAssetProcessor>()
-            {
-                { AssetType.Texture, new TextureAssetProcessor() },
-                { AssetType.Audio, new AudioAssetProcessor() },
-                { AssetType.Text, new TextAssetProcessor() },
-                { AssetType.Shader, new ShaderAssetProcessor() },
-                { AssetType.Font, new RawBytesAssetProcessor() },
-            };
+            InitAssetCookers();
+        }
 
+
+        private void InitAssetCookers()
+        {
             if (File.Exists(Paths.GetAssetDatabaseFilePath()))
             {
                 _databaseInfo = JsonConvert.DeserializeObject<AssetsDatabaseInfo>(File.ReadAllText(Paths.GetAssetDatabaseFilePath()));
@@ -73,10 +73,32 @@ namespace GameCooker
                 };
             }
 
+            var devModeAssetsProcessors = new Dictionary<AssetType, IAssetProcessor>()
+            {
+                { AssetType.Texture, new TextureAssetProcessor() },
+                { AssetType.Audio, new AudioAssetProcessor() },
+                { AssetType.Text, new TextAssetProcessor() },
+                { AssetType.Shader, new ShaderAssetProcessor() },
+                { AssetType.Font, new RawBytesAssetProcessor() },
+                { AssetType.AnimationClip, new AnimClipAssetProcessorDevMode() },
+                { AssetType.AnimationController, new AnimControllerClipAssetProcessorDevMode() },
+            };
+
+            var releaseModeAssetsProcessors = new Dictionary<AssetType, IAssetProcessor>()
+            {
+                { AssetType.Texture, new TextureAssetProcessor() },
+                { AssetType.Audio, new AudioAssetProcessor() },
+                { AssetType.Text, new TextAssetProcessor() },
+                { AssetType.Shader, new ShaderAssetProcessor() },
+                { AssetType.Font, new RawBytesAssetProcessor() },
+                { AssetType.AnimationClip, new RawBytesAssetProcessor() }, // TODO: binary serialization
+                { AssetType.AnimationController, new RawBytesAssetProcessor() }, // TODO: binary serialization
+            };
+
             _assetCookers = new Dictionary<CookingType, AssetsCookerBase>()
             {
-                {  CookingType.DevMode, new DevModeFilesCooker(_databaseInfo) },
-                {  CookingType.ReleaseMode, new ReleaseModeFilesCooker() },
+                {  CookingType.DevMode, new DevModeFilesCooker(_databaseInfo, devModeAssetsProcessors) },
+                {  CookingType.ReleaseMode, new ReleaseModeFilesCooker(releaseModeAssetsProcessors) },
             };
         }
 
@@ -107,7 +129,8 @@ namespace GameCooker
                 });
             }
 
-            await _assetCookers[options.Type].CookAssetsAsync(options.FileOptions, selectedFiles.ToArray(), (x, y, z) => ProcessAsset(options.Platform, x, y, z), options.ExportFolderPath);
+            await _assetCookers[options.Type].CookAssetsAsync(options.FileOptions, options.Platform,
+                                                              selectedFiles.ToArray(), options.ExportFolderPath);
 
             return _databaseInfo;
         }
@@ -115,16 +138,6 @@ namespace GameCooker
         public AssetsDatabaseInfo CookAll(CookOptions options)
         {
             return CookAllAsync(options).GetAwaiter().GetResult();
-        }
-
-        private byte[] ProcessAsset(CookingPlatform platform, AssetType type, AssetMetaFileBase meta, string path)
-        {
-            if (_assetsProcessors.TryGetValue(type, out var processor))
-            {
-                return processor.Process(path, meta, platform);
-            }
-
-            return [];
         }
     }
 }

@@ -256,6 +256,10 @@ namespace Engine.Serialization
                 if (ReflectionUtils.ResolveType(complexItem.TargetTypeName, out Type itemType))
                 {
                     var itemInstance = ReflectionUtils.GetDefaultValueInstance(itemType);
+                    if(itemInstance == null)
+                    {
+                        throw new Exception($"Can't create an instance of type: {itemType}, check if a default constructor is available.");
+                    }
                     DeserializeTarget(itemInstance, complexItem.Properties, deserializerData);
                     setValueCallback(itemInstance);
                 }

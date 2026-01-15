@@ -50,6 +50,12 @@ namespace Engine
         private AnimationClip() : base(string.Empty, Guid.NewGuid()) // TODO: animation clip
         {
         }
+
+        public AnimationClip(string path, Guid guid) : base(path, guid)
+        {
+            
+        }
+
         public AnimationClip(string name, bool loop = true) : base(string.Empty, Guid.NewGuid()) // TODO: animation clip
         {
             Name = name;

@@ -1,0 +1,271 @@
+[
+  {
+    "Name": "Loop",
+    "Type": "Simple",
+    "InternalType": "System.Boolean, System.Private.CoreLib",
+    "Data": {
+      "$type": "System.Boolean, System.Private.CoreLib",
+      "$value": false
+    }
+  },
+  {
+    "Name": "_floatCurves",
+    "Type": "SimpleCollection",
+    "InternalType": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib],[Engine.AnimationCurveBase`1[[System.Single, System.Private.CoreLib]], Engine]], System.Private.CoreLib",
+    "Data": {
+      "$type": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib],[Engine.AnimationCurveBase`1[[System.Single, System.Private.CoreLib]], Engine]], System.Private.CoreLib",
+      "$value": {}
+    }
+  },
+  {
+    "Name": "_vec2Curves",
+    "Type": "SimpleCollection",
+    "InternalType": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib],[Engine.AnimationCurveBase`1[[GlmNet.vec2, SharedTypes]], Engine]], System.Private.CoreLib",
+    "Data": {
+      "$type": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib],[Engine.AnimationCurveBase`1[[GlmNet.vec2, SharedTypes]], Engine]], System.Private.CoreLib",
+      "$value": {}
+    }
+  },
+  {
+    "Name": "_vec3Curves",
+    "Type": "SimpleCollection",
+    "InternalType": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib],[Engine.AnimationCurveBase`1[[GlmNet.vec3, SharedTypes]], Engine]], System.Private.CoreLib",
+    "Data": {
+      "$type": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib],[Engine.AnimationCurveBase`1[[GlmNet.vec3, SharedTypes]], Engine]], System.Private.CoreLib",
+      "$value": {}
+    }
+  },
+  {
+    "Name": "_quatCurves",
+    "Type": "SimpleCollection",
+    "InternalType": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib],[Engine.AnimationCurveBase`1[[GlmNet.quat, Engine]], Engine]], System.Private.CoreLib",
+    "Data": {
+      "$type": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib],[Engine.AnimationCurveBase`1[[GlmNet.quat, Engine]], Engine]], System.Private.CoreLib",
+      "$value": {}
+    }
+  },
+  {
+    "Name": "_colorCurves",
+    "Type": "SimpleCollection",
+    "InternalType": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib],[Engine.AnimationCurveBase`1[[Engine.Color, Engine]], Engine]], System.Private.CoreLib",
+    "Data": {
+      "$type": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib],[Engine.AnimationCurveBase`1[[Engine.Color, Engine]], Engine]], System.Private.CoreLib",
+      "$value": {}
+    }
+  },
+  {
+    "Name": "_spriteCurves",
+    "Type": "ComplexCollection",
+    "InternalType": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib],[Engine.AnimationCurveBase`1[[Engine.Sprite, Engine]], Engine]], System.Private.CoreLib",
+    "Data": {
+      "$type": "Engine.CollectionPropertyData, Engine",
+      "$value": {
+        "CollectionType": "Dictionary",
+        "Collection": [
+          {
+            "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+            "Key": {
+              "TargetTypeName": "System.String, System.Private.CoreLib",
+              "ComplexType": "Simple",
+              "Properties": [
+                {
+                  "Name": "DictionaryKey",
+                  "Type": "Simple",
+                  "InternalType": "System.String, System.Private.CoreLib",
+                  "Data": {
+                    "$type": "System.String, System.Private.CoreLib",
+                    "$value": "Sprite_Property"
+                  }
+                }
+              ]
+            },
+            "Value": {
+              "TargetTypeName": "Engine.SpriteCurve, Engine",
+              "ComplexType": "ComplexClass",
+              "Properties": [
+                {
+                  "Name": "Keyframes",
+                  "Type": "ComplexCollection",
+                  "InternalType": "System.Collections.Generic.List`1[[Engine.Keyframe`1[[Engine.Sprite, Engine]], Engine]], System.Private.CoreLib",
+                  "Data": {
+                    "$type": "Engine.CollectionPropertyData, Engine",
+                    "$value": {
+                      "CollectionType": "List",
+                      "Collection": [
+                        {
+                          "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                          "Value": {
+                            "TargetTypeName": "Engine.Keyframe`1[[Engine.Sprite, Engine]], Engine",
+                            "ComplexType": "ComplexClass",
+                            "Properties": [
+                              {
+                                "Name": "Value",
+                                "Type": "Asset",
+                                "InternalType": "Engine.Sprite, Engine",
+                                "Data": {
+                                  "$type": "System.Guid, System.Private.CoreLib",
+                                  "$value": "0def5a62-4b29-4bce-987d-93eff1bcc273"
+                                }
+                              },
+                              {
+                                "Name": "Time",
+                                "Type": "Simple",
+                                "InternalType": "System.Single, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.Single, System.Private.CoreLib",
+                                  "$value": 0.0
+                                }
+                              }
+                            ]
+                          },
+                          "Type": "ComplexClass"
+                        },
+                        {
+                          "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                          "Value": {
+                            "TargetTypeName": "Engine.Keyframe`1[[Engine.Sprite, Engine]], Engine",
+                            "ComplexType": "ComplexClass",
+                            "Properties": [
+                              {
+                                "Name": "Value",
+                                "Type": "Asset",
+                                "InternalType": "Engine.Sprite, Engine",
+                                "Data": {
+                                  "$type": "System.Guid, System.Private.CoreLib",
+                                  "$value": "74ce688f-a033-46e0-9440-56b83d8b4c77"
+                                }
+                              },
+                              {
+                                "Name": "Time",
+                                "Type": "Simple",
+                                "InternalType": "System.Single, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.Single, System.Private.CoreLib",
+                                  "$value": 0.08695652
+                                }
+                              }
+                            ]
+                          },
+                          "Type": "ComplexClass"
+                        },
+                        {
+                          "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                          "Value": {
+                            "TargetTypeName": "Engine.Keyframe`1[[Engine.Sprite, Engine]], Engine",
+                            "ComplexType": "ComplexClass",
+                            "Properties": [
+                              {
+                                "Name": "Value",
+                                "Type": "Asset",
+                                "InternalType": "Engine.Sprite, Engine",
+                                "Data": {
+                                  "$type": "System.Guid, System.Private.CoreLib",
+                                  "$value": "b3a057b4-e434-44d5-a3c6-c3afcc0019a2"
+                                }
+                              },
+                              {
+                                "Name": "Time",
+                                "Type": "Simple",
+                                "InternalType": "System.Single, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.Single, System.Private.CoreLib",
+                                  "$value": 0.17391305
+                                }
+                              }
+                            ]
+                          },
+                          "Type": "ComplexClass"
+                        },
+                        {
+                          "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                          "Value": {
+                            "TargetTypeName": "Engine.Keyframe`1[[Engine.Sprite, Engine]], Engine",
+                            "ComplexType": "ComplexClass",
+                            "Properties": [
+                              {
+                                "Name": "Value",
+                                "Type": "Asset",
+                                "InternalType": "Engine.Sprite, Engine",
+                                "Data": {
+                                  "$type": "System.Guid, System.Private.CoreLib",
+                                  "$value": "c3aae6ae-8fa2-4c25-b2e3-6754dda3f474"
+                                }
+                              },
+                              {
+                                "Name": "Time",
+                                "Type": "Simple",
+                                "InternalType": "System.Single, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.Single, System.Private.CoreLib",
+                                  "$value": 0.26086956
+                                }
+                              }
+                            ]
+                          },
+                          "Type": "ComplexClass"
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            },
+            "Type": "ComplexClass"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "Name": "_eventCurve",
+    "Type": "ComplexClass",
+    "InternalType": "Engine.EventCurve, Engine",
+    "Data": {
+      "$type": "Engine.ComplexTypeData, Engine",
+      "$value": {
+        "TargetTypeName": "Engine.EventCurve, Engine",
+        "ComplexType": "ComplexClass",
+        "Properties": [
+          {
+            "Name": "Keyframes",
+            "Type": "ComplexCollection",
+            "InternalType": "System.Collections.Generic.List`1[[Engine.EventCurve+EventKeyFrame, Engine]], System.Private.CoreLib",
+            "Data": {
+              "$type": "Engine.CollectionPropertyData, Engine",
+              "$value": {
+                "CollectionType": "List",
+                "Collection": [
+                  {
+                    "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                    "Value": {
+                      "TargetTypeName": "Engine.EventCurve+EventKeyFrame, Engine",
+                      "ComplexType": "ComplexClass",
+                      "Properties": [
+                        {
+                          "Name": "Value",
+                          "Type": "ComplexClass",
+                          "InternalType": "DelegateForwarder",
+                          "Data": null
+                        },
+                        {
+                          "Name": "Time",
+                          "Type": "Simple",
+                          "InternalType": "System.Single, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.Single, System.Private.CoreLib",
+                            "$value": 0.0
+                          }
+                        }
+                      ]
+                    },
+                    "Type": "ComplexClass"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+]

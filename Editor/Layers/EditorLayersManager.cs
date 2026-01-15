@@ -29,7 +29,7 @@ namespace Editor
                   new AudioLayer(),                // 5
                   null, // PhysicsLayer,           // 6
                   new RenderingLayer(),            // 7
-                  new IOLayer()])                  // 8
+                  new EditorIOLayer()])            // 8
         {
             _editorSceneLayer = new SceneLayer();
 
@@ -111,7 +111,9 @@ namespace Editor
                 var actors = EditorJsonUtils.Deserialize<List<ActorDataSceneAsset>>(file);
                 Debug.Log("Total actors in scene: " + actors.Count);
 
-
+                var clip = Assets.Get<AnimationClip>("Animation/AnimClip.anim");
+                var clipController = Assets.Get<AnimatorController>("Animation/AnimController.animcontroller");
+                
                 SceneManager.Initialize();
                 SceneManager.UnloadAll();
                 SceneManager.LoadScene("Reload scene");

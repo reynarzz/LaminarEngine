@@ -3,6 +3,7 @@ using Engine;
 using Engine.Utils;
 using System.Collections;
 using System.Reflection;
+using Microsoft.VisualBasic.FileIO;
 
 namespace Editor.Serialization
 {
@@ -27,7 +28,7 @@ namespace Editor.Serialization
                 properties.Add(new SerializedPropertyData()
                 {
                     Name = member.Name,
-                    InternalType = ReflectionUtils.GetFullTypeName(valueType),
+                    InternalType = GetInternalType(valueType),
                     Type = serializedType,
                     Data = GetPropertyData(member, serializedType, value)
                 });
@@ -89,7 +90,7 @@ namespace Editor.Serialization
                 if (ReflectionUtils.IsCollectionOfInternalTypes(type) ||
                    !ReflectionUtils.HasAnySerializedMemberWithType(type, typeof(IObject)))
                 {
-                    if (!ReflectionUtils.HasAnySerializedMemberWithType(type, typeof(Delegate), false))
+                    if (!ReflectionUtils.HasAnySerializedMemberWithType(type, typeof(Delegate)))
                     {
                         return SerializedType.SimpleCollection;
                     }
@@ -98,7 +99,7 @@ namespace Editor.Serialization
                         return SerializedType.ComplexCollection;
                     }
                 }
-                else if (ReflectionUtils.HasAnySerializedMemberWithType(type, typeof(Delegate), false))
+                else if (ReflectionUtils.HasAnySerializedMemberWithType(type, typeof(Delegate)))
                 {
                     return SerializedType.ComplexCollection;
                 }
@@ -242,7 +243,7 @@ namespace Editor.Serialization
                                     argSerializedType == SerializedType.SimpleClass ||
                                     argSerializedType == SerializedType.SimpleCollection)
                                 {
-                                    var internalType = ReflectionUtils.GetFullTypeName(argValue?.GetType());
+                                    var internalType = GetInternalType(argValue?.GetType());
                                     return new ComplexTypeData()
                                     {
                                         ComplexType = argSerializedType,
@@ -330,7 +331,7 @@ namespace Editor.Serialization
                 {
                     Name = currentType.Name,
                     Type = serializedType,
-                    InternalType = ReflectionUtils.GetFullTypeName(valueType),
+                    InternalType = GetInternalType(valueType),
                     Data = GetPropertyData(currentType, serializedType, value),
                 };
             }
@@ -350,6 +351,16 @@ namespace Editor.Serialization
             }
 
             return complexClass;
+        }
+
+        private static string GetInternalType(Type type)
+        {
+            if (type.IsAssignableTo(typeof(Delegate)))
+            {
+                return "DelegateForwarder";// TODO: point to the real delegate forwarder type.
+            }
+
+            return ReflectionUtils.GetFullTypeName(type);
         }
     }
 }

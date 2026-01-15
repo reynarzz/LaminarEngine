@@ -9,16 +9,26 @@ using System.Threading.Tasks;
 
 namespace Engine.Layers
 {
-    internal class IOLayer : LayerBase
+    public class IOLayer : LayerBase
     {
         private static AssetDatabase _assetDatabase;
         internal static AssetDatabase Database => _assetDatabase; // Remove this.
-        // Refactor: (factory)
+
+        // TODO: remove all this, this is here to avoid breaking the current IO functionality. 
         public override void Initialize()
         {
-            DiskBase disk = null;
-            _assetDatabase = new AssetDatabase();
+            var assetbuilder = new Dictionary<AssetType, AssetBuilderBase>()
+            {
+                { AssetType.Texture, new TextureAssetBuilder() },
+                { AssetType.Text, new TextAssetBuilder() },
+                { AssetType.Shader, new TextAssetBuilder() },
+                { AssetType.Audio, new AudioClipAssetBuilder() },
+                { AssetType.Font, new FontAssetBuilder() },
+                { AssetType.AnimationClip, new AnimationClipAssetBuilder() },
+                //{ AssetType.AnimationController, new FontAssetBuilder() },
+            };
 
+            DiskBase disk = null;
 #if DEBUG && !MOBILE
             disk = new DevModeDisk();
 #else
@@ -28,6 +38,16 @@ namespace Engine.Layers
             disk = new ReleaseModeDisk(GFSEngine.AssetFileStream);
 #endif
 #endif
+            disk.Initialize();
+
+            _assetDatabase = new AssetDatabase(assetbuilder);
+            _assetDatabase.Initialize(disk);
+        }
+
+        private protected void InitializeIO(DiskBase disk, Dictionary<AssetType, AssetBuilderBase> assetsBuilder)
+        {
+            _assetDatabase = new AssetDatabase(assetsBuilder);
+
             disk.Initialize();
 
             _assetDatabase.Initialize(disk);
@@ -41,6 +61,5 @@ namespace Engine.Layers
         public override void Close()
         {
         }
-
     }
 }

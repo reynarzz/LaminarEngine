@@ -13,7 +13,12 @@ namespace Engine
             this(window, appLayer, input, null)
         { }
 
-        public GFSEngine(IWindow window, ApplicationLayer appLayer, InputLayerBase input, BinaryReader assetFileStream)
+        public GFSEngine(IWindow window, ApplicationLayer appLayer, InputLayerBase input, BinaryReader assetFileStream) :
+            this(window, appLayer, input, new RuntimeIOLayer(), assetFileStream)
+        {
+
+        }
+        public GFSEngine(IWindow window, ApplicationLayer appLayer, InputLayerBase input, IOLayer ioLayer, BinaryReader assetFileStream)
             : this(window, input, new LayersManager([new TimeLayer(), input,
                                                    appLayer,
                                                    new MainThreadDispatcher(),
@@ -21,7 +26,7 @@ namespace Engine
                                                    new AudioLayer(),
                                                    new PhysicsLayer(),
                                                    new RenderingLayer(),
-                                                   new IOLayer()]), assetFileStream)
+                                                   ioLayer]), assetFileStream)
         {
         }
 
@@ -35,7 +40,7 @@ namespace Engine
             window.OnWindowClose += () => { layerManager.OnClose(); };
             if (window.IsInitialized)
             {
-                _layersManager = layerManager; 
+                _layersManager = layerManager;
                 _layersManager.Initialize();
             }
         }

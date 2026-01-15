@@ -3,17 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections;
 
 namespace Engine.Utils
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-
     public class BiDictionary<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>>
     {
-        private readonly Dictionary<TKey, TValue> _keyToValue = new();
-        private readonly Dictionary<TValue, TKey> _valueToKey = new();
+        [SerializedField] private Dictionary<TKey, TValue> _keyToValue = new();
+        [SerializedField] private Dictionary<TValue, TKey> _valueToKey = new();
 
         public int Count => _keyToValue.Count;
 
@@ -43,14 +40,12 @@ namespace Engine.Utils
             return true;
         }
 
-        public TValue GetByKey(TKey key) => _keyToValue[key];
-        public TKey GetByValue(TValue value) => _valueToKey[value];
-
-        public bool TryGetByKey(TKey key, out TValue value) => _keyToValue.TryGetValue(key, out value);
-        public bool TryGetByValue(TValue value, out TKey key) => _valueToKey.TryGetValue(value, out key);
-
-        public bool ContainsKey(TKey key) => _keyToValue.ContainsKey(key);
-        public bool ContainsValue(TValue value) => _valueToKey.ContainsKey(value);
+        public TValue GetByKey(TKey key) { return _keyToValue[key]; }
+        public TKey GetByValue(TValue value) { return _valueToKey[value]; }
+        public bool TryGetByKey(TKey key, out TValue value) { return _keyToValue.TryGetValue(key, out value); }
+        public bool TryGetByValue(TValue value, out TKey key) { return _valueToKey.TryGetValue(value, out key); }
+        public bool ContainsKey(TKey key) { return _keyToValue.ContainsKey(key); }
+        public bool ContainsValue(TValue value) { return _valueToKey.ContainsKey(value); }
 
         public void Clear()
         {
@@ -58,8 +53,8 @@ namespace Engine.Utils
             _valueToKey.Clear();
         }
 
-        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => _keyToValue.GetEnumerator();
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() { return _keyToValue.GetEnumerator(); }
+        IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
     }
 
 }

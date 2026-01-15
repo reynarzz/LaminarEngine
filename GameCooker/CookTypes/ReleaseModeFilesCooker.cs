@@ -50,10 +50,13 @@ namespace GameCooker
         private const long fieldIfOffset = assetBlockLocSize + assetDataLocSize + metaLocSize;
 
         private const int TEMP_BUFFER_SIZE = 81920;
-       
-        internal override async Task CookAssetsAsync(CookFileOptions fileOptions, (string, AssetType)[] files,
-                                                    Func<AssetType, AssetMetaFileBase, string, byte[]> processAssetCallback,
-                                                    string outFolder)
+
+        public ReleaseModeFilesCooker(Dictionary<AssetType, IAssetProcessor> processor) : base(processor)
+        {
+        }
+
+        internal override async Task CookAssetsAsync(CookFileOptions fileOptions, CookingPlatform platform, (string, AssetType)[] files,
+                                                     string outFolder)
         {
             var path = Path.Combine(outFolder, Paths.GetAssetBuildDataFilename());
             Directory.CreateDirectory(outFolder);
@@ -118,7 +121,7 @@ namespace GameCooker
                 // encrypt files path
                 bufWritter.Write(fileOptions.EncryptFilesPath);
 
-                var assetData = await Task.Run(() => processAssetCallback(assetType, meta, filePath));
+                var assetData = await Task.Run(() => ProcessAsset(platform, assetType, meta, filePath));
 
                 if (shouldCompressFile)
                 {

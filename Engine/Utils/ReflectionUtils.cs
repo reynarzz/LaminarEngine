@@ -26,7 +26,7 @@ namespace Engine.Utils
                 }
                 else
                 {
-                    return Activator.CreateInstance(type);
+                    return Activator.CreateInstance(type, true);
                 }
             }
             else
@@ -43,10 +43,11 @@ namespace Engine.Utils
                 {
                     try
                     {
-                        return Activator.CreateInstance(type);
+                        return Activator.CreateInstance(type, true);
                     }
                     catch (Exception e)
                     {
+                        Debug.Error(e);
                         return null;
                     }
                 }
@@ -625,14 +626,16 @@ namespace Engine.Utils
             }
             else
             {
-                members = current.GetMembers(BindingFlags.Instance | BindingFlags.Public);
+                members = current.GetMembers(_flags).Where(m => m.MemberType == MemberTypes.Field || m.MemberType == MemberTypes.Property);
             }
 
             foreach (var member in members)
             {
                 var memberType = GetMemberType(member);
                 if (ContainsType(memberType, searched, visited, checkOnlySerialized))
+                {
                     return true;
+                }
             }
 
             return false;

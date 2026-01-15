@@ -16,16 +16,9 @@ namespace Engine.IO
         private BiDictionary<Guid, string> _guidPathDict;
         private DiskBase _disk;
         internal DiskBase Disk => _disk;
-        public AssetDatabase()
+        public AssetDatabase(Dictionary<AssetType, AssetBuilderBase> assetBuilder)
         {
-            _assetbuilder = new()
-            {
-                { AssetType.Texture, new TextureAssetBuilder() },
-                { AssetType.Text, new TextAssetBuilder() },
-                { AssetType.Shader, new TextAssetBuilder() },
-                { AssetType.Audio, new AudioClipAssetBuilder() },
-                { AssetType.Font, new FontAssetBuilder() },
-            };
+            _assetbuilder = assetBuilder;
             _databaseCache = new();
         }
 

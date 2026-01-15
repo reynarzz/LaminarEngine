@@ -46,6 +46,10 @@ namespace Engine
             return Get<AudioClip>(path);
         }
 
+        public static AssetResourceBase Get(string path) 
+        {
+            return Get<AssetResourceBase>(path);
+        }
         public static T Get<T>(string path) where T: AssetResourceBase
         {
 #if DEBUG

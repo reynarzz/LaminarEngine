@@ -13,6 +13,9 @@ namespace SharedTypes
         Audio,
         Text,
         Shader,
-        Font
+        Font,
+        AnimationClip,
+        AnimationController,
+        Material
     }
 }

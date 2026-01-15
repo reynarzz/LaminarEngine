@@ -9,8 +9,22 @@ namespace GameCooker
 {
     internal abstract class AssetsCookerBase
     {
-        internal abstract Task CookAssetsAsync(CookFileOptions fileOptions, (string, AssetType)[] files, 
-                                               Func<AssetType, AssetMetaFileBase, string, byte[]> processAssetCallback, 
-                                               string outFolder);
+        private readonly Dictionary<AssetType, IAssetProcessor> _assetProcessor;
+        protected AssetsCookerBase(Dictionary<AssetType, IAssetProcessor> processor)
+        {
+            _assetProcessor = processor;
+        }
+
+        internal abstract Task CookAssetsAsync(CookFileOptions fileOptions, CookingPlatform platform, (string, AssetType)[] files, string outFolder);
+
+        protected byte[] ProcessAsset(CookingPlatform platform, AssetType type, AssetMetaFileBase meta, string path)
+        {
+            if (_assetProcessor.TryGetValue(type, out var processor))
+            {
+                return processor.Process(path, meta, platform);
+            }
+
+            return [];
+        }
     }
 }

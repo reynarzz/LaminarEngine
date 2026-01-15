@@ -13,14 +13,13 @@ namespace GameCooker
     {
         private AssetsDatabaseInfo _database;
 
-        public DevModeFilesCooker(AssetsDatabaseInfo database)
+        public DevModeFilesCooker(AssetsDatabaseInfo database, Dictionary<AssetType, IAssetProcessor> assetProcessor) :
+            base(assetProcessor)
         {
             _database = database;
         }
 
-        internal override async Task CookAssetsAsync(CookFileOptions fileOptions, (string, AssetType)[] files,
-                                                     Func<AssetType, AssetMetaFileBase, string, byte[]> processAssetCallback,
-                                                     string outFolder)
+        internal override async Task CookAssetsAsync(CookFileOptions fileOptions, CookingPlatform platform, (string, AssetType)[] files, string outFolder)
         {
             foreach (var (filePath, assetType) in files)
             {
@@ -51,7 +50,7 @@ namespace GameCooker
                 if (!constainsAssetInfo || latestWriteTime > assetInfo.LastWriteTime ||
                     !isInLibrary || metaLatestWriteTime > assetInfo.MetaWriteTime)
                 {
-                    var data = processAssetCallback(assetType, meta, filePath);
+                    var data = ProcessAsset(platform, assetType, meta, filePath);
 
                     var assetRelPath = Paths.GetRelativeAssetPath(filePath);
                     if (data != null)
@@ -109,7 +108,7 @@ namespace GameCooker
                 }
             }
 
-            // Delete non uses .mt file in 'Assets' folder
+            // Delete non used .mt file in 'Assets' folder
             var mtFiles = Directory.GetFiles(Paths.GetAssetsFolderPath(), "*.mt", SearchOption.AllDirectories);
             foreach (var metaPath in mtFiles)
             {
