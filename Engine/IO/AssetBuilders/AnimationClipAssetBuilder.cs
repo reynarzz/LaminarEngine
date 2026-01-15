@@ -12,14 +12,17 @@ namespace Engine.IO
     {
         internal override AssetResourceBase BuildAsset(AssetInfo info, AssetMetaFileBase meta, Guid guid, BinaryReader reader)
         {
-            // TODO: implement for binary based serialization. 
+            // TODO: implement for binary based derialization, the IR reconstruction. 
             var length = reader.BaseStream.Length;
             var data = new byte[length];
             int bytesRead = reader.BaseStream.Read(data, 0, (int)length);
 
-            // TODO: populate anim data.
             var anim = new AnimationClip(info.Path, guid);
-           
+
+            // TODO: populate anim data.
+
+            Deserializer.Deserialize(anim, null);
+
             return anim;
         }
     }

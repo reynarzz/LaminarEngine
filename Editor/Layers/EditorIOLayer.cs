@@ -14,7 +14,7 @@ namespace Editor
     {
         public override void Initialize()
         {
-            var assetbuilder = new Dictionary<AssetType, AssetBuilderBase>()
+            InitializeIO(new DevModeDisk(), new Dictionary<AssetType, AssetBuilderBase>()
             {
                 { AssetType.Texture, new TextureAssetBuilder() },
                 { AssetType.Text, new TextAssetBuilder() },
@@ -23,9 +23,7 @@ namespace Editor
                 { AssetType.Font, new FontAssetBuilder() },
                 { AssetType.AnimationClip, new JsonBasedAssetBuilder<AnimationClip>() },
                 { AssetType.AnimationController, new JsonBasedAssetBuilder<AnimatorController>() },
-            };
-
-            InitializeIO(new DevModeDisk(), assetbuilder);
+            });
         }
     }
 }

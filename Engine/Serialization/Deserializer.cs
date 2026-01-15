@@ -15,6 +15,9 @@ namespace Engine.Serialization
     {
         internal static T Deserialize<T>(IReadOnlyList<SerializedPropertyData> properties)
         {
+            if (properties == null)
+                return default;
+
             var target = Activator.CreateInstance(typeof(T), true);
             Deserialize(target, properties);
             if (target == default)
@@ -30,6 +33,9 @@ namespace Engine.Serialization
         internal static void DeserializeTarget(object targetInstance, IReadOnlyList<SerializedPropertyData> properties,
                                                DeserializerData deserializerData)
         {
+            if (targetInstance == null || properties == null)
+                return;
+
             foreach (var property in properties)
             {
                 switch (property.Type)
