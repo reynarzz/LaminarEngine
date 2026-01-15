@@ -256,7 +256,7 @@ namespace Engine.Serialization
                 if (ReflectionUtils.ResolveType(complexItem.TargetTypeName, out Type itemType))
                 {
                     var itemInstance = ReflectionUtils.GetDefaultValueInstance(itemType);
-                    if(itemInstance == null)
+                    if (itemInstance == null)
                     {
                         throw new Exception($"Can't create an instance of type: {itemType}, check if a default constructor is available.");
                     }
@@ -282,7 +282,7 @@ namespace Engine.Serialization
                                 complexArg.ComplexType == SerializedType.SimpleClass ||
                                 complexArg.ComplexType == SerializedType.SimpleCollection)
                             {
-                               // if (complexArg.Properties != null && complexArg.Properties.Count > 0)
+                                // if (complexArg.Properties != null && complexArg.Properties.Count > 0)
                                 {
                                     deserializedArgValue = complexArg.Properties?[0].Data ?? null;
                                 }
@@ -340,22 +340,15 @@ namespace Engine.Serialization
                     return GetReferenceValue(deserializerData?.ComponentsByID, guid);
                 case SerializedType.Actor:
                     return GetReferenceValue(deserializerData?.ActorsByID, guid);
-                //case SerializableType.Asset:
-                //    break;
-                //case SerializableType.TextureAsset:
-                //    break;
-                //case SerializableType.RenderTextureAsset:
-                //    break;
+                case SerializedType.Asset:
+                case SerializedType.TextureAsset:
+                case SerializedType.RenderTextureAsset:
                 case SerializedType.AudioClipAsset:
-                    return Assets.GetAssetFromGuid(guid) as AudioClip;
-                //case SerializableType.MaterialAsset:
-                //    break;
-                //case SerializableType.AnimationAsset:
-                //    break;
-                //case SerializableType.AnimatorAsset:
-                //    break;
-                //case SerializableType.ScriptableObject:
-                //    break;
+                case SerializedType.MaterialAsset:
+                case SerializedType.AnimationAsset:
+                case SerializedType.AnimatorControllerAsset:
+                case SerializedType.ScriptableObject:
+                    return Assets.GetAssetFromGuid(guid);
                 default:
                     // Debug.Error($"Can't deserialize reference: '{type}' is not implemented.");
                     break;
