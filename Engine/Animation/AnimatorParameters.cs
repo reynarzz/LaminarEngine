@@ -39,5 +39,16 @@ namespace Engine
             }
             return false;
         }
+
+        internal AnimatorParameters Clone()
+        {
+            return new AnimatorParameters()
+            {
+                _bools = new Dictionary<string, bool>(_bools),
+                _floats = new Dictionary<string, float>(_floats),
+                _ints = new Dictionary<string, int>(_ints),
+                _triggers = new Dictionary<string, bool>(_triggers)
+            };
+        }
     }
 }

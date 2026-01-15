@@ -62,12 +62,13 @@ namespace Engine.Graphics
             }
             set
             {
-                if(_isEnabledFunc == null)
+                if (_isEnabledFunc == null)
                 {
                     _isEnabled = value;
                 }
             }
         }
+        // public override bool IsEnabled => _isEnabledFunc?.Invoke() ?? true;
 
         //public RendererData2D(Guid id, Transform transform, Func<bool> isEnabled)
         //{

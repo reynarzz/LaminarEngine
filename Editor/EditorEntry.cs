@@ -16,12 +16,15 @@ using System.Numerics;
 namespace Editor
 {
     // TODO:
-    // Current code is very slow, most of it is in 'prototype' phase, a nice (big) refactor is on the way.
-    // Refactor.
-    // Playmode on launch (maybe I implement a proper playmode later: pause, frame step)
-    // Changing cameras causes to render prevCamera.
-    // Weird rendering issue, related to mouse picking pink materials, is it the RenderingSystem, batcher?
-    // Implement Asset files for: Scene, animationClip, animatorController, Tilemap.
+    // -Current code is very slow, most of it is in 'prototype' phase, a nice (big) refactor is on the way.
+    // -Refactor.
+    // -Playmode on launch (maybe I implement a proper playmode later: pause, frame step)
+    // -Changing cameras causes to render prevCamera.
+    // -Weird rendering issue, related to mouse picking pink materials, is it the RenderingSystem, batcher?
+    // -Implement Asset files for: Scene, animationClip, animatorController, Tilemap.
+    // -The serializer has a possible bug related to delegates,
+    //   collections do not search for all delegates(privates/public), but classes do.
+    //-If I load the runtime mode, and the applicationLayer is enabled, the camera renders black.
 
     internal class EditorEntry
     {

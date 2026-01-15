@@ -13,8 +13,6 @@ namespace Engine
     [UniqueComponent]
     public class Animator : Component, ILateUpdatableComponent
     {
-        internal IDictionary<string, AnimationState> States => Controller.States;
-
         private AnimationPlayer _animPlayer = new();
         private AnimationState _nextState;
 
@@ -26,13 +24,16 @@ namespace Engine
         public AnimatorController Controller { get; set; } = new(); // TODO: remove the instance creation,
                                                                     //       this is only done to not break the game.
                                                                     //       since it is done completely in code, no editor.
+        
+        private AnimatorParameters _animatorParametersCopy;
+        public AnimatorParameters Parameters => _animatorParametersCopy ?? (_animatorParametersCopy = Controller?.Parameters.Clone());
 
         [ShowFieldNoSerialize]
         public AnimationState CurrentState { get; private set; }
-        [SerializedField] public AnimatorParameters Parameters { get; private set; } = new AnimatorParameters();
 
         internal float CurrentStateTime => _animPlayer.CurrentTime;
 
+        // Remove from animator, this should be handled by the editor
         public void AddState(AnimationState state)
         {
             Controller.States[state.Name] = state;
@@ -158,7 +159,7 @@ namespace Engine
         /// </summary>
         public void Clear()
         {
-            Controller.States.Clear();
+            // Controller.States.Clear();
             CurrentState = null;
             _nextState = null;
             _transitionTime = 0;

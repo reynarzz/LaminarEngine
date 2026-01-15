@@ -8,11 +8,11 @@ namespace Engine
 {
     public class AnimatorController : AssetResourceBase
     {
-        [SerializedField] private Dictionary<string, AnimationState> _states = new();
-        internal IDictionary<string, AnimationState> States => _states;
+        [SerializedField] internal AnimatorParameters Parameters { get; private set; } = new();
+        [SerializedField] internal Dictionary<string, AnimationState> States { get; private set; } = new();
 
         // Serializer
-        internal AnimatorController() : base(string.Empty, Guid.Empty)
+        internal AnimatorController() : base("Animator Controller", Guid.Empty)
         {
         }
 

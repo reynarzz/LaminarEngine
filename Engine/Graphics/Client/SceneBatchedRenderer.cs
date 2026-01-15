@@ -70,7 +70,7 @@ namespace Engine.Graphics
                 info.TotalRenderers += batch.RenderersCount;
                 batch.Flush();
 
-                if (batch.Material)
+                //   if (batch.Material)
                 {
                     var isScreenGrabPass = batch.Material.Passes.Any(x => x.IsScreenGrabPass);
 
@@ -109,12 +109,12 @@ namespace Engine.Graphics
                         }
                     }
                 }
-                else
-                {
-                    Debug.EngineError("Fatal batch doesn't have material");
-                }
+                //else
+                //{
+                //    Debug.EngineError("Fatal batch doesn't have material");
+                //}
 
-                    RenderPass(batch, ref VP, sceneRenderTarget, _screenGrabTarget, camera);
+                RenderPass(batch, ref VP, sceneRenderTarget, _screenGrabTarget, camera);
             }
 
             return info;

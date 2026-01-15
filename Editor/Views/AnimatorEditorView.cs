@@ -54,9 +54,14 @@ namespace Editor
             int yPos = 100;
             int xPos = 100;
 
+
+            if (!animator.Controller)
+            {
+                return;
+            }
             var nodes = new Dictionary<string, Node>();
 
-            foreach (var (currentStateName, state) in animator.States)
+            foreach (var (currentStateName, state) in animator.Controller.States)
             {
                 var node = CreateNode(state, new vec2(xPos, yPos));
                 nodes.Add(currentStateName, node);

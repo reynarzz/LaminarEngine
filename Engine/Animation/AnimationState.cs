@@ -40,6 +40,9 @@ namespace Engine
 
         public AnimatorTransition CheckTransitions(AnimatorParameters parameters)
         {
+            if(parameters == null)
+                return null;
+
             foreach (var transition in _transitions)
             {
                 bool allConditionsMet = true;
