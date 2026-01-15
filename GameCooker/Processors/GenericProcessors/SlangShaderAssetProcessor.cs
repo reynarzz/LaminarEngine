@@ -29,52 +29,69 @@ namespace GameCooker
             {
                 path,
                 "-profile", "glsl_330", // "sm_6_6",
-                //"-matrix-layout-column-major",
                 "-entry",$"{vertexEntryPoint}", "-stage", "vertex",
-                //"-entry","fragmentMain", "-stage", "pixel",
+                "-lang", "glsl",
                 "-target", $"{target}",
+                //"-allow-glsl",
+                "-no-mangle",
                 "-capability", "glsl_spirv_1_6",
-                "-capability", "vertex"
+                //"-i", "import_file.slang",
+                "-O3",
             };
 
             var fragmentArgs = new string[]
             {
                 path,
                 "-profile", "glsl_330",
-                //"-matrix-layout-column-major",
-                //"-entry","vertexMain", "-stage", "vertex",
                 "-entry",$"{fragmentEntryPoint}", "-stage", "fragment",
+                "-lang", "glsl",
                 "-target", $"{target}",
+                "-no-mangle",
                 "-capability", "glsl_spirv_1_6",
-                "-capability", "fragment"
+                "-O3",
             };
 
             // var arg = $"slangc {path} -entry vertexMain -stage vertex -entry fragmentMain -stage fragment -target spirv";
 
-            var vertSpirv = SlangCompiler.CompileWithReflection(vertexArgs, out SlangReflection reflection);
-            var fragSpirv = SlangCompiler.CompileWithReflection(fragmentArgs, out reflection);
+            var vertSpirv = SlangCompiler.CompileWithReflection(vertexArgs, out SlangReflection vertReflection);
+            var fragSpirv = SlangCompiler.CompileWithReflection(fragmentArgs, out var fragReflection);
 
-            // Console.WriteLine($"Compilation Time: {stopwatch.ElapsedMilliseconds} ms");
             Console.WriteLine($"SPIR-V: {vertSpirv.Length} bytes");
-            Console.WriteLine($"Reflection JSON: {reflection.Json}");
+            Console.WriteLine($"Reflection JSON: {vertReflection.Json}");
 
-            reflection.Deserialize();
-            var context = new SPIRVCross.NET.Context();
+            vertReflection.Deserialize();
+            var context = new Context();
 
             string CompileGLSL(byte[] spirv)
             {
                 var parsedIR = context.ParseSpirv(spirv);
 
                 var compiler = context.CreateGLSLCompiler(parsedIR);
-                compiler.glslOptions.ES = true;
-                compiler.glslOptions.version = 300;
+                bool isMobile = false;
+
+                if (platform == CookingPlatform.Android || platform == CookingPlatform.IOS)
+                {
+                    compiler.glslOptions.ES = true;
+                    compiler.glslOptions.version = 300;
+                    isMobile = true;
+                }
+                else
+                {
+                    compiler.glslOptions.version = 330;
+                }
                 compiler.glslOptions.separateShaderObjects = false;
                 compiler.glslOptions.vulkanSemantics = false;
                 compiler.glslOptions.enableRowMajorLoadWorkaround = false;
                 compiler.glslOptions.enable420PackExtension = false;
+                compiler.glslOptions.emitUniformBufferAsPlainUniforms = true;
+                var str = compiler.Compile();
 
-                return compiler.Compile();
+                if (!isMobile)
+                {
+                    str = str.Replace("#version 330", "#version 330 core");
+                }
 
+                return str;
             }
             var vertex = CompileGLSL(vertSpirv);
             var fragment = CompileGLSL(fragSpirv);

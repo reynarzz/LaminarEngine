@@ -113,7 +113,10 @@ namespace Editor
 
                 var clip = Assets.Get<AnimationClip>("Animation/AnimClip.anim");
                 var clipController = Assets.Get<AnimatorController>("Animation/AnimController.animcontroller");
-                
+                var vert = Assets.GetText("Shaders/Slang/Test.slangv_.glsl")?.Text;
+                var frag = Assets.GetText("Shaders/Slang/Test.slangf_.glsl")?.Text;
+                var sha = new Shader(vert, frag);
+
                 SceneManager.Initialize();
                 SceneManager.UnloadAll();
                 SceneManager.LoadScene("Reload scene");

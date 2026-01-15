@@ -17,7 +17,7 @@ uniform float4   uColor;
 VertexOutput vertexMain(VertexInput input)
 {
     VertexOutput output;
-    output.position = mul(uMVP, float4(input.position, 1.0));
+    output.position = mul(float4(input.position, 1.0), uMVP);
     return output;
 }
 
