@@ -17,11 +17,16 @@
     <PackageReference Include="K4os.Compression.LZ4.Streams" Version="1.3.8" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="SoundFlow" Version="1.3.0" />
-    <PackageReference Include="SPIRV-Cross.NET" Version="1.0.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SharedTypes\SharedTypes.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="SPIRV-Cross.NET">
+      <HintPath>Third\Spirv-Cross\SPIRV-Cross.NET.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
