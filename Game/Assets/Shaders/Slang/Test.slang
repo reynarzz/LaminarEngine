@@ -1,4 +1,4 @@
-// simple.slang
+// simple_es.slang
 
 struct VertexInput
 {
@@ -10,13 +10,10 @@ struct VertexOutput
     float4 position : SV_Position;
 };
 
-cbuffer Uniforms
-{
-    float4x4 uMVP;
-    float4 uColor;
-};
-
-[shader("vertex")]
+// Loose uniforms 
+uniform float4x4 uMVP;
+uniform float4   uColor;
+ 
 VertexOutput vertexMain(VertexInput input)
 {
     VertexOutput output;
@@ -24,7 +21,6 @@ VertexOutput vertexMain(VertexInput input)
     return output;
 }
 
-[shader("fragment")]
 float4 fragmentMain(VertexOutput input) : SV_Target
 {
     return uColor;
