@@ -36,14 +36,11 @@ namespace GameCooker
                 { ".json", AssetType.Text },
                 { ".xml", AssetType.Text },
                 { ".csv", AssetType.Text },
-           
+                
                 // Shader
                 { ".shader", AssetType.Shader },
-                { ".glsl", AssetType.Shader },
                 { ".vert", AssetType.Shader },
-                { ".vertex", AssetType.Shader },
                 { ".frag", AssetType.Shader },
-                { ".fragment", AssetType.Shader },
 
                 { ".slang", AssetType.SlangShader },
 

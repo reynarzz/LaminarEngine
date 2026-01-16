@@ -1,35 +1,69 @@
 ﻿using Engine.Graphics;
+using Engine.IO;
+using SharedTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Engine
 {
     public class Shader : AssetResourceBase
     {
-        internal GfxResource NativeShader { get; }
-        public Shader(string vertexCode, string fragmentCode) : this(vertexCode, fragmentCode, string.Empty, string.Empty) 
+        [ShowFieldNoSerialize(isReadOnly: true)] private readonly ShaderUniform[] _uniforms;
+        private readonly ShaderSource[] _sources;
+        private GfxResource _nativeShader;
+        internal GfxResource NativeShader
         {
-          
+            get
+            {
+                if (_nativeShader == null)
+                {
+                    _nativeShader = UploadShader(_sources[0].Shader, _sources[1].Shader);
+                }
+
+                return _nativeShader;
+            }
         }
 
-        public Shader(string vertexCode, string fragmentCode, string vertName, string fragName) : 
+        internal IReadOnlyList<ShaderUniform> Uniforms => _uniforms;
+
+        // TODO: only compile shader when requested by the system, not in the constructor.
+        internal Shader(ShaderSource[] sources, string path, Guid guid) : base(path, guid)
+        {
+            _sources = sources;
+            _uniforms = sources.SelectMany(x => x.Uniforms).DistinctBy(x => x.Name).ToArray();
+        }
+
+        [Obsolete("Load shaders with Assets.GetShader(\\\"pathToShader.slang\\\")")]
+        public Shader(string vertexCode, string fragmentCode) : this(vertexCode, fragmentCode, string.Empty, string.Empty)
+        {
+
+        }
+
+        [Obsolete]
+        public Shader(string vertexCode, string fragmentCode, string vertName, string fragName) :
             base(string.Empty, Guid.NewGuid()) // TODO: load shaders from file.
+        {
+            _nativeShader = UploadShader(Encoding.UTF8.GetBytes(vertexCode), Encoding.UTF8.GetBytes(fragmentCode));
+        }
+
+        private GfxResource UploadShader(byte[] vertex, byte[] fragment/*, byte[] geometry, byte[] compute*/)
         {
             var shaderDescriptor = new ShaderDescriptor()
             {
-                VertexSource = Encoding.UTF8.GetBytes(vertexCode),
-                FragmentSource = Encoding.UTF8.GetBytes(fragmentCode),
-                VertName = vertName,
-                FragName = fragName
+                VertexSource = vertex,
+                FragmentSource = fragment,
+
+                // VertName = vertName,
+                // FragName = fragName
             };
-         
-            NativeShader = GfxDeviceManager.Current.CreateShader(shaderDescriptor);
+
+            return GfxDeviceManager.Current.CreateShader(shaderDescriptor);
         }
 
+        [Obsolete]
         public static Shader FromPath(string vertex, string fragment)
         {
             var vertexCode = Assets.GetText(vertex).Text;

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Engine.Graphics
 {
-    internal enum UniformType
+    public enum UniformType
     {
         Invalid,
         Int,

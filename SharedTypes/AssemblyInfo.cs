@@ -6,4 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 [assembly: InternalsVisibleTo("GameCooker")]
+[assembly: InternalsVisibleTo("Engine")]
+[assembly: InternalsVisibleTo("Editor")]
 
