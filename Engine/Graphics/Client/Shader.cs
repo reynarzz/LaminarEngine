@@ -20,7 +20,10 @@ namespace Engine
             {
                 if (_nativeShader == null && !HasErrors)
                 {
-                    _nativeShader = UploadShader(_sources[0].Shader, _sources[1].Shader);
+                    var vertex = _sources.FirstOrDefault(x => x.Stage == ShaderStage.Vertex);
+                    var fragment = _sources.FirstOrDefault(x => x.Stage == ShaderStage.Fragment);
+
+                    _nativeShader = UploadShader(vertex.Shader, fragment.Shader);
                 }
 
                 return _nativeShader;
@@ -33,7 +36,7 @@ namespace Engine
         internal Shader(ShaderSource[] sources, string path, Guid guid) : base(path, guid)
         {
             _sources = sources;
-            HasErrors = sources?.Any(x => x.HasErrors) ?? true;
+            HasErrors = sources == null || sources.Length < 2 || (sources?.Any(x => x?.HasErrors ?? true) ?? true);
 
             if (!HasErrors)
             {

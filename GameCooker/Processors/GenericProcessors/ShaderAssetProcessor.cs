@@ -39,37 +39,40 @@ namespace GameCooker
             var vertexCode = version + shaderFile.Substring(vertexIndex + vertexTag.Length, fragmentIndex - vertexTag.Length).Trim();
             var fragmentCode = version + shaderFile.Substring(fragmentIndex + fragmentTag.Length).Trim();
 
-            //File.WriteAllText(path + "v_.glsl", vertexCode);
-            //File.WriteAllText(path + "f_.glsl", fragmentCode);
+            var spirVs = CompileToSpirV(
+            [
+                (Glslang.NET.ShaderStage.Vertex, vertexCode),
+                (Glslang.NET.ShaderStage.Fragment, fragmentCode)
+            ]);
 
-            var spirVs = CompileToSpirV(false, (ShaderStage.Vertex, vertexCode),
-                                               (ShaderStage.Fragment, fragmentCode));
-
-            ShaderSource vertex = null;
-            ShaderSource fragment = null;
             if (spirVs != null && spirVs.Length >= 2)
             {
-                vertex = CompileGLSL(isMobile, spirVs[0].spirv);
-                fragment = CompileGLSL(isMobile, spirVs[1].spirv);
+                var sources = new ShaderSource[spirVs.Length];
+                for (int i = 0; i < spirVs.Length; i++)
+                {
+                    sources[i] = CompileGLSL(isMobile, spirVs[i]);
+                }
 
                 // Testing remove.
                 // File.WriteAllText(path + "v_.glsl", Encoding.UTF8.GetString(vertex.Shader));
                 // File.WriteAllText(path + "f_.glsl", Encoding.UTF8.GetString(fragment.Shader));
 
-                return GetAsset([vertex, fragment]);
+                return GetAsset(sources);
             }
 
             return null;
         }
+
         // NOTE: for now this will write a json, for production ready code, it should be binary.
         private byte[] GetAsset(ShaderSource[] sources)
         {
             return Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new ShaderData() { Sources = sources }));
         }
 
-        private (ShaderStage stage, byte[] spirv)[] CompileToSpirV(bool isMobile, params (ShaderStage stage, string shaderCode)[] shaders)
+        private (Glslang.NET.ShaderStage stage, byte[] spirv)[] CompileToSpirV((Glslang.NET.ShaderStage stage,
+                                                                                string shaderCode)[] shaders)
         {
-            var shadersSpirv = new (ShaderStage stage, byte[] spirv)[shaders.Length];
+            var shadersSpirv = new (Glslang.NET.ShaderStage stage, byte[] spirv)[shaders.Length];
             var program = new Program();
 
             for (int i = 0; i < shaders.Length; i++)
@@ -80,12 +83,12 @@ namespace GameCooker
                 {
                     language = SourceType.GLSL,
                     entrypoint = "main",
-                    defaultProfile = isMobile ? ShaderProfile.ES : ShaderProfile.CoreProfile,
+                    defaultProfile = ShaderProfile.CoreProfile,
                     client = ClientType.OpenGL,
                     clientVersion = TargetClientVersion.OpenGL_450,
                     messages = MessageType.Default,
                     stage = shaderData.stage,
-                    defaultVersion = isMobile ? 310 : 330,
+                    defaultVersion = 330,
                     targetLanguage = TargetLanguage.SPV,
                     forceDefaultVersionAndProfile = true,
                     forwardCompatible = false,
@@ -130,10 +133,12 @@ namespace GameCooker
 
                 program.GenerateSPIRV(out uint[] spirv, shaderData.stage);
 
-                string messages = program.GetSPIRVMessages();
+                var messages = program.GetSPIRVMessages();
 
                 if (!string.IsNullOrWhiteSpace(messages))
+                {
                     Console.WriteLine(messages);
+                }
 
                 shadersSpirv[i] = (shaderData.stage, UIntArrayToBytes(spirv));
             }
@@ -141,9 +146,9 @@ namespace GameCooker
             return shadersSpirv;
         }
 
-        private ShaderSource CompileGLSL(bool isMobile, byte[] spirv)
+        private ShaderSource CompileGLSL(bool isMobile, (Glslang.NET.ShaderStage stage, byte[] spirv) shaderSource)
         {
-            var parsedIR = _context.ParseSpirv(spirv);
+            var parsedIR = _context.ParseSpirv(shaderSource.spirv);
 
             var compiler = _context.CreateGLSLCompiler(parsedIR);
 
@@ -173,7 +178,7 @@ namespace GameCooker
             {
                 str = str.Replace("#version 330", "#version 300 es");
             }
-            
+
             // Current compiler add this when 'separateShaderObjects' is true, but I need it to be true because it also adds layouts.
             //str = str.Replace("#extension GL_ARB_separate_shader_objects : require", string.Empty);
             // str = RemoveGlPerVertexBlock(str);
@@ -183,10 +188,10 @@ namespace GameCooker
             return new ShaderSource()
             {
                 Shader = Encoding.UTF8.GetBytes(str),
-                Uniforms = GetUniforms(resources, compiler)
+                Uniforms = GetUniforms(resources, compiler),
+                Stage = (SharedTypes.ShaderStage)shaderSource.stage
             };
         }
-
 
         private ShaderUniform[] GetUniforms(SPIRVCross.NET.Resources resources, SPIRVCross.NET.Compiler compiler)
         {
