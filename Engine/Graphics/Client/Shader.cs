@@ -29,7 +29,6 @@ namespace Engine
 
         internal IReadOnlyList<ShaderUniform> Uniforms => _uniforms;
 
-        // TODO: only compile shader when requested by the system, not in the constructor.
         internal Shader(ShaderSource[] sources, string path, Guid guid) : base(path, guid)
         {
             _sources = sources;

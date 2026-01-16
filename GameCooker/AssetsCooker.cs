@@ -38,7 +38,6 @@ namespace GameCooker
                 { ".csv", AssetType.Text },
                 
                 // Shader
-                { ".shader", AssetType.Shader },
                 { ".vert", AssetType.Shader },
                 { ".frag", AssetType.Shader },
 

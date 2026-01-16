@@ -109,13 +109,12 @@ namespace Editor
 
                 var file = File.ReadAllText(TestfilePath);
                 var actors = EditorJsonUtils.Deserialize<List<ActorDataSceneAsset>>(file);
-                Debug.Log("Total actors in scene: " + actors.Count);
 
                 var clip = Assets.Get<AnimationClip>("Animation/AnimClip.anim");
                 var clipController = Assets.Get<AnimatorController>("Animation/AnimController.animcontroller");
 
                 var shader = Assets.GetShader("Shaders/Slang/Test.slang");
-                //var sha = new Shader(vert, frag);
+                
 
                 SceneManager.Initialize();
                 SceneManager.UnloadAll();

@@ -17,11 +17,12 @@ namespace GameCooker
         private const string _target = "spirv";
         private const string _vertexEntryPoint = "vertexMain";
         private const string _fragmentEntryPoint = "fragmentMain";
-        private Context _context = new Context();
+        private static Context _context = new Context();
 
         string[] vertexArgs =
         [
             "",
+            "-lang", "slang",
             "-profile", "glsl_330", // "sm_6_6",
             "-entry", $"{_vertexEntryPoint}", "-stage", "vertex",
             "-target", $"{_target}",
@@ -34,6 +35,7 @@ namespace GameCooker
         string[] fragmentArgs =
         [
             "",
+            "-lang", "slang",
             "-profile", "glsl_330",
             "-entry", $"{_fragmentEntryPoint}", "-stage", "fragment",
             "-target", $"{_target}",
@@ -54,6 +56,9 @@ namespace GameCooker
 
             var vertex = CompileGLSL(platform, vertSpirv);
             var fragment = CompileGLSL(platform, fragSpirv);
+
+            File.WriteAllText(path + "v_.glsl", vertex);
+            File.WriteAllText(path + "f_.glsl", fragment);
 
             return GetAsset(vertex, fragment, vertReflection, fragReflection);
         }
