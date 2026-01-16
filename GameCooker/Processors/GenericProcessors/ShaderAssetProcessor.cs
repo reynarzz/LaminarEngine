@@ -35,7 +35,7 @@ namespace GameCooker
                 return null;
             }
 
-            var version = "#version 330 core\n\n";
+            var version = "#version 330 core\n";
             var vertexCode = version + shaderFile.Substring(vertexIndex + vertexTag.Length, fragmentIndex - vertexTag.Length).Trim();
             var fragmentCode = version + shaderFile.Substring(fragmentIndex + fragmentTag.Length).Trim();
 
