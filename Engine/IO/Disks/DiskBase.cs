@@ -34,7 +34,7 @@ namespace Engine.IO
 
                 data = await LoadAssetFromDiskAsync(guid);
 
-                if(data == null)
+                if (data == null)
                 {
                     Debug.Error("Fatal: Can't load asset from disk, is in database table but contents are not in disk?");
                     return default;
@@ -70,6 +70,8 @@ namespace Engine.IO
                     case AssetType.Text:
                         return JsonConvert.DeserializeObject<DefaultMetaFile>(json);
                     case AssetType.Shader:
+                        return JsonConvert.DeserializeObject<DefaultMetaFile>(json);
+                    case AssetType.SlangShader:
                         return JsonConvert.DeserializeObject<DefaultMetaFile>(json);
                     case AssetType.Font:
                         return JsonConvert.DeserializeObject<DefaultMetaFile>(json);

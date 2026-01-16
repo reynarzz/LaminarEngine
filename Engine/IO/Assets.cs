@@ -26,6 +26,11 @@ namespace Engine
             return Get<TextAsset>(path);
         }
 
+        public static Shader GetShader(string path)
+        {
+            return Get<Shader>(path);
+        }
+
         internal static AssetResourceBase GetAssetFromGuid(Guid guid)
         {
             return IOLayer.GetDatabase().GetAsset<AssetResourceBase>(guid);

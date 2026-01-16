@@ -1,5 +1,6 @@
 ﻿using Engine;
 using Engine.Graphics;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +11,8 @@ namespace SharedTypes
 {
     public class ShaderUniform
     {
-        public string Name { get; internal set; }
-        public UniformType Type { get; internal set; }
-        public int ElementCount { get; set; }
+        [JsonProperty] public string Name { get; internal set; }
+        [JsonProperty] public UniformType Type { get; internal set; }
+        [JsonProperty] public int ElementCount { get; set; }
     }
 }
