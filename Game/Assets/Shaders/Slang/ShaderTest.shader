@@ -21,15 +21,20 @@ vec4 unpackColor(uint c)
 
 void main() 
 {
-    fragUV = uv;
+    fragUV = uv; 
     worldUV = position.xy * 0.1;
     fragTexIndex = texIndex; 
+ 
     vColor = unpackColor(color);
     gl_Position = uVP * vec4(position, 1.0);
 }
 
 ##[Fragment]
 uniform sampler2D uTextures[15]; //uniform sampler2D uTextures[{32}]
+uniform mat3 matTest;
+uniform mat2 Amat2Unif; 
+uniform bool yeah;
+
 in vec2 fragUV;
 in vec4 vColor;
 

@@ -9,14 +9,24 @@ namespace Engine.Graphics
     public enum UniformType
     {
         Invalid,
+        Bool,
         Int,
         Float,
+        Double,
         Uint,
+        Mat2,
+        Mat3,
         Mat4,
         Vec2,
         Vec3,
         Vec4,
         IntArr,
-        RenderTexture,
+        Texture2D,
+        Texture2DArray,
+        Texture3D,
+        Texture3DArray,
+        TextureCubeMap,
+        TextureCubeMapArray,
+        Sampler,
     }
 }

@@ -13,13 +13,22 @@ namespace Engine.IO
         internal override AssetResourceBase BuildAsset(AssetInfo info, AssetMetaFileBase meta, Guid guid, BinaryReader reader)
         {
             var length = reader.BaseStream.Length;
-            var data = new byte[length];
-            var bytesRead = reader.BaseStream.Read(data, 0, (int)length);
-            var text = Encoding.UTF8.GetString(data, 0, bytesRead);
+            ShaderSource[] shaderSources = null;
 
-            var shaderData = JsonConvert.DeserializeObject<ShaderData>(text);
+            if (length > 0)
+            {
+                var data = new byte[length];
+                var bytesRead = reader.BaseStream.Read(data, 0, (int)length);
+                var text = Encoding.UTF8.GetString(data, 0, bytesRead);
 
-            return new Shader(shaderData.Sources, info.Path, guid);
+                if (!string.IsNullOrEmpty(text))
+                {
+                    var shaderData = JsonConvert.DeserializeObject<ShaderData>(text);
+                    shaderSources = shaderData.Sources;
+                }
+            }
+
+            return new Shader(shaderSources, info.Path, guid);
         }
     }
 }

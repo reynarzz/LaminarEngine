@@ -18,7 +18,7 @@ namespace Engine
         {
             get
             {
-                if (_nativeShader == null)
+                if (_nativeShader == null && !HasErrors)
                 {
                     _nativeShader = UploadShader(_sources[0].Shader, _sources[1].Shader);
                 }
@@ -28,11 +28,17 @@ namespace Engine
         }
 
         internal IReadOnlyList<ShaderUniform> Uniforms => _uniforms;
-
+        internal IReadOnlyList<ShaderSource> ShaderSources => _sources;
+        internal bool HasErrors { get; }
         internal Shader(ShaderSource[] sources, string path, Guid guid) : base(path, guid)
         {
             _sources = sources;
-            _uniforms = sources.SelectMany(x => x.Uniforms).DistinctBy(x => x.Name).ToArray();
+            HasErrors = sources?.Any(x => x.HasErrors) ?? true;
+
+            if (!HasErrors)
+            {
+                _uniforms = sources.SelectMany(x => x.Uniforms).DistinctBy(x => x.Name).ToArray();
+            }
         }
 
         [Obsolete("Load shaders with Assets.GetShader(\\\"pathToShader.slang\\\")")]

@@ -8,6 +8,7 @@ namespace SharedTypes
 {
     internal class ShaderSource
     {
+        public bool HasErrors { get; set; }
         public byte[] Shader { get; set; }
         public ShaderUniform[] Uniforms { get; set; }
     }

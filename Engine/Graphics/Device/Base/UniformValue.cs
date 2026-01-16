@@ -74,7 +74,7 @@ namespace Engine.Graphics
         {
             Name = name;
             RenderTextureValue = value;
-            Type = UniformType.RenderTexture;
+            Type = UniformType.Texture2D;
         }
         public void SetIntArr(string name, int[] value)
         {

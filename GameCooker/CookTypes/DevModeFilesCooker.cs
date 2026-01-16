@@ -53,38 +53,35 @@ namespace GameCooker
                     var data = ProcessAsset(platform, assetType, meta, filePath);
 
                     var assetRelPath = Paths.GetRelativeAssetPath(filePath);
-                    if (data != null)
+                    if (constainsAssetInfo)
                     {
-                        if (constainsAssetInfo)
-                        {
-                            Console.WriteLine("Updating asset file: " + filePath);
-                            assetInfo = _database.Assets[meta.GUID];
+                        Console.WriteLine("Updating asset file: " + filePath);
+                        assetInfo = _database.Assets[meta.GUID];
 
-                            assetInfo.LastWriteTime = latestWriteTime;
-                            assetInfo.MetaWriteTime = metaLatestWriteTime;
-                            assetInfo.Path = assetRelPath;
-                        }
-                        else
-                        {
-                            Console.WriteLine("Importing asset file: " + filePath);
-
-                            // Write meta
-                            File.WriteAllText(metaPath, JsonConvert.SerializeObject(meta, Formatting.Indented));
-
-                            _database.Assets.Add(meta.GUID, new AssetInfo()
-                            {
-                                Type = assetType,
-                                Path = assetRelPath,
-                                IsEncrypted = false,
-                                IsCompressed = false,
-                                LastWriteTime = latestWriteTime,
-                                MetaWriteTime = File.GetLastWriteTime(metaPath)
-                            });
-                        }
-
-                        // Write asset to library
-                        File.WriteAllBytes(binPath, data);
+                        assetInfo.LastWriteTime = latestWriteTime;
+                        assetInfo.MetaWriteTime = metaLatestWriteTime;
+                        assetInfo.Path = assetRelPath;
                     }
+                    else
+                    {
+                        Console.WriteLine("Importing asset file: " + filePath);
+
+                        // Write meta
+                        File.WriteAllText(metaPath, JsonConvert.SerializeObject(meta, Formatting.Indented));
+
+                        _database.Assets.Add(meta.GUID, new AssetInfo()
+                        {
+                            Type = assetType,
+                            Path = assetRelPath,
+                            IsEncrypted = false,
+                            IsCompressed = false,
+                            LastWriteTime = latestWriteTime,
+                            MetaWriteTime = File.GetLastWriteTime(metaPath)
+                        });
+                    }
+
+                    // Write asset to library
+                    File.WriteAllBytes(binPath, data ?? []);
                 }
             }
             var prevColor = Console.ForegroundColor;

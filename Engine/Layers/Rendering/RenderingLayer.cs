@@ -326,7 +326,7 @@ namespace Engine.Layers
                     var type = uniforms[i].Type;
                     if (type == UniformType.Invalid)
                         continue;
-                    if (type == UniformType.RenderTexture)
+                    if (type == UniformType.Texture2D)
                     {
                         // Texture + 1 is the texture that will be used by the shader.
                         _screenQuadDrawCallData.Textures[uniformIndex + 1] = uniforms[i].RenderTextureValue.NativeResource.SubResources[0];
