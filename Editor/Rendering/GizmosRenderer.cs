@@ -18,7 +18,7 @@ namespace Editor.Rendering
     {
         private readonly Batcher2D _batcher;
         private readonly DrawCallData _drawCallData;
-        private readonly Dictionary<Guid, RendererData2D> _renderDatasByType;
+        private readonly Dictionary<Guid, (WeakReference<Component> component, RendererData2D renderer)> _renderDatasByType;
         private List<Batch2D> _batches;
         private PipelineFeatures _pipelineFeatures;
         private RenderTexture _renderTexture;
@@ -153,7 +153,7 @@ namespace Editor.Rendering
         public GizmosRenderer()
         {
             _batcher = new Batcher2D(Consts.Graphics.MAX_QUADS_PER_BATCH);
-            _renderDatasByType = new Dictionary<Guid, RendererData2D>();
+            _renderDatasByType = new();
 
             _renderTexture = new RenderTexture(1920, 1080, TextureFilter.Linear, true,
                 Math.Min(GfxDeviceManager.Current.GetDeviceInfo().MaxSamples, 4));
@@ -198,17 +198,30 @@ namespace Editor.Rendering
             var cameras = SceneManager.FindAll<Camera>(false);
             var audio = SceneManager.FindAll<AudioSource>(false);
 
+            _renderDatasByType.Clear();
+
             GetRenderData(cameras, _renderDatasByType, _cameraSprite, camera);
             GetRenderData(audio, _renderDatasByType, _audioSprite, camera);
 
-            if (cameras.Count > 0)
+            for (int i = 0; i < cameras.Count; i++)
             {
-                var cameraGame = cameras.ElementAt(0);
-                CameraFrustum(cameraGame);
+                CameraFrustum(cameras.ElementAt(i));
             }
 
             DrawSelected();
-            _batches = _batcher.GetBatches(_renderDatasByType.Values);
+            // TODO: this is very slow to do it every frame, refactor incoming.
+            var componentsToDraw = _renderDatasByType.Values.Where(x =>
+            {
+                if (x.component.TryGetTarget(out var comp))
+                {
+                    return comp && comp.IsEnabled && comp.Actor.IsActiveInHierarchy;
+                }
+
+                return false;
+            }).Select(x => x.renderer).ToArray();
+
+            _batches = _batcher.GetBatches(componentsToDraw);
+
         }
 
         private void DrawSelected()
@@ -251,14 +264,14 @@ namespace Editor.Rendering
                 points = GraphicsHelper.CreateOrthoFrustumLines(camera.WorldPosition, camera.Forward, camera.Right, camera.Up,
                                                                 camera.OrthographicSize * 2.0f, camera.Aspect, camera.NearPlane, camera.FarPlane);
             }
-            
+
             for (int i = 0; i < points.Count - 1; i += 2)
             {
                 Debug.DrawLine(points[i], points[i + 1], SemiTransparent);
             }
         }
 
-        private void GetRenderData<T>(List<T> components, Dictionary<Guid, RendererData2D> renderDatas,
+        private void GetRenderData<T>(List<T> components, Dictionary<Guid, (WeakReference<Component> component, RendererData2D renderer)> renderDatas,
                                       Sprite sprite, ICamera camera) where T : Component
         {
             for (int i = 0; i < components.Count; i++)
@@ -266,21 +279,22 @@ namespace Editor.Rendering
                 var component = components[i];
                 if (!renderDatas.ContainsKey(component.GetID()))
                 {
-                    renderDatas.Add(component.GetID(), new RendererData2D(component.GetID(), new Transform())
+                    renderDatas.Add(component.GetID(), (new WeakReference<Component>(component), new RendererData2D(component.GetID(), new Transform())
                     {
                         IsBillboard = true,
                         SortOrder = 20,
                         Sprite = sprite,
                         Material = _mat
-                    });
+                    }));
                 }
 
                 var translation = component.Transform.GetRenderingWorldMatrix()[3];
                 var renderData = renderDatas[component.GetID()];
-                renderData.Transform.WorldPosition = new vec3(translation);
-                renderData.IsDirty = true;
+                renderData.renderer.Transform.WorldPosition = new vec3(translation);
+                renderData.renderer.IsDirty = true;
+                renderData.renderer.IsEnabled = component && component.IsEnabled && component.Actor.IsActiveInHierarchy;
                 const int scaling = 100;
-                renderData.SortOrder = -(int)(glm.dot(component.Transform.WorldPosition - camera.WorldPosition, camera.Forward) * scaling);
+                renderData.renderer.SortOrder = -(int)(glm.dot(component.Transform.WorldPosition - camera.WorldPosition, camera.Forward) * scaling);
             }
         }
 

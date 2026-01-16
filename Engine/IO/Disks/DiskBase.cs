@@ -71,7 +71,7 @@ namespace Engine.IO
                         return JsonConvert.DeserializeObject<DefaultMetaFile>(json);
                     case AssetType.Shader:
                         return JsonConvert.DeserializeObject<DefaultMetaFile>(json);
-                    case AssetType.SlangShader:
+                    case AssetType.ShaderV2:
                         return JsonConvert.DeserializeObject<DefaultMetaFile>(json);
                     case AssetType.Font:
                         return JsonConvert.DeserializeObject<DefaultMetaFile>(json);

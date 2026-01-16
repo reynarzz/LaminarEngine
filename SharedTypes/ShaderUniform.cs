@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace SharedTypes
 {
-    public class ShaderUniform
+    public struct ShaderUniform
     {
-        [JsonProperty] public string Name { get; internal set; }
-        [JsonProperty] public UniformType Type { get; internal set; }
-        [JsonProperty] public int ElementCount { get; set; }
+        public string Name { get;  set; }
+        public UniformType Type { get; set; }
+        public int ElementCount { get; set; }
     }
 }

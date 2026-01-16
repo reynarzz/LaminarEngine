@@ -17,6 +17,6 @@ namespace SharedTypes
         AnimationClip,
         AnimationController,
         Material,
-        SlangShader
+        ShaderV2
     }
 }

@@ -19,7 +19,7 @@ namespace Editor
                 { AssetType.Texture, new TextureAssetBuilder() },
                 { AssetType.Text, new TextAssetBuilder() },
                 { AssetType.Shader, new TextAssetBuilder() },
-                { AssetType.SlangShader, new ShaderAssetBuilder() },
+                { AssetType.ShaderV2, new ShaderAssetBuilder() },
                 { AssetType.Audio, new AudioClipAssetBuilder() },
                 { AssetType.Font, new FontAssetBuilder() },
                 { AssetType.AnimationClip, new JsonBasedAssetBuilder<AnimationClip>() },
