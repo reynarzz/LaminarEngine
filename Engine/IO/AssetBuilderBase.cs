@@ -10,5 +10,6 @@ namespace Engine.IO
     internal abstract class AssetBuilderBase
     {
         internal abstract AssetResourceBase BuildAsset(AssetInfo info, AssetMetaFileBase meta, Guid guid, BinaryReader reader);
+        internal abstract void UpdateAsset(AssetResourceBase asset, AssetMetaFileBase meta, BinaryReader reader);
     }
 }

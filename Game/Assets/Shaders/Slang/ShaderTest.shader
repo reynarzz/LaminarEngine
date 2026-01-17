@@ -14,15 +14,15 @@ VERTEX_SHADER
     out vec2 worldUV;
 
     void main() 
-    {
-        fragUV = uv;  
+    { 
+        fragUV = uv;   
         worldUV = position.xy * 0.1;
         fragTexIndex = texIndex; 
- 
-        vColor = GFS_UnpackColor(color);
-        gl_Position = uVP * vec4(position, 1.0);
+        
+        vColor = GFS_UnpackColor(color); 
+        gl_Position = uVP * vec4(position, 1.0); 
     }
-}
+} 
 
 FRAGMENT_SHADER
 {
@@ -30,16 +30,13 @@ FRAGMENT_SHADER
     #define GFS_TEXTURE_ARRAY uTextures
     #include "Core.glsl"
 
-    uniform mat3 matTest;
-    uniform mat2 Amat2Unif;  
-    uniform bool yeah;
- 
     in vec2 fragUV;
     in vec4 vColor;
 
     flat in int fragTexIndex;
     out vec4 fragColor;
-
+    uniform vec2 express;
+    
     void main()
     {
         fragColor = GFS_SampleTextureArray(fragTexIndex, fragUV) * vColor;

@@ -12,6 +12,19 @@ namespace Engine.IO
     {
         internal override AssetResourceBase BuildAsset(AssetInfo info, AssetMetaFileBase meta, Guid guid, BinaryReader reader)
         {
+            var shaderSources = GetSources(reader);
+            return new Shader(shaderSources, info.Path, guid);
+        }
+
+        internal override void UpdateAsset(AssetResourceBase asset, AssetMetaFileBase meta, BinaryReader reader)
+        {
+            Debug.Log("Update shader");
+            var shaderSources = GetSources(reader);
+            asset.UpdateResource(shaderSources, string.Empty, meta.GUID);
+        }
+
+        private ShaderSource[] GetSources(BinaryReader reader)
+        {
             var length = reader.BaseStream.Length;
             ShaderSource[] shaderSources = null;
 
@@ -27,8 +40,7 @@ namespace Engine.IO
                     shaderSources = shaderData.Sources;
                 }
             }
-
-            return new Shader(shaderSources, info.Path, guid);
+            return shaderSources;
         }
     }
 }

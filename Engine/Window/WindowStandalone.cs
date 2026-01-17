@@ -31,10 +31,13 @@ namespace Engine
         public int Height { get; private set; }
         private SizeCallback _onResizeCallback;
         private WindowCallback _closeCallback;
+        private FocusCallback _focusCallback;
+
         private int _startWidth;
         private int _startHeight;
         private string _windowName = "Game";
         public event Action<int, int> OnWindowChanged;
+        public event Action<bool> OnWindowFocusChanged;
         private static bool _isInitialized = false;
         private bool dragging = false;
         private double startCursorX, startCursorY;
@@ -210,6 +213,7 @@ namespace Engine
 
             _onResizeCallback = FrameBufferSizeCallback;
             _closeCallback = OnCloseWindow;
+            _focusCallback = OnFocused;
 
             Glfw.SetFramebufferSizeCallback(NativeWindow, _onResizeCallback);
 
@@ -228,7 +232,7 @@ namespace Engine
             Glfw.GetFramebufferSize(NativeWindow, out width, out height);
             Width = width;
             Height = height;
-
+            Glfw.SetWindowFocusCallback(NativeWindow, _focusCallback);
             LoadIconRandom(image);
         }
         private void LoadIconRandom(TextureDescriptor image)
@@ -252,6 +256,10 @@ namespace Engine
         private void OnCloseWindow(IntPtr x)
         {
             OnWindowClose?.Invoke();
+        }
+        private void OnFocused(IntPtr win, bool focused)
+        {
+            OnWindowFocusChanged?.Invoke(focused);
         }
         private void FrameBufferSizeCallback(IntPtr win, int width, int height)
         {

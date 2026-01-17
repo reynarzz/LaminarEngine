@@ -45,7 +45,7 @@ namespace Editor
         {
             base.Initialize();
         }
-
+        private Shader _test;
         internal override void Update()
         {
             if (Input.GetKeyDown(KeyCode.P))
@@ -113,7 +113,7 @@ namespace Editor
                 var clip = Assets.Get<AnimationClip>("Animation/AnimClip.anim");
                 var clipController = Assets.Get<AnimatorController>("Animation/AnimController.animcontroller");
 
-                var shader = Assets.GetShader("Shaders/Slang/ShaderTest.shader");
+                _test = Assets.GetShader("Shaders/Slang/ShaderTest.shader");
                 
 
                 SceneManager.Initialize();

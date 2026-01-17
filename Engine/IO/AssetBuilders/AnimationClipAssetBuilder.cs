@@ -25,5 +25,10 @@ namespace Engine.IO
 
             return anim;
         }
+
+        internal override void UpdateAsset(AssetResourceBase asset, AssetMetaFileBase meta, BinaryReader reader)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

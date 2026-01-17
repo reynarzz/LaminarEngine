@@ -12,6 +12,13 @@ namespace Engine.IO
 
         public bool GetAsset<T>(Guid guid, out T asset) where T : AssetResourceBase
         {
+            var result = GetAsset(guid, out AssetResourceBase assetOut);
+            asset = assetOut as T;
+            return result;
+        }
+
+        public bool GetAsset(Guid guid, out AssetResourceBase asset) 
+        {
             bool isValid = false;
             asset = null;
 
@@ -19,7 +26,7 @@ namespace Engine.IO
             {
                 if (assetRef.TryGetTarget(out var weakAsset))
                 {
-                    asset = weakAsset as T;
+                    asset = weakAsset;
                     isValid = true;
                 }
                 else

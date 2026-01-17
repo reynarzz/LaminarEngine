@@ -22,8 +22,8 @@ namespace Editor
                 { AssetType.ShaderV2, new ShaderAssetBuilder() },
                 { AssetType.Audio, new AudioClipAssetBuilder() },
                 { AssetType.Font, new FontAssetBuilder() },
-                { AssetType.AnimationClip, new JsonBasedAssetBuilder<AnimationClip>() },
-                { AssetType.AnimationController, new JsonBasedAssetBuilder<AnimatorController>() },
+                { AssetType.AnimationClip, new AnimationClipAssetBuilderEditor() },
+                { AssetType.AnimationController, new AnimationControllerAssetBuilderEditor() },
             });
         }
     }

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Editor
 {
-    internal class JsonBasedAssetBuilder<T> : AssetBuilderBase
+    internal abstract class JsonBasedAssetBuilder<T> : AssetBuilderBase
     {
         internal override AssetResourceBase BuildAsset(AssetInfo info, AssetMetaFileBase meta, Guid guid, BinaryReader reader)
         {

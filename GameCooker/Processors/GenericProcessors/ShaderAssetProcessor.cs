@@ -16,8 +16,6 @@ namespace GameCooker
     {
         private static Context _context = new Context();
         private const string INCLUDE_EXTENSION = "#extension GL_GOOGLE_include_directive : enable";
-        private const string VERTEX_TAG = "##[Vertex]";
-        private const string FRAGMENT_TAG = "##[Fragment]";
         private const string VERSION = "#version 330 core";
         private const string VERTEX_KEYWORD = "VERTEX_SHADER";
         private const string FRAGMENT_KEYWORD = "FRAGMENT_SHADER";
@@ -25,7 +23,6 @@ namespace GameCooker
         private const string SHADER_HEADER = VERSION + "\n" + INCLUDE_EXTENSION + "\n";
         byte[] IAssetProcessor.Process(string path, AssetMetaFileBase meta, CookingPlatform platform)
         {
-            var isMobile = platform == CookingPlatform.Android || platform == CookingPlatform.IOS;
 
             var shaderFile = File.ReadAllText(path);
 
@@ -56,6 +53,8 @@ namespace GameCooker
 
             if (spirVs != null && spirVs.Length >= 2)
             {
+                var isMobile = platform == CookingPlatform.Android || platform == CookingPlatform.IOS;
+
                 var sources = new ShaderSource[spirVs.Length];
                 for (int i = 0; i < spirVs.Length; i++)
                 {
@@ -369,12 +368,18 @@ namespace GameCooker
             int depth = 0;
             for (int i = braceStart; i < source.Length; i++)
             {
-                if (source[i] == '{') depth++;
-                else if (source[i] == '}') depth--;
+                if (source[i] == '{')
+                {
+                    depth++;
+                }
+                else if (source[i] == '}')
+                {
+                    depth--;
+                }
 
                 if (depth == 0)
                 {
-                    // extract contents WITHOUT outer braces
+                    // extract contents
                     return source.Substring(braceStart + 1, i - braceStart - 1).Trim();
                 }
             }

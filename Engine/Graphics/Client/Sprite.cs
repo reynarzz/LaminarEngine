@@ -53,5 +53,10 @@ namespace Engine
 #endif
             return AtlasChunk.DefaultChunk;
         }
+
+        internal override void UpdateResource(object data, string path, Guid guid)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

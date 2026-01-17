@@ -77,6 +77,21 @@ namespace Engine.IO
             return null;
         }
 
+        internal void UpdateReloadAsset(Guid guid)
+        {
+            if (_databaseCache.GetAsset(guid, out var asset))
+            {
+                var assetContent = Disk.GetAssetAsync(guid).GetAwaiter().GetResult();
+
+                if (assetContent.Success)
+                {
+                    var assetMeta = Disk.GetAssetMeta(guid);
+
+                    BuildAsset(assetContent.Info, assetMeta, guid, assetContent.RawData, true);
+                }
+            }
+        }
+
         internal T GetAsset<T>(Guid guid) where T : AssetResourceBase
         {
             if (guid == Guid.Empty)
@@ -86,6 +101,7 @@ namespace Engine.IO
             {
                 return asset;
             }
+
             var assetContent = Disk.GetAssetAsync(guid).GetAwaiter().GetResult();
 
             if (assetContent.Success)
@@ -115,7 +131,8 @@ namespace Engine.IO
             return null;
         }
 
-        private AssetResourceBase BuildAsset(AssetInfo info, AssetMetaFileBase meta, Guid guid, byte[] rawData)
+        // TODO: cleanup this function.
+        private AssetResourceBase BuildAsset(AssetInfo info, AssetMetaFileBase meta, Guid guid, byte[] rawData, bool update = false)
         {
             var encoding = Encoding.Default;
 
@@ -125,9 +142,7 @@ namespace Engine.IO
             }
 
             using var mem = new MemoryStream(rawData);
-
             var reader = new BinaryReader(mem, encoding);
-
 
             if (_assetbuilder.TryGetValue(info.Type, out AssetBuilderBase builder))
             {
@@ -151,7 +166,16 @@ namespace Engine.IO
                     reader = new BinaryReader(AssetCompressor.DecompressStream(reader.BaseStream));
                 }
 
-                var asset = builder.BuildAsset(info, meta, guid, reader);
+                AssetResourceBase asset = null;
+
+                if (!update)
+                {
+                    asset = builder.BuildAsset(info, meta, guid, reader);
+                }
+                else if(_databaseCache.GetAsset(guid, out asset))
+                {
+                    builder.UpdateAsset(asset, meta, reader);
+                }
 
                 reader.Dispose();
                 return asset;

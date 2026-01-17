@@ -204,5 +204,9 @@ namespace Engine
             return HasProperty(property, _colorCurves);
         }
 
+        internal override void UpdateResource(object data, string path, Guid guid)
+        {
+            //throw new NotImplementedException();
+        }
     }
 }

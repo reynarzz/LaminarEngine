@@ -66,5 +66,10 @@ namespace Engine
         {
             return new Texture2D(name, Guid.NewGuid(), TextureMode.Clamp, TextureFilter.Nearest, 1, 1, 4, 1, color);
         }
+
+        internal override void UpdateResource(object data, string path, Guid guid)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

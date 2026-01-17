@@ -5,6 +5,7 @@ using Editor.Views;
 using Engine;
 using Engine.Graphics;
 using Engine.GUI;
+using Engine.IO;
 using Engine.Layers;
 using Engine.Layers.Input;
 using Game;
@@ -18,14 +19,14 @@ namespace Editor
     // TODO:
     // -Current code is very slow, most of it is in 'prototype' phase, a nice (big) refactor is on the way.
     // -Refactor.
-    // -Playmode on launch (maybe I implement a proper playmode later: pause, frame step)
+    // -Playmode on launch (maybe I should implement a proper playmode later: pause, frame step)
     // -Changing cameras causes to render prevCamera.
     // -Weird rendering issue, related to mouse picking pink materials, is it the RenderingSystem, batcher?
-    // -Implement Asset files for: Scene, animationClip, animatorController, Tilemap.
+    // -Implement Asset files for: Tilemap.
     // -The serializer has a possible bug related to delegates,
     //   collections do not search for all delegates(privates/public), but classes do.
     //-If I load the runtime mode, and the applicationLayer is enabled, the camera renders black.
-
+    // implement hot reload: ApplicationLayer, and assets
     internal class EditorEntry
     {
         private WindowStandalone _win;
@@ -70,6 +71,7 @@ namespace Editor
             _glfwInput.Init();
             _node = new AnimatorEditorView();
 
+            InitializePaths();
             ImportAssets();
 
             _gameSurface = new RenderingSurface()
@@ -114,6 +116,7 @@ namespace Editor
                 Render();
             };
 
+            // Physical window.
             _win.OnWindowChanged += (w, h) =>
             {
                 RenderingLayer.OverlayOptions.Width = _win.PhysicalWidth;
@@ -121,9 +124,16 @@ namespace Editor
                 UpdateAll();
             };
 
+            // Game window
             _gameWindow.OnWindowChanged += (w, h) =>
             {
                 _engine.Update();
+            };
+
+            _win.OnWindowFocusChanged += focused =>
+            {
+                Debug.Log("Is focused: " + focused);
+                ImportAssets();
             };
 
             while (!_win.ShouldClose)
@@ -160,18 +170,21 @@ namespace Editor
             GfsTypeRegistry.Register<Body2DType>("color32");
         }
 
-        private void ImportAssets()
+        private void InitializePaths()
         {
             var assemblyDir = Paths.ClearPathSeparation(Path.GetDirectoryName(AppContext.BaseDirectory)!);
             var root = Path.Combine(assemblyDir.Substring(0, assemblyDir.LastIndexOf(PROJECT_FOLDER_NAME)), Paths.GAME_FOLDER_NAME);
-
             new GameCooker.GameProject().Initialize(new GameCooker.ProjectConfig() { ProjectFolderRoot = root });
+        }
+
+        private void ImportAssets()
+        {
             var releaseAssetsList = default(string[]);
             if (File.Exists(Paths.GetShipAssetsFilePath()))
             {
                 releaseAssetsList = File.ReadAllText(Paths.GetShipAssetsFilePath())?.Split('\n', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
             }
-            new GameCooker.AssetsCooker().CookAll(new GameCooker.CookOptions()
+            var assetDatabase = new GameCooker.AssetsCooker().CookAll(new GameCooker.CookOptions()
             {
                 Type = GameCooker.CookingType.DevMode,
                 Platform = GameCooker.CookingPlatform.Windows,
@@ -183,8 +196,15 @@ namespace Editor
                     CompressionLevel = 12,
                     EncryptAllFiles = false,
                 },
+                // TODO: The editor will walk through all the scenes recursively and detect which assets are used,
+                //       so no manual list  will be needed.
                 MatchingFiles = releaseAssetsList
             });
+
+            foreach (var guid in assetDatabase.UpdatedAssets)
+            {
+                IOLayer.Database.UpdateReloadAsset(guid);
+            }
         }
 
         private void Render()

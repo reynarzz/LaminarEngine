@@ -11,7 +11,6 @@ namespace Engine.IO
     internal abstract class DiskBase
     {
         public AssetsDatabaseInfo AssetDatabaseInfo { get; protected set; } = new();
-        protected Dictionary<Guid, byte[]> AssetsData { get; private set; } = new();
 
 
         public abstract bool Initialize();
@@ -27,19 +26,13 @@ namespace Engine.IO
         {
             if (AssetDatabaseInfo.Assets.TryGetValue(guid, out var info))
             {
-                if (AssetsData.TryGetValue(guid, out var data))
-                {
-                    return new RawAssetContent() { Info = info, RawData = data };
-                }
-
-                data = await LoadAssetFromDiskAsync(guid);
+                var data = await LoadAssetFromDiskAsync(guid);
 
                 if (data == null)
                 {
                     Debug.Error("Fatal: Can't load asset from disk, is in database table but contents are not in disk?");
                     return default;
                 }
-                AssetsData.Add(guid, data);
 
                 return new RawAssetContent() { Info = info, RawData = data };
             }
@@ -90,10 +83,5 @@ namespace Engine.IO
         protected abstract Task<byte[]> LoadAssetFromDiskAsync(Guid guid);
         protected abstract byte[] LoadAssetFromDisk(Guid guid);
         protected abstract byte[] LoadMetaFromDisk(Guid guid);
-
-        public void ReleaseAsset(Guid guid)
-        {
-            AssetsData.Remove(guid);
-        }
     }
 }

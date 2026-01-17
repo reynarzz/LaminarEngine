@@ -21,6 +21,8 @@ namespace GameCooker
 
         internal override async Task CookAssetsAsync(CookFileOptions fileOptions, CookingPlatform platform, (string, AssetType)[] files, string outFolder)
         {
+            _database.UpdatedAssets.Clear();
+
             foreach (var (filePath, assetType) in files)
             {
                 if (filePath.EndsWith(Paths.ASSET_META_EXT_NAME))
@@ -61,6 +63,7 @@ namespace GameCooker
                         assetInfo.LastWriteTime = latestWriteTime;
                         assetInfo.MetaWriteTime = metaLatestWriteTime;
                         assetInfo.Path = assetRelPath;
+                        _database.UpdatedAssets.Add(meta.GUID);
                     }
                     else
                     {

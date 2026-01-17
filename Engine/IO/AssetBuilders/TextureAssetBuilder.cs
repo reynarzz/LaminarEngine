@@ -24,5 +24,10 @@ namespace Engine.IO
             var texMeta = (TextureMetaFile)meta;
             return new Texture2D(info.Path, guid, (TextureMode)texMeta.Config.Mode, (TextureFilter)texMeta.Config.Filter, width, height, comp, texMeta.Config.PixelPerUnit, imageData);
         }
+
+        internal override void UpdateAsset(AssetResourceBase asset, AssetMetaFileBase meta, BinaryReader reader)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

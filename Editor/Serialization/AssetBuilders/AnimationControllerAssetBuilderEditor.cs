@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Editor
 {
-    internal class AnimationClipAssetBuilderEditor : JsonBasedAssetBuilder<AnimationClip>
+    internal class AnimationControllerAssetBuilderEditor : JsonBasedAssetBuilder<AnimatorController>
     {
         internal override void UpdateAsset(AssetResourceBase asset, AssetMetaFileBase meta, BinaryReader reader)
         {

@@ -13,5 +13,10 @@ namespace Engine.IO
         {
             return new FontAsset(info.Path, guid, reader.ReadBytes((int)reader.BaseStream.Length));
         }
+
+        internal override void UpdateAsset(AssetResourceBase asset, AssetMetaFileBase meta, BinaryReader reader)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

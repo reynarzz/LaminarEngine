@@ -34,5 +34,10 @@ namespace Engine.IO
                                  guid, data, sampleRate, 
                                  samplesLength, channels, sampleFormat);
         }
+
+        internal override void UpdateAsset(AssetResourceBase asset, AssetMetaFileBase meta, BinaryReader reader)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

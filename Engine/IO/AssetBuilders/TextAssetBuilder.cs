@@ -18,5 +18,10 @@ namespace Engine.IO
 
             return new TextAsset(text, info.Path, guid);
         }
+
+        internal override void UpdateAsset(AssetResourceBase asset, AssetMetaFileBase meta, BinaryReader reader)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

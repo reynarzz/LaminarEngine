@@ -11,8 +11,8 @@ namespace Engine
 {
     public class Shader : AssetResourceBase
     {
-        [ShowFieldNoSerialize(isReadOnly: true)] private readonly ShaderUniform[] _uniforms;
-        private readonly ShaderSource[] _sources;
+        [ShowFieldNoSerialize(isReadOnly: true)] private ShaderUniform[] _uniforms;
+        private ShaderSource[] _sources;
         private GfxResource _nativeShader;
         internal GfxResource NativeShader
         {
@@ -20,10 +20,7 @@ namespace Engine
             {
                 if (_nativeShader == null && !HasErrors)
                 {
-                    var vertex = _sources.FirstOrDefault(x => x.Stage == ShaderStage.Vertex);
-                    var fragment = _sources.FirstOrDefault(x => x.Stage == ShaderStage.Fragment);
-
-                    _nativeShader = UploadShader(vertex.Shader, fragment.Shader);
+                    UploadShaderSources(_sources);
                 }
 
                 return _nativeShader;
@@ -32,8 +29,13 @@ namespace Engine
 
         internal IReadOnlyList<ShaderUniform> Uniforms => _uniforms;
         internal IReadOnlyList<ShaderSource> ShaderSources => _sources;
-        internal bool HasErrors { get; }
+        internal bool HasErrors { get; private set; }
         internal Shader(ShaderSource[] sources, string path, Guid guid) : base(path, guid)
+        {
+            Initialize(sources);
+        }
+
+        private bool Initialize(ShaderSource[] sources)
         {
             _sources = sources;
             HasErrors = sources == null || sources.Length < 2 || (sources?.Any(x => x?.HasErrors ?? true) ?? true);
@@ -41,7 +43,11 @@ namespace Engine
             if (!HasErrors)
             {
                 _uniforms = sources.SelectMany(x => x.Uniforms).DistinctBy(x => x.Name).ToArray();
+
+                return true;
             }
+
+            return false;
         }
 
         [Obsolete("Load shaders with Assets.GetShader(\\\"pathToShader.slang\\\")")]
@@ -54,21 +60,50 @@ namespace Engine
         public Shader(string vertexCode, string fragmentCode, string vertName, string fragName) :
             base(string.Empty, Guid.NewGuid()) // TODO: load shaders from file.
         {
-            _nativeShader = UploadShader(Encoding.UTF8.GetBytes(vertexCode), Encoding.UTF8.GetBytes(fragmentCode));
+            UploadShader(Encoding.UTF8.GetBytes(vertexCode), Encoding.UTF8.GetBytes(fragmentCode));
         }
 
-        private GfxResource UploadShader(byte[] vertex, byte[] fragment/*, byte[] geometry, byte[] compute*/)
+        internal override void UpdateResource(object data, string path, Guid guid)
         {
-            var shaderDescriptor = new ShaderDescriptor()
+            var sources = data as ShaderSource[];
+            if (Initialize(sources))
             {
-                VertexSource = vertex,
-                FragmentSource = fragment,
+                UploadShaderSources(sources);
+            }
+            else
+            {
+                DestroyNativeShader();
+            }
+        }
 
-                // VertName = vertName,
-                // FragName = fragName
-            };
+        private void UploadShaderSources(ShaderSource[] sources)
+        {
+            if (!HasErrors)
+            {
+                var vertex = sources.FirstOrDefault(x => x.Stage == ShaderStage.Vertex);
+                var fragment = sources.FirstOrDefault(x => x.Stage == ShaderStage.Fragment);
 
-            return GfxDeviceManager.Current.CreateShader(shaderDescriptor);
+                UploadShader(vertex.Shader, fragment.Shader);
+            }
+        }
+
+        private void UploadShader(byte[] vertex, byte[] fragment/*, byte[] geometry, byte[] compute*/)
+        {
+            DestroyNativeShader();
+
+            if (!HasErrors)
+            {
+                var shaderDescriptor = new ShaderDescriptor()
+                {
+                    VertexSource = vertex,
+                    FragmentSource = fragment,
+
+                    // VertName = vertName,
+                    // FragName = fragName
+                };
+
+                _nativeShader = GfxDeviceManager.Current.CreateShader(shaderDescriptor);
+            }
         }
 
         [Obsolete]
@@ -79,9 +114,16 @@ namespace Engine
             return new Shader(vertexCode, fragCode, System.IO.Path.GetFileName(vertex), System.IO.Path.GetFileName(fragment));
         }
 
+        private void DestroyNativeShader()
+        {
+            GfxDeviceManager.Current.DestroyResource(_nativeShader);
+            _nativeShader = null;
+
+        }
         protected internal override void OnDestroy()
         {
-            GfxDeviceManager.Current.DestroyResource(NativeShader);
+            DestroyNativeShader();
         }
+
     }
 }
