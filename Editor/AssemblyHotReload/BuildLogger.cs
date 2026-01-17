@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Engine;
 using Microsoft.Build.Framework;
-using Microsoft.Build.Utilities;
 
 namespace Editor.AssemblyHotReload
 {
@@ -22,8 +21,21 @@ namespace Editor.AssemblyHotReload
             //source.ProjectStarted += (_, e) => Debug.Info($"Project: {e.ProjectFile}");
             //source.TargetStarted += (_, e) => Debug.Info($"Target: {e.TargetName}");
 
-            source.ErrorRaised += (_, e) => Debug.Error($"{e.File}({e.LineNumber},{e.ColumnNumber}): {e.Message}");
-            source.WarningRaised += (_, e) => Debug.Warn($"{e.File}({e.LineNumber},{e.ColumnNumber}): {e.Message}");
+            source.ErrorRaised += (_, e) =>
+            {
+                if (e.ProjectFile.EndsWith(EditorPaths.GAME_PROJECT_FULL_NAME))
+                {
+                    Debug.Error($"{e.File}({e.LineNumber},{e.ColumnNumber}): {e.Message}");
+                }
+            };
+
+            source.WarningRaised += (_, e) =>
+            {
+                if (e.ProjectFile.EndsWith(EditorPaths.GAME_PROJECT_FULL_NAME))
+                {
+                    Debug.Warn($"{e.File}({e.LineNumber},{e.ColumnNumber}): {e.Message}");
+                }
+            };
             //source.StatusEventRaised += (_, e) => Debug.Info($"Status: {e.Message}");
         }
 
