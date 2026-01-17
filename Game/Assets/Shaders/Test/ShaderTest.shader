@@ -26,7 +26,7 @@ VERTEX_SHADER
 
 FRAGMENT_SHADER
 {
-    uniform sampler2D uTextures[15]; //uniform sampler2D uTextures[{32}]
+    uniform sampler2D uTextures[15];
     #define GFS_TEXTURE_ARRAY uTextures
     #include "Core.glsl"
 

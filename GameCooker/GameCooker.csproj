@@ -7,6 +7,8 @@
     <OutputType>Library</OutputType>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 	<RuntimeIdentifiers>win-x64;linux-x64;osx-arm64;osx-x64</RuntimeIdentifiers>
+	<AppendRuntimeIdentifierToOutputPath>False</AppendRuntimeIdentifierToOutputPath>
+	<AppendTargetFrameworkToOutputPath>False</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
 
 	<PropertyGroup Condition="'$(ForceConsoleOutput)' == 'true'">

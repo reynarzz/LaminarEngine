@@ -21,11 +21,16 @@
 	<PropertyGroup Condition="'$(OS)' == 'Unix' AND&#xD;&#xA;  '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'True'">
 		<DefineConstants>MACOS;OSX;UNIX;DESKTOP;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>
-
+	<ItemGroup>
+	  <PackageReference Include="Microsoft.Build" Version="17.14.28" ExcludeAssets="runtime" />
+	  <PackageReference Include="Microsoft.Build.Framework" Version="17.14.28" ExcludeAssets="runtime" />
+	  <PackageReference Include="Microsoft.Build.Locator" Version="1.11.2" />
+	  <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.14.28" ExcludeAssets="runtime" />
+	</ItemGroup>
+	
 	<ItemGroup>
 		<ProjectReference Include="..\Engine\Engine.csproj" />
 		<ProjectReference Include="..\GameCooker\GameCooker.csproj" />
-		<ProjectReference Include="..\Game\Game.csproj" />
 		<ProjectReference Include="..\SharedTypes\SharedTypes.csproj" />
 	</ItemGroup>
 

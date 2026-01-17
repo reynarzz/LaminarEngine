@@ -1,4 +1,5 @@
-﻿using Editor.Rendering;
+﻿using Editor.AssemblyHotReload;
+using Editor.Rendering;
 using Editor.Serialization;
 using Editor.Utils;
 using Editor.Views;
@@ -8,7 +9,6 @@ using Engine.GUI;
 using Engine.IO;
 using Engine.Layers;
 using Engine.Layers.Input;
-using Game;
 using GlmNet;
 using ImGuiNET;
 using SharedTypes;
@@ -88,6 +88,8 @@ namespace Editor
             _inputLayer = new InputStandAlonePlatform();
             _gameWindow = new EditorGameView(_win, _gameSurface, _inputLayer);
 
+            BuildGameAssembly();
+
             _engine = new GFSEngine(_gameWindow, _inputLayer, new EditorLayersManager(_inputLayer), null);
 
             var sceneBatcher = new SceneBatchedRenderer();
@@ -142,6 +144,12 @@ namespace Editor
             {
                 UpdateAll();
             }
+        }
+
+        private void BuildGameAssembly()
+        {
+            var builder = new GameAssemblyBuilder();
+            builder.Build();
         }
 
         // TODO: move to another place, and complete it.

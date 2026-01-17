@@ -4,9 +4,7 @@
 		<TargetFrameworks>net9.0-windows;net9.0</TargetFrameworks>
 		<ImplicitUsings>false</ImplicitUsings>
 		<Nullable>disable</Nullable>
-		<BaseIntermediateOutputPath>Library\Build\obj\</BaseIntermediateOutputPath>
-		<BaseOutputPath>Library\Build\bin\</BaseOutputPath>
-		<DefineConstants>$(DefineConstants);PROJECT_PATH="$(MSBuildProjectFullPath)"</DefineConstants>
+
 	</PropertyGroup>
 
 

@@ -35,7 +35,7 @@ namespace Editor
 
             _playmodeLayers = new List<(LayerBase layer, int priorityIndex)>()
             {
-                (new Game.GameApplication(), 2),
+                //(new Game.GameApplication(), 2),
                 (new SceneLayer(), 4),
                 (new PhysicsLayer(), 6),
             };
