@@ -162,7 +162,6 @@ namespace Editor
 
         private void ImportAssets()
         {
-            // This will import all the assets without using the GUI tool. Useful for running the project in debug mode.
             var assemblyDir = Paths.ClearPathSeparation(Path.GetDirectoryName(AppContext.BaseDirectory)!);
             var root = Path.Combine(assemblyDir.Substring(0, assemblyDir.LastIndexOf(PROJECT_FOLDER_NAME)), Paths.GAME_FOLDER_NAME);
 

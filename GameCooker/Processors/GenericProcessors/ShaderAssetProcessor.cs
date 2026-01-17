@@ -15,29 +15,38 @@ namespace GameCooker
     internal class ShaderAssetProcessor : IAssetProcessor
     {
         private static Context _context = new Context();
+        private const string INCLUDE_EXTENSION = "#extension GL_GOOGLE_include_directive : enable";
+        private const string VERTEX_TAG = "##[Vertex]";
+        private const string FRAGMENT_TAG = "##[Fragment]";
+        private const string VERSION = "#version 330 core";
+        private const string VERTEX_KEYWORD = "VERTEX_SHADER";
+        private const string FRAGMENT_KEYWORD = "FRAGMENT_SHADER";
 
+        private const string SHADER_HEADER = VERSION + "\n" + INCLUDE_EXTENSION + "\n";
         byte[] IAssetProcessor.Process(string path, AssetMetaFileBase meta, CookingPlatform platform)
         {
             var isMobile = platform == CookingPlatform.Android || platform == CookingPlatform.IOS;
 
             var shaderFile = File.ReadAllText(path);
-            var lines = shaderFile.Split('\n');
 
-            var vertexTag = "##[Vertex]";
-            var fragmentTag = "##[Fragment]";
-
-            var vertexIndex = shaderFile.IndexOf(vertexTag);
-            var fragmentIndex = shaderFile.IndexOf(fragmentTag);
-
-            if (vertexIndex < 0 || fragmentIndex < 0)
+            if (string.IsNullOrEmpty(shaderFile))
             {
-                Console.WriteLine($"Not: {vertexTag} or {fragmentTag} was found in the shader: {path}");
+                Console.WriteLine("Error: Empty shader.");
                 return null;
             }
 
-            var version = "#version 330 core\n";
-            var vertexCode = version + shaderFile.Substring(vertexIndex + vertexTag.Length, fragmentIndex - vertexTag.Length).Trim();
-            var fragmentCode = version + shaderFile.Substring(fragmentIndex + fragmentTag.Length).Trim();
+            var vertexCode = ExtractShader(shaderFile, VERTEX_KEYWORD);
+            var fragmentCode = ExtractShader(shaderFile, FRAGMENT_KEYWORD);
+
+            if (string.IsNullOrEmpty(vertexCode) || string.IsNullOrEmpty(fragmentCode))
+            {
+                return null;
+            }
+            else
+            {
+                vertexCode = SHADER_HEADER + vertexCode;
+                fragmentCode = SHADER_HEADER + fragmentCode;
+            }
 
             var spirVs = CompileToSpirV(
             [
@@ -54,8 +63,8 @@ namespace GameCooker
                 }
 
                 // Testing remove.
-                // File.WriteAllText(path + "v_.glsl", Encoding.UTF8.GetString(vertex.Shader));
-                // File.WriteAllText(path + "f_.glsl", Encoding.UTF8.GetString(fragment.Shader));
+                // File.WriteAllText(path + "v_.glsl", Encoding.UTF8.GetString(sources[0].Shader));
+                // File.WriteAllText(path + "f_.glsl", Encoding.UTF8.GetString(sources[1].Shader));
 
                 return GetAsset(sources);
             }
@@ -93,8 +102,10 @@ namespace GameCooker
                     forceDefaultVersionAndProfile = true,
                     forwardCompatible = false,
                     code = shaderData.shaderCode,
+                    fileIncluder = FileIncluder
                 };
                 var shader = new Shader(input);
+
                 shader.SetOptions(ShaderOptions.AutoMapBindings | ShaderOptions.AutoMapLocations | ShaderOptions.MapUnusedUniforms);
 
                 if (!shader.Preprocess())
@@ -146,6 +157,21 @@ namespace GameCooker
             return shadersSpirv;
         }
 
+        private IncludeResult FileIncluder(string headerName, string includerName, uint includeDepth, bool isSystemFile)
+        {
+            var includePath = Path.Combine(CookerPaths.ShadersPath, headerName);
+            var includeData = "";
+            if (File.Exists(includePath))
+            {
+                includeData = File.ReadAllText(includePath).Trim();
+            }
+            return new IncludeResult()
+            {
+                headerName = headerName,
+                headerData = includeData,
+            };
+        }
+
         private ShaderSource CompileGLSL(bool isMobile, (Glslang.NET.ShaderStage stage, byte[] spirv) shaderSource)
         {
             var parsedIR = _context.ParseSpirv(shaderSource.spirv);
@@ -167,7 +193,8 @@ namespace GameCooker
             compiler.glslOptions.vulkanSemantics = false;
             compiler.glslOptions.enableRowMajorLoadWorkaround = false;
             compiler.glslOptions.enable420PackExtension = false;
-            compiler.glslOptions.emitUniformBufferAsPlainUniforms = true;
+            compiler.glslOptions.emitUniformBufferAsPlainUniforms = false;
+
             var str = compiler.Compile();
 
             if (!isMobile)
@@ -178,10 +205,6 @@ namespace GameCooker
             {
                 str = str.Replace("#version 330", "#version 300 es");
             }
-
-            // Current compiler add this when 'separateShaderObjects' is true, but I need it to be true because it also adds layouts.
-            //str = str.Replace("#extension GL_ARB_separate_shader_objects : require", string.Empty);
-            // str = RemoveGlPerVertexBlock(str);
 
             var resources = compiler.CreateShaderResources();
 
@@ -327,10 +350,37 @@ namespace GameCooker
             return UniformType.Invalid;
         }
 
-        private string RemoveGlPerVertexBlock(string glsl)
+        private string ExtractShader(string source, string keyword)
         {
-            var pattern = @"out\s+gl_PerVertex\s*\{[\s\S]*?\};";
-            return Regex.Replace(glsl, pattern, "");
+            int keywordIndex = source.IndexOf(keyword, StringComparison.Ordinal);
+            if (keywordIndex == -1)
+            {
+                Console.WriteLine($"'{keyword}' was not found.");
+                return null;
+            }
+
+            int braceStart = source.IndexOf('{', keywordIndex);
+            if (braceStart == -1)
+            {
+                Console.WriteLine($"No open braces found, invalid shader.");
+                return null;
+            }
+
+            int depth = 0;
+            for (int i = braceStart; i < source.Length; i++)
+            {
+                if (source[i] == '{') depth++;
+                else if (source[i] == '}') depth--;
+
+                if (depth == 0)
+                {
+                    // extract contents WITHOUT outer braces
+                    return source.Substring(braceStart + 1, i - braceStart - 1).Trim();
+                }
+            }
+
+            Console.WriteLine($"Unmatched braces in ${keyword} block");
+            return string.Empty;
         }
 
         public static byte[] UIntArrayToBytes(uint[] uintArray, bool littleEndian = true)
