@@ -16,15 +16,4 @@ namespace Engine
 
         internal abstract void UpdateResource(object data, string path, Guid guid);
     }
-
-    //public abstract class AssetResourceBase<T> : AssetResourceBase where T : class
-    //{
-    //    internal AssetResourceBase(string path, Guid guid) : base(path, guid) { }
-    //    internal override void UpdateResource(object data, string path, Guid guid)
-    //    {
-    //        OnResourceUpdate(data as T, path, guid);
-    //    }
-
-    //    internal abstract void OnResourceUpdate(T data, string path, Guid guid);
-    //}
 }

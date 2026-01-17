@@ -18,7 +18,6 @@ namespace Engine.IO
 
         internal override void UpdateAsset(AssetResourceBase asset, AssetMetaFileBase meta, BinaryReader reader)
         {
-            Debug.Log("Update shader");
             var shaderSources = GetSources(reader);
             asset.UpdateResource(shaderSources, string.Empty, meta.GUID);
         }

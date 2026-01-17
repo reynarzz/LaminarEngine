@@ -26,7 +26,9 @@ namespace Editor
     // -The serializer has a possible bug related to delegates,
     //   collections do not search for all delegates(privates/public), but classes do.
     //-If I load the runtime mode, and the applicationLayer is enabled, the camera renders black.
-    // implement hot reload: ApplicationLayer, and assets
+    // implement hot reload: ApplicationLayer, and assets.
+    // Renaming a folder, GameCooker doesn't import its contents on the first execution.
+
     internal class EditorEntry
     {
         private WindowStandalone _win;
@@ -203,7 +205,7 @@ namespace Editor
 
             foreach (var guid in assetDatabase.UpdatedAssets)
             {
-                IOLayer.Database.UpdateReloadAsset(guid);
+                IOLayer.Database?.UpdateReloadAsset(guid);
             }
         }
 

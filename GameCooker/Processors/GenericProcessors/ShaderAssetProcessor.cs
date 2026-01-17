@@ -23,7 +23,6 @@ namespace GameCooker
         private const string SHADER_HEADER = VERSION + "\n" + INCLUDE_EXTENSION + "\n";
         byte[] IAssetProcessor.Process(string path, AssetMetaFileBase meta, CookingPlatform platform)
         {
-
             var shaderFile = File.ReadAllText(path);
 
             if (string.IsNullOrEmpty(shaderFile))
@@ -80,7 +79,6 @@ namespace GameCooker
         private (Glslang.NET.ShaderStage stage, byte[] spirv)[] CompileToSpirV((Glslang.NET.ShaderStage stage,
                                                                                 string shaderCode)[] shaders)
         {
-            var shadersSpirv = new (Glslang.NET.ShaderStage stage, byte[] spirv)[shaders.Length];
             var program = new Program();
 
             for (int i = 0; i < shaders.Length; i++)
@@ -109,7 +107,7 @@ namespace GameCooker
 
                 if (!shader.Preprocess())
                 {
-                    Console.WriteLine("shader preprocessing failed");
+                    Console.WriteLine($"shader '{shaderData.stage}' preprocessing failed");
                     Console.WriteLine(shader.GetInfoLog());
                     Console.WriteLine(shader.GetDebugLog());
                     return null;
@@ -117,7 +115,7 @@ namespace GameCooker
 
                 if (!shader.Parse())
                 {
-                    Console.WriteLine("shader parsing failed");
+                    Console.WriteLine($"shader '{shaderData.stage}' parsing failed");
                     Console.WriteLine(shader.GetInfoLog());
                     Console.WriteLine(shader.GetDebugLog());
                     Console.WriteLine(shader.GetPreprocessedCode());
@@ -136,6 +134,8 @@ namespace GameCooker
                 Console.WriteLine(program.GetDebugLog());
                 return null;
             }
+
+            var shadersSpirv = new (Glslang.NET.ShaderStage stage, byte[] spirv)[shaders.Length];
 
             for (int i = 0; i < shaders.Length; i++)
             {
@@ -289,9 +289,22 @@ namespace GameCooker
                             return UniformType.Mat4;
                         }
                     }
-
+                    else if (type.VectorSize > 1)
+                    {
+                        if (type.VectorSize == 2)
+                        {
+                            return UniformType.Vec2;
+                        }
+                        else if (type.VectorSize == 3)
+                        {
+                            return UniformType.Vec3;
+                        }
+                        else if (type.VectorSize == 4)
+                        {
+                            return UniformType.Vec4;
+                        }
+                    }
                     return UniformType.Float;
-
                 case BaseType.Float64:
                     return UniformType.Double;
                 case BaseType.Struct:

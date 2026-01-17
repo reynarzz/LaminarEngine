@@ -30,13 +30,13 @@ FRAGMENT_SHADER
     #define GFS_TEXTURE_ARRAY uTextures
     #include "Core.glsl"
 
-    in vec2 fragUV;
+    in vec2 fragUV; 
     in vec4 vColor;
 
-    flat in int fragTexIndex;
+    flat in int fragTexIndex; 
     out vec4 fragColor;
     uniform vec2 express;
-    
+
     void main()
     {
         fragColor = GFS_SampleTextureArray(fragTexIndex, fragUV) * vColor;
