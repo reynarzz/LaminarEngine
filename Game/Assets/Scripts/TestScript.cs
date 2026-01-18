@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    internal class TestScript : ScriptBehavior
+    public class TestScript : ScriptBehavior
     {
         public class TestClassSub
         {

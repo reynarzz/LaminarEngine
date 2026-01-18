@@ -13,14 +13,12 @@ namespace Editor.AssemblyHotReload
 {
     internal class GameAssemblyBuilder
     {
-        public event Action<bool> BuildCompleted;
-        private const string BUILD_TYPE = "Debug";
-        private string CurrentFolderPath => $@"Library/Build/bin/{BUILD_TYPE}/Current";
+        public event Action<bool, bool> OnBuildCompleted;
+        
         private ProjectCollection _pc;
         private ProjectInstance _instance;
         private BuildParameters _parameters;
-        private string NewGameDllFullPath => $@"Library/Build/bin/{BUILD_TYPE}/{EditorPaths.GAME_PROJECT_NAME}.dll";
-        private string CurrentGameDllFullPath => Path.Combine(CurrentFolderPath, $"{EditorPaths.GAME_PROJECT_NAME}.dll");
+     
 
         private readonly Dictionary<string, string> _globalProps = new()
         {
@@ -28,7 +26,7 @@ namespace Editor.AssemblyHotReload
             ["BaseOutputPath"] = @"Library/Build/bin/",
             ["AppendRuntimeIdentifierToOutputPath"] = "false",
             ["AppendTargetFrameworkToOutputPath"] = "false",
-            ["Configuration"] = BUILD_TYPE
+            ["Configuration"] = EditorPaths.GAME_BUILD_TYPE
         };
 
         internal GameAssemblyBuilder()
@@ -40,7 +38,7 @@ namespace Editor.AssemblyHotReload
         {
             if (!IsBuildNeeded())
             {
-                BuildCompleted?.Invoke(true);
+                OnBuildCompleted?.Invoke(true, false);
                 return;
             }
 
@@ -69,28 +67,18 @@ namespace Editor.AssemblyHotReload
             if (result.OverallResult == BuildResultCode.Success)
             {
                 Debug.Success("Build success");
-                BuildCompleted?.Invoke(true);
-
-                // Copy only when dll is ejected.
-                var from = GetGameAbsolutePath(NewGameDllFullPath);
-                var to = GetGameAbsolutePath(CurrentGameDllFullPath);
-                File.Copy(from, to, true);
+                OnBuildCompleted?.Invoke(true, true);
             }
             else
             {
-                BuildCompleted?.Invoke(false);
+                OnBuildCompleted?.Invoke(false, false);
                 Debug.Error("Build failed");
             }
         }
 
-        private string GetGameAbsolutePath(string path)
-        {
-            return Path.Combine(EditorPaths.GameRoot, path);
-        }
-
         private bool IsBuildNeeded()
         {
-            var currentGameDllFolder = GetGameAbsolutePath(CurrentFolderPath);
+            var currentGameDllFolder = EditorPaths.CurrentFolderAbsolutePath;
 
             if (!Directory.Exists(currentGameDllFolder))
             {
@@ -98,7 +86,7 @@ namespace Editor.AssemblyHotReload
                 return true;
             }
 
-            var output = GetGameAbsolutePath(CurrentGameDllFullPath);
+            var output = EditorPaths.GameHookDLLAbsolutePath;
             if (!File.Exists(output))
             {
                 return true;

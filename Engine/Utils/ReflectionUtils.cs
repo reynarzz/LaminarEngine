@@ -6,6 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -54,6 +55,19 @@ namespace Engine.Utils
                 return null;
             }
         }
+
+#if DEBUG || EDITOR
+        private readonly static List<Assembly> _externalAssemblies = new();
+        internal static void PushAssembly(Assembly assembly)
+        {
+            _externalAssemblies.Add(assembly);
+        }
+
+        internal static void PopAssembly(Assembly assembly)
+        {
+            _externalAssemblies.Remove(assembly);
+        }
+#endif
         public static Type NormalizeType(object obj)
         {
             var type = obj.GetType();
@@ -320,33 +334,135 @@ namespace Engine.Utils
                 }
             }
         }
+        public static bool ResolveType(string name, string backupName, out Type type)
+        {
+            if (ResolveType(name, out type))
+            {
+                return true;
+            }
+            else if (ResolveType(backupName, out type))
+            {
+                return true;
+            }
+
+            return false;
+        }
 
         public static bool ResolveType(string name, out Type type)
         {
+            type = null;
+
+            if (string.IsNullOrEmpty(name))
+            {
+                return false;
+            }
+
             type = Type.GetType(name);
             if (type != null)
             {
                 return true;
             }
 
+            bool TryGetType(string name, Assembly assembly, out Type typeOut)
+            {
+                typeOut = assembly.GetType(name);
+                if (typeOut != null)
+                {
+                    return true;
+                }
+
+                return false;
+            }
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                type = assembly.GetType(name, throwOnError: false);
+                if (TryGetType(name, assembly, out type))
+                {
+                    return true;
+                }
+            }
+
+#if DEBUG || EDITOR
+            foreach (var assembly in _externalAssemblies)
+            {
+                type = assembly.GetTypes().FirstOrDefault(t => StripAssemblyMetadata(t.AssemblyQualifiedName).Equals(name));
+
                 if (type != null)
                 {
                     return true;
                 }
             }
 
+
+            Debug.Warn(name);
+#endif
             return false;
         }
+        static string NormalizeGameGenerics(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return input;
 
+            var sb = new StringBuilder(input.Length);
+
+            for (int i = 0; i < input.Length; i++)
+            {
+                // Assembly-qualified generic argument [[...], Game]
+                if (i + 1 < input.Length && input[i] == '[' && input[i + 1] == '[')
+                {
+                    i += 2; // skip [[
+                    int depth = 1;
+                    int start = i;
+
+                    while (i < input.Length && depth > 0)
+                    {
+                        if (input[i] == '[') depth++;
+                        else if (input[i] == ']') depth--;
+                        i++;
+                    }
+
+                    var content = input.Substring(start, i - start - 1);
+
+                    // Expect optional ", Game" here
+                    if (i + 6 <= input.Length && input.Substring(i, 6) == ", Game")
+                    {
+                        i += 6; // consume ", Game"
+                    }
+
+                    content = NormalizeGameGenerics(content);
+
+                    // collapse [[...], Game] → [...]
+                    sb.Append('[').Append(content).Append(']');
+                    continue;
+                }
+
+                sb.Append(input[i]);
+            }
+
+            return sb.ToString();
+        }
+        static string RemoveLastGame(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return input;
+
+            const string token = ", Game";
+            int index = input.LastIndexOf(token, StringComparison.Ordinal);
+            if (index < 0)
+                return input;
+
+            return input.Remove(index, token.Length);
+        }
         public static string GetFullTypeName(Type type)
         {
             if (type == null)
                 return string.Empty;
 
             return StripAssemblyMetadata(type.AssemblyQualifiedName);
+        }
+
+        public static string GetTypeMinimalName(Type type)
+        {
+            return $"{type.Namespace}.{type.Name}";
         }
 
         public static string StripAssemblyMetadata(string typeName)

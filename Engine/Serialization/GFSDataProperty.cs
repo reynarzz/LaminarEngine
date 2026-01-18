@@ -12,6 +12,7 @@ namespace Engine.Serialization
     internal class GFSDataProperty : JsonConverter
     {
         private const string _typeTag = "$type";
+        private const string _typeMinimalTag = "$type_minimal";
         private const string _valueTag = "$value";
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
@@ -27,6 +28,7 @@ namespace Engine.Serialization
             var wrapper = new JObject()
             {
                 [_typeTag] = ReflectionUtils.GetFullTypeName(type),
+               // [_typeMinimalTag] = ReflectionUtils.GetTypeMinimalName(type),
                 [_valueTag] = JToken.FromObject(value, serializer)
             };
 
@@ -51,18 +53,25 @@ namespace Engine.Serialization
                 return wrapper.ToObject(objectType, serializer);
             }
 
-            string typeName = typeToken.ToString();
-
-            Type type = Type.GetType(typeName);
-            //return new SerializedPropertyData()
+            //if (!wrapper.TryGetValue(_typeMinimalTag, out var typeMinimalToken))
             //{
-            //    TypeName = type.FullName,
-            //    Value = wrapper[_valueTag].ToObject(type, serializer)
-            //};
+            //    return wrapper.ToObject(objectType, serializer);
+            //}
 
-            if (type != null)
+            
+            string typeName = typeToken.ToString();
+            string typeMinimalName = "";// typeMinimalToken?.ToString() ?? string.Empty;
+
+            if (ReflectionUtils.ResolveType(typeName, typeMinimalName, out var type))
             {
+                //return new SerializedPropertyData()
+                //{
+                //    TypeName = type.FullName,
+                //    Value = wrapper[_valueTag].ToObject(type, serializer)
+                //};
+
                 return wrapper[_valueTag].ToObject(type, serializer);
+
             }
 
             Debug.Error($"Type name: '{typeName}' cannot be found, can't deserialize data");

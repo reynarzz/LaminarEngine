@@ -45,11 +45,11 @@ namespace Editor
         private RenderingSurface _editorSurface;
         private EditorCamera _editorCamera;
         private InputStandAlonePlatform _inputLayer;
-
         internal void Init()
         {
             NativeLogger.Init();
             RegistryTypes();
+
 
             var windowIcon = new TextureDescriptor()
             {
@@ -74,7 +74,6 @@ namespace Editor
             _node = new AnimatorEditorView();
 
             InitializePaths();
-            ImportAssets();
 
             _gameSurface = new RenderingSurface()
             {
@@ -88,9 +87,8 @@ namespace Editor
             _inputLayer = new InputStandAlonePlatform();
             _gameWindow = new EditorGameView(_win, _gameSurface, _inputLayer);
 
-            BuildGameAssembly();
-
-            _engine = new GFSEngine(_gameWindow, _inputLayer, new EditorLayersManager(_inputLayer), null);
+            var editorLayerManager = new EditorLayersManager(_inputLayer);
+            _engine = new GFSEngine(_gameWindow, _inputLayer, editorLayerManager, null);
 
             var sceneBatcher = new SceneBatchedRenderer();
             _gameSurface.SceneRenderers = new() { sceneBatcher };
@@ -136,20 +134,13 @@ namespace Editor
 
             _win.OnWindowFocusChanged += focused =>
             {
-                Debug.Log("Is focused: " + focused);
-                ImportAssets();
+                editorLayerManager.PublishEvent(focused ? EventType.WindowFocusEnter : EventType.WindowFocusExit, null);
             };
 
             while (!_win.ShouldClose)
             {
                 UpdateAll();
             }
-        }
-
-        private void BuildGameAssembly()
-        {
-            var builder = new GameAssemblyBuilder();
-            builder.Build();
         }
 
         // TODO: move to another place, and complete it.
@@ -185,36 +176,6 @@ namespace Editor
             var assemblyDir = Paths.ClearPathSeparation(Path.GetDirectoryName(AppContext.BaseDirectory)!);
             var root = Path.Combine(assemblyDir.Substring(0, assemblyDir.LastIndexOf(PROJECT_FOLDER_NAME)), Paths.GAME_FOLDER_NAME);
             new GameCooker.GameProject().Initialize(new GameCooker.ProjectConfig() { ProjectFolderRoot = root });
-        }
-
-        private void ImportAssets()
-        {
-            var releaseAssetsList = default(string[]);
-            if (File.Exists(Paths.GetShipAssetsFilePath()))
-            {
-                releaseAssetsList = File.ReadAllText(Paths.GetShipAssetsFilePath())?.Split('\n', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
-            }
-            var assetDatabase = new GameCooker.AssetsCooker().CookAll(new GameCooker.CookOptions()
-            {
-                Type = GameCooker.CookingType.DevMode,
-                Platform = GameCooker.CookingPlatform.Windows,
-                AssetsFolderPath = Paths.GetAssetsFolderPath(),
-                ExportFolderPath = Paths.GetAssetDatabaseFolder(),
-                FileOptions = new GameCooker.CookFileOptions()
-                {
-                    CompressAllFiles = false,
-                    CompressionLevel = 12,
-                    EncryptAllFiles = false,
-                },
-                // TODO: The editor will walk through all the scenes recursively and detect which assets are used,
-                //       so no manual list  will be needed.
-                MatchingFiles = releaseAssetsList
-            });
-
-            foreach (var guid in assetDatabase.UpdatedAssets)
-            {
-                IOLayer.Database?.UpdateReloadAsset(guid);
-            }
         }
 
         private void Render()

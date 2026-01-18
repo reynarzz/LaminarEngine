@@ -88,11 +88,11 @@ namespace Engine.Layers
             _cleanupLayer.UpdateLayer();
         }
 
-        internal virtual void PublishEvent(LayerEvent currentEvent)
+        internal virtual void PublishEvent(EventType type, object value)
         {
             for (int i = 0; i < _layers.Length; i++)
             {
-                _layers[i]?.OnEvent(currentEvent);
+                _layers[i]?.OnEvent(type, value);
             }
         }
 

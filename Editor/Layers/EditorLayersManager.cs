@@ -1,4 +1,5 @@
-﻿using Editor.Serialization;
+﻿using Editor.Layers;
+using Editor.Serialization;
 using Editor.Utils;
 using Engine;
 using Engine.Layers;
@@ -29,7 +30,8 @@ namespace Editor
                   new AudioLayer(),                // 5
                   null, // PhysicsLayer,           // 6
                   new RenderingLayer(),            // 7
-                  new EditorIOLayer()])            // 8
+                  new EditorIOLayer(),             // 8
+                  new HotReloadLayer()])           // 9          
         {
             _editorSceneLayer = new SceneLayer();
 
