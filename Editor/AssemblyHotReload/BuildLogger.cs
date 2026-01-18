@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Editor.Views;
 using Engine;
 using Microsoft.Build.Framework;
 
@@ -25,7 +26,10 @@ namespace Editor.AssemblyHotReload
             {
                 if (e.ProjectFile.EndsWith(EditorPaths.GAME_PROJECT_FULL_NAME))
                 {
-                    Debug.Error($"{e.File}({e.LineNumber},{e.ColumnNumber}): {e.Message}");
+                    var error = $"{e.File}({e.LineNumber},{e.ColumnNumber}): {e.Message}";
+                    Debug.Error(error);
+                    ConsoleEditorView.AddError(error); // Remove from here
+
                 }
             };
 
@@ -33,7 +37,10 @@ namespace Editor.AssemblyHotReload
             {
                 if (e.ProjectFile.EndsWith(EditorPaths.GAME_PROJECT_FULL_NAME))
                 {
-                    Debug.Warn($"{e.File}({e.LineNumber},{e.ColumnNumber}): {e.Message}");
+                    var warn = $"{e.File}({e.LineNumber},{e.ColumnNumber}): {e.Message}";
+                    Debug.Warn(warn);
+
+                    ConsoleEditorView.AddWarning(warn); // Remove from here
                 }
             };
             //source.StatusEventRaised += (_, e) => Debug.Info($"Status: {e.Message}");

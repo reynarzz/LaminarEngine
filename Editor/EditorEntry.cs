@@ -37,6 +37,7 @@ namespace Editor
         private EditorGameView _gameWindow;
         private SceneEditorView _editorSceneView;
 
+        // Note: All this need to be refactored.
         private SceneGraphWindow _sceneGraphWindow;
         private GFSEngine _engine;
         private AnimatorEditorView _node;
@@ -45,7 +46,7 @@ namespace Editor
         private RenderingSurface _editorSurface;
         private EditorCamera _editorCamera;
         private InputStandAlonePlatform _inputLayer;
-
+        private ConsoleEditorView _consoleWindow;
         internal void Init()
         {
             NativeLogger.Init();
@@ -71,6 +72,7 @@ namespace Editor
             _glfwInput = new ImGuiGLFW(WindowStandalone.NativeWindow);
             _glfwInput.Init();
             _node = new AnimatorEditorView();
+            _consoleWindow = new ConsoleEditorView();
 
             InitializePaths();
 
@@ -202,6 +204,7 @@ namespace Editor
             _sceneGraphWindow.OnDraw();
             _objectEditor.OnDraw();
             _node.OnRender();
+            _consoleWindow.OnDraw();
 
             RenderingInfoWindow();
             // ------
