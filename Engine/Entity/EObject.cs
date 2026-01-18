@@ -33,7 +33,7 @@ namespace Engine
         internal EObject(string name, Guid id)
         {
             Name = name;
-            this._id = id;
+            _id = id;
         }
 
         public Guid GetID()

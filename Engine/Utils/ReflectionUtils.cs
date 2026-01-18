@@ -62,7 +62,10 @@ namespace Engine.Utils
         internal static void SetGameAssembly(Assembly assembly, Func<string, Type> typeRegistry)
         {
             _registryResolver = typeRegistry;
-            _externalAssemblies.Add(assembly);
+            if (!_externalAssemblies.Contains(assembly))
+            {
+                _externalAssemblies.Add(assembly);
+            }
         }
 
         internal static void RemoveGame(Assembly assembly)

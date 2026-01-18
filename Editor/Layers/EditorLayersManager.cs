@@ -74,7 +74,7 @@ namespace Editor
                 //if (!Application.IsInPlayMode)
                 {
                     Debug.Log("Saving scene to: " + TestfilePath);
-                    _actors = SceneSerializer.SerializeScene(SceneManager.Scenes[^1]);
+                    _actors = SceneSerializer.SerializeScene(SceneManager.Scenes[^1])?.ActorsData;
 
                     var obj = Actor.Find("Player");
                     if (obj)

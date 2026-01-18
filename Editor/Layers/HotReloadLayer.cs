@@ -3,6 +3,7 @@ using Editor.Serialization;
 using Editor.Utils;
 using Engine;
 using Engine.Layers;
+using Engine.Serialization;
 using Engine.Utils;
 using SharedTypes;
 using System.Reflection;
@@ -15,6 +16,9 @@ namespace Editor.Layers
         private readonly GameAssemblyBuilder _gameAssemblyBuilder;
         private AssemblyLoadContext _assemblyLoadContext;
         private Assembly _gameAppAssembly = null;
+        private readonly List<string> _sceneList = new();
+        private readonly List<List<Actor>> _actorsSerialized = new();
+        private readonly List<Type> _componentsTypes = new();
 
         public HotReloadLayer()
         {
@@ -43,7 +47,7 @@ namespace Editor.Layers
         {
             Debug.Log("Rebuild detected");
 
-            Unload();
+            BeforeReload();
 
             // Copy new compiled dll.
             File.Copy(EditorPaths.NewGameDllAbsolutePath, EditorPaths.GameHookDLLAbsolutePath, true);
@@ -90,12 +94,16 @@ namespace Editor.Layers
                     Debug.Success(type.AssemblyQualifiedName);
                 }
             }
+
+            DeserializeScenes();
         }
 
-        private void Unload()
+        private void BeforeReload()
         {
             if (_assemblyLoadContext != null)
             {
+                SerializeScene();
+
                 ReflectionUtils.RemoveGame(_gameAppAssembly);
                 GfsTypeRegistry.Clear();
 
@@ -105,6 +113,41 @@ namespace Editor.Layers
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
             }
+        }
+
+        private void SerializeScene()
+        {
+            _sceneList.Clear();
+            _actorsSerialized.Clear();
+            foreach (var scene in SceneManager.Scenes)
+            {
+                var sceneObj = SceneSerializer.SerializeScene(scene,
+                    new SceneSerializer.SerializationOptions()
+                    {
+                        CollectedPhysicalActors = true,
+                        RemoveGameDLLComponentsFromActors = true,
+                        SerializeOnlyGameDLLComponents = true
+                    });
+                var serializedScene = EditorJsonUtils.Serialize(sceneObj);
+                _actorsSerialized.Add(sceneObj.Actors);
+
+                _sceneList.Add(serializedScene);
+            }
+        }
+
+        private void DeserializeScenes()
+        {
+            if (_sceneList.Count > 0)
+            {
+                for (int i = 0; i < _sceneList.Count; i++)
+                {
+                    var sceneSerialized = EditorJsonUtils.Deserialize<SerializedScene>(_sceneList[i]);
+                    SceneDeserializer.DeserializeSceneComponents(_actorsSerialized[i], sceneSerialized.ActorsData);
+                }
+            }
+
+            _sceneList.Clear();
+            _actorsSerialized.Clear();
         }
 
         public override void OnEvent(EventType currentEvent, object value)
