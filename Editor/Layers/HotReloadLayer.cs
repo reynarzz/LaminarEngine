@@ -1,4 +1,6 @@
 ﻿using Editor.AssemblyHotReload;
+using Editor.Serialization;
+using Editor.Utils;
 using Engine;
 using Engine.Layers;
 using Engine.Utils;
@@ -77,30 +79,29 @@ namespace Editor.Layers
                 return context.LoadFromAssemblyPath(depPath);
             };
 
-            ReflectionUtils.PushAssembly(_gameAppAssembly);
+            ReflectionUtils.SetGameAssembly(_gameAppAssembly, GfsTypeRegistry.Resolve);
 
             foreach (var type in _gameAppAssembly.DefinedTypes)
             {
+                EditorReflection.RegisterTypeRecursive(type);
+
                 if (type.IsAssignableTo(typeof(ApplicationLayer)))
                 {
-                    Debug.Success(type.Name);
+                    Debug.Success(type.AssemblyQualifiedName);
                 }
-                Debug.Log(type.Name);
             }
-
-
         }
 
         private void Unload()
         {
             if (_assemblyLoadContext != null)
             {
-                ReflectionUtils.PopAssembly(_gameAppAssembly);
+                ReflectionUtils.RemoveGame(_gameAppAssembly);
+                GfsTypeRegistry.Clear();
 
                 _assemblyLoadContext.Unload();
                 _assemblyLoadContext = null;
                 _gameAppAssembly = null;
-
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
             }

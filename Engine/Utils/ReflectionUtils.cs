@@ -57,13 +57,15 @@ namespace Engine.Utils
         }
 
 #if DEBUG || EDITOR
+        private static Func<string, Type> _registryResolver;
         private readonly static List<Assembly> _externalAssemblies = new();
-        internal static void PushAssembly(Assembly assembly)
+        internal static void SetGameAssembly(Assembly assembly, Func<string, Type> typeRegistry)
         {
+            _registryResolver = typeRegistry;
             _externalAssemblies.Add(assembly);
         }
 
-        internal static void PopAssembly(Assembly assembly)
+        internal static void RemoveGame(Assembly assembly)
         {
             _externalAssemblies.Remove(assembly);
         }
@@ -86,6 +88,27 @@ namespace Engine.Utils
             }
         }
 
+        public static IEnumerable<MemberInfo> GetAllPropertiesAndFields(Type type, bool order, BindingFlags flags)
+        {
+            while (type != null && type != typeof(object))
+            {
+                var members = type.GetMembers(flags)
+                                  .Where(m => m.MemberType == MemberTypes.Field || m.MemberType == MemberTypes.Property);
+
+                if (order)
+                {
+                    members = members.OrderBy(m => m.MetadataToken);
+                }
+
+                foreach (var member in members)
+                {
+                    yield return member;
+                }
+
+                type = type.BaseType;
+            }
+        }
+
         public static IEnumerable<MemberInfo> GetAllMembersWithAttribute<T>(Type type, bool inherit = true, bool order = false,
                                                                             BindingFlags flags = _flags) where T : Attribute
         {
@@ -101,7 +124,9 @@ namespace Engine.Utils
                 }
 
                 foreach (var member in members)
+                {
                     yield return member;
+                }
 
                 type = type.BaseType;
             }
@@ -382,21 +407,19 @@ namespace Engine.Utils
             }
 
 #if DEBUG || EDITOR
-            foreach (var assembly in _externalAssemblies)
+            type = _registryResolver?.Invoke(name);
+
+            if (type != null)
             {
-                type = assembly.GetTypes().FirstOrDefault(t => StripAssemblyMetadata(t.AssemblyQualifiedName).Equals(name));
-
-                if (type != null)
-                {
-                    return true;
-                }
+                return true;
             }
-
 
             Debug.Warn(name);
 #endif
             return false;
         }
+
+
         static string NormalizeGameGenerics(string input)
         {
             if (string.IsNullOrEmpty(input))
@@ -457,7 +480,10 @@ namespace Engine.Utils
             if (type == null)
                 return string.Empty;
 
-            return StripAssemblyMetadata(type.AssemblyQualifiedName);
+            var str = StripAssemblyMetadata(type.AssemblyQualifiedName);
+
+
+            return str;
         }
 
         public static string GetTypeMinimalName(Type type)

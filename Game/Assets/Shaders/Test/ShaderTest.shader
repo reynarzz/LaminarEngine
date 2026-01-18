@@ -37,7 +37,7 @@ FRAGMENT_SHADER
     out vec4 fragColor;
     uniform vec2 express;
 
-    void main()
+    void main()  
     {
         fragColor = GFS_SampleTextureArray(fragTexIndex, fragUV) * vColor;
 

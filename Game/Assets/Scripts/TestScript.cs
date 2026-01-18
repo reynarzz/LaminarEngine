@@ -103,6 +103,7 @@ namespace Game
         {
             [SerializedField] public T TValue;
             [SerializedField] public EnumerablePartitionerOptions Enumn;
+            // [SerializedField] private int HotReloadThis;
         }
         [SerializedField] AAA<int> AAAClass;
         [SerializedField] List<AAA<int>> AAAIntList;

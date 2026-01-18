@@ -45,11 +45,10 @@ namespace Editor
         private RenderingSurface _editorSurface;
         private EditorCamera _editorCamera;
         private InputStandAlonePlatform _inputLayer;
+
         internal void Init()
         {
             NativeLogger.Init();
-            RegistryTypes();
-
 
             var windowIcon = new TextureDescriptor()
             {
@@ -142,35 +141,6 @@ namespace Editor
                 UpdateAll();
             }
         }
-
-        // TODO: move to another place, and complete it.
-        private void RegistryTypes()
-        {
-            GfsTypeRegistry.Register<bool>("bool");
-            GfsTypeRegistry.Register<byte>("byte");
-            GfsTypeRegistry.Register<int>("int");
-            GfsTypeRegistry.Register<uint>("uint");
-            GfsTypeRegistry.Register<long>("long");
-            GfsTypeRegistry.Register<ulong>("ulong");
-            GfsTypeRegistry.Register<short>("short");
-            GfsTypeRegistry.Register<ushort>("ushort");
-            GfsTypeRegistry.Register<float>("float");
-            GfsTypeRegistry.Register<double>("double");
-            GfsTypeRegistry.Register<string>("string");
-
-            GfsTypeRegistry.Register<vec2>("vec2");
-            GfsTypeRegistry.Register<vec3>("vec3");
-            GfsTypeRegistry.Register<vec4>("vec4");
-            GfsTypeRegistry.Register<quat>("quat");
-            GfsTypeRegistry.Register<mat2>("mat2");
-            GfsTypeRegistry.Register<mat3>("mat3");
-            GfsTypeRegistry.Register<mat4>("mat4");
-            GfsTypeRegistry.Register<Guid>("id");
-            GfsTypeRegistry.Register<Color>("color");
-            GfsTypeRegistry.Register<Color32>("color32");
-            GfsTypeRegistry.Register<Body2DType>("color32");
-        }
-
         private void InitializePaths()
         {
             var assemblyDir = Paths.ClearPathSeparation(Path.GetDirectoryName(AppContext.BaseDirectory)!);
