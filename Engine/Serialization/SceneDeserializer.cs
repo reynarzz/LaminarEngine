@@ -15,12 +15,13 @@ namespace Engine.Serialization
         private readonly static Dictionary<Guid, (Actor value, ActorDataSceneAsset data)> _actorsByID = new();
         private readonly static Dictionary<Guid, (Component value, ComponentDataSceneAsset data)> _componentsByID = new();
 
-        private static List<Component> _initializationComponents = new();
-
+        private static readonly List<Component> _initializationComponents = new();
+        private static readonly Dictionary<Guid, Component> _existantComponents = new();
         public static void DeserializeSceneComponents(IReadOnlyList<Actor> actors, IReadOnlyList<ActorDataSceneAsset> actorsData)
         {
             _actorsByID.Clear();
             _componentsByID.Clear();
+            _existantComponents.Clear();
 
             if (actorsData == null || actorsData.Count == 0)
                 return;
@@ -30,27 +31,32 @@ namespace Engine.Serialization
                 var actorData = actorsData[i];
 
                 _actorsByID[actorData.ID] = (actors[i], actorData);
-            }
 
-            foreach (var actor in actors)
-            {
-                // Add current alive components.
-                foreach (var component in actor.Components)
+                for (int j = 0; j < actors[i].Components.Count; j++)
                 {
-                    _componentsByID.Add(component.GetID(), (component, new ComponentDataSceneAsset() 
-                    {
-                          ID = component.GetID(),
-                          IsEnabled = component.IsEnabled,
-                          TypeName = ReflectionUtils.GetFullTypeName(component.GetType()),
-                    }));
+                    var existantComp = actors[i].Components[j];
+                    _existantComponents.Add(existantComp.GetID(), existantComp);
                 }
             }
 
+            //foreach (var actor in actors)
+            //{
+            //    // Add current alive components.
+            //    foreach (var component in actor.Components)
+            //    {
+            //        _componentsByID.Add(component.GetID(), (component, new ComponentDataSceneAsset() 
+            //        {
+            //              ID = component.GetID(),
+            //              IsEnabled = component.IsEnabled,
+            //              TypeName = ReflectionUtils.GetFullTypeName(component.GetType()),
+            //        }));
+            //    }
+            //}
+           
             for (int i = 0; i < actorsData.Count; i++)
             {
                 var actorData = actorsData[i];
                 var actor = _actorsByID[actorData.ID].value;
-
                 // Add components, but no deserialize yet.
                 for (int j = 0; j < actorData.Components.Count; j++)
                 {
@@ -61,11 +67,17 @@ namespace Engine.Serialization
                         // TODO: fix the component initialization for the ones that auto add other required components.
                         // When 'Application.IsInPlayMode' is on, it will auto add components, making this not usable.
 
-                        var component = actor.AddComponent(componentType, componentData.ID, false,
+                        Component component = null;
+
+                        if(!_existantComponents.TryGetValue(componentData.ID, out component))
+                        {
+                            component = actor.AddComponent(componentType, componentData.ID, false,
                                                            componentData.IsEnabled, true, out var isPendingToInitialize);
 #if DEBUG
-                        component.Transform.SyncLocalEulerDelta(true);
+                            component.Transform.SyncLocalEulerDelta(true);
 #endif
+                        }
+
                         _componentsByID.Add(componentData.ID, (component, componentData));
                     }
                 }
@@ -108,6 +120,7 @@ namespace Engine.Serialization
 
             _actorsByID.Clear();
             _componentsByID.Clear();
+            _existantComponents.Clear();
         }
 
         public static void DeserializeScene(IReadOnlyList<ActorDataSceneAsset> actors, WeakReference<Scene> scene)

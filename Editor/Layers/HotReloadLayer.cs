@@ -19,6 +19,8 @@ namespace Editor.Layers
         private readonly List<string> _sceneList = new();
         private readonly List<List<Actor>> _actorsSerialized = new();
         private readonly List<Type> _componentsTypes = new();
+        private bool _canSwapDll = false;
+        private bool _isSwappingDll = false;
 
         public HotReloadLayer()
         {
@@ -26,9 +28,9 @@ namespace Editor.Layers
             _gameAssemblyBuilder.OnBuildCompleted += OnBuildCompleted;
         }
 
-        public override void Initialize()
+        public override async void Initialize()
         {
-            _gameAssemblyBuilder.Build();
+            await _gameAssemblyBuilder.BuildAsync();
         }
 
         private void OnBuildCompleted(bool success, bool isRebuild)
@@ -37,7 +39,7 @@ namespace Editor.Layers
             {
                 if (isRebuild || _gameAppAssembly == null)
                 {
-                    SwapDll();
+                    _canSwapDll = true;
                 }
                 ImportAssets();
             }
@@ -51,12 +53,19 @@ namespace Editor.Layers
 
             // Copy new compiled dll.
             File.Copy(EditorPaths.NewGameDllAbsolutePath, EditorPaths.GameHookDLLAbsolutePath, true);
-            //  File.Copy(EditorPaths.NewGameDllAbsolutePath, EditorPaths.GameHookDLLAbsolutePath, true);
+            var asmBytes = File.ReadAllBytes(EditorPaths.GameHookDLLAbsolutePath);
+
             var pdbPath = Paths.ClearPathSeparation(Path.Combine(EditorPaths.GameBinFolderAbsolutePath,
                                                                  EditorPaths.GAME_PROJECT_NAME + ".pdb"));
+            var pdbTargetPath = Paths.ClearPathSeparation(Path.Combine(EditorPaths.CurrentFolderAbsolutePath,
+                                                          EditorPaths.GAME_PROJECT_NAME + ".pdb"));
 
-            var asmBytes = File.ReadAllBytes(EditorPaths.GameHookDLLAbsolutePath);
-            var pdbBytes = File.Exists(pdbPath) ? File.ReadAllBytes(pdbPath) : null;
+            byte[] pdbBytes = null;
+            if (File.Exists(pdbPath))
+            {
+                File.Copy(pdbPath, pdbTargetPath, true);
+                pdbBytes = File.ReadAllBytes(pdbTargetPath);
+            }
 
             _assemblyLoadContext = new AssemblyLoadContext(EditorPaths.GAME_PROJECT_NAME, isCollectible: true);
 
@@ -85,17 +94,39 @@ namespace Editor.Layers
 
             ReflectionUtils.SetGameAssembly(_gameAppAssembly, GfsTypeRegistry.Resolve);
 
+            LayerBase gameAppLayer = null;
+
             foreach (var type in _gameAppAssembly.DefinedTypes)
             {
                 EditorReflection.RegisterTypeRecursive(type);
 
                 if (type.IsAssignableTo(typeof(ApplicationLayer)))
                 {
+                    try
+                    {
+                        gameAppLayer = ReflectionUtils.GetDefaultValueInstance(type) as LayerBase;
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.Error(e);
+                    }
                     Debug.Success(type.AssemblyQualifiedName);
                 }
             }
 
             DeserializeScenes();
+        }
+
+        // Swap happens at a certain point to avoid UI's sudden jumps.
+        internal override void UpdateLayer()
+        {
+            if(_canSwapDll && !_isSwappingDll)
+            {
+                _canSwapDll = false;
+                _isSwappingDll = true;
+                SwapDll();
+                _isSwappingDll = false;
+            }
         }
 
         private void BeforeReload()
@@ -126,7 +157,6 @@ namespace Editor.Layers
                     {
                         CollectedPhysicalActors = true,
                         RemoveGameDLLComponentsFromActors = true,
-                        SerializeOnlyGameDLLComponents = true
                     });
                 var serializedScene = EditorJsonUtils.Serialize(sceneObj);
                 _actorsSerialized.Add(sceneObj.Actors);
@@ -150,11 +180,11 @@ namespace Editor.Layers
             _actorsSerialized.Clear();
         }
 
-        public override void OnEvent(EventType currentEvent, object value)
+        public override async void OnEvent(EventType currentEvent, object value)
         {
             if (currentEvent == EventType.WindowFocusEnter)
             {
-                _gameAssemblyBuilder.Build();
+                await _gameAssemblyBuilder.BuildAsync();
             }
         }
 

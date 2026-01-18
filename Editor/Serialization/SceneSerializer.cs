@@ -26,7 +26,6 @@ namespace Editor.Serialization
         {
             public bool RemoveGameDLLComponentsFromActors;
             public bool CollectedPhysicalActors;
-            public bool SerializeOnlyGameDLLComponents;
         }
         private readonly static List<Component> _componentsToRemove = new();
         internal static SerializedScene SerializeScene(Scene scene, SerializationOptions options = default)
@@ -94,11 +93,7 @@ namespace Editor.Serialization
             }
             for (int i = 0; i < actor.Components.Count; i++)
             {
-                if (!options.SerializeOnlyGameDLLComponents ||
-                    (options.SerializeOnlyGameDLLComponents && IsFromGameDll(actor.Components[i])))
-                {
-                    componentsData.Add(GetComponentData(actor.Components[i]));
-                }
+                componentsData.Add(GetComponentData(actor.Components[i]));
             }
 
             if (options.RemoveGameDLLComponentsFromActors)

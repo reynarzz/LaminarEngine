@@ -14,11 +14,13 @@ namespace Editor.AssemblyHotReload
     internal class GameAssemblyBuilder
     {
         public event Action<bool, bool> OnBuildCompleted;
-        
+        private static SynchronizationContext _mainContext;
+
         private ProjectCollection _pc;
         private ProjectInstance _instance;
         private BuildParameters _parameters;
-     
+
+        private bool _isBuilding = false;
 
         private readonly Dictionary<string, string> _globalProps = new()
         {
@@ -31,14 +33,41 @@ namespace Editor.AssemblyHotReload
 
         internal GameAssemblyBuilder()
         {
+            _mainContext = SynchronizationContext.Current;
+
             MSBuildLocator.RegisterDefaults();
+        }
+
+        internal Task BuildAsync()
+        {
+            if (_isBuilding)
+            {
+                return Task.CompletedTask;
+            }
+
+            return Task.Run(() =>
+            {
+                try
+                {
+                    Build();
+                }
+                finally
+                {
+                    _isBuilding = false;
+                }
+            });
         }
 
         internal void Build()
         {
+            if (_isBuilding)
+                return;
+
+            _isBuilding = true;
+
             if (!IsBuildNeeded())
             {
-                OnBuildCompleted?.Invoke(true, false);
+                RaiseBuildCompleted(true, false);
                 return;
             }
 
@@ -67,12 +96,29 @@ namespace Editor.AssemblyHotReload
             if (result.OverallResult == BuildResultCode.Success)
             {
                 Debug.Success("Build success");
-                OnBuildCompleted?.Invoke(true, true);
+                RaiseBuildCompleted(true, true);
             }
             else
             {
-                OnBuildCompleted?.Invoke(false, false);
+                RaiseBuildCompleted(false, false);
                 Debug.Error("Build failed");
+            }
+
+            _isBuilding = false;
+        }
+
+        private void RaiseBuildCompleted(bool success, bool didBuild)
+        {
+            var ctx = _mainContext;
+
+            if (ctx != null)
+            {
+                ctx.Post(_ => OnBuildCompleted?.Invoke(success, didBuild), null);
+            }
+            else
+            {
+                // Fallback if no context 
+                OnBuildCompleted?.Invoke(success, didBuild);
             }
         }
 
