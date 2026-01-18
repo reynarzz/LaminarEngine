@@ -32,9 +32,20 @@ namespace Engine.Serialization
                 _actorsByID[actorData.ID] = (actors[i], actorData);
             }
 
-            // Note: loops through the actors again after the hierarchy is completed to add the components.
-            //      This is important in playmode since components could be added to a "enable later" queue, if actors are disabled
-            //      by itself or in the hierarchy.
+            foreach (var actor in actors)
+            {
+                // Add current alive components.
+                foreach (var component in actor.Components)
+                {
+                    _componentsByID.Add(component.GetID(), (component, new ComponentDataSceneAsset() 
+                    {
+                          ID = component.GetID(),
+                          IsEnabled = component.IsEnabled,
+                          TypeName = ReflectionUtils.GetFullTypeName(component.GetType()),
+                    }));
+                }
+            }
+
             for (int i = 0; i < actorsData.Count; i++)
             {
                 var actorData = actorsData[i];

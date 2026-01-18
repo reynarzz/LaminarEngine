@@ -15,7 +15,7 @@ namespace Editor.Serialization
     {
         public string Name { get; set; }
         public List<ActorDataSceneAsset> ActorsData { get; set; }
-        [JsonIgnore]internal List<Actor> Actors { get; set; }
+        [JsonIgnore] internal List<Actor> Actors { get; set; }
     }
 
     // Note: This is a very naive serializaton, renaming types, changing to another assembly will cause references to break.
@@ -28,8 +28,11 @@ namespace Editor.Serialization
             public bool CollectedPhysicalActors;
             public bool SerializeOnlyGameDLLComponents;
         }
+        private readonly static List<Component> _componentsToRemove = new();
         internal static SerializedScene SerializeScene(Scene scene, SerializationOptions options = default)
         {
+            _componentsToRemove.Clear();
+
             var serializedScene = new SerializedScene()
             {
                 Name = scene.Name,
@@ -59,6 +62,12 @@ namespace Editor.Serialization
                 SerializeActors(actor);
             }
 
+            for (var i = 0; i < _componentsToRemove.Count; i++)
+            {
+                var component = _componentsToRemove[i];
+                component.Actor.Components.Remove(component);
+            }
+            _componentsToRemove.Clear();
             return serializedScene;
         }
 
@@ -85,7 +94,7 @@ namespace Editor.Serialization
             }
             for (int i = 0; i < actor.Components.Count; i++)
             {
-                if (!options.SerializeOnlyGameDLLComponents || 
+                if (!options.SerializeOnlyGameDLLComponents ||
                     (options.SerializeOnlyGameDLLComponents && IsFromGameDll(actor.Components[i])))
                 {
                     componentsData.Add(GetComponentData(actor.Components[i]));
@@ -94,11 +103,11 @@ namespace Editor.Serialization
 
             if (options.RemoveGameDLLComponentsFromActors)
             {
-                for (int i = actor.Components.Count - 1; i >= 0; --i)
+                for (int i = 0; i < actor.Components.Count; i++)
                 {
                     if (IsFromGameDll(actor.Components[i]))
                     {
-                        actor.Components.Remove(actor.Components[i]);
+                        _componentsToRemove.Add(actor.Components[i]);
                     }
                 }
             }

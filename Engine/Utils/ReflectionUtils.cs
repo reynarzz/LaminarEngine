@@ -258,6 +258,12 @@ namespace Engine.Utils
 
         public static void SetMemberValue(object target, MemberInfo member, object value)
         {
+            var memberType = GetMemberType(member);
+            if (memberType != null && value != null && !value.GetType().IsAssignableTo(memberType))
+            {
+                Debug.Warn($"Can't assign the value: '{value.GetType().Name}' to member: '{member.Name}({memberType.Name})'. Types are not assignable.");
+                return;
+            }
             switch (member)
             {
                 case PropertyInfo prop:
