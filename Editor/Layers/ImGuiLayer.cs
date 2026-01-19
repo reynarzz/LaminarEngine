@@ -86,16 +86,16 @@ namespace Editor.Layers
 
             _windows = new List<IEditorWindow>()
             {
+                _gameWindow, 
                 new SceneEditorView("Scene", _editorSurface, _editorCamera),
                 new SceneGraphWindow(),
                 new ObjectEditorView(),
                 new AnimatorEditorView(),
-                _gameWindow,
-
+                  
                 // new ConsoleEditorView()
             };
         }
-
+         
         private void Draw()
         {
             ImguiImplOpenGL3.SetPerFrameImGuiData(Time.UnscaledDeltaTime, _win.PhysicalWidth, _win.PhysicalHeight);

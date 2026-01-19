@@ -51,16 +51,10 @@ namespace Editor
             RenderingLayer.OverlayOptions.Height = _win.PhysicalHeight;
 
             _inputLayer = new InputStandAlonePlatform();
-            WindowManager.Window = _win; // Hack, engine initializes this, but late, fix this.
 
             var editorLayerManager = new EditorLayersManager(_inputLayer, _win);
 
             _engine = new GFSEngine(ImGuiLayer.GameWindow, _inputLayer, editorLayerManager, null);
-
-            RenderingLayer.OnDrawOverlay += () =>
-            {
-                Render();
-            };
 
             // Physical window.
             _win.OnWindowChanged += (w, h) =>
@@ -87,14 +81,10 @@ namespace Editor
             }
         }
 
-        private void Render()
-        {
-            _win.SwapBuffers();
-        }
-
         private void UpdateAll()
         {
             _engine.Update();
+            _win.SwapBuffers();
         }
     }
 }
