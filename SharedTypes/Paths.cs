@@ -97,7 +97,7 @@ namespace SharedTypes
             if (string.IsNullOrEmpty(path))
                 return "";
 
-            return path.Replace("\\", "/");
+            return path.Replace('\\', '/');
         }
         private static string GetAbsolutePathFlag(bool isRelativePath)
         {

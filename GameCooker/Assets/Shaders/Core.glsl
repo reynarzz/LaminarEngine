@@ -7,6 +7,45 @@ vec4 GFS_UnpackColor(uint c)
     float a = float( c        & 0xFFu) / 255.0;
     return vec4(r, g, b, a);
 }
+float GFS_Hash(float n) 
+{
+    return fract(fract(n * 0.1031) * 43758.5453123);
+}
+ 
+float GFS_Hash(vec2 p)
+{
+    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
+}
+
+float GFS_Noise(float x) 
+{
+    float i = floor(x);
+    float f = fract(x);
+    float u = f * f * (3.0 - 2.0 * f);
+    return mix(GFS_Hash(i), GFS_Hash(i + 1.0), u);
+}
+
+float GFS_Noise(vec2 p)
+{
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    f = f * f * (3.0 - 2.0 * f);
+    float a = GFS_Hash(i);
+    float b = GFS_Hash(i + vec2(1.0, 0.0));
+    float c = GFS_Hash(i + vec2(0.0, 1.0));
+    float d = GFS_Hash(i + vec2(1.0, 1.0));
+    return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+}
+
+vec3 GFS_Luminance(vec3 color)
+{
+    return vec3(dot(color, vec3(0.299, 0.587, 0.114)));
+}
+
+vec4 GFS_Luminance(vec4 color)
+{
+    return vec4(GFS_Luminance(color.rgb), color.a);
+}
 
 #ifdef GFS_TEXTURE_ARRAY
 vec4 GFS_SampleTextureArray(int index, vec2 uv)

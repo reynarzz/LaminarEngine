@@ -20,7 +20,7 @@ namespace Editor.AssemblyHotReload
         private ProjectInstance _instance;
         private BuildParameters _parameters;
 
-        private bool _isBuilding = false;
+        internal static bool IsBuilding { get; private set; } = false;
 
         private readonly Dictionary<string, string> _globalProps = new()
         {
@@ -40,7 +40,7 @@ namespace Editor.AssemblyHotReload
 
         internal Task BuildAsync()
         {
-            if (_isBuilding)
+            if (IsBuilding)
             {
                 return Task.CompletedTask;
             }
@@ -53,17 +53,17 @@ namespace Editor.AssemblyHotReload
                 }
                 finally
                 {
-                    _isBuilding = false;
+                    IsBuilding = false;
                 }
             });
         }
 
         internal void Build()
         {
-            if (_isBuilding)
+            if (IsBuilding)
                 return;
 
-            _isBuilding = true;
+            IsBuilding = true;
 
             if (!IsBuildNeeded())
             {
@@ -104,7 +104,7 @@ namespace Editor.AssemblyHotReload
                 Debug.Error("Build failed");
             }
 
-            _isBuilding = false;
+            IsBuilding = false;
         }
 
         private void RaiseBuildCompleted(bool success, bool didBuild)
