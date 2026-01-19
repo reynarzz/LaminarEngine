@@ -21,7 +21,7 @@ namespace Editor.Layers
         private readonly ImGuiGLFW _glfwInput;
         private static EditorGameView _gameWindow;
         internal static EditorGameView GameWindow => _gameWindow;
-    
+
         private RenderingSurface _editorSurface;
         private RenderingSurface _gameSurface;
 
@@ -48,7 +48,7 @@ namespace Editor.Layers
                 UIViewProj = UICanvas.UIViewProj,
             };
             _gameWindow = new EditorGameView(_win, _gameSurface, _inputLayer);
-           
+
             RenderingLayer.OnDrawOverlay += () =>
             {
                 Draw();
@@ -86,19 +86,23 @@ namespace Editor.Layers
 
             _windows = new List<IEditorWindow>()
             {
-                _gameWindow, 
+                _gameWindow,
+                new ActionBarView(),
+                new FooterBarView(),
+
                 new SceneEditorView("Scene", _editorSurface, _editorCamera),
                 new SceneGraphWindow(),
                 new ObjectEditorView(),
                 new AnimatorEditorView(),
-                  
+                new RenderingInfoView(),
+
                 // new ConsoleEditorView()
             };
         }
-         
+
         private void Draw()
         {
-            ImguiImplOpenGL3.SetPerFrameImGuiData(Time.UnscaledDeltaTime, _win.PhysicalWidth, _win.PhysicalHeight);
+            ImguiImplOpenGL3.SetPerFrameImGuiData(Math.Min(Time.UnscaledDeltaTime, 0.0000001f), _win.PhysicalWidth, _win.PhysicalHeight);
 
             //ImGui.NewFrame();
             ImAllGui.imgui_NewFrame();
@@ -145,11 +149,7 @@ namespace Editor.Layers
                 windowView.OnDraw();
             }
 
-            RenderingInfoWindow();
-
             ImGui.End();
-
-            FooterView();
         }
 
         internal override void UpdateLayer()
@@ -159,56 +159,7 @@ namespace Editor.Layers
                 windowView.OnUpdate();
             }
         }
-        private void FooterView() // TODO: Move to its own view class.
-        {
-            ImGuiViewportPtr viewport = ImGui.GetMainViewport();
-
-            ImGui.SetNextWindowPos(viewport.Pos + new Vector2(0, viewport.Size.Y - 25));
-            ImGui.SetNextWindowSize(new Vector2(viewport.Size.X, 25));
-            ImGui.SetNextWindowViewport(viewport.ID);
-
-            var footerFlags = ImGuiWindowFlags.NoTitleBar |
-                                     ImGuiWindowFlags.NoCollapse |
-                                     ImGuiWindowFlags.NoResize |
-                                     ImGuiWindowFlags.NoMove |
-                                     ImGuiWindowFlags.NoBringToFrontOnFocus |
-                                     ImGuiWindowFlags.NoNavFocus |
-                                     ImGuiWindowFlags.NoDocking;
-
-            ImGui.PushStyleVar(ImGuiStyleVar.WindowRounding, 0.0f);
-            ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f);
-            ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Vector2.Zero);
-            ImGui.PushStyleVar(ImGuiStyleVar.WindowMinSize, Vector2.Zero);
-            ImGui.PushStyleColor(ImGuiCol.WindowBg, new Vector4(0.13f, 0.13f, 0.13f, 1.0f));
-            ImGui.Begin("FooterSpace", footerFlags);
-
-            if (GameAssemblyBuilder.IsBuilding)
-            {
-                ImGui.Text("Compiling...");
-            }
-            ImGui.End();
-            ImGui.PopStyleColor();
-
-            ImGui.PopStyleVar(4);
-
-        }
-
-        private void RenderingInfoWindow()
-        {
-            ImGui.Begin("Rendering Info");
-            ImGui.Text($"{nameof(Time.FPS)}: {Time.FPS}");
-            ImGui.Text($"{nameof(EngineInfo.Renderer.WBatches)}: {EngineInfo.Renderer.WBatches}");
-            ImGui.Text($"{nameof(EngineInfo.Renderer.GrabScreenPass)}: {EngineInfo.Renderer.GrabScreenPass}");
-            ImGui.Text($"{nameof(EngineInfo.Renderer.WDrawCalls)}: {EngineInfo.Renderer.WDrawCalls}");
-            ImGui.Text($"{nameof(EngineInfo.Renderer.UIBatches)}: {EngineInfo.Renderer.UIBatches}");
-            ImGui.Text($"{nameof(EngineInfo.Renderer.UIGrabScreenPass)}: {EngineInfo.Renderer.UIGrabScreenPass}");
-            ImGui.Text($"{nameof(EngineInfo.Renderer.UIDrawCalls)}: {EngineInfo.Renderer.UIDrawCalls}");
-            ImGui.Text($"{nameof(EngineInfo.Renderer.TotalBatches)}: {EngineInfo.Renderer.TotalBatches}");
-            ImGui.Text($"{nameof(EngineInfo.Renderer.TotalDrawCalls)}: {EngineInfo.Renderer.TotalDrawCalls}");
-            ImGui.Text($"{nameof(EngineInfo.Renderer.SavedByBatching)}: {EngineInfo.Renderer.SavedByBatching}");
-            ImGui.End();
-        }
-
+       
         public override void Close()
         {
         }

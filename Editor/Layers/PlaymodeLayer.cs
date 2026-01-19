@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace Editor.Layers
 {
-    internal class PlaymodeLayer : LayerBase
+    internal class PlaymodeController
     {
         private readonly LayersManager _manager;
         private readonly TimeLayer _time;
         private readonly List<(LayerBase layer, int priorityIndex)> _playmodeLayers;
 
-        public PlaymodeLayer(LayersManager manager, TimeLayer time)
+        public PlaymodeController(LayersManager manager, TimeLayer time)
         {
             _manager = manager;
             _time = time;
@@ -28,16 +28,8 @@ namespace Editor.Layers
             };
         }
 
-        public override void Close()
-        {
-        }
 
-        public override void Initialize()
-        {
-        }
-
-
-        private void PlayModeOn()
+        internal void PlayModeOn()
         {
             _time.Initialize();
             Application.IsInPlayMode = true;
@@ -52,7 +44,7 @@ namespace Editor.Layers
             }
         }
 
-        private void PlayModeOff()
+        internal void PlayModeOff()
         {
             foreach (var layerData in _playmodeLayers)
             {
@@ -61,6 +53,5 @@ namespace Editor.Layers
 
             Application.IsInPlayMode = false;
         }
-
     }
 }

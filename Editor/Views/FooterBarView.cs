@@ -1,65 +1,59 @@
-﻿using ImGuiNET;
+﻿using Editor.AssemblyHotReload;
+using ImGuiNET;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Editor.Views
 {
-    internal class ActionBarView : IEditorWindow
+    internal class FooterBarView : IEditorWindow
     {
-        public void OnOpen()
+        public void OnClose()
         {
         }
 
         public void OnDraw()
         {
-            var viewport = ImGui.GetMainViewport();
-            ImGui.SetNextWindowPos(new Vector2(0, 0));
-            ImGui.SetNextWindowSize(new Vector2(viewport.Size.X, 33));
+            ImGuiViewportPtr viewport = ImGui.GetMainViewport();
 
-            var flags = ImGuiWindowFlags.NoTitleBar |
+            ImGui.SetNextWindowPos(viewport.Pos + new Vector2(0, viewport.Size.Y - 25));
+            ImGui.SetNextWindowSize(new Vector2(viewport.Size.X, 25));
+            ImGui.SetNextWindowViewport(viewport.ID);
+
+            var footerFlags = ImGuiWindowFlags.NoTitleBar |
                                      ImGuiWindowFlags.NoCollapse |
                                      ImGuiWindowFlags.NoResize |
                                      ImGuiWindowFlags.NoMove |
                                      ImGuiWindowFlags.NoBringToFrontOnFocus |
                                      ImGuiWindowFlags.NoNavFocus |
                                      ImGuiWindowFlags.NoDocking;
-            ImGui.PushStyleVar(ImGuiStyleVar.WindowMinSize, Vector2.Zero);
+
             ImGui.PushStyleVar(ImGuiStyleVar.WindowRounding, 0.0f);
             ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f);
             ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Vector2.Zero);
+            ImGui.PushStyleVar(ImGuiStyleVar.WindowMinSize, Vector2.Zero);
             ImGui.PushStyleColor(ImGuiCol.WindowBg, new Vector4(0.13f, 0.13f, 0.13f, 1.0f));
-            ImGui.Begin("ActionBarView", flags);
+            ImGui.Begin("FooterSpace", footerFlags);
 
-            if (ImGui.Button("Play"))
+            if (GameAssemblyBuilder.IsBuilding)
             {
-
-            }
-            ImGui.SameLine();
-            if (ImGui.Button("Stop"))
-            {
-
-            }
-            ImGui.SameLine();
-            if (ImGui.Button("Pause"))
-            {
-
+                ImGui.Text("Compiling...");
             }
             ImGui.End();
             ImGui.PopStyleColor();
 
             ImGui.PopStyleVar(4);
+
+        }
+
+        public void OnOpen()
+        {
         }
 
         public void OnUpdate()
         {
         }
-
-        public void OnClose()
-        {
-        }
     }
+
 }

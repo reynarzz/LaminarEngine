@@ -65,10 +65,10 @@ namespace Editor
             };
 
             // Game window
-            ImGuiLayer.GameWindow.OnWindowChanged += (w, h) =>
-            {
-                _engine.Update();
-            };
+            //ImGuiLayer.GameWindow.OnWindowChanged += (w, h) =>
+            //{
+            //    //_engine.Update();
+            //};
 
             _win.OnWindowFocusChanged += focused =>
             {
@@ -79,6 +79,8 @@ namespace Editor
             {
                 UpdateAll();
             }
+
+            editorLayerManager.OnClose();
         }
 
         private void UpdateAll()
