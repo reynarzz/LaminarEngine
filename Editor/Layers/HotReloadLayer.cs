@@ -130,7 +130,7 @@ namespace Editor.Layers
         // Swap happens at a certain point to avoid UI's sudden jumps.
         internal override void UpdateLayer()
         {
-            if (_canSwapDll && !_isSwappingDll)
+            if (_canSwapDll && !_isSwappingDll && !Application.IsInPlayMode)
             {
                 _canSwapDll = false;
                 _isSwappingDll = true;
