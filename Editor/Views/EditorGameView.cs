@@ -31,13 +31,13 @@ namespace Editor
 
         public event Action<int, int> OnWindowChanged;
         public event Action OnWindowClose;
-        private readonly WindowStandalone _window;
+        private readonly IWindow _window;
         private bool _updateWindowSize;
         private int _offsetX = 0;
         private int _offsetY = 0;
         public int OffsetX => _offsetX;
         public int OffsetY => _offsetY;
-        public EditorGameView(WindowStandalone window, RenderingSurface surface, InputLayerBase inputLayer) : base("Game", surface)
+        public EditorGameView(IWindow window, RenderingSurface surface, InputLayerBase inputLayer) : base("Game", surface)
         {
             _window = window;
             _width = _window.Width;
@@ -64,6 +64,7 @@ namespace Editor
         {
             _inputLayer.IsEnabled = ImGui.IsWindowFocused();
         }
+
         public override void OnDraw()
         {
             base.OnDraw();
@@ -80,7 +81,7 @@ namespace Editor
             }
         }
 
-        internal void Update()
+        public override void OnUpdate()
         {
             if (_updateWindowSize)
             {

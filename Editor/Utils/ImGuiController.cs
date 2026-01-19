@@ -60,9 +60,9 @@ namespace Editor
             return ImGui.GetCurrentContext() == 0 ? null : (RendererData*)ImGui.GetIO().BackendRendererUserData;
         }
         static byte[] BackendName = "custom_impl_opengl3"u8.ToArray();
-        private static WindowStandalone _window;
+        private static IWindow _window;
 
-        public static bool Init(WindowStandalone window)
+        public static bool Init(IWindow window)
         {
             var assemblyDir = Paths.ClearPathSeparation(Path.GetDirectoryName(AppContext.BaseDirectory)!);
             var root = Path.Combine(assemblyDir.Substring(0, assemblyDir.LastIndexOf("Editor")), "Editor/Data");

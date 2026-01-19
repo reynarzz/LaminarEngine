@@ -20,28 +20,21 @@ namespace Editor
         private string AnimControllerPath => $"{EditorPaths.AppRoot}AnimController.bin";
 
 
-        private readonly List<(LayerBase layer, int priorityIndex)> _playmodeLayers;
 
-        public EditorLayersManager(InputLayerBase inputLayer) :
-            base([_time,                           // 0
-                  inputLayer,                      // 1
-                  null, // AppLayer                // 2
-                  new MainThreadDispatcher(),      // 3
-                  null, // SceneLayer              // 4
-                  new AudioLayer(),                // 5
-                  null, // PhysicsLayer,           // 6
-                  new RenderingLayer(),            // 7
-                  new EditorIOLayer(),             // 8
-                  new HotReloadLayer()])           // 9          
+        public EditorLayersManager(InputLayerBase inputLayer, WindowStandalone win) :
+            base([_time,                           
+                  inputLayer,                      
+                  null, // AppLayer                
+                  new MainThreadDispatcher(),      
+                  null, // SceneLayer              
+                  new AudioLayer(),                
+                  null, // PhysicsLayer,           
+                  new ImGuiLayer(win, inputLayer),
+                  new RenderingLayer(),            
+                  new EditorIOLayer(),             
+                  new HotReloadLayer()])                     
         {
             _editorSceneLayer = new SceneLayer();
-
-            _playmodeLayers = new List<(LayerBase layer, int priorityIndex)>()
-            {
-                (default, 2),
-                (new SceneLayer(), 4),
-                (new PhysicsLayer(), 6),
-            };
         }
 
         internal override void Initialize()
@@ -51,15 +44,6 @@ namespace Editor
         private Shader _test;
         internal override void Update()
         {
-            if (Input.GetKeyDown(KeyCode.P))
-            {
-                PlayModeOn();
-            }
-
-            if (Input.GetKeyDown(KeyCode.Backspace))
-            {
-                PlayModeOff();
-            }
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
                 Physics2D.DrawColliders = !Physics2D.DrawColliders;
@@ -120,44 +104,11 @@ namespace Editor
 
             if (Input.GetKeyDown(KeyCode.O))
             {
-                if (Application.IsInPlayMode)
-                {
-                    PlayModeOff();
-                }
-                else
-                {
-                    PlayModeOn();
-                }
-
                 LoadScene();
             }
             base.Update();
         }
 
-        private void PlayModeOn()
-        {
-            _time.Initialize();
-            Application.IsInPlayMode = true;
-
-            var gameLayer = _playmodeLayers[0];
-            gameLayer.layer = ReflectionUtils.GetDefaultValueInstance(GfsTypeRegistry.GameAppType) as LayerBase;
-            _playmodeLayers[0] = gameLayer;
-            for (int i = _playmodeLayers.Count - 1; i >= 0; --i)
-            {
-                var layerData = _playmodeLayers[i];
-                PushLayer(layerData.layer, layerData.priorityIndex);
-            }
-        }
-
-        private void PlayModeOff()
-        {
-            foreach (var layerData in _playmodeLayers)
-            {
-                PopLayer(layerData.priorityIndex);
-            }
-
-            Application.IsInPlayMode = false;
-        }
         private void LoadScene()
         {
             var file = File.ReadAllText(TestfilePath);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Reflection.Metadata;
 using Editor;
+using Editor.Views;
 using Engine;
 using Engine.Utils;
 using GlmNet;
@@ -11,7 +12,7 @@ using imnodesNET;
 
 namespace Editor
 {
-    public class AnimatorEditorView
+    public class AnimatorEditorView : IEditorWindow
     {
         private int _nextId = 1;
 
@@ -98,7 +99,7 @@ namespace Editor
             }
         }
 
-        public void OnRender()
+        public void OnDraw()
         {
             if (Selector.SelectedTransform())
             {
@@ -259,7 +260,17 @@ namespace Editor
 
         private int NewId() => _nextId++;
 
-        // ---------------- DATA ----------------
+        public void OnOpen()
+        {
+        }
+
+        public void OnClose()
+        {
+        }
+
+        public void OnUpdate()
+        {
+        }
 
         private sealed class Node
         {
