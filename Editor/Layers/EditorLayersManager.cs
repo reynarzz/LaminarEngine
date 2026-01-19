@@ -106,6 +106,7 @@ namespace Editor
 
             }
 
+
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.R))
             {
                 // Application.IsInPlayMode = false;
@@ -114,7 +115,7 @@ namespace Editor
                 var actors = EditorJsonUtils.Deserialize<List<ActorDataSceneAsset>>(file);
 
                 var clip = Assets.Get<AnimationClip>("Animation/AnimClip.anim");
-                var clipController = Assets.Get<AnimatorController>("Animation/AnimController.animcontroller");
+                var clipController = Assets.Get<AnimatorController>("Animation/AnimController.animctrl");
 
                 _test = Assets.GetShader("Shaders/Test/ShaderTest.shader");
                 

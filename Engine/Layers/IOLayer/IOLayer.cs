@@ -53,6 +53,11 @@ namespace Engine.Layers
             _assetDatabase.Initialize(disk);
         }
 
+        private protected void Reload(DiskBase disk)
+        {
+            _assetDatabase.Initialize(disk);
+        }
+
         internal static AssetDatabase GetDatabase() // Refactor
         {
             return _assetDatabase;

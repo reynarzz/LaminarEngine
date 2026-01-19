@@ -48,7 +48,7 @@ namespace GameCooker
                 { ".otf", AssetType.Font },
 
                 { ".anim", AssetType.AnimationClip },
-                { ".animcontroller", AssetType.AnimationController },
+                { ".animctrl", AssetType.AnimationController },
 
             };
 

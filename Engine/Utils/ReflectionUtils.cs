@@ -413,7 +413,7 @@ namespace Engine.Utils
                 return true;
             }
 
-            Debug.Warn(name);
+            Debug.Warn("Could not find type name: " + name);
 #endif
             return false;
         }
