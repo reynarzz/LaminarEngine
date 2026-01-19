@@ -1,4 +1,7 @@
-﻿using ImGuiNET;
+﻿using Editor.AssemblyHotReload;
+using Editor.Layers;
+using Engine;
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,21 +36,22 @@ namespace Editor.Views
             ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Vector2.Zero);
             ImGui.PushStyleColor(ImGuiCol.WindowBg, new Vector4(0.13f, 0.13f, 0.13f, 1.0f));
             ImGui.Begin("ActionBarView", flags);
-
+            ImGui.BeginDisabled(GameAssemblyBuilder.IsBuilding && !Application.IsInPlayMode);
             if (ImGui.Button("Play"))
             {
-
+                PlaymodeController.Instance.PlayModeOn();
             }
             ImGui.SameLine();
             if (ImGui.Button("Stop"))
             {
-
+                PlaymodeController.Instance.PlayModeOff();
             }
             ImGui.SameLine();
             if (ImGui.Button("Pause"))
             {
 
             }
+            ImGui.EndDisabled();
             ImGui.End();
             ImGui.PopStyleColor();
 

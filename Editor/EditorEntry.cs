@@ -64,12 +64,6 @@ namespace Editor
                 UpdateAll();
             };
 
-            // Game window
-            //ImGuiLayer.GameWindow.OnWindowChanged += (w, h) =>
-            //{
-            //    //_engine.Update();
-            //};
-
             _win.OnWindowFocusChanged += focused =>
             {
                 editorLayerManager.PublishEvent(focused ? EventType.WindowFocusEnter : EventType.WindowFocusExit, null);

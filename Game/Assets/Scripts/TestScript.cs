@@ -102,25 +102,25 @@ namespace Game
 
         }
 
-        //public class AAA<T, T2>
-        //{
-        //    [SerializedField] public T TValue1;
-        //    [SerializedField] public T2 TValue2;
+        public class AAA<T, T2>
+        {
+            [SerializedField] public T TValue1;
+            [SerializedField] public T2 TValue2;
 
-        //}
-         
+        }
+
         public class AAA<T>
         {
             [SerializedField] public T TValue; 
             [SerializedField] public EnumerablePartitionerOptions Enumn;
             [SerializedField] private int HotReloadThis;
             //[SerializedField] private RigidBody2D Something; 
-            //[SerializedField] private RigidBody2D _rigid2; 
-            //[SerializedField] private Body2DType bod;  
+            [SerializedField] private RigidBody2D _rigid2; 
+            [SerializedField] private Body2DType bod;  
             [SerializedField] public AStruct[] AStructTypeArray { get; set; }
         }
         [SerializedField] AAA<int> AAAClass;
-        //[SerializedField] AAA<string, Body2DType> AAAClass2v;
+        [SerializedField] AAA<string, Body2DType> AAAClass2v;
         [SerializedField] AAA<int, TestClass, float> AAAClass3v;
         [SerializedField] List<AAA<int>> AAAIntList;
         [SerializedField] List<AAA<string>> AAAStringList;
@@ -131,8 +131,8 @@ namespace Game
         [SerializedField] public List<AStruct> AStructTypeList { get; set; }
         [SerializedField] public AStruct[] AStructTypeArray { get; set; }
         [SerializedField][HideFromInspector] public List<TestClass> _TestCLassList { get; set; }
-        [SerializedField] public TestClass TestClassObj; 
-        //[SerializedField] public List<string> StringTest; 
+        [SerializedField] public TestClass TestClassObj;
+        //[SerializedField] public List<string> StringTest;
         // [SerializedField] public List<int> IntTest { get; set; } = new();
         // [SerializedField] public List<Component> _TestComponentList { get; set; }
         // [SerializedField] public List<Component> _TestComponentArray { get; set; }

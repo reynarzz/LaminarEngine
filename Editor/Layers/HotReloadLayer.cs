@@ -58,11 +58,11 @@ namespace Editor.Layers
             }
         }
 
-        private void SwapDll()
+        internal void SwapDll(bool serializeCurrentScene = true)
         {
             Debug.Log("Rebuild detected");
 
-            BeforeReload();
+            BeforeReload(serializeCurrentScene);
 
             // Copy new compiled dll.
             File.Copy(EditorPaths.CompiledGameDllAbsolutePath, EditorPaths.GameHookDLLAbsolutePath, true);
@@ -126,6 +126,7 @@ namespace Editor.Layers
             DeserializeScenes();
         }
 
+
         // Swap happens at a certain point to avoid UI's sudden jumps.
         internal override void UpdateLayer()
         {
@@ -138,11 +139,14 @@ namespace Editor.Layers
             }
         }
 
-        private void BeforeReload()
+        private void BeforeReload(bool serializeCurrentScene)
         {
             if (_assemblyLoadContext != null)
             {
-                SerializeScene();
+                if (serializeCurrentScene)
+                {
+                    SerializeScene();
+                }
 
                 GfsTypeRegistry.Clear();
 

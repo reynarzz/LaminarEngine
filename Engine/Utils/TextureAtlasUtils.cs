@@ -76,12 +76,6 @@ namespace Engine.Utils
         public static Sprite[] SliceSprites(Texture2D texture, int tileWidth, int tileHeight, vec2 pivot,
                                             int startIndex, int length = int.MaxValue)
         {
-            if(texture.Atlas.ChunksCount > 0)
-            {
-                Debug.Error("Can't slice. Sliced already.");
-                return null;
-            }
-
             int tilesX = texture.Width / tileWidth;
             int tilesY = texture.Height / tileHeight;
 

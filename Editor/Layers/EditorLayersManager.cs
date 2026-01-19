@@ -19,8 +19,8 @@ namespace Editor
         private string AnimClipPath => $"{EditorPaths.AppRoot}AnimClip.bin";
         private string AnimControllerPath => $"{EditorPaths.AppRoot}AnimController.bin";
 
-
-
+        private PlaymodeController _playmodeController; // Remove from here
+        private static HotReloadLayer _hotReload;
         public EditorLayersManager(InputLayerBase inputLayer, WindowStandalone win) :
             base([_time,                           
                   inputLayer,                      
@@ -31,10 +31,12 @@ namespace Editor
                   null, // PhysicsLayer,           
                   new ImGuiLayer(win, inputLayer),
                   new RenderingLayer(),            
-                  new EditorIOLayer(),             
-                  new HotReloadLayer()])                     
+                  new EditorIOLayer(),
+                  _hotReload = new HotReloadLayer()])                     
         {
             _editorSceneLayer = new SceneLayer();
+            _playmodeController = new PlaymodeController(this, _time, _hotReload);
+
         }
 
         internal override void Initialize()
