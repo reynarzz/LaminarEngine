@@ -14,7 +14,7 @@ namespace Editor.Layers
     internal class HotReloadLayer : LayerBase
     {
         private readonly GameAssemblyBuilder _gameAssemblyBuilder;
-        private AssemblyLoadContext _assemblyLoadContext;
+        private PluginLoadContext _assemblyLoadContext;
         private Assembly _gameAppAssembly = null;
         private readonly List<string> _sceneList = new();
         private readonly List<List<Actor>> _actorsSerialized = new();
@@ -43,6 +43,21 @@ namespace Editor.Layers
                 ImportAssets();
             }
         }
+        private class PluginLoadContext : AssemblyLoadContext
+        {
+            private readonly AssemblyDependencyResolver _resolver;
+
+            public PluginLoadContext(string pluginPath) : base(pluginPath, true)
+            {
+                _resolver = new AssemblyDependencyResolver(pluginPath);
+            }
+
+            protected override Assembly Load(AssemblyName assemblyName)
+            {
+                var path = _resolver.ResolveAssemblyToPath(assemblyName);
+                return path != null ? LoadFromAssemblyPath(path) : null;
+            }
+        }
 
         private void SwapDll()
         {
@@ -52,7 +67,6 @@ namespace Editor.Layers
 
             // Copy new compiled dll.
             File.Copy(EditorPaths.CompiledGameDllAbsolutePath, EditorPaths.GameHookDLLAbsolutePath, true);
-            var asmBytes = File.ReadAllBytes(EditorPaths.GameHookDLLAbsolutePath);
 
             var pdbPath = Paths.ClearPathSeparation(Path.Combine(EditorPaths.GameBinFolderAbsolutePath,
                                                                  EditorPaths.GAME_PROJECT_NAME + ".pdb"));
@@ -66,8 +80,26 @@ namespace Editor.Layers
                 pdbBytes = File.ReadAllBytes(pdbTargetPath);
             }
 
-            _assemblyLoadContext = new AssemblyLoadContext(EditorPaths.GAME_PROJECT_NAME, isCollectible: true);
+            _assemblyLoadContext = new(EditorPaths.GameHookDLLAbsolutePath);
 
+            var buildPath = EditorPaths.CompiledGameDllAbsolutePath;
+            var resolver = new AssemblyDependencyResolver(buildPath);
+            Console.WriteLine(System.Runtime.InteropServices.RuntimeInformation.RuntimeIdentifier);
+            Console.WriteLine(System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription);
+            _assemblyLoadContext.Resolving += (context, name) =>
+            {
+                // Never resolve the main assembly here
+                if (name.Name == Path.GetFileNameWithoutExtension(buildPath))
+                    return null;
+
+                var path = resolver.ResolveAssemblyToPath(name);
+                if (path != null)
+                    return context.LoadFromAssemblyPath(path);
+
+                return null;
+            };
+
+            var asmBytes = File.ReadAllBytes(EditorPaths.GameHookDLLAbsolutePath);
             using var asmStream = new MemoryStream(asmBytes);
             using var pdbStream = pdbBytes != null ? new MemoryStream(pdbBytes) : null;
 
@@ -79,22 +111,6 @@ namespace Editor.Layers
             {
                 _gameAppAssembly = _assemblyLoadContext.LoadFromStream(asmStream);
             }
-            var buildPath = Directory.GetParent(EditorPaths.CompiledGameDllAbsolutePath).FullName;
-            var resolver = new AssemblyDependencyResolver(buildPath);
-            _assemblyLoadContext.Resolving += (context, name) =>
-            {
-                //var depPath = Path.Combine(EditorPaths.GameBinFolderAbsolutePath, name.Name + ".dll");
-                //if (!File.Exists(depPath))
-                //{
-                //    return null;
-                //}
-                var path = resolver.ResolveAssemblyToPath(name);
-                if (path != null)
-                    return context.LoadFromAssemblyPath(path);
-
-                return context.LoadFromAssemblyPath(buildPath);
-            };
-
             ReflectionUtils.SetGameAssembly(_gameAppAssembly, GfsTypeRegistry.Resolve);
 
             Type appLayer = null;
