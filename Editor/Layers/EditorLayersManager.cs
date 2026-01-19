@@ -109,22 +109,15 @@ namespace Editor
 
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.R))
             {
-                // Application.IsInPlayMode = false;
-
-                var file = File.ReadAllText(TestfilePath);
-                var actors = EditorJsonUtils.Deserialize<List<ActorDataSceneAsset>>(file);
-
                 var clip = Assets.Get<AnimationClip>("Animation/AnimClip.anim");
                 var clipController = Assets.Get<AnimatorController>("Animation/AnimController.animctrl");
 
                 _test = Assets.GetShader("Shaders/Test/ShaderTest.shader");
-                
 
-                SceneManager.Initialize();
-                SceneManager.UnloadAll();
-                SceneManager.LoadScene("Reload scene");
-                SceneDeserializer.DeserializeScene(actors, SceneManager.ActiveScene);
+
+                LoadScene();
             }
+
             if (Input.GetKeyDown(KeyCode.O))
             {
                 if (Application.IsInPlayMode)
@@ -172,8 +165,6 @@ namespace Editor
             // var actors = _actors;
             Debug.Log("Total actors in scene: " + actors.Count);
             SceneManager.Initialize();
-            //SceneManager.UnloadAll();
-            //SceneManager.LoadScene("Reload scene");
             SceneDeserializer.DeserializeScene(actors, SceneManager.ActiveScene);
         }
     }

@@ -1,4 +1,5 @@
-﻿using Editor.Rendering;
+﻿using Editor.AssemblyHotReload;
+using Editor.Rendering;
 using Editor.Utils;
 using Editor.Views;
 using Engine;
@@ -169,11 +170,10 @@ namespace Editor
         private void DockSpace()
         {
             ImGuiViewportPtr viewport = ImGui.GetMainViewport();
-            ImGui.SetNextWindowPos(viewport.Pos);
-            ImGui.SetNextWindowSize(viewport.Size);
-            ImGui.SetNextWindowViewport(viewport.ID);
+            ImGui.SetNextWindowPos(viewport.Pos + new Vector2(0, 35));
+            ImGui.SetNextWindowSize(viewport.Size - new Vector2(0, 62));
 
-            ImGuiWindowFlags flags = ImGuiWindowFlags.NoTitleBar |
+            var flags = ImGuiWindowFlags.NoTitleBar |
                                      ImGuiWindowFlags.NoCollapse |
                                      ImGuiWindowFlags.NoResize |
                                      ImGuiWindowFlags.NoMove |
@@ -206,8 +206,78 @@ namespace Editor
             // ------
 
             ImGui.End();
+
+            FooterView();
+            ActionBarView();
+
             //ImGui.PopStyleColor();
         }
+
+        private void ActionBarView() // TODO: Move to its own view class.
+        {
+            var viewport = ImGui.GetMainViewport();
+            ImGui.SetNextWindowPos(new Vector2(0, 0));
+            ImGui.SetNextWindowSize(new Vector2(viewport.Size.X, 33));
+
+            var flags = ImGuiWindowFlags.NoTitleBar |
+                                     ImGuiWindowFlags.NoCollapse |
+                                     ImGuiWindowFlags.NoResize |
+                                     ImGuiWindowFlags.NoMove |
+                                     ImGuiWindowFlags.NoBringToFrontOnFocus |
+                                     ImGuiWindowFlags.NoNavFocus |
+                                     ImGuiWindowFlags.NoDocking;
+            ImGui.PushStyleVar(ImGuiStyleVar.WindowMinSize, Vector2.Zero);
+            ImGui.PushStyleVar(ImGuiStyleVar.WindowRounding, 0.0f);
+            ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f);
+            ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Vector2.Zero);
+            ImGui.PushStyleColor(ImGuiCol.WindowBg, new Vector4(0.13f, 0.13f, 0.13f, 1.0f));
+            ImGui.Begin("ActionBarView", flags);
+
+            if (ImGui.Button("Play"))
+            {
+
+            }
+            ImGui.End();
+            ImGui.PopStyleColor();
+
+            ImGui.PopStyleVar(4);
+
+        }
+
+
+        private void FooterView() // TODO: Move to its own view class.
+        {
+            ImGuiViewportPtr viewport = ImGui.GetMainViewport();
+
+            ImGui.SetNextWindowPos(viewport.Pos + new Vector2(0, viewport.Size.Y - 25));
+            ImGui.SetNextWindowSize(new Vector2(viewport.Size.X, 25));
+            ImGui.SetNextWindowViewport(viewport.ID);
+
+            var footerFlags = ImGuiWindowFlags.NoTitleBar |
+                                     ImGuiWindowFlags.NoCollapse |
+                                     ImGuiWindowFlags.NoResize |
+                                     ImGuiWindowFlags.NoMove |
+                                     ImGuiWindowFlags.NoBringToFrontOnFocus |
+                                     ImGuiWindowFlags.NoNavFocus | 
+                                     ImGuiWindowFlags.NoDocking;
+
+            ImGui.PushStyleVar(ImGuiStyleVar.WindowRounding, 0.0f);
+            ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f);
+            ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Vector2.Zero);
+            ImGui.PushStyleVar(ImGuiStyleVar.WindowMinSize, Vector2.Zero);
+            ImGui.PushStyleColor(ImGuiCol.WindowBg, new Vector4(0.13f, 0.13f, 0.13f, 1.0f));
+            ImGui.Begin("FooterSpace", footerFlags);
+            if (GameAssemblyBuilder.IsBuilding)
+            {
+                ImGui.Text("Compiling...");
+            }
+            ImGui.End();
+            ImGui.PopStyleColor();
+
+            ImGui.PopStyleVar(4);
+
+        }
+
         private void RenderingInfoWindow()
         {
             ImGui.Begin("Rendering Info");
