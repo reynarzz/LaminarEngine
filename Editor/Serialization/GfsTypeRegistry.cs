@@ -23,6 +23,7 @@ namespace Editor.Serialization
 
         internal static Assembly EngineAssembly { get; }
         internal static Assembly EditorAssembly { get; }
+        internal static Assembly GameAssembly { get; set; }
 
         static GfsTypeRegistry()
         {
@@ -70,7 +71,8 @@ namespace Editor.Serialization
 
         private static bool IsTypeFromGameAssembly(Type type)
         {
-            return type.Assembly.GetName().Name.Equals(EditorPaths.GAME_PROJECT_NAME);
+            //return type.Assembly.GetName().Name.Equals(EditorPaths.GAME_PROJECT_NAME);
+            return type.Assembly == GameAssembly;
         }
 
         internal static void RegisterRecursive(Type type)
@@ -141,6 +143,7 @@ namespace Editor.Serialization
             _idToType.Clear();
             GameAppComponentTypes.Clear();
             GameAppType = null;
+            GameAssembly = null;
         }
     }
 }

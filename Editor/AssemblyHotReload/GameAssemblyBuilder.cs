@@ -140,8 +140,7 @@ namespace Editor.AssemblyHotReload
             // Check all the files to verify of any changed.
             var outputTime = File.GetLastWriteTimeUtc(EditorPaths.GameHookDLLAbsolutePath);
 
-            if (!File.Exists(EditorPaths.CompiledGameDllAbsolutePath) ||
-                File.GetLastWriteTime(EditorPaths.CompiledGameDllAbsolutePath) != outputTime)
+            if (!File.Exists(EditorPaths.CompiledGameDllAbsolutePath))
             {
                 Debug.Log($"Original '{EditorPaths.GAME_PROJECT_NAME}.dll' is non existent.");
                 return true;

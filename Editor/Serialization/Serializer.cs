@@ -339,7 +339,7 @@ namespace Editor.Serialization
             var complexClass = new ComplexTypeData()
             {
                 ComplexType = GetSerializedType(complexType),
-                TargetTypeName = ReflectionUtils.GetFullTypeName(complexType),
+                TargetTypeName = GetInternalType(complexType),
                 Properties = new List<SerializedPropertyData>()
             };
 

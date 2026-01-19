@@ -112,7 +112,8 @@ namespace Editor.Layers
             {
                 _gameAppAssembly = _assemblyLoadContext.LoadFromStream(asmStream);
             }
-            ReflectionUtils.SetGameAssembly(_gameAppAssembly, GfsTypeRegistry.Resolve);
+            GfsTypeRegistry.GameAssembly = _gameAppAssembly;
+            ReflectionUtils.SetTypeRegistry(GfsTypeRegistry.Resolve);
 
             foreach (var type in _gameAppAssembly.DefinedTypes)
             {
@@ -144,7 +145,6 @@ namespace Editor.Layers
             {
                 SerializeScene();
 
-                ReflectionUtils.RemoveGame(_gameAppAssembly);
                 GfsTypeRegistry.Clear();
 
                 _assemblyLoadContext.Unload();

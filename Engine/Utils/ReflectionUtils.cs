@@ -58,19 +58,9 @@ namespace Engine.Utils
 
 #if DEBUG || EDITOR
         private static Func<string, Type> _registryResolver;
-        private readonly static List<Assembly> _externalAssemblies = new();
-        internal static void SetGameAssembly(Assembly assembly, Func<string, Type> typeRegistry)
+        internal static void SetTypeRegistry(Func<string, Type> typeRegistry)
         {
             _registryResolver = typeRegistry;
-            if (!_externalAssemblies.Contains(assembly))
-            {
-                _externalAssemblies.Add(assembly);
-            }
-        }
-
-        internal static void RemoveGame(Assembly assembly)
-        {
-            _externalAssemblies.Remove(assembly);
         }
 #endif
         public static Type NormalizeType(object obj)
