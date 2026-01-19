@@ -1,8 +1,10 @@
 ﻿using Engine;
+using Engine.Layers;
 using Engine.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,14 +18,58 @@ namespace Editor.Serialization
         private static readonly Dictionary<string, Type> _idToType = new();
         private static readonly Dictionary<Type, string> _typeToId = new();
 
+        internal static Type GameAppType { get; private set; }
+        internal static List<Type> GameAppComponentTypes { get; private set; } = new();
+
+        internal static Assembly EngineAssembly { get; }
+        internal static Assembly EditorAssembly { get; }
+
+        static GfsTypeRegistry()
+        {
+            foreach (var item in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                if (item.GetName().Name.Equals("Editor"))
+                {
+                    EditorAssembly = item;
+                }
+                else if (item.GetName().Name.Equals("Engine"))
+                {
+                    EngineAssembly = item;
+                }
+            }
+        }
+
         internal static void Register(Type type)
         {
             var id = ReflectionUtils.GetFullTypeName(type);
             if (!string.IsNullOrEmpty(id))
             {
-                _idToType[id] = type;
-                _typeToId[type] = id;
+                if (!_idToType.ContainsKey(id))
+                {
+                    _idToType[id] = type;
+                }
+
+                if (!_typeToId.ContainsKey(type))
+                {
+                    _typeToId[type] = id;
+
+                    if (type.IsAssignableTo(typeof(Component)) && !type.IsAbstract &&
+                       IsTypeFromGameAssembly(type))
+                    {
+                        GameAppComponentTypes.Add(type);
+                    }
+                }
+
+                if (type.IsAssignableTo(typeof(ApplicationLayer)) && IsTypeFromGameAssembly(type))
+                {
+                    GameAppType = type;
+                }
             }
+        }
+
+        private static bool IsTypeFromGameAssembly(Type type)
+        {
+            return type.Assembly.GetName().Name.Equals(EditorPaths.GAME_PROJECT_NAME);
         }
         internal static Type Resolve(string id)
         {
@@ -51,6 +97,8 @@ namespace Editor.Serialization
         {
             _typeToId.Clear();
             _idToType.Clear();
+            GameAppComponentTypes.Clear();
+            GameAppType = null;
         }
     }
 }

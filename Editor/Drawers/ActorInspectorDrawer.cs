@@ -8,12 +8,15 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using Editor.Utils;
+using Editor.Serialization;
+using System.Reflection;
 
 namespace Editor
 {
     public class ActorInspectorDrawer : IDrawerEditor
     {
-        private IReadOnlyList<Type> _allComponentTypes;
+        private static readonly List<Type> _componentTypes = new();
+
         private readonly static Type[] _visibilityAttributes = [typeof(SerializedFieldAttribute), typeof(ShowFieldNoSerialize)];
 
         public ActorInspectorDrawer()
@@ -83,7 +86,7 @@ namespace Editor
             }
             if (ImGui.Button("Add Component", new Vector2(ImGui.GetContentRegionAvail().X, 23)))
             {
-                _allComponentTypes = GetAllComponentTypes();
+                PopulateAllComponentTypes();
                 ImGui.OpenPopup("DropdownPopup");
             }
 
@@ -110,12 +113,12 @@ namespace Editor
 
                 ImGui.BeginChild("##ComponentListChild", Vector2.Zero, ImGuiChildFlags.None, ImGuiWindowFlags.None);
 
-                foreach (var componentType in _allComponentTypes)
+                foreach (var componentType in _componentTypes)
                 {
                     // ImGui.Image(EditorIcons.GetIcon(EditorIconType.ScriptIcon), new Vector2(15, 15));
                     // ImGui.SameLine();
 
-                    if (ImGui.Selectable(componentType.Name))
+                    if (ImGui.Selectable($"{componentType.Name}##{componentType.AssemblyQualifiedName}"))
                     {
                         actor.AddComponent(componentType);
                         ImGui.CloseCurrentPopup();
@@ -129,30 +132,25 @@ namespace Editor
             EndGroupPanel();
         }
 
-        private static readonly List<Type> _componentTypes = new();
 
         // NOTE: This will always be called after hot reloading the game dll, for now, for quick test I'm calling it every frame,
-        public static IReadOnlyList<Type> GetAllComponentTypes()
+        public static void PopulateAllComponentTypes()
         {
-            Type baseType = typeof(Component);
-            System.Reflection.Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            _componentTypes.Clear();
-
-            for (int i = 0; i < assemblies.Length; i++)
+            void AddComponentsFromAssembly(Assembly assembly)
             {
                 Type[] types;
 
                 try
                 {
-                    types = assemblies[i].GetTypes();
+                    types = assembly.GetTypes();
                 }
-                catch (System.Reflection.ReflectionTypeLoadException e)
+                catch (ReflectionTypeLoadException e)
                 {
                     types = e.Types;
                 }
 
                 if (types == null)
-                    continue;
+                    return;
 
                 for (int j = 0; j < types.Length; j++)
                 {
@@ -166,16 +164,26 @@ namespace Editor
                     if (t.IsAbstract)
                         continue;
 
-                    if (!baseType.IsAssignableFrom(t))
+                    if (!t.IsAssignableTo(typeof(Component)))
                         continue;
 
                     _componentTypes.Add(t);
                 }
             }
 
-            _componentTypes.Sort(static (a, b) => string.Compare(a.Name, b.Name, StringComparison.OrdinalIgnoreCase));
+            _componentTypes.Clear();
 
-            return _componentTypes;
+            AddComponentsFromAssembly(GfsTypeRegistry.EngineAssembly);
+            AddComponentsFromAssembly(GfsTypeRegistry.EditorAssembly);
+
+            for (int i = 0; i < GfsTypeRegistry.GameAppComponentTypes.Count; i++)
+            {
+                var componentType = GfsTypeRegistry.GameAppComponentTypes[i];
+
+                _componentTypes.Add(componentType);
+            }
+
+            _componentTypes.Sort(static (a, b) => string.Compare(a.Name, b.Name, StringComparison.OrdinalIgnoreCase));
         }
 
         private static object _componentClipboard;

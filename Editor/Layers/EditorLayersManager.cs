@@ -4,6 +4,7 @@ using Editor.Utils;
 using Engine;
 using Engine.Layers;
 using Engine.Serialization;
+using Engine.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -37,7 +38,7 @@ namespace Editor
 
             _playmodeLayers = new List<(LayerBase layer, int priorityIndex)>()
             {
-                //(new Game.GameApplication(), 2),
+                (default, 2),
                 (new SceneLayer(), 4),
                 (new PhysicsLayer(), 6),
             };
@@ -144,6 +145,9 @@ namespace Editor
             _time.Initialize();
             Application.IsInPlayMode = true;
 
+            var gameLayer = _playmodeLayers[0];
+            gameLayer.layer = ReflectionUtils.GetDefaultValueInstance(GfsTypeRegistry.GameAppType) as LayerBase;
+            _playmodeLayers[0] = gameLayer;
             for (int i = _playmodeLayers.Count - 1; i >= 0; --i)
             {
                 var layerData = _playmodeLayers[i];

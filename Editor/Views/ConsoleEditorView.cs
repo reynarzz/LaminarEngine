@@ -72,7 +72,7 @@ namespace Editor.Views
             }
 
             float splitterThickness = 6f;
-            float minPanelHeight = 50f;
+            float minPanelHeight = 10f;
 
             float maxSplitter = Math.Max(minPanelHeight, availY - minPanelHeight - splitterThickness);
 

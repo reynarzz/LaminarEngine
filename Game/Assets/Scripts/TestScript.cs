@@ -1,17 +1,13 @@
-﻿using Box2D.NET;
-using Engine;
+﻿using Engine;
 using GlmNet;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Game
-{
-    public class TestScript : ScriptBehavior
-    {
+{   
+    public class TestScript : ScriptBehavior 
+    { 
         public class TestClassSub
         {
             [SerializedField] public int ValueTest { get; set; }
@@ -97,20 +93,26 @@ namespace Game
             {
                 Debug.Log("Called from editor");
             }
-        }
-
+        } 
+        public class AAA<T, T2>
+        {
+            [SerializedField] public T TValue1;
+            [SerializedField] public T2 TValue2;
+              
+        } 
         public class AAA<T>
         {
-            [SerializedField] public T TValue;
+            [SerializedField] public T TValue; 
             [SerializedField] public EnumerablePartitionerOptions Enumn;
             [SerializedField] private int HotReloadThis;
-            //[SerializedField] private RigidBody2D Something;
-            //[SerializedField] private RigidBody2D _rigid2;
-            [SerializedField] private Body2DType bod;
+            //[SerializedField] private RigidBody2D Something; 
+            [SerializedField] private RigidBody2D _rigid2; 
+            //[SerializedField] private Body2DType bod;
             [SerializedField] public AStruct[] AStructTypeArray { get; set; }
-
+            [SerializedField] int x;
         }
         [SerializedField] AAA<int> AAAClass;
+        [SerializedField] AAA<int, TestClass> AAAClass2v;
         [SerializedField] List<AAA<int>> AAAIntList;
         [SerializedField] List<AAA<string>> AAAStringList;
         [SerializedField] List<AAA<AStruct>> AAAStructList;
@@ -155,7 +157,7 @@ namespace Game
         [SerializedField]
         private Dictionary<int, string> _intStringDictionary =
            new Dictionary<int, string> { { 3, "first value" }, { 51, "Second value"} };
-
+         
         [SerializedField]
         private Dictionary<int, Component> _compStringDictionary =
            new Dictionary<int, Component> { { 3, default }, { 51, default } };

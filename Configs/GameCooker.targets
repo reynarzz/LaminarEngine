@@ -6,10 +6,7 @@
 			BeforeTargets="$(GameCookerBeforeBuildStage)"
 			DependsOnTargets="NormalizePublishDir">
 		<PropertyGroup>
-			<GC_Framework Condition="'$(TargetFramework)' != ''">$(TargetFramework)</GC_Framework>
-			<GC_Framework Condition="'$(GC_Framework)' == ''">net9.0</GC_Framework>
-
-			<GameCookerOutDir>$(ProjectRoot)GameCooker/bin/$(Configuration)/net9.0/</GameCookerOutDir>
+			<GameCookerOutDir>$(ProjectRoot)GameCooker/bin/$(Configuration)/</GameCookerOutDir>
 
 			<GameCookerExe Condition="'$(OS)' == 'Windows_NT'">$(GameCookerOutDir)GameCooker.exe</GameCookerExe>
 			<GameCookerExe Condition="'$(OS)' != 'Windows_NT'">$(GameCookerOutDir)GameCooker</GameCookerExe>

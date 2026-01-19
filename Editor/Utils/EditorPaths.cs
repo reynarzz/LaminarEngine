@@ -22,7 +22,7 @@ namespace Editor
 
         internal static string GameBinFolderAbsolutePath => GetGameFolderAbsolutePath($@"Library/Build/bin/{GAME_BUILD_TYPE}");
         internal static string CurrentFolderAbsolutePath => GetGameFolderAbsolutePath(CurrentFolderRelativePath);
-        internal static string NewGameDllAbsolutePath => GetGameFolderAbsolutePath(NewGameDllRelativePath);
+        internal static string CompiledGameDllAbsolutePath => GetGameFolderAbsolutePath(NewGameDllRelativePath);
         internal static string GameHookDLLAbsolutePath => GetGameFolderAbsolutePath(CurrentGameDllRelativePath);
 
 

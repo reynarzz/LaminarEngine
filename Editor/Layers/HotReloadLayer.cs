@@ -18,7 +18,6 @@ namespace Editor.Layers
         private Assembly _gameAppAssembly = null;
         private readonly List<string> _sceneList = new();
         private readonly List<List<Actor>> _actorsSerialized = new();
-        private readonly List<Type> _componentsTypes = new();
         private bool _canSwapDll = false;
         private bool _isSwappingDll = false;
 
@@ -52,7 +51,7 @@ namespace Editor.Layers
             BeforeReload();
 
             // Copy new compiled dll.
-            File.Copy(EditorPaths.NewGameDllAbsolutePath, EditorPaths.GameHookDLLAbsolutePath, true);
+            File.Copy(EditorPaths.CompiledGameDllAbsolutePath, EditorPaths.GameHookDLLAbsolutePath, true);
             var asmBytes = File.ReadAllBytes(EditorPaths.GameHookDLLAbsolutePath);
 
             var pdbPath = Paths.ClearPathSeparation(Path.Combine(EditorPaths.GameBinFolderAbsolutePath,
@@ -80,40 +79,40 @@ namespace Editor.Layers
             {
                 _gameAppAssembly = _assemblyLoadContext.LoadFromStream(asmStream);
             }
-
+            var buildPath = Directory.GetParent(EditorPaths.CompiledGameDllAbsolutePath).FullName;
+            var resolver = new AssemblyDependencyResolver(buildPath);
             _assemblyLoadContext.Resolving += (context, name) =>
             {
-                var depPath = Path.Combine(EditorPaths.GameBinFolderAbsolutePath, name.Name + ".dll");
-                if (!File.Exists(depPath))
-                {
-                    return null;
-                }
+                //var depPath = Path.Combine(EditorPaths.GameBinFolderAbsolutePath, name.Name + ".dll");
+                //if (!File.Exists(depPath))
+                //{
+                //    return null;
+                //}
+                var path = resolver.ResolveAssemblyToPath(name);
+                if (path != null)
+                    return context.LoadFromAssemblyPath(path);
 
-                return context.LoadFromAssemblyPath(depPath);
+                return context.LoadFromAssemblyPath(buildPath);
             };
 
             ReflectionUtils.SetGameAssembly(_gameAppAssembly, GfsTypeRegistry.Resolve);
 
-            LayerBase gameAppLayer = null;
-
+            Type appLayer = null;
             foreach (var type in _gameAppAssembly.DefinedTypes)
             {
                 EditorReflection.RegisterTypeRecursive(type);
 
                 if (type.IsAssignableTo(typeof(ApplicationLayer)))
                 {
-                    try
-                    {
-                        gameAppLayer = ReflectionUtils.GetDefaultValueInstance(type) as LayerBase;
-                    }
-                    catch (Exception e)
-                    {
-                        Debug.Error(e);
-                    }
+                    appLayer = type;
                     Debug.Success(type.AssemblyQualifiedName);
                 }
             }
 
+            if(appLayer == null)
+            {
+                Debug.Error("No app layer is defined in the Game.dll");
+            }
             DeserializeScenes();
         }
 
@@ -143,6 +142,7 @@ namespace Editor.Layers
                 _gameAppAssembly = null;
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
+                GC.Collect();
             }
         }
 
