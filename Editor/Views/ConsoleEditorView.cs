@@ -33,17 +33,17 @@ namespace Editor.Views
 
         public static void AddLog(string msg)
         {
-            _entries.Add(new LogEntry { Type = LogType.Log, Message = msg });
+           // _entries.Add(new LogEntry { Type = LogType.Log, Message = msg });
         }
 
         public static void AddWarning(string msg)
         {
-            _entries.Add(new LogEntry { Type = LogType.Warning, Message = msg });
+           // _entries.Add(new LogEntry { Type = LogType.Warning, Message = msg });
         }
 
         public static void AddError(string msg)
         {
-            _entries.Add(new LogEntry { Type = LogType.Error, Message = msg });
+          //  _entries.Add(new LogEntry { Type = LogType.Error, Message = msg });
         }
 
         public void OnOpen()

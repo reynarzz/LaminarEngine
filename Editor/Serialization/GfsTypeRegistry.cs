@@ -53,14 +53,15 @@ namespace Editor.Serialization
                 {
                     _typeToId[type] = id;
 
-                    if (type.IsAssignableTo(typeof(Component)) && !type.IsAbstract &&
+                    if (!type.IsAbstract && type.IsAssignableTo(typeof(Component)) &&
                        IsTypeFromGameAssembly(type))
                     {
                         GameAppComponentTypes.Add(type);
                     }
                 }
 
-                if (type.IsAssignableTo(typeof(ApplicationLayer)) && IsTypeFromGameAssembly(type))
+                if (!type.IsAbstract && type.IsAssignableTo(typeof(ApplicationLayer)) &&
+                    IsTypeFromGameAssembly(type))
                 {
                     GameAppType = type;
                 }

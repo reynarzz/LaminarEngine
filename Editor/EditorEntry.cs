@@ -202,7 +202,7 @@ namespace Editor
             _sceneGraphWindow.OnDraw();
             _objectEditor.OnDraw();
             _node.OnRender();
-            _consoleWindow.OnDraw();
+            // _consoleWindow.OnDraw();
 
             RenderingInfoWindow();
             // ------
