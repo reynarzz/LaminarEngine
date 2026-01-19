@@ -124,7 +124,7 @@ namespace Editor.AssemblyHotReload
 
         private bool IsBuildNeeded()
         {
-            var currentGameDllFolder = EditorPaths.CurrentFolderAbsolutePath;
+            var currentGameDllFolder = EditorPaths.HookFolderAbsolutePath;
 
             if (!Directory.Exists(currentGameDllFolder))
             {
@@ -132,14 +132,21 @@ namespace Editor.AssemblyHotReload
                 return true;
             }
 
-            var output = EditorPaths.GameHookDLLAbsolutePath;
-            if (!File.Exists(output))
+            if (!File.Exists(EditorPaths.GameHookDLLAbsolutePath))
             {
                 return true;
             }
 
             // Check all the files to verify of any changed.
-            var outputTime = File.GetLastWriteTimeUtc(output);
+            var outputTime = File.GetLastWriteTimeUtc(EditorPaths.GameHookDLLAbsolutePath);
+
+            if (!File.Exists(EditorPaths.CompiledGameDllAbsolutePath) ||
+                File.GetLastWriteTime(EditorPaths.CompiledGameDllAbsolutePath) != outputTime)
+            {
+                Debug.Log($"Original '{EditorPaths.GAME_PROJECT_NAME}.dll' is non existent.");
+                return true;
+            }
+
             var files = Directory.EnumerateFiles(Paths.GetAssetsFolderPath(), "*.cs", SearchOption.AllDirectories);
             return files.Any(f => File.GetLastWriteTimeUtc(f) > outputTime);
         }

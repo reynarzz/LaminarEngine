@@ -29,7 +29,6 @@ namespace GameCooker
                 Paths.GetLibraryFolderPath(),
                 Paths.GetProjectSettingsFolder(),
                 Paths.GetAssetDatabaseFolder(),
-                Paths.GetBuildTempFolderPath(),
             })
             {
                 Directory.CreateDirectory(dir);

@@ -72,6 +72,47 @@ namespace Editor.Serialization
         {
             return type.Assembly.GetName().Name.Equals(EditorPaths.GAME_PROJECT_NAME);
         }
+
+        internal static void RegisterRecursive(Type type)
+        {
+            if (type == null)
+                return;
+
+            if (IsRegistered(type))
+            {
+                return;
+            }
+
+            // Register first to break cycles
+            Register(type);
+
+            if (type.IsPrimitive || type == typeof(string) || type.IsEnum)
+            {
+                return;
+            }
+
+            if (type.IsArray)
+            {
+                RegisterRecursive(type.GetElementType());
+                return;
+            }
+
+            if (type.IsGenericType)
+            {
+                foreach (var arg in type.GetGenericArguments())
+                {
+                    RegisterRecursive(arg);
+                }
+            }
+
+            RegisterRecursive(type.BaseType);
+
+            foreach (var memType in ReflectionUtils.GetAllMembersWithAttribute<SerializedFieldAttribute>(type))
+            {
+                RegisterRecursive(ReflectionUtils.GetMemberType(memType));
+            }
+        }
+
         internal static Type Resolve(string id)
         {
             if (!_idToType.TryGetValue(id, out var type))

@@ -70,7 +70,7 @@ namespace Editor.Layers
 
             var pdbPath = Paths.ClearPathSeparation(Path.Combine(EditorPaths.GameBinFolderAbsolutePath,
                                                                  EditorPaths.GAME_PROJECT_NAME + ".pdb"));
-            var pdbTargetPath = Paths.ClearPathSeparation(Path.Combine(EditorPaths.CurrentFolderAbsolutePath,
+            var pdbTargetPath = Paths.ClearPathSeparation(Path.Combine(EditorPaths.HookFolderAbsolutePath,
                                                           EditorPaths.GAME_PROJECT_NAME + ".pdb"));
 
             byte[] pdbBytes = null;
@@ -84,17 +84,18 @@ namespace Editor.Layers
 
             var buildPath = EditorPaths.CompiledGameDllAbsolutePath;
             var resolver = new AssemblyDependencyResolver(buildPath);
-            Console.WriteLine(System.Runtime.InteropServices.RuntimeInformation.RuntimeIdentifier);
-            Console.WriteLine(System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription);
+
             _assemblyLoadContext.Resolving += (context, name) =>
             {
-                // Never resolve the main assembly here
+                // Prevents resolving the main assembly here.
                 if (name.Name == Path.GetFileNameWithoutExtension(buildPath))
                     return null;
 
                 var path = resolver.ResolveAssemblyToPath(name);
                 if (path != null)
+                {
                     return context.LoadFromAssemblyPath(path);
+                }
 
                 return null;
             };
@@ -113,19 +114,12 @@ namespace Editor.Layers
             }
             ReflectionUtils.SetGameAssembly(_gameAppAssembly, GfsTypeRegistry.Resolve);
 
-            Type appLayer = null;
             foreach (var type in _gameAppAssembly.DefinedTypes)
             {
-                EditorReflection.RegisterTypeRecursive(type);
-
-                if (type.IsAssignableTo(typeof(ApplicationLayer)))
-                {
-                    appLayer = type;
-                    Debug.Success(type.AssemblyQualifiedName);
-                }
+                GfsTypeRegistry.RegisterRecursive(type);
             }
 
-            if(appLayer == null)
+            if (GfsTypeRegistry.GameAppType == null)
             {
                 Debug.Error("No app layer is defined in the Game.dll");
             }
@@ -135,7 +129,7 @@ namespace Editor.Layers
         // Swap happens at a certain point to avoid UI's sudden jumps.
         internal override void UpdateLayer()
         {
-            if(_canSwapDll && !_isSwappingDll)
+            if (_canSwapDll && !_isSwappingDll)
             {
                 _canSwapDll = false;
                 _isSwappingDll = true;

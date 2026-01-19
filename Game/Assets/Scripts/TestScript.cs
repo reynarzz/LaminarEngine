@@ -9,10 +9,10 @@ namespace Game
     public class TestScript : ScriptBehavior 
     { 
         public class TestClassSub
-        {
+        { 
             [SerializedField] public int ValueTest { get; set; }
             [SerializedField] public string StringTest { get; set; }
-            [SerializedField] public TypeCode EnumTest { get; set; }
+            [SerializedField] public TypeCode EnumTest { get; set; } 
             [SerializedField] public vec2 vec2Test { get; set; }
             [SerializedField] public vec3 vec3Test { get; set; }
             [SerializedField] public vec4 vec4Test { get; set; }
@@ -104,12 +104,11 @@ namespace Game
         {
             [SerializedField] public T TValue; 
             [SerializedField] public EnumerablePartitionerOptions Enumn;
-            [SerializedField] private int HotReloadThis;
+            //[SerializedField] private int HotReloadThis;
             //[SerializedField] private RigidBody2D Something; 
-            [SerializedField] private RigidBody2D _rigid2; 
-            //[SerializedField] private Body2DType bod;
+            //[SerializedField] private RigidBody2D _rigid2; 
+            //[SerializedField] private Body2DType bod; 
             [SerializedField] public AStruct[] AStructTypeArray { get; set; }
-            [SerializedField] int x;
         }
         [SerializedField] AAA<int> AAAClass;
         [SerializedField] AAA<int, TestClass> AAAClass2v;
@@ -157,7 +156,7 @@ namespace Game
         [SerializedField]
         private Dictionary<int, string> _intStringDictionary =
            new Dictionary<int, string> { { 3, "first value" }, { 51, "Second value"} };
-         
+
         [SerializedField]
         private Dictionary<int, Component> _compStringDictionary =
            new Dictionary<int, Component> { { 3, default }, { 51, default } };

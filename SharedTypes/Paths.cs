@@ -9,7 +9,6 @@ namespace SharedTypes
     public static class Paths
     {
         public const string LIBRARY_FOLDER_NAME = "Library";
-        public const string BUILD_TEMP_FOLDER_NAME = "BuildTemp";
         public const string ASSETS_FOLDER_NAME = "Assets";
         public const string GAME_FOLDER_NAME = "Game";
         public const string SHIP_ASSETS_LIST_FILE_NAME = "ShipAssets.txt";
@@ -81,11 +80,6 @@ namespace SharedTypes
         public static string CreateBinFilePath(string folderPath, string guid, bool isRelativePath = false)
         {
             return ClearPathSeparation(Path.Join(folderPath, guid + ASSET_DATABASE_BINARY_EXT_NAME));
-        }
-
-        public static string GetBuildTempFolderPath(bool isRelativePath = false)
-        {
-            return ClearPathSeparation(Path.Join(GetAbsolutePathFlag(isRelativePath), GetLibraryFolderPath(true), BUILD_TEMP_FOLDER_NAME));
         }
 
         public static string GetRelativeAssetPath(string absoluteAssetPath)
