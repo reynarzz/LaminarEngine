@@ -72,6 +72,8 @@ namespace Engine.IO
                         return JsonConvert.DeserializeObject<DefaultMetaFile>(json);
                     case AssetType.AnimationController:
                         return JsonConvert.DeserializeObject<DefaultMetaFile>(json);
+                    case AssetType.Material:
+                        return JsonConvert.DeserializeObject<DefaultMetaFile>(json);
                     default:
                         throw new NotImplementedException($"Asset type for meta is not implemented: {info.Type}");
                 }

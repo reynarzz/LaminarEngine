@@ -13,11 +13,12 @@ using System.Reflection;
 
 namespace Editor
 {
-    public class ActorInspectorDrawer : IDrawerEditor
+    public class ActorInspectorDrawer : IDrawerEditor<Actor>
     {
         private static readonly List<Type> _componentTypes = new();
 
         private readonly static Type[] _visibilityAttributes = [typeof(SerializedFieldAttribute), typeof(ShowFieldNoSerialize)];
+        public bool AutoDrawTitle => false;
 
         public ActorInspectorDrawer()
         {
@@ -27,35 +28,31 @@ namespace Editor
         {
         }
 
-        public void OnDraw()
+        public void OnDraw(Actor actor)
         {
-            if (Selector.Selected && Selector.Selected.IsAlive && Selector.Selected is Actor actor)
+            DrawActor(actor);
+
+            for (int i = 0; i < actor.Components.Count; i++)
             {
-                DrawActor(actor);
-
-                for (int i = 0; i < actor.Components.Count; i++)
+                var component = actor.Components[i];
+                var members = ReflectionUtils.GetAllMembersWithAttributes(component.GetType(), _visibilityAttributes, true, true);
+                DrawComponentTree(component, i, x =>
                 {
-                    var component = actor.Components[i];
-                    var members = ReflectionUtils.GetAllMembersWithAttributes(component.GetType(), _visibilityAttributes, true, true);
-                    DrawComponentTree(component, i, x =>
+                    if (component)
                     {
-                        if (component)
+                        int index = 0;
+                        foreach (var member in members)
                         {
-                            int index = 0;
-                            foreach (var member in members)
-                            {
-                                PropertyDrawer.DrawVars(x.GetID().ToString(), component, member, 0, index, 0, true);
-                                index++;
-                            }
-
-                            PropertyDrawer.DrawMethods(component, x.GetID().ToString());
-
+                            PropertyDrawer.DrawVars(x.GetID().ToString(), component, member, 0, index, 0, true);
+                            index++;
                         }
-                    });
-                }
+
+                        PropertyDrawer.DrawMethods(component, x.GetID().ToString());
+
+                    }
+                });
             }
         }
-
 
         private void DrawActor(Actor actor)
         {
@@ -297,6 +294,7 @@ namespace Editor
         }
 
         private static List<GuiRect> s_GroupPanelLabelStack = new();
+
 
         public static void BeginGroupPanel(string name, Vector2 size)
         {

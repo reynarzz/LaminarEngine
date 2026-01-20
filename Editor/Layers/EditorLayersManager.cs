@@ -71,15 +71,13 @@ namespace Editor
                         var renderer = Actor.Find("Portal").Transform.Children[1].GetComponent<SpriteRenderer>();
                         var materialIR = Serializer.Serialize(renderer.Material);
 
-                        
+                        var material = Assets.GetMaterial("Materials/Material.material");
+
                         File.WriteAllText(AnimClipPath, EditorJsonUtils.Serialize(animIR));
                         File.WriteAllText(AnimControllerPath, EditorJsonUtils.Serialize(animControlerIR));
                         File.WriteAllText(MaterialPath, EditorJsonUtils.Serialize(materialIR));
 
 
-                        var material = new Material(Guid.Empty, "asd");
-                        var props = EditorJsonUtils.Deserialize<List<SerializedPropertyData>>(File.ReadAllText(MaterialPath));
-                        Deserializer.Deserialize( material, props);
 
                     }
 
@@ -99,6 +97,8 @@ namespace Editor
                 Deserializer.Deserialize(anim, ir);
                 var anim2 = Deserializer.Deserialize<AnimationClip>(ir);
 
+                var material = Assets.GetMaterial("Materials/Material.material");
+                Selector.Selected = material;
             }
 
 

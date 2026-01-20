@@ -352,6 +352,7 @@ namespace Engine.Serialization
                 case SerializedType.RenderTextureAsset:
                 case SerializedType.AudioClipAsset:
                 case SerializedType.MaterialAsset:
+                case SerializedType.ShaderAsset:
                 case SerializedType.AnimationAsset:
                 case SerializedType.AnimatorControllerAsset:
                 case SerializedType.ScriptableObject:

@@ -38,7 +38,10 @@ namespace Engine
         {
             return Get<Shader>(path);
         }
-
+        public static Material GetMaterial(string path)
+        {
+            return Get<Material>(path);
+        }
         internal static AssetResourceBase GetAssetFromGuid(Guid guid)
         {
             return IOLayer.GetDatabase().GetAsset<AssetResourceBase>(guid);

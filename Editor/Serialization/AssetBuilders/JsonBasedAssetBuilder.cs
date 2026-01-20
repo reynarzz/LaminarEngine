@@ -6,6 +6,7 @@ using SharedTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,8 +21,8 @@ namespace Editor
             int bytesRead = reader.BaseStream.Read(data, 0, (int)length);
             string text = Encoding.UTF8.GetString(data, 0, bytesRead);
 
-            var assetInstance = Activator.CreateInstance(typeof(T), info.Path, guid);
-
+            var assetInstance = Activator.CreateInstance(typeof(T), BindingFlags.Instance | BindingFlags.NonPublic,
+                                                         null, [info.Path, guid], null);
             var ir = EditorJsonUtils.Deserialize<List<SerializedPropertyData>>(text);
 
             Deserializer.Deserialize(assetInstance, ir);

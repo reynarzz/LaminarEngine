@@ -16,7 +16,7 @@ namespace Engine
         internal List<RenderPass> Passes => _passes;
         [SerializedField] private Dictionary<string, Texture> _textures;
         internal Dictionary<string, Texture> Textures => _textures;
-        [SerializedField] public Shader Shader { get; private set; }
+        [SerializedField] public Shader Shader { get;  set; }
 
         private const string _defaultTypeName = "Material";
 
@@ -28,9 +28,8 @@ namespace Engine
         {
         }
 
-        internal Material(Guid guid, string name) : base(name, guid)
-        {
-        }
+        //Serializer
+        internal Material(string name, Guid guid) : base(name, guid) { }
         public Material(Guid guid, string name, Shader shader) : base(name, guid)
         {
             Shader = shader;
@@ -67,7 +66,7 @@ namespace Engine
 
         public void AddTexture(string name, Texture texture)
         {
-            if(_textures.Count < GfxDeviceManager.Current.GetDeviceInfo().MaxHardwareTextureUnits)
+            if (_textures.Count < GfxDeviceManager.Current.GetDeviceInfo().MaxHardwareTextureUnits)
             {
                 _textures[name] = texture;
             }
@@ -80,9 +79,9 @@ namespace Engine
             _passes[0].SetProperty(name, value);
         }
 
-        public void SetProperty<T>(int pass, string name, T value) where T: unmanaged
+        public void SetProperty<T>(int pass, string name, T value) where T : unmanaged
         {
-            if(GetPassSafe(pass, out var passObj))
+            if (GetPassSafe(pass, out var passObj))
             {
                 passObj.SetProperty(name, value);
             }

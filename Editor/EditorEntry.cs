@@ -51,9 +51,9 @@ namespace Editor
 
             _win = new WindowStandalone("GFS Editor", 1324, 740, Color.Black, new TextureDescriptor()
             {
-                Width = EditorIcon.Width,
-                Height = EditorIcon.Height,
-                Buffer = EditorIcon.Icon
+                Width = EditorDefaultIcon.Width,
+                Height = EditorDefaultIcon.Height,
+                Buffer = EditorDefaultIcon.Icon
             });
 
             _win.CanResize = true;

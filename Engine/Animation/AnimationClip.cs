@@ -51,7 +51,7 @@ namespace Engine
         {
         }
 
-        public AnimationClip(string path, Guid guid) : base(path, guid)
+        internal AnimationClip(string path, Guid guid) : base(path, guid)
         {
             
         }

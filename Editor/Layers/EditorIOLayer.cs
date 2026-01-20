@@ -29,9 +29,9 @@ namespace Editor
                 { AssetType.Font, new FontAssetBuilder() },
                 { AssetType.AnimationClip, new AnimationClipAssetBuilderEditor() },
                 { AssetType.AnimationController, new AnimationControllerAssetBuilderEditor() },
+                { AssetType.Material, new MaterialAssetBuilderEditor() },
             });
         }
-
 
         private void InitializePaths()
         {

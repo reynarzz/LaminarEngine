@@ -42,6 +42,7 @@ namespace GameCooker
                 { ".frag", AssetType.Shader },
 
                 { ".shader", AssetType.ShaderV2 },
+                { ".material", AssetType.Material },
 
                 // Font
                 { ".ttf", AssetType.Font },
@@ -81,6 +82,7 @@ namespace GameCooker
                 { AssetType.Font, new RawBytesAssetProcessor() },
                 { AssetType.AnimationClip, new AnimClipAssetProcessorDevMode() },
                 { AssetType.AnimationController, new AnimControllerClipAssetProcessorDevMode() },
+                { AssetType.Material, new MaterialAssetProcessorDevMode() },
             };
 
             var releaseModeAssetsProcessors = new Dictionary<AssetType, IAssetProcessor>()
@@ -93,6 +95,7 @@ namespace GameCooker
                 { AssetType.Font, new RawBytesAssetProcessor() },
                 { AssetType.AnimationClip, new RawBytesAssetProcessor() }, // TODO: binary serialization
                 { AssetType.AnimationController, new RawBytesAssetProcessor() }, // TODO: binary serialization
+                { AssetType.Material, new RawBytesAssetProcessor() }, // TODO: binary serialization
             };
 
             _assetCookers = new Dictionary<CookingType, AssetsCookerBase>()

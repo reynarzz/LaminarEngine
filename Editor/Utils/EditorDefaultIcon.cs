@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Editor
 {
     // Note: embedded default icon
-    internal class EditorIcon
+    internal class EditorDefaultIcon
     {
         internal const int Width = 64;
         internal const int Height = 64;

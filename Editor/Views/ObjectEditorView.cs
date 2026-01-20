@@ -25,7 +25,9 @@ namespace Editor
         {
             _drawers = new()
             {
-                { typeof(Actor), new ActorInspectorDrawer() }
+                { typeof(Actor), new ActorInspectorDrawer() },
+                { typeof(Material), new MaterialInspectorDrawer() },
+
             };
         }
 
@@ -46,16 +48,8 @@ namespace Editor
                 {
                     if (_drawers.TryGetValue(typeof(Actor), out var drawer))
                     {
-                        if (_prevSelected != Selector.Selected)
-                        {
-                            if (_prevSelected != null)
-                            {
-                                _prevSelected.OnClose();
-                            }
-                            _prevSelected = drawer;
-                            drawer.OnOpen();
-                        }
-                        drawer.OnDraw();
+                        InitDrawer(drawer);
+                        drawer.OnDraw(transform?.Actor);
                     }
                     else
                     {
@@ -63,9 +57,10 @@ namespace Editor
                         Clear();
                     }
                 }
-                else
+                else if (_drawers.TryGetValue(Selector.Selected.GetType(), out var drawer))
                 {
-                    Clear();
+                    InitDrawer(drawer);
+                    drawer.OnDraw(Selector.Selected);
                 }
             }
             else
@@ -74,6 +69,19 @@ namespace Editor
             }
 
             ImGui.End();
+        }
+
+        private void InitDrawer(IDrawerEditor drawer)
+        {
+            if (_prevSelected != Selector.Selected)
+            {
+                if (_prevSelected != null)
+                {
+                    _prevSelected.OnClose();
+                }
+                _prevSelected = drawer;
+                drawer.OnOpen();
+            }
         }
 
         private void Clear()
