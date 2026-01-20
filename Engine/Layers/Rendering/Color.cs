@@ -142,8 +142,15 @@ namespace Engine
         {
             return new Vector4(R, G, B, A);
         }
+        
+        internal static Color FromRGBHex(int rgbHex)
+        {
+            int r = (rgbHex >> 16) & 0xFF;
+            int g = (rgbHex >> 8) & 0xFF;
+            int b = rgbHex & 0xFF;
+            return new Color(r / 255.0f, g / 255.0f, b / 255.0f, 1.0f);
+        }
     }
-
     public struct Color32
     {
         public byte R;

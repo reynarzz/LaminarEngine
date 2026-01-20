@@ -9,7 +9,7 @@ namespace Engine.Graphics
 {
     public struct UniformValue
     {
-        internal string Name { get; private set; }
+        public string Name { get; private set; }
         public int IntValue { get; private set; }
         public uint UIntValue { get; private set; }
         public float FloatValue { get; private set; }
@@ -18,7 +18,7 @@ namespace Engine.Graphics
         public vec3 Vec3Value { get; private set; }
         public vec4 Vec4Value { get; private set; }
         public int[] IntArrValue { get; private set; }
-        internal UniformType Type { get; private set; }
+        public UniformType Type { get; private set; }
         public RenderTexture RenderTextureValue { get; private set; }
 
         public void SetInt(string name, int value)

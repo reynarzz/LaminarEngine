@@ -12,7 +12,6 @@ namespace Engine.Serialization
     internal class GFSDataProperty : JsonConverter
     {
         private const string _typeTag = "$type";
-        private const string _typeMinimalTag = "$type_minimal";
         private const string _valueTag = "$value";
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
@@ -28,7 +27,6 @@ namespace Engine.Serialization
             var wrapper = new JObject()
             {
                 [_typeTag] = ReflectionUtils.GetFullTypeName(type),
-               // [_typeMinimalTag] = ReflectionUtils.GetTypeMinimalName(type),
                 [_valueTag] = JToken.FromObject(value, serializer)
             };
 
@@ -53,24 +51,18 @@ namespace Engine.Serialization
                 return wrapper.ToObject(objectType, serializer);
             }
 
-            //if (!wrapper.TryGetValue(_typeMinimalTag, out var typeMinimalToken))
-            //{
-            //    return wrapper.ToObject(objectType, serializer);
-            //}
-
-            
             string typeName = typeToken.ToString();
-            string typeMinimalName = "";// typeMinimalToken?.ToString() ?? string.Empty;
 
-            if (ReflectionUtils.ResolveType(typeName, typeMinimalName, out var type))
+            if (ReflectionUtils.ResolveType(typeName, out var type))
             {
                 //return new SerializedPropertyData()
                 //{
                 //    TypeName = type.FullName,
                 //    Value = wrapper[_valueTag].ToObject(type, serializer)
                 //};
-
-                return wrapper[_valueTag].ToObject(type, serializer);
+                var val = wrapper[_valueTag];
+                var obj = val.ToObject(type, serializer);
+                return obj;
 
             }
 

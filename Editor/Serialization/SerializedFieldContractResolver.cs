@@ -18,6 +18,20 @@ namespace Editor
             foreach (var p in props)
             {
                 existingNames.Add(p.PropertyName);
+                if (!p.Writable)
+                {
+                    var pi = type.GetProperty(
+                        p.UnderlyingName,
+                        BindingFlags.Instance |
+                        BindingFlags.Public |
+                        BindingFlags.NonPublic
+                    );
+
+                    if (pi?.GetSetMethod(true) != null)
+                    {
+                        p.Writable = true;
+                    }
+                }
             }
 
             foreach (var member in ReflectionUtils.GetAllMembersWithAttribute<SerializedFieldAttribute>(type))

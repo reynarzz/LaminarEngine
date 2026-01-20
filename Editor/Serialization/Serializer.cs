@@ -68,6 +68,10 @@ namespace Editor.Serialization
                     {
                         return SerializedType.AnimationAsset;
                     }
+                    else if (type.IsAssignableTo(typeof(Shader)))
+                    {
+                        return SerializedType.ShaderAsset;
+                    }
                     else if (type.IsAssignableTo(typeof(Material)))
                     {
                         return SerializedType.MaterialAsset;

@@ -63,7 +63,7 @@ namespace Game
             material.Name = "Portal Material";
             material.AddTexture("uStarsTex", Assets.GetTexture("stars.png"));
             material.AddTexture("uFrameTex", GameTextures.GetSprite("portal_frame").Texture);
-
+             
             var pass = material.GetPass(0);
             pass.IsScreenGrabPass = true;
             material.SetProperty("uDistortionAmount", 0.009f);

@@ -768,7 +768,7 @@ namespace IMGUIZMO_NAMESPACE
         OPERATION mOperation = OPERATION(-1);
 
         bool mAllowAxisFlip = true;
-        float mGizmoSizeClipSpace = 0.1f;
+        float mGizmoSizeClipSpace = 0.3f; // 0.1f
 
         inline ImGuiID GetCurrentID()
         {
@@ -1104,7 +1104,7 @@ namespace IMGUIZMO_NAMESPACE
         }
     }
 
-    static void ComputeContext(const float* view, const float* projection, float* matrix, MODE mode)
+    static void ComputeContext(const float* view, const float* projection, float* matrix, MODE mode, OPERATION operation)
     {
         gContext.mMode = mode;
         gContext.mViewMat = *(matrix_t*)view;
@@ -1154,12 +1154,17 @@ namespace IMGUIZMO_NAMESPACE
         float rightLength = GetSegmentLengthClipSpace(makeVect(0.f, 0.f), rightViewInverse);
 
         
-        // ORIGINAL:
-        // gContext.mScreenFactor = gContext.mGizmoSizeClipSpace / rightLength;
+       /* if (operation == ImGuizmo::OPERATION::ROTATE) 
+        {
+            gContext.mScreenFactor = gContext.mGizmoSizeClipSpace / rightLength;
+        }
+        else */
+        {
+            // Reynarz
+            ComputePixelGuizmo();
+        }
 
-        // Reynarz
-        ComputePixelGuizmo();
-
+        
         ImVec2 centerSSpace = worldToPos(makeVect(0.f, 0.f), gContext.mMVP);
         gContext.mScreenSquareCenter = centerSSpace;
         gContext.mScreenSquareMin = ImVec2(centerSSpace.x - 10.f, centerSSpace.y - 10.f);
@@ -1312,6 +1317,7 @@ namespace IMGUIZMO_NAMESPACE
         return angle;
     }
 
+    
     static void DrawRotationGizmo(OPERATION op, int type)
     {
         if (!Intersects(op, ROTATE))
@@ -2730,7 +2736,7 @@ namespace IMGUIZMO_NAMESPACE
         gContext.mDrawList->PushClipRect(ImVec2(gContext.mX, gContext.mY), ImVec2(gContext.mX + gContext.mWidth, gContext.mY + gContext.mHeight), false);
 
         // Scale is always local or matrix will be skewed when applying world scale or oriented matrix
-        ComputeContext(view, projection, matrix, (operation & SCALE) ? LOCAL : mode);
+        ComputeContext(view, projection, matrix, (operation & SCALE) ? LOCAL : mode, operation);
 
         // set delta to identity
         if (deltaMatrix)
@@ -2994,7 +3000,7 @@ namespace IMGUIZMO_NAMESPACE
     void ViewManipulate(float* view, const float* projection, OPERATION operation, MODE mode, float* matrix, float length, ImVec2 position, ImVec2 size, ImU32 backgroundColor)
     {
         // Scale is always local or matrix will be skewed when applying world scale or oriented matrix
-        ComputeContext(view, projection, matrix, (operation & SCALE) ? LOCAL : mode);
+        ComputeContext(view, projection, matrix, (operation & SCALE) ? LOCAL : mode, operation);
         ViewManipulate(view, length, position, size, backgroundColor);
     }
 
@@ -3500,7 +3506,7 @@ namespace IMGUIZMO_NAMESPACE
         gContext.mbUsingViewManipulate = (interpolationFrames != 0) || isDraging;
 
         ComputeContext(svgView.m16, svgProjection.m16,
-            gContext.mModelSource.m16, gContext.mMode);
+            gContext.mModelSource.m16, gContext.mMode, ImGuizmo::OPERATION::UNIVERSAL);
     }
 
 };

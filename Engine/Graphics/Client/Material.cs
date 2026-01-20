@@ -12,11 +12,11 @@ namespace Engine
 {
     public class Material : AssetResourceBase
     {
-        private readonly List<RenderPass> _passes;
+        [SerializedField] private List<RenderPass> _passes;
         internal List<RenderPass> Passes => _passes;
-        private readonly OrderedDictionary<string, Texture> _textures;
-        internal OrderedDictionary<string, Texture> Textures => _textures;
-        public Shader Shader { get; }
+        [SerializedField] private Dictionary<string, Texture> _textures;
+        internal Dictionary<string, Texture> Textures => _textures;
+        [SerializedField] public Shader Shader { get; private set; }
 
         private const string _defaultTypeName = "Material";
 
@@ -28,6 +28,9 @@ namespace Engine
         {
         }
 
+        internal Material(Guid guid, string name) : base(name, guid)
+        {
+        }
         public Material(Guid guid, string name, Shader shader) : base(name, guid)
         {
             Shader = shader;
@@ -62,16 +65,14 @@ namespace Engine
             _passes.RemoveAt(index);
         }
 
-        public int AddTexture(string name, Texture texture)
+        public void AddTexture(string name, Texture texture)
         {
             if(_textures.Count < GfxDeviceManager.Current.GetDeviceInfo().MaxHardwareTextureUnits)
             {
                 _textures[name] = texture;
-
-                return _textures.IndexOf(name);
             }
 
-            return -1; 
+            Debug.Error("Max textures per slot was reached");
         }
 
         public void SetProperty<T>(string name, T value) where T : unmanaged

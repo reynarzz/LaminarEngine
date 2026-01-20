@@ -17,6 +17,7 @@ namespace Editor
         private string TestfilePath => $"{EditorPaths.AppRoot}Scene.bin";
         private string AnimClipPath => $"{EditorPaths.AppRoot}AnimClip.bin";
         private string AnimControllerPath => $"{EditorPaths.AppRoot}AnimController.bin";
+        private string MaterialPath => $"{EditorPaths.AppRoot}Material.bin";
 
         private PlaymodeController _playmodeController; // Remove from here
         private static HotReloadLayer _hotReload;
@@ -67,9 +68,19 @@ namespace Editor
                         var animator = obj.GetComponent<Animator>();
                         var animIR = Serializer.Serialize(animator.CurrentState.Clip);
                         var animControlerIR = Serializer.Serialize(animator.Controller);
+                        var renderer = Actor.Find("Portal").Transform.Children[1].GetComponent<SpriteRenderer>();
+                        var materialIR = Serializer.Serialize(renderer.Material);
 
+                        
                         File.WriteAllText(AnimClipPath, EditorJsonUtils.Serialize(animIR));
                         File.WriteAllText(AnimControllerPath, EditorJsonUtils.Serialize(animControlerIR));
+                        File.WriteAllText(MaterialPath, EditorJsonUtils.Serialize(materialIR));
+
+
+                        var material = new Material(Guid.Empty, "asd");
+                        var props = EditorJsonUtils.Deserialize<List<SerializedPropertyData>>(File.ReadAllText(MaterialPath));
+                        Deserializer.Deserialize( material, props);
+
                     }
 
                     File.WriteAllText(TestfilePath, EditorJsonUtils.Serialize(_actors));

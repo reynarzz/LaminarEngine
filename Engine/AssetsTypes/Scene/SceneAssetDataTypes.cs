@@ -85,6 +85,7 @@ namespace Engine
         TextureAsset,
         RenderTextureAsset,
         AudioClipAsset,
+        ShaderAsset,
         MaterialAsset,
         AnimationAsset,
         AnimatorControllerAsset,
@@ -96,6 +97,6 @@ namespace Engine
         Simple,
         SimpleClass,
         SimpleCollection,
-        ReferenceCollection
+        ReferenceCollection,
     }
 }

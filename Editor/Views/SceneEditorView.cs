@@ -60,15 +60,15 @@ namespace Editor
         {
             if (ImGui.IsMouseHoveringRect(ImGui.GetWindowPos(), ImGui.GetWindowSize()) && ImGui.IsAnyMouseDown())
             {
-                // TODO:
+                // TODO: 
                 // ImGui.FocusWindow(ImGui.GetCurrentWindow());
             }
         }
-         
-        private void RenderGuizmo()
+             
+        private void RenderGuizmo() 
         {
             ImGuizmo.Enable(true);
-            
+              
             var offset = ImGui.GetFrameHeight();// + ImGui.GetStyle().FrameBorderSize;
 
             var windowAdjustSize = new vec2(WindowSize.X, WindowSize.Y - offset);
@@ -103,14 +103,14 @@ namespace Editor
             if (Selector.SelectedTransform())
             {
                 var selectedTransform = Selector.SelectedTransform();
-
+                 
                 mat4 model = selectedTransform.GetRenderingWorldMatrix();
                 mat4 delta = default;
                 OPERATION operation = OPERATION.TRANSLATE;
                 MODE mode = MODE.LOCAL;
 
 
-                
+                  
 
                 // This prevents the guizmo from disappearing when any scale scale component is zero.
                 const float minValue = 0.01f;

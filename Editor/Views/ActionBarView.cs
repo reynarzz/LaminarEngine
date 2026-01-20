@@ -53,9 +53,9 @@ namespace Editor.Views
 
             if (Application.IsInPlayMode)
             {
-                ImGui.PushStyleColor(ImGuiCol.Button, EditorColors.MainColor.ToARGB_U32());
-                ImGui.PushStyleColor(ImGuiCol.ButtonActive, EditorColors.MainColor.ToARGB_U32());
-                ImGui.PushStyleColor(ImGuiCol.ButtonHovered, EditorColors.MainColor.ToARGB_U32());
+                ImGui.PushStyleColor(ImGuiCol.Button, EditorColors.MainColor.ToVector4());
+                ImGui.PushStyleColor(ImGuiCol.ButtonActive, EditorColors.MainColor.ToVector4());
+                ImGui.PushStyleColor(ImGuiCol.ButtonHovered, EditorColors.MainColor.ToVector4());
             }
 
             if (ImGui.ImageButton("##Play", playIcon, _buttonSize))
