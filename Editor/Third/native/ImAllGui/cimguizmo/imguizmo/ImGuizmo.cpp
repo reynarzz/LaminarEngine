@@ -1063,6 +1063,46 @@ namespace IMGUIZMO_NAMESPACE
             gContext.mbUsingBounds = false;
         }
     }
+    float get_length(ImVec2 p0, ImVec2 p1)
+    {
+        float dx = p0.x - p1.x;
+        float dy = p0.y - p1.y;
+
+        return sqrt(dx * dx + dy * dy);
+    }
+
+    static float _gizmoPixelSize = 80.0f;
+
+    void SetGizmoPixelSize(float size) 
+    {
+        _gizmoPixelSize = size;
+    }
+
+    static void ComputePixelGuizmo()
+    {
+        vec_t origin = gContext.mModel.v.position;
+
+        // One unit in camera-right direction
+        vec_t right = gContext.mCameraRight;
+        right.Normalize();
+
+        vec_t p0w = origin;
+        vec_t p1w = origin + right;
+
+        ImVec2 p0 = worldToPos(p0w, gContext.mViewProjection);
+        ImVec2 p1 = worldToPos(p1w, gContext.mViewProjection);
+
+        float pixelLength = get_length(p1, p0);
+
+        if (pixelLength > FLT_EPSILON) 
+        {
+            gContext.mScreenFactor = _gizmoPixelSize / pixelLength;
+        }
+        else
+        {
+            gContext.mScreenFactor = 1.0f;
+        }
+    }
 
     static void ComputeContext(const float* view, const float* projection, float* matrix, MODE mode)
     {
@@ -1112,7 +1152,13 @@ namespace IMGUIZMO_NAMESPACE
         vec_t rightViewInverse = viewInverse.v.right;
         rightViewInverse.TransformVector(gContext.mModelInverse);
         float rightLength = GetSegmentLengthClipSpace(makeVect(0.f, 0.f), rightViewInverse);
-        gContext.mScreenFactor = gContext.mGizmoSizeClipSpace / rightLength;
+
+        
+        // ORIGINAL:
+        // gContext.mScreenFactor = gContext.mGizmoSizeClipSpace / rightLength;
+
+        // Reynarz
+        ComputePixelGuizmo();
 
         ImVec2 centerSSpace = worldToPos(makeVect(0.f, 0.f), gContext.mMVP);
         gContext.mScreenSquareCenter = centerSSpace;
@@ -1121,6 +1167,7 @@ namespace IMGUIZMO_NAMESPACE
 
         ComputeCameraRay(gContext.mRayOrigin, gContext.mRayVector);
     }
+  
 
     static void ComputeColors(ImU32* colors, int type, OPERATION operation)
     {

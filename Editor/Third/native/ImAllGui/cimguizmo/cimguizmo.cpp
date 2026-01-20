@@ -173,5 +173,11 @@ CIMGUI_API Style* ImGuizmo_GetStyle()
     return &ImGuizmo::GetStyle();
 }
 
+// Custom:
+
+CIMGUI_API void SetGizmoPixelSize(float size) 
+{
+    ImGuizmo::SetGizmoPixelSize(size);
+}
 
 

@@ -33,6 +33,8 @@ namespace Editor
             RenderingLayer.OnRenderingEnd += OnRenderingEnd;
             _mousePickerRenderer = new MousePickerSceneRenderer();
             _mousePickerRenderer.RenderTextureIndex = 1;
+
+            ImGuizmo.SetGizmosPixelSize(60);
         }
 
         private void OnRenderingEnd()
@@ -62,10 +64,11 @@ namespace Editor
                 // ImGui.FocusWindow(ImGui.GetCurrentWindow());
             }
         }
-
+         
         private void RenderGuizmo()
         {
             ImGuizmo.Enable(true);
+            
             var offset = ImGui.GetFrameHeight();// + ImGui.GetStyle().FrameBorderSize;
 
             var windowAdjustSize = new vec2(WindowSize.X, WindowSize.Y - offset);

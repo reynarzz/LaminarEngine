@@ -304,4 +304,8 @@ namespace IMGUIZMO_NAMESPACE
    };
 
    IMGUI_API Style& GetStyle();
+
+   // Custom:
+   IMGUI_API void SetGizmoPixelSize(float size);
+
 }

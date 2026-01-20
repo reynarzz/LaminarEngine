@@ -243,5 +243,11 @@ namespace ImGuizmoNET
                 ImGuizmoNative.ImGuizmo_ViewManipulate_Float(native_view, length, position, size, backgroundColor);
             }
         }
+
+        // Custom
+        public static void SetGizmosPixelSize(float size)
+        {
+            ImGuizmoNative.SetGizmoPixelSize(size);
+        }
     }
 }

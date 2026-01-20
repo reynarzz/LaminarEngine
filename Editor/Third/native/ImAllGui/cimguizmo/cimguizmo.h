@@ -122,6 +122,9 @@ CIMGUI_API void Style_destroy(Style* self);
 CIMGUI_API Style* ImGuizmo_GetStyle(void);
 
 
+// Custom
+CIMGUI_API void SetGizmoPixelSize(float size);
+
 
 #endif //CIMGUIZMO_INCLUDED
 

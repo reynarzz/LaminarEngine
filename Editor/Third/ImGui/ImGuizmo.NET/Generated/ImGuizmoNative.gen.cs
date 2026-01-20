@@ -43,5 +43,9 @@ namespace ImGuizmoNET
         public static extern void ImGuizmo_SetRect(float x, float y, float width, float height);
         [DllImport("ImAllGui", CallingConvention = CallingConvention.Cdecl)]
         public static extern void ImGuizmo_ViewManipulate_Float(float* view, float length, Vector2 position, Vector2 size, uint backgroundColor);
+         
+        // Custom:
+        [DllImport("ImAllGui", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void SetGizmoPixelSize(float size);
     }
 }
