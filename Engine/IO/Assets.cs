@@ -26,6 +26,14 @@ namespace Engine
             return Get<TextAsset>(path);
         }
 
+        /// <summary>
+        /// Get the SpriteAtlas linked to a Texture2D.
+        /// </summary>
+        public static SpriteAtlas GetSpriteAtlas(string path)
+        {
+            return Get<SpriteAtlas>(path);
+        }
+
         public static Shader GetShader(string path)
         {
             return Get<Shader>(path);

@@ -26,6 +26,18 @@ namespace Editor
     //   collections do not search for all delegates(privates/public), but classes do.
     // -If I load the runtime mode, and the applicationLayer is enabled, the camera renders black.
 
+    // Assets:
+    // Serialize materials.
+    // load spriteAtlas from texture 2d metadata.
+
+    // Save Editor config:
+    // Current loaded scene name.
+    // Layers.
+    // Camera position.
+    // Project settings: project name, icon, physics, audio etc..
+    // Project build settings: 
+
+
     internal class EditorEntry
     {
         private WindowStandalone _win;
