@@ -13,22 +13,18 @@ using System.Reflection;
 
 namespace Editor
 {
-    public class ActorInspectorDrawer : IDrawerEditor<Actor>
+    internal class ActorInspectorDrawer : EditorDrawerBase<Actor>
     {
         private static readonly List<Type> _componentTypes = new();
 
         private readonly static Type[] _visibilityAttributes = [typeof(SerializedFieldAttribute), typeof(ShowFieldNoSerialize)];
-        public bool AutoDrawTitle => false;
+        protected override bool AutoDrawTitle => false;
 
         public ActorInspectorDrawer()
         {
         }
 
-        public void OnOpen()
-        {
-        }
-
-        public void OnDraw(Actor actor)
+        protected override void OnDraw(Actor actor)
         {
             DrawActor(actor);
 

@@ -98,7 +98,7 @@ namespace Editor
                 var anim2 = Deserializer.Deserialize<AnimationClip>(ir);
 
                 var material = Assets.GetMaterial("Materials/Material.material");
-                Selector.Selected = material;
+                Selector.Selected = material;//.Textures.FirstOrDefault().Value;
             }
 
 

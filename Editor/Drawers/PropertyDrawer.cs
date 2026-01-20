@@ -57,6 +57,12 @@ namespace Editor
 
             return result;
         }
+
+        public static bool DrawVars(string objectId, object target, MemberInfo prop, bool enforceSerializedFieldAttribute = true)
+        {
+            return DrawVars(objectId, target, prop, 0, 0, 0, enforceSerializedFieldAttribute);
+        }
+
         public static bool DrawVars(string objectId, object target, MemberInfo prop, float cursorX, int index, float width,
                                      bool enforceSerializedFieldAttribute, SetMemberValueSafeCallBack setMemberCallBack = null)
         {

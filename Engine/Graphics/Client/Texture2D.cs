@@ -11,6 +11,8 @@ namespace Engine
     {
         public TextureAtlasData Atlas { get; } = new();
         private int _pixelsPerUnit;
+
+        [SerializedField]
         public int PixelPerUnit
         {
             get
@@ -18,11 +20,14 @@ namespace Engine
                 _pixelsPerUnit = Math.Clamp(_pixelsPerUnit, 1, int.MaxValue);
                 return _pixelsPerUnit;
             }
+            private set
+            {
+                _pixelsPerUnit = value;
+            }
         }
 
         public static Texture2D White { get; } = Get1PixelTexture("WhiteTexture_Internal", [0xFF, 0xFF, 0xFF, 0xFF]);
         public static Texture2D Black { get; } = Get1PixelTexture("BlackTexture_Internal", [0x00, 0x00, 0x00, 0xFF]);
-
         
         public Texture2D(string path, Guid guid, TextureMode mode, TextureFilter filter, int width, int height, int channels, int pixelsPerUnit, byte[] data) :
                 base(path, guid, mode, filter, width, height, channels, data)

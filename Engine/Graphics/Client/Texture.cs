@@ -11,8 +11,8 @@ namespace Engine
     {
         public int Width { get; protected set; }
         public int Height { get; protected set; }
-        public TextureMode Mode { get; protected set; }
-        public TextureFilter Filter { get; protected set; }
+        [SerializedField] public TextureMode Mode { get; protected set; }
+        [SerializedField] public TextureFilter Filter { get; protected set; }
         public int Channels { get; }
         internal protected byte[] Data { get; internal set; }
 

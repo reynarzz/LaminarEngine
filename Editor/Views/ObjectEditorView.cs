@@ -15,8 +15,8 @@ namespace Editor
 {
     internal class ObjectEditorView : IEditorWindow
     {
-        private readonly Dictionary<Type, IDrawerEditor> _drawers;
-        private IDrawerEditor _prevSelected;
+        private readonly Dictionary<Type, EditorDrawerBase> _drawers;
+        private EditorDrawerBase _prevSelected;
         private const string NothingSelectedLabel = "Nothing is selected.";
         private bool _isTextSizeCalculated;
         private Vector2 _textSize;
@@ -27,6 +27,7 @@ namespace Editor
             {
                 { typeof(Actor), new ActorInspectorDrawer() },
                 { typeof(Material), new MaterialInspectorDrawer() },
+                { typeof(Texture2D), new TextureInspectorDrawer() },
 
             };
         }
@@ -71,9 +72,9 @@ namespace Editor
             ImGui.End();
         }
 
-        private void InitDrawer(IDrawerEditor drawer)
+        private void InitDrawer(EditorDrawerBase drawer)
         {
-            if (_prevSelected != Selector.Selected)
+            if (_prevSelected != drawer)
             {
                 if (_prevSelected != null)
                 {
