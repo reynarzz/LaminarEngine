@@ -19,7 +19,7 @@ namespace Editor.Layers
         private readonly List<(LayerBase layer, int priorityIndex)> _playmodeLayers;
         private static PlaymodeController _instanceTest;
         public static PlaymodeController Instance => _instanceTest; // Remove, refactor
-
+        public static bool IsPaused { get; private set; }
         public PlaymodeController(LayersManager manager, TimeLayer time, HotReloadLayer hotReload)
         {
             _instanceTest = this;
@@ -57,6 +57,8 @@ namespace Editor.Layers
         {
             if (Application.IsInPlayMode)
             {
+                _time.Initialize();
+
                 foreach (var layerData in _playmodeLayers)
                 {
                     _manager.PopLayer(layerData.priorityIndex);

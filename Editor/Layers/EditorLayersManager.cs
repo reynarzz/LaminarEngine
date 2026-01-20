@@ -13,7 +13,6 @@ namespace Editor
     internal class EditorLayersManager : LayersManager
     {
         private static TimeLayer _time = new();
-        private SceneLayer _editorSceneLayer;
         private List<ActorDataSceneAsset> _actors;
         private string TestfilePath => $"{EditorPaths.AppRoot}Scene.bin";
         private string AnimClipPath => $"{EditorPaths.AppRoot}AnimClip.bin";
@@ -34,7 +33,6 @@ namespace Editor
                   new EditorIOLayer(),
                   _hotReload = new HotReloadLayer()])                     
         {
-            _editorSceneLayer = new SceneLayer();
             _playmodeController = new PlaymodeController(this, _time, _hotReload);
 
         }
@@ -104,10 +102,6 @@ namespace Editor
                 LoadScene();
             }
 
-            if (Input.GetKeyDown(KeyCode.O))
-            {
-                LoadScene();
-            }
             base.Update();
         }
 

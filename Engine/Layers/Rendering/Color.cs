@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -135,6 +136,11 @@ namespace Engine
         {
             var color = (Color32)this;
             return ((uint)color.A << 24) | ((uint)color.R << 16) | ((uint)color.G << 8) | color.B;
+        }
+
+        public Vector4 ToVector4()
+        {
+            return new Vector4(R, G, B, A);
         }
     }
 

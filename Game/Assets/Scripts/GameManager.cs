@@ -256,14 +256,14 @@ namespace Game
         {
 #if DEBUG
             // Debug.DrawBox(ForegroundTilemap.Bounds.Center, ForegroundTilemap.Bounds.Size, Color.Red);
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                Physics2D.DrawColliders = !Physics2D.DrawColliders;
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                Debug.DrawUILines = !Debug.DrawUILines;
-            }
+            //if (Input.GetKeyDown(KeyCode.Alpha1))
+            //{
+            //    Physics2D.DrawColliders = !Physics2D.DrawColliders;
+            //}
+            //if (Input.GetKeyDown(KeyCode.Alpha2))
+            //{
+            //    Debug.DrawUILines = !Debug.DrawUILines;
+            //} 
 
             if (Input.GetKeyDown(KeyCode.T))
             {

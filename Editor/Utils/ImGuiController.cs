@@ -1,4 +1,5 @@
-﻿using Engine;
+﻿using Editor.Utils;
+using Engine;
 using GLFW;
 using GlmNet;
 using ImGuiNET;
@@ -121,7 +122,7 @@ namespace Editor
         private static void Styles2()
         {
             var style = ImGui.GetStyle();
-            var green = new Vector4(0.133f, 0.545f, 0.133f, 1.0f);
+            var green = EditorColors.MainColor.ToVector4();
             style.Alpha = 1.0f;
             float rounding = 2.0f;
 

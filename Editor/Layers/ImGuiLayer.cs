@@ -102,7 +102,7 @@ namespace Editor.Layers
 
         private void Draw()
         {
-            ImguiImplOpenGL3.SetPerFrameImGuiData(Math.Min(Time.UnscaledDeltaTime, 0.0000001f), _win.PhysicalWidth, _win.PhysicalHeight);
+            ImguiImplOpenGL3.SetPerFrameImGuiData(Math.Max(Time.UnscaledDeltaTime, 0.0000001f), _win.PhysicalWidth, _win.PhysicalHeight);
 
             //ImGui.NewFrame();
             ImAllGui.imgui_NewFrame();
@@ -121,8 +121,8 @@ namespace Editor.Layers
         private void DockSpace()
         {
             ImGuiViewportPtr viewport = ImGui.GetMainViewport();
-            ImGui.SetNextWindowPos(viewport.Pos + new Vector2(0, 35));
-            ImGui.SetNextWindowSize(viewport.Size - new Vector2(0, 62));
+            ImGui.SetNextWindowPos(viewport.Pos + new Vector2(0, 40));
+            ImGui.SetNextWindowSize(viewport.Size - new Vector2(0, 67));
 
             var flags = ImGuiWindowFlags.NoTitleBar |
                                      ImGuiWindowFlags.NoCollapse |
