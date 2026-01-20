@@ -13,6 +13,10 @@ namespace Editor.Views
 {
     internal class ActionBarView : IEditorWindow
     {
+        private bool _shouldPlay = false;
+        private bool _shouldPause = false;
+        private bool _shouldStop = false;
+
         public void OnOpen()
         {
         }
@@ -39,17 +43,17 @@ namespace Editor.Views
             ImGui.BeginDisabled(GameAssemblyBuilder.IsBuilding && !Application.IsInPlayMode);
             if (ImGui.Button("Play"))
             {
-                PlaymodeController.Instance.PlayModeOn();
+                _shouldPlay = true;
             }
             ImGui.SameLine();
             if (ImGui.Button("Stop"))
             {
-                PlaymodeController.Instance.PlayModeOff();
+                _shouldStop = true;
             }
             ImGui.SameLine();
             if (ImGui.Button("Pause"))
             {
-
+                _shouldPause = true;
             }
             ImGui.EndDisabled();
             ImGui.End();
@@ -60,6 +64,25 @@ namespace Editor.Views
 
         public void OnUpdate()
         {
+            // Handles events in the correct update stack.
+            if (_shouldPlay)
+            {
+                _shouldPlay = false;
+                PlaymodeController.Instance.PlayModeOn();
+
+            }
+
+            if (_shouldStop)
+            {
+                _shouldStop = false;
+                PlaymodeController.Instance.PlayModeOff();
+
+            }
+
+            if (_shouldPause)
+            {
+                _shouldPause = false;
+            }
         }
 
         public void OnClose()

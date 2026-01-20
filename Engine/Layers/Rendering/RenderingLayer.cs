@@ -291,7 +291,6 @@ namespace Engine.Layers
         {
             ClearScreenToColor(Color.Black, null, OverlayOptions.Width, OverlayOptions.Height);
             GfxDeviceManager.Current.Draw(OnDrawOverlay, null);
-            GfxDeviceManager.Current.Present();
         }
 
         private void RenderPostProcessing(ref RenderTexture screenRenderTexture)
