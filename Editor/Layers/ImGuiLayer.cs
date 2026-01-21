@@ -94,7 +94,6 @@ namespace Editor.Layers
                 new ObjectEditorView(),
                 new AnimatorEditorView(),
                 new RenderingInfoView(),
-
                 // new ConsoleEditorView()
             };
         }

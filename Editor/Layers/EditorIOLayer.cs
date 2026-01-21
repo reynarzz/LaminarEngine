@@ -74,10 +74,15 @@ namespace Editor
         {
             if(type == EventType.WindowFocusEnter)
             {
-                ImportAssets();
-                _devDisk.Initialize();
-                Reload(_devDisk);
+                Refresh();
             }
+        }
+
+        internal void Refresh()
+        {
+            ImportAssets();
+            _devDisk.Initialize();
+            Reload(_devDisk);
         }
     }
 }

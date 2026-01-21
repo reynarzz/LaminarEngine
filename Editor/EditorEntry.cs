@@ -26,7 +26,7 @@ namespace Editor
     //   collections do not search for all delegates(privates/public), but classes do.
     // -If I load the runtime mode, and the applicationLayer is enabled, the camera renders black.
     // GameCooker, the asset database sometimes doesn't remove old assets correctly.
-
+    // Bug with mouse picker: cliking almost the top border of the scene window doesn't register a pick, and performance degrades.
     // Fix:
     // Copy native dependencies to bin directories.
 

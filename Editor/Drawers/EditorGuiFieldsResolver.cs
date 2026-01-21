@@ -124,7 +124,7 @@ namespace Editor.Utils
             {
                 T v = value;
                 nint ptr = (nint)(&v);
-                var result = ImGui.DragScalar($"##{name}", type, ptr) && (!pressEnterToConfirm || ImGui.IsKeyDown(ImGuiKey.Enter));
+                var result = ImGui.DragScalar($"##{name}", type, ptr, 0.2f) && (!pressEnterToConfirm || ImGui.IsKeyDown(ImGuiKey.Enter));
                 value = *(T*)ptr;
                 return result;
             }
@@ -200,6 +200,16 @@ namespace Editor.Utils
 
             return changed;
         }
+        public static bool DrawVec2Field(string name, ref ivec2 value)
+        {
+            return DrawIVec2Field(name, ref value, 0, false);
+        }
+        public static bool DrawIVec2Field(string name, ref ivec2 value, float itemWidth = 0, bool pressEnterToConfirm = false)
+        {
+            SetNextItemWidth(itemWidth);
+            return ImGui.DragInt2($"##{name}", ref value.x, 0.2f) && (!pressEnterToConfirm || ImGui.IsKeyDown(ImGuiKey.Enter));
+        }
+
         public static bool DrawVec3Field(string name, ref vec3 value)
         {
             return DrawVec3Field(name, ref value, 0, false);

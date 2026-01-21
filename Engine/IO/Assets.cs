@@ -62,15 +62,15 @@ namespace Engine
             return Get<AudioClip>(path);
         }
 
-        public static AssetResourceBase Get(string path) 
+        public static AssetResourceBase Get(string path)
         {
             return Get<AssetResourceBase>(path);
         }
-        public static T Get<T>(string path) where T: AssetResourceBase
+        public static T Get<T>(string path) where T : AssetResourceBase
         {
 #if DEBUG
             if (!string.IsNullOrEmpty(path) && !_loadedPaths.Contains(path))
-            _loadedPaths.Add(path);
+                _loadedPaths.Add(path);
 #endif
 
             return IOLayer.GetDatabase().GetAsset<T>(path);
@@ -81,6 +81,12 @@ namespace Engine
         public static string[] LoadedPaths()
         {
             return _loadedPaths.ToArray();
+        }
+
+        internal static void RefreshAssetDatabase()
+        {
+            // IOLayer.GetDatabase
+            Debug.Log("TODO: Refresh asset database.");
         }
 #endif
     }

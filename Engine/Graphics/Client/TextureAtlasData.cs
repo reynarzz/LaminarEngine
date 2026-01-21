@@ -43,7 +43,7 @@ namespace Engine
         }
     }
 
-    public struct AtlasChunk 
+    public struct AtlasChunk // Convert to class
     {
         public static AtlasChunk DefaultChunk = new AtlasChunk()
         {
@@ -56,6 +56,9 @@ namespace Engine
         public vec2 Pivot { get; set; }
 
         public QuadUV Uvs { get; set; }
+
+        public int XPixel { get; set; }
+        public int YPixel { get; set; }
 
         public int Width { get; set; }
         public int Height { get; set; }

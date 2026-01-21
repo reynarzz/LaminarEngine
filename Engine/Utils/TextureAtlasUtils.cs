@@ -35,28 +35,62 @@ namespace Engine.Utils
                 Height = height,
                 Uvs = texCoords,
                 Pivot = new vec2(pivotX, pivotY),
+                XPixel = xPixel,
+                YPixel = yPixel,
             };
         }
 
-        public static void SliceTiles(TextureAtlasData data, int width, int height, int baseTextureWidth, int baseTextureHeight)
+        //public static void SliceTiles(TextureAtlasData data, int width, int height, int baseTextureWidth, int baseTextureHeight)
+        //{
+        //    int tilesX = baseTextureWidth / width;
+        //    int tilesY = baseTextureHeight / height;
+
+        //    var length = tilesX * tilesY;
+        //    var atlasChunks = new AtlasChunk[length];
+
+        //    int index = 0;
+        //    for (int y = tilesY - 1; y >= 0; --y)
+        //    {
+        //        for (int x = 0; x < tilesX; ++x)
+        //        {
+        //            atlasChunks[index++] = CreateTileBounds(x * width, (y) * height, width, height, 0.5f, 0.5f, baseTextureWidth, baseTextureHeight);
+        //        }
+        //    }
+
+        //    data.SetChunks(atlasChunks);
+        //}
+
+        public static void SliceTiles(TextureAtlasData data, int tileWidth, int tileHeight, int textureWidth, int textureHeight)
         {
-            int tilesX = baseTextureWidth / width;
-            int tilesY = baseTextureHeight / height;
-
-            var length = tilesX * tilesY;
-            var atlasChunks = new AtlasChunk[length];
-
-            int index = 0;
-            for (int y = tilesY - 1; y >= 0; --y)
+            if (tileWidth <= 0 || tileHeight <= 0)
             {
-                for (int x = 0; x < tilesX; ++x)
+                Debug.Error("negative tile size is not supported");
+                return;
+            }
+
+            int tilesX = textureWidth / tileWidth;
+            int tilesY = textureHeight / tileHeight;
+
+            if (tilesX <= 0 || tilesY <= 0)
+                return;
+
+            var atlasChunks = new AtlasChunk[tilesX * tilesY];
+            int index = 0;
+
+            for (int y = 0; y < tilesY; y++)
+            {
+                int flippedY = (tilesY - 1 - y) * tileHeight;
+
+                for (int x = 0; x < tilesX; x++)
                 {
-                    atlasChunks[index++] = CreateTileBounds(x * width, (y) * height, width, height, 0.5f, 0.5f, baseTextureWidth, baseTextureHeight);
+                    atlasChunks[index++] = CreateTileBounds(x * tileWidth, flippedY, tileWidth, tileHeight,
+                                                            0.5f, 0.5f, textureWidth, textureHeight);
                 }
             }
 
             data.SetChunks(atlasChunks);
         }
+
 
         public static Sprite[] SliceSprites(Texture2D texture, int tileWidth, int tileHeight)
         {
