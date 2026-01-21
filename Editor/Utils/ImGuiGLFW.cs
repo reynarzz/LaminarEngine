@@ -109,7 +109,6 @@ namespace Editor
         public void UpdateMouseCursor()
         {
             var io = ImGui.GetIO();
-            Engine.Debug.Log(ImGui.GetMouseCursor());
 
             if (io.ConfigFlags.HasFlag(ImGuiConfigFlags.NoMouseCursorChange))
             {
