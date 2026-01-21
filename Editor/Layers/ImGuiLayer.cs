@@ -36,7 +36,6 @@ namespace Editor.Layers
             ImguiImplOpenGL3.Init(window);
 
             _glfwInput = new ImGuiGLFW(WindowStandalone.NativeWindow);
-            _glfwInput.Init();
 
             // TODO: move the surface creation to their own classes.
             _gameSurface = new RenderingSurface()
@@ -106,8 +105,9 @@ namespace Editor.Layers
 
             //ImGui.NewFrame();
             EditorNatives.imgui_NewFrame();
-            ImguiImplOpenGL3.NewFrame();
-            _glfwInput.NewFrame();
+			_glfwInput.NewFrame();
+
+			ImguiImplOpenGL3.NewFrame();
 
             // Render ImGui here:
 
@@ -115,8 +115,9 @@ namespace Editor.Layers
 
             ImGui.Render();
             ImguiImplOpenGL3.RenderDrawData(ImGui.GetDrawData());
+            _glfwInput.UpdateMouseCursor();
 
-        }
+		}
 
         private void DockSpace()
         {

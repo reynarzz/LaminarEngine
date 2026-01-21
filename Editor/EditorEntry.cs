@@ -27,6 +27,10 @@ namespace Editor
     // -If I load the runtime mode, and the applicationLayer is enabled, the camera renders black.
     // GameCooker, the asset database sometimes doesn't remove old assets correctly.
 
+    // Fix:
+    // Copy native dependencies to bin directories.
+
+
     // Assets:
     // Serialize materials.
     // load spriteAtlas from texture 2d metadata.
@@ -37,7 +41,6 @@ namespace Editor
     // Camera position.
     // Project settings: project name, icon, physics, audio etc..
     // Project build settings: 
-
 
     internal class EditorEntry
     {

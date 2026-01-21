@@ -56,10 +56,13 @@
 	<ItemGroup>
     <Compile Remove="Scene\**" />
     <Compile Remove="Third\Glfw\**" />
+    <Compile Remove="Third\Native\glfw\_bin\**" />
     <EmbeddedResource Remove="Scene\**" />
     <EmbeddedResource Remove="Third\Glfw\**" />
+    <EmbeddedResource Remove="Third\Native\glfw\_bin\**" />
     <None Remove="Scene\**" />
     <None Remove="Third\Glfw\**" />
+    <None Remove="Third\Native\glfw\_bin\**" />
   </ItemGroup>
 
   <ItemGroup>

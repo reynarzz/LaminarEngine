@@ -33,6 +33,9 @@
         /// <summary>
         ///     The vertical resize arrow shape.
         /// </summary>
-        ResizeVertical = 0x00036006
+        ResizeVertical = 0x00036006,
+        ResizeNWSE = 0x00036007,
+        ResizeNESW = 0x00036008,
+        ResizeAll = 0x00036009
     }
 }

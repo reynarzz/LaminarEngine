@@ -17,10 +17,7 @@ namespace Editor
         public ImGuiGLFW(Window window)
         {
             _window = window;
-        }
 
-        public void Init(bool installCallbacks = true)
-        {
             var io = ImGui.GetIO();
 
             io.BackendFlags |= ImGuiBackendFlags.HasMouseCursors;
@@ -31,10 +28,7 @@ namespace Editor
 
             CreateCursors();
 
-            if (installCallbacks)
-            {
-                InstallCallbacks();
-            }
+            InstallCallbacks();
         }
 
         private void CreateCursors()
@@ -43,7 +37,10 @@ namespace Editor
             _mouseCursors[(int)ImGuiMouseCursor.TextInput] = Glfw.CreateStandardCursor(CursorType.Beam);
             _mouseCursors[(int)ImGuiMouseCursor.ResizeNS] = Glfw.CreateStandardCursor(CursorType.ResizeVertical);
             _mouseCursors[(int)ImGuiMouseCursor.ResizeEW] = Glfw.CreateStandardCursor(CursorType.ResizeHorizontal);
+            _mouseCursors[(int)ImGuiMouseCursor.ResizeNWSE] = Glfw.CreateStandardCursor(CursorType.ResizeNWSE);
+            _mouseCursors[(int)ImGuiMouseCursor.ResizeNESW] = Glfw.CreateStandardCursor(CursorType.ResizeNESW);
             _mouseCursors[(int)ImGuiMouseCursor.Hand] = Glfw.CreateStandardCursor(CursorType.Hand);
+            _mouseCursors[(int)ImGuiMouseCursor.ResizeAll] = Glfw.CreateStandardCursor(CursorType.ResizeAll);
         }
 
         private void InstallCallbacks()
@@ -107,13 +104,12 @@ namespace Editor
             double x, y;
             Glfw.GetCursorPosition(_window, out x, out y);
             io.AddMousePosEvent((float)x, (float)y);
-
-            UpdateMouseCursor();
         }
 
-        private void UpdateMouseCursor()
+        public void UpdateMouseCursor()
         {
             var io = ImGui.GetIO();
+            Engine.Debug.Log(ImGui.GetMouseCursor());
 
             if (io.ConfigFlags.HasFlag(ImGuiConfigFlags.NoMouseCursorChange))
             {
