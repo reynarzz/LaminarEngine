@@ -15,7 +15,7 @@ namespace Engine
         internal Dictionary<string, UniformValue> Uniforms => _uniforms;
 
         [SerializedField] public bool IsScreenGrabPass { get; set; }
-        [SerializedField] public Shader Shader { get; private set; }
+        [SerializedField] public Shader Shader { get; internal set; }
         [SerializedField] public Blending Blending { get; private set; } = new()
         {
             Enabled = true,

@@ -43,6 +43,7 @@ namespace Editor
             base.Initialize();
         }
         private Shader _test;
+        private Material _materialTest;
         internal override void Update()
         {
             if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -97,8 +98,8 @@ namespace Editor
                 Deserializer.Deserialize(anim, ir);
                 var anim2 = Deserializer.Deserialize<AnimationClip>(ir);
 
-                var material = Assets.GetMaterial("Materials/Material.material");
-                Selector.Selected = material;//.Textures.FirstOrDefault().Value;
+                _materialTest = Assets.GetMaterial("Materials/Material.material");
+                Selector.Selected = _materialTest;//.Textures.ElementAt(0).Value;
             }
 
 

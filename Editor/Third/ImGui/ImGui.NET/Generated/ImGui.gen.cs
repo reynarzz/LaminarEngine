@@ -4087,7 +4087,7 @@ namespace ImGuiNET
             }
         }
 #endif
-        public static bool Combo(string label, ref int current_item, string[] items, int items_count)
+        public static bool Combo(string label, ref int current_item, IReadOnlyList<string> items, int items_count)
         {
             byte* native_label;
             int label_byteCount = 0;
@@ -4107,9 +4107,9 @@ namespace ImGuiNET
                 native_label[native_label_offset] = 0;
             }
             else { native_label = null; }
-            int* items_byteCounts = stackalloc int[items.Length];
+            int* items_byteCounts = stackalloc int[items.Count];
             int items_byteCount = 0;
-            for (int i = 0; i < items.Length; i++)
+            for (int i = 0; i < items.Count; i++)
             {
                 string s = items[i];
                 items_byteCounts[i] = Encoding.UTF8.GetByteCount(s);
@@ -4117,15 +4117,15 @@ namespace ImGuiNET
             }
             byte* native_items_data = stackalloc byte[items_byteCount];
             int offset = 0;
-            for (int i = 0; i < items.Length; i++)
+            for (int i = 0; i < items.Count; i++)
             {
                 string s = items[i];
                 offset += Util.GetUtf8(s, native_items_data + offset, items_byteCounts[i]);
                 native_items_data[offset++] = 0;
             }
-            byte** native_items = stackalloc byte*[items.Length];
+            byte** native_items = stackalloc byte*[items.Count];
             offset = 0;
-            for (int i = 0; i < items.Length; i++)
+            for (int i = 0; i < items.Count; i++)
             {
                 native_items[i] = &native_items_data[offset];
                 offset += items_byteCounts[i] + 1;

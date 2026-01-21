@@ -15,7 +15,7 @@ namespace Editor
         private readonly static Type[] _visibilityAttributes = [typeof(SerializedFieldAttribute), typeof(ShowFieldNoSerialize)];
         protected override bool AutoDrawTitle => true;
 
-        protected override Texture2D GetIcon(Texture2D target)
+        protected override Texture2D GetTitleIcon(Texture2D target)
         {
             // Pass the same texture as the icon.
             return target;

@@ -13,7 +13,9 @@ namespace Engine.IO
     {
         private readonly Dictionary<AssetType, AssetBuilderBase> _assetbuilder;
         private readonly AssetDatabaseCache _databaseCache;
-        private BiDictionary<Guid, string> _guidPathDict;
+        private readonly BiDictionary<Guid, string> _guidPathDict = new();
+        private readonly Dictionary<AssetType, OrderedDictionary<Guid, AssetInfo>> _assetsGuidByTypes = new();
+
         private DiskBase _disk;
         internal DiskBase Disk => _disk;
         public AssetDatabase(Dictionary<AssetType, AssetBuilderBase> assetBuilder)
@@ -25,12 +27,31 @@ namespace Engine.IO
         internal virtual void Initialize(DiskBase disk)
         {
             _disk = disk;
-            _guidPathDict = new BiDictionary<Guid, string>();
+            _guidPathDict.Clear();
+            _assetsGuidByTypes.Clear();
 
             foreach (var (guid, info) in _disk.AssetDatabaseInfo.Assets)
             {
                 _guidPathDict.Add(guid, info.Path);
+
+                if (!_assetsGuidByTypes.TryGetValue(info.Type, out var guidList))
+                {
+                    guidList = new OrderedDictionary<Guid, AssetInfo>();
+                    _assetsGuidByTypes[info.Type] = guidList;
+                }
+
+                guidList.Add(guid, info);
             }
+        }
+
+        internal IDictionary<Guid, AssetInfo> GetAssetsInfoByType(AssetType assetType)
+        {
+            if (_assetsGuidByTypes.TryGetValue(assetType, out var guidList))
+            {
+                return guidList;
+            }
+
+            return null;
         }
 
         internal async Task<T> GetAssetAsync<T>(string path) where T : AssetResourceBase
@@ -172,7 +193,7 @@ namespace Engine.IO
                 {
                     asset = builder.BuildAsset(info, meta, guid, reader);
                 }
-                else if(_databaseCache.GetAsset(guid, out asset))
+                else if (_databaseCache.GetAsset(guid, out asset))
                 {
                     builder.UpdateAsset(asset, meta, reader);
                 }

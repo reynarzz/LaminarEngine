@@ -268,11 +268,11 @@ namespace Editor.Utils
             return false;
         }
 
-        public static bool DrawCombo(string name, ref int index, string[] values, float itemWidth = 0)
+        public static bool DrawCombo(string name, ref int index, IReadOnlyList<string> values, float itemWidth = 0)
         {
             SetNextItemWidth(itemWidth);
             ImGui.PushStyleColor(ImGuiCol.FrameBg, new Vector4(0.2f, 0.2f, 0.21568628f, 1));
-            bool result = ImGui.Combo($"##{name}", ref index, values, values.Length);
+            bool result = ImGui.Combo($"##{name}", ref index, values, values.Count);
 
             ImGui.PopStyleColor();
             return result;

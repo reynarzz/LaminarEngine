@@ -12,11 +12,25 @@ namespace Engine
 {
     public class Material : AssetResourceBase
     {
-        [SerializedField] private List<RenderPass> _passes;
+        [SerializedField] private List<RenderPass> _passes = new();
         internal List<RenderPass> Passes => _passes;
-        [SerializedField] private Dictionary<string, Texture> _textures;
+        [SerializedField] private Dictionary<string, Texture> _textures = new();
         internal Dictionary<string, Texture> Textures => _textures;
-        [SerializedField] public Shader Shader { get;  set; }
+        public Shader Shader
+        {
+            get => _passes.FirstOrDefault()?.Shader; 
+            set
+            {
+                if(_passes.Count == 0)
+                {
+                    _passes.Add(new RenderPass(value));
+                }
+                else
+                {
+                    _passes[0].Shader = value;
+                }
+            }
+        }
 
         private const string _defaultTypeName = "Material";
 
@@ -29,10 +43,12 @@ namespace Engine
         }
 
         //Serializer
-        internal Material(string name, Guid guid) : base(name, guid) { }
+        internal Material(string name, Guid guid) : base(name, guid)
+        {
+
+        }
         public Material(Guid guid, string name, Shader shader) : base(name, guid)
         {
-            Shader = shader;
             _textures = new();
             _passes = new List<RenderPass>()
             {

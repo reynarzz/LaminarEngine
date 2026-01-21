@@ -81,7 +81,7 @@ namespace Editor
                     _prevSelected.OnClose();
                 }
                 _prevSelected = drawer;
-                drawer.OnOpen();
+                drawer.OnOpen(Selector.Selected);
             }
         }
 

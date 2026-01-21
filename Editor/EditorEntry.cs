@@ -25,6 +25,7 @@ namespace Editor
     // -The serializer has a possible bug related to delegates,
     //   collections do not search for all delegates(privates/public), but classes do.
     // -If I load the runtime mode, and the applicationLayer is enabled, the camera renders black.
+    // GameCooker, the asset database sometimes doesn't remove old assets correctly.
 
     // Assets:
     // Serialize materials.

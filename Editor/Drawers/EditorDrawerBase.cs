@@ -13,7 +13,7 @@ namespace Editor
     internal abstract class EditorDrawerBase
     {
         protected abstract bool AutoDrawTitle { get; }
-        internal virtual void OnOpen() { }
+        internal virtual void OnOpen(IObject target) { }
         internal virtual void OnClose() { }
         internal abstract void OnDraw(IObject target);
         protected virtual Texture2D GetIcon(IObject target)
@@ -40,9 +40,15 @@ namespace Editor
 
     internal abstract class EditorDrawerBase<T> : EditorDrawerBase where T : class, IObject
     {
+        internal override sealed void OnOpen(IObject target)
+        {
+            OnOpen(target as T);
+        }
+        internal virtual void OnOpen(T target) {}
+
         protected sealed override Texture2D GetIcon(IObject target)
         {
-           return GetIcon(target as T);
+           return GetTitleIcon(target as T);
         }
 
         internal sealed override void OnDraw(IObject target)
@@ -55,7 +61,7 @@ namespace Editor
         }
 
         protected abstract void OnDraw(T target);
-        protected virtual Texture2D GetIcon(T target)
+        protected virtual Texture2D GetTitleIcon(T target)
         {
            return base.GetIcon(target);
         }
