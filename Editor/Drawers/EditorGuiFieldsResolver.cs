@@ -66,7 +66,7 @@ namespace Editor.Utils
             SetNextItemWidth(itemWidth);
             ImGui.PushStyleVar(ImGuiStyleVar.IndentSpacing, 0f);
 
-            bool changed = ImGui.DragFloat($"##{name}", ref value, 0.1f, 0, 0, "%.4f") &&
+            bool changed = ImGui.DragFloat($"##{name}", ref value, 0.1f, 0, 0, $"%.{Math.Max(1, Mathf.GetDecimalPlaces(value))}f") &&
                            (!pressEnterToConfirm || ImGui.IsKeyDown(ImGuiKey.Enter));
 
             ImGui.PopStyleVar();

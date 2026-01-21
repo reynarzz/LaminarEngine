@@ -287,7 +287,7 @@ namespace Engine
         }
 
 
-        
+
         public static mat4 QuatToMat4(quat q)
         {
             float x = q.x, y = q.y, z = q.z, w = q.w;
@@ -479,6 +479,17 @@ namespace Engine
 
             return sum / norm; // stays in [-1,1]
         }
-
+        public static int GetDecimalPlaces(float value)
+        {
+            return GetDecimalPlaces((decimal)value);
+        }
+        public static int GetDecimalPlaces(double value)
+        {
+            return GetDecimalPlaces((decimal)value);
+        }
+        public static int GetDecimalPlaces(decimal value)
+        {
+            return (decimal.GetBits(value)[3] >> 16) & 0xFF;
+        }
     }
 }
