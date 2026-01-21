@@ -99,6 +99,29 @@ namespace Editor.Views
                 {
                     _isPanning = false;
                 }
+
+                if (ImGui.IsMouseClicked(ImGuiMouseButton.Left))
+                {
+                    vec2 imageSpace = (mouseLocal - _panOffset) / _zoomFactor;
+
+                    if (imageSpace.x >= 0 && imageSpace.y >= 0 &&
+                        imageSpace.x < _imageSize.x && imageSpace.y < _imageSize.y)
+                    {
+                        for (int i = 0; i < texture.Atlas.ChunksCount; i++)
+                        {
+                            var chunk = texture.Atlas.GetChunk(i);
+
+                            if (imageSpace.x >= chunk.XPixel &&
+                                imageSpace.x < chunk.XPixel + chunk.Width &&
+                                imageSpace.y >= chunk.YPixel &&
+                                imageSpace.y < chunk.YPixel + chunk.Height)
+                            {
+                                _chunkIndex = i;
+                                break;
+                            }
+                        }
+                    }
+                }
             }
 
             float wheel = io.MouseWheel;
