@@ -114,6 +114,7 @@ namespace Editor.Views
                 if (ImGui.IsMouseClicked(ImGuiMouseButton.Left))
                 {
                     vec2 imageSpace = (mouseLocal - _panOffset) / _zoomFactor;
+                    imageSpace.y = _imageSize.y - imageSpace.y;
 
                     if (imageSpace.x >= 0 && imageSpace.y >= 0 &&
                         imageSpace.x < _imageSize.x && imageSpace.y < _imageSize.y)
@@ -258,9 +259,9 @@ namespace Editor.Views
                 ImDrawListPtr drawList = ImGui.GetWindowDrawList();
 
                 float x1 = origin.x + chunk.XPixel * zoom;
-                float y1 = origin.y + chunk.YPixel * zoom;
                 float x2 = origin.x + (chunk.XPixel + chunk.Width) * zoom;
-                float y2 = origin.y + (chunk.YPixel + chunk.Height) * zoom;
+                float y1 = origin.y + (_imageSize.y - chunk.YPixel - chunk.Height) * zoom;
+                float y2 = origin.y + (_imageSize.y - chunk.YPixel) * zoom;
 
                 drawList.AddLine(new Vector2(x1, y1), new Vector2(x1, y2), color.ToARGB_U32());
                 drawList.AddLine(new Vector2(x2, y1), new Vector2(x2, y2), color.ToARGB_U32());
