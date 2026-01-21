@@ -36,6 +36,7 @@ namespace Editor
                 _atlasEditor.OnOpen(target);
                 _openAtlasEditor = true;
             }
+
             if (_openAtlasEditor)
             {
                 _atlasEditor.OnDraw(target);

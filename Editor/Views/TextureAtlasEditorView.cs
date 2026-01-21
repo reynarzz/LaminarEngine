@@ -6,11 +6,7 @@ using GlmNet;
 using ImGuiNET;
 using SharedTypes;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Editor.Views
 {
@@ -18,27 +14,26 @@ namespace Editor.Views
     {
         protected override bool AutoDrawTitle => false;
 
-        private float _zoomFactor = 1.0f; // Default zoom level
-        private const float _zoomSpeed = 0.1f; // Speed at which zooming occurs
-        private const float _minZoom = 0.5f; // Minimum zoom factor (half size)
-        private const float _maxZoom = 3.0f; // Maximum zoom factor (3x size)
+        private float _zoomFactor = 1.0f;
+        private const float _zoomSpeed = 0.1f;
+        private const float _minZoom = 0.5f;
+        private const float _maxZoom = 3.0f;
 
         private int _chunkIndex = 0;
-
         private float _prevScrollAmount = -1;
-        private vec2 _origin;
-        private vec2 _cursorPos;
-        private vec2 _cursorRelativePos;
 
-        // Apply zoomFactor to the image size
         private vec2 _imageSize;
         private vec2 _zoomedSize;
 
-        // Adjust image position based on zooming around the cursor position
-        private vec2 _zoomedOrigin;
-        private bool _isImageHovered = false;
         private ivec2 _sliceDim = new ivec2(8, 8);
-        private bool _isOpen = true;
+        public bool _isOpen = false;
+
+        private vec2 _panOffset;        
+        private bool _isPanning;
+        private vec2 _lastMousePosLocal;
+        private bool _panInitialized;
+
+        public bool IsWindowOpen() { return _isOpen; }
 
         internal override void OnOpen(Texture2D texture)
         {
@@ -47,71 +42,155 @@ namespace Editor.Views
             _imageSize = new vec2(texture.Width, texture.Height);
             _sliceDim = new ivec2(8, 8);
             _zoomedSize = default;
-            _origin = default;
             _prevScrollAmount = -1;
+
+            _panOffset = default;
+            _isPanning = false;
+            _panInitialized = false;
         }
 
         protected override void OnDraw(Texture2D texture)
         {
-            //ImguiUtils::DisableNextWindowMenuButton();
-
             if (!_isOpen)
                 return;
 
             ImGui.Begin("Atlas Editor", ref _isOpen);
+            ImGui.BeginDisabled(GameAssemblyBuilder.IsBuilding);
 
-            ImGui.BeginDisabled(GameAssemblyBuilder.IsBuilding /*|| project_builder.is_building_game()*/);
+            var io = ImGui.GetIO();
 
-            var atlasInfo = texture.Atlas;
+            Vector2 canvasPos = ImGui.GetCursorScreenPos();
+            Vector2 canvasSize = ImGui.GetContentRegionAvail();
 
-            // Handle zooming with mouse wheel
-            float scrollAmount = ImGui.GetIO().MouseWheel;
+            vec2 canvasPosV = canvasPos.ToVec2();
+            vec2 canvasSizeV = canvasSize.ToVec2();
 
-            bool canMove = false;
+            vec2 mouseLocal = ImGui.GetMousePos().ToVec2() - canvasPosV;
 
-            if (scrollAmount != _prevScrollAmount)
+            if (!_panInitialized)
             {
-                _prevScrollAmount = scrollAmount;
-                canMove = true;
-            }
-            ImGui.Text(texture.Name);
-            _origin = ImGui.GetCursorScreenPos().ToVec2();  // Get the starting position (top-left corner)
-
-            if (canMove && ImGui.IsWindowHovered() && _isImageHovered) // remove
-            {
-                // Get the image's origin and cursor position relative to the image
-                _cursorPos = ImGui.GetMousePos().ToVec2();      // Get the current mouse cursor position
-                _cursorRelativePos = _cursorPos - _origin; // Cursor position relative to the image
-
-                // Apply zoomFactor to the image size
-                _zoomFactor += scrollAmount * _zoomSpeed;
-
-                // Adjust image position based on zooming around the cursor position
-                _zoomedOrigin = _cursorPos - _cursorRelativePos * _zoomFactor;
+                vec2 canvasCenter = canvasSizeV * 0.5f;
+                _panOffset = canvasCenter - (_imageSize * _zoomFactor) * 0.5f;
+                _panInitialized = true;
             }
 
-            _zoomFactor = Mathf.Clamp(_zoomFactor, 0.1f, 5.0f); // Prevent zooming too far in or out
+            if (ImGui.IsWindowHovered())
+            {
+                if (ImGui.IsMouseClicked(ImGuiMouseButton.Middle))
+                {
+                    _isPanning = true;
+                    _lastMousePosLocal = mouseLocal;
+                }
 
+                if (_isPanning && ImGui.IsMouseDown(ImGuiMouseButton.Middle))
+                {
+                    vec2 delta = mouseLocal - _lastMousePosLocal;
+                    _panOffset += delta;
+                    _lastMousePosLocal = mouseLocal;
+                }
 
-            _zoomedSize = new vec2(_imageSize.x * _zoomFactor, _imageSize.y * _zoomFactor);
+                if (ImGui.IsMouseReleased(ImGuiMouseButton.Middle))
+                {
+                    _isPanning = false;
+                }
+            }
 
-            // Create a scrollable child for horizontal scrolling
-            //--ImGui.SetCursorScreenPos(zoomedOrigin); // Set the image position based on zoom
-            ImGui.SetCursorScreenPos(_origin.ToVector2()); // Set the image position based on zoom
+            float wheel = io.MouseWheel;
+            if (wheel != 0 && ImGui.IsWindowHovered())
+            {
+                vec2 mouseBefore = (mouseLocal - _panOffset) / _zoomFactor;
 
-            // Display the image
-            ImGui.Image(EditorTextureDatabase.GetIconImGui(texture), _zoomedSize.ToVector2(), new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f));
-            _isImageHovered = ImGui.IsItemHovered();
+                _zoomFactor = Mathf.Clamp(_zoomFactor + wheel * _zoomSpeed,
+                                          _minZoom, _maxZoom);
 
-            // Display image size information
-            ImGui.Text($"Size ({texture.Width}, {texture.Height})");
+                vec2 mouseAfter = mouseBefore * _zoomFactor;
+                _panOffset = mouseLocal - mouseAfter;
+            }
 
-            // Scale grid drawing based on zoom factor
-            //DrawGrid(zoomedOrigin, tex, zoomFactor);
-            DrawGrid(_origin, texture, _zoomFactor);
+            _zoomedSize = _imageSize * _zoomFactor;
+
+            vec2 drawOrigin = canvasPosV + _panOffset;
+
+            ImDrawListPtr drawList = ImGui.GetWindowDrawList();
+
+            drawList.AddImage(EditorTextureDatabase.GetIconImGui(texture), drawOrigin.ToVector2(),
+                              (drawOrigin + _zoomedSize).ToVector2(), new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f));
+
+            DrawGrid(drawOrigin, texture, _zoomFactor);
+
+            ImGui.SetNextWindowBgAlpha(0.9f);
+            ImGui.SetNextWindowPos(ImGui.GetWindowPos() + new Vector2(10, 30), ImGuiCond.Always);
+
+            PropertiesGUI(texture);
+
+            ImGui.EndDisabled();
+            ImGui.End();
+        }
+
+        private void PropertiesGUI(Texture2D texture)
+        {
+            const float OverlayWidth = 250.0f;
+            const float OverlayHeight = 175.0f;
+            const float Margin = 10.0f;
+
+            // Canvas reference
+            Vector2 canvasPos = ImGui.GetCursorScreenPos();
+            Vector2 canvasSize = ImGui.GetContentRegionAvail();
+
+            Vector2 overlayPos = new Vector2(canvasPos.X + canvasSize.X - OverlayWidth - Margin,
+                                             canvasPos.Y + canvasSize.Y - OverlayHeight - Margin);
+
+            ImGui.SetCursorScreenPos(overlayPos);
+
+            ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, new Vector2(18, 18));
+            ImGui.PushStyleColor(ImGuiCol.WindowBg, new Vector4(0, 0, 0, 0.35f));
+
+            ImGui.BeginChild("AtlasPropertiesOverlay", new Vector2(OverlayWidth, OverlayHeight),
+                             ImGuiChildFlags.Borders, ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse);
 
             DrawProperties(texture);
 
+            ImGui.EndChild();
+
+            ImGui.PopStyleColor();
+            ImGui.PopStyleVar();
+        }
+
+
+        private void DrawGrid(vec2 origin, Texture2D tex, float zoom)
+        {
+            for (int i = 0; i < tex.Atlas.ChunksCount; i++)
+            {
+                if (_chunkIndex != i)
+                    DrawChunkLines(tex.Atlas.GetChunk(i), Color.Red);
+            }
+
+            DrawChunkLines(tex.Atlas.GetChunk(_chunkIndex), Color.White);
+
+            void DrawChunkLines(AtlasChunk chunk, Color color)
+            {
+                ImDrawListPtr drawList = ImGui.GetWindowDrawList();
+
+                float x1 = origin.x + chunk.XPixel * zoom;
+                float y1 = origin.y + chunk.YPixel * zoom;
+                float x2 = origin.x + (chunk.XPixel + chunk.Width) * zoom;
+                float y2 = origin.y + (chunk.YPixel + chunk.Height) * zoom;
+
+                drawList.AddLine(new Vector2(x1, y1), new Vector2(x1, y2), color);
+                drawList.AddLine(new Vector2(x2, y1), new Vector2(x2, y2), color);
+                drawList.AddLine(new Vector2(x1, y1), new Vector2(x2, y1), color);
+                drawList.AddLine(new Vector2(x1, y2), new Vector2(x2, y2), color);
+
+                float lerpX = Mathf.Lerp(x1, x2, chunk.Pivot.x);
+                float lerpY = Mathf.Lerp(y1, y2, chunk.Pivot.y);
+
+                drawList.AddRectFilled(new Vector2(lerpX - 1, lerpY - 1), new Vector2(lerpX + 1, lerpY + 1), Color.White);
+            }
+        }
+
+        private void DrawProperties(Texture2D texture)
+        {
+            var atlasInfo = texture.Atlas;
 
             ImGui.Text("Slice size");
             ImGui.SameLine();
@@ -124,95 +203,10 @@ namespace Editor.Views
             ImGui.SameLine();
             if (ImGui.Button("Slice"))
             {
-                TextureAtlasUtils.SliceTiles(atlasInfo, _sliceDim.x, _sliceDim.y, texture.Width, texture.Height);
+                TextureAtlasUtils.SliceTiles(texture.Atlas, _sliceDim.x, _sliceDim.y,
+                                             texture.Width, texture.Height);
                 _chunkIndex = 0;
             }
-
-            // TODO: Feature to replace a cell index by another cell
-            ImGui.Text("Replace cell index");
-            ImGui.SameLine();
-            int currentTest = 0;
-            EditorGuiFieldsResolver.DrawIntField("#AtlasReplaceCellIndex", ref currentTest, 200);
-
-
-            if (ImGui.Button("Save"))
-            {
-                // Updates every cell change. TODO: Only update the cells that changed.
-                for (int i = 0; i < atlasInfo.ChunksCount; i++)
-                {
-                    var currentCell = atlasInfo.GetChunk(i);
-
-                    atlasInfo.UpdateChunk(i, TextureAtlasUtils.CreateTileBounds(currentCell.XPixel, currentCell.YPixel, currentCell.Width, currentCell.Height,
-                                                                                currentCell.Pivot.x, currentCell.Pivot.y, texture.Width, texture.Height));
-                }
-
-                // TODO: save
-                var path = texture.Path;
-                var texMeta = new TextureMetaFile();
-                texMeta.GUID = texture.GetID();
-                // texMeta.AtlasData = tex._textureInfo;
-
-                Assets.RefreshAssetDatabase();
-            }
-
-            ImGui.EndDisabled();
-            ImGui.End();
-        }
-
-        private void DrawGrid(vec2 origin, Texture2D tex, float zoom)
-        {
-            // Scale the grid cells based on zoom
-            for (int i = 0; i < tex.Atlas.ChunksCount; i++)
-            {
-                if (_chunkIndex != i)
-                {
-                    DrawChunkLines(tex.Atlas.GetChunk(i), Color.Red);
-                }
-            }
-
-            DrawChunkLines(tex.Atlas.GetChunk(_chunkIndex), Color.White);
-
-            void DrawChunkLines(AtlasChunk chunk, Color color)
-            {
-                ImDrawListPtr draw_list = ImGui.GetWindowDrawList();
-
-                float x1 = origin.x + chunk.XPixel * zoom;
-                float y1 = origin.y + chunk.YPixel * zoom;
-                float x2 = origin.x + (chunk.XPixel + chunk.Width) * zoom;
-                float y2 = origin.y + (chunk.YPixel + chunk.Height) * zoom;
-
-                // Draw the grid lines (quad outline)
-                draw_list.AddLine(new Vector2(x1, y1), new Vector2(x1, y2), color); // Left
-                draw_list.AddLine(new Vector2(x2, y1), new Vector2(x2, y2), color); // Right
-                draw_list.AddLine(new Vector2(x1, y1), new Vector2(x2, y1), color); // Top
-                draw_list.AddLine(new Vector2(x1, y2), new Vector2(x2, y2), color); // Bottom
-
-                // Define the size of the smaller quad (scaled by zoom)
-                //float smallWidth = (cell.width * 0.2f) * zoom;  // 20% of the original width
-                //float smallHeight = (cell.height * 0.2f) * zoom; // 20% of the original height
-
-                float smallWidth = 2;
-                float smallHeight = 2;
-
-
-                // Apply the pivot using lerp between the corners (pivotX and pivotY as percentage)
-                float lerpX = Mathf.Lerp(x1, x2, chunk.Pivot.x);
-                float lerpY = Mathf.Lerp(y1, y2, chunk.Pivot.y);
-
-                // Calculate the corners of the small quad, centered around the pivot
-                float smallX1 = lerpX - smallWidth / 2.0f;
-                float smallY1 = lerpY - smallHeight / 2.0f;
-                float smallX2 = lerpX + smallWidth / 2.0f;
-                float smallY2 = lerpY + smallHeight / 2.0f;
-
-                // Draw the small filled quad at the pivot position
-                draw_list.AddRectFilled(new Vector2(smallX1, smallY1), new Vector2(smallX2, smallY2), Color.White); // Filled quad
-            }
-        }
-
-        private void DrawProperties(Texture2D texture)
-        {
-            var atlasInfo = texture.Atlas;
 
             if (atlasInfo.ChunksCount > 0)
             {
