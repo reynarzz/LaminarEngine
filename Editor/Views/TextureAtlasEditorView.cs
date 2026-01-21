@@ -43,7 +43,8 @@ namespace Editor.Views
             _chunkIndex = 0;
             _isOpen = true;
             _imageSize = new vec2(texture.Width, texture.Height);
-            _sliceDim = new ivec2(8, 8);
+            _sliceDim = texture.Atlas.ChunksCount == 0 ? new ivec2(8, 8) :
+                new ivec2(texture.Atlas.GetChunk(0).Width, texture.Atlas.GetChunk(0).Height);
 
             RestartView();
         }
@@ -269,7 +270,7 @@ namespace Editor.Views
                 drawList.AddLine(new Vector2(x1, y2), new Vector2(x2, y2), color.ToARGB_U32());
 
                 float lerpX = Mathf.Lerp(x1, x2, chunk.Pivot.x);
-                float lerpY = Mathf.Lerp(y1, y2, chunk.Pivot.y);
+                float lerpY = Mathf.Lerp(y1, y2, 1.0f - chunk.Pivot.y);
 
                 var size = _pivotDotSize * _zoomFactor;
                 drawList.AddRectFilled(new Vector2(lerpX - size, lerpY - size), new Vector2(lerpX + size, lerpY + size), Color.Green.ToARGB_U32());

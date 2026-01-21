@@ -22,17 +22,17 @@ namespace Editor
         private PlaymodeController _playmodeController; // Remove from here
         private static HotReloadLayer _hotReload;
         public EditorLayersManager(InputLayerBase inputLayer, WindowStandalone win) :
-            base([_time,                           
-                  inputLayer,                      
+            base([_time,
+                  inputLayer,
                   null, // AppLayer                
-                  new MainThreadDispatcher(),      
+                  new MainThreadDispatcher(),
                   null, // SceneLayer              
-                  new AudioLayer(),                
+                  new AudioLayer(),
                   null, // PhysicsLayer,           
                   new ImGuiLayer(win, inputLayer),
-                  new RenderingLayer(),            
+                  new RenderingLayer(),
                   new EditorIOLayer(),
-                  _hotReload = new HotReloadLayer()])                     
+                  _hotReload = new HotReloadLayer()])
         {
             _playmodeController = new PlaymodeController(this, _time, _hotReload);
 
@@ -99,9 +99,15 @@ namespace Editor
                 var anim2 = Deserializer.Deserialize<AnimationClip>(ir);
 
                 _materialTest = Assets.GetMaterial("Materials/Material.material");
-                Selector.Selected = _materialTest.Textures.ElementAt(0).Value;
-            }
+                Selector.Selected = Assets.GetTexture("starkTileset.png"); //_materialTest.Textures.ElementAt(0).Value;
 
+                var obj = Actor.Find("Player");
+                if (obj)
+                {
+                    var value = obj.GetComponent<SpriteRenderer>();
+                    Selector.Selected = value.Sprite.Texture;
+                }
+            }
 
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.R))
             {
