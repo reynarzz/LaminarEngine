@@ -10,7 +10,7 @@ namespace Editor.Utils
 {
     public static class NativeLogger
     {
-        private static ImAllGui.LogCallback _callback; 
+        private static EditorNatives.LogCallback _callback; 
 
         private static void OnNativeLog(IntPtr message)
         {
@@ -21,7 +21,7 @@ namespace Editor.Utils
         public static void Init()
         {
             _callback = OnNativeLog;
-            ImAllGui.RegisterLogCallback(_callback);
+            EditorNatives.RegisterLogCallback(_callback);
         }
     }
 }

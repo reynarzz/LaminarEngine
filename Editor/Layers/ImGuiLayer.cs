@@ -105,7 +105,7 @@ namespace Editor.Layers
             ImguiImplOpenGL3.SetPerFrameImGuiData(Math.Max(Time.UnscaledDeltaTime, 0.0000001f), _win.PhysicalWidth, _win.PhysicalHeight);
 
             //ImGui.NewFrame();
-            ImAllGui.imgui_NewFrame();
+            EditorNatives.imgui_NewFrame();
             ImguiImplOpenGL3.NewFrame();
             _glfwInput.NewFrame();
 

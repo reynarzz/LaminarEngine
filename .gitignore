@@ -19,3 +19,4 @@ Editor/Third/native/ImAllGui/_build/
 Editor/Third/native/ImAllGui/out/
 *.pdb
 *.bin
+Editor/Third/native/out/

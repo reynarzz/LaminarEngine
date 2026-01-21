@@ -69,7 +69,7 @@ namespace Editor
             var root = Path.Combine(assemblyDir.Substring(0, assemblyDir.LastIndexOf("Editor")), "Editor/Data");
 
             _window = window;
-            ImAllGui.InitImAllGui();
+            EditorNatives.InitImAllGui();
 
             var io = ImGui.GetIO();
 

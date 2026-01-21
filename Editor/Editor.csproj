@@ -38,14 +38,14 @@
 
 		<PropertyGroup>
 			<GlfwWinSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\Third\Win\glfw\lib-vc2022\glfw.dll'))</GlfwWinSrc>
-			<ImGuiSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\Third\ImAllGui\bins\win\ImAllGui.dll'))</ImGuiSrc>
+			<ImGuiSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\Third\EditorNatives\bin\win\EditorNatives.dll'))</ImGuiSrc>
 			
 		</PropertyGroup>
 
 		<Message Text="Copying from $(GlfwWinSrc)" Importance="high" />
 
 		<Copy SourceFiles="$(GlfwWinSrc)" DestinationFiles="$(TargetDir)glfw.dll" SkipUnchangedFiles="true" />
-		<Copy SourceFiles="$(ImGuiSrc)" DestinationFiles="$(TargetDir)ImAllGui.dll" SkipUnchangedFiles="true" />
+		<Copy SourceFiles="$(ImGuiSrc)" DestinationFiles="$(TargetDir)EditorNatives.dll" SkipUnchangedFiles="true" />
 </Target>
 		
 
@@ -54,12 +54,12 @@
 
   <PropertyGroup> 
   <GlfwMacSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)/../Third/MacOs/glfw/$(MacLibFolder)/libglfw.dylib'))</GlfwMacSrc>
-  <ImGuiSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\Third\ImAllGui\bins\osx\libImAllGui.dylib'))</ImGuiSrc>
+  <ImGuiSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\Third\EditorNatives\bin\osx\libEditorNatives.dylib'))</ImGuiSrc>
 
   </PropertyGroup>
 
   <Copy SourceFiles="$(GlfwMacSrc)" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
-		<Copy SourceFiles="$(ImGuiSrc)" DestinationFiles="$(TargetDir)libImAllGui.dylib" SkipUnchangedFiles="true" />
+		<Copy SourceFiles="$(ImGuiSrc)" DestinationFiles="$(TargetDir)libEditorNatives.dylib" SkipUnchangedFiles="true" />
 
 </Target>
 
