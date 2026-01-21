@@ -253,15 +253,15 @@ namespace Engine
             Glfw.SwapBuffers(NativeWindow);
         }
 
-        private void OnCloseWindow(IntPtr x)
+        private void OnCloseWindow(Window x)
         {
             OnWindowClose?.Invoke();
         }
-        private void OnFocused(IntPtr win, bool focused)
+        private void OnFocused(Window win, bool focused)
         {
             OnWindowFocusChanged?.Invoke(focused);
         }
-        private void FrameBufferSizeCallback(IntPtr win, int width, int height)
+        private void FrameBufferSizeCallback(Window win, int width, int height)
         {
             Width = width;
             Height = height;

@@ -59,7 +59,7 @@ namespace Editor
             Glfw.SetCharCallback(_window, _charCb);
         }
 
-        private void OnMouseButton(IntPtr wnd, MouseButton button, InputState state, ModifierKeys mods)
+        private void OnMouseButton(Window wnd, MouseButton button, InputState state, ModifierKeys mods)
         {
             var io = ImGui.GetIO();
             int index = (int)button;
@@ -69,12 +69,12 @@ namespace Editor
             }
         }
 
-        private void OnScroll(IntPtr wnd, double x, double y)
+        private void OnScroll(Window wnd, double x, double y)
         {
             ImGui.GetIO().AddMouseWheelEvent((float)x, (float)y);
         }
 
-        private void OnKey(IntPtr wnd, Keys key, int scancode, InputState state, ModifierKeys mods)
+        private void OnKey(Window wnd, Keys key, int scancode, InputState state, ModifierKeys mods)
         {
             var io = ImGui.GetIO();
 
@@ -95,7 +95,7 @@ namespace Editor
         }
 
 
-        private void OnChar(IntPtr wnd, uint c)
+        private void OnChar(Window wnd, uint c)
         {
             ImGui.GetIO().AddInputCharacter(c);
         }

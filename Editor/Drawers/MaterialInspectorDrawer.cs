@@ -32,7 +32,7 @@ namespace Editor
                 _shadersNames.Add(item.Value.Path.Substring(0, item.Value.Path.LastIndexOf('.')));
             }
         }
-
+         
         protected override void OnDraw(Material target)
         {
             ImGui.Text("Shader");

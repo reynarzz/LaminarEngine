@@ -20,3 +20,5 @@ Editor/Third/native/ImAllGui/out/
 *.pdb
 *.bin
 Editor/Third/native/out/
+Engine/Third/Native/glfw/_bin/
+Editor/Third/native/_build/

@@ -19,19 +19,21 @@ set(CIMGUI_DIR "${EDITOR_NATIVES_ROOT_DIR}/cimgui")
 set(IMGUI_DIR "${CIMGUI_DIR}/imgui")
 set(OUTPUT_DIR ${EDITOR_NATIVES_ROOT_DIR}../../EditorNatives/bin)
 
-# Force GLFW to build as OBJECT library
-set(GLFW_LIBRARY_TYPE OBJECT CACHE STRING "" FORCE)
+## Force GLFW to build as OBJECT library
+#set(GLFW_LIBRARY_TYPE OBJECT CACHE STRING "" FORCE)
+#
+## Disable GLFW stuff we don't need
+#set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+#set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+#set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+#set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
 
-# Disable GLFW stuff we don't need
-set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
-set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
-
-add_subdirectory(glfw)
+#add_subdirectory(glfw)
 add_subdirectory(cimgui)
 add_subdirectory(cimnodes)
 add_subdirectory(cimguizmo)
+
+#target_compile_definitions(glfw PRIVATE _GLFW_BUILD_DLL)
 
 add_library(${PROJECT_NAME} SHARED
 EditorNatives.cpp
@@ -49,7 +51,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     VISIBILITY_INLINES_HIDDEN OFF
 )
 target_sources(${PROJECT_NAME} PRIVATE
-    $<TARGET_OBJECTS:glfw>
+    #$<TARGET_OBJECTS:glfw>
     $<TARGET_OBJECTS:cimgui_obj>
     $<TARGET_OBJECTS:imnodes_obj>
     $<TARGET_OBJECTS:cimnodes_obj>
@@ -64,30 +66,8 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${EDITOR_NATIVES_ROOT_DIR}/cimgui>
     $<BUILD_INTERFACE:${EDITOR_NATIVES_ROOT_DIR}/cimnodes>
     $<BUILD_INTERFACE:${EDITOR_NATIVES_ROOT_DIR}/cimguizmo>
-    $<BUILD_INTERFACE:${EDITOR_NATIVES_ROOT_DIR}/glfw/include>
+    #$<BUILD_INTERFACE:${EDITOR_NATIVES_ROOT_DIR}/glfw/include>
     $<BUILD_INTERFACE:${IMGUI_DIR}>
     # Install interface
     $<INSTALL_INTERFACE:include>
 )
-if (WIN32)
-    target_link_libraries(${PROJECT_NAME} PRIVATE
-        user32
-        gdi32
-        shell32
-        winmm
-    )
-endif()
-if (APPLE)
-    target_link_libraries(${PROJECT_NAME} PRIVATE
-        "-framework Cocoa"
-        "-framework IOKit"
-        "-framework CoreFoundation"
-    )
-endif()
-if (UNIX AND NOT APPLE)
-    target_link_libraries(${PROJECT_NAME} PRIVATE
-        X11
-        pthread
-        dl
-    )
-endif()

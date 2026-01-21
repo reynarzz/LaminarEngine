@@ -55,12 +55,16 @@
 
 	<ItemGroup>
     <Compile Remove="Scene\**" />
+    <Compile Remove="Third\Glfw\**" />
     <EmbeddedResource Remove="Scene\**" />
+    <EmbeddedResource Remove="Third\Glfw\**" />
     <None Remove="Scene\**" />
+    <None Remove="Third\Glfw\**" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Graphics\Device\Null\" />
+    <Folder Include="Third\Native\bin\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -68,10 +72,6 @@
 	  <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 	  <PackageReference Include="SoundFlow" Version="1.3.0" />
   </ItemGroup>
-	
-	<ItemGroup>
-		<PackageReference Include="glfw-net" Version="3.3.1" Condition="'$(TargetFramework)' == 'net9.0' OR '$(TargetFramework)' == 'net9.0-windows'" />
-	</ItemGroup>
 	
 	<ItemGroup>
 	  <ProjectReference Include="..\SharedTypes\SharedTypes.csproj" />
