@@ -81,9 +81,9 @@ namespace Engine
             return _chunks != null && _chunks.Length > chunkIndex;
         }
 
-        public AtlasChunk GetChunk(int index) 
+        public AtlasChunk GetChunk(int index)
         {
-            if (_chunks == null) 
+            if (_chunks == null)
             {
                 return AtlasChunk.DefaultChunk;
             }
@@ -101,7 +101,10 @@ namespace Engine
 
         public void UpdateChunk(int index, AtlasChunk chunk)
         {
-            _chunks[index] = chunk;
+            if (_chunks != null && _chunks.Length > index)
+            {
+                _chunks[index] = chunk;
+            }
         }
 
         public void UpdatePivot(int index, vec2 pivot)

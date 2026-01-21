@@ -17,14 +17,22 @@ namespace Editor
         protected override bool AutoDrawTitle => true;
         private readonly TextureAtlasEditorView _atlasEditor = new();
         private bool _openAtlasEditor = false;
+        private Texture2D _texture;
         protected override Texture2D GetTitleIcon(Texture2D target)
         {
             // Pass the same texture as the icon.
             return target;
         }
-
+        internal override void OnOpen(Texture2D target)
+        {
+            _texture = target;
+        }
         protected override void OnDraw(Texture2D target)
         {
+
+            bool wasTextureChanged = _texture != target;
+            _texture = target;
+
             var members = ReflectionUtils.GetAllMembersWithAttributes(target.GetType(), _visibilityAttributes, true, true);
             foreach (var member in members)
             {
@@ -39,8 +47,18 @@ namespace Editor
 
             if (_openAtlasEditor)
             {
+                if (wasTextureChanged)
+                {
+                    _atlasEditor.OnOpen(target);
+                }
                 _atlasEditor.OnDraw(target);
             }
+        }
+
+        internal override void OnClose()
+        {
+            _openAtlasEditor = false;
+            _texture = null;
         }
     }
 }

@@ -6,6 +6,7 @@ using GlmNet;
 using ImGuiNET;
 using SharedTypes;
 using System;
+using System.Diagnostics;
 using System.Numerics;
 
 namespace Editor.Views
@@ -18,9 +19,9 @@ namespace Editor.Views
         private const float _zoomSpeed = 0.1f;
         private const float _minZoom = 0.5f;
         private const float _maxZoom = 13.0f;
+        private const float _pivotDotSize = 0.9f;
 
         private int _chunkIndex = 0;
-        private float _prevScrollAmount = -1;
 
         private vec2 _imageSize;
         private vec2 _zoomedSize;
@@ -43,9 +44,13 @@ namespace Editor.Views
             _isOpen = true;
             _imageSize = new vec2(texture.Width, texture.Height);
             _sliceDim = new ivec2(8, 8);
-            _zoomedSize = default;
-            _prevScrollAmount = -1;
 
+            RestartView();
+        }
+
+        private void RestartView()
+        {
+            _zoomedSize = default;
             _panOffset = default;
             _isPanning = false;
             _panInitialized = false;
@@ -55,6 +60,12 @@ namespace Editor.Views
         {
             if (!_isOpen)
                 return;
+
+            if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
+                && Input.GetKeyDown(KeyCode.F))
+            {
+                RestartView();
+            }
 
             ImGui.Begin("Atlas Editor", ref _isOpen);
             ImGui.BeginDisabled(GameAssemblyBuilder.IsBuilding);
@@ -142,9 +153,15 @@ namespace Editor.Views
             ImDrawListPtr drawList = ImGui.GetWindowDrawList();
 
             drawList.AddImage(EditorTextureDatabase.GetIconImGui(texture), drawOrigin.ToVector2(),
-                              (drawOrigin + _zoomedSize).ToVector2(), new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f));
+                             (drawOrigin + _zoomedSize).ToVector2(), new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f));
 
             DrawGrid(drawOrigin, texture, _zoomFactor);
+
+            if (texture.Atlas.ChunksCount == 0)
+            {
+                DrawDottedRect(drawList, drawOrigin.ToVector2(), (drawOrigin + _zoomedSize).ToVector2(),
+                               Color.White.ToARGB_U32(), 6.0f, 3.0f);
+            }
 
             ImGui.SetNextWindowBgAlpha(0.9f);
             ImGui.SetNextWindowPos(ImGui.GetWindowPos() + new Vector2(10, 30), ImGuiCond.Always);
@@ -153,6 +170,31 @@ namespace Editor.Views
 
             ImGui.EndDisabled();
             ImGui.End();
+        }
+
+        private void DrawDottedRect(ImDrawListPtr drawList, Vector2 min, Vector2 max,
+                                    uint color, float dashLength, float gapLength)
+        {
+            void DrawDottedLine(Vector2 a, Vector2 b)
+            {
+                Vector2 dir = Vector2.Normalize(b - a);
+                float length = Vector2.Distance(a, b);
+                float t = 0.0f;
+
+                while (t < length)
+                {
+                    float seg = MathF.Min(dashLength, length - t);
+                    Vector2 p1 = a + dir * t;
+                    Vector2 p2 = a + dir * (t + seg);
+                    drawList.AddLine(p1, p2, color);
+                    t += dashLength + gapLength;
+                }
+            }
+
+            DrawDottedLine(new Vector2(min.X, min.Y), new Vector2(max.X, min.Y));
+            DrawDottedLine(new Vector2(max.X, min.Y), new Vector2(max.X, max.Y));
+            DrawDottedLine(new Vector2(max.X, max.Y), new Vector2(min.X, max.Y));
+            DrawDottedLine(new Vector2(min.X, max.Y), new Vector2(min.X, min.Y));
         }
 
         private float ComputeFitZoom(vec2 canvasSize, vec2 imageSize, float padding)
@@ -169,7 +211,7 @@ namespace Editor.Views
         private void PropertiesGUI(Texture2D texture)
         {
             const float OverlayWidth = 250.0f;
-            const float OverlayHeight = 175.0f;
+            const float OverlayHeight = 200.0f;
             const float Margin = 10.0f;
 
             Vector2 canvasPos = ImGui.GetCursorScreenPos();
@@ -196,10 +238,17 @@ namespace Editor.Views
 
         private void DrawGrid(vec2 origin, Texture2D tex, float zoom)
         {
+            if (tex.Atlas.ChunksCount == 0)
+                return;
+
+            var nonSelectedChunkColor = new Color(1, 1, 1, 0.3f);
+
             for (int i = 0; i < tex.Atlas.ChunksCount; i++)
             {
                 if (_chunkIndex != i)
-                    DrawChunkLines(tex.Atlas.GetChunk(i), Color.Red);
+                {
+                    DrawChunkLines(tex.Atlas.GetChunk(i), nonSelectedChunkColor);
+                }
             }
 
             DrawChunkLines(tex.Atlas.GetChunk(_chunkIndex), Color.White);
@@ -213,15 +262,16 @@ namespace Editor.Views
                 float x2 = origin.x + (chunk.XPixel + chunk.Width) * zoom;
                 float y2 = origin.y + (chunk.YPixel + chunk.Height) * zoom;
 
-                drawList.AddLine(new Vector2(x1, y1), new Vector2(x1, y2), color);
-                drawList.AddLine(new Vector2(x2, y1), new Vector2(x2, y2), color);
-                drawList.AddLine(new Vector2(x1, y1), new Vector2(x2, y1), color);
-                drawList.AddLine(new Vector2(x1, y2), new Vector2(x2, y2), color);
+                drawList.AddLine(new Vector2(x1, y1), new Vector2(x1, y2), color.ToARGB_U32());
+                drawList.AddLine(new Vector2(x2, y1), new Vector2(x2, y2), color.ToARGB_U32());
+                drawList.AddLine(new Vector2(x1, y1), new Vector2(x2, y1), color.ToARGB_U32());
+                drawList.AddLine(new Vector2(x1, y2), new Vector2(x2, y2), color.ToARGB_U32());
 
                 float lerpX = Mathf.Lerp(x1, x2, chunk.Pivot.x);
                 float lerpY = Mathf.Lerp(y1, y2, chunk.Pivot.y);
 
-                drawList.AddRectFilled(new Vector2(lerpX - 1, lerpY - 1), new Vector2(lerpX + 1, lerpY + 1), Color.White);
+                var size = _pivotDotSize * _zoomFactor;
+                drawList.AddRectFilled(new Vector2(lerpX - size, lerpY - size), new Vector2(lerpX + size, lerpY + size), Color.Green.ToARGB_U32());
             }
         }
 
@@ -245,47 +295,54 @@ namespace Editor.Views
                 _chunkIndex = 0;
             }
 
-            if (atlasInfo.ChunksCount > 0)
+            ImGui.BeginDisabled(atlasInfo.ChunksCount == 0);
+            ImGui.Separator();
+
+            float cursorX = ImGui.GetCursorPosX();
+
+            ImGui.Text("Cell Index");
+            ImGui.SameLine();
+            ImGui.SetCursorPosX(cursorX + 100);
+            if (EditorGuiFieldsResolver.DrawIntField("#AtlasCurrentCellIndex", ref _chunkIndex))
             {
-                float cursorX = ImGui.GetCursorPosX();
+                _chunkIndex = Mathf.Clamp(_chunkIndex, 0, atlasInfo.ChunksCount - 1);
+            }
 
-                ImGui.Text("Cell Index");
-                ImGui.SameLine();
-                ImGui.SetCursorPosX(cursorX + 100);
-                if (EditorGuiFieldsResolver.DrawIntField("#AtlasCurrentCellIndex", ref _chunkIndex))
-                {
-                    _chunkIndex = Mathf.Clamp(_chunkIndex, 0, atlasInfo.ChunksCount - 1);
-                }
+            var currentCell = atlasInfo.GetChunk(_chunkIndex);
 
-                var currentCell = atlasInfo.GetChunk(_chunkIndex);
+            var position = new ivec2(currentCell.XPixel, currentCell.YPixel);
 
-                var position = new ivec2(currentCell.XPixel, currentCell.YPixel);
+            ImGui.Text("Pixel Position");
+            ImGui.SameLine();
+            ImGui.SetCursorPosX(cursorX + 100);
+            EditorGuiFieldsResolver.DrawVec2Field("#AtlasPixelPosition", ref position);
+            currentCell.XPixel = Mathf.Clamp(position.x, 0, int.MaxValue);
+            currentCell.YPixel = Mathf.Clamp(position.y, 0, int.MaxValue);
 
-                ImGui.Text("Pixel Position");
-                ImGui.SameLine();
-                ImGui.SetCursorPosX(cursorX + 100);
-                EditorGuiFieldsResolver.DrawVec2Field("#AtlasPixelPosition", ref position);
-                currentCell.XPixel = Mathf.Clamp(position.x, 0, int.MaxValue);
-                currentCell.YPixel = Mathf.Clamp(position.y, 0, int.MaxValue);
+            var size = new ivec2(currentCell.Width, currentCell.Height);
 
-                var size = new ivec2(currentCell.Width, currentCell.Height);
+            ImGui.Text("Size");
+            ImGui.SameLine();
+            ImGui.SetCursorPosX(cursorX + 100);
+            EditorGuiFieldsResolver.DrawIVec2Field("#AtlasSize", ref size);
+            currentCell.Width = Mathf.Clamp(size.x, 1, int.MaxValue);
+            currentCell.Height = Mathf.Clamp(size.y, 1, int.MaxValue);
 
-                ImGui.Text("Size");
-                ImGui.SameLine();
-                ImGui.SetCursorPosX(cursorX + 100);
-                EditorGuiFieldsResolver.DrawIVec2Field("#AtlasSize", ref size);
-                currentCell.Width = (int)Mathf.Clamp(size.x, 1, int.MaxValue);
-                currentCell.Height = (int)Mathf.Clamp(size.y, 1, int.MaxValue);
+            vec2 pivotDim = new vec2(currentCell.Pivot.x, currentCell.Pivot.y);
 
-                vec2 pivotDim = new vec2(currentCell.Pivot.x, currentCell.Pivot.y);
+            ImGui.Text("Pivot");
+            ImGui.SameLine();
+            ImGui.SetCursorPosX(cursorX + 100);
+            EditorGuiFieldsResolver.DrawVec2Field("#AtlasPivotPos", ref pivotDim);
+            currentCell.Pivot = new vec2(Mathf.Clamp(pivotDim.x, 0.0f, 1.0f), Mathf.Clamp(pivotDim.y, 0.0f, 1.0f));
 
-                ImGui.Text("Pivot");
-                ImGui.SameLine();
-                ImGui.SetCursorPosX(cursorX + 100);
-                EditorGuiFieldsResolver.DrawVec2Field("#AtlasPivotPos", ref pivotDim);
-                currentCell.Pivot = new vec2(Mathf.Clamp(pivotDim.x, 0.0f, 1.0f), Mathf.Clamp(pivotDim.y, 0.0f, 1.0f));
+            atlasInfo.UpdateChunk(_chunkIndex, currentCell);
 
-                atlasInfo.UpdateChunk(_chunkIndex, currentCell);
+            ImGui.EndDisabled();
+
+            if (ImGui.Button("Apply All", new Vector2(ImGui.GetContentRegionAvail().X, 23)))
+            {
+
             }
         }
     }
