@@ -17,7 +17,7 @@ namespace Editor.Views
         private float _zoomFactor = 1.0f;
         private const float _zoomSpeed = 0.1f;
         private const float _minZoom = 0.5f;
-        private const float _maxZoom = 3.0f;
+        private const float _maxZoom = 13.0f;
 
         private int _chunkIndex = 0;
         private float _prevScrollAmount = -1;
@@ -28,10 +28,12 @@ namespace Editor.Views
         private ivec2 _sliceDim = new ivec2(8, 8);
         public bool _isOpen = false;
 
-        private vec2 _panOffset;        
+        private vec2 _panOffset;
         private bool _isPanning;
         private vec2 _lastMousePosLocal;
         private bool _panInitialized;
+
+        private float _fitPadding = 32.0f;
 
         public bool IsWindowOpen() { return _isOpen; }
 
@@ -69,8 +71,12 @@ namespace Editor.Views
 
             if (!_panInitialized)
             {
+                _zoomFactor = ComputeFitZoom(canvasSizeV, _imageSize, _fitPadding);
+
                 vec2 canvasCenter = canvasSizeV * 0.5f;
-                _panOffset = canvasCenter - (_imageSize * _zoomFactor) * 0.5f;
+                vec2 imageCenter = (_imageSize * _zoomFactor) * 0.5f;
+
+                _panOffset = canvasCenter - imageCenter;
                 _panInitialized = true;
             }
 
@@ -100,8 +106,7 @@ namespace Editor.Views
             {
                 vec2 mouseBefore = (mouseLocal - _panOffset) / _zoomFactor;
 
-                _zoomFactor = Mathf.Clamp(_zoomFactor + wheel * _zoomSpeed,
-                                          _minZoom, _maxZoom);
+                _zoomFactor = Mathf.Clamp(_zoomFactor + wheel * _zoomSpeed, _minZoom, _maxZoom);
 
                 vec2 mouseAfter = mouseBefore * _zoomFactor;
                 _panOffset = mouseLocal - mouseAfter;
@@ -127,13 +132,23 @@ namespace Editor.Views
             ImGui.End();
         }
 
+        private float ComputeFitZoom(vec2 canvasSize, vec2 imageSize, float padding)
+        {
+            float availableW = Math.Max(1.0f, canvasSize.x - padding * 2.0f);
+            float availableH = Math.Max(1.0f, canvasSize.y - padding * 2.0f);
+
+            float zoomW = availableW / imageSize.x;
+            float zoomH = availableH / imageSize.y;
+
+            return Mathf.Clamp(Math.Min(zoomW, zoomH), _minZoom, _maxZoom);
+        }
+
         private void PropertiesGUI(Texture2D texture)
         {
             const float OverlayWidth = 250.0f;
             const float OverlayHeight = 175.0f;
             const float Margin = 10.0f;
 
-            // Canvas reference
             Vector2 canvasPos = ImGui.GetCursorScreenPos();
             Vector2 canvasSize = ImGui.GetContentRegionAvail();
 
@@ -155,7 +170,6 @@ namespace Editor.Views
             ImGui.PopStyleColor();
             ImGui.PopStyleVar();
         }
-
 
         private void DrawGrid(vec2 origin, Texture2D tex, float zoom)
         {
