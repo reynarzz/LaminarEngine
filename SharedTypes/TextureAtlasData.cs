@@ -79,11 +79,21 @@ namespace SharedTypes
         [JsonProperty] private TextureAtlasCell[] _chunks;
         [JsonIgnore] public int ChunksCount => _chunks?.Length ?? 0;
 
-        public TextureAtlasData()
+        // Serializer
+        internal TextureAtlasData()
+        {
+        }
+
+        public TextureAtlasData(int width, int height)
         {
             var defaultChunk = TextureAtlasCell.DefaultChunk;
-            defaultChunk.Width = 1;
-            defaultChunk.Height = 1;
+            defaultChunk.Width = width;
+            defaultChunk.Height = height;
+
+            _chunks =
+            [
+                defaultChunk
+            ];
         }
 
         public bool HasValidChunk(int chunkIndex)
@@ -117,7 +127,7 @@ namespace SharedTypes
             }
         }
 
-        
+
         public void SetChunks(TextureAtlasCell[] chunks)
         {
             _chunks = chunks;
