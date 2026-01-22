@@ -91,65 +91,7 @@ namespace Engine.Utils
             data.SetChunks(atlasChunks);
         }
 
-
-        public static Sprite[] SliceSprites(Texture2D texture, int tileWidth, int tileHeight)
-        {
-            return SliceSprites(texture, tileWidth, tileHeight, new vec2(0.5f, 0.5f));
-        }
-        public static Sprite[] SliceSprites(Texture2D texture, int tileWidth, int tileHeight, int startIndex, int length)
-        {
-            return SliceSprites(texture, tileWidth, tileHeight, new vec2(0.5f, 0.5f), startIndex, length);
-        }
-        public static Sprite[] SliceSprites(Texture2D texture, int tileWidth, int tileHeight, vec2 pivot)
-        {
-            int tilesX = texture.Width / tileWidth;
-            int tilesY = texture.Height / tileHeight;
-            return SliceSprites(texture, tileWidth, tileHeight, pivot, 0, tilesX * tilesY);
-        }
-
-        public static Sprite[] SliceSprites(Texture2D texture, int tileWidth, int tileHeight, vec2 pivot,
-                                            int startIndex, int length = int.MaxValue)
-        {
-            int tilesX = texture.Width / tileWidth;
-            int tilesY = texture.Height / tileHeight;
-
-            length = int.Min((tilesX * tilesY) - startIndex, length);
-
-            var atlasChunks = new TextureAtlasCell[length];
-            var sprites = new Sprite[length];
-            texture.Atlas.SetChunks(atlasChunks);
-
-            for (int i = 0; i < length; i++)
-            {
-                int globalIndex = startIndex + i;
-                int x = globalIndex % tilesX;
-                int y = globalIndex / tilesX;
-
-                // Flip y
-                y = tilesY - 1 - y;
-
-                atlasChunks[i] = CreateTileBounds(x * tileWidth, y * tileHeight, tileWidth, tileHeight,
-                                                  pivot.x, pivot.y, texture.Width, texture.Height);
-
-                sprites[i] = new Sprite($"{texture.Name} ({i})", i, texture);
-            }
-
-            return sprites;
-        }
-
-        public static Sprite[] GetSprites(Texture2D texture, int startIndex, int length = int.MaxValue)
-        {
-            length = int.Min(texture.Atlas.ChunksCount - startIndex, length);
-
-            var sprites = new Sprite[length];
-
-            for (int i = 0; i < sprites.Length; ++i)
-            {
-                sprites[i] = new Sprite(i + startIndex, texture);
-            }
-
-            return sprites;
-        }
+        
 
 
         public QuadUV ConvertTexCoordToGraphicsApiCompatible(QuadUV coord)

@@ -14,11 +14,6 @@ namespace Engine
         internal int AtlasIndex { get; private set; }
         internal TextureAtlasCell Cell { get; private set; }
 
-        internal Sprite() : this(0, Texture2D.White)
-        {
-            Name = "Sprite";
-        }
-
         internal Sprite(Texture2D texture, TextureAtlasCell cell, int index) : base(CreateSpriteName(texture, index), cell.ID)
         {
             AtlasIndex = index;
@@ -51,15 +46,7 @@ namespace Engine
         {
             if (Texture)
             {
-                var chunk = Texture.Atlas.GetCell(AtlasIndex);
-
-                if (chunk.Width <= 1 && chunk.Height <= 1)
-                {
-                    chunk.Width = Texture.Width;
-                    chunk.Height = Texture.Height;
-                }
-
-                return chunk;
+                return Cell;
             }
 
 #if DEBUG

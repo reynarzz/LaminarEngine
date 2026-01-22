@@ -10,7 +10,6 @@ namespace Engine
 {
     public class Texture2D : Texture
     {
-        public TextureAtlasData Atlas { get; } = new();
         private int _pixelsPerUnit;
 
         [SerializedField]

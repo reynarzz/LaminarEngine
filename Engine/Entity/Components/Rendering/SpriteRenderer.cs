@@ -30,7 +30,10 @@ namespace Engine
                 }
 
                 base.FlipX = value;
-                Sprite?.Texture?.Atlas?.UpdateUvs(Sprite.AtlasIndex, QuadUV.FlipUV(Sprite.GetAtlasChunk().Uvs, value, FlipY));
+                if(Sprite != null)
+                {
+                    Sprite.Cell.UpdateUvs(QuadUV.FlipUV(Sprite.GetAtlasChunk().Uvs, value, FlipY));
+                }
                 RendererData.IsDirty = true;
             }
         }
@@ -47,7 +50,10 @@ namespace Engine
                 }
 
                 base.FlipY = value;
-                Sprite?.Texture?.Atlas?.UpdateUvs(Sprite.AtlasIndex, QuadUV.FlipUV(Sprite.GetAtlasChunk().Uvs, FlipX, value));
+                if(Sprite != null)
+                {
+                    Sprite.Cell.UpdateUvs(QuadUV.FlipUV(Sprite.GetAtlasChunk().Uvs, FlipX, value));
+                }
                 RendererData.IsDirty = true;
             }
         }

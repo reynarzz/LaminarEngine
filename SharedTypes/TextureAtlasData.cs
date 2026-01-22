@@ -62,6 +62,16 @@ namespace SharedTypes
         public int YPixel { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
+
+        public void UpdatePivot(vec2 pivot)
+        {
+            Pivot = pivot;
+        }
+
+        public void UpdateUvs(QuadUV uvs)
+        {
+            Uvs = uvs;
+        }
     }
 
     public class TextureAtlasData
@@ -107,19 +117,11 @@ namespace SharedTypes
             }
         }
 
-        public void UpdatePivot(int index, vec2 pivot)
-        {
-            _chunks[index].Pivot = pivot;
-        }
-
+        
         public void SetChunks(TextureAtlasCell[] chunks)
         {
             _chunks = chunks;
         }
 
-        public void UpdateUvs(int index, QuadUV uvs)
-        {
-            _chunks[index].Uvs = uvs;
-        }
     }
 }

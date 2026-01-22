@@ -72,7 +72,7 @@ namespace Engine
             QuadVertices vertices = default;
 
             var texture = Sprite.Texture;
-            var chunk = texture.Atlas.GetCell(tile.Index);
+            var chunk = Assets.GetSpriteAtlas(texture.Path).GetSprite(tile.Index).Cell;
 
             float ppu = texture.PixelPerUnit;
             var width = (float)chunk.Width / ppu;

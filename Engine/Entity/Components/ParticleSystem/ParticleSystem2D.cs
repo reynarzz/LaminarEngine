@@ -52,7 +52,7 @@ namespace Engine
 
             _particles.Capacity = (int)MathF.Ceiling(EmitRate * ParticleLife * bufferOffset);
             _rendererData.Mesh.Vertices.Capacity = _particles.Capacity * 4;
-            Sprite = new Sprite();
+            Sprite = new Sprite(0, Texture2D.White); // Remove this, reference default sprite
             _rendererData.PrivateBatch = true; // TODO: Remove this
         }
 
@@ -146,7 +146,7 @@ namespace Engine
         internal override void Draw()
         {
             var texture = Sprite.Texture;
-            var chunk = texture.Atlas.GetCell(0);
+            var chunk = Sprite.Cell;
             float ppu = texture.PixelPerUnit;
 
 

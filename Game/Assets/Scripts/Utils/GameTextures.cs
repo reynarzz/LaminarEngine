@@ -100,6 +100,8 @@ namespace Game
                 { "outlineCircle", new Sprite(Assets.GetTexture("outlineCircle.png")) },
                 { "portal_frame", new Sprite(Assets.GetTexture("portal_frame.png")) },
             };
+
+
         }
 
         public static Sprite[] GetAtlas(string atlasId)
@@ -124,11 +126,37 @@ namespace Game
 
         private static Sprite[] TakeSprites(Sprite[] tileset, int startIndex, int length = int.MaxValue)
         {
-            return TextureAtlasUtils.GetSprites(tileset[0].Texture, startIndex, length);
+            return GetSprites(tileset[0].Texture, startIndex, length);
+        }
+
+        private static Sprite[] GetSprites(Texture2D texture, int startIndex, int length = int.MaxValue)
+        {
+            length = int.Min(Assets.GetSpriteAtlas(texture.Path).SpriteCount - startIndex, length);
+
+            var sprites = new Sprite[length];
+
+            for (int i = 0; i < sprites.Length; ++i)
+            {
+                sprites[i] = new Sprite(i + startIndex, texture);
+            }
+
+            return sprites;
         }
         private static Sprite[] SliceSprites(string name, int width, int height, vec2 pivot, int startIndex = 0, int length = int.MaxValue)
         {
-            return TextureAtlasUtils.SliceSprites(Assets.GetTexture(name), width, height, pivot, startIndex, length);
+            var spriteAtlas = Assets.GetSpriteAtlas(name);
+
+            if(length == int.MaxValue)
+            {
+                length = spriteAtlas.SpriteCount;
+            }
+            var sprites = new Sprite[length];
+
+            for (int i = 0; i < length; i++)
+            {
+                sprites[i] = spriteAtlas.GetSprite(i + startIndex);
+            }
+            return sprites;
         }
     }
 }
