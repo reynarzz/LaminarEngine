@@ -15,6 +15,13 @@ namespace SharedTypes
             public const string HEADER = "GFSD";
         }
 
+        public static void WriteMeta(string relativeAssetPath, AssetMetaFileBase meta)
+        {
+            File.WriteAllText(Paths.GetAbsoluteAssetPath(relativeAssetPath) + Paths.ASSET_META_EXT_NAME,
+                JsonConvert.SerializeObject(meta, Formatting.Indented));
+        }
+        
+        
         public static AssetMetaFileBase GetMeta(string path, AssetType assetType)
         {
             string metaJson = null;

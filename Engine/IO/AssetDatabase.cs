@@ -54,6 +54,16 @@ namespace Engine.IO
             return null;
         }
 
+        internal AssetInfo GetAssetInfo(AssetResourceBase asset)
+        {
+            if(_disk.AssetDatabaseInfo.Assets.TryGetValue(asset.GetID(), out var info))
+            {
+                return info;
+            }
+
+            return null;
+        }
+
         internal async Task<T> GetAssetAsync<T>(string path) where T : AssetResourceBase
         {
             if (_guidPathDict.TryGetByValue(Paths.ClearPathSeparation(path), out var guid))

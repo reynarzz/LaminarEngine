@@ -37,16 +37,20 @@ namespace Editor.Views
         private float _fitPadding = 32.0f;
 
         public bool IsWindowOpen() { return _isOpen; }
-
-        internal override void OnOpen(Texture2D texture)
+        private TextureMetaFile _meta;
+        internal void OnOpen(Texture2D texture, TextureMetaFile meta)
         {
             _chunkIndex = 0;
             _isOpen = true;
+            _meta = meta;
+
             _imageSize = new vec2(texture.Width, texture.Height);
-            _sliceDim = texture.Atlas.ChunksCount == 0 ? new ivec2(8, 8) :
-                new ivec2(texture.Atlas.GetChunk(0).Width, texture.Atlas.GetChunk(0).Height);
+            _sliceDim = _meta.AtlasData.ChunksCount == 0 ? new ivec2(8, 8) :
+                new ivec2(_meta.AtlasData.GetChunk(0).Width, _meta.AtlasData.GetChunk(0).Height);
 
             RestartView();
+
+
         }
 
         private void RestartView()
@@ -120,9 +124,9 @@ namespace Editor.Views
                     if (imageSpace.x >= 0 && imageSpace.y >= 0 &&
                         imageSpace.x < _imageSize.x && imageSpace.y < _imageSize.y)
                     {
-                        for (int i = 0; i < texture.Atlas.ChunksCount; i++)
+                        for (int i = 0; i < _meta.AtlasData.ChunksCount; i++)
                         {
-                            var chunk = texture.Atlas.GetChunk(i);
+                            var chunk = _meta.AtlasData.GetChunk(i);
 
                             if (imageSpace.x >= chunk.XPixel &&
                                 imageSpace.x < chunk.XPixel + chunk.Width &&
@@ -159,7 +163,7 @@ namespace Editor.Views
 
             DrawGrid(drawOrigin, texture, _zoomFactor);
 
-            if (texture.Atlas.ChunksCount == 0)
+            if (_meta.AtlasData.ChunksCount == 0)
             {
                 DrawDottedRect(drawList, drawOrigin.ToVector2(), (drawOrigin + _zoomedSize).ToVector2(),
                                Color.White.ToARGB_U32(), 6.0f, 3.0f);
@@ -240,20 +244,20 @@ namespace Editor.Views
 
         private void DrawGrid(vec2 origin, Texture2D tex, float zoom)
         {
-            if (tex.Atlas.ChunksCount == 0)
+            if (_meta.AtlasData.ChunksCount == 0)
                 return;
 
             var nonSelectedChunkColor = new Color(1, 1, 1, 0.3f);
 
-            for (int i = 0; i < tex.Atlas.ChunksCount; i++)
+            for (int i = 0; i < _meta.AtlasData.ChunksCount; i++)
             {
                 if (_chunkIndex != i)
                 {
-                    DrawChunkLines(tex.Atlas.GetChunk(i), nonSelectedChunkColor);
+                    DrawChunkLines(_meta.AtlasData.GetChunk(i), nonSelectedChunkColor);
                 }
             }
 
-            DrawChunkLines(tex.Atlas.GetChunk(_chunkIndex), Color.White);
+            DrawChunkLines(_meta.AtlasData.GetChunk(_chunkIndex), Color.White);
 
             void DrawChunkLines(AtlasChunk chunk, Color color)
             {
@@ -279,9 +283,9 @@ namespace Editor.Views
 
         private void DrawProperties(Texture2D texture)
         {
-            var atlasInfo = texture.Atlas;
+            var atlasData = _meta.AtlasData;
 
-           // ImGui.Text($"{texture.Name} ({texture.Width}, {texture.Height})");
+            // ImGui.Text($"{texture.Name} ({texture.Width}, {texture.Height})");
             ImGui.Text("Slice size");
             ImGui.SameLine();
             if (EditorGuiFieldsResolver.DrawIVec2Field("#CellSizeVec", ref _sliceDim, 200))
@@ -293,12 +297,12 @@ namespace Editor.Views
             ImGui.SameLine();
             if (ImGui.Button("Slice"))
             {
-                TextureAtlasUtils.SliceTiles(texture.Atlas, _sliceDim.x, _sliceDim.y,
+                TextureAtlasUtils.SliceTiles(_meta.AtlasData, _sliceDim.x, _sliceDim.y,
                                              texture.Width, texture.Height);
                 _chunkIndex = 0;
             }
 
-            ImGui.BeginDisabled(atlasInfo.ChunksCount == 0);
+            ImGui.BeginDisabled(atlasData.ChunksCount == 0);
             ImGui.Separator();
 
             float cursorX = ImGui.GetCursorPosX();
@@ -308,10 +312,10 @@ namespace Editor.Views
             ImGui.SetCursorPosX(cursorX + 100);
             if (EditorGuiFieldsResolver.DrawIntField("#AtlasCurrentCellIndex", ref _chunkIndex))
             {
-                _chunkIndex = Mathf.Clamp(_chunkIndex, 0, atlasInfo.ChunksCount - 1);
+                _chunkIndex = Mathf.Clamp(_chunkIndex, 0, atlasData.ChunksCount - 1);
             }
 
-            var currentCell = atlasInfo.GetChunk(_chunkIndex);
+            var currentCell = atlasData.GetChunk(_chunkIndex);
 
             var position = new ivec2(currentCell.XPixel, currentCell.YPixel);
 
@@ -339,14 +343,15 @@ namespace Editor.Views
             EditorGuiFieldsResolver.DrawVec2Field("#AtlasPivotPos", ref pivotDim);
             currentCell.Pivot = new vec2(Mathf.Clamp(pivotDim.x, 0.0f, 1.0f), Mathf.Clamp(pivotDim.y, 0.0f, 1.0f));
 
-            atlasInfo.UpdateChunk(_chunkIndex, currentCell);
+            atlasData.UpdateChunk(_chunkIndex, currentCell);
 
             ImGui.EndDisabled();
 
             if (ImGui.Button("Apply All", new Vector2(ImGui.GetContentRegionAvail().X, 23)))
             {
-
+                AssetUtils.WriteMeta(texture.Path, _meta);
             }
         }
+
     }
 }

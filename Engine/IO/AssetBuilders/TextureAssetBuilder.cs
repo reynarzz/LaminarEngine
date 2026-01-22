@@ -13,6 +13,31 @@ namespace Engine.IO
     {
         internal override AssetResourceBase BuildAsset(AssetInfo info, AssetMetaFileBase meta, Guid guid, BinaryReader reader)
         {
+            var data = GetData(reader, meta);
+
+            return new Texture2D(info.Path, guid, (TextureMode)data.Config.Mode, (TextureFilter)data.Config.Filter,
+                data.Width, data.Height, data.Channels, data.Config.PixelPerUnit, data.Data);
+        }
+
+        internal override void UpdateAsset(AssetResourceBase asset, AssetMetaFileBase meta, BinaryReader reader)
+        {
+            var texture = asset as Texture2D;
+            var updatedPath = texture.Path; // TODO: use actual updated texture path
+            var data = GetData(reader, meta);
+
+            texture.UpdateResource(data, updatedPath, meta.GUID);
+        }
+
+        internal class TextureDeserializedData
+        {
+            public int Width { get; set; }
+            public int Height { get; set; }
+            public int Channels { get; set; }
+            public byte[] Data { get; set; }
+            public TextureConfig Config { get; set; }
+        }
+        private TextureDeserializedData GetData(BinaryReader reader, AssetMetaFileBase meta)
+        {
             var width = reader.ReadInt32();
             var height = reader.ReadInt32();
             var comp = reader.ReadInt32();
@@ -21,13 +46,16 @@ namespace Engine.IO
             var imageData = new byte[imageSize];
 
             reader.BaseStream.ReadExactly(imageData);
-            var texMeta = (TextureMetaFile)meta;
-            return new Texture2D(info.Path, guid, (TextureMode)texMeta.Config.Mode, (TextureFilter)texMeta.Config.Filter, width, height, comp, texMeta.Config.PixelPerUnit, imageData);
-        }
 
-        internal override void UpdateAsset(AssetResourceBase asset, AssetMetaFileBase meta, BinaryReader reader)
-        {
-            throw new NotImplementedException();
+            var texMeta = (TextureMetaFile)meta;
+            return new TextureDeserializedData()
+            {
+                Width = width,
+                Height = height,
+                Channels = comp,
+                Config = texMeta.Config,
+                Data = imageData
+            };
         }
     }
 }

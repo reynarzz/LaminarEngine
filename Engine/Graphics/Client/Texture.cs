@@ -13,7 +13,7 @@ namespace Engine
         public int Height { get; protected set; }
         [SerializedField] public TextureMode Mode { get; protected set; }
         [SerializedField] public TextureFilter Filter { get; protected set; }
-        public int Channels { get; }
+        public int Channels { get; protected set; }
         internal protected byte[] Data { get; internal set; }
 
         internal GfxResource NativeResource { get; protected private set; }

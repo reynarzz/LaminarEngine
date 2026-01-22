@@ -16,7 +16,8 @@ namespace Engine.Graphics.OpenGL
     {
         private int _slotBound = 0;
         private bool _isMultisample = false;
-
+        private int _width;
+        private int _height;
         public GLTexture() : base(glGenTexture, glDeleteTexture)
         {
         }
@@ -26,6 +27,8 @@ namespace Engine.Graphics.OpenGL
             _isMultisample = descriptor.IsMultiSample;
 
             Bind();
+            _width = descriptor.Width;
+            _height = descriptor.Height;
 
             if (!descriptor.IsMultiSample)
             {
@@ -35,57 +38,8 @@ namespace Engine.Graphics.OpenGL
                                  GL_RGBA, GL_UNSIGNED_BYTE, data);
                 }
 
+                SetTextureFeatures(descriptor);
 
-                int minFilter = 0;
-                int magFilter = 0;
-
-                switch (descriptor.Filter)
-                {
-                    case TextureFilter.Nearest:
-                        if (descriptor.EnableMipMaps)
-                        {
-                            minFilter = GL_NEAREST_MIPMAP_NEAREST;
-                            magFilter = GL_NEAREST_MIPMAP_NEAREST;
-                        }
-                        else
-                        {
-                            minFilter = GL_NEAREST;
-                            magFilter = GL_NEAREST;
-                        }
-                        break;
-                    case TextureFilter.Linear:
-                        if (descriptor.EnableMipMaps)
-                        {
-                            minFilter = GL_LINEAR_MIPMAP_LINEAR;
-                            magFilter = GL_LINEAR_MIPMAP_LINEAR;
-                        }
-                        else
-                        {
-                            minFilter = GL_LINEAR;
-                            magFilter = GL_LINEAR;
-                        }
-                        break;
-                    default:
-                        throw new Exception("GL filter not implemented");
-                }
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilter);
-
-                int texMode = 0;
-                switch (descriptor.Mode)
-                {
-                    case TextureMode.Clamp:
-                        texMode = GL_CLAMP_TO_EDGE;
-                        break;
-                    case TextureMode.Repeat:
-                        texMode = GL_REPEAT;
-                        break;
-                    default:
-                        break;
-                }
-
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, texMode);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, texMode);
 
 
             }
@@ -106,11 +60,78 @@ namespace Engine.Graphics.OpenGL
         internal override unsafe void UpdateResource(TextureDescriptor descriptor)
         {
             Bind();
+            SetTextureFeatures(descriptor);
             fixed (void* data = descriptor.Buffer)
             {
-                glTexSubImage2D(GL_TEXTURE_2D, 0, descriptor.XOffset, descriptor.YOffset, descriptor.Width, descriptor.Height, GL_RGBA, GL_UNSIGNED_BYTE, data);
+                var isSizeChanged = descriptor.Width != _width || descriptor.Height != _height;
+                _width = descriptor.Width;
+                _height = descriptor.Height;
+
+                if (!isSizeChanged)
+                {
+                    glTexSubImage2D(GL_TEXTURE_2D, 0, descriptor.XOffset, descriptor.YOffset, 
+                                    descriptor.Width, descriptor.Height, GL_RGBA, GL_UNSIGNED_BYTE, data);
+                }
+                else
+                {
+                    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, descriptor.Width, descriptor.Height, 0, GL_RGBA, 
+                                 GL_UNSIGNED_BYTE, data);
+                }
             }
             Unbind();
+        }
+        private void SetTextureFeatures(TextureDescriptor descriptor)
+        {
+            int minFilter = 0;
+            int magFilter = 0;
+
+            switch (descriptor.Filter)
+            {
+                case TextureFilter.Nearest:
+                    if (descriptor.EnableMipMaps)
+                    {
+                        minFilter = GL_NEAREST_MIPMAP_NEAREST;
+                        magFilter = GL_NEAREST_MIPMAP_NEAREST;
+                    }
+                    else
+                    {
+                        minFilter = GL_NEAREST;
+                        magFilter = GL_NEAREST;
+                    }
+                    break;
+                case TextureFilter.Linear:
+                    if (descriptor.EnableMipMaps)
+                    {
+                        minFilter = GL_LINEAR_MIPMAP_LINEAR;
+                        magFilter = GL_LINEAR_MIPMAP_LINEAR;
+                    }
+                    else
+                    {
+                        minFilter = GL_LINEAR;
+                        magFilter = GL_LINEAR;
+                    }
+                    break;
+                default:
+                    throw new Exception("GL filter not implemented");
+            }
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilter);
+
+            int texMode = 0;
+            switch (descriptor.Mode)
+            {
+                case TextureMode.Clamp:
+                    texMode = GL_CLAMP_TO_EDGE;
+                    break;
+                case TextureMode.Repeat:
+                    texMode = GL_REPEAT;
+                    break;
+                default:
+                    break;
+            }
+
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, texMode);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, texMode);
         }
 
         /// <summary>

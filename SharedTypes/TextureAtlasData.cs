@@ -1,4 +1,5 @@
 ﻿using GlmNet;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -66,7 +67,7 @@ namespace SharedTypes
 
     public class TextureAtlasData
     {
-        private AtlasChunk[] _chunks;
+        [JsonProperty] private AtlasChunk[] _chunks;
         public int ChunksCount => _chunks?.Length ?? 0;
 
         public TextureAtlasData()

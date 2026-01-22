@@ -6,17 +6,6 @@ using System.Threading.Tasks;
 
 namespace Engine.Graphics
 {
-    public enum TextureMode
-    {
-        Clamp,
-        Repeat
-    }
-    public enum TextureFilter
-    {
-        Nearest,
-        Linear
-    }
-
     internal class TextureDescriptor : IGfxResourceDescriptor
     {
         internal int Width { get; set; }
