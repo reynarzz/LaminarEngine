@@ -21,7 +21,7 @@ namespace Engine
             _cell = cell;
         }
 
-        public Sprite(Texture2D texture) : this(0, texture)
+        internal Sprite(Texture2D texture) : this(0, texture)
         {
             Name = texture?.Name;
         }

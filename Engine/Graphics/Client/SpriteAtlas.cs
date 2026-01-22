@@ -20,6 +20,11 @@ namespace Engine
             _targetTexture = targetTexture;
             _sprites = new List<Sprite>();
             CollectionsMarshal.SetCount(_sprites, metadata.AtlasData.ChunksCount);
+
+            if(_sprites.Count == 0)
+            {
+                _sprites.Add(default);
+            }
         }
 
         internal override void UpdateResource(object data, string path, Guid id)
@@ -43,6 +48,21 @@ namespace Engine
 
         public Sprite GetSprite(int index)
         {
+            if (_textureMeta.AtlasData.ChunksCount == 0)
+            {
+                // Return default sprite if the texture is texture2D.
+                var defaultSprite = _sprites[index];
+                
+                if(defaultSprite == null)
+                { 
+                    var defaultCell = TextureAtlasCell.DefaultChunk;
+                    defaultCell.ID = _targetTexture.GetID();
+                    defaultCell.Width = _targetTexture.Width;
+                    defaultCell.Height = _targetTexture.Height;
+                    defaultSprite = CreateSprite(defaultCell, index);
+                }
+                return defaultSprite;
+            }
             if (_textureMeta.AtlasData.ChunksCount <= index)
             {
                 Debug.Error("Invalid sprite index. Out of range");
@@ -54,10 +74,16 @@ namespace Engine
             if (!sprite)
             {
                 // Lazy load the sprite and add it to the list.
-                var chunk = _textureMeta.AtlasData.GetCell(index);
-                sprite = new Sprite(_targetTexture, chunk, index);
-                _sprites[index] = sprite;
+                sprite = CreateSprite(_textureMeta.AtlasData.GetCell(index), index);
             }
+            return sprite;
+        }
+
+        private Sprite CreateSprite(TextureAtlasCell cell, int index)
+        {
+            var sprite = new Sprite(_targetTexture, cell, index);
+            _sprites[index] = sprite;
+
             return sprite;
         }
     }

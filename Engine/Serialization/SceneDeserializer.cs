@@ -253,6 +253,8 @@ namespace Engine.Serialization
                     }
                 }
                 _initializationComponents.Clear();
+                _actorsByID.Clear();
+                _componentsByID.Clear();
             }
 
         }

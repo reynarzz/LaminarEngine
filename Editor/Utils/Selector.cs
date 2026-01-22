@@ -20,11 +20,11 @@ namespace Editor
                     return null;
 
                 _selected.TryGetTarget(out var target);
-                return target;
+                return target ? target : null;
             }
             set
             {
-                if(_selected == null)
+                if (_selected == null)
                 {
                     _selected = new WeakReference<EObject>(value);
                 }
@@ -41,7 +41,7 @@ namespace Editor
             void Set(Transform transform)
             {
                 if (_transform == null)
-                    _transform = new WeakReference<Transform>(transform);
+                    _transform = new WeakReference<Transform>(transform ? transform : null);
                 else
                     _transform.SetTarget(transform);
             }
@@ -57,7 +57,7 @@ namespace Editor
                     Set(transform);
                 }
             }
-            else if(_transform != null)
+            else if (_transform != null)
             {
                 _transform.SetTarget(null);
             }
@@ -68,7 +68,7 @@ namespace Editor
             if (_transform == null)
                 return null;
             _transform.TryGetTarget(out var transform);
-            return transform;
+            return transform ? transform : null;
         }
     }
 }
