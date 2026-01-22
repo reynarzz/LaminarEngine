@@ -7,6 +7,7 @@ using Engine.Serialization;
 using Engine.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using SharedTypes;
 
 namespace Editor
 {
@@ -99,7 +100,8 @@ namespace Editor
                 var anim2 = Deserializer.Deserialize<AnimationClip>(ir);
 
                 _materialTest = Assets.GetMaterial("Materials/Material.material");
-                Selector.Selected = Assets.GetTexture("pixel-ui_buttons_long_47x14.png"); //_materialTest.Textures.ElementAt(0).Value;
+                Selector.Selected = Assets.GetTexture("starkTileset.png"); //_materialTest.Textures.ElementAt(0).Value;
+                ExportSlicedSprites();
 
                 var obj = Actor.Find("Chest");
                 if (obj)
@@ -121,6 +123,27 @@ namespace Editor
             }
 
             base.Update();
+        }
+
+        private void ExportSlicedSprites()
+        {
+            void Slice(Texture2D texture, int sliceX, int sliceY, float pivotX, float pivotY)
+            {
+                var meta = EditorAssetUtils.GetAssetMeta(texture) as TextureMetaFile;
+                meta.Config.IsAtlas = true;
+                TextureAtlasUtils.SliceTiles(meta.AtlasData, sliceX, sliceY, texture.Width, texture.Height, pivotX, pivotY);
+                AssetUtils.WriteMeta(texture.Path, meta);
+            }
+
+            var paths = new string[]
+            {
+                "KingsAndPigsSprites/11-Door/Opening (46x56).png"
+            };
+
+            foreach (var path in paths)
+            {
+                Slice(Assets.GetTexture(path), 46, 56, 0.5f, 0.5f);
+            }
         }
 
         private void LoadScene()

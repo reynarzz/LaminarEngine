@@ -43,6 +43,7 @@ namespace Engine
 
     internal class SpriteReferenceData : ReferenceData
     {
+        public Guid TextureId { get; set; }
         public int AtlasIndex { get; set; }
     }
 

@@ -47,6 +47,7 @@ namespace Engine.Serialization
                     case SerializedType.Actor:
                     case SerializedType.Asset:
                     case SerializedType.TextureAsset:
+                    case SerializedType.SpriteAsset:
                     case SerializedType.RenderTextureAsset:
                     case SerializedType.AudioClipAsset:
                     case SerializedType.MaterialAsset:
@@ -371,10 +372,12 @@ namespace Engine.Serialization
 
         private static Sprite GetSprite(SpriteReferenceData refData)
         {
-            var atlas = (Assets.GetAssetFromGuid(refData.Id) as TextureAsset)?.Atlas;
+            var asset = Assets.GetAssetFromGuid(refData.TextureId);
+            var atlas = (asset as TextureAsset)?.Atlas;
             if (atlas != null)
             {
-                return atlas.GetSprite(refData.AtlasIndex);
+                var sprite = atlas.GetSprite(refData.AtlasIndex);
+                return sprite;
             }
 
             return null;

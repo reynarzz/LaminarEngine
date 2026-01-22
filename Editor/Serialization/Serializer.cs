@@ -80,7 +80,10 @@ namespace Editor.Serialization
                     {
                         return SerializedType.AnimatorControllerAsset;
                     }
-                   
+                    else if (type.IsAssignableTo(typeof(Sprite)))
+                    {
+                        return SerializedType.SpriteAsset;
+                    }
                     return SerializedType.Asset;
                 }
                 else
@@ -340,7 +343,11 @@ namespace Editor.Serialization
                 case SerializedType.ScriptableObject:
                     return new ReferenceData() { Id = id };
                 case SerializedType.SpriteAsset:
-                    return new SpriteReferenceData() { Id = id, AtlasIndex = (value as Sprite).AtlasIndex };
+                    return new SpriteReferenceData() 
+                    { 
+                        Id = id, AtlasIndex = (value as Sprite).AtlasIndex, 
+                        TextureId = (value as Sprite).Texture.GetID() 
+                    };
                 default:
                     break;
             }

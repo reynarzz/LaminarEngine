@@ -40,27 +40,8 @@ namespace Engine.Utils
             };
         }
 
-        //public static void SliceTiles(TextureAtlasData data, int width, int height, int baseTextureWidth, int baseTextureHeight)
-        //{
-        //    int tilesX = baseTextureWidth / width;
-        //    int tilesY = baseTextureHeight / height;
-
-        //    var length = tilesX * tilesY;
-        //    var atlasChunks = new AtlasChunk[length];
-
-        //    int index = 0;
-        //    for (int y = tilesY - 1; y >= 0; --y)
-        //    {
-        //        for (int x = 0; x < tilesX; ++x)
-        //        {
-        //            atlasChunks[index++] = CreateTileBounds(x * width, (y) * height, width, height, 0.5f, 0.5f, baseTextureWidth, baseTextureHeight);
-        //        }
-        //    }
-
-        //    data.SetChunks(atlasChunks);
-        //}
-
-        public static void SliceTiles(TextureAtlasData data, int tileWidth, int tileHeight, int textureWidth, int textureHeight)
+        public static void SliceTiles(TextureAtlasData data, int tileWidth, int tileHeight, int textureWidth, int textureHeight,
+                                      float pivotX = 0.5f, float pivotY = 0.5f)
         {
             if (tileWidth <= 0 || tileHeight <= 0)
             {
@@ -84,43 +65,11 @@ namespace Engine.Utils
                 for (int x = 0; x < tilesX; x++)
                 {
                     atlasChunks[index++] = CreateTileBounds(x * tileWidth, flippedY, tileWidth, tileHeight,
-                                                            0.5f, 0.5f, textureWidth, textureHeight);
+                                                            pivotX, pivotY, textureWidth, textureHeight);
                 }
             }
 
             data.SetChunks(atlasChunks);
-        }
-
-        
-
-
-        public QuadUV ConvertTexCoordToGraphicsApiCompatible(QuadUV coord)
-        {
-            // TODO: Since the engine is rendering in OpengL, the uv is always reversed,
-            //       This must change when api is changed to another that texCoord do not start from the bottom 
-
-            bool flipDueGraphicsApi = true;
-
-            QuadUV outCoords = coord;
-            if (flipDueGraphicsApi)
-            {
-                // Flip whole textCoord
-                outCoords.BottomLeftUV.y = 1.0f - coord.BottomLeftUV.y;
-                outCoords.TopLeftUV.y = 1.0f - coord.TopLeftUV.y;
-                outCoords.TopRightUV.y = 1.0f - coord.TopRightUV.y;
-                outCoords.BottomRightUV.y = 1.0f - coord.BottomRightUV.y;
-
-                // Flip cell y
-                float leftTempY = outCoords.TopLeftUV.y;
-                float rightTempY = outCoords.TopRightUV.y;
-
-                outCoords.BottomLeftUV.y = outCoords.TopLeftUV.y;
-                outCoords.TopLeftUV.y = leftTempY;
-                outCoords.TopRightUV.y = outCoords.BottomRightUV.y;
-                outCoords.BottomRightUV.y = rightTempY;
-            }
-
-            return outCoords;
         }
     }
 }
