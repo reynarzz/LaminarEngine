@@ -68,7 +68,7 @@ namespace Editor.Views
                 RestartView();
             }
 
-            ImGui.Begin("Atlas Editor", ref _isOpen);
+            ImGui.Begin("Atlas Editor", ref _isOpen, ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoCollapse);
             ImGui.BeginDisabled(GameAssemblyBuilder.IsBuilding);
 
             var io = ImGui.GetIO();
@@ -281,6 +281,7 @@ namespace Editor.Views
         {
             var atlasInfo = texture.Atlas;
 
+           // ImGui.Text($"{texture.Name} ({texture.Width}, {texture.Height})");
             ImGui.Text("Slice size");
             ImGui.SameLine();
             if (EditorGuiFieldsResolver.DrawIVec2Field("#CellSizeVec", ref _sliceDim, 200))

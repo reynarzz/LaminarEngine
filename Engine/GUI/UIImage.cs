@@ -2,6 +2,7 @@
 using Engine.GUI;
 using System.Runtime.CompilerServices;
 using Engine.Graphics;
+using SharedTypes;
 
 namespace Engine.GUI
 {

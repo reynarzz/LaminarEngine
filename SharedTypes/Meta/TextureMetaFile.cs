@@ -17,16 +17,11 @@ namespace SharedTypes
         public int PixelPerUnit { get; set; }
     }
 
-    public class AtlasData
-    {
-        public List<object> Chunks { get; set; }
-    }
-
     [Serializable]
     [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
     public class TextureMetaFile : AssetMetaFileBase
     {
         public TextureConfig Config { get; set; } = new TextureConfig() { PixelPerUnit = 16 };
-        public AtlasData AtlasData { get; set; } = new AtlasData();
+        public TextureAtlasData AtlasData { get; set; } = new();
     }
 }

@@ -104,9 +104,9 @@ namespace Editor.Layers
 
             //ImGui.NewFrame();
             EditorNatives.imgui_NewFrame();
-			_glfwInput.NewFrame();
+            _glfwInput.NewFrame();
 
-			ImguiImplOpenGL3.NewFrame();
+            ImguiImplOpenGL3.NewFrame();
 
             // Render ImGui here:
 
@@ -116,7 +116,13 @@ namespace Editor.Layers
             ImguiImplOpenGL3.RenderDrawData(ImGui.GetDrawData());
             _glfwInput.UpdateMouseCursor();
 
-		}
+            //var io = ImGui.GetIO();
+            //if ((io.ConfigFlags & ImGuiConfigFlags.ViewportsEnable) != 0)
+            //{
+            //    ImGui.UpdatePlatformWindows();          // creates OS windows for floating viewports
+            //    ImGui.RenderPlatformWindowsDefault();   // render them
+            //}
+        }
 
         private void DockSpace()
         {
@@ -124,13 +130,13 @@ namespace Editor.Layers
             ImGui.SetNextWindowPos(viewport.Pos + new Vector2(0, 40));
             ImGui.SetNextWindowSize(viewport.Size - new Vector2(0, 67));
 
-            var flags = ImGuiWindowFlags.NoTitleBar |
-                                     ImGuiWindowFlags.NoCollapse |
-                                     ImGuiWindowFlags.NoResize |
-                                     ImGuiWindowFlags.NoMove |
-                                     ImGuiWindowFlags.NoBringToFrontOnFocus |
-                                     ImGuiWindowFlags.NoNavFocus |
-                                     ImGuiWindowFlags.NoBackground;
+            const ImGuiWindowFlags flags = ImGuiWindowFlags.NoTitleBar |
+                                      ImGuiWindowFlags.NoCollapse |
+                                      ImGuiWindowFlags.NoResize |
+                                      ImGuiWindowFlags.NoMove |
+                                      ImGuiWindowFlags.NoBringToFrontOnFocus |
+                                      ImGuiWindowFlags.NoNavFocus |
+                                      ImGuiWindowFlags.NoBackground;
 
             ImGui.PushStyleVar(ImGuiStyleVar.WindowRounding, 0.0f);
             ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f);
@@ -159,7 +165,7 @@ namespace Editor.Layers
                 windowView.OnUpdate();
             }
         }
-       
+        
         public override void Close()
         {
         }

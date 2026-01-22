@@ -99,7 +99,7 @@ namespace Editor
                 var anim2 = Deserializer.Deserialize<AnimationClip>(ir);
 
                 _materialTest = Assets.GetMaterial("Materials/Material.material");
-                Selector.Selected = Assets.GetTexture("starkTileset.png"); //_materialTest.Textures.ElementAt(0).Value;
+                Selector.Selected = Assets.GetTexture("Tilemap/SunnyLand_by_Ansimuz-extended.png"); //_materialTest.Textures.ElementAt(0).Value;
 
                 var obj = Actor.Find("Player");
                 if (obj)

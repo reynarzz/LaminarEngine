@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Engine
+namespace SharedTypes
 {
     public struct QuadUV
     {
@@ -92,7 +92,7 @@ namespace Engine
 #if DEBUG
             if (isInvalidIndex)
             {
-                Debug.Error($"invalid atlas chunk index: '{index}', Atlas Max: '{_chunks.Length}'");
+                Console.WriteLine($"invalid atlas chunk index: '{index}', Atlas Max: '{_chunks.Length}'");
                 return AtlasChunk.DefaultChunk;
             }
 #endif

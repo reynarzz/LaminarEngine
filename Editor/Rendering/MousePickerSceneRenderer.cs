@@ -2,6 +2,7 @@
 using Engine.Graphics;
 using Engine.Utils;
 using GlmNet;
+using SharedTypes;
 
 namespace Editor.Rendering
 {

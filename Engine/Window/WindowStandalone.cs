@@ -196,15 +196,11 @@ namespace Engine
             // Create a window
             if (NativeWindow == GLFW.Window.None)
             {
-                Console.WriteLine("Failed to create GLFW window");
+                Debug.Error("Failed to create GLFW window");
                 Glfw.Terminate();
                 return;
             }
-            else
-            {
-                Console.WriteLine("GLFW window sucess");
 
-            }
             Glfw.MakeContextCurrent(NativeWindow);
             // Glfw.SetMouseButtonCallback(NativeWindow, OnMouseButton);
             // Glfw.SetCursorPositionCallback(NativeWindow, OnCursorPos);

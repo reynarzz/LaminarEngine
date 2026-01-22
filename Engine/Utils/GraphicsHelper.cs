@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Engine.Graphics;
 using GlmNet;
+using SharedTypes;
 
 namespace Engine
 {

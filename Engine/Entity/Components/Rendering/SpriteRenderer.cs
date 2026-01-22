@@ -1,5 +1,6 @@
 ﻿using Engine.Graphics;
 using Engine.Types;
+using SharedTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
