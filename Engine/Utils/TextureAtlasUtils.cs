@@ -11,7 +11,7 @@ namespace Engine.Utils
 {
     public class TextureAtlasUtils
     {
-        public static AtlasChunk CreateTileBounds(int xPixel, int yPixel, int width, int height, float pivotX, float pivotY, int baseTextureWidth, int baseTextureHeight)
+        public static TextureAtlasCell CreateTileBounds(int xPixel, int yPixel, int width, int height, float pivotX, float pivotY, int baseTextureWidth, int baseTextureHeight)
         {
             float x = xPixel / (float)baseTextureWidth;
             float y = yPixel / (float)baseTextureHeight;
@@ -22,22 +22,21 @@ namespace Engine.Utils
             float ptX = (1.0f / (float)(baseTextureWidth * width)) / 2.0f;
             float ptY = (1.0f / (float)(baseTextureHeight * width)) / 2.0f;
 
-            var texCoords = new QuadUV()
+            return new TextureAtlasCell()
             {
-                BottomLeftUV = new vec2(x + ptX, y + ptY),                    // Bottom left
-                TopLeftUV = new vec2(x + ptX, y + nHeight - ptY),             // Top left
-                TopRightUV = new vec2(x + nWidth - ptX, y + nHeight - ptY),   // Top right
-                BottomRightUV = new vec2(x + nWidth - ptX, y + ptY),          // Bottom right
-            };
-
-            return new AtlasChunk()
-            {
+                ID = Guid.NewGuid(),
                 Width = width,
                 Height = height,
-                Uvs = texCoords,
                 Pivot = new vec2(pivotX, pivotY),
                 XPixel = xPixel,
                 YPixel = yPixel,
+                Uvs = new QuadUV()
+                {
+                    BottomLeftUV = new vec2(x + ptX, y + ptY),                    // Bottom left
+                    TopLeftUV = new vec2(x + ptX, y + nHeight - ptY),             // Top left
+                    TopRightUV = new vec2(x + nWidth - ptX, y + nHeight - ptY),   // Top right
+                    BottomRightUV = new vec2(x + nWidth - ptX, y + ptY),          // Bottom right
+                },
             };
         }
 
@@ -75,7 +74,7 @@ namespace Engine.Utils
             if (tilesX <= 0 || tilesY <= 0)
                 return;
 
-            var atlasChunks = new AtlasChunk[tilesX * tilesY];
+            var atlasChunks = new TextureAtlasCell[tilesX * tilesY];
             int index = 0;
 
             for (int y = 0; y < tilesY; y++)
@@ -115,8 +114,8 @@ namespace Engine.Utils
             int tilesY = texture.Height / tileHeight;
 
             length = int.Min((tilesX * tilesY) - startIndex, length);
-        
-            var atlasChunks = new AtlasChunk[length];
+
+            var atlasChunks = new TextureAtlasCell[length];
             var sprites = new Sprite[length];
             texture.Atlas.SetChunks(atlasChunks);
 
@@ -141,7 +140,7 @@ namespace Engine.Utils
         public static Sprite[] GetSprites(Texture2D texture, int startIndex, int length = int.MaxValue)
         {
             length = int.Min(texture.Atlas.ChunksCount - startIndex, length);
-  
+
             var sprites = new Sprite[length];
 
             for (int i = 0; i < sprites.Length; ++i)

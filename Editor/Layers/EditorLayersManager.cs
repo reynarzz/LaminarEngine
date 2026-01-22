@@ -101,7 +101,7 @@ namespace Editor
                 _materialTest = Assets.GetMaterial("Materials/Material.material");
                 Selector.Selected = Assets.GetTexture("Tilemap/SunnyLand_by_Ansimuz-extended.png"); //_materialTest.Textures.ElementAt(0).Value;
 
-                var obj = Actor.Find("Player");
+                var obj = Actor.Find("Chest");
                 if (obj)
                 {
                     var value = obj.GetComponent<SpriteRenderer>();
@@ -111,10 +111,10 @@ namespace Editor
 
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.R))
             {
-                var clip = Assets.Get<AnimationClip>("Animation/AnimClip.anim");
-                var clipController = Assets.Get<AnimatorController>("Animation/AnimController.animctrl");
+                //var clip = Assets.Get<AnimationClip>("Animation/AnimClip.anim");
+                //var clipController = Assets.Get<AnimatorController>("Animation/AnimController.animctrl");
 
-                _test = Assets.GetShader("Shaders/Test/ShaderTest.shader");
+                //_test = Assets.GetShader("Shaders/Test/ShaderTest.shader");
 
 
                 LoadScene();

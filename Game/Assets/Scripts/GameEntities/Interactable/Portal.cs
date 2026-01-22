@@ -32,7 +32,7 @@ namespace Game
             // TODO: move this to an audio library class.
             if (_clip == null)
             {
-                _clip = Assets.Get<AudioClip>("Audio/RetroSounds/portal.wav");
+                _clip = Assets.GetAudioClip("Audio/RetroSounds/portal.wav");
             }
         }
 

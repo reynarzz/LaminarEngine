@@ -36,6 +36,16 @@ namespace Engine
         public object Data { get; set; }
     }
 
+    internal class ReferenceData
+    {
+        public Guid Id { get; set; }
+    }
+
+    internal class SpriteReferenceData : ReferenceData
+    {
+        public int AtlasIndex { get; set; }
+    }
+
     internal class CollectionPropertyData
     {
         public ReflectionUtils.CollectionType CollectionType { get; set; }
@@ -83,6 +93,7 @@ namespace Engine
         ComplexCollection,
         Asset,
         TextureAsset,
+        SpriteAsset,
         RenderTextureAsset,
         AudioClipAsset,
         ShaderAsset,

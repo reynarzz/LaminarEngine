@@ -31,7 +31,8 @@ namespace Engine
         /// </summary>
         public static SpriteAtlas GetSpriteAtlas(string path)
         {
-            return Get<SpriteAtlas>(path);
+            var asset = Get<TextureAsset>(path);
+            return asset?.Atlas; 
         }
 
         public static Shader GetShader(string path)
@@ -54,7 +55,8 @@ namespace Engine
 
         public static Texture2D GetTexture(string path)
         {
-            return Get<Texture2D>(path);
+            var asset = Get<TextureAsset>(path);
+            return asset.Texture as Texture2D;
         }
 
         public static AudioClip GetAudioClip(string path)
@@ -66,7 +68,7 @@ namespace Engine
         {
             return Get<AssetResourceBase>(path);
         }
-        public static T Get<T>(string path) where T : AssetResourceBase
+        internal static T Get<T>(string path) where T : AssetResourceBase
         {
 #if DEBUG
             if (!string.IsNullOrEmpty(path) && !_loadedPaths.Contains(path))

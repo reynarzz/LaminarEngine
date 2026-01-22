@@ -85,9 +85,10 @@ namespace Engine.Serialization
                 return;
             }
             //if(Guid.TryParse((string)property.Data, out var guid))
-            var guid = GetGuidSafe(property.Data);
 
-            var referenceValue = GetReferenceValue(property.Type, guid, deserializerData);
+            var refData = property.Data as ReferenceData;
+
+            var referenceValue = GetReferenceValue(property.Type, deserializerData, refData);
 
             if (referenceValue != null)
             {
@@ -153,7 +154,6 @@ namespace Engine.Serialization
                 foreach (var item in collectionData.Collection)
                 {
                     var serializedItem = (DictionaryData<object, object>)item;
-                    var guid = GetGuidSafe(serializedItem.Value);
                     if ((serializedItem.keyType == SerializedType.Simple ||
                         serializedItem.keyType == SerializedType.SimpleClass ||
                         serializedItem.keyType == SerializedType.SimpleCollection) && serializedItem.Key != null
@@ -162,7 +162,7 @@ namespace Engine.Serialization
                         serializedItem.Key = Convert.ChangeType(serializedItem.Key, args[0]);
                     }
 
-                    dictionary.Add(serializedItem.Key, GetReferenceValue(serializedItem.Type, guid, deserializerData));
+                    dictionary.Add(serializedItem.Key, GetReferenceValue(serializedItem.Type, deserializerData, serializedItem.Value as ReferenceData));
                 }
 
                 ReflectionUtils.SetMemberValue(target, dictionary, property.Name);
@@ -189,12 +189,12 @@ namespace Engine.Serialization
 
             object GetItemReferenceValue(object item)
             {
-                var referenceElement = item as CollectionData<Guid>;
+                var referenceElement = item as CollectionData<ReferenceData>;
 
                 if (referenceElement == null)
                     return null;
 
-                return GetReferenceValue(referenceElement.Type, referenceElement.Value, deserializerData);
+                return GetReferenceValue(referenceElement.Type, deserializerData, referenceElement.Value);
             }
 
             void SetValueToProperty(object collectionInstance, Action<object, int> setCollectionValueCallback)
@@ -336,19 +336,23 @@ namespace Engine.Serialization
             }
         }
 
-        private static object GetReferenceValue(SerializedType type, Guid guid, DeserializerData deserializerData)
+        private static object GetReferenceValue(SerializedType type, DeserializerData deserializerData,
+                                                ReferenceData refData)
         {
-            if (type == SerializedType.None || guid == Guid.Empty)
+            if (type == SerializedType.None || refData.Id == Guid.Empty)
                 return null;
 
             switch (type)
             {
                 case SerializedType.Component:
-                    return GetReferenceValue(deserializerData?.ComponentsByID, guid);
+                    return GetReferenceValue(deserializerData?.ComponentsByID, refData.Id);
                 case SerializedType.Actor:
-                    return GetReferenceValue(deserializerData?.ActorsByID, guid);
+                    return GetReferenceValue(deserializerData?.ActorsByID, refData.Id);
                 case SerializedType.Asset:
                 case SerializedType.TextureAsset:
+                    return (Assets.GetAssetFromGuid(refData.Id) as TextureAsset)?.Texture;
+                case SerializedType.SpriteAsset:
+                    return GetSprite(refData as SpriteReferenceData);
                 case SerializedType.RenderTextureAsset:
                 case SerializedType.AudioClipAsset:
                 case SerializedType.MaterialAsset:
@@ -356,7 +360,7 @@ namespace Engine.Serialization
                 case SerializedType.AnimationAsset:
                 case SerializedType.AnimatorControllerAsset:
                 case SerializedType.ScriptableObject:
-                    return Assets.GetAssetFromGuid(guid);
+                    return Assets.GetAssetFromGuid(refData.Id);
                 default:
                     // Debug.Error($"Can't deserialize reference: '{type}' is not implemented.");
                     break;
@@ -364,6 +368,18 @@ namespace Engine.Serialization
 
             return null;
         }
+
+        private static Sprite GetSprite(SpriteReferenceData refData)
+        {
+            var atlas = (Assets.GetAssetFromGuid(refData.Id) as TextureAsset)?.Atlas;
+            if (atlas != null)
+            {
+                return atlas.GetSprite(refData.AtlasIndex);
+            }
+
+            return null;
+        }
+
         private static object GetReferenceValue<V, D>(Dictionary<Guid, (V value, D data)> ids, Guid guid)
         {
             if (guid == Guid.Empty)

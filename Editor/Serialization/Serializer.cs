@@ -80,11 +80,15 @@ namespace Editor.Serialization
                     {
                         return SerializedType.AnimatorControllerAsset;
                     }
-
+                   
                     return SerializedType.Asset;
                 }
                 else
                 {
+                    if (type.IsAssignableTo(typeof(Sprite)))
+                    {
+                        return SerializedType.SpriteAsset;
+                    }
                     return SerializedType.EObject;
                 }
             }
@@ -166,6 +170,7 @@ namespace Editor.Serialization
             return (aTop && (!bHasAny || bTop)) || (bTop && (!aHasAny || aTop));
         }
 
+
         // This only returns reference ids, simple and complex property data.
         internal static object GetPropertyData(MemberInfo member, SerializedType serializedMemberType, object value)
         {
@@ -196,11 +201,9 @@ namespace Editor.Serialization
             }
             else if (type.IsAssignableTo(typeof(IObject)))
             {
-                if (value != null)
-                {
-                    return (value as IObject).GetID();
-                }
-                return Guid.Empty;
+                var id = (value as IObject)?.GetID() ?? Guid.Empty;
+
+                return GetReferenceData(id, serializedMemberType, value);
             }
             else if (ReflectionUtils.IsCollection(type, out var collectionType))
             {
@@ -221,12 +224,13 @@ namespace Editor.Serialization
                     {
                         var dValue = dictionary[dKey];
 
-                        var k = isKeyEObject ? (dKey as IObject)?.GetID() ?? Guid.Empty : dKey;
-                        var v = isValueEObject ? (dValue as IObject)?.GetID() ?? Guid.Empty : dValue;
-                        var referenceType = isKeyEObject ? dKey?.GetType() : dValue?.GetType();
-                        var serializedType = GetSerializedType(referenceType);
                         var keySerializedType = dKey != null ? GetSerializedType(dKey?.GetType()) : GetSerializedType(elementsType[0]);
                         var ValueSerializedType = dValue != null ? GetSerializedType(dValue?.GetType()) : GetSerializedType(elementsType[1]);
+
+                        var k = isKeyEObject ? GetReferenceData((dKey as IObject)?.GetID() ?? Guid.Empty, keySerializedType, dKey) : dKey;
+                        var v = isValueEObject ? GetReferenceData((dValue as IObject)?.GetID() ?? Guid.Empty, ValueSerializedType, dValue) : dValue;
+                        var referenceType = isKeyEObject ? dKey?.GetType() : dValue?.GetType();
+                        var serializedType = GetSerializedType(referenceType);
 
                         if (serializedMemberType == SerializedType.ReferenceCollection)
                         {
@@ -257,7 +261,7 @@ namespace Editor.Serialization
                                             new SerializedPropertyData()
                                             {
                                                Data = argValue,
-                                               InternalType =internalType,
+                                               InternalType = internalType,
                                                Type = argSerializedType,
                                                Name = argName
                                             }
@@ -287,10 +291,11 @@ namespace Editor.Serialization
                     {
                         if (serializedMemberType == SerializedType.ReferenceCollection)
                         {
-                            referenced.Collection.Add(new CollectionData<Guid>()
+                            var itemSerializedType = GetSerializedType(item?.GetType());
+                            referenced.Collection.Add(new CollectionData<ReferenceData>()
                             {
-                                Type = GetSerializedType(item?.GetType()),
-                                Value = (item as IObject)?.GetID() ?? Guid.Empty
+                                Type = itemSerializedType,
+                                Value = GetReferenceData((item as IObject)?.GetID() ?? Guid.Empty, itemSerializedType, item),
                             });
                         }
                         else
@@ -315,6 +320,33 @@ namespace Editor.Serialization
             return null;
         }
 
+        private static ReferenceData GetReferenceData(Guid id, SerializedType serializedMemberType, object value)
+        {
+            switch (serializedMemberType)
+            {
+                case SerializedType.None:
+                    break;
+                case SerializedType.EObject:
+                case SerializedType.Component:
+                case SerializedType.Actor:
+                case SerializedType.Asset:
+                case SerializedType.TextureAsset:
+                case SerializedType.RenderTextureAsset:
+                case SerializedType.AudioClipAsset:
+                case SerializedType.ShaderAsset:
+                case SerializedType.MaterialAsset:
+                case SerializedType.AnimationAsset:
+                case SerializedType.AnimatorControllerAsset:
+                case SerializedType.ScriptableObject:
+                    return new ReferenceData() { Id = id };
+                case SerializedType.SpriteAsset:
+                    return new SpriteReferenceData() { Id = id, AtlasIndex = (value as Sprite).AtlasIndex };
+                default:
+                    break;
+            }
+
+            return new ReferenceData() { Id = id };
+        }
         internal static ComplexTypeData CreateComplexType(Type complexType, object value, SerializedType serializedType)
         {
             if (complexType == null)

@@ -57,8 +57,10 @@
                   "Type": "AnimationAsset",
                   "InternalType": "Engine.AnimationClip, Engine",
                   "Data": {
-                    "$type": "System.Guid, System.Private.CoreLib",
-                    "$value": "93e141e0-f742-4b5b-8e1a-e516e00145d8"
+                    "$type": "Engine.ReferenceData, Engine",
+                    "$value": {
+                      "Id": "4c94b23e-2ccf-46f8-b40d-7356e5987b4c"
+                    }
                   }
                 },
                 {
@@ -205,8 +207,10 @@
                   "Type": "AnimationAsset",
                   "InternalType": "Engine.AnimationClip, Engine",
                   "Data": {
-                    "$type": "System.Guid, System.Private.CoreLib",
-                    "$value": "209200d0-32f0-442a-80f4-8293849f2bc7"
+                    "$type": "Engine.ReferenceData, Engine",
+                    "$value": {
+                      "Id": "5374cbde-5a50-4191-89f9-0914b1a6e3d7"
+                    }
                   }
                 },
                 {
@@ -353,8 +357,10 @@
                   "Type": "AnimationAsset",
                   "InternalType": "Engine.AnimationClip, Engine",
                   "Data": {
-                    "$type": "System.Guid, System.Private.CoreLib",
-                    "$value": "25718034-b744-424f-b602-9ae07285219a"
+                    "$type": "Engine.ReferenceData, Engine",
+                    "$value": {
+                      "Id": "c59112d7-1f5b-4443-a8cb-d42ef40c81ae"
+                    }
                   }
                 },
                 {
@@ -507,8 +513,10 @@
                   "Type": "AnimationAsset",
                   "InternalType": "Engine.AnimationClip, Engine",
                   "Data": {
-                    "$type": "System.Guid, System.Private.CoreLib",
-                    "$value": "cebf507e-cf07-4914-bf35-55bc89a6b255"
+                    "$type": "Engine.ReferenceData, Engine",
+                    "$value": {
+                      "Id": "f632fec9-55ef-492d-9dad-5ab43708e3b7"
+                    }
                   }
                 },
                 {
@@ -632,8 +640,10 @@
                   "Type": "AnimationAsset",
                   "InternalType": "Engine.AnimationClip, Engine",
                   "Data": {
-                    "$type": "System.Guid, System.Private.CoreLib",
-                    "$value": "0057b70a-4569-41f2-ae43-57e86f194e83"
+                    "$type": "Engine.ReferenceData, Engine",
+                    "$value": {
+                      "Id": "d350b0de-8afb-47db-a262-4e26595c9931"
+                    }
                   }
                 },
                 {
@@ -764,8 +774,10 @@
                   "Type": "AnimationAsset",
                   "InternalType": "Engine.AnimationClip, Engine",
                   "Data": {
-                    "$type": "System.Guid, System.Private.CoreLib",
-                    "$value": "50ba392a-1975-443f-9ea6-05ddc489936a"
+                    "$type": "Engine.ReferenceData, Engine",
+                    "$value": {
+                      "Id": "ceb1c78b-40b5-4a69-847b-b26be5ea9679"
+                    }
                   }
                 },
                 {
@@ -816,8 +828,10 @@
                   "Type": "AnimationAsset",
                   "InternalType": "Engine.AnimationClip, Engine",
                   "Data": {
-                    "$type": "System.Guid, System.Private.CoreLib",
-                    "$value": "4c605d81-69b8-4b65-a29a-85c6befe500b"
+                    "$type": "Engine.ReferenceData, Engine",
+                    "$value": {
+                      "Id": "08aab13a-7cee-472a-bb30-3d583f47a713"
+                    }
                   }
                 },
                 {
@@ -994,8 +1008,10 @@
                   "Type": "AnimationAsset",
                   "InternalType": "Engine.AnimationClip, Engine",
                   "Data": {
-                    "$type": "System.Guid, System.Private.CoreLib",
-                    "$value": "f2b72e97-fb42-4ece-ac62-ab48410b94c0"
+                    "$type": "Engine.ReferenceData, Engine",
+                    "$value": {
+                      "Id": "4d16fdbe-01d4-4783-a26f-99700943c815"
+                    }
                   }
                 },
                 {
@@ -1046,8 +1062,10 @@
                   "Type": "AnimationAsset",
                   "InternalType": "Engine.AnimationClip, Engine",
                   "Data": {
-                    "$type": "System.Guid, System.Private.CoreLib",
-                    "$value": "31c48fd4-9f51-4564-8e5d-c6938e59e78f"
+                    "$type": "Engine.ReferenceData, Engine",
+                    "$value": {
+                      "Id": "5a71378d-2632-4b06-a1ef-45f44fb59b08"
+                    }
                   }
                 },
                 {

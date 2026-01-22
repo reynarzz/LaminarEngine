@@ -8,16 +8,29 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    public class Sprite : AssetResourceBase
+    public class Sprite : EObject
     {
-        public Texture2D Texture { get; }
-        public int AtlasIndex { get; }
+        public Texture2D Texture { get; private set; }
+        internal int AtlasIndex { get; private set; }
+        internal TextureAtlasCell Cell { get; private set; }
 
-        public Sprite() : this(0, Texture2D.White)
+        internal Sprite() : this(0, Texture2D.White)
         {
             Name = "Sprite";
         }
 
+        internal Sprite(Texture2D texture, TextureAtlasCell cell, int index) : base(CreateSpriteName(texture, index), cell.ID)
+        {
+            AtlasIndex = index;
+            Texture = texture;
+            Cell = cell;
+        }
+
+        private static string CreateSpriteName(Texture2D texture, int index)
+        {
+            var postFix = (index > 0) ? $"[{index}]" : string.Empty;
+            return $"{texture.Name}{postFix}";
+        }
         public Sprite(string name, int atlasIndex, Texture2D texture) : this(atlasIndex, texture)
         {
             Name = name;
@@ -34,11 +47,11 @@ namespace Engine
             Name = texture?.Name;
         }
 
-        public AtlasChunk GetAtlasChunk()
+        public TextureAtlasCell GetAtlasChunk()
         {
             if (Texture)
             {
-                var chunk = Texture.Atlas.GetChunk(AtlasIndex);
+                var chunk = Texture.Atlas.GetCell(AtlasIndex);
 
                 if (chunk.Width <= 1 && chunk.Height <= 1)
                 {
@@ -52,12 +65,16 @@ namespace Engine
 #if DEBUG
             Debug.Error($"Sprite: {Name}, doesn't have a texture attached, using default atlas chunk instead.");
 #endif
-            return AtlasChunk.DefaultChunk;
+            return TextureAtlasCell.DefaultChunk;
         }
 
-        internal override void UpdateResource(object data, string path, Guid guid)
+        internal void UpdateResource(Texture2D texture, TextureAtlasCell cell, int index)
         {
-            throw new NotImplementedException();
+            Texture = texture;
+            Name = CreateSpriteName(texture, index);
+            Cell = cell;
+            AtlasIndex = index;
+            _SetID(cell.ID);
         }
     }
 }

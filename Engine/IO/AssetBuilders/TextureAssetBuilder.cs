@@ -15,17 +15,18 @@ namespace Engine.IO
         {
             var data = GetData(reader, meta);
 
-            return new Texture2D(info.Path, guid, (TextureMode)data.Config.Mode, (TextureFilter)data.Config.Filter,
-                data.Width, data.Height, data.Channels, data.Config.PixelPerUnit, data.Data);
+            var texture = new Texture2D(info.Path, guid, data.Config.Mode, data.Config.Filter,data.Width, data.Height,
+                                        data.Channels, data.Config.PixelPerUnit, data.Data);
+
+            return new TextureAsset(info.Path, guid, texture, new SpriteAtlas(meta as TextureMetaFile, texture, guid));
         }
 
         internal override void UpdateAsset(AssetResourceBase asset, AssetMetaFileBase meta, BinaryReader reader)
         {
-            var texture = asset as Texture2D;
-            var updatedPath = texture.Path; // TODO: use actual updated texture path
+            var textureAsset = asset as TextureAsset;
+            var updatedPath = textureAsset.Texture.Path;
             var data = GetData(reader, meta);
-
-            texture.UpdateResource(data, updatedPath, meta.GUID);
+            textureAsset.Texture.UpdateResource(data, updatedPath, meta.GUID);
         }
 
         internal class TextureDeserializedData

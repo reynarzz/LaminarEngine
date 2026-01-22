@@ -5,7 +5,7 @@
     "InternalType": "System.Boolean, System.Private.CoreLib",
     "Data": {
       "$type": "System.Boolean, System.Private.CoreLib",
-      "$value": false
+      "$value": true
     }
   },
   {
@@ -100,11 +100,14 @@
                             "Properties": [
                               {
                                 "Name": "Value",
-                                "Type": "Asset",
+                                "Type": "SpriteAsset",
                                 "InternalType": "Engine.Sprite, Engine",
                                 "Data": {
-                                  "$type": "System.Guid, System.Private.CoreLib",
-                                  "$value": "0def5a62-4b29-4bce-987d-93eff1bcc273"
+                                  "$type": "Engine.SpriteReferenceData, Engine",
+                                  "$value": {
+                                    "AtlasIndex": 0,
+                                    "Id": "6a7cedbd-f7ed-4626-97fc-f6a8f244ec5c"
+                                  }
                                 }
                               },
                               {
@@ -128,11 +131,14 @@
                             "Properties": [
                               {
                                 "Name": "Value",
-                                "Type": "Asset",
+                                "Type": "SpriteAsset",
                                 "InternalType": "Engine.Sprite, Engine",
                                 "Data": {
-                                  "$type": "System.Guid, System.Private.CoreLib",
-                                  "$value": "74ce688f-a033-46e0-9440-56b83d8b4c77"
+                                  "$type": "Engine.SpriteReferenceData, Engine",
+                                  "$value": {
+                                    "AtlasIndex": 1,
+                                    "Id": "bac0f7a9-d9d3-47cd-b2e7-6c5e3beee1a0"
+                                  }
                                 }
                               },
                               {
@@ -156,11 +162,14 @@
                             "Properties": [
                               {
                                 "Name": "Value",
-                                "Type": "Asset",
+                                "Type": "SpriteAsset",
                                 "InternalType": "Engine.Sprite, Engine",
                                 "Data": {
-                                  "$type": "System.Guid, System.Private.CoreLib",
-                                  "$value": "b3a057b4-e434-44d5-a3c6-c3afcc0019a2"
+                                  "$type": "Engine.SpriteReferenceData, Engine",
+                                  "$value": {
+                                    "AtlasIndex": 2,
+                                    "Id": "d5239113-a60f-45f9-b8d2-a7cb7e20c408"
+                                  }
                                 }
                               },
                               {
@@ -184,11 +193,14 @@
                             "Properties": [
                               {
                                 "Name": "Value",
-                                "Type": "Asset",
+                                "Type": "SpriteAsset",
                                 "InternalType": "Engine.Sprite, Engine",
                                 "Data": {
-                                  "$type": "System.Guid, System.Private.CoreLib",
-                                  "$value": "c3aae6ae-8fa2-4c25-b2e3-6754dda3f474"
+                                  "$type": "Engine.SpriteReferenceData, Engine",
+                                  "$value": {
+                                    "AtlasIndex": 3,
+                                    "Id": "761052b0-42c7-44ac-8e2b-d4172ec9efab"
+                                  }
                                 }
                               },
                               {
@@ -198,6 +210,223 @@
                                 "Data": {
                                   "$type": "System.Single, System.Private.CoreLib",
                                   "$value": 0.26086956
+                                }
+                              }
+                            ]
+                          },
+                          "Type": "ComplexClass"
+                        },
+                        {
+                          "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                          "Value": {
+                            "TargetTypeName": "Engine.Keyframe`1[[Engine.Sprite, Engine]], Engine",
+                            "ComplexType": "ComplexClass",
+                            "Properties": [
+                              {
+                                "Name": "Value",
+                                "Type": "SpriteAsset",
+                                "InternalType": "Engine.Sprite, Engine",
+                                "Data": {
+                                  "$type": "Engine.SpriteReferenceData, Engine",
+                                  "$value": {
+                                    "AtlasIndex": 4,
+                                    "Id": "2eeadb90-2fac-4d45-bc1a-8a04440708aa"
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "Time",
+                                "Type": "Simple",
+                                "InternalType": "System.Single, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.Single, System.Private.CoreLib",
+                                  "$value": 0.3478261
+                                }
+                              }
+                            ]
+                          },
+                          "Type": "ComplexClass"
+                        },
+                        {
+                          "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                          "Value": {
+                            "TargetTypeName": "Engine.Keyframe`1[[Engine.Sprite, Engine]], Engine",
+                            "ComplexType": "ComplexClass",
+                            "Properties": [
+                              {
+                                "Name": "Value",
+                                "Type": "SpriteAsset",
+                                "InternalType": "Engine.Sprite, Engine",
+                                "Data": {
+                                  "$type": "Engine.SpriteReferenceData, Engine",
+                                  "$value": {
+                                    "AtlasIndex": 5,
+                                    "Id": "641496ca-bcb7-40e2-bf12-0b7885b23ad0"
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "Time",
+                                "Type": "Simple",
+                                "InternalType": "System.Single, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.Single, System.Private.CoreLib",
+                                  "$value": 0.43478262
+                                }
+                              }
+                            ]
+                          },
+                          "Type": "ComplexClass"
+                        },
+                        {
+                          "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                          "Value": {
+                            "TargetTypeName": "Engine.Keyframe`1[[Engine.Sprite, Engine]], Engine",
+                            "ComplexType": "ComplexClass",
+                            "Properties": [
+                              {
+                                "Name": "Value",
+                                "Type": "SpriteAsset",
+                                "InternalType": "Engine.Sprite, Engine",
+                                "Data": {
+                                  "$type": "Engine.SpriteReferenceData, Engine",
+                                  "$value": {
+                                    "AtlasIndex": 6,
+                                    "Id": "63475e4b-4b5c-4cee-a060-671f6e5dbfd2"
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "Time",
+                                "Type": "Simple",
+                                "InternalType": "System.Single, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.Single, System.Private.CoreLib",
+                                  "$value": 0.5217391
+                                }
+                              }
+                            ]
+                          },
+                          "Type": "ComplexClass"
+                        },
+                        {
+                          "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                          "Value": {
+                            "TargetTypeName": "Engine.Keyframe`1[[Engine.Sprite, Engine]], Engine",
+                            "ComplexType": "ComplexClass",
+                            "Properties": [
+                              {
+                                "Name": "Value",
+                                "Type": "SpriteAsset",
+                                "InternalType": "Engine.Sprite, Engine",
+                                "Data": {
+                                  "$type": "Engine.SpriteReferenceData, Engine",
+                                  "$value": {
+                                    "AtlasIndex": 7,
+                                    "Id": "01d987a7-b611-4085-8e3a-78c475650154"
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "Time",
+                                "Type": "Simple",
+                                "InternalType": "System.Single, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.Single, System.Private.CoreLib",
+                                  "$value": 0.6086957
+                                }
+                              }
+                            ]
+                          },
+                          "Type": "ComplexClass"
+                        },
+                        {
+                          "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                          "Value": {
+                            "TargetTypeName": "Engine.Keyframe`1[[Engine.Sprite, Engine]], Engine",
+                            "ComplexType": "ComplexClass",
+                            "Properties": [
+                              {
+                                "Name": "Value",
+                                "Type": "SpriteAsset",
+                                "InternalType": "Engine.Sprite, Engine",
+                                "Data": {
+                                  "$type": "Engine.SpriteReferenceData, Engine",
+                                  "$value": {
+                                    "AtlasIndex": 8,
+                                    "Id": "bb372705-34f5-49d8-bada-eae9a51c3634"
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "Time",
+                                "Type": "Simple",
+                                "InternalType": "System.Single, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.Single, System.Private.CoreLib",
+                                  "$value": 0.6956522
+                                }
+                              }
+                            ]
+                          },
+                          "Type": "ComplexClass"
+                        },
+                        {
+                          "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                          "Value": {
+                            "TargetTypeName": "Engine.Keyframe`1[[Engine.Sprite, Engine]], Engine",
+                            "ComplexType": "ComplexClass",
+                            "Properties": [
+                              {
+                                "Name": "Value",
+                                "Type": "SpriteAsset",
+                                "InternalType": "Engine.Sprite, Engine",
+                                "Data": {
+                                  "$type": "Engine.SpriteReferenceData, Engine",
+                                  "$value": {
+                                    "AtlasIndex": 9,
+                                    "Id": "2f864abe-7449-4895-9866-1781bdf9556c"
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "Time",
+                                "Type": "Simple",
+                                "InternalType": "System.Single, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.Single, System.Private.CoreLib",
+                                  "$value": 0.7826087
+                                }
+                              }
+                            ]
+                          },
+                          "Type": "ComplexClass"
+                        },
+                        {
+                          "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                          "Value": {
+                            "TargetTypeName": "Engine.Keyframe`1[[Engine.Sprite, Engine]], Engine",
+                            "ComplexType": "ComplexClass",
+                            "Properties": [
+                              {
+                                "Name": "Value",
+                                "Type": "SpriteAsset",
+                                "InternalType": "Engine.Sprite, Engine",
+                                "Data": {
+                                  "$type": "Engine.SpriteReferenceData, Engine",
+                                  "$value": {
+                                    "AtlasIndex": 10,
+                                    "Id": "f3884440-7181-46f9-8097-d7c47e464fc5"
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "Time",
+                                "Type": "Simple",
+                                "InternalType": "System.Single, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.Single, System.Private.CoreLib",
+                                  "$value": 0.86956525
                                 }
                               }
                             ]
@@ -234,33 +463,7 @@
               "$type": "Engine.CollectionPropertyData, Engine",
               "$value": {
                 "CollectionType": "List",
-                "Collection": [
-                  {
-                    "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
-                    "Value": {
-                      "TargetTypeName": "Engine.EventCurve+EventKeyFrame, Engine",
-                      "ComplexType": "ComplexClass",
-                      "Properties": [
-                        {
-                          "Name": "Value",
-                          "Type": "ComplexClass",
-                          "InternalType": "DelegateForwarder",
-                          "Data": null
-                        },
-                        {
-                          "Name": "Time",
-                          "Type": "Simple",
-                          "InternalType": "System.Single, System.Private.CoreLib",
-                          "Data": {
-                            "$type": "System.Single, System.Private.CoreLib",
-                            "$value": 0.0
-                          }
-                        }
-                      ]
-                    },
-                    "Type": "ComplexClass"
-                  }
-                ]
+                "Collection": []
               }
             }
           }

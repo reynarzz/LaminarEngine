@@ -44,35 +44,34 @@ namespace SharedTypes
         }
     }
 
-    public struct AtlasChunk // Convert to class
+    public struct TextureAtlasCell // Convert to class
     {
-        public static AtlasChunk DefaultChunk = new AtlasChunk()
+        public static TextureAtlasCell DefaultChunk = new TextureAtlasCell()
         {
+            ID = Guid.NewGuid(),
             Pivot = new vec2(0.5f, 0.5f),
             Uvs = QuadUV.DefaultUVs,
             Width = 1,
             Height = 1,
         };
 
+        public Guid ID { get; set; }
         public vec2 Pivot { get; set; }
-
         public QuadUV Uvs { get; set; }
-
         public int XPixel { get; set; }
         public int YPixel { get; set; }
-
         public int Width { get; set; }
         public int Height { get; set; }
     }
 
     public class TextureAtlasData
     {
-        [JsonProperty] private AtlasChunk[] _chunks;
-        public int ChunksCount => _chunks?.Length ?? 0;
+        [JsonProperty] private TextureAtlasCell[] _chunks;
+        [JsonIgnore] public int ChunksCount => _chunks?.Length ?? 0;
 
         public TextureAtlasData()
         {
-            var defaultChunk = AtlasChunk.DefaultChunk;
+            var defaultChunk = TextureAtlasCell.DefaultChunk;
             defaultChunk.Width = 1;
             defaultChunk.Height = 1;
         }
@@ -82,11 +81,11 @@ namespace SharedTypes
             return _chunks != null && _chunks.Length > chunkIndex;
         }
 
-        public AtlasChunk GetChunk(int index)
+        public TextureAtlasCell GetCell(int index)
         {
             if (_chunks == null)
             {
-                return AtlasChunk.DefaultChunk;
+                return TextureAtlasCell.DefaultChunk;
             }
 
             var isInvalidIndex = index >= _chunks.Length;
@@ -94,13 +93,13 @@ namespace SharedTypes
             if (isInvalidIndex)
             {
                 Console.WriteLine($"invalid atlas chunk index: '{index}', Atlas Max: '{_chunks.Length}'");
-                return AtlasChunk.DefaultChunk;
+                return TextureAtlasCell.DefaultChunk;
             }
 #endif
             return _chunks[index];
         }
 
-        public void UpdateChunk(int index, AtlasChunk chunk)
+        public void UpdateChunk(int index, TextureAtlasCell chunk)
         {
             if (_chunks != null && _chunks.Length > index)
             {
@@ -113,7 +112,7 @@ namespace SharedTypes
             _chunks[index].Pivot = pivot;
         }
 
-        public void SetChunks(AtlasChunk[] chunks)
+        public void SetChunks(TextureAtlasCell[] chunks)
         {
             _chunks = chunks;
         }

@@ -1,14 +1,5 @@
 [
   {
-    "Name": "Shader",
-    "Type": "ShaderAsset",
-    "InternalType": "Engine.Shader, Engine",
-    "Data": {
-      "$type": "System.Guid, System.Private.CoreLib",
-      "$value": "789ddba2-9545-4717-81df-5926837de7cb"
-    }
-  },
-  {
     "Name": "_passes",
     "Type": "ComplexCollection",
     "InternalType": "System.Collections.Generic.List`1[[Engine.RenderPass, Engine]], System.Private.CoreLib",
@@ -37,8 +28,10 @@
                   "Type": "ShaderAsset",
                   "InternalType": "Engine.Shader, Engine",
                   "Data": {
-                    "$type": "System.Guid, System.Private.CoreLib",
-                    "$value": "789ddba2-9545-4717-81df-5926837de7cb"
+                    "$type": "Engine.ReferenceData, Engine",
+                    "$value": {
+                      "Id": "2b583c4e-0861-4bdc-aba6-bf6598deda39"
+                    }
                   }
                 },
                 {
@@ -74,461 +67,1409 @@
                 },
                 {
                   "Name": "_uniforms",
-                  "Type": "SimpleCollection",
+                  "Type": "ComplexCollection",
                   "InternalType": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib],[Engine.Graphics.UniformValue, Engine]], System.Private.CoreLib",
                   "Data": {
-                    "$type": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib],[Engine.Graphics.UniformValue, Engine]], System.Private.CoreLib",
+                    "$type": "Engine.CollectionPropertyData, Engine",
                     "$value": {
-                      "uDistortionAmount": {
-                        "Name": "uDistortionAmount",
-                        "IntValue": 0,
-                        "UIntValue": 0,
-                        "FloatValue": 0.009,
-                        "Mat4Value": {
-                          "c0": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
+                      "CollectionType": "Dictionary",
+                      "Collection": [
+                        {
+                          "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+                          "Key": {
+                            "TargetTypeName": "System.String, System.Private.CoreLib",
+                            "ComplexType": "Simple",
+                            "Properties": [
+                              {
+                                "Name": "DictionaryKey",
+                                "Type": "Simple",
+                                "InternalType": "System.String, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.String, System.Private.CoreLib",
+                                  "$value": "uDistortionAmount"
+                                }
+                              }
+                            ]
                           },
-                          "c1": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
+                          "Value": {
+                            "TargetTypeName": "Engine.Graphics.UniformValue, Engine",
+                            "ComplexType": "ComplexClass",
+                            "Properties": [
+                              {
+                                "Name": "Name",
+                                "Type": "Simple",
+                                "InternalType": "System.String, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.String, System.Private.CoreLib",
+                                  "$value": "uDistortionAmount"
+                                }
+                              },
+                              {
+                                "Name": "IntValue",
+                                "Type": "Simple",
+                                "InternalType": "System.Int32, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.Int32, System.Private.CoreLib",
+                                  "$value": 0
+                                }
+                              },
+                              {
+                                "Name": "UIntValue",
+                                "Type": "Simple",
+                                "InternalType": "System.UInt32, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.UInt32, System.Private.CoreLib",
+                                  "$value": 0
+                                }
+                              },
+                              {
+                                "Name": "FloatValue",
+                                "Type": "Simple",
+                                "InternalType": "System.Single, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.Single, System.Private.CoreLib",
+                                  "$value": 0.009
+                                }
+                              },
+                              {
+                                "Name": "Mat4Value",
+                                "Type": "Simple",
+                                "InternalType": "GlmNet.mat4, SharedTypes",
+                                "Data": {
+                                  "$type": "GlmNet.mat4, SharedTypes",
+                                  "$value": {
+                                    "c0": {
+                                      "x": 0.0,
+                                      "y": 0.0,
+                                      "z": 0.0,
+                                      "w": 0.0
+                                    },
+                                    "c1": {
+                                      "x": 0.0,
+                                      "y": 0.0,
+                                      "z": 0.0,
+                                      "w": 0.0
+                                    },
+                                    "c2": {
+                                      "x": 0.0,
+                                      "y": 0.0,
+                                      "z": 0.0,
+                                      "w": 0.0
+                                    },
+                                    "c3": {
+                                      "x": 0.0,
+                                      "y": 0.0,
+                                      "z": 0.0,
+                                      "w": 0.0
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "Vec2Value",
+                                "Type": "Simple",
+                                "InternalType": "GlmNet.vec2, SharedTypes",
+                                "Data": {
+                                  "$type": "GlmNet.vec2, SharedTypes",
+                                  "$value": {
+                                    "x": 0.0,
+                                    "y": 0.0
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "Vec3Value",
+                                "Type": "Simple",
+                                "InternalType": "GlmNet.vec3, SharedTypes",
+                                "Data": {
+                                  "$type": "GlmNet.vec3, SharedTypes",
+                                  "$value": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "Vec4Value",
+                                "Type": "Simple",
+                                "InternalType": "GlmNet.vec4, SharedTypes",
+                                "Data": {
+                                  "$type": "GlmNet.vec4, SharedTypes",
+                                  "$value": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0,
+                                    "w": 0.0
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "IntArrValue",
+                                "Type": "SimpleCollection",
+                                "InternalType": "System.Int32[], System.Private.CoreLib",
+                                "Data": null
+                              },
+                              {
+                                "Name": "Type",
+                                "Type": "Simple",
+                                "InternalType": "Engine.Graphics.UniformType, SharedTypes",
+                                "Data": {
+                                  "$type": "Engine.Graphics.UniformType, SharedTypes",
+                                  "$value": "Float"
+                                }
+                              },
+                              {
+                                "Name": "RenderTextureValue",
+                                "Type": "TextureAsset",
+                                "InternalType": "Engine.RenderTexture, Engine",
+                                "Data": null
+                              }
+                            ]
                           },
-                          "c2": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
+                          "Type": "ComplexClass"
+                        },
+                        {
+                          "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+                          "Key": {
+                            "TargetTypeName": "System.String, System.Private.CoreLib",
+                            "ComplexType": "Simple",
+                            "Properties": [
+                              {
+                                "Name": "DictionaryKey",
+                                "Type": "Simple",
+                                "InternalType": "System.String, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.String, System.Private.CoreLib",
+                                  "$value": "uOutlineColor"
+                                }
+                              }
+                            ]
                           },
-                          "c3": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
-                          }
-                        },
-                        "Vec2Value": {
-                          "x": 0.0,
-                          "y": 0.0
-                        },
-                        "Vec3Value": {
-                          "x": 0.0,
-                          "y": 0.0,
-                          "z": 0.0
-                        },
-                        "Vec4Value": {
-                          "x": 0.0,
-                          "y": 0.0,
-                          "z": 0.0,
-                          "w": 0.0
-                        },
-                        "IntArrValue": null,
-                        "Type": "Float",
-                        "RenderTextureValue": null
-                      },
-                      "uOutlineColor": {
-                        "Name": "uOutlineColor",
-                        "IntValue": 0,
-                        "UIntValue": 0,
-                        "FloatValue": 0.0,
-                        "Mat4Value": {
-                          "c0": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
+                          "Value": {
+                            "TargetTypeName": "Engine.Graphics.UniformValue, Engine",
+                            "ComplexType": "ComplexClass",
+                            "Properties": [
+                              {
+                                "Name": "Name",
+                                "Type": "Simple",
+                                "InternalType": "System.String, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.String, System.Private.CoreLib",
+                                  "$value": "uOutlineColor"
+                                }
+                              },
+                              {
+                                "Name": "IntValue",
+                                "Type": "Simple",
+                                "InternalType": "System.Int32, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.Int32, System.Private.CoreLib",
+                                  "$value": 0
+                                }
+                              },
+                              {
+                                "Name": "UIntValue",
+                                "Type": "Simple",
+                                "InternalType": "System.UInt32, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.UInt32, System.Private.CoreLib",
+                                  "$value": 0
+                                }
+                              },
+                              {
+                                "Name": "FloatValue",
+                                "Type": "Simple",
+                                "InternalType": "System.Single, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.Single, System.Private.CoreLib",
+                                  "$value": 0.0
+                                }
+                              },
+                              {
+                                "Name": "Mat4Value",
+                                "Type": "Simple",
+                                "InternalType": "GlmNet.mat4, SharedTypes",
+                                "Data": {
+                                  "$type": "GlmNet.mat4, SharedTypes",
+                                  "$value": {
+                                    "c0": {
+                                      "x": 0.0,
+                                      "y": 0.0,
+                                      "z": 0.0,
+                                      "w": 0.0
+                                    },
+                                    "c1": {
+                                      "x": 0.0,
+                                      "y": 0.0,
+                                      "z": 0.0,
+                                      "w": 0.0
+                                    },
+                                    "c2": {
+                                      "x": 0.0,
+                                      "y": 0.0,
+                                      "z": 0.0,
+                                      "w": 0.0
+                                    },
+                                    "c3": {
+                                      "x": 0.0,
+                                      "y": 0.0,
+                                      "z": 0.0,
+                                      "w": 0.0
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "Vec2Value",
+                                "Type": "Simple",
+                                "InternalType": "GlmNet.vec2, SharedTypes",
+                                "Data": {
+                                  "$type": "GlmNet.vec2, SharedTypes",
+                                  "$value": {
+                                    "x": 0.0,
+                                    "y": 0.0
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "Vec3Value",
+                                "Type": "Simple",
+                                "InternalType": "GlmNet.vec3, SharedTypes",
+                                "Data": {
+                                  "$type": "GlmNet.vec3, SharedTypes",
+                                  "$value": {
+                                    "x": 1.6,
+                                    "y": 1.0,
+                                    "z": 1.0
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "Vec4Value",
+                                "Type": "Simple",
+                                "InternalType": "GlmNet.vec4, SharedTypes",
+                                "Data": {
+                                  "$type": "GlmNet.vec4, SharedTypes",
+                                  "$value": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0,
+                                    "w": 0.0
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "IntArrValue",
+                                "Type": "SimpleCollection",
+                                "InternalType": "System.Int32[], System.Private.CoreLib",
+                                "Data": null
+                              },
+                              {
+                                "Name": "Type",
+                                "Type": "Simple",
+                                "InternalType": "Engine.Graphics.UniformType, SharedTypes",
+                                "Data": {
+                                  "$type": "Engine.Graphics.UniformType, SharedTypes",
+                                  "$value": "Vec3"
+                                }
+                              },
+                              {
+                                "Name": "RenderTextureValue",
+                                "Type": "TextureAsset",
+                                "InternalType": "Engine.RenderTexture, Engine",
+                                "Data": null
+                              }
+                            ]
                           },
-                          "c1": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
+                          "Type": "ComplexClass"
+                        },
+                        {
+                          "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+                          "Key": {
+                            "TargetTypeName": "System.String, System.Private.CoreLib",
+                            "ComplexType": "Simple",
+                            "Properties": [
+                              {
+                                "Name": "DictionaryKey",
+                                "Type": "Simple",
+                                "InternalType": "System.String, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.String, System.Private.CoreLib",
+                                  "$value": "uOutlineThickness"
+                                }
+                              }
+                            ]
                           },
-                          "c2": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
+                          "Value": {
+                            "TargetTypeName": "Engine.Graphics.UniformValue, Engine",
+                            "ComplexType": "ComplexClass",
+                            "Properties": [
+                              {
+                                "Name": "Name",
+                                "Type": "Simple",
+                                "InternalType": "System.String, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.String, System.Private.CoreLib",
+                                  "$value": "uOutlineThickness"
+                                }
+                              },
+                              {
+                                "Name": "IntValue",
+                                "Type": "Simple",
+                                "InternalType": "System.Int32, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.Int32, System.Private.CoreLib",
+                                  "$value": 0
+                                }
+                              },
+                              {
+                                "Name": "UIntValue",
+                                "Type": "Simple",
+                                "InternalType": "System.UInt32, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.UInt32, System.Private.CoreLib",
+                                  "$value": 0
+                                }
+                              },
+                              {
+                                "Name": "FloatValue",
+                                "Type": "Simple",
+                                "InternalType": "System.Single, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.Single, System.Private.CoreLib",
+                                  "$value": 0.02
+                                }
+                              },
+                              {
+                                "Name": "Mat4Value",
+                                "Type": "Simple",
+                                "InternalType": "GlmNet.mat4, SharedTypes",
+                                "Data": {
+                                  "$type": "GlmNet.mat4, SharedTypes",
+                                  "$value": {
+                                    "c0": {
+                                      "x": 0.0,
+                                      "y": 0.0,
+                                      "z": 0.0,
+                                      "w": 0.0
+                                    },
+                                    "c1": {
+                                      "x": 0.0,
+                                      "y": 0.0,
+                                      "z": 0.0,
+                                      "w": 0.0
+                                    },
+                                    "c2": {
+                                      "x": 0.0,
+                                      "y": 0.0,
+                                      "z": 0.0,
+                                      "w": 0.0
+                                    },
+                                    "c3": {
+                                      "x": 0.0,
+                                      "y": 0.0,
+                                      "z": 0.0,
+                                      "w": 0.0
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "Vec2Value",
+                                "Type": "Simple",
+                                "InternalType": "GlmNet.vec2, SharedTypes",
+                                "Data": {
+                                  "$type": "GlmNet.vec2, SharedTypes",
+                                  "$value": {
+                                    "x": 0.0,
+                                    "y": 0.0
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "Vec3Value",
+                                "Type": "Simple",
+                                "InternalType": "GlmNet.vec3, SharedTypes",
+                                "Data": {
+                                  "$type": "GlmNet.vec3, SharedTypes",
+                                  "$value": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "Vec4Value",
+                                "Type": "Simple",
+                                "InternalType": "GlmNet.vec4, SharedTypes",
+                                "Data": {
+                                  "$type": "GlmNet.vec4, SharedTypes",
+                                  "$value": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0,
+                                    "w": 0.0
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "IntArrValue",
+                                "Type": "SimpleCollection",
+                                "InternalType": "System.Int32[], System.Private.CoreLib",
+                                "Data": null
+                              },
+                              {
+                                "Name": "Type",
+                                "Type": "Simple",
+                                "InternalType": "Engine.Graphics.UniformType, SharedTypes",
+                                "Data": {
+                                  "$type": "Engine.Graphics.UniformType, SharedTypes",
+                                  "$value": "Float"
+                                }
+                              },
+                              {
+                                "Name": "RenderTextureValue",
+                                "Type": "TextureAsset",
+                                "InternalType": "Engine.RenderTexture, Engine",
+                                "Data": null
+                              }
+                            ]
                           },
-                          "c3": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
-                          }
+                          "Type": "ComplexClass"
                         },
-                        "Vec2Value": {
-                          "x": 0.0,
-                          "y": 0.0
-                        },
-                        "Vec3Value": {
-                          "x": 1.6,
-                          "y": 1.0,
-                          "z": 1.0
-                        },
-                        "Vec4Value": {
-                          "x": 0.0,
-                          "y": 0.0,
-                          "z": 0.0,
-                          "w": 0.0
-                        },
-                        "IntArrValue": null,
-                        "Type": "Vec3",
-                        "RenderTextureValue": null
-                      },
-                      "uOutlineThickness": {
-                        "Name": "uOutlineThickness",
-                        "IntValue": 0,
-                        "UIntValue": 0,
-                        "FloatValue": 0.02,
-                        "Mat4Value": {
-                          "c0": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
+                        {
+                          "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+                          "Key": {
+                            "TargetTypeName": "System.String, System.Private.CoreLib",
+                            "ComplexType": "Simple",
+                            "Properties": [
+                              {
+                                "Name": "DictionaryKey",
+                                "Type": "Simple",
+                                "InternalType": "System.String, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.String, System.Private.CoreLib",
+                                  "$value": "uDotted"
+                                }
+                              }
+                            ]
                           },
-                          "c1": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
+                          "Value": {
+                            "TargetTypeName": "Engine.Graphics.UniformValue, Engine",
+                            "ComplexType": "ComplexClass",
+                            "Properties": [
+                              {
+                                "Name": "Name",
+                                "Type": "Simple",
+                                "InternalType": "System.String, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.String, System.Private.CoreLib",
+                                  "$value": "uDotted"
+                                }
+                              },
+                              {
+                                "Name": "IntValue",
+                                "Type": "Simple",
+                                "InternalType": "System.Int32, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.Int32, System.Private.CoreLib",
+                                  "$value": 0
+                                }
+                              },
+                              {
+                                "Name": "UIntValue",
+                                "Type": "Simple",
+                                "InternalType": "System.UInt32, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.UInt32, System.Private.CoreLib",
+                                  "$value": 0
+                                }
+                              },
+                              {
+                                "Name": "FloatValue",
+                                "Type": "Simple",
+                                "InternalType": "System.Single, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.Single, System.Private.CoreLib",
+                                  "$value": 0.0
+                                }
+                              },
+                              {
+                                "Name": "Mat4Value",
+                                "Type": "Simple",
+                                "InternalType": "GlmNet.mat4, SharedTypes",
+                                "Data": {
+                                  "$type": "GlmNet.mat4, SharedTypes",
+                                  "$value": {
+                                    "c0": {
+                                      "x": 0.0,
+                                      "y": 0.0,
+                                      "z": 0.0,
+                                      "w": 0.0
+                                    },
+                                    "c1": {
+                                      "x": 0.0,
+                                      "y": 0.0,
+                                      "z": 0.0,
+                                      "w": 0.0
+                                    },
+                                    "c2": {
+                                      "x": 0.0,
+                                      "y": 0.0,
+                                      "z": 0.0,
+                                      "w": 0.0
+                                    },
+                                    "c3": {
+                                      "x": 0.0,
+                                      "y": 0.0,
+                                      "z": 0.0,
+                                      "w": 0.0
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "Vec2Value",
+                                "Type": "Simple",
+                                "InternalType": "GlmNet.vec2, SharedTypes",
+                                "Data": {
+                                  "$type": "GlmNet.vec2, SharedTypes",
+                                  "$value": {
+                                    "x": 0.0,
+                                    "y": 0.0
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "Vec3Value",
+                                "Type": "Simple",
+                                "InternalType": "GlmNet.vec3, SharedTypes",
+                                "Data": {
+                                  "$type": "GlmNet.vec3, SharedTypes",
+                                  "$value": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "Vec4Value",
+                                "Type": "Simple",
+                                "InternalType": "GlmNet.vec4, SharedTypes",
+                                "Data": {
+                                  "$type": "GlmNet.vec4, SharedTypes",
+                                  "$value": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0,
+                                    "w": 0.0
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "IntArrValue",
+                                "Type": "SimpleCollection",
+                                "InternalType": "System.Int32[], System.Private.CoreLib",
+                                "Data": null
+                              },
+                              {
+                                "Name": "Type",
+                                "Type": "Simple",
+                                "InternalType": "Engine.Graphics.UniformType, SharedTypes",
+                                "Data": {
+                                  "$type": "Engine.Graphics.UniformType, SharedTypes",
+                                  "$value": "Int"
+                                }
+                              },
+                              {
+                                "Name": "RenderTextureValue",
+                                "Type": "TextureAsset",
+                                "InternalType": "Engine.RenderTexture, Engine",
+                                "Data": null
+                              }
+                            ]
                           },
-                          "c2": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
+                          "Type": "ComplexClass"
+                        },
+                        {
+                          "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+                          "Key": {
+                            "TargetTypeName": "System.String, System.Private.CoreLib",
+                            "ComplexType": "Simple",
+                            "Properties": [
+                              {
+                                "Name": "DictionaryKey",
+                                "Type": "Simple",
+                                "InternalType": "System.String, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.String, System.Private.CoreLib",
+                                  "$value": "uDotSpacing"
+                                }
+                              }
+                            ]
                           },
-                          "c3": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
-                          }
-                        },
-                        "Vec2Value": {
-                          "x": 0.0,
-                          "y": 0.0
-                        },
-                        "Vec3Value": {
-                          "x": 0.0,
-                          "y": 0.0,
-                          "z": 0.0
-                        },
-                        "Vec4Value": {
-                          "x": 0.0,
-                          "y": 0.0,
-                          "z": 0.0,
-                          "w": 0.0
-                        },
-                        "IntArrValue": null,
-                        "Type": "Float",
-                        "RenderTextureValue": null
-                      },
-                      "uDotted": {
-                        "Name": "uDotted",
-                        "IntValue": 0,
-                        "UIntValue": 0,
-                        "FloatValue": 0.0,
-                        "Mat4Value": {
-                          "c0": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
+                          "Value": {
+                            "TargetTypeName": "Engine.Graphics.UniformValue, Engine",
+                            "ComplexType": "ComplexClass",
+                            "Properties": [
+                              {
+                                "Name": "Name",
+                                "Type": "Simple",
+                                "InternalType": "System.String, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.String, System.Private.CoreLib",
+                                  "$value": "uDotSpacing"
+                                }
+                              },
+                              {
+                                "Name": "IntValue",
+                                "Type": "Simple",
+                                "InternalType": "System.Int32, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.Int32, System.Private.CoreLib",
+                                  "$value": 0
+                                }
+                              },
+                              {
+                                "Name": "UIntValue",
+                                "Type": "Simple",
+                                "InternalType": "System.UInt32, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.UInt32, System.Private.CoreLib",
+                                  "$value": 0
+                                }
+                              },
+                              {
+                                "Name": "FloatValue",
+                                "Type": "Simple",
+                                "InternalType": "System.Single, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.Single, System.Private.CoreLib",
+                                  "$value": 0.15
+                                }
+                              },
+                              {
+                                "Name": "Mat4Value",
+                                "Type": "Simple",
+                                "InternalType": "GlmNet.mat4, SharedTypes",
+                                "Data": {
+                                  "$type": "GlmNet.mat4, SharedTypes",
+                                  "$value": {
+                                    "c0": {
+                                      "x": 0.0,
+                                      "y": 0.0,
+                                      "z": 0.0,
+                                      "w": 0.0
+                                    },
+                                    "c1": {
+                                      "x": 0.0,
+                                      "y": 0.0,
+                                      "z": 0.0,
+                                      "w": 0.0
+                                    },
+                                    "c2": {
+                                      "x": 0.0,
+                                      "y": 0.0,
+                                      "z": 0.0,
+                                      "w": 0.0
+                                    },
+                                    "c3": {
+                                      "x": 0.0,
+                                      "y": 0.0,
+                                      "z": 0.0,
+                                      "w": 0.0
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "Vec2Value",
+                                "Type": "Simple",
+                                "InternalType": "GlmNet.vec2, SharedTypes",
+                                "Data": {
+                                  "$type": "GlmNet.vec2, SharedTypes",
+                                  "$value": {
+                                    "x": 0.0,
+                                    "y": 0.0
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "Vec3Value",
+                                "Type": "Simple",
+                                "InternalType": "GlmNet.vec3, SharedTypes",
+                                "Data": {
+                                  "$type": "GlmNet.vec3, SharedTypes",
+                                  "$value": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "Vec4Value",
+                                "Type": "Simple",
+                                "InternalType": "GlmNet.vec4, SharedTypes",
+                                "Data": {
+                                  "$type": "GlmNet.vec4, SharedTypes",
+                                  "$value": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0,
+                                    "w": 0.0
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "IntArrValue",
+                                "Type": "SimpleCollection",
+                                "InternalType": "System.Int32[], System.Private.CoreLib",
+                                "Data": null
+                              },
+                              {
+                                "Name": "Type",
+                                "Type": "Simple",
+                                "InternalType": "Engine.Graphics.UniformType, SharedTypes",
+                                "Data": {
+                                  "$type": "Engine.Graphics.UniformType, SharedTypes",
+                                  "$value": "Float"
+                                }
+                              },
+                              {
+                                "Name": "RenderTextureValue",
+                                "Type": "TextureAsset",
+                                "InternalType": "Engine.RenderTexture, Engine",
+                                "Data": null
+                              }
+                            ]
                           },
-                          "c1": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
+                          "Type": "ComplexClass"
+                        },
+                        {
+                          "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+                          "Key": {
+                            "TargetTypeName": "System.String, System.Private.CoreLib",
+                            "ComplexType": "Simple",
+                            "Properties": [
+                              {
+                                "Name": "DictionaryKey",
+                                "Type": "Simple",
+                                "InternalType": "System.String, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.String, System.Private.CoreLib",
+                                  "$value": "uGlitchMaxOffset"
+                                }
+                              }
+                            ]
                           },
-                          "c2": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
+                          "Value": {
+                            "TargetTypeName": "Engine.Graphics.UniformValue, Engine",
+                            "ComplexType": "ComplexClass",
+                            "Properties": [
+                              {
+                                "Name": "Name",
+                                "Type": "Simple",
+                                "InternalType": "System.String, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.String, System.Private.CoreLib",
+                                  "$value": "uGlitchMaxOffset"
+                                }
+                              },
+                              {
+                                "Name": "IntValue",
+                                "Type": "Simple",
+                                "InternalType": "System.Int32, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.Int32, System.Private.CoreLib",
+                                  "$value": 0
+                                }
+                              },
+                              {
+                                "Name": "UIntValue",
+                                "Type": "Simple",
+                                "InternalType": "System.UInt32, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.UInt32, System.Private.CoreLib",
+                                  "$value": 0
+                                }
+                              },
+                              {
+                                "Name": "FloatValue",
+                                "Type": "Simple",
+                                "InternalType": "System.Single, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.Single, System.Private.CoreLib",
+                                  "$value": 0.03
+                                }
+                              },
+                              {
+                                "Name": "Mat4Value",
+                                "Type": "Simple",
+                                "InternalType": "GlmNet.mat4, SharedTypes",
+                                "Data": {
+                                  "$type": "GlmNet.mat4, SharedTypes",
+                                  "$value": {
+                                    "c0": {
+                                      "x": 0.0,
+                                      "y": 0.0,
+                                      "z": 0.0,
+                                      "w": 0.0
+                                    },
+                                    "c1": {
+                                      "x": 0.0,
+                                      "y": 0.0,
+                                      "z": 0.0,
+                                      "w": 0.0
+                                    },
+                                    "c2": {
+                                      "x": 0.0,
+                                      "y": 0.0,
+                                      "z": 0.0,
+                                      "w": 0.0
+                                    },
+                                    "c3": {
+                                      "x": 0.0,
+                                      "y": 0.0,
+                                      "z": 0.0,
+                                      "w": 0.0
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "Vec2Value",
+                                "Type": "Simple",
+                                "InternalType": "GlmNet.vec2, SharedTypes",
+                                "Data": {
+                                  "$type": "GlmNet.vec2, SharedTypes",
+                                  "$value": {
+                                    "x": 0.0,
+                                    "y": 0.0
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "Vec3Value",
+                                "Type": "Simple",
+                                "InternalType": "GlmNet.vec3, SharedTypes",
+                                "Data": {
+                                  "$type": "GlmNet.vec3, SharedTypes",
+                                  "$value": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "Vec4Value",
+                                "Type": "Simple",
+                                "InternalType": "GlmNet.vec4, SharedTypes",
+                                "Data": {
+                                  "$type": "GlmNet.vec4, SharedTypes",
+                                  "$value": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0,
+                                    "w": 0.0
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "IntArrValue",
+                                "Type": "SimpleCollection",
+                                "InternalType": "System.Int32[], System.Private.CoreLib",
+                                "Data": null
+                              },
+                              {
+                                "Name": "Type",
+                                "Type": "Simple",
+                                "InternalType": "Engine.Graphics.UniformType, SharedTypes",
+                                "Data": {
+                                  "$type": "Engine.Graphics.UniformType, SharedTypes",
+                                  "$value": "Float"
+                                }
+                              },
+                              {
+                                "Name": "RenderTextureValue",
+                                "Type": "TextureAsset",
+                                "InternalType": "Engine.RenderTexture, Engine",
+                                "Data": null
+                              }
+                            ]
                           },
-                          "c3": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
-                          }
+                          "Type": "ComplexClass"
                         },
-                        "Vec2Value": {
-                          "x": 0.0,
-                          "y": 0.0
-                        },
-                        "Vec3Value": {
-                          "x": 0.0,
-                          "y": 0.0,
-                          "z": 0.0
-                        },
-                        "Vec4Value": {
-                          "x": 0.0,
-                          "y": 0.0,
-                          "z": 0.0,
-                          "w": 0.0
-                        },
-                        "IntArrValue": null,
-                        "Type": "Int",
-                        "RenderTextureValue": null
-                      },
-                      "uDotSpacing": {
-                        "Name": "uDotSpacing",
-                        "IntValue": 0,
-                        "UIntValue": 0,
-                        "FloatValue": 0.15,
-                        "Mat4Value": {
-                          "c0": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
+                        {
+                          "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+                          "Key": {
+                            "TargetTypeName": "System.String, System.Private.CoreLib",
+                            "ComplexType": "Simple",
+                            "Properties": [
+                              {
+                                "Name": "DictionaryKey",
+                                "Type": "Simple",
+                                "InternalType": "System.String, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.String, System.Private.CoreLib",
+                                  "$value": "uGlitchFreq"
+                                }
+                              }
+                            ]
                           },
-                          "c1": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
+                          "Value": {
+                            "TargetTypeName": "Engine.Graphics.UniformValue, Engine",
+                            "ComplexType": "ComplexClass",
+                            "Properties": [
+                              {
+                                "Name": "Name",
+                                "Type": "Simple",
+                                "InternalType": "System.String, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.String, System.Private.CoreLib",
+                                  "$value": "uGlitchFreq"
+                                }
+                              },
+                              {
+                                "Name": "IntValue",
+                                "Type": "Simple",
+                                "InternalType": "System.Int32, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.Int32, System.Private.CoreLib",
+                                  "$value": 0
+                                }
+                              },
+                              {
+                                "Name": "UIntValue",
+                                "Type": "Simple",
+                                "InternalType": "System.UInt32, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.UInt32, System.Private.CoreLib",
+                                  "$value": 0
+                                }
+                              },
+                              {
+                                "Name": "FloatValue",
+                                "Type": "Simple",
+                                "InternalType": "System.Single, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.Single, System.Private.CoreLib",
+                                  "$value": 20.0
+                                }
+                              },
+                              {
+                                "Name": "Mat4Value",
+                                "Type": "Simple",
+                                "InternalType": "GlmNet.mat4, SharedTypes",
+                                "Data": {
+                                  "$type": "GlmNet.mat4, SharedTypes",
+                                  "$value": {
+                                    "c0": {
+                                      "x": 0.0,
+                                      "y": 0.0,
+                                      "z": 0.0,
+                                      "w": 0.0
+                                    },
+                                    "c1": {
+                                      "x": 0.0,
+                                      "y": 0.0,
+                                      "z": 0.0,
+                                      "w": 0.0
+                                    },
+                                    "c2": {
+                                      "x": 0.0,
+                                      "y": 0.0,
+                                      "z": 0.0,
+                                      "w": 0.0
+                                    },
+                                    "c3": {
+                                      "x": 0.0,
+                                      "y": 0.0,
+                                      "z": 0.0,
+                                      "w": 0.0
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "Vec2Value",
+                                "Type": "Simple",
+                                "InternalType": "GlmNet.vec2, SharedTypes",
+                                "Data": {
+                                  "$type": "GlmNet.vec2, SharedTypes",
+                                  "$value": {
+                                    "x": 0.0,
+                                    "y": 0.0
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "Vec3Value",
+                                "Type": "Simple",
+                                "InternalType": "GlmNet.vec3, SharedTypes",
+                                "Data": {
+                                  "$type": "GlmNet.vec3, SharedTypes",
+                                  "$value": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "Vec4Value",
+                                "Type": "Simple",
+                                "InternalType": "GlmNet.vec4, SharedTypes",
+                                "Data": {
+                                  "$type": "GlmNet.vec4, SharedTypes",
+                                  "$value": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0,
+                                    "w": 0.0
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "IntArrValue",
+                                "Type": "SimpleCollection",
+                                "InternalType": "System.Int32[], System.Private.CoreLib",
+                                "Data": null
+                              },
+                              {
+                                "Name": "Type",
+                                "Type": "Simple",
+                                "InternalType": "Engine.Graphics.UniformType, SharedTypes",
+                                "Data": {
+                                  "$type": "Engine.Graphics.UniformType, SharedTypes",
+                                  "$value": "Float"
+                                }
+                              },
+                              {
+                                "Name": "RenderTextureValue",
+                                "Type": "TextureAsset",
+                                "InternalType": "Engine.RenderTexture, Engine",
+                                "Data": null
+                              }
+                            ]
                           },
-                          "c2": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
+                          "Type": "ComplexClass"
+                        },
+                        {
+                          "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+                          "Key": {
+                            "TargetTypeName": "System.String, System.Private.CoreLib",
+                            "ComplexType": "Simple",
+                            "Properties": [
+                              {
+                                "Name": "DictionaryKey",
+                                "Type": "Simple",
+                                "InternalType": "System.String, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.String, System.Private.CoreLib",
+                                  "$value": "uColorSplit"
+                                }
+                              }
+                            ]
                           },
-                          "c3": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
-                          }
-                        },
-                        "Vec2Value": {
-                          "x": 0.0,
-                          "y": 0.0
-                        },
-                        "Vec3Value": {
-                          "x": 0.0,
-                          "y": 0.0,
-                          "z": 0.0
-                        },
-                        "Vec4Value": {
-                          "x": 0.0,
-                          "y": 0.0,
-                          "z": 0.0,
-                          "w": 0.0
-                        },
-                        "IntArrValue": null,
-                        "Type": "Float",
-                        "RenderTextureValue": null
-                      },
-                      "uGlitchMaxOffset": {
-                        "Name": "uGlitchMaxOffset",
-                        "IntValue": 0,
-                        "UIntValue": 0,
-                        "FloatValue": 0.03,
-                        "Mat4Value": {
-                          "c0": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
+                          "Value": {
+                            "TargetTypeName": "Engine.Graphics.UniformValue, Engine",
+                            "ComplexType": "ComplexClass",
+                            "Properties": [
+                              {
+                                "Name": "Name",
+                                "Type": "Simple",
+                                "InternalType": "System.String, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.String, System.Private.CoreLib",
+                                  "$value": "uColorSplit"
+                                }
+                              },
+                              {
+                                "Name": "IntValue",
+                                "Type": "Simple",
+                                "InternalType": "System.Int32, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.Int32, System.Private.CoreLib",
+                                  "$value": 0
+                                }
+                              },
+                              {
+                                "Name": "UIntValue",
+                                "Type": "Simple",
+                                "InternalType": "System.UInt32, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.UInt32, System.Private.CoreLib",
+                                  "$value": 0
+                                }
+                              },
+                              {
+                                "Name": "FloatValue",
+                                "Type": "Simple",
+                                "InternalType": "System.Single, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.Single, System.Private.CoreLib",
+                                  "$value": 0.001
+                                }
+                              },
+                              {
+                                "Name": "Mat4Value",
+                                "Type": "Simple",
+                                "InternalType": "GlmNet.mat4, SharedTypes",
+                                "Data": {
+                                  "$type": "GlmNet.mat4, SharedTypes",
+                                  "$value": {
+                                    "c0": {
+                                      "x": 0.0,
+                                      "y": 0.0,
+                                      "z": 0.0,
+                                      "w": 0.0
+                                    },
+                                    "c1": {
+                                      "x": 0.0,
+                                      "y": 0.0,
+                                      "z": 0.0,
+                                      "w": 0.0
+                                    },
+                                    "c2": {
+                                      "x": 0.0,
+                                      "y": 0.0,
+                                      "z": 0.0,
+                                      "w": 0.0
+                                    },
+                                    "c3": {
+                                      "x": 0.0,
+                                      "y": 0.0,
+                                      "z": 0.0,
+                                      "w": 0.0
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "Vec2Value",
+                                "Type": "Simple",
+                                "InternalType": "GlmNet.vec2, SharedTypes",
+                                "Data": {
+                                  "$type": "GlmNet.vec2, SharedTypes",
+                                  "$value": {
+                                    "x": 0.0,
+                                    "y": 0.0
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "Vec3Value",
+                                "Type": "Simple",
+                                "InternalType": "GlmNet.vec3, SharedTypes",
+                                "Data": {
+                                  "$type": "GlmNet.vec3, SharedTypes",
+                                  "$value": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "Vec4Value",
+                                "Type": "Simple",
+                                "InternalType": "GlmNet.vec4, SharedTypes",
+                                "Data": {
+                                  "$type": "GlmNet.vec4, SharedTypes",
+                                  "$value": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0,
+                                    "w": 0.0
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "IntArrValue",
+                                "Type": "SimpleCollection",
+                                "InternalType": "System.Int32[], System.Private.CoreLib",
+                                "Data": null
+                              },
+                              {
+                                "Name": "Type",
+                                "Type": "Simple",
+                                "InternalType": "Engine.Graphics.UniformType, SharedTypes",
+                                "Data": {
+                                  "$type": "Engine.Graphics.UniformType, SharedTypes",
+                                  "$value": "Float"
+                                }
+                              },
+                              {
+                                "Name": "RenderTextureValue",
+                                "Type": "TextureAsset",
+                                "InternalType": "Engine.RenderTexture, Engine",
+                                "Data": null
+                              }
+                            ]
                           },
-                          "c1": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
+                          "Type": "ComplexClass"
+                        },
+                        {
+                          "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+                          "Key": {
+                            "TargetTypeName": "System.String, System.Private.CoreLib",
+                            "ComplexType": "Simple",
+                            "Properties": [
+                              {
+                                "Name": "DictionaryKey",
+                                "Type": "Simple",
+                                "InternalType": "System.String, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.String, System.Private.CoreLib",
+                                  "$value": "uPixelationAmount"
+                                }
+                              }
+                            ]
                           },
-                          "c2": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
+                          "Value": {
+                            "TargetTypeName": "Engine.Graphics.UniformValue, Engine",
+                            "ComplexType": "ComplexClass",
+                            "Properties": [
+                              {
+                                "Name": "Name",
+                                "Type": "Simple",
+                                "InternalType": "System.String, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.String, System.Private.CoreLib",
+                                  "$value": "uPixelationAmount"
+                                }
+                              },
+                              {
+                                "Name": "IntValue",
+                                "Type": "Simple",
+                                "InternalType": "System.Int32, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.Int32, System.Private.CoreLib",
+                                  "$value": 0
+                                }
+                              },
+                              {
+                                "Name": "UIntValue",
+                                "Type": "Simple",
+                                "InternalType": "System.UInt32, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.UInt32, System.Private.CoreLib",
+                                  "$value": 0
+                                }
+                              },
+                              {
+                                "Name": "FloatValue",
+                                "Type": "Simple",
+                                "InternalType": "System.Single, System.Private.CoreLib",
+                                "Data": {
+                                  "$type": "System.Single, System.Private.CoreLib",
+                                  "$value": 2.0
+                                }
+                              },
+                              {
+                                "Name": "Mat4Value",
+                                "Type": "Simple",
+                                "InternalType": "GlmNet.mat4, SharedTypes",
+                                "Data": {
+                                  "$type": "GlmNet.mat4, SharedTypes",
+                                  "$value": {
+                                    "c0": {
+                                      "x": 0.0,
+                                      "y": 0.0,
+                                      "z": 0.0,
+                                      "w": 0.0
+                                    },
+                                    "c1": {
+                                      "x": 0.0,
+                                      "y": 0.0,
+                                      "z": 0.0,
+                                      "w": 0.0
+                                    },
+                                    "c2": {
+                                      "x": 0.0,
+                                      "y": 0.0,
+                                      "z": 0.0,
+                                      "w": 0.0
+                                    },
+                                    "c3": {
+                                      "x": 0.0,
+                                      "y": 0.0,
+                                      "z": 0.0,
+                                      "w": 0.0
+                                    }
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "Vec2Value",
+                                "Type": "Simple",
+                                "InternalType": "GlmNet.vec2, SharedTypes",
+                                "Data": {
+                                  "$type": "GlmNet.vec2, SharedTypes",
+                                  "$value": {
+                                    "x": 0.0,
+                                    "y": 0.0
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "Vec3Value",
+                                "Type": "Simple",
+                                "InternalType": "GlmNet.vec3, SharedTypes",
+                                "Data": {
+                                  "$type": "GlmNet.vec3, SharedTypes",
+                                  "$value": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "Vec4Value",
+                                "Type": "Simple",
+                                "InternalType": "GlmNet.vec4, SharedTypes",
+                                "Data": {
+                                  "$type": "GlmNet.vec4, SharedTypes",
+                                  "$value": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0,
+                                    "w": 0.0
+                                  }
+                                }
+                              },
+                              {
+                                "Name": "IntArrValue",
+                                "Type": "SimpleCollection",
+                                "InternalType": "System.Int32[], System.Private.CoreLib",
+                                "Data": null
+                              },
+                              {
+                                "Name": "Type",
+                                "Type": "Simple",
+                                "InternalType": "Engine.Graphics.UniformType, SharedTypes",
+                                "Data": {
+                                  "$type": "Engine.Graphics.UniformType, SharedTypes",
+                                  "$value": "Float"
+                                }
+                              },
+                              {
+                                "Name": "RenderTextureValue",
+                                "Type": "TextureAsset",
+                                "InternalType": "Engine.RenderTexture, Engine",
+                                "Data": null
+                              }
+                            ]
                           },
-                          "c3": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
-                          }
-                        },
-                        "Vec2Value": {
-                          "x": 0.0,
-                          "y": 0.0
-                        },
-                        "Vec3Value": {
-                          "x": 0.0,
-                          "y": 0.0,
-                          "z": 0.0
-                        },
-                        "Vec4Value": {
-                          "x": 0.0,
-                          "y": 0.0,
-                          "z": 0.0,
-                          "w": 0.0
-                        },
-                        "IntArrValue": null,
-                        "Type": "Float",
-                        "RenderTextureValue": null
-                      },
-                      "uGlitchFreq": {
-                        "Name": "uGlitchFreq",
-                        "IntValue": 0,
-                        "UIntValue": 0,
-                        "FloatValue": 20.0,
-                        "Mat4Value": {
-                          "c0": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
-                          },
-                          "c1": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
-                          },
-                          "c2": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
-                          },
-                          "c3": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
-                          }
-                        },
-                        "Vec2Value": {
-                          "x": 0.0,
-                          "y": 0.0
-                        },
-                        "Vec3Value": {
-                          "x": 0.0,
-                          "y": 0.0,
-                          "z": 0.0
-                        },
-                        "Vec4Value": {
-                          "x": 0.0,
-                          "y": 0.0,
-                          "z": 0.0,
-                          "w": 0.0
-                        },
-                        "IntArrValue": null,
-                        "Type": "Float",
-                        "RenderTextureValue": null
-                      },
-                      "uColorSplit": {
-                        "Name": "uColorSplit",
-                        "IntValue": 0,
-                        "UIntValue": 0,
-                        "FloatValue": 0.001,
-                        "Mat4Value": {
-                          "c0": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
-                          },
-                          "c1": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
-                          },
-                          "c2": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
-                          },
-                          "c3": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
-                          }
-                        },
-                        "Vec2Value": {
-                          "x": 0.0,
-                          "y": 0.0
-                        },
-                        "Vec3Value": {
-                          "x": 0.0,
-                          "y": 0.0,
-                          "z": 0.0
-                        },
-                        "Vec4Value": {
-                          "x": 0.0,
-                          "y": 0.0,
-                          "z": 0.0,
-                          "w": 0.0
-                        },
-                        "IntArrValue": null,
-                        "Type": "Float",
-                        "RenderTextureValue": null
-                      },
-                      "uPixelationAmount": {
-                        "Name": "uPixelationAmount",
-                        "IntValue": 0,
-                        "UIntValue": 0,
-                        "FloatValue": 2.0,
-                        "Mat4Value": {
-                          "c0": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
-                          },
-                          "c1": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
-                          },
-                          "c2": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
-                          },
-                          "c3": {
-                            "x": 0.0,
-                            "y": 0.0,
-                            "z": 0.0,
-                            "w": 0.0
-                          }
-                        },
-                        "Vec2Value": {
-                          "x": 0.0,
-                          "y": 0.0
-                        },
-                        "Vec3Value": {
-                          "x": 0.0,
-                          "y": 0.0,
-                          "z": 0.0
-                        },
-                        "Vec4Value": {
-                          "x": 0.0,
-                          "y": 0.0,
-                          "z": 0.0,
-                          "w": 0.0
-                        },
-                        "IntArrValue": null,
-                        "Type": "Float",
-                        "RenderTextureValue": null
-                      }
+                          "Type": "ComplexClass"
+                        }
+                      ]
                     }
                   }
                 }
@@ -554,7 +1495,10 @@
             "keyType": "Simple",
             "ValueType": "TextureAsset",
             "Key": "uStarsTex",
-            "Value": "e0b82024-21a1-46f9-bbb8-67497e8460e3",
+            "Value": {
+              "$type": "Engine.ReferenceData, Engine",
+              "Id": "e0b82024-21a1-46f9-bbb8-67497e8460e3"
+            },
             "Type": "TextureAsset"
           },
           {
@@ -562,7 +1506,10 @@
             "keyType": "Simple",
             "ValueType": "TextureAsset",
             "Key": "uFrameTex",
-            "Value": "66ec47ec-bf10-489e-907b-0a00a7eef4ff",
+            "Value": {
+              "$type": "Engine.ReferenceData, Engine",
+              "Id": "66ec47ec-bf10-489e-907b-0a00a7eef4ff"
+            },
             "Type": "TextureAsset"
           }
         ]

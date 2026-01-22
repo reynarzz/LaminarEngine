@@ -74,7 +74,7 @@ namespace Game
             var walkClip = new AnimationClip("Walk", true);
 
             SpriteCurve curve = new SpriteCurve();
-            curve.AddKeyFrame(0, new Sprite());
+            curve.AddKeyFrame(0, new Sprite(Texture2D.White));
             var hermite = new Vec2HermiteCurve();
             hermite.AutoSmoothTangents();
 

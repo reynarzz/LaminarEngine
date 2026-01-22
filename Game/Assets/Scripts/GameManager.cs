@@ -65,7 +65,7 @@ namespace Game
         private void InitializeData()
         {
             _itemsDatabase = new ItemsDatabase("Data/ItemsDatabase.csv");
-            DefaultFont = Assets.Get<FontAsset>("Fonts/windows-bold[1].ttf");
+            DefaultFont = Assets.GetFont("Fonts/windows-bold[1].ttf");
             _gameEntityManager = new GameEntityManager();
             _tilemapManager = new TilemapWorldBuilderManager("Tilemap/WorldTilemap.ldtk", _gameEntityManager);
         }

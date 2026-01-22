@@ -11,12 +11,13 @@ namespace Engine
         [SerializedField] internal AnimatorParameters Parameters { get; private set; } = new();
         [SerializedField] internal Dictionary<string, AnimationState> States { get; private set; } = new();
 
-        // Serializer
+        // Remove
         internal AnimatorController() : base("Animator Controller", Guid.Empty)
         {
         }
 
-        public AnimatorController(string path, Guid guid) : base(path, guid)
+        // Serializer
+        internal AnimatorController(string path, Guid guid) : base(path, guid)
         {
         }
 

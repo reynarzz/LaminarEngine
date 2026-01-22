@@ -38,15 +38,16 @@ namespace Editor.Views
 
         public bool IsWindowOpen() { return _isOpen; }
         private TextureMetaFile _meta;
+        private Texture2D _text;
         internal void OnOpen(Texture2D texture, TextureMetaFile meta)
         {
             _chunkIndex = 0;
             _isOpen = true;
             _meta = meta;
-
+            _text = texture;
             _imageSize = new vec2(texture.Width, texture.Height);
-            _sliceDim = _meta.AtlasData.ChunksCount == 0 ? new ivec2(8, 8) :
-                new ivec2(_meta.AtlasData.GetChunk(0).Width, _meta.AtlasData.GetChunk(0).Height);
+            _sliceDim = GetAtlasData().ChunksCount == 0 ? new ivec2(8, 8) :
+                new ivec2(GetAtlasData().GetCell(0).Width, GetAtlasData().GetCell(0).Height);
 
             RestartView();
 
@@ -74,7 +75,6 @@ namespace Editor.Views
 
             ImGui.Begin("Atlas Editor", ref _isOpen, ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoCollapse);
             ImGui.BeginDisabled(GameAssemblyBuilder.IsBuilding);
-
             var io = ImGui.GetIO();
 
             Vector2 canvasPos = ImGui.GetCursorScreenPos();
@@ -124,9 +124,9 @@ namespace Editor.Views
                     if (imageSpace.x >= 0 && imageSpace.y >= 0 &&
                         imageSpace.x < _imageSize.x && imageSpace.y < _imageSize.y)
                     {
-                        for (int i = 0; i < _meta.AtlasData.ChunksCount; i++)
+                        for (int i = 0; i < GetAtlasData().ChunksCount; i++)
                         {
-                            var chunk = _meta.AtlasData.GetChunk(i);
+                            var chunk = GetAtlasData().GetCell(i);
 
                             if (imageSpace.x >= chunk.XPixel &&
                                 imageSpace.x < chunk.XPixel + chunk.Width &&
@@ -163,7 +163,7 @@ namespace Editor.Views
 
             DrawGrid(drawOrigin, texture, _zoomFactor);
 
-            if (_meta.AtlasData.ChunksCount == 0)
+            if (GetAtlasData().ChunksCount == 0)
             {
                 DrawDottedRect(drawList, drawOrigin.ToVector2(), (drawOrigin + _zoomedSize).ToVector2(),
                                Color.White.ToARGB_U32(), 6.0f, 3.0f);
@@ -173,7 +173,6 @@ namespace Editor.Views
             ImGui.SetNextWindowPos(ImGui.GetWindowPos() + new Vector2(10, 30), ImGuiCond.Always);
 
             PropertiesGUI(texture);
-
             ImGui.EndDisabled();
             ImGui.End();
         }
@@ -244,22 +243,22 @@ namespace Editor.Views
 
         private void DrawGrid(vec2 origin, Texture2D tex, float zoom)
         {
-            if (_meta.AtlasData.ChunksCount == 0)
+            if (GetAtlasData().ChunksCount == 0)
                 return;
 
             var nonSelectedChunkColor = new Color(1, 1, 1, 0.3f);
 
-            for (int i = 0; i < _meta.AtlasData.ChunksCount; i++)
+            for (int i = 0; i < GetAtlasData().ChunksCount; i++)
             {
                 if (_chunkIndex != i)
                 {
-                    DrawChunkLines(_meta.AtlasData.GetChunk(i), nonSelectedChunkColor);
+                    DrawChunkLines(GetAtlasData().GetCell(i), nonSelectedChunkColor);
                 }
             }
 
-            DrawChunkLines(_meta.AtlasData.GetChunk(_chunkIndex), Color.White);
+            DrawChunkLines(GetAtlasData().GetCell(_chunkIndex), Color.White);
 
-            void DrawChunkLines(AtlasChunk chunk, Color color)
+            void DrawChunkLines(TextureAtlasCell chunk, Color color)
             {
                 ImDrawListPtr drawList = ImGui.GetWindowDrawList();
 
@@ -283,7 +282,7 @@ namespace Editor.Views
 
         private void DrawProperties(Texture2D texture)
         {
-            var atlasData = _meta.AtlasData;
+            var atlasData = GetAtlasData();
 
             // ImGui.Text($"{texture.Name} ({texture.Width}, {texture.Height})");
             ImGui.Text("Slice size");
@@ -297,7 +296,7 @@ namespace Editor.Views
             ImGui.SameLine();
             if (ImGui.Button("Slice"))
             {
-                TextureAtlasUtils.SliceTiles(_meta.AtlasData, _sliceDim.x, _sliceDim.y,
+                TextureAtlasUtils.SliceTiles(GetAtlasData(), _sliceDim.x, _sliceDim.y,
                                              texture.Width, texture.Height);
                 _chunkIndex = 0;
             }
@@ -315,7 +314,7 @@ namespace Editor.Views
                 _chunkIndex = Mathf.Clamp(_chunkIndex, 0, atlasData.ChunksCount - 1);
             }
 
-            var currentCell = atlasData.GetChunk(_chunkIndex);
+            var currentCell = atlasData.GetCell(_chunkIndex);
 
             var position = new ivec2(currentCell.XPixel, currentCell.YPixel);
 
@@ -349,9 +348,14 @@ namespace Editor.Views
 
             if (ImGui.Button("Apply All", new Vector2(ImGui.GetContentRegionAvail().X, 23)))
             {
+                _meta.AtlasData = atlasData;
                 AssetUtils.WriteMeta(texture.Path, _meta);
             }
         }
 
+        private TextureAtlasData GetAtlasData()
+        {
+            return _meta.AtlasData; //_text.Atlas; 
+        }
     }
 }
