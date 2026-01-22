@@ -178,7 +178,7 @@ namespace Editor.Rendering
                             _drawCallData.Geometry = _quadGeometry;
                             _drawCallData.IndexedDraw.IndexCount = 6;
 
-                            var chunk = renderer.Sprite?.GetAtlasChunk() ?? TextureAtlasCell.DefaultChunk;
+                            var chunk = renderer.Sprite?.GetAtlasCell() ?? TextureAtlasCell.DefaultChunk;
                             var worldMatrix = renderer.Transform.GetRenderingWorldMatrix();
 
                             float ppu = texture.PixelPerUnit;

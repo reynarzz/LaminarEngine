@@ -1,6 +1,6 @@
 {
   "Config": {
-    "IsAtlas": false,
+    "IsAtlas": true,
     "Mode": 0,
     "Filter": 0,
     "PixelPerUnit": 16
@@ -8,7 +8,7 @@
   "AtlasData": {
     "_chunks": [
       {
-        "ID": "619a27be-9d65-4bef-8e3e-41a1acbb6365",
+        "ID": "e7ca868d-b5d4-49e0-9a00-d870d4048946",
         "Pivot": {
           "x": 0.4,
           "y": 0.42

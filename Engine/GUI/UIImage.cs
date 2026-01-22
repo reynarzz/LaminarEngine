@@ -89,7 +89,7 @@ namespace Engine.GUI
 
         private void DrawSimpleQuad(RectTransform rt, vec2 size)
         {
-            var chunk = Sprite?.GetAtlasChunk() ?? TextureAtlasCell.DefaultChunk;
+            var chunk = Sprite?.GetAtlasCell() ?? TextureAtlasCell.DefaultChunk;
             _rendererData.Mesh.IndicesToDrawCount = 6;
 
             if (PreserveAspect && chunk.Width > 0 && chunk.Height > 0)
@@ -113,7 +113,7 @@ namespace Engine.GUI
 
         private void Draw9SliceQuad(RectTransform rt, vec2 size)
         {
-            var chunk = Sprite?.GetAtlasChunk() ?? TextureAtlasCell.DefaultChunk;
+            var chunk = Sprite?.GetAtlasCell() ?? TextureAtlasCell.DefaultChunk;
 
             var uv = QuadUV.FlipUV(chunk.Uvs, false, true);
 

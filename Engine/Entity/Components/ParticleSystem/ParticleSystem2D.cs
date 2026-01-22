@@ -146,7 +146,7 @@ namespace Engine
         internal override void Draw()
         {
             var texture = Sprite.Texture;
-            var chunk = Sprite.Cell;
+            var chunk = Sprite.GetAtlasCell();
             float ppu = texture.PixelPerUnit;
 
 

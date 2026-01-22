@@ -32,7 +32,7 @@ namespace Engine
                 base.FlipX = value;
                 if(Sprite != null)
                 {
-                    Sprite.Cell.UpdateUvs(QuadUV.FlipUV(Sprite.GetAtlasChunk().Uvs, value, FlipY));
+                    Sprite.GetAtlasCell().UpdateUvs(QuadUV.FlipUV(Sprite.GetAtlasCell().Uvs, value, FlipY));
                 }
                 RendererData.IsDirty = true;
             }
@@ -52,7 +52,7 @@ namespace Engine
                 base.FlipY = value;
                 if(Sprite != null)
                 {
-                    Sprite.Cell.UpdateUvs(QuadUV.FlipUV(Sprite.GetAtlasChunk().Uvs, FlipX, value));
+                    Sprite.GetAtlasCell().UpdateUvs(QuadUV.FlipUV(Sprite.GetAtlasCell().Uvs, FlipX, value));
                 }
                 RendererData.IsDirty = true;
             }

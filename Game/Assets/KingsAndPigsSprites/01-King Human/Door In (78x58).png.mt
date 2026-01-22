@@ -1,6 +1,6 @@
 {
   "Config": {
-    "IsAtlas": false,
+    "IsAtlas": true,
     "Mode": 0,
     "Filter": 0,
     "PixelPerUnit": 16
@@ -8,7 +8,7 @@
   "AtlasData": {
     "_chunks": [
       {
-        "ID": "382e0c18-d5eb-4ffa-ae97-e0fba61dbf6e",
+        "ID": "4f141cb7-dc1e-41d4-9637-3a87c95cad82",
         "Pivot": {
           "x": 0.4,
           "y": 0.42
@@ -37,7 +37,7 @@
         "Height": 58
       },
       {
-        "ID": "7cd67bb4-24d3-4654-bcac-16240f8eac25",
+        "ID": "5f1f7f57-0d61-4730-a905-99d287ca8cfe",
         "Pivot": {
           "x": 0.4,
           "y": 0.42
@@ -66,7 +66,7 @@
         "Height": 58
       },
       {
-        "ID": "1394b61b-4201-4759-8dbc-193f0adccd0e",
+        "ID": "92b79282-d437-48b3-a959-476d9a4b2763",
         "Pivot": {
           "x": 0.4,
           "y": 0.42
@@ -95,7 +95,7 @@
         "Height": 58
       },
       {
-        "ID": "ae5a07aa-2de7-460b-bd41-8d1671786045",
+        "ID": "eba0e99f-7685-4ed1-9c31-831a155a333f",
         "Pivot": {
           "x": 0.4,
           "y": 0.42
@@ -124,7 +124,7 @@
         "Height": 58
       },
       {
-        "ID": "062d41ca-526b-478a-b109-ecc6e9443f94",
+        "ID": "45a270fc-f5a0-41f2-a950-22856be406a5",
         "Pivot": {
           "x": 0.4,
           "y": 0.42
@@ -153,7 +153,7 @@
         "Height": 58
       },
       {
-        "ID": "4c34a7f4-c9cf-4853-9ef5-6113146161c7",
+        "ID": "0985db1d-8fcb-4e91-ad6e-94225035181d",
         "Pivot": {
           "x": 0.4,
           "y": 0.42
@@ -182,7 +182,7 @@
         "Height": 58
       },
       {
-        "ID": "731db745-36ce-46f9-bc43-e6e65e33dc9f",
+        "ID": "9050ac87-6554-43a4-be79-1e7a34c1bb88",
         "Pivot": {
           "x": 0.4,
           "y": 0.42
@@ -211,7 +211,7 @@
         "Height": 58
       },
       {
-        "ID": "85c1489a-2c14-49a9-bd3b-653567c2b0f8",
+        "ID": "2f15fda0-a43a-4657-b357-5ffbf4777ff5",
         "Pivot": {
           "x": 0.4,
           "y": 0.42

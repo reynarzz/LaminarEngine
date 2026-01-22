@@ -67,7 +67,6 @@ namespace Game
             //[ExposeEditorField] public mat2 mat2Test { get; set; }
             //[ExposeEditorField] public mat3 mat3Test { get; set; }
             //[ExposeEditorField] public mat4 mat4Test { get; set; }
-            private static Sprite sp = new Sprite("Sprite in dictionary", 0, Texture2D.White);
             [SerializedField]
             private Dictionary<int, Actor> _InStructeActorDictionary;
                 // = new Dictionary<int, EObject> { { 2, null }, { 346, null } };

@@ -53,7 +53,7 @@ namespace Engine
 
                 if (value)
                 {
-                    var chunk = value.GetAtlasChunk();
+                    var chunk = value.GetAtlasCell();
 
                     float ppu = value.Texture.PixelPerUnit;
                     var width = (float)chunk.Width / ppu;

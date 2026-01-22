@@ -1,6 +1,6 @@
 {
   "Config": {
-    "IsAtlas": false,
+    "IsAtlas": true,
     "Mode": 0,
     "Filter": 0,
     "PixelPerUnit": 16
@@ -8,7 +8,7 @@
   "AtlasData": {
     "_chunks": [
       {
-        "ID": "20a9fd8b-d52c-47ae-be26-74535eb428f2",
+        "ID": "4f95f2ac-ac1d-4f6f-864b-8fb6e6c6ad4d",
         "Pivot": {
           "x": 0.4,
           "y": 0.42
@@ -37,7 +37,7 @@
         "Height": 58
       },
       {
-        "ID": "c11256fd-57f8-4f49-bfad-294af5c37ac0",
+        "ID": "65a6d3f4-1a47-467e-8d90-dd91b8fd95e0",
         "Pivot": {
           "x": 0.4,
           "y": 0.42
@@ -66,7 +66,7 @@
         "Height": 58
       },
       {
-        "ID": "428eafe3-9f44-4329-bec5-3727474592c4",
+        "ID": "e5656600-d522-407e-80f5-ca408c21d391",
         "Pivot": {
           "x": 0.4,
           "y": 0.42

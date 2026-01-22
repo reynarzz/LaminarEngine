@@ -12,23 +12,13 @@ namespace Engine
     {
         public Texture2D Texture { get; private set; }
         internal int AtlasIndex { get; private set; }
-        internal TextureAtlasCell Cell { get; private set; }
+        private TextureAtlasCell _cell;
 
         internal Sprite(Texture2D texture, TextureAtlasCell cell, int index) : base(CreateSpriteName(texture, index), cell.ID)
         {
             AtlasIndex = index;
             Texture = texture;
-            Cell = cell;
-        }
-
-        private static string CreateSpriteName(Texture2D texture, int index)
-        {
-            var postFix = (index > 0) ? $"[{index}]" : string.Empty;
-            return $"{texture.Name}{postFix}";
-        }
-        public Sprite(string name, int atlasIndex, Texture2D texture) : this(atlasIndex, texture)
-        {
-            Name = name;
+            _cell = cell;
         }
 
         public Sprite(Texture2D texture) : this(0, texture)
@@ -42,11 +32,21 @@ namespace Engine
             Name = texture?.Name;
         }
 
-        public TextureAtlasCell GetAtlasChunk()
+        internal TextureAtlasCell GetAtlasCell()
         {
             if (Texture)
             {
-                return Cell;
+                var chunk = _cell;
+
+                if (chunk.Width <= 1 && chunk.Height <= 1)
+                {
+                    chunk = TextureAtlasCell.DefaultChunk;
+                    chunk.ID = GetID();
+                    chunk.Width = Texture.Width;
+                    chunk.Height = Texture.Height;
+                }
+
+                return chunk;
             }
 
 #if DEBUG
@@ -59,9 +59,15 @@ namespace Engine
         {
             Texture = texture;
             Name = CreateSpriteName(texture, index);
-            Cell = cell;
+            _cell = cell;
             AtlasIndex = index;
             _SetID(cell.ID);
+        }
+
+        private static string CreateSpriteName(Texture2D texture, int index)
+        {
+            var postFix = (index > 0) ? $"[{index}]" : string.Empty;
+            return $"{texture.Name}{postFix}";
         }
     }
 }

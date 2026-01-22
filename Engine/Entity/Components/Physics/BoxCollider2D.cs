@@ -44,7 +44,7 @@ namespace Engine
 
             if (renderer && renderer.Sprite)
             {
-                var chunk = renderer.Sprite.GetAtlasChunk();
+                var chunk = renderer.Sprite.GetAtlasCell();
 
                 if (renderer.Sprite.Texture)
                 {

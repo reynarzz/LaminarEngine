@@ -130,7 +130,7 @@ namespace Engine.Rendering
 
                     if (renderer.Mesh == null)
                     {
-                        var chunk = renderer.Sprite?.GetAtlasChunk() ?? TextureAtlasCell.DefaultChunk;
+                        var chunk = renderer.Sprite?.GetAtlasCell() ?? TextureAtlasCell.DefaultChunk;
 
                         float ppu = texture.PixelPerUnit;
                         var width = (float)chunk.Width / ppu;
