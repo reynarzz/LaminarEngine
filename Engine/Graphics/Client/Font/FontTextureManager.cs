@@ -37,6 +37,7 @@ namespace Engine.Graphics
             _sharedDescriptor.Height = bounds.Height;
             _sharedDescriptor.Buffer = data;
 
+            //tex2D.UpdateResource(bounds.Width, bounds.Height, bounds.Left, bounds.Top, data); // Why updating directly doesn't work?
             GfxDeviceManager.Current.UpdateResouce(tex2D.NativeResource, _sharedDescriptor);
         }
     }
