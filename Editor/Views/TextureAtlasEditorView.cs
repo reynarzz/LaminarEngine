@@ -350,6 +350,8 @@ namespace Editor.Views
             {
                 _meta.AtlasData = atlasData;
                 AssetUtils.WriteMeta(texture.Path, _meta);
+
+                EditorAssetUtils.RefreshAssetDatabase();
             }
         }
 

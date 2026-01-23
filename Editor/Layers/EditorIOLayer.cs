@@ -14,6 +14,13 @@ namespace Editor
     {
         private const string PROJECT_FOLDER_NAME = "Editor";
         private DevModeDisk _devDisk = new();
+        private static EditorIOLayer _instance;
+        public static EditorIOLayer Instance => _instance; // Dirty, please remove.
+        public EditorIOLayer()
+        {
+            _instance = this;
+        }
+
         public override void Initialize()
         {
             InitializePaths();

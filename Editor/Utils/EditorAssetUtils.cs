@@ -23,5 +23,10 @@ namespace Editor
             var meta = AssetUtils.GetMeta(path, type) as TextureMetaFile;
             return meta;
         }
+
+        internal static void RefreshAssetDatabase()
+        {
+            EditorIOLayer.Instance.Refresh();
+        }
     }
 }
