@@ -54,7 +54,7 @@ namespace Editor
             Application.IsInPlayMode = false;
             NativeLogger.Init();
 
-            _win = new WindowStandalone("GFS Editor", 1324, 740, Color.Black, new TextureDescriptor()
+            _win = new WindowStandalone("GFS Editor", 1424, 840, Color.Black, new TextureDescriptor()
             {
                 Width = EditorDefaultIcon.Width,
                 Height = EditorDefaultIcon.Height,

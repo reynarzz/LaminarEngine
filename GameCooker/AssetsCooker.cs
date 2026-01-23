@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using SharedTypes;
+using System.Reflection;
 
 namespace GameCooker
 {
@@ -107,7 +108,12 @@ namespace GameCooker
 
         public async Task<AssetsDatabaseInfo> CookAllAsync(CookOptions options)
         {
-            var files = Directory.GetFiles(options.AssetsFolderPath, "*", SearchOption.AllDirectories);
+            // Search project's files first
+            var files = Directory.GetFiles(options.AssetsFolderPath, "*", SearchOption.AllDirectories).ToList();
+
+            var cookersFiles = Directory.GetFiles(Path.Combine(CookerPaths.CookerRoot, "Assets"), "*", SearchOption.AllDirectories);
+
+            files.AddRange(cookersFiles);
 
             var selectedFiles = files.Where(path => _assetsTypes.TryGetValue(Path.GetExtension(path), out _))
                                      .Select(path => (path: Paths.ClearPathSeparation(path), assetType: _assetsTypes[Path.GetExtension(path)]));
@@ -122,7 +128,7 @@ namespace GameCooker
                         if (string.IsNullOrEmpty(options.MatchingFiles[i]))
                             continue;
 
-                        if (x.path.EndsWith(options.MatchingFiles[i]))
+                        if (x.path.EndsWith(options.MatchingFiles[i]) || x.path.Contains(CookerPaths.InternalAssetsPath))
                         {
                             return true;
                         }
@@ -132,8 +138,9 @@ namespace GameCooker
                 });
             }
 
+            var collectedFiles = selectedFiles.ToArray();
             await _assetCookers[options.Type].CookAssetsAsync(options.FileOptions, options.Platform,
-                                                              selectedFiles.ToArray(), options.ExportFolderPath);
+                                                             collectedFiles, options.ExportFolderPath);
 
             return _databaseInfo;
         }

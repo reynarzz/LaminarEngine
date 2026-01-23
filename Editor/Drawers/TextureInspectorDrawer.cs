@@ -51,6 +51,8 @@ namespace Editor
                 PropertyDrawer.DrawVars(target.GetID().ToString(), _meta.Config, property, false);
             }
 
+            ImGui.BeginDisabled(!_meta.Config.IsAtlas);
+
             if (ImGui.Button("Edit Atlas"))
             {
                 _atlasEditor.OnOpen(target, _meta);
@@ -65,6 +67,8 @@ namespace Editor
                 }
                 _atlasEditor.OnDraw(target);
             }
+
+            ImGui.EndDisabled();
         }
 
         internal override void OnClose()

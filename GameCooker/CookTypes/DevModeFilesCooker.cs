@@ -96,7 +96,16 @@ namespace GameCooker
             var currentIds = new HashSet<string>(files.Select(a => a.Item1), StringComparer.OrdinalIgnoreCase);
             foreach (var item in _database.Assets.ToList())
             {
-                var absoluteAssetPath = Paths.GetAbsoluteAssetPath(item.Value.Path);
+                string absoluteAssetPath = null;
+
+                if (!item.Value.Path.StartsWith(CookerPaths.INTERNAL_ASSET_FOLDER_NAME))
+                {
+                    absoluteAssetPath = Paths.GetAbsoluteAssetPath(item.Value.Path);
+                }
+                else
+                {
+                    absoluteAssetPath = Paths.ClearPathSeparation(Path.Combine(CookerPaths.AssetsPath, item.Value.Path));
+                }
                 if (!currentIds.Contains(absoluteAssetPath))
                 {
                     _database.Assets.Remove(item.Key);
@@ -112,7 +121,9 @@ namespace GameCooker
             }
 
             // Delete non used .mt file in 'Assets' folder
-            var mtFiles = Directory.GetFiles(Paths.GetAssetsFolderPath(), "*.mt", SearchOption.AllDirectories);
+            var mtFiles = Directory.GetFiles(Paths.GetAssetsFolderPath(), "*.mt", SearchOption.AllDirectories);//.ToList();
+           // mtFiles.AddRange(Directory.GetFiles(CookerPaths.InternalAssetsPath, "*.mt", SearchOption.AllDirectories));
+
             foreach (var metaPath in mtFiles)
             {
                 var clearPath = Paths.ClearPathSeparation(metaPath);
