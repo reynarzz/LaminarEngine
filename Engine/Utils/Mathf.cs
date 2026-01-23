@@ -141,21 +141,31 @@ namespace Engine
             return MathF.Floor(v);
         }
 
-        public static int Floor(int v)
-        {
-            return Floor(v);
-        }
         public static int FloorToInt(float v)
         {
-            return (int)Floor(v);
+            return (int)MathF.Floor(v);
         }
+        public static ivec2 FloorToInt(vec2 v)
+        {
+            return new ivec2((int)MathF.Floor(v.x), (int)MathF.Floor(v.y));
+        }
+
         public static int RoundToInt(float v)
         {
             return (int)MathF.Round(v);
         }
+        public static ivec2 RoundToInt(vec2 v)
+        {
+            return new ivec2((int)MathF.Round(v.x), (int)MathF.Round(v.y));
+        }
+
         public static int CeilToInt(float v)
         {
             return (int)MathF.Ceiling(v);
+        }
+        public static ivec2 CeilToInt(vec2 v)
+        {
+            return new ivec2((int)MathF.Ceiling(v.x), (int)MathF.Ceiling(v.y));
         }
 
         public static int RoundToInt(double v)

@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.InteropServices.Marshalling;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -65,6 +66,10 @@ namespace Editor
         {
             return _contentRegionAvail;
         }
+
+        protected virtual void OnImguiWindowSizeChanged()
+        {
+        }
         public virtual void OnDraw()
         {
             ImGuiWindowFlags flags = ImGuiWindowFlags.NoScrollbar |
@@ -75,15 +80,23 @@ namespace Editor
             ImGui.PushStyleColor(ImGuiCol.WindowBg, _canRenderWindow ? new Vector4(0.1f, 0.1f, 0.1f, 1.0f) : new Vector4(0, 0, 0, 1));
             ImGui.PushID(_surfaceViewId);
             ImGui.Begin(_viewName, flags);
+
+            var prevWinSize = WindowSize;
             WindowSize = ImGui.GetWindowSize();
-            var pos = ImGui.GetWindowPos();
             _contentRegionAvail = ImGui.GetContentRegionAvail().ToVec2();
+
+            if (Mathf.RoundToInt(prevWinSize.ToVec2()) != Mathf.RoundToInt(WindowSize.ToVec2()))
+            {
+                OnImguiWindowSizeChanged();
+            }
+
+            var pos = ImGui.GetWindowPos();
             var imageCursorPos = GetViewPosition().ToVector2();
             var imageSize = GetViewSize().ToVector2();
             WindowPosition = pos;
-            WindowPositionRender = new Vector2((int)pos.X + imageCursorPos.X, (int)pos.Y + imageCursorPos.Y);
-            ImGui.GetMousePos();
+            WindowPositionRender = pos + imageCursorPos;
 
+            
             ICamera camera = null;
             var surfaceCamerasInUse = _surface.Cameras != null && _surface.Cameras.Length > 0 &&
                                       (_surface.Cameras?[0]?.TryGetTarget(out camera) ?? false) && camera != null &&

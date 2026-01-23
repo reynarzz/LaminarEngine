@@ -45,7 +45,7 @@ namespace Editor
         private int _offsetY = 0;
         public int OffsetX => _offsetX;
         public int OffsetY => _offsetY;
-        private vec2 _targetResolution;
+        private vec2 _targetResolution = new vec2(512 * 2, 258 * 2);
         private float _targetResScale = 1.0f;
         private GameViewResolution _resolutionType = GameViewResolution.Custom;
         private bool _autoFit = true;
@@ -115,16 +115,19 @@ namespace Editor
             }
             _offsetY = Mathf.RoundToInt(WindowPositionRender.Y - frameOffset);
 
+        }
+
+        protected override void OnImguiWindowSizeChanged()
+        {
             if (_resolutionType == GameViewResolution.Free)
             {
                 TryNotifyUpdateResolution(WindowSize.ToVec2());
             }
             else
             {
-                _targetResolution = new vec2(512 * 2, 258 * 2);
-
                 if (_autoFit)
                 {
+                    // TODO: only call this when window size changes.
                     _targetResScale = CalculateAutoFitScale(_targetResolution);
                 }
 
@@ -135,6 +138,9 @@ namespace Editor
         private float CalculateAutoFitScale(vec2 targetResolution)
         {
             var avail = GetPrevContentRegionAvail();
+
+            if (avail.x >= targetResolution.x && avail.y >= targetResolution.y)
+                return 1;
 
             if (targetResolution.x <= 0 || targetResolution.y <= 0)
                 return 1.0f;

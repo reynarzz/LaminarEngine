@@ -89,8 +89,14 @@ namespace GlmNet
             return false;
         }
 
-        public static bool operator ==(ivec2 v1, ivec2 v2) => v1.Equals(v2);
-        public static bool operator !=(ivec2 v1, ivec2 v2) => !v1.Equals(v2);
+        public static bool operator ==(ivec2 v1, ivec2 v2)
+        {
+            return v1.x == v2.x && v1.y == v2.y;
+        }
+        public static bool operator !=(ivec2 v1, ivec2 v2)
+        {
+            return !(v1 == v2);
+        }
 
         public override int GetHashCode()
         {
