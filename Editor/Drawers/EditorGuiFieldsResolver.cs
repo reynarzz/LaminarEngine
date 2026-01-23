@@ -9,6 +9,7 @@ using Engine.Utils;
 using System.Collections;
 using Engine;
 using Engine.Layers;
+using SharedTypes;
 
 namespace Editor.Utils
 {
@@ -957,6 +958,7 @@ namespace Editor.Utils
 
             PickObjectPopup(valueType, setValue);
         }
+        static int count = 0;
 
         private static void PickObjectPopup(Type valueType, Func<object, bool> setValue)
         {
@@ -978,6 +980,7 @@ namespace Editor.Utils
                 return;
             }
 
+            // TODO: refactor the asset picker list behavior.
             if (typeof(AssetResourceBase).IsAssignableFrom(valueType))
             {
                 // Asset picking
@@ -1019,6 +1022,28 @@ namespace Editor.Utils
                     }
                 }
             }
+            else if (valueType == typeof(Sprite))
+            {
+                var assets = IOLayer.Database.Disk.GetAssetsInfo(SharedTypes.AssetType.Texture);
+                foreach (var (id, info) in assets)
+                {
+                    // TODO: this is very very slow, I have to cache all the sprites names on load.
+                    var meta = EditorAssetUtils.GetAssetMeta(info.Path, AssetType.Texture) as TextureMetaFile;
+                   // var texturesInfo = EditorIOLayer.Database.GetAssetsInfoByType(AssetType.Texture);
+
+                    if (meta?.AtlasData == null || meta.AtlasData.ChunksCount == 0)
+                        continue;
+
+                    for (int i = 0; i < meta.AtlasData.ChunksCount; i++)
+                    {
+                        var name = Sprite.CreateSpriteName(Path.GetFileName(info.Path), i);
+                        if (ImGui.Selectable($"{name}##{meta.AtlasData.GetCell(i).ID}{i}{info.Path}"))
+                        {
+                            setValue(Assets.GetSpriteAtlas(info.Path).GetSprite(i));
+                        }
+                    }
+                }
+            }
             else
             {
                 foreach (var scene in SceneManager.Scenes)
@@ -1032,6 +1057,8 @@ namespace Editor.Utils
             }
             ImGui.EndPopup();
         }
+
+
         private static void DrawSceneObjectPropertyPicker(Transform root, Type targetType, Func<object, bool> setValue)
         {
             if (typeof(Actor).IsAssignableFrom(targetType))

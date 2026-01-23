@@ -54,6 +54,7 @@ namespace Engine.Graphics
 
         private Func<bool> _isEnabledFunc;
         private bool _isEnabled = true;
+        public string Name { get; set; }
         public override bool IsEnabled
         {
             get

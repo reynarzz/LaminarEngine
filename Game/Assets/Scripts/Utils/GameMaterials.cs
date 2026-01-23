@@ -14,6 +14,7 @@ namespace Game
         public Material SpriteMaterialOverlay { get; private set; }
         public Material SpriteMaterialWorld { get; private set; }
         public Material UIMaterial { get; private set; }
+        public Material FontAnimatedMaterial { get; private set; }
         public Material FontMaterial { get; private set; }
         public Material PortalMaterial { get; private set; }
         public Material WobbleMaterial { get; private set; }
@@ -23,11 +24,12 @@ namespace Game
         private GameMaterials()
         {
             SpriteMaterial = GetMaterial("SpriteMaterial", "Shaders/SpriteVert.vert", "Shaders/SpriteFrag.frag");
+            FontMaterial = GetMaterial("FontMaterial", "Shaders/SpriteVert.vert", "Shaders/SpriteFrag.frag");
             SpriteMaterialOverlay = GetMaterial("SpriteMaterialOverlay", "Shaders/SpriteVert.vert", "Shaders/SpriteFrag.frag");
             SpriteMaterialWorld = GetMaterial("SpriteMaterialWorld", "Shaders/SpriteVert.vert", "Shaders/SpriteFrag.frag");
             WobbleMaterial = GetMaterial("WobbleMaterial", "Shaders/VertScreenGrab.vert", "Shaders/ScreenGrabWobble.frag");
             UIMaterial = GetMaterial("UIMaterial", "Shaders/SpriteVert.vert", "Shaders/SpriteFrag.frag");
-            FontMaterial = GetMaterial("FontMaterial", "Shaders/Font/FontVert.vert", "Shaders/Font/FontFrag.frag");
+            FontAnimatedMaterial = GetMaterial("FontMaterial", "Shaders/Font/FontVert.vert", "Shaders/Font/FontFrag.frag");
             
             var spritePass = SpriteMaterial.GetPass(0);
             spritePass.Stencil.Enabled = true;
@@ -52,8 +54,8 @@ namespace Game
             WobbleMaterial.SetProperty(0, "uColorSplit", 0.0017f);
             WobbleMaterial.SetProperty(0, "uPixelationAmount", 0.0f);
             
-            FontMaterial.SetProperty(0, "uAmplitude", 2.0f);
-            FontMaterial.SetProperty(0, "uFrequency", 6.0f);
+            FontAnimatedMaterial.SetProperty(0, "uAmplitude", 2.0f);
+            FontAnimatedMaterial.SetProperty(0, "uFrequency", 6.0f);
         }
         
         private static Material InitPortalMaterial()

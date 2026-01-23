@@ -1,10 +1,12 @@
 {
   "Config": {
-    "IsNearest": false,
     "IsAtlas": false,
     "Mode": 0,
     "Filter": 0,
     "PixelPerUnit": 100
+  },
+  "AtlasData": {
+    "_chunks": null
   },
   "GUID": "95dffc07-ee3d-405b-9e63-8fa7ac6bcfa3"
 }

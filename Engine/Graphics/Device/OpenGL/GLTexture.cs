@@ -18,6 +18,8 @@ namespace Engine.Graphics.OpenGL
         private bool _isMultisample = false;
         private int _width;
         private int _height;
+        private int _channels;
+
         public GLTexture() : base(glGenTexture, glDeleteTexture)
         {
         }
@@ -29,19 +31,16 @@ namespace Engine.Graphics.OpenGL
             Bind();
             _width = descriptor.Width;
             _height = descriptor.Height;
-
+            _channels = descriptor.Channels;
             if (!descriptor.IsMultiSample)
             {
                 fixed (byte* data = descriptor.Buffer)
                 {
-                    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, descriptor.Width, descriptor.Height, 0,
-                                 GL_RGBA, GL_UNSIGNED_BYTE, data);
+                    glTexImage2D(GL_TEXTURE_2D, 0, GetInternalFormat(descriptor.Channels), descriptor.Width, descriptor.Height, 0,
+                                 GetFormat(descriptor.Channels), GL_UNSIGNED_BYTE, data);
                 }
 
                 SetTextureFeatures(descriptor);
-
-
-
             }
             else
             {
@@ -63,23 +62,67 @@ namespace Engine.Graphics.OpenGL
             SetTextureFeatures(descriptor);
             fixed (void* data = descriptor.Buffer)
             {
-                var isSizeChanged = descriptor.Width != _width || descriptor.Height != _height;
-                _width = descriptor.Width;
-                _height = descriptor.Height;
+                var isSizeFit = DoesNewSizeFit(descriptor);
 
-                if (!isSizeChanged)
+                int prev;
+                glGetIntegerv(GL_UNPACK_ALIGNMENT, &prev);
+                glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+                _channels = descriptor.Channels;
+                glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+                if (isSizeFit)
                 {
-                    glTexSubImage2D(GL_TEXTURE_2D, 0, descriptor.XOffset, descriptor.YOffset, 
-                                    descriptor.Width, descriptor.Height, GL_RGBA, GL_UNSIGNED_BYTE, data);
+                    glTexSubImage2D(GL_TEXTURE_2D, 0, descriptor.XOffset, descriptor.YOffset,
+                                    descriptor.Width, descriptor.Height, GetFormat(descriptor.Channels), GL_UNSIGNED_BYTE, data);
                 }
                 else
                 {
-                    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, descriptor.Width, descriptor.Height, 0, GL_RGBA, 
-                                 GL_UNSIGNED_BYTE, data);
+                    _width = descriptor.Width;
+                    _height = descriptor.Height;
+                    glTexImage2D(GL_TEXTURE_2D, 0, GetInternalFormat(descriptor.Channels), descriptor.Width, descriptor.Height, 0,
+                                 GetFormat(descriptor.Channels), GL_UNSIGNED_BYTE, data);
                 }
+
+                //if (descriptor.EnableMipMaps)
+                //{
+                //    glGenerateMipmap(GL_TEXTURE_2D);
+                //}
+
+                glPixelStorei(GL_UNPACK_ALIGNMENT, prev);
             }
             Unbind();
         }
+
+        private int GetFormat(int channels)
+        {
+            return channels switch
+            {
+                1 => GL_RED,
+                2 => GL_RG,
+                3 => GL_RGB,
+                4 => GL_RGBA,
+                _ => GL_RGBA
+            };
+        }
+
+        private int GetInternalFormat(int channels)
+        {
+            return channels switch
+            {
+                1 => GL_R8,
+                2 => GL_RG8,
+                // 3 => GL_RGB8, // TODO
+                4 => GL_RGBA8,
+                _ => GL_RGBA8
+            };
+        }
+        private bool DoesNewSizeFit(TextureDescriptor descriptor)
+        {
+            return descriptor.XOffset + descriptor.Width <= _width &&
+                   descriptor.YOffset + descriptor.Height <= _height;
+        }
+
+
         private void SetTextureFeatures(TextureDescriptor descriptor)
         {
             int minFilter = 0;

@@ -28,7 +28,7 @@ namespace Engine
 
         public static Texture2D White { get; } = Get1PixelTexture("WhiteTexture_Internal", [0xFF, 0xFF, 0xFF, 0xFF]);
         public static Texture2D Black { get; } = Get1PixelTexture("BlackTexture_Internal", [0x00, 0x00, 0x00, 0xFF]);
-
+        private readonly TextureDescriptor _descriptor = new();
         public Texture2D(string path, Guid guid, TextureMode mode, TextureFilter filter, int width, int height, int channels, int pixelsPerUnit, byte[] data) :
                 base(path, guid, mode, filter, width, height, channels, data)
         {
@@ -72,6 +72,23 @@ namespace Engine
             return new Texture2D(name, Guid.NewGuid(), TextureMode.Clamp, TextureFilter.Nearest, 1, 1, 4, 1, color);
         }
 
+        internal void UpdateResource(int width, int height, int xOffset, int yOffset, byte[] data)
+        {
+            Width = width;
+            Height = height;
+            Data = data;
+
+            _descriptor.Width = width;
+            _descriptor.Height = height;
+            _descriptor.Channels = Channels;
+            _descriptor.Buffer = data;
+            _descriptor.Mode = Mode;
+            _descriptor.Filter = Filter;
+            _descriptor.XOffset = xOffset;
+            _descriptor.YOffset = yOffset;
+
+            GfxDeviceManager.Current.UpdateResouce(NativeResource, _descriptor);
+        }
         internal override void UpdateResource(object data, string path, Guid guid)
         {
             var deserializedData = data as IO.TextureAssetBuilder.TextureDeserializedData;

@@ -8,6 +8,7 @@ namespace Engine
 {
     public abstract class AssetResourceBase : EObject
     {
+        internal virtual bool IsCacheHardReference { get; protected private set; } = false;
         public string Path { get; }
         internal AssetResourceBase(string path, Guid guid) : base(System.IO.Path.GetFileNameWithoutExtension(path), guid)
         {

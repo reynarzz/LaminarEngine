@@ -3,6 +3,7 @@ using Engine.Utils;
 using FontStashSharp;
 using FontStashSharp.Interfaces;
 using GlmNet;
+using System.Reflection.Metadata;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -47,7 +48,7 @@ namespace Engine.GUI
             base.OnAwake();
             _rendererData = (RendererData as RendererData2D);
             _rendererData.Mesh = new Mesh();
-
+            _rendererData.Name = nameof(UIText);
 
             _rendererData.Mesh.Vertices.Capacity = Consts.Graphics.MAX_QUADS_PER_BATCH * 4;
         }

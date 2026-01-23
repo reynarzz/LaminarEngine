@@ -21,7 +21,7 @@ namespace Engine
             _sprites = new List<Sprite>();
             CollectionsMarshal.SetCount(_sprites, metadata.AtlasData.ChunksCount);
 
-            if(_sprites.Count == 0)
+            if (_sprites.Count == 0)
             {
                 _sprites.Add(default);
             }
@@ -52,9 +52,9 @@ namespace Engine
             {
                 // Return default sprite if the texture is texture2D.
                 var defaultSprite = _sprites[index];
-                
-                if(defaultSprite == null)
-                { 
+
+                if (defaultSprite == null)
+                {
                     var defaultCell = TextureAtlasCell.DefaultChunk;
                     defaultCell.ID = _targetTexture.GetID();
                     defaultCell.Width = _targetTexture.Width;

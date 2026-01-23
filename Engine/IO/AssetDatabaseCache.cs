@@ -9,6 +9,7 @@ namespace Engine.IO
     internal class AssetDatabaseCache
     {
         private readonly Dictionary<Guid, WeakReference<AssetResourceBase>> _assets = new();
+        private readonly Dictionary<Guid, AssetResourceBase> _assetsHardRefs = new();
 
         public bool GetAsset<T>(Guid guid, out T asset) where T : AssetResourceBase
         {
@@ -17,7 +18,7 @@ namespace Engine.IO
             return result;
         }
 
-        public bool GetAsset(Guid guid, out AssetResourceBase asset) 
+        public bool GetAsset(Guid guid, out AssetResourceBase asset)
         {
             bool isValid = false;
             asset = null;
@@ -36,13 +37,24 @@ namespace Engine.IO
                     isValid = false;
                 }
             }
+            else
+            {
+                isValid = _assetsHardRefs.TryGetValue(guid, out asset);
+            }
 
             return isValid;
         }
 
-        public void PushAsset(Guid guid, AssetResourceBase asset) 
+        public void PushAsset(Guid guid, AssetResourceBase asset)
         {
-            _assets.Add(guid, new WeakReference<AssetResourceBase>(asset));
+            if (!asset.IsCacheHardReference)
+            {
+                _assets.Add(guid, new WeakReference<AssetResourceBase>(asset));
+            }
+            else if (!_assetsHardRefs.ContainsKey(guid))
+            {
+                _assetsHardRefs.Add(guid, asset);
+            }
         }
     }
 }

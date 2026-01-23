@@ -16,5 +16,12 @@ namespace Editor
             var meta = AssetUtils.GetMeta(path, EditorIOLayer.Database.GetAssetInfo(asset).Type) as TextureMetaFile;
             return meta;
         }
+
+        internal static AssetMetaFileBase GetAssetMeta(string asstPathRelative, AssetType type)
+        {
+            var path = Paths.GetAbsoluteAssetPath(asstPathRelative) + Paths.ASSET_META_EXT_NAME;
+            var meta = AssetUtils.GetMeta(path, type) as TextureMetaFile;
+            return meta;
+        }
     }
 }

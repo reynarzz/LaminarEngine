@@ -14,7 +14,7 @@ namespace Engine
         internal int AtlasIndex { get; private set; }
         private TextureAtlasCell _cell;
 
-        internal Sprite(Texture2D texture, TextureAtlasCell cell, int index) : base(CreateSpriteName(texture, index), cell.ID)
+        internal Sprite(Texture2D texture, TextureAtlasCell cell, int index) : base(CreateSpriteName(texture?.Name, index), cell.ID)
         {
             AtlasIndex = index;
             Texture = texture;
@@ -36,17 +36,17 @@ namespace Engine
         {
             if (Texture)
             {
-                var chunk = _cell;
+                var cell = _cell;
 
-                if (chunk.Width <= 1 && chunk.Height <= 1)
+                if (cell.Width <= 1 && cell.Height <= 1)
                 {
-                    chunk = TextureAtlasCell.DefaultChunk;
-                    chunk.ID = GetID();
-                    chunk.Width = Texture.Width;
-                    chunk.Height = Texture.Height;
+                    cell = TextureAtlasCell.DefaultChunk;
+                    cell.ID = GetID();
+                    cell.Width = Texture.Width;
+                    cell.Height = Texture.Height;
                 }
 
-                return chunk;
+                return cell;
             }
 
 #if DEBUG
@@ -58,16 +58,16 @@ namespace Engine
         internal void UpdateResource(Texture2D texture, TextureAtlasCell cell, int index)
         {
             Texture = texture;
-            Name = CreateSpriteName(texture, index);
+            Name = CreateSpriteName(texture.Name, index);
             _cell = cell;
             AtlasIndex = index;
             _SetID(cell.ID);
         }
 
-        private static string CreateSpriteName(Texture2D texture, int index)
+        internal static string CreateSpriteName(string baseName, int index)
         {
-            var postFix = (index > 0) ? $"[{index}]" : string.Empty;
-            return $"{texture.Name}{postFix}";
+            var postFix = (index > 0) ? $"({index})" : string.Empty;
+            return $"{baseName}{postFix}";
         }
     }
 }

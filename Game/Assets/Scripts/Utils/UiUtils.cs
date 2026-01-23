@@ -16,7 +16,7 @@ namespace Game
             var text = new Actor(name).AddComponent<UIText>();
             text.Transform.Parent = parent;
             text.Font = GameManager.DefaultFont;
-            text.Material = GameMaterials.Instance.SpriteMaterial;
+            text.Material = GameMaterials.Instance.FontMaterial;
             text.SetText(value);
             text.Transform.LocalPosition = position;
             text.BlockEvents = false;

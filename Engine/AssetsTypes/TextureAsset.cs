@@ -8,6 +8,7 @@ namespace Engine
 {
     internal class TextureAsset : AssetResourceBase
     {
+        internal override bool IsCacheHardReference { get; private protected set; } = true;
         public Texture Texture { get; }
         public SpriteAtlas Atlas { get; }
 
@@ -19,6 +20,7 @@ namespace Engine
 
         internal override void UpdateResource(object data, string path, Guid guid)
         {
+            Texture.UpdateResource(data, path, guid);
         }
     }
 }

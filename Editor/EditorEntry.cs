@@ -29,6 +29,7 @@ namespace Editor
     // Bug with mouse picker: cliking almost the top border of the scene window doesn't register a pick, and performance degrades.
     // Fix:
     // Copy native dependencies to bin directories.
+    // Investigate why when the scene is reloaded old objects are still alive.
 
 
     // Assets:
