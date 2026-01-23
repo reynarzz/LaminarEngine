@@ -17,6 +17,7 @@ namespace Engine.Layers
             _lastFrameTime = 0f;
             _timePast = 0;
             _unscaledTimePast = 0;
+            Restart();
         }
 
         internal override void UpdateLayer()
@@ -48,6 +49,12 @@ namespace Engine.Layers
             Time.FPS = Time.UnscaledDeltaTime > 0f ? 1f / Time.UnscaledDeltaTime : 0f;
         }
 
+
+        private void Restart()
+        {
+            Time.TimeScale = 1;
+
+        }
         public override void Close()
         {
             _stopwatch.Stop();
