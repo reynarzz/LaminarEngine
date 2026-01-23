@@ -172,7 +172,9 @@ namespace Editor.Views
             ImGui.SetNextWindowBgAlpha(0.9f);
             ImGui.SetNextWindowPos(ImGui.GetWindowPos() + new Vector2(10, 30), ImGuiCond.Always);
 
+
             PropertiesGUI(texture);
+
             ImGui.EndDisabled();
             ImGui.End();
         }
@@ -230,8 +232,17 @@ namespace Editor.Views
             ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, new Vector2(18, 18));
             ImGui.PushStyleColor(ImGuiCol.WindowBg, new Vector4(0, 0, 0, 0.35f));
 
+            
+            var flags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse;
+
+            if (ImGui.IsMouseDown(ImGuiMouseButton.Middle))
+            {
+
+                flags |= ImGuiWindowFlags.NoMouseInputs;
+            }
+
             ImGui.BeginChild("AtlasPropertiesOverlay", new Vector2(OverlayWidth, OverlayHeight),
-                             ImGuiChildFlags.Borders, ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse);
+                             ImGuiChildFlags.Borders, flags);
 
             DrawProperties(texture);
 

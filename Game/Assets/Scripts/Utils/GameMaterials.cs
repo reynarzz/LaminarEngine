@@ -23,8 +23,8 @@ namespace Game
 
         private GameMaterials()
         {
-            SpriteMaterial = GetMaterial("SpriteMaterial", "Shaders/SpriteVert.vert", "Shaders/SpriteFrag.frag");
-            FontMaterial = GetMaterial("FontMaterial", "Shaders/SpriteVert.vert", "Shaders/SpriteFrag.frag");
+            SpriteMaterial = Assets.GetMaterial("__InternalAssets__/Materials/SpriteDefault.material");
+            FontMaterial = Assets.GetMaterial("__InternalAssets__/Materials/SpriteDefault.material");
             SpriteMaterialOverlay = GetMaterial("SpriteMaterialOverlay", "Shaders/SpriteVert.vert", "Shaders/SpriteFrag.frag");
             SpriteMaterialWorld = GetMaterial("SpriteMaterialWorld", "Shaders/SpriteVert.vert", "Shaders/SpriteFrag.frag");
             WobbleMaterial = GetMaterial("WobbleMaterial", "Shaders/VertScreenGrab.vert", "Shaders/ScreenGrabWobble.frag");
@@ -44,9 +44,9 @@ namespace Game
             overlayPass.Stencil.ZPassOp = StencilOp.Keep;
 
 #if DESKTOP
-            PortalMaterial = InitPortalMaterial();
+            PortalMaterial = Assets.GetMaterial("Materials/Portal.material"); 
 #else
-            PortalMaterial = InitPortalMobileMaterial();
+            PortalMaterial = Assets.GetMaterial("Materials/Portal_mobile.material");
 #endif
 
             WobbleMaterial.GetPass(0).IsScreenGrabPass = true;
