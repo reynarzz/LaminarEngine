@@ -85,11 +85,7 @@ namespace Engine
             return _loadedPaths.ToArray();
         }
 
-        internal static void RefreshAssetDatabase()
-        {
-            // IOLayer.GetDatabase
-            Debug.Log("TODO: Refresh asset database.");
-        }
+       
 #endif
     }
 }
