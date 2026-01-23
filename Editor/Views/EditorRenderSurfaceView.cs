@@ -2,6 +2,8 @@
 using Engine;
 using Engine.Graphics;
 using Engine.Layers;
+using Engine.Utils;
+using GlmNet;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -22,6 +24,9 @@ namespace Editor
         private readonly string _viewName;
         private readonly string _surfaceViewId;
         protected ImGuiWindowFlags WindowFlags { get; set; }
+        private bool _canRenderWindow = false;
+
+        private vec2 _contentRegionAvail;
         public EditorRenderSurfaceView(string viewName, RenderingSurface surface)
         {
             _surface = surface;
@@ -48,6 +53,18 @@ namespace Editor
 
         }
 
+        protected virtual vec2 GetViewSize()
+        {
+            return ImGui.GetContentRegionAvail().ToVec2();
+        }
+        protected virtual vec2 GetViewPosition()
+        {
+            return ImGui.GetCursorPos().ToVec2();
+        }
+        protected virtual vec2 GetPrevContentRegionAvail()
+        {
+            return _contentRegionAvail;
+        }
         public virtual void OnDraw()
         {
             ImGuiWindowFlags flags = ImGuiWindowFlags.NoScrollbar |
@@ -55,18 +72,21 @@ namespace Editor
                                      ImGuiWindowFlags.NoCollapse | WindowFlags;
 
             ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Vector2.Zero);
-            ImGui.PushStyleColor(ImGuiCol.WindowBg, new Vector4(0, 0, 0, 1));
+            ImGui.PushStyleColor(ImGuiCol.WindowBg, _canRenderWindow ? new Vector4(0.1f, 0.1f, 0.1f, 1.0f) : new Vector4(0, 0, 0, 1));
             ImGui.PushID(_surfaceViewId);
             ImGui.Begin(_viewName, flags);
             WindowSize = ImGui.GetWindowSize();
             var pos = ImGui.GetWindowPos();
+            _contentRegionAvail = ImGui.GetContentRegionAvail().ToVec2();
+            var imageCursorPos = GetViewPosition().ToVector2();
+            var imageSize = GetViewSize().ToVector2();
             WindowPosition = pos;
-            WindowPositionRender = new Vector2((int)pos.X, (int)pos.Y + (int)ImGui.GetFrameHeight() / 2);
+            WindowPositionRender = new Vector2((int)pos.X + imageCursorPos.X, (int)pos.Y + imageCursorPos.Y);
             ImGui.GetMousePos();
 
             ICamera camera = null;
             var surfaceCamerasInUse = _surface.Cameras != null && _surface.Cameras.Length > 0 &&
-                                      (_surface.Cameras?[0]?.TryGetTarget(out camera) ?? false) && camera != null && 
+                                      (_surface.Cameras?[0]?.TryGetTarget(out camera) ?? false) && camera != null &&
                                       camera.IsAlive && camera.IsEnabled;
             if (surfaceCamerasInUse)
             {
@@ -79,8 +99,10 @@ namespace Editor
 
                 if (cameraRenderTarget != null)
                 {
+                    _canRenderWindow = true;
                     var frameBuffer = cameraRenderTarget as GLFrameBuffer;
-                    ImGui.Image((nint)frameBuffer.ColorTexture.Handle, ImGui.GetContentRegionAvail(), new Vector2(0, 1), new Vector2(1, 0));
+                    ImGui.SetCursorPos(imageCursorPos);
+                    ImGui.Image((nint)frameBuffer.ColorTexture.Handle, imageSize, new Vector2(0, 1), new Vector2(1, 0));
                 }
                 else
                 {
@@ -106,7 +128,7 @@ namespace Editor
             string text = "No valid cameras were found/enabled.";
             Vector2 textSize = ImGui.CalcTextSize(text);
             Vector2 windowSize = ImGui.GetContentRegionAvail();
-
+            _canRenderWindow = false;
             ImGui.SetCursorPos(new Vector2((windowSize.X - textSize.X) * 0.5f, (windowSize.Y - textSize.Y) * 0.5f));
 
             ImGui.Text(text);

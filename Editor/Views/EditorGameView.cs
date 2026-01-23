@@ -1,9 +1,17 @@
 ﻿using Engine;
 using Engine.Graphics;
+using Engine.Utils;
+using GlmNet;
 using ImGuiNET;
 
 namespace Editor
 {
+    public enum GameViewResolution
+    {
+        Free,
+        Custom
+    }
+
     internal class EditorGameView : EditorRenderSurfaceView, IWindow
     {
         private readonly InputLayerBase _inputLayer;
@@ -37,6 +45,10 @@ namespace Editor
         private int _offsetY = 0;
         public int OffsetX => _offsetX;
         public int OffsetY => _offsetY;
+        private vec2 _targetResolution;
+        private float _targetResScale = 1.0f;
+        private GameViewResolution _resolutionType = GameViewResolution.Custom;
+        private bool _autoFit = true;
         public EditorGameView(IWindow window, RenderingSurface surface, InputLayerBase inputLayer) : base("Game", surface)
         {
             _window = window;
@@ -60,6 +72,31 @@ namespace Editor
         {
         }
 
+        protected override vec2 GetViewSize()
+        {
+            if (_resolutionType == GameViewResolution.Free)
+            {
+                return base.GetViewSize();
+            }
+
+            return _targetResolution * _targetResScale;
+        }
+
+        protected override vec2 GetViewPosition()
+        {
+            var avail = ImGui.GetContentRegionAvail().ToVec2();
+            var cursor = ImGui.GetCursorPos().ToVec2();
+
+            var size = new vec2(_width, _height) * _targetResScale;
+            var pos = cursor + (avail - size) * 0.5f;
+
+            if (_resolutionType == GameViewResolution.Free)
+            {
+                pos.y += (int)ImGui.GetFrameHeight() / 2;
+            }
+            return pos;
+        }
+
         protected override void OnWindowRender()
         {
             _inputLayer.IsEnabled = ImGui.IsWindowFocused();
@@ -69,13 +106,54 @@ namespace Editor
         {
             base.OnDraw();
 
-            _offsetX = (int)WindowPositionRender.X;
-            _offsetY = (int)WindowPositionRender.Y;
+            _offsetX = Mathf.RoundToInt(WindowPositionRender.X);
+            var frameOffset = 0;
 
-            if (_width != (int)WindowSize.X || _height != (int)WindowSize.Y)
+            if (_resolutionType == GameViewResolution.Free)
             {
-                _width = (int)WindowSize.X;
-                _height = (int)WindowSize.Y;
+                frameOffset = (int)ImGui.GetFrameHeight() / 2;
+            }
+            _offsetY = Mathf.RoundToInt(WindowPositionRender.Y - frameOffset);
+
+            if (_resolutionType == GameViewResolution.Free)
+            {
+                TryNotifyUpdateResolution(WindowSize.ToVec2());
+            }
+            else
+            {
+                _targetResolution = new vec2(512 * 2, 258 * 2);
+
+                if (_autoFit)
+                {
+                    _targetResScale = CalculateAutoFitScale(_targetResolution);
+                }
+
+                TryNotifyUpdateResolution(_targetResolution);
+            }
+        }
+
+        private float CalculateAutoFitScale(vec2 targetResolution)
+        {
+            var avail = GetPrevContentRegionAvail();
+
+            if (targetResolution.x <= 0 || targetResolution.y <= 0)
+                return 1.0f;
+
+            var scaleX = avail.x / targetResolution.x;
+            var scaleY = avail.y / targetResolution.y;
+
+            return MathF.Min(scaleX, scaleY);
+        }
+
+        private void TryNotifyUpdateResolution(vec2 newResolution)
+        {
+            var newX = Mathf.RoundToInt(newResolution.x);
+            var newY = Mathf.RoundToInt(newResolution.y);
+
+            if (_width != newX || _height != newY)
+            {
+                _width = newX;
+                _height = newY;
 
                 _updateWindowSize = true;
             }
