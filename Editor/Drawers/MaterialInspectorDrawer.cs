@@ -23,7 +23,7 @@ namespace Editor
         internal override void OnOpen(Material target)
         {
             _shaders = EditorIOLayer.Database.GetAssetsInfoByType(AssetType.ShaderV2) as OrderedDictionary<Guid, AssetInfo>;
-            _shaderIndex = _shaders.IndexOf(target.Shader.GetID());
+            _shaderIndex = target.Shader ? _shaders.IndexOf(target.Shader.GetID()):0;
 
             _shadersNames.Capacity = _shaders.Count;
             _shadersNames.Clear();
