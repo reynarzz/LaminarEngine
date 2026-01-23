@@ -986,15 +986,14 @@ namespace Editor.Utils
                 // Asset picking
                 if (valueType == typeof(Material))
                 {
-                    //foreach (var guid in Assets.GetGuids(AssetType.Material))
-                    //{
-                    //    var path = Assets.ResolvePath(guid);
-                    //    if (ImGui.Selectable($"{System.IO.Path.GetFileName(path)}##{guid}"))
-                    //    {
-                    //        setValue(Assets.GetMaterial(path));
-                    //        ImGui.CloseCurrentPopup();
-                    //    }
-                    //}
+                    var assets = IOLayer.Database.Disk.GetAssetsInfo(AssetType.Material);
+                    foreach (var (id, info) in assets)
+                    {
+                        if (ImGui.Selectable($"{Path.GetFileName(info.Path)}##{id}{info.Path}"))
+                        {
+                            setValue(Assets.GetMaterial(info.Path));
+                        }
+                    }
                 }
                 else if (valueType == typeof(Texture))
                 {
@@ -1029,10 +1028,16 @@ namespace Editor.Utils
                 {
                     // TODO: this is very very slow, I have to cache all the sprites names on load.
                     var meta = EditorAssetUtils.GetAssetMeta(info.Path, AssetType.Texture) as TextureMetaFile;
-                   // var texturesInfo = EditorIOLayer.Database.GetAssetsInfoByType(AssetType.Texture);
+                    // var texturesInfo = EditorIOLayer.Database.GetAssetsInfoByType(AssetType.Texture);
 
                     if (meta?.AtlasData == null || meta.AtlasData.ChunksCount == 0)
                         continue;
+
+                    // TODO: use a tree node for multi sprites
+                    //if (ImGui.TreeNode())
+                    //{
+
+                    //}
 
                     for (int i = 0; i < meta.AtlasData.ChunksCount; i++)
                     {

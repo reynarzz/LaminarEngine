@@ -1,4 +1,5 @@
-﻿using SharedTypes;
+﻿using GameCooker;
+using SharedTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace Editor
         internal static string CompiledGameDllAbsolutePath => GetGameFolderAbsolutePath(NewGameDllRelativePath);
         internal static string GameHookDLLAbsolutePath => GetGameFolderAbsolutePath(HookGameDllRelativePath);
 
-
+       
         static EditorPaths()
         {
             var assemblyDir = Paths.ClearPathSeparation(Path.GetDirectoryName(AppContext.BaseDirectory)!);
@@ -39,6 +40,20 @@ namespace Editor
         public static string GetGameFolderAbsolutePath(string path)
         {
             return Paths.ClearPathSeparation(Path.Combine(GameRoot, path));
+        }
+
+        internal static string GetAbsolutePathSafe(string relativePath)
+        {
+            string absoluteAssetPath = null;
+            if (!relativePath.StartsWith(CookerPaths.INTERNAL_ASSET_FOLDER_NAME))
+            {
+                absoluteAssetPath = Paths.GetAbsoluteAssetPath(relativePath);
+            }
+            else
+            {
+                absoluteAssetPath = Paths.ClearPathSeparation(Path.Combine(CookerPaths.AssetsPath, relativePath));
+            }
+            return absoluteAssetPath;
         }
     }
 }

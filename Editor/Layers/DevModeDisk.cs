@@ -1,4 +1,5 @@
-﻿using GameCooker;
+﻿using Editor;
+using GameCooker;
 using Newtonsoft.Json;
 using SharedTypes;
 using System;
@@ -22,13 +23,11 @@ namespace Engine.IO
         {
             if (AssetDatabaseInfo.Assets.TryGetValue(guid, out var assetInfo))
             {
-                return File.Exists(GetAbsolutePathSafe(assetInfo.Path));
+                return File.Exists(EditorPaths.GetAbsolutePathSafe(assetInfo.Path));
             }
 
             return false;
         }
-
-
 
         protected override byte[] LoadAssetFromDisk(Guid guid)
         {
@@ -54,23 +53,9 @@ namespace Engine.IO
         {
             if (AssetDatabaseInfo.Assets.TryGetValue(guid, out var assetInfo))
             {
-                return File.ReadAllBytes(GetAbsolutePathSafe(assetInfo.Path + Paths.ASSET_META_EXT_NAME));
+                return File.ReadAllBytes(EditorPaths.GetAbsolutePathSafe(assetInfo.Path + Paths.ASSET_META_EXT_NAME));
             }
             return null;
-        }
-
-        private string GetAbsolutePathSafe(string relativePath)
-        {
-            string absoluteAssetPath = null;
-            if (!relativePath.StartsWith(CookerPaths.INTERNAL_ASSET_FOLDER_NAME))
-            {
-                absoluteAssetPath = Paths.GetAbsoluteAssetPath(relativePath);
-            }
-            else
-            {
-                absoluteAssetPath = Paths.ClearPathSeparation(Path.Combine(CookerPaths.AssetsPath, relativePath));
-            }
-            return absoluteAssetPath;
         }
     }
 }

@@ -12,15 +12,15 @@ namespace Editor
     {
         internal static AssetMetaFileBase GetAssetMeta(AssetResourceBase asset)
         {
-            var path = Paths.GetAbsoluteAssetPath(asset.Path) + Paths.ASSET_META_EXT_NAME;
-            var meta = AssetUtils.GetMeta(path, EditorIOLayer.Database.GetAssetInfo(asset).Type) as TextureMetaFile;
+            var path = EditorPaths.GetAbsolutePathSafe(asset.Path) + Paths.ASSET_META_EXT_NAME;
+            var meta = AssetUtils.GetMeta(path, EditorIOLayer.Database.GetAssetInfo(asset).Type);
             return meta;
         }
 
         internal static AssetMetaFileBase GetAssetMeta(string asstPathRelative, AssetType type)
         {
-            var path = Paths.GetAbsoluteAssetPath(asstPathRelative) + Paths.ASSET_META_EXT_NAME;
-            var meta = AssetUtils.GetMeta(path, type) as TextureMetaFile;
+            var path = EditorPaths.GetAbsolutePathSafe(asstPathRelative) + Paths.ASSET_META_EXT_NAME;
+            var meta = AssetUtils.GetMeta(path, type);
             return meta;
         }
 
