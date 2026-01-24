@@ -27,6 +27,7 @@ namespace Engine.Layers
                 { AssetType.Audio, new AudioClipAssetBuilder() },
                 { AssetType.Font, new FontAssetBuilder() },
                 { AssetType.AnimationClip, new AnimationClipAssetBuilder() },
+                { AssetType.Material, new MaterialAssetBuilder() },
                 //{ AssetType.AnimationController, new FontAssetBuilder() },
             };
 

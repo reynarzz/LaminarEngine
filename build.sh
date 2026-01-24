@@ -15,16 +15,12 @@ if [ -z "$PLATFORM" ]; then
     exit 1
 fi
 
-dotnet_cmd() 
-{
-    if [ "$BUILD_TYPE" = "RELEASE" ]; then
-        dotnet publish \
-            -c "$BUILD_TYPE" \
-            -p:PublishTrimmed=true \
-            "$@"
-    else
-        dotnet build -c "$BUILD_TYPE" "$@"
-    fi
+dotnet_cmd() {
+
+    dotnet publish \
+        -c "$BUILD_TYPE" \
+        -p:PublishTrimmed=true \
+        "$@"
 }
 
 build_gamecooker() 

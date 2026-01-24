@@ -7,7 +7,11 @@ namespace Engine
     {
         internal override AssetResourceBase BuildAsset(AssetInfo info, AssetMetaFileBase meta, Guid guid, BinaryReader reader)
         {
-            return null;
+            // TODO: read material correctly
+            throw new NotImplementedException("Implement Materia asset builder");
+
+            return new Material(new Shader(Assets.GetText("Shaders/SpriteVert.vert").Text, Assets.GetText("Shaders/SpriteFrag.frag").Text, 
+                "Invalid builder", "invalid builder"));
         }
 
         internal override void UpdateAsset(AssetResourceBase asset, AssetMetaFileBase meta, BinaryReader reader)
