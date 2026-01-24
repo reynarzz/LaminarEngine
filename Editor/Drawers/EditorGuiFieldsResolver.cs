@@ -26,8 +26,13 @@ namespace Editor.Utils
         {
         }
 
-        private static void SetNextItemWidth(float width)
+        private static void SetNextItemWidth(float width, bool trueWidth = false)
         {
+            if (trueWidth)
+            {
+                ImGui.SetNextItemWidth(width);
+                return;
+            }
             if (width > 0)
             {
                 ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X - width);
@@ -49,7 +54,7 @@ namespace Editor.Utils
             var refStr = value;
             var changed = ImGui.InputText("##" + name, ref refStr, (uint)bufferSize);
 
-            if (changed && (!pressEnterToConfirm || ImGui.IsKeyDown(ImGuiKey.Enter)))
+            if (changed)
             {
                 value = refStr;
             }
@@ -125,7 +130,7 @@ namespace Editor.Utils
             {
                 T v = value;
                 nint ptr = (nint)(&v);
-                var result = ImGui.DragScalar($"##{name}", type, ptr, 0.2f) && (!pressEnterToConfirm || ImGui.IsKeyDown(ImGuiKey.Enter));
+                var result = ImGui.DragScalar($"##{name}", type, ptr, 0.2f);
                 value = *(T*)ptr;
                 return result;
             }
@@ -191,7 +196,7 @@ namespace Editor.Utils
             SetNextItemWidth(itemWidth);
             Vector2 ve = value.ToVector2();
 
-            var changed = ImGui.DragFloat2($"##{name}", ref ve, 0.1f, 0, 0, "%.4f") && (!pressEnterToConfirm || ImGui.IsKeyDown(ImGuiKey.Enter));
+            var changed = ImGui.DragFloat2($"##{name}", ref ve, 0.1f, 0, 0, "%.4f");
 
             if (changed)
             {
@@ -205,10 +210,17 @@ namespace Editor.Utils
         {
             return DrawIVec2Field(name, ref value, 0, false);
         }
+
+        public static bool DrawIVec2Field(string name, ref ivec2 value, float itemWidth)
+        {
+            SetNextItemWidth(itemWidth, true);
+            return ImGui.DragInt2($"##{name}", ref value.x, 0.2f);
+        }
+
         public static bool DrawIVec2Field(string name, ref ivec2 value, float itemWidth = 0, bool pressEnterToConfirm = false)
         {
             SetNextItemWidth(itemWidth);
-            return ImGui.DragInt2($"##{name}", ref value.x, 0.2f) && (!pressEnterToConfirm || ImGui.IsKeyDown(ImGuiKey.Enter));
+            return ImGui.DragInt2($"##{name}", ref value.x, 0.2f);
         }
 
         public static bool DrawVec3Field(string name, ref vec3 value)
@@ -220,7 +232,7 @@ namespace Editor.Utils
             SetNextItemWidth(itemWidth);
             Vector3 ve = new Vector3(value.x, value.y, value.z);
 
-            var changed = ImGui.DragFloat3($"##{name}", ref ve, 0.1f, 0, 0, "%.4f") && (!pressEnterToConfirm || ImGui.IsKeyDown(ImGuiKey.Enter));
+            var changed = ImGui.DragFloat3($"##{name}", ref ve, 0.1f, 0, 0, "%.4f");
 
             if (changed)
             {
@@ -250,7 +262,7 @@ namespace Editor.Utils
             SetNextItemWidth(itemWidth);
             Vector4 ve = new Vector4(value.x, value.y, value.z, value.w);
 
-            var changed = ImGui.DragFloat4($"##{name}", ref ve, 0.1f, 0, 0, "%.4f") && (!pressEnterToConfirm || ImGui.IsKeyDown(ImGuiKey.Enter));
+            var changed = ImGui.DragFloat4($"##{name}", ref ve, 0.1f, 0, 0, "%.4f");
 
             if (changed)
             {

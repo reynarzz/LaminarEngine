@@ -181,8 +181,8 @@ namespace Editor
             style.Colors[(int)ImGuiCol.ScrollbarGrabActive] = new Vector4(0.3529412f, 0.3529412f, 0.37254903f, 1);
 
             style.Colors[(int)ImGuiCol.CheckMark] = new Vector4(0.0f, 0.46666667f, 0.78431374f, 1);
-            style.Colors[(int)ImGuiCol.SliderGrab] = new Vector4(0.11372549f, 0.5921569f, 0.9254902f, 1);
-            style.Colors[(int)ImGuiCol.SliderGrabActive] = new Vector4(0.0f, 0.46666667f, 0.78431374f, 1);
+            style.Colors[(int)ImGuiCol.SliderGrab] = green;//new Vector4(0.11372549f, 0.5921569f, 0.9254902f, 1);
+            style.Colors[(int)ImGuiCol.SliderGrabActive] = new Vector4(0.1f, 0.1f, 0.1f, 1.0f); //new Vector4(0.0f, 0.46666667f, 0.78431374f, 1);
 
             style.Colors[(int)ImGuiCol.Button] = new Vector4(0.2f, 0.2f, 0.21568628f, 1);
             style.Colors[(int)ImGuiCol.ButtonHovered] = new Vector4(0.23f, 0.23f, 0.23f, 1);

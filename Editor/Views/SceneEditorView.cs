@@ -79,11 +79,11 @@ namespace Editor
             var gizmoSize = WindowSize;
             if ((ImGuizmo.IsOver() || ImGuizmo.IsUsing()))
             {
-                WindowFlags = ImGuiWindowFlags.NoMove;
+                WindowFlags |= ImGuiWindowFlags.NoMove;
             }
             else
             {
-                WindowFlags = default;
+                WindowFlags &= ~ImGuiWindowFlags.NoMove;
             }
             ImGuizmo.SetRect(WindowPosition.X, WindowPosition.Y + offset, windowAdjustSize.x, windowAdjustSize.y);
             ImGuizmo.BeginFrame();

@@ -4032,60 +4032,60 @@ namespace ImGuiNET
             }
         }
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER
-        public static bool Combo(ReadOnlySpan<char> label, ref int current_item, string[] items, int items_count)
-        {
-            byte* native_label;
-            int label_byteCount = 0;
-            if (label != null)
-            {
-                label_byteCount = Encoding.UTF8.GetByteCount(label);
-                if (label_byteCount > Util.StackAllocationSizeLimit)
-                {
-                    native_label = Util.Allocate(label_byteCount + 1);
-                }
-                else
-                {
-                    byte* native_label_stackBytes = stackalloc byte[label_byteCount + 1];
-                    native_label = native_label_stackBytes;
-                }
-                int native_label_offset = Util.GetUtf8(label, native_label, label_byteCount);
-                native_label[native_label_offset] = 0;
-            }
-            else { native_label = null; }
-            int* items_byteCounts = stackalloc int[items.Length];
-            int items_byteCount = 0;
-            for (int i = 0; i < items.Length; i++)
-            {
-                string s = items[i];
-                items_byteCounts[i] = Encoding.UTF8.GetByteCount(s);
-                items_byteCount += items_byteCounts[i] + 1;
-            }
-            byte* native_items_data = stackalloc byte[items_byteCount];
-            int offset = 0;
-            for (int i = 0; i < items.Length; i++)
-            {
-                string s = items[i];
-                offset += Util.GetUtf8(s, native_items_data + offset, items_byteCounts[i]);
-                native_items_data[offset++] = 0;
-            }
-            byte** native_items = stackalloc byte*[items.Length];
-            offset = 0;
-            for (int i = 0; i < items.Length; i++)
-            {
-                native_items[i] = &native_items_data[offset];
-                offset += items_byteCounts[i] + 1;
-            }
-            int popup_max_height_in_items = -1;
-            fixed (int* native_current_item = &current_item)
-            {
-                byte ret = ImGuiNative.igCombo_Str_arr(native_label, native_current_item, native_items, items_count, popup_max_height_in_items);
-                if (label_byteCount > Util.StackAllocationSizeLimit)
-                {
-                    Util.Free(native_label);
-                }
-                return ret != 0;
-            }
-        }
+        //public static bool Combo(ReadOnlySpan<char> label, ref int current_item, string[] items, int items_count)
+        //{
+        //    byte* native_label;
+        //    int label_byteCount = 0;
+        //    if (label != null)
+        //    {
+        //        label_byteCount = Encoding.UTF8.GetByteCount(label);
+        //        if (label_byteCount > Util.StackAllocationSizeLimit)
+        //        {
+        //            native_label = Util.Allocate(label_byteCount + 1);
+        //        }
+        //        else
+        //        {
+        //            byte* native_label_stackBytes = stackalloc byte[label_byteCount + 1];
+        //            native_label = native_label_stackBytes;
+        //        }
+        //        int native_label_offset = Util.GetUtf8(label, native_label, label_byteCount);
+        //        native_label[native_label_offset] = 0;
+        //    }
+        //    else { native_label = null; }
+        //    int* items_byteCounts = stackalloc int[items.Length];
+        //    int items_byteCount = 0;
+        //    for (int i = 0; i < items.Length; i++)
+        //    {
+        //        string s = items[i];
+        //        items_byteCounts[i] = Encoding.UTF8.GetByteCount(s);
+        //        items_byteCount += items_byteCounts[i] + 1;
+        //    }
+        //    byte* native_items_data = stackalloc byte[items_byteCount];
+        //    int offset = 0;
+        //    for (int i = 0; i < items.Length; i++)
+        //    {
+        //        string s = items[i];
+        //        offset += Util.GetUtf8(s, native_items_data + offset, items_byteCounts[i]);
+        //        native_items_data[offset++] = 0;
+        //    }
+        //    byte** native_items = stackalloc byte*[items.Length];
+        //    offset = 0;
+        //    for (int i = 0; i < items.Length; i++)
+        //    {
+        //        native_items[i] = &native_items_data[offset];
+        //        offset += items_byteCounts[i] + 1;
+        //    }
+        //    int popup_max_height_in_items = -1;
+        //    fixed (int* native_current_item = &current_item)
+        //    {
+        //        byte ret = ImGuiNative.igCombo_Str_arr(native_label, native_current_item, native_items, items_count, popup_max_height_in_items);
+        //        if (label_byteCount > Util.StackAllocationSizeLimit)
+        //        {
+        //            Util.Free(native_label);
+        //        }
+        //        return ret != 0;
+        //    }
+        //}
 #endif
         public static bool Combo(string label, ref int current_item, IReadOnlyList<string> items, int items_count)
         {

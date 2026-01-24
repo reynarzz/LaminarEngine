@@ -56,8 +56,14 @@ namespace Engine
         }
         public static bool IsAlmostZero(float x)
         {
-            return MathF.Abs(x) < Mathf.Epsilon;
+            return MathF.Abs(x) < Epsilon;
         }
+
+        public static bool CompareFloats(float f1, float f2, float epsilon = Epsilon)
+        {
+            return MathF.Abs(f1 - f2) <= epsilon;
+        }
+
         public static float PingPong(float t, float length = 1f)
         {
             t = t % (2f * length);
@@ -429,6 +435,14 @@ namespace Engine
             return new vec3(MathF.Max(a.x, b.x), MathF.Max(a.y, b.y), MathF.Max(a.z, b.z));
         }
 
+        public static float Max(float a, float b)
+        {
+            return MathF.Max(a, b);
+        }
+        public static float Min(float a, float b)
+        {
+            return MathF.Min(a, b);
+        }
         public static float SmoothNoise1D(float x)
         {
             int i = (int)MathF.Floor(x);

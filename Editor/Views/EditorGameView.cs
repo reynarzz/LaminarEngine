@@ -1,15 +1,17 @@
-﻿using Engine;
+﻿using Editor.Utils;
+using Engine;
 using Engine.Graphics;
 using Engine.Utils;
 using GlmNet;
 using ImGuiNET;
+using System.Numerics;
 
 namespace Editor
 {
     public enum GameViewResolution
     {
-        Free,
-        Custom
+        FreeAspect,
+        Resolution
     }
 
     internal class EditorGameView : EditorRenderSurfaceView, IWindow
@@ -47,20 +49,20 @@ namespace Editor
         public int OffsetY => _offsetY;
         private vec2 _targetResolution = new vec2(512 * 2, 258 * 2);
         private float _targetResScale = 1.0f;
-        private GameViewResolution _resolutionType = GameViewResolution.Custom;
+        private GameViewResolution _resolutionType = GameViewResolution.Resolution;
+        private const float TOOLBAR_HEIGHT = 24;
         private bool _autoFit = true;
+        private const float MAX_VIEW_SCALE = 7.0f;
+
+        private readonly string[] _resolutionTypesNames;
         public EditorGameView(IWindow window, RenderingSurface surface, InputLayerBase inputLayer) : base("Game", surface)
         {
             _window = window;
             _width = _window.Width;
             _height = _window.Height;
             _inputLayer = inputLayer;
-            //_window.OnWindowChanged += OnWindowWasChanged;
-        }
 
-        private void OnWindowWasChanged(int w, int h)
-        {
-            _updateWindowSize = true;
+            _resolutionTypesNames = Enum.GetNames(typeof(GameViewResolution));
         }
 
         public void SetWindowSize(int width, int height)
@@ -74,9 +76,9 @@ namespace Editor
 
         protected override vec2 GetViewSize()
         {
-            if (_resolutionType == GameViewResolution.Free)
+            if (_resolutionType == GameViewResolution.FreeAspect)
             {
-                return base.GetViewSize();
+                return base.GetViewSize() * _targetResScale;
             }
 
             return _targetResolution * _targetResScale;
@@ -90,9 +92,9 @@ namespace Editor
             var size = new vec2(_width, _height) * _targetResScale;
             var pos = cursor + (avail - size) * 0.5f;
 
-            if (_resolutionType == GameViewResolution.Free)
+            if (_resolutionType == GameViewResolution.FreeAspect)
             {
-                pos.y += (int)ImGui.GetFrameHeight() / 2;
+                pos.y += (int)ImGui.GetFrameHeight();
             }
             return pos;
         }
@@ -102,14 +104,76 @@ namespace Editor
             _inputLayer.IsEnabled = ImGui.IsWindowFocused();
         }
 
+        protected override void OnRenderChildWindows()
+        {
+            Toolbar();
+        }
+
+        private void Toolbar()
+        {
+            ImGui.PushStyleColor(ImGuiCol.ChildBg, new Vector4(0.15f, 0.15f, 0.15f, 1.0f));
+            ImGui.BeginChild("##GameViewChild", new Vector2(ImGui.GetContentRegionAvail().X, TOOLBAR_HEIGHT), ImGuiChildFlags.None,
+                             ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoScrollbar);
+            var targetRes = Mathf.RoundToInt(_targetResolution);
+            var currentResIndex = (int)_resolutionType;
+
+            ImGui.SetNextItemWidth(135);
+            if (ImGui.Combo("##GameViewRes", ref currentResIndex, _resolutionTypesNames, _resolutionTypesNames.Length))
+            {
+                _resolutionType = (GameViewResolution)currentResIndex;
+
+                if(_resolutionType == GameViewResolution.FreeAspect && _targetResScale < 1.0f)
+                {
+                    _targetResScale = 1.0f;
+                }
+                OnImguiWindowSizeChanged();
+            }
+            ImGui.BeginDisabled(_resolutionType != GameViewResolution.Resolution);
+            ImGui.SameLine();
+            if (EditorGuiFieldsResolver.DrawIVec2Field("Resolution", ref targetRes, 100))
+            {
+                _targetResolution = new vec2(targetRes.x, targetRes.y);
+                OnImguiWindowSizeChanged();
+            }
+            ImGui.EndDisabled();
+
+            ImGui.SameLine();
+            var scale = _targetResScale;
+            var min = _resolutionType == GameViewResolution.Resolution? CalculateAutoFitScale(_targetResolution):1;
+            ImGui.Text("Scale");
+            ImGui.SameLine();
+            ImGui.SetNextItemWidth(170);
+
+            if (ImGui.SliderFloat("##Scale", ref scale, min, MAX_VIEW_SCALE, "%.2f"))
+            {
+                _targetResScale = Mathf.Clamp(scale, min, MAX_VIEW_SCALE);
+                //if(_targetResScale > min)
+                //{
+                //    WindowFlags &= ~ImGuiWindowFlags.NoScrollbar;
+                //}
+                //else
+                //{
+                //    WindowFlags |= ImGuiWindowFlags.NoScrollbar;
+                //}
+                _autoFit = Mathf.CompareFloats(_targetResScale, min, 0.05f);
+            }
+            ImGui.SameLine();
+            if (ImGui.Button("Stats"))
+            {
+
+            }
+            ImGui.EndChild();
+            ImGui.PopStyleColor();
+        }
         public override void OnDraw()
         {
+            // Draw the window
             base.OnDraw();
 
             _offsetX = Mathf.RoundToInt(WindowPositionRender.X);
             var frameOffset = 0;
 
-            if (_resolutionType == GameViewResolution.Free)
+            if (_resolutionType == GameViewResolution.FreeAspect)
             {
                 frameOffset = (int)ImGui.GetFrameHeight() / 2;
             }
@@ -119,7 +183,7 @@ namespace Editor
 
         protected override void OnImguiWindowSizeChanged()
         {
-            if (_resolutionType == GameViewResolution.Free)
+            if (_resolutionType == GameViewResolution.FreeAspect)
             {
                 TryNotifyUpdateResolution(WindowSize.ToVec2());
             }
@@ -139,11 +203,11 @@ namespace Editor
         {
             var avail = GetPrevContentRegionAvail();
 
-            if (avail.x >= targetResolution.x && avail.y >= targetResolution.y)
+            if ((avail.x >= targetResolution.x && avail.y >= targetResolution.y) ||
+                targetResolution.x <= 0 || targetResolution.y <= 0)
+            {
                 return 1;
-
-            if (targetResolution.x <= 0 || targetResolution.y <= 0)
-                return 1.0f;
+            }
 
             var scaleX = avail.x / targetResolution.x;
             var scaleY = avail.y / targetResolution.y;

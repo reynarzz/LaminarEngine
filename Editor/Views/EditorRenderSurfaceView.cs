@@ -24,10 +24,14 @@ namespace Editor
         public Vector2 WindowSize { get; private set; }
         private readonly string _viewName;
         private readonly string _surfaceViewId;
-        protected ImGuiWindowFlags WindowFlags { get; set; }
+        protected ImGuiWindowFlags WindowFlags { get; set; } = ImGuiWindowFlags.NoScrollbar |
+                                                               ImGuiWindowFlags.NoScrollWithMouse |
+                                                               ImGuiWindowFlags.NoCollapse;
+
         private bool _canRenderWindow = false;
 
         private vec2 _contentRegionAvail;
+
         public EditorRenderSurfaceView(string viewName, RenderingSurface surface)
         {
             _surface = surface;
@@ -67,19 +71,15 @@ namespace Editor
             return _contentRegionAvail;
         }
 
-        protected virtual void OnImguiWindowSizeChanged()
-        {
-        }
+        protected virtual void OnImguiWindowSizeChanged() { }
+        protected virtual void OnRenderChildWindows() { }
         public virtual void OnDraw()
         {
-            ImGuiWindowFlags flags = ImGuiWindowFlags.NoScrollbar |
-                                     ImGuiWindowFlags.NoScrollWithMouse |
-                                     ImGuiWindowFlags.NoCollapse | WindowFlags;
-
             ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Vector2.Zero);
             ImGui.PushStyleColor(ImGuiCol.WindowBg, _canRenderWindow ? new Vector4(0.1f, 0.1f, 0.1f, 1.0f) : new Vector4(0, 0, 0, 1));
             ImGui.PushID(_surfaceViewId);
-            ImGui.Begin(_viewName, flags);
+            ImGui.Begin(_viewName, WindowFlags);
+            OnRenderChildWindows();
 
             var prevWinSize = WindowSize;
             WindowSize = ImGui.GetWindowSize();
