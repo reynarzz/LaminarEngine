@@ -129,7 +129,7 @@ namespace Editor
             style.DisabledAlpha = 0.6000000238418579f;
             style.WindowPadding = new Vector2(4.0f, 5.0f);
             style.WindowRounding = rounding;
-            style.WindowBorderSize = 2.0f; // was zero, TODO
+            style.WindowBorderSize = 0.0f; // was zero, TODO
             style.WindowMinSize = new Vector2(300.0f, 100.0f);
             style.WindowTitleAlign = new Vector2(0.0f, 0.5f);
             style.WindowMenuButtonPosition = ImGuiDir.None;
@@ -169,17 +169,17 @@ namespace Editor
             style.Colors[(int)ImGuiCol.FrameBg] = new Vector4(0.11f, 0.11f, 0.11156863f, 1);
             style.Colors[(int)ImGuiCol.FrameBgHovered] = new Vector4(0.23f, 0.23f, 0.23f, 1);
             style.Colors[(int)ImGuiCol.FrameBgActive] = green;
-
+              
             style.Colors[(int)ImGuiCol.TitleBg] =  new Vector4(0.14509805f, 0.14509805f, 0.14901961f, 1);
             style.Colors[(int)ImGuiCol.TitleBgActive] = new Vector4(0.08f, 0.08f, 0.08f, 1); // Window title background
             style.Colors[(int)ImGuiCol.TitleBgCollapsed] = new Vector4(0.14509805f, 0.14509805f, 0.14901961f, 1);
-
+                  
             style.Colors[(int)ImGuiCol.MenuBarBg] = new Vector4(0.2f, 0.2f, 0.21568628f, 1);
-            style.Colors[(int)ImGuiCol.ScrollbarBg] = new Vector4(0.2f, 0.2f, 0.21568628f, 1);
+            style.Colors[(int)ImGuiCol.ScrollbarBg] = new Vector4(0.2f, 0.2f, 0.21568628f, 0);
             style.Colors[(int)ImGuiCol.ScrollbarGrab] = new Vector4(0.32156864f, 0.32156864f, 0.33333334f, 1);
             style.Colors[(int)ImGuiCol.ScrollbarGrabHovered] = new Vector4(0.3529412f, 0.3529412f, 0.37254903f, 1);
             style.Colors[(int)ImGuiCol.ScrollbarGrabActive] = new Vector4(0.3529412f, 0.3529412f, 0.37254903f, 1);
-
+ 
             style.Colors[(int)ImGuiCol.CheckMark] = new Vector4(0.0f, 0.46666667f, 0.78431374f, 1);
             style.Colors[(int)ImGuiCol.SliderGrab] = green;//new Vector4(0.11372549f, 0.5921569f, 0.9254902f, 1);
             style.Colors[(int)ImGuiCol.SliderGrabActive] = new Vector4(0.1f, 0.1f, 0.1f, 1.0f); //new Vector4(0.0f, 0.46666667f, 0.78431374f, 1);
@@ -208,9 +208,9 @@ namespace Editor
             style.Colors[(int)ImGuiCol.DockingEmptyBg] = new Vector4(0.32156864f, 0.32156864f, 0.33333334f, 1);
             style.Colors[(int)ImGuiCol.DockingPreview] = new Vector4(0, 0, 0, 0.6f);
 
-            var tabColor = new Vector4(0.133f, 0.545f, 0.133f, 1);
+            var tabColor = green;//new Vector4(0.133f, 0.545f, 0.133f, 1);
             var tabUnfocused = new Vector4(tabColor.X * 0.5f, tabColor.Y * 0.5f, tabColor.Z * 0.5f, 1);
-
+               
             style.Colors[(int)ImGuiCol.TabDimmedSelected] = tabColor;
             style.Colors[(int)ImGuiCol.TabSelected] = tabColor;
             style.Colors[(int)ImGuiCol.Tab] = tabColor;
@@ -218,8 +218,10 @@ namespace Editor
             //style.Colors[(int)ImGuiCol.TabUnfocused] = tabUnfocused;
             //style.Colors[(int)ImGuiCol.TabUnfocusedActive] = tabColor;
             style.Colors[(int)ImGuiCol.TabSelectedOverline] = tabColor;
-            style.Colors[(int)ImGuiCol.TabDimmed] = tabUnfocused;
-
+            style.Colors[(int)ImGuiCol.TabDimmed] = tabUnfocused; 
+            style.Colors[(int)ImGuiCol.TabDimmedSelectedOverline] = default;
+            style.Colors[(int)ImGuiCol.TabHorizontalLine] = new Vector4(1.0f, 0, 0, 0.0f);
+             
             style.Colors[(int)ImGuiCol.PlotLines] = new Vector4(0.0f, 0.46666667f, 0.78431374f, 1);
             style.Colors[(int)ImGuiCol.PlotLinesHovered] = new Vector4(0.11372549f, 0.5921569f, 0.9254902f, 1);
             style.Colors[(int)ImGuiCol.PlotHistogram] = new Vector4(0.0f, 0.46666667f, 0.78431374f, 1);

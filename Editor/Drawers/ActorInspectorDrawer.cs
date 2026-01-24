@@ -77,7 +77,7 @@ namespace Editor
             {
                 actor.Layer = LayerMask.NameToLayer(layerNames[layerIndex]);
             }
-            if (ImGui.Button("Add Component", new Vector2(ImGui.GetContentRegionAvail().X, 23)))
+            if (ImGui.Button("Add Component", new Vector2(ImGui.GetContentRegionAvail().X-5, 23)))
             {
                 PopulateAllComponentTypes();
                 ImGui.OpenPopup("DropdownPopup");

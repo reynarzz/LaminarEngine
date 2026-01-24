@@ -60,6 +60,7 @@ namespace ImGuiNET
         NavWindowingHighlight = 55,
         NavWindowingDimBg = 56,
         ModalWindowDimBg = 57,
+        TabHorizontalLine = 58,
         COUNT = 58,
     }
 }

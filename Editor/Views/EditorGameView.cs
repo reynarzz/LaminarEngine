@@ -111,7 +111,7 @@ namespace Editor
 
         private void Toolbar()
         {
-            ImGui.PushStyleColor(ImGuiCol.ChildBg, new Vector4(0.15f, 0.15f, 0.15f, 1.0f));
+            ImGui.PushStyleVar(ImGuiStyleVar.ChildBorderSize, 0);
             ImGui.BeginChild("##GameViewChild", new Vector2(ImGui.GetContentRegionAvail().X, TOOLBAR_HEIGHT), ImGuiChildFlags.None,
                              ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoScrollbar);
             var targetRes = Mathf.RoundToInt(_targetResolution);
@@ -163,7 +163,7 @@ namespace Editor
 
             }
             ImGui.EndChild();
-            ImGui.PopStyleColor();
+            ImGui.PopStyleVar();
         }
         public override void OnDraw()
         {
