@@ -22,7 +22,7 @@ namespace GLFW
         ///     <para>For Unix users using an installed version of GLFW, this needs refactored to <c>glfw</c>.</para>
         /// </summary>
 #if Windows
-        public const string LIBRARY = "glfw3";
+        public const string LIBRARY = "glfw";
 #elif OSX
         public const string LIBRARY = "libglfw.3"; // mac
 #else

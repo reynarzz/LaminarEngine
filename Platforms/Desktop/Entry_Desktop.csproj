@@ -56,8 +56,14 @@
 
 
 	<Target Name="PostBuild_Windows" AfterTargets="PostBuildEvent" Condition="'$(OS)' == 'Windows_NT'">
-		<Message Text="PostBuild: Windows detected: copying glfw3.dll" Importance="high" />
-		<Copy SourceFiles="$(MSBuildProjectDirectory)/../..//Third/Win/glfw/lib-vc2022/glfw.dll" DestinationFiles="$(TargetDir)glfw.dll" SkipUnchangedFiles="true" />
+		<Message Text="PostBuild: Windows detected: copying dlls" Importance="high" />
+
+
+		<PropertyGroup>
+			<GlfwWinSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..\Engine\Third\Native\bin\win\glfw3.dll'))</GlfwWinSrc>
+		</PropertyGroup>
+
+		<Copy SourceFiles="$(GlfwWinSrc)" DestinationFiles="$(TargetDir)glfw.dll" SkipUnchangedFiles="true" />
 	</Target>
 
 
