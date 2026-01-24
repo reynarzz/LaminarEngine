@@ -17,7 +17,8 @@ using System.Numerics;
 namespace Editor
 {
     // TODO:
-    // -Current code is very slow, most of it is in 'prototype' phase, a nice (big) refactor is on the way.
+    // -The current code is very slow, and contains tons of bad practices to cut corners, leading to memory leaks, and slowdowns,
+    //    most of it is in 'prototype' phase a nice (big) refactor is on the way.
     // -Refactor.
     // -Changing cameras causes to render prevCamera.
     // -Weird rendering issue, related to mouse picking pink materials, is it the RenderingSystem, batcher?
@@ -27,7 +28,7 @@ namespace Editor
     // -If I load the runtime mode, and the applicationLayer is enabled, the camera renders black.
     // GameCooker, the asset database sometimes doesn't remove old assets correctly.
     // Bug with mouse picker: cliking almost the top border of the scene window doesn't register a pick, and performance degrades.
-   
+
     // Fix:
     // Copy native dependencies to bin directories.
     // Investigate why when the scene is reloaded old objects are still alive.
@@ -35,8 +36,9 @@ namespace Editor
     // Fix CollisionDispatcher Hashset use instead of dictionary.
 
     // Assets:
-    // Serialize materials.
+    // Implement material asset build.
     // load spriteAtlas from texture 2d metadata.
+    // Write binary serializer for runtime build.
 
     // Save Editor config:
     // Current loaded scene name.

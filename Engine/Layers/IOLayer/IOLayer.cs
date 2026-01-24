@@ -9,37 +9,10 @@ using System.Threading.Tasks;
 
 namespace Engine.Layers
 {
-    public class IOLayer : LayerBase
+    public abstract class IOLayer : LayerBase
     {
         private static AssetDatabase _assetDatabase;
         internal static AssetDatabase Database => _assetDatabase; // Remove this.
-
-        // TODO: remove all this, this is here to avoid breaking the current IO functionality. 
-        public override void Initialize()
-        {
-            var assetbuilder = new Dictionary<AssetType, AssetBuilderBase>()
-            {
-                { AssetType.Texture, new TextureAssetBuilder() },
-                { AssetType.Text, new TextAssetBuilder() },
-                { AssetType.Shader, new TextAssetBuilder() },
-                { AssetType.Audio, new AudioClipAssetBuilder() },
-                { AssetType.Font, new FontAssetBuilder() },
-                { AssetType.AnimationClip, new AnimationClipAssetBuilder() },
-                //{ AssetType.AnimationController, new FontAssetBuilder() },
-            };
-
-            DiskBase disk = null;
-
-#if !MOBILE
-            disk = new ReleaseModeDisk(Paths.GetReleaseDataFolder());
-#else
-            disk = new ReleaseModeDisk(GFSEngine.AssetFileStream);
-#endif
-            disk.Initialize();
-
-            _assetDatabase = new AssetDatabase(assetbuilder);
-            _assetDatabase.Initialize(disk);
-        }
 
         private protected void InitializeIO(DiskBase disk, Dictionary<AssetType, AssetBuilderBase> assetsBuilder)
         {

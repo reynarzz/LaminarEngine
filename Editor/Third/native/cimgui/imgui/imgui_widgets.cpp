@@ -3279,13 +3279,11 @@ bool ImGui::SliderScalar(const char* label, ImGuiDataType data_type, void* p_dat
       //  grabMin.y += 2;
        // grabMax.y -= 2;
 
-        // Reynarz----
+        // Reynarzz----
        // window->DrawList->AddRectFilled(grabMin, grabMax, GetColorU32(g.ActiveId == id ? ImGuiCol_SliderGrabActive : ImGuiCol_SliderGrab), style.GrabRounding);
-
         ImVec2 center = ImVec2((grabMin.x + grabMax.x) * 0.5f,(grabMin.y + grabMax.y) * 0.5f);
         float radius = ImMin((grabMax.x - grabMin.x),(grabMax.y - grabMin.y)) * 0.5f;
-        window->DrawList->AddCircleFilled(center,radius,GetColorU32(g.ActiveId == id ? ImGuiCol_SliderGrabActive : 
-                                                                                       ImGuiCol_SliderGrab));
+        window->DrawList->AddCircleFilled(center,radius,GetColorU32(g.ActiveId == id ? ImGuiCol_SliderGrabActive : ImGuiCol_SliderGrab));
         //------
     }
 
@@ -9358,7 +9356,7 @@ static void ImGui::TabBarLayout(ImGuiTabBar* tab_bar)
 {
     ImGuiContext& g = *GImGui;
     tab_bar->WantLayout = false;
-
+    
     // Garbage collect by compacting list
     // Detect if we need to sort out tab list (e.g. in rare case where a tab changed section)
     int tab_dst_n = 0;
@@ -10353,7 +10351,14 @@ ImVec2 ImGui::TabItemCalcSize(const char* label, bool has_close_button_or_unsave
         size.x += g.Style.FramePadding.x + (g.Style.ItemInnerSpacing.x + g.FontSize); // We use Y intentionally to fit the close button circle.
     else
         size.x += g.Style.FramePadding.x + 1.0f;
-    return ImVec2(ImMin(size.x, TabBarCalcMaxTabWidth()), size.y);
+
+
+    ImVec2 val = ImVec2(ImMin(size.x, TabBarCalcMaxTabWidth()), size.y);
+
+    // Reynarzz---
+    val.x = ImMax(90.0f, val.x);
+    //---
+    return val;
 }
 
 ImVec2 ImGui::TabItemCalcSize(ImGuiWindow* window)
@@ -10464,7 +10469,16 @@ void ImGui::TabItemLabelAndCloseButton(ImDrawList* draw_list, const ImRect& bb, 
         ellipsis_max_x = text_pixel_clip_bb.Max.x;
     }
     LogSetNextTextDecoration("/", "\\");
-    RenderTextEllipsis(draw_list, text_ellipsis_clip_bb.Min, text_ellipsis_clip_bb.Max, text_pixel_clip_bb.Max.x, ellipsis_max_x, label, NULL, &label_size);
+    
+    // Original
+    // RenderTextEllipsis(draw_list, text_ellipsis_clip_bb.Min, text_ellipsis_clip_bb.Max, text_pixel_clip_bb.Max.x, ellipsis_max_x, label, NULL, &label_size);
+
+    // Reynarzz--
+    ImVec2 middle(0.5f, 0.0f);
+    auto newMin = ImLerp(text_ellipsis_clip_bb.Min, text_ellipsis_clip_bb.Max, middle);
+    newMin.x -= label_size.x * 0.5f;
+    RenderTextEllipsis(draw_list, newMin, text_ellipsis_clip_bb.Max, text_pixel_clip_bb.Max.x, ellipsis_max_x, label, NULL, &label_size);
+    // ----
 
 #if 0
     if (!is_contents_visible)
