@@ -27,10 +27,12 @@ namespace Editor
     // -If I load the runtime mode, and the applicationLayer is enabled, the camera renders black.
     // GameCooker, the asset database sometimes doesn't remove old assets correctly.
     // Bug with mouse picker: cliking almost the top border of the scene window doesn't register a pick, and performance degrades.
+   
     // Fix:
     // Copy native dependencies to bin directories.
     // Investigate why when the scene is reloaded old objects are still alive.
-
+    // Rebuild the rendering system.
+    // Fix CollisionDispatcher Hashset use instead of dictionary.
 
     // Assets:
     // Serialize materials.

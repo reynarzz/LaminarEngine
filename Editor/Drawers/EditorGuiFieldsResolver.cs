@@ -66,7 +66,17 @@ namespace Editor.Utils
         {
             return DrawScalarField(name, ref value, ImGuiDataType.Double, 0, false);
         }
+        // TODO: reuse the function below
+        public static bool DrawFloatFieldRealWidth(string name, ref float value, float itemWidth, float min, float max, int decimalPlaces = 2)
+        {
+            SetNextItemWidth(itemWidth, true);
+            ImGui.PushStyleVar(ImGuiStyleVar.IndentSpacing, 0f);
 
+            bool changed = ImGui.DragFloat($"##{name}", ref value, 0.1f, min, max, $"%.{Mathf.Min(decimalPlaces, Mathf.GetDecimalPlaces(value))}f");
+
+            ImGui.PopStyleVar();
+            return changed;
+        }
         public static bool DrawFloatField(string name, ref float value, float itemWidth = 0, bool pressEnterToConfirm = false)
         {
             SetNextItemWidth(itemWidth);

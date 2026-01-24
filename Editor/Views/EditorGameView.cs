@@ -144,9 +144,14 @@ namespace Editor
             ImGui.SameLine();
             ImGui.SetNextItemWidth(170);
 
-            if (ImGui.SliderFloat("##Scale", ref scale, min, MAX_VIEW_SCALE, "%.2f"))
+            void RecalcScale(float scale)
             {
                 _targetResScale = Mathf.Clamp(scale, min, MAX_VIEW_SCALE);
+                _autoFit = Mathf.CompareFloats(_targetResScale, min, 0.05f);
+
+            }
+            if (ImGui.SliderFloat("##Scale", ref scale, min, MAX_VIEW_SCALE, "%.2f"))
+            {
                 //if(_targetResScale > min)
                 //{
                 //    WindowFlags &= ~ImGuiWindowFlags.NoScrollbar;
@@ -155,7 +160,14 @@ namespace Editor
                 //{
                 //    WindowFlags |= ImGuiWindowFlags.NoScrollbar;
                 //}
-                _autoFit = Mathf.CompareFloats(_targetResScale, min, 0.05f);
+
+                RecalcScale(scale);
+            }
+            ImGui.SameLine();
+
+            if(EditorGuiFieldsResolver.DrawFloatFieldRealWidth("##Scale_Value", ref scale, 40, min, MAX_VIEW_SCALE))
+            {
+                RecalcScale(scale);
             }
             ImGui.SameLine();
             if (ImGui.Button("Stats"))

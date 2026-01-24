@@ -84,6 +84,7 @@ namespace Editor
                     }
 
                     File.WriteAllText(TestfilePath, EditorJsonUtils.Serialize(_actors));
+                    _actors.Clear();
                 }
                 //else
                 //{
@@ -100,9 +101,11 @@ namespace Editor
                 var anim2 = Deserializer.Deserialize<AnimationClip>(ir);
 
                 _materialTest = Assets.GetMaterial("Materials/Material.material");
-                Selector.Selected = Assets.GetTexture("starkTileset.png"); //_materialTest.Textures.ElementAt(0).Value;
-                ExportSlicedSprites();
-
+                Selector.Selected = Assets.GetTexture("Tilemap/SunnyLand_by_Ansimuz-extended.png"); //_materialTest.Textures.ElementAt(0).Value;
+                //ExportSlicedSprites();
+                var material = Assets.GetMaterial("__InternalAssets__/Materials/SpriteDefault.material");
+                 material = Assets.GetMaterial("Materials/Material.material");
+                Selector.Selected = material;
                 var obj = Actor.Find("Chest");
                 if (obj)
                 {
@@ -137,12 +140,25 @@ namespace Editor
 
             var paths = new string[]
             {
-                "KingsAndPigsSprites/11-Door/Opening (46x56).png"
+                "KingsAndPigsSprites/01-King Human/Idle (78x58)S.png",
+                "KingsAndPigsSprites/01-King Human/Run (78x58)S.png",
+                "KingsAndPigsSprites/01-King Human/Jump (78x58)S.png",
+                "KingsAndPigsSprites/01-King Human/Fall (78x58)S.png",
+                "KingsAndPigsSprites/01-King Human/Hit (78x58).png",
+                "KingsAndPigsSprites/01-King Human/Dead (78x58).png",
+                "KingsAndPigsSprites/01-King Human/Attack (78x58).png",
+                "KingsAndPigsSprites/01-King Human/Door In (78x58).png",
+                "KingsAndPigsSprites/01-King Human/Door Out (78x58).png"
+
+
+
+
+
             };
 
             foreach (var path in paths)
             {
-                Slice(Assets.GetTexture(path), 46, 56, 0.5f, 0.5f);
+                Slice(Assets.GetTexture(path), 78, 58, 0.4f, 0.42f);
             }
         }
 
@@ -153,6 +169,7 @@ namespace Editor
             // var actors = _actors;
             Debug.Log("Total actors in scene: " + actors.Count);
             SceneManager.Initialize();
+           
             SceneDeserializer.DeserializeScene(actors, SceneManager.ActiveScene);
         }
     }

@@ -3253,7 +3253,15 @@ bool ImGui::SliderScalar(const char* label, ImGuiDataType data_type, void* p_dat
     // Draw frame
     const ImU32 frame_col = GetColorU32(g.ActiveId == id ? ImGuiCol_FrameBgActive : hovered ? ImGuiCol_FrameBgHovered : ImGuiCol_FrameBg);
     RenderNavCursor(frame_bb, id);
-    RenderFrame(frame_bb.Min, frame_bb.Max, frame_col, true, g.Style.FrameRounding);
+    auto frameMin = frame_bb.Min;
+    auto frameMax = frame_bb.Max;
+
+    frameMin.x += 4;
+    frameMin.y += 8;
+    frameMax.x -= 4;
+    frameMax.y -= 8;
+
+    RenderFrame(frameMin, frameMax, frame_col, true, g.Style.FrameRounding);
 
     // Slider behavior
     ImRect grab_bb;
@@ -3262,15 +3270,31 @@ bool ImGui::SliderScalar(const char* label, ImGuiDataType data_type, void* p_dat
         MarkItemEdited(id);
 
     // Render grab
-    if (grab_bb.Max.x > grab_bb.Min.x)
-        window->DrawList->AddRectFilled(grab_bb.Min, grab_bb.Max, GetColorU32(g.ActiveId == id ? ImGuiCol_SliderGrabActive : ImGuiCol_SliderGrab), style.GrabRounding);
+    if (grab_bb.Max.x > grab_bb.Min.x) 
+    {
+        //window->DrawList->AddRectFilled(grab_bb.Min, grab_bb.Max, GetColorU32(g.ActiveId == id ? ImGuiCol_SliderGrabActive : ImGuiCol_SliderGrab), style.GrabRounding);
+
+        auto grabMin = grab_bb.Min;
+        auto grabMax = grab_bb.Max;
+      //  grabMin.y += 2;
+       // grabMax.y -= 2;
+
+        // Reynarz----
+       // window->DrawList->AddRectFilled(grabMin, grabMax, GetColorU32(g.ActiveId == id ? ImGuiCol_SliderGrabActive : ImGuiCol_SliderGrab), style.GrabRounding);
+
+        ImVec2 center = ImVec2((grabMin.x + grabMax.x) * 0.5f,(grabMin.y + grabMax.y) * 0.5f);
+        float radius = ImMin((grabMax.x - grabMin.x),(grabMax.y - grabMin.y)) * 0.5f;
+        window->DrawList->AddCircleFilled(center,radius,GetColorU32(g.ActiveId == id ? ImGuiCol_SliderGrabActive : 
+                                                                                       ImGuiCol_SliderGrab));
+        //------
+    }
 
     // Display value using user-provided display format so user can add prefix/suffix/decorations to the value.
     char value_buf[64];
     const char* value_buf_end = value_buf + DataTypeFormatString(value_buf, IM_ARRAYSIZE(value_buf), data_type, p_data, format);
     if (g.LogEnabled)
         LogSetNextTextDecoration("{", "}");
-    RenderTextClipped(frame_bb.Min, frame_bb.Max, value_buf, value_buf_end, NULL, ImVec2(0.5f, 0.5f));
+   // RenderTextClipped(frame_bb.Min, frame_bb.Max, value_buf, value_buf_end, NULL, ImVec2(0.5f, 0.5f));
 
     if (label_size.x > 0.0f)
         RenderText(ImVec2(frame_bb.Max.x + style.ItemInnerSpacing.x, frame_bb.Min.y + style.FramePadding.y), label);
