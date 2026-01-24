@@ -50,7 +50,7 @@ namespace Editor
         private vec2 _targetResolution = new vec2(512 * 2, 258 * 2);
         private float _targetResScale = 1.0f;
         private GameViewResolution _resolutionType = GameViewResolution.Resolution;
-        private const float TOOLBAR_HEIGHT = 24;
+        private const float TOOLBAR_HEIGHT = 28;
         private bool _autoFit = true;
         private const float MAX_VIEW_SCALE = 7.0f;
 
@@ -94,7 +94,7 @@ namespace Editor
 
             if (_resolutionType == GameViewResolution.FreeAspect)
             {
-                pos.y += (int)ImGui.GetFrameHeight();
+                pos.y += (int)ImGui.GetFrameHeight() / 2 + TOOLBAR_HEIGHT;
             }
             return pos;
         }
@@ -112,11 +112,14 @@ namespace Editor
         private void Toolbar()
         {
             ImGui.PushStyleVar(ImGuiStyleVar.ChildBorderSize, 0);
-            ImGui.BeginChild("##GameViewChild", new Vector2(ImGui.GetContentRegionAvail().X, TOOLBAR_HEIGHT), ImGuiChildFlags.None,
-                             ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoScrollbar);
+            ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, new Vector2(0, 2));
+            ImGui.PushStyleVar(ImGuiStyleVar.ChildRounding, 0);
+
+            ImGui.BeginChild("##GameViewChild", new Vector2(ImGui.GetContentRegionAvail().X, TOOLBAR_HEIGHT), ImGuiChildFlags.AlwaysUseWindowPadding,
+                             ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoDecoration);
             var targetRes = Mathf.RoundToInt(_targetResolution);
             var currentResIndex = (int)_resolutionType;
-
+            ImGui.SameLine();
             ImGui.SetNextItemWidth(135);
             if (ImGui.Combo("##GameViewRes", ref currentResIndex, _resolutionTypesNames, _resolutionTypesNames.Length))
             {
@@ -175,7 +178,7 @@ namespace Editor
 
             }
             ImGui.EndChild();
-            ImGui.PopStyleVar();
+            ImGui.PopStyleVar(3);
         }
         public override void OnDraw()
         {
