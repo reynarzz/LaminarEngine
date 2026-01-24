@@ -78,7 +78,7 @@ namespace Editor
         {
             if (_resolutionType == GameViewResolution.FreeAspect)
             {
-                return base.GetViewSize() * _targetResScale;
+                return new vec2(_width, _height) * _targetResScale;
             }
 
             return _targetResolution * _targetResScale;
@@ -94,7 +94,7 @@ namespace Editor
 
             if (_resolutionType == GameViewResolution.FreeAspect)
             {
-                pos.y += (int)ImGui.GetFrameHeight() / 2 + TOOLBAR_HEIGHT;
+                pos.y += (int)ImGui.GetFrameHeight();
             }
             return pos;
         }
