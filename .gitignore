@@ -1,5 +1,16 @@
-bin/
+bin/**
 obj/
+
+Editor/bin
+Engine/bin
+Engine/Library
+Game/bin
+GameCooker/bin
+Platforms/Android/bin
+Platforms/Desktop/bin
+SharedTypes/bin
+SharedTypes/Library
+
 .vs/
 /Game/Library
 *.user
@@ -17,6 +28,7 @@ Editor/Third/native/ImAllGui/imgui/examples/
 Editor/Third/native/ImAllGui/cimnodes/cimgui/imgui/
 Editor/Third/native/ImAllGui/_build/
 Editor/Third/native/ImAllGui/out/
+
 *.pdb
 *.bin
 Editor/Third/native/out/
