@@ -82,9 +82,9 @@ namespace SharedTypes
             return ClearPathSeparation(Path.Join(folderPath, guid + ASSET_DATABASE_BINARY_EXT_NAME));
         }
 
-        public static string GetRelativeAssetPath(string absoluteAssetPath)
+        public static string GetRelativeAssetPath(string absoluteAssetPath, string assetFolderName = ASSETS_FOLDER_NAME)
         {
-            return ClearPathSeparation(absoluteAssetPath.Substring(absoluteAssetPath.IndexOf(ASSETS_FOLDER_NAME) + ASSETS_FOLDER_NAME.Length + 1));
+            return ClearPathSeparation(absoluteAssetPath.Substring(absoluteAssetPath.IndexOf(assetFolderName) + assetFolderName.Length + 1));
         }
 
         public static string GetAbsoluteAssetPath(string relativeAssetPath)

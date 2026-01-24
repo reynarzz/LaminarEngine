@@ -60,130 +60,138 @@ namespace GameCooker
         {
             var path = Path.Combine(outFolder, Paths.GetAssetBuildDataFilename());
             Directory.CreateDirectory(outFolder);
-            await using var fs = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None, TEMP_BUFFER_SIZE, useAsync: true);
-            using var bufWritter = new BinaryWriter(fs, Encoding.UTF8, leaveOpen: true);
-
-            // Writes header
-            bufWritter.Write(Encoding.ASCII.GetBytes(AssetUtils.GFSFileFormat.HEADER));
-
-            // Writes total asset files
-            bufWritter.Write(files.Length);
-
-            // creation date
-            var creationDate = DateTime.Now.ToBinary();
-            bufWritter.Write(creationDate);
-
-            var currentFileIdPosition = bufWritter.BaseStream.Position;
-
-            long currentAssetOffset = fieldIfOffset * files.Length;
-
-            bufWritter.BaseStream.Position += currentAssetOffset;
-            int count = 0;
-            foreach (var (filePath, assetType) in files)
-            {
-                long startAssetBlockPos = bufWritter.BaseStream.Position;
-
-                var meta = AssetUtils.GetMeta(filePath + Paths.ASSET_META_EXT_NAME, assetType);
-                var relAssetPath = Paths.GetRelativeAssetPath(filePath);
-
-                var guidBinary = meta.GUID.ToByteArray();
-                // asset guid size
-                bufWritter.Write(guidBinary.Length);
-
-                // asset guid
-                bufWritter.Write(guidBinary);
-
-                var pathBytes = Encoding.UTF8.GetBytes(relAssetPath);
-                
-                if(fileOptions.EncryptFilesPath)
-                {
-                    pathBytes = await Task.Run(() => AssetEncrypter.EncryptBytes(pathBytes, AssetUtils.ENCRYPTION_VERY_SECURE_PASSWORD));
-                }
-               
-                // asset path size
-                bufWritter.Write(pathBytes.Length);
-
-                // asset path
-                bufWritter.Write(pathBytes);
-
-                // Writes asset type
-                bufWritter.Write((int)assetType);
-
-                var shouldCompressFile = fileOptions.CompressAllFiles || fileOptions.FilesToCompress.Contains(assetType);
-                var shouldEncryptFile = fileOptions.EncryptAllFiles || fileOptions.FilesToEncrypt.Contains(assetType);
-
-                // is compressed
-                bufWritter.Write(shouldCompressFile);
-
-                // is encrypted
-                bufWritter.Write(shouldEncryptFile);
-
-                // encrypt files path
-                bufWritter.Write(fileOptions.EncryptFilesPath);
-
-                var assetData = await Task.Run(() => ProcessAsset(platform, assetType, meta, filePath));
-
-                if (shouldCompressFile)
-                {
-                    assetData = await Task.Run(() => AssetCompressor.CompressBytes(assetData, fileOptions.CompressionLevel));
-                }
-
-                if (shouldEncryptFile)
-                {
-                    assetData = await Task.Run(() => AssetEncrypter.EncryptBytes(assetData, AssetUtils.ENCRYPTION_VERY_SECURE_PASSWORD));
-                }
-
-                // Asset length
-                bufWritter.Write(assetData.Length);
-
-                var metaBuffer = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(meta));
-
-                // meta size
-                bufWritter.Write(metaBuffer.Length);
-
-                long assetDataLoc = bufWritter.BaseStream.Position;
-                // Asset data
-                bufWritter.Write(assetData);
-
-                long metaStartLocation = bufWritter.BaseStream.Position;
-
-                // metadata
-                bufWritter.Write(metaBuffer);
-
-                long assetEndPos = bufWritter.BaseStream.Position;
-
-                // ---- Set table position to write asset info
-                bufWritter.BaseStream.Position = currentFileIdPosition;
-
-                
-                // asset block location
-                bufWritter.Write(startAssetBlockPos);
-
-                // asset data location
-                bufWritter.Write(assetDataLoc);
-
-                // asset's meta location
-                bufWritter.Write(metaStartLocation);
-
-                // apply current asset block write position
-                bufWritter.BaseStream.Position = assetEndPos;
-
-                // advance file info position in table
-                currentFileIdPosition += fieldIfOffset;
-
-                count++;
-
-                Console.WriteLine($"Building Assets ({count * 100 / files.Length}%): {filePath}");
-            }
 
             try
             {
+                await using var fs = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None, TEMP_BUFFER_SIZE, useAsync: true);
+                using var bufWritter = new BinaryWriter(fs, Encoding.UTF8, leaveOpen: true);
+
+                // Writes header
+                bufWritter.Write(Encoding.ASCII.GetBytes(AssetUtils.GFSFileFormat.HEADER));
+
+                // Writes total asset files
+                bufWritter.Write(files.Length);
+
+                // creation date
+                var creationDate = DateTime.Now.ToBinary();
+                bufWritter.Write(creationDate);
+
+                var currentFileIdPosition = bufWritter.BaseStream.Position;
+
+                long currentAssetOffset = fieldIfOffset * files.Length;
+
+                bufWritter.BaseStream.Position += currentAssetOffset;
+                int count = 0;
+                foreach (var (filePath, assetType) in files)
+                {
+                    long startAssetBlockPos = bufWritter.BaseStream.Position;
+
+                    var meta = AssetUtils.GetMeta(filePath + Paths.ASSET_META_EXT_NAME, assetType);
+                    var relAssetPath = Paths.GetRelativeAssetPath(filePath);
+
+                    var guidBinary = meta.GUID.ToByteArray();
+                    // asset guid size
+                    bufWritter.Write(guidBinary.Length);
+                    //if (guidBinary.Length != 16)
+                    //{
+                    //    throw new Exception("Bigger than 16");
+                    //}
+                    // asset guid
+                    bufWritter.Write(guidBinary);
+
+                    var pathBytes = Encoding.UTF8.GetBytes(relAssetPath);
+
+                    if (fileOptions.EncryptFilesPath)
+                    {
+                        pathBytes = await Task.Run(() => AssetEncrypter.EncryptBytes(pathBytes, AssetUtils.ENCRYPTION_VERY_SECURE_PASSWORD));
+                    }
+
+                    // asset path size
+                    bufWritter.Write(pathBytes.Length);
+
+                    // asset path
+                    bufWritter.Write(pathBytes);
+
+                    // Writes asset type
+                    bufWritter.Write((int)assetType);
+
+                    var shouldCompressFile = fileOptions.CompressAllFiles || fileOptions.FilesToCompress.Contains(assetType);
+                    var shouldEncryptFile = fileOptions.EncryptAllFiles || fileOptions.FilesToEncrypt.Contains(assetType);
+
+                    // is compressed
+                    bufWritter.Write(shouldCompressFile);
+
+                    // is encrypted
+                    bufWritter.Write(shouldEncryptFile);
+
+                    // encrypt files path
+                    bufWritter.Write(fileOptions.EncryptFilesPath);
+
+                    var assetData = await Task.Run(() => ProcessAsset(platform, assetType, meta, filePath));
+
+                    if (shouldCompressFile)
+                    {
+                        assetData = await Task.Run(() => AssetCompressor.CompressBytes(assetData, fileOptions.CompressionLevel));
+                    }
+
+                    if (shouldEncryptFile)
+                    {
+                        assetData = await Task.Run(() => AssetEncrypter.EncryptBytes(assetData, AssetUtils.ENCRYPTION_VERY_SECURE_PASSWORD));
+                    }
+
+                    // Asset length
+                    bufWritter.Write(assetData.Length);
+
+                    var metaBuffer = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(meta));
+
+                    // meta size
+                    bufWritter.Write(metaBuffer.Length);
+
+                    long assetDataLoc = bufWritter.BaseStream.Position;
+                    // Asset data
+                    bufWritter.Write(assetData);
+
+                    long metaStartLocation = bufWritter.BaseStream.Position;
+
+                    // metadata
+                    bufWritter.Write(metaBuffer);
+
+                    long assetEndPos = bufWritter.BaseStream.Position;
+
+                    // ---- Set table position to write asset info
+                    bufWritter.BaseStream.Position = currentFileIdPosition;
+
+
+                    // asset block location
+                    bufWritter.Write(startAssetBlockPos);
+
+                    // asset data location
+                    bufWritter.Write(assetDataLoc);
+
+                    // asset's meta location
+                    bufWritter.Write(metaStartLocation);
+
+                    // apply current asset block write position
+                    bufWritter.BaseStream.Position = assetEndPos;
+
+                    // advance file info position in table
+                    currentFileIdPosition += fieldIfOffset;
+
+                    count++;
+
+                    Console.WriteLine($"Building Assets ({count * 100 / files.Length}%): {filePath}");
+                }
+
                 bufWritter.Flush();
                 await fs.FlushAsync();
             }
             catch (Exception e)
             {
+                File.WriteAllText(path + "Error.txt", e.ToString());
+                File.Delete(path);
                 Console.WriteLine(e.ToString());
+
+                throw;
             }
 
             // File.WriteAllText(Path.Combine(outFolder, Paths.ASSET_BUILD_DATA_FILE_META_NAME), JsonConvert.SerializeObject(new GameDataMetaFile() {  CreationDateBinary = creationDate }));

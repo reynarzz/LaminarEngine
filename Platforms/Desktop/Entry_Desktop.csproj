@@ -50,10 +50,6 @@
     <ProjectReference Include="..\..\Game\Game.csproj" />
   </ItemGroup>
 
-	<ItemGroup Condition="'$(Configuration)'!='Release'">
-		<ProjectReference Include="..\..\GameCooker\GameCooker.csproj" />
-	</ItemGroup>
-
 
 	<Target Name="PostBuild_Windows" AfterTargets="PostBuildEvent" Condition="'$(OS)' == 'Windows_NT'">
 		<Message Text="PostBuild: Windows detected: copying dlls" Importance="high" />

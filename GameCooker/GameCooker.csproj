@@ -25,7 +25,38 @@
     <ProjectReference Include="..\SharedTypes\SharedTypes.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
+
+	<Target Name="PostBuild_Windows" AfterTargets="PostBuildEvent" Condition="'$(OS)' == 'Windows_NT'">
+
+		<PropertyGroup>
+			<GlSlang>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\Editor\Third\EditorNatives\bin\win\glslang.dll'))</GlSlang>
+			<SpirvCross>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\Editor\Third\EditorNatives\bin\win\spirv-cross.dll'))</SpirvCross>
+
+		</PropertyGroup>
+
+		<Message Text="Copying from $(GlfwWinSrc)" Importance="high" />
+
+		<Copy SourceFiles="$(GlSlang)" DestinationFiles="$(TargetDir)glslang.dll" SkipUnchangedFiles="true" />
+		<Copy SourceFiles="$(SpirvCross)" DestinationFiles="$(TargetDir)spirv-cross.dll" SkipUnchangedFiles="true" />
+	</Target>
+
+
+
+	<Target Name="PostBuild_Mac" AfterTargets="PostBuildEvent" Condition="'$(OS)' == 'Unix' AND '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'True'">
+
+		<PropertyGroup>
+			<GlfwMacSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\Engine\Third\Native\bin\osx\libglfw.dylib'))</GlfwMacSrc>
+			<ImGuiSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\Third\EditorNatives\bin\osx\libEditorNatives.dylib'))</ImGuiSrc>
+
+		</PropertyGroup>
+
+		<Copy SourceFiles="$(GlfwMacSrc)" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
+		<Copy SourceFiles="$(ImGuiSrc)" DestinationFiles="$(TargetDir)libEditorNatives.dylib" SkipUnchangedFiles="true" />
+
+	</Target>
+
+
+	<ItemGroup>
     <Reference Include="Glslang.NET">
       <HintPath>Third\GlSlang.Net\Glslang.NET.dll</HintPath>
     </Reference>
