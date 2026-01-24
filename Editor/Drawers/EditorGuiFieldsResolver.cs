@@ -16,6 +16,7 @@ namespace Editor.Utils
     public class EditorGuiFieldsResolver
     {
         public const float XPosOffset = 180;
+        private static readonly Vector2 VECTOR_INNER_SPACING = new Vector2(3, 2);
         private static bool _openPopup;
 
         private static object _selectedValue;
@@ -205,9 +206,10 @@ namespace Editor.Utils
         {
             SetNextItemWidth(itemWidth);
             Vector2 ve = value.ToVector2();
+            ImGui.PushStyleVar(ImGuiStyleVar.ItemInnerSpacing, VECTOR_INNER_SPACING);
 
             var changed = ImGui.DragFloat2($"##{name}", ref ve, 0.1f, 0, 0, "%.4f");
-
+            ImGui.PopStyleVar();
             if (changed)
             {
                 value.x = ve.X;
@@ -220,17 +222,34 @@ namespace Editor.Utils
         {
             return DrawIVec2Field(name, ref value, 0, false);
         }
-
-        public static bool DrawIVec2Field(string name, ref ivec2 value, float itemWidth)
+        public static bool DrawIVec2FieldTrueWidth(string name, ref ivec2 value, float itemWidth)
         {
             SetNextItemWidth(itemWidth, true);
-            return ImGui.DragInt2($"##{name}", ref value.x, 0.2f);
+            ImGui.PushStyleVar(ImGuiStyleVar.ItemInnerSpacing, VECTOR_INNER_SPACING);
+
+            var result = ImGui.DragInt2($"##{name}", ref value.x, 0.2f);
+            ImGui.PopStyleVar();
+            return result;
+        }
+        public static bool DrawIVec2Field(string name, ref ivec2 value, float itemWidth)
+        {
+            SetNextItemWidth(itemWidth);
+            ImGui.PushStyleVar(ImGuiStyleVar.ItemInnerSpacing, VECTOR_INNER_SPACING);
+
+            var result = ImGui.DragInt2($"##{name}", ref value.x, 0.2f);
+            ImGui.PopStyleVar();
+
+            return result;
         }
 
         public static bool DrawIVec2Field(string name, ref ivec2 value, float itemWidth = 0, bool pressEnterToConfirm = false)
         {
             SetNextItemWidth(itemWidth);
-            return ImGui.DragInt2($"##{name}", ref value.x, 0.2f);
+            ImGui.PushStyleVar(ImGuiStyleVar.ItemInnerSpacing, VECTOR_INNER_SPACING);
+            var result = ImGui.DragInt2($"##{name}", ref value.x, 0.2f);
+            ImGui.PopStyleVar();
+
+            return result;
         }
 
         public static bool DrawVec3Field(string name, ref vec3 value)
@@ -241,9 +260,9 @@ namespace Editor.Utils
         {
             SetNextItemWidth(itemWidth);
             Vector3 ve = new Vector3(value.x, value.y, value.z);
-
+            ImGui.PushStyleVar(ImGuiStyleVar.ItemInnerSpacing, VECTOR_INNER_SPACING);
             var changed = ImGui.DragFloat3($"##{name}", ref ve, 0.1f, 0, 0, "%.4f");
-
+            ImGui.PopStyleVar();
             if (changed)
             {
                 value.x = ve.X;
@@ -271,9 +290,10 @@ namespace Editor.Utils
         {
             SetNextItemWidth(itemWidth);
             Vector4 ve = new Vector4(value.x, value.y, value.z, value.w);
+            ImGui.PushStyleVar(ImGuiStyleVar.ItemInnerSpacing, VECTOR_INNER_SPACING);
 
             var changed = ImGui.DragFloat4($"##{name}", ref ve, 0.1f, 0, 0, "%.4f");
-
+            ImGui.PopStyleVar();
             if (changed)
             {
                 value.x = ve.X;
@@ -326,6 +346,8 @@ namespace Editor.Utils
                 string id = $"##_mat_{name}mat2_{i}";
 
                 Vector2 v = row.ToVector2();
+                ImGui.PushStyleVar(ImGuiStyleVar.ItemInnerSpacing, VECTOR_INNER_SPACING);
+
                 if (ImGui.DragFloat2($"##{id}", ref v, 0.1f, 0, 0, "%.4f"))
                 {
                     row.x = v.X;
@@ -334,6 +356,7 @@ namespace Editor.Utils
                     value[i] = row;
                     changed = true;
                 }
+                ImGui.PopStyleVar();
             }
 
             return changed;
@@ -352,6 +375,7 @@ namespace Editor.Utils
                 var row = value[i];
                 Vector3 v = row.ToVector3();
                 string id = $"##_mat_{name}mat3_{i}";
+                ImGui.PushStyleVar(ImGuiStyleVar.ItemInnerSpacing, VECTOR_INNER_SPACING);
 
                 if (ImGui.DragFloat3($"##{id}", ref v, 0.1f, 0, 0, "%.4f"))
                 {
@@ -361,6 +385,7 @@ namespace Editor.Utils
                     value[i] = row;
                     changed = true;
                 }
+                ImGui.PopStyleVar();
             }
 
             return changed;
@@ -379,6 +404,7 @@ namespace Editor.Utils
                 var row = value[i];
                 Vector4 v = row.ToVector4();
                 string id = $"##_mat_{name}mat4_{i}";
+                ImGui.PushStyleVar(ImGuiStyleVar.ItemInnerSpacing, VECTOR_INNER_SPACING);
 
                 if (ImGui.DragFloat4($"##{id}", ref v, 0.1f, 0, 0, "%.4f"))
                 {
@@ -389,6 +415,7 @@ namespace Editor.Utils
                     value[i] = row;
                     changed = true;
                 }
+                ImGui.PopStyleVar();
             }
 
             return changed;

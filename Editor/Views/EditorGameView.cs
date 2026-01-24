@@ -133,7 +133,7 @@ namespace Editor
             }
             ImGui.BeginDisabled(_resolutionType != GameViewResolution.Resolution);
             ImGui.SameLine();
-            if (EditorGuiFieldsResolver.DrawIVec2Field("Resolution", ref targetRes, 100))
+            if (EditorGuiFieldsResolver.DrawIVec2FieldTrueWidth("Resolution", ref targetRes, 100))
             {
                 _targetResolution = new vec2(targetRes.x, targetRes.y);
                 OnImguiWindowSizeChanged();
