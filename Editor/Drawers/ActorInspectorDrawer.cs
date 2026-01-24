@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Editor.Utils;
 using Editor.Serialization;
 using System.Reflection;
+using GlmNet;
 
 namespace Editor
 {
@@ -77,7 +78,7 @@ namespace Editor
             {
                 actor.Layer = LayerMask.NameToLayer(layerNames[layerIndex]);
             }
-            if (ImGui.Button("Add Component", new Vector2(ImGui.GetContentRegionAvail().X-5, 23)))
+            if (ImGui.Button("Add Component", new Vector2(ImGui.GetContentRegionAvail().X - 5, 23)))
             {
                 PopulateAllComponentTypes();
                 ImGui.OpenPopup("DropdownPopup");
@@ -108,8 +109,8 @@ namespace Editor
 
                 foreach (var componentType in _componentTypes)
                 {
-                    // ImGui.Image(EditorIcons.GetIcon(EditorIconType.ScriptIcon), new Vector2(15, 15));
-                    // ImGui.SameLine();
+                    ImGui.Image(EditorTextureDatabase.GetIconImGui(EditorIcon.ScriptFile), new Vector2(15, 15), new Vector2(0, 1), new Vector2(1, 0));
+                    ImGui.SameLine();
 
                     if (ImGui.Selectable($"{componentType.Name}##{componentType.AssemblyQualifiedName}"))
                     {
@@ -203,9 +204,8 @@ namespace Editor
             var cursorX = ImGui.GetCursorPosX();
 
             ImGui.SetCursorPosX(cursorX + 10);
-            ImGui.SetCursorPosY(cursorY);
-
-            if (ImGui.Checkbox($"##__COMPONENT__ENABLED_{baseID}", ref enabled))
+            ImGui.SetCursorPosY(cursorY + 2);
+            if (EditorGuiFieldsResolver.DrawBoolField($"##__COMPONENT__ENABLED_{baseID}", ref enabled))
             {
                 component.IsEnabled = enabled;
             }
@@ -213,20 +213,17 @@ namespace Editor
             ImGui.SameLine();
 
             // Component icon
-            ImGui.SetCursorPosX(ImGui.GetCursorPosX() - 45);
-            ImGui.SetCursorPosY(cursorY + 2);
-            IntPtr imagePtr = default; // TODO: get component icon.
+            ImGui.SetCursorPosX(ImGui.GetCursorPosX() - 50);
+            var imageSize = new Vector2(19, 19);
+            ImGui.SetCursorPosY(cursorY + 3);
 
-            if (imagePtr != IntPtr.Zero)
-            {
 
-                ImGui.Image(imagePtr, new Vector2(16, 16));
+            ImGui.Image(EditorTextureDatabase.GetIconImGui(EditorIcon.ScriptFile), imageSize, new Vector2(0, 1), new Vector2(1, 0));
 
-            }
 
             // Component name
             ImGui.SameLine();
-            ImGui.SetCursorPosX(ImGui.GetCursorPosX());
+            ImGui.SetCursorPosX(cursorX + 40);
             ImGui.SetCursorPosY(cursorY);
             ImGui.Text(component.GetType().Name);
 

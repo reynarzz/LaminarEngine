@@ -47,7 +47,7 @@ namespace Editor
         private int _offsetY = 0;
         public int OffsetX => _offsetX;
         public int OffsetY => _offsetY;
-        private vec2 _targetResolution = new vec2(512 * 2, 258 * 2);
+        private vec2 _targetResolution = new vec2(1024, 576);
         private float _targetResScale = 1.0f;
         private GameViewResolution _resolutionType = GameViewResolution.Resolution;
         private const float TOOLBAR_HEIGHT = 28;
@@ -133,6 +133,10 @@ namespace Editor
             }
             ImGui.BeginDisabled(_resolutionType != GameViewResolution.Resolution);
             ImGui.SameLine();
+            if (_resolutionType == GameViewResolution.FreeAspect)
+            {
+                targetRes = new ivec2(_width, _height);
+            }
             if (EditorGuiFieldsResolver.DrawIVec2FieldTrueWidth("Resolution", ref targetRes, 100))
             {
                 _targetResolution = new vec2(targetRes.x, targetRes.y);

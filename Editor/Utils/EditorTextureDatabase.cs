@@ -18,7 +18,8 @@ namespace Editor.Utils
         Skip,
         Material,
         Text,
-        Scene
+        Scene,
+        ScriptFile
     }
 
     internal sealed class EditorTextureDatabase
@@ -38,6 +39,7 @@ namespace Editor.Utils
                 { EditorIcon.Material, LoadIconFromDisk("material_icon.png") },
                 { EditorIcon.Text, LoadIconFromDisk("text_icon.png") },
                 { EditorIcon.Scene, LoadIconFromDisk("scene.png") },
+                { EditorIcon.ScriptFile, LoadIconFromDisk("csharp.png") },
             };
 
             _typesToIconTypeMapper = new Dictionary<Type, EditorIcon>()
