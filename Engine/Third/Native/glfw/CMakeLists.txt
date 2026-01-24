@@ -19,9 +19,12 @@ option(GLFW_BUILD_EXAMPLES "Build the GLFW example programs" OFF)
 option(GLFW_BUILD_TESTS "Build the GLFW test programs" OFF)
 option(GLFW_BUILD_DOCS "Build the GLFW documentation" OFF)
 option(GLFW_INSTALL "Generate installation target" OFF)
+set(OUTPUT_DIR "${CMAKE_CURRENT_SOURCE_DIR}../../bin")
+
 
 include(GNUInstallDirs)
 include(CMakeDependentOption)
+
 
 if (GLFW_USE_OSMESA)
     message(FATAL_ERROR "GLFW_USE_OSMESA has been removed; set the GLFW_PLATFORM init hint")
@@ -156,3 +159,9 @@ if (GLFW_INSTALL)
     endif()
 endif()
 
+
+set_target_properties(glfw PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${OUTPUT_DIR}/win"   # Windows DLL
+    LIBRARY_OUTPUT_DIRECTORY "${OUTPUT_DIR}/osx"   # .so / .dylib
+    ARCHIVE_OUTPUT_DIRECTORY "${OUTPUT_DIR}/lib"   # .lib / .a
+)
