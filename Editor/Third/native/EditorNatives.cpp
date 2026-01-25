@@ -71,6 +71,7 @@ EDITOR_NATIVES_API void BeginGLFWImguiInternal()
 
 EDITOR_NATIVES_API void EndGLFWImguiInternal()
 {
+	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 	if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)

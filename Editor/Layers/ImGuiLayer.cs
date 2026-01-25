@@ -6,6 +6,7 @@ using Engine;
 using Engine.Graphics;
 using Engine.GUI;
 using Engine.Layers;
+using GLFW;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,6 @@ namespace Editor.Layers
     internal class ImGuiLayer : LayerBase
     {
         private List<IEditorWindow> _windows;
-        private readonly ImGuiGLFW _glfwInput;
         private static EditorGameView _gameWindow;
         internal static EditorGameView GameWindow => _gameWindow;
 
@@ -29,14 +29,13 @@ namespace Editor.Layers
         private EditorCamera _editorCamera;
         private readonly IWindow _win;
         private readonly InputLayerBase _inputLayer;
-
+        private readonly ImGuiController _imguiController;
         public ImGuiLayer(IWindow window, InputLayerBase inputLayer)
         {
             _win = window;
             _inputLayer = inputLayer;
-            ImguiImplOpenGL3.Init(window);
-             
-            //_glfwInput = new ImGuiGLFW(WindowStandalone.NativeWindow);
+            _imguiController = new ImGuiController();
+
             EditorNatives.InitGLFWImguiInternal(window.NativeWindow);
 
             // TODO: move the surface creation to their own classes.
@@ -100,53 +99,13 @@ namespace Editor.Layers
             };
         }
 
-        private void Draw()
+        private void Draw() 
         {
-            ImguiImplOpenGL3.SetPerFrameImGuiData(Math.Max(Time.UnscaledDeltaTime, 0.0000001f), _win.PhysicalWidth, _win.PhysicalHeight);
-
-            //ImGui.NewFrame();
-            // _glfwInput.NewFrame();
-            //EditorNatives.imgui_NewFrame();
             EditorNatives.BeginGLFWImguiInternal();
 
-            //ImguiImplOpenGL3.NewFrame();
-
-            // Render ImGui here:
-
             DockSpace();
-            // DebugTexture(); 
-            //
-            ImGui.Render();
-            //ImguiImplOpenGL3.RenderDrawData(ImGui.GetDrawData());
 
             EditorNatives.EndGLFWImguiInternal();
-            //_glfwInput.UpdateMouseCursor();
-
-            //var io = ImGui.GetIO();
-            //if ((io.ConfigFlags & ImGuiConfigFlags.ViewportsEnable) != 0)
-            //{
-            //    ImGui.UpdatePlatformWindows();          // creates OS windows for floating viewports
-            //    ImGui.RenderPlatformWindowsDefault();   // render them
-            //}
-        }
-
-        private void DebugTexture()
-        {
-            var uitex = Actor.Find("Title text")?.GetComponent<UIText>();
-            Texture2D texture = null;
-            if (uitex != null)
-            {
-                if (uitex.Sprite)
-                {
-                    texture = uitex.Sprite.Texture;
-                }
-            }
-            //texture = Actor.Find("Player")?.GetComponent<SpriteRenderer>()?.Sprite?.Texture;
-
-            if (texture != null)
-            {
-                ImGui.Image(EditorTextureDatabase.GetIconImGui(texture), new Vector2(400, 400));
-            }
         }
 
         private void DockSpace()
@@ -190,9 +149,7 @@ namespace Editor.Layers
                 windowView.OnUpdate();
             }
         }
-        
-        public override void Close()
-        {
-        }
+
+        public override void Close() { }
     }
 }
