@@ -229,7 +229,11 @@ namespace Engine
             Width = width;
             Height = height;
             Glfw.SetWindowFocusCallback(NativeWindow, _focusCallback);
-            LoadIconRandom(image);
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                LoadIconRandom(image);
+            }
         }
         private void LoadIconRandom(TextureDescriptor image)
         {

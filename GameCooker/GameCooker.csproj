@@ -45,9 +45,9 @@
 	<Target Name="PostBuild_Mac" AfterTargets="PostBuildEvent" Condition="'$(OS)' == 'Unix' AND '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'True'">
 
 		<PropertyGroup>
-			<GlfwMacSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\Engine\Third\Native\bin\osx\libglfw.dylib'))</GlfwMacSrc>
-			<ImGuiSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\Third\EditorNatives\bin\osx\libEditorNatives.dylib'))</ImGuiSrc>
-
+		    <GlSlang>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\Editor\Third\EditorNatives\bin\osx\x64\libglslang.dylib'))</GlSlang>
+            <SpirvCross>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\Editor\Third\EditorNatives\bin\osx\x64\libspirv-cross.dylib'))</SpirvCross>
+  
 		</PropertyGroup>
 
 		<Copy SourceFiles="$(GlfwMacSrc)" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />

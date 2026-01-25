@@ -59,14 +59,18 @@
 	<Target Name="PostBuild_Mac" AfterTargets="PostBuildEvent" Condition="'$(OS)' == 'Unix' AND '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'True'">
 
   <PropertyGroup> 
-  <GlfwMacSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\Engine\Third\Native\bin\osx\libglfw.3.4.dylib'))</GlfwMacSrc>
+  <GlfwMacSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\Engine\Third\Native\bin\osx\libglfw.dylib'))</GlfwMacSrc>
   <ImGuiSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\Third\EditorNatives\bin\osx\libEditorNatives.dylib'))</ImGuiSrc>
-
+  <GlSlang>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\Third\EditorNatives\bin\osx\arm\libglslang.dylib'))</GlSlang>
+  <SpirvCross>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\Third\EditorNatives\bin\osx\arm\libspirv-cross.dylib'))</SpirvCross>
+  
   </PropertyGroup>
 
-  <Copy SourceFiles="$(GlfwMacSrc)" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
-		<Copy SourceFiles="$(ImGuiSrc)" DestinationFiles="$(TargetDir)libEditorNatives.dylib" SkipUnchangedFiles="true" />
 
+  	<Copy SourceFiles="$(GlfwMacSrc)" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
+	<Copy SourceFiles="$(ImGuiSrc)" DestinationFiles="$(TargetDir)libEditorNatives.dylib" SkipUnchangedFiles="true" />
+	<Copy SourceFiles="$(GlSlang)" DestinationFiles="$(TargetDir)libglslang.dylib" SkipUnchangedFiles="true" />
+	<Copy SourceFiles="$(SpirvCross)" DestinationFiles="$(TargetDir)libspirv-cross.dylib" SkipUnchangedFiles="true" />
 </Target>
 
 
