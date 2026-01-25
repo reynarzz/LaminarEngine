@@ -24,7 +24,7 @@ namespace GLFW
 #if Windows
         public const string LIBRARY = "glfw";
 #elif OSX
-        public const string LIBRARY = "libglfw.3"; // mac
+        public const string LIBRARY = "libglfw.3.4"; // mac
 #else
         public const string LIBRARY = "glfw";
 #endif
