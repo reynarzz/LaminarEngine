@@ -59,7 +59,7 @@
 	<Target Name="PostBuild_Mac" AfterTargets="PostBuildEvent" Condition="'$(OS)' == 'Unix' AND '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'True'">
 
   <PropertyGroup> 
-  <GlfwMacSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\Engine\Third\Native\bin\osx\libglfw.dylib'))</GlfwMacSrc>
+  <GlfwMacSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\Engine\Third\Native\bin\osx\libglfw.3.4.dylib'))</GlfwMacSrc>
   <ImGuiSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\Third\EditorNatives\bin\osx\libEditorNatives.dylib'))</ImGuiSrc>
 
   </PropertyGroup>
