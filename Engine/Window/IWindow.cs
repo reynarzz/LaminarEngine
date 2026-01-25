@@ -25,7 +25,7 @@ namespace Engine
         int PhysicalHeight { get; }
         int OffsetX { get; }
         int OffsetY { get; }
-
+        IntPtr NativeWindow { get; }
         void SwapBuffers();
         void SetWindowSize(int width, int height);
     }

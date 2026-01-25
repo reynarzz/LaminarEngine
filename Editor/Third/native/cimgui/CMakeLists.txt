@@ -19,6 +19,11 @@ file(GLOB IMGUI_SOURCES
     imgui/imgui_draw.cpp
     imgui/imgui_demo.cpp
     imgui/imgui_widgets.cpp
+
+    #backends
+    imgui/backends/imgui_impl_glfw.cpp
+    imgui/backends/imgui_impl_opengl3.cpp
+
     ${TABLES_SOURCE}
 )
 
@@ -52,6 +57,8 @@ target_compile_definitions(cimgui_obj PUBLIC IMGUI_DISABLE_OBSOLETE_FUNCTIONS=1)
 target_include_directories(cimgui_obj PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/imgui
+    ${ENGINE_NATIVES}/glfw/include
+
 )
 
 # set no prefix (optional)

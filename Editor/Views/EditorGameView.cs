@@ -47,6 +47,9 @@ namespace Editor
         private int _offsetY = 0;
         public int OffsetX => _offsetX;
         public int OffsetY => _offsetY;
+
+        public nint NativeWindow => 0;
+
         private vec2 _targetResolution = new vec2(1024, 576);
         private float _targetResScale = 1.0f;
         private GameViewResolution _resolutionType = GameViewResolution.Resolution;

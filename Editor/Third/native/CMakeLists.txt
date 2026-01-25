@@ -18,6 +18,7 @@ set(EDITOR_NATIVES_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 set(CIMGUI_DIR "${EDITOR_NATIVES_ROOT_DIR}/cimgui")
 set(IMGUI_DIR "${CIMGUI_DIR}/imgui")
 set(OUTPUT_DIR ${EDITOR_NATIVES_ROOT_DIR}../../EditorNatives/bin)
+set(ENGINE_NATIVES ${CMAKE_CURRENT_SOURCE_DIR}../../../../Engine/Third/Native)
 
 ## Force GLFW to build as OBJECT library
 #set(GLFW_LIBRARY_TYPE OBJECT CACHE STRING "" FORCE)
@@ -66,8 +67,15 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${EDITOR_NATIVES_ROOT_DIR}/cimgui>
     $<BUILD_INTERFACE:${EDITOR_NATIVES_ROOT_DIR}/cimnodes>
     $<BUILD_INTERFACE:${EDITOR_NATIVES_ROOT_DIR}/cimguizmo>
-    #$<BUILD_INTERFACE:${EDITOR_NATIVES_ROOT_DIR}/glfw/include>
+    ${ENGINE_NATIVES}/glfw/include
     $<BUILD_INTERFACE:${IMGUI_DIR}>
     # Install interface
     $<INSTALL_INTERFACE:include>
 )
+
+target_link_libraries(${PROJECT_NAME} PUBLIC 
+
+    ${ENGINE_NATIVES}/bin/lib/glfw3dll.lib
+)
+
+

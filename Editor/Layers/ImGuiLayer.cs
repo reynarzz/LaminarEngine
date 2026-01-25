@@ -1,5 +1,6 @@
 ﻿using Editor.AssemblyHotReload;
 using Editor.Rendering;
+using Editor.Utils;
 using Editor.Views;
 using Engine;
 using Engine.Graphics;
@@ -34,8 +35,9 @@ namespace Editor.Layers
             _win = window;
             _inputLayer = inputLayer;
             ImguiImplOpenGL3.Init(window);
-
-            _glfwInput = new ImGuiGLFW(WindowStandalone.NativeWindow);
+             
+            //_glfwInput = new ImGuiGLFW(WindowStandalone.NativeWindow);
+            EditorNatives.InitGLFWImguiInternal(window.NativeWindow);
 
             // TODO: move the surface creation to their own classes.
             _gameSurface = new RenderingSurface()
@@ -103,18 +105,22 @@ namespace Editor.Layers
             ImguiImplOpenGL3.SetPerFrameImGuiData(Math.Max(Time.UnscaledDeltaTime, 0.0000001f), _win.PhysicalWidth, _win.PhysicalHeight);
 
             //ImGui.NewFrame();
-            EditorNatives.imgui_NewFrame();
-            _glfwInput.NewFrame();
+            // _glfwInput.NewFrame();
+            //EditorNatives.imgui_NewFrame();
+            EditorNatives.BeginGLFWImguiInternal();
 
-            ImguiImplOpenGL3.NewFrame();
+            //ImguiImplOpenGL3.NewFrame();
 
             // Render ImGui here:
 
             DockSpace();
-
+            // DebugTexture(); 
+            //
             ImGui.Render();
-            ImguiImplOpenGL3.RenderDrawData(ImGui.GetDrawData());
-            _glfwInput.UpdateMouseCursor();
+            //ImguiImplOpenGL3.RenderDrawData(ImGui.GetDrawData());
+
+            EditorNatives.EndGLFWImguiInternal();
+            //_glfwInput.UpdateMouseCursor();
 
             //var io = ImGui.GetIO();
             //if ((io.ConfigFlags & ImGuiConfigFlags.ViewportsEnable) != 0)
@@ -122,6 +128,25 @@ namespace Editor.Layers
             //    ImGui.UpdatePlatformWindows();          // creates OS windows for floating viewports
             //    ImGui.RenderPlatformWindowsDefault();   // render them
             //}
+        }
+
+        private void DebugTexture()
+        {
+            var uitex = Actor.Find("Title text")?.GetComponent<UIText>();
+            Texture2D texture = null;
+            if (uitex != null)
+            {
+                if (uitex.Sprite)
+                {
+                    texture = uitex.Sprite.Texture;
+                }
+            }
+            //texture = Actor.Find("Player")?.GetComponent<SpriteRenderer>()?.Sprite?.Texture;
+
+            if (texture != null)
+            {
+                ImGui.Image(EditorTextureDatabase.GetIconImGui(texture), new Vector2(400, 400));
+            }
         }
 
         private void DockSpace()

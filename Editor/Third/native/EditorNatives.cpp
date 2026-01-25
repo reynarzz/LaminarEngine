@@ -14,6 +14,10 @@
 #include <stdio.h>
 #include "Logger.h"
 
+#include <GLFW/glfw3.h>
+#include <backends/imgui_impl_glfw.h>
+#include <backends/imgui_impl_opengl3.h>
+
 LogCallback _Log = nullptr;
 
 CIMGUI_API void InitImAllGui()
@@ -22,7 +26,12 @@ CIMGUI_API void InitImAllGui()
 	imnodes::CreateContext();
 	imnodes::StyleColorsDark();
 	_Log("Editor Natives Init");
+
+	
+
 }
+
+
 
 CIMGUI_API void SetCurrentWindowHitTestHole(float posX, float posY, float sizeX, float sizeY)
 {
@@ -43,6 +52,36 @@ EDITOR_NATIVES_API void RegisterLogCallback(LogCallback callback)
 {
 	_Log = callback;
 }
+
+
+EDITOR_NATIVES_API void InitGLFWImguiInternal(void* windowPtr)
+{
+	ImGui_ImplGlfw_InitForOpenGL(static_cast<GLFWwindow*>(windowPtr), true);
+	ImGui_ImplOpenGL3_Init();
+
+}
+
+
+EDITOR_NATIVES_API void BeginGLFWImguiInternal() 
+{
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplGlfw_NewFrame();
+	ImGui::NewFrame();
+}
+
+EDITOR_NATIVES_API void EndGLFWImguiInternal()
+{
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+	if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		GLFWwindow* backup_current_context = glfwGetCurrentContext();
+		ImGui::UpdatePlatformWindows();
+		ImGui::RenderPlatformWindowsDefault();
+		glfwMakeContextCurrent(backup_current_context);
+	}
+}
+
 
 void NativeLogSomething()
 {

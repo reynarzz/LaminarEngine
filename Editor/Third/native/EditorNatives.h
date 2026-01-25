@@ -9,3 +9,6 @@ EDITOR_NATIVES_API void SetCurrentWindowHitTestHole(float posX, float posY, floa
 EDITOR_NATIVES_API void ImGuizmo_SetCurrentWindowDrawList();
 EDITOR_NATIVES_API void imgui_NewFrame();
 
+EDITOR_NATIVES_API void InitGLFWImguiInternal(void* windowPtr);
+EDITOR_NATIVES_API void BeginGLFWImguiInternal();
+EDITOR_NATIVES_API void EndGLFWImguiInternal();

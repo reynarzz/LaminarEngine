@@ -96,24 +96,28 @@ namespace Editor
             bytes.CopyTo(new Span<byte>(iniPath, bytes.Length));
             io.NativePtr->IniFilename = iniPath;
 
-            RendererData* bd = (RendererData*)NativeMemory.AllocZeroed((uint)sizeof(RendererData));
-            bd->GlslVersion = 330;
+            //RendererData* bd = (RendererData*)NativeMemory.AllocZeroed((uint)sizeof(RendererData));
+            //bd->GlslVersion = 330;
 
-            io.BackendRendererUserData = (IntPtr)bd;
+            // io.BackendRendererUserData = (IntPtr)bd;
+           
             io.NativePtr->BackendRendererName = (byte*)Unsafe.AsPointer(ref BackendName);
 
             io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
             io.BackendFlags |= ImGuiBackendFlags.RendererHasViewports;
-            
-            InitMultiViewportSupport();
-
-            NewFrame();
+            io.BackendFlags |= ImGuiBackendFlags.HasMouseCursors;
+            io.BackendFlags |= ImGuiBackendFlags.HasSetMousePos;
+            io.KeyRepeatDelay = 0.35f; // default ~0.25
+            io.KeyRepeatRate = 0.05f; // default ~0.05
+            io.MouseDoubleClickTime = 0.8f;
             io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
             io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
             io.ConfigFlags |= ImGuiConfigFlags.ViewportsEnable;
 
-           // SetPerFrameImGuiData(1f / 60f, window.PhysicalWidth, window.PhysicalHeight);
-            //Styles();
+            // InitMultiViewportSupport();
+
+            NewFrame();
+           
             Styles2();
 
             return true;
@@ -367,16 +371,16 @@ namespace Editor
 
         public static void NewFrame()
         {
-            RendererData* bd = GetBackendData();
+            //RendererData* bd = GetBackendData();
 
-            if (bd->ShaderHandle == 0)
-            {
-                CreateDeviceObjects();
-            }
-            if (bd->FontTexture == 0)
-            {
-                CreateFontsTexture();
-            }
+            //if (bd->ShaderHandle == 0)
+            //{
+            //    CreateDeviceObjects();
+            //}
+            //if (bd->FontTexture == 0)
+            //{
+            //    CreateFontsTexture();
+            //}
         }
 
         public static void SetupRenderState(ImDrawDataPtr drawData, int fbWidth, int fbHeight, int vao)
@@ -449,7 +453,7 @@ namespace Editor
             array4 last_polygon_mode = default;
             glGetIntegerv(GL_POLYGON_MODE, &last_polygon_mode._0);
 
-            array4 last_viewport = default;
+            array4 last_viewport = default; 
             glGetIntegerv(GL_VIEWPORT, &last_viewport._0);
 
             array4 last_scissor_box = default;

@@ -22,13 +22,13 @@ namespace GLFW
         ///     <para>For Unix users using an installed version of GLFW, this needs refactored to <c>glfw</c>.</para>
         /// </summary>
 #if Windows
-        public const string LIBRARY = "glfw";
+        public const string LIBRARY = "glfw3";
 #elif OSX
         public const string LIBRARY = "libglfw.dylib"; // mac
 #else
-        public const string LIBRARY = "glfw";
+        public const string LIBRARY = "glfw3";
 #endif
-
+         
         private static readonly ErrorCallback errorCallback = GlfwError;
 
         #endregion

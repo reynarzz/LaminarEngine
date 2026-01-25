@@ -22,5 +22,14 @@ namespace Editor
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void LogCallback(IntPtr message);
+          
+        [DllImport("EditorNatives", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void InitGLFWImguiInternal(IntPtr windowPtr);
+
+        [DllImport("EditorNatives", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void BeginGLFWImguiInternal();
+        
+        [DllImport("EditorNatives", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void EndGLFWImguiInternal();
     }
 }

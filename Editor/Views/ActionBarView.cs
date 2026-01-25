@@ -28,7 +28,7 @@ namespace Editor.Views
         public void OnDraw()
         {
             var viewport = ImGui.GetMainViewport();
-            ImGui.SetNextWindowPos(new Vector2(0, 0));
+            ImGui.SetNextWindowPos(viewport.Pos + new Vector2(0, 0));
             ImGui.SetNextWindowSize(new Vector2(viewport.Size.X, _barHeight));
 
             var flags = ImGuiWindowFlags.NoTitleBar |
@@ -38,6 +38,7 @@ namespace Editor.Views
                                      ImGuiWindowFlags.NoBringToFrontOnFocus |
                                      ImGuiWindowFlags.NoNavFocus |
                                      ImGuiWindowFlags.NoDocking;
+
             ImGui.PushStyleVar(ImGuiStyleVar.WindowMinSize, Vector2.Zero);
             ImGui.PushStyleVar(ImGuiStyleVar.WindowRounding, 0.0f);
             ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f);
