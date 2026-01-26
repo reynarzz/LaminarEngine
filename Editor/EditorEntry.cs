@@ -33,7 +33,7 @@ namespace Editor
     // Copy native dependencies to bin directories.
     // Investigate why when the scene is reloaded old objects are still alive.
     // Rebuild the rendering system.
-    
+
     // Performance fix:
     // Fix CollisionDispatcher Hashset use instead of dictionary.
     // UI performance is pretty bad, rewrite the entire UI system.
@@ -78,6 +78,9 @@ namespace Editor
 
             var editorLayerManager = new EditorLayersManager(_inputLayer, _win);
 
+
+            MenuItems();
+
             _engine = new GFSEngine(ImGuiLayer.GameWindow, _inputLayer, editorLayerManager, null);
 
             // Physical window.
@@ -99,6 +102,58 @@ namespace Editor
             }
 
             editorLayerManager.OnClose();
+        }
+
+
+        private void MenuItems()
+        {
+            // File
+            EditorMenu.PushMenu("File/Open", () => Debug.Warn("Open"));
+            EditorMenu.PushMenu("File/Save", () => Debug.Warn("Save"));
+            EditorMenu.PushMenu("File/Save As", () => Debug.Warn("Save As"));
+            EditorMenu.PushMenu("File/Settings", () => Debug.Warn("Settings"));
+            EditorMenu.PushMenu("File/Quit", () => Debug.Warn("Quit"));
+
+            // Edit
+            EditorMenu.PushMenu("Edit/Project Settings", () => Debug.Warn("proj"));
+            EditorMenu.PushMenu("Edit/Preferences", () => { });
+
+            // Assets
+            EditorMenu.PushMenu("Assets/Create/Folder", () => { });
+            EditorMenu.PushMenu("Assets/Create/Scene", () => { });
+            EditorMenu.PushMenu("Assets/Create/Material", () => { });
+            EditorMenu.PushMenu("Assets/Create/Shader", () => { });
+            EditorMenu.PushMenu("Assets/Create/Animation Clip", () => { });
+            EditorMenu.PushMenu("Assets/Create/Animator Controller", () => { });
+
+            // Actor
+            EditorMenu.PushMenu("Actor/Create Empty", () => { });
+            EditorMenu.PushMenu("Actor/Create Empty Child", () => { });
+
+            EditorMenu.AddSeparator("Actor", 2);
+            EditorMenu.PushMenu("Actor/Box", () => { });
+            EditorMenu.PushMenu("Actor/Sprite", () => { });
+            EditorMenu.PushMenu("Actor/Audio Source", () => { });
+
+            // Window
+            EditorMenu.PushMenu("Window/Game", () => { });
+            EditorMenu.PushMenu("Window/Scene", () => { });
+            EditorMenu.PushMenu("Window/Object Editor", () => { });
+            EditorMenu.PushMenu("Window/Scene Graph", () => { });
+
+            // Help
+            EditorMenu.PushMenu("Help/Made by Reynardo Perez", () => {
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = "https://www.reynarz.com",
+                    UseShellExecute = true
+                });
+            });
+            EditorMenu.PushMenu("Help/With toggle", () => { }, true);
+            EditorMenu.PushMenu("Help/Disabled", () => { });
+
+            EditorMenu.SetEnabled("Help/With toggle", false);
+            EditorMenu.Toggle("Help/With toggle", true);
         }
 
         private void UpdateAll()

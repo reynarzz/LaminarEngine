@@ -26,7 +26,11 @@ add_subdirectory(cimguizmo)
 
 add_library(${PROJECT_NAME} SHARED
 EditorNatives.cpp
-EditorNatives.h)
+EditorNatives.h
+nativemenu/cnativemenu.cpp
+$<$<BOOL:WIN32>:nativemenu/NativeMenu.cpp>
+$<$<BOOL:APPLE>:nativemenu/NativeMenu.mm>
+)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${OUTPUT_DIR}/win"   # Windows DLL
@@ -66,4 +70,25 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     ${ENGINE_NATIVES}/bin/lib/glfw3dll.lib
 )
 
+if (WIN32)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE WINDOWS)
+elseif (APPLE)
+    set_source_files_properties(
+       nativemenu/NativeMenu.mm
+       PROPERTIES
+       LANGUAGE OBJCXX
+    )
+    find_library(COCOA_LIBRARY Cocoa REQUIRED)
+    find_library(IOKIT_LIBRARY IOKit REQUIRED)
+    find_library(COREVIDEO_LIBRARY CoreVideo REQUIRED)
 
+    target_link_libraries(${PROJECT_NAME} PRIVATE
+        ${COCOA_LIBRARY}
+        ${IOKIT_LIBRARY}
+        ${COREVIDEO_LIBRARY}
+    )
+
+    target_compile_definitions(${PROJECT_NAME} PRIVATE MACOS)
+elseif (UNIX)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE LINUX)
+endif()

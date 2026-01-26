@@ -17,6 +17,7 @@
 #include <GLFW/glfw3.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
+#include "nativemenu/NativeMenu.h"
 
 LogCallback _Log = nullptr;
 
@@ -25,10 +26,8 @@ CIMGUI_API void InitImAllGui()
 	ImGui::CreateContext();
 	imnodes::CreateContext();
 	imnodes::StyleColorsDark();
+
 	_Log("Editor Natives Init");
-
-	
-
 }
 
 
@@ -56,9 +55,11 @@ EDITOR_NATIVES_API void RegisterLogCallback(LogCallback callback)
 
 EDITOR_NATIVES_API void InitGLFWImguiInternal(void* windowPtr)
 {
-	ImGui_ImplGlfw_InitForOpenGL(static_cast<GLFWwindow*>(windowPtr), true);
-	ImGui_ImplOpenGL3_Init();
+	GLFWwindow* win = static_cast<GLFWwindow*>(windowPtr);
 
+	ImGui_ImplGlfw_InitForOpenGL(win, true);
+	ImGui_ImplOpenGL3_Init();
+	NativeMenu::Init(win);
 }
 
 
