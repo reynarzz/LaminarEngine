@@ -28,7 +28,8 @@ namespace Editor.AssemblyHotReload
             ["BaseOutputPath"] = @"Library/Build/bin/",
             ["AppendRuntimeIdentifierToOutputPath"] = "false",
             ["AppendTargetFrameworkToOutputPath"] = "false",
-            ["Configuration"] = EditorPaths.GAME_BUILD_TYPE
+            ["Configuration"] = EditorPaths.GAME_BUILD_TYPE,
+            ["DefineConstants"] = "DEBUG;EDITOR;DESKTOP"
         };
 
         internal GameAssemblyBuilder()
