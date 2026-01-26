@@ -53,7 +53,6 @@ namespace Editor
             io.KeyRepeatRate = 0.05f; // default ~0.05
             io.MouseDoubleClickTime = 0.8f;
             io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
-            io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
             io.ConfigFlags |= ImGuiConfigFlags.ViewportsEnable;
 
             Styles2();

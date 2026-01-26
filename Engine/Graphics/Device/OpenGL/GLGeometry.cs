@@ -17,7 +17,7 @@ namespace Engine.Graphics.OpenGL
         private readonly GLVertexBuffer _vertBuffer;
         private GLIndexBuffer _indexBuffer;
         private GLIndexBuffer _sharedBuffer;
-
+        private static uint _prevVAO;
         public GLGeometry() : base(glGenVertexArray, glDeleteVertexArray, glBindVertexArray)
         {
             _vertBuffer = new GLVertexBuffer();
@@ -25,8 +25,7 @@ namespace Engine.Graphics.OpenGL
 
         protected override bool CreateResource(GeometryDescriptor descriptor)
         {
-            int prevVAO = 0;
-            glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &prevVAO);
+            uint prevVAO = _prevVAO;
             
             Bind();
             if (!_vertBuffer.Create(descriptor.VertexDesc.BufferDesc))
@@ -75,15 +74,16 @@ namespace Engine.Graphics.OpenGL
             }
 
             //  Unbind();
-            glBindVertexArray((uint)prevVAO);
+
+            _prevVAO = prevVAO;
+            glBindVertexArray(_prevVAO);
 
             return true;
         }
 
         internal override void UpdateResource(GeometryDescriptor descriptor)
         {
-            int prevVAO = 0;
-            glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &prevVAO);
+            uint prevVAO = _prevVAO;
 
             Bind();
             _vertBuffer.Update(descriptor.VertexDesc.BufferDesc);
@@ -104,9 +104,16 @@ namespace Engine.Graphics.OpenGL
                 _indexBuffer.Bind();
             }
 
-            glBindVertexArray((uint)prevVAO);
+            _prevVAO = prevVAO;
+            glBindVertexArray(_prevVAO);
         }
 
+        internal override void Bind()
+        {
+            base.Bind();
+            _prevVAO = Handle;
+
+        }
         protected override void FreeResource()
         {
             _vertBuffer.Dispose();

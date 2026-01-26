@@ -10,6 +10,8 @@ namespace Engine.Layers
         private float _timePast;
         private float _unscaledTimePast;
         private const float _timeWrapLength = 10;
+        private float _second;
+        private int _frames;
         public override void Initialize()
         {
             _stopwatch = new Stopwatch();
@@ -46,7 +48,17 @@ namespace Engine.Layers
             Time.UnscaledTimeWrap = Mathf.Wrap(_unscaledTimePast, _timeWrapLength);
             Time.TimeCurrentWrap = Mathf.Wrap(_timePast, _timeWrapLength);
 
-            Time.FPS = Time.UnscaledDeltaTime > 0f ? 1f / Time.UnscaledDeltaTime : 0f;
+            //Time.FPS = Time.UnscaledDeltaTime > 0f ? 1f / Time.UnscaledDeltaTime : 0f;
+            if((_second += Time.UnscaledDeltaTime) >= 1.0f)
+            {
+                Time.FPS = _frames;
+                _second = 0;
+                _frames = 0;
+            }
+            else
+            {
+                _frames++;
+            }
         }
 
 

@@ -39,14 +39,19 @@ namespace Engine.Graphics.OpenGL
         /// <summary>
         /// Bind this resource for use.
         /// </summary>
-        internal virtual void Bind()
+        internal virtual void Bind(uint handle)
         {
             if (_handleBinder == null)
             {
                 Debug.Error("Binder not specified in constructor, override Bind() if this was intended.");
                 return;
             }
-            _handleBinder(Handle);
+            _handleBinder(handle);
+        }
+
+        internal virtual void Bind()
+        {
+            Bind(Handle);
         }
 
         internal virtual void Unbind()

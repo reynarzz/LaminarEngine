@@ -17,8 +17,7 @@ namespace GLFW
         /// <summary>
         ///     Internal pointer.
         /// </summary>
-        private readonly IntPtr handle;
-        public IntPtr Handle => handle;
+        public readonly IntPtr handle;
         /// <summary>
         ///     Performs an implicit conversion from <see cref="Window" /> to <see cref="IntPtr" />.
         /// </summary>

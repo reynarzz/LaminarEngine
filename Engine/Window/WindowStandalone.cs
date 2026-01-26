@@ -45,7 +45,7 @@ namespace Engine
         public event Action OnWindowClose;
         private bool _isMouseVisible = true;
 
-        IntPtr IWindow.NativeWindow => NativeWindow.Handle;
+        IntPtr IWindow.NativeWindow => NativeWindow.handle;
         public bool CursorVisible
         {
             get => _isMouseVisible;

@@ -14,6 +14,7 @@ namespace Engine.Graphics.OpenGL
     internal class GLBuffer : GLGfxResource<BufferDataDescriptor>
     {
         protected int Target { get; private set; }
+     
 
         public GLBuffer(int target) : base(glGenBuffer,
                                            glDeleteBuffer,
@@ -60,24 +61,15 @@ namespace Engine.Graphics.OpenGL
                     break;
             }
 
-            int prevBuffer = 0;
-            glGetIntegerv(bindingEnum, &prevBuffer);
-
             Bind();
             glBufferData(Target, desc.BufferLength, desc.GetBufferUnsafePtr().ToPointer(), usage);
             Unbind();
 
-            if (prevBuffer >= 0)
-                glBindBuffer(Target, (uint)prevBuffer);
-
             return true;
         }
-
         internal unsafe override void UpdateResource(BufferDataDescriptor desc)
         {
-            int prevBuffer;
-            glGetIntegerv(Target, &prevBuffer);
-
+          
             Bind();
             unsafe
             {
@@ -86,9 +78,8 @@ namespace Engine.Graphics.OpenGL
             Unbind();
 
 
-            if (prevBuffer >= 0)
-                glBindBuffer(Target, (uint)prevBuffer);
-
         }
+
+       
     }
 }

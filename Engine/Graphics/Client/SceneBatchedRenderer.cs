@@ -122,6 +122,19 @@ namespace Engine.Graphics
 
         private void RenderPass(Batch2D batch, ref mat4 VP, RenderTexture renderTarget, RenderTexture screenGrabTarget, ICamera camera)
         {
+            if(batch == null)
+            {
+                Debug.EngineError("Batch is null");
+            }
+            if (batch.Material == null)
+            {
+                Debug.EngineError("Material is null");
+            }
+            if (batch.Material.Passes == null)
+            {
+                Debug.EngineError("Passes is null");
+            }
+
             for (int i = 0; i < batch.Material.Passes.Count; i++)
             {
                 var pass = batch.Material.Passes[i];

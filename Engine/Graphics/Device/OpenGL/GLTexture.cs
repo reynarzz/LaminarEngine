@@ -19,6 +19,8 @@ namespace Engine.Graphics.OpenGL
         private int _width;
         private int _height;
         private int _channels;
+        private static uint _prevBoundTexture;
+        private static int _prevBoundSlot;
 
         public GLTexture() : base(glGenTexture, glDeleteTexture)
         {
@@ -58,6 +60,8 @@ namespace Engine.Graphics.OpenGL
 
         internal override unsafe void UpdateResource(TextureDescriptor descriptor)
         {
+            var prevBoundText = _prevBoundTexture;
+            var prevBoundSlot = _prevBoundSlot;
             Bind();
             SetTextureFeatures(descriptor);
             fixed (void* data = descriptor.Buffer)
@@ -91,6 +95,11 @@ namespace Engine.Graphics.OpenGL
                 glPixelStorei(GL_UNPACK_ALIGNMENT, prev);
             }
             Unbind();
+
+            if(prevBoundText >= 0)
+            {
+                Bind(prevBoundText, prevBoundSlot);
+            }
         }
 
         private int GetFormat(int channels)
@@ -184,19 +193,25 @@ namespace Engine.Graphics.OpenGL
         {
             Bind(0);
         }
-
         internal void Bind(int slot)
+        {
+            Bind(Handle, slot);
+        }
+        internal void Bind(uint handle, int slot)
         {
             if (_isMultisample)
             {
-                glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, Handle);
+                glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, handle);
             }
             else
             {
                 _slotBound = slot;
                 glActiveTexture(GL_TEXTURE0 + slot);
-                glBindTexture(GL_TEXTURE_2D, Handle);
+                glBindTexture(GL_TEXTURE_2D, handle);
             }
+
+            _prevBoundTexture = handle;
+            _prevBoundSlot = slot;
         }
 
         internal override void Unbind()

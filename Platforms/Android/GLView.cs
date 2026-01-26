@@ -30,6 +30,9 @@ namespace Engine.Android
         private readonly AndroidSystem _system;
         public int OffsetX => 0;
         public int OffsetY => 0;
+
+        public nint NativeWindow => 0;
+
         public GLView(Context context) : base(context)
         {
             // Request an OpenGL ES 3.0 context
