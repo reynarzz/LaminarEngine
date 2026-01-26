@@ -101,11 +101,22 @@ namespace Editor
                 var anim2 = Deserializer.Deserialize<AnimationClip>(ir);
 
                 _materialTest = Assets.GetMaterial("Materials/Material.material");
-                Selector.Selected = Assets.GetTexture("Tilemap/SunnyLand_by_Ansimuz-extended.png"); //_materialTest.Textures.ElementAt(0).Value;
+                var texture = Assets.GetTexture("starkTileset.png"); //_materialTest.Textures.ElementAt(0).Value;
+                Selector.Selected = texture;
+
+                var channels = 4;
+                var outWidth = texture.Width / 2;
+                var outHeight = texture.Height / 2;
+                var outBytes = new byte[outWidth * outHeight * channels];
+                EditorImage.Resize(texture.Data, channels, texture.Width, texture.Height, outBytes, outWidth, outHeight);
+
+                var format = EditorImageWriteFormat.Jpg;
+                EditorImage.Write(EditorPaths.AppRoot + $"/resized.{format.ToString().ToLower()}", outWidth, outHeight, channels, outBytes, format);
+
                 //ExportSlicedSprites();
-                var material = Assets.GetMaterial("__InternalAssets__/Materials/SpriteDefault.material");
-                 material = Assets.GetMaterial("Materials/Material.material");
-                Selector.Selected = material;
+                //var material = Assets.GetMaterial("__InternalAssets__/Materials/SpriteDefault.material");
+                // material = Assets.GetMaterial("Materials/Material.material");
+                //Selector.Selected = material;
                 var obj = Actor.Find("Chest");
                 if (obj)
                 {
@@ -169,7 +180,7 @@ namespace Editor
             // var actors = _actors;
             Debug.Log("Total actors in scene: " + actors.Count);
             SceneManager.Initialize();
-           
+
             SceneDeserializer.DeserializeScene(actors, SceneManager.ActiveScene);
         }
     }

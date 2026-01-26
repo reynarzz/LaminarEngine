@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Editor
 {
-    internal abstract class EditorRenderSurfaceView : IEditorWindow
+    internal abstract class EditorRenderSurfaceView : EditorWindow
     {
         private readonly RenderingSurface _surface;
         protected RenderingSurface Surface { get; }
@@ -32,25 +32,13 @@ namespace Editor
 
         private vec2 _contentRegionAvail;
 
-        public EditorRenderSurfaceView(string viewName, RenderingSurface surface)
+        public EditorRenderSurfaceView(string viewName, string menuItemPath, RenderingSurface surface) : base(menuItemPath)
         {
             _surface = surface;
             Surface = surface;
             _viewName = viewName;
             _surfaceViewId = $"__SURFACE_VIEW__ID__{_viewName}";
 
-        }
-
-        public virtual void OnClose()
-        {
-        }
-
-        public virtual void OnOpen()
-        {
-        }
-
-        public virtual void OnUpdate()
-        {
         }
 
         protected virtual void OnWindowRender()
@@ -73,7 +61,7 @@ namespace Editor
 
         protected virtual void OnImguiWindowSizeChanged() { }
         protected virtual void OnRenderChildWindows() { }
-        public virtual void OnDraw()
+        public override void OnDraw()
         {
             ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Vector2.Zero);
             ImGui.PushStyleColor(ImGuiCol.WindowBg, _canRenderWindow ? new Vector4(0.1f, 0.1f, 0.1f, 1.0f) : new Vector4(0, 0, 0, 1));

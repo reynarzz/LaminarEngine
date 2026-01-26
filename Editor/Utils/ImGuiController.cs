@@ -17,7 +17,6 @@ namespace Editor
             var assemblyDir = Paths.ClearPathSeparation(Path.GetDirectoryName(AppContext.BaseDirectory)!);
             var root = Path.Combine(assemblyDir.Substring(0, assemblyDir.LastIndexOf("Editor")), "Editor/Data");
 
-            EditorNatives.InitImAllGui();
 
             var io = ImGui.GetIO();
 

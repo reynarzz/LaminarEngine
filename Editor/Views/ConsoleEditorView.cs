@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Editor.Views
 {
-    internal class ConsoleEditorView : IEditorWindow
+    internal class ConsoleEditorView : EditorWindow
     {
         private enum LogType
         {
@@ -30,59 +30,50 @@ namespace Editor.Views
         private bool _showError = true;
 
         private float _splitterHeight = 120f;
+        public ConsoleEditorView() : base("Window/Animator")
+        {
+        }
 
         public static void AddLog(string msg)
         {
-           // _entries.Add(new LogEntry { Type = LogType.Log, Message = msg });
+            // _entries.Add(new LogEntry { Type = LogType.Log, Message = msg });
         }
 
         public static void AddWarning(string msg)
         {
-           // _entries.Add(new LogEntry { Type = LogType.Warning, Message = msg });
+            // _entries.Add(new LogEntry { Type = LogType.Warning, Message = msg });
         }
 
         public static void AddError(string msg)
         {
-          //  _entries.Add(new LogEntry { Type = LogType.Error, Message = msg });
+            //  _entries.Add(new LogEntry { Type = LogType.Error, Message = msg });
         }
 
-        public void OnOpen()
+        public override void OnDraw()
         {
-        }
-
-        public void OnClose()
-        {
-        }
-
-        public void OnUpdate()
-        {
-        }
-
-        public void OnDraw()
-        {
-            ImGui.Begin("Console");
-
-            DrawToolbar();
-
-            float availY = ImGui.GetContentRegionAvail().Y;
-            if (availY <= 0)
+            if (OnBeginWindow("Console"))
             {
-                ImGui.End();
-                return;
+                DrawToolbar();
+
+                float availY = ImGui.GetContentRegionAvail().Y;
+                if (availY <= 0)
+                {
+                    ImGui.End();
+                    return;
+                }
+
+                float splitterThickness = 6f;
+                float minPanelHeight = 10f;
+
+                float maxSplitter = Math.Max(minPanelHeight, availY - minPanelHeight - splitterThickness);
+
+                _splitterHeight = Math.Clamp(_splitterHeight, minPanelHeight, maxSplitter);
+
+                DrawLogViewTop(_splitterHeight);
+                DrawSplitter(splitterThickness);
+                DrawLogViewBottom();
             }
-
-            float splitterThickness = 6f;
-            float minPanelHeight = 10f;
-
-            float maxSplitter = Math.Max(minPanelHeight, availY - minPanelHeight - splitterThickness);
-
-            _splitterHeight = Math.Clamp(_splitterHeight, minPanelHeight, maxSplitter);
-
-            DrawLogViewTop(_splitterHeight);
-            DrawSplitter(splitterThickness);
-            DrawLogViewBottom();
-
-            ImGui.End();
+            OnEndWindow();
         }
         private void DrawSplitter(float thickness)
         {

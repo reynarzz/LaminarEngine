@@ -58,7 +58,7 @@ namespace Editor
         private const float MAX_VIEW_SCALE = 7.0f;
 
         private readonly string[] _resolutionTypesNames;
-        public EditorGameView(IWindow window, RenderingSurface surface, InputLayerBase inputLayer) : base("Game", surface)
+        public EditorGameView(IWindow window, RenderingSurface surface, InputLayerBase inputLayer) : base("Game", "Window/Game", surface)
         {
             _window = window;
             _width = _window.Width;

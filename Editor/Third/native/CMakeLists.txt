@@ -28,6 +28,8 @@ add_library(${PROJECT_NAME} SHARED
 EditorNatives.cpp
 EditorNatives.h
 nativemenu/cnativemenu.cpp
+avirimageresize/cavirresize.cpp
+stbimagewrite/cstbimagewrite.cpp
 $<$<BOOL:WIN32>:nativemenu/NativeMenu.cpp>
 $<$<BOOL:APPLE>:nativemenu/NativeMenu.mm>
 )

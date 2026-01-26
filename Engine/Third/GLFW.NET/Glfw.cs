@@ -21,9 +21,9 @@ namespace GLFW
         ///     The native library name,
         ///     <para>For Unix users using an installed version of GLFW, this needs refactored to <c>glfw</c>.</para>
         /// </summary>
-#if Windows
+#if WINDOWS
         public const string LIBRARY = "glfw3";
-#elif OSX
+#elif MACOS
         public const string LIBRARY = "libglfw.dylib"; // mac
 #else
         public const string LIBRARY = "glfw3";

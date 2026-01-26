@@ -19,7 +19,7 @@ namespace Editor.Layers
 {
     internal class ImGuiLayer : LayerBase
     {
-        private List<IEditorWindow> _windows;
+        private List<EditorWindow> _windows;
         private static EditorGameView _gameWindow;
         internal static EditorGameView GameWindow => _gameWindow;
 
@@ -36,7 +36,6 @@ namespace Editor.Layers
             _inputLayer = inputLayer;
             _imguiController = new ImGuiController();
 
-            EditorNatives.InitGLFWImguiInternal(window.NativeWindow);
 
             // TODO: move the surface creation to their own classes.
             _gameSurface = new RenderingSurface()
@@ -84,7 +83,7 @@ namespace Editor.Layers
                 UpdateLayer();
             };
 
-            _windows = new List<IEditorWindow>()
+            _windows = new List<EditorWindow>()
             {
                 _gameWindow,
                 new ActionBarView(),
@@ -94,7 +93,7 @@ namespace Editor.Layers
                 new SceneGraphWindow(),
                 new ObjectEditorView(),
                 new AnimatorEditorView(),
-                new RenderingInfoView(),
+                new RenderingStatsView(),
                 // new ConsoleEditorView()
             };
         }

@@ -7,13 +7,9 @@ using System.Text;
 
 namespace Editor.Views
 {
-    internal class FooterBarView : IEditorWindow
+    internal class FooterBarView : EditorWindow
     {
-        public void OnClose()
-        {
-        }
-
-        public void OnDraw()
+        public override void OnDraw()
         {
             ImGuiViewportPtr viewport = ImGui.GetMainViewport();
 
@@ -34,26 +30,17 @@ namespace Editor.Views
             ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Vector2.Zero);
             ImGui.PushStyleVar(ImGuiStyleVar.WindowMinSize, Vector2.Zero);
             ImGui.PushStyleColor(ImGuiCol.WindowBg, new Vector4(0.13f, 0.13f, 0.13f, 1.0f));
-            ImGui.Begin("FooterSpace", footerFlags);
+            OnBeginWindow("FooterSpace", footerFlags, false);
 
             if (GameAssemblyBuilder.IsBuilding)
             {
                 ImGui.Text("Compiling...");
             }
-            ImGui.End();
+            OnEndWindow();
             ImGui.PopStyleColor();
 
             ImGui.PopStyleVar(4);
 
         }
-
-        public void OnOpen()
-        {
-        }
-
-        public void OnUpdate()
-        {
-        }
     }
-
 }

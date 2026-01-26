@@ -27,7 +27,7 @@ namespace Editor
         private vec2 _mouseFirstPickedPosition;
         private const float _maxPickedMouseDistance = 1.5f;
 
-        public SceneEditorView(string viewName, RenderingSurface surface, EditorCamera camera) : base(viewName, surface)
+        public SceneEditorView(string viewName, RenderingSurface surface, EditorCamera camera) : base(viewName, "Window/Scene", surface)
         {
             _camera = camera;
             RenderingLayer.OnRenderingEnd += OnRenderingEnd;

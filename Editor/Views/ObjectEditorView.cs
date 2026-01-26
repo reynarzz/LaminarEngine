@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Editor
 {
-    internal class ObjectEditorView : IEditorWindow
+    internal class ObjectEditorView : EditorWindow
     {
         private readonly Dictionary<Type, EditorDrawerBase> _drawers;
         private EditorDrawerBase _prevSelected;
@@ -21,7 +21,7 @@ namespace Editor
         private bool _isTextSizeCalculated;
         private Vector2 _textSize;
 
-        public ObjectEditorView()
+        public ObjectEditorView() : base("Window/Object Editor")
         {
             _drawers = new()
             {
@@ -32,44 +32,40 @@ namespace Editor
             };
         }
 
-        public void OnOpen()
+        public override void OnDraw()
         {
-
-        }
-
-        public void OnDraw()
-        {
-            ImGui.Begin("Object Editor");
-
-            if (Selector.Selected)
+            if (OnBeginWindow("Object Editor"))
             {
-                var transform = Selector.SelectedTransform();
-
-                if (transform?.Actor)
+                if (Selector.Selected)
                 {
-                    if (_drawers.TryGetValue(typeof(Actor), out var drawer))
+                    var transform = Selector.SelectedTransform();
+
+                    if (transform?.Actor)
+                    {
+                        if (_drawers.TryGetValue(typeof(Actor), out var drawer))
+                        {
+                            InitDrawer(drawer);
+                            drawer.OnDraw(transform?.Actor);
+                        }
+                        else
+                        {
+                            Debug.Error($"Type for editor view: '{Selector.Selected.GetType()}' is not implemented");
+                            Clear();
+                        }
+                    }
+                    else if (_drawers.TryGetValue(Selector.Selected.GetType(), out var drawer))
                     {
                         InitDrawer(drawer);
-                        drawer.OnDraw(transform?.Actor);
-                    }
-                    else
-                    {
-                        Debug.Error($"Type for editor view: '{Selector.Selected.GetType()}' is not implemented");
-                        Clear();
+                        drawer.OnDraw(Selector.Selected);
                     }
                 }
-                else if (_drawers.TryGetValue(Selector.Selected.GetType(), out var drawer))
+                else
                 {
-                    InitDrawer(drawer);
-                    drawer.OnDraw(Selector.Selected);
+                    Clear();
                 }
-            }
-            else
-            {
-                Clear();
             }
 
-            ImGui.End();
+            OnEndWindow();
         }
 
         private void InitDrawer(EditorDrawerBase drawer)
@@ -103,16 +99,6 @@ namespace Editor
 
             ImGui.SetCursorPos(new Vector2(size.X / 2.0f - _textSize.X / 2.0f, size.Y / 2.0f - _textSize.Y / 2.0f));
             ImGui.Text(NothingSelectedLabel);
-        }
-
-        public void OnUpdate()
-        {
-
-        }
-
-        public void OnClose()
-        {
-
         }
     }
 }

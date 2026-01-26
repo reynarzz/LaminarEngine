@@ -61,6 +61,7 @@ namespace Editor
         {
             Application.IsInPlayMode = false;
             NativeLogger.Init();
+            EditorNatives.InitImAllGui();
 
             _win = new WindowStandalone("GFS Editor", 1424, 840, Color.Black, new TextureDescriptor()
             {
@@ -68,6 +69,10 @@ namespace Editor
                 Height = EditorDefaultIcon.Height,
                 Buffer = EditorDefaultIcon.Icon
             });
+
+            EditorNatives.InitGLFWImguiInternal(WindowStandalone.NativeWindow.handle);
+            MenuItems();
+
 
             _win.CanResize = true;
 
@@ -79,7 +84,7 @@ namespace Editor
             var editorLayerManager = new EditorLayersManager(_inputLayer, _win);
 
 
-            MenuItems();
+            HelpMenu();
 
             _engine = new GFSEngine(ImGuiLayer.GameWindow, _inputLayer, editorLayerManager, null);
 
@@ -104,12 +109,28 @@ namespace Editor
             editorLayerManager.OnClose();
         }
 
+        private void HelpMenu()
+        {
+            // Help
+            EditorMenu.PushMenu("Help/Made by Reynardo Perez", () =>
+            {
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = "https://www.reynarz.com",
+                    UseShellExecute = true
+                });
+            });
+            EditorMenu.PushMenu("Help/With toggle", () => { }, true);
+            EditorMenu.PushMenu("Help/Disabled", () => { });
 
+            EditorMenu.SetEnabled("Help/With toggle", false);
+            EditorMenu.Toggle("Help/With toggle", true);
+        }
         private void MenuItems()
         {
             // File
             EditorMenu.PushMenu("File/Open", () => Debug.Warn("Open"));
-            EditorMenu.PushMenu("File/Save", () => Debug.Warn("Save"));
+            EditorMenu.PushMenu("File/Save", () => Debug.Warn("Save"), false, "Ctrl+S");
             EditorMenu.PushMenu("File/Save As", () => Debug.Warn("Save As"));
             EditorMenu.PushMenu("File/Settings", () => Debug.Warn("Settings"));
             EditorMenu.PushMenu("File/Quit", () => Debug.Warn("Quit"));
@@ -135,25 +156,7 @@ namespace Editor
             EditorMenu.PushMenu("Actor/Sprite", () => { });
             EditorMenu.PushMenu("Actor/Audio Source", () => { });
 
-            // Window
-            EditorMenu.PushMenu("Window/Game", () => { });
-            EditorMenu.PushMenu("Window/Scene", () => { });
-            EditorMenu.PushMenu("Window/Object Editor", () => { });
-            EditorMenu.PushMenu("Window/Scene Graph", () => { });
-
-            // Help
-            EditorMenu.PushMenu("Help/Made by Reynardo Perez", () => {
-                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-                {
-                    FileName = "https://www.reynarz.com",
-                    UseShellExecute = true
-                });
-            });
-            EditorMenu.PushMenu("Help/With toggle", () => { }, true);
-            EditorMenu.PushMenu("Help/Disabled", () => { });
-
-            EditorMenu.SetEnabled("Help/With toggle", false);
-            EditorMenu.Toggle("Help/With toggle", true);
+           
         }
 
         private void UpdateAll()

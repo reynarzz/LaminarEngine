@@ -21,6 +21,7 @@ namespace Editor.AssemblyHotReload
         private BuildParameters _parameters;
 
         internal static bool IsBuilding { get; private set; } = false;
+        internal static bool IsError { get; private set; } = false;
 
         private readonly Dictionary<string, string> _globalProps = new()
         {
@@ -68,6 +69,7 @@ namespace Editor.AssemblyHotReload
 
             if (!IsBuildNeeded())
             {
+                IsError = false;
                 RaiseBuildCompleted(true, false);
                 return;
             }
@@ -97,10 +99,12 @@ namespace Editor.AssemblyHotReload
             if (result.OverallResult == BuildResultCode.Success)
             {
                 Debug.Success("Build success");
+                IsError = false;
                 RaiseBuildCompleted(true, true);
             }
             else
             {
+                IsError = true;
                 RaiseBuildCompleted(false, false);
                 Debug.Error("Build failed");
             }

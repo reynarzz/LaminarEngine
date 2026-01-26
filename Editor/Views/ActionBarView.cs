@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Editor.Views
 {
-    internal class ActionBarView : IEditorWindow
+    internal class ActionBarView : EditorWindow
     {
         private bool _shouldPlay = false;
         private bool _shouldPause = false;
@@ -21,11 +21,8 @@ namespace Editor.Views
         
         private readonly Vector2 _buttonSize = new Vector2(20, 20);
         private const float _barHeight = 38;
-        public void OnOpen()
-        {
-        }
 
-        public void OnDraw()
+        public override void OnDraw()
         {
             var viewport = ImGui.GetMainViewport();
             ImGui.SetNextWindowPos(viewport.Pos + new Vector2(0, 0));
@@ -37,15 +34,16 @@ namespace Editor.Views
                                      ImGuiWindowFlags.NoMove |
                                      ImGuiWindowFlags.NoBringToFrontOnFocus |
                                      ImGuiWindowFlags.NoNavFocus |
-                                     ImGuiWindowFlags.NoDocking;
+                                     ImGuiWindowFlags.NoDocking |  
+                                     ImGuiWindowFlags.NoSavedSettings;
 
             ImGui.PushStyleVar(ImGuiStyleVar.WindowMinSize, Vector2.Zero);
             ImGui.PushStyleVar(ImGuiStyleVar.WindowRounding, 0.0f);
             ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f);
             ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Vector2.Zero);
             ImGui.PushStyleColor(ImGuiCol.WindowBg, new Vector4(0.13f, 0.13f, 0.13f, 1.0f));
-            ImGui.Begin("ActionBarView", flags);
-            ImGui.BeginDisabled(GameAssemblyBuilder.IsBuilding && !Application.IsInPlayMode);
+            OnBeginWindow("ActionBarView", flags, false);
+            ImGui.BeginDisabled((GameAssemblyBuilder.IsBuilding && !Application.IsInPlayMode) || GameAssemblyBuilder.IsError);
 
             var playIcon = Application.IsInPlayMode ? EditorTextureDatabase.GetIconImGui(Utils.EditorIcon.Stop) :
                                                       EditorTextureDatabase.GetIconImGui(Utils.EditorIcon.Play);
@@ -88,13 +86,14 @@ namespace Editor.Views
             }
             ImGui.EndDisabled();
             ImGui.EndDisabled();
-            ImGui.End();
+
+            OnEndWindow();
             ImGui.PopStyleColor();
 
             ImGui.PopStyleVar(4);
         }
 
-        public void OnUpdate()
+        public override void OnUpdate()
         {
             // Handles events in the correct update stack.
             if (_shouldPlay)
@@ -115,10 +114,6 @@ namespace Editor.Views
             {
                 _shouldPause = false;
             }
-        }
-
-        public void OnClose()
-        {
         }
     }
 }

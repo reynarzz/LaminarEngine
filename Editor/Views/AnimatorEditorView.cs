@@ -12,7 +12,7 @@ using imnodesNET;
 
 namespace Editor
 {
-    public class AnimatorEditorView : IEditorWindow
+    internal class AnimatorEditorView : EditorWindow
     {
         private int _nextId = 1;
 
@@ -20,7 +20,7 @@ namespace Editor
         private readonly List<Link> _links = new();
         private Animator _selectedAnimator;
 
-        public unsafe AnimatorEditorView()
+        public unsafe AnimatorEditorView() : base("Window/Animator")
         {
             imnodes.GetStyle()->link_line_segments_per_length = 0;
             imnodes.GetStyle()->node_corner_rounding = 4;
@@ -76,7 +76,7 @@ namespace Editor
 
                 foreach (var transition in transitions)
                 {
-                    if(transition == null)
+                    if (transition == null)
                     {
                         Debug.Error("Transition is null");
                         continue;
@@ -99,7 +99,7 @@ namespace Editor
             }
         }
 
-        public void OnDraw()
+        public override void OnDraw()
         {
             if (Selector.SelectedTransform())
             {
@@ -112,26 +112,30 @@ namespace Editor
                 }
             }
 
-            ImGui.Begin("Animator");
-            HandleLinkCreation();
-            HandleLinkDeletion();
-            var dark = 0.16f;
-            imnodes.PushColorStyle(ColorStyle.GridBackground, new Color(dark, dark, dark, 1).ToARGB_U32());
-            imnodes.PushColorStyle(ColorStyle.GridLine, new Color(0.1f, 0.1f, 0.1f, 1).ToARGB_U32());
+            if (OnBeginWindow("Animator"))
+            {
 
-            imnodes.BeginNodeEditor();
+                HandleLinkCreation();
+                HandleLinkDeletion();
+                var dark = 0.16f;
+                imnodes.PushColorStyle(ColorStyle.GridBackground, new Color(dark, dark, dark, 1).ToARGB_U32());
+                imnodes.PushColorStyle(ColorStyle.GridLine, new Color(0.1f, 0.1f, 0.1f, 1).ToARGB_U32());
 
-            imnodes.Minimap(0.2f, MinimapLocation.BottomRight);
+                imnodes.BeginNodeEditor();
 
-            ImGui.Text("Some text");
+                imnodes.Minimap(0.2f, MinimapLocation.BottomRight);
 
-            DrawNodes();
-            DrawLinks();
+                ImGui.Text("Some text");
 
-            imnodes.EndNodeEditor();
-            imnodes.PopColorStyle();
-            imnodes.PopColorStyle();
-            ImGui.End();
+                DrawNodes();
+                DrawLinks();
+
+                imnodes.EndNodeEditor();
+                imnodes.PopColorStyle();
+                imnodes.PopColorStyle();
+            }
+
+            OnEndWindow();
         }
         private readonly HashSet<int> _initializedNodes = new();
         private void DrawNodes()
@@ -259,18 +263,6 @@ namespace Editor
         }
 
         private int NewId() => _nextId++;
-
-        public void OnOpen()
-        {
-        }
-
-        public void OnClose()
-        {
-        }
-
-        public void OnUpdate()
-        {
-        }
 
         private sealed class Node
         {
