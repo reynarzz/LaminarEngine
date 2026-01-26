@@ -28,7 +28,7 @@ namespace Game
         public static UIImage NewImage(string name, vec2 position, vec2 size, Color color, Transform parent)
         {
             var image = new Actor(name).AddComponent<UIImage>();
-            image.Material = GameMaterials.Instance.SpriteMaterial;
+            image.Material = GameMaterials.Instance.UIMaterial;
             image.Transform.Parent = parent;
             image.RectTransform.Pivot = vec2.Half;
             image.RectTransform.Size = size;

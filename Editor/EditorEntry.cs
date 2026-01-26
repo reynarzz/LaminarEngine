@@ -33,10 +33,14 @@ namespace Editor
     // Copy native dependencies to bin directories.
     // Investigate why when the scene is reloaded old objects are still alive.
     // Rebuild the rendering system.
+    
+    // Performance fix:
     // Fix CollisionDispatcher Hashset use instead of dictionary.
+    // UI performance is pretty bad, rewrite the entire UI system.
+
 
     // Assets:
-    // Implement material asset build.
+    // Implement MaterialAssetBuilder.
     // load spriteAtlas from texture 2d metadata.
     // Write binary serializer for runtime build.
 
