@@ -16,9 +16,9 @@ namespace Editor.Build
                                                 EditorPaths.Win32ShipGameDataFolderRoot,
                                                 new CookFileOptions()
                                                 {
-                                                    CompressAllFiles = false,
+                                                    CompressAllFiles = true,
                                                     CompressionLevel = 12,
-                                                    EncryptAllFiles = false
+                                                    EncryptAllFiles = true
                                                 })
         {
         }

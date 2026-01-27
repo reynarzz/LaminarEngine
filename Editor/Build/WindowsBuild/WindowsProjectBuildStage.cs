@@ -41,6 +41,18 @@ namespace Editor.Build
                 ["EnableCompressionInSingleFile"] = "true",
                 // ["DefineConstants"] = "$(DefineConstants);WINDOWS;WIN32;DESKTOP"
 
+                // Metadata
+                ["Company"] = "My Company LLC",
+                ["Product"] = "My Game",
+                ["Description"] = "My Game Description",
+                ["Authors"] = "My Company LLC",
+
+                ["AssemblyTitle"] = "My Game",
+                ["AssemblyDescription"] = "My Game Description",
+
+                ["AssemblyVersion"] = "1.2.3.0",
+                ["FileVersion"] = "1.2.3.0",
+                ["InformationalVersion"] = "1.2.3"
             };
         }
 

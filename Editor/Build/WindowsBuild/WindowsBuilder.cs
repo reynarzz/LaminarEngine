@@ -16,14 +16,20 @@ namespace Editor.Build
 
         protected override void OnBeforeBuild()
         {
-            try
+            void PerformOp(Action op)
             {
-                Directory.Delete(EditorPaths.ShipWin32FolderRoot, true);
+                try
+                {
+                    op();
+                }
+                catch (Exception e)
+                {
+                    Debug.Warn(e.ToString());
+                }
             }
-            catch (Exception e)
-            {
-                Debug.Warn(e.ToString());
-            }
+
+            PerformOp(() => Directory.Delete(EditorPaths.ShipWin32FolderRoot, true));
+            PerformOp(() => Directory.Delete(EditorPaths.Win32PublishFolderRoot, true));
         }
     }
 }
