@@ -101,17 +101,12 @@ namespace Editor
                 var anim2 = Deserializer.Deserialize<AnimationClip>(ir);
 
                 _materialTest = Assets.GetMaterial("Materials/Material.material");
-                var texture = Assets.GetTexture("starkTileset.png"); //_materialTest.Textures.ElementAt(0).Value;
-                Selector.Selected = texture;
+                Selector.Selected = _materialTest;
 
-                var channels = 4;
-                var outWidth = texture.Width / 2;
-                var outHeight = texture.Height / 2;
-                var outBytes = new byte[outWidth * outHeight * channels];
-                EditorImage.Resize(texture.Data, channels, texture.Width, texture.Height, outBytes, outWidth, outHeight);
 
-                var format = EditorImageWriteFormat.Jpg;
-                EditorImage.Write(EditorPaths.AppRoot + $"/resized.{format.ToString().ToLower()}", outWidth, outHeight, channels, outBytes, format);
+                GenerateIconAndroidSizes(Assets.GetTexture("Icons/playerhead.png"), 
+                                         Assets.GetTexture("Icons/playerhead_foreground.png"), 
+                                         Assets.GetTexture("Icons/playerhead_background.png"));
 
                 //ExportSlicedSprites();
                 //var material = Assets.GetMaterial("__InternalAssets__/Materials/SpriteDefault.material");
@@ -137,6 +132,51 @@ namespace Editor
             }
 
             base.Update();
+        }
+
+        public enum AndroidIconSizes
+        {
+            mdpi = 48,
+            hdpi = 72,
+            xhdpi = 96,
+            xxhdpi = 144,
+            xxxhdpi = 192,
+        }
+
+        private void GenerateIconAndroidSizes(Texture defaultTexture, Texture foreground, Texture background)
+        {
+            var resolutions = Enum.GetValues<AndroidIconSizes>();
+            var dir = Path.Combine(EditorPaths.AppRoot, "Platforms/Android/Resources");
+           
+            var channels = 4;
+
+            void AddIcons(string name, Texture texture)
+            {
+                if (!texture)
+                {
+                    Debug.Error("Icon is null, can't convert: " + name);
+                    return;
+                }
+
+                for (int i = 0; i < resolutions.Length; i++)
+                {
+                    var resEnum = resolutions[i];
+
+                    int dim = (int)resEnum;
+                    var outBytes = new byte[dim * dim * channels];
+
+                    EditorImage.Resize(texture.Data, channels, texture.Width, texture.Height, outBytes, dim, dim);
+
+                    var format = EditorImageWriteFormat.Png;
+                    var iconPath = Path.Combine(dir, $"mipmap-{resEnum}", $"{name}.{format.ToString().ToLower()}");
+                    EditorImage.Write(iconPath, dim, dim, channels, outBytes, format);
+                }
+            }
+
+            AddIcons("appicon", defaultTexture);
+            AddIcons("appicon_foreground", foreground);
+            AddIcons("appicon_background", background);
+
         }
 
         private void ExportSlicedSprites()
