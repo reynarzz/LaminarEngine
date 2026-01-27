@@ -1,4 +1,4 @@
-﻿using Editor.AssemblyHotReload;
+﻿using Editor.Build;
 using Editor.Utils;
 using Engine;
 using Engine.Utils;
@@ -74,7 +74,7 @@ namespace Editor.Views
             }
 
             ImGui.Begin("Atlas Editor", ref _isOpen, ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoCollapse);
-            ImGui.BeginDisabled(GameAssemblyBuilder.IsBuilding);
+            ImGui.BeginDisabled(BuildSystem.IsAnyBuilding);
             var io = ImGui.GetIO();
 
             Vector2 canvasPos = ImGui.GetCursorScreenPos();

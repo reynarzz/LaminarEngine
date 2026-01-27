@@ -1,4 +1,4 @@
-﻿using Editor.AssemblyHotReload;
+﻿using Editor.Build;
 using Editor.Layers;
 using Editor.Rendering;
 using Editor.Utils;
@@ -56,6 +56,7 @@ namespace Editor
         private WindowStandalone _win;
         private GFSEngine _engine;
         private InputStandAlonePlatform _inputLayer;
+        private const string PROJECT_FOLDER_NAME = "Editor";
 
         internal void Init()
         {
@@ -80,6 +81,7 @@ namespace Editor
             RenderingLayer.OverlayOptions.Height = _win.PhysicalHeight;
 
             _inputLayer = new InputStandAlonePlatform();
+            InitializePaths();
 
             var editorLayerManager = new EditorLayersManager(_inputLayer, _win);
 
@@ -101,6 +103,8 @@ namespace Editor
                 editorLayerManager.PublishEvent(focused ? EventType.WindowFocusEnter : EventType.WindowFocusExit, null);
             };
 
+            BuildSystem.BuildAsync(PlatformBuild.Android);
+
             while (!_win.ShouldClose)
             {
                 UpdateAll();
@@ -108,6 +112,14 @@ namespace Editor
 
             editorLayerManager.OnClose();
         }
+
+        private void InitializePaths()
+        {
+            var assemblyDir = Paths.ClearPathSeparation(Path.GetDirectoryName(AppContext.BaseDirectory)!);
+            var root = Path.Combine(assemblyDir.Substring(0, assemblyDir.LastIndexOf(PROJECT_FOLDER_NAME)), Paths.GAME_FOLDER_NAME);
+            new GameCooker.GameProject().Initialize(new GameCooker.ProjectConfig() { ProjectFolderRoot = root });
+        }
+
 
         private void HelpMenu()
         {

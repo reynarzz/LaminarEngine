@@ -1,4 +1,4 @@
-﻿using Editor.AssemblyHotReload;
+﻿using Editor.Build;
 using Editor.Serialization;
 using Editor.Utils;
 using Engine;
@@ -13,7 +13,6 @@ namespace Editor.Layers
 {
     internal class HotReloadLayer : LayerBase
     {
-        private readonly GameAssemblyBuilder _gameAssemblyBuilder;
         private PluginLoadContext _assemblyLoadContext;
         private Assembly _gameAppAssembly = null;
         private readonly List<string> _sceneList = new();
@@ -23,25 +22,25 @@ namespace Editor.Layers
 
         public HotReloadLayer()
         {
-            _gameAssemblyBuilder = new GameAssemblyBuilder();
-            _gameAssemblyBuilder.OnBuildCompleted += OnBuildCompleted;
+            BuildSystem.OnBuildCompleted += OnBuildCompleted;
         }
 
-        public override async void Initialize()
+        public override void Initialize()
         {
-            await _gameAssemblyBuilder.BuildAsync();
+            BuildSystem.BuildAsync(PlatformBuild.Editor);
         }
 
-        private void OnBuildCompleted(bool success, bool isRebuild)
+        private void OnBuildCompleted(BuildResult result)
         {
-            if (success)
+            if (result.IsSucess && result.Platform == PlatformBuild.Editor)
             {
-                if (isRebuild || _gameAppAssembly == null)
+                if (result.IsSucess || _gameAppAssembly == null)
                 {
                     _canSwapDll = true;
                 }
             }
         }
+
         private class PluginLoadContext : AssemblyLoadContext
         {
             private readonly AssemblyDependencyResolver _resolver;
@@ -193,11 +192,11 @@ namespace Editor.Layers
             _actorsSerialized.Clear();
         }
 
-        public override async void OnEvent(EventType currentEvent, object value)
+        public override void OnEvent(EventType currentEvent, object value)
         {
             if (currentEvent == EventType.WindowFocusEnter)
             {
-                await _gameAssemblyBuilder.BuildAsync();
+                BuildSystem.BuildAsync(PlatformBuild.Editor);
             }
         }
 

@@ -12,7 +12,6 @@ namespace Editor
 {
     internal class EditorIOLayer : IOLayer
     {
-        private const string PROJECT_FOLDER_NAME = "Editor";
         private DevModeDisk _devDisk = new();
         private static EditorIOLayer _instance;
         public static EditorIOLayer Instance => _instance; // Dirty, please remove.
@@ -23,7 +22,6 @@ namespace Editor
 
         public override void Initialize()
         {
-            InitializePaths();
             ImportAssets();
 
             InitializeIO(_devDisk, new Dictionary<AssetType, AssetBuilderBase>()
@@ -38,13 +36,6 @@ namespace Editor
                 { AssetType.AnimationController, new AnimationControllerAssetBuilderEditor() },
                 { AssetType.Material, new MaterialAssetBuilderEditor() },
             });
-        }
-
-        private void InitializePaths()
-        {
-            var assemblyDir = Paths.ClearPathSeparation(Path.GetDirectoryName(AppContext.BaseDirectory)!);
-            var root = Path.Combine(assemblyDir.Substring(0, assemblyDir.LastIndexOf(PROJECT_FOLDER_NAME)), Paths.GAME_FOLDER_NAME);
-            new GameCooker.GameProject().Initialize(new GameCooker.ProjectConfig() { ProjectFolderRoot = root });
         }
 
         private void ImportAssets()

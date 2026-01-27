@@ -1,4 +1,4 @@
-﻿using Editor.AssemblyHotReload;
+﻿using Editor.Build;
 using ImGuiNET;
 using System;
 using System.Linq;
@@ -32,7 +32,7 @@ namespace Editor.Views
             ImGui.PushStyleColor(ImGuiCol.WindowBg, new Vector4(0.13f, 0.13f, 0.13f, 1.0f));
             OnBeginWindow("FooterSpace", footerFlags, false);
 
-            if (GameAssemblyBuilder.IsBuilding)
+            if (BuildSystem.IsAnyBuilding)
             {
                 ImGui.Text("Compiling...");
             }

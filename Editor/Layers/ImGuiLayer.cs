@@ -1,5 +1,4 @@
-﻿using Editor.AssemblyHotReload;
-using Editor.Rendering;
+﻿using Editor.Rendering;
 using Editor.Utils;
 using Editor.Views;
 using Engine;

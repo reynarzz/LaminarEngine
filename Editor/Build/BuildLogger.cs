@@ -7,7 +7,7 @@ using Editor.Views;
 using Engine;
 using Microsoft.Build.Framework;
 
-namespace Editor.AssemblyHotReload
+namespace Editor
 {
     internal class BuildLogger : ILogger
     {
@@ -43,7 +43,7 @@ namespace Editor.AssemblyHotReload
                     ConsoleEditorView.AddWarning(warn); // Remove from here
                 }
             };
-            //source.StatusEventRaised += (_, e) => Debug.Info($"Status: {e.Message}");
+            source.StatusEventRaised += (_, e) => Debug.Info($"{e.Message}");
         }
 
         public void Shutdown()

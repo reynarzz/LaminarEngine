@@ -1,4 +1,4 @@
-﻿using Editor.AssemblyHotReload;
+﻿using Editor.Build;
 using Editor.Layers;
 using Editor.Utils;
 using Engine;
@@ -43,7 +43,7 @@ namespace Editor.Views
             ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Vector2.Zero);
             ImGui.PushStyleColor(ImGuiCol.WindowBg, new Vector4(0.13f, 0.13f, 0.13f, 1.0f));
             OnBeginWindow("ActionBarView", flags, false);
-            ImGui.BeginDisabled((GameAssemblyBuilder.IsBuilding && !Application.IsInPlayMode) || GameAssemblyBuilder.IsError);
+            ImGui.BeginDisabled((BuildSystem.IsAnyBuilding && !Application.IsInPlayMode) /*|| BuildSystem.IsError*/);
 
             var playIcon = Application.IsInPlayMode ? EditorTextureDatabase.GetIconImGui(Utils.EditorIcon.Stop) :
                                                       EditorTextureDatabase.GetIconImGui(Utils.EditorIcon.Play);

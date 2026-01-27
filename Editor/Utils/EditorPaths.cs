@@ -20,7 +20,7 @@ namespace Editor
         internal const string GAME_PROJECT_FULL_NAME = GAME_PROJECT_NAME + PROJECT_EXTENSION;
         internal const string GAME_BUILD_TYPE = "Debug";
         internal const string SHIP_FOLDER_NAME = "_Ship";
-
+        
         internal const string ANDROID_PROJECT_NAME = "Entry_Android";
         internal const string ANDROID_PROJECT_FULL_NAME = ANDROID_PROJECT_NAME + PROJECT_EXTENSION;
 
@@ -35,6 +35,7 @@ namespace Editor
 
         public static string ShipFolderRoot => Path.Combine(AppRoot, SHIP_FOLDER_NAME);
         public static string ShipAndroidFolderRoot => Path.Combine(AppRoot, SHIP_FOLDER_NAME, "android");
+        public static string AndroidProjectAssetsFolderRoot => Path.Combine(AndroidProjectRoot, "Assets");
         public static string ShipWin32FolderRoot => Path.Combine(AppRoot, SHIP_FOLDER_NAME, "win32");
         public static string ShipMacOsFolderRoot => Path.Combine(AppRoot, SHIP_FOLDER_NAME, "osx");
         public static string ShipIOSFolderRoot => Path.Combine(AppRoot, SHIP_FOLDER_NAME, "ios");
