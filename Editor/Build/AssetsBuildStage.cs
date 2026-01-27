@@ -64,10 +64,5 @@ namespace Editor.Build
                 Data = assetDatabaseInfo
             };
         }
-
-        public override bool ShouldBuild()
-        {
-            return true;
-        }
     }
 }

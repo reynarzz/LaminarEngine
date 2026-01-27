@@ -64,10 +64,5 @@ namespace Editor.Build
         {
             return _targets;
         }
-
-        public override bool ShouldBuild()
-        {
-            return true;
-        }
     }
 }
