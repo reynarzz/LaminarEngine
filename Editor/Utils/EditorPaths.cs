@@ -13,6 +13,7 @@ namespace Editor
         internal static string AppRoot { get; }
         internal static string DataRoot { get; }
         internal static string GameRoot { get; }
+        internal static string SharedTypesRoot { get; }
         public static string AndroidProjectRoot { get; }
         public static string DesktopProjectRoot { get; }
 
@@ -50,6 +51,10 @@ namespace Editor
         public static string ShipIOSFolderRoot => Path.Combine(ShipFolderRoot, "ios");
         public static string ShipLinuxFolderRoot => Path.Combine(ShipFolderRoot, "linux");
 
+        public static string EngineNativesFolderRoot => Path.Combine(AppRoot, "Engine", "Third", "Native", "bin");
+        public static string EngineWin32NativesFolderRoot => Path.Combine(EngineNativesFolderRoot, "win");
+
+        
         static EditorPaths()
         {
             var assemblyDir = Paths.ClearPathSeparation(Path.GetDirectoryName(AppContext.BaseDirectory)!);
@@ -60,6 +65,7 @@ namespace Editor
             GameRoot = Paths.ClearPathSeparation(Path.Combine(AppRoot, Paths.GAME_FOLDER_NAME));
             AndroidProjectRoot = Paths.ClearPathSeparation(Path.Combine(AppRoot, "Platforms/Android"));
             DesktopProjectRoot = Paths.ClearPathSeparation(Path.Combine(AppRoot, "Platforms/Desktop"));
+            SharedTypesRoot = Paths.ClearPathSeparation(Path.Combine(AppRoot, "SharedTypes"));
         }
 
         public static string GetGameFolderAbsolutePath(string path)

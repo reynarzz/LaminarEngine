@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Engine;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,18 @@ namespace Editor.Build
         public WindowsBuilder() : base([new WindowsProjectBuildStage(),
                                         new WindowsAssetsBuildStage()])
         {
+        }
+
+        protected override void OnBeforeBuild()
+        {
+            try
+            {
+                Directory.Delete(EditorPaths.ShipWin32FolderRoot, true);
+            }
+            catch (Exception e)
+            {
+                Debug.Warn(e.ToString());
+            }
         }
     }
 }

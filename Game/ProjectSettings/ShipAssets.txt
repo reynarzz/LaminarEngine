@@ -1,4 +1,7 @@
 Fonts/windows-bold[1].ttf
+Materials/Portal.material
+Shaders/Portal.shader
+Shaders/Portal_mobile.shader
 Shaders/ScreenVert.vert
 Shaders/Bloom/Bloom_BrightPass.frag
 Shaders/Bloom/Bloom_GaussianBlur.frag

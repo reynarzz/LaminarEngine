@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharedTypes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,8 +10,8 @@ namespace Editor.Build
     internal class WindowsProjectBuildStage : ProjectBuildStage
     {
         private readonly string[] _targets = ["Publish"];
-            
-        private readonly string[] _buildFilesExt = { ".exe",  }; // copy the dlls to data folder.
+
+        private readonly string[] _buildFilesExt = { ".exe", ".pdb" };
         public WindowsProjectBuildStage() : base(new BuildLogger()
         {
             DebugStatus = true
@@ -30,14 +31,16 @@ namespace Editor.Build
 
                 // Trimming
                 ["PublishTrimmed"] = "true",
-                ["TrimMode"] = "full", // link
-                                                              
+                ["TrimMode"] = "full", // or 'link'
+
                 // Output
                 ["PublishDir"] = EditorPaths.Win32PublishFolderRoot + "\\",
 
                 ["PublishSingleFile"] = "true",
                 ["IncludeNativeLibrariesForSelfExtract"] = "true",
                 ["EnableCompressionInSingleFile"] = "true",
+                // ["DefineConstants"] = "$(DefineConstants);WINDOWS;WIN32;DESKTOP"
+
             };
         }
 
@@ -45,13 +48,32 @@ namespace Editor.Build
         {
             Directory.CreateDirectory(EditorPaths.ShipWin32FolderRoot);
 
+            // Rename executable
+            var appName = "Game";
+            File.Move(Path.Combine(EditorPaths.Win32PublishFolderRoot, EditorPaths.DESKTOP_PROJECT_NAME + ".exe"),
+                      Path.Combine(EditorPaths.Win32PublishFolderRoot, $"{appName}.exe"), true);
+
+            // Copy build files
             foreach (var file in Directory.EnumerateFiles(EditorPaths.Win32PublishFolderRoot))
             {
                 if (_buildFilesExt.Contains(Path.GetExtension(file), StringComparer.OrdinalIgnoreCase))
                 {
-                    File.Copy(file, Path.Combine(EditorPaths.ShipWin32FolderRoot, "Game"), overwrite: true);
+                    File.Copy(file, Path.Combine(EditorPaths.ShipWin32FolderRoot, Path.GetFileName(file)), overwrite: true);
                 }
             }
+
+            // Copy assemblies: TODO: create a list of dependencies.
+            var assembliesFolder = Path.Combine(EditorPaths.Win32ShipGameDataFolderRoot, "Assemblies");
+            Directory.CreateDirectory(assembliesFolder);
+
+            // Copy glfw dll
+            string glfwDllName = "glfw3.dll";
+            File.Copy(Path.Combine(EditorPaths.EngineWin32NativesFolderRoot, glfwDllName), Path.Combine(assembliesFolder, glfwDllName), true);
+
+            // Copy miniaudio dll
+            string miniaudioDllName = "miniaudio.dll";
+            var miniaudioDllPath = Path.Combine(EditorPaths.SharedTypesRoot, "Third", "SoundFlow", "runtimes", "win-x64", "native", miniaudioDllName);
+            File.Copy(miniaudioDllPath, Path.Combine(assembliesFolder, miniaudioDllName), true);
         }
 
         protected override string GetCSProjPath()
@@ -62,11 +84,6 @@ namespace Editor.Build
         protected override string[] GetTargetsToBuild()
         {
             return _targets;
-        }
-
-        public override bool ShouldBuild()
-        {
-            return true;
         }
     }
 }
