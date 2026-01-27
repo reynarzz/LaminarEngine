@@ -9,7 +9,11 @@ namespace Editor.Build
     internal class AndroidProjectBuildStage : ProjectBuildStage
     {
         private readonly string[] _targets = ["SignAndroidPackage"];
-
+        public AndroidProjectBuildStage() : base(new BuildLogger()
+        {
+            DebugStatus = true
+        })
+        { }
         protected override Dictionary<string, string> GetBuildProperties()
         {
             return new()
@@ -45,6 +49,9 @@ namespace Editor.Build
             return _targets;
         }
 
-      
+        public override bool ShouldBuild()
+        {
+            return true;
+        }
     }
 }

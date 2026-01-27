@@ -1,4 +1,6 @@
-﻿using Engine.IO;
+﻿using Engine;
+using Engine.IO;
+using Engine.Layers;
 using GameCooker;
 using SharedTypes;
 using System;
@@ -27,15 +29,14 @@ namespace Editor.Build
         public override async Task<BuildStageResult> Execute()
         {
             var result = await base.Execute();
-
+            Debug.Log("Editor asset update");
             var assetDatabase = (AssetsDatabaseInfo)result.Data;
 
-            // Update database.
-            foreach (var guid in assetDatabase.UpdatedAssets)
+            await MainThreadDispatcher.EnqueueAsync(() =>
             {
-               EditorIOLayer.Database?.UpdateReloadAsset(guid);
-            }
-
+                EditorIOLayer.Instance.ReloadDisk(assetDatabase);
+            });
+           
             return new BuildStageResult()
             {
                 IsSuccess = true,

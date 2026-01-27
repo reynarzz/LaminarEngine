@@ -19,34 +19,40 @@ namespace Editor.Build
                 return new BuildResult()
                 {
                     IsSucess = true,
-                    DidBuild = false
+                    AnyStageSkippedBuild = true
                 };
             }
 
+            BuildResult buildResult = default;
+
             foreach (var stage in _buildStages)
             {
-                var result = await stage.Execute();
-
-                if (!result.IsSuccess)
+                if (stage.ShouldBuild())
                 {
-                    return new BuildResult()
+                    var result = await stage.Execute();
+
+                    if (!result.IsSuccess)
                     {
-                        DidBuild = false,
-                        IsSucess = false
-                    };
+                        return new BuildResult()
+                        {
+                            AnyStageSkippedBuild = false,
+                            IsSucess = false
+                        };
+                    }
+                }
+                else
+                {
+                    buildResult.AnyStageSkippedBuild = true;
                 }
             }
 
-            return new()
-            {
-                IsSucess = true,
-                DidBuild = true
-            };
+            buildResult.IsSucess = true;
+            return buildResult;
         }
 
         protected virtual void OnBeforeBuild() { }
         protected virtual void OnAfterBuild() { }
 
-        protected abstract bool IsBuildNeeded();
+        protected virtual bool IsBuildNeeded() { return true; }
     }
 }

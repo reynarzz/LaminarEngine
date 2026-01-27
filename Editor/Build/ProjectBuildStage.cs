@@ -1,5 +1,6 @@
 ﻿using Microsoft.Build.Evaluation;
 using Microsoft.Build.Execution;
+using Microsoft.Build.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,11 @@ namespace Editor.Build
     {
         private BuildParameters _parameters;
         private ProjectInstance _instance;
+        private readonly ILogger _logger;
+        protected ProjectBuildStage(ILogger logger)
+        {
+            _logger = logger;
+        }
 
         public sealed override async Task<BuildStageResult> Execute()
         {
@@ -21,7 +27,7 @@ namespace Editor.Build
             // Logger
             _parameters = new BuildParameters(projectCollection)
             {
-                Loggers = [new BuildLogger()]
+                Loggers = [_logger]
             };
 
             _instance = project.CreateProjectInstance();

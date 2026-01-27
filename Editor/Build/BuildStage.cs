@@ -16,5 +16,6 @@ namespace Editor.Build
     internal abstract class BuildStage
     {
         public abstract Task<BuildStageResult> Execute();
+        public abstract bool ShouldBuild();
     }
 }

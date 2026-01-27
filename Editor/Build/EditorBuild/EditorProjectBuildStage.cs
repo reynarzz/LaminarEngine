@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Engine;
+using Microsoft.Build.Framework;
+using SharedTypes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +12,13 @@ namespace Editor.Build
     internal class EditorProjectBuildStage : ProjectBuildStage
     {
         private readonly string[] _targets = ["Build"];
+
+        public EditorProjectBuildStage() : base(new BuildLogger()
+        {
+             DebugStatus = false
+        })
+        { }
+
         protected override Dictionary<string, string> GetBuildProperties()
         {
             return new()
@@ -30,6 +40,34 @@ namespace Editor.Build
         protected override string[] GetTargetsToBuild()
         {
             return _targets;
+        }
+
+        public override bool ShouldBuild()
+        {
+            var currentGameDllFolder = EditorPaths.HookFolderAbsolutePath;
+
+            if (!Directory.Exists(currentGameDllFolder))
+            {
+                Directory.CreateDirectory(currentGameDllFolder);
+                return true;
+            }
+
+            if (!File.Exists(EditorPaths.GameHookDLLAbsolutePath))
+            {
+                return true;
+            }
+
+            // Check all the files to verify of any changed.
+            var outputTime = File.GetLastWriteTimeUtc(EditorPaths.GameHookDLLAbsolutePath);
+
+            if (!File.Exists(EditorPaths.CompiledGameDllAbsolutePath))
+            {
+                Debug.Log($"Original '{EditorPaths.GAME_PROJECT_NAME}.dll' is non existent.");
+                return true;
+            }
+
+            var files = Directory.EnumerateFiles(Paths.GetAssetsFolderPath(), "*.cs", SearchOption.AllDirectories);
+            return files.Any(f => File.GetLastWriteTimeUtc(f) > outputTime);
         }
     }
 }

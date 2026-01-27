@@ -101,12 +101,13 @@ namespace Editor
                 var anim2 = Deserializer.Deserialize<AnimationClip>(ir);
 
                 _materialTest = Assets.GetMaterial("Materials/Material.material");
-                Selector.Selected = _materialTest;
+                Selector.Selected = Assets.GetTexture("starkTileset.png");//_materialTest;
 
 
-                GenerateIconAndroidSizes(Assets.GetTexture("Icons/playerhead.png"), 
-                                         Assets.GetTexture("Icons/playerhead_foreground.png"), 
-                                         Assets.GetTexture("Icons/playerhead_background.png"));
+                //GenerateIconAndroidSizes(Assets.GetTexture("Icons/playerhead.png"), 
+                //                         Assets.GetTexture("Icons/playerhead_foreground.png"), 
+                //                         Assets.GetTexture("Icons/playerhead_background.png"));
+
 
                 //ExportSlicedSprites();
                 //var material = Assets.GetMaterial("__InternalAssets__/Materials/SpriteDefault.material");

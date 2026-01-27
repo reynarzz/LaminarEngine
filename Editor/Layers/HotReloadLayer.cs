@@ -34,7 +34,7 @@ namespace Editor.Layers
         {
             if (result.IsSucess && result.Platform == PlatformBuild.Editor)
             {
-                if (result.IsSucess || _gameAppAssembly == null)
+                if (!result.AnyStageSkippedBuild || _gameAppAssembly == null)
                 {
                     _canSwapDll = true;
                 }

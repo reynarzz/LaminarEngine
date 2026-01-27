@@ -12,6 +12,7 @@ namespace Editor
     internal class BuildLogger : ILogger
     {
         public LoggerVerbosity Verbosity { get; set; } = LoggerVerbosity.Normal;
+        public bool DebugStatus { get; set; }
         public string Parameters { get; set; }
 
         public void Initialize(IEventSource source)
@@ -43,7 +44,11 @@ namespace Editor
                     ConsoleEditorView.AddWarning(warn); // Remove from here
                 }
             };
-            source.StatusEventRaised += (_, e) => Debug.Info($"{e.Message}");
+
+            if (DebugStatus)
+            {
+                source.StatusEventRaised += (_, e) => Debug.Info($"{e.Message}");
+            }
         }
 
         public void Shutdown()

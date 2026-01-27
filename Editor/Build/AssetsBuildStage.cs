@@ -42,10 +42,16 @@ namespace Editor.Build
             {
                 // TODO: The editor will walk through all the scenes recursively and detect which assets are used,
                 //       so no manual list  will be needed.
-
                 // --_cookOptions.MatchingFiles = default;
-            }
 
+                // NOTE: This is only provisional.
+                var releaseAssetsList = default(string[]);
+                if (File.Exists(Paths.GetShipAssetsFilePath()))
+                {
+                    releaseAssetsList = File.ReadAllText(Paths.GetShipAssetsFilePath())?.Split('\n', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+                }
+                _cookOptions.MatchingFiles = releaseAssetsList;
+            }
         }
 
         public override async Task<BuildStageResult> Execute()
@@ -57,6 +63,11 @@ namespace Editor.Build
                 IsSuccess = true,
                 Data = assetDatabaseInfo
             };
+        }
+
+        public override bool ShouldBuild()
+        {
+            return true;
         }
     }
 }

@@ -20,9 +20,10 @@ namespace Editor.Build
     public struct BuildResult
     {
         public bool IsSucess;
-        public bool DidBuild;
+        public bool AnyStageSkippedBuild;
         public PlatformBuild Platform;
     }
+
     internal class BuildSystem
     {
         internal static bool IsAnyBuilding { get; private set; } = false;
@@ -30,7 +31,6 @@ namespace Editor.Build
 
         private static readonly Dictionary<PlatformBuild, PlatformBuilder> _platformBuilders;
         private readonly static SynchronizationContext _mainContext;
-
         public static event Action<BuildResult> OnBuildCompleted;
         
         static BuildSystem()
@@ -47,6 +47,10 @@ namespace Editor.Build
 
         internal static Task BuildAsync(PlatformBuild platform)
         {
+            return BuildAsync(platform, null);
+        }
+        internal static Task BuildAsync(PlatformBuild platform, Action<BuildResult> resultCallback)
+        {
             if (IsAnyBuilding)
             {
                 return Task.CompletedTask;
@@ -61,7 +65,7 @@ namespace Editor.Build
                         IsAnyBuilding = true;
                         var platformBuildResult = await builder.Build();
                         platformBuildResult.Platform = platform;
-                        RaiseBuildCompleted(platformBuildResult);
+                        RaiseBuildCompleted(platformBuildResult, resultCallback);
                     }
                 }
                 catch(Exception e)
@@ -75,17 +79,27 @@ namespace Editor.Build
             });
         }
 
-        private static void RaiseBuildCompleted(BuildResult result)
+        private static void RaiseBuildCompleted(BuildResult result, Action<BuildResult> resultCallback)
         {
             var ctx = _mainContext;
 
             if (ctx != null)
             {
-                ctx.Post(_ => OnBuildCompleted?.Invoke(result), null);
+                ctx.Post(_ => 
+                { 
+                    OnBuildCompleted?.Invoke(result);
+                }, null);
+
+                ctx.Post(_ =>
+                {
+                    resultCallback?.Invoke(result);
+                }, null);
+
             }
             else
             {
                 OnBuildCompleted?.Invoke(result);
+                resultCallback?.Invoke(result);
             }
         }
     }

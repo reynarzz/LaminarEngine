@@ -103,8 +103,6 @@ namespace Editor
                 editorLayerManager.PublishEvent(focused ? EventType.WindowFocusEnter : EventType.WindowFocusExit, null);
             };
 
-            BuildSystem.BuildAsync(PlatformBuild.Android);
-
             while (!_win.ShouldClose)
             {
                 UpdateAll();

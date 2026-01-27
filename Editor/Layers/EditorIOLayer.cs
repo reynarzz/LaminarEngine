@@ -1,4 +1,5 @@
-﻿using Engine;
+﻿using Editor.Build;
+using Engine;
 using Engine.IO;
 using Engine.Layers;
 using SharedTypes;
@@ -15,6 +16,7 @@ namespace Editor
         private DevModeDisk _devDisk = new();
         private static EditorIOLayer _instance;
         public static EditorIOLayer Instance => _instance; // Dirty, please remove.
+
         public EditorIOLayer()
         {
             _instance = this;
@@ -22,8 +24,6 @@ namespace Editor
 
         public override void Initialize()
         {
-            ImportAssets();
-
             InitializeIO(_devDisk, new Dictionary<AssetType, AssetBuilderBase>()
             {
                 { AssetType.Texture, new TextureAssetBuilder() },
@@ -38,49 +38,21 @@ namespace Editor
             });
         }
 
-        private void ImportAssets()
+        internal void ReloadDisk(AssetsDatabaseInfo assetDatabase)
         {
-            var releaseAssetsList = default(string[]);
-            if (File.Exists(Paths.GetShipAssetsFilePath()))
-            {
-                releaseAssetsList = File.ReadAllText(Paths.GetShipAssetsFilePath())?.Split('\n', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
-            }
-            var assetDatabase = new GameCooker.AssetsCooker().CookAll(new GameCooker.CookOptions()
-            {
-                Type = GameCooker.CookingType.DevMode,
-                Platform = GameCooker.CookingPlatform.Windows,
-                AssetsFolderPath = Paths.GetAssetsFolderPath(),
-                ExportFolderPath = Paths.GetAssetDatabaseFolder(),
-                FileOptions = new GameCooker.CookFileOptions()
-                {
-                    CompressAllFiles = false,
-                    CompressionLevel = 12,
-                    EncryptAllFiles = false,
-                },
-                // TODO: The editor will walk through all the scenes recursively and detect which assets are used,
-                //       so no manual list  will be needed.
-                MatchingFiles = releaseAssetsList
-            });
+            _devDisk.Initialize();
+            Reload(_devDisk);
 
+            // Update database.
             foreach (var guid in assetDatabase.UpdatedAssets)
             {
                 Database?.UpdateReloadAsset(guid);
             }
         }
 
-        public override void OnEvent(EventType type, object value)
-        {
-            if(type == EventType.WindowFocusEnter)
-            {
-                Refresh();
-            }
-        }
-
         internal void Refresh()
         {
-            ImportAssets();
-            _devDisk.Initialize();
-            Reload(_devDisk);
+            BuildSystem.BuildAsync(PlatformBuild.Editor);
         }
     }
 }
