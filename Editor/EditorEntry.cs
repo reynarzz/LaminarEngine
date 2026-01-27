@@ -43,6 +43,7 @@ namespace Editor
     // Implement MaterialAssetBuilder.
     // load spriteAtlas from texture 2d metadata.
     // Write binary serializer for runtime build.
+    // -Asset ERROR: If I get an error importing the assets at editor launch, it means that the other layers ran before the importer finished.
 
     // Save Editor config:
     // Current loaded scene name.
