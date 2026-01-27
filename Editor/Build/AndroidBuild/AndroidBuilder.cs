@@ -12,10 +12,5 @@ namespace Editor.Build
                                         new AndroidProjectBuildStage()])
         {
         }
-
-        protected override bool IsBuildNeeded()
-        {
-            return true;
-        }
     }
 }

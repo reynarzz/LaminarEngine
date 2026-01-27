@@ -2,7 +2,7 @@
 
 namespace Editor.Build
 {
-    
+
     internal abstract class PlatformBuilder
     {
         private readonly BuildStage[] _buildStages;
@@ -23,6 +23,7 @@ namespace Editor.Build
                 };
             }
 
+            OnBeforeBuild();
             BuildResult buildResult = default;
 
             foreach (var stage in _buildStages)
@@ -33,11 +34,15 @@ namespace Editor.Build
 
                     if (!result.IsSuccess)
                     {
-                        return new BuildResult()
+                        buildResult = new BuildResult()
                         {
                             AnyStageSkippedBuild = false,
                             IsSucess = false
                         };
+
+                        OnAfterBuild(buildResult);
+
+                        return buildResult;
                     }
                 }
                 else
@@ -47,12 +52,13 @@ namespace Editor.Build
             }
 
             buildResult.IsSucess = true;
+
+            OnAfterBuild(buildResult);
             return buildResult;
         }
 
         protected virtual void OnBeforeBuild() { }
-        protected virtual void OnAfterBuild() { }
-
+        protected virtual void OnAfterBuild(BuildResult result) { }
         protected virtual bool IsBuildNeeded() { return true; }
     }
 }

@@ -118,9 +118,13 @@ namespace Editor.Views
             ImGui.SliderInt("Optimization Level", ref _dummyInt, 0, 3);
             ImGui.InputText("Output Path", ref _dummyString, 256);
 
-            if (ImGui.Button("Build android test"))
+            if (ImGui.Button("Build Android test"))
             {
                 BuildSystem.BuildAsync(PlatformBuild.Android);
+            }
+            if (ImGui.Button("Build Windows test"))
+            {
+                BuildSystem.BuildAsync(PlatformBuild.Windows);
             }
             ImGui.EndChild();
         }

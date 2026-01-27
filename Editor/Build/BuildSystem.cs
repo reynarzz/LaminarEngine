@@ -41,7 +41,8 @@ namespace Editor.Build
             _platformBuilders = new Dictionary<PlatformBuild, PlatformBuilder>()
             {
                 { PlatformBuild.Editor, new EditorBuilder() },
-                { PlatformBuild.Android, new AndroidBuilder() }
+                { PlatformBuild.Windows, new WindowsBuilder() },
+                { PlatformBuild.Android, new AndroidBuilder() },
             };
         }
 
