@@ -16,14 +16,13 @@ namespace Editor.AssemblyHotReload
         public event Action<bool, bool> OnBuildCompleted;
         private static SynchronizationContext _mainContext;
 
-        private ProjectCollection _pc;
         private ProjectInstance _instance;
         private BuildParameters _parameters;
 
         internal static bool IsBuilding { get; private set; } = false;
         internal static bool IsError { get; private set; } = false;
 
-        private readonly Dictionary<string, string> _globalProps = new()
+        private readonly Dictionary<string, string> _editorBuildProps = new()
         {
             ["MSBuildProjectExtensionsPath"] = @"Library/Build/obj/",
             ["BaseOutputPath"] = @"Library/Build/bin/",
@@ -33,13 +32,36 @@ namespace Editor.AssemblyHotReload
             ["DefineConstants"] = "DEBUG;EDITOR;DESKTOP"
         };
 
-        internal GameAssemblyBuilder()
+        private Dictionary<string, string> _androidBuildProps = new Dictionary<string, string>
+        {
+            ["Configuration"] = "Release",
+            ["Platform"] = "AnyCPU",
+            ["AndroidSdkDirectory"] = GetAndroidSdkPath(),
+            ["AndroidKeyStore"] = "false",
+            ["AndroidSigningKeyAlias"] = "myalias",
+            ["AndroidSigningKeyPass"] = "mypassword",
+            ["AndroidSigningStorePass"] = "storepassword",
+            ["OutputPath"] = EditorPaths.ShipAndroidFolderRoot
+        };
+
+        static GameAssemblyBuilder()
         {
             _mainContext = SynchronizationContext.Current;
-
             MSBuildLocator.RegisterDefaults();
         }
 
+        private static string GetAndroidSdkPath()
+        {
+            var sdkPath = Environment.GetEnvironmentVariable("ANDROID_SDK_ROOT") ?? Environment.GetEnvironmentVariable("ANDROID_HOME");
+
+            if (string.IsNullOrEmpty(sdkPath))
+                throw new Exception("Android SDK path not found. Check Visual Studio Android settings.");
+
+            return sdkPath;
+        }
+
+        protected virtual void OnBeforeBuild() { }
+        protected virtual void OnAfterBuild() { }
         internal Task BuildAsync()
         {
             if (IsBuilding)
@@ -51,7 +73,7 @@ namespace Editor.AssemblyHotReload
             {
                 try
                 {
-                    Build();
+                    Build(PlatformBuild.Editor);
                 }
                 finally
                 {
@@ -60,25 +82,82 @@ namespace Editor.AssemblyHotReload
             });
         }
 
-        internal void Build()
+        public enum PlatformBuild
+        {
+            Editor,
+            Windows,
+            MacOs,
+            Android,
+            IOS,
+            Linux
+        }
+
+        private ProjectCollection GetProjectCollection(PlatformBuild platform)
+        {
+            switch (platform)
+            {
+                case PlatformBuild.Editor:
+                    return new ProjectCollection(_editorBuildProps);
+                case PlatformBuild.Windows:
+                    break;
+                case PlatformBuild.MacOs:
+                    break;
+                case PlatformBuild.Android:
+                    return new ProjectCollection(_androidBuildProps);
+                case PlatformBuild.IOS:
+                    break;
+                case PlatformBuild.Linux:
+                    break;
+                default:
+                    return null;
+            }
+
+            return null;
+        }
+
+        private string GetProjectToBuildPath(PlatformBuild platform)
+        {
+            switch (platform)
+            {
+                case PlatformBuild.Editor:
+                    return Path.Combine(EditorPaths.GameRoot, EditorPaths.GAME_PROJECT_FULL_NAME);
+                case PlatformBuild.Windows:
+                    break;
+                case PlatformBuild.MacOs:
+                    break;
+                case PlatformBuild.Android:
+                    return Path.Combine(EditorPaths.AndroidProjectRoot, EditorPaths.ANDROID_PROJECT_FULL_NAME);
+                case PlatformBuild.IOS:
+                    break;
+                case PlatformBuild.Linux:
+                    break;
+                default:
+                    break;
+            }
+
+            return string.Empty;
+        }
+        internal void Build(PlatformBuild platform)
         {
             if (IsBuilding)
                 return;
 
             IsBuilding = true;
 
-            if (!IsBuildNeeded())
+            if (!IsBuildNeeded(platform))
             {
                 IsError = false;
                 RaiseBuildCompleted(true, false);
                 return;
             }
 
-            _pc = new ProjectCollection(_globalProps);
-            var project = _pc.LoadProject(Path.Combine(EditorPaths.GameRoot, EditorPaths.GAME_PROJECT_FULL_NAME));
+            var projectCollection = GetProjectCollection(platform);
+            Project project = null;
+            
+            project = projectCollection.LoadProject(GetProjectToBuildPath(platform));
 
             // Logger
-            _parameters = new BuildParameters(_pc)
+            _parameters = new BuildParameters(projectCollection)
             {
                 Loggers = [new BuildLogger()]
             };
@@ -93,8 +172,17 @@ namespace Editor.AssemblyHotReload
                 BuildManager.DefaultBuildManager.Build(_parameters, new BuildRequestData(_instance, ["Restore"]));
             }
 
-            // Compile
-            var result = BuildManager.DefaultBuildManager.Build(_parameters, new BuildRequestData(_instance, ["Build"]));
+            BuildResult result = null;
+
+            if (platform == PlatformBuild.Android)
+            {
+                result = BuildManager.DefaultBuildManager.Build(_parameters, new BuildRequestData(_instance, ["SignAndroidPackage"]));
+            }
+            else if (platform == PlatformBuild.Editor)
+            {
+                // Compile
+                result = BuildManager.DefaultBuildManager.Build(_parameters, new BuildRequestData(_instance, ["Build"]));
+            }
 
             if (result.OverallResult == BuildResultCode.Success)
             {
@@ -127,8 +215,11 @@ namespace Editor.AssemblyHotReload
             }
         }
 
-        private bool IsBuildNeeded()
+        private bool IsBuildNeeded(PlatformBuild platform)
         {
+            if (platform != PlatformBuild.Editor)
+                return true;
+
             var currentGameDllFolder = EditorPaths.HookFolderAbsolutePath;
 
             if (!Directory.Exists(currentGameDllFolder))
