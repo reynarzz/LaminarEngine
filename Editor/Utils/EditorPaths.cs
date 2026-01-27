@@ -34,8 +34,9 @@ namespace Editor
         internal static string GameHookDLLAbsolutePath => GetGameFolderAbsolutePath(HookGameDllRelativePath);
 
         public static string ShipFolderRoot => Path.Combine(AppRoot, SHIP_FOLDER_NAME);
-        public static string ShipAndroidFolderRoot => Path.Combine(AppRoot, SHIP_FOLDER_NAME, "android");
+        public static string ShipAndroidFolderRoot => Path.Combine(ShipFolderRoot, "android");
         public static string AndroidProjectAssetsFolderRoot => Path.Combine(AndroidProjectRoot, "Assets");
+        public static string AndroidPublishFolderRoot => Path.Combine(AndroidProjectRoot, "bin", "Publish");
         public static string ShipWin32FolderRoot => Path.Combine(AppRoot, SHIP_FOLDER_NAME, "win32");
         public static string ShipMacOsFolderRoot => Path.Combine(AppRoot, SHIP_FOLDER_NAME, "osx");
         public static string ShipIOSFolderRoot => Path.Combine(AppRoot, SHIP_FOLDER_NAME, "ios");
@@ -48,7 +49,7 @@ namespace Editor
 
             AppRoot = root;
             DataRoot = Path.Combine(root, "Editor/Data");
-            GameRoot = Paths.ClearPathSeparation(Path.Combine(AppRoot, "Game"));
+            GameRoot = Paths.ClearPathSeparation(Path.Combine(AppRoot, Paths.GAME_FOLDER_NAME));
             AndroidProjectRoot = Paths.ClearPathSeparation(Path.Combine(AppRoot, "Platforms/Android"));
         }
 

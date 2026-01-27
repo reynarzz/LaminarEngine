@@ -93,6 +93,7 @@ namespace Editor.Layers
                 new ObjectEditorView(),
                 new AnimatorEditorView(),
                 new RenderingStatsView(),
+                new PlatformBuildWindow()
                 // new ConsoleEditorView()
             };
         }

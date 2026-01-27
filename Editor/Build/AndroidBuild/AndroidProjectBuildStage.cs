@@ -9,11 +9,14 @@ namespace Editor.Build
     internal class AndroidProjectBuildStage : ProjectBuildStage
     {
         private readonly string[] _targets = ["SignAndroidPackage"];
+            
+        private readonly string[] _buildFilesExt = { ".aab", ".apk", ".idsig" };
         public AndroidProjectBuildStage() : base(new BuildLogger()
         {
             DebugStatus = true
         })
         { }
+
         protected override Dictionary<string, string> GetBuildProperties()
         {
             return new()
@@ -25,8 +28,21 @@ namespace Editor.Build
                 ["AndroidSigningKeyAlias"] = "myalias",
                 ["AndroidSigningKeyPass"] = "mypassword",
                 ["AndroidSigningStorePass"] = "storepassword",
-                ["OutputPath"] = EditorPaths.ShipAndroidFolderRoot
+                ["OutputPath"] = EditorPaths.AndroidPublishFolderRoot + "/"
             };
+        }
+
+        protected override void OnBuildSuccess()
+        {
+            Directory.CreateDirectory(EditorPaths.ShipAndroidFolderRoot);
+
+            foreach (var file in Directory.EnumerateFiles(EditorPaths.AndroidPublishFolderRoot))
+            {
+                if (_buildFilesExt.Contains(Path.GetExtension(file), StringComparer.OrdinalIgnoreCase))
+                {
+                    File.Copy(file, Path.Combine(EditorPaths.ShipAndroidFolderRoot, Path.GetFileName(file)), overwrite: true);
+                }
+            }
         }
 
         private string GetAndroidSdkPath()

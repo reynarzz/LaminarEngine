@@ -42,12 +42,24 @@ namespace Editor.Build
 
             var result = BuildManager.DefaultBuildManager.Build(_parameters, new BuildRequestData(_instance, GetTargetsToBuild()));
 
-            return new BuildStageResult()
+            var buildResult = new BuildStageResult()
             {
                 IsSuccess = result.OverallResult == BuildResultCode.Success,
-
             };
+
+            if (buildResult.IsSuccess)
+            {
+                OnBuildSuccess();
+            }
+            else
+            {
+                OnBuildFailed();
+            }
+
+            return buildResult;
         }
+        protected virtual void OnBuildSuccess() { }
+        protected virtual void OnBuildFailed() { }
 
         protected abstract Dictionary<string, string> GetBuildProperties();
         protected abstract string GetCSProjPath();

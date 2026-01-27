@@ -9,6 +9,7 @@ using Engine.GUI;
 using Engine.IO;
 using Engine.Layers;
 using Engine.Layers.Input;
+using GameCooker;
 using GlmNet;
 using ImGuiNET;
 using SharedTypes;
@@ -41,7 +42,6 @@ namespace Editor
 
     // Assets:
     // Implement MaterialAssetBuilder.
-    // load spriteAtlas from texture 2d metadata.
     // Write binary serializer for runtime build.
     // -Asset ERROR: If I get an error importing the assets at editor launch, it means that the other layers ran before the importer finished.
 
@@ -57,11 +57,12 @@ namespace Editor
         private WindowStandalone _win;
         private GFSEngine _engine;
         private InputStandAlonePlatform _inputLayer;
-        private const string PROJECT_FOLDER_NAME = "Editor";
 
         internal void Init()
         {
             Application.IsInPlayMode = false;
+            GameProject.Initialize(new ProjectConfig() { ProjectFolderRoot = EditorPaths.GameRoot });
+
             NativeLogger.Init();
             EditorNatives.InitImAllGui();
 
@@ -82,7 +83,6 @@ namespace Editor
             RenderingLayer.OverlayOptions.Height = _win.PhysicalHeight;
 
             _inputLayer = new InputStandAlonePlatform();
-            InitializePaths();
 
             var editorLayerManager = new EditorLayersManager(_inputLayer, _win);
 
@@ -111,14 +111,6 @@ namespace Editor
 
             editorLayerManager.OnClose();
         }
-
-        private void InitializePaths()
-        {
-            var assemblyDir = Paths.ClearPathSeparation(Path.GetDirectoryName(AppContext.BaseDirectory)!);
-            var root = Path.Combine(assemblyDir.Substring(0, assemblyDir.LastIndexOf(PROJECT_FOLDER_NAME)), Paths.GAME_FOLDER_NAME);
-            new GameCooker.GameProject().Initialize(new GameCooker.ProjectConfig() { ProjectFolderRoot = root });
-        }
-
 
         private void HelpMenu()
         {
@@ -159,15 +151,22 @@ namespace Editor
             EditorMenu.PushMenu("Assets/Create/Animator Controller", () => { });
 
             // Actor
-            EditorMenu.PushMenu("Actor/Create Empty", () => { });
-            EditorMenu.PushMenu("Actor/Create Empty Child", () => { });
+            EditorMenu.PushMenu("Actor/Create Empty", () => { new Actor("Actor"); });
+            EditorMenu.PushMenu("Actor/Create Empty Child", () =>
+            {
+                if (Selector.SelectedTransform())
+                {
+                    new Actor("Actor").Transform.Parent = Selector.SelectedTransform();
+                }
+
+            });
 
             EditorMenu.AddSeparator("Actor", 2);
             EditorMenu.PushMenu("Actor/Box", () => { });
             EditorMenu.PushMenu("Actor/Sprite", () => { });
             EditorMenu.PushMenu("Actor/Audio Source", () => { });
 
-           
+
         }
 
         private void UpdateAll()
