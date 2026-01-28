@@ -38,7 +38,8 @@ namespace Editor
     // Performance fix:
     // Fix CollisionDispatcher Hashset use instead of dictionary.
     // UI performance is pretty bad, rewrite the entire UI system.
-
+    // -The serializer cannot correctly serialize Dictionary<value, BaseType> when instances of BaseType are generic: Child<T> : BaseType
+    //   this causes to Reflection.HasAnySerializedMemberWithType return false, when it has EObject.
 
     // Assets:
     // Implement MaterialAssetBuilder.

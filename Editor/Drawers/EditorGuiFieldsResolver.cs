@@ -1093,18 +1093,6 @@ namespace Editor.Utils
                     });
                     RenderItemsInColumns(items);
                 }
-                else if (valueType == typeof(Texture))
-                {
-                    //foreach (var guid in Assets.GetGuids(AssetType.Texture))
-                    //{
-                    //    var path = Assets.ResolvePath(guid);
-                    //    if (ImGui.Selectable($"{System.IO.Path.GetFileName(path)}##{guid}"))
-                    //    {
-                    //        setValue(Assets.GetTexture(path));
-                    //        ImGui.CloseCurrentPopup();
-                    //    }
-                    //}
-                }
                 else if (valueType == typeof(AudioClip))
                 {
                     //var audios = IOLayer.Database.Disk.GetAssetsInfo(SharedTypes.AssetType.Audio);
@@ -1127,7 +1115,29 @@ namespace Editor.Utils
                     });
                     RenderItemsInColumns(items);
                 }
+                else if (valueType.IsAssignableTo(typeof(Texture)))
+                {
+                    //foreach (var guid in Assets.GetGuids(AssetType.Texture))
+                    //{
+                    //    var path = Assets.ResolvePath(guid);
+                    //    if (ImGui.Selectable($"{System.IO.Path.GetFileName(path)}##{guid}"))
+                    //    {
+                    //        setValue(Assets.GetTexture(path));
+                    //        ImGui.CloseCurrentPopup();
+                    //    }
+                    //}
+
+                    var assets = IOLayer.Database.Disk.GetAssetsInfo(AssetType.Texture);
+                    var items = assets.Select(a =>
+                    {
+                        var (id, info) = a;
+                        string label = $"{Path.GetFileName(info.Path)}##{id}";
+                        return (label, (Action)(() => setValue(Assets.GetTexture(info.Path))));
+                    });
+                    RenderItemsInColumns(items);
+                }
             }
+         
             else if (valueType == typeof(Sprite))
             {
                 //var assets = IOLayer.Database.Disk.GetAssetsInfo(SharedTypes.AssetType.Texture);
@@ -1197,6 +1207,7 @@ namespace Editor.Utils
                     }
                 }
             }
+
             ImGui.EndPopup();
         }
 

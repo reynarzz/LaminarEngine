@@ -19,6 +19,8 @@ namespace Editor
 
         internal const string GAME_PROJECT_NAME = "Game";
         internal const string PROJECT_EXTENSION = ".csproj";
+        internal const string EDITOR_DATA_EXTENSION = ".dat";
+
         internal const string GAME_PROJECT_FULL_NAME = GAME_PROJECT_NAME + PROJECT_EXTENSION;
         internal const string GAME_BUILD_TYPE = "Debug";
         internal const string SHIP_FOLDER_NAME = "_Ship";
@@ -55,7 +57,7 @@ namespace Editor
         public static string EngineNativesFolderRoot => Path.Combine(AppRoot, "Engine", "Third", "Native", "bin");
         public static string EngineWin32NativesFolderRoot => Path.Combine(EngineNativesFolderRoot, "win");
 
-        
+
         static EditorPaths()
         {
             var assemblyDir = Paths.ClearPathSeparation(Path.GetDirectoryName(AppContext.BaseDirectory)!);

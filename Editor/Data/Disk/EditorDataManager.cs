@@ -1,4 +1,7 @@
 ﻿using Editor.Build;
+using Editor.Serialization;
+using Editor.Utils;
+using SharedTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +19,19 @@ namespace Editor.Data
         {
             // TODO: Save all unsaved data to disk.
 
+            SaveBuildSettings();
+        }
+
+        private static void SaveBuildSettings()
+        {
+            WriteProjectData("BuildSettings", _buildSettingsData);
+        }
+
+        private static void WriteProjectData(string name, object data)
+        {
+            var projectSettings = Paths.GetProjectSettingsFolder();
+            var json = EditorJsonUtils.Serialize(Serializer.Serialize(data));
+            File.WriteAllText(Path.Combine(projectSettings, $"{name}{EditorPaths.EDITOR_DATA_EXTENSION}"), json);
         }
     }
 }
