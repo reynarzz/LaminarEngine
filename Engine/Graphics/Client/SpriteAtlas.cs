@@ -65,7 +65,7 @@ namespace Engine
             }
             if (_textureMeta.AtlasData.ChunksCount <= index)
             {
-                Debug.Error("Invalid sprite index. Out of range");
+                Debug.Error($"Invalid sprite index '{index}'. Out of range. Max'{_textureMeta.AtlasData.ChunksCount}'");
                 return null;
             }
 

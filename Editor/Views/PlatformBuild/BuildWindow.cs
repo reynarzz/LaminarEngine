@@ -1,5 +1,6 @@
 ﻿using Editor.Build;
 using Editor.Data;
+using Editor.Utils;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Editor.Views
 {
-    internal class PlatformBuildWindow : EditorWindow
+    internal class BuildWindow : EditorWindow
     {
         private int _selectedPlatform = 0;
 
@@ -21,14 +22,14 @@ namespace Editor.Views
 
         private readonly string[] _platforms;
         private Dictionary<PlatformBuild, PlatformBuildSettingsDrawer> _drawers;
-        public PlatformBuildWindow() : base("Window/Build")
+        public BuildWindow() : base("Window/Build")
         {
             _platforms = Enum.GetNames<PlatformBuild>().Skip(1).ToArray();
             _drawers = new()
             {
                 { PlatformBuild.Windows, new WindowsBuildDrawer() },
                 { PlatformBuild.Android, new AndroidBuildDrawer() },
-                
+
             };
         }
 
@@ -106,6 +107,8 @@ namespace Editor.Views
 
             for (int i = 0; i < _platforms.Length; i++)
             {
+                ImGui.Image(GetPlatformIcon((PlatformBuild)(i + 1)), new Vector2(16, 16), new Vector2(0, 1), new Vector2(1, 0));
+                ImGui.SameLine();
                 if (ImGui.Selectable(_platforms[i], _selectedPlatform == i))
                 {
                     _selectedPlatform = i;
@@ -113,23 +116,43 @@ namespace Editor.Views
             }
 
             ImGui.EndChild();
-
         }
+
+      
         private void RightPane(Vector2 contentAvail)
         {
-            ImGui.BeginChild("ConfigPane", new Vector2(0, contentAvail.Y), ImGuiChildFlags.None);
+            ImGui.BeginChild("ConfigPane", new Vector2(0, contentAvail.Y), ImGuiChildFlags.None, ImGuiWindowFlags.NoMove |
+                                                                                                 ImGuiWindowFlags.NoDocking);
 
-            ImGui.Text($"Configuration: {_platforms[_selectedPlatform]}");
-            ImGui.Separator();
-
+            bool isValidPlatformBuild = false;
             if (_drawers.TryGetValue(GetSelectedPlatform(), out var drawer))
             {
-                drawer.OnDraw(EditorDataManager.BuildSettings.GetBuildSettings(GetSelectedPlatform()));
+                isValidPlatformBuild = true;
+            }
 
-                if (ImGui.Button($"Build {GetSelectedPlatform()}"))
+            ImGui.Image(GetPlatformIcon(GetSelectedPlatform()), new Vector2(32, 32), new Vector2(0, 1), new Vector2(1, 0));
+            ImGui.SameLine();
+            var title = GetSelectedPlatform().ToString();
+            var size = ImGui.CalcTextSize(title);
+            var cursorY = ImGui.GetCursorPosY();
+
+            ImGui.SetCursorPosY(cursorY + size.Y * 0.5f);
+            ImGui.Text(title);
+            if (isValidPlatformBuild)
+            {
+                ImGui.SameLine();
+
+                if (ImGui.Button($"Build {GetSelectedPlatform()}", new Vector2(100, 23)))
                 {
                     BuildSystem.BuildAsync(GetSelectedPlatform());
                 }
+
+            }
+            ImGui.Separator();
+
+            if (isValidPlatformBuild)
+            {
+                drawer.OnDraw(EditorDataManager.BuildSettings.GetBuildSettings(GetSelectedPlatform()));
             }
             else
             {
@@ -142,6 +165,26 @@ namespace Editor.Views
         private PlatformBuild GetSelectedPlatform()
         {
             return (PlatformBuild)(_selectedPlatform + 1);
+        }
+        private nint GetPlatformIcon(PlatformBuild platform)
+        {
+            switch (platform) 
+            {
+                case PlatformBuild.Windows:
+                    return EditorTextureDatabase.GetIconImGui(EditorIcon.WindowsSmall);
+                case PlatformBuild.MacOs:
+                    return EditorTextureDatabase.GetIconImGui(EditorIcon.AppleSmall);
+                case PlatformBuild.Android:
+                    return EditorTextureDatabase.GetIconImGui(EditorIcon.AndroidSmall);
+                case PlatformBuild.IOS:
+                    return EditorTextureDatabase.GetIconImGui(EditorIcon.AppleSmall);
+                case PlatformBuild.Linux:
+                    return EditorTextureDatabase.GetIconImGui(EditorIcon.LinuxSmall);
+                default:
+                    break;
+            }
+
+            return 0;
         }
     }
 }

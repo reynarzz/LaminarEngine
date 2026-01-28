@@ -27,6 +27,7 @@ namespace Editor
         internal const string DESKTOP_PROJECT_NAME = "Entry_Desktop";
         internal const string ANDROID_PROJECT_FULL_NAME = ANDROID_PROJECT_NAME + PROJECT_EXTENSION;
         internal const string DESKTOP_PROJECT_FULL_NAME = DESKTOP_PROJECT_NAME + PROJECT_EXTENSION;
+        internal const string WIN32_DATA_SHIP_FOLDER_NAME = "Data";
 
         internal static string HookFolderRelativePath => $@"Library/Build/bin/{GAME_BUILD_TYPE}/Hook";
         internal static string NewGameDllRelativePath => $@"Library/Build/bin/{GAME_BUILD_TYPE}/{GAME_PROJECT_NAME}.dll";
@@ -38,7 +39,7 @@ namespace Editor
         internal static string GameHookDLLAbsolutePath => GetGameFolderAbsolutePath(HookGameDllRelativePath);
 
         public static string ShipFolderRoot => Path.Combine(AppRoot, SHIP_FOLDER_NAME);
-        public static string ShipAndroidFolderRoot => Path.Combine(ShipFolderRoot, "android");
+        public static string AndroidShipFolderRoot => Path.Combine(ShipFolderRoot, "android");
         public static string AndroidProjectAssetsFolderRoot => Path.Combine(AndroidProjectRoot, "Assets");
         public static string AndroidPublishFolderRoot => Path.Combine(AndroidProjectRoot, "bin", "Publish");
         public static string DesktopPublishFolderRoot => Path.Combine(DesktopProjectRoot, "bin", "Publish");

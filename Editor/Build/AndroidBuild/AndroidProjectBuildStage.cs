@@ -17,7 +17,7 @@ namespace Editor.Build
         internal const string INSTALL_TARGET = "Install";
         internal const string START_TARGET = "Start";
 
-        
+
     }
     internal class AndroidProjectBuildStage : ProjectBuildStage
     {
@@ -32,7 +32,7 @@ namespace Editor.Build
 
         protected override Dictionary<string, string> GetBuildProperties()
         {
-            var settings = GetBuildSettings();
+            var settings = GetBuildSettings<AndroidBuildSettings>(PlatformBuild.Android);
             var buildTypeSettings = settings.GetCurrentBuildTypeSettings();
 
             CurrentOutputPath = string.Empty;
@@ -66,12 +66,12 @@ namespace Editor.Build
 
         protected override void OnBeforeBuild()
         {
-            var buildTypeSettings = GetBuildSettings().GetCurrentBuildTypeSettings();
+            var buildTypeSettings = GetBuildSettings<AndroidBuildSettings>(PlatformBuild.Android).GetCurrentBuildTypeSettings();
             UpdateAndroidAppName(buildTypeSettings.ApplicationName);
         }
         protected override void OnBuildSuccess()
         {
-            var rootOutputFolder = EditorPaths.ShipAndroidFolderRoot;
+            var rootOutputFolder = EditorPaths.AndroidShipFolderRoot;
             if (!string.IsNullOrEmpty(CurrentOutputPath))
             {
                 rootOutputFolder = CurrentOutputPath;
@@ -105,7 +105,7 @@ namespace Editor.Build
 
         protected override string[] GetTargetsToBuild()
         {
-            var settings = GetBuildSettings();
+            var settings = GetBuildSettings<AndroidBuildSettings>(PlatformBuild.Android);
 
             if (settings.LaunchAfterBuild)
             {
@@ -137,11 +137,6 @@ namespace Editor.Build
 	<string name=""app_name"">{escapedName}</string>
 	<string name=""app_text"">{escapedName}</string>
 </resources>";
-        }
-
-        private AndroidBuildSettings GetBuildSettings()
-        {
-            return EditorDataManager.BuildSettings.GetBuildSettings(PlatformBuild.Android) as AndroidBuildSettings;
         }
     }
 }

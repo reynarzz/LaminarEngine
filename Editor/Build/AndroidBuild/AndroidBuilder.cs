@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Engine;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,24 @@ namespace Editor.Build
         public AndroidBuilder() : base([new AndroidAssetsBuildStage(),
                                         new AndroidProjectBuildStage()])
         {
+        }
+
+        protected override void OnBeforeBuild()
+        {
+            void PerformOp(Action op)
+            {
+                try
+                {
+                    op();
+                }
+                catch (Exception e)
+                {
+                    Debug.Warn(e.ToString());
+                }
+            }
+
+            PerformOp(() => Directory.Delete(EditorPaths.AndroidShipFolderRoot, true));
+            PerformOp(() => Directory.Delete(EditorPaths.AndroidPublishFolderRoot, true));
         }
 
         protected override void OnAfterBuild(BuildResult result)

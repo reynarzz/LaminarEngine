@@ -1,4 +1,5 @@
-﻿using SharedTypes;
+﻿using GlmNet;
+using SharedTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,9 @@ namespace Editor.Build
         private readonly string[] _targets = ["Publish"];
 
         private readonly string[] _buildFilesExt = { ".exe", ".pdb" };
+
+        public string CurrentOutputPath { get; private set; }
+
         public WindowsProjectBuildStage() : base(new BuildLogger()
         {
             DebugStatus = true
@@ -20,9 +24,19 @@ namespace Editor.Build
 
         protected override Dictionary<string, string> GetBuildProperties()
         {
+            var settings = GetBuildSettings<WindowsBuildSettings>(PlatformBuild.Windows);
+            var buildTypeSettings = settings.GetCurrentBuildTypeSettings();
+
+            CurrentOutputPath = string.Empty;
+
+            if (!string.IsNullOrEmpty(buildTypeSettings.OutputPath))
+            {
+                CurrentOutputPath = Paths.ClearPathSeparation(buildTypeSettings.OutputPath);
+            }
+
             return new()
             {
-                ["Configuration"] = "Release",
+                ["Configuration"] = settings.Type == BuildType.Release ? "Release" : "Debug",
                 ["Platform"] = "AnyCPU",
 
                 // Publish settings
@@ -42,40 +56,53 @@ namespace Editor.Build
                 // ["DefineConstants"] = "$(DefineConstants);WINDOWS;WIN32;DESKTOP"
 
                 // Metadata
-                ["Company"] = "My Company LLC",
-                ["Product"] = "My Game",
-                ["Description"] = "My Game Description",
-                ["Authors"] = "My Company LLC",
+                ["Company"] = buildTypeSettings.Company,
+                ["Product"] = buildTypeSettings.ApplicationName,
+                ["Description"] = buildTypeSettings.Description,
+                ["Authors"] = buildTypeSettings.Authors,
 
-                ["AssemblyTitle"] = "My Game",
-                ["AssemblyDescription"] = "My Game Description",
+                ["AssemblyTitle"] = buildTypeSettings.ApplicationName,
+                ["AssemblyDescription"] = buildTypeSettings.Description,
 
-                ["AssemblyVersion"] = "1.2.3.0",
-                ["FileVersion"] = "1.2.3.0",
-                ["InformationalVersion"] = "1.2.3"
+                ["AssemblyVersion"] = GetVersion( buildTypeSettings.Version),
+                ["FileVersion"] = GetVersion( buildTypeSettings.Version),
+                ["InformationalVersion"] = GetVersion(buildTypeSettings.Version)
             };
+        }
+
+        private string GetVersion(ivec2 version)
+        {
+            return $"{version.x}.{version.y}";
         }
 
         protected override void OnBuildSuccess()
         {
-            Directory.CreateDirectory(EditorPaths.ShipWin32FolderRoot);
+            var rootOutputFolder = EditorPaths.ShipWin32FolderRoot;
+            if (!string.IsNullOrEmpty(CurrentOutputPath))
+            {
+                rootOutputFolder = CurrentOutputPath;
+            }
+
+            Directory.CreateDirectory(rootOutputFolder);
+
+            var settings = GetBuildSettings<WindowsBuildSettings>(PlatformBuild.Windows);
+            var buildTypeSettings = settings.GetCurrentBuildTypeSettings();
 
             // Rename executable
-            var appName = "Game";
             File.Move(Path.Combine(EditorPaths.Win32PublishFolderRoot, EditorPaths.DESKTOP_PROJECT_NAME + ".exe"),
-                      Path.Combine(EditorPaths.Win32PublishFolderRoot, $"{appName}.exe"), true);
+                      Path.Combine(EditorPaths.Win32PublishFolderRoot, $"{buildTypeSettings.ApplicationName}.exe"), true);
 
             // Copy build files
             foreach (var file in Directory.EnumerateFiles(EditorPaths.Win32PublishFolderRoot))
             {
                 if (_buildFilesExt.Contains(Path.GetExtension(file), StringComparer.OrdinalIgnoreCase))
                 {
-                    File.Copy(file, Path.Combine(EditorPaths.ShipWin32FolderRoot, Path.GetFileName(file)), overwrite: true);
+                    File.Copy(file, Path.Combine(rootOutputFolder, Path.GetFileName(file)), overwrite: true);
                 }
             }
 
-            // Copy assemblies: TODO: create a list of dependencies.
-            var assembliesFolder = Path.Combine(EditorPaths.Win32ShipGameDataFolderRoot, "Assemblies");
+            // Copy assemblies: TODO: copy assemblies from the plugin folder.
+            var assembliesFolder = Path.Combine(rootOutputFolder, EditorPaths.WIN32_DATA_SHIP_FOLDER_NAME, "Assemblies");
             Directory.CreateDirectory(assembliesFolder);
 
             // Copy glfw dll

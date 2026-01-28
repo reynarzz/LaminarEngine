@@ -1,4 +1,5 @@
-﻿using GameCooker;
+﻿using Editor.Data;
+using GameCooker;
 using SharedTypes;
 using System;
 using System.Collections.Generic;
@@ -12,8 +13,8 @@ namespace Editor.Build
     {
         public WindowsAssetsBuildStage() : base(CookingPlatform.Windows, 
                                                 CookingType.ReleaseMode, 
-                                                AssetBuildType.OnlyMatchingFiles,
-                                                EditorPaths.Win32ShipGameDataFolderRoot,
+                                                AssetsBuildType.OnlyMatchingFiles,
+                                                GetDataOutputDir(),
                                                 new CookFileOptions()
                                                 {
                                                     CompressAllFiles = false,
@@ -21,6 +22,25 @@ namespace Editor.Build
                                                     EncryptAllFiles = true
                                                 })
         {
+        }
+
+        protected override void OnBeforeBuild()
+        {
+            OutputFolder = GetDataOutputDir();
+        }
+
+        private static string GetDataOutputDir()
+        {
+            var settings = EditorDataManager.BuildSettings.GetBuildSettings(PlatformBuild.Windows) as WindowsBuildSettings;
+
+            var buildTypeSettings = settings.GetCurrentBuildTypeSettings();
+
+            if (!string.IsNullOrEmpty(buildTypeSettings.OutputPath))
+            {
+                return Path.Combine(buildTypeSettings.OutputPath, EditorPaths.WIN32_DATA_SHIP_FOLDER_NAME);
+            }
+
+            return EditorPaths.Win32ShipGameDataFolderRoot;
         }
     }
 }

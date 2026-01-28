@@ -1,4 +1,5 @@
-﻿using Microsoft.Build.Evaluation;
+﻿using Editor.Data;
+using Microsoft.Build.Evaluation;
 using Microsoft.Build.Execution;
 using Microsoft.Build.Framework;
 using System;
@@ -67,5 +68,15 @@ namespace Editor.Build
         protected abstract Dictionary<string, string> GetBuildProperties();
         protected abstract string GetCSProjPath();
         protected abstract string[] GetTargetsToBuild();
+
+        protected T GetBuildSettings<T>(PlatformBuild platform) where T: PlatformBuildSettings
+        {
+            return GetBuildSettings(platform) as T;
+        }
+
+        protected PlatformBuildSettings GetBuildSettings(PlatformBuild platform) 
+        {
+            return EditorDataManager.BuildSettings.GetBuildSettings(platform);
+        }
     }
 }

@@ -9,9 +9,8 @@ namespace Editor.Data
 {
     internal static class EditorDataManager
     {
-        private static BuildSettings _buildSettingsData = new();
-        public static BuildSettings BuildSettings => _buildSettingsData;
-
+        private static BuildSettings _buildSettingsData;
+        public static BuildSettings BuildSettings => _buildSettingsData ?? (_buildSettingsData = new());
 
         public static void SaveAll()
         {

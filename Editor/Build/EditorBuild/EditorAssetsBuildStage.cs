@@ -15,7 +15,7 @@ namespace Editor.Build
     {
         internal EditorAssetsBuildStage() : base(CookingPlatform.Windows,
                                                  CookingType.DevMode,
-                                                 AssetBuildType.All,
+                                                 AssetsBuildType.All,
                                                  Paths.GetAssetDatabaseFolder(),
                                                  new CookFileOptions()
                                                  {

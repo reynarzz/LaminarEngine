@@ -8,7 +8,7 @@ using SharedTypes;
 
 namespace Editor.Build
 {
-    public enum AssetBuildType
+    public enum AssetsBuildType
     {
         All,
         OnlyMatchingFiles,
@@ -20,25 +20,49 @@ namespace Editor.Build
         private readonly AssetsCooker _assetsCooker;
         private readonly CookFileOptions _fileOptions;
 
-        public AssetsBuildStage(CookingPlatform platform, CookingType cookType, AssetBuildType buildType, string outPath, CookFileOptions options)
+        protected string OutputFolder { get; set; }
+        private readonly AssetsBuildType _assetsBuildType;
+        public AssetsBuildStage(CookingPlatform platform, CookingType cookType, AssetsBuildType buildType, string outPath, CookFileOptions options)
         {
             _assetsCooker = new AssetsCooker();
             _fileOptions = options;
+            _assetsBuildType = buildType;
+            OutputFolder = outPath;
+
             var assetsFolderPath = Paths.GetAssetsFolderPath();
             _cookOptions = new CookOptions()
             {
                 Type = cookType,
                 Platform = platform,
                 AssetsFolderPath = Paths.GetAssetsFolderPath(),
-                ExportFolderPath = outPath,
+                ExportFolderPath = OutputFolder,
                 FileOptions = options,
             };
+        }
 
-            if (buildType == AssetBuildType.All)
+        public override async Task<BuildStageResult> Execute()
+        {
+            OnBeforeBuild();
+            CollecMatchingFiles();
+
+            _cookOptions.ExportFolderPath = OutputFolder;
+
+            var assetDatabaseInfo = await _assetsCooker.CookAllAsync(_cookOptions);
+
+            return new BuildStageResult()
+            {
+                IsSuccess = true,
+                Data = assetDatabaseInfo
+            };
+        }
+
+        private void CollecMatchingFiles()
+        {
+            if (_assetsBuildType == AssetsBuildType.All)
             {
                 _cookOptions.MatchingFiles = null;
             }
-            else if (buildType == AssetBuildType.OnlyMatchingFiles)
+            else if (_assetsBuildType == AssetsBuildType.OnlyMatchingFiles)
             {
                 // TODO: The editor will walk through all the scenes recursively and detect which assets are used,
                 //       so no manual list  will be needed.
@@ -54,15 +78,6 @@ namespace Editor.Build
             }
         }
 
-        public override async Task<BuildStageResult> Execute()
-        {
-            var assetDatabaseInfo = await _assetsCooker.CookAllAsync(_cookOptions);
-
-            return new BuildStageResult()
-            {
-                IsSuccess = true,
-                Data = assetDatabaseInfo
-            };
-        }
+        protected virtual void OnBeforeBuild() { }
     }
 }

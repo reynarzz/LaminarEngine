@@ -12,7 +12,7 @@ namespace Editor.Build
     {
         public AndroidAssetsBuildStage() : base(CookingPlatform.Android, 
                                                 CookingType.ReleaseMode, 
-                                                AssetBuildType.OnlyMatchingFiles,
+                                                AssetsBuildType.OnlyMatchingFiles,
                                                 EditorPaths.AndroidProjectAssetsFolderRoot,
                                                 new CookFileOptions()
                                                 {

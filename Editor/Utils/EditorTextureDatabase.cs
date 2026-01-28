@@ -19,7 +19,11 @@ namespace Editor.Utils
         Material,
         Text,
         Scene,
-        ScriptFile
+        ScriptFile,
+        WindowsSmall,
+        AndroidSmall,
+        AppleSmall,
+        LinuxSmall
     }
 
     internal sealed class EditorTextureDatabase
@@ -40,6 +44,10 @@ namespace Editor.Utils
                 { EditorIcon.Text, LoadIconFromDisk("text_icon.png") },
                 { EditorIcon.Scene, LoadIconFromDisk("scene.png") },
                 { EditorIcon.ScriptFile, LoadIconFromDisk("csharp.png") },
+                { EditorIcon.WindowsSmall, LoadIconFromDisk("windows32x32.png") },
+                { EditorIcon.AndroidSmall, LoadIconFromDisk("android32x32.png") },
+                { EditorIcon.AppleSmall, LoadIconFromDisk("apple32x32.png") },
+                { EditorIcon.LinuxSmall, LoadIconFromDisk("linux32x32.png") },
             };
 
             _typesToIconTypeMapper = new Dictionary<Type, EditorIcon>()
