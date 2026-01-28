@@ -16,6 +16,6 @@ namespace Editor.Build
     internal abstract class BuildStage
     {
         public abstract Task<BuildStageResult> Execute();
-        public virtual bool ShouldBuild() { return true; }
+        public virtual bool ShouldExecute() { return true; }
     }
 }

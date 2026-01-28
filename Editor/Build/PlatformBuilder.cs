@@ -28,7 +28,7 @@ namespace Editor.Build
 
             foreach (var stage in _buildStages)
             {
-                if (stage.ShouldBuild())
+                if (stage.ShouldExecute())
                 {
                     var result = await stage.Execute();
 

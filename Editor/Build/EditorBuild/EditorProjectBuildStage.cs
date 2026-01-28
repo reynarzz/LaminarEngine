@@ -42,7 +42,7 @@ namespace Editor.Build
             return _targets;
         }
 
-        public override bool ShouldBuild()
+        public override bool ShouldExecute()
         {
             var currentGameDllFolder = EditorPaths.HookFolderAbsolutePath;
 

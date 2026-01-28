@@ -44,6 +44,7 @@ namespace Editor.Build
             {
                 ["Configuration"] = settings.Type == BuildType.Release ? "Release" : "Debug",
                 ["Platform"] = "AnyCPU",
+                ["TargetFramework"] = "net9.0-android",
                 ["AndroidSdkDirectory"] = GetAndroidSdkPath(),
                 ["AndroidKeyStore"] = "false",
                 ["AndroidSigningKeyAlias"] = settings.KeyAlias,
@@ -51,6 +52,9 @@ namespace Editor.Build
                 ["AndroidSigningStorePass"] = settings.StorePass,
                 ["OutputPath"] = EditorPaths.AndroidPublishFolderRoot + "/",
                 ["AndroidApplicationLabel"] = buildTypeSettings.ApplicationName,
+                ["PublishTrimmed"] = "true",
+                ["DefineConstants"] = "$(DefineConstants);ANDROID;MOBILE",
+                ["TrimMode"] = "link",
                 ["ApplicationId"] = packageName,
             };
         }
@@ -62,15 +66,9 @@ namespace Editor.Build
         }
         protected override void OnBuildSuccess()
         {
-            var rootOutputFolder = EditorPaths.AndroidShipFolderRoot;
+            
             var settings = GetBuildSettings<AndroidBuildSettings>(PlatformBuild.Android);
-            var buildTypeSettings = settings.GetCurrentBuildTypeSettings();
-
-            if (!string.IsNullOrEmpty(buildTypeSettings.OutputPath))
-            {
-                rootOutputFolder = Paths.ClearPathSeparation(buildTypeSettings.OutputPath);
-            }
-
+            var rootOutputFolder = GetOutputFolder(settings);
             Directory.CreateDirectory(rootOutputFolder);
 
             foreach (var file in Directory.EnumerateFiles(EditorPaths.AndroidPublishFolderRoot))
@@ -80,6 +78,17 @@ namespace Editor.Build
                     File.Copy(file, Path.Combine(rootOutputFolder, Path.GetFileName(file)), overwrite: true);
                 }
             }
+        }
+
+        internal static string GetOutputFolder(AndroidBuildSettings settings) // ugly
+        {
+            var rootOutputFolder = EditorPaths.AndroidShipFolderRoot;
+            var buildTypeSettings = settings.GetCurrentBuildTypeSettings();
+            if (!string.IsNullOrEmpty(buildTypeSettings.OutputPath))
+            {
+                rootOutputFolder = Paths.ClearPathSeparation(buildTypeSettings.OutputPath);
+            }
+            return rootOutputFolder;
         }
 
         private string GetAndroidSdkPath()

@@ -10,7 +10,8 @@ namespace Editor.Build
     internal class AndroidBuilder : PlatformBuilder
     {
         public AndroidBuilder() : base([new AndroidAssetsBuildStage(),
-                                        new AndroidProjectBuildStage()])
+                                        new AndroidProjectBuildStage(),
+                                        new AndroidInstallBuildStage()])
         {
         }
 

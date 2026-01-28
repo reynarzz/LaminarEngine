@@ -428,7 +428,7 @@
                   "InternalType": "System.Boolean, System.Private.CoreLib",
                   "Data": {
                     "$type": "System.Boolean, System.Private.CoreLib",
-                    "$value": false
+                    "$value": true
                   }
                 },
                 {
@@ -866,7 +866,7 @@
                   "InternalType": "Editor.Build.BuildType, Editor",
                   "Data": {
                     "$type": "Editor.Build.BuildType, Editor",
-                    "$value": "Release"
+                    "$value": "Debug"
                   }
                 },
                 {
