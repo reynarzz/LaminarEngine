@@ -1,16 +1,29 @@
-﻿using System;
+﻿using Editor.Data;
+using SharedTypes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Editor.Build
 {
+    public class AndroidConsts
+    {
+        internal const string DEFAULT_APP_NAME = "Application";
+        internal const string DEFAULT_APP_PACKAGE_NAME = "com.application.gfs";
+        internal const string BUILD_TARGET = "SignAndroidPackage";
+        internal const string INSTALL_TARGET = "Install";
+        internal const string START_TARGET = "Start";
+
+        
+    }
     internal class AndroidProjectBuildStage : ProjectBuildStage
     {
-        private readonly string[] _targets = ["SignAndroidPackage"];
-            
         private readonly string[] _buildFilesExt = { ".aab", ".apk", ".idsig" };
+        private string CurrentOutputPath { get; set; }
+
         public AndroidProjectBuildStage() : base(new BuildLogger()
         {
             DebugStatus = true
@@ -19,28 +32,58 @@ namespace Editor.Build
 
         protected override Dictionary<string, string> GetBuildProperties()
         {
+            var settings = GetBuildSettings();
+            var buildTypeSettings = settings.GetCurrentBuildTypeSettings();
+
+            CurrentOutputPath = string.Empty;
+
+            if (!string.IsNullOrEmpty(buildTypeSettings.OutputPath))
+            {
+                CurrentOutputPath = Paths.ClearPathSeparation(buildTypeSettings.OutputPath);
+            }
+
+            var packageName = AndroidConsts.DEFAULT_APP_PACKAGE_NAME;
+
+            if (!string.IsNullOrEmpty(buildTypeSettings.PackageName))
+            {
+                packageName = buildTypeSettings.PackageName;
+            }
+
             return new()
             {
-                ["Configuration"] = "Release",
+                ["Configuration"] = settings.Type == BuildType.Release ? "Release" : "Debug",
                 ["Platform"] = "AnyCPU",
                 ["AndroidSdkDirectory"] = GetAndroidSdkPath(),
                 ["AndroidKeyStore"] = "false",
-                ["AndroidSigningKeyAlias"] = "myalias",
-                ["AndroidSigningKeyPass"] = "mypassword",
-                ["AndroidSigningStorePass"] = "storepassword",
-                ["OutputPath"] = EditorPaths.AndroidPublishFolderRoot + "/"
+                ["AndroidSigningKeyAlias"] = settings.KeyAlias,
+                ["AndroidSigningKeyPass"] = settings.KeyPass,
+                ["AndroidSigningStorePass"] = settings.StorePass,
+                ["OutputPath"] = EditorPaths.AndroidPublishFolderRoot + "/",
+                ["AndroidApplicationLabel"] = buildTypeSettings.ApplicationName,
+                ["ApplicationId"] = packageName,
             };
         }
 
+        protected override void OnBeforeBuild()
+        {
+            var buildTypeSettings = GetBuildSettings().GetCurrentBuildTypeSettings();
+            UpdateAndroidAppName(buildTypeSettings.ApplicationName);
+        }
         protected override void OnBuildSuccess()
         {
-            Directory.CreateDirectory(EditorPaths.ShipAndroidFolderRoot);
+            var rootOutputFolder = EditorPaths.ShipAndroidFolderRoot;
+            if (!string.IsNullOrEmpty(CurrentOutputPath))
+            {
+                rootOutputFolder = CurrentOutputPath;
+            }
+
+            Directory.CreateDirectory(rootOutputFolder);
 
             foreach (var file in Directory.EnumerateFiles(EditorPaths.AndroidPublishFolderRoot))
             {
                 if (_buildFilesExt.Contains(Path.GetExtension(file), StringComparer.OrdinalIgnoreCase))
                 {
-                    File.Copy(file, Path.Combine(EditorPaths.ShipAndroidFolderRoot, Path.GetFileName(file)), overwrite: true);
+                    File.Copy(file, Path.Combine(rootOutputFolder, Path.GetFileName(file)), overwrite: true);
                 }
             }
         }
@@ -62,7 +105,43 @@ namespace Editor.Build
 
         protected override string[] GetTargetsToBuild()
         {
-            return _targets;
+            var settings = GetBuildSettings();
+
+            if (settings.LaunchAfterBuild)
+            {
+                return [AndroidConsts.BUILD_TARGET/*, AndroidConsts.INSTALL_TARGET, AndroidConsts.START_TARGET*/];
+            }
+
+            return [AndroidConsts.BUILD_TARGET];
+        }
+
+        private void UpdateAndroidAppName(string name)
+        {
+            var stringsXmlPath = Path.Combine(EditorPaths.AndroidProjectRoot, "Resources", "values", "strings.xml");
+            File.WriteAllText(stringsXmlPath, BuildAndroidStringsXml(name));
+        }
+        private string BuildAndroidStringsXml(string applicationName)
+        {
+            if (string.IsNullOrEmpty(applicationName))
+            {
+                applicationName = AndroidConsts.DEFAULT_APP_NAME;
+            }
+            var escapedName = SecurityElement.Escape(applicationName);
+
+            //return $@"<resources>
+            //            <string name=""app_name"">{escapedName}</string>
+            //            <string name=""app_text"">{escapedName}</string>
+            //          </resources>";
+
+            return $@"<resources>
+	<string name=""app_name"">{escapedName}</string>
+	<string name=""app_text"">{escapedName}</string>
+</resources>";
+        }
+
+        private AndroidBuildSettings GetBuildSettings()
+        {
+            return EditorDataManager.BuildSettings.GetBuildSettings(PlatformBuild.Android) as AndroidBuildSettings;
         }
     }
 }

@@ -21,6 +21,8 @@ namespace Editor.Build
 
         public sealed override async Task<BuildStageResult> Execute()
         {
+            OnBeforeBuild();
+
             var projectCollection = new ProjectCollection(GetBuildProperties());
             var project = projectCollection.LoadProject(GetCSProjPath());
 
@@ -58,6 +60,7 @@ namespace Editor.Build
 
             return buildResult;
         }
+        protected virtual void OnBeforeBuild() { }
         protected virtual void OnBuildSuccess() { }
         protected virtual void OnBuildFailed() { }
 

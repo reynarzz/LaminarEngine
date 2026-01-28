@@ -44,6 +44,7 @@ namespace Editor
     // Implement MaterialAssetBuilder.
     // Write binary serializer for runtime build.
     // -Asset ERROR: If I get an error importing the assets at editor launch, it means that the other layers ran before the importer finished.
+    // Metadata of every asset should be binary on final build.
 
     // Save Editor config:
     // Current loaded scene name.

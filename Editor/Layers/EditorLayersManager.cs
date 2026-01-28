@@ -1,4 +1,5 @@
-﻿using Editor.Layers;
+﻿using Editor.Build;
+using Editor.Layers;
 using Editor.Serialization;
 using Editor.Utils;
 using Engine;
@@ -133,15 +134,6 @@ namespace Editor
             }
 
             base.Update();
-        }
-
-        public enum AndroidIconSizes
-        {
-            mdpi = 48,
-            hdpi = 72,
-            xhdpi = 96,
-            xxhdpi = 144,
-            xxxhdpi = 192,
         }
 
         private void GenerateIconAndroidSizes(Texture defaultTexture, Texture foreground, Texture background)

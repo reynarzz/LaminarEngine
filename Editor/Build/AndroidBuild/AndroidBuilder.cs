@@ -12,5 +12,13 @@ namespace Editor.Build
                                         new AndroidProjectBuildStage()])
         {
         }
+
+        protected override void OnAfterBuild(BuildResult result)
+        {
+            if (result.IsSucess)
+            {
+                // TODO: Check if the user requested to install the app automatically, if so install it.
+            }
+        }
     }
 }

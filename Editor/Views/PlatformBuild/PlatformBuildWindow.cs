@@ -1,4 +1,5 @@
 ﻿using Editor.Build;
+using Editor.Data;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -12,25 +13,29 @@ namespace Editor.Views
     internal class PlatformBuildWindow : EditorWindow
     {
         private int _selectedPlatform = 0;
-       
+
         private float _leftPaneWidth = 150f;
         private const float SplitterWidth = 6f;
-        private readonly string[] _platforms =
-       {
-            "Windows",
-            "Linux",
-            "macOS",
-            "Android",
-            "iOS"
-        };
+        private float _splitterStartWidth;
+        private float _splitterAccumulatedDelta;
 
+        private readonly string[] _platforms;
+        private Dictionary<PlatformBuild, PlatformBuildSettingsDrawer> _drawers;
         public PlatformBuildWindow() : base("Window/Build")
         {
-            
+            _platforms = Enum.GetNames<PlatformBuild>().Skip(1).ToArray();
+            _drawers = new()
+            {
+                { PlatformBuild.Windows, new WindowsBuildDrawer() },
+                { PlatformBuild.Android, new AndroidBuildDrawer() },
+                
+            };
         }
+
         public override void OnDraw()
         {
-            if(OnBeginWindow("Build", ImGuiWindowFlags.Modal, true))
+            ImGui.BeginDisabled(BuildSystem.IsAnyBuilding);
+            if (OnBeginWindow("Build", ImGuiWindowFlags.Modal, true))
             {
                 var contentAvail = ImGui.GetContentRegionAvail();
 
@@ -44,14 +49,12 @@ namespace Editor.Views
             }
 
             OnEndWindow();
+            ImGui.EndDisabled();
         }
 
         private void Splitter(Vector2 contentAvail)
         {
-
-            var splitterId = ImGui.GetID("##Splitter");
             var splitterSize = new Vector2(SplitterWidth, contentAvail.Y);
-
             ImGui.InvisibleButton("##Splitter", splitterSize);
 
             bool hovered = ImGui.IsItemHovered();
@@ -62,10 +65,18 @@ namespace Editor.Views
                 ImGui.SetMouseCursor(ImGuiMouseCursor.ResizeEW);
             }
 
+            if (ImGui.IsItemActivated())
+            {
+                _splitterStartWidth = _leftPaneWidth;
+                _splitterAccumulatedDelta = 0.0f;
+            }
+
             if (active)
             {
-                _leftPaneWidth += ImGui.GetIO().MouseDelta.X;
-                _leftPaneWidth = Math.Clamp(_leftPaneWidth, 80f, contentAvail.X - 80f);
+                _splitterAccumulatedDelta += ImGui.GetIO().MouseDelta.X;
+
+                float newWidth = _splitterStartWidth + _splitterAccumulatedDelta;
+                _leftPaneWidth = Math.Clamp(newWidth, 80f, contentAvail.X - 80f);
             }
 
             var drawList = ImGui.GetWindowDrawList();
@@ -73,12 +84,10 @@ namespace Editor.Views
             var max = ImGui.GetItemRectMax();
 
             uint splitterColor = ImGui.GetColorU32(ImGuiCol.Separator);
-
             if (hovered)
             {
                 splitterColor = ImGui.GetColorU32(ImGuiCol.SeparatorHovered);
             }
-
             if (active)
             {
                 splitterColor = ImGui.GetColorU32(ImGuiCol.SeparatorActive);
@@ -86,12 +95,11 @@ namespace Editor.Views
 
             float centerX = (min.X + max.X) * 0.5f;
             drawList.AddLine(new Vector2(centerX, min.Y), new Vector2(centerX, max.Y), splitterColor, 1.0f);
-
         }
 
         private void LeftPane(Vector2 contentAvail)
         {
-            ImGui.BeginChild("PlatformsPane", new System.Numerics.Vector2(_leftPaneWidth, contentAvail.Y), ImGuiChildFlags.None);
+            ImGui.BeginChild("PlatformsPane", new Vector2(_leftPaneWidth, contentAvail.Y), ImGuiChildFlags.None);
 
             ImGui.Text("Platforms");
             ImGui.Separator();
@@ -114,25 +122,26 @@ namespace Editor.Views
             ImGui.Text($"Configuration: {_platforms[_selectedPlatform]}");
             ImGui.Separator();
 
-            ImGui.Checkbox("Enable Build", ref _dummyBool);
-            ImGui.SliderInt("Optimization Level", ref _dummyInt, 0, 3);
-            ImGui.InputText("Output Path", ref _dummyString, 256);
+            if (_drawers.TryGetValue(GetSelectedPlatform(), out var drawer))
+            {
+                drawer.OnDraw(EditorDataManager.BuildSettings.GetBuildSettings(GetSelectedPlatform()));
 
-            if (ImGui.Button("Build Android test"))
-            {
-                BuildSystem.BuildAsync(PlatformBuild.Android);
+                if (ImGui.Button($"Build {GetSelectedPlatform()}"))
+                {
+                    BuildSystem.BuildAsync(GetSelectedPlatform());
+                }
             }
-            if (ImGui.Button("Build Windows test"))
+            else
             {
-                BuildSystem.BuildAsync(PlatformBuild.Windows);
+                ImGui.Text("Build settings not implemented for this platform");
             }
+
             ImGui.EndChild();
         }
 
-        // Dummy config values
-        private bool _dummyBool = true;
-        private int _dummyInt = 2;
-        private string _dummyString = "build/output";
-
+        private PlatformBuild GetSelectedPlatform()
+        {
+            return (PlatformBuild)(_selectedPlatform + 1);
+        }
     }
 }

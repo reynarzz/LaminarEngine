@@ -108,8 +108,9 @@ namespace Engine.Utils
             while (type != null && type != typeof(object))
             {
                 var members = type.GetMembers(flags)
-                                  .Where(m => (m.MemberType == MemberTypes.Field || m.MemberType == MemberTypes.Property) &&
-                                         m.IsDefined(typeof(T), inherit));
+                                  .Where(m =>
+                                      (m.MemberType == MemberTypes.Field || m.MemberType == MemberTypes.Property) &&
+                                      m.IsDefined(typeof(T), inherit));
 
                 if (order)
                 {
@@ -121,7 +122,25 @@ namespace Engine.Utils
                     yield return member;
                 }
 
-                type = type.BaseType;
+                var baseType = type.BaseType;
+
+                if (baseType == null)
+                {
+                    break;
+                }
+
+                if (baseType.IsGenericType && !baseType.IsGenericTypeDefinition)
+                {
+                    type = baseType;
+                }
+                else if (baseType.IsGenericTypeDefinition && type.IsGenericType)
+                {
+                    type = baseType.MakeGenericType(type.GetGenericArguments());
+                }
+                else
+                {
+                    type = baseType;
+                }
             }
         }
 
