@@ -768,12 +768,15 @@ namespace Engine.Utils
             // Generic arguments
             if (current.IsGenericType)
             {
-                if (current.GetGenericTypeDefinition() == typeof(Dictionary<,>))
+                bool useDefault = true;
+                if (current.IsAssignableTo(typeof(IDictionary)))
                 {
-                    var dictionary = (targetValue as IDictionary);
+                    var dictionary = targetValue as IDictionary;
 
                     if (dictionary != null)
                     {
+                        useDefault = false;
+
                         var genericArgs = current.GetGenericArguments();
 
                         foreach (var key in dictionary.Keys)
@@ -785,22 +788,32 @@ namespace Engine.Utils
 
                         foreach (var val in dictionary.Values)
                         {
-                            var type = val != null ? val.GetType() : genericArgs[1];
+                            var type = val?.GetType() ?? genericArgs[1];
                             if (ContainsType(type, searched, visited, val, checkOnlySerialized))
                                 return true;
                         }
                     }
-                    else
+                }
+                else if (current.IsAssignableTo(typeof(ICollection)))
+                {
+                    var collection = targetValue as ICollection;
+
+                    if (collection != null)
                     {
-                        // Fallback to default.
-                        foreach (var arg in current.GetGenericArguments())
+                        useDefault = false;
+                        var genericArgs = current.GetGenericArguments();
+
+                        foreach (var item in collection)
                         {
-                            if (ContainsType(arg, searched, visited, targetValue, checkOnlySerialized))
+                            var type = item?.GetType() ?? genericArgs[0];
+
+                            if (ContainsType(type, searched, visited, targetValue, checkOnlySerialized))
                                 return true;
                         }
                     }
                 }
-                else
+
+                if (useDefault)
                 {
                     foreach (var arg in current.GetGenericArguments())
                     {

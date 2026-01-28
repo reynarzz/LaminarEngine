@@ -23,13 +23,14 @@ namespace GameCooker
         private static void InitializeProjectDirectories(string projectRoot)
         {
             Paths.ProjectRootFolder = projectRoot;
-            foreach (var dir in new string[]
+            var directories = new string[]
             {
                 Paths.GetAssetsFolderPath(),
                 Paths.GetLibraryFolderPath(),
                 Paths.GetProjectSettingsFolder(),
                 Paths.GetAssetDatabaseFolder(),
-            })
+            };
+            foreach (var dir in directories)
             {
                 Directory.CreateDirectory(dir);
             }
