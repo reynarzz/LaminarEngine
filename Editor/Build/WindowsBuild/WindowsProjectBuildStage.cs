@@ -10,7 +10,7 @@ namespace Editor.Build
 {
     internal class WindowsProjectBuildStage : ProjectBuildStage
     {
-        private readonly string[] _targets = ["Publish"];
+        private readonly string[] _targets = ["Rebuild", "Publish"];
 
         private readonly string[] _buildFilesExt = { ".exe", ".pdb" };
 
@@ -44,7 +44,7 @@ namespace Editor.Build
                 ["PublishSingleFile"] = "true",
                 ["IncludeNativeLibrariesForSelfExtract"] = "true",
                 ["EnableCompressionInSingleFile"] = "true",
-                // ["DefineConstants"] = "$(DefineConstants);WINDOWS;WIN32;DESKTOP"
+                ["DefineConstants"] = "$(DefineConstants);WINDOWS;WIN32;DESKTOP",
 
                 // Metadata
                 ["Company"] = buildTypeSettings.Company,

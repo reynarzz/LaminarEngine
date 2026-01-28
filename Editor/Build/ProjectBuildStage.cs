@@ -43,7 +43,8 @@ namespace Editor.Build
                 BuildManager.DefaultBuildManager.Build(_parameters, new BuildRequestData(_instance, ["Restore"]));
             }
 
-            var result = BuildManager.DefaultBuildManager.Build(_parameters, new BuildRequestData(_instance, GetTargetsToBuild()));
+            var result = BuildManager.DefaultBuildManager.Build(_parameters, new BuildRequestData(_instance, GetTargetsToBuild(), null,
+                                                                BuildRequestDataFlags.ReplaceExistingProjectInstance));
 
             var buildResult = new BuildStageResult()
             {

@@ -44,7 +44,6 @@ namespace Editor.Build
             {
                 ["Configuration"] = settings.Type == BuildType.Release ? "Release" : "Debug",
                 ["Platform"] = "AnyCPU",
-                ["TargetFramework"] = "net9.0-android",
                 ["AndroidSdkDirectory"] = GetAndroidSdkPath(),
                 ["AndroidKeyStore"] = "false",
                 ["AndroidSigningKeyAlias"] = settings.KeyAlias,
@@ -112,7 +111,7 @@ namespace Editor.Build
 
             if (settings.LaunchAfterBuild)
             {
-                return [AndroidConsts.BUILD_TARGET/*, AndroidConsts.INSTALL_TARGET, AndroidConsts.START_TARGET*/];
+                return ["Rebuild", AndroidConsts.BUILD_TARGET/*, AndroidConsts.INSTALL_TARGET, AndroidConsts.START_TARGET*/];
             }
 
             return [AndroidConsts.BUILD_TARGET];

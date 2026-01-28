@@ -15,7 +15,6 @@
 	<TargetSdkVersion>34</TargetSdkVersion>
 	<CompileSdkVersion>34</CompileSdkVersion>
 	<UseLatestAndroidPlatformSdk>true</UseLatestAndroidPlatformSdk>
-	<PublishPlatform>android</PublishPlatform>
 	<GameDataOutDir>$(MSBuildProjectDirectory)/Assets/</GameDataOutDir>
 	  
 	  <!--
@@ -45,7 +44,6 @@
 	</ItemGroup>
 
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
-		<GameCookerBeforeBuildStage>Compile</GameCookerBeforeBuildStage>
 		<AddAssetsFolder>false</AddAssetsFolder>
 	</PropertyGroup>
 
@@ -54,14 +52,4 @@
 			<AndroidAsset Include="Assets\**\*.*" />
 		</ItemGroup>
 	</Target>
-
-	<PropertyGroup>
-		<ProjectRoot>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..'))</ProjectRoot>
-		<ProjectRoot>$([MSBuild]::EnsureTrailingSlash('$(ProjectRoot)'))</ProjectRoot>
-	</PropertyGroup>
-
-
-	<Import Condition="$(BuildAndroid)=='true'" Project="$(ProjectRoot)Configs/GameCooker.targets" />
-	<Import Condition="$(BuildAndroid)=='true'" Project="$(ProjectRoot)Configs/Android.publish.platforms.targets" />
-	
 </Project>
