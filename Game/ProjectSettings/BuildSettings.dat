@@ -116,6 +116,33 @@
                             "$type": "System.String, System.Private.CoreLib",
                             "$value": ""
                           }
+                        },
+                        {
+                          "Name": "EncryptAssets",
+                          "Type": "Simple",
+                          "InternalType": "System.Boolean, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.Boolean, System.Private.CoreLib",
+                            "$value": false
+                          }
+                        },
+                        {
+                          "Name": "CompressAssets",
+                          "Type": "Simple",
+                          "InternalType": "System.Boolean, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.Boolean, System.Private.CoreLib",
+                            "$value": false
+                          }
+                        },
+                        {
+                          "Name": "CompressionLevel",
+                          "Type": "Simple",
+                          "InternalType": "System.Int32, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.Int32, System.Private.CoreLib",
+                            "$value": 12
+                          }
                         }
                       ]
                     }
@@ -191,6 +218,33 @@
                           "Type": "Simple",
                           "InternalType": "System.String, System.Private.CoreLib",
                           "Data": null
+                        },
+                        {
+                          "Name": "EncryptAssets",
+                          "Type": "Simple",
+                          "InternalType": "System.Boolean, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.Boolean, System.Private.CoreLib",
+                            "$value": false
+                          }
+                        },
+                        {
+                          "Name": "CompressAssets",
+                          "Type": "Simple",
+                          "InternalType": "System.Boolean, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.Boolean, System.Private.CoreLib",
+                            "$value": false
+                          }
+                        },
+                        {
+                          "Name": "CompressionLevel",
+                          "Type": "Simple",
+                          "InternalType": "System.Int32, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.Int32, System.Private.CoreLib",
+                            "$value": 0
+                          }
                         }
                       ]
                     }
@@ -266,6 +320,33 @@
                           "Type": "Simple",
                           "InternalType": "System.String, System.Private.CoreLib",
                           "Data": null
+                        },
+                        {
+                          "Name": "EncryptAssets",
+                          "Type": "Simple",
+                          "InternalType": "System.Boolean, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.Boolean, System.Private.CoreLib",
+                            "$value": false
+                          }
+                        },
+                        {
+                          "Name": "CompressAssets",
+                          "Type": "Simple",
+                          "InternalType": "System.Boolean, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.Boolean, System.Private.CoreLib",
+                            "$value": false
+                          }
+                        },
+                        {
+                          "Name": "CompressionLevel",
+                          "Type": "Simple",
+                          "InternalType": "System.Int32, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.Int32, System.Private.CoreLib",
+                            "$value": 0
+                          }
                         }
                       ]
                     }
@@ -471,6 +552,33 @@
                             "$type": "System.String, System.Private.CoreLib",
                             "$value": ""
                           }
+                        },
+                        {
+                          "Name": "EncryptAssets",
+                          "Type": "Simple",
+                          "InternalType": "System.Boolean, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.Boolean, System.Private.CoreLib",
+                            "$value": false
+                          }
+                        },
+                        {
+                          "Name": "CompressAssets",
+                          "Type": "Simple",
+                          "InternalType": "System.Boolean, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.Boolean, System.Private.CoreLib",
+                            "$value": false
+                          }
+                        },
+                        {
+                          "Name": "CompressionLevel",
+                          "Type": "Simple",
+                          "InternalType": "System.Int32, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.Int32, System.Private.CoreLib",
+                            "$value": 0
+                          }
                         }
                       ]
                     }
@@ -582,6 +690,33 @@
                             "$type": "System.String, System.Private.CoreLib",
                             "$value": ""
                           }
+                        },
+                        {
+                          "Name": "EncryptAssets",
+                          "Type": "Simple",
+                          "InternalType": "System.Boolean, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.Boolean, System.Private.CoreLib",
+                            "$value": false
+                          }
+                        },
+                        {
+                          "Name": "CompressAssets",
+                          "Type": "Simple",
+                          "InternalType": "System.Boolean, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.Boolean, System.Private.CoreLib",
+                            "$value": false
+                          }
+                        },
+                        {
+                          "Name": "CompressionLevel",
+                          "Type": "Simple",
+                          "InternalType": "System.Int32, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.Int32, System.Private.CoreLib",
+                            "$value": 0
+                          }
                         }
                       ]
                     }
@@ -692,6 +827,33 @@
                           "Data": {
                             "$type": "System.String, System.Private.CoreLib",
                             "$value": ""
+                          }
+                        },
+                        {
+                          "Name": "EncryptAssets",
+                          "Type": "Simple",
+                          "InternalType": "System.Boolean, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.Boolean, System.Private.CoreLib",
+                            "$value": false
+                          }
+                        },
+                        {
+                          "Name": "CompressAssets",
+                          "Type": "Simple",
+                          "InternalType": "System.Boolean, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.Boolean, System.Private.CoreLib",
+                            "$value": false
+                          }
+                        },
+                        {
+                          "Name": "CompressionLevel",
+                          "Type": "Simple",
+                          "InternalType": "System.Int32, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.Int32, System.Private.CoreLib",
+                            "$value": 0
                           }
                         }
                       ]

@@ -17,6 +17,11 @@ namespace Editor.Build
     {
         [SerializedField] public string ApplicationName = "Application";
         [SerializedField] public string OutputPath;
+
+        [PropertyHeader("Assets Config")]
+        [SerializedField] public bool EncryptAssets;
+        [SerializedField] public bool CompressAssets;
+        [SerializedField] public int CompressionLevel;
     }
 
     internal abstract class PlatformBuildSettings

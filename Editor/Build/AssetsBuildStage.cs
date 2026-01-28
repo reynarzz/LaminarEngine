@@ -14,20 +14,16 @@ namespace Editor.Build
         OnlyMatchingFiles,
     }
 
-    internal class AssetsBuildStage : BuildStage
+    internal abstract class AssetsBuildStage : BuildStage
     {
         private readonly CookOptions _cookOptions;
         private readonly AssetsCooker _assetsCooker;
-        private readonly CookFileOptions _fileOptions;
 
-        protected string OutputFolder { get; set; }
         private readonly AssetsBuildType _assetsBuildType;
-        public AssetsBuildStage(CookingPlatform platform, CookingType cookType, AssetsBuildType buildType, string outPath, CookFileOptions options)
+        public AssetsBuildStage(CookingPlatform platform, CookingType cookType, AssetsBuildType buildType)
         {
             _assetsCooker = new AssetsCooker();
-            _fileOptions = options;
             _assetsBuildType = buildType;
-            OutputFolder = outPath;
 
             var assetsFolderPath = Paths.GetAssetsFolderPath();
             _cookOptions = new CookOptions()
@@ -35,17 +31,16 @@ namespace Editor.Build
                 Type = cookType,
                 Platform = platform,
                 AssetsFolderPath = Paths.GetAssetsFolderPath(),
-                ExportFolderPath = OutputFolder,
-                FileOptions = options,
             };
         }
 
         public override async Task<BuildStageResult> Execute()
         {
-            OnBeforeBuild();
+            var cookData = OnBeforeBuild();
             CollecMatchingFiles();
 
-            _cookOptions.ExportFolderPath = OutputFolder;
+            _cookOptions.ExportFolderPath = cookData.ExportFolderPath;
+            _cookOptions.FileOptions = cookData.FileOptions;
 
             var assetDatabaseInfo = await _assetsCooker.CookAllAsync(_cookOptions);
 
@@ -78,6 +73,12 @@ namespace Editor.Build
             }
         }
 
-        protected virtual void OnBeforeBuild() { }
+        protected class CookData
+        {
+            public string ExportFolderPath { get; set; }
+            public CookFileOptions FileOptions { get; set; }
+        }
+
+        protected abstract CookData OnBeforeBuild();
     }
 }

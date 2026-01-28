@@ -1,4 +1,5 @@
-﻿using GameCooker;
+﻿using Editor.Data;
+using GameCooker;
 using SharedTypes;
 using System;
 using System.Collections.Generic;
@@ -10,17 +11,27 @@ namespace Editor.Build
 {
     internal class AndroidAssetsBuildStage : AssetsBuildStage
     {
-        public AndroidAssetsBuildStage() : base(CookingPlatform.Android, 
-                                                CookingType.ReleaseMode, 
-                                                AssetsBuildType.OnlyMatchingFiles,
-                                                EditorPaths.AndroidProjectAssetsFolderRoot,
-                                                new CookFileOptions()
-                                                {
-                                                    CompressAllFiles = false,
-                                                    CompressionLevel = 12,
-                                                    EncryptAllFiles = false
-                                                })
+        public AndroidAssetsBuildStage() : base(CookingPlatform.Android,
+                                                CookingType.ReleaseMode,
+                                                AssetsBuildType.OnlyMatchingFiles)
         {
+        }
+
+        protected override CookData OnBeforeBuild()
+        {
+            var settings = EditorDataManager.BuildSettings.GetBuildSettings(PlatformBuild.Android) as AndroidBuildSettings;
+            var buildTypeSettings = settings.GetCurrentBuildTypeSettings();
+
+            return new()
+            {
+                ExportFolderPath = EditorPaths.AndroidProjectAssetsFolderRoot,
+                FileOptions = new CookFileOptions()
+                {
+                    EncryptAllFiles = buildTypeSettings.EncryptAssets,
+                    CompressAllFiles = buildTypeSettings.CompressAssets,
+                    CompressionLevel = buildTypeSettings.CompressionLevel,
+                }
+            };
         }
     }
 }

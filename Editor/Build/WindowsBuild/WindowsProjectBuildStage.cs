@@ -25,10 +25,10 @@ namespace Editor.Build
             var settings = GetBuildSettings<WindowsBuildSettings>(PlatformBuild.Windows);
             var buildTypeSettings = settings.GetCurrentBuildTypeSettings();
 
-            return new()
+            var props = new Dictionary<string, string>()
             {
                 ["Configuration"] = settings.Type == BuildType.Release ? "Release" : "Debug",
-                ["Platform"] = "AnyCPU",
+                ["Platform"] = "x64",
 
                 // Publish settings
                 ["RuntimeIdentifier"] = "win-x64",
@@ -36,7 +36,7 @@ namespace Editor.Build
 
                 // Trimming
                 ["PublishTrimmed"] = "true",
-                ["TrimMode"] = "full", // or 'link'
+                ["TrimMode"] = "link", // or 'full'
 
                 // Output
                 ["PublishDir"] = EditorPaths.Win32PublishFolderRoot + "\\",
@@ -59,6 +59,14 @@ namespace Editor.Build
                 ["FileVersion"] = GetVersion(buildTypeSettings.Version),
                 ["InformationalVersion"] = GetVersion(buildTypeSettings.Version)
             };
+
+            if(settings.Type == BuildType.Release)
+            {
+                props.Add("DebugType", "none");
+                props.Add("DebugSymbols", "false");
+            }
+
+            return props;
         }
 
         protected override void OnBuildSuccess()

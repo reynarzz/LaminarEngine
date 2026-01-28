@@ -15,15 +15,22 @@ namespace Editor.Build
     {
         internal EditorAssetsBuildStage() : base(CookingPlatform.Windows,
                                                  CookingType.DevMode,
-                                                 AssetsBuildType.All,
-                                                 Paths.GetAssetDatabaseFolder(),
-                                                 new CookFileOptions()
-                                                 {
-                                                     CompressAllFiles = false,
-                                                     CompressionLevel = 0,
-                                                     EncryptAllFiles = false
-                                                 })
+                                                 AssetsBuildType.All)
         {
+        }
+
+        protected override CookData OnBeforeBuild()
+        {
+            return new CookData()
+            {
+                ExportFolderPath = Paths.GetAssetDatabaseFolder(),
+                FileOptions = new CookFileOptions()
+                {
+                    CompressAllFiles = false,
+                    CompressionLevel = 0,
+                    EncryptAllFiles = false
+                }
+            };
         }
 
         public override async Task<BuildStageResult> Execute()
@@ -36,11 +43,12 @@ namespace Editor.Build
             {
                 EditorIOLayer.Instance.ReloadDisk(assetDatabase);
             });
-           
+
             return new BuildStageResult()
             {
                 IsSuccess = true,
             };
         }
+
     }
 }
