@@ -14,8 +14,6 @@ namespace Editor.Build
 
         private readonly string[] _buildFilesExt = { ".exe", ".pdb" };
 
-        public string CurrentOutputPath { get; private set; }
-
         public WindowsProjectBuildStage() : base(new BuildLogger()
         {
             DebugStatus = true
@@ -26,13 +24,6 @@ namespace Editor.Build
         {
             var settings = GetBuildSettings<WindowsBuildSettings>(PlatformBuild.Windows);
             var buildTypeSettings = settings.GetCurrentBuildTypeSettings();
-
-            CurrentOutputPath = string.Empty;
-
-            if (!string.IsNullOrEmpty(buildTypeSettings.OutputPath))
-            {
-                CurrentOutputPath = Paths.ClearPathSeparation(buildTypeSettings.OutputPath);
-            }
 
             return new()
             {
@@ -70,23 +61,18 @@ namespace Editor.Build
             };
         }
 
-        private string GetVersion(ivec2 version)
-        {
-            return $"{version.x}.{version.y}";
-        }
-
         protected override void OnBuildSuccess()
         {
             var rootOutputFolder = EditorPaths.ShipWin32FolderRoot;
-            if (!string.IsNullOrEmpty(CurrentOutputPath))
-            {
-                rootOutputFolder = CurrentOutputPath;
-            }
-
-            Directory.CreateDirectory(rootOutputFolder);
 
             var settings = GetBuildSettings<WindowsBuildSettings>(PlatformBuild.Windows);
             var buildTypeSettings = settings.GetCurrentBuildTypeSettings();
+            if (!string.IsNullOrEmpty(buildTypeSettings.OutputPath))
+            {
+                rootOutputFolder = Paths.ClearPathSeparation(buildTypeSettings.OutputPath);
+            }
+
+            Directory.CreateDirectory(rootOutputFolder);
 
             // Rename executable
             File.Move(Path.Combine(EditorPaths.Win32PublishFolderRoot, EditorPaths.DESKTOP_PROJECT_NAME + ".exe"),
@@ -123,6 +109,11 @@ namespace Editor.Build
         protected override string[] GetTargetsToBuild()
         {
             return _targets;
+        }
+
+        private string GetVersion(ivec3 version)
+        {
+            return $"{version.x}.{version.y}.{version.z}";
         }
     }
 }

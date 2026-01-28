@@ -14,7 +14,7 @@ namespace Editor.Build
         [SerializedField] public string Description { get; set; } = "Application description";
         [SerializedField] public string Company { get; set; } = "My Company";
         [SerializedField] public string Authors { get; set; } = "Author";
-        [SerializedField] public ivec2 Version { get; set; } = new ivec2(1, 0);
+        [SerializedField] public ivec3 Version { get; set; } = new ivec3(1, 0, 0);
     }
 
     internal class WindowsBuildSettings : PlatformBuildSettings<WindowsBuildTypeSettings>

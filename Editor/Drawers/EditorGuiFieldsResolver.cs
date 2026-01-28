@@ -251,7 +251,14 @@ namespace Editor.Utils
 
             return result;
         }
-
+        public static bool DrawIVec3Field(string name, ref ivec3 value, float itemWidth = 0, bool pressEnterToConfirm = false)
+        {
+            SetNextItemWidth(itemWidth);
+            ImGui.PushStyleVar(ImGuiStyleVar.ItemInnerSpacing, VECTOR_INNER_SPACING);
+            var result = ImGui.DragInt3($"##{name}", ref value.x, 0.2f);
+            ImGui.PopStyleVar();
+            return result;
+        }
         public static bool DrawVec3Field(string name, ref vec3 value)
         {
             return DrawVec3Field(name, ref value, 0, false);

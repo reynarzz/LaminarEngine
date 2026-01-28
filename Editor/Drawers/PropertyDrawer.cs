@@ -246,10 +246,20 @@ namespace Editor
                 resultChanged = DrawSimpleProperty<vec2>(propertyName, target, value, isReadOnly, prop, index, width,
                     EditorGuiFieldsResolver.DrawVec2Field, setMemberValueCallBack);
             }
+            else if (type == typeof(ivec2))
+            {
+                resultChanged = DrawSimpleProperty<ivec2>(propertyName, target, value, isReadOnly, prop, index, width,
+                    EditorGuiFieldsResolver.DrawIVec2Field, setMemberValueCallBack);
+            }
             else if (type == typeof(vec3))
             {
                 resultChanged = DrawSimpleProperty<vec3>(propertyName, target, value, isReadOnly, prop, index, width,
                     EditorGuiFieldsResolver.DrawVec3Field, setMemberValueCallBack);
+            }
+            else if (type == typeof(ivec3))
+            {
+                resultChanged = DrawSimpleProperty<ivec3>(propertyName, target, value, isReadOnly, prop, index, width,
+                    EditorGuiFieldsResolver.DrawIVec3Field, setMemberValueCallBack);
             }
             else if (type == typeof(vec4))
             {

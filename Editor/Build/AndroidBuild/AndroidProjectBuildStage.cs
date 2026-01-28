@@ -22,8 +22,6 @@ namespace Editor.Build
     internal class AndroidProjectBuildStage : ProjectBuildStage
     {
         private readonly string[] _buildFilesExt = { ".aab", ".apk", ".idsig" };
-        private string CurrentOutputPath { get; set; }
-
         public AndroidProjectBuildStage() : base(new BuildLogger()
         {
             DebugStatus = true
@@ -34,13 +32,6 @@ namespace Editor.Build
         {
             var settings = GetBuildSettings<AndroidBuildSettings>(PlatformBuild.Android);
             var buildTypeSettings = settings.GetCurrentBuildTypeSettings();
-
-            CurrentOutputPath = string.Empty;
-
-            if (!string.IsNullOrEmpty(buildTypeSettings.OutputPath))
-            {
-                CurrentOutputPath = Paths.ClearPathSeparation(buildTypeSettings.OutputPath);
-            }
 
             var packageName = AndroidConsts.DEFAULT_APP_PACKAGE_NAME;
 
@@ -72,9 +63,12 @@ namespace Editor.Build
         protected override void OnBuildSuccess()
         {
             var rootOutputFolder = EditorPaths.AndroidShipFolderRoot;
-            if (!string.IsNullOrEmpty(CurrentOutputPath))
+            var settings = GetBuildSettings<AndroidBuildSettings>(PlatformBuild.Android);
+            var buildTypeSettings = settings.GetCurrentBuildTypeSettings();
+
+            if (!string.IsNullOrEmpty(buildTypeSettings.OutputPath))
             {
-                rootOutputFolder = CurrentOutputPath;
+                rootOutputFolder = Paths.ClearPathSeparation(buildTypeSettings.OutputPath);
             }
 
             Directory.CreateDirectory(rootOutputFolder);
