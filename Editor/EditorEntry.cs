@@ -1,4 +1,5 @@
 ﻿using Editor.Build;
+using Editor.Data;
 using Editor.Layers;
 using Editor.Rendering;
 using Editor.Utils;
@@ -34,12 +35,12 @@ namespace Editor
     // Copy native dependencies to bin directories.
     // Investigate why when the scene is reloaded old objects are still alive.
     // Rebuild the rendering system.
+    // -The serializer cannot correctly serialize Dictionary<value, BaseType> when instances of BaseType are generic: Child<T> : BaseType
+    //   this causes to Reflection.HasAnySerializedMemberWithType return false, when it has EObject.
 
     // Performance fix:
     // Fix CollisionDispatcher Hashset use instead of dictionary.
     // UI performance is pretty bad, rewrite the entire UI system.
-    // -The serializer cannot correctly serialize Dictionary<value, BaseType> when instances of BaseType are generic: Child<T> : BaseType
-    //   this causes to Reflection.HasAnySerializedMemberWithType return false, when it has EObject.
 
     // Assets:
     // Implement MaterialAssetBuilder.

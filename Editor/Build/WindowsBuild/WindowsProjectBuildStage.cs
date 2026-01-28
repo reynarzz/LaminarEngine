@@ -52,11 +52,11 @@ namespace Editor.Build
                 ["Description"] = buildTypeSettings.Description,
                 ["Authors"] = buildTypeSettings.Authors,
 
-                ["AssemblyTitle"] = buildTypeSettings.ApplicationName,
+                ["AssemblyTitle"] = buildTypeSettings.Description,
                 ["AssemblyDescription"] = buildTypeSettings.Description,
 
-                ["AssemblyVersion"] = GetVersion( buildTypeSettings.Version),
-                ["FileVersion"] = GetVersion( buildTypeSettings.Version),
+                ["AssemblyVersion"] = GetVersion(buildTypeSettings.Version),
+                ["FileVersion"] = GetVersion(buildTypeSettings.Version),
                 ["InformationalVersion"] = GetVersion(buildTypeSettings.Version)
             };
         }
@@ -75,8 +75,10 @@ namespace Editor.Build
             Directory.CreateDirectory(rootOutputFolder);
 
             // Rename executable
-            File.Move(Path.Combine(EditorPaths.Win32PublishFolderRoot, EditorPaths.DESKTOP_PROJECT_NAME + ".exe"),
-                      Path.Combine(EditorPaths.Win32PublishFolderRoot, $"{buildTypeSettings.ApplicationName}.exe"), true);
+            var originalFileName = Path.Combine(EditorPaths.Win32PublishFolderRoot, $"{EditorPaths.DESKTOP_PROJECT_NAME}.exe");
+            var newFileName = Path.Combine(EditorPaths.Win32PublishFolderRoot, $"{buildTypeSettings.ApplicationName}.exe");
+
+            File.Move(originalFileName, newFileName, true);
 
             // Copy build files
             foreach (var file in Directory.EnumerateFiles(EditorPaths.Win32PublishFolderRoot))
@@ -113,7 +115,7 @@ namespace Editor.Build
 
         private string GetVersion(ivec3 version)
         {
-            return $"{version.x}.{version.y}.{version.z}";
+            return $"{version.x}.{version.y}.{version.z}.{0}";
         }
     }
 }

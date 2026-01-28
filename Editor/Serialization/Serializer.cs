@@ -21,8 +21,8 @@ namespace Editor.Serialization
             {
                 var value = ReflectionUtils.GetMemberValue(target, member);
                 var memberType = ReflectionUtils.GetMemberType(member);
-                var serializedType = GetSerializedType(memberType);
                 var valueType = value?.GetType() ?? memberType;
+                var serializedType = GetSerializedType(valueType, value);
 
 
                 properties.Add(new SerializedPropertyData()
@@ -37,7 +37,7 @@ namespace Editor.Serialization
             return properties;
         }
 
-        internal static SerializedType GetSerializedType(Type type)
+        internal static SerializedType GetSerializedType(Type type, object value)
         {
             if (type == null)
             {
@@ -98,10 +98,11 @@ namespace Editor.Serialization
             else if (ReflectionUtils.IsCollection(type, out var collectionType))
             {
                 // NOTE: ugly 'if/else' to avoid unnecessary computations.
+                var hasEObject = ReflectionUtils.HasAnySerializedMemberWithType(type, typeof(IObject), value);
                 if (ReflectionUtils.IsCollectionOfInternalTypes(type) ||
-                   !ReflectionUtils.HasAnySerializedMemberWithType(type, typeof(IObject)))
+                   !hasEObject)
                 {
-                    if (!ReflectionUtils.HasAnySerializedMemberWithType(type, typeof(Delegate)))
+                    if (!ReflectionUtils.HasAnySerializedMemberWithType(type, typeof(Delegate), value) && !hasEObject)
                     {
                         return SerializedType.SimpleCollection;
                     }
@@ -110,7 +111,7 @@ namespace Editor.Serialization
                         return SerializedType.ComplexCollection;
                     }
                 }
-                else if (ReflectionUtils.HasAnySerializedMemberWithType(type, typeof(Delegate)))
+                else if (ReflectionUtils.HasAnySerializedMemberWithType(type, typeof(Delegate), value))
                 {
                     return SerializedType.ComplexCollection;
                 }
@@ -119,7 +120,7 @@ namespace Editor.Serialization
                 var isSingleArgCollectionAEObject = elementsTypes.Length == 1 && elementsTypes[0].IsAssignableTo(typeof(IObject));
 
                 if (isSingleArgCollectionAEObject ||
-                    (collectionType == ReflectionUtils.CollectionType.Dictionary && IsPureReferenceDictionary(elementsTypes)))
+                    (collectionType == ReflectionUtils.CollectionType.Dictionary && IsPureReferenceDictionary(elementsTypes, value)))
                 {
                     return SerializedType.ReferenceCollection;
                 }
@@ -132,8 +133,8 @@ namespace Editor.Serialization
             }
             else if (type.IsClass || ReflectionUtils.IsUserDefinedStruct(type))
             {
-                if (ReflectionUtils.HasAnySerializedMemberWithType(type, typeof(IObject)) ||
-                    ReflectionUtils.HasAnySerializedMemberWithType(type, typeof(Delegate), false))
+                if (ReflectionUtils.HasAnySerializedMemberWithType(type, typeof(IObject), value) ||
+                    ReflectionUtils.HasAnySerializedMemberWithType(type, typeof(Delegate), value, false))
                 {
                     return SerializedType.ComplexClass;
                 }
@@ -146,7 +147,7 @@ namespace Editor.Serialization
         /// <summary>
         /// Checks if the dictionary has not IObject deep in the graph, but only on the key or value generic args.
         /// </summary>
-        internal static bool IsPureReferenceDictionary(Type[] genericArgs)
+        internal static bool IsPureReferenceDictionary(Type[] genericArgs, object value)
         {
             if (genericArgs == null || genericArgs.Length != 2)
             {
@@ -163,7 +164,7 @@ namespace Editor.Serialization
                     return;
                 }
 
-                hasAny = ReflectionUtils.HasAnySerializedMemberWithType(argType, typeof(IObject));
+                hasAny = ReflectionUtils.HasAnySerializedMemberWithType(argType, typeof(IObject), value);
                 isTopLevel = false;
             }
 
@@ -227,13 +228,13 @@ namespace Editor.Serialization
                     {
                         var dValue = dictionary[dKey];
 
-                        var keySerializedType = dKey != null ? GetSerializedType(dKey?.GetType()) : GetSerializedType(elementsType[0]);
-                        var ValueSerializedType = dValue != null ? GetSerializedType(dValue?.GetType()) : GetSerializedType(elementsType[1]);
+                        var keySerializedType = dKey != null ? GetSerializedType(dKey?.GetType(), null) : GetSerializedType(elementsType[0], null);
+                        var ValueSerializedType = dValue != null ? GetSerializedType(dValue?.GetType(), null) : GetSerializedType(elementsType[1], null);
 
                         var k = isKeyEObject ? GetReferenceData((dKey as IObject)?.GetID() ?? Guid.Empty, keySerializedType, dKey) : dKey;
                         var v = isValueEObject ? GetReferenceData((dValue as IObject)?.GetID() ?? Guid.Empty, ValueSerializedType, dValue) : dValue;
                         var referenceType = isKeyEObject ? dKey?.GetType() : dValue?.GetType();
-                        var serializedType = GetSerializedType(referenceType);
+                        var serializedType = GetSerializedType(referenceType,null);
 
                         if (serializedMemberType == SerializedType.ReferenceCollection)
                         {
@@ -294,7 +295,7 @@ namespace Editor.Serialization
                     {
                         if (serializedMemberType == SerializedType.ReferenceCollection)
                         {
-                            var itemSerializedType = GetSerializedType(item?.GetType());
+                            var itemSerializedType = GetSerializedType(item?.GetType(), null);
                             referenced.Collection.Add(new CollectionData<ReferenceData>()
                             {
                                 Type = itemSerializedType,
@@ -307,7 +308,7 @@ namespace Editor.Serialization
 
                             referenced.Collection.Add(new CollectionData<ComplexTypeData>()
                             {
-                                Type = GetSerializedType(item?.GetType()),
+                                Type = GetSerializedType(item?.GetType(), null),
                                 Value = complex
                             });
                         }
@@ -365,7 +366,7 @@ namespace Editor.Serialization
             SerializedPropertyData GetPropertyGraph(MemberInfo currentType, object target)
             {
                 var currentMemberType = ReflectionUtils.GetMemberType(currentType);
-                var serializedType = GetSerializedType(currentMemberType);
+                var serializedType = GetSerializedType(currentMemberType, null);
                 var value = ReflectionUtils.GetMemberValue(target, currentType);
 
                 var valueType = value?.GetType() ?? currentMemberType;
@@ -381,7 +382,7 @@ namespace Editor.Serialization
 
             var complexClass = new ComplexTypeData()
             {
-                ComplexType = GetSerializedType(complexType),
+                ComplexType = GetSerializedType(complexType, null),
                 TargetTypeName = GetInternalType(complexType),
                 Properties = new List<SerializedPropertyData>()
             };

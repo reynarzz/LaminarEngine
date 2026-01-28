@@ -115,6 +115,10 @@ namespace Editor.Views
                 }
             }
 
+            if(ImGui.Button("Save all config test"))
+            {
+                EditorDataManager.SaveAll();
+            }
             ImGui.EndChild();
         }
 

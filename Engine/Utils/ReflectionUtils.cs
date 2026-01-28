@@ -738,13 +738,13 @@ namespace Engine.Utils
         /// <summary>
         /// Walks the complete object graph of 'target' to make sure that it has at least one member (field/property) with the 'searchedType'
         /// </summary>
-        internal static bool HasAnySerializedMemberWithType(Type target, Type searchedType, bool checkOnlySerialized = true)
+        internal static bool HasAnySerializedMemberWithType(Type target, Type searchedType, object targetValue, bool checkOnlySerialized = true)
         {
             var visited = new HashSet<Type>();
-            return ContainsType(target, searchedType, visited, checkOnlySerialized);
+            return ContainsType(target, searchedType, visited, targetValue, checkOnlySerialized);
         }
 
-        private static bool ContainsType(Type current, Type searched, HashSet<Type> visited, bool checkOnlySerialized = true)
+        private static bool ContainsType(Type current, Type searched, HashSet<Type> visited, object targetValue, bool checkOnlySerialized = true)
         {
             if (current == null)
                 return false;
@@ -759,19 +759,54 @@ namespace Engine.Utils
 
             // Array
             if (current.IsArray)
-                return ContainsType(current.GetElementType(), searched, visited, checkOnlySerialized);
+                return ContainsType(current.GetElementType(), searched, visited, targetValue, checkOnlySerialized);
 
             // Nullabl
             if (Nullable.GetUnderlyingType(current) is Type nullable)
-                return ContainsType(nullable, searched, visited, checkOnlySerialized);
+                return ContainsType(nullable, searched, visited, targetValue, checkOnlySerialized);
 
             // Generic arguments
             if (current.IsGenericType)
             {
-                foreach (var arg in current.GetGenericArguments())
+                if (current.GetGenericTypeDefinition() == typeof(Dictionary<,>))
                 {
-                    if (ContainsType(arg, searched, visited, checkOnlySerialized))
-                        return true;
+                    var dictionary = (targetValue as IDictionary);
+
+                    if (dictionary != null)
+                    {
+                        var genericArgs = current.GetGenericArguments();
+
+                        foreach (var key in dictionary.Keys)
+                        {
+                            var type = key != null ? key.GetType() : genericArgs[0];
+                            if (ContainsType(type, searched, visited, key, checkOnlySerialized))
+                                return true;
+                        }
+
+                        foreach (var val in dictionary.Values)
+                        {
+                            var type = val != null ? val.GetType() : genericArgs[1];
+                            if (ContainsType(type, searched, visited, val, checkOnlySerialized))
+                                return true;
+                        }
+                    }
+                    else
+                    {
+                        // Fallback to default.
+                        foreach (var arg in current.GetGenericArguments())
+                        {
+                            if (ContainsType(arg, searched, visited, targetValue, checkOnlySerialized))
+                                return true;
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var arg in current.GetGenericArguments())
+                    {
+                        if (ContainsType(arg, searched, visited, targetValue, checkOnlySerialized))
+                            return true;
+                    }
                 }
             }
 
@@ -792,7 +827,7 @@ namespace Engine.Utils
             foreach (var member in members)
             {
                 var memberType = GetMemberType(member);
-                if (ContainsType(memberType, searched, visited, checkOnlySerialized))
+                if (ContainsType(memberType, searched, visited, targetValue, checkOnlySerialized))
                 {
                     return true;
                 }

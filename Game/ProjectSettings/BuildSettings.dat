@@ -1,0 +1,727 @@
+[
+  {
+    "Name": "Scenes",
+    "Type": "SimpleCollection",
+    "InternalType": "System.Collections.Generic.List`1[[System.Guid, System.Private.CoreLib]], System.Private.CoreLib",
+    "Data": {
+      "$type": "System.Collections.Generic.List`1[[System.Guid, System.Private.CoreLib]], System.Private.CoreLib",
+      "$value": []
+    }
+  },
+  {
+    "Name": "_platformsBuildSettings",
+    "Type": "ComplexCollection",
+    "InternalType": "System.Collections.Generic.Dictionary`2[[Editor.Build.PlatformBuild, Editor],[Editor.Build.PlatformBuildSettings, Editor]], System.Private.CoreLib",
+    "Data": {
+      "$type": "Engine.CollectionPropertyData, Engine",
+      "$value": {
+        "CollectionType": "Dictionary",
+        "Collection": [
+          {
+            "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+            "Key": {
+              "TargetTypeName": "Editor.Build.PlatformBuild, Editor",
+              "ComplexType": "Simple",
+              "Properties": [
+                {
+                  "Name": "DictionaryKey",
+                  "Type": "Simple",
+                  "InternalType": "Editor.Build.PlatformBuild, Editor",
+                  "Data": {
+                    "$type": "Editor.Build.PlatformBuild, Editor",
+                    "$value": "Windows"
+                  }
+                }
+              ]
+            },
+            "Value": {
+              "TargetTypeName": "Editor.Build.WindowsBuildSettings, Editor",
+              "ComplexType": "ComplexClass",
+              "Properties": [
+                {
+                  "Name": "Default",
+                  "Type": "ComplexClass",
+                  "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
+                  "Data": {
+                    "$type": "Engine.ComplexTypeData, Engine",
+                    "$value": {
+                      "TargetTypeName": "Editor.Build.WindowsBuildTypeSettings, Editor",
+                      "ComplexType": "ComplexClass",
+                      "Properties": [
+                        {
+                          "Name": "Icon",
+                          "Type": "TextureAsset",
+                          "InternalType": "Engine.Texture2D, Engine",
+                          "Data": {
+                            "$type": "Engine.ReferenceData, Engine",
+                            "$value": {
+                              "Id": "2cb4a5eb-9991-4a83-85bb-6a312dba842b"
+                            }
+                          }
+                        },
+                        {
+                          "Name": "Description",
+                          "Type": "Simple",
+                          "InternalType": "System.String, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.String, System.Private.CoreLib",
+                            "$value": "Application description"
+                          }
+                        },
+                        {
+                          "Name": "Company",
+                          "Type": "Simple",
+                          "InternalType": "System.String, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.String, System.Private.CoreLib",
+                            "$value": "My Company"
+                          }
+                        },
+                        {
+                          "Name": "Authors",
+                          "Type": "Simple",
+                          "InternalType": "System.String, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.String, System.Private.CoreLib",
+                            "$value": "Reynarzz"
+                          }
+                        },
+                        {
+                          "Name": "Version",
+                          "Type": "Simple",
+                          "InternalType": "GlmNet.ivec3, SharedTypes",
+                          "Data": {
+                            "$type": "GlmNet.ivec3, SharedTypes",
+                            "$value": {
+                              "x": 1,
+                              "y": 2,
+                              "z": 3
+                            }
+                          }
+                        },
+                        {
+                          "Name": "ApplicationName",
+                          "Type": "Simple",
+                          "InternalType": "System.String, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.String, System.Private.CoreLib",
+                            "$value": "Game GFS"
+                          }
+                        },
+                        {
+                          "Name": "OutputPath",
+                          "Type": "Simple",
+                          "InternalType": "System.String, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.String, System.Private.CoreLib",
+                            "$value": ""
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "Name": "Release",
+                  "Type": "ComplexClass",
+                  "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
+                  "Data": {
+                    "$type": "Engine.ComplexTypeData, Engine",
+                    "$value": {
+                      "TargetTypeName": "Editor.Build.WindowsBuildTypeSettings, Editor",
+                      "ComplexType": "ComplexClass",
+                      "Properties": [
+                        {
+                          "Name": "Icon",
+                          "Type": "TextureAsset",
+                          "InternalType": "Engine.Texture2D, Engine",
+                          "Data": null
+                        },
+                        {
+                          "Name": "Description",
+                          "Type": "Simple",
+                          "InternalType": "System.String, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.String, System.Private.CoreLib",
+                            "$value": "Application description"
+                          }
+                        },
+                        {
+                          "Name": "Company",
+                          "Type": "Simple",
+                          "InternalType": "System.String, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.String, System.Private.CoreLib",
+                            "$value": "My Company"
+                          }
+                        },
+                        {
+                          "Name": "Authors",
+                          "Type": "Simple",
+                          "InternalType": "System.String, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.String, System.Private.CoreLib",
+                            "$value": "Author"
+                          }
+                        },
+                        {
+                          "Name": "Version",
+                          "Type": "Simple",
+                          "InternalType": "GlmNet.ivec3, SharedTypes",
+                          "Data": {
+                            "$type": "GlmNet.ivec3, SharedTypes",
+                            "$value": {
+                              "x": 1,
+                              "y": 0,
+                              "z": 0
+                            }
+                          }
+                        },
+                        {
+                          "Name": "ApplicationName",
+                          "Type": "Simple",
+                          "InternalType": "System.String, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.String, System.Private.CoreLib",
+                            "$value": "Application"
+                          }
+                        },
+                        {
+                          "Name": "OutputPath",
+                          "Type": "Simple",
+                          "InternalType": "System.String, System.Private.CoreLib",
+                          "Data": null
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "Name": "Debug",
+                  "Type": "ComplexClass",
+                  "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
+                  "Data": {
+                    "$type": "Engine.ComplexTypeData, Engine",
+                    "$value": {
+                      "TargetTypeName": "Editor.Build.WindowsBuildTypeSettings, Editor",
+                      "ComplexType": "ComplexClass",
+                      "Properties": [
+                        {
+                          "Name": "Icon",
+                          "Type": "TextureAsset",
+                          "InternalType": "Engine.Texture2D, Engine",
+                          "Data": null
+                        },
+                        {
+                          "Name": "Description",
+                          "Type": "Simple",
+                          "InternalType": "System.String, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.String, System.Private.CoreLib",
+                            "$value": "Application description"
+                          }
+                        },
+                        {
+                          "Name": "Company",
+                          "Type": "Simple",
+                          "InternalType": "System.String, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.String, System.Private.CoreLib",
+                            "$value": "My Company"
+                          }
+                        },
+                        {
+                          "Name": "Authors",
+                          "Type": "Simple",
+                          "InternalType": "System.String, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.String, System.Private.CoreLib",
+                            "$value": "Author"
+                          }
+                        },
+                        {
+                          "Name": "Version",
+                          "Type": "Simple",
+                          "InternalType": "GlmNet.ivec3, SharedTypes",
+                          "Data": {
+                            "$type": "GlmNet.ivec3, SharedTypes",
+                            "$value": {
+                              "x": 1,
+                              "y": 0,
+                              "z": 0
+                            }
+                          }
+                        },
+                        {
+                          "Name": "ApplicationName",
+                          "Type": "Simple",
+                          "InternalType": "System.String, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.String, System.Private.CoreLib",
+                            "$value": "Application"
+                          }
+                        },
+                        {
+                          "Name": "OutputPath",
+                          "Type": "Simple",
+                          "InternalType": "System.String, System.Private.CoreLib",
+                          "Data": null
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "Name": "Type",
+                  "Type": "Simple",
+                  "InternalType": "Editor.Build.BuildType, Editor",
+                  "Data": {
+                    "$type": "Editor.Build.BuildType, Editor",
+                    "$value": "Release"
+                  }
+                },
+                {
+                  "Name": "ShareDefaultSettings",
+                  "Type": "Simple",
+                  "InternalType": "System.Boolean, System.Private.CoreLib",
+                  "Data": {
+                    "$type": "System.Boolean, System.Private.CoreLib",
+                    "$value": true
+                  }
+                }
+              ]
+            },
+            "Type": "ComplexClass"
+          },
+          {
+            "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+            "Key": {
+              "TargetTypeName": "Editor.Build.PlatformBuild, Editor",
+              "ComplexType": "Simple",
+              "Properties": [
+                {
+                  "Name": "DictionaryKey",
+                  "Type": "Simple",
+                  "InternalType": "Editor.Build.PlatformBuild, Editor",
+                  "Data": {
+                    "$type": "Editor.Build.PlatformBuild, Editor",
+                    "$value": "Android"
+                  }
+                }
+              ]
+            },
+            "Value": {
+              "TargetTypeName": "Editor.Build.AndroidBuildSettings, Editor",
+              "ComplexType": "ComplexClass",
+              "Properties": [
+                {
+                  "Name": "KeyAlias",
+                  "Type": "Simple",
+                  "InternalType": "System.String, System.Private.CoreLib",
+                  "Data": {
+                    "$type": "System.String, System.Private.CoreLib",
+                    "$value": "myalias"
+                  }
+                },
+                {
+                  "Name": "KeyPass",
+                  "Type": "Simple",
+                  "InternalType": "System.String, System.Private.CoreLib",
+                  "Data": {
+                    "$type": "System.String, System.Private.CoreLib",
+                    "$value": "mypassword"
+                  }
+                },
+                {
+                  "Name": "StorePass",
+                  "Type": "Simple",
+                  "InternalType": "System.String, System.Private.CoreLib",
+                  "Data": {
+                    "$type": "System.String, System.Private.CoreLib",
+                    "$value": "storepassword"
+                  }
+                },
+                {
+                  "Name": "LaunchAfterBuild",
+                  "Type": "Simple",
+                  "InternalType": "System.Boolean, System.Private.CoreLib",
+                  "Data": {
+                    "$type": "System.Boolean, System.Private.CoreLib",
+                    "$value": false
+                  }
+                },
+                {
+                  "Name": "Default",
+                  "Type": "ComplexClass",
+                  "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
+                  "Data": {
+                    "$type": "Engine.ComplexTypeData, Engine",
+                    "$value": {
+                      "TargetTypeName": "Editor.Build.AndroidBuildTypeSettings, Editor",
+                      "ComplexType": "ComplexClass",
+                      "Properties": [
+                        {
+                          "Name": "DefaultIcon",
+                          "Type": "ComplexClass",
+                          "InternalType": "Editor.Build.AndroidIcon, Editor",
+                          "Data": {
+                            "$type": "Engine.ComplexTypeData, Engine",
+                            "$value": {
+                              "TargetTypeName": "Editor.Build.AndroidIcon, Editor",
+                              "ComplexType": "ComplexClass",
+                              "Properties": [
+                                {
+                                  "Name": "Icon",
+                                  "Type": "TextureAsset",
+                                  "InternalType": "Engine.Texture2D, Engine",
+                                  "Data": {
+                                    "$type": "Engine.ReferenceData, Engine",
+                                    "$value": {
+                                      "Id": "d682d746-edc8-4efe-895e-a31a2fbefd4d"
+                                    }
+                                  }
+                                },
+                                {
+                                  "Name": "ForegroundIcon",
+                                  "Type": "TextureAsset",
+                                  "InternalType": "Engine.Texture2D, Engine",
+                                  "Data": {
+                                    "$type": "Engine.ReferenceData, Engine",
+                                    "$value": {
+                                      "Id": "a70a6ebd-9c2c-40e5-a9bb-10dda953ecfb"
+                                    }
+                                  }
+                                },
+                                {
+                                  "Name": "BackgroundIcon",
+                                  "Type": "TextureAsset",
+                                  "InternalType": "Engine.Texture2D, Engine",
+                                  "Data": {
+                                    "$type": "Engine.ReferenceData, Engine",
+                                    "$value": {
+                                      "Id": "8c713ca8-3093-47d2-b19b-3a960bdbb0f2"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "Name": "Icons",
+                          "Type": "ComplexCollection",
+                          "InternalType": "Editor.Build.AndroidIcon[], Editor",
+                          "Data": {
+                            "$type": "Engine.CollectionPropertyData, Engine",
+                            "$value": {
+                              "CollectionType": "Array",
+                              "Collection": [
+                                {
+                                  "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                                  "Value": null,
+                                  "Type": "None"
+                                },
+                                {
+                                  "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                                  "Value": null,
+                                  "Type": "None"
+                                },
+                                {
+                                  "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                                  "Value": null,
+                                  "Type": "None"
+                                },
+                                {
+                                  "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                                  "Value": null,
+                                  "Type": "None"
+                                },
+                                {
+                                  "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                                  "Value": null,
+                                  "Type": "None"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "Name": "PackageName",
+                          "Type": "Simple",
+                          "InternalType": "System.String, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.String, System.Private.CoreLib",
+                            "$value": "com.reynarzz.gfs"
+                          }
+                        },
+                        {
+                          "Name": "ApplicationName",
+                          "Type": "Simple",
+                          "InternalType": "System.String, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.String, System.Private.CoreLib",
+                            "$value": "GFS"
+                          }
+                        },
+                        {
+                          "Name": "OutputPath",
+                          "Type": "Simple",
+                          "InternalType": "System.String, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.String, System.Private.CoreLib",
+                            "$value": ""
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "Name": "Release",
+                  "Type": "ComplexClass",
+                  "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
+                  "Data": {
+                    "$type": "Engine.ComplexTypeData, Engine",
+                    "$value": {
+                      "TargetTypeName": "Editor.Build.AndroidBuildTypeSettings, Editor",
+                      "ComplexType": "ComplexClass",
+                      "Properties": [
+                        {
+                          "Name": "DefaultIcon",
+                          "Type": "ComplexClass",
+                          "InternalType": "Editor.Build.AndroidIcon, Editor",
+                          "Data": {
+                            "$type": "Engine.ComplexTypeData, Engine",
+                            "$value": {
+                              "TargetTypeName": "Editor.Build.AndroidIcon, Editor",
+                              "ComplexType": "ComplexClass",
+                              "Properties": [
+                                {
+                                  "Name": "Icon",
+                                  "Type": "TextureAsset",
+                                  "InternalType": "Engine.Texture2D, Engine",
+                                  "Data": null
+                                },
+                                {
+                                  "Name": "ForegroundIcon",
+                                  "Type": "TextureAsset",
+                                  "InternalType": "Engine.Texture2D, Engine",
+                                  "Data": null
+                                },
+                                {
+                                  "Name": "BackgroundIcon",
+                                  "Type": "TextureAsset",
+                                  "InternalType": "Engine.Texture2D, Engine",
+                                  "Data": null
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "Name": "Icons",
+                          "Type": "ComplexCollection",
+                          "InternalType": "Editor.Build.AndroidIcon[], Editor",
+                          "Data": {
+                            "$type": "Engine.CollectionPropertyData, Engine",
+                            "$value": {
+                              "CollectionType": "Array",
+                              "Collection": [
+                                {
+                                  "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                                  "Value": null,
+                                  "Type": "None"
+                                },
+                                {
+                                  "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                                  "Value": null,
+                                  "Type": "None"
+                                },
+                                {
+                                  "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                                  "Value": null,
+                                  "Type": "None"
+                                },
+                                {
+                                  "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                                  "Value": null,
+                                  "Type": "None"
+                                },
+                                {
+                                  "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                                  "Value": null,
+                                  "Type": "None"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "Name": "PackageName",
+                          "Type": "Simple",
+                          "InternalType": "System.String, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.String, System.Private.CoreLib",
+                            "$value": "com.application.gfs"
+                          }
+                        },
+                        {
+                          "Name": "ApplicationName",
+                          "Type": "Simple",
+                          "InternalType": "System.String, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.String, System.Private.CoreLib",
+                            "$value": "Application"
+                          }
+                        },
+                        {
+                          "Name": "OutputPath",
+                          "Type": "Simple",
+                          "InternalType": "System.String, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.String, System.Private.CoreLib",
+                            "$value": ""
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "Name": "Debug",
+                  "Type": "ComplexClass",
+                  "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
+                  "Data": {
+                    "$type": "Engine.ComplexTypeData, Engine",
+                    "$value": {
+                      "TargetTypeName": "Editor.Build.AndroidBuildTypeSettings, Editor",
+                      "ComplexType": "ComplexClass",
+                      "Properties": [
+                        {
+                          "Name": "DefaultIcon",
+                          "Type": "ComplexClass",
+                          "InternalType": "Editor.Build.AndroidIcon, Editor",
+                          "Data": {
+                            "$type": "Engine.ComplexTypeData, Engine",
+                            "$value": {
+                              "TargetTypeName": "Editor.Build.AndroidIcon, Editor",
+                              "ComplexType": "ComplexClass",
+                              "Properties": [
+                                {
+                                  "Name": "Icon",
+                                  "Type": "TextureAsset",
+                                  "InternalType": "Engine.Texture2D, Engine",
+                                  "Data": null
+                                },
+                                {
+                                  "Name": "ForegroundIcon",
+                                  "Type": "TextureAsset",
+                                  "InternalType": "Engine.Texture2D, Engine",
+                                  "Data": null
+                                },
+                                {
+                                  "Name": "BackgroundIcon",
+                                  "Type": "TextureAsset",
+                                  "InternalType": "Engine.Texture2D, Engine",
+                                  "Data": null
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "Name": "Icons",
+                          "Type": "ComplexCollection",
+                          "InternalType": "Editor.Build.AndroidIcon[], Editor",
+                          "Data": {
+                            "$type": "Engine.CollectionPropertyData, Engine",
+                            "$value": {
+                              "CollectionType": "Array",
+                              "Collection": [
+                                {
+                                  "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                                  "Value": null,
+                                  "Type": "None"
+                                },
+                                {
+                                  "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                                  "Value": null,
+                                  "Type": "None"
+                                },
+                                {
+                                  "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                                  "Value": null,
+                                  "Type": "None"
+                                },
+                                {
+                                  "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                                  "Value": null,
+                                  "Type": "None"
+                                },
+                                {
+                                  "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                                  "Value": null,
+                                  "Type": "None"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "Name": "PackageName",
+                          "Type": "Simple",
+                          "InternalType": "System.String, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.String, System.Private.CoreLib",
+                            "$value": "com.application.gfs"
+                          }
+                        },
+                        {
+                          "Name": "ApplicationName",
+                          "Type": "Simple",
+                          "InternalType": "System.String, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.String, System.Private.CoreLib",
+                            "$value": "Application"
+                          }
+                        },
+                        {
+                          "Name": "OutputPath",
+                          "Type": "Simple",
+                          "InternalType": "System.String, System.Private.CoreLib",
+                          "Data": {
+                            "$type": "System.String, System.Private.CoreLib",
+                            "$value": ""
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "Name": "Type",
+                  "Type": "Simple",
+                  "InternalType": "Editor.Build.BuildType, Editor",
+                  "Data": {
+                    "$type": "Editor.Build.BuildType, Editor",
+                    "$value": "Release"
+                  }
+                },
+                {
+                  "Name": "ShareDefaultSettings",
+                  "Type": "Simple",
+                  "InternalType": "System.Boolean, System.Private.CoreLib",
+                  "Data": {
+                    "$type": "System.Boolean, System.Private.CoreLib",
+                    "$value": true
+                  }
+                }
+              ]
+            },
+            "Type": "ComplexClass"
+          }
+        ]
+      }
+    }
+  }
+]

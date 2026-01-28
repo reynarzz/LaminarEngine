@@ -14,7 +14,7 @@ namespace Editor.Build
         public WindowsAssetsBuildStage() : base(CookingPlatform.Windows, 
                                                 CookingType.ReleaseMode, 
                                                 AssetsBuildType.OnlyMatchingFiles,
-                                                GetDataOutputDir(),
+                                                string.Empty,
                                                 new CookFileOptions()
                                                 {
                                                     CompressAllFiles = false,
