@@ -5,14 +5,14 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace Game
-{   
-    public class TestScript : ScriptBehavior 
-    { 
+{
+    public class TestScript : ScriptBehavior
+    {
         public class TestClassSub
-        { 
+        {
             [SerializedField] public int ValueTest { get; set; }
             [SerializedField] public string StringTest { get; set; }
-            [SerializedField] public TypeCode EnumTest { get; set; } 
+            [SerializedField] public TypeCode EnumTest { get; set; }
             [SerializedField] public vec2 vec2Test { get; set; }
             [SerializedField] public vec3 vec3Test { get; set; }
             [SerializedField] public vec4 vec4Test { get; set; }
@@ -69,11 +69,11 @@ namespace Game
             //[ExposeEditorField] public mat4 mat4Test { get; set; }
             [SerializedField]
             private Dictionary<int, Actor> _InStructeActorDictionary;
-                // = new Dictionary<int, EObject> { { 2, null }, { 346, null } };
+            // = new Dictionary<int, EObject> { { 2, null }, { 346, null } };
 
             [SerializedField]
             private Dictionary<int, Component> _InStructComponentDictionary;
-                //= new Dictionary<int, AssetResourceBase> { { 11, null }, { 71, sp } };
+            //= new Dictionary<int, AssetResourceBase> { { 11, null }, { 71, sp } };
 
 
 
@@ -93,13 +93,15 @@ namespace Game
             {
                 Debug.Log("Called from editor");
             }
-        } 
+        }
+
         public class AAA<T, T2, T3>
         {
             [SerializedField] public T TValue1;
             [SerializedField] public T2 TValue2;
             [SerializedField] public T3 TValue3;
-
+            [SerializedField] private AAA<T, T2> SubGeneric;
+            [SerializedField] public List<T> List { get; set; }
         }
 
         public class AAA<T, T2>
@@ -111,12 +113,12 @@ namespace Game
 
         public class AAA<T>
         {
-            [SerializedField] public T TValue; 
+            [SerializedField] public T TValue;
             [SerializedField] public EnumerablePartitionerOptions Enumn;
             [SerializedField] private int HotReloadThis;
             //[SerializedField] private RigidBody2D Something; 
-            [SerializedField] private RigidBody2D _rigid2; 
-            [SerializedField] private Body2DType bod;  
+            [SerializedField] private RigidBody2D _rigid2;
+            [SerializedField] private Body2DType bod;
             [SerializedField] public AStruct[] AStructTypeArray { get; set; }
         }
         [SerializedField] AAA<int> AAAClass;
@@ -165,7 +167,7 @@ namespace Game
 
         [SerializedField]
         private Dictionary<int, string> _intStringDictionary =
-           new Dictionary<int, string> { { 3, "first value" }, { 51, "Second value"} };
+           new Dictionary<int, string> { { 3, "first value" }, { 51, "Second value" } };
 
         [SerializedField]
         private Dictionary<int, Component> _compStringDictionary =
@@ -173,7 +175,7 @@ namespace Game
 
         [SerializedField]
         private Dictionary<int, quat> _quatDictionary =
-          new Dictionary<int, quat> { { 3, default }, { 51, new quat(1, 0,0,0) } };
+          new Dictionary<int, quat> { { 3, default }, { 51, new quat(1, 0, 0, 0) } };
 
 
         [ShowMethodInEditor]
