@@ -37,7 +37,7 @@
 		<ProjectReference Include="..\SharedTypes\SharedTypes.csproj" />
 	</ItemGroup>
 
-	<Target Name="PostBuild_Windows" AfterTargets="Build" Condition="'$(OS)' == 'Windows_NT'">
+	<Target Name="PostBuild_Windows" AfterTargets="CopyFilesToOutputDirectory" Condition="'$(OS)' == 'Windows_NT'">
 
 		<PropertyGroup>
 			<GlfwWinSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\Engine\Third\Native\bin\win\glfw3.dll'))</GlfwWinSrc>
@@ -57,7 +57,7 @@
 		
 
 
-	<Target Name="PostBuild_Mac" AfterTargets="Build" Condition="'$(OS)' == 'Unix' AND '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'True'">
+	<Target Name="PostBuild_Mac" AfterTargets="CopyFilesToOutputDirectory" Condition="'$(OS)' == 'Unix' AND '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'True'">
 
   <PropertyGroup> 
   <GlfwMacSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\Engine\Third\Native\bin\osx\libglfw.dylib'))</GlfwMacSrc>
