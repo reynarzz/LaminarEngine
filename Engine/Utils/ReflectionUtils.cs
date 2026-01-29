@@ -885,7 +885,7 @@ namespace Engine.Utils
 
                         foreach (var key in dictionary.Keys)
                         {
-                            var type = key != null ? key.GetType() : genericArgs[0];
+                            var type = key?.GetType() ?? genericArgs[0];
                             if (ContainsType(type, searched, visited, key, checkOnlySerialized))
                                 return true;
                         }
@@ -912,21 +912,14 @@ namespace Engine.Utils
                         {
                             var type = item?.GetType() ?? genericArgs[0];
 
-                            if (ContainsType(type, searched, visited, targetValue, checkOnlySerialized))
+                            if (ContainsType(type, searched, visited, item, checkOnlySerialized))
                                 return true;
                         }
 
                         return false;
                     }
                 }
-
-                foreach (var arg in current.GetGenericArguments())
-                {
-                    if (ContainsType(arg, searched, visited, targetValue, checkOnlySerialized))
-                        return true;
-                }
             }
-
             
             IEnumerable<MemberInfo> members = null;
             if (checkOnlySerialized)

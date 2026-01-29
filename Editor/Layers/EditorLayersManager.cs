@@ -62,7 +62,7 @@ namespace Editor
 
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.S))
             {
-                if (Application.IsInPlayMode)
+                if (Application.IsInPlayMode || SceneManager.Scenes.FirstOrDefault() != null)
                 {
                     Debug.Log("Saving scene to: " + TestfilePath);
                     _actors = SceneSerializer.SerializeScene(SceneManager.Scenes[^1])?.ActorsData;
