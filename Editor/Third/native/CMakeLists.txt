@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.20)
 
 # Force clang-cl BEFORE project()
 if (WIN32)
@@ -12,14 +12,16 @@ endif()
 
 set(PROJECT_NAME EditorNatives)
 
-project(${PROJECT_NAME} LANGUAGES C CXX)
+project(${PROJECT_NAME} LANGUAGES C CXX OBJCXX)
 
 set(EDITOR_NATIVES_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 set(CIMGUI_DIR "${EDITOR_NATIVES_ROOT_DIR}/cimgui")
 set(IMGUI_DIR "${CIMGUI_DIR}/imgui")
 set(OUTPUT_DIR ${EDITOR_NATIVES_ROOT_DIR}../../EditorNatives/bin)
-set(ENGINE_NATIVES ${CMAKE_CURRENT_SOURCE_DIR}../../../../Engine/Third/Native)
-
+cmake_path(SET ENGINE_NATIVES
+    NORMALIZE
+    "${PROJECT_SOURCE_DIR}/../../../Engine/Third/Native"
+)
 add_subdirectory(cimgui)
 add_subdirectory(cimnodes)
 add_subdirectory(cimguizmo)
@@ -52,6 +54,11 @@ target_sources(${PROJECT_NAME} PRIVATE
     $<TARGET_OBJECTS:cimguizmo_obj>
 )
 
+message(STATUS "GLFW include path: ${ENGINE_NATIVES}/glfw/include")
+
+# old
+include_directories(${ENGINE_NATIVES}/glfw/include)
+
 # Export include dirs from subtargets
 target_include_directories(${PROJECT_NAME} PUBLIC
     # Top-level build dir
@@ -63,23 +70,17 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${IMGUI_DIR}>
     # Install interface
     $<INSTALL_INTERFACE:include>
-
-    ${ENGINE_NATIVES}/glfw/include
 )
 
+
+if (WIN32)
 target_link_libraries(${PROJECT_NAME} PUBLIC 
 
     ${ENGINE_NATIVES}/bin/lib/glfw3dll.lib
 )
 
-if (WIN32)
     target_compile_definitions(${PROJECT_NAME} PRIVATE WINDOWS)
 elseif (APPLE)
-    set_source_files_properties(
-       nativemenu/NativeMenu.mm
-       PROPERTIES
-       LANGUAGE OBJCXX
-    )
     find_library(COCOA_LIBRARY Cocoa REQUIRED)
     find_library(IOKIT_LIBRARY IOKit REQUIRED)
     find_library(COREVIDEO_LIBRARY CoreVideo REQUIRED)
@@ -88,6 +89,9 @@ elseif (APPLE)
         ${COCOA_LIBRARY}
         ${IOKIT_LIBRARY}
         ${COREVIDEO_LIBRARY}
+    ${ENGINE_NATIVES}/bin/osx/libglfw.3.4.dylib
+
+        
     )
 
     target_compile_definitions(${PROJECT_NAME} PRIVATE MACOS)

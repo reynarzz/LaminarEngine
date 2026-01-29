@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.4...3.28 FATAL_ERROR)
 
 project(GLFW VERSION 3.4.0 LANGUAGES C)
 
+if(APPLE)
+    set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64" CACHE STRING "" FORCE)
+endif()
+
 if (POLICY CMP0069)
     cmake_policy(SET CMP0069 NEW)
 endif()

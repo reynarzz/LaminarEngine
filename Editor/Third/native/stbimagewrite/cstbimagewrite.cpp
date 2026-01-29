@@ -11,7 +11,7 @@ enum EditorImageWriteFormat
     Tga,
 	Bmp,
 	hdr
-}
+};
 
 EDITOR_NATIVES_API void STBI_Write(const char* path, s32 width, s32 height, s32 channels, void* data, EditorImageWriteFormat format, s32 bitsPerChannel, u8 filpVertical)
 {

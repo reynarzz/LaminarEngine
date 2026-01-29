@@ -53,14 +53,6 @@ endif()
 target_compile_definitions(cimgui_obj PUBLIC IMGUI_DISABLE_OBSOLETE_FUNCTIONS=1)
 
 
-# includes
-target_include_directories(cimgui_obj PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/imgui
-    ${ENGINE_NATIVES}/glfw/include
-
-)
-
 # set no prefix (optional)
 set_target_properties(cimgui_obj PROPERTIES PREFIX "")
 
@@ -68,7 +60,10 @@ target_include_directories(cimgui_obj PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/imgui>
     $<INSTALL_INTERFACE:include>   # for installable targets
+    
+    $<BUILD_INTERFACE:${ENGINE_NATIVES}/glfw/include>
 )
+
 # ---------------------------
 # optional standalone STATIC library (for backward compatibility)
 # ---------------------------
