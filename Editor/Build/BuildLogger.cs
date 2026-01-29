@@ -15,7 +15,7 @@ namespace Editor
         public bool DebugStatus { get; set; }
         public string Parameters { get; set; }
 
-        public static string CurrentStatus { get; private set; } = string.Empty;    
+        public static string CurrentStatus { get; private set; } = string.Empty;
 
         public void Initialize(IEventSource source)
         {
@@ -27,9 +27,10 @@ namespace Editor
 
             source.ErrorRaised += (_, e) =>
             {
-               // if (e.ProjectFile.EndsWith(EditorPaths.GAME_PROJECT_FULL_NAME))
+                // if (e.ProjectFile.EndsWith(EditorPaths.GAME_PROJECT_FULL_NAME))
                 {
-                    var error = $"{e.File}({e.LineNumber},{e.ColumnNumber}): {e.Message}";
+                    var index = e.File.IndexOf("Assets");
+                    var error = $"{e.File.Substring(index, e.File.Length - index)}({e.LineNumber},{e.ColumnNumber}): {e.Message}";
                     Debug.Error(error);
                     ConsoleEditorView.AddError(error); // Remove from here
 
@@ -40,7 +41,8 @@ namespace Editor
             {
                 if (e.ProjectFile.EndsWith(EditorPaths.GAME_PROJECT_FULL_NAME))
                 {
-                    var warn = $"{e.File}({e.LineNumber},{e.ColumnNumber}): {e.Message}";
+                    var index = e.File.IndexOf("Assets");
+                    var warn = $"{e.File.Substring(index, e.File.Length - index)}({e.LineNumber},{e.ColumnNumber}): {e.Message}";
 
                     Debug.Warn(warn);
 

@@ -70,7 +70,7 @@ namespace Engine.Serialization
                 }
                 catch (Exception e)
                 {
-                    Debug.Warn("Cannot convert to to type, type changed");
+                    Debug.Warn("Cannot convert to type, it changed.");
                 }
                 return obj;
 
