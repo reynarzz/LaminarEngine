@@ -61,7 +61,17 @@ namespace Engine.Serialization
                 //    Value = wrapper[_valueTag].ToObject(type, serializer)
                 //};
                 var val = wrapper[_valueTag];
-                var obj = val.ToObject(type, serializer);
+
+                var obj = default(object);
+
+                try
+                {
+                    obj = val.ToObject(type, serializer);
+                }
+                catch (Exception e)
+                {
+                    Debug.Warn("Cannot convert to to type, type changed");
+                }
                 return obj;
 
             }

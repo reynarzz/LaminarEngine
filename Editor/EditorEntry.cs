@@ -39,7 +39,9 @@ namespace Editor
     //   this causes to Reflection.HasAnySerializedMemberWithType return false, when it has EObject.
     
     // Serialization
-    // Forbid serialization of dictionaries that contains EObject as key?
+    // - Forbid serialization of dictionaries that contains EObject as key?
+    // - Generic can serialize EObject as simple class if the property/field doesn't contain [Serializable]
+    // - For runtime create a dictionary with all the types, so types can be saved and found quickly: Dictionary<Guid, Type>
 
     // Performance fix:
     // Fix CollisionDispatcher Hashset use instead of dictionary.

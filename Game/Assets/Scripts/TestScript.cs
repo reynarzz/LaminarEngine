@@ -104,6 +104,18 @@ namespace Game
             [SerializedField] public List<T> List { get; set; }
         }
 
+        public interface ITestInterface<T>
+        {
+            T a { get; set; }
+        }
+
+        public class InterA : ITestInterface<Texture2D>
+        {
+            [SerializedField] public Texture2D a { get; set; } 
+        }
+
+        [SerializedField] private ITestInterface<Texture2D> InterfaceSera;// = new InterA() { a = new Sprite(0, Assets.GetTexture("starkTileset.png")) };
+
         public class AAA<T, T2>
         {
             [SerializedField] public T TValue1;
