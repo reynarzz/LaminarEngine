@@ -32,9 +32,14 @@ namespace Editor.Views
             ImGui.PushStyleColor(ImGuiCol.WindowBg, new Vector4(0.13f, 0.13f, 0.13f, 1.0f));
             OnBeginWindow("FooterSpace", footerFlags, false);
 
-            if (BuildSystem.IsAnyBuilding)
+            if (BuildSystem.IsBuilding(PlatformBuild.GameAppDomain))
             {
                 ImGui.Text("Compiling...");
+            }
+            else if(BuildSystem.IsAnyBuilding)
+            {
+                ImGui.Text($"Building...");
+
             }
             OnEndWindow();
             ImGui.PopStyleColor();

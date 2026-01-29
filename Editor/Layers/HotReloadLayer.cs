@@ -27,12 +27,12 @@ namespace Editor.Layers
 
         public override void Initialize()
         {
-            BuildSystem.BuildAsync(PlatformBuild.Editor);
+            BuildSystem.BuildAsync(PlatformBuild.GameAppDomain);
         }
 
         private void OnBuildCompleted(BuildResult result)
         {
-            if (result.IsSucess && result.Platform == PlatformBuild.Editor)
+            if (result.IsSucess && result.Platform == PlatformBuild.GameAppDomain)
             {
                 if (!result.AnyStageSkippedBuild || _gameAppAssembly == null)
                 {
@@ -196,7 +196,7 @@ namespace Editor.Layers
         {
             if (currentEvent == EventType.WindowFocusEnter)
             {
-                BuildSystem.BuildAsync(PlatformBuild.Editor);
+                BuildSystem.BuildAsync(PlatformBuild.GameAppDomain);
             }
         }
 

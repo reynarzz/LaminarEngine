@@ -15,6 +15,8 @@ namespace Editor
         public bool DebugStatus { get; set; }
         public string Parameters { get; set; }
 
+        public static string CurrentStatus { get; private set; } = string.Empty;    
+
         public void Initialize(IEventSource source)
         {
             // source.BuildStarted += (_, e) => Debug.Info("Build started");
@@ -39,6 +41,7 @@ namespace Editor
                 if (e.ProjectFile.EndsWith(EditorPaths.GAME_PROJECT_FULL_NAME))
                 {
                     var warn = $"{e.File}({e.LineNumber},{e.ColumnNumber}): {e.Message}";
+
                     Debug.Warn(warn);
 
                     ConsoleEditorView.AddWarning(warn); // Remove from here
@@ -47,7 +50,11 @@ namespace Editor
 
             if (DebugStatus)
             {
-                source.StatusEventRaised += (_, e) => Debug.Info($"{e.Message}");
+                source.StatusEventRaised += (_, e) =>
+                {
+                    CurrentStatus = e.Message;
+                    Debug.Info($"{e.Message}");
+                };
             }
         }
 

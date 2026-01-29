@@ -1,4 +1,5 @@
-﻿using Editor.Rendering;
+﻿using Editor.Build;
+using Editor.Rendering;
 using Editor.Utils;
 using Editor.Views;
 using Engine;
@@ -93,12 +94,13 @@ namespace Editor.Layers
                 new ObjectEditorView(),
                 new AnimatorEditorView(),
                 new RenderingStatsView(),
-                new BuildWindow()
+                new BuildWindow(),
+                new TaskWindow()
                 // new ConsoleEditorView()
             };
         }
 
-        private void Draw() 
+        private void Draw()
         {
             EditorNatives.BeginGLFWImguiInternal();
 
@@ -133,11 +135,12 @@ namespace Editor.Layers
             var dockspaceId = ImGui.GetID("MainDockSpace");
             ImGui.DockSpace(dockspaceId, Vector2.Zero, ImGuiDockNodeFlags.PassthruCentralNode);
 
+            ImGui.BeginDisabled(BuildSystem.IsAnyBuilding && !BuildSystem.IsBuilding(PlatformBuild.GameAppDomain));
             foreach (var windowView in _windows)
             {
                 windowView.OnDraw();
             }
-
+            ImGui.EndDisabled();
             ImGui.End();
         }
 

@@ -10,7 +10,7 @@ namespace Editor.Build
 {
     public enum PlatformBuild
     {
-        Editor,
+        GameAppDomain,
         Windows,
         MacOs,
         Android,
@@ -32,7 +32,8 @@ namespace Editor.Build
         private static readonly Dictionary<PlatformBuild, PlatformBuilder> _platformBuilders;
         private readonly static SynchronizationContext _mainContext;
         public static event Action<BuildResult> OnBuildCompleted;
-        
+        private static PlatformBuild? _currentPlatformBuilding;
+
         static BuildSystem()
         {
             _mainContext = SynchronizationContext.Current;
@@ -40,7 +41,7 @@ namespace Editor.Build
 
             _platformBuilders = new Dictionary<PlatformBuild, PlatformBuilder>()
             {
-                { PlatformBuild.Editor, new EditorBuilder() },
+                { PlatformBuild.GameAppDomain, new EditorBuilder() },
                 { PlatformBuild.Windows, new WindowsBuilder() },
                 { PlatformBuild.Android, new AndroidBuilder() },
             };
@@ -56,6 +57,8 @@ namespace Editor.Build
             {
                 return Task.CompletedTask;
             }
+            
+            _currentPlatformBuilding = platform;
 
             return Task.Run(async () =>
             {
@@ -76,8 +79,14 @@ namespace Editor.Build
                 finally
                 {
                     IsAnyBuilding = false;
+                    _currentPlatformBuilding = null;
                 }
             });
+        }
+
+        internal static bool IsBuilding(PlatformBuild platform)
+        {
+            return platform == _currentPlatformBuilding;
         }
 
         private static void RaiseBuildCompleted(BuildResult result, Action<BuildResult> resultCallback)

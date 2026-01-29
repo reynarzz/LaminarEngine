@@ -51,6 +51,7 @@ namespace Editor.Views
 
             OnEndWindow();
             ImGui.EndDisabled();
+
         }
 
         private void Splitter(Vector2 contentAvail)

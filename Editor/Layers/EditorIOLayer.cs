@@ -52,7 +52,7 @@ namespace Editor
 
         internal void Refresh()
         {
-            BuildSystem.BuildAsync(PlatformBuild.Editor);
+            BuildSystem.BuildAsync(PlatformBuild.GameAppDomain);
         }
     }
 }
