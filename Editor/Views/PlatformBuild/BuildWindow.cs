@@ -146,12 +146,21 @@ namespace Editor.Views
             if (isValidPlatformBuild)
             {
                 ImGui.SameLine();
+                var cursorPos = ImGui.GetCursorPos();
 
-                if (ImGui.Button($"Build {GetSelectedPlatform()}", new Vector2(100, 23)))
+                ImGui.SetCursorPos(cursorPos.X + ImGui.GetContentRegionAvail().X -146, cursorPos.Y + 4);
+                if (ImGui.Button("Build"))
                 {
                     BuildSystem.BuildAsync(GetSelectedPlatform());
                 }
+                ImGui.SameLine();
+                 cursorPos = ImGui.GetCursorPos();
+                ImGui.SetCursorPos(cursorPos.X, cursorPos.Y + 4);
 
+                if (ImGui.Button("Build and Run"))
+                {
+                    BuildSystem.BuildAsync(GetSelectedPlatform());
+                }
             }
             ImGui.Separator();
 

@@ -30,7 +30,10 @@ namespace Editor
                 // if (e.ProjectFile.EndsWith(EditorPaths.GAME_PROJECT_FULL_NAME))
                 {
                     var index = e.File.IndexOf("Assets");
-                    var error = $"{e.File.Substring(index, e.File.Length - index)}({e.LineNumber},{e.ColumnNumber}): {e.Message}";
+                    var name = index >= 0 ? e.File.Substring(index, e.File.Length - index) : e.File;
+
+                    var error = $"{name}({e.LineNumber},{e.ColumnNumber}): {e.Message}";
+
                     Debug.Error(error);
                     ConsoleEditorView.AddError(error); // Remove from here
 
@@ -42,7 +45,9 @@ namespace Editor
                 if (e.ProjectFile.EndsWith(EditorPaths.GAME_PROJECT_FULL_NAME))
                 {
                     var index = e.File.IndexOf("Assets");
-                    var warn = $"{e.File.Substring(index, e.File.Length - index)}({e.LineNumber},{e.ColumnNumber}): {e.Message}";
+                    var name = index >=0? e.File.Substring(index, e.File.Length - index): e.File;
+
+                    var warn = $"{name}({e.LineNumber},{e.ColumnNumber}): {e.Message}";
 
                     Debug.Warn(warn);
 

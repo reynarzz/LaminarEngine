@@ -21081,6 +21081,10 @@ namespace ImGuiNET
         {
             ImGuiNative.igSetCurrentContext(ctx);
         }
+        public static void SetCursorPos(float x, float y)
+        {
+            SetCursorPos(new Vector2(x, y));
+        }
         public static void SetCursorPos(Vector2 local_pos)
         {
             ImGuiNative.igSetCursorPos(local_pos);
