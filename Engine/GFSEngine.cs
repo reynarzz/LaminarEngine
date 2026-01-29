@@ -32,6 +32,17 @@ namespace Engine
 
         internal GFSEngine(IWindow window, InputLayerBase input, LayersManager layerManager, BinaryReader assetFileStream)
         {
+#if DEBUG
+    #if WIN32
+                Debug.Log("Engine running windows");
+    #elif ANDROID
+                Debug.Log("Engine running android");
+    #elif MACOS
+                Debug.Log("Engine running macOs");
+    #elif EDITOR
+                Debug.Log("Engine running editor");
+    #endif
+#endif
             WindowManager.Window = window;
             Input.CurrentInput = input;
             AssetFileStream = assetFileStream;

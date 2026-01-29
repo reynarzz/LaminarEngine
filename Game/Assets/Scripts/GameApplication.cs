@@ -1,5 +1,6 @@
 ﻿using Engine;
 using Engine.Layers;
+using System;
 
 namespace Game
 {
@@ -49,11 +50,23 @@ namespace Game
 
         public override void Initialize()
         {
+#if DEBUG
+    #if WIN32
+                Debug.Log("Running windows");
+    #elif ANDROID
+                Debug.Log("Running android");
+    #elif MACOS
+                Debug.Log("Running macOs");
+    #elif EDITOR
+                Debug.Log("Running editor");
+    #endif
+#endif
 #if RELEASE
             Screen.IsFullScreen = true;
             WindowManager.Window.CursorVisible = false;
 #endif
             new Actor<LaunchScreen>("Launch Screen");
+
         }
 
         public override void Close() 

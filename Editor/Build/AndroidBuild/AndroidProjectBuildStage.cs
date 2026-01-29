@@ -40,7 +40,7 @@ namespace Editor.Build
                 packageName = buildTypeSettings.PackageName;
             }
 
-            return new()
+            var properties = new Dictionary<string, string>()
             {
                 ["Configuration"] = settings.Type == BuildType.Release ? "Release" : "Debug",
                 ["Platform"] = "AnyCPU",
@@ -56,6 +56,17 @@ namespace Editor.Build
                 ["TrimMode"] = "link",
                 ["ApplicationId"] = packageName,
             };
+
+            // NOTE: Not sure why do I have to define build type, msbuild should do it by default.
+            if(settings.Type == BuildType.Release)
+            {
+                properties["DefineConstants"] = "$(DefineConstants);ANDROID;MOBILE;RELEASE";
+            }
+            else
+            {
+                properties["DefineConstants"] = "$(DefineConstants);ANDROID;MOBILE;DEBUG";
+            }
+            return properties;
         }
 
         protected override void OnBeforeBuild()

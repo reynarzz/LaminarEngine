@@ -10,7 +10,6 @@ using System.Text;
 
 namespace Android
 {
-    // dotnet build -p:BuildAndroid=true -c Release
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true, 
         ScreenOrientation = ScreenOrientation.Landscape, 
         ConfigurationChanges = ConfigChanges.Orientation 

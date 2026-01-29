@@ -44,7 +44,6 @@ namespace Editor.Build
                 ["PublishSingleFile"] = "true",
                 ["IncludeNativeLibrariesForSelfExtract"] = "true",
                 ["EnableCompressionInSingleFile"] = "true",
-                ["DefineConstants"] = "$(DefineConstants);WINDOWS;WIN32;DESKTOP",
 
                 // Metadata
                 ["Company"] = buildTypeSettings.Company,
@@ -62,10 +61,13 @@ namespace Editor.Build
 
             if(settings.Type == BuildType.Release)
             {
-                props.Add("DebugType", "none");
-                props.Add("DebugSymbols", "false");
+                props["DefineConstants"] = "WINDOWS;WIN32;DESKTOP;RELEASE";
             }
+            else
+            {
+                props["DefineConstants"] = "WINDOWS;WIN32;DESKTOP;DEBUG";
 
+            }
             return props;
         }
 
