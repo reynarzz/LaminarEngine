@@ -62,7 +62,7 @@ namespace Editor
 
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.S))
             {
-                //if (!Application.IsInPlayMode)
+                if (Application.IsInPlayMode)
                 {
                     Debug.Log("Saving scene to: " + TestfilePath);
                     _actors = SceneSerializer.SerializeScene(SceneManager.Scenes[^1])?.ActorsData;
@@ -81,8 +81,6 @@ namespace Editor
                         File.WriteAllText(AnimClipPath, EditorJsonUtils.Serialize(animIR));
                         File.WriteAllText(AnimControllerPath, EditorJsonUtils.Serialize(animControlerIR));
                         File.WriteAllText(MaterialPath, EditorJsonUtils.Serialize(materialIR));
-
-
 
                     }
 
