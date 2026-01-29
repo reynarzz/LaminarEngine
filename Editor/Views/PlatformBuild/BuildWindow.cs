@@ -155,6 +155,7 @@ namespace Editor.Views
             }
             ImGui.Separator();
 
+            ImGui.BeginChild("BuildSettingsContent");
             if (isValidPlatformBuild)
             {
                 drawer.OnDraw(EditorDataManager.BuildSettings.GetBuildSettings(GetSelectedPlatform()));
@@ -163,7 +164,7 @@ namespace Editor.Views
             {
                 ImGui.Text("Build settings not implemented for this platform");
             }
-
+            ImGui.EndChild();
             ImGui.EndChild();
         }
 
