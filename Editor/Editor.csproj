@@ -36,7 +36,7 @@
 		<ProjectReference Include="..\SharedTypes\SharedTypes.csproj" />
 	</ItemGroup>
 
-	<Target Name="PostBuild_Windows" AfterTargets="PostBuildEvent" Condition="'$(OS)' == 'Windows_NT'">
+	<Target Name="PostBuild_Windows" AfterTargets="Build" Condition="'$(OS)' == 'Windows_NT'">
 
 		<PropertyGroup>
 			<GlfwWinSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\Engine\Third\Native\bin\win\glfw3.dll'))</GlfwWinSrc>
@@ -48,7 +48,7 @@
 
 		<Message Text="Copying from $(GlfwWinSrc)" Importance="high" />
 
-		<Copy SourceFiles="$(GlfwWinSrc)" DestinationFiles="$(TargetDir)glfw.dll" SkipUnchangedFiles="true" />
+		<Copy SourceFiles="$(GlfwWinSrc)" DestinationFiles="$(TargetDir)glfw3.dll" SkipUnchangedFiles="true" />
 		<Copy SourceFiles="$(ImGuiSrc)" DestinationFiles="$(TargetDir)EditorNatives.dll" SkipUnchangedFiles="true" />
 		<Copy SourceFiles="$(GlSlang)" DestinationFiles="$(TargetDir)glslang.dll" SkipUnchangedFiles="true" />
 		<Copy SourceFiles="$(SpirvCross)" DestinationFiles="$(TargetDir)spirv-cross.dll" SkipUnchangedFiles="true" />
@@ -56,7 +56,7 @@
 		
 
 
-	<Target Name="PostBuild_Mac" AfterTargets="PostBuildEvent" Condition="'$(OS)' == 'Unix' AND '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'True'">
+	<Target Name="PostBuild_Mac" AfterTargets="Build" Condition="'$(OS)' == 'Unix' AND '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'True'">
 
   <PropertyGroup> 
   <GlfwMacSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\Engine\Third\Native\bin\osx\libglfw.dylib'))</GlfwMacSrc>
