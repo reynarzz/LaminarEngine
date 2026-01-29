@@ -37,6 +37,9 @@ namespace Editor
     // Rebuild the rendering system.
     // -The serializer cannot correctly serialize Dictionary<value, BaseType> when instances of BaseType are generic: Child<T> : BaseType
     //   this causes to Reflection.HasAnySerializedMemberWithType return false, when it has EObject.
+    
+    // Serialization
+    // Forbid serialization of dictionaries that contains EObject as key?
 
     // Performance fix:
     // Fix CollisionDispatcher Hashset use instead of dictionary.

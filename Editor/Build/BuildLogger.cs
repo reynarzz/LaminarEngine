@@ -27,7 +27,7 @@ namespace Editor
 
             source.ErrorRaised += (_, e) =>
             {
-                if (e.ProjectFile.EndsWith(EditorPaths.GAME_PROJECT_FULL_NAME))
+               // if (e.ProjectFile.EndsWith(EditorPaths.GAME_PROJECT_FULL_NAME))
                 {
                     var error = $"{e.File}({e.LineNumber},{e.ColumnNumber}): {e.Message}";
                     Debug.Error(error);

@@ -619,6 +619,89 @@ namespace Engine.Utils
             return null;
         }
 
+        public static Type[] GetCollectionElementsTypes(Type type, out CollectionType collectionType, object value)
+        {
+            if (!IsCollection(type, out collectionType))
+                return null;
+
+            switch (collectionType)
+            {
+                case CollectionType.Array:
+                    {
+                        if (value == null)
+                        {
+                            return [type.GetElementType()];
+                        }
+
+                        var types = new HashSet<Type>();
+
+                        foreach (var item in value as IList)
+                        {
+                            var itemType = item?.GetType() ?? type.GetElementType();
+
+                            if (!types.Contains(itemType))
+                            {
+                                types.Add(itemType);
+                            }
+                        }
+
+                        return types.ToArray();
+                    }
+                case CollectionType.List:
+                case CollectionType.Stack:
+                case CollectionType.Queue:
+                case CollectionType.Hashset:
+                case CollectionType.Dictionary:
+                    {
+                        if (!type.IsGenericType)
+                        {
+                            Debug.EngineError($"FATAL: A non generic collection as defined as one: '{type.Name}'.");
+                        }
+                        if (value == null)
+                        {
+                            return type.GetGenericArguments();
+                        }
+                        var types = new HashSet<Type>();
+
+                        if (value is IDictionary dict)
+                        {
+                            var args = type.GetGenericArguments();
+
+                            void AddToTypes(ICollection collection, Type defaultArg, HashSet<Type> types)
+                            {
+                                foreach (var dArg in collection)
+                                {
+                                    var argType = dArg?.GetType() ?? defaultArg;
+                                    if (!types.Contains(argType))
+                                    {
+                                        types.Add(argType);
+                                    }
+                                }
+                            }
+
+                            AddToTypes(dict.Keys, args[0], types);
+                            AddToTypes(dict.Values, args[1], types);
+
+                            return types.ToArray();
+                        }
+
+                        var defArg = type.GetGenericArguments()[0];
+                        foreach (var item in value as ICollection)
+                        {
+                            var itemType = item?.GetType() ?? defArg;
+
+                            if (!types.Contains(itemType))
+                            {
+                                types.Add(itemType);
+                            }
+                        }
+
+                        return types.ToArray();
+                    }
+            }
+
+            return null;
+        }
 
         public static Type GetMemberType(MemberInfo member)
         {
@@ -759,24 +842,45 @@ namespace Engine.Utils
 
             // Array
             if (current.IsArray)
-                return ContainsType(current.GetElementType(), searched, visited, targetValue, checkOnlySerialized);
+            {
+                if (targetValue != null)
+                {
+                    var arr = targetValue as IList;
+                    
+                    foreach (var item in arr)
+                    {
+                        var itemType = item?.GetType() ?? current.GetElementType();
+                        if (ContainsType(itemType, searched, visited, item, checkOnlySerialized))
+                        {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                }
+                else
+                {
+                    return ContainsType(current.GetElementType(), searched, visited, targetValue, checkOnlySerialized);
+                }
+            }
 
             // Nullabl
             if (Nullable.GetUnderlyingType(current) is Type nullable)
                 return ContainsType(nullable, searched, visited, targetValue, checkOnlySerialized);
 
+            // Stop on internal types
+            if (IsInternalType(current))
+                return false;
+
             // Generic arguments
             if (current.IsGenericType)
             {
-                bool useDefault = true;
                 if (current.IsAssignableTo(typeof(IDictionary)))
                 {
                     var dictionary = targetValue as IDictionary;
 
                     if (dictionary != null)
                     {
-                        useDefault = false;
-
                         var genericArgs = current.GetGenericArguments();
 
                         foreach (var key in dictionary.Keys)
@@ -792,6 +896,8 @@ namespace Engine.Utils
                             if (ContainsType(type, searched, visited, val, checkOnlySerialized))
                                 return true;
                         }
+
+                        return false;
                     }
                 }
                 else if (current.IsAssignableTo(typeof(ICollection)))
@@ -800,7 +906,6 @@ namespace Engine.Utils
 
                     if (collection != null)
                     {
-                        useDefault = false;
                         var genericArgs = current.GetGenericArguments();
 
                         foreach (var item in collection)
@@ -810,23 +915,19 @@ namespace Engine.Utils
                             if (ContainsType(type, searched, visited, targetValue, checkOnlySerialized))
                                 return true;
                         }
+
+                        return false;
                     }
                 }
 
-                if (useDefault)
+                foreach (var arg in current.GetGenericArguments())
                 {
-                    foreach (var arg in current.GetGenericArguments())
-                    {
-                        if (ContainsType(arg, searched, visited, targetValue, checkOnlySerialized))
-                            return true;
-                    }
+                    if (ContainsType(arg, searched, visited, targetValue, checkOnlySerialized))
+                        return true;
                 }
             }
 
-            // Stop on internal types
-            if (IsInternalType(current))
-                return false;
-
+            
             IEnumerable<MemberInfo> members = null;
             if (checkOnlySerialized)
             {
@@ -840,7 +941,9 @@ namespace Engine.Utils
             foreach (var member in members)
             {
                 var memberType = GetMemberType(member);
-                if (ContainsType(memberType, searched, visited, targetValue, checkOnlySerialized))
+                var value = GetMemberValue(targetValue, member);
+
+                if (ContainsType(memberType, searched, visited, value, checkOnlySerialized))
                 {
                     return true;
                 }

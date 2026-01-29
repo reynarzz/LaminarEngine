@@ -116,8 +116,10 @@ namespace Editor.Serialization
                     return SerializedType.ComplexCollection;
                 }
 
+                // TODO: get all the elements in the collection so they can be checked in case there is a reference.
                 var elementsTypes = ReflectionUtils.GetCollectionElementsType(type);
-                var isSingleArgCollectionAEObject = elementsTypes.Length == 1 && elementsTypes[0].IsAssignableTo(typeof(IObject));
+                
+                var isSingleArgCollectionAEObject = elementsTypes.Length == 1 && elementsTypes.Any(x => x.IsAssignableTo(typeof(IObject)));
 
                 if (isSingleArgCollectionAEObject ||
                     (collectionType == ReflectionUtils.CollectionType.Dictionary && IsPureReferenceDictionary(elementsTypes, value)))
@@ -145,7 +147,8 @@ namespace Editor.Serialization
         }
 
         /// <summary>
-        /// Checks if the dictionary has not IObject deep in the graph, but only on the key or value generic args.
+        /// Checks if a dictionary containing a EObject has not EObject deep in the graph, but only on the key or value generic args.
+        /// Immediate in the key or value = pure, Deep into the object graph = not pure
         /// </summary>
         internal static bool IsPureReferenceDictionary(Type[] genericArgs, object value)
         {
@@ -155,25 +158,83 @@ namespace Editor.Serialization
                 return false;
             }
 
-            void Check(Type argType, out bool hasAny, out bool isTopLevel)
+            if (value == null)
             {
-                if (argType.IsAssignableTo(typeof(IObject)))
+                bool ContainsTop(Type argType, out bool hasAny)
                 {
-                    hasAny = true;
-                    isTopLevel = true;
-                    return;
+                    hasAny = false;
+                    if (ReflectionUtils.IsEObject(argType))
+                    {
+                        hasAny = true;
+                        return true;
+                    }
+
+                    hasAny = ReflectionUtils.HasAnySerializedMemberWithType(argType, typeof(IObject), null);
+
+                    return false;
+                }
+                
+                if (!ContainsTop(genericArgs[0], out var hasEObjectAsKey) && hasEObjectAsKey)
+                {
+                    return false;
                 }
 
-                hasAny = ReflectionUtils.HasAnySerializedMemberWithType(argType, typeof(IObject), value);
-                isTopLevel = false;
+                if (!ContainsTop(genericArgs[1], out var containsEObjectAsVal) && containsEObjectAsVal)
+                {
+                    return false;
+                }
+
+                return true;
             }
 
-            Check(genericArgs[0], out bool aHasAny, out bool aTop);
-            Check(genericArgs[1], out bool bHasAny, out bool bTop);
+            var dictionary = value as IDictionary;
 
-            return (aTop && (!bHasAny || bTop)) || (bTop && (!aHasAny || aTop));
+            void CheckInstanceArg(ICollection args, Type argDefault, out bool hasAny, out bool isTopLevel)
+            {
+                hasAny = false;
+                isTopLevel = false;
+
+                foreach (var argInstance in args)
+                {
+                    var argType = argInstance?.GetType() ?? argDefault;
+
+                    if (ReflectionUtils.IsEObject(argType))
+                    {
+                        hasAny = true;
+                        isTopLevel = true;
+                    }
+                    else
+                    {
+                        var hasEObject = ReflectionUtils.HasAnySerializedMemberWithType(argType, typeof(IObject), argInstance);
+
+                        if (hasEObject)
+                        {
+                            hasAny = true;
+                            isTopLevel = false;
+                            return;
+                        }
+                    }
+                }
+            }
+
+            // Check in keys using the runtime type.
+            CheckInstanceArg(dictionary.Keys, genericArgs[0], out var keyHasAny, out var keyTop);
+
+            if (keyHasAny && !keyTop)
+            {
+                return false;
+            }
+
+            // Check in values using the runtime type
+            CheckInstanceArg(dictionary.Values, genericArgs[1], out var valHasAny, out var valTop);
+
+            if (valHasAny && !valTop)
+            {
+                return false;
+            }
+
+            return true;
         }
-
 
         // This only returns reference ids, simple and complex property data.
         internal static object GetPropertyData(MemberInfo member, SerializedType serializedMemberType, object value)
@@ -234,7 +295,7 @@ namespace Editor.Serialization
                         var k = isKeyEObject ? GetReferenceData((dKey as IObject)?.GetID() ?? Guid.Empty, keySerializedType, dKey) : dKey;
                         var v = isValueEObject ? GetReferenceData((dValue as IObject)?.GetID() ?? Guid.Empty, ValueSerializedType, dValue) : dValue;
                         var referenceType = isKeyEObject ? dKey?.GetType() : dValue?.GetType();
-                        var serializedType = GetSerializedType(referenceType,null);
+                        var serializedType = GetSerializedType(referenceType, null);
 
                         if (serializedMemberType == SerializedType.ReferenceCollection)
                         {
@@ -344,10 +405,11 @@ namespace Editor.Serialization
                 case SerializedType.ScriptableObject:
                     return new ReferenceData() { Id = id };
                 case SerializedType.SpriteAsset:
-                    return new SpriteReferenceData() 
-                    { 
-                        Id = id, AtlasIndex = (value as Sprite).AtlasIndex, 
-                        TextureId = (value as Sprite).Texture.GetID() 
+                    return new SpriteReferenceData()
+                    {
+                        Id = id,
+                        AtlasIndex = (value as Sprite).AtlasIndex,
+                        TextureId = (value as Sprite).Texture.GetID()
                     };
                 default:
                     break;
