@@ -43,17 +43,15 @@ GFS is a 2D video game and game engine built entirely from scratch with **C#**, 
 #### Note: If you are only interested in playing the game, download the repo, and go to DemoBin/win32
 
 - Windows or macOS: .NET 9.0 SDK or later: https://dotnet.microsoft.com/en-us/download/dotnet/9.0
-- cd platforms/desktop
+- cd Editor
 - dotnet build
-- For publish builds, find the binaries on: _Ship/<platform_name>
-- Want to try the editor? cd Editor + dotnet build. Or Visual Studio: select the editor as startup project and run it.
 
-
-Optional
+- If using Visual Studio, select the editor as the startup project.
+- For building, open the editor and go to the Build window. The binaries can be found on: _Ship/<platform_name>, or your custom path.
+  
+Recommended
 --------
 - Use an IDE like Visual Studio 2022+, Rider, or VS Code with C# support.
-- On Visual Studio set "Entry_Desktop" or "Editor" as startup project.
-- Make sure your PATH includes the .NET 9.0 SDK.
 
 ## License
 This project is licensed under the Non-Commercial Copyleft License (NCCL).
