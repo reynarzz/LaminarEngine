@@ -28,10 +28,6 @@ namespace Engine.Android
             _pointerToSlot = new();
         }
 
-        public override void Initialize()
-        {
-        }
-
         internal override void UpdateLayer()
         {
             int activeCount = 0;

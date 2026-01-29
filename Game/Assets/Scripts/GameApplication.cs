@@ -49,7 +49,7 @@ namespace Game
         // Improve performance of contact dispatcher.
         // Implement instancing rendering.
 
-        public override Task Initialize()
+        protected override void OnInitialize()
         {
 #if DEBUG
     #if WIN32
@@ -66,9 +66,8 @@ namespace Game
             Screen.IsFullScreen = true;
             WindowManager.Window.CursorVisible = false;
 #endif
-            new Actor<LaunchScreen>("Launch Screen");
 
-            return Task.CompletedTask;
+            new Actor<LaunchScreen>("Launch Screen");
         }
 
         public override void Close() 

@@ -39,7 +39,7 @@ namespace Editor.Layers
             if (!Application.IsInPlayMode)
             {
                 _hotReload.SwapDll();
-                _time.Initialize();
+                _time.InitializeAsync();
                 Application.IsInPlayMode = true;
 
                 var gameLayer = _playmodeLayers[0];
@@ -57,7 +57,7 @@ namespace Editor.Layers
         {
             if (Application.IsInPlayMode)
             {
-                _time.Initialize();
+                _time.InitializeAsync();
 
                 foreach (var layerData in _playmodeLayers)
                 {

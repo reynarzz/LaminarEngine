@@ -10,7 +10,7 @@ namespace Engine.Layers
     {
         public static bool CleaningUp { get; private set; }
 
-        public override Task Initialize()
+        public override Task InitializeAsync()
         {
             return Task.CompletedTask;
         }

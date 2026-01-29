@@ -14,7 +14,6 @@ namespace Engine.Layers
         private bool _layersInitialized = false;
         public int Count => _layers.Length;
         public bool IsInitialized => _layersInitialized;
-
         public LayersManager([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type[] layersTypes)
         {
             _layers = new LayerBase[layersTypes.Length];
@@ -32,9 +31,13 @@ namespace Engine.Layers
             _cleanupLayer = new CleanUpLayer();
         }
 
-        internal virtual async Task Initialize()
+        internal virtual Task InitializeAsync()
         {
-            await _cleanupLayer.Initialize();
+            if (_layersInitialized)
+            {
+                Debug.EngineError("Layers are already initialized");
+                return Task.CompletedTask;
+            }
 
             for (int i = _layers.Length - 1; i >= 0; i--)
             {
@@ -42,7 +45,58 @@ namespace Engine.Layers
 
                 if(layer != null)
                 {
-                    await layer.Initialize();
+                     layer.InitializeAsync().GetAwaiter().GetResult();
+                }
+
+                //#if DEBUG
+                //                try
+                //                {
+                //                    _layers[i].Initialize();
+                //                }
+                //                catch (Exception e)
+                //                {
+                //                    Debug.Error(e);
+                //                }
+                //#else
+                //                _layers[i].Initialize();
+                //#endif
+            }
+
+            _layersInitialized = true;
+
+            return Task.CompletedTask;
+        }
+        /* internal virtual void InitializeNext()
+        {
+            if (_layersInitialized)
+            {
+                Debug.EngineError("Layers are already initialized");
+                return;
+            }
+
+            var layer = _layers[_layers.Length - 1 - _layerInitIndex];
+
+            if (layer != null)
+            {
+                layer.InitializeAsync().GetAwaiter().GetResult();
+            }
+        }*/
+        internal virtual void Initialize()
+        {
+            if (_layersInitialized)
+            {
+                Debug.EngineError("Layers are already initialized");
+                return;
+            }
+            _cleanupLayer.Initialize();
+
+            for (int i = _layers.Length - 1; i >= 0; i--)
+            {
+                var layer = _layers[i];
+
+                if (layer != null)
+                {
+                    layer.Initialize();
                 }
 
                 //#if DEBUG
@@ -62,6 +116,7 @@ namespace Engine.Layers
             _layersInitialized = true;
         }
 
+
         internal void PushLayer(LayerBase layer, int index)
         {
             if (index < 0 || index >= _layers.Length)
@@ -72,7 +127,7 @@ namespace Engine.Layers
 
             _layers[index] = layer;
 
-            layer.Initialize();
+            layer.InitializeAsync();
         }
 
         internal void PopLayer(int index)

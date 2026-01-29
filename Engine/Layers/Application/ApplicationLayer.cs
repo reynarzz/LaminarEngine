@@ -8,6 +8,14 @@ namespace Engine.Layers
 {
     public abstract class ApplicationLayer : LayerBase
     {
+        public sealed override Task InitializeAsync()
+        {
+            OnInitialize();
+
+            return Task.CompletedTask;
+        }
+
+        protected abstract void OnInitialize();
         public virtual void OnFocusEnter() { }
         public virtual void OnFocusExit() { }
     }

@@ -22,7 +22,7 @@ namespace Editor
             _instance = this;
         }
 
-        public override Task Initialize()
+        public override Task InitializeAsync()
         {
             InitializeIO(_devDisk, new Dictionary<AssetType, AssetBuilderBase>()
             {

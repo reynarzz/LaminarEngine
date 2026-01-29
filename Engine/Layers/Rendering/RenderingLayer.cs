@@ -30,26 +30,24 @@ namespace Engine.Layers
             _drawPostProcessCallback = PostProcessDraw;
         }
 
-        public override Task Initialize()
+        public override Task InitializeAsync()
         {
-            MainThreadDispatcher.EnqueueAsync(() =>
+            GfxDeviceManager.Init();
+
+            _screenPipelineFeatures = new PipelineFeatures();
+            _defaultRenderTexture = new RenderTexture(Screen.Width, Screen.Height);
+
+            _renderers = new();
+            _UIElementRenderers = new();
+
+            _screenQuadDrawCallData = new DrawCallData()
             {
-                GfxDeviceManager.Init();
+                Textures = new GfxResource[GfxDeviceManager.Current.GetDeviceInfo().MaxValidTextureUnits],
+                Uniforms = new UniformValue[GfxDeviceManager.Current.GetDeviceInfo().MaxUniformsCount],
+            };
 
-                _screenPipelineFeatures = new PipelineFeatures();
-                _defaultRenderTexture = new RenderTexture(Screen.Width, Screen.Height);
-
-                _renderers = new();
-                _UIElementRenderers = new();
-
-                _screenQuadDrawCallData = new DrawCallData()
-                {
-                    Textures = new GfxResource[GfxDeviceManager.Current.GetDeviceInfo().MaxValidTextureUnits],
-                    Uniforms = new UniformValue[GfxDeviceManager.Current.GetDeviceInfo().MaxUniformsCount],
-                };
-
-                // Default surface
-                InitializeSurfaces([new RenderingSurface()
+            // Default surface
+            InitializeSurfaces([new RenderingSurface()
                 {
                    PickCameraFromSceneGraph = true,
                    RenderPostProcessing = true,
@@ -61,10 +59,8 @@ namespace Engine.Layers
                    RenderDebug = true,
     #endif
                 }]);
-                _screenGeometry = GraphicsHelper.CreateQuadGeometry();
-                WindowManager.Window.OnWindowChanged += OnWindowsChanged;
-
-            });
+            _screenGeometry = GraphicsHelper.CreateQuadGeometry();
+            WindowManager.Window.OnWindowChanged += OnWindowsChanged;
 
             return Task.CompletedTask;
         }

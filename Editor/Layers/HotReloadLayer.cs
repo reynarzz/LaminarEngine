@@ -26,7 +26,7 @@ namespace Editor.Layers
 
         }
 
-        public override Task Initialize()
+        public override Task InitializeAsync()
         {
             return BuildSystem.BuildAsync(PlatformBuild.GameAppDomain);
         }

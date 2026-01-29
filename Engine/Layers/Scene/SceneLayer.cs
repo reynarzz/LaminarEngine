@@ -7,7 +7,7 @@ namespace Engine.Layers
 {
     internal class SceneLayer : LayerBase
     {
-        public override Task Initialize()
+        public override Task InitializeAsync()
         {
             SceneManager.Initialize();
 

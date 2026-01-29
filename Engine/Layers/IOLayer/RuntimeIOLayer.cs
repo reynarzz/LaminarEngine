@@ -10,7 +10,7 @@ namespace Engine.Layers
 {
     internal class RuntimeIOLayer : IOLayer
     {
-        public override Task Initialize()
+        public override Task InitializeAsync()
         {
             DiskBase disk = null;
 #if !MOBILE

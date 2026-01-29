@@ -15,7 +15,8 @@ namespace Engine.Layers
     public abstract class LayerBase
     {
         //internal abstract int Priority { get; set; }
-        public abstract Task Initialize();
+        public virtual Task InitializeAsync() { return Task.CompletedTask; }
+        public virtual void Initialize() { }
         public abstract void Close();
         internal virtual void UpdateLayer() { }
         public virtual void OnPause() { }

@@ -12,7 +12,7 @@ namespace Engine.Layers
         private const float _timeWrapLength = 10;
         private float _second;
         private int _frames;
-        public override Task Initialize()
+        public override Task InitializeAsync()
         {
             _stopwatch = new Stopwatch();
             _stopwatch.Start();

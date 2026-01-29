@@ -15,7 +15,7 @@ namespace Engine.Layers
 
         }
 
-        public override Task Initialize()
+        public override Task InitializeAsync()
         {
             return Task.CompletedTask;
         }

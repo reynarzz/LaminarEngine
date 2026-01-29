@@ -21,7 +21,7 @@ namespace Engine.Layers
         private static float _accumulator = 0f;
         private const float _fixedTimeStep = 0.02f;
 
-        public override Task Initialize()
+        public override Task InitializeAsync()
         {
             PhysicWorld.Initialize();
             _contactDispatcher = new ContactsDispatcher();
