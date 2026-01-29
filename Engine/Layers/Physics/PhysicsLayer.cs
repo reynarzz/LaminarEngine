@@ -21,13 +21,15 @@ namespace Engine.Layers
         private static float _accumulator = 0f;
         private const float _fixedTimeStep = 0.02f;
 
-        public override void Initialize()
+        public override Task Initialize()
         {
             PhysicWorld.Initialize();
             _contactDispatcher = new ContactsDispatcher();
             B2Worlds.b2World_SetCustomFilterCallback(PhysicWorld.WorldID, CustomFilter, this);
             _accumulator = 0;
             _rigidbodies.Clear();
+
+            return Task.CompletedTask;
         }
 
         public bool CustomFilter(B2ShapeId shapeIdA, B2ShapeId shapeIdB, object context)

@@ -8,8 +8,9 @@
 	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	  <AppendRuntimeIdentifierToOutputPath>False</AppendRuntimeIdentifierToOutputPath>
 	  <AppendTargetFrameworkToOutputPath>False</AppendTargetFrameworkToOutputPath>
+	  <DefineConstants>$(DefineConstants);EDITOR</DefineConstants>
   </PropertyGroup>
-
+	
 	<PropertyGroup Condition="'$(OS)' == 'Unix' AND&#xD;&#xA;'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform(&#xD;&#xA;   $([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'True'">
   <MacLibFolder>lib-universal</MacLibFolder>
 </PropertyGroup>

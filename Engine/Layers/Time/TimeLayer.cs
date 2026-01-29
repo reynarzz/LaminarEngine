@@ -12,7 +12,7 @@ namespace Engine.Layers
         private const float _timeWrapLength = 10;
         private float _second;
         private int _frames;
-        public override void Initialize()
+        public override Task Initialize()
         {
             _stopwatch = new Stopwatch();
             _stopwatch.Start();
@@ -20,6 +20,8 @@ namespace Engine.Layers
             _timePast = 0;
             _unscaledTimePast = 0;
             Restart();
+
+            return Task.CompletedTask;
         }
 
         internal override void UpdateLayer()
@@ -69,7 +71,7 @@ namespace Engine.Layers
         }
         public override void Close()
         {
-            _stopwatch.Stop();
+            _stopwatch?.Stop();
         }
     }
 }

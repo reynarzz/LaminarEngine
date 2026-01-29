@@ -30,13 +30,11 @@ namespace Editor.Build
         // internal static bool IsError { get; private set; } = false;
 
         private static readonly Dictionary<PlatformBuild, PlatformBuilder> _platformBuilders;
-        private readonly static SynchronizationContext _mainContext;
         public static event Action<BuildResult> OnBuildCompleted;
         private static PlatformBuild? _currentPlatformBuilding;
 
         static BuildSystem()
         {
-            _mainContext = SynchronizationContext.Current;
             MSBuildLocator.RegisterDefaults();
 
             _platformBuilders = new Dictionary<PlatformBuild, PlatformBuilder>()
@@ -91,20 +89,15 @@ namespace Editor.Build
 
         private static void RaiseBuildCompleted(BuildResult result, Action<BuildResult> resultCallback)
         {
-            var ctx = _mainContext;
 
-            if (ctx != null)
+            if (SynchronizationContext.Current != null)
             {
-                ctx.Post(_ => 
+                SynchronizationContext.Current.Send(_ => 
                 { 
                     OnBuildCompleted?.Invoke(result);
-                }, null);
-
-                ctx.Post(_ =>
-                {
                     resultCallback?.Invoke(result);
-                }, null);
 
+                }, null);
             }
             else
             {

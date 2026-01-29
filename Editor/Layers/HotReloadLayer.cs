@@ -23,12 +23,14 @@ namespace Editor.Layers
         public HotReloadLayer()
         {
             BuildSystem.OnBuildCompleted += OnBuildCompleted;
+
         }
 
-        public override void Initialize()
+        public override Task Initialize()
         {
-            BuildSystem.BuildAsync(PlatformBuild.GameAppDomain);
+            return BuildSystem.BuildAsync(PlatformBuild.GameAppDomain);
         }
+
 
         private void OnBuildCompleted(BuildResult result)
         {

@@ -34,16 +34,18 @@ namespace Editor
                   new ImGuiLayer(win, inputLayer),
                   new RenderingLayer(),
                   new EditorIOLayer(),
-                  _hotReload = new HotReloadLayer()])
+                  _hotReload = new HotReloadLayer()
+                  ])
         {
             _playmodeController = new PlaymodeController(this, _time, _hotReload);
 
         }
 
-        internal override void Initialize()
+        internal override async Task Initialize()
         {
-            base.Initialize();
+            await base.Initialize();
         }
+
         private Shader _test;
         private Material _materialTest;
         internal override void Update()
@@ -140,7 +142,7 @@ namespace Editor
         {
             var resolutions = Enum.GetValues<AndroidIconSizes>();
             var dir = Path.Combine(EditorPaths.AppRoot, "Platforms/Android/Resources");
-           
+
             var channels = 4;
 
             void AddIcons(string name, Texture texture)

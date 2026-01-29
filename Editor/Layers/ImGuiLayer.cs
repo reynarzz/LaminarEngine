@@ -54,36 +54,38 @@ namespace Editor.Layers
             };
         }
 
-        public override void Initialize()
+        public override Task Initialize()
         {
-            var sceneBatcher = new SceneBatchedRenderer();
-            _gameSurface.SceneRenderers = new() { sceneBatcher };
-            _editorCamera = new EditorCamera();
-            _editorSurface = new RenderingSurface()
+            MainThreadDispatcher.EnqueueAsync(() =>
             {
-                Cameras = [new WeakReference<ICamera>(_editorCamera)],
-                RenderDebug = true,
-                RenderPostProcessing = false,
-                RenderUI = true,
-                BlitToScreen = false,
-                DrawGizmos = true,
-                GizmosRenderer = new GizmosRenderer(),
-                RenderTextures = [new RenderTexture(1920, 1080) { Name = "Scene view Render Texture" },
+                var sceneBatcher = new SceneBatchedRenderer();
+                _gameSurface.SceneRenderers = new() { sceneBatcher };
+                _editorCamera = new EditorCamera();
+                _editorSurface = new RenderingSurface()
+                {
+                    Cameras = [new WeakReference<ICamera>(_editorCamera)],
+                    RenderDebug = true,
+                    RenderPostProcessing = false,
+                    RenderUI = true,
+                    BlitToScreen = false,
+                    DrawGizmos = true,
+                    GizmosRenderer = new GizmosRenderer(),
+                    RenderTextures = [new RenderTexture(1920, 1080) { Name = "Scene view Render Texture" },
                                   new RenderTexture(1920, 1080) { Name = "Mouse picker Render Texture" }],
-                SceneRenderers =
+                    SceneRenderers =
                 {
                     sceneBatcher,
                 },
-            };
+                };
 
-            RenderingLayer.InitializeSurfaces([_gameSurface, _editorSurface]);
+                RenderingLayer.InitializeSurfaces([_gameSurface, _editorSurface]);
 
-            _win.OnWindowChanged += (w, h) =>
-            {
-                UpdateLayer();
-            };
+                _win.OnWindowChanged += (w, h) =>
+                {
+                    UpdateLayer();
+                };
 
-            _windows = new List<EditorWindow>()
+                _windows = new List<EditorWindow>()
             {
                 _gameWindow,
                 new ActionBarView(),
@@ -98,6 +100,10 @@ namespace Editor.Layers
                 new TaskWindow()
                 // new ConsoleEditorView()
             };
+
+            });
+          
+            return Task.CompletedTask;
         }
 
         private void Draw()

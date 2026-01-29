@@ -37,13 +37,15 @@ namespace Engine.Layers.Input
             Gamepad = new GamepadInput(_gamepads);
         }
 
-        public override void Initialize()
+        public override Task Initialize()
         {
             _keyCodesArray = Enum.GetValues<KeyCode>();
             _mouseButtonsArray = Enum.GetValues<MouseButton>();
 
             _previousKeys = new HashSet<KeyCode>();
             _previousMouse = new HashSet<MouseButton>();
+            return Task.CompletedTask;
+
         }
 
         private void CopyKeys<T>(HashSet<T> from, HashSet<T> to)
@@ -58,8 +60,10 @@ namespace Engine.Layers.Input
         internal override void UpdateLayer()
         {
             // Poll OS events
+#if !EDITOR
+            Debug.Log("update input");
             Glfw.PollEvents();
-
+#endif
             if (!IsEnabled)
             {
                 _previousKeys.Clear();

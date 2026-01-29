@@ -7,9 +7,11 @@ namespace Engine.Layers
 {
     internal class SceneLayer : LayerBase
     {
-        public override void Initialize()
+        public override Task Initialize()
         {
             SceneManager.Initialize();
+
+            return Task.CompletedTask;
         }
 
         internal override void UpdateLayer()

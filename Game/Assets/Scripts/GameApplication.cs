@@ -1,6 +1,7 @@
 ﻿using Engine;
 using Engine.Layers;
 using System;
+using System.Threading.Tasks;
 
 namespace Game
 {
@@ -48,7 +49,7 @@ namespace Game
         // Improve performance of contact dispatcher.
         // Implement instancing rendering.
 
-        public override void Initialize()
+        public override Task Initialize()
         {
 #if DEBUG
     #if WIN32
@@ -67,6 +68,7 @@ namespace Game
 #endif
             new Actor<LaunchScreen>("Launch Screen");
 
+            return Task.CompletedTask;
         }
 
         public override void Close() 

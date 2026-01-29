@@ -15,9 +15,9 @@ namespace Engine.Layers
 
         }
 
-        public override void Initialize()
+        public override Task Initialize()
         {
-
+            return Task.CompletedTask;
         }
 
         internal override void UpdateLayer()

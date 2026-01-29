@@ -10,7 +10,7 @@ namespace Engine.Layers
 {
     internal class RuntimeIOLayer : IOLayer
     {
-        public override void Initialize()
+        public override Task Initialize()
         {
             DiskBase disk = null;
 #if !MOBILE
@@ -32,6 +32,8 @@ namespace Engine.Layers
             };
 
             InitializeIO(disk, assetbuilder);
+
+            return Task.CompletedTask;
         }
     }
 }

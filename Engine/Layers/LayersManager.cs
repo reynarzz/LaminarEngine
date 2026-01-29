@@ -13,6 +13,7 @@ namespace Engine.Layers
         private CleanUpLayer _cleanupLayer;
         private bool _layersInitialized = false;
         public int Count => _layers.Length;
+        public bool IsInitialized => _layersInitialized;
 
         public LayersManager([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type[] layersTypes)
         {
@@ -31,13 +32,18 @@ namespace Engine.Layers
             _cleanupLayer = new CleanUpLayer();
         }
 
-        internal virtual void Initialize()
+        internal virtual async Task Initialize()
         {
-            _cleanupLayer.Initialize();
+            await _cleanupLayer.Initialize();
 
             for (int i = _layers.Length - 1; i >= 0; i--)
             {
-                _layers[i]?.Initialize();
+                var layer = _layers[i];
+
+                if(layer != null)
+                {
+                    await layer.Initialize();
+                }
 
                 //#if DEBUG
                 //                try
@@ -58,7 +64,7 @@ namespace Engine.Layers
 
         internal void PushLayer(LayerBase layer, int index)
         {
-            if(index < 0 || index >= _layers.Length)
+            if (index < 0 || index >= _layers.Length)
             {
                 Debug.Error("Wrong layer index: " + index);
                 return;

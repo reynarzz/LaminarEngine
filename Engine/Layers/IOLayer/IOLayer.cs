@@ -20,7 +20,7 @@ namespace Engine.Layers
 
             disk.Initialize();
 
-            _assetDatabase.Initialize(disk);
+           _assetDatabase.Initialize(disk);
         }
 
         private protected void Reload(DiskBase disk)

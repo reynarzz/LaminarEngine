@@ -23,7 +23,7 @@ namespace Engine.Layers
         private float _currentRetryTime = 0;
         private static readonly AudioFormat _defaultFormat = AudioFormat.DvdHq;
 
-        public override void Initialize()
+        public override Task Initialize()
         {
             _engine = new MiniAudioEngine();
             var defaultDevice = _engine.PlaybackDevices?.FirstOrDefault(x => x.IsDefault) ?? default;
@@ -49,6 +49,8 @@ namespace Engine.Layers
 
             // Effects:
             // ParametricEqualizer 
+
+            return Task.CompletedTask;
         }
 
         internal override void UpdateLayer()

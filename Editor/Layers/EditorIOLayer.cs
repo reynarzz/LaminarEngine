@@ -16,13 +16,13 @@ namespace Editor
         private DevModeDisk _devDisk = new();
         private static EditorIOLayer _instance;
         public static EditorIOLayer Instance => _instance; // Dirty, please remove.
-
+        private bool _intiialized = false;
         public EditorIOLayer()
         {
             _instance = this;
         }
 
-        public override void Initialize()
+        public override Task Initialize()
         {
             InitializeIO(_devDisk, new Dictionary<AssetType, AssetBuilderBase>()
             {
@@ -36,10 +36,15 @@ namespace Editor
                 { AssetType.AnimationController, new AnimationControllerAssetBuilderEditor() },
                 { AssetType.Material, new MaterialAssetBuilderEditor() },
             });
+            _intiialized = true;
+            return Task.CompletedTask;
         }
 
         internal void ReloadDisk(AssetsDatabaseInfo assetDatabase)
         {
+            if (!_intiialized)
+                return;
+
             _devDisk.Initialize();
             Reload(_devDisk);
 

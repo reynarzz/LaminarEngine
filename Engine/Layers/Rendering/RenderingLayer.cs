@@ -30,35 +30,43 @@ namespace Engine.Layers
             _drawPostProcessCallback = PostProcessDraw;
         }
 
-        public override void Initialize()
+        public override Task Initialize()
         {
-            _screenPipelineFeatures = new PipelineFeatures();
-            _defaultRenderTexture = new RenderTexture(Screen.Width, Screen.Height);
-
-            _renderers = new();
-            _UIElementRenderers = new();
-
-            _screenQuadDrawCallData = new DrawCallData()
+            MainThreadDispatcher.EnqueueAsync(() =>
             {
-                Textures = new GfxResource[GfxDeviceManager.Current.GetDeviceInfo().MaxValidTextureUnits],
-                Uniforms = new UniformValue[GfxDeviceManager.Current.GetDeviceInfo().MaxUniformsCount],
-            };
+                GfxDeviceManager.Init();
 
-            // Default surface
-            InitializeSurfaces([new RenderingSurface()
-            {
-               PickCameraFromSceneGraph = true,
-               RenderPostProcessing = true,
-               BlitToScreen = true,
-               RenderUI = true,
-               UIViewProj = UICanvas.UIViewProj,
-               SceneRenderers = { new SceneBatchedRenderer() },
-#if DEBUG
-               RenderDebug = true,
-#endif
-            }]);
-            _screenGeometry = GraphicsHelper.CreateQuadGeometry();
-            WindowManager.Window.OnWindowChanged += OnWindowsChanged;
+                _screenPipelineFeatures = new PipelineFeatures();
+                _defaultRenderTexture = new RenderTexture(Screen.Width, Screen.Height);
+
+                _renderers = new();
+                _UIElementRenderers = new();
+
+                _screenQuadDrawCallData = new DrawCallData()
+                {
+                    Textures = new GfxResource[GfxDeviceManager.Current.GetDeviceInfo().MaxValidTextureUnits],
+                    Uniforms = new UniformValue[GfxDeviceManager.Current.GetDeviceInfo().MaxUniformsCount],
+                };
+
+                // Default surface
+                InitializeSurfaces([new RenderingSurface()
+                {
+                   PickCameraFromSceneGraph = true,
+                   RenderPostProcessing = true,
+                   BlitToScreen = true,
+                   RenderUI = true,
+                   UIViewProj = UICanvas.UIViewProj,
+                   SceneRenderers = { new SceneBatchedRenderer() },
+    #if DEBUG
+                   RenderDebug = true,
+    #endif
+                }]);
+                _screenGeometry = GraphicsHelper.CreateQuadGeometry();
+                WindowManager.Window.OnWindowChanged += OnWindowsChanged;
+
+            });
+
+            return Task.CompletedTask;
         }
 
         private void OnWindowsChanged(int w, int h)
@@ -80,7 +88,7 @@ namespace Engine.Layers
 
         private bool IsValidCamera(WeakReference<ICamera> camera)
         {
-            if(camera != null && camera.TryGetTarget(out var target))
+            if (camera != null && camera.TryGetTarget(out var target))
             {
                 return target != null && target.IsAlive;
             }
@@ -136,7 +144,7 @@ namespace Engine.Layers
                     RenderScene(surface, camera);
                 }
             }
-            
+
             OnRenderingEnd?.Invoke();
         }
 
@@ -304,7 +312,7 @@ namespace Engine.Layers
         private void PostProcessDraw(Shader shader, RenderTexture inTex, RenderTexture outTex, UniformValue[] uniforms)
         {
             // TODO: Fix selecting the current rendering camera from the surface, for now its using the scene camera.
-            if(_sceneCamera.TryGetTarget(out var camera))
+            if (_sceneCamera.TryGetTarget(out var camera))
             {
                 DrawScreenQuad(shader, inTex, outTex, uniforms, camera);
             }

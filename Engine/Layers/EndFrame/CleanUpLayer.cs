@@ -10,8 +10,9 @@ namespace Engine.Layers
     {
         public static bool CleaningUp { get; private set; }
 
-        public override void Initialize()
+        public override Task Initialize()
         {
+            return Task.CompletedTask;
         }
 
         internal override void UpdateLayer()

@@ -9,6 +9,7 @@ namespace Engine
     {
         private LayersManager _layersManager;
         internal static BinaryReader AssetFileStream { get; private set; }
+        internal static SynchronizationContext SyncContext { get; private set; }
         public GFSEngine(IWindow window, ApplicationLayer appLayer, InputLayerBase input) :
             this(window, appLayer, input, null)
         { }
@@ -33,15 +34,15 @@ namespace Engine
         internal GFSEngine(IWindow window, InputLayerBase input, LayersManager layerManager, BinaryReader assetFileStream)
         {
 #if DEBUG
-    #if WIN32
+#if WIN32
                 Debug.Log("Engine running windows");
-    #elif ANDROID
+#elif ANDROID
                 Debug.Log("Engine running android");
-    #elif MACOS
+#elif MACOS
                 Debug.Log("Engine running macOs");
-    #elif EDITOR
+#elif EDITOR
                 Debug.Log("Engine running editor");
-    #endif
+#endif
 #endif
             WindowManager.Window = window;
             Input.CurrentInput = input;
@@ -49,10 +50,14 @@ namespace Engine
 
             window.OnWindowChanged += (x, y) => layerManager.Update();
             window.OnWindowClose += () => { layerManager.OnClose(); };
+            SyncContext = new SynchronizationContext();
+            SynchronizationContext.SetSynchronizationContext(SyncContext);
+
             if (window.IsInitialized)
             {
                 _layersManager = layerManager;
-                _layersManager.Initialize();
+
+                _layersManager.Initialize().GetAwaiter().GetResult();
             }
         }
 
