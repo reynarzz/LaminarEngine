@@ -111,7 +111,7 @@ namespace Game
 
         public class InterA : ITestInterface<Texture2D>
         {
-            [SerializedField] public Texture2D a { get; set; } 
+            public Texture2D a { get; set; } 
         }
 
         [SerializedField] private ITestInterface<Texture2D> InterfaceSera;// = new InterA() { a = new Sprite(0, Assets.GetTexture("starkTileset.png")) };

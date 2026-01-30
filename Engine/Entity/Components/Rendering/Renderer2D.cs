@@ -10,7 +10,6 @@ namespace Engine
 {
     public abstract class Renderer2D : Renderer
     {
-        private uint _colorpacket = Color.White;
         private RendererData2D _renderData;
         internal override RendererData RendererData
         {

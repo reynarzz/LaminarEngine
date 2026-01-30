@@ -1,4 +1,5 @@
 ﻿using Engine.Graphics;
+using Engine.Layers;
 using GlmNet;
 using System;
 using System.Collections.Generic;
@@ -55,6 +56,21 @@ namespace Engine
             Sprite = new Sprite(0, Texture2D.White); // Remove this, reference default sprite
             _rendererData.PrivateBatch = true; // TODO: Remove this
         }
+
+        internal override void OnInternalInitialize()
+        {
+            base.OnInternalInitialize();
+
+            RenderingLayer.PushRenderer(this);
+        }
+
+        public override void OnEnabled()
+        {
+            base.OnEnabled();
+
+            RenderingLayer.PushRenderer(this);
+        }
+
 
         void IStartableComponent.OnStart()
         {

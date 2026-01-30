@@ -55,7 +55,7 @@ namespace Editor.Build
             {
                 return Task.CompletedTask;
             }
-            
+            IsAnyBuilding = true;
             _currentPlatformBuilding = platform;
 
             return Task.Run(async () =>
@@ -64,13 +64,12 @@ namespace Editor.Build
                 {
                     if (_platformBuilders.TryGetValue(platform, out var builder))
                     {
-                        IsAnyBuilding = true;
                         var platformBuildResult = await builder.Build();
                         platformBuildResult.Platform = platform;
                         RaiseBuildCompleted(platformBuildResult, resultCallback);
                     }
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Debug.Error(e);
                 }
@@ -92,8 +91,8 @@ namespace Editor.Build
 
             if (SynchronizationContext.Current != null)
             {
-                SynchronizationContext.Current.Send(_ => 
-                { 
+                SynchronizationContext.Current.Send(_ =>
+                {
                     OnBuildCompleted?.Invoke(result);
                     resultCallback?.Invoke(result);
 

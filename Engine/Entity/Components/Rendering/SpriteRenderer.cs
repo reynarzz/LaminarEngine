@@ -1,4 +1,5 @@
 ﻿using Engine.Graphics;
+using Engine.Layers;
 using Engine.Types;
 using SharedTypes;
 using System;
@@ -56,6 +57,20 @@ namespace Engine
                 }
                 RendererData.IsDirty = true;
             }
+        }
+
+        internal override void OnInternalInitialize()
+        {
+            base.OnInternalInitialize();
+
+            RenderingLayer.PushRenderer(this);
+        }
+
+        public override void OnEnabled()
+        {
+            base.OnEnabled();
+
+            RenderingLayer.PushRenderer(this);
         }
     }
 }

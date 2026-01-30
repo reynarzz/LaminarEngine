@@ -44,26 +44,23 @@ namespace Engine.Layers
         {
             _accumulator = Math.Min(_accumulator + Time.DeltaTime, 0.25f);
 
-            // TODO: refactor, this is for fast prototyping
             _rigidbodies.Clear();
             SceneManager.FindAll(_rigidbodies, findDisabled: false);
-
-            foreach (var rigidbody in _rigidbodies)
-            {
-                rigidbody.PreUpdateBody();
-            }
 
             while (_accumulator >= _fixedTimeStep)
             {
                 _contactDispatcher.Update();
-
                 SceneManager.FixedUpdate();
 
                 foreach (var rigidbody in _rigidbodies)
                 {
-                    rigidbody.PreUpdateBody();
+                    if (!rigidbody)
+                        continue;
+
                     rigidbody.PrevLocalPosition = rigidbody.Transform.LocalPosition;
                     rigidbody.PrevLocalRotation = rigidbody.Transform.LocalRotation;
+
+                    rigidbody.PreUpdateBody();
                 }
 
                 B2Worlds.b2World_Step(PhysicWorld.WorldID, _fixedTimeStep, 3);
@@ -71,10 +68,10 @@ namespace Engine.Layers
 
                 foreach (var rigidbody in _rigidbodies)
                 {
-                    if (rigidbody)
-                    {
-                        rigidbody.PostUpdateBody();
-                    }
+                    if (!rigidbody)
+                        continue;
+
+                    rigidbody.PostUpdateBody();
                 }
             }
 
@@ -82,16 +79,20 @@ namespace Engine.Layers
 
             foreach (var rigidbody in _rigidbodies)
             {
+                if (!rigidbody)
+                    continue;
+
                 rigidbody.CalculatePhysicsInterpolation(rigidbody.Transform, rigidbody.PrevLocalPosition, rigidbody.PrevLocalRotation, alpha);
             }
         }
+
         internal static void Clear()
         {
             _accumulator = 0;
             _rigidbodies.Clear();
             _contactDispatcher.ClearCollisions();
         }
-        public override void Close() 
+        public override void Close()
         {
             Clear();
             PhysicWorld.Clear();

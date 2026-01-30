@@ -32,17 +32,16 @@ namespace Editor
     // Bug with mouse picker: cliking almost the top border of the scene window doesn't register a pick, and performance degrades.
 
     // Fix:
-    // Copy native dependencies to bin directories.
     // Investigate why when the scene is reloaded old objects are still alive.
     // Rebuild the rendering system.
-    // -The serializer cannot correctly serialize Dictionary<value, BaseType> when instances of BaseType are generic: Child<T> : BaseType
-    //   this causes to Reflection.HasAnySerializedMemberWithType return false, when it has EObject.
-    
+    // Compilation can get stuck forever.
+
     // Serialization
     // - Forbid serialization of dictionaries that contains EObject as key?
     // - Generic can serialize EObject as simple class if the property/field doesn't contain [Serializable]
     // - For runtime create a dictionary with all the types, so types can be saved and found quickly: Dictionary<Guid, Type>
     // - Maybe I should remove the 'SimpleClass' and serialize all classes as complex so I avoid serializing complex classes as simple.
+         // Fix the issue of references.
 
     // Performance fix:
     // Fix CollisionDispatcher Hashset use instead of dictionary.
@@ -74,7 +73,7 @@ namespace Editor
 
             NativeLogger.Init();
             EditorNatives.InitImAllGui();
-
+             
             _win = new WindowStandalone("GFS Editor", 1424, 840, Color.Black, new TextureDescriptor()
             {
                 Width = EditorDefaultIcon.Width,

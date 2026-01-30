@@ -1,5 +1,6 @@
 ﻿using Box2D.NET;
 using Engine.Graphics;
+using Engine.Layers;
 using Engine.Types;
 using Engine.Utils;
 using GlmNet;
@@ -60,7 +61,17 @@ namespace Engine
                 Min = vec3.One * int.MaxValue,
                 Max = vec3.One * int.MinValue
             };
+
+            RenderingLayer.PushRenderer(this);
         }
+
+        public override void OnEnabled()
+        {
+            base.OnEnabled();
+
+            RenderingLayer.PushRenderer(this);
+        }
+
         protected override void OnAwake()
         {
             base.OnAwake();

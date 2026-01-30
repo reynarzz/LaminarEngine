@@ -1,4 +1,5 @@
 ﻿using Engine.GUI;
+using Engine.Layers;
 using Engine.Types;
 using GlmNet;
 using System;
@@ -17,6 +18,20 @@ namespace Engine
         public bool UseCustomSorting { get; set; }
         public bool BlockEvents { get; set; } = true;
         public bool ReceiveEvents { get; set; } = true;
+
+        internal override void OnInternalInitialize()
+        {
+            base.OnInternalInitialize();
+
+            RenderingLayer.PushUIRenderer(this);
+        }
+
+        public override void OnEnabled()
+        {
+            base.OnEnabled();
+
+            RenderingLayer.PushUIRenderer(this);
+        }
 
         internal sealed override void Draw()
         {

@@ -2,6 +2,7 @@
 using Engine.GUI;
 using Engine.Utils;
 using GlmNet;
+using System.Runtime.InteropServices;
 
 namespace Engine.Layers
 {
@@ -11,12 +12,9 @@ namespace Engine.Layers
         private DrawCallData _screenQuadDrawCallData;
         private PipelineFeatures _screenPipelineFeatures;
         private GfxResource _screenGeometry;
-        private List<Renderer2D> _renderers;
-        private List<Renderer2D> _UIElementRenderers;
 
-        private List<RendererData2D> _renderersData;
-        private List<RendererData2D> _UIElementRenderersData;
-
+        private readonly static Dictionary<Guid, RendererData2D> _renderersById = new();
+        private readonly static Dictionary<Guid, RendererData2D> _uiRenderersById = new();
         internal static DrawOverlayOptions OverlayOptions { get; } = new DrawOverlayOptions();
 
         private static readonly List<RenderingSurface> _renderingSurfaces = new();
@@ -36,9 +34,6 @@ namespace Engine.Layers
 
             _screenPipelineFeatures = new PipelineFeatures();
             _defaultRenderTexture = new RenderTexture(Screen.Width, Screen.Height);
-
-            _renderers = new();
-            _UIElementRenderers = new();
 
             _screenQuadDrawCallData = new DrawCallData()
             {
@@ -70,6 +65,26 @@ namespace Engine.Layers
             _defaultRenderTexture.UpdateTarget(w, h);
         }
 
+        internal static void PushRenderer(Renderer renderer)
+        {
+            renderer.RendererData.OnDestroyRenderer += OnRendererDestroyed;
+            _renderersById.Add(renderer.GetID(), renderer.RendererData as RendererData2D);
+        }
+
+        internal static void PushUIRenderer(UIElement element)
+        {
+            element.RendererData.OnDestroyRenderer += OnUIRendererDestroyed;
+            _uiRenderersById.Add(element.GetID(), element.RendererData as RendererData2D);
+        }
+
+        private static void OnRendererDestroyed(RendererData renderer)
+        {
+            _renderersById.Remove(renderer.ID);
+        }
+        private static void OnUIRendererDestroyed(RendererData renderer)
+        {
+            _uiRenderersById.Remove(renderer.ID);
+        }
         internal static void InitializeSurfaces(RenderingSurface[] configs)
         {
             _renderingSurfaces.Clear();
@@ -96,7 +111,7 @@ namespace Engine.Layers
         {
             EngineInfo.Renderer.Clear();
 
-            CollectRenderers();
+            SceneManager.OnPreRenderUpdate();
 
             for (int i = 0; i < _renderingSurfaces.Count; i++)
             {
@@ -142,28 +157,6 @@ namespace Engine.Layers
             }
 
             OnRenderingEnd?.Invoke();
-        }
-
-        private void CollectRenderers()
-        {
-            // TODO: improve this, don't ask for renderers but add/remove with events.
-            SceneManager.OnPreRenderUpdate();
-
-            _renderers.Clear();
-            _UIElementRenderers.Clear();
-            SceneManager.FindAll(_renderers, x =>
-            {
-                return x.IsEnabled && x is not UIElement;
-            });
-
-            SceneManager.FindAll(_UIElementRenderers, x =>
-            {
-                return x.IsEnabled && x is UIGraphicsElement;
-            });
-
-            // TODO: This is too slow, this is here for quick tests.
-            _renderersData = _renderers.Select(x => x.RendererData as RendererData2D).ToList();
-            _UIElementRenderersData = _UIElementRenderers.Select(x => x.RendererData as RendererData2D).ToList();
         }
 
         private void RenderScene(RenderingSurface surface, ICamera camera)
@@ -219,7 +212,7 @@ namespace Engine.Layers
                     Color = camera.BackgroundColor,
                     RenderTarget = targetRenderTexture.NativeResource
                 });
-                sceneRenderer.OnPrepare(_renderersData, _UIElementRenderersData);
+                sceneRenderer.OnPrepare(_renderersById.Values, _uiRenderersById.Values);
                 // TODO: begin
                 sceneRenderer.OnBegin();
 

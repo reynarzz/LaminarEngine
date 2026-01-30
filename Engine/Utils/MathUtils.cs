@@ -77,11 +77,18 @@ namespace Engine.Utils
             return result;
         }
 
+        //internal static B2Rot QuatToB2Rot(this quat q)
+        //{
+        //    float angle = MathF.Atan2(2f * (q.w * q.z + q.x * q.y),
+        //                              1f - 2f * (q.y * q.y + q.z * q.z));
+        //    return new B2Rot(MathF.Cos(angle), MathF.Sin(angle));
+        //}
+
         internal static B2Rot QuatToB2Rot(this quat q)
         {
-            float angle = MathF.Atan2(2f * (q.w * q.z + q.x * q.y),
-                                      1f - 2f * (q.y * q.y + q.z * q.z));
-            return new B2Rot(MathF.Cos(angle), MathF.Sin(angle));
+            float cos = 1f - 2f * q.z * q.z;
+            float sin = 2f * q.z * q.w;
+            return new B2Rot(cos, sin);
         }
 
         internal static quat B2RotToQuat(this B2Rot rot)

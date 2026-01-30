@@ -107,10 +107,10 @@ namespace Editor.Rendering
             _backBuffer = new RenderTexture(1920, 1080);
         }
 
-        protected override void OnPrepareRendering(List<RendererData2D> worldRenderers, List<RendererData2D> uiRenderers)
+        protected override void OnPrepareRendering(IReadOnlyCollection<RendererData2D> worldRenderers, IReadOnlyCollection<RendererData2D> uiRenderers)
         {
-            _worldRenderers = worldRenderers;
-            _uiRenderers = uiRenderers;
+            _worldRenderers = worldRenderers.ToList();
+            _uiRenderers = uiRenderers.ToList();
 
 
 
