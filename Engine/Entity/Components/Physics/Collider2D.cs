@@ -64,7 +64,7 @@ namespace Engine
                 {
                     if (!value)
                     {
-                        PhysicsLayer.ContactsDispatcher.NotifyColliderToRemove(this);
+                        NotifyExit();
                     }
                     ApplyToShapesSafe(shape =>
                     {
@@ -204,7 +204,7 @@ namespace Engine
             public bool WasEnterFired { get; set; }
         }
 
-        private readonly Dictionary<Collider2D, CollisionData> _currentContacts = new();
+        private readonly Dictionary<Guid, CollisionData> _currentContacts = new();
         private readonly Action<ScriptBehavior, Collision2D> _onCollisionEnter = (x, y) => x.OnCollisionEnter2D(y);
         private readonly Action<ScriptBehavior, Collision2D> _onCollisionExit = (x, y) => x.OnCollisionExit2D(y);
         private readonly Action<ScriptBehavior, Collision2D> _onCollisionStay = (x, y) => x.OnCollisionStay2D(y);
@@ -328,7 +328,7 @@ namespace Engine
 
             // if (AttachedRigidbody != null)
             {
-                PhysicsLayer.ContactsDispatcher.NotifyColliderToRemove(this);
+                NotifyExit();
                 AttachedRigidbody = null;
             }
             DestroyShape();
@@ -402,14 +402,13 @@ namespace Engine
             }
         }
 
-
         // Called by physics engine callback
-        internal void OnContactBegin(Collider2D other, bool isTrigger)
+        internal void OnContactBegin(Collider2D other)
         {
-            if (!_currentContacts.TryGetValue(other, out var data))
+            if (!_currentContacts.TryGetValue(other.GetID(), out var data))
             {
                 data = new CollisionData { Other = other, WasEnterFired = false, ContactCount = 0 };
-                _currentContacts.Add(other, data);
+                _currentContacts.Add(other.GetID(), data);
             }
 
             data.ContactCount++;
@@ -418,6 +417,9 @@ namespace Engine
             if (!data.WasEnterFired)
             {
                 data.WasEnterFired = true;
+
+                var isTrigger = IsTrigger || other.IsTrigger;
+
                 if (isTrigger)
                     NotifyTriggerEnter(other);
                 else
@@ -425,19 +427,21 @@ namespace Engine
             }
         }
 
-        internal void OnContactEnd(Collider2D other, bool isTrigger)
+        internal void OnContactEnd(Collider2D other)
         {
-            if (_currentContacts.TryGetValue(other, out var data))
+            if (_currentContacts.TryGetValue(other.GetID(), out var data))
             {
                 data.ContactCount--;
                 if (data.ContactCount <= 0)
                 {
+                    var isTrigger = IsTrigger || other.IsTrigger;
+
                     if (isTrigger)
                         NotifyTriggerExit(other);
                     else
                         NotifyCollisionExit(other, data);
 
-                    _currentContacts.Remove(other);
+                    _currentContacts.Remove(other.GetID());
                 }
             }
         }
@@ -456,32 +460,48 @@ namespace Engine
             }
         }
 
-        private void NotifyCollisionEnter(Collider2D other, CollisionData data) 
+        private void NotifyCollisionEnter(Collider2D other, CollisionData data)
         {
-            OnNotifyScripts(_onCollisionEnter, new Collision2D() { Collider = this, OtherCollider =  other });
+            if (other && other.Actor)
+            {
+                OnNotifyScripts(_onCollisionEnter, new Collision2D() { Collider = this, OtherCollider = other });
+            }
         }
-        private void NotifyCollisionStay(Collider2D other, CollisionData kvp) 
+        private void NotifyCollisionStay(Collider2D other, CollisionData kvp)
         {
-            OnNotifyScripts(_onCollisionStay, new Collision2D() { Collider = this, OtherCollider =  other });
+            if (other && other.Actor)
+            {
+                OnNotifyScripts(_onCollisionStay, new Collision2D() { Collider = this, OtherCollider = other });
+            }
         }
-        private void NotifyCollisionExit(Collider2D other, CollisionData data) 
+        private void NotifyCollisionExit(Collider2D other, CollisionData data)
         {
-            OnNotifyScripts(_onCollisionExit, new Collision2D() { Collider = this, OtherCollider =  other });
+            if (other && other.Actor)
+            {
+                OnNotifyScripts(_onCollisionExit, new Collision2D() { Collider = this, OtherCollider = other });
+            }
         }
-
-        private void NotifyTriggerEnter(Collider2D other) 
+        private void NotifyTriggerEnter(Collider2D other)
         {
-            OnNotifyScripts(_onTriggerEnter, other);
+            if (other && other.Actor)
+            {
+                OnNotifyScripts(_onTriggerEnter, other);
+            }
         }
-        private void NotifyTriggerStay(Collider2D other) 
+        private void NotifyTriggerStay(Collider2D other)
         {
-            OnNotifyScripts(_onTriggerStay, other);
+            if (other && other.Actor)
+            {
+                OnNotifyScripts(_onTriggerStay, other);
+            }
         }
         private void NotifyTriggerExit(Collider2D other)
         {
-            OnNotifyScripts(_onTriggerExit, other);
+            if (other && other.Actor)
+            {
+                OnNotifyScripts(_onTriggerExit, other);
+            }
         }
-
         private void OnNotifyScripts<T>(Action<ScriptBehavior, T> funcEvent, T data)
         {
             if (this && Actor && Actor.IsActiveInHierarchy)
@@ -494,6 +514,17 @@ namespace Engine
                     }
                 }
             }
+        }
+        private void NotifyExit()
+        {
+            foreach (var (otherCollider, data) in _currentContacts)
+            {
+                OnContactEnd(data.Other);
+                data.Other.OnContactEnd(this);
+            }
+
+            // PhysicsLayer.ContactsDispatcher.NotifyColliderToRemove(this);
+            // Debug.Log("Notify exit");
         }
 
 #if DEBUG

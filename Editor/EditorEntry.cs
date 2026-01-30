@@ -35,6 +35,7 @@ namespace Editor
     // Investigate why when the scene is reloaded old objects are still alive.
     // Rebuild the rendering system.
     // Compilation can get stuck forever.
+    // If a collider change from Trigger to normal (and viceversa), the ontrigerExit/onCollisionExit must be called.
 
     // Serialization
     // - Forbid serialization of dictionaries that contains EObject as key?

@@ -160,28 +160,45 @@ namespace Engine.Layers
 
         public static void BeginContact(B2ShapeId shapeA, B2ShapeId shapeB)
         {
+            if (!B2Worlds.b2Shape_IsValid(shapeA) || !B2Worlds.b2Shape_IsValid(shapeB))
+            {
+#if DEBUG
+                Debug.Warn("invalid shape");
+#endif
+                return;
+            }
+
             var colA = B2Shapes.b2Shape_GetUserData(shapeA) as Collider2D;
             var colB = B2Shapes.b2Shape_GetUserData(shapeB) as Collider2D;
 
-            if (colA == null || colB == null) return;
+            if (!colA || !colB)
+            {
+                return;
+            }
 
-            bool isTrigger = colA.IsTrigger || colB.IsTrigger;
-
-            colA.OnContactBegin(colB, isTrigger);
-            colB.OnContactBegin(colA, isTrigger);
+            colA.OnContactBegin(colB);
+            colB.OnContactBegin(colA);
         }
 
         public static void EndContact(B2ShapeId shapeA, B2ShapeId shapeB)
         {
+            if (!B2Worlds.b2Shape_IsValid(shapeA) || !B2Worlds.b2Shape_IsValid(shapeB))
+            {
+#if DEBUG
+                Debug.Warn("invalid shape");
+#endif
+                return;
+            }
+
             var colA = B2Shapes.b2Shape_GetUserData(shapeA) as Collider2D;
             var colB = B2Shapes.b2Shape_GetUserData(shapeB) as Collider2D;
 
-            if (colA == null || colB == null) return;
-
-            bool isTrigger = colA.IsTrigger || colB.IsTrigger;
-
-            colA.OnContactEnd(colB, isTrigger);
-            colB.OnContactEnd(colA, isTrigger);
+            if (!colA || !colB)
+            {
+                return;
+            }
+            colA.OnContactEnd(colB);
+            colB.OnContactEnd(colA);
         }
 
         internal void OldUpdate()
@@ -348,41 +365,41 @@ namespace Engine.Layers
                This function takes care of collecting all the OnCollisionExit/OnTriggerExit from collisions
                before the actors become invalid, so they can be called in the same frame.
         */
-        internal void NotifyColliderToRemove(Collider2D currentCollider)
-        {
-            void AddToExit<T>(OrderedDictionary<CollisionKey, CollisionValue> enter,
-                              Action<Action<ScriptBehavior, T>, Collider2D, Collider2D> eventForwarder,
-                              Action<ScriptBehavior, T> exitEvent)
-            {
-                var values = enter.ToArray().Reverse();
+        //internal void NotifyColliderToRemove(Collider2D currentCollider)
+        //{
+        //    void AddToExit<T>(OrderedDictionary<CollisionKey, CollisionValue> enter,
+        //                      Action<Action<ScriptBehavior, T>, Collider2D, Collider2D> eventForwarder,
+        //                      Action<ScriptBehavior, T> exitEvent)
+        //    {
+        //        var values = enter.ToArray().Reverse();
 
-                //for (int i = enter.Count - 1; i >= 0; i--)
-                foreach (var kvp in values)
-                {
-                    if (kvp.Value.colliderA == currentCollider ||
-                        kvp.Value.colliderB == currentCollider)
-                    {
-                        OnExit(kvp.Key, enter, eventForwarder, exitEvent);
-                        enter.Remove(kvp.Key);
-                    }
-                }
-            }
+        //        //for (int i = enter.Count - 1; i >= 0; i--)
+        //        foreach (var kvp in values)
+        //        {
+        //            if (kvp.Value.colliderA == currentCollider ||
+        //                kvp.Value.colliderB == currentCollider)
+        //            {
+        //                OnExit(kvp.Key, enter, eventForwarder, exitEvent);
+        //                enter.Remove(kvp.Key);
+        //            }
+        //        }
+        //    }
 
-            if (!currentCollider.IsTrigger)
-            {
-                AddToExit(_contactEnter, _collisionFuncEvent, _onCollisionExit);
-            }
-            else
-            {
-                AddToExit(_triggerEnter, _triggerFuncEvent, _onTriggerExit);
-            }
-            //Debug.Log("Collision removed: ");
-            //RemovePairsContaining(_contactEnter, currentCollider);
-            //Debug.Log("Trigger removed: ");
-            //RemovePairsContaining(_triggerEnter, currentCollider);
-            //RemovePairsContaining(_contactExit, currentCollider);
-            //RemovePairsContaining(_triggerExit, currentCollider);
-        }
+        //    if (!currentCollider.IsTrigger)
+        //    {
+        //        AddToExit(_contactEnter, _collisionFuncEvent, _onCollisionExit);
+        //    }
+        //    else
+        //    {
+        //        AddToExit(_triggerEnter, _triggerFuncEvent, _onTriggerExit);
+        //    }
+        //    //Debug.Log("Collision removed: ");
+        //    //RemovePairsContaining(_contactEnter, currentCollider);
+        //    //Debug.Log("Trigger removed: ");
+        //    //RemovePairsContaining(_triggerEnter, currentCollider);
+        //    //RemovePairsContaining(_contactExit, currentCollider);
+        //    //RemovePairsContaining(_triggerExit, currentCollider);
+        //}
 
         //private void RemovePairsContaining(Dictionary<CollisionKey, CollisionValue> keys, Collider2D collider)
         //{
