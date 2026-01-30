@@ -18,7 +18,7 @@ namespace Engine.Layers
         internal static ContactsDispatcher ContactsDispatcher => _contactDispatcher;
         private static List<RigidBody2D> _rigidbodies = new();
 
-        private static float _accumulator = 0f;
+        private static double _accumulator = 0f;
         private const float _fixedTimeStep = 0.02f;
 
         public override Task InitializeAsync()
@@ -57,10 +57,9 @@ namespace Engine.Layers
                     if (!rigidbody)
                         continue;
 
+                    rigidbody.PreUpdateBody();
                     rigidbody.PrevLocalPosition = rigidbody.Transform.LocalPosition;
                     rigidbody.PrevLocalRotation = rigidbody.Transform.LocalRotation;
-
-                    rigidbody.PreUpdateBody();
                 }
 
                 B2Worlds.b2World_Step(PhysicWorld.WorldID, _fixedTimeStep, 3);
@@ -75,7 +74,7 @@ namespace Engine.Layers
                 }
             }
 
-            float alpha = _accumulator / _fixedTimeStep;
+            float alpha = (float)_accumulator / _fixedTimeStep;
 
             foreach (var rigidbody in _rigidbodies)
             {

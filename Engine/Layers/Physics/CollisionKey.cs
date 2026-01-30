@@ -12,17 +12,8 @@ namespace Engine
         public readonly Guid ColliderAId;
         public readonly Guid ColliderBId;
 
-        public readonly Collider2D colliderA;
-        public readonly Collider2D colliderB;
-
-        public bool WasEnterEventRaised;
-        public int CollisionsCount;
-
         public CollisionKey(Collider2D a, Collider2D b)
         {
-            colliderA = a;
-            colliderB = b;
-
             var idA = a.GetID();
             var idB = b.GetID();
 
@@ -38,7 +29,6 @@ namespace Engine
                 ColliderBId = idB;
             }
 
-            CollisionsCount = 1;
         }
 
         public bool Equals(CollisionKey other) =>
@@ -50,6 +40,21 @@ namespace Engine
 
         public override int GetHashCode() =>
             HashCode.Combine(ColliderAId, ColliderBId);
+    }
+
+    internal class CollisionValue
+    {
+        public readonly Collider2D colliderA;
+        public readonly Collider2D colliderB;
+
+        public bool WasEnterEventRaised;
+        public int CollisionsCount = 1;
+
+        public CollisionValue(Collider2D colliderA, Collider2D colliderB)
+        {
+            this.colliderA = colliderA;
+            this.colliderB = colliderB;
+        }
     }
 
 }
