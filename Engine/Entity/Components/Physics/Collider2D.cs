@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    public abstract class Collider2D : Component
+    public abstract class Collider2D : Component, IUpdatableComponent
 #if DEBUG
         , IDrawableGizmo
 #endif
@@ -197,6 +197,21 @@ namespace Engine
                 return bounds;
             }
         }
+        private class CollisionData
+        {
+            public Collider2D Other { get; set; }
+            public int ContactCount { get; set; }
+            public bool WasEnterFired { get; set; }
+        }
+
+        private readonly Dictionary<Collider2D, CollisionData> _currentContacts = new();
+        private readonly Action<ScriptBehavior, Collision2D> _onCollisionEnter = (x, y) => x.OnCollisionEnter2D(y);
+        private readonly Action<ScriptBehavior, Collision2D> _onCollisionExit = (x, y) => x.OnCollisionExit2D(y);
+        private readonly Action<ScriptBehavior, Collision2D> _onCollisionStay = (x, y) => x.OnCollisionStay2D(y);
+
+        private readonly Action<ScriptBehavior, Collider2D> _onTriggerEnter = (x, y) => x.OnTriggerEnter2D(y);
+        private readonly Action<ScriptBehavior, Collider2D> _onTriggerExit = (x, y) => x.OnTriggerExit2D(y);
+        private readonly Action<ScriptBehavior, Collider2D> _onTriggerStay = (x, y) => x.OnTriggerStay2D(y);
 
         protected override void OnAwake()
         {
@@ -205,6 +220,11 @@ namespace Engine
             Create();
         }
 
+
+        public void OnUpdate()
+        {
+            UpdateStay();
+        }
         internal void Create()
         {
             _shapeDef = new B2ShapeDef()
@@ -381,6 +401,101 @@ namespace Engine
                 B2Bodies.b2Body_Disable(_defaultBody);
             }
         }
+
+
+        // Called by physics engine callback
+        internal void OnContactBegin(Collider2D other, bool isTrigger)
+        {
+            if (!_currentContacts.TryGetValue(other, out var data))
+            {
+                data = new CollisionData { Other = other, WasEnterFired = false, ContactCount = 0 };
+                _currentContacts.Add(other, data);
+            }
+
+            data.ContactCount++;
+
+            // Fire Enter event once
+            if (!data.WasEnterFired)
+            {
+                data.WasEnterFired = true;
+                if (isTrigger)
+                    NotifyTriggerEnter(other);
+                else
+                    NotifyCollisionEnter(other, data);
+            }
+        }
+
+        internal void OnContactEnd(Collider2D other, bool isTrigger)
+        {
+            if (_currentContacts.TryGetValue(other, out var data))
+            {
+                data.ContactCount--;
+                if (data.ContactCount <= 0)
+                {
+                    if (isTrigger)
+                        NotifyTriggerExit(other);
+                    else
+                        NotifyCollisionExit(other, data);
+
+                    _currentContacts.Remove(other);
+                }
+            }
+        }
+
+        private void UpdateStay()
+        {
+            foreach (var kvp in _currentContacts.Values)
+            {
+                if (kvp.ContactCount > 0)
+                {
+                    if (IsTrigger)
+                        NotifyTriggerStay(kvp.Other);
+                    else
+                        NotifyCollisionStay(kvp.Other, kvp);
+                }
+            }
+        }
+
+        private void NotifyCollisionEnter(Collider2D other, CollisionData data) 
+        {
+            OnNotifyScripts(_onCollisionEnter, new Collision2D() { Collider = this, OtherCollider =  other });
+        }
+        private void NotifyCollisionStay(Collider2D other, CollisionData kvp) 
+        {
+            OnNotifyScripts(_onCollisionStay, new Collision2D() { Collider = this, OtherCollider =  other });
+        }
+        private void NotifyCollisionExit(Collider2D other, CollisionData data) 
+        {
+            OnNotifyScripts(_onCollisionExit, new Collision2D() { Collider = this, OtherCollider =  other });
+        }
+
+        private void NotifyTriggerEnter(Collider2D other) 
+        {
+            OnNotifyScripts(_onTriggerEnter, other);
+        }
+        private void NotifyTriggerStay(Collider2D other) 
+        {
+            OnNotifyScripts(_onTriggerStay, other);
+        }
+        private void NotifyTriggerExit(Collider2D other)
+        {
+            OnNotifyScripts(_onTriggerExit, other);
+        }
+
+        private void OnNotifyScripts<T>(Action<ScriptBehavior, T> funcEvent, T data)
+        {
+            if (this && Actor && Actor.IsActiveInHierarchy)
+            {
+                foreach (var component in Actor.Components)
+                {
+                    if (component && component.IsEnabled && component is ScriptBehavior script)
+                    {
+                        funcEvent(script, data);
+                    }
+                }
+            }
+        }
+
 #if DEBUG
         void IDrawableGizmo.OnDrawGizmo()
         {
@@ -404,6 +519,7 @@ namespace Engine
                 }
             }
         }
+
 #endif
     }
 }

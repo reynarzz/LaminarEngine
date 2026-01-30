@@ -127,9 +127,66 @@ namespace Engine.Layers
             return true;
         }
 
-
         internal void Update()
         {
+            // Contacts
+            var contactsEvent = B2Worlds.b2World_GetContactEvents(PhysicWorld.WorldID);
+            for (int i = 0; i < contactsEvent.beginCount; ++i)
+            {
+                var evt = contactsEvent.beginEvents[i];
+                BeginContact(evt.shapeIdA, evt.shapeIdB);
+            }
+
+            for (int i = 0; i < contactsEvent.endCount; ++i)
+            {
+                var evt = contactsEvent.endEvents[i];
+                EndContact(evt.shapeIdA, evt.shapeIdB);
+            }
+
+            // Sensor
+            var sensorEvents = B2Worlds.b2World_GetSensorEvents(PhysicWorld.WorldID);
+            for (int i = 0; i < sensorEvents.beginCount; ++i)
+            {
+                var evt = sensorEvents.beginEvents[i];
+                BeginContact(evt.sensorShapeId, evt.visitorShapeId);
+            }
+
+            for (int i = 0; i < sensorEvents.endCount; ++i)
+            {
+                var evt = sensorEvents.endEvents[i];
+                EndContact(evt.sensorShapeId, evt.visitorShapeId);
+            }
+        }
+
+        public static void BeginContact(B2ShapeId shapeA, B2ShapeId shapeB)
+        {
+            var colA = B2Shapes.b2Shape_GetUserData(shapeA) as Collider2D;
+            var colB = B2Shapes.b2Shape_GetUserData(shapeB) as Collider2D;
+
+            if (colA == null || colB == null) return;
+
+            bool isTrigger = colA.IsTrigger || colB.IsTrigger;
+
+            colA.OnContactBegin(colB, isTrigger);
+            colB.OnContactBegin(colA, isTrigger);
+        }
+
+        public static void EndContact(B2ShapeId shapeA, B2ShapeId shapeB)
+        {
+            var colA = B2Shapes.b2Shape_GetUserData(shapeA) as Collider2D;
+            var colB = B2Shapes.b2Shape_GetUserData(shapeB) as Collider2D;
+
+            if (colA == null || colB == null) return;
+
+            bool isTrigger = colA.IsTrigger || colB.IsTrigger;
+
+            colA.OnContactEnd(colB, isTrigger);
+            colB.OnContactEnd(colA, isTrigger);
+        }
+
+        internal void OldUpdate()
+        {
+
             // Contacts
             var contactsEvent = B2Worlds.b2World_GetContactEvents(PhysicWorld.WorldID);
             for (int i = 0; i < contactsEvent.beginCount; ++i)
@@ -218,7 +275,6 @@ namespace Engine.Layers
 
             RaiseEvents();
         }
-
         private void RaiseEvents()
         {
             OnEnter(_contactEnter, _collisionFuncEvent, _onCollisionEnter, _onCollisionStay);
