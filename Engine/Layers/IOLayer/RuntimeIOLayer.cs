@@ -13,9 +13,9 @@ namespace Engine.Layers
         public override Task InitializeAsync()
         {
             DiskBase disk = null;
-#if !MOBILE
+#if DESKTOP
             disk = new ReleaseModeDisk(Paths.GetReleaseDataFolder());
-#else
+#elif MOBILE
             disk = new ReleaseModeDisk(GFSEngine.AssetFileStream);
 #endif
             var assetbuilder = new Dictionary<AssetType, AssetBuilderBase>()

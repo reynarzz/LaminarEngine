@@ -86,20 +86,20 @@ namespace Editor.Layers
                 };
 
                 _windows = new List<EditorWindow>()
-            {
-                _gameWindow,
-                new ActionBarView(),
-                new FooterBarView(),
+                {
+                    _gameWindow,
+                    new ActionBarView(),
+                    new FooterBarView(),
 
-                new SceneEditorView("Scene", _editorSurface, _editorCamera),
-                new SceneGraphWindow(),
-                new ObjectEditorView(),
-                new AnimatorEditorView(),
-                new RenderingStatsView(),
-                new BuildWindow(),
-                new TaskWindow()
-                // new ConsoleEditorView()
-            };
+                    new SceneEditorView("Scene", _editorSurface, _editorCamera),
+                    new SceneGraphWindow(),
+                    new ObjectEditorView(),
+                    new AnimatorEditorView(),
+                    new RenderingStatsView(),
+                    new BuildWindow(),
+                    new TaskWindow()
+                    // new ConsoleEditorView()
+                };
 
             });
           

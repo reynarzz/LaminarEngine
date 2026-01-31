@@ -30,19 +30,21 @@ namespace Engine.Layers
 
         public override Task InitializeAsync()
         {
-            GfxDeviceManager.Init();
-
-            _screenPipelineFeatures = new PipelineFeatures();
-            _defaultRenderTexture = new RenderTexture(Screen.Width, Screen.Height);
-
-            _screenQuadDrawCallData = new DrawCallData()
+            return MainThreadDispatcher.EnqueueAsync(() =>
             {
-                Textures = new GfxResource[GfxDeviceManager.Current.GetDeviceInfo().MaxValidTextureUnits],
-                Uniforms = new UniformValue[GfxDeviceManager.Current.GetDeviceInfo().MaxUniformsCount],
-            };
+                GfxDeviceManager.Init();
 
-            // Default surface
-            InitializeSurfaces([new RenderingSurface()
+                _screenPipelineFeatures = new PipelineFeatures();
+                _defaultRenderTexture = new RenderTexture(Screen.Width, Screen.Height);
+
+                _screenQuadDrawCallData = new DrawCallData()
+                {
+                    Textures = new GfxResource[GfxDeviceManager.Current.GetDeviceInfo().MaxValidTextureUnits],
+                    Uniforms = new UniformValue[GfxDeviceManager.Current.GetDeviceInfo().MaxUniformsCount],
+                };
+
+                // Default surface
+                InitializeSurfaces([new RenderingSurface()
                 {
                    PickCameraFromSceneGraph = true,
                    RenderPostProcessing = true,
@@ -54,10 +56,10 @@ namespace Engine.Layers
                    RenderDebug = true,
     #endif
                 }]);
-            _screenGeometry = GraphicsHelper.CreateQuadGeometry();
-            WindowManager.Window.OnWindowChanged += OnWindowsChanged;
+                _screenGeometry = GraphicsHelper.CreateQuadGeometry();
+                WindowManager.Window.OnWindowChanged += OnWindowsChanged;
+            });
 
-            return Task.CompletedTask;
         }
 
         private void OnWindowsChanged(int w, int h)

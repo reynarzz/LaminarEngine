@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace Engine.Layers
     {
         protected LayerBase[] _layers;
         private CleanUpLayer _cleanupLayer;
+        private MainThreadDispatcher _initializationDispatcher = new();
         private bool _layersInitialized = false;
         public int Count => _layers.Length;
         public bool IsInitialized => _layersInitialized;
@@ -31,42 +33,7 @@ namespace Engine.Layers
             _cleanupLayer = new CleanUpLayer();
         }
 
-        internal virtual Task InitializeAsync()
-        {
-            if (_layersInitialized)
-            {
-                Debug.EngineError("Layers are already initialized");
-                return Task.CompletedTask;
-            }
-
-            for (int i = _layers.Length - 1; i >= 0; i--)
-            {
-                var layer = _layers[i];
-
-                if(layer != null)
-                {
-                     layer.InitializeAsync().GetAwaiter().GetResult();
-                }
-
-                //#if DEBUG
-                //                try
-                //                {
-                //                    _layers[i].Initialize();
-                //                }
-                //                catch (Exception e)
-                //                {
-                //                    Debug.Error(e);
-                //                }
-                //#else
-                //                _layers[i].Initialize();
-                //#endif
-            }
-
-            _layersInitialized = true;
-
-            return Task.CompletedTask;
-        }
-        /* internal virtual void InitializeNext()
+        internal virtual void InitializeAsync()
         {
             if (_layersInitialized)
             {
@@ -74,13 +41,43 @@ namespace Engine.Layers
                 return;
             }
 
-            var layer = _layers[_layers.Length - 1 - _layerInitIndex];
-
-            if (layer != null)
+            Task.Run(async () =>
             {
-                layer.InitializeAsync().GetAwaiter().GetResult();
-            }
-        }*/
+                for (int i = _layers.Length - 1; i >= 0; i--)
+                {
+                    var layer = _layers[i];
+
+                    if (layer != null)
+                    {
+                        await layer.InitializeAsync();
+                        Debug.Log("Initialized layer: " + layer.GetType().Name);
+                    }
+
+
+                    //#if DEBUG
+                    //                try
+                    //                {
+                    //                    _layers[i].Initialize();
+                    //                }
+                    //                catch (Exception e)
+                    //                {
+                    //                    Debug.Error(e);
+                    //                }
+                    //#else
+                    //                _layers[i].Initialize();
+                    //#endif
+                }
+
+                // if (_synced)
+                {
+                    Debug.Log("Layers fully initialized");
+                    _layersInitialized = true;
+                }
+            });
+        }
+
+
+
         internal virtual void Initialize()
         {
             if (_layersInitialized)
@@ -139,7 +136,10 @@ namespace Engine.Layers
         internal virtual void Update()
         {
             if (!_layersInitialized)
+            {
+                AdvanceSyncWork();
                 return;
+            }
 
             for (int i = 0; i < _layers.Length; i++)
             {
@@ -147,6 +147,14 @@ namespace Engine.Layers
             }
 
             _cleanupLayer.UpdateLayer();
+        }
+
+        internal void AdvanceSyncWork()
+        {
+            _initializationDispatcher.UpdateLayer();
+#if DESKTOP
+            GLFW.Glfw.PollEvents();
+#endif
         }
 
         internal virtual void PublishEvent(EventType type, object value)

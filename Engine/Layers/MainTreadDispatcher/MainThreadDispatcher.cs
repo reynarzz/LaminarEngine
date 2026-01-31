@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,16 +9,11 @@ namespace Engine.Layers
 {
     internal class MainThreadDispatcher : LayerBase
     {
-        private static readonly Queue<Func<Task>> _queue = new();
+        private static readonly ConcurrentQueue<Func<Task>> _queue = new();
 
         public override void Close()
         {
 
-        }
-
-        public override Task InitializeAsync()
-        {
-            return Task.CompletedTask;
         }
 
         internal override void UpdateLayer()

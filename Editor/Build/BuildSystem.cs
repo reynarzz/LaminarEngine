@@ -1,4 +1,5 @@
 ﻿using Engine;
+using Engine.Layers;
 using Microsoft.Build.Locator;
 using System;
 using System.Collections.Generic;
@@ -71,11 +72,12 @@ namespace Editor.Build
                 }
                 catch (Exception e)
                 {
+                    IsAnyBuilding = false;
+
                     Debug.Error(e);
                 }
                 finally
                 {
-                    IsAnyBuilding = false;
                     _currentPlatformBuilding = null;
                 }
             });
@@ -88,21 +90,13 @@ namespace Editor.Build
 
         private static void RaiseBuildCompleted(BuildResult result, Action<BuildResult> resultCallback)
         {
-
-            if (SynchronizationContext.Current != null)
-            {
-                SynchronizationContext.Current.Send(_ =>
-                {
-                    OnBuildCompleted?.Invoke(result);
-                    resultCallback?.Invoke(result);
-
-                }, null);
-            }
-            else
+            MainThreadDispatcher.EnqueueAsync(() =>
             {
                 OnBuildCompleted?.Invoke(result);
                 resultCallback?.Invoke(result);
-            }
+
+                IsAnyBuilding = false;
+            });
         }
     }
 }

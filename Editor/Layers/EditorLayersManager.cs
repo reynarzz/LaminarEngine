@@ -41,9 +41,9 @@ namespace Editor
 
         }
 
-        internal override Task InitializeAsync()
+        internal override void InitializeAsync()
         {
-            return base.InitializeAsync();
+            base.InitializeAsync();
         }
 
         private Shader _test;
