@@ -106,7 +106,7 @@ namespace GameCooker
             };
         }
 
-        public async Task<AssetsDatabaseInfo> CookAllAsync(CookOptions options)
+        public async Task<DishResult> CookAllAsync(CookOptions options)
         {
             // Search project's files first
             var files = Directory.GetFiles(options.AssetsFolderPath, "*", SearchOption.AllDirectories).ToList();
@@ -139,15 +139,25 @@ namespace GameCooker
             }
 
             var collectedFiles = selectedFiles.ToArray();
-            await _assetCookers[options.Type].CookAssetsAsync(options.FileOptions, options.Platform,
-                                                             collectedFiles, options.ExportFolderPath);
+            var result = await _assetCookers[options.Type].CookAssetsAsync(options.FileOptions, options.Platform,
+                                             collectedFiles, options.ExportFolderPath);
 
-            return _databaseInfo;
+            return new DishResult()
+            {
+                IsSuccess = result,
+                DataInfo = _databaseInfo
+            };
         }
 
-        public AssetsDatabaseInfo CookAll(CookOptions options)
+        public DishResult CookAll(CookOptions options)
         {
             return CookAllAsync(options).GetAwaiter().GetResult();
         }
+    }
+
+    public class DishResult
+    {
+        public bool IsSuccess { get; set; }
+        public AssetsDatabaseInfo DataInfo { get; set; }
     }
 }

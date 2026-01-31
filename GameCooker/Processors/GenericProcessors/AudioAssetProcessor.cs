@@ -18,7 +18,7 @@ namespace GameCooker
     {
         private readonly static MiniAudioEngine _engine = new MiniAudioEngine();
 
-        byte[] IAssetProcessor.Process(string path, AssetMetaFileBase meta, CookingPlatform platform)
+        AssetProccesResult IAssetProcessor.Process(string path, AssetMetaFileBase meta, CookingPlatform platform)
         {
             using var fs = new FileStream(path, FileMode.Open, FileAccess.Read);
 
@@ -44,7 +44,11 @@ namespace GameCooker
                 bw.Write(sample);
             }
 
-            return ms.ToArray();
+            return new AssetProccesResult()
+            {
+                IsSuccess = true,
+                Data = ms.ToArray()
+            };
         }
     }
 }

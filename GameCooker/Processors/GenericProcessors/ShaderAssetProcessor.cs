@@ -21,14 +21,14 @@ namespace GameCooker
         private const string FRAGMENT_KEYWORD = "FRAGMENT_SHADER";
 
         private const string SHADER_HEADER = VERSION + "\n" + INCLUDE_EXTENSION + "\n";
-        byte[] IAssetProcessor.Process(string path, AssetMetaFileBase meta, CookingPlatform platform)
+       AssetProccesResult IAssetProcessor.Process(string path, AssetMetaFileBase meta, CookingPlatform platform)
         {
             var shaderFile = File.ReadAllText(path);
 
             if (string.IsNullOrEmpty(shaderFile))
             {
                 Console.WriteLine("Error: Empty shader.");
-                return null;
+                return default;
             }
 
             var vertexCode = ExtractShader(shaderFile, VERTEX_KEYWORD);
@@ -36,7 +36,7 @@ namespace GameCooker
 
             if (string.IsNullOrEmpty(vertexCode) || string.IsNullOrEmpty(fragmentCode))
             {
-                return null;
+                return default;
             }
             else
             {
@@ -64,10 +64,14 @@ namespace GameCooker
                 // File.WriteAllText(path + "v_.glsl", Encoding.UTF8.GetString(sources[0].Shader));
                 // File.WriteAllText(path + "f_.glsl", Encoding.UTF8.GetString(sources[1].Shader));
 
-                return GetAsset(sources);
+                return new AssetProccesResult()
+                {
+                    IsSuccess = true,
+                    Data = GetAsset(sources)
+                };
             }
 
-            return null;
+            return default;
         }
 
         // NOTE: for now this will write a json, for production ready code, it should be binary.

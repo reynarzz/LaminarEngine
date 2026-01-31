@@ -50,17 +50,17 @@ namespace GameCooker
         private const long fieldIfOffset = assetBlockLocSize + assetDataLocSize + metaLocSize;
 
         private const int TEMP_BUFFER_SIZE = 81920;
-
         public ReleaseModeFilesCooker(Dictionary<AssetType, IAssetProcessor> processor) : base(processor)
         {
         }
 
-        internal override async Task CookAssetsAsync(CookFileOptions fileOptions, CookingPlatform platform, (string, AssetType)[] files,
-                                                     string outFolder)
+        internal override async Task<bool> CookAssetsAsync(CookFileOptions fileOptions, CookingPlatform platform, (string, AssetType)[] files,
+                                                            string outFolder)
         {
+            bool success = false;
+            Exception failureException = null;
             var path = Path.Combine(outFolder, Paths.GetAssetBuildDataFilename());
             Directory.CreateDirectory(outFolder);
-
             try
             {
                 await using var fs = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None, TEMP_BUFFER_SIZE, useAsync: true);
@@ -129,18 +129,23 @@ namespace GameCooker
 
                     var assetData = await Task.Run(() => ProcessAsset(platform, assetType, meta, filePath));
 
+                    if (!assetData.IsSuccess)
+                    {
+                        return false;
+                    }
+
                     if (shouldCompressFile)
                     {
-                        assetData = await Task.Run(() => AssetCompressor.CompressBytes(assetData, fileOptions.CompressionLevel));
+                        assetData.Data = await Task.Run(() => AssetCompressor.CompressBytes(assetData.Data, fileOptions.CompressionLevel));
                     }
 
                     if (shouldEncryptFile)
                     {
-                        assetData = await Task.Run(() => AssetEncrypter.EncryptBytes(assetData, AssetUtils.ENCRYPTION_VERY_SECURE_PASSWORD));
+                        assetData.Data = await Task.Run(() => AssetEncrypter.EncryptBytes(assetData.Data, AssetUtils.ENCRYPTION_VERY_SECURE_PASSWORD));
                     }
 
                     // Asset length
-                    bufWritter.Write(assetData.Length);
+                    bufWritter.Write(assetData.Data.Length);
 
                     var metaBuffer = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(meta));
 
@@ -149,7 +154,7 @@ namespace GameCooker
 
                     long assetDataLoc = bufWritter.BaseStream.Position;
                     // Asset data
-                    bufWritter.Write(assetData);
+                    bufWritter.Write(assetData.Data);
 
                     long metaStartLocation = bufWritter.BaseStream.Position;
 
@@ -182,18 +187,28 @@ namespace GameCooker
                     Console.WriteLine($"Building Assets ({count * 100 / files.Length}%): {filePath}");
                 }
 
-                bufWritter.Flush();
-                await fs.FlushAsync();
+                success = true;
             }
             catch (Exception e)
             {
-                File.WriteAllText(path + "Error.txt", e.ToString());
-                File.Delete(path);
                 Console.WriteLine(e.ToString());
+                failureException = e;
+                return false;
+            }
+            finally
+            {
+                if (!success && File.Exists(path))
+                {
+                    if (failureException != null)
+                    {
+                        File.WriteAllText(path + "Error.txt", failureException.ToString());
+                    }
 
-                throw;
+                    File.Delete(path);
+                }
             }
 
+            return true;
             // File.WriteAllText(Path.Combine(outFolder, Paths.ASSET_BUILD_DATA_FILE_META_NAME), JsonConvert.SerializeObject(new GameDataMetaFile() {  CreationDateBinary = creationDate }));
         }
     }

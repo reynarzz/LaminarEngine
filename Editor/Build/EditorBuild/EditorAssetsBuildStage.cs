@@ -39,11 +39,7 @@ namespace Editor.Build
             Debug.Log("Editor asset update");
             var assetDatabase = (AssetsDatabaseInfo)result.Data;
 
-            //GFSEngine.SyncContext?.Send(_ =>
-            //{
-            //    EditorIOLayer.Instance.ReloadDisk(assetDatabase);
-            //}, null);
-            MainThreadDispatcher.EnqueueAsync(() =>
+            await MainThreadDispatcher.EnqueueAsync(() =>
             {
                 EditorIOLayer.Instance.ReloadDisk(assetDatabase);
             });

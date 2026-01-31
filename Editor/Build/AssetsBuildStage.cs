@@ -42,12 +42,12 @@ namespace Editor.Build
             _cookOptions.ExportFolderPath = cookData.ExportFolderPath;
             _cookOptions.FileOptions = cookData.FileOptions;
 
-            var assetDatabaseInfo = await _assetsCooker.CookAllAsync(_cookOptions);
+            var result = await _assetsCooker.CookAllAsync(_cookOptions);
 
             return new BuildStageResult()
             {
-                IsSuccess = true,
-                Data = assetDatabaseInfo
+                IsSuccess = result.IsSuccess,
+                Data = result.DataInfo
             };
         }
 

@@ -43,9 +43,8 @@ namespace Editor
     // - For runtime create a dictionary with all the types, so types can be saved and found quickly: Dictionary<Guid, Type>
     // - Maybe I should remove the 'SimpleClass' and 'simpleCollection' and serialize all classes as complex so I avoid serializing complex classes as simple.
          // Fix the issue of references. This will avoid having, live real classes in the IR.
-
+          
     // Performance fix:
-    // Fix CollisionDispatcher Hashset use instead of dictionary.
     // UI performance is pretty bad, rewrite the entire UI system.
 
     // Assets:
@@ -132,11 +131,11 @@ namespace Editor
                     UseShellExecute = true
                 });
             });
-            EditorMenu.PushMenu("Help/With toggle", () => { }, true);
-            EditorMenu.PushMenu("Help/Disabled", () => { });
+            //EditorMenu.PushMenu("Help/With toggle", () => { }, true);
+            //EditorMenu.PushMenu("Help/Disabled", () => { });
 
-            EditorMenu.SetEnabled("Help/With toggle", false);
-            EditorMenu.Toggle("Help/With toggle", true);
+            //EditorMenu.SetEnabled("Help/With toggle", false);
+            //EditorMenu.Toggle("Help/With toggle", true);
         }
         private void MenuItems()
         {
@@ -160,13 +159,13 @@ namespace Editor
             EditorMenu.PushMenu("Assets/Create/Animator Controller", () => { });
 
             // Actor
-            EditorMenu.PushMenu("Actor/Create Empty", () => { new Actor("Actor"); });
+            EditorMenu.PushMenu("Actor/Create Empty", () => { /*new Actor("Actor"); */});
             EditorMenu.PushMenu("Actor/Create Empty Child", () =>
             {
-                if (Selector.SelectedTransform())
-                {
-                    new Actor("Actor").Transform.Parent = Selector.SelectedTransform();
-                }
+                //if (Selector.SelectedTransform())
+                //{
+                //    new Actor("Actor").Transform.Parent = Selector.SelectedTransform();
+                //}
 
             });
 

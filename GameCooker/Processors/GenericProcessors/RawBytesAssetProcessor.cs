@@ -9,9 +9,13 @@ namespace GameCooker
 {
     internal class RawBytesAssetProcessor : IAssetProcessor
     {
-        byte[] IAssetProcessor.Process(string path, AssetMetaFileBase meta, CookingPlatform platform)
+        AssetProccesResult IAssetProcessor.Process(string path, AssetMetaFileBase meta, CookingPlatform platform)
         {
-            return File.ReadAllBytes(path);
+            return new AssetProccesResult()
+            {
+                IsSuccess = true,
+                Data = File.ReadAllBytes(path)
+            };
         }
     }
 }

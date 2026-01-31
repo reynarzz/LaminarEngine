@@ -10,9 +10,7 @@ namespace Engine.Layers
     {
         public sealed override Task InitializeAsync()
         {
-            OnInitialize();
-
-            return Task.CompletedTask;
+            return MainThreadDispatcher.EnqueueAsync(OnInitialize);
         }
 
         protected abstract void OnInitialize();

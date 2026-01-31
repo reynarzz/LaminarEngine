@@ -10,11 +10,15 @@ namespace GameCooker
 {
     internal class TilemapWorldAssetProcessor : IAssetProcessor
     {
-        byte[] IAssetProcessor.Process(string path, AssetMetaFileBase meta, CookingPlatform platform)
+        AssetProccesResult IAssetProcessor.Process(string path, AssetMetaFileBase meta, CookingPlatform platform)
         {
             using var reader = new StreamReader(path, Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
 
-            return Encoding.UTF8.GetBytes(reader.ReadToEnd());
+            return new AssetProccesResult()
+            {
+                IsSuccess = true,
+                Data = Encoding.UTF8.GetBytes(reader.ReadToEnd())
+            };
         }
     }
 }

@@ -20,8 +20,13 @@ namespace GameCooker
 
     internal class TextureAssetProcessor : IAssetProcessor
     {
-        byte[] IAssetProcessor.Process(string path, AssetMetaFileBase meta, CookingPlatform platform)
+        AssetProccesResult IAssetProcessor.Process(string path, AssetMetaFileBase meta, CookingPlatform platform)
         {
+            if (!File.Exists(path))
+            {
+                return default;
+            }
+
             StbImage.stbi_set_flip_vertically_on_load(1);
 
             var result = ImageResult.FromMemory(File.ReadAllBytes(path));
@@ -36,7 +41,11 @@ namespace GameCooker
                     bw.Write(result.Data);
                     bw.Flush();
 
-                    return ms.ToArray();
+                    return new AssetProccesResult()
+                    {
+                        IsSuccess = true,
+                        Data = ms.ToArray()
+                    };
                 }
             }
         }

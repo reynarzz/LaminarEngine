@@ -14,6 +14,13 @@ namespace Editor.Build
         {
         }
 
+        protected override void OnAfterBuild(BuildResult result)
+        {
+            if (result.IsSucess)
+            {
+
+            }
+        }
         protected override void OnBeforeBuild()
         {
             void PerformOp(Action op)

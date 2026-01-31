@@ -56,7 +56,7 @@ namespace Editor.Layers
 
         public override Task InitializeAsync()
         {
-            MainThreadDispatcher.EnqueueAsync(() =>
+            return MainThreadDispatcher.EnqueueAsync(() =>
             {
                 var sceneBatcher = new SceneBatchedRenderer();
                 _gameSurface.SceneRenderers = new() { sceneBatcher };
@@ -100,10 +100,7 @@ namespace Editor.Layers
                     new TaskWindow()
                     // new ConsoleEditorView()
                 };
-
             });
-          
-            return Task.CompletedTask;
         }
 
         private void Draw()

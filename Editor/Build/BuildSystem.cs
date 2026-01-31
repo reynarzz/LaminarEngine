@@ -72,12 +72,11 @@ namespace Editor.Build
                 }
                 catch (Exception e)
                 {
-                    IsAnyBuilding = false;
-
                     Debug.Error(e);
                 }
                 finally
                 {
+                    IsAnyBuilding = false;
                     _currentPlatformBuilding = null;
                 }
             });
@@ -94,8 +93,6 @@ namespace Editor.Build
             {
                 OnBuildCompleted?.Invoke(result);
                 resultCallback?.Invoke(result);
-
-                IsAnyBuilding = false;
             });
         }
     }

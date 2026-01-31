@@ -41,7 +41,7 @@ namespace Engine.Layers
                 return;
             }
 
-            Task.Run(async () =>
+            async Task InitializeLayers()
             {
                 for (int i = _layers.Length - 1; i >= 0; i--)
                 {
@@ -68,51 +68,12 @@ namespace Engine.Layers
                     //#endif
                 }
 
-                // if (_synced)
-                {
-                    Debug.Log("Layers fully initialized");
-                    _layersInitialized = true;
-                }
-            });
-        }
-
-
-
-        internal virtual void Initialize()
-        {
-            if (_layersInitialized)
-            {
-                Debug.EngineError("Layers are already initialized");
-                return;
-            }
-            _cleanupLayer.Initialize();
-
-            for (int i = _layers.Length - 1; i >= 0; i--)
-            {
-                var layer = _layers[i];
-
-                if (layer != null)
-                {
-                    layer.Initialize();
-                }
-
-                //#if DEBUG
-                //                try
-                //                {
-                //                    _layers[i].Initialize();
-                //                }
-                //                catch (Exception e)
-                //                {
-                //                    Debug.Error(e);
-                //                }
-                //#else
-                //                _layers[i].Initialize();
-                //#endif
+                Debug.Log("Layers fully initialized");
+                _layersInitialized = true;
             }
 
-            _layersInitialized = true;
+            Task.Run(InitializeLayers);
         }
-
 
         internal void PushLayer(LayerBase layer, int index)
         {
@@ -137,7 +98,10 @@ namespace Engine.Layers
         {
             if (!_layersInitialized)
             {
-                AdvanceSyncWork();
+                _initializationDispatcher.UpdateLayer();
+#if DESKTOP
+                GLFW.Glfw.PollEvents();
+#endif
                 return;
             }
 
@@ -147,14 +111,6 @@ namespace Engine.Layers
             }
 
             _cleanupLayer.UpdateLayer();
-        }
-
-        internal void AdvanceSyncWork()
-        {
-            _initializationDispatcher.UpdateLayer();
-#if DESKTOP
-            GLFW.Glfw.PollEvents();
-#endif
         }
 
         internal virtual void PublishEvent(EventType type, object value)

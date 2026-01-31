@@ -12,7 +12,7 @@ namespace GameCooker
     {
         private readonly StringBuilder _sb = new();
 
-        byte[] IAssetProcessor.Process(string path, AssetMetaFileBase meta, CookingPlatform platform)
+        AssetProccesResult IAssetProcessor.Process(string path, AssetMetaFileBase meta, CookingPlatform platform)
         {
             using var reader = new StreamReader(path, Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
             var str = reader.ReadToEnd();
@@ -57,7 +57,11 @@ namespace GameCooker
                 Console.WriteLine("Shader doesn't contain '#version' tag");
             }
 
-            return Encoding.UTF8.GetBytes(_sb.ToString().TrimStart());
+            return new AssetProccesResult()
+            {
+                IsSuccess = true,
+                Data = Encoding.UTF8.GetBytes(_sb.ToString().TrimStart())
+            };
         }
     }
 }
