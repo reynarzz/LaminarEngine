@@ -29,7 +29,6 @@ namespace Editor
     //   collections do not search for all delegates(privates/public), but classes do.
     // -If I load the runtime mode, and the applicationLayer is enabled, the camera renders black.
     // GameCooker, the asset database sometimes doesn't remove old assets correctly.
-    // Bug with mouse picker: cliking almost the top border of the scene window doesn't register a pick, and performance degrades.
 
     // Fix:
     // Investigate why when the scene is reloaded old objects are still alive.
@@ -42,8 +41,8 @@ namespace Editor
     // - Generic can serialize EObject as simple class if the property/field doesn't contain [Serializable]
     // - For runtime create a dictionary with all the types, so types can be saved and found quickly: Dictionary<Guid, Type>
     // - Maybe I should remove the 'SimpleClass' and 'simpleCollection' and serialize all classes as complex so I avoid serializing complex classes as simple.
-         // Fix the issue of references. This will avoid having, live real classes in the IR.
-          
+    // Fix the issue of references. This will avoid having, live real classes in the IR.
+
     // Performance fix:
     // UI performance is pretty bad, rewrite the entire UI system.
 
@@ -73,7 +72,7 @@ namespace Editor
 
             NativeLogger.Init();
             EditorNatives.InitImAllGui();
-             
+
             _win = new WindowStandalone("GFS Editor", 1424, 840, Color.Black, new TextureDescriptor()
             {
                 Width = EditorDefaultIcon.Width,

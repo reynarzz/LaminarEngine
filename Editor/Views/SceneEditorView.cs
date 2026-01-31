@@ -39,7 +39,7 @@ namespace Editor
 
         private void OnRenderingEnd()
         {
-            if (IsMouseClicked && IsMouseInsideWindow())
+            if (IsMouseClicked)
             {
                 SelecteObject();
 
