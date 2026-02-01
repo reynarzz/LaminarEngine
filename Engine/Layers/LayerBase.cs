@@ -15,6 +15,7 @@ namespace Engine.Layers
     public abstract class LayerBase
     {
         //internal abstract int Priority { get; set; }
+        internal bool IsInitialized { get; protected private set; }
         public virtual Task InitializeAsync() { return Task.CompletedTask; }
         public virtual void Initialize() { }
         public abstract void Close();

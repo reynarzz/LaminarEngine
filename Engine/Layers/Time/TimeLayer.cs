@@ -20,6 +20,7 @@ namespace Engine.Layers
             _timePast = 0;
             _unscaledTimePast = 0;
             Restart();
+            IsInitialized = true;
 
             return Task.CompletedTask;
         }

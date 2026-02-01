@@ -14,7 +14,6 @@ namespace Editor
 {
     internal class EditorLayersManager : LayersManager
     {
-        private static TimeLayer _time = new();
         private List<ActorDataSceneAsset> _actors;
         private string TestfilePath => $"{EditorPaths.AppRoot}Scene.bin";
         private string AnimClipPath => $"{EditorPaths.AppRoot}AnimClip.bin";
@@ -22,34 +21,87 @@ namespace Editor
         private string MaterialPath => $"{EditorPaths.AppRoot}Material.bin";
 
         private PlaymodeController _playmodeController; // Remove from here
-        private static HotReloadLayer _hotReload;
-        public EditorLayersManager(InputLayerBase inputLayer, WindowStandalone win) :
-            base([_time,
-                  inputLayer,
-                  null, // AppLayer                
-                  new MainThreadDispatcher(),
-                  null, // SceneLayer              
-                  new AudioLayer(),
-                  null, // PhysicsLayer,           
-                  new ImGuiLayer(win, inputLayer),
-                  new RenderingLayer(),
-                  new EditorIOLayer(),
-                  _hotReload = new HotReloadLayer()
-                  ])
-        {
-            _playmodeController = new PlaymodeController(this, _time, _hotReload);
 
+        private readonly LayerBase[] _initializationLayers;
+        public EditorLayersManager(InputLayerBase inputLayer, WindowStandalone win)
+        {
+            var timeLayer = new TimeLayer();
+            var mainThreadDispLayer = new MainThreadDispatcher();
+            var audioLayer = new AudioLayer();
+            var imguiLayer = new ImGuiLayer(win, inputLayer, this);
+            var renderingLayer = new RenderingLayer();
+            var editorLayer = new EditorIOLayer();
+            var hotReloadLayer = new HotReloadLayer();
+
+            Layers =
+            [
+                timeLayer,
+                inputLayer,
+                null, // App Layer
+                mainThreadDispLayer,
+                null, // Scene layer
+                audioLayer,
+                null, // Physics layer.
+                editorLayer,
+                hotReloadLayer,
+                imguiLayer,
+                renderingLayer,
+            ];
+
+            _initializationLayers =
+            [
+                renderingLayer
+            ];
+
+            _playmodeController = new PlaymodeController(this, timeLayer, hotReloadLayer);
         }
 
         internal override void InitializeAsync()
         {
-            base.InitializeAsync();
+            if (LayersInitialized)
+            {
+                Debug.EngineError("Layers are already initialized");
+                return;
+            }
+
+            async Task InitializeLayers()
+            {
+                for (int i = Layers.Length - 1; i >= 0; i--)
+                {
+                    var layer = Layers[i];
+
+                    if (layer != null)
+                    {
+                        await layer.InitializeAsync();
+                        Debug.Log("Initialized layer: " + layer.GetType().Name);
+                    }
+                }
+
+                Debug.Log("Layers fully initialized");
+                LayersInitialized = true;
+            }
+
+            Task.Run(InitializeLayers);
         }
 
         private Shader _test;
         private Material _materialTest;
         internal override void Update()
         {
+            base.Update();
+
+            if (!LayersInitialized)
+            {
+                // Updates layers needed to present initialization info to the user.
+                foreach (var layer in _initializationLayers)
+                {
+                    if (layer.IsInitialized)
+                    {
+                        layer.UpdateLayer();
+                    }
+                }
+            }
+
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
                 Physics2D.DrawColliders = !Physics2D.DrawColliders;
@@ -133,7 +185,6 @@ namespace Editor
                 LoadScene();
             }
 
-            base.Update();
         }
 
         private void GenerateIconAndroidSizes(Texture defaultTexture, Texture foreground, Texture background)

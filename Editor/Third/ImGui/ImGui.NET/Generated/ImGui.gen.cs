@@ -21382,6 +21382,10 @@ namespace ImGuiNET
         {
             ImGuiNative.igSetNextWindowFocus();
         }
+        public static void SetNextWindowPos(float x, float y)
+        {
+            SetNextWindowPos(new Vector2(x, y));
+        }
         public static void SetNextWindowPos(Vector2 pos)
         {
             ImGuiCond cond = (ImGuiCond)0;

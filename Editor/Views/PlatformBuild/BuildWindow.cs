@@ -1,6 +1,7 @@
 ﻿using Editor.Build;
 using Editor.Data;
 using Editor.Utils;
+using Engine;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -56,7 +57,7 @@ namespace Editor.Views
 
         private void Splitter(Vector2 contentAvail)
         {
-            var splitterSize = new Vector2(SplitterWidth, contentAvail.Y);
+            var splitterSize = new Vector2(SplitterWidth, Mathf.Clamp(contentAvail.Y,1, contentAvail.Y+1));
             ImGui.InvisibleButton("##Splitter", splitterSize);
 
             bool hovered = ImGui.IsItemHovered();

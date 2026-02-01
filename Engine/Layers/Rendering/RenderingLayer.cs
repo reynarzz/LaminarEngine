@@ -58,6 +58,7 @@ namespace Engine.Layers
                 }]);
                 _screenGeometry = GraphicsHelper.CreateQuadGeometry();
                 WindowManager.Window.OnWindowChanged += OnWindowsChanged;
+                IsInitialized = true;
             });
 
         }

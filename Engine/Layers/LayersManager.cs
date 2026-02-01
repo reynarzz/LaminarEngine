@@ -10,32 +10,33 @@ namespace Engine.Layers
 {
     internal class LayersManager
     {
-        protected LayerBase[] _layers;
-        private CleanUpLayer _cleanupLayer;
+        protected LayerBase[] Layers {  get; set; }
+        private readonly CleanUpLayer _cleanupLayer = new();
         private MainThreadDispatcher _initializationDispatcher = new();
-        private bool _layersInitialized = false;
-        public int Count => _layers.Length;
-        public bool IsInitialized => _layersInitialized;
+        internal bool LayersInitialized { get; protected private set; }
+        public int Count => Layers.Length;
         public LayersManager([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Type[] layersTypes)
         {
-            _layers = new LayerBase[layersTypes.Length];
+            Layers = new LayerBase[layersTypes.Length];
             for (int i = 0; i < layersTypes.Length; i++)
             {
-                _layers[i] = (LayerBase)Activator.CreateInstance(layersTypes[i]);
+                Layers[i] = (LayerBase)Activator.CreateInstance(layersTypes[i]);
             }
 
-            _cleanupLayer = new CleanUpLayer();
+        }
+
+        protected LayersManager()
+        {
         }
 
         public LayersManager(LayerBase[] layers)
         {
-            _layers = layers;
-            _cleanupLayer = new CleanUpLayer();
+            Layers = layers;
         }
 
         internal virtual void InitializeAsync()
         {
-            if (_layersInitialized)
+            if (LayersInitialized)
             {
                 Debug.EngineError("Layers are already initialized");
                 return;
@@ -43,9 +44,9 @@ namespace Engine.Layers
 
             async Task InitializeLayers()
             {
-                for (int i = _layers.Length - 1; i >= 0; i--)
+                for (int i = Layers.Length - 1; i >= 0; i--)
                 {
-                    var layer = _layers[i];
+                    var layer = Layers[i];
 
                     if (layer != null)
                     {
@@ -55,7 +56,7 @@ namespace Engine.Layers
                 }
 
                 Debug.Log("Layers fully initialized");
-                _layersInitialized = true;
+                LayersInitialized = true;
             }
 
             Task.Run(InitializeLayers);
@@ -63,26 +64,26 @@ namespace Engine.Layers
 
         internal void PushLayer(LayerBase layer, int index)
         {
-            if (index < 0 || index >= _layers.Length)
+            if (index < 0 || index >= Layers.Length)
             {
                 Debug.Error("Wrong layer index: " + index);
                 return;
             }
 
-            _layers[index] = layer;
+            Layers[index] = layer;
 
             layer.InitializeAsync();
         }
 
         internal void PopLayer(int index)
         {
-            _layers[index]?.Close();
-            _layers[index] = null;
+            Layers[index]?.Close();
+            Layers[index] = null;
         }
 
         internal virtual void Update()
         {
-            if (!_layersInitialized)
+            if (!LayersInitialized)
             {
                 _initializationDispatcher.UpdateLayer();
 #if DESKTOP
@@ -91,9 +92,9 @@ namespace Engine.Layers
                 return;
             }
 
-            for (int i = 0; i < _layers.Length; i++)
+            for (int i = 0; i < Layers.Length; i++)
             {
-                _layers[i]?.UpdateLayer();
+                Layers[i]?.UpdateLayer();
             }
 
             _cleanupLayer.UpdateLayer();
@@ -101,17 +102,17 @@ namespace Engine.Layers
 
         internal virtual void PublishEvent(EventType type, object value)
         {
-            for (int i = 0; i < _layers.Length; i++)
+            for (int i = 0; i < Layers.Length; i++)
             {
-                _layers[i]?.OnEvent(type, value);
+                Layers[i]?.OnEvent(type, value);
             }
         }
 
         internal virtual void OnClose()
         {
-            for (int i = 0; i < _layers.Length; i++)
+            for (int i = 0; i < Layers.Length; i++)
             {
-                _layers[i]?.Close();
+                Layers[i]?.Close();
             }
         }
     }

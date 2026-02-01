@@ -30,7 +30,7 @@ namespace Editor.Layers
         private readonly IWindow _win;
         private readonly InputLayerBase _inputLayer;
         private readonly ImGuiController _imguiController;
-        public ImGuiLayer(IWindow window, InputLayerBase inputLayer)
+        public ImGuiLayer(IWindow window, InputLayerBase inputLayer, LayersManager layerManager)
         {
             _win = window;
             _inputLayer = inputLayer;
@@ -50,7 +50,14 @@ namespace Editor.Layers
 
             RenderingLayer.OnDrawOverlay += () =>
             {
-                Draw();
+                if (layerManager.LayersInitialized)
+                {
+                    Draw();
+                }
+                else
+                {
+                    DrawInitialization();
+                }
             };
         }
 
@@ -73,9 +80,9 @@ namespace Editor.Layers
                     RenderTextures = [new RenderTexture(1920, 1080) { Name = "Scene view Render Texture" },
                                   new RenderTexture(1920, 1080) { Name = "Mouse picker Render Texture" }],
                     SceneRenderers =
-                {
-                    sceneBatcher,
-                },
+                    {
+                        sceneBatcher,
+                    },
                 };
 
                 RenderingLayer.InitializeSurfaces([_gameSurface, _editorSurface]);
@@ -100,6 +107,8 @@ namespace Editor.Layers
                     new TaskWindow()
                     // new ConsoleEditorView()
                 };
+
+                IsInitialized = true;
             });
         }
 
@@ -153,6 +162,29 @@ namespace Editor.Layers
             {
                 windowView.OnUpdate();
             }
+        }
+
+        // TODO: show real progress.
+        private float _fakeProgress = 0;
+        private void DrawInitialization()
+        {
+            EditorNatives.BeginGLFWImguiInternal();
+            var winSize = new Vector2(300, 100);
+            ImGuiViewportPtr viewport = ImGui.GetMainViewport();
+
+            ImGui.SetNextWindowSize(winSize, ImGuiCond.Once);
+            ImGui.SetNextWindowPos(viewport.Pos.X + viewport.Size.X * 0.5f - winSize.X * 0.5f,
+                                   viewport.Pos.Y + viewport.Size.Y * 0.5f - winSize.Y * 0.5f);
+            ImGui.Begin("Initializing Editor", ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove);
+            _fakeProgress += ImGui.GetIO().DeltaTime * 0.05f;
+
+            var fakeMessage = _fakeProgress <= 0.3 ? "Compiling GameApplication Domain" : "Importing assets";
+            ImGui.Text($"{fakeMessage}");
+          
+            ImGui.ProgressBar(_fakeProgress, new Vector2(270, 20));
+            ImGui.End();
+            EditorNatives.EndGLFWImguiInternal();
+
         }
 
         public override void Close() { }
