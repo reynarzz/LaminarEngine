@@ -23,13 +23,27 @@ namespace Editor.Build
             var filename = Path.Combine(rootFolder, current.PackageName);
 
             var value = AdbRunner.Run("adb", $"install {filename}-Signed.apk");
-            AdbRunner.Run("adb", $"shell am start -n {current.PackageName}/crc64faceced24a29f4d5.MainActivity");
+            var IsInstallSuccess = value.exitCode == 0;
 
-            Debug.Log($"Installing stage ended: {(value.exitCode == 0? "success": "fail")}");
+            if (IsInstallSuccess)
+            {
+                Debug.Log("Installation Success.");
+
+                var launchResult = AdbRunner.Run("adb", $"shell am start -n {current.PackageName}/crc64faceced24a29f4d5.MainActivity");
+
+                if(launchResult.exitCode == 0)
+                {
+                    Debug.Log("App launch Success.");
+                }
+            }
+            else
+            {
+                Debug.Log($"Couldn't install, check android device's compatibility.");
+            }
 
             return new BuildStageResult()
             {
-                IsSuccess = value.exitCode == 0
+                IsSuccess = IsInstallSuccess
             };
         }
     }
