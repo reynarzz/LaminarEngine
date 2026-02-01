@@ -58,6 +58,7 @@ namespace Editor.Build
                 ["ApplicationId"] = packageName,
                 ["ApplicationDisplayVersion"] = GetVersion(settings.Version),
                 ["SupportedOSPlatformVersion"] = ((int)settings.MinimumApiLevel).ToString(),
+                ["AndroidTargetSdkVersion"] = ((int)settings.TargetApiLevel).ToString()
             };
 
             // NOTE: Not sure why do I have to define build type, msbuild should do it by default.

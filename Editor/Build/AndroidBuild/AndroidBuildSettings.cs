@@ -56,7 +56,7 @@ namespace Editor.Build
         [SerializedField] public string StorePass { get; set; } = "storepassword";
         [SerializedField] public bool LaunchAfterBuild { get; set; }
         [SerializedField] public AndroidApiLevel MinimumApiLevel { get; set; }
+        [SerializedField] public AndroidApiLevel TargetApiLevel { get; set; } = Enum.GetValues<AndroidApiLevel>()[^1];
         [SerializedField] public ivec3 Version { get; set; } = new ivec3(1, 0, 0);
     }
-
 }
