@@ -1,4 +1,5 @@
 ﻿using Engine;
+using GlmNet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,23 @@ namespace Editor.Build
         xhdpi = 96,
         xxhdpi = 144,
         xxxhdpi = 192,
+    }
+
+    public enum AndroidApiLevel
+    {
+        Android_6_Marshmallow_API_23 = 23,
+        Android_7_Nougat_API_24 = 24,
+        Android_7_1_NougatMr1_API_25 = 25,
+        Android_8_Oreo_API_26 = 26,
+        Android_8_1_OreoMr1_API_27 = 27,
+        Android_9_Pie_API_28 = 28,
+        Android_10_API_29 = 29,
+        Android_11_API_30 = 30,
+        Android_12_API_31 = 31,
+        Android_12L_API_32 = 32,
+        Android_13_API_33 = 33,
+        Android_14_API_34 = 34,
+        Android_15_API_35 = 35
     }
 
     internal class AndroidIcon
@@ -37,6 +55,8 @@ namespace Editor.Build
         [SerializedField] public string KeyPass { get; set; } = "mypassword";
         [SerializedField] public string StorePass { get; set; } = "storepassword";
         [SerializedField] public bool LaunchAfterBuild { get; set; }
+        [SerializedField] public AndroidApiLevel MinimumApiLevel { get; set; }
+        [SerializedField] public ivec3 Version { get; set; } = new ivec3(1, 0, 0);
     }
 
 }

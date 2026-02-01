@@ -1,4 +1,5 @@
 ﻿using Editor.Data;
+using GlmNet;
 using SharedTypes;
 using System;
 using System.Collections.Generic;
@@ -55,6 +56,8 @@ namespace Editor.Build
                 ["DefineConstants"] = "$(DefineConstants);ANDROID;MOBILE",
                 ["TrimMode"] = "link",
                 ["ApplicationId"] = packageName,
+                ["ApplicationDisplayVersion"] = GetVersion(settings.Version),
+                ["SupportedOSPlatformVersion"] = ((int)settings.MinimumApiLevel).ToString(),
             };
 
             // NOTE: Not sure why do I have to define build type, msbuild should do it by default.
@@ -127,7 +130,10 @@ namespace Editor.Build
 
             return [AndroidConsts.BUILD_TARGET];
         }
-
+        private string GetVersion(ivec3 version)
+        {
+            return $"{version.x}.{version.y}.{version.z}.{0}";
+        }
         private void UpdateAndroidAppName(string name)
         {
             var stringsXmlPath = Path.Combine(EditorPaths.AndroidProjectRoot, "Resources", "values", "strings.xml");

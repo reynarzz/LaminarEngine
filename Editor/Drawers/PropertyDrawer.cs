@@ -291,8 +291,14 @@ namespace Editor
                 ImGui.SameLine();
                 ImGui.SetCursorPosX(Math.Max(EditorGuiFieldsResolver.XPosOffset, ImGui.GetCursorPosX()));
 
-                int idx = (int)value;
-                string[] names = Enum.GetNames(type);
+                var names = Enum.GetNames(type);
+                var idx = Array.IndexOf(names, Enum.GetName(type, value));
+
+                if (idx < 0)
+                {
+                    value = ReflectionUtils.GetDefaultValueInstance(type);
+                    idx = 0;
+                }
                 if (resultChanged = EditorGuiFieldsResolver.DrawCombo(propertyName, ref idx, names, width))
                 {
                     setMemberValueCallBack(target, Enum.Parse(type, names[idx]), prop, index);
