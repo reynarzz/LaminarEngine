@@ -170,7 +170,7 @@ namespace Editor.Layers
         {
             EditorNatives.BeginGLFWImguiInternal();
             var winSize = new Vector2(300, 100);
-            ImGuiViewportPtr viewport = ImGui.GetMainViewport();
+            var viewport = ImGui.GetMainViewport();
 
             ImGui.SetNextWindowSize(winSize, ImGuiCond.Once);
             ImGui.SetNextWindowPos(viewport.Pos.X + viewport.Size.X * 0.5f - winSize.X * 0.5f,
