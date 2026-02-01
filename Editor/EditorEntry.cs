@@ -52,6 +52,9 @@ namespace Editor
     // -Asset ERROR: If I get an error importing the assets at editor launch, it means that the other layers ran before the importer finished.
     // Metadata of every asset should be binary on final build.
 
+    // Featiures
+    // - Fully async scene load in the background: async asset loading (mainThreadSync for graphic assets)
+
     // Save Editor config:
     // Current loaded scene name.
     // Layers.

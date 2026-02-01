@@ -53,9 +53,7 @@ namespace Engine
             if (window.IsInitialized)
             {
                 _layersManager = layerManager;
-
                 _layersManager.InitializeAsync();
-                // _layersManager.Initialize().GetAwaiter().GetResult();
             }
         }
 

@@ -52,20 +52,6 @@ namespace Engine.Layers
                         await layer.InitializeAsync();
                         Debug.Log("Initialized layer: " + layer.GetType().Name);
                     }
-
-
-                    //#if DEBUG
-                    //                try
-                    //                {
-                    //                    _layers[i].Initialize();
-                    //                }
-                    //                catch (Exception e)
-                    //                {
-                    //                    Debug.Error(e);
-                    //                }
-                    //#else
-                    //                _layers[i].Initialize();
-                    //#endif
                 }
 
                 Debug.Log("Layers fully initialized");
