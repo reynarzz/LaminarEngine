@@ -29,7 +29,7 @@ namespace Editor.Build
             {
                 ["Configuration"] = settings.Type == BuildType.Release ? "Release" : "Debug",
                 ["Platform"] = "x64",
-
+                ["TargetFramework"] = "net9.0",
                 // Publish settings
                 ["RuntimeIdentifier"] = "win-x64",
                 ["SelfContained"] = "true",
@@ -62,11 +62,12 @@ namespace Editor.Build
             if(settings.Type == BuildType.Release)
             {
                 props["DefineConstants"] = "WINDOWS;WIN32;DESKTOP;RELEASE";
+                props["DebugType"] = "none";
+                props["DebugSymbols"] = "false";
             }
             else
             {
                 props["DefineConstants"] = "WINDOWS;WIN32;DESKTOP;DEBUG";
-
             }
             return props;
         }

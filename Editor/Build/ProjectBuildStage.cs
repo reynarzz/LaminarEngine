@@ -35,14 +35,10 @@ namespace Editor.Build
 
             _instance = project.CreateProjectInstance();
 
-            var assetsPath = Path.Combine(EditorPaths.GameRoot, "Library/Build/obj/project.assets.json");
+            // Restore packages, such as nugget.
+            BuildManager.DefaultBuildManager.Build(_parameters, new BuildRequestData(_instance, ["Restore"]));
 
-            if (!File.Exists(assetsPath))
-            {
-                // Restore packages, such as nugget.
-                BuildManager.DefaultBuildManager.Build(_parameters, new BuildRequestData(_instance, ["Restore"]));
-            }
-
+            // Project build.
             var result = BuildManager.DefaultBuildManager.Build(_parameters, new BuildRequestData(_instance, GetTargetsToBuild(), null,
                                                                 BuildRequestDataFlags.ReplaceExistingProjectInstance));
 
@@ -70,12 +66,12 @@ namespace Editor.Build
         protected abstract string GetCSProjPath();
         protected abstract string[] GetTargetsToBuild();
 
-        protected T GetBuildSettings<T>(PlatformBuild platform) where T: PlatformBuildSettings
+        protected T GetBuildSettings<T>(PlatformBuild platform) where T : PlatformBuildSettings
         {
             return GetBuildSettings(platform) as T;
         }
 
-        protected PlatformBuildSettings GetBuildSettings(PlatformBuild platform) 
+        protected PlatformBuildSettings GetBuildSettings(PlatformBuild platform)
         {
             return EditorDataManager.BuildSettings.GetBuildSettings(platform);
         }
