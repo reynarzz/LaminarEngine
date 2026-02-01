@@ -72,15 +72,15 @@ namespace Editor
             Application.IsInPlayMode = false;
             GameProject.Initialize(new ProjectConfig() { ProjectFolderRoot = EditorPaths.GameRoot });
 
-            NativeLogger.Init();
-            EditorNatives.InitImAllGui();
-
             _win = new WindowStandalone("GFS Editor", 1424, 840, Color.Black, new TextureDescriptor()
             {
                 Width = EditorDefaultIcon.Width,
                 Height = EditorDefaultIcon.Height,
                 Buffer = EditorDefaultIcon.Icon
             });
+
+            NativeLogger.Init();
+            EditorNatives.InitImAllGui();
 
             EditorNatives.InitGLFWImguiInternal(WindowStandalone.NativeWindow.handle);
             MenuItems();
