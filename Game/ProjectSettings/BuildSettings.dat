@@ -358,7 +358,7 @@
                   "InternalType": "Editor.Build.BuildType, Editor",
                   "Data": {
                     "$type": "Editor.Build.BuildType, Editor",
-                    "$value": "Release"
+                    "$value": "Debug"
                   }
                 },
                 {
@@ -866,7 +866,7 @@
                   "InternalType": "Editor.Build.BuildType, Editor",
                   "Data": {
                     "$type": "Editor.Build.BuildType, Editor",
-                    "$value": "Debug"
+                    "$value": "Release"
                   }
                 },
                 {
