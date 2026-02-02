@@ -21,7 +21,7 @@ namespace GameCooker
 
         internal override Task<bool> CookAssetsAsync(CookFileOptions fileOptions, CookingPlatform platform, (string, AssetType)[] files, string outFolder)
         {
-            return Task.Run(() =>
+            return Task.Run(async () =>
             {
                 bool someAssetFailImport = false;
 
@@ -82,7 +82,7 @@ namespace GameCooker
                             Console.WriteLine("Importing asset file: " + filePath);
 
                             // Write meta
-                            File.WriteAllText(metaPath, JsonConvert.SerializeObject(meta, Formatting.Indented));
+                            await File.WriteAllTextAsync(metaPath, JsonConvert.SerializeObject(meta, Formatting.Indented));
 
                             _database.Assets.Add(meta.GUID, new AssetInfo()
                             {
@@ -96,7 +96,7 @@ namespace GameCooker
                         }
 
                         // Write asset to library
-                        File.WriteAllBytes(binPath, data.Data ?? []);
+                        await File.WriteAllBytesAsync(binPath, data.Data ?? []);
                     }
                 }
                 var prevColor = Console.ForegroundColor;
@@ -147,9 +147,16 @@ namespace GameCooker
 
                 _database.TotalAssets = _database.Assets.Count;
 
-                // Write asset database
-                File.WriteAllText(Path.Combine(outFolder, Paths.ASSET_DATABASE_FILE_NAME), JsonConvert.SerializeObject(_database, Formatting.Indented));
-
+                try
+                {
+                    // Write asset database
+                    await File.WriteAllTextAsync(Path.Combine(outFolder, Paths.ASSET_DATABASE_FILE_NAME), JsonConvert.SerializeObject(_database, Formatting.Indented));
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Check Permission: Dev mode files cooker.");
+                }
+                
                 return someAssetFailImport;
             });
         }
