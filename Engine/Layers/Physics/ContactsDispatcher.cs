@@ -85,10 +85,10 @@ namespace Engine.Layers
         private readonly Action<Action<ScriptBehavior, Collision2D>, Collider2D, Collider2D> _collisionFuncEvent;
         private readonly Action<Action<ScriptBehavior, Collider2D>, Collider2D, Collider2D> _triggerFuncEvent;
 
-        private OrderedDictionary<CollisionKey, CollisionValue> _contactEnter;
-        private OrderedDictionary<CollisionKey, CollisionValue> _contactExit;
-        private OrderedDictionary<CollisionKey, CollisionValue> _triggerEnter;
-        private OrderedDictionary<CollisionKey, CollisionValue> _triggerExit;
+        private Dictionary<CollisionKey, CollisionValue> _contactEnter;
+        private Dictionary<CollisionKey, CollisionValue> _contactExit;
+        private Dictionary<CollisionKey, CollisionValue> _triggerEnter;
+        private Dictionary<CollisionKey, CollisionValue> _triggerExit;
 
         private Collision2D _collisionData;
 
@@ -301,7 +301,7 @@ namespace Engine.Layers
             OnExit(_triggerExit, _triggerEnter, _triggerFuncEvent, _onTriggerExit);
         }
 
-        private void OnEnter<T>(OrderedDictionary<CollisionKey, CollisionValue> enterCollisions, Action<Action<ScriptBehavior, T>, Collider2D, Collider2D> eventForwarder,
+        private void OnEnter<T>(Dictionary<CollisionKey, CollisionValue> enterCollisions, Action<Action<ScriptBehavior, T>, Collider2D, Collider2D> eventForwarder,
                                 Action<ScriptBehavior, T> onEnterFunc, Action<ScriptBehavior, T> onStayFunc)
         {
             foreach (var (key, collision) in enterCollisions)
@@ -321,7 +321,7 @@ namespace Engine.Layers
             }
         }
 
-        private void OnExit<T>(OrderedDictionary<CollisionKey, CollisionValue> exitCollisions, OrderedDictionary<CollisionKey, CollisionValue> enterCollisions,
+        private void OnExit<T>(Dictionary<CollisionKey, CollisionValue> exitCollisions, Dictionary<CollisionKey, CollisionValue> enterCollisions,
                                Action<Action<ScriptBehavior, T>, Collider2D, Collider2D> eventForwarder,
                                Action<ScriptBehavior, T> exitEvent)
         {
@@ -333,7 +333,7 @@ namespace Engine.Layers
             exitCollisions.Clear();
         }
 
-        private void OnExit<T>(CollisionKey exitCollision, OrderedDictionary<CollisionKey, CollisionValue> enterCollisions,
+        private void OnExit<T>(CollisionKey exitCollision, Dictionary<CollisionKey, CollisionValue> enterCollisions,
                                Action<Action<ScriptBehavior, T>, Collider2D, Collider2D> eventForwarder,
                                Action<ScriptBehavior, T> exitEvent)
         {
@@ -367,7 +367,7 @@ namespace Engine.Layers
         */
         //internal void NotifyColliderToRemove(Collider2D currentCollider)
         //{
-        //    void AddToExit<T>(OrderedDictionary<CollisionKey, CollisionValue> enter,
+        //    void AddToExit<T>(Dictionary<CollisionKey, CollisionValue> enter,
         //                      Action<Action<ScriptBehavior, T>, Collider2D, Collider2D> eventForwarder,
         //                      Action<ScriptBehavior, T> exitEvent)
         //    {

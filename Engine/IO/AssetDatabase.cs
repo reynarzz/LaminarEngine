@@ -14,7 +14,7 @@ namespace Engine.IO
         private readonly Dictionary<AssetType, AssetBuilderBase> _assetbuilder;
         private readonly AssetDatabaseCache _databaseCache;
         private readonly BiDictionary<Guid, string> _guidPathDict = new();
-        private readonly Dictionary<AssetType, OrderedDictionary<Guid, AssetInfo>> _assetsGuidByTypes = new();
+        private readonly Dictionary<AssetType, Dictionary<Guid, AssetInfo>> _assetsGuidByTypes = new();
 
         private DiskBase _disk;
         internal DiskBase Disk => _disk;
@@ -36,7 +36,7 @@ namespace Engine.IO
 
                 if (!_assetsGuidByTypes.TryGetValue(info.Type, out var guidList))
                 {
-                    guidList = new OrderedDictionary<Guid, AssetInfo>();
+                    guidList = new();
                     _assetsGuidByTypes[info.Type] = guidList;
                 }
 

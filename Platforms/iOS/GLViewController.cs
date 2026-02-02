@@ -34,7 +34,10 @@ namespace Engine.IOS
         public int Width { get; set; }
 
         public int Height { get; set; }
-
+        public int OffsetX => 0;
+        public int OffsetY => 0;
+        private InputLayerIOS _inputTest = new();
+        public nint NativeWindow => 0;
         public void SetWindowSize(int width, int height)
         {
         }
@@ -148,7 +151,8 @@ namespace Engine.IOS
                     if (status == GL_FRAMEBUFFER_COMPLETE)
                     {
 
-                        _engine = new GFSEngine(this, new GameApplication(), _reader);
+                        _engine = new GFSEngine(this, new GameApplication(), _inputTest, _reader);
+
                     }
                 }
                 else

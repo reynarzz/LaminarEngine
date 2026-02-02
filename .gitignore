@@ -36,3 +36,4 @@ Engine/Third/Native/glfw/_bin/
 Editor/Third/native/_build/
 Platforms/Android/Resources/values/strings.xml
 #Editor/Data/imgui.ini
+/Platforms/iOS/bin
