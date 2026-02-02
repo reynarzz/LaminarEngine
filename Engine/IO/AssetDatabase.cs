@@ -14,8 +14,11 @@ namespace Engine.IO
         private readonly Dictionary<AssetType, AssetBuilderBase> _assetbuilder;
         private readonly AssetDatabaseCache _databaseCache;
         private readonly BiDictionary<Guid, string> _guidPathDict = new();
+        #if DESKTOP
+        private readonly Dictionary<AssetType, OrderedDictionary<Guid, AssetInfo>> _assetsGuidByTypes = new();
+        #else
         private readonly Dictionary<AssetType, Dictionary<Guid, AssetInfo>> _assetsGuidByTypes = new();
-
+        #endif
         private DiskBase _disk;
         internal DiskBase Disk => _disk;
         public AssetDatabase(Dictionary<AssetType, AssetBuilderBase> assetBuilder)
