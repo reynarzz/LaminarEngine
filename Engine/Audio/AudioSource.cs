@@ -17,12 +17,14 @@ namespace Engine
         private bool _isLooping = false;
 
         internal SoundPlayer SoundPlayer => _soundPlayer;
+
+        [SerializedField]
         public AudioClip Clip
         {
             get => _audioClip;
             set
             {
-                if (_audioClip == value)
+                if (_audioClip == value || !IsAlive)
                 {
                     return;
                 }
@@ -49,7 +51,7 @@ namespace Engine
             get => _mixer;
             set
             {
-                if (_mixer == value)
+                if (_mixer == value || _soundPlayer == null)
                     return;
 
                 _mixer = value;
@@ -65,6 +67,7 @@ namespace Engine
             }
         }
 
+        [SerializedField]
         public bool Loop
         {
             get => _isLooping;
@@ -77,10 +80,10 @@ namespace Engine
                 _soundPlayer.IsLooping = value;
             }
         }
-
+        [SerializedField]
         public float Volume
         {
-            get => _soundPlayer?.Volume ?? -1;
+            get => _soundPlayer?.Volume ?? 1;
             set
             {
                 if (_soundPlayer == null)
@@ -89,10 +92,10 @@ namespace Engine
                 _soundPlayer.Volume = value;
             }
         }
-
+        [SerializedField]
         public float Pan
         {
-            get => _soundPlayer?.Pan ?? -1;
+            get => _soundPlayer?.Pan ?? 0;
             set
             {
                 if (_soundPlayer == null)
@@ -101,10 +104,10 @@ namespace Engine
                 _soundPlayer.Pan = value;
             }
         }
-
+        [SerializedField]
         public float PlaybackSpeed
         {
-            get => _soundPlayer?.PlaybackSpeed ?? -1;
+            get => _soundPlayer?.PlaybackSpeed ?? 1;
             set
             {
                 if (_soundPlayer == null)
@@ -126,10 +129,16 @@ namespace Engine
             }
         }
 
+        [ShowFieldNoSerialize(isReadOnly: true)]
         public bool IsPlaying => _soundPlayer?.State == PlaybackState.Playing;
+
+        [ShowFieldNoSerialize(isReadOnly: true)]
         public bool IsPaused => _soundPlayer?.State == PlaybackState.Paused;
+
+        [ShowFieldNoSerialize(isReadOnly: true)]
         public bool IsStopped => _soundPlayer?.State == PlaybackState.Stopped;
 
+        [ShowMethodInEditor(true)]
         public void Play()
         {
             if (_soundPlayer == null)
@@ -157,6 +166,9 @@ namespace Engine
 
         public void PlayOneShot(AudioClip clip, float volume)
         {
+            if (!IsAlive)
+                return;
+
             if (clip == null)
             {
                 Debug.Error("Clip is null, can't play one shot");
@@ -178,14 +190,16 @@ namespace Engine
             sound.Play();
         }
 
+        [ShowMethodInEditor(true)]
         public void Pause()
         {
             if (_soundPlayer == null)
                 return;
 
             _soundPlayer.Pause();
-        }
 
+        }
+        [ShowMethodInEditor]
         public void Stop()
         {
             if (_soundPlayer == null)
@@ -216,6 +230,8 @@ namespace Engine
 
             _soundPlayer?.Dispose();
             _provider?.Dispose();
+
+            _soundPlayer = null;
         }
     }
 }

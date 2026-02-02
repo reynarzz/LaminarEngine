@@ -68,10 +68,5 @@ namespace Engine
             _internalMixer.Dispose();
             _internalMixer = null;
         }
-
-        ~AudioMixer()
-        {
-            Destroy();
-        }
     }
 }

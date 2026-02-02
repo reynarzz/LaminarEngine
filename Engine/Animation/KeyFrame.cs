@@ -8,17 +8,17 @@ namespace Engine
 {
     public interface IKeyFrame
     {
-        public float Time { get; }
+        [SerializedField] public float Time { get; set; }
     }
 
     public interface IKeyFrame<T> : IKeyFrame
     {
-        public T Value { get; }
+        public T Value { get; set; }
     }
     public struct Keyframe<T> : IKeyFrame<T>
     {
-        public T Value { get; }
-        public float Time { get; }
+        [SerializedField] public T Value { get; set; }
+        [SerializedField] public float Time { get; set; }
         public Keyframe(float time, T value)
         {
             Time = time;
@@ -27,11 +27,11 @@ namespace Engine
     }
     public struct KeyFrameHermite<T> : IKeyFrame<T>
     {
-        public T InTangent { get; set; }
-        public T OutTangent { get; set; }
+        [SerializedField] public T InTangent { get; set; }
+        [SerializedField] public T OutTangent { get; set; }
 
-        public T Value { get; }
-        public float Time { get; }
+        [SerializedField] public T Value { get; set; }
+        [SerializedField] public float Time { get; set; }
 
         public KeyFrameHermite(float time, T value) : this(time, value, default, default)
         {

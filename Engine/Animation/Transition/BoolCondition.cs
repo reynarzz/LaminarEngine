@@ -8,15 +8,19 @@ namespace Engine
 {
     public class BoolCondition : TransitionCondition
     {
-        private readonly bool _compare;
+        [SerializedField] public bool Compare { get; set; }
+        // Deserializer needs this
+        public BoolCondition() : base(null)
+        {
+        }
         public BoolCondition(string property, bool compare) : base(property)
         {
-            _compare = compare;
+            Compare = compare;
         }
 
         public override bool IsCondition(AnimatorParameters parameters)
         {
-            return parameters.GetBool(Property) == _compare;
+            return parameters.GetBool(Property) == Compare;
         }
     }
 }

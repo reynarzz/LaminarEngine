@@ -8,7 +8,12 @@ namespace Engine
 {
     public class AnyCondition : TransitionCondition
     {
-        private readonly TransitionCondition[] _conditions;
+        [SerializedField] private TransitionCondition[] _conditions;
+
+        // Deserializer needs this
+        private AnyCondition() : base(null)
+        {
+        }
         public AnyCondition(TransitionCondition[] conditions) : base(null)
         {
             _conditions = conditions;

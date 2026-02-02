@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System;
 using System.Runtime.CompilerServices;
 using GlmNet;
+using SharedTypes;
 
 namespace Engine
 {
@@ -83,7 +84,14 @@ namespace Engine
                 Console.ForegroundColor = LevelToColor(level);
 #endif
                 string timestamp = DateTime.Now.ToString("HH:mm:ss");
-                string filename = System.IO.Path.GetFileName(file);
+                string filename = "";
+#if ANDROID
+                var clearedpath = Paths.ClearPathSeparation(file);
+                var index = clearedpath.LastIndexOf('/');
+                filename = clearedpath.Substring(index + 1, clearedpath.Length - index -1);
+#else
+                filename = System.IO.Path.GetFileName(file);
+#endif
                 //Console.WriteLine($"[{timestamp}] [{level}] {filename}:{line} ({member}) - {message}");
                 Console.WriteLine($"{Prefix}[{timestamp}] [{level}] [{filename}:{line}] {message}");
 #if !MOBILE
@@ -91,7 +99,7 @@ namespace Engine
 #endif
             }
 #endif
-        }
+            }
 
         private static ConsoleColor LevelToColor(LogLevel level)
         {

@@ -7,6 +7,7 @@ using Engine.Graphics;
 using Engine.Types;
 using Engine.Utils;
 using GlmNet;
+using SharedTypes;
 
 namespace Engine
 {
@@ -61,17 +62,15 @@ namespace Engine
     }
 
     [UniqueComponent]
-    public class Camera : Component
+    public class Camera : Component, ICamera
     {
         public mat4 Projection { get; private set; }
         public mat4 ViewMatrix => glm.inverse(Transform.WorldMatrix);
-        public int Priority { get; set; } = 0;
-        public float NearPlane { get; set; } = 0.1f;
-        public float FarPlane { get; set; } = 100;
-        public Color BackgroundColor { get; set; } = Color.Black;
-        public RenderTexture RenderTexture { get; set; }
+        bool ICamera.IsEnabled => IsEnabled && Actor && Actor.IsActiveInHierarchy;
 
+        [SerializedField] public Color BackgroundColor { get; set; } = new Color32(49, 77, 121, 255);
         private CameraProjectionMode _projectionMode;
+        [SerializedField("Projection")]
         public CameraProjectionMode ProjectionMode
         {
             get => _projectionMode;
@@ -84,8 +83,19 @@ namespace Engine
                 UpdateCurrent();
             }
         }
-
-        private float _orthoSize;
+        private float _fov = 60;
+        [SerializedField("Field of view")]
+        public float Fov
+        {
+            get => _fov;
+            set
+            {
+                _fov = value;
+                UpdateCurrent();
+            }
+        }
+        private float _orthoSize = 32;
+        [SerializedField]
         public float OrthographicSize
         {
             get => _orthoSize;
@@ -96,7 +106,19 @@ namespace Engine
             }
         }
 
-        public float Fov { get; set; }
+        private float _nearPlane = 0.1f;
+        private float _farPlane = 100.0f;
+        [SerializedField] public float NearPlane { get => _nearPlane; set { _nearPlane = Math.Clamp(value, 0.0001f, FarPlane - 1); UpdateCurrent(); } }
+        [SerializedField] public float FarPlane { get => _farPlane; set { _farPlane = Math.Clamp(value, NearPlane + 1, 5000); UpdateCurrent(); } }
+        public float Aspect => Viewport.z / Viewport.w;
+        [SerializedField] public RenderTexture RenderTexture { get; set; }
+        RenderTexture ICamera.OutRenderTexture { get; set; }
+
+        [SerializedField] public int Priority { get; set; } = 0;
+        public vec3 WorldPosition => Transform.WorldPosition;
+        public vec3 Forward => Transform.Forward;
+        public vec3 Right => Transform.Right;
+        public vec3 Up => Transform.Up;
 
         public vec4 _viewport;
         public vec4 Viewport
@@ -115,17 +137,14 @@ namespace Engine
             }
         }
 
-        protected override void OnAwake()
-        {
-            base.OnAwake();
+        bool ICamera.IsAlive => IsAlive;
 
-            OrthographicSize = 32;
-            Fov = 60.0f;
+        internal override void OnInternalInitialize()
+        {
             WindowManager.Window.OnWindowChanged += OnWindowChanged;
             UpdateCurrent();
-            //UpdatePerspective();
         }
-       
+
         private void OnWindowChanged(int width, int height)
         {
             UpdateCurrent();
@@ -149,11 +168,11 @@ namespace Engine
             }
             else
             {
-                Projection = MathUtils.Perspective(Fov, aspect, NearPlane, FarPlane);
+                Projection = MathUtils.Perspective(glm.radians(Fov), aspect, NearPlane, FarPlane);
             }
         }
 
-        private FrustumCorners GetOrthoFrustumCornersViewSpace(float left, float right, float bottom, 
+        private FrustumCorners GetOrthoFrustumCornersViewSpace(float left, float right, float bottom,
                                                                 float top, float near, float far)
         {
             FrustumCorners c;

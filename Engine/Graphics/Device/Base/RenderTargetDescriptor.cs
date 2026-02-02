@@ -10,5 +10,8 @@ namespace Engine.Graphics
     {
         public int Width { get; set; }
         public int Height { get; set; }
+        public bool IsMultiSample { get; set; }
+        public int SamplesCount { get; set; }
+        public TextureDescriptor ColorTextureDescriptor { get; } = new(); 
     }
 }

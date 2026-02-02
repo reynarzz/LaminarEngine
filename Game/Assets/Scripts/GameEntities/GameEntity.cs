@@ -9,5 +9,6 @@ namespace Game
 {
     public abstract class GameEntity : ScriptBehavior
     {
+        
     }
 }

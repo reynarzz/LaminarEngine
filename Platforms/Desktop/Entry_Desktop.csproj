@@ -8,9 +8,6 @@
 	<PublishSingleFile>true</PublishSingleFile>
     <InvariantGlobalization>true</InvariantGlobalization>
 	<ApplicationIcon>Icon.ico</ApplicationIcon>
-	<GameCookerBeforeBuildStage>Publish</GameCookerBeforeBuildStage>
-	<PublishPlatform>win32</PublishPlatform>
-
   </PropertyGroup>
 
 	<PropertyGroup>
@@ -21,28 +18,6 @@
 	  <OutputType>WinExe</OutputType>
 	</PropertyGroup>
 	
-	<!-- Windows -->
-	<PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
-		<DefineConstants>WINDOWS;DESKTOP;$(DefineConstants)</DefineConstants>
-	</PropertyGroup>
-
-	<!-- Linux -->
-	<PropertyGroup Condition="'$(OS)' == 'Unix' AND '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'True'">
-		<DefineConstants>LINUX;UNIX;DESKTOP;$(DefineConstants)</DefineConstants>
-		<PublishPlatform>linux</PublishPlatform>
-	</PropertyGroup>
-
-	<!-- macOS -->
-	<PropertyGroup Condition="'$(OS)' == 'Unix' AND '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'True'">
-		<DefineConstants>MACOS;OSX;UNIX;DESKTOP;$(DefineConstants)</DefineConstants>
-		<PublishPlatform>macOS</PublishPlatform>
-	</PropertyGroup>
-	
-	<PropertyGroup Condition="'$(Configuration)'=='Release'">
-		<DebugType>none</DebugType>
-		<DebugSymbols>false</DebugSymbols>
-	</PropertyGroup>
-	
 	<ItemGroup>
     <Content Include="Icon.ico" />
   </ItemGroup>
@@ -51,49 +26,4 @@
     <ProjectReference Include="..\..\Engine\Engine.csproj" />
     <ProjectReference Include="..\..\Game\Game.csproj" />
   </ItemGroup>
-
-	<ItemGroup Condition="'$(Configuration)'!='Release'">
-		<ProjectReference Include="..\..\GameCooker\GameCooker.csproj" />
-	</ItemGroup>
-
-
-	<Target Name="PostBuild_Windows" AfterTargets="PostBuildEvent" Condition="'$(OS)' == 'Windows_NT'">
-		<Message Text="PostBuild: Windows detected: copying glfw3.dll" Importance="high" />
-		<Copy SourceFiles="$(MSBuildProjectDirectory)/../..//Third/Win/glfw/lib-vc2022/glfw.dll" DestinationFiles="$(TargetDir)glfw.dll" SkipUnchangedFiles="true" />
-	</Target>
-
-
-	<Target Name="SelectMacLibFolder" BeforeTargets="PostBuild_Mac">
-		<PropertyGroup>
-			<MacLibFolder Condition="$(RuntimeIdentifier.Contains('arm64'))">lib-arm64</MacLibFolder>
-			<MacLibFolder Condition="$(RuntimeIdentifier.Contains('x64'))">lib-x86_64</MacLibFolder>
-			<MacLibFolder Condition="'$(MacLibFolder)' == '' AND $(RuntimeIdentifier.Contains('osx'))">lib-universal</MacLibFolder>
-		</PropertyGroup>
-
-		<Message Text="SelectMacLibFolder: RID=$(RuntimeIdentifier) MacLibFolder=$(MacLibFolder)" Importance="high" />
-	</Target>
-
-	<Target Name="PostBuild_Mac" AfterTargets="PostBuildEvent" Condition="$(RuntimeIdentifier.Contains('osx'))">
-
-		<Message Text="PostBuild: macOS detected: copying from $(MacLibFolder)" Importance="high" />
-
-		<Copy SourceFiles="$(MSBuildProjectDirectory)/../..//Third/MacOs/glfw/$(MacLibFolder)/libglfw.dylib" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
-	</Target>
-
-	<Target Name="MoveAllDllsToLibs" AfterTargets="Publish">
-		<MakeDir Directories="$(TargetDir)Data/Assemblies" />
-		<ItemGroup>
-			<DllsToMove Include="$(TargetDir)*.dll" Exclude="$(TargetDir)$(AssemblyName).dll" />
-		</ItemGroup>
-		<Move SourceFiles="@(DllsToMove)" DestinationFolder="$(TargetDir)Data/Assemblies" />
-	</Target>
-
-	<PropertyGroup>
-		<ProjectRoot>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..'))</ProjectRoot>
-		<ProjectRoot>$([MSBuild]::EnsureTrailingSlash('$(ProjectRoot)'))</ProjectRoot>
-	</PropertyGroup>
-	
-	<Import Condition="'$(Configuration)' == 'Release'" Project="$(ProjectRoot)Configs/BuildDependencies.targets" />
-	<Import Condition="'$(Configuration)' == 'Release'" Project="$(ProjectRoot)Configs/GameCooker.targets" />
-	<Import Condition="'$(Configuration)' == 'Release'" Project="$(ProjectRoot)Configs/Standalone.publish.platforms.targets" />
 </Project>

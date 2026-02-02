@@ -61,11 +61,12 @@ namespace Game
         public float HitRecoilStrengthScaling;
         public int HitInvincibilityBlinks;
         public bool DisappearOnDead;
+        public bool PushAwayFromWalls;
         public int StartLookDir;
 
     }
 
-    public abstract class Character : GameEntity
+    public abstract class Character : GameEntity, IDamageReceiver
     {
         protected Animator Animator { get; private set; }
         protected SpriteRenderer Renderer { get; private set; }
@@ -107,6 +108,7 @@ namespace Game
                 OnGroundChanged(value);
             }
         }
+        private bool _isStopBoxHit = false;
         private float _maxFallYVelocity = -20;
 
         public CharacterInventory Inventory { get; protected set; }
@@ -329,6 +331,9 @@ namespace Game
 
         protected sealed override void OnLateUpdate()
         {
+            if (Animator == null)
+                return;
+
             Renderer.Sprite = Animator.GetSprite(SPRITE_PROPERTY_NAME);
             Animator.Parameters.SetFloat(VEL_X_PROP_NAME, Rigidbody.Velocity.x);
             Animator.Parameters.SetFloat(VEL_Y_PROP_NAME, Rigidbody.Velocity.y);
@@ -388,8 +393,8 @@ namespace Game
 
         public void BeginJump()
         {
-            if (!CanCharacterMove()) return;
-            if (!IsOnGround || _jumping) return;
+            if (!CanCharacterMove() || !IsOnGround || _jumping)
+                return;
 
             _jumping = true;
             _jumpStartY = Transform.WorldPosition.y;
@@ -406,7 +411,7 @@ namespace Game
         public void EndJump()
         {
             var diff = Transform.WorldPosition.y - _jumpStartY;
-            Debug.Log(diff + ", " + _characterConfig.NormalJumpHeightThreshold);
+            //Debug.Log(diff + ", " + _characterConfig.NormalJumpHeightThreshold);
             var isNormalJump = diff >= _characterConfig.NormalJumpHeightThreshold;
             if (Rigidbody.Velocity.y > 0 && !isNormalJump)
             {
@@ -418,6 +423,9 @@ namespace Game
 
         protected override void OnFixedUpdate()
         {
+            if (Rigidbody == null)
+                return;
+
             if (_characterConfig.Ground.Enabled)
             {
                 CheckGround();
@@ -435,8 +443,39 @@ namespace Game
 
                 }
             }
+
+            //CheckPushWall();
         }
 
+        // Push the character back when is touching a wall, this prevents the collider to slide when jumping.
+        private bool CheckPushWall()
+        {
+            if (!_characterConfig.PushAwayFromWalls)
+                return false;
+
+            vec3 origin = Transform.WorldPosition + new vec3(Transform.WorldScale.x * _characterConfig.SpriteLookDirFlip * 0.5f, 0.22f);
+            vec3 size = new vec3(0.3f, 1.5f);
+            var boxWallkhit = Physics2D.BoxCast(origin, size, GameConsts.GROUND_MASK);
+
+            if (boxWallkhit.isHit)
+            {
+                Rigidbody.Velocity = new vec2(-(Transform.WorldScale.x * _characterConfig.SpriteLookDirFlip) * 0.55f, Rigidbody.Velocity.y);
+
+                if (Physics2D.DrawColliders)
+                {
+                    Debug.DrawBox(boxWallkhit.Point, vec3.One * 0.1f, Color.Green);
+                }
+
+                var dist = origin - new vec3(boxWallkhit.Point, 0);
+                // Transform.WorldPosition += new vec3(dist.x, 0, 0);
+            }
+            if (Physics2D.DrawColliders)
+            {
+                Debug.DrawBox(origin, size, Color.Red);
+            }
+
+            return boxWallkhit.isHit;
+        }
         public void LookAt(int dir)
         {
             if (dir == 0)
@@ -446,8 +485,8 @@ namespace Game
             }
 
             LookDir = dir;
-            var scaleX = Math.Abs(Transform.LocalScale.x);
-            Transform.LocalScale = new vec3(scaleX * dir * Math.Sign(_characterConfig.SpriteLookDirFlip), Transform.LocalScale.y, Transform.LocalScale.z);
+            var scaleX = Math.Abs(Transform.WorldScale.x);
+            Transform.WorldScale = new vec3(scaleX * dir * Math.Sign(_characterConfig.SpriteLookDirFlip), Transform.WorldScale.y, Transform.WorldScale.z);
         }
 
 
@@ -460,10 +499,16 @@ namespace Game
             if (!CanCharacterMove())
                 return;
             dir *= _characterConfig.SpriteLookDirFlip;
+
             if (dir != 0)
             {
+
+                //if (CheckPushWall())
+                //{
+                //    return;
+                //}
+
                 LookAt(dir);
-                LookDir = dir;
 
                 float targetX = _characterConfig.WalkSpeed * dir;
                 float accel = 100;
@@ -515,7 +560,7 @@ namespace Game
                 return;
 
             Rigidbody.Velocity = new vec2(0, Rigidbody.Velocity.y > 0 ? 0 : Rigidbody.Velocity.y);
-            HitDamage(this, MAX_LIFE);
+            HitDamage(Transform.WorldPosition, MAX_LIFE);
         }
 
         private IEnumerator HitEffect(int blinks)
@@ -533,7 +578,7 @@ namespace Game
 
                 yield return null;
             }
-            if(color.A < 0.9)
+            if (color.A < 0.9)
             {
                 Debug.Error("Fix: character color is not being restarted correctly.");
             }
@@ -542,7 +587,7 @@ namespace Game
             IsInvencible = false;
         }
 
-        public virtual bool HitDamage(GameEntity who, int amount)
+        public virtual bool HitDamage(vec3 aggressorPos, int amount)
         {
             if (!IsCharacterAlive() || IsInvencible || IsEnteringThroughDoor)
                 return false;
@@ -550,7 +595,7 @@ namespace Game
             Inventory.Life = Math.Clamp(Inventory.Life - amount, 0, MAX_LIFE);
             Rigidbody.GravityScale = _characterConfig.YGravityScale;
 
-            var damageDir = (Transform.WorldPosition - who.Transform.WorldPosition).Normalized;
+            var damageDir = (Transform.WorldPosition - aggressorPos).Normalized;
             float max = 50;
             if (IsOnGround)
             {
@@ -581,6 +626,7 @@ namespace Game
                 Animator.SetState(HIT_ANIM_STATE);
                 Animator.Parameters.SetTrigger(DEATH_ANIM_STATE);
                 OnCharacterDead?.Invoke();
+              //  Actor.Layer = LayerMask.NameToLayer(GameConsts.CHARACTER_DEAD);
             }
 
             PlayHitSFX();
@@ -591,7 +637,7 @@ namespace Game
 
         public bool IsCharacterAlive()
         {
-            return Inventory.Life > 0;
+            return Inventory?.Life > 0;
         }
 
 
@@ -602,6 +648,7 @@ namespace Game
             var raysCount = _characterConfig.Ground.RaysCount;
 
             var dir = Transform.Up * -_characterConfig.Ground.SizeY;
+
 
             uint hitIndex = 0;
             CastHit2D hit = default;
@@ -623,6 +670,8 @@ namespace Game
                 if (hit.isHit)
                     break;
             }
+
+
             if (Physics2D.DrawColliders)
             {
                 for (var i = 0; i < raysCount; i++)
@@ -642,6 +691,7 @@ namespace Game
                 var yPos = (hit.Point.y - Collider.AABB.Min.y) + bias;
                 Transform.WorldPosition = new vec3(Transform.WorldPosition.x, yPos, Transform.WorldPosition.z);
             }
+
             IsOnGround = hit.isHit;
         }
 
@@ -672,6 +722,7 @@ namespace Game
             {
                 Inventory.Life = _characterConfig.StartingLife;
             }
+            Actor.Layer = LayerMask.NameToLayer(_characterConfig.LayerName);
 
 #if DEBUG
             Renderer.IsEnabled = true;

@@ -14,17 +14,7 @@ namespace Engine
     {
         private vec2 _size = new vec2(1, 1);
         private float _cornerRadius = 0;
-
-        public vec2 Size
-        {
-            get => _size;
-            set
-            {
-                _size = value;
-                UpdateShapeSafe();
-            }
-        }
-
+    
         public float CornerRadius
         {
             get => _cornerRadius;
@@ -34,7 +24,16 @@ namespace Engine
                 UpdateShapeSafe();
             }
         }
-
+        [SerializedField("Size")]
+        public vec2 Size
+        {
+            get => _size;
+            set
+            {
+                _size = value;
+                UpdateShapeSafe();
+            }
+        }
         protected override void OnAwake()
         {
             // TODO: instead of using the scale, use the bounds of the sprite
@@ -45,7 +44,7 @@ namespace Engine
 
             if (renderer && renderer.Sprite)
             {
-                var chunk = renderer.Sprite.GetAtlasChunk();
+                var chunk = renderer.Sprite.GetAtlasCell();
 
                 if (renderer.Sprite.Texture)
                 {

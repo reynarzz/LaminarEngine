@@ -14,6 +14,7 @@ namespace Engine.Graphics.OpenGL
     internal class GLBuffer : GLGfxResource<BufferDataDescriptor>
     {
         protected int Target { get; private set; }
+     
 
         public GLBuffer(int target) : base(glGenBuffer,
                                            glDeleteBuffer,
@@ -52,15 +53,19 @@ namespace Engine.Graphics.OpenGL
 
             return true;
         }
-
-        internal override void UpdateResource(BufferDataDescriptor desc)
+        internal unsafe override void UpdateResource(BufferDataDescriptor desc)
         {
+          
             Bind();
             unsafe
             {
                 glBufferSubData(Target, desc.Offset, desc.Count, desc.GetBufferUnsafePtr().ToPointer());
             }
             Unbind();
+
+
         }
+
+       
     }
 }

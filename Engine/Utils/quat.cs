@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Engine;
+using Newtonsoft.Json;
+using System;
 
 namespace GlmNet
 {
@@ -9,7 +11,7 @@ namespace GlmNet
         public float z;
         public float w;
 
-        public quat Conjugate => new quat(-x, -y, -z, w);
+        [JsonIgnore] public quat Conjugate => new quat(-x, -y, -z, w);
         public static quat Identity => new quat(0, 0, 0, 1);
         public quat(float x, float y, float z, float w)
         {
@@ -47,6 +49,10 @@ namespace GlmNet
             );
         }
 
+        public vec4 ToVec4()
+        {
+            return new vec4(x, y, z, w);
+        }
         /// <summary>Converts quaternion to 4x4 rotation matrix (column-major)</summary>
         public mat4 ToMat4()
         {
@@ -111,7 +117,7 @@ namespace GlmNet
         }
 
         /// <summary>Quaternion from Euler angles (radians)</summary>
-        public static quat FromEulerAngles(vec3 euler)
+        public static quat FromEulerAngles(float v, vec3 euler)
         {
             float cy = MathF.Cos(euler.z * 0.5f);
             float sy = MathF.Sin(euler.z * 0.5f);
@@ -126,6 +132,16 @@ namespace GlmNet
                 cr * cp * sy - sr * sp * cy,
                 cr * cp * cy + sr * sp * sy
             );
+        }
+
+        public static quat FromEulerAngles(float xRad, float yRad, float zRad)
+        {
+            quat qx = FromAxisAngle(new vec3(1, 0, 0), xRad);
+            quat qy = FromAxisAngle(new vec3(0, 1, 0), yRad);
+            quat qz = FromAxisAngle(new vec3(0, 0, 1), zRad);
+
+            // XYZ order
+            return Mathf.Normalize(qz * qy * qx);
         }
 
         public static quat operator *(quat q, float scalar)

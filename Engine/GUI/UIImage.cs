@@ -1,6 +1,8 @@
 ﻿using GlmNet;
 using Engine.GUI;
 using System.Runtime.CompilerServices;
+using Engine.Graphics;
+using SharedTypes;
 
 namespace Engine.GUI
 {
@@ -15,7 +17,7 @@ namespace Engine.GUI
                 if (_preserveAspect == value)
                     return;
 
-                IsDirty = true;
+                RendererData.IsDirty = true;
 
                 _preserveAspect = value;
             }
@@ -30,7 +32,7 @@ namespace Engine.GUI
                 if (_isSliced == value)
                     return;
 
-                IsDirty = true;
+                RendererData.IsDirty = true;
 
                 _isSliced = value;
             }
@@ -45,15 +47,20 @@ namespace Engine.GUI
         public float TopBorder = 10f;
 
         private int _currentSliceVertexIndex = 0;
+        private RendererData2D _rendererData;
+
         public float SlicedBorderResolution { get; set; } = 1;
         protected override void OnAwake()
         {
             base.OnAwake();
-            Mesh = new Mesh();
-            Mesh.IndicesToDrawCount = 6;
+
+            _rendererData = (RendererData as RendererData2D);
+            _rendererData.Mesh = new Mesh();
+
+            _rendererData.Mesh.IndicesToDrawCount = 6;
             for (int i = 0; i < 4; i++)
             {
-                Mesh.Vertices.Add(default);
+                _rendererData.Mesh.Vertices.Add(default);
             }
         }
 
@@ -67,7 +74,7 @@ namespace Engine.GUI
                 return;
             }
 
-            if (IsDirty)
+            if (RendererData.IsDirty)
             {
                 if (!IsSliced)
                 {
@@ -82,8 +89,8 @@ namespace Engine.GUI
 
         private void DrawSimpleQuad(RectTransform rt, vec2 size)
         {
-            var chunk = Sprite?.GetAtlasChunk() ?? AtlasChunk.DefaultChunk;
-            Mesh.IndicesToDrawCount = 6;
+            var chunk = Sprite?.GetAtlasCell() ?? TextureAtlasCell.DefaultChunk;
+            _rendererData.Mesh.IndicesToDrawCount = 6;
 
             if (PreserveAspect && chunk.Width > 0 && chunk.Height > 0)
             {
@@ -98,15 +105,15 @@ namespace Engine.GUI
 
             var quad = GraphicsHelper.GetUIQuadVerticesLocal(chunk.Uvs, size, rt.Pivot, Color, Transform.WorldMatrix);
 
-            Mesh.Vertices[0] = quad.v0;
-            Mesh.Vertices[1] = quad.v1;
-            Mesh.Vertices[2] = quad.v2;
-            Mesh.Vertices[3] = quad.v3;
+            _rendererData.Mesh.Vertices[0] = quad.v0;
+            _rendererData.Mesh.Vertices[1] = quad.v1;
+            _rendererData.Mesh.Vertices[2] = quad.v2;
+            _rendererData.Mesh.Vertices[3] = quad.v3;
         }
 
         private void Draw9SliceQuad(RectTransform rt, vec2 size)
         {
-            var chunk = Sprite?.GetAtlasChunk() ?? AtlasChunk.DefaultChunk;
+            var chunk = Sprite?.GetAtlasCell() ?? TextureAtlasCell.DefaultChunk;
 
             var uv = QuadUV.FlipUV(chunk.Uvs, false, true);
 
@@ -148,7 +155,7 @@ namespace Engine.GUI
             float v3 = vMin;
 
             _currentSliceVertexIndex = 0;
-            Mesh.IndicesToDrawCount = 0;
+            _rendererData.Mesh.IndicesToDrawCount = 0;
 
             for (int iy = 0; iy < 3; iy++)
             {
@@ -164,7 +171,7 @@ namespace Engine.GUI
                     float uA = ix == 0 ? u0 : (ix == 1 ? u1 : u2);
                     float uB = ix == 0 ? u1 : (ix == 1 ? u2 : u3);
 
-                    Mesh.IndicesToDrawCount += 6;
+                    _rendererData.Mesh.IndicesToDrawCount += 6;
                     AddVertex(xA, yA, uA, vA);
                     AddVertex(xA, yB, uA, vB);
                     AddVertex(xB, yB, uB, vB);
@@ -176,12 +183,12 @@ namespace Engine.GUI
             {
                 vec4 wp = Transform.WorldMatrix * new vec4(x, y, 0, 1);
 
-                if (Mesh.Vertices.Count <= _currentSliceVertexIndex)
+                if (_rendererData.Mesh.Vertices.Count <= _currentSliceVertexIndex)
                 {
-                    Mesh.Vertices.Add(default);
+                    _rendererData.Mesh.Vertices.Add(default);
                 }
 
-                Mesh.Vertices[_currentSliceVertexIndex++] = new Vertex()
+                _rendererData.Mesh.Vertices[_currentSliceVertexIndex++] = new Vertex()
                 {
                     Position = new vec2(wp.x, wp.y),
                     UV = new vec2(u, v),

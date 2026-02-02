@@ -3,6 +3,7 @@ using Engine.Layers;
 using Engine.Types;
 using Engine.Utils;
 using GlmNet;
+using SharedTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    public abstract class Collider2D : Component
+    public abstract class Collider2D : Component, IUpdatableComponent
 #if DEBUG
         , IDrawableGizmo
 #endif
@@ -63,7 +64,7 @@ namespace Engine
                 {
                     if (!value)
                     {
-                        PhysicsLayer.ContactsDispatcher.NotifyColliderToRemove(this);
+                        NotifyExit();
                     }
                     ApplyToShapesSafe(shape =>
                     {
@@ -72,7 +73,7 @@ namespace Engine
                 }
             }
         }
-
+        [SerializedField("Offset")]
         public vec2 Offset
         {
             get => _offset;
@@ -82,7 +83,7 @@ namespace Engine
                 UpdateShapeSafe();
             }
         }
-
+        [SerializedField("Is Trigger")]
         public bool IsTrigger
         {
             get => _isTrigger;
@@ -103,7 +104,7 @@ namespace Engine
                     B2Shapes.b2Shape_EnableContactEvents(shapeid, !value);
 
                     var shape = B2Shapes.b2GetShape(world, shapeid);
-                    if (_shapeDef.isSensor)
+                    if (_shapeDef.isSensor && shape.sensorIndex >= 0)
                     {
                         B2Sensors.b2DestroySensor(PhysicWorld.World, shape);
                     }
@@ -135,9 +136,10 @@ namespace Engine
         }
 
         private float _friction;
+        [SerializedField("Friction")]
         public float Friction
         {
-            get => AreShapesValid() ? B2Shapes.b2Shape_GetFriction(_shapesID[0]) : -1;
+            get => AreShapesValid() ? B2Shapes.b2Shape_GetFriction(_shapesID[0]) : _friction;
             set
             {
                 _friction = value;
@@ -148,9 +150,10 @@ namespace Engine
             }
         }
         private float _bounciness;
+        [SerializedField("Bounciness")]
         public float Bounciness
         {
-            get => AreShapesValid() ? B2Shapes.b2Shape_GetRestitution(_shapesID[0]) : -1;
+            get => AreShapesValid() ? B2Shapes.b2Shape_GetRestitution(_shapesID[0]) : _bounciness;
             set
             {
                 _bounciness = value;
@@ -194,6 +197,21 @@ namespace Engine
                 return bounds;
             }
         }
+        private class CollisionData
+        {
+            public Collider2D Other { get; set; }
+            public int ContactCount { get; set; }
+            public bool WasEnterFired { get; set; }
+        }
+
+        private readonly Dictionary<Guid, CollisionData> _currentContacts = new();
+        private readonly Action<ScriptBehavior, Collision2D> _onCollisionEnter = (x, y) => x.OnCollisionEnter2D(y);
+        private readonly Action<ScriptBehavior, Collision2D> _onCollisionExit = (x, y) => x.OnCollisionExit2D(y);
+        private readonly Action<ScriptBehavior, Collision2D> _onCollisionStay = (x, y) => x.OnCollisionStay2D(y);
+
+        private readonly Action<ScriptBehavior, Collider2D> _onTriggerEnter = (x, y) => x.OnTriggerEnter2D(y);
+        private readonly Action<ScriptBehavior, Collider2D> _onTriggerExit = (x, y) => x.OnTriggerExit2D(y);
+        private readonly Action<ScriptBehavior, Collider2D> _onTriggerStay = (x, y) => x.OnTriggerStay2D(y);
 
         protected override void OnAwake()
         {
@@ -202,6 +220,11 @@ namespace Engine
             Create();
         }
 
+
+        public void OnUpdate()
+        {
+            UpdateStay();
+        }
         internal void Create()
         {
             _shapeDef = new B2ShapeDef()
@@ -305,7 +328,7 @@ namespace Engine
 
             // if (AttachedRigidbody != null)
             {
-                PhysicsLayer.ContactsDispatcher.NotifyColliderToRemove(this);
+                NotifyExit();
                 AttachedRigidbody = null;
             }
             DestroyShape();
@@ -378,6 +401,132 @@ namespace Engine
                 B2Bodies.b2Body_Disable(_defaultBody);
             }
         }
+
+        // Called by physics engine callback
+        internal void OnContactBegin(Collider2D other)
+        {
+            if (!_currentContacts.TryGetValue(other.GetID(), out var data))
+            {
+                data = new CollisionData { Other = other, WasEnterFired = false, ContactCount = 0 };
+                _currentContacts.Add(other.GetID(), data);
+            }
+
+            data.ContactCount++;
+
+            // Fire Enter event once
+            if (!data.WasEnterFired)
+            {
+                data.WasEnterFired = true;
+
+                var isTrigger = IsTrigger || other.IsTrigger;
+
+                if (isTrigger)
+                    NotifyTriggerEnter(other);
+                else
+                    NotifyCollisionEnter(other, data);
+            }
+        }
+
+        internal void OnContactEnd(Collider2D other)
+        {
+            if (_currentContacts.TryGetValue(other.GetID(), out var data))
+            {
+                data.ContactCount--;
+                if (data.ContactCount <= 0)
+                {
+                    var isTrigger = IsTrigger || other.IsTrigger;
+
+                    if (isTrigger)
+                        NotifyTriggerExit(other);
+                    else
+                        NotifyCollisionExit(other, data);
+
+                    _currentContacts.Remove(other.GetID());
+                }
+            }
+        }
+
+        private void UpdateStay()
+        {
+            foreach (var kvp in _currentContacts.Values)
+            {
+                if (kvp.ContactCount > 0)
+                {
+                    if (IsTrigger)
+                        NotifyTriggerStay(kvp.Other);
+                    else
+                        NotifyCollisionStay(kvp.Other, kvp);
+                }
+            }
+        }
+
+        private void NotifyCollisionEnter(Collider2D other, CollisionData data)
+        {
+            if (other && other.Actor)
+            {
+                OnNotifyScripts(_onCollisionEnter, new Collision2D() { Collider = this, OtherCollider = other });
+            }
+        }
+        private void NotifyCollisionStay(Collider2D other, CollisionData kvp)
+        {
+            if (other && other.Actor)
+            {
+                OnNotifyScripts(_onCollisionStay, new Collision2D() { Collider = this, OtherCollider = other });
+            }
+        }
+        private void NotifyCollisionExit(Collider2D other, CollisionData data)
+        {
+            if (other && other.Actor)
+            {
+                OnNotifyScripts(_onCollisionExit, new Collision2D() { Collider = this, OtherCollider = other });
+            }
+        }
+        private void NotifyTriggerEnter(Collider2D other)
+        {
+            if (other && other.Actor)
+            {
+                OnNotifyScripts(_onTriggerEnter, other);
+            }
+        }
+        private void NotifyTriggerStay(Collider2D other)
+        {
+            if (other && other.Actor)
+            {
+                OnNotifyScripts(_onTriggerStay, other);
+            }
+        }
+        private void NotifyTriggerExit(Collider2D other)
+        {
+            if (other && other.Actor)
+            {
+                OnNotifyScripts(_onTriggerExit, other);
+            }
+        }
+        private void OnNotifyScripts<T>(Action<ScriptBehavior, T> funcEvent, T data)
+        {
+            if (this && Actor && Actor.IsActiveInHierarchy)
+            {
+                foreach (var component in Actor.Components)
+                {
+                    if (component && component.IsEnabled && component is ScriptBehavior script)
+                    {
+                        funcEvent(script, data);
+                    }
+                }
+            }
+        }
+        private void NotifyExit()
+        {
+            foreach (var (otherCollider, data) in _currentContacts)
+            {
+                OnContactEnd(data.Other);
+                data.Other.OnContactEnd(this);
+            }
+
+            // PhysicsLayer.ContactsDispatcher.NotifyColliderToRemove(this);
+            // Debug.Log("Notify exit");
+        }
+
 #if DEBUG
         void IDrawableGizmo.OnDrawGizmo()
         {
@@ -401,6 +550,7 @@ namespace Engine
                 }
             }
         }
+
 #endif
     }
 }

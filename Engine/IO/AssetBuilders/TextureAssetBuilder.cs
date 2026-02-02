@@ -13,6 +13,32 @@ namespace Engine.IO
     {
         internal override AssetResourceBase BuildAsset(AssetInfo info, AssetMetaFileBase meta, Guid guid, BinaryReader reader)
         {
+            var data = GetData(reader, meta);
+
+            var texture = new Texture2D(info.Path, guid, data.Config.Mode, data.Config.Filter,data.Width, data.Height,
+                                        data.Channels, data.Config.PixelPerUnit, data.Data);
+
+            return new TextureAsset(info.Path, guid, texture, new SpriteAtlas(meta as TextureMetaFile, texture, guid));
+        }
+
+        internal override void UpdateAsset(AssetResourceBase asset, AssetMetaFileBase meta, BinaryReader reader)
+        {
+            var textureAsset = asset as TextureAsset;
+            var updatedPath = textureAsset.Texture.Path;
+            var data = GetData(reader, meta);
+            textureAsset.Texture.UpdateResource(data, updatedPath, meta.GUID);
+        }
+
+        internal class TextureDeserializedData
+        {
+            public int Width { get; set; }
+            public int Height { get; set; }
+            public int Channels { get; set; }
+            public byte[] Data { get; set; }
+            public TextureConfig Config { get; set; }
+        }
+        private TextureDeserializedData GetData(BinaryReader reader, AssetMetaFileBase meta)
+        {
             var width = reader.ReadInt32();
             var height = reader.ReadInt32();
             var comp = reader.ReadInt32();
@@ -21,8 +47,16 @@ namespace Engine.IO
             var imageData = new byte[imageSize];
 
             reader.BaseStream.ReadExactly(imageData);
+
             var texMeta = (TextureMetaFile)meta;
-            return new Texture2D(info.Path, guid, (TextureMode)texMeta.Config.Mode, width, height, comp, texMeta.Config.PixelPerUnit, imageData);
+            return new TextureDeserializedData()
+            {
+                Width = width,
+                Height = height,
+                Channels = comp,
+                Config = texMeta.Config,
+                Data = imageData
+            };
         }
     }
 }

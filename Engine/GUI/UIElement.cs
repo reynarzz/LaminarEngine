@@ -1,4 +1,5 @@
 ﻿using Engine.GUI;
+using Engine.Layers;
 using Engine.Types;
 using GlmNet;
 using System;
@@ -18,12 +19,34 @@ namespace Engine
         public bool BlockEvents { get; set; } = true;
         public bool ReceiveEvents { get; set; } = true;
 
+        internal override void OnInternalInitialize()
+        {
+            base.OnInternalInitialize();
+
+            RenderingLayer.PushUIRenderer(this);
+        }
+
+        public override void OnEnabled()
+        {
+            base.OnEnabled();
+
+            RenderingLayer.PushUIRenderer(this);
+        }
+
         internal sealed override void Draw()
         {
 #if DEBUG
             if (Debug.DrawUILines)
             {
-                Debug.DrawBoxUI(RectTransform.Rect.Center, RectTransform.Rect.Size, Color.Red);
+
+
+                vec2 pivotOffset = new vec2(RectTransform.Rect.Width * (0.5f - RectTransform.Pivot.x),
+                                            RectTransform.Rect.Height * (0.5f - RectTransform.Pivot.y));
+
+                vec2 centerWS = new vec2(Transform.WorldPosition.x + pivotOffset.x,
+                                         Transform.WorldPosition.y + pivotOffset.y);
+
+                Debug.DrawBoxUI(centerWS, RectTransform.Rect.Size, Transform.WorldEulerAngles, Color.Red);
             }
 #endif
         }

@@ -39,35 +39,24 @@ namespace Engine
         private readonly static mat4 _identity = mat4.identity();
         internal B2BodyId BodyId => _bodyId;
 
-        private vec2 _velocity;
-        public vec2 Velocity
+        [SerializedField]
+        public Body2DType BodyType
         {
-            get => B2Bodies.b2Body_GetLinearVelocity(_bodyId).ToVec2();
-            set => B2Bodies.b2Body_SetLinearVelocity(_bodyId, value.ToB2Vec2());
-        }
-        //public vec2 Velocity
-        //{
-        //    get => _velocity;
-        //    set
-        //    {
-        //        _velocity = value;
-        //        B2Bodies.b2Body_SetLinearVelocity(_bodyId, _velocity.ToB2Vec2());
-        //    }
-        //}
-
-        public float AngularVelovity
-        {
-            get
-            {
-                return B2Bodies.b2Body_GetAngularVelocity(_bodyId);
-            }
+            get => _bodyType;
             set
             {
-                B2Bodies.b2Body_SetAngularVelocity(_bodyId, value);
+                if (_bodyType == value) return;
+                _bodyType = value;
+
+                if (!IsValidBody())
+                    return;
+
+                    B2Bodies.b2Body_SetType(_bodyId, (B2BodyType)_bodyType);
             }
         }
 
         private bool _interpolate = false;
+        [SerializedField]
         public bool Interpolate
         {
             get => _interpolate;
@@ -83,19 +72,56 @@ namespace Engine
             get => base.IsEnabled;
             set
             {
-                if (value)
+                if (IsValidBody())
                 {
-                    B2Bodies.b2Body_Enable(_bodyId);
-                }
-                else
-                {
-                    B2Bodies.b2Body_Disable(_bodyId);
+                    if (value)
+                    {
+                        B2Bodies.b2Body_Enable(_bodyId);
+                    }
+                    else
+                    {
+                        B2Bodies.b2Body_Disable(_bodyId);
+                    }
                 }
 
                 base.IsEnabled = value;
             }
         }
 
+        [SerializedField]
+        public bool LockZRotation
+        {
+            get => _isZRotationLocked;
+            set
+            {
+                if (_isZRotationLocked == value)
+                    return;
+                _isZRotationLocked = value;
+
+                if (!IsValidBody())
+                    return;
+
+                B2Bodies.b2Body_SetMotionLocks(_bodyId, new B2MotionLocks() { angularZ = value });
+            }
+        }
+
+        [SerializedField]
+        public bool IsContinuos
+        {
+            get => _isContinuos;
+            set
+            {
+                if (_isContinuos == value) return;
+                _isContinuos = value;
+
+                if (!IsValidBody())
+                    return;
+
+                B2Bodies.b2Body_SetBullet(_bodyId, _isContinuos);
+            }
+        }
+
+        [SerializedField]
         public bool CanSleep
         {
             get => _canSleep;
@@ -105,16 +131,23 @@ namespace Engine
                     return;
                 _canSleep = value;
 
+                if (!IsValidBody())
+                    return;
+
                 B2Bodies.b2Body_EnableSleep(_bodyId, _canSleep);
             }
         }
-
+        [SerializedField]
         public bool IsAutoMass
         {
             get => _isAutoMass;
             set
             {
                 _isAutoMass = value;
+
+                if (!IsValidBody())
+                    return;
+
                 if (_isAutoMass)
                 {
                     B2Bodies.b2Body_ApplyMassFromShapes(_bodyId);
@@ -125,7 +158,7 @@ namespace Engine
                 }
             }
         }
-
+        [SerializedField]
         public float Mass
         {
             get => _userMassValue;
@@ -136,65 +169,89 @@ namespace Engine
 
                 _userMassValue = value;
 
+                if (!IsValidBody())
+                    return;
+
                 var currentMassData = B2Bodies.b2Body_GetMassData(_bodyId);
                 currentMassData.mass = _userMassValue;
                 B2Bodies.b2Body_SetMassData(_bodyId, currentMassData);
             }
         }
-
+        [SerializedField]
         public float GravityScale
         {
             get => _gravityScale;
             set
             {
+                if (!IsValidBody())
+                    return;
+
                 _gravityScale = value;
                 B2Bodies.b2Body_SetGravityScale(_bodyId, _gravityScale);
             }
         }
-
+        [SerializedField]
         public float AngularDamping
         {
             get => _angularDamping;
             set
             {
+                if (!IsValidBody())
+                    return;
+
                 _angularDamping = value;
                 B2Bodies.b2Body_SetAngularDamping(_bodyId, _angularDamping);
             }
         }
 
+        private vec2 _velocity;
 
-        public bool LockZRotation
+        [ShowFieldNoSerialize(isReadOnly: true)]
+        public vec2 Velocity
         {
-            get => _isZRotationLocked;
+            get
+            {
+                if (!IsValidBody())
+                    return default;
+
+                return B2Bodies.b2Body_GetLinearVelocity(_bodyId).ToVec2();
+            }
             set
             {
-                if (_isZRotationLocked == value)
+                if (!IsValidBody())
                     return;
 
-                B2Bodies.b2Body_SetMotionLocks(_bodyId, new B2MotionLocks() { angularZ = value });
+                B2Bodies.b2Body_SetLinearVelocity(_bodyId, value.ToB2Vec2());
             }
         }
+        //public vec2 Velocity
+        //{
+        //    get => _velocity;
+        //    set
+        //    {
+        //        _velocity = value;
+        //        B2Bodies.b2Body_SetLinearVelocity(_bodyId, _velocity.ToB2Vec2());
+        //    }
+        //}
 
-        public Body2DType BodyType
+        [ShowFieldNoSerialize(isReadOnly: true)]
+        public float AngularVelovity
         {
-            get => _bodyType;
-            set
+            get
             {
-                if (_bodyType == value) return;
-                _bodyType = value;
+                if (IsValidBody())
+                {
+                    return B2Bodies.b2Body_GetAngularVelocity(_bodyId);
+                }
 
-                B2Bodies.b2Body_SetType(_bodyId, (B2BodyType)_bodyType);
+                return 0;
             }
-        }
-
-        public bool IsContinuos
-        {
-            get => _isContinuos;
             set
             {
-                if (_isContinuos == value) return;
-                _isContinuos = value;
-                B2Bodies.b2Body_SetBullet(_bodyId, _isContinuos);
+                if (IsValidBody())
+                {
+                    B2Bodies.b2Body_SetAngularVelocity(_bodyId, value);
+                }
             }
         }
 
@@ -277,6 +334,8 @@ namespace Engine
         {
             if (_shouldUpdatePreTransformation)
             {
+                if (!IsValidBody())
+                    return;
                 _shouldUpdatePreTransformation = false;
                 B2Bodies.b2Body_SetTransform(_bodyId, Transform.WorldPosition.ToB2Vec2(), Transform.WorldRotation.QuatToB2Rot());
             }
@@ -286,6 +345,9 @@ namespace Engine
         {
             if (_bodyType == Body2DType.Dynamic)
             {
+                if (!IsValidBody())
+                    return;
+
                 var position = B2Bodies.b2Body_GetPosition(_bodyId);
                 _velocity = B2Bodies.b2Body_GetLinearVelocity(_bodyId).ToVec2();
 
@@ -296,6 +358,9 @@ namespace Engine
 
         public void AddForce(vec2 force, ForceMode2D mode)
         {
+            if (!IsValidBody())
+                return;
+
             switch (mode)
             {
                 case ForceMode2D.Force:
@@ -312,6 +377,9 @@ namespace Engine
 
         public void AddForce(vec2 force, vec2 point, ForceMode2D mode)
         {
+            if (!IsValidBody())
+                return;
+
             switch (mode)
             {
                 case ForceMode2D.Force:
@@ -331,6 +399,9 @@ namespace Engine
 
         public void AddAngularForce(float force, ForceMode2D mode)
         {
+            if (!IsValidBody())
+                return;
+
             switch (mode)
             {
                 case ForceMode2D.Force:
@@ -371,25 +442,35 @@ namespace Engine
             }
 
             // Makes collider to use the default body. TODO: it shold link to the next available rigidbody in the hierarchy.
-            var colliders = GetComponentsInChildren<Collider2D>(); //TODO: This caused a crash when changin scenes, why?
-            foreach (var collider in colliders)
+            if (Actor)
             {
-                if (collider && collider.AttachedRigidbody == this)
+                var colliders = GetComponentsInChildren<Collider2D>(); //TODO: This caused a crash when changin scenes, why?
+                foreach (var collider in colliders)
                 {
-                    collider.AttachedRigidbody = null;
-                    collider.Create();
+                    if (collider && collider.AttachedRigidbody == this)
+                    {
+                        collider.AttachedRigidbody = null;
+                        collider.Create();
+                    }
                 }
             }
 
-            if (B2Worlds.b2Body_IsValid(_bodyId))
+            if (IsValidBody())
             {
                 B2Bodies.b2DestroyBody(_bodyId);
             }
         }
 
+        private bool IsValidBody()
+        {
+            return B2Worlds.b2Body_IsValid(_bodyId);
+        }
         public override void OnEnabled()
         {
             base.OnEnabled();
+
+            if (!IsValidBody())
+                return;
             if (IsEnabled)
             {
                 B2Bodies.b2Body_Enable(_bodyId);
@@ -399,7 +480,11 @@ namespace Engine
         public override void OnDisabled()
         {
             base.OnDisabled();
-            B2Bodies.b2Body_Disable(_bodyId);
+
+            if (!IsValidBody())
+                return;
+
+                B2Bodies.b2Body_Disable(_bodyId);
         }
     }
 }

@@ -8,6 +8,7 @@ using Engine.Utils;
 using ldtk;
 using GlmNet;
 using System.Collections;
+using SharedTypes;
 
 namespace Game
 {
@@ -21,6 +22,7 @@ namespace Game
         public const string ENEMY_CONFUSED = "EnemyConfused"; // enemy that attacks other enemies.
         public const string PLATFORM = "Platform";
         public const string COLLECTIBLE = "Collectible";
+        public const string Interactable = "Interactable";
         public const string CHARACTER_IGNORE = "character_Ignore";
         public const string NO_WALKABLE = "no_walkable";
         public const string BULLET = "bullet";
@@ -55,15 +57,15 @@ namespace Game
             Actor.DontDestroyOnLoad(this);
 
             InitializeActorLayers();
+
             InitializeData();
             InitializeWorld();
-
         }
 
         private void InitializeData()
         {
             _itemsDatabase = new ItemsDatabase("Data/ItemsDatabase.csv");
-            DefaultFont = Assets.Get<FontAsset>("Fonts/windows-bold[1].ttf");
+            DefaultFont = Assets.GetFont("Fonts/windows-bold[1].ttf");
             _gameEntityManager = new GameEntityManager();
             _tilemapManager = new TilemapWorldBuilderManager("Tilemap/WorldTilemap.ldtk", _gameEntityManager);
         }
@@ -91,8 +93,11 @@ namespace Game
             LayerMask.TurnOff(GameConsts.ENEMY, GameConsts.CHARACTER_IGNORE);
             LayerMask.TurnOff(GameConsts.ENEMY, GameConsts.PLAYER);
             LayerMask.TurnOff(GameConsts.ENEMY, GameConsts.CHARACTER_DEAD);
+            LayerMask.TurnOff(GameConsts.COLLECTIBLE, GameConsts.CHARACTER_DEAD);
+            LayerMask.TurnOff(GameConsts.COLLECTIBLE, GameConsts.ENEMY);
             // LayerMask.TurnOff(GameConsts.ENEMY, GameConsts.ENEMY);
             LayerMask.TurnOff(GameConsts.ENEMY_CONFUSED, GameConsts.CHARACTER_IGNORE);
+            LayerMask.TurnOff(GameConsts.COLLECTIBLE, GameConsts.CHARACTER_IGNORE);
             LayerMask.TurnOff(GameConsts.PLATFORM, GameConsts.COLLECTIBLE);
             LayerMask.TurnOffAll(GameConsts.BULLET);
             LayerMask.TurnOn(GameConsts.BULLET, GameConsts.COLLECTIBLE);
@@ -104,10 +109,15 @@ namespace Game
         {
             PostProcessingStack.Clear();
             ScreenGrabTest();
+#if DESKTOP
             PostProcessingStack.Push(new BloomPostProcessing());
             ScreenGrabTest3();
+#endif
             _fadeInOutManager = new Actor("FadeInOutManager").AddComponent<FadeInOutManager>();
             _fadeInOutManager.Transform.Parent = Transform;
+            _fadeInOutManager.FadeOut(1);
+
+
 
             //  IEnumerator next()
             {
@@ -121,14 +131,13 @@ namespace Game
                 musicAudio.Clip = Assets.GetAudioClip("Audio/MinifantasyMusic/Goblins_Dance_(Battle).wav");
                 musicAudio.Mixer = new AudioMixer("Music");
                 musicAudio.Transform.Parent = Transform;
-                musicAudio.Play();
+                //musicAudio.Play();
 
                 _gameUIManger = new Actor("GameUIManager").AddComponent<GameUIManager>();
                 _gameUIManger.Transform.Parent = Transform;
 
                 // Begin from first level.
                 BuildLevel(levelIndex: 0);
-                Debug.Log("level loaded");
             }
             // StartCoroutine(next());
         }
@@ -137,11 +146,12 @@ namespace Game
         {
             SceneManager.LoadScene("Level: " + levelIndex);
             // WaterTest();
+            new Actor<TestScript>("Test Editor script");
 
             var result = _tilemapManager.BuildLevel(new LevelInstantiateInfo()
             {
                 LevelIndex = levelIndex,
-                TilemapSprites = GameTextures.GetAtlas("sunny_land_tileset"),
+                TilemapSprites = [GameTextures.GetAtlas("sunny_land_tileset")[0], GameTextures.GetAtlas("stark_full_tileset")[0]],
                 WorldSpacePixelsPerUnit = GameTextures.GetAtlas("sunny_land_tileset")[0].Texture.PixelPerUnit,
                 Tilemaps =
                 {
@@ -149,7 +159,7 @@ namespace Game
                     {
                         Name = "Foreground tilemap",
                         EnableCollision = true,
-                        LayersToDraw = 1 << 3,
+                        LayersToDraw = 1 << 4,
                         SortingOrder = 5,
                         SpriteIndex = 0
                     },
@@ -157,7 +167,7 @@ namespace Game
                     {
                         Name = "Background tilemap",
                         EnableCollision = false,
-                        LayersToDraw = 1 << 4,
+                        LayersToDraw = 1 << 5,
                         SortingOrder = -2,
                         SpriteIndex = 0
                     },
@@ -165,9 +175,26 @@ namespace Game
                     {
                         Name = "Decoration tilemap",
                         EnableCollision = false,
-                        LayersToDraw = 1 << 0,
+                        LayersToDraw = 1 << 1,
                         SortingOrder = 6,
                         SpriteIndex = 0
+                    },
+                    new TilemapData()
+                    {
+                        Name = "Deadly tilemap",
+                        EnableCollision = true,
+                        IsTriggerCollision = true,
+                        LayersToDraw = 1 << 0,
+                        SortingOrder = 6,
+                        SpriteIndex = 1,
+                        ColliderOffset = new vec2(0, -0.8f),
+                        TilemapAction = x => 
+                        {
+                            var damageTo = x.AddComponent<DamageTo>();
+
+                            damageTo.DamageAmount = 2;
+                            damageTo.Mask = GameConsts.CHARACTER_MASK;
+                        }
                     },
                 }
             });
@@ -215,6 +242,7 @@ namespace Game
                 Camera.OrthographicSize = GameResolution.y / 2.0f / 16.0f;
                 Camera.ProjectionMode = CameraProjectionMode.Orthographic;
                 Camera.RenderTexture = new RenderTexture((int)GameResolution.x * 2, (int)GameResolution.y * 2);
+                Camera.RenderTexture.Name = "Game Camera RenderTexture";
                 Camera.Transform.Parent = Transform;
             }
 
@@ -227,25 +255,27 @@ namespace Game
         protected override void OnUpdate()
         {
 #if DEBUG
-            WindowManager.Window.Name = EngineInfo.RendererInfoToString() + " | FPS: " + ((int)Time.FPS).ToString();
             // Debug.DrawBox(ForegroundTilemap.Bounds.Center, ForegroundTilemap.Bounds.Size, Color.Red);
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                Physics2D.DrawColliders = !Physics2D.DrawColliders;
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                Debug.DrawUILines = !Debug.DrawUILines;
-            }
+            //if (Input.GetKeyDown(KeyCode.Alpha1))
+            //{
+            //    Physics2D.DrawColliders = !Physics2D.DrawColliders;
+            //}
+            //if (Input.GetKeyDown(KeyCode.Alpha2))
+            //{
+            //    Debug.DrawUILines = !Debug.DrawUILines;
+            //} 
 
             if (Input.GetKeyDown(KeyCode.T))
             {
                 BuildLevel(0);
             }
 #endif
-            Debug.Log("Running game manager");
-            if (Input.GetKeyDown(KeyCode.Enter))
+            if (Input.GetKeyDown(KeyCode.Enter) || Input.Gamepad.Main.GetButtonState(GamePadButton.Start) == InputState.Down)
             {
+                if (!_gameUIManger)
+                {
+                    Debug.Log("Is null");
+                }
                 _gameUIManger.PauseMenu.OnPause();
             }
 
@@ -320,7 +350,7 @@ uniform float uOutlineThickness = 0.04f
 
         private void ScreenGrabTest()
         {
-            var screenShader = Shader.FromPath("Shaders/ScreenVert.vert","Shaders/CTRTv.frag");
+            var screenShader = Shader.FromPath("Shaders/ScreenVert.vert", "Shaders/CTRTv_Cheap.frag");
             var pass = new PostProcessingSinglePass(screenShader);
 
             pass.SetValue("uBackgroundColor", new vec3(0.07f));

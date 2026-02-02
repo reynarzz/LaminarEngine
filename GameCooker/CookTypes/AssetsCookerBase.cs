@@ -7,10 +7,30 @@ using System.Threading.Tasks;
 
 namespace GameCooker
 {
+    internal struct AssetProccesResult
+    {
+        public bool IsSuccess { get; set; }
+        public byte[] Data { get; set; }
+    }
+
     internal abstract class AssetsCookerBase
     {
-        internal abstract Task CookAssetsAsync(CookFileOptions fileOptions, (string, AssetType)[] files, 
-                                               Func<AssetType, AssetMetaFileBase, string, byte[]> processAssetCallback, 
-                                               string outFolder);
+        private readonly Dictionary<AssetType, IAssetProcessor> _assetProcessor;
+        protected AssetsCookerBase(Dictionary<AssetType, IAssetProcessor> processor)
+        {
+            _assetProcessor = processor;
+        }
+
+        internal abstract Task<bool> CookAssetsAsync(CookFileOptions fileOptions, CookingPlatform platform, (string, AssetType)[] files, string outFolder);
+
+        protected AssetProccesResult ProcessAsset(CookingPlatform platform, AssetType type, AssetMetaFileBase meta, string path)
+        {
+            if (_assetProcessor.TryGetValue(type, out var processor))
+            {
+                return processor.Process(path, meta, platform);
+            }
+
+            return default;
+        }
     }
 }

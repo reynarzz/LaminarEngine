@@ -14,50 +14,36 @@ namespace Engine
 
         private const string DefaultObjectName = "Object";
 
-        private Guid _guid;
+        private Guid _id;
 
         internal bool IsAlive { get; set; } = true;
         internal bool IsPendingToDestroy { get; set; } = false;
 
         internal EObject()
         {
-            _guid = Guid.NewGuid();
+            _id = Guid.NewGuid();
         }
 
         internal EObject(string name)
         {
             Name = name;
-            _guid = Guid.NewGuid();
-        }
-
-        internal EObject(string name, string id)
-        {
-            Name = name;
-
-            if (!string.IsNullOrEmpty(id))
-            {
-                _guid = Guid.Parse(id);
-            }
-            else
-            {
-                _guid = Guid.NewGuid();
-            }
+            _id = Guid.NewGuid();
         }
 
         internal EObject(string name, Guid id)
         {
             Name = name;
-            _guid = id;
+            _id = id;
         }
 
         public Guid GetID()
         {
-            return _guid;
+            return _id;
         }
 
         public static implicit operator bool(EObject obj)
         {
-            return obj != null && obj.IsAlive && !obj.IsPendingToDestroy && obj._guid != Guid.Empty;
+            return obj != null && obj.IsAlive && !obj.IsPendingToDestroy;
         }
 
         protected bool CheckIfValidObject(EObject obj)
@@ -90,6 +76,13 @@ namespace Engine
         public bool IsValid()
         {
             return this;
+        }
+
+
+        // Remove this.
+        internal void _SetID(Guid id)
+        {
+            _id = id;
         }
     }
 }

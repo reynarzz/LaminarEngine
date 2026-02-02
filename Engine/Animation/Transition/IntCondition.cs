@@ -18,32 +18,36 @@ namespace Engine
 
     public class IntCondition : TransitionCondition
     {
-        private readonly IntOp _op;
-        private readonly float _compare;
+        [SerializedField] public IntOp Op { get; set; }
+        [SerializedField] public int Compare { get; set; }
+        // Deserializer needs this
+        public IntCondition() : base(null)
+        {
+        }
         public IntCondition(string property, int compare, IntOp op) : base(property)
         {
-            _op = op;
-            _compare = compare;
+            Op = op;
+            Compare = compare;
         }
 
         public override bool IsCondition(AnimatorParameters parameters)
         {
             var aValue = parameters.GetInt(Property);
 
-            switch (_op)
+            switch (Op)
             {
                 case IntOp.LessThan:
-                    return aValue < _compare;
+                    return aValue < Compare;
                 case IntOp.GreaterThan:
-                    return aValue > _compare;
+                    return aValue > Compare;
                 case IntOp.LessThanOrEqual:
-                    return aValue <= _compare;
+                    return aValue <= Compare;
                 case IntOp.GreaterThanOrEqual:
-                    return aValue >= _compare;
+                    return aValue >= Compare;
                 case IntOp.Equal:
-                    return aValue == _compare;
+                    return aValue == Compare;
                 case IntOp.NotEqual:
-                    return aValue != _compare;
+                    return aValue != Compare;
             }
 
             return false;

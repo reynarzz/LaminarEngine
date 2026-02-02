@@ -20,10 +20,12 @@ namespace Engine
         bool ShouldClose { get; }
         int MonitorCount { get; }
         bool IsInitialized { get; }
-        bool CanResize { get; }
+        bool CanResize { get; set; }
         int PhysicalWidth { get; }
         int PhysicalHeight { get; }
-
+        int OffsetX { get; }
+        int OffsetY { get; }
+        IntPtr NativeWindow { get; }
         void SwapBuffers();
         void SetWindowSize(int width, int height);
     }

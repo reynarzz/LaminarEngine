@@ -6,12 +6,6 @@ using System.Threading.Tasks;
 
 namespace Engine.Graphics
 {
-    public enum TextureMode
-    {
-        Clamp,
-        Repeat
-    }
-
     internal class TextureDescriptor : IGfxResourceDescriptor
     {
         internal int Width { get; set; }
@@ -20,6 +14,10 @@ namespace Engine.Graphics
         internal int YOffset { get; set; }
         internal int Channels { get; set; }
         internal byte[] Buffer { get; set; }
+        internal bool IsMultiSample { get; set; }
+        internal int SamplesCount { get; set; }
+        internal bool EnableMipMaps { get; set; }
         internal TextureMode Mode { get; set; } = TextureMode.Clamp;
+        internal TextureFilter Filter { get; set; } = TextureFilter.Nearest;
     }
 }

@@ -1,5 +1,7 @@
 ﻿using Engine.Graphics;
+using Engine.Layers;
 using Engine.Types;
+using SharedTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,22 +13,33 @@ namespace Engine
     [UniqueComponent]
     public class SpriteRenderer : Renderer2D
     {
+        [SerializedField]
+        public override int SortOrder { get => base.SortOrder; set => base.SortOrder = value; }
+
+        [SerializedField]
+        public override Color Color { get => base.Color; set => base.Color = value; }
+
+        [SerializedField]
         public override bool FlipX
         {
             get => base.FlipX;
             set
             {
-                if(base.FlipX == value)
+                if (base.FlipX == value)
                 {
                     return;
                 }
 
                 base.FlipX = value;
-                Sprite.Texture.Atlas.UpdateUvs(Sprite.AtlasIndex, QuadUV.FlipUV(Sprite.GetAtlasChunk().Uvs, value, FlipY));
-                IsDirty = true;
+                if(Sprite != null)
+                {
+                    Sprite.GetAtlasCell().UpdateUvs(QuadUV.FlipUV(Sprite.GetAtlasCell().Uvs, value, FlipY));
+                }
+                RendererData.IsDirty = true;
             }
         }
 
+        [SerializedField]
         public override bool FlipY
         {
             get => base.FlipY;
@@ -38,9 +51,26 @@ namespace Engine
                 }
 
                 base.FlipY = value;
-                Sprite.Texture.Atlas.UpdateUvs(Sprite.AtlasIndex, QuadUV.FlipUV(Sprite.GetAtlasChunk().Uvs, FlipX, value));
-                IsDirty = true;
+                if(Sprite != null)
+                {
+                    Sprite.GetAtlasCell().UpdateUvs(QuadUV.FlipUV(Sprite.GetAtlasCell().Uvs, FlipX, value));
+                }
+                RendererData.IsDirty = true;
             }
+        }
+
+        internal override void OnInternalInitialize()
+        {
+            base.OnInternalInitialize();
+
+            RenderingLayer.PushRenderer(this);
+        }
+
+        public override void OnEnabled()
+        {
+            base.OnEnabled();
+
+            RenderingLayer.PushRenderer(this);
         }
     }
 }

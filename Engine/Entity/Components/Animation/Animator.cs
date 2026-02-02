@@ -1,32 +1,44 @@
 ﻿using Engine.Types;
 using GlmNet;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Engine.Serialization;
 
 namespace Engine
 {
     [UniqueComponent]
     public class Animator : Component, ILateUpdatableComponent
     {
-        private Dictionary<string, AnimationState> _states = new();
         private AnimationPlayer _animPlayer = new();
-        private AnimationState _currentState;
         private AnimationState _nextState;
 
         private float _transitionTime;
         private float _transitionDuration;
         public event Action<Animator> OnUpdate;
-        public AnimationState CurrentState => _currentState;
-        public AnimatorParameters Parameters { get; } = new AnimatorParameters();
 
+        [SerializedField("Controller")]
+        public AnimatorController Controller { get; set; } = new(); // TODO: remove the instance creation,
+                                                                    //       this is only done to not break the game.
+                                                                    //       since it is done completely in code, no editor.
+        
+        private AnimatorParameters _animatorParametersCopy;
+        public AnimatorParameters Parameters => _animatorParametersCopy ?? (_animatorParametersCopy = Controller?.Parameters.Clone());
+
+        [ShowFieldNoSerialize]
+        public AnimationState CurrentState { get; private set; }
+
+        internal float CurrentStateTime => _animPlayer.CurrentTime;
+
+        // Remove from animator, this should be handled by the editor
         public void AddState(AnimationState state)
         {
-            _states[state.Name] = state;
+            Controller.States[state.Name] = state;
 
-            if(_currentState == null)
+            if (CurrentState == null)
             {
                 SetState(state);
             }
@@ -34,27 +46,27 @@ namespace Engine
 
         public void SetState(string name)
         {
-            if (_states.TryGetValue(name, out var state))
+            if (Controller.States.TryGetValue(name, out var state))
             {
-                _currentState = state;
+                CurrentState = state;
                 _animPlayer.Play(state.Clip);
             }
         }
 
         public AnimationState GetState(string name)
         {
-            _states.TryGetValue(name, out var state);
+            Controller.States.TryGetValue(name, out var state);
             return state;
         }
 
         public void SetState(AnimationState state)
         {
-            if (!_states.ContainsKey(state.Name))
+            if (!Controller.States.ContainsKey(state.Name))
             {
                 AddState(state);
             }
 
-            _currentState = state;
+            CurrentState = state;
             _animPlayer.Play(state.Clip);
         }
 
@@ -65,15 +77,15 @@ namespace Engine
 
         private void UpdateFrames()
         {
-            if (_currentState == null)
+            if (CurrentState == null)
             {
                 return;
             }
 
-            var transition = _currentState.CheckTransitions(Parameters);
+            var transition = CurrentState.CheckTransitions(Parameters);
             if (transition != null && _nextState == null)
             {
-                if (_states.TryGetValue(transition.ToState, out _nextState))
+                if (Controller.States.TryGetValue(transition.ToState, out _nextState))
                 {
                     _transitionTime = 0f;
                     _transitionDuration = transition.BlendTime;
@@ -86,11 +98,11 @@ namespace Engine
 
                 if (_transitionTime >= _transitionDuration)
                 {
-                    _currentState = _nextState;
+                    CurrentState = _nextState;
                     _nextState = null;
                     _transitionDuration = 0;
                     _transitionTime = 0;
-                    _animPlayer.Play(_currentState.Clip);
+                    _animPlayer.Play(CurrentState.Clip);
                 }
             }
 
@@ -101,7 +113,7 @@ namespace Engine
 
         public void Play(string state)
         {
-            _states.TryGetValue(state, out _nextState);
+            Controller.States.TryGetValue(state, out _nextState);
             _transitionDuration = 0;
             _transitionTime = 0;
             UpdateFrames();
@@ -147,8 +159,8 @@ namespace Engine
         /// </summary>
         public void Clear()
         {
-            _states.Clear();
-            _currentState = null;
+            // Controller.States.Clear();
+            CurrentState = null;
             _nextState = null;
             _transitionTime = 0;
             _transitionDuration = 0;

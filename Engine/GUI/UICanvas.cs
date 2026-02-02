@@ -54,13 +54,15 @@ namespace Engine.GUI
         private readonly Action<IPointerUpOutsideRectEvent, PointerEventData> _pointerUpOutsideRectEventInvoker = (p, d) => p.OnPointerUpOutsideRect(d);
         private readonly Action<IPointerDragEvent, PointerEventData> _pointerDragEventInvoker = (p, d) => p.OnPointerDrag(d);
 
-        public static mat4 UIViewProj;
+        public static float CanvasWidth = 512 * 3;
+        public static float CanvasHeight = 288 * 3;
+        public static mat4 UIViewProj { get; } = MathUtils.Ortho(0, CanvasWidth, CanvasHeight , 0, 0, -1);
         private static bool _staticInitialized = false;
         protected override void OnAwake()
         {
             base.OnAwake();
             RectTransform = AddComponent<RectTransform>();
-            RectTransform.Size = new vec2(512 * 3, 288 * 3);
+            RectTransform.Size = new vec2(CanvasWidth, CanvasHeight);
             RectTransform.Pivot = default;
             RectTransform.Recalculate(null);
             // Window.OnWindowChanged += Window_OnWindowChanged;
@@ -79,7 +81,7 @@ namespace Engine.GUI
 
         private void CanvasValues()
         {
-            UIViewProj = MathUtils.Ortho(0, RectTransform.Size.x, RectTransform.Size.y, 0, 0, -1);
+            //UIViewProj = MathUtils.Ortho(0, RectTransform.Size.x, RectTransform.Size.y, 0, 0, -1);
         }
 
         private void EventRecursive(UIElement element, RectTransform parent, ref bool mouseEventHandled)
@@ -105,13 +107,13 @@ namespace Engine.GUI
             if (canReceivePointerEvents)
             {
                 // Pointer down event
-                if (Input.GetMouseDown(MouseButton.Left))
+                if (Input.GetMouseDown(MouseButton.Left) || IsAnyTouch(TouchEvent.Down))
                 {
                     _dragElement = element;
                     InvokePointerEvent(element, _pointerDownEvents, eventData, _pointerDownEventInvoker);
                 }
                 // Pointer up event
-                if (Input.GetMouseUp(MouseButton.Left))
+                if (Input.GetMouseUp(MouseButton.Left) || IsAnyTouch(TouchEvent.Up))
                 {
                     _dragElement = null;
                     InvokePointerEvent(element, _pointerUpEvents, eventData, _pointerUpEventInvoker);
@@ -136,26 +138,43 @@ namespace Engine.GUI
             }
 
             // Pointer up event, outside rect
-            if (!canReceivePointerEvents && _dragElement == element && Input.GetMouseUp(MouseButton.Left))
+            if (!canReceivePointerEvents && _dragElement == element && (Input.GetMouseUp(MouseButton.Left) || IsAnyTouch(TouchEvent.Up)))
             {
                 _dragElement = null;
                 InvokePointerEvent(element, _pointerUpOusideRectEvents, eventData, _pointerUpOutsideRectEventInvoker);
             }
 
             // Drag event
-            if (_dragElement == element && Input.GetMouse(MouseButton.Left))
+            if (_dragElement == element && (Input.GetMouse(MouseButton.Left) || IsAnyTouch(TouchEvent.Stationary)))
             {
                 InvokePointerEvent(element, _pointerDragEvents, eventData, _pointerDragEventInvoker);
             }
         }
 
+        private bool IsAnyTouch(TouchEvent evt)
+        {
+            for (int i = 0; i < Input.Touch.TouchCount; i++)
+            {
+                if(Input.Touch.GetTouch(i).Type == evt)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static int _globalSortOrder = 0;
         private void DrawRecursive(UIElement element, RectTransform parent)
         {
+            // TODO: This is a quick dirty hack, please remove it, and manage proper global canvas sortOrder.
+            _globalSortOrder++;
+
             if (!element || !element.IsEnabled || !element.Actor.IsActiveSelf)
                 return;
 
             element.RectTransform.Recalculate(parent);
-
+            element.SortOrder = _globalSortOrder;
             if (element is UIGraphicsElement graphics)
             {
                 graphics.OnCanvasDraw(this);
@@ -172,6 +191,7 @@ namespace Engine.GUI
 
         void IUpdatableComponent.OnUpdate()
         {
+            _globalSortOrder = 0;
             _mouseCanvasPos = ScreenToCanvas(Input.MousePosition);
             _mouseDeltaPos = _mouseCanvasPos - _prevMousePos;
             _mouseNormalizedPosition = _mouseCanvasPos / RectTransform.Rect.Size;
@@ -191,8 +211,8 @@ namespace Engine.GUI
 
         public vec2 ScreenToCanvas(vec2 mousePosScreen)
         {
-            float x = (mousePosScreen.x / (float)Screen.PhysicalWidth) * (float)RectTransform.Rect.Width;
-            float y = (mousePosScreen.y / (float)Screen.PhysicalHeight) * (float)RectTransform.Rect.Height;
+            float x =  ((mousePosScreen.x - Screen.OffsetX) / (float)Screen.PhysicalWidth) * (float)RectTransform.Rect.Width;
+            float y =  ((mousePosScreen.y - Screen.OffsetY) / (float)Screen.PhysicalHeight) * (float)RectTransform.Rect.Height;
             return new vec2(x, y);
         }
 

@@ -110,6 +110,8 @@ namespace Engine
         public static void DrawLine(vec3 start, vec3 end, Color color)
         {
 #if DEBUG
+            Initialize();
+
             if (!_drawUIVertices)
             {
                 DrawLine(start, end, color, _linesVertexPositions, ref _totalLinesVerticesToDraw);
@@ -377,6 +379,12 @@ namespace Engine
                 var renderTexture = texture as GLFrameBuffer;
                 GL.glDisable(GL.GL_STENCIL_TEST);
 
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    GL.glLineWidth(3);
+                    GL.glEnable(GL.GL_LINE_SMOOTH);
+                }
+
                 shader.Bind();
 
                 if (renderTexture != null)
@@ -425,7 +433,7 @@ namespace Engine
                 _linesGeoDescriptor.VertexDesc.BufferDesc.Offset = 0;
             }
 
-            GfxDeviceManager.Current.UpdateGeometry(_linesGeometry, _linesGeoDescriptor);
+            GfxDeviceManager.Current.UpdateResouce(_linesGeometry, _linesGeoDescriptor);
         }
     }
 }

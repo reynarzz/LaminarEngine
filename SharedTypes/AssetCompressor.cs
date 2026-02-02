@@ -4,7 +4,6 @@ using K4os.Compression.LZ4.Streams;
 
 namespace SharedTypes
 {
-
     public static class AssetCompressor
     {
         public static void CompressFile(string inputFile, int compressionLevel, string outputFile)

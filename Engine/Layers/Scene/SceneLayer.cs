@@ -2,23 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Engine.Layers
 {
     internal class SceneLayer : LayerBase
     {
-        public override void Close()
+        public override Task InitializeAsync()
         {
-        }
+            SceneManager.Initialize();
 
-        public override void Initialize()
-        {
+            return Task.CompletedTask;
         }
 
         internal override void UpdateLayer()
         {
             SceneManager.UpdateScenes();
+        }
+
+        public override void Close()
+        {
+            SceneManager.UnloadAll();
         }
     }
 }

@@ -18,7 +18,7 @@ namespace Engine.Graphics
 
         public object CreateTexture(int width, int height)
         {
-            return new Texture2D(TextureMode.Clamp, width, height, 4, null);
+            return new Texture2D(TextureMode.Clamp, TextureFilter.Nearest, width, height, 4, null);
         }
 
         public Point GetTextureSize(object texture)
@@ -37,6 +37,7 @@ namespace Engine.Graphics
             _sharedDescriptor.Height = bounds.Height;
             _sharedDescriptor.Buffer = data;
 
+            //tex2D.UpdateResource(bounds.Width, bounds.Height, bounds.Left, bounds.Top, data); // Why updating directly doesn't work?
             GfxDeviceManager.Current.UpdateResouce(tex2D.NativeResource, _sharedDescriptor);
         }
     }

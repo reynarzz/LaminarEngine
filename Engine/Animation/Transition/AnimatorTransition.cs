@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Engine.Serialization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,10 +9,14 @@ namespace Engine
 {
     public class AnimatorTransition
     {
-        public string ToState { get; }
-        public TransitionCondition[] Conditions { get; }
-        public float BlendTime { get; set; }
+        [SerializedField] public string ToState { get; set; }
+        [SerializedField] public TransitionCondition[] Conditions { get; set; }
+        [SerializedField] public float BlendTime { get; set; }
 
+        // Deserializer needs this.
+        private AnimatorTransition()
+        {
+        }
         public AnimatorTransition(AnimatorTransition copy)
         {
             ToState = copy.ToState;

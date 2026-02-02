@@ -1,4 +1,5 @@
-﻿using GlmNet;
+﻿using Engine;
+using GlmNet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -68,7 +69,7 @@ namespace Game
 
             if (Input.GetKeyDown(KeyCode.O))
             {
-                HitDamage(this, 1);
+                HitDamage(Transform.WorldPosition, 1);
             }
         }
 

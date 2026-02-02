@@ -10,26 +10,51 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    public class Material : EObject
+    public class Material : AssetResourceBase
     {
-        private readonly List<RenderPass> _passes;
+        [SerializedField] private List<RenderPass> _passes = new();
         internal List<RenderPass> Passes => _passes;
-        private readonly Dictionary<string, Texture> _textures;
+        [SerializedField] private Dictionary<string, Texture> _textures = new();
         internal Dictionary<string, Texture> Textures => _textures;
-        public Shader Shader { get; }
-        public Material(string name, Shader shader) : base(name)
+        public Shader Shader
         {
-            Shader = shader;
+            get => _passes.FirstOrDefault()?.Shader; 
+            set
+            {
+                if(_passes.Count == 0)
+                {
+                    _passes.Add(new RenderPass(value));
+                }
+                else
+                {
+                    _passes[0].Shader = value;
+                }
+            }
+        }
+
+        private const string _defaultTypeName = "Material";
+
+        public Material(Shader shader) : this(_defaultTypeName, shader)
+        {
+        }
+
+        public Material(string name, Shader shader) : this(Guid.Empty, name, shader)
+        {
+        }
+
+        //Serializer
+        internal Material(string name, Guid guid) : base(name, guid)
+        {
+
+        }
+        public Material(Guid guid, string name, Shader shader) : base(name, guid)
+        {
             _textures = new();
             _passes = new List<RenderPass>()
             {
                 new RenderPass(shader)
             };
         }
-        public Material(Shader shader) : this("Material", shader)
-        {
-        }
-
         public RenderPass PushPass(Shader shader)
         {
             var pass = new RenderPass(shader);
@@ -55,16 +80,14 @@ namespace Engine
             _passes.RemoveAt(index);
         }
 
-        public bool AddTexture(string name, Texture texture)
+        public void AddTexture(string name, Texture texture)
         {
             if (_textures.Count < GfxDeviceManager.Current.GetDeviceInfo().MaxHardwareTextureUnits)
             {
                 _textures[name] = texture;
-
-                return true;
             }
 
-            return false; 
+            Debug.Error("Max textures per slot was reached");
         }
 
         public void SetProperty<T>(string name, T value) where T : unmanaged
@@ -72,9 +95,9 @@ namespace Engine
             _passes[0].SetProperty(name, value);
         }
 
-        public void SetProperty<T>(int pass, string name, T value) where T: unmanaged
+        public void SetProperty<T>(int pass, string name, T value) where T : unmanaged
         {
-            if(GetPassSafe(pass, out var passObj))
+            if (GetPassSafe(pass, out var passObj))
             {
                 passObj.SetProperty(name, value);
             }
@@ -93,6 +116,11 @@ namespace Engine
             Debug.Error($"Render pass index is out of range: {index}");
 
             return false;
+        }
+
+        internal override void UpdateResource(object data, string path, Guid guid)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace StbImageSharp
+namespace StbImageSharp_Internal
 {
 	internal class AnimatedGifEnumerator : IEnumerator<AnimatedFrameResult>
 	{

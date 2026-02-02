@@ -37,7 +37,7 @@ namespace Engine.IO
                 }
                 else
                 {
-                    Debug.Error("Can't find");
+                    Debug.Error($"Can't find game assets '.gfs', maybe the build failed?");
                 }
             }
             _reader = new BinaryReader(new FileStream(executablePath, FileMode.Open, FileAccess.Read));

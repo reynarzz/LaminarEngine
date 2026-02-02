@@ -21,7 +21,7 @@ namespace Game
 
             if (GetInt(entityData, "locked_amount", out var value))
             {
-                portalData.LockedAmount = value;
+                portalData.LockedByAmount = value;
             }
 
             if (GetEntityRef(entityData, "target", worldData, out var targetValue))
@@ -35,7 +35,7 @@ namespace Game
                 portalData.IsArriveOnly = true;
             }
 
-            portalData.InteractCondition = PlayerHasItem_Condition(portalData.LockedBy, portalData.LockedAmount);
+            portalData.InteractCondition = PlayerHasItem_Condition(portalData.LockedBy, portalData.LockedByAmount);
 
             portal.Init(portalData);
 

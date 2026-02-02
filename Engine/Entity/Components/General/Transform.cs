@@ -29,6 +29,7 @@ namespace Engine
         private quat _cachedWorldRotation = quat.Identity;
         private vec3 _cachedWorldScale = new vec3(1, 1, 1);
 
+        [SerializedField("Position")]
         public vec3 LocalPosition
         {
             get => _localPosition;
@@ -39,16 +40,76 @@ namespace Engine
             }
         }
 
+        [SerializedField("Rotation"), HideFromInspector]
         public quat LocalRotation
         {
             get => _localRotation;
             set
             {
-                _localRotation = value;
+                _eulerCacheValid = false;
+                _localRotation = Mathf.Normalize(value);
                 MarkDirty();
             }
         }
 
+        [ShowFieldNoSerialize("Rotation")]
+        public vec3 LocalEulerAngles
+        {
+            get
+            {
+                return QuaternionToEuler(LocalRotation);
+            }
+            set
+            {
+                var currentEuler = QuaternionToEuler(LocalRotation);
+                var delta = value - currentEuler;
+                var deltaQ = quat.FromEulerAngles(glm.radians(delta.x), glm.radians(delta.y), glm.radians(delta.z));
+
+                LocalRotation = Mathf.Normalize(deltaQ * LocalRotation);
+            }
+        }
+
+        private vec3 _eulerDeltaCache;
+        private bool _eulerCacheValid = false;
+
+        internal void SyncLocalEulerDelta(bool force = false)
+        {
+            if (!_eulerCacheValid || force)
+            {
+                _eulerCacheValid = true;
+                _eulerDeltaCache = QuaternionToEuler(_localRotation);
+            }
+        }
+        // [ShowFieldNoSerialize("Rotation")]
+        private vec3 LocalEulerDelta
+        {
+            get
+            {
+               // if (Application.IsInPlayMode)
+                {
+                    SyncLocalEulerDelta();
+                }
+                return _eulerDeltaCache;
+            }
+            set
+            {
+                vec3 delta = value - _eulerDeltaCache;
+                _eulerDeltaCache = value;
+
+                if (delta == vec3.Zero)
+                    return;
+
+                var qx = delta.x != 0 ? quat.FromAxisAngle(new vec3(1, 0, 0), glm.radians(delta.x)) : quat.Identity;
+                var qy = delta.y != 0 ? quat.FromAxisAngle(new vec3(0, 1, 0), glm.radians(delta.y)) : quat.Identity;
+                var qz = delta.z != 0 ? quat.FromAxisAngle(new vec3(0, 0, 1), glm.radians(delta.z)) : quat.Identity;
+
+                quat deltaQ = qz * qy * qx;
+
+                LocalRotation = Mathf.Normalize(deltaQ * LocalRotation);
+            }
+        }
+
+        [SerializedField("Scale")]
         public vec3 LocalScale
         {
             get => _localScale;
@@ -75,7 +136,7 @@ namespace Engine
                 vec3 oldWorldScale = WorldScale;
 
                 Actor.Scene.TryGetTarget(out var scene);
-          
+
                 if (value == null)
                     scene.RegisterRootActor(Actor);
                 else
@@ -176,18 +237,6 @@ namespace Engine
             }
         }
 
-        // Euler angles
-        public vec3 LocalEulerAngles
-        {
-            get
-            {
-                return QuaternionToEuler(LocalRotation);
-            }
-            set
-            {
-                LocalRotation = EulerToQuaternion(value);
-            }
-        }
 
         public vec3 WorldEulerAngles
         {
@@ -201,9 +250,9 @@ namespace Engine
             }
         }
 
-        public vec3 Right => WorldRotation * vec3.Right;
-        public vec3 Up => WorldRotation * vec3.Up;
-        public vec3 Forward => WorldRotation * vec3.Forward;
+        public vec3 Right => new vec3(WorldMatrix[0, 0], WorldMatrix[0, 1], WorldMatrix[0, 2]).Normalized;
+        public vec3 Up => new vec3(WorldMatrix[1, 0], WorldMatrix[1, 1], WorldMatrix[1, 2]).Normalized;
+        public vec3 Forward => new vec3(WorldMatrix[2, 0], WorldMatrix[2, 1], WorldMatrix[2, 2]).Normalized;
 
         internal bool NeedsInterpolation { get; set; }
         internal mat4 InterpolatedWorldMatrix { get; set; }
@@ -224,7 +273,7 @@ namespace Engine
             _cachedWorldMatrix[3, 1],
             _cachedWorldMatrix[3, 2]
         );
-            _cachedWorldRotation = Parent != null ? Parent.WorldRotation * LocalRotation : LocalRotation;
+            _cachedWorldRotation = Mathf.Normalize(Parent != null ? Parent.WorldRotation * LocalRotation : LocalRotation);
             _cachedWorldScale = Parent != null ? Parent.WorldScale * LocalScale : LocalScale;
 
             _isDirty = false;
@@ -232,12 +281,13 @@ namespace Engine
 
         public mat4 GetRenderingWorldMatrix()
         {
-            return NeedsInterpolation && !Actor.IsAwaking ? InterpolatedWorldMatrix : WorldMatrix;
+            return NeedsInterpolation && Actor && !Actor.IsAwaking ? InterpolatedWorldMatrix : WorldMatrix;
         }
 
         private static vec3 QuaternionToEuler(quat q)
         {
             vec3 euler;
+            q = Mathf.Normalize(q);
             float ysqr = q.y * q.y;
 
             float t0 = +2.0f * (q.w * q.x + q.y * q.z);

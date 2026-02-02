@@ -8,10 +8,15 @@ namespace Engine
 {
     public class AnimationState
     {
-        public string Name { get; }
-        public AnimationClip Clip { get; }
-        private List<AnimatorTransition> _transitions = new();
+        [SerializedField] public string Name { get; set; }
+        [SerializedField] public AnimationClip Clip { get; set; }
+        [SerializedField] private List<AnimatorTransition> _transitions = new();
+        internal IReadOnlyList<AnimatorTransition> Transitions => _transitions;
 
+        // Serializer
+        private AnimationState()
+        {
+        }
         public AnimationState(string name, AnimationClip clip)
         {
             Name = name;
@@ -35,6 +40,9 @@ namespace Engine
 
         public AnimatorTransition CheckTransitions(AnimatorParameters parameters)
         {
+            if(parameters == null)
+                return null;
+
             foreach (var transition in _transitions)
             {
                 bool allConditionsMet = true;

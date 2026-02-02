@@ -75,11 +75,6 @@ namespace Engine.Graphics
             throw new NotImplementedException();
         }
 
-        internal override void UpdateGeometry(GfxResource resource, GeometryDescriptor desc)
-        {
-            throw new NotImplementedException();
-        }
-
         internal override void UpdateResouce(GfxResource resource, IGfxResourceDescriptor desc)
         {
             throw new NotImplementedException();
@@ -95,12 +90,7 @@ namespace Engine.Graphics
             throw new NotImplementedException();
         }
 
-        internal override byte[] ReadRenderTargetColors(GfxResource nativeResource)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal override void BlitRenderTargetTo(GfxResource source, GfxResource target, bool color = true, bool depth = true)
+        internal override byte[] ReadRenderTargetColors(GfxResource nativeResource, int x, int y, int width, int height)
         {
             throw new NotImplementedException();
         }
@@ -111,6 +101,16 @@ namespace Engine.Graphics
         }
 
         internal override bool IsResourceValid(GfxResource nativeResource)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal override void Draw(Action draw, GfxResource renderTarget)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal override void BlitRenderTargetTo(GfxResource source, GfxResource target, bool color = true, bool depth = true, bool linear = false)
         {
             throw new NotImplementedException();
         }

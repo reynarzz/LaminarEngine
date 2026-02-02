@@ -14,6 +14,7 @@ namespace Game
         public Material SpriteMaterialOverlay { get; private set; }
         public Material SpriteMaterialWorld { get; private set; }
         public Material UIMaterial { get; private set; }
+        public Material FontAnimatedMaterial { get; private set; }
         public Material FontMaterial { get; private set; }
         public Material PortalMaterial { get; private set; }
         public Material WobbleMaterial { get; private set; }
@@ -22,12 +23,13 @@ namespace Game
 
         private GameMaterials()
         {
-            SpriteMaterial = GetMaterial("SpriteMaterial", "Shaders/SpriteVert.vert", "Shaders/SpriteFrag.frag");
+            SpriteMaterial = Assets.GetMaterial("__InternalAssets__/Materials/SpriteDefault.material");
+            FontMaterial = Assets.GetMaterial("__InternalAssets__/Materials/SpriteDefault.material");
             SpriteMaterialOverlay = GetMaterial("SpriteMaterialOverlay", "Shaders/SpriteVert.vert", "Shaders/SpriteFrag.frag");
             SpriteMaterialWorld = GetMaterial("SpriteMaterialWorld", "Shaders/SpriteVert.vert", "Shaders/SpriteFrag.frag");
             WobbleMaterial = GetMaterial("WobbleMaterial", "Shaders/VertScreenGrab.vert", "Shaders/ScreenGrabWobble.frag");
             UIMaterial = GetMaterial("UIMaterial", "Shaders/SpriteVert.vert", "Shaders/SpriteFrag.frag");
-            FontMaterial = GetMaterial("FontMaterial", "Shaders/Font/FontVert.vert", "Shaders/Font/FontFrag.frag");
+            FontAnimatedMaterial = GetMaterial("FontMaterial", "Shaders/Font/FontVert.vert", "Shaders/Font/FontFrag.frag");
             
             var spritePass = SpriteMaterial.GetPass(0);
             spritePass.Stencil.Enabled = true;
@@ -41,14 +43,19 @@ namespace Game
             overlayPass.Stencil.Ref = 3;
             overlayPass.Stencil.ZPassOp = StencilOp.Keep;
 
-            PortalMaterial = InitPortalMaterial();
+#if DESKTOP
+            PortalMaterial = Assets.GetMaterial("Materials/Portal.material"); 
+#else
+            PortalMaterial = Assets.GetMaterial("Materials/Portal_mobile.material");
+#endif
+
             WobbleMaterial.GetPass(0).IsScreenGrabPass = true;
             WobbleMaterial.SetProperty(0, "uDistortionAmount", 0.0003f);
             WobbleMaterial.SetProperty(0, "uColorSplit", 0.0017f);
             WobbleMaterial.SetProperty(0, "uPixelationAmount", 0.0f);
             
-            FontMaterial.SetProperty(0, "uAmplitude", 2.0f);
-            FontMaterial.SetProperty(0, "uFrequency", 6.0f);
+            FontAnimatedMaterial.SetProperty(0, "uAmplitude", 2.0f);
+            FontAnimatedMaterial.SetProperty(0, "uFrequency", 6.0f);
         }
         
         private static Material InitPortalMaterial()
@@ -57,6 +64,8 @@ namespace Game
             var material = new Material(screenShader);
             material.Name = "Portal Material";
             material.AddTexture("uStarsTex", Assets.GetTexture("stars.png"));
+            material.AddTexture("uFrameTex", GameTextures.GetSprite("portal_frame").Texture);
+             
             var pass = material.GetPass(0);
             pass.IsScreenGrabPass = true;
             material.SetProperty("uDistortionAmount", 0.009f);
@@ -69,6 +78,16 @@ namespace Game
             material.SetProperty("uColorSplit", 0.001f);
             material.SetProperty("uPixelationAmount", 2.0f);
             
+            return material;
+        }
+
+        private Material InitPortalMobileMaterial()
+        {
+            var screenShader = new Shader(Assets.GetText("Shaders/VertScreenGrab.vert").Text, Assets.GetText("Shaders/Portal_mobile_cheap.frag").Text);
+            var material = new Material(screenShader);
+            material.Name = "Portal Material";
+            material.AddTexture("uStarsTex", Assets.GetTexture("stars.png"));
+            material.AddTexture("uFrameTex", GameTextures.GetSprite("portal_frame").Texture);
             return material;
         }
 

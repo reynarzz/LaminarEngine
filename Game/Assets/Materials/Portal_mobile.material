@@ -1,0 +1,123 @@
+[
+  {
+    "Name": "_passes",
+    "Type": "ComplexCollection",
+    "InternalType": "System.Collections.Generic.List`1[[Engine.RenderPass, Engine]], System.Private.CoreLib",
+    "Data": {
+      "$type": "Engine.CollectionPropertyData, Engine",
+      "$value": {
+        "CollectionType": "List",
+        "Collection": [
+          {
+            "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+            "Value": {
+              "TargetTypeName": "Engine.RenderPass, Engine",
+              "ComplexType": "ComplexClass",
+              "Properties": [
+                {
+                  "Name": "IsScreenGrabPass",
+                  "Type": "Simple",
+                  "InternalType": "System.Boolean, System.Private.CoreLib",
+                  "Data": {
+                    "$type": "System.Boolean, System.Private.CoreLib",
+                    "$value": false
+                  }
+                },
+                {
+                  "Name": "Shader",
+                  "Type": "ShaderAsset",
+                  "InternalType": "Engine.Shader, Engine",
+                  "Data": {
+                    "$type": "Engine.ReferenceData, Engine",
+                    "$value": {
+                      "Id": "705a76e8-3c6a-4a2b-8265-574f05510c1f"
+                    }
+                  }
+                },
+                {
+                  "Name": "Blending",
+                  "Type": "SimpleClass",
+                  "InternalType": "Engine.Blending, Engine",
+                  "Data": {
+                    "$type": "Engine.Blending, Engine",
+                    "$value": {
+                      "Enabled": true,
+                      "SrcFactor": "SrcAlpha",
+                      "DstFactor": "OneMinusSrcAlpha",
+                      "Equation": "FuncAdd"
+                    }
+                  }
+                },
+                {
+                  "Name": "Stencil",
+                  "Type": "SimpleClass",
+                  "InternalType": "Engine.Stencil, Engine",
+                  "Data": {
+                    "$type": "Engine.Stencil, Engine",
+                    "$value": {
+                      "Enabled": false,
+                      "Func": "Never",
+                      "Ref": 0,
+                      "Mask": 255,
+                      "FailOp": "Keep",
+                      "ZFailOp": "Keep",
+                      "ZPassOp": "Keep"
+                    }
+                  }
+                },
+                {
+                  "Name": "_uniforms",
+                  "Type": "ComplexCollection",
+                  "InternalType": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib],[Engine.Graphics.UniformValue, Engine]], System.Private.CoreLib",
+                  "Data": {
+                    "$type": "Engine.CollectionPropertyData, Engine",
+                    "$value": {
+                      "CollectionType": "Dictionary",
+                      "Collection": []
+                    }
+                  }
+                }
+              ]
+            },
+            "Type": "ComplexClass"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "Name": "_textures",
+    "Type": "ReferenceCollection",
+    "InternalType": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib],[Engine.Texture, Engine]], System.Private.CoreLib",
+    "Data": {
+      "$type": "Engine.CollectionPropertyData, Engine",
+      "$value": {
+        "CollectionType": "Dictionary",
+        "Collection": [
+          {
+            "$type": "Engine.DictionaryData`2[[System.Object, System.Private.CoreLib],[System.Object, System.Private.CoreLib]], Engine",
+            "keyType": "Simple",
+            "ValueType": "TextureAsset",
+            "Key": "uStarsTex",
+            "Value": {
+              "$type": "Engine.ReferenceData, Engine",
+              "Id": "e0b82024-21a1-46f9-bbb8-67497e8460e3"
+            },
+            "Type": "TextureAsset"
+          },
+          {
+            "$type": "Engine.DictionaryData`2[[System.Object, System.Private.CoreLib],[System.Object, System.Private.CoreLib]], Engine",
+            "keyType": "Simple",
+            "ValueType": "TextureAsset",
+            "Key": "uFrameTex",
+            "Value": {
+              "$type": "Engine.ReferenceData, Engine",
+              "Id": "66ec47ec-bf10-489e-907b-0a00a7eef4ff"
+            },
+            "Type": "TextureAsset"
+          }
+        ]
+      }
+    }
+  }
+]

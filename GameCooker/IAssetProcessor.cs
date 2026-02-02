@@ -9,6 +9,6 @@ namespace GameCooker
 {
     internal interface IAssetProcessor
     {
-        byte[] Process(string path, AssetMetaFileBase meta, CookingPlatform platform);
+        AssetProccesResult Process(string path, AssetMetaFileBase meta, CookingPlatform platform);
     }
 }

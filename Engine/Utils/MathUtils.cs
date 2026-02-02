@@ -3,6 +3,7 @@ using GlmNet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -42,6 +43,9 @@ namespace Engine.Utils
             return view;
         }
 
+        /// <summary>
+        /// Left hand orthographic projection.
+        /// </summary>
         public static mat4 Ortho(float left, float right, float bottom, float top, float near, float far)
         {
             mat4 result = mat4.identity();
@@ -56,25 +60,35 @@ namespace Engine.Utils
             return result;
         }
 
+        /// <summary>
+        /// Left hand perspective projection.
+        /// </summary>
         public static mat4 Perspective(float fovY, float aspect, float near, float far)
         {
-            float f = 1.0f / (float)Math.Tan(fovY / 2.0f);
-            mat4 result = mat4.identity();
+            float f = 1.0f / MathF.Tan(fovY * 0.5f);
 
+            mat4 result = mat4.zero();
             result[0, 0] = f / aspect;
             result[1, 1] = f;
-            result[2, 2] = (far + near) / (near - far);
-            result[2, 3] = -1;
-            result[3, 2] = (2 * far * near) / (near - far);
+            result[2, 2] = (far + near) / (far - near);
+            result[2, 3] = 1.0f;
+            result[3, 2] = -(2 * near * far) / (far - near);
 
             return result;
         }
 
+        //internal static B2Rot QuatToB2Rot(this quat q)
+        //{
+        //    float angle = MathF.Atan2(2f * (q.w * q.z + q.x * q.y),
+        //                              1f - 2f * (q.y * q.y + q.z * q.z));
+        //    return new B2Rot(MathF.Cos(angle), MathF.Sin(angle));
+        //}
+
         internal static B2Rot QuatToB2Rot(this quat q)
         {
-            float angle = MathF.Atan2(2f * (q.w * q.z + q.x * q.y),
-                                      1f - 2f * (q.y * q.y + q.z * q.z));
-            return new B2Rot(MathF.Cos(angle), MathF.Sin(angle));
+            float cos = 1f - 2f * q.z * q.z;
+            float sin = 2f * q.z * q.w;
+            return new B2Rot(cos, sin);
         }
 
         internal static quat B2RotToQuat(this B2Rot rot)
@@ -88,10 +102,25 @@ namespace Engine.Utils
         {
             return new B2Vec2(vec.x, vec.y);
         }
-
+        internal static Vector2 ToVector2(this vec2 vec)
+        {
+            return new Vector2(vec.x, vec.y);
+        }
+        internal static Vector3 ToVector3(this vec3 vec)
+        {
+            return new Vector3(vec.x, vec.y, vec.z);
+        }
+        internal static Vector4 ToVector4(this vec4 vec)
+        {
+            return new Vector4(vec.x, vec.y, vec.z, vec.w);
+        }
         internal static B2Vec2 ToB2Vec2(this vec3 vec)
         {
             return new B2Vec2(vec.x, vec.y);
+        }
+        internal static vec2 ToVec2(this Vector2 vec)
+        {
+            return new vec2(vec.X, vec.Y);
         }
 
         internal static B2Rot ToB2Rot(this float angleRadians)
@@ -107,6 +136,23 @@ namespace Engine.Utils
         internal static vec3 ToVec3(this B2Vec2 vec)
         {
             return new vec3(vec.X, vec.Y, 0);
+        }
+
+        public static mat4 LookAt(vec3 eye, vec3 target, vec3 up)
+        {
+            vec3 zaxis = glm.normalize(target - eye);      
+            vec3 xaxis = glm.normalize(glm.cross(up, zaxis));
+            vec3 yaxis = glm.cross(zaxis, xaxis);
+
+            mat4 m = new mat4(1.0f);
+            m[0, 0] = xaxis.x; m[1, 0] = xaxis.y; m[2, 0] = xaxis.z;
+            m[0, 1] = yaxis.x; m[1, 1] = yaxis.y; m[2, 1] = yaxis.z;
+            m[0, 2] = zaxis.x; m[1, 2] = zaxis.y; m[2, 2] = zaxis.z;
+
+            m[3, 0] = -glm.dot(xaxis, eye);
+            m[3, 1] = -glm.dot(yaxis, eye);
+            m[3, 2] = -glm.dot(zaxis, eye);
+            return m;
         }
     }
 }

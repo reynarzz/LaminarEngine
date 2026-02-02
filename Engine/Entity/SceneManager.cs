@@ -11,14 +11,16 @@ namespace Engine
     {
         internal static WeakReference<Scene> ActiveScene { get; private set; }
         internal static WeakReference<Scene> DontDestroyOnLoadScene { get; private set; }
-
+        internal static Scene Dont => _scenes[0];
         private static Scene _activeScene;
 
         private static readonly List<Scene> _scenesToDestroy = new();
         private static readonly List<Scene> _scenes = new();
+        internal static IReadOnlyList<Scene> Scenes => _scenes;
 
-        static SceneManager()
+        internal static void Initialize()
         {
+            UnloadAll();
             // First Scene is always the 'dontDestroyOnLoad' scene
             LoadSceneAdditive("DontDestroyOnLoad");
             LoadSceneAdditive("DefaultScene");
@@ -30,41 +32,43 @@ namespace Engine
 
         public static void LoadScene(string name)
         {
-            PrintActorsInScene(_activeScene);
-
             ClearScenes();
-            OnCleanUpUpdate();
+            OnCleanupUpdate();
 
             // TODO: Load scene from file (Probably will never be implemented since all scenes are built at runtime, without a editor)
             var scene = new Scene(name);
             _activeScene = scene;
-            ActiveScene = new WeakReference<Scene>(_activeScene);
+            ActiveScene.SetTarget(_activeScene);
             _scenes.Add(scene);
+            DontDestroyOnLoadScene.SetTarget(_scenes[0]);
         }
-        private static void LogHierarchy(Transform current, int depth = 0)
+
+        internal static void UnloadScene(Scene scene)
         {
-            string indent = new string('-', depth);
+            if (!_scenes.Contains(scene) || scene == _scenes[0])
+                return;
 
-            Debug.Log($"{indent}{current.Name}");
-
-            for (int i = 0; i < current.Children.Count; i++)
-            {
-                LogHierarchy(current.Children[i], depth + 1);
-            }
+            _scenesToDestroy.Add(scene);
+            _scenes.Remove(scene);
         }
-        private static void PrintActorsInScene(Scene scene)
+
+        internal static void UnloadAll()
         {
-            for (int i = 0; i < _activeScene.RootActors.Count; i++)
+            _activeScene = null;
+            for (int i = 0; i < _scenes.Count; i++)
             {
-                LogHierarchy(_activeScene.RootActors[i].Transform);
+                _scenesToDestroy.Add(_scenes[i]);
             }
 
+            OnCleanupUpdate();
+            _scenes.Clear();
         }
+
         private static void ClearScenes()
         {
             _scenesToDestroy.Clear();
             // Adds all scenes to destroy, except the 'DontDestroyOnLoadScene'
-            for (int i = _scenes.Count - 1; i >= 1; --i)
+            for (int i = _scenes.Count - 1; i > 0; --i)
             {
                 _scenesToDestroy.Add(_scenes[i]);
                 _scenes.RemoveAt(i);
@@ -123,9 +127,12 @@ namespace Engine
                 _scenes[i].OnPreRender();
             }
         }
-        internal static void OnCleanUpUpdate()
+        internal static void OnCleanupUpdate()
         {
-            _activeScene.DeletePending();
+            for (int i = 0; i < _scenes.Count; i++)
+            {
+                _scenes[i].DeletePending();
+            }
 
             foreach (var scene in _scenesToDestroy)
             {
@@ -134,7 +141,6 @@ namespace Engine
             if (_scenesToDestroy.Count > 0)
             {
                 // Note: this is provisional.
-                // RenderingLayer.Test_ClearBatches();
                 PhysicsLayer.Clear(); // Remove
                 _scenesToDestroy.Clear();
             }

@@ -18,6 +18,7 @@ namespace Engine.Graphics.OpenGL
     {
         private readonly GfxDeviceInfo _gfxDeviceInfo;
         private static uint _defaultVAO;
+        internal static uint DefaultVAO => _defaultVAO;
         public GLDevice()
         {
             int maxTextureUnits;
@@ -34,6 +35,11 @@ namespace Engine.Graphics.OpenGL
                 glGetIntegerv(GL_MAX_FRAGMENT_UNIFORM_COMPONENTS, &maxFragmentUniforms);
 
                 _gfxDeviceInfo.MaxUniformsCount = (int)MathF.Min(Consts.Graphics.MAX_UNIFORMS_PER_DRAWCALL, MathF.Min(maxFragmentUniforms, maxFragmentUniforms));
+
+                int maxSamples;
+                glGetIntegerv(GL_MAX_SAMPLES, &maxSamples);
+                _gfxDeviceInfo.MaxSamples = maxSamples;
+
                 //int maxUniformBlocks = 0;
                 //glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &maxUniformBlocks);
             }
@@ -50,20 +56,13 @@ namespace Engine.Graphics.OpenGL
             Debug.Log("OpenGL Renderer: " + _gfxDeviceInfo.Renderer);
             Debug.Log("OpenGL MaxTextureUnits: " + _gfxDeviceInfo.MaxValidTextureUnits);
             Debug.Log("OpenGL MaxUniformsCount: " + _gfxDeviceInfo.MaxUniformsCount);
-#if MACOS
+
             _defaultVAO = glGenVertexArray();
             glBindVertexArray(_defaultVAO);
-            System.Console.WriteLine("MacOs default vao.");
-#endif
         }
 
-        internal override void Initialize()
-        {
-        }
-
-        internal override void Close()
-        {
-        }
+        internal override void Initialize() { }
+        internal override void Close() { }
 
         internal override void Clear(ClearDeviceConfig config)
         {
@@ -124,17 +123,17 @@ namespace Engine.Graphics.OpenGL
         {
             var indexBuffer = new GLIndexBuffer();
             indexBuffer.Create(desc);
-
             return indexBuffer;
         }
 
         internal override GfxResource CreateShader(ShaderDescriptor desc)
         {
+            glBindVertexArray(DefaultVAO);
             var shader = new GLShader();
             shader.Create(desc);
             return shader;
         }
-
+        
         internal override GfxResource CreateTexture(TextureDescriptor desc)
         {
             var texture = new GLTexture();
@@ -208,11 +207,6 @@ namespace Engine.Graphics.OpenGL
             return _gfxDeviceInfo;
         }
 
-        internal override void UpdateGeometry(GfxResource resource, GeometryDescriptor desc)
-        {
-            (resource as GLGeometry).UpdateResource(desc);
-        }
-
         internal override void SetViewport(vec4 viewport)
         {
             glViewport((int)viewport.x, (int)viewport.y, (int)viewport.z, (int)viewport.w);
@@ -265,8 +259,23 @@ namespace Engine.Graphics.OpenGL
             {
                 glDisable(GL_STENCIL_TEST);
             }
+            if (features.DepthTesting)
+            {
+                glEnable(GL_DEPTH_TEST);
+            }
+            else
+            {
+                glDisable(GL_DEPTH_TEST);
+            }
         }
 
+        internal override void Draw(Action draw, GfxResource renderTarget)
+        {
+            var frameBuffer = renderTarget as GLFrameBuffer;
+            frameBuffer?.Bind();
+            draw?.Invoke();
+            frameBuffer?.Unbind();
+        }
         internal override void Draw(DrawCallData drawCallData)
         {
             (drawCallData.Geometry as GLGeometry).Bind();
@@ -322,20 +331,20 @@ namespace Engine.Graphics.OpenGL
             (drawCallData.Geometry as GLGeometry).Unbind();
         }
 
-        internal override byte[] ReadRenderTargetColors(GfxResource nativeResource)
+        internal override byte[] ReadRenderTargetColors(GfxResource nativeResource, int x, int y, int width, int height)
         {
             if (nativeResource is GLFrameBuffer buffer)
             {
-                return buffer.ReadPixels();
+                return buffer.ReadPixels(x, y, width, height);
             }
 
             return null;
         }
 
-        internal override void BlitRenderTargetTo(GfxResource source, GfxResource target, bool color = true, bool depth = false)
+        internal override void BlitRenderTargetTo(GfxResource source, GfxResource target, bool color = true, bool depth = false, bool linear = false)
         {
             var sourceFB = (source as GLFrameBuffer);
-            sourceFB.BlitTo(target as GLFrameBuffer, color, depth);
+            sourceFB.BlitTo(target as GLFrameBuffer, color, depth, linear);
         }
 
         internal override void DestroyResource(GfxResource resource)

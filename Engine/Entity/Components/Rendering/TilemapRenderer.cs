@@ -1,7 +1,11 @@
 ﻿using Box2D.NET;
+using Engine.Graphics;
+using Engine.Layers;
 using Engine.Types;
 using Engine.Utils;
 using GlmNet;
+using ldtk;
+using SharedTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,16 +34,48 @@ namespace Engine
     [UniqueComponent]
     public class TilemapRenderer : Renderer2D
     {
+        [SerializedField]
+        public override Color Color { get => base.Color; set => base.Color = value; }
+
+        [SerializedField]
+        public override int SortOrder { get => base.SortOrder; set => base.SortOrder = value; }
+
+        [SerializedField] public LDtkOptions Options { get; set; }
+
+        [SerializedField] public LdtkJson Map { get; set; } 
+
         public IReadOnlyList<vec2> TilesPositions => _tilesPositions;
         private List<vec2> _tilesPositions = new();
+        private RendererData2D _rendererData;
+        public vec2 GridSize { get; private set; }
+
+        internal override void OnInternalInitialize()
+        {
+            base.OnInternalInitialize();
+            _rendererData = (RendererData as RendererData2D);
+            _rendererData.Mesh = new Mesh();
+            _rendererData.Mesh.IndicesToDrawCount = 0;
+            _rendererData.PrivateBatch = true;
+            _rendererData.Bounds = new Bounds()
+            {
+                Min = vec3.One * int.MaxValue,
+                Max = vec3.One * int.MinValue
+            };
+
+            RenderingLayer.PushRenderer(this);
+        }
+
+        public override void OnEnabled()
+        {
+            base.OnEnabled();
+
+            RenderingLayer.PushRenderer(this);
+        }
 
         protected override void OnAwake()
         {
             base.OnAwake();
 
-            Mesh = new Mesh();
-            Mesh.IndicesToDrawCount = 0;
-            PrivateBatch = true;
         }
 
         public void AddTile(Tile tile, vec3 position, float rot = 0)
@@ -47,7 +83,7 @@ namespace Engine
             QuadVertices vertices = default;
 
             var texture = Sprite.Texture;
-            var chunk = texture.Atlas.GetChunk(tile.Index);
+            var chunk = Assets.GetSpriteAtlas(texture.Path).GetSprite(tile.Index).GetAtlasCell();
 
             float ppu = texture.PixelPerUnit;
             var width = (float)chunk.Width / ppu;
@@ -59,14 +95,20 @@ namespace Engine
 
             GraphicsHelper.CreateQuad(ref vertices, chunk.Uvs, width, height, chunk.Pivot, Color, tileMatrix);
 
-            Mesh.Vertices.Add(vertices.v0);
-            Mesh.Vertices.Add(vertices.v1);
-            Mesh.Vertices.Add(vertices.v2);
-            Mesh.Vertices.Add(vertices.v3);
+            _rendererData.Mesh.Vertices.Add(vertices.v0);
+            _rendererData.Mesh.Vertices.Add(vertices.v1);
+            _rendererData.Mesh.Vertices.Add(vertices.v2);
+            _rendererData.Mesh.Vertices.Add(vertices.v3);
 
-            Mesh.IndicesToDrawCount += 6;
+            _rendererData.Mesh.IndicesToDrawCount += 6;
 
-            IsDirty = true;
+            RendererData.IsDirty = true;
+
+            var max = _rendererData.Bounds.Max;
+            var min = _rendererData.Bounds.Min;
+            _rendererData.Bounds.Max = new vec3(Math.Max(max.x, position.x), Math.Max(max.y, position.y), 0);
+            _rendererData.Bounds.Min = new vec3(Math.Min(min.x, position.x), Math.Min(min.y, position.y), 0);
+
 
             //var index = (uint)Mesh.Vertices.Count - 4;
             //Mesh.Indices.Add(index + 0);
@@ -93,8 +135,8 @@ namespace Engine
                 float worldY = -level.WorldY + -tilePxY + -layer.PxTotalOffsetY;
 
                 var position = new vec3(
-                    MathF.Floor(worldX / Sprite.Texture.PixelPerUnit),
-                    MathF.Floor(worldY / Sprite.Texture.PixelPerUnit),
+                    (worldX / Sprite.Texture.PixelPerUnit),
+                    (worldY / Sprite.Texture.PixelPerUnit),
                     0
                 );
 
@@ -102,9 +144,15 @@ namespace Engine
 
                 AddTile(new Tile((int)tile.T, isFlippedX, isFlippedY), position);
             }
+
+            _rendererData.Bounds.Min -= vec3.One * 0.5f;
+            _rendererData.Bounds.Max += vec3.One * 0.5f;
+
+            _rendererData.Bounds.Min.z = 0;
+            _rendererData.Bounds.Max.z = 0;
         }
 
-        public void SetTilemapLDtk(ldtk.LdtkJson project, LDtkOptions options)
+        public void SetTilemapLDtk(LdtkJson project, LDtkOptions options)
         {
             _tilesPositions.Clear();
 
@@ -118,13 +166,15 @@ namespace Engine
                 if (((options.LayersToLoadMask & (1UL << j)) == 0) && options.LayersToLoadMask != 0)
                     continue;
 
+
                 var layer = level.LayerInstances[j];
+                GridSize = new vec2(layer.CWid, layer.CHei);
 
                 if (!layer.Visible)
                     continue;
 
                 var type = layer.Type;
-                Debug.Log(type);
+
                 switch (type)
                 {
                     case "AutoLayer":
@@ -141,23 +191,15 @@ namespace Engine
                 }
             }
         }
-
-        public void SetTilemapLDtk(string json, LDtkOptions options)
-        {
-            if (!string.IsNullOrEmpty(json))
-            {
-                SetTilemapLDtk(ldtk.LdtkJson.FromJson(json), options);
-            }
-        }
     }
 
     public struct LDtkOptions
     {
-        public bool RenderIntGridLayer { get; set; }
-        public bool RenderTilesLayer { get; set; }
-        public bool RenderAutoLayer { get; set; }
-        public int LevelToLoad { get; set; }
-        public ulong LayersToLoadMask { get; set; }
-        public int WorldDepth { get; set; }
+        [SerializedField] public bool RenderIntGridLayer { get; set; }
+        [SerializedField] public bool RenderTilesLayer { get; set; }
+        [SerializedField] public bool RenderAutoLayer { get; set; }
+        [SerializedField] public int LevelToLoad { get; set; }
+        [SerializedField] public ulong LayersToLoadMask { get; set; }
+        [SerializedField] public int WorldDepth { get; set; }
     }
 }

@@ -89,15 +89,18 @@ namespace Engine
         private static readonly Func<Actor, List<IComponent>> _getStartPending = a => a._onStartPendingComponents;
 
 
-        public Actor() : this(string.Empty, string.Empty)
+        public Actor() : this(string.Empty)
         {
         }
 
-        public Actor(string name) : this(name, string.Empty)
+        public Actor(string name) : this(name, Guid.NewGuid())
         {
         }
 
-        internal Actor(string name, string id) : base(name, id)
+        internal Actor(string name, Guid id) : this(name, id, SceneManager.ActiveScene)
+        {
+        }
+        internal Actor(string name, Guid id, WeakReference<Scene> scene) : base(name, id)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -115,22 +118,49 @@ namespace Engine
             _onEnablePendingComponents = new();
             _transform = AddComponent<Transform>();
 
-            Scene = SceneManager.ActiveScene;
-            Scene.TryGetTarget(out var scene);
-            scene.RegisterRootActor(this);
+            if (scene != null && scene.TryGetTarget(out var s) && s != null)
+            {
+                Scene = scene;
+            }
+            else
+            {
+                Scene = SceneManager.ActiveScene;
+            }
+
+            if (Scene.TryGetTarget(out var sceneTarget))
+            {
+                sceneTarget.RegisterRootActor(this);
+            }
+            else
+            {
+                Debug.EngineError("Not a valid scene was found!");
+            }
         }
 
-        public Component AddComponent([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] 
+        public Component AddComponent([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
                                       Type type)
         {
+            return AddComponent(type, Guid.Empty, true, true, false, out _);
+        }
+
+        internal Component AddComponent([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
+                                         Type type, Guid id, bool autoAddRequiredComponents, bool enabledByDefault, bool isDeserializing,
+            out bool isPendingToInitialize)
+        {
+            isPendingToInitialize = false;
             CheckIfValidObject(this);
 
             if (!IsValidComponent(type))
             {
-                return default;
+                return null;
             }
             else if (type.IsAssignableFrom(typeof(Transform)) && _components.Count > 0)
             {
+                if (id != Guid.Empty)
+                {
+                    Transform._SetID(id); // Remove this
+                }
+
                 return Transform;
             }
 
@@ -167,21 +197,30 @@ namespace Engine
 
             var component = Activator.CreateInstance(type) as Component;
             component.Actor = this;
+            component.IsEnabledDontNotify = enabledByDefault;
 
-            var required = GetAllAttributes<RequireComponentAttribute>(type);
-            if (required != null)
+            if (id != Guid.Empty)
             {
-                foreach (var requiredAttrib in required)
-                {
-                    foreach (var componentsTypes in requiredAttrib.RequiredComponents)
-                    {
-                        var requiredComponent = AddComponent(componentsTypes);
+                component._SetID(id); // Remove this
+            }
 
-                        foreach (var property in ReflectionUtils.GetAllMembersWithAttribute<RequiredPropertyAttribute>(type))
+            if (autoAddRequiredComponents)
+            {
+                var required = GetAllAttributes<RequireComponentAttribute>(type);
+                if (required != null)
+                {
+                    foreach (var requiredAttrib in required)
+                    {
+                        foreach (var componentsTypes in requiredAttrib.RequiredComponents)
                         {
-                            if (ReflectionUtils.GetMemberType(property) == requiredComponent.GetType())
+                            var requiredComponent = AddComponent(componentsTypes);
+
+                            foreach (var property in ReflectionUtils.GetAllMembersWithAttribute<RequiredPropertyAttribute>(type))
                             {
-                                ReflectionUtils.SetMemberValue(component, property, requiredComponent);
+                                if (ReflectionUtils.GetMemberType(property) == requiredComponent.GetType())
+                                {
+                                    ReflectionUtils.SetMemberValue(component, property, requiredComponent);
+                                }
                             }
                         }
                     }
@@ -190,26 +229,42 @@ namespace Engine
 
             _components.Add(component);
 
+            component.OnInternalInitialize();
+
             if (component is IStartableComponent start)
             {
                 _onStartPendingComponents.Add(start);
             }
 
-            if (!IsActiveInHierarchy || !IsActiveSelf)
+            if (Application.IsInPlayMode)
             {
-                _onAwakePendingComponents.Add(component);
-                _onEnablePendingComponents.Add(component);
-            }
-            else
-            {
-                (component as IAwakeableComponent).OnAwake();
+                if (!IsActiveInHierarchy || !IsActiveSelf || !enabledByDefault)
+                {
+                    isPendingToInitialize = true;
+                    _onAwakePendingComponents.Add(component);
+                    _onEnablePendingComponents.Add(component);
+                }
+                else
+                {
+                    if (!isDeserializing)
+                    {
+                        try
+                        {
+                            (component as IAwakeableComponent).OnAwake();
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.Error(e);
+                        }
+                    }
 
-                // NOTE: All components are enabled by default, so this if is unncessary right now,
-                //       however, in the future I might add a flag to addComponents that are disabled by default.
-                //if (component.IsEnabled) // Remove from here
-                //{
-                //    (component as IEnabledComponent).OnEnabled();
-                //}
+                    // NOTE: All components are enabled by default, so this if is unncessary right now,
+                    //       however, in the future I might add a flag to addComponents that are disabled by default.
+                    //if (component.IsEnabled) // Remove from here
+                    //{
+                    //    (component as IEnabledComponent).OnEnabled();
+                    //}
+                }
             }
 
             return component;
@@ -338,7 +393,10 @@ namespace Engine
 
                 foreach (var child in actor.Transform.Children)
                 {
-                    GetComponents(ref elements, child.Actor);
+                    if (child.Actor)
+                    {
+                        GetComponents(ref elements, child.Actor);
+                    }
                 }
             }
 
@@ -670,6 +728,8 @@ namespace Engine
                     }
                 }
 
+                Scene.TryGetTarget(out var scene);
+
                 void OnCleanUpChildren(Actor actor)
                 {
                     for (int i = actor._components.Count - 1; i >= 0; i--)
@@ -683,7 +743,6 @@ namespace Engine
                     }
 
                     actor.IsAlive = false;
-                    actor.Scene.TryGetTarget(out var scene);
                     scene.RemoveActor(actor);
                     // actor.Scene = null;
                 }
@@ -770,18 +829,18 @@ namespace Engine
     public class Actor<
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T1> : Actor where T1 : Component
     {
-        public Actor() : this(string.Empty, string.Empty) { }
-        public Actor(string name) : this(name, string.Empty) { }
-        public Actor(string name, string id) : base(name, id) => AddComponent<T1>();
+        public Actor() : this(string.Empty, Guid.NewGuid()) { }
+        public Actor(string name) : this(name, Guid.NewGuid()) { }
+        public Actor(string name, Guid id) : base(name, id) => AddComponent<T1>();
     }
 
     public class Actor<
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T1,
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T2> : Actor where T1 : Component where T2 : Component
     {
-        public Actor() : this(string.Empty, string.Empty) { }
-        public Actor(string name) : this(name, string.Empty) { }
-        public Actor(string name, string id) : base(name, id) => AddComponent<T1, T2>();
+        public Actor() : this(string.Empty, Guid.NewGuid()) { }
+        public Actor(string name) : this(name, Guid.NewGuid()) { }
+        public Actor(string name, Guid id) : base(name, id) => AddComponent<T1, T2>();
     }
 
     public class Actor<
@@ -789,9 +848,9 @@ namespace Engine
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T2,
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T3> : Actor where T1 : Component where T2 : Component where T3 : Component
     {
-        public Actor() : this(string.Empty, string.Empty) { }
-        public Actor(string name) : this(name, string.Empty) { }
-        public Actor(string name, string id) : base(name, id) => AddComponent<T1, T2, T3>();
+        public Actor() : this(string.Empty, Guid.NewGuid()) { }
+        public Actor(string name) : this(name, Guid.NewGuid()) { }
+        public Actor(string name, Guid id) : base(name, id) => AddComponent<T1, T2, T3>();
     }
 
     public class Actor<
@@ -800,9 +859,9 @@ namespace Engine
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T3,
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T4> : Actor where T1 : Component where T2 : Component where T3 : Component where T4 : Component
     {
-        public Actor() : this(string.Empty, string.Empty) { }
-        public Actor(string name) : this(name, string.Empty) { }
-        public Actor(string name, string id) : base(name, id) => AddComponent<T1, T2, T3, T4>();
+        public Actor() : this(string.Empty, Guid.NewGuid()) { }
+        public Actor(string name) : this(name, Guid.NewGuid()) { }
+        public Actor(string name, Guid id) : base(name, id) => AddComponent<T1, T2, T3, T4>();
     }
 
     public class Actor<
@@ -812,8 +871,8 @@ namespace Engine
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T4,
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T5> : Actor where T1 : Component where T2 : Component where T3 : Component where T4 : Component where T5 : Component
     {
-        public Actor() : this(string.Empty, string.Empty) { }
-        public Actor(string name) : this(name, string.Empty) { }
-        public Actor(string name, string id) : base(name, id) => AddComponent<T1, T2, T3, T4, T5>();
+        public Actor() : this(string.Empty, Guid.NewGuid()) { }
+        public Actor(string name) : this(name, Guid.NewGuid()) { }
+        public Actor(string name, Guid id) : base(name, id) => AddComponent<T1, T2, T3, T4, T5>();
     }
 }

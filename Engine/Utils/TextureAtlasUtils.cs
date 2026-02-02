@@ -5,12 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Engine;
 using GlmNet;
+using SharedTypes;
 
 namespace Engine.Utils
 {
     public class TextureAtlasUtils
     {
-        public static AtlasChunk CreateTileBounds(int xPixel, int yPixel, int width, int height, float pivotX, float pivotY, int baseTextureWidth, int baseTextureHeight)
+        public static TextureAtlasCell CreateTileBounds(int xPixel, int yPixel, int width, int height, float pivotX, float pivotY, int baseTextureWidth, int baseTextureHeight)
         {
             float x = xPixel / (float)baseTextureWidth;
             float y = yPixel / (float)baseTextureHeight;
@@ -21,136 +22,54 @@ namespace Engine.Utils
             float ptX = (1.0f / (float)(baseTextureWidth * width)) / 2.0f;
             float ptY = (1.0f / (float)(baseTextureHeight * width)) / 2.0f;
 
-            var texCoords = new QuadUV()
+            return new TextureAtlasCell()
             {
-                BottomLeftUV = new vec2(x + ptX, y + ptY),                    // Bottom left
-                TopLeftUV = new vec2(x + ptX, y + nHeight - ptY),             // Top left
-                TopRightUV = new vec2(x + nWidth - ptX, y + nHeight - ptY),   // Top right
-                BottomRightUV = new vec2(x + nWidth - ptX, y + ptY),          // Bottom right
-            };
-
-            return new AtlasChunk()
-            {
+                ID = Guid.NewGuid(),
                 Width = width,
                 Height = height,
-                Uvs = texCoords,
                 Pivot = new vec2(pivotX, pivotY),
+                XPixel = xPixel,
+                YPixel = yPixel,
+                Uvs = new QuadUV()
+                {
+                    BottomLeftUV = new vec2(x + ptX, y + ptY),                    // Bottom left
+                    TopLeftUV = new vec2(x + ptX, y + nHeight - ptY),             // Top left
+                    TopRightUV = new vec2(x + nWidth - ptX, y + nHeight - ptY),   // Top right
+                    BottomRightUV = new vec2(x + nWidth - ptX, y + ptY),          // Bottom right
+                },
             };
         }
 
-        public static void SliceTiles(TextureAtlasData data, int width, int height, int baseTextureWidth, int baseTextureHeight)
+        public static void SliceTiles(TextureAtlasData data, int tileWidth, int tileHeight, int textureWidth, int textureHeight,
+                                      float pivotX = 0.5f, float pivotY = 0.5f)
         {
-            int tilesX = baseTextureWidth / width;
-            int tilesY = baseTextureHeight / height;
-
-            var length = tilesX * tilesY;
-            var atlasChunks = new AtlasChunk[length];
-
-            int index = 0;
-            for (int y = tilesY - 1; y >= 0; --y)
+            if (tileWidth <= 0 || tileHeight <= 0)
             {
-                for (int x = 0; x < tilesX; ++x)
+                Debug.Error("negative tile size is not supported");
+                return;
+            }
+
+            int tilesX = textureWidth / tileWidth;
+            int tilesY = textureHeight / tileHeight;
+
+            if (tilesX <= 0 || tilesY <= 0)
+                return;
+
+            var atlasChunks = new TextureAtlasCell[tilesX * tilesY];
+            int index = 0;
+
+            for (int y = 0; y < tilesY; y++)
+            {
+                int flippedY = (tilesY - 1 - y) * tileHeight;
+
+                for (int x = 0; x < tilesX; x++)
                 {
-                    atlasChunks[index++] = CreateTileBounds(x * width, (y) * height, width, height, 0.5f, 0.5f, baseTextureWidth, baseTextureHeight);
+                    atlasChunks[index++] = CreateTileBounds(x * tileWidth, flippedY, tileWidth, tileHeight,
+                                                            pivotX, pivotY, textureWidth, textureHeight);
                 }
             }
 
             data.SetChunks(atlasChunks);
-        }
-
-        public static Sprite[] SliceSprites(Texture2D texture, int tileWidth, int tileHeight)
-        {
-            return SliceSprites(texture, tileWidth, tileHeight, new vec2(0.5f, 0.5f));
-        }
-        public static Sprite[] SliceSprites(Texture2D texture, int tileWidth, int tileHeight, int startIndex, int length)
-        {
-            return SliceSprites(texture, tileWidth, tileHeight, new vec2(0.5f, 0.5f), startIndex, length);
-        }
-        public static Sprite[] SliceSprites(Texture2D texture, int tileWidth, int tileHeight, vec2 pivot)
-        {
-            int tilesX = texture.Width / tileWidth;
-            int tilesY = texture.Height / tileHeight;
-            return SliceSprites(texture, tileWidth, tileHeight, pivot, 0, tilesX * tilesY);
-        }
-
-        public static Sprite[] SliceSprites(Texture2D texture, int tileWidth, int tileHeight, vec2 pivot,
-                                            int startIndex, int length = int.MaxValue)
-        {
-            if(texture.Atlas.ChunksCount > 0)
-            {
-                Debug.Error("Can't slice. Sliced already.");
-                return null;
-            }
-
-            int tilesX = texture.Width / tileWidth;
-            int tilesY = texture.Height / tileHeight;
-
-            length = int.Min((tilesX * tilesY) - startIndex, length);
-        
-            var atlasChunks = new AtlasChunk[length];
-            var sprites = new Sprite[length];
-            texture.Atlas.SetChunks(atlasChunks);
-
-            for (int i = 0; i < length; i++)
-            {
-                int globalIndex = startIndex + i;
-                int x = globalIndex % tilesX;
-                int y = globalIndex / tilesX;
-
-                // Flip y
-                y = tilesY - 1 - y;
-
-                atlasChunks[i] = CreateTileBounds(x * tileWidth, y * tileHeight, tileWidth, tileHeight,
-                                                  pivot.x, pivot.y, texture.Width, texture.Height);
-
-                sprites[i] = new Sprite(i, texture);
-            }
-
-            return sprites;
-        }
-
-        public static Sprite[] GetSprites(Texture2D texture, int startIndex, int length = int.MaxValue)
-        {
-            length = int.Min(texture.Atlas.ChunksCount - startIndex, length);
-  
-            var sprites = new Sprite[length];
-
-            for (int i = 0; i < sprites.Length; ++i)
-            {
-                sprites[i] = new Sprite(i + startIndex, texture);
-            }
-
-            return sprites;
-        }
-
-
-        public QuadUV ConvertTexCoordToGraphicsApiCompatible(QuadUV coord)
-        {
-            // TODO: Since the engine is rendering in OpengL, the uv is always reversed,
-            //       This must change when api is changed to another that texCoord do not start from the bottom 
-
-            bool flipDueGraphicsApi = true;
-
-            QuadUV outCoords = coord;
-            if (flipDueGraphicsApi)
-            {
-                // Flip whole textCoord
-                outCoords.BottomLeftUV.y = 1.0f - coord.BottomLeftUV.y;
-                outCoords.TopLeftUV.y = 1.0f - coord.TopLeftUV.y;
-                outCoords.TopRightUV.y = 1.0f - coord.TopRightUV.y;
-                outCoords.BottomRightUV.y = 1.0f - coord.BottomRightUV.y;
-
-                // Flip cell y
-                float leftTempY = outCoords.TopLeftUV.y;
-                float rightTempY = outCoords.TopRightUV.y;
-
-                outCoords.BottomLeftUV.y = outCoords.TopLeftUV.y;
-                outCoords.TopLeftUV.y = leftTempY;
-                outCoords.TopRightUV.y = outCoords.BottomRightUV.y;
-                outCoords.BottomRightUV.y = rightTempY;
-            }
-
-            return outCoords;
         }
     }
 }

@@ -1,12 +1,12 @@
 ﻿using Newtonsoft.Json;
 using SharedTypes;
+using System.Reflection;
 
 namespace GameCooker
 {
     public class AssetsCooker
     {
         private Dictionary<string, AssetType> _assetsTypes;
-        private Dictionary<AssetType, IAssetProcessor> _assetsProcessors;
         private Dictionary<CookingType, AssetsCookerBase> _assetCookers;
 
         private AssetsDatabaseInfo _databaseInfo;
@@ -37,29 +37,29 @@ namespace GameCooker
                 { ".json", AssetType.Text },
                 { ".xml", AssetType.Text },
                 { ".csv", AssetType.Text },
-           
+                
                 // Shader
-                { ".shader", AssetType.Shader },
-                { ".glsl", AssetType.Shader },
                 { ".vert", AssetType.Shader },
-                { ".vertex", AssetType.Shader },
                 { ".frag", AssetType.Shader },
-                { ".fragment", AssetType.Shader },
+
+                { ".shader", AssetType.ShaderV2 },
+                { ".material", AssetType.Material },
 
                 // Font
                 { ".ttf", AssetType.Font },
                 { ".otf", AssetType.Font },
+
+                { ".anim", AssetType.AnimationClip },
+                { ".animctrl", AssetType.AnimationController },
+
             };
 
-            _assetsProcessors = new Dictionary<AssetType, IAssetProcessor>()
-            {
-                { AssetType.Texture, new TextureAssetProcessor() },
-                { AssetType.Audio, new AudioAssetProcessor() },
-                { AssetType.Text, new TextAssetProcessor() },
-                { AssetType.Shader, new ShaderAssetProcessor() },
-                { AssetType.Font, new RawBytesAssetProcessor() },
-            };
+            InitAssetCookers();
+        }
 
+
+        private void InitAssetCookers()
+        {
             if (File.Exists(Paths.GetAssetDatabaseFilePath()))
             {
                 _databaseInfo = JsonConvert.DeserializeObject<AssetsDatabaseInfo>(File.ReadAllText(Paths.GetAssetDatabaseFilePath()));
@@ -73,16 +73,47 @@ namespace GameCooker
                 };
             }
 
+            var devModeAssetsProcessors = new Dictionary<AssetType, IAssetProcessor>()
+            {
+                { AssetType.Texture, new TextureAssetProcessor() },
+                { AssetType.Audio, new AudioAssetProcessor() },
+                { AssetType.Text, new TextAssetProcessor() },
+                { AssetType.Shader, new ShaderAssetProcessorOld() },
+                { AssetType.ShaderV2, new ShaderAssetProcessor() },
+                { AssetType.Font, new RawBytesAssetProcessor() },
+                { AssetType.AnimationClip, new AnimClipAssetProcessorDevMode() },
+                { AssetType.AnimationController, new AnimControllerClipAssetProcessorDevMode() },
+                { AssetType.Material, new MaterialAssetProcessorDevMode() },
+            };
+
+            var releaseModeAssetsProcessors = new Dictionary<AssetType, IAssetProcessor>()
+            {
+                { AssetType.Texture, new TextureAssetProcessor() },
+                { AssetType.Audio, new AudioAssetProcessor() },
+                { AssetType.Text, new TextAssetProcessor() },
+                { AssetType.Shader, new ShaderAssetProcessorOld() },
+                { AssetType.ShaderV2, new ShaderAssetProcessor() },
+                { AssetType.Font, new RawBytesAssetProcessor() },
+                { AssetType.AnimationClip, new RawBytesAssetProcessor() }, // TODO: binary serialization
+                { AssetType.AnimationController, new RawBytesAssetProcessor() }, // TODO: binary serialization
+                { AssetType.Material, new RawBytesAssetProcessor() }, // TODO: binary serialization
+            };
+
             _assetCookers = new Dictionary<CookingType, AssetsCookerBase>()
             {
-                {  CookingType.DevMode, new DevModeFilesCooker(_databaseInfo) },
-                {  CookingType.ReleaseMode, new ReleaseModeFilesCooker() },
+                {  CookingType.DevMode, new DevModeFilesCooker(_databaseInfo, devModeAssetsProcessors) },
+                {  CookingType.ReleaseMode, new ReleaseModeFilesCooker(releaseModeAssetsProcessors) },
             };
         }
 
-        public async Task<AssetsDatabaseInfo> CookAllAsync(CookOptions options)
+        public async Task<DishResult> CookAllAsync(CookOptions options)
         {
-            var files = Directory.GetFiles(options.AssetsFolderPath, "*", SearchOption.AllDirectories);
+            // Search project's files first
+            var files = Directory.GetFiles(options.AssetsFolderPath, "*", SearchOption.AllDirectories).ToList();
+
+            var cookersFiles = Directory.GetFiles(Path.Combine(CookerPaths.CookerRoot, "Assets"), "*", SearchOption.AllDirectories);
+
+            files.AddRange(cookersFiles);
 
             var selectedFiles = files.Where(path => _assetsTypes.TryGetValue(Path.GetExtension(path), out _))
                                      .Select(path => (path: Paths.ClearPathSeparation(path), assetType: _assetsTypes[Path.GetExtension(path)]));
@@ -97,7 +128,7 @@ namespace GameCooker
                         if (string.IsNullOrEmpty(options.MatchingFiles[i]))
                             continue;
 
-                        if (x.path.EndsWith(options.MatchingFiles[i]))
+                        if (x.path.EndsWith(options.MatchingFiles[i]) || x.path.Contains(CookerPaths.InternalAssetsPath))
                         {
                             return true;
                         }
@@ -107,24 +138,26 @@ namespace GameCooker
                 });
             }
 
-            await _assetCookers[options.Type].CookAssetsAsync(options.FileOptions, selectedFiles.ToArray(), (x, y, z) => ProcessAsset(options.Platform, x, y, z), options.ExportFolderPath);
+            var collectedFiles = selectedFiles.ToArray();
+            var result = await _assetCookers[options.Type].CookAssetsAsync(options.FileOptions, options.Platform,
+                                             collectedFiles, options.ExportFolderPath);
 
-            return _databaseInfo;
+            return new DishResult()
+            {
+                IsSuccess = result,
+                DataInfo = _databaseInfo
+            };
         }
 
-        public AssetsDatabaseInfo CookAll(CookOptions options)
+        public DishResult CookAll(CookOptions options)
         {
             return CookAllAsync(options).GetAwaiter().GetResult();
         }
+    }
 
-        private byte[] ProcessAsset(CookingPlatform platform, AssetType type, AssetMetaFileBase meta, string path)
-        {
-            if (_assetsProcessors.TryGetValue(type, out var processor))
-            {
-                return processor.Process(path, meta, platform);
-            }
-
-            return [];
-        }
+    public class DishResult
+    {
+        public bool IsSuccess { get; set; }
+        public AssetsDatabaseInfo DataInfo { get; set; }
     }
 }

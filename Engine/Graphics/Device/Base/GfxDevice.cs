@@ -23,8 +23,7 @@ namespace Engine.Graphics
         internal abstract GfxResource CreateVertexBuffer(VertexDataDescriptor desc);
         internal abstract GfxResource CreateRenderTarget(RenderTargetDescriptor desc);
 
-        internal abstract void BlitRenderTargetTo(GfxResource source, GfxResource target, bool color = true, bool depth = true);
-        internal abstract void UpdateGeometry(GfxResource resource, GeometryDescriptor desc);
+        internal abstract void BlitRenderTargetTo(GfxResource source, GfxResource target, bool color = true, bool depth = true, bool linear = false);
         internal abstract void SetViewport(vec4 viewport);
 
         internal abstract void UpdateResouce(GfxResource resource, IGfxResourceDescriptor desc);
@@ -32,8 +31,9 @@ namespace Engine.Graphics
         internal abstract void Present();
 
         internal abstract void Draw(DrawCallData data);
+        internal abstract void Draw(Action draw, GfxResource renderTarget);
 
-        internal abstract byte[] ReadRenderTargetColors(GfxResource nativeResource);
+        internal abstract byte[] ReadRenderTargetColors(GfxResource nativeResource, int x, int y, int width, int height);
         internal abstract void DestroyResource(GfxResource resource);
         internal abstract bool IsResourceValid(GfxResource nativeResource);
     }

@@ -1,6 +1,7 @@
 ﻿using Engine.Graphics;
 using Engine.Utils;
 using GlmNet;
+using SharedTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,13 +21,12 @@ namespace Engine.Rendering
 
         private const int IndicesPerQuad = 6;
         private const int VerticesPerQuad = 4;
-        private Dictionary<BucketKey, List<Renderer2D>> _renderBuckets;
+        private Dictionary<BucketKey, List<RendererData2D>> _renderBuckets;
         private BatchesPool _batchesPool;
-        private Material _pinkMaterial;
+        private static Material _pinkMaterial;
         private readonly Vertex[] _quadVertexArray = new Vertex[4];
-        private readonly List<List<Renderer2D>> _sortedBuckets = new();
-        private static readonly Comparison<List<Renderer2D>> _bucketSorter =
-            (a, b) => a[0].SortOrder.CompareTo(b[0].SortOrder);
+        private readonly List<List<RendererData2D>> _sortedBuckets = new();
+        private static readonly Comparison<List<RendererData2D>> _bucketSorter = (a, b) => a[0].SortOrder.CompareTo(b[0].SortOrder);
 
         private struct BucketKey : IEquatable<BucketKey>
         {
@@ -59,10 +59,14 @@ namespace Engine.Rendering
         public Batcher2D(int maxQuadsPerBatch)
         {
             MaxQuadsPerBatch = maxQuadsPerBatch;
-            _renderBuckets = new Dictionary<BucketKey, List<Renderer2D>>();
+            _renderBuckets = new Dictionary<BucketKey, List<RendererData2D>>();
 
-            _pinkMaterial = new Material(InternalShaderUtils.GetShaderPink());
-            _pinkMaterial.Name = "Pink Material";
+            if(_pinkMaterial == null)
+            {
+                _pinkMaterial = new Material(InternalShaderUtils.GetShaderPink());
+                _pinkMaterial.Name = "Pink Material";
+            }
+            
             Initialize();
         }
 
@@ -72,16 +76,14 @@ namespace Engine.Rendering
             _batchesPool = new BatchesPool(_sharedIndexBuffer);
         }
 
-
-        internal List<Batch2D> GetBatches<T>(List<T> renderers) where T : Renderer2D
+        internal List<Batch2D> GetBatches<T>(IReadOnlyCollection<T> renderers) where T : RendererData2D
         {
             // TODO: Do frustum culling
-
             _renderBuckets.Clear();
 
             foreach (var renderer in renderers)
             {
-                if (!renderer.IsEnabled || !renderer.Actor.IsActiveInHierarchy)
+                if (!renderer.IsEnabled)
                 {
                     // TODO: notify if need to be removed from a batch
                     continue;
@@ -91,7 +93,7 @@ namespace Engine.Rendering
 
                 if (!_renderBuckets.ContainsKey(key))
                 {
-                    _renderBuckets.Add(key, new List<Renderer2D>());
+                    _renderBuckets.Add(key, new List<RendererData2D>());
                 }
 
                 _renderBuckets[key].Add(renderer);
@@ -119,23 +121,24 @@ namespace Engine.Rendering
                     }
 
                     var texture = renderer.Sprite?.Texture ?? Texture2D.White;
-                    var material = renderer.Material ?? _pinkMaterial;
+                    var material = renderer.Material;
 
-                    if(material != null && !material.Shader.NativeShader.IsInitialized)
+                    if (!material || material.Shader == null || material.Shader.HasErrors /*|| !material.Shader.NativeShader.IsInitialized*/)
                     {
                         material = _pinkMaterial;
                     }
 
                     if (renderer.Mesh == null)
                     {
-                        var chunk = renderer.Sprite?.GetAtlasChunk() ?? AtlasChunk.DefaultChunk;
-                        var worldMatrix = renderer.Transform.GetRenderingWorldMatrix();
+                        var chunk = renderer.Sprite?.GetAtlasCell() ?? TextureAtlasCell.DefaultChunk;
 
                         float ppu = texture.PixelPerUnit;
                         var width = (float)chunk.Width / ppu;
                         var height = (float)chunk.Height / ppu;
 
                         var currentBatch = _batchesPool.Get(renderer, VerticesPerQuad, MaxBatchVertexSize, texture, material);
+
+                        var worldMatrix = renderer.Transform.GetRenderingWorldMatrix();
 
                         QuadVertices quad = default;
                         GraphicsHelper.CreateQuad(ref quad, chunk.Uvs, width, height, chunk.Pivot, renderer.Color, worldMatrix);
@@ -154,7 +157,16 @@ namespace Engine.Rendering
 
                         if (!_batchesPool.GetCurrentBatch(renderer, texture, out var currentBatch))
                         {
-                            var indices = GraphicsHelper.GetQuadIndices(vertexCount / VerticesPerQuad);
+                            var indices = default(uint[]);
+
+                            if (renderer.Mesh.Indices == null)
+                            {
+                                indices = GraphicsHelper.GetQuadIndices(vertexCount / VerticesPerQuad);
+                            }
+                            else
+                            {
+                                indices = renderer.Mesh.Indices;
+                            }
                             currentBatch = _batchesPool.Get(renderer, renderer.Mesh.Vertices.Count, vertexCount, texture, material, indices);
                         }
 

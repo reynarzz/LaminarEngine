@@ -15,8 +15,15 @@ namespace Engine
         public const float PI = 3.14159265358979323846f;
 
         public const float Tau = 6.283185307179586476925f;
+        public const float Epsilon = 1e-6f;
+
         public static float Clamp(float value, float min, float max)
            => value < min ? min : (value > max ? max : value);
+
+        public static int Clamp(int value, int min, int max)
+        {
+            return value < min ? min : (value > max ? max : value);
+        }
 
         public static float Clamp01(float v) => Clamp(v, 0f, 1f);
 
@@ -46,6 +53,15 @@ namespace Engine
             result.Normalize();
 
             return result;
+        }
+        public static bool IsAlmostZero(float x)
+        {
+            return MathF.Abs(x) < Epsilon;
+        }
+
+        public static bool CompareFloats(float f1, float f2, float epsilon = Epsilon)
+        {
+            return MathF.Abs(f1 - f2) <= epsilon;
         }
 
         public static float PingPong(float t, float length = 1f)
@@ -126,7 +142,42 @@ namespace Engine
         {
             return new vec3(MathF.Floor(v.x), MathF.Floor(v.y), MathF.Floor(v.z));
         }
+        public static float Floor(float v)
+        {
+            return MathF.Floor(v);
+        }
 
+        public static int FloorToInt(float v)
+        {
+            return (int)MathF.Floor(v);
+        }
+        public static ivec2 FloorToInt(vec2 v)
+        {
+            return new ivec2((int)MathF.Floor(v.x), (int)MathF.Floor(v.y));
+        }
+
+        public static int RoundToInt(float v)
+        {
+            return (int)MathF.Round(v);
+        }
+        public static ivec2 RoundToInt(vec2 v)
+        {
+            return new ivec2((int)MathF.Round(v.x), (int)MathF.Round(v.y));
+        }
+
+        public static int CeilToInt(float v)
+        {
+            return (int)MathF.Ceiling(v);
+        }
+        public static ivec2 CeilToInt(vec2 v)
+        {
+            return new ivec2((int)MathF.Ceiling(v.x), (int)MathF.Ceiling(v.y));
+        }
+
+        public static int RoundToInt(double v)
+        {
+            return (int)Math.Round(v);
+        }
         public static vec3 Ceil(vec3 v)
         {
             return new vec3(MathF.Ceiling(v.x), MathF.Ceiling(v.y), MathF.Ceiling(v.z));
@@ -252,7 +303,7 @@ namespace Engine
         }
 
 
-        
+
         public static mat4 QuatToMat4(quat q)
         {
             float x = q.x, y = q.y, z = q.z, w = q.w;
@@ -368,23 +419,31 @@ namespace Engine
             return Normalize(result);
         }
 
-        private static quat Normalize(quat value)
+        public static quat Normalize(quat value)
         {
             float length = MathF.Sqrt(value.x * value.x + value.y * value.y + value.z * value.z + value.w * value.w);
             return length > 0f ? value / length : value;
         }
 
-        internal static vec3 Min(vec3 a, vec3 b)
+        public static vec3 Min(vec3 a, vec3 b)
         {
             return new vec3(MathF.Min(a.x, b.x), MathF.Min(a.y, b.y), MathF.Min(a.z, b.z));
         }
 
-        internal static vec3 Max(vec3 a, vec3 b)
+        public static vec3 Max(vec3 a, vec3 b)
         {
             return new vec3(MathF.Max(a.x, b.x), MathF.Max(a.y, b.y), MathF.Max(a.z, b.z));
         }
 
-        private static float SmoothNoise1D(float x)
+        public static float Max(float a, float b)
+        {
+            return MathF.Max(a, b);
+        }
+        public static float Min(float a, float b)
+        {
+            return MathF.Min(a, b);
+        }
+        public static float SmoothNoise1D(float x)
         {
             int i = (int)MathF.Floor(x);
             float f = x - i;
@@ -444,6 +503,17 @@ namespace Engine
 
             return sum / norm; // stays in [-1,1]
         }
-
+        public static int GetDecimalPlaces(float value)
+        {
+            return GetDecimalPlaces((decimal)value);
+        }
+        public static int GetDecimalPlaces(double value)
+        {
+            return GetDecimalPlaces((decimal)value);
+        }
+        public static int GetDecimalPlaces(decimal value)
+        {
+            return (decimal.GetBits(value)[3] >> 16) & 0xFF;
+        }
     }
 }

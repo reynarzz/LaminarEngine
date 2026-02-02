@@ -8,27 +8,24 @@ namespace Engine
 {
     public class AnimatorParameters
     {
-        private readonly Dictionary<string, float> _floats = new();
-        private readonly Dictionary<string, int> _ints = new();
-        private readonly Dictionary<string, bool> _bools = new();
-        private readonly HashSet<string> _triggers = new();
+        [SerializedField] private Dictionary<string, float> _floats = new();
+        [SerializedField] private Dictionary<string, int> _ints = new();
+        [SerializedField] private Dictionary<string, bool> _bools = new();
+        [SerializedField] private Dictionary<string, bool> _triggers = new();
 
         public void SetInt(string name, int value) { _ints[name] = value; }
-        public int GetInt(string name) => _ints.TryGetValue(name, out var v) ? v : 0;
-
-
+        public int GetInt(string name) { return _ints.TryGetValue(name, out var v) ? v : 0; }
         public void SetFloat(string name, float value) { _floats[name] = value; }
-        public float GetFloat(string name) => _floats.TryGetValue(name, out var v) ? v : 0f;
-        
+        public float GetFloat(string name) { return _floats.TryGetValue(name, out var v) ? v : 0f; }
         public void SetBool(string name, bool value) { _bools[name] = value; }
         public bool GetBool(string name) { return _bools.TryGetValue(name, out var v) && v; }
+        public void SetTrigger(string name) { _triggers[name] = true; }
 
-        public void SetTrigger(string name) { _triggers.Add(name); }
         public bool GetTrigger(string name)
         {
             if (HasTrigger(name))
             {
-                _triggers.Remove(name);
+                _triggers[name] = false;
                 return true;
             }
             return false;
@@ -36,7 +33,22 @@ namespace Engine
 
         public bool HasTrigger(string name)
         {
-            return _triggers.Contains(name);
+            if (_triggers.TryGetValue(name, out var val))
+            {
+                return val;
+            }
+            return false;
+        }
+
+        internal AnimatorParameters Clone()
+        {
+            return new AnimatorParameters()
+            {
+                _bools = new Dictionary<string, bool>(_bools),
+                _floats = new Dictionary<string, float>(_floats),
+                _ints = new Dictionary<string, int>(_ints),
+                _triggers = new Dictionary<string, bool>(_triggers)
+            };
         }
     }
 }

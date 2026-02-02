@@ -168,7 +168,11 @@ namespace Engine.Graphics.OpenGL
             _ => "unknown"
         };
 
-        internal override void UpdateResource(ShaderDescriptor descriptor) { }
+        internal override void UpdateResource(ShaderDescriptor descriptor) 
+        {
+            Console.WriteLine("GL shader resource update");
+            CreateResource(descriptor);
+        }
 
         internal void SetUniform(string name, int value)
         {

@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    public class AnimationClip : EObject
+    public class AnimationClip : AssetResourceBase
     {
+        [ShowFieldNoSerialize]
         public float Duration
         {
             get
@@ -34,20 +35,28 @@ namespace Engine
             }
         }
 
-        public bool Loop { get; set; }
-        private Dictionary<string, AnimationCurveBase<float>>  _floatCurves  = new();
-        private Dictionary<string, AnimationCurveBase<vec2>>   _vec2Curves   = new();
-        private Dictionary<string, AnimationCurveBase<vec3>>   _vec3Curves   = new();
-        private Dictionary<string, AnimationCurveBase<quat>>   _quatCurves   = new();
-        private Dictionary<string, AnimationCurveBase<Color>>  _colorCurves  = new();
-        private Dictionary<string, AnimationCurveBase<Sprite>> _spriteCurves = new();
-        private Dictionary<string, AnimationCurveBase> _curves = new();
+        [SerializedField] public bool Loop { get; set; }
+        [SerializedField] private Dictionary<string, AnimationCurveBase<float>> _floatCurves = new();
+        [SerializedField] private Dictionary<string, AnimationCurveBase<vec2>> _vec2Curves = new();
+        [SerializedField] private Dictionary<string, AnimationCurveBase<vec3>> _vec3Curves = new();
+        [SerializedField] private Dictionary<string, AnimationCurveBase<quat>> _quatCurves = new();
+        [SerializedField] private Dictionary<string, AnimationCurveBase<Color>> _colorCurves = new();
+        [SerializedField] private Dictionary<string, AnimationCurveBase<Sprite>> _spriteCurves = new();
+        //[SerializedField] private Dictionary<string, AnimationCurveBase> _curves = new();
 
-        private EventCurve _eventCurve = new();
+        [SerializedField] private EventCurve _eventCurve = new();
 
-       
+        // The serializer needs this.
+        private AnimationClip() : base(string.Empty, Guid.NewGuid()) // TODO: animation clip
+        {
+        }
 
-        public AnimationClip(string name, bool loop = true)
+        internal AnimationClip(string path, Guid guid) : base(path, guid)
+        {
+            
+        }
+
+        public AnimationClip(string name, bool loop = true) : base(string.Empty, Guid.NewGuid()) // TODO: animation clip
         {
             Name = name;
             Loop = loop;
@@ -99,8 +108,8 @@ namespace Engine
 
         internal void Evaluate(string property, float time, ref CurveEvaluatedResult result)
         {
-           // TODO: 
-           // result = _curves.TryGetValue(property, out var c) ? c.Evaluate(time) : default;
+            // TODO: 
+            // result = _curves.TryGetValue(property, out var c) ? c.Evaluate(time) : default;
         }
 
         internal float EvaluateFloat(string property, float time)
@@ -195,5 +204,9 @@ namespace Engine
             return HasProperty(property, _colorCurves);
         }
 
+        internal override void UpdateResource(object data, string path, Guid guid)
+        {
+            //throw new NotImplementedException();
+        }
     }
 }

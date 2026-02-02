@@ -23,19 +23,19 @@ namespace Engine.Layers
         private float _currentRetryTime = 0;
         private static readonly AudioFormat _defaultFormat = AudioFormat.DvdHq;
 
-        public override void Initialize()
+        public override Task InitializeAsync()
         {
-          
+            _engine = new MiniAudioEngine();
+            var defaultDevice = _engine.PlaybackDevices?.FirstOrDefault(x => x.IsDefault) ?? default;
+            
+            if (!defaultDevice.IsDefault)
+            {
+                Debug.Warn($"No default playback device found. Using first available, Total: {_engine.PlaybackDevices.Length}");
+                defaultDevice = _engine.PlaybackDevices.FirstOrDefault();
+            }
+
             try
             {
-                _engine = new MiniAudioEngine();
-                var defaultDevice = _engine.PlaybackDevices?.FirstOrDefault(x => x.IsDefault) ?? default;
-            
-                if (!defaultDevice.IsDefault)
-                {
-                    Debug.Warn($"No default playback device found. Using first available, Total: {_engine.PlaybackDevices.Length}");
-                }
-
                 _currentDevice = _engine.InitializePlaybackDevice(defaultDevice, _defaultFormat);
                 _currentDevice.Start();
             }
@@ -46,11 +46,13 @@ namespace Engine.Layers
 
             var mixer = new Mixer(_engine, _defaultFormat, true);
             _masterMixer = new AudioMixer("Master", mixer);
-     
+
             // Effects:
             // ParametricEqualizer 
+
+            return Task.CompletedTask;
         }
-            
+
         internal override void UpdateLayer()
         {
             base.UpdateLayer();
@@ -103,9 +105,13 @@ namespace Engine.Layers
             device = null;
             try
             {
-                if (!_currentDevice.IsDisposed && _currentDevice.IsRunning && _currentDevice.MasterMixer != null)
+                if (_currentDevice != null && !_currentDevice.IsDisposed && _currentDevice.IsRunning && _currentDevice.MasterMixer != null)
                 {
                     device = _currentDevice;
+                }
+                else
+                {
+                    return false;
                 }
             }
             catch

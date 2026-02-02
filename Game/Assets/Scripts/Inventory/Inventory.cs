@@ -223,6 +223,25 @@ namespace Game
             return default;
         }
 
+        public bool Contains(ItemId item, int count)
+        {
+            for (var i = 0; i < _slots.Length; i++)
+            {
+                ref var slot = ref _slots[i];
+                if (!slot.IsEmpty() && slot.item.Features.Id == item)
+                {
+                    count -= slot.Amount;
+
+                    if (count <= 0)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
         public void DropAll(vec2 position)
         {
             if (_slots != null)

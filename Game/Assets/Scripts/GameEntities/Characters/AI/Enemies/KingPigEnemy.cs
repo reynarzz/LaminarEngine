@@ -45,9 +45,9 @@ namespace Game
             InitAnimationStates(states);
         }
 
-        public override bool HitDamage(GameEntity who, int amount)
+        public override bool HitDamage(vec3 aggressorPos, int amount)
         {
-            var isHit = base.HitDamage(who, amount);
+            var isHit = base.HitDamage(aggressorPos, amount);
 
             if(isHit)
             _stateMachine.ChangeState<ChaseState<KingPigEnemy>>();
@@ -56,7 +56,7 @@ namespace Game
         }
         protected override void OnUpdate()
         {
-            _stateMachine.OnUpdate();
+            _stateMachine?.OnUpdate();
         }
     }
 }

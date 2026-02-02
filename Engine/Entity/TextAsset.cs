@@ -14,5 +14,10 @@ namespace Engine
         {
             Text = text;
         }
+
+        internal override void UpdateResource(object data, string path, Guid guid)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

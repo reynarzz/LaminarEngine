@@ -8,8 +8,11 @@ namespace Engine
 {
     public abstract class TransitionCondition 
     {
-        internal string Property { get; }
+        [SerializedField] internal string Property { get; set; }
 
+        protected TransitionCondition()
+        {
+        }
         protected TransitionCondition(string property)
         {
             Property = property;

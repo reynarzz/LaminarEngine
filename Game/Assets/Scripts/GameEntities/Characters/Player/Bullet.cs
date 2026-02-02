@@ -104,7 +104,7 @@ namespace Game
                     {
                         if (character.IsCharacterAlive())
                         {
-                            if(character.HitDamage(this, 1))
+                            if(character.HitDamage(Transform.WorldPosition, 1))
                             {
                                 characterWasHit = true;
                             }
@@ -141,7 +141,7 @@ namespace Game
 
             _particleSystem.OnEmitFinished += () =>
             {
-                Actor.Destroy(_particleSystem);
+                Actor.Destroy(_particleSystem.Actor);
             };
 
 

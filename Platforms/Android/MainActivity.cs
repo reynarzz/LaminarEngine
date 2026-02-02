@@ -10,7 +10,6 @@ using System.Text;
 
 namespace Android
 {
-    // dotnet build -p:BuildAndroid=true -c Release
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true, 
         ScreenOrientation = ScreenOrientation.Landscape, 
         ConfigurationChanges = ConfigChanges.Orientation 
@@ -22,6 +21,7 @@ namespace Android
     public partial class MainActivity : Activity
     {
         private GLView? _glView;
+
         protected override void OnCreate(Bundle? savedInstanceState)
         {
             base.OnCreate(savedInstanceState);

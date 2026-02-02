@@ -44,7 +44,7 @@ namespace GameCooker
                     Platform = (CookingPlatform)int.Parse(args[3]),
                     FileOptions = new CookFileOptions()
                     {
-                        CompressAllFiles = true,
+                        CompressAllFiles = false,
                         EncryptAllFiles = false,
                         EncryptFilesPath = false
                     },

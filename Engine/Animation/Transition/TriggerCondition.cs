@@ -8,10 +8,11 @@ namespace Engine
 {
     public class TriggerCondition : TransitionCondition
     {
-        public TriggerCondition(string property) : base(property)
+        // Deserializer needs this
+        public TriggerCondition() : base(null)
         {
         }
-
+        public TriggerCondition(string property) : base(property) { }
         public override bool IsCondition(AnimatorParameters parameters)
         {
             return parameters.GetTrigger(Property);

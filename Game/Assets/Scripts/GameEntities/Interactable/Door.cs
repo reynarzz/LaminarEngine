@@ -66,6 +66,8 @@ namespace Game
             {
                 SpriteRenderer.Sprite = animator.GetSprite("Sprite");
             };
+
+            LockedByItemPos = new vec2(0, 2.5f);
         }
 
         public override bool TryInteract(Player player)

@@ -15,6 +15,29 @@ namespace Engine
         public Vertex v1;
         public Vertex v2;
         public Vertex v3;
+        public const int Count = 4;
+        public Vertex this[int index]
+        {
+            get
+            {
+                switch (index)
+                {
+                    case 0:
+                        return v0;
+                        case 1:
+                            return v1;
+                        case 2:
+                            return v2;
+                        case 3:
+                            return v3;
+                    default:
+                        {
+                            Debug.Error($"Index out of range: {index}");
+                            return default;
+                        }
+                }
+            }
+        }
     }
 
     internal struct QuadVertices<T> where T : unmanaged, IVertex<T>
@@ -47,6 +70,7 @@ namespace Engine
         public uint Color;
         private int _textureIndex;
         public int VertexIndex;
+        public vec3 WorldCenter;
 
         public int TextureIndex { get => _textureIndex; set => _textureIndex = value; }
 
@@ -57,6 +81,7 @@ namespace Engine
             new() { Count = 1, Normalized = false, Type = GfxValueType.Uint,  Stride = sizeof(Vertex), Offset = sizeof(uint)  * 5 },  // Color
             new() { Count = 1, Normalized = false, Type = GfxValueType.Int,   Stride = sizeof(Vertex), Offset = sizeof(int)   * 6 },  // TextureIndex
             new() { Count = 1, Normalized = false, Type = GfxValueType.Int,   Stride = sizeof(Vertex), Offset = sizeof(int)   * 7 },  // VertexIndex
+            new() { Count = 3, Normalized = false, Type = GfxValueType.Float,   Stride = sizeof(Vertex), Offset = sizeof(int)   * 8 },  // VertexIndex
         ];
 
         static VertexAtrib[] IVertex<Vertex>.GetVertexAttributes()
@@ -65,11 +90,41 @@ namespace Engine
         }
     }
 
+    //public struct Vertex : IVertex2D<Vertex>
+    //{
+    //    public vec3 Position;
+    //    public vec2 UV;
+    //    public uint Color;
+    //    private int _textureIndex;
+    //    public int VertexIndex;
+    //    public float Rotation;
+    //    public vec2 Scale;
+
+    //    public int TextureIndex { get => _textureIndex; set => _textureIndex = value; }
+
+    //    private unsafe static VertexAtrib[] _attribs =
+    //    [
+    //        new() { Count = 3, Normalized = false, Type = GfxValueType.Float, Stride = sizeof(Vertex), Offset = 0 },                  // Position
+    //        new() { Count = 2, Normalized = false, Type = GfxValueType.Float, Stride = sizeof(Vertex), Offset = sizeof(float) * 3 },  // UV
+    //        new() { Count = 1, Normalized = false, Type = GfxValueType.Uint,  Stride = sizeof(Vertex), Offset = sizeof(uint)  * 5 },  // Color
+    //        new() { Count = 1, Normalized = false, Type = GfxValueType.Int,   Stride = sizeof(Vertex), Offset = sizeof(int)   * 6 },  // TextureIndex
+    //        new() { Count = 1, Normalized = false, Type = GfxValueType.Int,   Stride = sizeof(Vertex), Offset = sizeof(int)   * 7 },  // VertexIndex
+
+    //        new() { Count = 1, Normalized = false, Type = GfxValueType.Float,   Stride = sizeof(Vertex), Offset = sizeof(float) * 8 },  
+    //        new() { Count = 2, Normalized = false, Type = GfxValueType.Float,   Stride = sizeof(Vertex), Offset = sizeof(float) * 9 },  
+    //    ];
+
+    //    static VertexAtrib[] IVertex<Vertex>.GetVertexAttributes()
+    //    {
+    //        return _attribs;
+    //    }
+    //}
+
 
     public class Mesh : EObject
     {
         internal bool IsDirty { get; private set; }
-        public List<Vertex> Vertices { get; }
+        public List<Vertex> Vertices { get; set; }
         public uint[] Indices { get; set; }
         public int IndicesToDrawCount { get; set; }
 

@@ -20,7 +20,6 @@ namespace Game
             if (!_player)
             {
                 _player = new Actor("Player").AddComponent<Player>();
-                _player.Actor.Layer = LayerMask.NameToLayer(GameConsts.PLAYER);
 
                 // TODO: get player's config values from a config .csv file.
 
@@ -44,6 +43,7 @@ namespace Game
                     StartLookDir = lookToRight ? 1 : -1,
                     HitRecoilTime = 0.5f,
                     HitRecoilStrengthScaling = 3.5f,
+                    PushAwayFromWalls = true,
                     Ground = new GroundDetectionOptions()
                     {
                         Enabled = true,
@@ -72,6 +72,8 @@ namespace Game
                 _player.Transform.WorldPosition = entityData.WorldPosition;
                 _player.LookAt(lookToRight ? 1 : -1);
             }
+
+            _player.Actor.Layer = LayerMask.NameToLayer(GameConsts.PLAYER);
 
             return _player;
         }

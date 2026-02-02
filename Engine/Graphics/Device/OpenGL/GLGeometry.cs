@@ -12,12 +12,12 @@ using static OpenGL.GL;
 
 namespace Engine.Graphics.OpenGL
 {
-    internal class GLGeometry : GLGfxResource<GeometryDescriptor>
+    internal unsafe class GLGeometry : GLGfxResource<GeometryDescriptor>
     {
         private readonly GLVertexBuffer _vertBuffer;
         private GLIndexBuffer _indexBuffer;
         private GLIndexBuffer _sharedBuffer;
-
+        private static uint _prevVAO;
         public GLGeometry() : base(glGenVertexArray, glDeleteVertexArray, glBindVertexArray)
         {
             _vertBuffer = new GLVertexBuffer();
@@ -25,6 +25,8 @@ namespace Engine.Graphics.OpenGL
 
         protected override bool CreateResource(GeometryDescriptor descriptor)
         {
+            uint prevVAO = _prevVAO;
+            
             Bind();
             if (!_vertBuffer.Create(descriptor.VertexDesc.BufferDesc))
             {
@@ -46,20 +48,20 @@ namespace Engine.Graphics.OpenGL
 
                 _indexBuffer.Bind();
             }
-            else if(descriptor.SharedIndexBuffer != null)
+            else if (descriptor.SharedIndexBuffer != null)
             {
                 (descriptor.SharedIndexBuffer as GLIndexBuffer).Bind();
 
                 _sharedBuffer = descriptor.SharedIndexBuffer as GLIndexBuffer;
             }
-
+           
             _vertBuffer.Bind();
 
             for (uint i = 0; i < descriptor.VertexDesc.Attribs.Length; i++)
             {
                 var attrib = descriptor.VertexDesc.Attribs[(int)i];
 
-                if(attrib.Type == GfxValueType.Int || attrib.Type == GfxValueType.Uint)
+                if (attrib.Type == GfxValueType.Int || attrib.Type == GfxValueType.Uint)
                 {
                     glVertexAttribIPointer(i, attrib.Count, attrib.Type.ToGL(), attrib.Stride, attrib.Offset);
                 }
@@ -71,17 +73,22 @@ namespace Engine.Graphics.OpenGL
                 glEnableVertexAttribArray(i);
             }
 
-          //  Unbind();
+            //  Unbind();
+
+            _prevVAO = prevVAO;
+            glBindVertexArray(_prevVAO);
 
             return true;
         }
 
         internal override void UpdateResource(GeometryDescriptor descriptor)
         {
+            uint prevVAO = _prevVAO;
+
             Bind();
             _vertBuffer.Update(descriptor.VertexDesc.BufferDesc);
             _vertBuffer.Bind();
-         
+
             if (descriptor.SharedIndexBuffer != null && descriptor.SharedIndexBuffer != _sharedBuffer)
             {
                 Debug.Error("Shared index buffer error");
@@ -96,9 +103,17 @@ namespace Engine.Graphics.OpenGL
                 _indexBuffer.Update(descriptor.IndexDesc);
                 _indexBuffer.Bind();
             }
-          //  Unbind();
+
+            _prevVAO = prevVAO;
+            glBindVertexArray(_prevVAO);
         }
 
+        internal override void Bind()
+        {
+            base.Bind();
+            _prevVAO = Handle;
+
+        }
         protected override void FreeResource()
         {
             _vertBuffer.Dispose();

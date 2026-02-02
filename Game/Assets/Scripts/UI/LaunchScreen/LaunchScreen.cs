@@ -21,7 +21,7 @@ namespace Game
         protected override void OnAwake()
         {
             _camera = new Actor<Camera>("Camera").GetComponent<Camera>();
-            _defaultFont = Assets.Get<FontAsset>("Fonts/windows-bold[1].ttf");
+            _defaultFont = Assets.GetFont("Fonts/windows-bold[1].ttf");
             _camera.BackgroundColor = Color.Black;
 
             PostProcessingStack.Push(new BloomPostProcessing());

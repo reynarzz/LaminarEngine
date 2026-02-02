@@ -20,25 +20,25 @@ namespace Game
             _tilesets = new Dictionary<string, Sprite[]>()
             {
                 // Player atlases
-                { "player_idle",     SliceSprites("KingsAndPigsSprites/01-King Human/Idle (78x58)S.png", 78, 58, playerPivot) },
-                { "player_run",      SliceSprites("KingsAndPigsSprites/01-King Human/Run (78x58)S.png", 78, 58,     playerPivot) },
-                { "player_jump",     SliceSprites("KingsAndPigsSprites/01-King Human/Jump (78x58)S.png", 78, 58,    playerPivot) },
-                { "player_fall",     SliceSprites("KingsAndPigsSprites/01-King Human/Fall (78x58)S.png", 78, 58,    playerPivot) },
-                { "player_hit",      SliceSprites("KingsAndPigsSprites/01-King Human/Hit (78x58).png", 78, 58,      playerPivot) },
-                { "player_dead",     SliceSprites("KingsAndPigsSprites/01-King Human/Dead (78x58).png", 78, 58,     playerPivot) },
-                { "player_attack",   SliceSprites("KingsAndPigsSprites/01-King Human/Attack (78x58).png", 78, 58,   playerPivot) },
-                { "player_door_in",  SliceSprites("KingsAndPigsSprites/01-King Human/Door In (78x58).png", 78, 58,  playerPivot, 2) },
+                { "player_idle",     SliceSprites("KingsAndPigsSprites/01-King Human/Idle (78x58)S.png",   78, 58, playerPivot) },
+                { "player_run",      SliceSprites("KingsAndPigsSprites/01-King Human/Run (78x58)S.png",     78, 58,     playerPivot) },
+                { "player_jump",     SliceSprites("KingsAndPigsSprites/01-King Human/Jump (78x58)S.png",    78, 58,    playerPivot) },
+                { "player_fall",     SliceSprites("KingsAndPigsSprites/01-King Human/Fall (78x58)S.png",    78, 58,    playerPivot) },
+                { "player_hit",      SliceSprites("KingsAndPigsSprites/01-King Human/Hit (78x58).png",      78, 58,      playerPivot) },
+                { "player_dead",     SliceSprites("KingsAndPigsSprites/01-King Human/Dead (78x58).png",     78, 58,     playerPivot) },
+                { "player_attack",   SliceSprites("KingsAndPigsSprites/01-King Human/Attack (78x58).png",   78, 58,   playerPivot) },
+                { "player_door_in",  SliceSprites("KingsAndPigsSprites/01-King Human/Door In (78x58).png",  78, 58,  playerPivot, 2) },
                 { "player_door_out", SliceSprites("KingsAndPigsSprites/01-King Human/Door Out (78x58).png", 78, 58, playerPivot, 1, 4) },
 
                 { "door_opening",    SliceSprites("KingsAndPigsSprites/11-Door/Opening (46x56).png", 46, 56, vec2.Half, 1) },
 
                 // Enemy: King pig
-                { "kingpig_enemy_idle",   SliceSprites("KingsAndPigsSprites/02-King Pig/Idle (38x28).png", 38, 28, new vec2(0.52f, 0.34f)) },
-                { "kingpig_enemy_run",    SliceSprites("KingsAndPigsSprites/02-King Pig/Run (38x28).png", 38, 28, new vec2(0.52f, 0.34f)) },
-                { "kingpig_enemy_jump",   SliceSprites("KingsAndPigsSprites/02-King Pig/Jump (38x28).png", 38, 28, new vec2(0.52f, 0.34f)) },
-                { "kingpig_enemy_fall",   SliceSprites("KingsAndPigsSprites/02-King Pig/Fall (38x28).png", 38, 28, new vec2(0.52f, 0.34f)) },
-                { "kingpig_enemy_hit",    SliceSprites("KingsAndPigsSprites/02-King Pig/Hit (38x28).png", 38, 28, new vec2(0.52f, 0.34f)) },
-                { "kingpig_enemy_dead",   SliceSprites("KingsAndPigsSprites/02-King Pig/Dead (38x28).png", 38, 28, new vec2(0.7f, 0.34f)) },
+                { "kingpig_enemy_idle",   SliceSprites("KingsAndPigsSprites/02-King Pig/Idle (38x28).png",   38, 28, new vec2(0.52f, 0.34f)) },
+                { "kingpig_enemy_run",    SliceSprites("KingsAndPigsSprites/02-King Pig/Run (38x28).png",    38, 28, new vec2(0.52f, 0.34f)) },
+                { "kingpig_enemy_jump",   SliceSprites("KingsAndPigsSprites/02-King Pig/Jump (38x28).png",   38, 28, new vec2(0.52f, 0.34f)) },
+                { "kingpig_enemy_fall",   SliceSprites("KingsAndPigsSprites/02-King Pig/Fall (38x28).png",   38, 28, new vec2(0.52f, 0.34f)) },
+                { "kingpig_enemy_hit",    SliceSprites("KingsAndPigsSprites/02-King Pig/Hit (38x28).png",    38, 28, new vec2(0.52f, 0.34f)) },
+                { "kingpig_enemy_dead",   SliceSprites("KingsAndPigsSprites/02-King Pig/Dead (38x28).png",   38, 28, new vec2(0.7f, 0.34f)) },
                 { "kingpig_enemy_attack", SliceSprites("KingsAndPigsSprites/02-King Pig/Attack (38x28).png", 38, 28, new vec2(0.52f, 0.34f)) },
 
                 // Enemy: Pig
@@ -51,7 +51,7 @@ namespace Game
                 { "pig_enemy_attack", SliceSprites("KingsAndPigsSprites/03-Pig/Attack (34x28).png", 34, 28, new vec2(0.58f, 0.34f)) },
 
                 // Full tilesets
-                { "stark_full_tileset", SliceSprites("starkTileset.png", 16, 16, new vec2(0.5f, 0.35f)) },
+                { "stark_full_tileset", SliceSprites("starkTileset.png", 16, 16, new vec2(0.5f, 0.5f)) },
                 { "sunny_land_tileset", SliceSprites("Tilemap/SunnyLand_by_Ansimuz-extended.png", 16, 16, vec2.Half) },
                 { "raven_ui_tileset", SliceSprites("RavenUI/RavenFantasy16x16.png", 16, 16, vec2.Half) },
                 { "keyboard", SliceSprites("Keyboard Letters and Symbols.png", 16, 16, vec2.Half) },
@@ -93,12 +93,21 @@ namespace Game
                 { ItemId.big_potion.ToString(),  _tilesets["raven_ui_tileset"][271] },
                 { ItemId.normal_potion.ToString(),  _tilesets["raven_ui_tileset"][266] },
                 { ItemId.small_potion.ToString(),  _tilesets["raven_ui_tileset"][264] },
-                { "e_interactable", new Sprite(Assets.GetTexture("eInteract.png")) },
-                { "e_interactable2", new Sprite(Assets.GetTexture("eInteract2.png")) },
-                { "e_interactable3", new Sprite(Assets.GetTexture("eInteract3.png")) },
-                { "inventory_slot", new Sprite(Assets.GetTexture("InventorySlot.png")) },
-                { "outlineCircle", new Sprite(Assets.GetTexture("outlineCircle.png")) },
+                { "e_interactable", GetSpriteAsset("eInteract.png") },
+                { "e_interactable2",GetSpriteAsset("eInteract2.png") },
+                { "e_interactable3",GetSpriteAsset("eInteract3.png") },
+                { "inventory_slot", GetSpriteAsset("InventorySlot.png") },
+                { "outlineCircle", GetSpriteAsset("outlineCircle.png") },
+                { "portal_frame", GetSpriteAsset("portal_frame.png") },
             };
+        }
+
+        private static Sprite GetSpriteAsset(string name)
+        {
+            var texture = Assets.GetTexture(name);
+            var atlas = Assets.GetSpriteAtlas(texture.Path);
+            var sprite = atlas.GetSprite(0);
+            return sprite;
         }
 
         public static Sprite[] GetAtlas(string atlasId)
@@ -123,11 +132,38 @@ namespace Game
 
         private static Sprite[] TakeSprites(Sprite[] tileset, int startIndex, int length = int.MaxValue)
         {
-            return TextureAtlasUtils.GetSprites(tileset[0].Texture, startIndex, length);
+            return GetSprites(tileset[0].Texture, startIndex, length);
+        }
+
+        private static Sprite[] GetSprites(Texture2D texture, int startIndex, int length = int.MaxValue)
+        {
+            var atlas = Assets.GetSpriteAtlas(texture.Path);
+            length = int.Min(atlas.SpriteCount - startIndex, length);
+
+            var sprites = new Sprite[length];
+
+            for (int i = 0; i < sprites.Length; ++i)
+            {
+                sprites[i] = atlas.GetSprite(i + startIndex);
+            }
+
+            return sprites;
         }
         private static Sprite[] SliceSprites(string name, int width, int height, vec2 pivot, int startIndex = 0, int length = int.MaxValue)
         {
-            return TextureAtlasUtils.SliceSprites(Assets.GetTexture(name), width, height, pivot, startIndex, length);
+            var spriteAtlas = Assets.GetSpriteAtlas(name);
+
+            if (length == int.MaxValue)
+            {
+                length = spriteAtlas.SpriteCount - startIndex;
+            }
+            var sprites = new Sprite[length];
+
+            for (int i = 0; i < length; i++)
+            {
+                sprites[i] = spriteAtlas.GetSprite(i + startIndex);
+            }
+            return sprites;
         }
     }
 }

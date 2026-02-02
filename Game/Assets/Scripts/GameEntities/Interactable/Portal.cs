@@ -21,7 +21,10 @@ namespace Game
             SpriteRenderer.IsEnabled = false;
             BoxCollider.IsEnabled = false;
 
-            _circle = AddComponent<CircleCollider2D>();
+            _circle = GetComponent<CircleCollider2D>();
+
+            if(_circle == null)
+                _circle = AddComponent<CircleCollider2D>();
             _circle.IsTrigger = true;
             InteractableRenderer.SortOrder = 15;
             // InteractableRenderer.Transform.LocalPosition += vec3.Up * 4;
@@ -29,13 +32,17 @@ namespace Game
             // TODO: move this to an audio library class.
             if (_clip == null)
             {
-                _clip = Assets.Get<AudioClip>("Audio/RetroSounds/portal.wav");
+                _clip = Assets.GetAudioClip("Audio/RetroSounds/portal.wav");
             }
         }
 
         public override void Init(PortalData data)
         {
             base.Init(data);
+            if (LockedByRenderer)
+            {
+                LockedByRenderer.SortOrder = 15;
+            }
 
             var portal = new Actor<Rotate>("PortalSprite").AddComponent<SpriteRenderer>();
             _renderer = portal.GetComponent<SpriteRenderer>();
@@ -82,6 +89,9 @@ namespace Game
 
         protected override void OnPlayerInteractZone(bool enter, Player player)
         {
+            if (Data == null)
+                return;
+
             if (!Data.IsArriveOnly)
             {
                 base.OnPlayerInteractZone(enter, player);

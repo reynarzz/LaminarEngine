@@ -10,13 +10,19 @@ namespace Engine.Layers
         private float _timePast;
         private float _unscaledTimePast;
         private const float _timeWrapLength = 10;
-        public override void Initialize()
+        private float _second;
+        private int _frames;
+        public override Task InitializeAsync()
         {
             _stopwatch = new Stopwatch();
             _stopwatch.Start();
             _lastFrameTime = 0f;
             _timePast = 0;
             _unscaledTimePast = 0;
+            Restart();
+            IsInitialized = true;
+
+            return Task.CompletedTask;
         }
 
         internal override void UpdateLayer()
@@ -45,12 +51,28 @@ namespace Engine.Layers
             Time.UnscaledTimeWrap = Mathf.Wrap(_unscaledTimePast, _timeWrapLength);
             Time.TimeCurrentWrap = Mathf.Wrap(_timePast, _timeWrapLength);
 
-            Time.FPS = Time.DeltaTime > 0f ? 1f / Time.DeltaTime : 0f;
+            //Time.FPS = Time.UnscaledDeltaTime > 0f ? 1f / Time.UnscaledDeltaTime : 0f;
+            if((_second += Time.UnscaledDeltaTime) >= 1.0f)
+            {
+                Time.FPS = _frames;
+                _second = 0;
+                _frames = 0;
+            }
+            else
+            {
+                _frames++;
+            }
         }
 
+
+        private void Restart()
+        {
+            Time.TimeScale = 1;
+
+        }
         public override void Close()
         {
-            _stopwatch.Stop();
+            _stopwatch?.Stop();
         }
     }
 }

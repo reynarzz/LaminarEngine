@@ -15,7 +15,6 @@
 	<TargetSdkVersion>34</TargetSdkVersion>
 	<CompileSdkVersion>34</CompileSdkVersion>
 	<UseLatestAndroidPlatformSdk>true</UseLatestAndroidPlatformSdk>
-	<PublishPlatform>android</PublishPlatform>
 	<GameDataOutDir>$(MSBuildProjectDirectory)/Assets/</GameDataOutDir>
 	  
 	  <!--
@@ -33,7 +32,6 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\Engine\Engine.csproj" />
         <ProjectReference Include="..\..\Game\Game.csproj" />
-		<Folder Include="Assets\" />
   </ItemGroup>
 
 	<ItemGroup>
@@ -41,23 +39,17 @@
 		<PackageReference Include="Xamarin.GooglePlayServices.Base" Version="118.9.0" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Assets\" />
+	</ItemGroup>
+
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
-		<GameCookerBeforeBuildStage>Compile</GameCookerBeforeBuildStage>
+		<AddAssetsFolder>false</AddAssetsFolder>
 	</PropertyGroup>
 
-	<Target Name="AddAssets" AfterTargets="$(GameCookerBeforeBuildStage)">
+	<Target Name="AddAssets" AfterTargets="$(GameCookerBeforeBuildStage)" Condition="'$(AddAssetsFolder)' == 'true'">
 		<ItemGroup>
 			<AndroidAsset Include="Assets\**\*.*" />
 		</ItemGroup>
 	</Target>
-
-	<PropertyGroup>
-		<ProjectRoot>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..'))</ProjectRoot>
-		<ProjectRoot>$([MSBuild]::EnsureTrailingSlash('$(ProjectRoot)'))</ProjectRoot>
-	</PropertyGroup>
-
-
-	<Import Project="$(ProjectRoot)Configs/GameCooker.targets"/>
-	<Import Project="$(ProjectRoot)Configs/Android.publish.platforms.targets"/>
-	
 </Project>

@@ -3,7 +3,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using Hebron.Runtime;
 
-namespace StbImageSharp
+namespace StbImageSharp_Internal
 {
 #if !STBSHARP_INTERNAL
 	public

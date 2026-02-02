@@ -21,7 +21,6 @@ namespace Game
             PostProcessingStack.Push(_fadePostProcessing);
             _fadePostProcessing.Color = Color.Black;
              _fadePostProcessing.Value = 1;
-            FadeOut(1);
             _instance = this;
         }
 
@@ -46,6 +45,8 @@ namespace Game
 
                 yield return null;
             }
+
+            _fadePostProcessing.Value = target;
 
             onComplete?.Invoke();
         }

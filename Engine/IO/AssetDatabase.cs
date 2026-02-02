@@ -13,31 +13,55 @@ namespace Engine.IO
     {
         private readonly Dictionary<AssetType, AssetBuilderBase> _assetbuilder;
         private readonly AssetDatabaseCache _databaseCache;
-        private BiDictionary<Guid, string> _guidPathDict;
+        private readonly BiDictionary<Guid, string> _guidPathDict = new();
+        private readonly Dictionary<AssetType, OrderedDictionary<Guid, AssetInfo>> _assetsGuidByTypes = new();
+
         private DiskBase _disk;
-        private DiskBase Disk => _disk;
-        public AssetDatabase()
+        internal DiskBase Disk => _disk;
+        public AssetDatabase(Dictionary<AssetType, AssetBuilderBase> assetBuilder)
         {
-            _assetbuilder = new()
-            {
-                { AssetType.Texture, new TextureAssetBuilder() },
-                { AssetType.Text, new TextAssetBuilder() },
-                { AssetType.Shader, new TextAssetBuilder() },
-                { AssetType.Audio, new AudioClipAssetBuilder() },
-                { AssetType.Font, new FontAssetBuilder() },
-            };
+            _assetbuilder = assetBuilder;
             _databaseCache = new();
         }
 
         internal virtual void Initialize(DiskBase disk)
         {
             _disk = disk;
-            _guidPathDict = new BiDictionary<Guid, string>();
+            _guidPathDict.Clear();
+            _assetsGuidByTypes.Clear();
 
             foreach (var (guid, info) in _disk.AssetDatabaseInfo.Assets)
             {
                 _guidPathDict.Add(guid, info.Path);
+
+                if (!_assetsGuidByTypes.TryGetValue(info.Type, out var guidList))
+                {
+                    guidList = new OrderedDictionary<Guid, AssetInfo>();
+                    _assetsGuidByTypes[info.Type] = guidList;
+                }
+
+                guidList.Add(guid, info);
             }
+        }
+
+        internal IDictionary<Guid, AssetInfo> GetAssetsInfoByType(AssetType assetType)
+        {
+            if (_assetsGuidByTypes.TryGetValue(assetType, out var guidList))
+            {
+                return guidList;
+            }
+
+            return null;
+        }
+
+        internal AssetInfo GetAssetInfo(AssetResourceBase asset)
+        {
+            if(_disk.AssetDatabaseInfo.Assets.TryGetValue(asset.GetID(), out var info))
+            {
+                return info;
+            }
+
+            return null;
         }
 
         internal async Task<T> GetAssetAsync<T>(string path) where T : AssetResourceBase
@@ -84,12 +108,31 @@ namespace Engine.IO
             return null;
         }
 
-        private T GetAsset<T>(Guid guid) where T : AssetResourceBase
+        internal void UpdateReloadAsset(Guid guid)
         {
+            if (_databaseCache.GetAsset(guid, out var asset))
+            {
+                var assetContent = Disk.GetAssetAsync(guid).GetAwaiter().GetResult();
+
+                if (assetContent.Success)
+                {
+                    var assetMeta = Disk.GetAssetMeta(guid);
+
+                    BuildAsset(assetContent.Info, assetMeta, guid, assetContent.RawData, true);
+                }
+            }
+        }
+
+        internal T GetAsset<T>(Guid guid) where T : AssetResourceBase
+        {
+            if (guid == Guid.Empty)
+                return null;
+
             if (_databaseCache.GetAsset<T>(guid, out var asset))
             {
                 return asset;
             }
+
             var assetContent = Disk.GetAssetAsync(guid).GetAwaiter().GetResult();
 
             if (assetContent.Success)
@@ -119,7 +162,8 @@ namespace Engine.IO
             return null;
         }
 
-        private AssetResourceBase BuildAsset(AssetInfo info, AssetMetaFileBase meta, Guid guid, byte[] rawData)
+        // TODO: cleanup this function.
+        private AssetResourceBase BuildAsset(AssetInfo info, AssetMetaFileBase meta, Guid guid, byte[] rawData, bool update = false)
         {
             var encoding = Encoding.Default;
 
@@ -129,9 +173,7 @@ namespace Engine.IO
             }
 
             using var mem = new MemoryStream(rawData);
-
             var reader = new BinaryReader(mem, encoding);
-
 
             if (_assetbuilder.TryGetValue(info.Type, out AssetBuilderBase builder))
             {
@@ -155,7 +197,16 @@ namespace Engine.IO
                     reader = new BinaryReader(AssetCompressor.DecompressStream(reader.BaseStream));
                 }
 
-                var asset = builder.BuildAsset(info, meta, guid, reader);
+                AssetResourceBase asset = null;
+
+                if (!update)
+                {
+                    asset = builder.BuildAsset(info, meta, guid, reader);
+                }
+                else if (_databaseCache.GetAsset(guid, out asset))
+                {
+                    builder.UpdateAsset(asset, meta, reader);
+                }
 
                 reader.Dispose();
                 return asset;

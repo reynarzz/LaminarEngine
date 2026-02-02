@@ -21,16 +21,22 @@ namespace Engine.Rendering
             _batches = new List<Batch2D>();
         }
 
-        internal bool GetCurrentBatch(Renderer2D renderer, Texture texture, out Batch2D batchOut)
+        internal bool GetCurrentBatch(RendererData2D renderer, Texture texture, out Batch2D batchOut)
         {
             batchOut = null;
             foreach (var batch in _batches)
             {
                 if (batch.Contains(renderer))
                 {
-                    if (batch.Material != renderer.Material || batch.SortOrder != renderer.SortOrder)
+                    if (batch.Material != renderer.Material || batch.SortOrder != renderer.SortOrder 
+                        || (renderer.Mesh?.Indices != null && renderer.Mesh.IndicesToDrawCount != batch.IndexCount))
                     {
                         batch.RemoveRenderer(renderer);
+
+                        if (renderer.PrivateBatch)
+                        {
+                            DestroyBatch(batch);
+                        }
                         return false;
                     }
                     else if (!batch.Textures.Contains(texture))
@@ -50,7 +56,7 @@ namespace Engine.Rendering
             return false;
         }
 
-        internal Batch2D Get(Renderer2D renderer, int vertexToAdd, int maxVertexSize, Texture texture, Material mat, uint[] rawIndices = null)
+        internal Batch2D Get(RendererData2D renderer, int vertexToAdd, int maxVertexSize, Texture texture, Material mat, uint[] rawIndices = null)
         {
             {
                 if (GetCurrentBatch(renderer, texture, out var batch))
@@ -126,6 +132,13 @@ namespace Engine.Rendering
             }
         }
 
+        private void DestroyBatch(Batch2D batch)
+        {
+            if (_batches.Remove(batch))
+            {
+                batch.Dispose();
+            }
+        }
         private void SortBatches()
         {
             _batches.Sort((x, y) =>

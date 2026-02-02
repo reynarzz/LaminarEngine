@@ -1,4 +1,5 @@
 ﻿using GlmNet;
+using SharedTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,40 +10,64 @@ namespace Engine
 {
     public class Sprite : EObject
     {
-        public Texture2D Texture { get; }
-        public int AtlasIndex { get; }
+        public Texture2D Texture { get; private set; }
+        internal int AtlasIndex { get; private set; }
+        private TextureAtlasCell _cell;
 
-        public Sprite() : this(0, Texture2D.White)
+        internal Sprite(Texture2D texture, TextureAtlasCell cell, int index) : base(CreateSpriteName(texture?.Name, index), cell.ID)
         {
+            AtlasIndex = index;
+            Texture = texture;
+            _cell = cell;
         }
-        public Sprite(Texture2D texture) : this(0, texture)
+
+        internal Sprite(Texture2D texture) : this(0, texture)
         {
+            Name = texture?.Name;
         }
-        public Sprite(int atlasIndex, Texture2D texture)
+        public Sprite(int atlasIndex, Texture2D texture) : base(texture.Path, Guid.NewGuid())
         {
             AtlasIndex = atlasIndex;
             Texture = texture;
+            Name = texture?.Name;
         }
-       
-        public AtlasChunk GetAtlasChunk()
+
+        internal TextureAtlasCell GetAtlasCell()
         {
             if (Texture)
             {
-                var chunk = Texture.Atlas.GetChunk(AtlasIndex);
+                var cell = _cell;
 
-                if (chunk.Width <= 1 && chunk.Height <= 1)
+                if (cell.Width <= 1 && cell.Height <= 1)
                 {
-                    chunk.Width = Texture.Width;
-                    chunk.Height = Texture.Height;
+                    cell = TextureAtlasCell.DefaultChunk;
+                    cell.ID = GetID();
+                    cell.Width = Texture.Width;
+                    cell.Height = Texture.Height;
                 }
 
-                return chunk;
+                return cell;
             }
 
 #if DEBUG
             Debug.Error($"Sprite: {Name}, doesn't have a texture attached, using default atlas chunk instead.");
 #endif
-            return AtlasChunk.DefaultChunk;
+            return TextureAtlasCell.DefaultChunk;
+        }
+
+        internal void UpdateResource(Texture2D texture, TextureAtlasCell cell, int index)
+        {
+            Texture = texture;
+            Name = CreateSpriteName(texture.Name, index);
+            _cell = cell;
+            AtlasIndex = index;
+            _SetID(cell.ID);
+        }
+
+        internal static string CreateSpriteName(string baseName, int index)
+        {
+            var postFix = (index > 0) ? $"({index})" : string.Empty;
+            return $"{baseName}{postFix}";
         }
     }
 }

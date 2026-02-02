@@ -11,21 +11,24 @@ namespace Engine
 {
     public class RenderPass
     {
-        private readonly Dictionary<string, UniformValue> _uniforms;
+        [SerializedField] private Dictionary<string, UniformValue> _uniforms;
         internal Dictionary<string, UniformValue> Uniforms => _uniforms;
 
-        public bool IsScreenGrabPass { get; set; }
-        public Shader Shader { get; }
-        public Blending Blending { get; } = new()
+        [SerializedField] public bool IsScreenGrabPass { get; set; }
+        [SerializedField] public Shader Shader { get; internal set; }
+        [SerializedField] public Blending Blending { get; private set; } = new()
         {
             Enabled = true,
             SrcFactor = BlendFactor.SrcAlpha,
             DstFactor = BlendFactor.OneMinusSrcAlpha,
             Equation = BlendEquation.FuncAdd
         };
+        [SerializedField] public Stencil Stencil { get; private set; } = new();
 
-        public Stencil Stencil { get; } = new();
-
+        // Serializer
+        private RenderPass()
+        {
+        }
         internal RenderPass(Shader shader)
         {
             Shader = shader;

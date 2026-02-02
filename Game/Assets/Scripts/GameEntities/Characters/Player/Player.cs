@@ -1,12 +1,9 @@
 ﻿using Engine;
-using Engine.Utils;
 using GlmNet;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Game
 {
@@ -19,12 +16,11 @@ namespace Game
 
         private readonly List<InteractableEntityBase> _nearInteractables = new();
 
-
         public override void Init(CharacterConfig config)
         {
             Inventory = new PlayerInventory(config.InventoryMaxSlots, 4);
             GameUIManager.Inventory.InitInventory(Inventory);
-            
+
             base.Init(config);
             var box = AddComponent<BoxCollider2D>();
             box.Size = new vec2(0.95f, 0.6f);
@@ -55,7 +51,7 @@ namespace Game
 
             states.Attack.Events = [new AnimEvent { Time = 0, Callback = PlayAttackSFX }];
             states.Walk.Events = [new AnimEvent { Time = 0, Callback = PlayWalkSFX }, new AnimEvent { Time = (1.0f / fps) * 4, Callback = PlayWalkSFX }];
-          //  states.Jump.Events = [new AnimEvent { Time = 0, Callback = PlayJumpSoundFx }];
+            //  states.Jump.Events = [new AnimEvent { Time = 0, Callback = PlayJumpSoundFx }];
 
             InitAnimationStates(states);
 
@@ -92,7 +88,7 @@ namespace Game
                 return;
             Renderer.IsEnabled = false;
             _canMove = false;
-            
+
             IEnumerator ExitFromDoor()
             {
                 Debug.Log("Open");
@@ -104,6 +100,7 @@ namespace Game
                 yield return new WaitForSeconds(0.4f);
                 door.Close();
                 Animator.Play(IDLE_ANIM_STATE);
+                Walk(0);
                 _canMove = true;
                 IsEnteringThroughDoor = false;
             }
@@ -123,6 +120,7 @@ namespace Game
                     yield break;
                 }
                 var walkDir = door.Transform.WorldPosition.x - Transform.WorldPosition.x;
+
                 while (Math.Abs(walkDir) > 0.1f)
                 {
                     walkDir = door.Transform.WorldPosition.x - Transform.WorldPosition.x;
@@ -145,82 +143,46 @@ namespace Game
             StartCoroutine(WalkToDoor());
         }
 
-        protected override void OnUpdate()
+        private void Interact()
         {
-            if (Input.GetKeyDown(KeyCode.E) && IsCharacterAlive())
-            {
-                if (_nearInteractables.Count > 0)
-                {
-                    var interactable = _nearInteractables[^1];
-                    if (interactable.CanInteract(this))
-                    {
-                        _nearInteractables.RemoveAt(_nearInteractables.Count - 1);
+            if (!IsCharacterAlive())
+                return;
 
-                        if (interactable is Door door)
-                        {
-                            MoveToDoor(door);
-                        }
-                        else
-                        {
-                            interactable.TryInteract(this);
-                        }
+            if (_nearInteractables.Count > 0)
+            {
+                var interactable = _nearInteractables[^1];
+                if (interactable.CanInteract(this))
+                {
+                    _nearInteractables.RemoveAt(_nearInteractables.Count - 1);
+
+                    if (interactable is Door door)
+                    {
+                        MoveToDoor(door);
+                    }
+                    else
+                    {
+                        interactable.TryInteract(this);
                     }
                 }
             }
-
+        }
+        protected override void OnUpdate()
+        {
             _shootCooldownTime -= Time.DeltaTime;
 
 
             if (_canMove)
             {
-                if (Input.GetKeyDown(KeyCode.Space))
+#if DESKTOP
+                if (!Input.Gamepad.Main.IsConnected)
                 {
-                    BeginJump();
+                    KeyboardInput();
                 }
-                else if (Input.GetKeyUp(KeyCode.Space))
-                {
+#elif MOBILE
+                TouchInput();
+#endif
+                GamepadInput();
 
-                    EndJump();
-                }
-
-                if(TouchInput.TouchCount > 0)
-                {
-                    if(TouchInput.GetTouch(0).Type == TouchEvent.Down)
-                    {
-                        BeginJump();
-
-                        // Remove this, just testing for android.
-                        if (_shootCooldownTime <= 0)
-                        {
-                            _shootCooldownTime = _shootCooldown;
-                            Attack();
-                        }
-                    }
-                    else if(TouchInput.GetTouch(0).Type == TouchEvent.Up)
-                    {
-                        EndJump();
-                    }
-
-                }
-
-                if (Input.GetKey(KeyCode.F) && _shootCooldownTime <= 0)
-                {
-                    _shootCooldownTime = _shootCooldown;
-                    Attack();
-                }
-
-                if (Input.GetKey(KeyCode.A))
-                {
-                    Walk(-1);
-                }
-                else if (Input.GetKey(KeyCode.D))
-                {
-                    Walk(1);
-                }
-                else
-                {
-                    Walk(0);
-                }
             }
 
 #if DEBUG
@@ -234,9 +196,152 @@ namespace Game
             }
             if (Input.GetKeyDown(KeyCode.H))
             {
-                HitDamage(this, 1);
+                HitDamage(Transform.WorldPosition, 1);
             }
 #endif
+           
+        }
+
+        public void GamepadInput()
+        {
+            if (!Input.Gamepad.Main.IsConnected)
+                return;
+
+            if (Input.Gamepad.Main.GetButtonState(GamePadButton.B) == InputState.Down ||
+                Input.Gamepad.Main.GetButtonState(GamePadButton.DpadUp) == InputState.Down)
+            {
+                Interact();
+            }
+
+            if (Input.Gamepad.Main.GetButtonState(GamePadButton.A) == InputState.Down)
+            {
+                BeginJump();
+            }
+            else if (Input.Gamepad.Main.GetButtonState(GamePadButton.A) == InputState.Release)
+            {
+                EndJump();
+            }
+
+            if (_shootCooldownTime <= 0 && Input.Gamepad.Main.GetButtonState(GamePadButton.X) == InputState.Press)
+            {
+                _shootCooldownTime = _shootCooldown;
+                Attack();
+            }
+
+            if (Input.Gamepad.Main.GetButtonState(GamePadButton.DpadLeft) == InputState.Press)
+            {
+                Walk(-1);
+            }
+            else if (Input.Gamepad.Main.GetButtonState(GamePadButton.DpadRight) == InputState.Press)
+            {
+                Walk(1);
+            }
+            else
+            {
+                Walk(0);
+            }
+        }
+
+        private void KeyboardInput()
+        {
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                Interact();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                BeginJump();
+            }
+            else if (Input.GetKeyUp(KeyCode.Space))
+            {
+
+                EndJump();
+            }
+
+            if (Input.GetKey(KeyCode.F) && _shootCooldownTime <= 0)
+            {
+                _shootCooldownTime = _shootCooldown;
+                Attack();
+            }
+
+            if (Input.GetKey(KeyCode.A))
+            {
+                Walk(-1);
+            }
+            else if (Input.GetKey(KeyCode.D))
+            {
+                Walk(1);
+            }
+            else
+            {
+                Walk(0);
+            }
+        }
+        private int _walkPointerId = -1;
+        private void TouchInput()
+        {
+            vec2 Normalize(vec2 pointerPos)
+            {
+                return pointerPos / new vec2(Screen.Width, Screen.Height);
+            }
+            if (Input.Touch.TouchCount > 0)
+            {
+                for (int i = 0; i < Input.Touch.TouchCount; i++)
+                {
+                    ref var touch = ref Input.Touch.GetTouch(i);
+                    var pointerPos = Normalize(touch.Position);
+
+                    var activellYPressing = (touch.Type == TouchEvent.Down || touch.Type == TouchEvent.Stationary || touch.Type == TouchEvent.Move);
+                    if (pointerPos.x < 0.2f && pointerPos.y > 0.5f && activellYPressing)
+                    {
+                        _walkPointerId = touch.PointerId;
+                        Walk(-1);
+                    }
+                    else if (pointerPos.x > 0.2f && pointerPos.x < 0.4f && pointerPos.y > 0.5f && activellYPressing)
+                    {
+                        _walkPointerId = touch.PointerId;
+                        Walk(1);
+                    }
+                    else if (pointerPos.x < 0.2f && pointerPos.y < 0.5f && activellYPressing)
+                    {
+                        Interact();
+                    }
+                    else if ((touch.Type == TouchEvent.Up && _walkPointerId == touch.PointerId) || _walkPointerId == -1)
+                    {
+                        _walkPointerId = -1;
+                        Walk(0);
+                    }
+
+                    if (pointerPos.x > 0.8f)
+                    {
+                        if (pointerPos.y < 0.5f)
+                        {
+                            if (touch.Type == TouchEvent.Down)
+                            {
+                                BeginJump();
+                            }
+                            else if (touch.Type == TouchEvent.Up)
+                            {
+                                EndJump();
+                            }
+                        }
+                        else
+                        {
+                            if (_shootCooldownTime <= 0)
+                            {
+                                _shootCooldownTime = _shootCooldown;
+                                Attack();
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                Walk(0);
+                _walkPointerId = -1;
+            }
         }
 
         public override bool Attack(int index = 0)

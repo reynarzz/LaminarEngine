@@ -74,7 +74,7 @@ namespace Game
                         RaysCount = 3,
                         SizeY = 0.7f,
                         YOffset = 0,
-                        GroundMask = GameConsts.GROUND_MASK //| LayerMask.NameToBit(GameConsts.ENEMY)
+                        GroundMask = GameConsts.GROUND_MASK | LayerMask.NameToBit(GameConsts.ENEMY)
                     },
                     HitSoundsVolume = 0.8f,
                     WalkSoundsVolume = 0.18f,

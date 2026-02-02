@@ -9,7 +9,7 @@ namespace GameCooker
 {
     public class GameProject
     {
-        public void Initialize(ProjectConfig config)
+        public static void Initialize(ProjectConfig config)
         {
             if (string.IsNullOrEmpty(config.ProjectFolderRoot) || !Directory.Exists(config.ProjectFolderRoot))
             {
@@ -20,17 +20,17 @@ namespace GameCooker
             InitializeProjectDirectories(config.ProjectFolderRoot);
         }
 
-        private void InitializeProjectDirectories(string projectRoot)
+        private static void InitializeProjectDirectories(string projectRoot)
         {
             Paths.ProjectRootFolder = projectRoot;
-            foreach (var dir in new string[]
+            var directories = new string[]
             {
                 Paths.GetAssetsFolderPath(),
                 Paths.GetLibraryFolderPath(),
                 Paths.GetProjectSettingsFolder(),
                 Paths.GetAssetDatabaseFolder(),
-                Paths.GetBuildTempFolderPath(),
-            })
+            };
+            foreach (var dir in directories)
             {
                 Directory.CreateDirectory(dir);
             }

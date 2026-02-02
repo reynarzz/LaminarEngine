@@ -40,6 +40,7 @@ namespace Game
         {
             _screenTex = new RenderTexture(1, 1);
             _shader = new Shader(Assets.GetText("Shaders/ScreenVert.vert").Text, Assets.GetText("Shaders/Fade.frag").Text);
+            _shader.Name = "Fade";
         }
 
         protected override RenderTexture Render(RenderTexture inRenderTexture)

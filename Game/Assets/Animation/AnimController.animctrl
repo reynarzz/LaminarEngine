@@ -1,0 +1,1088 @@
+[
+  {
+    "Name": "Parameters",
+    "Type": "SimpleClass",
+    "InternalType": "Engine.AnimatorParameters, Engine",
+    "Data": {
+      "$type": "Engine.AnimatorParameters, Engine",
+      "$value": {
+        "_floats": {},
+        "_ints": {},
+        "_bools": {},
+        "_triggers": {}
+      }
+    }
+  },
+  {
+    "Name": "States",
+    "Type": "ComplexCollection",
+    "InternalType": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib],[Engine.AnimationState, Engine]], System.Private.CoreLib",
+    "Data": {
+      "$type": "Engine.CollectionPropertyData, Engine",
+      "$value": {
+        "CollectionType": "Dictionary",
+        "Collection": [
+          {
+            "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+            "Key": {
+              "TargetTypeName": "System.String, System.Private.CoreLib",
+              "ComplexType": "Simple",
+              "Properties": [
+                {
+                  "Name": "DictionaryKey",
+                  "Type": "Simple",
+                  "InternalType": "System.String, System.Private.CoreLib",
+                  "Data": {
+                    "$type": "System.String, System.Private.CoreLib",
+                    "$value": "Idle"
+                  }
+                }
+              ]
+            },
+            "Value": {
+              "TargetTypeName": "Engine.AnimationState, Engine",
+              "ComplexType": "ComplexClass",
+              "Properties": [
+                {
+                  "Name": "Name",
+                  "Type": "Simple",
+                  "InternalType": "System.String, System.Private.CoreLib",
+                  "Data": {
+                    "$type": "System.String, System.Private.CoreLib",
+                    "$value": "Idle"
+                  }
+                },
+                {
+                  "Name": "Clip",
+                  "Type": "AnimationAsset",
+                  "InternalType": "Engine.AnimationClip, Engine",
+                  "Data": {
+                    "$type": "Engine.ReferenceData, Engine",
+                    "$value": {
+                      "Id": "4c94b23e-2ccf-46f8-b40d-7356e5987b4c"
+                    }
+                  }
+                },
+                {
+                  "Name": "_transitions",
+                  "Type": "SimpleCollection",
+                  "InternalType": "System.Collections.Generic.List`1[[Engine.AnimatorTransition, Engine]], System.Private.CoreLib",
+                  "Data": {
+                    "$type": "System.Collections.Generic.List`1[[Engine.AnimatorTransition, Engine]], System.Private.CoreLib",
+                    "$value": [
+                      {
+                        "ToState": "Walk",
+                        "Conditions": [
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "NotEqual",
+                            "Compare": 0,
+                            "Property": "VelocityX"
+                          },
+                          {
+                            "$type": "Engine.BoolCondition, Engine",
+                            "Compare": true,
+                            "Property": "IsOnGround"
+                          },
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "GreaterThan",
+                            "Compare": 0,
+                            "Property": "Life"
+                          }
+                        ],
+                        "BlendTime": 0.0
+                      },
+                      {
+                        "ToState": "Jump",
+                        "Conditions": [
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "GreaterThan",
+                            "Compare": 0,
+                            "Property": "VelocityY"
+                          },
+                          {
+                            "$type": "Engine.BoolCondition, Engine",
+                            "Compare": false,
+                            "Property": "IsOnGround"
+                          },
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "GreaterThan",
+                            "Compare": 0,
+                            "Property": "Life"
+                          }
+                        ],
+                        "BlendTime": 0.0
+                      },
+                      {
+                        "ToState": "Fall",
+                        "Conditions": [
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "LessThan",
+                            "Compare": 0,
+                            "Property": "VelocityY"
+                          },
+                          {
+                            "$type": "Engine.BoolCondition, Engine",
+                            "Compare": false,
+                            "Property": "IsOnGround"
+                          },
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "GreaterThan",
+                            "Compare": 0,
+                            "Property": "Life"
+                          }
+                        ],
+                        "BlendTime": 0.0
+                      },
+                      {
+                        "ToState": "Attack",
+                        "Conditions": [
+                          {
+                            "$type": "Engine.TriggerCondition, Engine",
+                            "Property": "Attack1"
+                          },
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "GreaterThan",
+                            "Compare": 0,
+                            "Property": "Life"
+                          }
+                        ],
+                        "BlendTime": 0.0
+                      },
+                      {
+                        "ToState": "Hit",
+                        "Conditions": [
+                          {
+                            "$type": "Engine.TriggerCondition, Engine",
+                            "Property": "IsHitDamage"
+                          }
+                        ],
+                        "BlendTime": 0.0
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            "Type": "ComplexClass"
+          },
+          {
+            "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+            "Key": {
+              "TargetTypeName": "System.String, System.Private.CoreLib",
+              "ComplexType": "Simple",
+              "Properties": [
+                {
+                  "Name": "DictionaryKey",
+                  "Type": "Simple",
+                  "InternalType": "System.String, System.Private.CoreLib",
+                  "Data": {
+                    "$type": "System.String, System.Private.CoreLib",
+                    "$value": "Walk"
+                  }
+                }
+              ]
+            },
+            "Value": {
+              "TargetTypeName": "Engine.AnimationState, Engine",
+              "ComplexType": "ComplexClass",
+              "Properties": [
+                {
+                  "Name": "Name",
+                  "Type": "Simple",
+                  "InternalType": "System.String, System.Private.CoreLib",
+                  "Data": {
+                    "$type": "System.String, System.Private.CoreLib",
+                    "$value": "Walk"
+                  }
+                },
+                {
+                  "Name": "Clip",
+                  "Type": "AnimationAsset",
+                  "InternalType": "Engine.AnimationClip, Engine",
+                  "Data": {
+                    "$type": "Engine.ReferenceData, Engine",
+                    "$value": {
+                      "Id": "5374cbde-5a50-4191-89f9-0914b1a6e3d7"
+                    }
+                  }
+                },
+                {
+                  "Name": "_transitions",
+                  "Type": "SimpleCollection",
+                  "InternalType": "System.Collections.Generic.List`1[[Engine.AnimatorTransition, Engine]], System.Private.CoreLib",
+                  "Data": {
+                    "$type": "System.Collections.Generic.List`1[[Engine.AnimatorTransition, Engine]], System.Private.CoreLib",
+                    "$value": [
+                      {
+                        "ToState": "Idle",
+                        "Conditions": [
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "Equal",
+                            "Compare": 0,
+                            "Property": "VelocityX"
+                          },
+                          {
+                            "$type": "Engine.BoolCondition, Engine",
+                            "Compare": true,
+                            "Property": "IsOnGround"
+                          },
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "GreaterThan",
+                            "Compare": 0,
+                            "Property": "Life"
+                          }
+                        ],
+                        "BlendTime": 0.0
+                      },
+                      {
+                        "ToState": "Jump",
+                        "Conditions": [
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "GreaterThan",
+                            "Compare": 0,
+                            "Property": "VelocityY"
+                          },
+                          {
+                            "$type": "Engine.BoolCondition, Engine",
+                            "Compare": false,
+                            "Property": "IsOnGround"
+                          },
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "GreaterThan",
+                            "Compare": 0,
+                            "Property": "Life"
+                          }
+                        ],
+                        "BlendTime": 0.0
+                      },
+                      {
+                        "ToState": "Fall",
+                        "Conditions": [
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "LessThan",
+                            "Compare": 0,
+                            "Property": "VelocityY"
+                          },
+                          {
+                            "$type": "Engine.BoolCondition, Engine",
+                            "Compare": false,
+                            "Property": "IsOnGround"
+                          },
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "GreaterThan",
+                            "Compare": 0,
+                            "Property": "Life"
+                          }
+                        ],
+                        "BlendTime": 0.0
+                      },
+                      {
+                        "ToState": "Attack",
+                        "Conditions": [
+                          {
+                            "$type": "Engine.TriggerCondition, Engine",
+                            "Property": "Attack1"
+                          },
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "GreaterThan",
+                            "Compare": 0,
+                            "Property": "Life"
+                          }
+                        ],
+                        "BlendTime": 0.0
+                      },
+                      {
+                        "ToState": "Hit",
+                        "Conditions": [
+                          {
+                            "$type": "Engine.TriggerCondition, Engine",
+                            "Property": "IsHitDamage"
+                          }
+                        ],
+                        "BlendTime": 0.0
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            "Type": "ComplexClass"
+          },
+          {
+            "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+            "Key": {
+              "TargetTypeName": "System.String, System.Private.CoreLib",
+              "ComplexType": "Simple",
+              "Properties": [
+                {
+                  "Name": "DictionaryKey",
+                  "Type": "Simple",
+                  "InternalType": "System.String, System.Private.CoreLib",
+                  "Data": {
+                    "$type": "System.String, System.Private.CoreLib",
+                    "$value": "Jump"
+                  }
+                }
+              ]
+            },
+            "Value": {
+              "TargetTypeName": "Engine.AnimationState, Engine",
+              "ComplexType": "ComplexClass",
+              "Properties": [
+                {
+                  "Name": "Name",
+                  "Type": "Simple",
+                  "InternalType": "System.String, System.Private.CoreLib",
+                  "Data": {
+                    "$type": "System.String, System.Private.CoreLib",
+                    "$value": "Jump"
+                  }
+                },
+                {
+                  "Name": "Clip",
+                  "Type": "AnimationAsset",
+                  "InternalType": "Engine.AnimationClip, Engine",
+                  "Data": {
+                    "$type": "Engine.ReferenceData, Engine",
+                    "$value": {
+                      "Id": "c59112d7-1f5b-4443-a8cb-d42ef40c81ae"
+                    }
+                  }
+                },
+                {
+                  "Name": "_transitions",
+                  "Type": "SimpleCollection",
+                  "InternalType": "System.Collections.Generic.List`1[[Engine.AnimatorTransition, Engine]], System.Private.CoreLib",
+                  "Data": {
+                    "$type": "System.Collections.Generic.List`1[[Engine.AnimatorTransition, Engine]], System.Private.CoreLib",
+                    "$value": [
+                      {
+                        "ToState": "Idle",
+                        "Conditions": [
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "Equal",
+                            "Compare": 0,
+                            "Property": "VelocityX"
+                          },
+                          {
+                            "$type": "Engine.BoolCondition, Engine",
+                            "Compare": true,
+                            "Property": "IsOnGround"
+                          },
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "GreaterThan",
+                            "Compare": 0,
+                            "Property": "Life"
+                          }
+                        ],
+                        "BlendTime": 0.0
+                      },
+                      {
+                        "ToState": "Fall",
+                        "Conditions": [
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "LessThan",
+                            "Compare": 0,
+                            "Property": "VelocityY"
+                          },
+                          {
+                            "$type": "Engine.BoolCondition, Engine",
+                            "Compare": false,
+                            "Property": "IsOnGround"
+                          },
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "GreaterThan",
+                            "Compare": 0,
+                            "Property": "Life"
+                          }
+                        ],
+                        "BlendTime": 0.0
+                      },
+                      {
+                        "ToState": "Walk",
+                        "Conditions": [
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "NotEqual",
+                            "Compare": 0,
+                            "Property": "VelocityX"
+                          },
+                          {
+                            "$type": "Engine.BoolCondition, Engine",
+                            "Compare": true,
+                            "Property": "IsOnGround"
+                          },
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "LessThanOrEqual",
+                            "Compare": 0,
+                            "Property": "VelocityY"
+                          },
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "GreaterThan",
+                            "Compare": 0,
+                            "Property": "Life"
+                          }
+                        ],
+                        "BlendTime": 0.0
+                      },
+                      {
+                        "ToState": "Attack",
+                        "Conditions": [
+                          {
+                            "$type": "Engine.TriggerCondition, Engine",
+                            "Property": "Attack1"
+                          },
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "GreaterThan",
+                            "Compare": 0,
+                            "Property": "Life"
+                          }
+                        ],
+                        "BlendTime": 0.0
+                      },
+                      {
+                        "ToState": "Hit",
+                        "Conditions": [
+                          {
+                            "$type": "Engine.TriggerCondition, Engine",
+                            "Property": "IsHitDamage"
+                          }
+                        ],
+                        "BlendTime": 0.0
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            "Type": "ComplexClass"
+          },
+          {
+            "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+            "Key": {
+              "TargetTypeName": "System.String, System.Private.CoreLib",
+              "ComplexType": "Simple",
+              "Properties": [
+                {
+                  "Name": "DictionaryKey",
+                  "Type": "Simple",
+                  "InternalType": "System.String, System.Private.CoreLib",
+                  "Data": {
+                    "$type": "System.String, System.Private.CoreLib",
+                    "$value": "Fall"
+                  }
+                }
+              ]
+            },
+            "Value": {
+              "TargetTypeName": "Engine.AnimationState, Engine",
+              "ComplexType": "ComplexClass",
+              "Properties": [
+                {
+                  "Name": "Name",
+                  "Type": "Simple",
+                  "InternalType": "System.String, System.Private.CoreLib",
+                  "Data": {
+                    "$type": "System.String, System.Private.CoreLib",
+                    "$value": "Fall"
+                  }
+                },
+                {
+                  "Name": "Clip",
+                  "Type": "AnimationAsset",
+                  "InternalType": "Engine.AnimationClip, Engine",
+                  "Data": {
+                    "$type": "Engine.ReferenceData, Engine",
+                    "$value": {
+                      "Id": "f632fec9-55ef-492d-9dad-5ab43708e3b7"
+                    }
+                  }
+                },
+                {
+                  "Name": "_transitions",
+                  "Type": "SimpleCollection",
+                  "InternalType": "System.Collections.Generic.List`1[[Engine.AnimatorTransition, Engine]], System.Private.CoreLib",
+                  "Data": {
+                    "$type": "System.Collections.Generic.List`1[[Engine.AnimatorTransition, Engine]], System.Private.CoreLib",
+                    "$value": [
+                      {
+                        "ToState": "Idle",
+                        "Conditions": [
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "Equal",
+                            "Compare": 0,
+                            "Property": "VelocityX"
+                          },
+                          {
+                            "$type": "Engine.BoolCondition, Engine",
+                            "Compare": true,
+                            "Property": "IsOnGround"
+                          },
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "GreaterThan",
+                            "Compare": 0,
+                            "Property": "Life"
+                          }
+                        ],
+                        "BlendTime": 0.0
+                      },
+                      {
+                        "ToState": "Walk",
+                        "Conditions": [
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "NotEqual",
+                            "Compare": 0,
+                            "Property": "VelocityX"
+                          },
+                          {
+                            "$type": "Engine.BoolCondition, Engine",
+                            "Compare": true,
+                            "Property": "IsOnGround"
+                          },
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "GreaterThan",
+                            "Compare": 0,
+                            "Property": "Life"
+                          }
+                        ],
+                        "BlendTime": 0.0
+                      },
+                      {
+                        "ToState": "Attack",
+                        "Conditions": [
+                          {
+                            "$type": "Engine.TriggerCondition, Engine",
+                            "Property": "Attack1"
+                          },
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "GreaterThan",
+                            "Compare": 0,
+                            "Property": "Life"
+                          }
+                        ],
+                        "BlendTime": 0.0
+                      },
+                      {
+                        "ToState": "Hit",
+                        "Conditions": [
+                          {
+                            "$type": "Engine.TriggerCondition, Engine",
+                            "Property": "IsHitDamage"
+                          }
+                        ],
+                        "BlendTime": 0.0
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            "Type": "ComplexClass"
+          },
+          {
+            "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+            "Key": {
+              "TargetTypeName": "System.String, System.Private.CoreLib",
+              "ComplexType": "Simple",
+              "Properties": [
+                {
+                  "Name": "DictionaryKey",
+                  "Type": "Simple",
+                  "InternalType": "System.String, System.Private.CoreLib",
+                  "Data": {
+                    "$type": "System.String, System.Private.CoreLib",
+                    "$value": "Attack"
+                  }
+                }
+              ]
+            },
+            "Value": {
+              "TargetTypeName": "Engine.AnimationState, Engine",
+              "ComplexType": "ComplexClass",
+              "Properties": [
+                {
+                  "Name": "Name",
+                  "Type": "Simple",
+                  "InternalType": "System.String, System.Private.CoreLib",
+                  "Data": {
+                    "$type": "System.String, System.Private.CoreLib",
+                    "$value": "Attack"
+                  }
+                },
+                {
+                  "Name": "Clip",
+                  "Type": "AnimationAsset",
+                  "InternalType": "Engine.AnimationClip, Engine",
+                  "Data": {
+                    "$type": "Engine.ReferenceData, Engine",
+                    "$value": {
+                      "Id": "d350b0de-8afb-47db-a262-4e26595c9931"
+                    }
+                  }
+                },
+                {
+                  "Name": "_transitions",
+                  "Type": "SimpleCollection",
+                  "InternalType": "System.Collections.Generic.List`1[[Engine.AnimatorTransition, Engine]], System.Private.CoreLib",
+                  "Data": {
+                    "$type": "System.Collections.Generic.List`1[[Engine.AnimatorTransition, Engine]], System.Private.CoreLib",
+                    "$value": [
+                      {
+                        "ToState": "Idle",
+                        "Conditions": [
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "Equal",
+                            "Compare": 0,
+                            "Property": "VelocityX"
+                          },
+                          {
+                            "$type": "Engine.BoolCondition, Engine",
+                            "Compare": true,
+                            "Property": "IsOnGround"
+                          },
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "GreaterThan",
+                            "Compare": 0,
+                            "Property": "Life"
+                          }
+                        ],
+                        "BlendTime": 0.17391305
+                      },
+                      {
+                        "ToState": "Walk",
+                        "Conditions": [
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "NotEqual",
+                            "Compare": 0,
+                            "Property": "VelocityX"
+                          },
+                          {
+                            "$type": "Engine.BoolCondition, Engine",
+                            "Compare": true,
+                            "Property": "IsOnGround"
+                          },
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "GreaterThan",
+                            "Compare": 0,
+                            "Property": "Life"
+                          }
+                        ],
+                        "BlendTime": 0.17391305
+                      },
+                      {
+                        "ToState": "Fall",
+                        "Conditions": [
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "LessThan",
+                            "Compare": 0,
+                            "Property": "VelocityY"
+                          },
+                          {
+                            "$type": "Engine.BoolCondition, Engine",
+                            "Compare": false,
+                            "Property": "IsOnGround"
+                          },
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "GreaterThan",
+                            "Compare": 0,
+                            "Property": "Life"
+                          }
+                        ],
+                        "BlendTime": 0.17391305
+                      },
+                      {
+                        "ToState": "Hit",
+                        "Conditions": [
+                          {
+                            "$type": "Engine.TriggerCondition, Engine",
+                            "Property": "IsHitDamage"
+                          }
+                        ],
+                        "BlendTime": 0.17391305
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            "Type": "ComplexClass"
+          },
+          {
+            "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+            "Key": {
+              "TargetTypeName": "System.String, System.Private.CoreLib",
+              "ComplexType": "Simple",
+              "Properties": [
+                {
+                  "Name": "DictionaryKey",
+                  "Type": "Simple",
+                  "InternalType": "System.String, System.Private.CoreLib",
+                  "Data": {
+                    "$type": "System.String, System.Private.CoreLib",
+                    "$value": "Death"
+                  }
+                }
+              ]
+            },
+            "Value": {
+              "TargetTypeName": "Engine.AnimationState, Engine",
+              "ComplexType": "ComplexClass",
+              "Properties": [
+                {
+                  "Name": "Name",
+                  "Type": "Simple",
+                  "InternalType": "System.String, System.Private.CoreLib",
+                  "Data": {
+                    "$type": "System.String, System.Private.CoreLib",
+                    "$value": "Death"
+                  }
+                },
+                {
+                  "Name": "Clip",
+                  "Type": "AnimationAsset",
+                  "InternalType": "Engine.AnimationClip, Engine",
+                  "Data": {
+                    "$type": "Engine.ReferenceData, Engine",
+                    "$value": {
+                      "Id": "ceb1c78b-40b5-4a69-847b-b26be5ea9679"
+                    }
+                  }
+                },
+                {
+                  "Name": "_transitions",
+                  "Type": "SimpleCollection",
+                  "InternalType": "System.Collections.Generic.List`1[[Engine.AnimatorTransition, Engine]], System.Private.CoreLib",
+                  "Data": {
+                    "$type": "System.Collections.Generic.List`1[[Engine.AnimatorTransition, Engine]], System.Private.CoreLib",
+                    "$value": []
+                  }
+                }
+              ]
+            },
+            "Type": "ComplexClass"
+          },
+          {
+            "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+            "Key": {
+              "TargetTypeName": "System.String, System.Private.CoreLib",
+              "ComplexType": "Simple",
+              "Properties": [
+                {
+                  "Name": "DictionaryKey",
+                  "Type": "Simple",
+                  "InternalType": "System.String, System.Private.CoreLib",
+                  "Data": {
+                    "$type": "System.String, System.Private.CoreLib",
+                    "$value": "Hit"
+                  }
+                }
+              ]
+            },
+            "Value": {
+              "TargetTypeName": "Engine.AnimationState, Engine",
+              "ComplexType": "ComplexClass",
+              "Properties": [
+                {
+                  "Name": "Name",
+                  "Type": "Simple",
+                  "InternalType": "System.String, System.Private.CoreLib",
+                  "Data": {
+                    "$type": "System.String, System.Private.CoreLib",
+                    "$value": "Hit"
+                  }
+                },
+                {
+                  "Name": "Clip",
+                  "Type": "AnimationAsset",
+                  "InternalType": "Engine.AnimationClip, Engine",
+                  "Data": {
+                    "$type": "Engine.ReferenceData, Engine",
+                    "$value": {
+                      "Id": "08aab13a-7cee-472a-bb30-3d583f47a713"
+                    }
+                  }
+                },
+                {
+                  "Name": "_transitions",
+                  "Type": "SimpleCollection",
+                  "InternalType": "System.Collections.Generic.List`1[[Engine.AnimatorTransition, Engine]], System.Private.CoreLib",
+                  "Data": {
+                    "$type": "System.Collections.Generic.List`1[[Engine.AnimatorTransition, Engine]], System.Private.CoreLib",
+                    "$value": [
+                      {
+                        "ToState": "Idle",
+                        "Conditions": [
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "Equal",
+                            "Compare": 0,
+                            "Property": "VelocityX"
+                          },
+                          {
+                            "$type": "Engine.BoolCondition, Engine",
+                            "Compare": true,
+                            "Property": "IsOnGround"
+                          },
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "GreaterThan",
+                            "Compare": 0,
+                            "Property": "Life"
+                          }
+                        ],
+                        "BlendTime": 0.08695652
+                      },
+                      {
+                        "ToState": "Walk",
+                        "Conditions": [
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "NotEqual",
+                            "Compare": 0,
+                            "Property": "VelocityX"
+                          },
+                          {
+                            "$type": "Engine.BoolCondition, Engine",
+                            "Compare": true,
+                            "Property": "IsOnGround"
+                          },
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "GreaterThan",
+                            "Compare": 0,
+                            "Property": "Life"
+                          }
+                        ],
+                        "BlendTime": 0.08695652
+                      },
+                      {
+                        "ToState": "Jump",
+                        "Conditions": [
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "GreaterThan",
+                            "Compare": 0,
+                            "Property": "VelocityY"
+                          },
+                          {
+                            "$type": "Engine.BoolCondition, Engine",
+                            "Compare": false,
+                            "Property": "IsOnGround"
+                          },
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "GreaterThan",
+                            "Compare": 0,
+                            "Property": "Life"
+                          }
+                        ],
+                        "BlendTime": 0.08695652
+                      },
+                      {
+                        "ToState": "Fall",
+                        "Conditions": [
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "LessThan",
+                            "Compare": 0,
+                            "Property": "VelocityY"
+                          },
+                          {
+                            "$type": "Engine.BoolCondition, Engine",
+                            "Compare": false,
+                            "Property": "IsOnGround"
+                          },
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "GreaterThan",
+                            "Compare": 0,
+                            "Property": "Life"
+                          }
+                        ],
+                        "BlendTime": 0.08695652
+                      },
+                      {
+                        "ToState": "Attack",
+                        "Conditions": [
+                          {
+                            "$type": "Engine.TriggerCondition, Engine",
+                            "Property": "Attack1"
+                          },
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "GreaterThan",
+                            "Compare": 0,
+                            "Property": "Life"
+                          }
+                        ],
+                        "BlendTime": 0.08695652
+                      },
+                      {
+                        "ToState": "Death",
+                        "Conditions": [
+                          {
+                            "$type": "Engine.IntCondition, Engine",
+                            "Op": "LessThanOrEqual",
+                            "Compare": 0,
+                            "Property": "Life"
+                          },
+                          {
+                            "$type": "Engine.BoolCondition, Engine",
+                            "Compare": true,
+                            "Property": "IsOnGround"
+                          }
+                        ],
+                        "BlendTime": 0.08695652
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            "Type": "ComplexClass"
+          },
+          {
+            "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+            "Key": {
+              "TargetTypeName": "System.String, System.Private.CoreLib",
+              "ComplexType": "Simple",
+              "Properties": [
+                {
+                  "Name": "DictionaryKey",
+                  "Type": "Simple",
+                  "InternalType": "System.String, System.Private.CoreLib",
+                  "Data": {
+                    "$type": "System.String, System.Private.CoreLib",
+                    "$value": "DoorIn"
+                  }
+                }
+              ]
+            },
+            "Value": {
+              "TargetTypeName": "Engine.AnimationState, Engine",
+              "ComplexType": "ComplexClass",
+              "Properties": [
+                {
+                  "Name": "Name",
+                  "Type": "Simple",
+                  "InternalType": "System.String, System.Private.CoreLib",
+                  "Data": {
+                    "$type": "System.String, System.Private.CoreLib",
+                    "$value": "DoorIn"
+                  }
+                },
+                {
+                  "Name": "Clip",
+                  "Type": "AnimationAsset",
+                  "InternalType": "Engine.AnimationClip, Engine",
+                  "Data": {
+                    "$type": "Engine.ReferenceData, Engine",
+                    "$value": {
+                      "Id": "4d16fdbe-01d4-4783-a26f-99700943c815"
+                    }
+                  }
+                },
+                {
+                  "Name": "_transitions",
+                  "Type": "SimpleCollection",
+                  "InternalType": "System.Collections.Generic.List`1[[Engine.AnimatorTransition, Engine]], System.Private.CoreLib",
+                  "Data": {
+                    "$type": "System.Collections.Generic.List`1[[Engine.AnimatorTransition, Engine]], System.Private.CoreLib",
+                    "$value": []
+                  }
+                }
+              ]
+            },
+            "Type": "ComplexClass"
+          },
+          {
+            "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+            "Key": {
+              "TargetTypeName": "System.String, System.Private.CoreLib",
+              "ComplexType": "Simple",
+              "Properties": [
+                {
+                  "Name": "DictionaryKey",
+                  "Type": "Simple",
+                  "InternalType": "System.String, System.Private.CoreLib",
+                  "Data": {
+                    "$type": "System.String, System.Private.CoreLib",
+                    "$value": "DoorOut"
+                  }
+                }
+              ]
+            },
+            "Value": {
+              "TargetTypeName": "Engine.AnimationState, Engine",
+              "ComplexType": "ComplexClass",
+              "Properties": [
+                {
+                  "Name": "Name",
+                  "Type": "Simple",
+                  "InternalType": "System.String, System.Private.CoreLib",
+                  "Data": {
+                    "$type": "System.String, System.Private.CoreLib",
+                    "$value": "DoorOut"
+                  }
+                },
+                {
+                  "Name": "Clip",
+                  "Type": "AnimationAsset",
+                  "InternalType": "Engine.AnimationClip, Engine",
+                  "Data": {
+                    "$type": "Engine.ReferenceData, Engine",
+                    "$value": {
+                      "Id": "5a71378d-2632-4b06-a1ef-45f44fb59b08"
+                    }
+                  }
+                },
+                {
+                  "Name": "_transitions",
+                  "Type": "SimpleCollection",
+                  "InternalType": "System.Collections.Generic.List`1[[Engine.AnimatorTransition, Engine]], System.Private.CoreLib",
+                  "Data": {
+                    "$type": "System.Collections.Generic.List`1[[Engine.AnimatorTransition, Engine]], System.Private.CoreLib",
+                    "$value": []
+                  }
+                }
+              ]
+            },
+            "Type": "ComplexClass"
+          }
+        ]
+      }
+    }
+  }
+]

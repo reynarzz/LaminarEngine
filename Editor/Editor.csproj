@@ -1,0 +1,78 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+	  <TargetFramework>net9.0</TargetFramework>
+	  <ImplicitUsings>enable</ImplicitUsings>
+	  <Nullable>disable</Nullable>
+	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	  <AppendRuntimeIdentifierToOutputPath>False</AppendRuntimeIdentifierToOutputPath>
+	  <AppendTargetFrameworkToOutputPath>False</AppendTargetFrameworkToOutputPath>
+	  <DefineConstants>$(DefineConstants);EDITOR</DefineConstants>
+  </PropertyGroup> 
+	
+	<PropertyGroup Condition="'$(OS)' == 'Unix' AND&#xD;&#xA;'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform(&#xD;&#xA;   $([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'True'">
+  <MacLibFolder>lib-universal</MacLibFolder>
+</PropertyGroup>
+
+	<!-- Windows -->
+	<PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
+		<DefineConstants>WINDOWS;DESKTOP;$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
+
+	<!-- macOS -->
+	<PropertyGroup Condition="'$(OS)' == 'Unix' AND&#xD;&#xA;  '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'True'">
+		<DefineConstants>MACOS;OSX;UNIX;DESKTOP;$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
+	<ItemGroup>
+	  <PackageReference Include="Microsoft.Build" Version="17.14.28" ExcludeAssets="runtime" />
+	  <PackageReference Include="Microsoft.Build.Framework" Version="17.14.28" ExcludeAssets="runtime" />
+	  <PackageReference Include="Microsoft.Build.Locator" Version="1.11.2" />
+	  <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.14.28" ExcludeAssets="runtime" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<ProjectReference Include="..\Engine\Engine.csproj" />
+		<ProjectReference Include="..\GameCooker\GameCooker.csproj" />
+		<ProjectReference Include="..\SharedTypes\SharedTypes.csproj" />
+	</ItemGroup>
+
+	<Target Name="PostBuild_Windows" AfterTargets="CopyFilesToOutputDirectory" Condition="'$(OS)' == 'Windows_NT'">
+
+		<PropertyGroup>
+			<GlfwWinSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\Engine\Third\Native\bin\win\glfw3.dll'))</GlfwWinSrc>
+			<ImGuiSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\Third\EditorNatives\bin\win\EditorNatives.dll'))</ImGuiSrc>
+			<GlSlang>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\Third\EditorNatives\bin\win\glslang.dll'))</GlSlang>
+			<SpirvCross>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\Third\EditorNatives\bin\win\spirv-cross.dll'))</SpirvCross>
+
+		</PropertyGroup>
+
+		<Message Text="Copying from $(GlfwWinSrc)" Importance="high" />
+
+		<Copy SourceFiles="$(GlfwWinSrc)" DestinationFiles="$(TargetDir)glfw3.dll"  />
+		<Copy SourceFiles="$(ImGuiSrc)" DestinationFiles="$(TargetDir)EditorNatives.dll"  />
+		<Copy SourceFiles="$(GlSlang)" DestinationFiles="$(TargetDir)glslang.dll" SkipUnchangedFiles="true" />
+		<Copy SourceFiles="$(SpirvCross)" DestinationFiles="$(TargetDir)spirv-cross.dll" SkipUnchangedFiles="true" />
+</Target>
+		
+
+
+	<Target Name="PostBuild_Mac" AfterTargets="CopyFilesToOutputDirectory" Condition="'$(OS)' == 'Unix' AND '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'True'">
+
+  <PropertyGroup> 
+  <GlfwMacSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\Engine\Third\Native\bin\osx\libglfw.dylib'))</GlfwMacSrc>
+  <ImGuiSrc>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\Third\EditorNatives\bin\osx\libEditorNatives.dylib'))</ImGuiSrc>
+  <GlSlang>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\Third\EditorNatives\bin\osx\arm\libglslang.dylib'))</GlSlang>
+  <SpirvCross>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\Third\EditorNatives\bin\osx\arm\libspirv-cross.dylib'))</SpirvCross>
+  
+  </PropertyGroup>
+
+
+  	<Copy SourceFiles="$(GlfwMacSrc)" DestinationFolder="$(TargetDir)"  />
+	<Copy SourceFiles="$(ImGuiSrc)" DestinationFiles="$(TargetDir)libEditorNatives.dylib"  />
+	<Copy SourceFiles="$(GlSlang)" DestinationFiles="$(TargetDir)libglslang.dylib" SkipUnchangedFiles="true" />
+	<Copy SourceFiles="$(SpirvCross)" DestinationFiles="$(TargetDir)libspirv-cross.dylib" SkipUnchangedFiles="true" />
+</Target>
+
+
+</Project>

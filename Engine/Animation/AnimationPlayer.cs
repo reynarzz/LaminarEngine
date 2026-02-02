@@ -12,6 +12,7 @@ namespace Engine
         private AnimationClip _currentClip;
         private float _currentTime;
         private bool _isPlaying;
+        internal float CurrentTime => _currentTime;
 
         internal void Play(AnimationClip clip)
         {

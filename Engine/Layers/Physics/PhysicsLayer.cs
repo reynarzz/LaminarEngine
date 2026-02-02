@@ -14,16 +14,22 @@ namespace Engine.Layers
     {
         // Samples: https://github.com/ikpil/Box2D.NET/tree/e68c8ff1fb9da8bd87a71159b13010c25eed76f8/src/Box2D.NET.Samples/Samples
 
-        private static ContactsDispatcher _contactDispatcher;
+        private static ContactsDispatcher _contactDispatcher = new();
         internal static ContactsDispatcher ContactsDispatcher => _contactDispatcher;
+        private static List<RigidBody2D> _rigidbodies = new();
 
-        private static float _accumulator = 0f;
-        private const float fixedTimeStep = 0.02f;
-        private static List<RigidBody2D> _rigidbody = new();
-        public override void Initialize()
+        private static double _accumulator = 0f;
+        private const float _fixedTimeStep = 0.02f;
+
+        public override Task InitializeAsync()
         {
+            PhysicWorld.Initialize();
             _contactDispatcher = new ContactsDispatcher();
             B2Worlds.b2World_SetCustomFilterCallback(PhysicWorld.WorldID, CustomFilter, this);
+            _accumulator = 0;
+            _rigidbodies.Clear();
+
+            return Task.CompletedTask;
         }
 
         public bool CustomFilter(B2ShapeId shapeIdA, B2ShapeId shapeIdB, object context)
@@ -38,53 +44,57 @@ namespace Engine.Layers
         {
             _accumulator = Math.Min(_accumulator + Time.DeltaTime, 0.25f);
 
-            // TODO: refactor, this is for fast prototyping
-            _rigidbody.Clear();
-            SceneManager.FindAll(_rigidbody, findDisabled: false);
+            _rigidbodies.Clear();
+            SceneManager.FindAll(_rigidbodies, findDisabled: false);
 
-            foreach (var rigidbody in _rigidbody)
-            {
-                rigidbody.PreUpdateBody();
-            }
-
-            while (_accumulator >= fixedTimeStep)
+            while (_accumulator >= _fixedTimeStep)
             {
                 _contactDispatcher.Update();
-
                 SceneManager.FixedUpdate();
 
-                foreach (var rigidbody in _rigidbody)
+                foreach (var rigidbody in _rigidbodies)
                 {
+                    if (!rigidbody)
+                        continue;
+
                     rigidbody.PreUpdateBody();
                     rigidbody.PrevLocalPosition = rigidbody.Transform.LocalPosition;
                     rigidbody.PrevLocalRotation = rigidbody.Transform.LocalRotation;
                 }
 
-                B2Worlds.b2World_Step(PhysicWorld.WorldID, fixedTimeStep, 6);
-                _accumulator -= fixedTimeStep;
+                B2Worlds.b2World_Step(PhysicWorld.WorldID, _fixedTimeStep, 3);
+                _accumulator -= _fixedTimeStep;
 
-                foreach (var rigidbody in _rigidbody)
+                foreach (var rigidbody in _rigidbodies)
                 {
-                    if (rigidbody)
-                    {
-                        rigidbody.PostUpdateBody();
-                    }
+                    if (!rigidbody)
+                        continue;
+
+                    rigidbody.PostUpdateBody();
                 }
             }
 
-            float alpha = _accumulator / fixedTimeStep;
+            float alpha = (float)_accumulator / _fixedTimeStep;
 
-            foreach (var rigidbody in _rigidbody)
+            foreach (var rigidbody in _rigidbodies)
             {
+                if (!rigidbody)
+                    continue;
+
                 rigidbody.CalculatePhysicsInterpolation(rigidbody.Transform, rigidbody.PrevLocalPosition, rigidbody.PrevLocalRotation, alpha);
             }
         }
+
         internal static void Clear()
         {
             _accumulator = 0;
-            _rigidbody.Clear();
+            _rigidbodies.Clear();
             _contactDispatcher.ClearCollisions();
         }
-        public override void Close() { }
+        public override void Close()
+        {
+            Clear();
+            PhysicWorld.Clear();
+        }
     }
 }

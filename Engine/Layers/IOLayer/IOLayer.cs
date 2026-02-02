@@ -9,27 +9,22 @@ using System.Threading.Tasks;
 
 namespace Engine.Layers
 {
-    internal class IOLayer : LayerBase
+    public abstract class IOLayer : LayerBase
     {
         private static AssetDatabase _assetDatabase;
+        internal static AssetDatabase Database => _assetDatabase; // Remove this.
 
-        // Refactor: (factory)
-        public override void Initialize()
+        private protected void InitializeIO(DiskBase disk, Dictionary<AssetType, AssetBuilderBase> assetsBuilder)
         {
-            DiskBase disk = null;
-            _assetDatabase = new AssetDatabase();
+            _assetDatabase = new AssetDatabase(assetsBuilder);
 
-#if DEBUG && !MOBILE
-            disk = new DevModeDisk();
-#else
-#if !MOBILE
-            disk = new ReleaseModeDisk(Paths.GetReleaseDataFolder());
-#else
-            disk = new ReleaseModeDisk(GFSEngine.AssetFileStream);
-#endif
-#endif
             disk.Initialize();
 
+           _assetDatabase.Initialize(disk);
+        }
+
+        private protected void Reload(DiskBase disk)
+        {
             _assetDatabase.Initialize(disk);
         }
 
@@ -41,6 +36,5 @@ namespace Engine.Layers
         public override void Close()
         {
         }
-
     }
 }

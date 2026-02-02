@@ -9,6 +9,7 @@ using Box2D.NET;
 using Engine.Types;
 using Engine.Utils;
 using System.Numerics;
+using SharedTypes;
 
 namespace Engine
 {
@@ -16,19 +17,6 @@ namespace Engine
     public class TilemapCollider2D : Collider2D
     {
         private TilemapRenderer _renderer;
-
-        private struct Box
-        {
-            public B2Vec2 Position;
-            public B2Vec2 Size;
-
-            public Box(B2Vec2 pos, B2Vec2 size)
-            {
-                Position = pos;
-                Size = size;
-            }
-
-        }
 
         protected override void OnAwake()
         {
@@ -61,9 +49,8 @@ namespace Engine
             for (int i = 0; i < boxes.Count; i++)
             {
 
-                polygons[i] = B2Geometries.b2MakeOffsetBox(boxes[i].Size.X / 2.0f, boxes[i].Size.Y / 2.0f, boxes[i].Position + Offset.ToB2Vec2(), glm.radians(RotationOffset).ToB2Rot());
+                polygons[i] = B2Geometries.b2MakeOffsetBox(boxes[i].Size.x / 2.0f, boxes[i].Size.y / 2.0f, (boxes[i].Position + Offset).ToB2Vec2(), glm.radians(RotationOffset).ToB2Rot());
             }
-
             return polygons;
         }
 
@@ -182,7 +169,7 @@ namespace Engine
                     float worldX = runStart + minX + runLength * 0.5f - 0.5f;
                     float worldY = y + minY + rectHeight * 0.5f - 0.5f;
 
-                    boxes.Add(new Box(new B2Vec2(worldX, worldY), new B2Vec2(runLength, rectHeight)));
+                    boxes.Add(new Box(new vec2(worldX, worldY), new vec2(runLength, rectHeight)));
 
                     consumed += runLength * rectHeight;
                     if (consumed >= totalTiles) { return boxes; }

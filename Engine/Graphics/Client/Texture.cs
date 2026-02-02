@@ -11,20 +11,23 @@ namespace Engine
     {
         public int Width { get; protected set; }
         public int Height { get; protected set; }
-        public TextureMode Mode { get; protected set; }
-        public int Channels { get; }
+        [SerializedField] public TextureMode Mode { get; protected set; }
+        [SerializedField] public TextureFilter Filter { get; protected set; }
+        public int Channels { get; protected set; }
         internal protected byte[] Data { get; internal set; }
 
-        internal GfxResource NativeResource { get; }
+        internal GfxResource NativeResource { get; protected private set; }
 
-        internal Texture(string path, Guid guid, TextureMode mode, int width, int height, int channels, byte[] data) : base(path, guid)
+        internal Texture(string path, Guid guid, TextureMode mode, TextureFilter filter, int width, int height, int channels, byte[] data) : base(path, guid)
         {
             Width = width;
             Height = height;
             Channels = channels;
             Data = data;
             Mode = mode;
-            NativeResource = Create() as GfxResource;
+            Filter = filter;
+
+
         }
 
         internal Texture(string path, Guid guid, int width, int height, int channels, GfxResource nativeResource) : base(path, guid)
@@ -40,6 +43,6 @@ namespace Engine
         {
             NativeResource.Dispose();
         }
-        protected abstract IResourceHandle Create();
+        protected abstract void Create();
     }
 }

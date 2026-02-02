@@ -11,11 +11,12 @@ namespace Engine
 {
     internal static class PhysicWorld
     {
-        public static B2WorldId WorldID { get; }
-        public static B2World World { get; }
+        public static B2WorldId WorldID { get; private set; }
+        public static B2World World { get; private set; }
         private static B2DebugDraw _debugDraw;
         internal static B2DebugDraw DebugDraw => _debugDraw;
-        static PhysicWorld()
+
+        internal static void Initialize()
         {
             B2WorldDef worldDef = B2Types.b2DefaultWorldDef();
             worldDef.gravity = new B2Vec2(0, -9.8f);
@@ -53,10 +54,14 @@ namespace Engine
             };
 
         }
-
         internal static void SetGravity(vec2 gravity)
         {
             B2Worlds.b2World_SetGravity(WorldID, new B2Vec2(gravity.x, gravity.y));
+        }
+
+        internal static void Clear()
+        {
+            B2Worlds.b2DestroyWorld(WorldID);
         }
     }
 }

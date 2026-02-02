@@ -6,11 +6,6 @@ using System.Threading.Tasks;
 
 namespace Engine.Layers
 {
-    public class LayerEvent 
-    {
-        public EventType Type { get; internal set; }
-    }
-
     public enum EventType
     {
         WindowFocusEnter,
@@ -20,11 +15,16 @@ namespace Engine.Layers
     public abstract class LayerBase
     {
         //internal abstract int Priority { get; set; }
-        public abstract void Initialize();
+        internal bool IsInitialized { get; protected private set; }
+        public virtual Task InitializeAsync() { return Task.CompletedTask; }
+        public virtual void Initialize() { }
         public abstract void Close();
         internal virtual void UpdateLayer() { }
         public virtual void OnPause() { }
         public virtual void OnResume() { }
-        public virtual void OnEvent(LayerEvent currentEvent) { }
+        public virtual void OnEvent(EventType type, object value) 
+        {
+        
+        }
     }
 }

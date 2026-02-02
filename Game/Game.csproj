@@ -4,16 +4,16 @@
 		<TargetFrameworks>net8.0-windows;net8.0</TargetFrameworks>
 		<ImplicitUsings>false</ImplicitUsings>
 		<Nullable>disable</Nullable>
-		<BaseIntermediateOutputPath>Library\Build\obj\</BaseIntermediateOutputPath>
-		<BaseOutputPath>Library\Build\bin\</BaseOutputPath>
-		<DefineConstants>$(DefineConstants);PROJECT_PATH="$(MSBuildProjectFullPath)"</DefineConstants>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<RestoreLockedMode>false</RestoreLockedMode>
 	</PropertyGroup>
 
+
+	
 	<PropertyGroup Condition="'$(Configuration)'=='Release'">
 		<DebugType>none</DebugType>
 		<DebugSymbols>false</DebugSymbols>
 	</PropertyGroup>
-
 
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0'">
 		<DefineConstants>DESKTOP;$(DefineConstants)</DefineConstants>
@@ -23,27 +23,24 @@
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-windows'">
 		<DefineConstants>WINDOWS;DESKTOP;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>
-
-	<!-- Android -->
-	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
-		<DefineConstants>ANDROID;MOBILE;$(DefineConstants)</DefineConstants>
-		<RuntimeIdentifiers>$(RuntimeIdentifiers)</RuntimeIdentifiers>
-	</PropertyGroup>
-
-	<!-- iOS -->
-	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios'">
-		<DefineConstants>IOS;MOBILE;$(DefineConstants)</DefineConstants>
+	<!-- macOS -->
+	<PropertyGroup Condition="'$(OS)' == 'Unix' AND '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'True'">
+		<DefineConstants>MACOS;OSX;UNIX;DESKTOP;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>
 	<!-- Linux -->
 	<PropertyGroup Condition="'$(OS)' == 'Unix' AND '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'True'">
 		<DefineConstants>LINUX;UNIX;DESKTOP;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>
-
-	<!-- macOS -->
-	<PropertyGroup Condition="'$(OS)' == 'Unix' AND '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'True'">
-		<DefineConstants>MACOS;OSX;UNIX;DESKTOP;$(DefineConstants)</DefineConstants>
+	
+	<!-- Android -->
+	<PropertyGroup Condition="'$(BuildAndroid)' == 'true'">
+		<DefineConstants>ANDROID;MOBILE</DefineConstants>
 	</PropertyGroup>
-
+	<!-- iOS -->
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios'">
+		<DefineConstants>IOS;MOBILE</DefineConstants>
+	</PropertyGroup>
+	
 	<ItemGroup>
 		<None Include="Assets\**\*" Visible="true">
 			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
@@ -69,10 +66,6 @@
 		<None Remove="**\*.zip" />
 		<None Remove="**\*.ldtk" />
 		<None Remove="obj\**" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Include="Assets\Scripts\Inventory\Items\PoisonAmmoItem.cs" />
 	</ItemGroup>
 
 	<ItemGroup>

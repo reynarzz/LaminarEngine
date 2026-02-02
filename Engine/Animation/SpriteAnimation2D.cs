@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    [UniqueComponent]
+    [UniqueComponent, Obsolete]
     public class SpriteAnimation2D : ScriptBehavior
     {
         private Sprite[] _frames;

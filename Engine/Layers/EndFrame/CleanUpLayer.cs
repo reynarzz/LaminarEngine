@@ -10,14 +10,15 @@ namespace Engine.Layers
     {
         public static bool CleaningUp { get; private set; }
 
-        public override void Initialize()
+        public override Task InitializeAsync()
         {
+            return Task.CompletedTask;
         }
 
         internal override void UpdateLayer()
         {
             CleaningUp = true;
-            SceneManager.OnCleanUpUpdate();
+            SceneManager.OnCleanupUpdate();
             CleaningUp = false;
         }
 

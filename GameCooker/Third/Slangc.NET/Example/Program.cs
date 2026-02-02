@@ -1,0 +1,27 @@
+﻿//using System.Diagnostics;
+//using Slangc.NET;
+
+//Stopwatch stopwatch = Stopwatch.StartNew();
+
+//args =
+//[
+//    Path.Combine(AppContext.BaseDirectory, "Shaders", "Test.slang"),
+//    "-profile", "sm_6_6",
+//    "-matrix-layout-row-major",
+//    "-entry","VSMain", "-stage", "vertex",
+//    "-entry","PSMain", "-stage", "pixel",
+//    "-target", "spirv"
+//];
+
+//byte[] spv = SlangCompiler.CompileWithReflection(args, out SlangReflection reflection);
+
+//stopwatch.Stop();
+
+//Console.WriteLine($"Compilation Time: {stopwatch.ElapsedMilliseconds} ms");
+//Console.WriteLine($"SPIR-V: {spv.Length} bytes");
+//Console.WriteLine($"Reflection JSON: {reflection.Json}");
+
+//reflection.Deserialize();
+
+//Console.WriteLine($"Reflection Parameters: {reflection.Parameters.Length} items");
+//Console.WriteLine($"Reflection EntryPoints: {reflection.EntryPoints.Length} items");

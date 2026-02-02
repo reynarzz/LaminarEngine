@@ -1,4 +1,7 @@
 Fonts/windows-bold[1].ttf
+Materials/Portal.material
+Shaders/Portal.shader
+Shaders/Portal_mobile.shader
 Shaders/ScreenVert.vert
 Shaders/Bloom/Bloom_BrightPass.frag
 Shaders/Bloom/Bloom_GaussianBlur.frag
@@ -10,6 +13,7 @@ Shaders/ScanLines.frag
 Data/ItemsDatabase.csv
 Tilemap/WorldTilemap.ldtk
 Shaders/CTRTv.frag
+Shaders/CTRTv_Cheap.frag
 Shaders/ChromaticAberration.frag
 Shaders/Fade.frag
 Audio/MinifantasyMusic/Goblins_Dance_(Battle).wav
@@ -47,6 +51,7 @@ pixel-ui_buttons_long_47x14.png
 eInteract.png
 eInteract2.png
 eInteract3.png
+portal_frame.png
 InventorySlot.png
 outlineCircle.png
 Shaders/SpriteVert.vert
@@ -57,6 +62,7 @@ Shaders/Font/FontFrag.frag
 Shaders/SpriteFragOver.frag
 Shaders/Portal.frag
 Shaders/Portal_mobile.frag
+Shaders/Portal_mobile_cheap.frag
 stars.png
 Audio/HALFTONE/UI/1. Buttons/Button_20_adjust.wav
 Audio/HALFTONE/UI/1. Buttons/Button_24.wav

@@ -10,8 +10,6 @@ namespace Game
     public class DoorData : InteractableData
     {
         public int Level { get; set; }
-        public ItemId LockedBy { get; set; }
-        public int LockedAmount { get; set; }
         public bool ConsumeItem { get; set; }
         public vec2 TargetPosition { get; internal set; }
         public int TargetLevelIndex { get; internal set; }

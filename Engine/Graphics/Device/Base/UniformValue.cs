@@ -9,17 +9,17 @@ namespace Engine.Graphics
 {
     public struct UniformValue
     {
-        internal string Name { get; private set; }
-        public int IntValue { get; private set; }
-        public uint UIntValue { get; private set; }
-        public float FloatValue { get; private set; }
-        public mat4 Mat4Value { get; private set; }
-        public vec2 Vec2Value { get; private set; }
-        public vec3 Vec3Value { get; private set; }
-        public vec4 Vec4Value { get; private set; }
-        public int[] IntArrValue { get; private set; }
-        internal UniformType Type { get; private set; }
-        public RenderTexture RenderTextureValue { get; private set; }
+        [SerializedField] public string Name { get; private set; }
+        [SerializedField] public int IntValue { get; private set; }
+        [SerializedField] public uint UIntValue { get; private set; }
+        [SerializedField] public float FloatValue { get; private set; }
+        [SerializedField] public mat4 Mat4Value { get; private set; }
+        [SerializedField] public vec2 Vec2Value { get; private set; }
+        [SerializedField] public vec3 Vec3Value { get; private set; }
+        [SerializedField] public vec4 Vec4Value { get; private set; }
+        [SerializedField] public int[] IntArrValue { get; private set; }
+        [SerializedField] public UniformType Type { get; private set; }
+        [SerializedField] public RenderTexture RenderTextureValue { get; private set; }
 
         public void SetInt(string name, int value)
         {
@@ -74,7 +74,7 @@ namespace Engine.Graphics
         {
             Name = name;
             RenderTextureValue = value;
-            Type = UniformType.RenderTexture;
+            Type = UniformType.Texture2D;
         }
         public void SetIntArr(string name, int[] value)
         {
