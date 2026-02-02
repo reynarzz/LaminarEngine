@@ -44,16 +44,25 @@ namespace Engine.Layers
 
             async Task InitializeLayers()
             {
+                
                 for (int i = Layers.Length - 1; i >= 0; i--)
                 {
-                    var layer = Layers[i];
+                        var layer = Layers[i];
 
-                    if (layer != null)
+                    try
                     {
-                        await layer.InitializeAsync();
-                        Debug.Log("Initialized layer: " + layer.GetType().Name);
+                        if (layer != null)
+                        {
+                            await layer.InitializeAsync();
+                            Debug.Log("Initialized layer: " + layer.GetType().Name);
+                        }
+                    }
+                    catch(Exception e)
+                    {
+                        Debug.Log(e.ToString());
                     }
                 }
+                
 
                 Debug.Log("Layers fully initialized");
                 LayersInitialized = true;

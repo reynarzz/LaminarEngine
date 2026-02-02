@@ -21,6 +21,15 @@
   <CodesignProvision>Automatic</CodesignProvision>
 </PropertyGroup>
 
+<PropertyGroup>
+    <!-- Use full linker to prevent stripping symbols -->
+    <MtouchLink>Full</MtouchLink>
+    <!-- Pass flags to the linker -->
+    <AdditionalArgs>
+        -cxx -gcc_flags "-L$(ProjectDir)NativeLibraries -lminiaudio -force_load $(ProjectDir)NativeLibraries/miniaudio"
+    </AdditionalArgs>
+</PropertyGroup>
+
 <ItemGroup>
   <BundleResource Include="Assets/**" />
 </ItemGroup>

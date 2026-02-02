@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using OpenGL;
+#if DESKTOP
+using static OpenGL.GL;
+#else
+using static OpenGL.ES.GLES30;
+#endif
 
 namespace Engine.Graphics.OpenGL
 {
@@ -64,7 +68,7 @@ namespace Engine.Graphics.OpenGL
             }
             _handleBinder(0);
 #if DEBUG
-            GLUtils.PrintGLErrors();
+            global::OpenGL.GLUtils.PrintGLErrors();
 #endif
         }
 
@@ -76,7 +80,8 @@ namespace Engine.Graphics.OpenGL
 
                 IsInitialized = CreateResource(descriptor);
 #if DEBUG
-                GLUtils.PrintGLErrors();
+                global::OpenGL.GLUtils.PrintGLErrors();
+                Debug.Log(GetType().Name);
 #endif
                 if (!IsInitialized)
                 {
@@ -98,7 +103,7 @@ namespace Engine.Graphics.OpenGL
             {
                 UpdateResource(descriptor);
 #if DEBUG
-                GLUtils.PrintGLErrors();
+                global::OpenGL.GLUtils.PrintGLErrors();
 #endif
             }
         }
@@ -110,7 +115,7 @@ namespace Engine.Graphics.OpenGL
         {
             Handle = _handleCreator();
 #if DEBUG
-            GLUtils.PrintGLErrors();
+            global::OpenGL.GLUtils.PrintGLErrors();
 #endif
         }
 
@@ -118,7 +123,7 @@ namespace Engine.Graphics.OpenGL
         {
             _handleDeleter?.Invoke(Handle);
 #if DEBUG
-            GLUtils.PrintGLErrors();
+            global::OpenGL.GLUtils.PrintGLErrors();
 #endif
             Handle = 0;
         }
@@ -133,7 +138,7 @@ namespace Engine.Graphics.OpenGL
 #endif
                 DestroyHandle();
 #if DEBUG
-                GLUtils.PrintGLErrors();
+                global::OpenGL.GLUtils.PrintGLErrors();
 #endif
                 IsInitialized = false;
             }

@@ -58,9 +58,11 @@ namespace Engine.Graphics.OpenGL
 #if DEBUG
             GLUtils.PrintGLErrors();
 #endif
-            Debug.Log($"v:{descriptor.VertName}, f:{descriptor.FragName}");
+ string src = Encoding.UTF8.GetString(descriptor.VertexSource);
 
-            return ValidateProgram(Handle);
+            Debug.Log($"v:{descriptor.VertName}, f:{descriptor.FragName}: {src}");
+
+            return true;//ValidateProgram(Handle);
         }
 
         private unsafe uint CompileShader(int shaderType, byte[] shaderSource, string name)

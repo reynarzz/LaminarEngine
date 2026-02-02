@@ -85,15 +85,6 @@ namespace Engine.IOS
                 layer.DrawableProperties = new NSDictionary(EAGLDrawableProperty.RetainedBacking, false, EAGLDrawableProperty.ColorFormat, EAGLColorFormat.RGBA8);
 
 
-                try
-                {
-                    //EAGLContext.SetCurrentContext(_context);
-                    _view.BindDrawable();
-                }
-                catch (Exception e)
-                {
-                    Debug.Log(e.ToString());
-                }
                 Debug.Prefix = "com.reynarzz.gfs:CONSOLE ";
                 _reader = OpenBundleBinary("Assets/GameData.gfs");
 
@@ -108,7 +99,7 @@ namespace Engine.IOS
                 PhysicalWidth = Width;
                 PhysicalHeight = Height;
 
-                Debug.Log($"width: {Width}, Height: {Height}, Pwidth: {PhysicalWidth}, PHeight: {PhysicalHeight}, ");
+                Debug.Log($"width: {Width}, Height: {Height}, Pwidth: {PhysicalWidth}, PHeight: {PhysicalHeight}, ----asdasd");
 
             }
             catch (Exception e)
@@ -142,13 +133,15 @@ namespace Engine.IOS
         {
             try
             {
-
+                EAGLContext.SetCurrentContext(_context);
+                view.BindDrawable();
+                
                 if (_engine == null)
                 {
                     var status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
                         Debug.Log("Is frame buffer ok?: " + (status == GL_FRAMEBUFFER_COMPLETE));
 
-                    if (status == GL_FRAMEBUFFER_COMPLETE)
+                    //if (status == GL_FRAMEBUFFER_COMPLETE)
                     {
 
                         _engine = new GFSEngine(this, new GameApplication(), _inputTest, _reader);

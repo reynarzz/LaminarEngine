@@ -24,22 +24,22 @@ namespace Engine.Graphics.OpenGL
 
         internal override void Bind()
         {
-            _prevBoundBuffer = _currentBoundBuffer;
-            _prevBoundBufferTarget = _currentBoundBufferTarget;
+           // _prevBoundBuffer = _currentBoundBuffer;
+           // _prevBoundBufferTarget = _currentBoundBufferTarget;
             base.Bind();
-            _currentBoundBuffer = Handle;
-            _currentBoundBufferTarget = Target;
+           // _currentBoundBuffer = Handle;
+           // _currentBoundBufferTarget = Target;
         }
 
         internal override void Unbind()
         {
             base.Unbind();
 
-            _currentBoundBuffer = _prevBoundBuffer;
-            _currentBoundBufferTarget = _prevBoundBufferTarget;
+           // _currentBoundBuffer = _prevBoundBuffer;
+            //_currentBoundBufferTarget = _prevBoundBufferTarget;
             if (_currentBoundBuffer >= 0)
             {
-                glBindBuffer(_currentBoundBufferTarget, _currentBoundBuffer);
+               // glBindBuffer(_currentBoundBufferTarget, _currentBoundBuffer);
             }
         }
     }
