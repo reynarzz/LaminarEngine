@@ -1,4 +1,6 @@
-﻿using Engine;
+﻿using Editor.Data;
+using Engine;
+using SharedTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,9 +20,19 @@ namespace Editor.Build
         {
             if (result.IsSucess)
             {
+                var rootOutputFolder = EditorPaths.ShipWin32FolderRoot;
 
+                var settings = EditorDataManager.BuildSettings.GetBuildSettings(PlatformBuild.Windows) as WindowsBuildSettings;
+                var buildTypeSettings = settings.GetCurrentBuildTypeSettings();
+                if (!string.IsNullOrEmpty(buildTypeSettings.OutputPath))
+                {
+                    rootOutputFolder = Paths.ClearPathSeparation(buildTypeSettings.OutputPath);
+                }
+
+                EditorFileDialog.DisplayFolder(rootOutputFolder);
             }
         }
+
         protected override void OnBeforeBuild()
         {
             void PerformOp(Action op)

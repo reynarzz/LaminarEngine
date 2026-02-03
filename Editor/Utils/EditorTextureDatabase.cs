@@ -1,6 +1,7 @@
 ﻿using Engine;
 using Engine.Graphics;
 using Engine.Graphics.OpenGL;
+using SharedTypes;
 using StbImageSharp;
 using System;
 using System.Collections.Generic;
@@ -60,11 +61,13 @@ namespace Editor.Utils
 
         private Texture2D LoadIconFromDisk(string path)
         {
-            var finalPath = Path.Combine(EditorPaths.DataRoot, "Resources/Icons", path);
+            var finalPath = Paths.ClearPathSeparation(Path.Combine(EditorPaths.DataRoot, "Resources/Icons", path));
             if (File.Exists(finalPath))
             {
                 StbImage.stbi_set_flip_vertically_on_load(1);
-                var image = ImageResult.FromStream(File.Open(finalPath, FileMode.Open));
+                using var file = File.Open(finalPath, FileMode.Open, FileAccess.Read);
+
+                var image = ImageResult.FromStream(file);
 
                 return new Texture2D(TextureMode.Clamp, TextureFilter.Linear, image.Width, image.Height, 4, image.Data);
             }

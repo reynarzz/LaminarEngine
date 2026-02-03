@@ -358,7 +358,7 @@
                   "InternalType": "Editor.Build.BuildType, Editor",
                   "Data": {
                     "$type": "Editor.Build.BuildType, Editor",
-                    "$value": "Debug"
+                    "$value": "Release"
                   }
                 },
                 {
@@ -429,6 +429,37 @@
                   "Data": {
                     "$type": "System.Boolean, System.Private.CoreLib",
                     "$value": true
+                  }
+                },
+                {
+                  "Name": "MinimumApiLevel",
+                  "Type": "Simple",
+                  "InternalType": "Editor.Build.AndroidApiLevel, Editor",
+                  "Data": {
+                    "$type": "Editor.Build.AndroidApiLevel, Editor",
+                    "$value": "Android_6_Marshmallow_API_23"
+                  }
+                },
+                {
+                  "Name": "TargetApiLevel",
+                  "Type": "Simple",
+                  "InternalType": "Editor.Build.AndroidApiLevel, Editor",
+                  "Data": {
+                    "$type": "Editor.Build.AndroidApiLevel, Editor",
+                    "$value": "Android_15_API_35"
+                  }
+                },
+                {
+                  "Name": "Version",
+                  "Type": "Simple",
+                  "InternalType": "GlmNet.ivec3, SharedTypes",
+                  "Data": {
+                    "$type": "GlmNet.ivec3, SharedTypes",
+                    "$value": {
+                      "x": 1,
+                      "y": 0,
+                      "z": 0
+                    }
                   }
                 },
                 {

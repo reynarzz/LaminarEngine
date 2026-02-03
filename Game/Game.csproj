@@ -74,6 +74,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Engine\Engine.csproj" />
+		<ProjectReference Include="..\SharedTypes\SharedTypes.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

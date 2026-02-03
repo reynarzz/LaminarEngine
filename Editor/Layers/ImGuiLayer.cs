@@ -176,9 +176,23 @@ namespace Editor.Layers
             ImGui.SetNextWindowPos(viewport.Pos.X + viewport.Size.X * 0.5f - winSize.X * 0.5f,
                                    viewport.Pos.Y + viewport.Size.Y * 0.5f - winSize.Y * 0.5f);
             ImGui.Begin("Initializing Editor", ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove);
-            _fakeProgress += ImGui.GetIO().DeltaTime * 0.05f;
+            _fakeProgress += ImGui.GetIO().DeltaTime * 0.04f;
 
-            var fakeMessage = _fakeProgress <= 0.3 ? "Compiling GameApplication Domain" : "Importing assets";
+            string fakeMessage = null;
+
+            if(_fakeProgress <= 0.3f)
+            {
+                fakeMessage = "Compiling GameApplication Domain";
+            }
+            else if(_fakeProgress < 1.0f)
+            {
+                fakeMessage = "Importing assets";
+            }
+            else
+            {
+                fakeMessage = "Finishing up";
+            }
+
             ImGui.Text($"{fakeMessage}");
           
             ImGui.ProgressBar(_fakeProgress, new Vector2(270, 20));
