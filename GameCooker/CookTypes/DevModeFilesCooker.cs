@@ -19,6 +19,7 @@ namespace GameCooker
             _database = database;
         }
 
+        // TODO: Split this function.
         internal override Task<bool> CookAssetsAsync(CookFileOptions fileOptions, CookingPlatform platform, (string, AssetType)[] files, string outFolder)
         {
             return Task.Run(async () =>
@@ -157,7 +158,7 @@ namespace GameCooker
                     Console.WriteLine("Check Permission: Dev mode files cooker.");
                 }
                 
-                return someAssetFailImport;
+                return !someAssetFailImport;
             });
         }
     }
