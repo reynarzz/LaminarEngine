@@ -88,17 +88,6 @@ namespace Engine.IOS
                 Debug.Prefix = "com.reynarzz.gfs:CONSOLE ";
                 _reader = OpenBundleBinary("Assets/GameData.gfs");
 
-                nfloat widthPoints = _view.Bounds.Width;
-                nfloat heightPoints = _view.Bounds.Height;
-
-                nfloat scale = UIScreen.MainScreen.Scale;
-
-                Width = (int)(widthPoints * scale);
-                Height = (int)(heightPoints * scale);
-
-                PhysicalWidth = Width;
-                PhysicalHeight = Height;
-
                 Debug.Log($"width: {Width}, Height: {Height}, Pwidth: {PhysicalWidth}, PHeight: {PhysicalHeight}, ----asdasd");
 
             }
@@ -139,7 +128,12 @@ namespace Engine.IOS
                      EAGLContext.SetCurrentContext(_context);
                     view.BindDrawable();
                 
+                     Width = (int)_view.DrawableWidth;
+                Height = (int)_view.DrawableHeight;
 
+                PhysicalWidth  = (int)_view.DrawableWidth;
+                PhysicalHeight = (int)_view.DrawableHeight;
+                Debug.Log($"size ({Width}, {Height})");
                     var status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
                         Debug.Log("Is frame buffer ok?: " + (status == GL_FRAMEBUFFER_COMPLETE));
 
