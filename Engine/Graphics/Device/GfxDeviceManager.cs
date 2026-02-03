@@ -1,5 +1,4 @@
-﻿using Engine.Graphics.OpenGL;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,7 +14,10 @@ namespace Engine.Graphics
 
         public static void Init()
         {
-            _device = new GLDevice();
+            #if IOS
+            #else
+            _device = new OpenGL.GLDevice();
+            #endif
             _device.Initialize();
         }
 

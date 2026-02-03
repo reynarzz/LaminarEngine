@@ -5,11 +5,12 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Engine.Graphics;
-using Engine.Graphics.OpenGL;
 using Engine.Utils;
 using GlmNet;
+#if !IOS
 using OpenGL;
-
+using Engine.Graphics.OpenGL;
+#endif
 namespace Engine
 {
     public static partial class Debug
@@ -371,7 +372,7 @@ namespace Engine
 
         internal static void DrawGeometries(mat4 worldViewProj, mat4 uiViewProj, GfxResource texture)
         {
-#if DEBUG
+#if DEBUG && !IOS
             if (_initializedGraphics)
             {
                 // TODO: Needs refactoring, dirty drawing. 
@@ -418,10 +419,11 @@ namespace Engine
 
         private static void DrawLines(ref int verticesToDrawCount)
         {
+            #if !IOS
             (_linesGeometry as GLGeometry).Bind();
-
             GfxDeviceManager.Current.DrawArrays(DrawMode.Lines, 0, verticesToDrawCount);
             verticesToDrawCount = 0;
+            #endif
         }
 
         private static void PushLineGeometries(DebugVertex[] vertices, int totalVertsToDraw)

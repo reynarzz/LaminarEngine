@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using GlmNet;
-using Engine.Graphics.OpenGL;
 
 namespace Engine.Rendering
 {

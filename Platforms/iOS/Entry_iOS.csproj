@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0-ios</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>true</ImplicitUsings>
+    <SupportedOSPlatformVersion>13.0</SupportedOSPlatformVersion>
+    <RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <!--
+      Enable full trimming in Release mode.
+      To learn more, see: https://learn.microsoft.com/dotnet/core/deploying/trimming/trimming-options#trimming-granularity
+    -->
+    <TrimMode Condition="'$(Configuration)' == 'Release'">link</TrimMode>
+  </PropertyGroup>
+
+<PropertyGroup>
+    <ApplicationId>com.reynarzz.gfs</ApplicationId>
+  <CodesignKey>Apple Development</CodesignKey>
+  <CodesignProvision>Automatic</CodesignProvision>
+</PropertyGroup>
+
+<PropertyGroup>
+    <MtouchLink>Full</MtouchLink>
+</PropertyGroup>
+
+<ItemGroup>
+  <BundleResource Include="Assets/**" />
+</ItemGroup>
+
+  <ItemGroup>
+		<ProjectReference Include="..\..\Engine\Engine.csproj" />
+        <ProjectReference Include="..\..\Game\Game.csproj" />
+  </ItemGroup>
+
+
+</Project>
