@@ -1,10 +1,10 @@
 #if DESKTOP
 using static OpenGL.GL;
 #else
-using Engine;
 using static OpenGL.ES.GLES30;
 #endif
 using System.Runtime.CompilerServices;
+using Engine;
 
 namespace OpenGL
 {

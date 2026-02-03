@@ -41,6 +41,8 @@ namespace Engine
                     Debug.Log("Engine running macOs");
 #elif EDITOR
                     Debug.Log("Engine running editor");
+#elif IOS
+                    Debug.Log("Engine running ios");
 #endif
 #endif
             WindowManager.Window = window;

@@ -74,7 +74,7 @@ namespace Engine
             if (!string.IsNullOrEmpty(path) && !_loadedPaths.Contains(path))
                 _loadedPaths.Add(path);
 #endif
-
+            Debug.Log(path);
             return IOLayer.GetDatabase().GetAsset<T>(path);
         }
 

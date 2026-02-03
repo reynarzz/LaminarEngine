@@ -133,11 +133,13 @@ namespace Engine.IOS
         {
             try
             {
-                EAGLContext.SetCurrentContext(_context);
-                view.BindDrawable();
-                
+               
                 if (_engine == null)
                 {
+                     EAGLContext.SetCurrentContext(_context);
+                    view.BindDrawable();
+                
+
                     var status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
                         Debug.Log("Is frame buffer ok?: " + (status == GL_FRAMEBUFFER_COMPLETE));
 
