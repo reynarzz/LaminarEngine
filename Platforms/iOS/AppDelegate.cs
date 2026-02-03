@@ -1,7 +1,8 @@
-namespace iOS;
 using Metal;
 using UIKit;
-
+namespace iOS
+{
+    
 [Register ("AppDelegate")]
 public class AppDelegate : UIApplicationDelegate 
 {
@@ -36,4 +37,5 @@ public class AppDelegate : UIApplicationDelegate
 		// If any sessions were discarded while the application was not running, this will be called shortly after 'FinishedLaunching'.
 		// Use this method to release any resources that were specific to the discarded scenes, as they will not return.
 	}
+}
 }

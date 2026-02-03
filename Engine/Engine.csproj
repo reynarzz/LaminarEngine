@@ -15,6 +15,7 @@
 		<TargetFrameworks>$(TargetFrameworks);net9.0-android</TargetFrameworks>
 	</PropertyGroup>
 
+	<!-- IOS -->
 	<PropertyGroup Condition="'$(BuildIOS)' == 'true'">
 		<TargetFrameworks>$(TargetFrameworks);net9.0-ios</TargetFrameworks>
 		<DefineConstants>IOS;MOBILE;$(DefineConstants)</DefineConstants>
@@ -22,6 +23,10 @@
 	
 	<ItemGroup Condition="'$(TargetFramework)'=='net9.0-ios'">
 	<Compile Remove="Graphics/Device/OpenGL/*.cs" />
+	<Compile Remove="Utils/GL_ES.cs" />
+	<Compile Remove="Utils/GL.cs" />
+	<Compile Remove="Window/WindowStandalone.cs" />
+	<Compile Remove="Layers/Input/InputStandalonePlatform.cs" />
 	</ItemGroup>
 
 	<!-- Windows -->
