@@ -43,19 +43,20 @@ namespace Editor
         [DllImport(EditorNatives.EDITOR_NATIVES, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr OpenFolders(string openPath, out ulong count);
 
+
+        internal static void DisplayFolder(string path)
+        {
+            DisplayFolder(path, false);
+        }
+
         internal static void DisplayFolder(string path, bool highlight)
         {
-            if (string.IsNullOrEmpty(path) || !File.Exists(path))
+            if (string.IsNullOrEmpty(path) || !Directory.Exists(path))
             {
                 return;
             }
 
             DisplayFolder(path, EditorNativesUtils.ToByte(highlight));
-        }
-
-        internal static void DisplayFolder(string path)
-        {
-            DisplayFolder(path, 0);
         }
 
         public static bool SaveFile(string openPath, out string path)
@@ -127,7 +128,7 @@ namespace Editor
         }
 
 
-        public static bool OpenFile(string openPath, FileFilter[] filters, out string path)
+        public static bool PickFile(string openPath, FileFilter[] filters, out string path)
         {
             path = string.Empty;
             if (filters.Length != filters.Length)
@@ -161,29 +162,15 @@ namespace Editor
             }
         }
 
-        public static bool OpenFiles(string openPath, out string[] paths)
+        public static bool PickFiles(string openPath, out string[] paths)
         {
             paths = null;
             ulong outCount;
             try
             {
                 var resultPtr = OpenFiles(openPath, out outCount);
-
-                if (resultPtr == IntPtr.Zero || outCount == 0)
-                {
-                    return false;
-                }
-
-                var result = new string[outCount];
-
-                for (ulong i = 0; i < outCount; i++)
-                {
-                    IntPtr strPtr = Marshal.ReadIntPtr(resultPtr, (int)(i * (ulong)IntPtr.Size));
-                    result[i] = Paths.ClearPathSeparation(Marshal.PtrToStringUTF8(strPtr));
-                }
-
+                paths = GetStringArrayFromPtr(resultPtr, outCount);
                 FreeAllocatedStringArray(resultPtr, outCount);
-                paths = result;
 
                 return outCount > 0;
             }
@@ -195,34 +182,21 @@ namespace Editor
             }
         }
 
-        public static bool OpenFiles(string openPath, FileFilter[] filters, out string[] files)
+        public static bool PickFiles(string openPath, FileFilter[] filters, out string[] paths)
         {
             int filterCount = filters?.Length ?? 0;
-            files = null;
+            paths = null;
             IntPtr namesPtr = IntPtr.Zero;
             IntPtr patternsPtr = IntPtr.Zero;
 
             try
             {
                 GetTitleAndExtensionsFiltersPtr(filters, ref namesPtr, ref patternsPtr);
-                ulong outCount;
-                var resultPtr = OpenFilesWithFilters(openPath, namesPtr, patternsPtr, (ulong)filterCount, out outCount);
+                var resultPtr = OpenFilesWithFilters(openPath, namesPtr, patternsPtr, (ulong)filterCount, out var outCount);
 
-                if (resultPtr == IntPtr.Zero || outCount == 0)
-                {
-                    return false;
-                }
-
-                var result = new string[outCount];
-
-                for (ulong i = 0; i < outCount; i++)
-                {
-                    IntPtr strPtr = Marshal.ReadIntPtr(resultPtr, (int)(i * (ulong)IntPtr.Size));
-                    result[i] = Paths.ClearPathSeparation(Marshal.PtrToStringUTF8(strPtr));
-                }
+                paths = GetStringArrayFromPtr(resultPtr, outCount);
 
                 FreeAllocatedStringArray(resultPtr, outCount);
-                files = result;
 
                 return outCount > 0;
             }
@@ -238,6 +212,30 @@ namespace Editor
                     EditorNativesUtils.FreeUtf8StringArray(patternsPtr, filterCount);
                 }
             }
+        }
+
+        internal static bool PickFolder(string openPath, out string path)
+        {
+            path = string.Empty;
+            var ptr = OpenFolder(openPath);
+
+            if (ptr == IntPtr.Zero)
+            {
+                return false;
+            }
+            path = Paths.ClearPathSeparation(Marshal.PtrToStringUTF8(ptr));
+            FreeAllocatedString(ptr);
+
+            return !string.IsNullOrEmpty(path);
+        }
+
+        internal static bool PickFolders(string openPath, out string[] paths)
+        {
+            paths = null;
+            var ptr = OpenFolders(openPath, out var count);
+            paths = GetStringArrayFromPtr(ptr, count);
+            FreeAllocatedStringArray(ptr, count);
+            return count > 0;
         }
 
         private static void GetTitleAndExtensionsFiltersPtr(FileFilter[] filters, ref IntPtr titlesPtr, ref IntPtr extensionsPtr)
@@ -258,6 +256,23 @@ namespace Editor
             }
         }
 
+        private static string[] GetStringArrayFromPtr(IntPtr ptr, ulong count)
+        {
+            if (ptr == IntPtr.Zero || count == 0)
+            {
+                return null;
+            }
+
+            var result = new string[count];
+
+            for (ulong i = 0; i < count; i++)
+            {
+                IntPtr strPtr = Marshal.ReadIntPtr(ptr, (int)(i * (ulong)IntPtr.Size));
+                result[i] = Paths.ClearPathSeparation(Marshal.PtrToStringUTF8(strPtr));
+            }
+
+            return result;
+        }
     }
     internal struct FileFilter
     {
