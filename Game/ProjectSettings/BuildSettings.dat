@@ -437,7 +437,7 @@
                   "InternalType": "Editor.Build.AndroidApiLevel, Editor",
                   "Data": {
                     "$type": "Editor.Build.AndroidApiLevel, Editor",
-                    "$value": 0
+                    "$value": "Android_6_Marshmallow_API_23"
                   }
                 },
                 {

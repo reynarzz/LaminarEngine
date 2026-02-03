@@ -37,6 +37,8 @@ namespace Editor.Build
         {
             if (result.IsSucess)
             {
+                EditorFileDialog.DisplayFolder(EditorPaths.AndroidShipFolderRoot);
+
                 // TODO: Check if the user requested to install the app automatically, if so install it.
             }
         }

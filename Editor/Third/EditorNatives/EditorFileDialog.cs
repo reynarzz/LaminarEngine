@@ -45,6 +45,11 @@ namespace Editor
 
         internal static void DisplayFolder(string path, bool highlight)
         {
+            if (string.IsNullOrEmpty(path) || !File.Exists(path))
+            {
+                return;
+            }
+
             DisplayFolder(path, EditorNativesUtils.ToByte(highlight));
         }
 
