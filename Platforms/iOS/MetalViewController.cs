@@ -41,7 +41,6 @@ namespace Engine.IOS
 
 
         private MTKView _metalView;
-        private CAMetalLayer _metalLayer;
         private IMTLDevice device;
         private IMTLCommandQueue commandQueue;
 
@@ -60,15 +59,6 @@ namespace Engine.IOS
                 Delegate = this,
                 EnableSetNeedsDisplay = true,
                 PreferredFramesPerSecond = 60
-            };
-
-            _metalLayer = new CAMetalLayer
-            {
-                Device = device,
-                PixelFormat = MTLPixelFormat.BGRA8Unorm,
-                FramebufferOnly = true,
-                Frame = View.Layer.Bounds,
-                ContentsScale = UIScreen.MainScreen.Scale
             };
 
             View.AddSubview(_metalView);
@@ -94,20 +84,17 @@ namespace Engine.IOS
         public void Draw(MTKView view)
         {
             using var commandBuffer = commandQueue.CommandBuffer();
-            using var renderPass = view.CurrentRenderPassDescriptor;
+            var renderPass = view.CurrentRenderPassDescriptor;
 
             if (renderPass != null)
             {
-                var drawable = _metalLayer.NextDrawable();
-
-                renderPass.ColorAttachments[0].Texture = drawable.Texture;
                 renderPass.ColorAttachments[0].LoadAction = MTLLoadAction.Clear;
                 renderPass.ColorAttachments[0].StoreAction = MTLStoreAction.Store;
-                renderPass.ColorAttachments[0].ClearColor = new MTLClearColor(1, 0, 0, 1); // blue
-                Debug.Log("Drawing");
-                view.ClearColor = new MTLClearColor(1, 0, 0, 1);
+                renderPass.ColorAttachments[0].ClearColor = new MTLClearColor(1, 0, 0, 1);
+
                 using var encoder = commandBuffer.CreateRenderCommandEncoder(renderPass);
                 encoder.EndEncoding();
+
                 commandBuffer.PresentDrawable(view.CurrentDrawable);
             }
 
