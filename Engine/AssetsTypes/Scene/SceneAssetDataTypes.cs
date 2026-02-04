@@ -107,7 +107,9 @@ namespace Engine
         /// Internal engine types: int, string, Color32, enums etc...
         /// </summary>
         Simple,
+        [Obsolete]
         SimpleClass,
+        [Obsolete]
         SimpleCollection,
         ReferenceCollection,
     }

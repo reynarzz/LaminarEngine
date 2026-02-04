@@ -163,7 +163,8 @@ namespace Engine.Serialization
                         serializedItem.Key = Convert.ChangeType(serializedItem.Key, args[0]);
                     }
 
-                    dictionary.Add(serializedItem.Key, GetReferenceValue(serializedItem.Type, deserializerData, serializedItem.Value as ReferenceData));
+                    var refVal = GetReferenceValue(serializedItem.Type, deserializerData, serializedItem.Value as ReferenceData);
+                    dictionary.Add(serializedItem.Key, refVal);
                 }
 
                 ReflectionUtils.SetMemberValue(target, dictionary, property.Name);
@@ -313,6 +314,10 @@ namespace Engine.Serialization
 
                         if (key != null && !dictionary.Contains(key))
                         {
+                            if(value is ReferenceData reference)
+                            {
+                                value = GetReferenceValue(complexItem.Type, deserializerData, reference);
+                            }
                             dictionary.Add(key, value);
                         }
                     }
@@ -328,6 +333,11 @@ namespace Engine.Serialization
 
                         DeserializeItem(complexItem.Value, item =>
                         {
+                            if (item is ReferenceData reference)
+                            {
+                                item = GetReferenceValue(complexItem.Type, deserializerData, reference);
+                            }
+
                             ReflectionUtils.SetMemberValueSafe(collectionInstance, item, default(MemberInfo), i);
                         });
                     }
@@ -340,7 +350,7 @@ namespace Engine.Serialization
         private static object GetReferenceValue(SerializedType type, DeserializerData deserializerData,
                                                 ReferenceData refData)
         {
-            if (type == SerializedType.None || refData.Id == Guid.Empty)
+            if (type == SerializedType.None || refData == null || refData.Id == Guid.Empty)
                 return null;
 
             switch (type)

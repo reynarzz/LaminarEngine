@@ -97,25 +97,6 @@ namespace Editor.Serialization
             }
             else if (ReflectionUtils.IsCollection(type, out var collectionType))
             {
-                // NOTE: ugly 'if/else' to avoid unnecessary computations.
-                var hasEObject = ReflectionUtils.HasAnySerializedMemberWithType(type, typeof(IObject), value);
-                if (ReflectionUtils.IsCollectionOfInternalTypes(type) ||
-                   !hasEObject)
-                {
-                    if (!ReflectionUtils.HasAnySerializedMemberWithType(type, typeof(Delegate), value) && !hasEObject)
-                    {
-                        return SerializedType.SimpleCollection;
-                    }
-                    else
-                    {
-                        return SerializedType.ComplexCollection;
-                    }
-                }
-                else if (ReflectionUtils.HasAnySerializedMemberWithType(type, typeof(Delegate), value))
-                {
-                    return SerializedType.ComplexCollection;
-                }
-
                 // TODO: get all the elements in the collection so they can be checked in case there is a reference.
                 var elementsTypes = ReflectionUtils.GetCollectionElementsType(type);
                 
@@ -124,6 +105,13 @@ namespace Editor.Serialization
                 if (isSingleArgCollectionAEObject ||
                     (collectionType == ReflectionUtils.CollectionType.Dictionary && IsPureReferenceDictionary(elementsTypes, value)))
                 {
+                    int i = 0;
+                    foreach (var item in elementsTypes)
+                    {
+                        Console.WriteLine($"{i}-{item.Name}");
+                        i++;
+                    }
+                    Console.WriteLine("----");
                     return SerializedType.ReferenceCollection;
                 }
 
@@ -135,13 +123,7 @@ namespace Editor.Serialization
             }
             else if (type.IsClass || ReflectionUtils.IsUserDefinedStruct(type))
             {
-                if (ReflectionUtils.HasAnySerializedMemberWithType(type, typeof(IObject), value) ||
-                    ReflectionUtils.HasAnySerializedMemberWithType(type, typeof(Delegate), value, false))
-                {
-                    return SerializedType.ComplexClass;
-                }
-
-                return SerializedType.SimpleClass;
+                return SerializedType.ComplexClass;
             }
             return SerializedType.None;
         }
@@ -157,13 +139,16 @@ namespace Editor.Serialization
                 Debug.Error("Invalid generic arguments.");
                 return false;
             }
+            if(genericArgs.Length > 1 && genericArgs[1] == typeof(GlmNet.quat))
+            {
 
+            }
             if (value == null)
             {
                 bool ContainsTop(Type argType, out bool hasAny)
                 {
                     hasAny = false;
-                    if (ReflectionUtils.IsEObject(argType))
+                    if (ReflectionUtils.IsEObject(argType) && !ReflectionUtils.HasAnySerializedMemberWithType(argType, typeof(IObject), null))
                     {
                         hasAny = true;
                         return true;
@@ -173,18 +158,21 @@ namespace Editor.Serialization
 
                     return false;
                 }
-                
-                if (!ContainsTop(genericArgs[0], out var hasEObjectAsKey) && hasEObjectAsKey)
+
+                var hasKeyTop = ContainsTop(genericArgs[0], out var hasEObjectAsKey);
+                if (!hasKeyTop && hasEObjectAsKey)
                 {
                     return false;
                 }
 
-                if (!ContainsTop(genericArgs[1], out var containsEObjectAsVal) && containsEObjectAsVal)
+                var hasValueTop = ContainsTop(genericArgs[1], out var containsEObjectAsVal);
+                if (!hasValueTop && containsEObjectAsVal)
                 {
                     return false;
                 }
 
-                return true;
+                return (hasEObjectAsKey && hasKeyTop && (!containsEObjectAsVal || hasValueTop)) || 
+                       (containsEObjectAsVal && hasValueTop && (!hasEObjectAsKey || hasKeyTop));
             }
 
             var dictionary = value as IDictionary;
@@ -233,7 +221,8 @@ namespace Editor.Serialization
                 return false;
             }
 
-            return true;
+            return (keyHasAny && keyTop && (!valHasAny || valTop)) ||
+                   (valHasAny && valTop && (!keyHasAny || keyTop));
         }
 
         // This only returns reference ids, simple and complex property data.
@@ -249,9 +238,7 @@ namespace Editor.Serialization
 
             var nameTest = member.Name;
 
-            if (serializedMemberType == SerializedType.Simple ||
-                serializedMemberType == SerializedType.SimpleClass ||
-                serializedMemberType == SerializedType.SimpleCollection)
+            if (serializedMemberType == SerializedType.Simple)
             {
                 return value;
             }
@@ -312,9 +299,7 @@ namespace Editor.Serialization
                         {
                             ComplexTypeData GetComplexTypeData(SerializedType argSerializedType, object argValue, string argName)
                             {
-                                if (argSerializedType == SerializedType.Simple ||
-                                    argSerializedType == SerializedType.SimpleClass ||
-                                    argSerializedType == SerializedType.SimpleCollection)
+                                if (argSerializedType == SerializedType.Simple)
                                 {
                                     var internalType = GetInternalType(argValue?.GetType());
                                     return new ComplexTypeData()
