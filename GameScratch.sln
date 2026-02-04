@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedTypes", "SharedTypes\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entry_Android", "Platforms\Android\Entry_Android.csproj", "{A39A4530-1CEF-42FC-B9FD-F5F87207E68C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entry_iOS", "Platforms\iOS\Entry_iOS.csproj", "{A93A4530-1CEF-42FC-B9FD-F5F87207E68C}"
+EndProject
 Global 
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
