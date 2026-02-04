@@ -1,4 +1,3 @@
-namespace iOS;
 
 using Engine.IOS;
 
@@ -30,7 +29,11 @@ public class SceneDelegate : UIResponder, IUIWindowSceneDelegate {
 	// 		Window.MakeKeyAndVisible ();
 	// 	}
 	// }
-	
+	public SceneDelegate()
+	{
+		Console.WriteLine("SceneDelegate constructor called");
+	}
+
 	[Export("scene:willConnectToSession:options:")]
 	public void WillConnect(UIScene scene, UISceneSession session, UISceneConnectionOptions connectionOptions)
 	{
