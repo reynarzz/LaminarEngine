@@ -80,10 +80,7 @@ namespace Editor.Serialization
                     {
                         return SerializedType.AnimatorControllerAsset;
                     }
-                    else if (type.IsAssignableTo(typeof(Sprite)))
-                    {
-                        return SerializedType.SpriteAsset;
-                    }
+
                     return SerializedType.Asset;
                 }
                 else
@@ -99,19 +96,12 @@ namespace Editor.Serialization
             {
                 // TODO: get all the elements in the collection so they can be checked in case there is a reference.
                 var elementsTypes = ReflectionUtils.GetCollectionElementsType(type);
-                
+
                 var isSingleArgCollectionAEObject = elementsTypes.Length == 1 && elementsTypes.Any(x => x.IsAssignableTo(typeof(IObject)));
 
                 if (isSingleArgCollectionAEObject ||
                     (collectionType == ReflectionUtils.CollectionType.Dictionary && IsPureReferenceDictionary(elementsTypes, value)))
                 {
-                    int i = 0;
-                    foreach (var item in elementsTypes)
-                    {
-                        Console.WriteLine($"{i}-{item.Name}");
-                        i++;
-                    }
-                    Console.WriteLine("----");
                     return SerializedType.ReferenceCollection;
                 }
 
@@ -139,16 +129,16 @@ namespace Editor.Serialization
                 Debug.Error("Invalid generic arguments.");
                 return false;
             }
-            if(genericArgs.Length > 1 && genericArgs[1] == typeof(GlmNet.quat))
-            {
+            //if (genericArgs.Length > 1 && genericArgs[1] == typeof(Component))
+            //{
 
-            }
+            //}
             if (value == null)
             {
                 bool ContainsTop(Type argType, out bool hasAny)
                 {
                     hasAny = false;
-                    if (ReflectionUtils.IsEObject(argType) && !ReflectionUtils.HasAnySerializedMemberWithType(argType, typeof(IObject), null))
+                    if (ReflectionUtils.IsEObject(argType))
                     {
                         hasAny = true;
                         return true;
