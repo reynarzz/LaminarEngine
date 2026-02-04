@@ -119,7 +119,7 @@ namespace Editor.Serialization
         }
 
         /// <summary>
-        /// Checks if a dictionary containing a EObject has not EObject deep in the graph, but only on the key or value generic args.
+        /// Checks if a dictionary containing EObjects doesn't have a EObject deep in the graph, but only on the key or value generic args.
         /// Immediate in the key or value = pure, Deep into the object graph = not pure
         /// </summary>
         internal static bool IsPureReferenceDictionary(Type[] genericArgs, object value)
