@@ -1,5 +1,8 @@
 
+using System;
 using Engine.IOS;
+using Foundation;
+using UIKit;
 
 [Register ("SceneDelegate")]
 public class SceneDelegate : UIResponder, IUIWindowSceneDelegate {
@@ -29,14 +32,11 @@ public class SceneDelegate : UIResponder, IUIWindowSceneDelegate {
 	// 		Window.MakeKeyAndVisible ();
 	// 	}
 	// }
-	public SceneDelegate()
-	{
-		Console.WriteLine("SceneDelegate constructor called");
-	}
 
 	[Export("scene:willConnectToSession:options:")]
 	public void WillConnect(UIScene scene, UISceneSession session, UISceneConnectionOptions connectionOptions)
 	{
+		Console.WriteLine("Will connect to session");
 		if (scene is UIWindowScene windowScene)
 		{
 			Window ??= new UIWindow(windowScene);

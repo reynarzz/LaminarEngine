@@ -1,3 +1,5 @@
+using System;
+using Foundation;
 using Metal;
 using UIKit;
 namespace iOS
@@ -28,6 +30,7 @@ public class AppDelegate : UIApplicationDelegate
 		// Called when a new scene session is being created.
 		// Use this method to select a configuration to create the new scene with.
 		// "Default Configuration" is defined in the Info.plist's 'UISceneConfigurationName' key.
+		Console.WriteLine("GetConfiguration");
 		return new UISceneConfiguration ("Default Configuration", connectingSceneSession.Role);
 	}
 

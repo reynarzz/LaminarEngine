@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using CoreAnimation;
 using Metal;
 using MetalKit;
@@ -45,9 +47,10 @@ namespace Engine.IOS
 
         public override void ViewDidLoad()
         {
+            Console.WriteLine("View loaded");
+            
             base.ViewDidLoad();
             // _reader = OpenBundleBinary("Assets/GameData.gfs");
-            Console.WriteLine("View loaded");
             // Create Metal device
             device = MTLDevice.SystemDefault;
 
@@ -82,11 +85,11 @@ namespace Engine.IOS
             commandQueue = device.CreateCommandQueue();
         }
 
-        private BinaryReader OpenBundleBinary(string relativePath)
-        {
-            var path = Path.Combine(NSBundle.MainBundle.ResourcePath, relativePath);
-            return new BinaryReader(File.OpenRead(path));
-        }
+        // private BinaryReader OpenBundleBinary(string relativePath)
+        // {
+        //     var path = Path.Combine(NSBundle.MainBundle.ResourcePath, relativePath);
+        //     return new BinaryReader(File.OpenRead(path));
+        // }
 
         public void Draw(MTKView view)
         {
