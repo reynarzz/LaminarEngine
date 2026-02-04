@@ -11,9 +11,4 @@ namespace Engine
     {
         public SerializedType Type { get; set; }
     }
-
-    internal class SerializedItem<T> : SerializedItem
-    {
-        public T Data { get; set; }
-    }
 }

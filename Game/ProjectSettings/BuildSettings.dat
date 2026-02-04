@@ -1,11 +1,14 @@
 [
   {
     "Name": "Scenes",
-    "Type": "SimpleCollection",
+    "Type": "ComplexCollection",
     "InternalType": "System.Collections.Generic.List`1[[System.Guid, System.Private.CoreLib]], System.Private.CoreLib",
     "Data": {
-      "$type": "System.Collections.Generic.List`1[[System.Guid, System.Private.CoreLib]], System.Private.CoreLib",
-      "$value": []
+      "$type": "Engine.CollectionPropertyData, Engine",
+      "$value": {
+        "CollectionType": "List",
+        "Collection": []
+      }
     }
   },
   {

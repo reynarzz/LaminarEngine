@@ -73,6 +73,15 @@ namespace Engine
         public V Value { get; set; }
     }
 
+    internal class DelegateData : SerializedItem
+    {
+        internal class Subscriber
+        {
+            public string Type { get; set; }
+            public string MethodName { get; set; }
+            public ReferenceData Reference { get; set; }
+        }
+    }
 
     internal class ComplexTypeData
     {
@@ -102,6 +111,7 @@ namespace Engine
         AnimationAsset,
         AnimatorControllerAsset,
         ScriptableObject,
+        Delegate,
 
         /// <summary>
         /// Internal engine types: int, string, Color32, enums etc...

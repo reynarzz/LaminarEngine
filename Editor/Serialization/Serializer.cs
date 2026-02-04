@@ -107,6 +107,10 @@ namespace Editor.Serialization
 
                 return SerializedType.ComplexCollection;
             }
+            else if (type.IsAssignableTo(typeof(Delegate)))
+            {
+                return SerializedType.Delegate;
+            }
             else if (ReflectionUtils.IsInternalType(type))
             {
                 return SerializedType.Simple;
@@ -161,7 +165,7 @@ namespace Editor.Serialization
                     return false;
                 }
 
-                return (hasEObjectAsKey && hasKeyTop && (!containsEObjectAsVal || hasValueTop)) || 
+                return (hasEObjectAsKey && hasKeyTop && (!containsEObjectAsVal || hasValueTop)) ||
                        (containsEObjectAsVal && hasValueTop && (!hasEObjectAsKey || hasKeyTop));
             }
 
@@ -239,6 +243,21 @@ namespace Editor.Serialization
             {
                 // TODO: handle delegates.
                 Debug.Warn($"TODO: Can't serialize delegate: {type.Name}");
+
+                if (value != null)
+                {
+                    var delegateObj = value as Delegate;
+                    var data = new DelegateData();
+
+                    foreach (var subscriber in delegateObj.GetInvocationList())
+                    {
+                        if (subscriber.Target is IObject targetEObject)
+                        {
+
+                        }
+                    }
+                }
+         
                 return null;
             }
             else if (type.IsAssignableTo(typeof(IObject)))
