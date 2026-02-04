@@ -145,6 +145,7 @@ namespace Editor
                 IntPtr resultPtr = OpenFile(openPath, namesPtr, patternsPtr, (ulong)count);
 
                 path = Paths.ClearPathSeparation(Marshal.PtrToStringUTF8(resultPtr));
+                FreeAllocatedString(resultPtr);
 
                 return !string.IsNullOrEmpty(path);
             }

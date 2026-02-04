@@ -112,10 +112,10 @@ namespace Game
         public class InterA : ITestInterface<int>
         {
             [SerializedField] public int a { get; set; } 
-            public Texture2D Text { get; set; } 
+            [SerializedField] public Texture2D Texture { get; set; } 
         }
 
-        [SerializedField] private ITestInterface<int> InterfaceSera = new InterA() { Text = Assets.GetTexture("starkTileset.png") };
+        [SerializedField] private ITestInterface<int> InterfaceSera = new InterA() { Texture = Assets.GetTexture("starkTileset.png") };
 
         public class AAA<T, T2>
         {

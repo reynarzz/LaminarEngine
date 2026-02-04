@@ -38,10 +38,7 @@ namespace Editor
 
     // Serialization
     // - Forbid serialization of dictionaries that contains EObject as key?
-    // - Generic can serialize EObject as simple class if the property/field doesn't contain [Serializable]
-    // - For runtime create a dictionary with all the types, so types can be saved and found quickly: Dictionary<Guid, Type>
-    // - Maybe I should remove the 'SimpleClass' and 'simpleCollection' and serialize all classes as complex so I avoid serializing complex classes as simple.
-    // Fix the issue of references. This will avoid having, live real classes in the IR.
+    // - For runtime build, create a dictionary with all the types, so types can be saved and found quickly: Dictionary<Guid, Type>
 
     // Performance fix:
     // UI performance is pretty bad, rewrite the entire UI system.
@@ -51,7 +48,7 @@ namespace Editor
     // Write binary serializer for runtime build.
     // Metadata of every asset should be binary on final build.
 
-    // Featiures
+    // Features
     // - Fully async scene load in the background: async asset loading (mainThreadSync for graphic assets)
 
     // Save Editor config:

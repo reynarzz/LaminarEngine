@@ -259,13 +259,16 @@ namespace Editor
 
         private void LoadScene()
         {
-            var file = File.ReadAllText(TestfilePath);
-            var actors = EditorJsonUtils.Deserialize<List<ActorDataSceneAsset>>(file);
-            // var actors = _actors;
-            Debug.Log("Total actors in scene: " + actors.Count);
-            SceneManager.Initialize();
+            if (File.Exists(TestfilePath))
+            {
+                var file = File.ReadAllText(TestfilePath);
+                var actors = EditorJsonUtils.Deserialize<List<ActorDataSceneAsset>>(file);
+                // var actors = _actors;
+                Debug.Log("Total actors in scene: " + actors.Count);
+                SceneManager.Initialize();
 
-            SceneDeserializer.DeserializeScene(actors, SceneManager.ActiveScene);
+                SceneDeserializer.DeserializeScene(actors, SceneManager.ActiveScene);
+            }
         }
     }
 }
