@@ -174,6 +174,15 @@ namespace Editor
                 }
             }
 
+            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.W))
+            {
+                var str = TypeRegistryClassGenerator.Generate([GfsTypeRegistry.EngineAssembly]);
+
+                Debug.Log(str);
+            }
+
+
+
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.R))
             {
                 //var clip = Assets.Get<AnimationClip>("Animation/AnimClip.anim");

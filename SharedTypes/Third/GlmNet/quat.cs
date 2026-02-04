@@ -139,9 +139,14 @@ namespace GlmNet
             quat qx = FromAxisAngle(new vec3(1, 0, 0), xRad);
             quat qy = FromAxisAngle(new vec3(0, 1, 0), yRad);
             quat qz = FromAxisAngle(new vec3(0, 0, 1), zRad);
-
+            
             // XYZ order
-            return Mathf.Normalize(qz * qy * qx);
+            return Normalize(qz * qy * qx);
+        }
+        private static quat Normalize(quat value)
+        {
+            float length = MathF.Sqrt(value.x * value.x + value.y * value.y + value.z * value.z + value.w * value.w);
+            return length > 0f ? value / length : value;
         }
 
         public static quat operator *(quat q, float scalar)
