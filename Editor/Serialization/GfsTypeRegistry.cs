@@ -22,6 +22,7 @@ namespace Editor.Serialization
         internal static List<Type> GameAppComponentTypes { get; private set; } = new();
 
         internal static Assembly EngineAssembly { get; }
+        internal static Assembly SharedTypesAssembly { get; }
         internal static Assembly EditorAssembly { get; }
         internal static Assembly GameAssembly { get; set; }
 
@@ -36,6 +37,10 @@ namespace Editor.Serialization
                 else if (item.GetName().Name.Equals("Engine"))
                 {
                     EngineAssembly = item;
+                }
+                else if (item.GetName().Name.Equals("SharedTypes"))
+                {
+                    SharedTypesAssembly = item;
                 }
             }
         }

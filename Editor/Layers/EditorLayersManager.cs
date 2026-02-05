@@ -176,12 +176,9 @@ namespace Editor
 
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.W))
             {
-                var str = TypeRegistryClassGenerator.Generate([GfsTypeRegistry.EngineAssembly]);
-
+                var str = TypeRegistryClassGenerator.Generate([GfsTypeRegistry.EngineAssembly, GfsTypeRegistry.SharedTypesAssembly]);
                 Debug.Log(str);
             }
-
-
 
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.R))
             {

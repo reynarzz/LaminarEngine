@@ -8,7 +8,7 @@ namespace Engine.Serialization
 {
     internal interface ITypeRegistry
     {
-        Type GetType(Guid id);
-        Guid GetID(Type type);
+        internal bool GetType(Guid id, out Type type);
+        internal bool GetID(Type type, out Guid id);
     }
 }
