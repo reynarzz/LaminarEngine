@@ -191,11 +191,11 @@ namespace Editor
                 //}
 
                 //var str = TypeRegistryClassGenerator.Generate();
-               
+
                 //File.WriteAllText($"{EditorPaths.AppRoot}/TypeRegistry.bin", str);
 
                 var a = new TypeRegistry();
-                if (a.GetType(Guid.Parse("9b36be118898b98cdfc24647e5039a39"), out Type type))
+                if (a.GetType(Guid.Parse("155b8de8a92b2bb630a8026d46704c61"), out Type type))
                 {
                     if (type != null)
                     {

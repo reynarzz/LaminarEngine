@@ -46,9 +46,9 @@ namespace Editor.Serialization
         };
 
         private static HashSet<Type> _typesLibrary = new();
-        internal static string Generate()
+        internal static string Generate(bool isEditMode = false)
         {
-            if(_typesLibrary.Count == 0)
+            if (_typesLibrary.Count == 0)
             {
                 Debug.Warn("Can't generate TypeRegistry, no types were added to the list.");
                 return string.Empty;
@@ -68,7 +68,7 @@ namespace Editor.Serialization
                 ids.Add(GetStableGuid(type), type);
             }
 
-            return GenerateTypeRegistry(ids).ToFullString();
+            return GenerateTypeRegistry(ids, isEditMode).ToFullString();
         }
 
         internal static bool ContainsType(Type type)
@@ -86,9 +86,9 @@ namespace Editor.Serialization
                 _typesLibrary.Add(type);
             }
         }
-        internal static void AddType( Type type)
+        internal static void AddType(Type type)
         {
-            if(type == null)
+            if (type == null)
             {
                 Debug.Error("Can't add null type to registry generator");
                 return;
@@ -104,16 +104,21 @@ namespace Editor.Serialization
             _typesLibrary.Clear();
         }
 
-        private static CompilationUnitSyntax GenerateTypeRegistry(Dictionary<Guid, Type> typeMap)
+        private static CompilationUnitSyntax GenerateTypeRegistry(Dictionary<Guid, Type> typeMap, bool isEditMode)
         {
             // Using statements
             var usings = SyntaxFactory.List(
             [
                 SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("System")),
                 SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("System.Collections.Generic")),
-                SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("Engine.Serialization")),
                 SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("System.Reflection")),
+                SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("Engine.Serialization")),
             ]);
+
+            if (isEditMode)
+            {
+                usings = usings.Add(SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("Editor.Serialization")));
+            }
 
             // Build dictionary entries: <Guid, Type>
             var initializerExpressions = new SeparatedSyntaxList<ExpressionSyntax>();
@@ -179,32 +184,6 @@ namespace Editor.Serialization
                 reverseInitializerExpressions = reverseInitializerExpressions.Add(kvpExpression);
             }
 
-            var dictionaryReverseField = SyntaxFactory.FieldDeclaration(
-                SyntaxFactory.VariableDeclaration(
-                    SyntaxFactory.ParseTypeName("Dictionary<Type, Guid>"))
-                    .WithVariables(
-                        SyntaxFactory.SingletonSeparatedList(
-                            SyntaxFactory.VariableDeclarator("_typesReverse")
-                                         .WithInitializer(
-                                             SyntaxFactory.EqualsValueClause(
-                                                 SyntaxFactory.ObjectCreationExpression(
-                                                     SyntaxFactory.ParseTypeName("Dictionary<Type, Guid>"))
-                                                 .WithInitializer(
-                                                     SyntaxFactory.InitializerExpression(
-                                                         SyntaxKind.CollectionInitializerExpression,
-                                                         reverseInitializerExpressions
-                                                     )
-                                                 )
-                                             )
-                                         )
-                        )
-                    )
-            ).AddModifiers(
-                SyntaxFactory.Token(SyntaxKind.PrivateKeyword),
-                SyntaxFactory.Token(SyntaxKind.StaticKeyword),
-                SyntaxFactory.Token(SyntaxKind.ReadOnlyKeyword)
-            );
-
             // Build GetType(Guid id, out Type type) method
             var getTypeMethod = SyntaxFactory.MethodDeclaration(
                     SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.BoolKeyword)),
@@ -246,9 +225,43 @@ namespace Editor.Serialization
             // Build class and implement ITypeRegistry
             var classDecl = SyntaxFactory.ClassDeclaration("TypeRegistry")
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.InternalKeyword))
-                .AddBaseListTypes(SyntaxFactory.SimpleBaseType(SyntaxFactory.ParseTypeName("ITypeRegistry")))
-                .WithLeadingTrivia(SyntaxFactory.Comment("// This is the generated TypeRegistry class. Do not edit manually."))
-                .AddMembers(dictionaryField, dictionaryReverseField, getTypeMethod, getIDMethod, GenerateResolveAssemblyMethod());
+                .AddBaseListTypes(SyntaxFactory.SimpleBaseType(SyntaxFactory.ParseTypeName(isEditMode ? "ITypeRegistryEditor" : "ITypeRegistry")))
+                .WithLeadingTrivia(SyntaxFactory.Comment("// This class was generated by a tool. Please do not edit manually."))
+                .AddMembers(dictionaryField);
+
+
+            if (isEditMode)
+            {
+                var dictionaryReverseField = SyntaxFactory.FieldDeclaration(
+                    SyntaxFactory.VariableDeclaration(
+                        SyntaxFactory.ParseTypeName("Dictionary<Type, Guid>"))
+                        .WithVariables(
+                            SyntaxFactory.SingletonSeparatedList(
+                                SyntaxFactory.VariableDeclarator("_typesReverse")
+                                             .WithInitializer(
+                                                 SyntaxFactory.EqualsValueClause(
+                                                     SyntaxFactory.ObjectCreationExpression(
+                                                         SyntaxFactory.ParseTypeName("Dictionary<Type, Guid>"))
+                                                     .WithInitializer(
+                                                         SyntaxFactory.InitializerExpression(
+                                                             SyntaxKind.CollectionInitializerExpression,
+                                                             reverseInitializerExpressions
+                                                         )
+                                                     )
+                                                 )
+                                             )
+                            )
+                        )
+                ).AddModifiers(
+                    SyntaxFactory.Token(SyntaxKind.PrivateKeyword),
+                    SyntaxFactory.Token(SyntaxKind.StaticKeyword),
+                    SyntaxFactory.Token(SyntaxKind.ReadOnlyKeyword)
+                );
+
+                classDecl = classDecl.AddMembers(dictionaryReverseField, getIDMethod);
+            }
+
+            classDecl = classDecl.AddMembers(getTypeMethod, GenerateResolveAssemblyMethod());
 
             // Build namespace
             var ns = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.ParseName("Generated"))
@@ -287,7 +300,7 @@ namespace Editor.Serialization
         private static ExpressionSyntax GetTypeExpression(Type type)
         {
             // Only private or protected nested types
-            if (type.IsNestedPrivate || type.IsNestedFamily || type.IsGenericType)
+            // if (type.IsNestedPrivate || type.IsNestedFamily || type.IsGenericType)
             {
                 // Compiler generated types are not taken into account.
                 if (type.Name.StartsWith("<") && type.Name.Contains(">"))
@@ -348,6 +361,19 @@ namespace Editor.Serialization
 
             return (type.Namespace != null ? type.Namespace + "." : "") + name;
         }
+
+
+        private static MemberDeclarationSyntax WrapWithIf(MemberDeclarationSyntax member, string symbol)
+        {
+            var ifDirective = SyntaxFactory.Trivia(SyntaxFactory.IfDirectiveTrivia(
+                    SyntaxFactory.IdentifierName(symbol), isActive: true, branchTaken: true, conditionValue: true));
+
+            var endIfDirective = SyntaxFactory.Trivia(SyntaxFactory.EndIfDirectiveTrivia(isActive: true));
+
+            return member.WithLeadingTrivia(SyntaxFactory.TriviaList(ifDirective, SyntaxFactory.ElasticCarriageReturnLineFeed))
+                         .WithTrailingTrivia(SyntaxFactory.TriviaList(SyntaxFactory.ElasticCarriageReturnLineFeed, endIfDirective));
+        }
+
         public static Guid GetStableGuid(Type type)
         {
             // Deterministic GUID based on type full name
