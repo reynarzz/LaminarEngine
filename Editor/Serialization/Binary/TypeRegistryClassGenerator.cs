@@ -58,8 +58,7 @@ namespace Editor.Serialization
 
                 foreach (var type in assembly.DefinedTypes)
                 {
-                    // Skip compiler generated or internal types
-                    if (type.IsNestedPrivate || type.IsSpecialName ||
+                    if (type.IsSpecialName || 
                         type.FullName.TrimStart().StartsWith("<") ||
                         _forbiddenNameSpaces.Contains(type.FullName))
                     {
@@ -90,6 +89,10 @@ namespace Editor.Serialization
                 var guidLiteral = SyntaxFactory.ParseExpression($"new Guid(\"{kvp.Key:N}\")");
                 var typeOfExpression = GetTypeExpression(kvp.Value);
 
+                if(typeOfExpression == null)
+                {
+                    continue;
+                }
                 var kvpExpression = SyntaxFactory.InitializerExpression(
                     SyntaxKind.ComplexElementInitializerExpression,
                     SyntaxFactory.SeparatedList<ExpressionSyntax>(new[] { guidLiteral, typeOfExpression })
@@ -129,6 +132,10 @@ namespace Editor.Serialization
             foreach (var kvp in typeMap)
             {
                 var typeOfExpression = GetTypeExpression(kvp.Value);
+                if (typeOfExpression == null)
+                {
+                    continue;
+                }
                 var guidLiteral = SyntaxFactory.ParseExpression($"new Guid(\"{kvp.Key:N}\")");
 
                 var kvpExpression = SyntaxFactory.InitializerExpression(
@@ -225,48 +232,71 @@ namespace Editor.Serialization
 
         private static ExpressionSyntax GetTypeExpression(Type type)
         {
-            if (type.IsNested && !type.IsNestedPublic)
+            // Only private or protected nested types
+            if (type.IsNestedPrivate || type.IsNestedFamily)
             {
-                // Private nested type: generate reflection call
-                var declaringFullName = GetCSharpFullName(type.DeclaringType);
-                return SyntaxFactory.ParseExpression(
-                    $"typeof({declaringFullName}).GetNestedType(\"{GetCSharpFullName(type)}\", System.Reflection.BindingFlags.NonPublic)"
-                );
+                if (type.Name.StartsWith("<") && type.Name.Contains(">"))
+                    return null;
+
+                string typeString = GetReflectionFullName(type) + ", " + type.Assembly.GetName().Name;
+                return SyntaxFactory.ParseExpression($"Type.GetType(\"{typeString}\", throwOnError: true)");
             }
 
-            // Public type or accessible nested type
+            // Public or internal nested types, or top-level types
             string fullName = GetCSharpFullName(type);
             return SyntaxFactory.TypeOfExpression(SyntaxFactory.ParseTypeName(fullName));
         }
 
-        private static string GetCSharpFullName(Type type)
+        /// <summary>
+        /// Returns a full name suitable for Type.GetType, including generic arity and nested types, with + separators.
+        /// </summary>
+        private static string GetReflectionFullName(Type type)
         {
+            string name;
+
             if (type.IsGenericTypeDefinition)
             {
-                // Open generic: build commas for arity
                 int arity = type.GetGenericArguments().Length;
-                var commas = new string(',', Math.Max(0, arity - 1));
-                var name = type.Name.Split('`')[0];
-
-                if (type.IsNested)
-                {
-                    return GetCSharpFullName(type.DeclaringType!) + "." + name + $"<{commas}>";
-                }
-                else
-                {
-                    return (type.Namespace != null ? type.Namespace + "." : "") + name + $"<{commas}>";
-                }
-            }
-            else if (type.IsNested)
-            {
-                // Nested type without generics
-                return GetCSharpFullName(type.DeclaringType!) + "." + type.Name;
+                name = type.Name.Split('`')[0] + "`" + arity;
             }
             else
             {
-                // Normal type
-                return (type.Namespace != null ? type.Namespace + "." : "") + type.Name;
+                name = type.Name;
             }
+
+            if (type.IsNested)
+            {
+                return GetReflectionFullName(type.DeclaringType!) + "+" + name;
+            }
+
+            return (type.Namespace != null ? type.Namespace + "." : "") + name;
+        }
+
+        /// <summary>
+        /// Returns a C#-friendly name, used for typeof(...) expressions.
+        /// Handles generics, nested types, and compiler-generated types.
+        /// </summary>
+        private static string GetCSharpFullName(Type type)
+        {
+            string name;
+
+            if (type.IsGenericTypeDefinition)
+            {
+                int arity = type.GetGenericArguments().Length;
+                string commas = new string(',', Math.Max(0, arity - 1));
+                name = type.Name.Split('`')[0] + $"<{commas}>";
+            }
+            else
+            {
+                name = type.Name;
+            }
+
+            if (type.IsNested)
+            {
+                return GetCSharpFullName(type.DeclaringType!) + "." + name;
+            }
+
+            return (type.Namespace != null ? type.Namespace + "." : "") + name;
         }
         private static Guid StableGuid(Type type)
         {

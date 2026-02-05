@@ -6,6 +6,7 @@ using Engine;
 using Engine.Layers;
 using Engine.Serialization;
 using Engine.Utils;
+using Generated;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using SharedTypes;
@@ -177,7 +178,16 @@ namespace Editor
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.W))
             {
                 var str = TypeRegistryClassGenerator.Generate([GfsTypeRegistry.EngineAssembly, GfsTypeRegistry.SharedTypesAssembly]);
-                Debug.Log(str);
+                //Debug.Log(str);
+
+                var a = new TypeRegistry();
+                if (a.GetType(Guid.Parse("c08d458d0c6e60f258e53764460abee6"), out Type type))
+                {
+                    if (type != null)
+                    {
+                        Debug.Log($"Success: {type.FullName}");
+                    }
+                }
             }
 
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.R))
