@@ -26,11 +26,11 @@ namespace Editor.Serialization
                 var valueType = value?.GetType() ?? memberType;
                 var serializedType = GetSerializedType(valueType, value);
 
-
                 properties.Add(new SerializedPropertyData()
                 {
                     Name = member.Name,
                     InternalType = GetInternalType(valueType),
+                    TypeId = GetTypeId(valueType),
                     Type = serializedType,
                     Data = GetPropertyData(member, serializedType, value)
                 });
@@ -311,16 +311,19 @@ namespace Editor.Serialization
                                 if (argSerializedType == SerializedType.Simple)
                                 {
                                     var internalType = GetInternalType(argValue?.GetType());
+                                    var typeId = GetTypeId(argValue?.GetType());
                                     return new ComplexTypeData()
                                     {
                                         ComplexType = argSerializedType,
                                         TargetTypeName = internalType,
+                                        TypeId = typeId,
                                         Properties = new List<SerializedPropertyData>()
                                         {
                                             new SerializedPropertyData()
                                             {
                                                Data = argValue,
                                                InternalType = internalType,
+                                               TypeId = typeId,
                                                Type = argSerializedType,
                                                Name = argName
                                             }
@@ -432,6 +435,7 @@ namespace Editor.Serialization
                     Name = currentType.Name,
                     Type = serializedType,
                     InternalType = GetInternalType(valueType),
+                    TypeId = GetTypeId(valueType),
                     Data = GetPropertyData(currentType, serializedType, value),
                 };
             }
@@ -440,6 +444,7 @@ namespace Editor.Serialization
             {
                 ComplexType = GetSerializedType(complexType, null),
                 TargetTypeName = GetInternalType(complexType),
+                TypeId = GetTypeId(complexType),
                 Properties = new List<SerializedPropertyData>()
             };
 
@@ -475,9 +480,19 @@ namespace Editor.Serialization
             var fullname = ReflectionUtils.GetFullTypeName(type);
             //   Debug.Error($"Type wasn't found in the type registry: {fullname}");
 
-           // return TypeRegistryClassGenerator.GetStableGuidString(type);
+            // return TypeRegistryClassGenerator.GetStableGuidString(type);
 
             return fullname;
+        }
+
+        private static Guid GetTypeId(Type type)
+        {
+            if (!TypeRegistryClassGenerator.ContainsType(type))
+            {
+                TypeRegistryClassGenerator.AddType(type);
+            }
+
+            return TypeRegistryClassGenerator.GetStableGuid(type);
         }
     }
 }

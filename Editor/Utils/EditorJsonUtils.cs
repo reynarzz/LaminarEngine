@@ -1,4 +1,5 @@
-﻿using Engine;
+﻿using Editor.Serialization;
+using Engine;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
@@ -18,6 +19,7 @@ namespace Editor.Utils
             Converters =
             {
                 new StringEnumConverter(),
+                new GuidNoHyphensConverter()
             },
             ContractResolver = new SerializedFieldContractResolver()
         };

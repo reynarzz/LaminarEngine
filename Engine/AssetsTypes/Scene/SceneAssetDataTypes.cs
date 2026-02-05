@@ -20,7 +20,9 @@ namespace Engine
 
     internal class ComponentDataSceneAsset
     {
+        [Obsolete("Use TypeId")]
         public string TypeName { get; set; }
+        public Guid TypeId { get; set; }
         public bool IsEnabled { get; set; }
         public Guid ID { get; set; }
         public List<SerializedPropertyData> SerializedProperties { get; set; }
@@ -30,7 +32,9 @@ namespace Engine
     {
         public string Name { get; set; }
         public SerializedType Type { get; set; }
+        [Obsolete("Use TypeId")]
         public string InternalType { get; set; }
+        public Guid TypeId { get; set; }
         public object Data { get; set; }
     }
 
@@ -75,7 +79,7 @@ namespace Engine
     {
         internal class Subscriber
         {
-            public string Type { get; set; }
+            public Guid TypeId { get; set; }
             public string MethodName { get; set; }
             public ReferenceData Reference { get; set; }
         }
@@ -83,7 +87,9 @@ namespace Engine
 
     internal class ComplexTypeData
     {
+        [Obsolete("Use TypeId")]
         public string TargetTypeName { get; set; }
+        public Guid TypeId { get; set; }
         public SerializedType ComplexType { get; set; }
         public List<SerializedPropertyData> Properties { get; set; }
     }

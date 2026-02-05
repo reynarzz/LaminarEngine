@@ -261,7 +261,7 @@ namespace Editor.Serialization
                 classDecl = classDecl.AddMembers(dictionaryReverseField, getIDMethod);
             }
 
-            classDecl = classDecl.AddMembers(getTypeMethod, GenerateResolveAssemblyMethod());
+            classDecl = classDecl.AddMembers(getTypeMethod, GenerateGetTypeMethod(), GenerateResolveAssemblyMethod());
 
             // Build namespace
             var ns = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.ParseName("Generated"))
@@ -276,7 +276,17 @@ namespace Editor.Serialization
             return compilationUnit;
         }
 
+        private static MemberDeclarationSyntax GenerateGetTypeMethod()
+        {
+            const string methodSource = @"
+            private static Type _GetType(string typeStr)
+            {
+                return Type.GetType(typeStr, ResolveAssembly, null, true);
+            }
+            ";
 
+            return SyntaxFactory.ParseMemberDeclaration(methodSource)!;
+        }
         private static MemberDeclarationSyntax GenerateResolveAssemblyMethod()
         {
             const string methodSource = @"
@@ -297,6 +307,7 @@ namespace Editor.Serialization
 
             return SyntaxFactory.ParseMemberDeclaration(methodSource)!;
         }
+
         private static ExpressionSyntax GetTypeExpression(Type type)
         {
             // Only private or protected nested types
@@ -309,7 +320,7 @@ namespace Editor.Serialization
                 string typeString = ReflectionUtils.GetFullTypeName(type);// GetReflectionFullName(type) + ", " + type.Assembly.GetName().Name;
                 //return SyntaxFactory.ParseExpression($"Type.GetType(\"{typeString}\", throwOnError: true)");
 
-                return SyntaxFactory.ParseExpression($"Type.GetType(\"{typeString}\", ResolveAssembly, null, true)");
+                return SyntaxFactory.ParseExpression($"_GetType(\"{typeString}\")");
             }
 
             // Public or internal nested types, or top-level types
@@ -376,6 +387,11 @@ namespace Editor.Serialization
 
         public static Guid GetStableGuid(Type type)
         {
+            if(type == null)
+            {
+                return Guid.Empty;
+            }
+
             // Deterministic GUID based on type full name
             var key = ReflectionUtils.GetFullTypeName(type);
             using var md5 = MD5.Create();
