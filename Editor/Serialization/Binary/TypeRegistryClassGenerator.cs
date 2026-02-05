@@ -2,9 +2,6 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
@@ -41,8 +38,11 @@ namespace Editor.Serialization
             { nameof(ldtk) },
             { nameof(GLFW) },
             { nameof(Engine.Graphics.OpenGL) },
+            { nameof(OpenGL) },
             { nameof(JetBrains) },
+            { "Generated" },
         };
+
         internal static string Generate(Assembly[] assemblies)
         {
             var ids = new Dictionary<Guid, Type>();
@@ -52,16 +52,18 @@ namespace Editor.Serialization
                 foreach (var type in assembly.DefinedTypes)
                 {
                     // Skip compiler-generated or internal types
-                    if (type.IsNestedPrivate || type.IsSpecialName || type.FullName.TrimStart().StartsWith("<") ||
+                    if (type.IsNestedPrivate || type.IsSpecialName || 
+                        type.FullName.TrimStart().StartsWith("<") ||
                         _forbiddenNameSpaces.Contains(type.FullName))
+                    {
                         continue;
+                    }
 
                     ids.Add(StableGuid(type.AsType()), type.AsType());
                 }
             }
 
-            var compiledUnit = GenerateTypeRegistry(ids);
-            return compiledUnit.ToFullString();
+            return GenerateTypeRegistry(ids).ToFullString();
         }
 
         private static CompilationUnitSyntax GenerateTypeRegistry(Dictionary<Guid, Type> typeMap)
@@ -82,7 +84,7 @@ namespace Editor.Serialization
 
                 var kvpExpression = SyntaxFactory.InitializerExpression(
                     SyntaxKind.ComplexElementInitializerExpression,
-                    SyntaxFactory.SeparatedList<ExpressionSyntax>(new ExpressionSyntax[] { guidLiteral, typeOfExpression })
+                    SyntaxFactory.SeparatedList<ExpressionSyntax>([guidLiteral, typeOfExpression])
                 );
 
                 initializerExpressions = initializerExpressions.Add(kvpExpression);
@@ -109,65 +111,59 @@ namespace Editor.Serialization
                                          )
                         )
                     )
-                ).AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword),
+    ).AddModifiers(SyntaxFactory.Token(SyntaxKind.InternalKeyword),
                                SyntaxFactory.Token(SyntaxKind.StaticKeyword),
                                SyntaxFactory.Token(SyntaxKind.ReadOnlyKeyword));
 
             // Build class
             var classDecl = SyntaxFactory.ClassDeclaration("TypeRegistry")
-                .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword),
+                .AddModifiers(SyntaxFactory.Token(SyntaxKind.InternalKeyword),
                               SyntaxFactory.Token(SyntaxKind.StaticKeyword))
                 .AddMembers(dictionaryField);
 
             // Build namespace
             var ns = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.ParseName("Generated"))
-                                  .AddMembers(classDecl);
+                .WithLeadingTrivia(SyntaxFactory.Comment("// This is the generated TypeRegistry class. Do not edit manually."))
+                .AddMembers(classDecl);
 
             // Build compilation unit
             var compilationUnit = SyntaxFactory.CompilationUnit()
-                                               .AddUsings(usings.ToArray())
-                                               .AddMembers(ns)
-                                               .NormalizeWhitespace();
+                .AddUsings(usings.ToArray()).AddMembers(ns).NormalizeWhitespace();
 
             return compilationUnit;
         }
 
         private static TypeSyntax GetTypeSyntax(Type type)
         {
+            string fullName = GetCSharpFullName(type);
+            return SyntaxFactory.ParseTypeName(fullName);
+        }
+
+        private static string GetCSharpFullName(Type type)
+        {
             if (type.IsGenericTypeDefinition)
             {
-                // Open generic e.g., PatrolState<>
+                // Open generic: build commas for arity
                 int arity = type.GetGenericArguments().Length;
                 string commas = new string(',', Math.Max(0, arity - 1));
-                string name = (type.Namespace != null ? type.Namespace + "." : "") + type.Name.Split('`')[0];
-                return SyntaxFactory.ParseTypeName($"{name}<{commas}>");
-            }
-            else if (type.IsArray)
-            {
-                // Handle arrays
-                var elementType = GetTypeSyntax(type.GetElementType()!);
-                return SyntaxFactory.ArrayType(elementType,
-                    SyntaxFactory.SingletonList(
-                        SyntaxFactory.ArrayRankSpecifier(
-                            SyntaxFactory.SingletonSeparatedList<ExpressionSyntax>(
-                                SyntaxFactory.OmittedArraySizeExpression()
-                            )
-                        )
-                    )
-                );
+                string name = type.Name.Split('`')[0];
+
+                if (type.IsNested)
+                    return GetCSharpFullName(type.DeclaringType!) + "." + name + $"<{commas}>";
+                else
+                    return (type.Namespace != null ? type.Namespace + "." : "") + name + $"<{commas}>";
             }
             else if (type.IsNested)
             {
-                // Nested type: Outer.Inner
-                string fullName = type.FullName?.Replace('+', '.') ?? type.Name;
-                return SyntaxFactory.ParseTypeName(fullName);
+                // Nested type without generics
+                return GetCSharpFullName(type.DeclaringType!) + "." + type.Name;
             }
             else
             {
-                return SyntaxFactory.ParseTypeName(type.FullName ?? type.Name);
+                // Normal type
+                return (type.Namespace != null ? type.Namespace + "." : "") + type.Name;
             }
         }
-
         private static Guid StableGuid(Type type)
         {
             // Deterministic GUID based on type full name
