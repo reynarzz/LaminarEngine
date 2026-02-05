@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Engine;
 using Engine.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Engine.Serialization
+namespace Editor.Serialization
 {
     internal class GFSDataProperty : JsonConverter
     {

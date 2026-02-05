@@ -1,6 +1,5 @@
 ﻿using Engine.Serialization;
 using Engine.Utils;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +31,6 @@ namespace Engine
         public string Name { get; set; }
         public SerializedType Type { get; set; }
         public string InternalType { get; set; }
-        [JsonConverter(typeof(GFSDataProperty))]
         public object Data { get; set; }
     }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using Editor.Serialization;
 using Engine;
 using Engine.Utils;
 using Newtonsoft.Json;
@@ -32,6 +33,11 @@ namespace Editor
                         p.Writable = true;
                     }
                 }
+
+                if (p.DeclaringType == typeof(SerializedPropertyData) && p.PropertyName == nameof(SerializedPropertyData.Data))
+                {
+                    p.Converter = new GFSDataProperty();
+                }
             }
 
             foreach (var member in ReflectionUtils.GetAllMembersWithAttribute<SerializedFieldAttribute>(type))
@@ -47,6 +53,8 @@ namespace Editor
                 existingNames.Add(prop.PropertyName);
             }
 
+
+            
             return props;
         }
     }

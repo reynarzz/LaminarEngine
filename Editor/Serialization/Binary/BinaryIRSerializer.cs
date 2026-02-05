@@ -10,7 +10,7 @@ namespace Editor.Serialization
 {
     internal class BinaryIRSerializer
     {
-        internal static byte[] Serialize(ITypeRegistry registry, List<SerializedPropertyData> properties)
+        internal static byte[] Serialize(List<SerializedPropertyData> properties)
         {
             return null;
         }
