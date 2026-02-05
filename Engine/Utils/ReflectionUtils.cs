@@ -504,11 +504,6 @@ namespace Engine.Utils
             return str;
         }
 
-        public static string GetTypeMinimalName(Type type)
-        {
-            return $"{type.Namespace}.{type.Name}";
-        }
-
         public static string StripAssemblyMetadata(string typeName)
         {
             if (string.IsNullOrEmpty(typeName))

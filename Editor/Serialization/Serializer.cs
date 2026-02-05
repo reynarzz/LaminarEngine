@@ -4,6 +4,8 @@ using Engine.Utils;
 using System.Collections;
 using System.Reflection;
 using Microsoft.VisualBasic.FileIO;
+using Generated;
+using Editor.Utils;
 
 namespace Editor.Serialization
 {
@@ -230,8 +232,6 @@ namespace Editor.Serialization
                 return null;
             }
 
-            var nameTest = member.Name;
-
             if (serializedMemberType == SerializedType.Simple)
             {
                 return value;
@@ -257,7 +257,7 @@ namespace Editor.Serialization
                         }
                     }
                 }
-         
+
                 return null;
             }
             else if (type.IsAssignableTo(typeof(IObject)))
@@ -453,6 +453,7 @@ namespace Editor.Serialization
             return complexClass;
         }
 
+        private static readonly TypeRegistry _registry = new();
         private static string GetInternalType(Type type)
         {
             if (type.IsAssignableTo(typeof(Delegate)))
@@ -460,7 +461,23 @@ namespace Editor.Serialization
                 return "DelegateForwarder";// TODO: point to the real delegate forwarder type.
             }
 
-            return ReflectionUtils.GetFullTypeName(type);
+            if (!TypeRegistryClassGenerator.ContainsType(type))
+            {
+                TypeRegistryClassGenerator.AddType(type);
+            }
+
+
+            //if (_registry.GetID(type, out var id))
+            //{
+            //    return id.ToString("N");
+            //}
+
+            var fullname = ReflectionUtils.GetFullTypeName(type);
+            //   Debug.Error($"Type wasn't found in the type registry: {fullname}");
+
+           // return TypeRegistryClassGenerator.GetStableGuidString(type);
+
+            return fullname;
         }
     }
 }

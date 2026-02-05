@@ -1,5 +1,6 @@
 ﻿using Engine;
 using Engine.Serialization;
+using Engine.Utils;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -44,32 +45,63 @@ namespace Editor.Serialization
             { "Generated" },
         };
 
-        internal static string Generate(Assembly[] assemblies)
+        private static HashSet<Type> _typesLibrary = new();
+        internal static string Generate()
         {
+            if(_typesLibrary.Count == 0)
+            {
+                Debug.Warn("Can't generate TypeRegistry, no types were added to the list.");
+                return string.Empty;
+            }
+
             var ids = new Dictionary<Guid, Type>();
 
-            foreach (var assembly in assemblies)
+            foreach (var type in _typesLibrary)
             {
-                if (assembly == null)
+                if (type.IsSpecialName ||
+                    type.FullName.TrimStart().StartsWith("<") ||
+                    _forbiddenNameSpaces.Contains(type.FullName))
                 {
-                    Debug.Error("Can't generate type for null assembly.");
                     continue;
                 }
 
-                foreach (var type in assembly.DefinedTypes)
-                {
-                    if (type.IsSpecialName || 
-                        type.FullName.TrimStart().StartsWith("<") ||
-                        _forbiddenNameSpaces.Contains(type.FullName))
-                    {
-                        continue;
-                    }
-
-                    ids.Add(StableGuid(type.AsType()), type.AsType());
-                }
+                ids.Add(GetStableGuid(type), type);
             }
 
             return GenerateTypeRegistry(ids).ToFullString();
+        }
+
+        internal static bool ContainsType(Type type)
+        {
+            return _typesLibrary.Contains(type);
+        }
+
+        internal static void AddTypes(params Type[] types)
+        {
+            if (types == null || types.Length == 0)
+                return;
+
+            foreach (var type in types)
+            {
+                _typesLibrary.Add(type);
+            }
+        }
+        internal static void AddType( Type type)
+        {
+            if(type == null)
+            {
+                Debug.Error("Can't add null type to registry generator");
+                return;
+            }
+            _typesLibrary.Add(type);
+        }
+
+        /// <summary>
+        /// Clear all types that will be generated.
+        /// </summary>
+        internal static void ClearTypesLibrary()
+        {
+            _typesLibrary.Clear();
         }
 
         private static CompilationUnitSyntax GenerateTypeRegistry(Dictionary<Guid, Type> typeMap)
@@ -80,6 +112,7 @@ namespace Editor.Serialization
                 SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("System")),
                 SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("System.Collections.Generic")),
                 SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("Engine.Serialization")),
+                SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("System.Reflection")),
             ]);
 
             // Build dictionary entries: <Guid, Type>
@@ -89,7 +122,7 @@ namespace Editor.Serialization
                 var guidLiteral = SyntaxFactory.ParseExpression($"new Guid(\"{kvp.Key:N}\")");
                 var typeOfExpression = GetTypeExpression(kvp.Value);
 
-                if(typeOfExpression == null)
+                if (typeOfExpression == null)
                 {
                     continue;
                 }
@@ -215,7 +248,7 @@ namespace Editor.Serialization
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.InternalKeyword))
                 .AddBaseListTypes(SyntaxFactory.SimpleBaseType(SyntaxFactory.ParseTypeName("ITypeRegistry")))
                 .WithLeadingTrivia(SyntaxFactory.Comment("// This is the generated TypeRegistry class. Do not edit manually."))
-                .AddMembers(dictionaryField, dictionaryReverseField, getTypeMethod, getIDMethod);
+                .AddMembers(dictionaryField, dictionaryReverseField, getTypeMethod, getIDMethod, GenerateResolveAssemblyMethod());
 
             // Build namespace
             var ns = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.ParseName("Generated"))
@@ -230,16 +263,40 @@ namespace Editor.Serialization
             return compilationUnit;
         }
 
+
+        private static MemberDeclarationSyntax GenerateResolveAssemblyMethod()
+        {
+            const string methodSource = @"
+            private static Assembly ResolveAssembly(AssemblyName name)
+            {
+                var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+                for (int i = 0; i < assemblies.Length; i++)
+                {
+                    var asm = assemblies[i];
+                    if (AssemblyName.ReferenceMatchesDefinition(asm.GetName(), name))
+                    {
+                        return asm;
+                    }
+                }
+                return null;
+            }
+            ";
+
+            return SyntaxFactory.ParseMemberDeclaration(methodSource)!;
+        }
         private static ExpressionSyntax GetTypeExpression(Type type)
         {
             // Only private or protected nested types
-            if (type.IsNestedPrivate || type.IsNestedFamily)
+            if (type.IsNestedPrivate || type.IsNestedFamily || type.IsGenericType)
             {
+                // Compiler generated types are not taken into account.
                 if (type.Name.StartsWith("<") && type.Name.Contains(">"))
                     return null;
 
-                string typeString = GetReflectionFullName(type) + ", " + type.Assembly.GetName().Name;
-                return SyntaxFactory.ParseExpression($"Type.GetType(\"{typeString}\", throwOnError: true)");
+                string typeString = ReflectionUtils.GetFullTypeName(type);// GetReflectionFullName(type) + ", " + type.Assembly.GetName().Name;
+                //return SyntaxFactory.ParseExpression($"Type.GetType(\"{typeString}\", throwOnError: true)");
+
+                return SyntaxFactory.ParseExpression($"Type.GetType(\"{typeString}\", ResolveAssembly, null, true)");
             }
 
             // Public or internal nested types, or top-level types
@@ -247,9 +304,6 @@ namespace Editor.Serialization
             return SyntaxFactory.TypeOfExpression(SyntaxFactory.ParseTypeName(fullName));
         }
 
-        /// <summary>
-        /// Returns a full name suitable for Type.GetType, including generic arity and nested types, with + separators.
-        /// </summary>
         private static string GetReflectionFullName(Type type)
         {
             string name;
@@ -272,10 +326,6 @@ namespace Editor.Serialization
             return (type.Namespace != null ? type.Namespace + "." : "") + name;
         }
 
-        /// <summary>
-        /// Returns a C#-friendly name, used for typeof(...) expressions.
-        /// Handles generics, nested types, and compiler-generated types.
-        /// </summary>
         private static string GetCSharpFullName(Type type)
         {
             string name;
@@ -298,13 +348,19 @@ namespace Editor.Serialization
 
             return (type.Namespace != null ? type.Namespace + "." : "") + name;
         }
-        private static Guid StableGuid(Type type)
+        public static Guid GetStableGuid(Type type)
         {
             // Deterministic GUID based on type full name
-            string key = type.FullName ?? type.Name;
+            var key = ReflectionUtils.GetFullTypeName(type);
             using var md5 = MD5.Create();
-            byte[] hash = md5.ComputeHash(Encoding.UTF8.GetBytes(key));
+            var hash = md5.ComputeHash(Encoding.UTF8.GetBytes(key));
             return new Guid(hash);
         }
+
+        public static string GetStableGuidString(Type type)
+        {
+            return GetStableGuid(type).ToString("N");
+        }
+
     }
 }

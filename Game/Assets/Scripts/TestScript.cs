@@ -109,7 +109,7 @@ namespace Game
             T a { get; set; }
         }
 
-        public class InterA : ITestInterface<int>
+        private class InterA : ITestInterface<int>
         {
             [SerializedField] public int a { get; set; } 
             [SerializedField] public Texture2D Texture { get; set; } 

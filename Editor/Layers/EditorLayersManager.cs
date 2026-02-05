@@ -10,6 +10,7 @@ using Generated;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using SharedTypes;
+using System.Reflection;
 
 namespace Editor
 {
@@ -177,11 +178,24 @@ namespace Editor
 
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.W))
             {
-                var str = TypeRegistryClassGenerator.Generate([GfsTypeRegistry.EngineAssembly, GfsTypeRegistry.SharedTypesAssembly]);
-                //Debug.Log(str);
+                //var assemblies = new Assembly[] { GfsTypeRegistry.EngineAssembly, GfsTypeRegistry.SharedTypesAssembly };
+                //foreach (var assembly in assemblies)
+                //{
+                //    if (assembly == null)
+                //    {
+                //        Debug.Error("Can't generate type for null assembly.");
+                //        continue;
+                //    }
+
+                //    TypeRegistryClassGenerator.AddTypes(assembly.DefinedTypes.Select(x => x.AsType()).ToArray());
+                //}
+
+                //var str = TypeRegistryClassGenerator.Generate();
+               
+                //File.WriteAllText($"{EditorPaths.AppRoot}/TypeRegistry.bin", str);
 
                 var a = new TypeRegistry();
-                if (a.GetType(Guid.Parse("c08d458d0c6e60f258e53764460abee6"), out Type type))
+                if (a.GetType(Guid.Parse("9b36be118898b98cdfc24647e5039a39"), out Type type))
                 {
                     if (type != null)
                     {
