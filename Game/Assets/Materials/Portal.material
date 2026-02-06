@@ -11,7 +11,7 @@
           {
             "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
             "Value": {
-              "TargetTypeName": "Engine.RenderPass, Engine",
+              "InternalType": "Engine.RenderPass, Engine",
               "ComplexType": "ComplexClass",
               "Properties": [
                 {
@@ -77,7 +77,7 @@
                         {
                           "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
                           "Key": {
-                            "TargetTypeName": "System.String, System.Private.CoreLib",
+                            "InternalType": "System.String, System.Private.CoreLib",
                             "ComplexType": "Simple",
                             "Properties": [
                               {
@@ -92,7 +92,7 @@
                             ]
                           },
                           "Value": {
-                            "TargetTypeName": "Engine.Graphics.UniformValue, Engine",
+                            "InternalType": "Engine.Graphics.UniformValue, Engine",
                             "ComplexType": "ComplexClass",
                             "Properties": [
                               {
@@ -232,7 +232,7 @@
                         {
                           "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
                           "Key": {
-                            "TargetTypeName": "System.String, System.Private.CoreLib",
+                            "InternalType": "System.String, System.Private.CoreLib",
                             "ComplexType": "Simple",
                             "Properties": [
                               {
@@ -247,7 +247,7 @@
                             ]
                           },
                           "Value": {
-                            "TargetTypeName": "Engine.Graphics.UniformValue, Engine",
+                            "InternalType": "Engine.Graphics.UniformValue, Engine",
                             "ComplexType": "ComplexClass",
                             "Properties": [
                               {
@@ -387,7 +387,7 @@
                         {
                           "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
                           "Key": {
-                            "TargetTypeName": "System.String, System.Private.CoreLib",
+                            "InternalType": "System.String, System.Private.CoreLib",
                             "ComplexType": "Simple",
                             "Properties": [
                               {
@@ -402,7 +402,7 @@
                             ]
                           },
                           "Value": {
-                            "TargetTypeName": "Engine.Graphics.UniformValue, Engine",
+                            "InternalType": "Engine.Graphics.UniformValue, Engine",
                             "ComplexType": "ComplexClass",
                             "Properties": [
                               {
@@ -542,7 +542,7 @@
                         {
                           "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
                           "Key": {
-                            "TargetTypeName": "System.String, System.Private.CoreLib",
+                            "InternalType": "System.String, System.Private.CoreLib",
                             "ComplexType": "Simple",
                             "Properties": [
                               {
@@ -557,7 +557,7 @@
                             ]
                           },
                           "Value": {
-                            "TargetTypeName": "Engine.Graphics.UniformValue, Engine",
+                            "InternalType": "Engine.Graphics.UniformValue, Engine",
                             "ComplexType": "ComplexClass",
                             "Properties": [
                               {
@@ -697,7 +697,7 @@
                         {
                           "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
                           "Key": {
-                            "TargetTypeName": "System.String, System.Private.CoreLib",
+                            "InternalType": "System.String, System.Private.CoreLib",
                             "ComplexType": "Simple",
                             "Properties": [
                               {
@@ -712,7 +712,7 @@
                             ]
                           },
                           "Value": {
-                            "TargetTypeName": "Engine.Graphics.UniformValue, Engine",
+                            "InternalType": "Engine.Graphics.UniformValue, Engine",
                             "ComplexType": "ComplexClass",
                             "Properties": [
                               {
@@ -852,7 +852,7 @@
                         {
                           "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
                           "Key": {
-                            "TargetTypeName": "System.String, System.Private.CoreLib",
+                            "InternalType": "System.String, System.Private.CoreLib",
                             "ComplexType": "Simple",
                             "Properties": [
                               {
@@ -867,7 +867,7 @@
                             ]
                           },
                           "Value": {
-                            "TargetTypeName": "Engine.Graphics.UniformValue, Engine",
+                            "InternalType": "Engine.Graphics.UniformValue, Engine",
                             "ComplexType": "ComplexClass",
                             "Properties": [
                               {
@@ -1007,7 +1007,7 @@
                         {
                           "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
                           "Key": {
-                            "TargetTypeName": "System.String, System.Private.CoreLib",
+                            "InternalType": "System.String, System.Private.CoreLib",
                             "ComplexType": "Simple",
                             "Properties": [
                               {
@@ -1022,7 +1022,7 @@
                             ]
                           },
                           "Value": {
-                            "TargetTypeName": "Engine.Graphics.UniformValue, Engine",
+                            "InternalType": "Engine.Graphics.UniformValue, Engine",
                             "ComplexType": "ComplexClass",
                             "Properties": [
                               {
@@ -1162,7 +1162,7 @@
                         {
                           "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
                           "Key": {
-                            "TargetTypeName": "System.String, System.Private.CoreLib",
+                            "InternalType": "System.String, System.Private.CoreLib",
                             "ComplexType": "Simple",
                             "Properties": [
                               {
@@ -1177,7 +1177,7 @@
                             ]
                           },
                           "Value": {
-                            "TargetTypeName": "Engine.Graphics.UniformValue, Engine",
+                            "InternalType": "Engine.Graphics.UniformValue, Engine",
                             "ComplexType": "ComplexClass",
                             "Properties": [
                               {
@@ -1317,7 +1317,7 @@
                         {
                           "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
                           "Key": {
-                            "TargetTypeName": "System.String, System.Private.CoreLib",
+                            "InternalType": "System.String, System.Private.CoreLib",
                             "ComplexType": "Simple",
                             "Properties": [
                               {
@@ -1332,7 +1332,7 @@
                             ]
                           },
                           "Value": {
-                            "TargetTypeName": "Engine.Graphics.UniformValue, Engine",
+                            "InternalType": "Engine.Graphics.UniformValue, Engine",
                             "ComplexType": "ComplexClass",
                             "Properties": [
                               {

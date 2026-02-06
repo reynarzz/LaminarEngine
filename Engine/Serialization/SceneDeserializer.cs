@@ -11,7 +11,8 @@ using System.Threading.Tasks;
 
 namespace Engine.Serialization
 {
-    internal static class SceneDeserializer
+    internal class SceneDeserializer : SceneDeserializer<TypeResolver> { }
+    internal class SceneDeserializer<T> where T: ITypeResolver
     {
         private readonly static Dictionary<Guid, (Actor value, ActorIR data)> _actorsByID = new();
         private readonly static Dictionary<Guid, (Component value, ComponentIR data)> _componentsByID = new();
@@ -63,7 +64,7 @@ namespace Engine.Serialization
                 {
                     var componentData = actorData.Components[j];
 
-                    if (ReflectionUtils.ResolveType(componentData.TypeName, out var componentType))
+                    if (T.ResolveType(componentData, out var componentType))
                     {
                         // TODO: fix the component initialization for the ones that auto add other required components.
                         // When 'Application.IsInPlayMode' is on, it will auto add components, making this not usable.
@@ -166,7 +167,7 @@ namespace Engine.Serialization
                 {
                     var componentData = actorData.Components[j];
 
-                    if (ReflectionUtils.ResolveType(componentData.TypeName, out var componentType))
+                    if (ReflectionUtils.ResolveType(componentData.InternalType, out var componentType))
                     {
                         // TODO: fix the component initialization for the ones that auto add other required components.
                         // When 'Application.IsInPlayMode' is on, it will auto add components, making this not usable.

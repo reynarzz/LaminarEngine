@@ -60,15 +60,17 @@ namespace Editor.Build
                 ["InformationalVersion"] = GetVersion(buildTypeSettings.Version),
             };
 
-            if(settings.Type == BuildType.Release)
+            var defaultConstants = "WINDOWS;WIN32;DESKTOP;SHIP_BUILD;";
+
+            if (settings.Type == BuildType.Release)
             {
-                props["DefineConstants"] = "WINDOWS;WIN32;DESKTOP;RELEASE";
+                props["DefineConstants"] = defaultConstants + "RELEASE";
                 props["DebugType"] = "none";
                 props["DebugSymbols"] = "false";
             }
             else
             {
-                props["DefineConstants"] = "WINDOWS;WIN32;DESKTOP;DEBUG";
+                props["DefineConstants"] = defaultConstants + "DEBUG";
             }
             return props;
         }

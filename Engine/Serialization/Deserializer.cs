@@ -6,13 +6,14 @@ using System.Reflection;
 
 namespace Engine.Serialization
 {
+
     internal class DeserializerData
     {
         internal Dictionary<Guid, (Actor value, ActorIR data)> ActorsByID = new();
         internal Dictionary<Guid, (Component value, ComponentIR data)> ComponentsByID = new();
     }
-
-    internal static class Deserializer
+    internal class Deserializer : Deserializer<TypeResolver> { }
+    internal class Deserializer<Tr> where Tr : ITypeResolver
     {
         internal static T Deserialize<T>(IReadOnlyList<SerializedPropertyIR> properties)
         {
@@ -213,29 +214,13 @@ namespace Engine.Serialization
             }
         }
 
-        private static Guid GetGuidSafe(object guid)
-        {
-            if (guid == null)
-            {
-                return Guid.Empty;
-            }
-
-            if (guid.GetType() == typeof(string))
-            {
-                Guid.TryParse((string)guid, out var guidValue);
-                return guidValue;
-            }
-
-            return (Guid)guid;
-        }
-
         internal static void DeserializeComplexClass(object target, SerializedPropertyIR property, DeserializerData deserializerData)
         {
             if (target == null || property == null || property.Data == null)
                 return;
 
             var complexData = property.Data as ComplexTypeData;
-            if (ReflectionUtils.ResolveType(complexData.TargetTypeName, out Type type))
+            if (Tr.ResolveType(complexData, out Type type))
             {
                 var inst = Activator.CreateInstance(type);
                 DeserializeTarget(inst, complexData.Properties, deserializerData);
@@ -263,7 +248,7 @@ namespace Engine.Serialization
                     setValueCallback(null);
                     return;
                 }
-                if (ReflectionUtils.ResolveType(complexItem.TargetTypeName, out Type itemType))
+                if (Tr.ResolveType(complexItem, out Type itemType))
                 {
                     var itemInstance = ReflectionUtils.GetDefaultValueInstance(itemType);
                     if (itemInstance == null)
@@ -275,7 +260,7 @@ namespace Engine.Serialization
                 }
             }
 
-            if (ReflectionUtils.ResolveType(property.InternalType, out Type type))
+            if (Tr.ResolveType(property, out Type type))
             {
                 var collectionInstance = ReflectionUtils.GetDefaultValueInstance(type, collectionData.Collection.Count);
 
@@ -315,7 +300,7 @@ namespace Engine.Serialization
 
                         if (key != null && !dictionary.Contains(key))
                         {
-                            if(value is ReferenceData reference)
+                            if (value is ReferenceData reference)
                             {
                                 value = GetReferenceValue(complexItem.Type, deserializerData, reference);
                             }

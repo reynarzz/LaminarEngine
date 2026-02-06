@@ -45,7 +45,7 @@ namespace Editor.Build
                 ["OutputPath"] = EditorPaths.AndroidPublishFolderRoot + "/",
                 ["AndroidApplicationLabel"] = buildTypeSettings.ApplicationName,
                 ["PublishTrimmed"] = "true",
-                ["DefineConstants"] = "$(DefineConstants);ANDROID;MOBILE",
+                ["DefineConstants"] = "$(DefineConstants);ANDROID;MOBILE;SHIP_BUILD",
                 ["TrimMode"] = "link",
                 ["ApplicationId"] = packageName,
                 ["ApplicationDisplayVersion"] = GetVersion(settings.Version),

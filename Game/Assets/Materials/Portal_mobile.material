@@ -11,7 +11,7 @@
           {
             "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
             "Value": {
-              "TargetTypeName": "Engine.RenderPass, Engine",
+              "InternalType": "Engine.RenderPass, Engine",
               "ComplexType": "ComplexClass",
               "Properties": [
                 {

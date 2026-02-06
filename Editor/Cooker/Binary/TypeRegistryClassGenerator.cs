@@ -3,7 +3,6 @@ using Engine.Utils;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Engine;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
@@ -186,7 +185,7 @@ namespace Editor.Cooker
             // Build GetType(Guid id, out Type type) method
             var getTypeMethod = SyntaxFactory.MethodDeclaration(
                     SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.BoolKeyword)),
-                    "GetType"
+                    "ResolveType"
                 )
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.InternalKeyword),
                               SyntaxFactory.Token(SyntaxKind.StaticKeyword))
@@ -224,7 +223,7 @@ namespace Editor.Cooker
                 ));
 
             // Build class and implement ITypeRegistry
-            var classDecl = SyntaxFactory.ClassDeclaration("TypeRegistry")
+            var classDecl = SyntaxFactory.ClassDeclaration("TypeRegistryRuntime")
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.InternalKeyword),
                               SyntaxFactory.Token(SyntaxKind.StaticKeyword))
                 //.AddBaseListTypes(SyntaxFactory.SimpleBaseType(SyntaxFactory.ParseTypeName(isEditMode ? "ITypeRegistryEditor" : "ITypeRegistry")))

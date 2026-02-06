@@ -18,8 +18,7 @@ namespace Engine
 
     internal class ComponentIR
     {
-        [Obsolete("Use TypeId")]
-        public string TypeName { get; set; }
+        public string InternalType { get; set; }
         public Guid TypeId { get; set; }
         public bool IsEnabled { get; set; }
         public Guid ID { get; set; }
@@ -30,7 +29,6 @@ namespace Engine
     {
         public string Name { get; set; }
         public SerializedType Type { get; set; }
-        [Obsolete("Use TypeId")]
         public string InternalType { get; set; }
         public Guid TypeId { get; set; }
         public object Data { get; set; }
@@ -90,8 +88,7 @@ namespace Engine
 
     internal class ComplexTypeData
     {
-        [Obsolete("Use TypeId")]
-        public string TargetTypeName { get; set; }
+        public string InternalType { get; set; }
         public Guid TypeId { get; set; }
         public SerializedType ComplexType { get; set; }
         public List<SerializedPropertyIR> Properties { get; set; }

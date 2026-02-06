@@ -29,7 +29,6 @@ namespace Editor.Serialization
         {
             foreach (var item in AppDomain.CurrentDomain.GetAssemblies())
             {
-                Debug.Log(item.GetName().Name);
                 if (item.GetName().Name.Equals("Editor"))
                 {
                     EditorAssembly = item;

@@ -316,7 +316,7 @@ namespace Editor.Serialization
                                     return new ComplexTypeData()
                                     {
                                         ComplexType = argSerializedType,
-                                        TargetTypeName = internalType,
+                                        InternalType = internalType,
                                         TypeId = typeId,
                                         Properties = new List<SerializedPropertyIR>()
                                         {
@@ -444,7 +444,7 @@ namespace Editor.Serialization
             var complexClass = new ComplexTypeData()
             {
                 ComplexType = GetSerializedType(complexType, null),
-                TargetTypeName = GetInternalType(complexType),
+                InternalType = GetInternalType(complexType),
                 TypeId = GetTypeId(complexType),
                 Properties = new List<SerializedPropertyIR>()
             };

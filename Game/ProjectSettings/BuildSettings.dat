@@ -25,7 +25,7 @@
           {
             "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
             "Key": {
-              "TargetTypeName": "Editor.Build.PlatformBuild, Editor",
+              "InternalType": "Editor.Build.PlatformBuild, Editor",
               "TypeId": "b5d78a8fad7627bca569eb732e643f2a",
               "ComplexType": "Simple",
               "Properties": [
@@ -42,7 +42,7 @@
               ]
             },
             "Value": {
-              "TargetTypeName": "Editor.Build.WindowsBuildSettings, Editor",
+              "InternalType": "Editor.Build.WindowsBuildSettings, Editor",
               "TypeId": "d979e2851edce68d1867706c6fbbaee5",
               "ComplexType": "ComplexClass",
               "Properties": [
@@ -54,7 +54,7 @@
                   "Data": {
                     "$type": "Engine.ComplexTypeData, Engine",
                     "$value": {
-                      "TargetTypeName": "Editor.Build.WindowsBuildTypeSettings, Editor",
+                      "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
                       "TypeId": "b82153ebc244d04c00548eb0a05390ee",
                       "ComplexType": "ComplexClass",
                       "Properties": [
@@ -176,7 +176,7 @@
                   "Data": {
                     "$type": "Engine.ComplexTypeData, Engine",
                     "$value": {
-                      "TargetTypeName": "Editor.Build.WindowsBuildTypeSettings, Editor",
+                      "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
                       "TypeId": "b82153ebc244d04c00548eb0a05390ee",
                       "ComplexType": "ComplexClass",
                       "Properties": [
@@ -290,7 +290,7 @@
                   "Data": {
                     "$type": "Engine.ComplexTypeData, Engine",
                     "$value": {
-                      "TargetTypeName": "Editor.Build.WindowsBuildTypeSettings, Editor",
+                      "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
                       "TypeId": "b82153ebc244d04c00548eb0a05390ee",
                       "ComplexType": "ComplexClass",
                       "Properties": [
@@ -423,7 +423,7 @@
           {
             "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
             "Key": {
-              "TargetTypeName": "Editor.Build.PlatformBuild, Editor",
+              "InternalType": "Editor.Build.PlatformBuild, Editor",
               "TypeId": "b5d78a8fad7627bca569eb732e643f2a",
               "ComplexType": "Simple",
               "Properties": [
@@ -440,7 +440,7 @@
               ]
             },
             "Value": {
-              "TargetTypeName": "Editor.Build.AndroidBuildSettings, Editor",
+              "InternalType": "Editor.Build.AndroidBuildSettings, Editor",
               "TypeId": "3732c59f64ea5db52de11d230ce95cab",
               "ComplexType": "ComplexClass",
               "Properties": [
@@ -516,7 +516,7 @@
                   "Data": {
                     "$type": "Engine.ComplexTypeData, Engine",
                     "$value": {
-                      "TargetTypeName": "Editor.Build.AndroidBuildTypeSettings, Editor",
+                      "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
                       "TypeId": "8a5456848915490a81177ccad9e1f6d7",
                       "ComplexType": "ComplexClass",
                       "Properties": [
@@ -528,7 +528,7 @@
                           "Data": {
                             "$type": "Engine.ComplexTypeData, Engine",
                             "$value": {
-                              "TargetTypeName": "Editor.Build.AndroidIcon, Editor",
+                              "InternalType": "Editor.Build.AndroidIcon, Editor",
                               "TypeId": "fc6bd7ae58d4e8ad12bd08b8c49944fd",
                               "ComplexType": "ComplexClass",
                               "Properties": [
@@ -683,7 +683,7 @@
                   "Data": {
                     "$type": "Engine.ComplexTypeData, Engine",
                     "$value": {
-                      "TargetTypeName": "Editor.Build.AndroidBuildTypeSettings, Editor",
+                      "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
                       "TypeId": "8a5456848915490a81177ccad9e1f6d7",
                       "ComplexType": "ComplexClass",
                       "Properties": [
@@ -695,7 +695,7 @@
                           "Data": {
                             "$type": "Engine.ComplexTypeData, Engine",
                             "$value": {
-                              "TargetTypeName": "Editor.Build.AndroidIcon, Editor",
+                              "InternalType": "Editor.Build.AndroidIcon, Editor",
                               "TypeId": "fc6bd7ae58d4e8ad12bd08b8c49944fd",
                               "ComplexType": "ComplexClass",
                               "Properties": [
@@ -835,7 +835,7 @@
                   "Data": {
                     "$type": "Engine.ComplexTypeData, Engine",
                     "$value": {
-                      "TargetTypeName": "Editor.Build.AndroidBuildTypeSettings, Editor",
+                      "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
                       "TypeId": "8a5456848915490a81177ccad9e1f6d7",
                       "ComplexType": "ComplexClass",
                       "Properties": [
@@ -847,7 +847,7 @@
                           "Data": {
                             "$type": "Engine.ComplexTypeData, Engine",
                             "$value": {
-                              "TargetTypeName": "Editor.Build.AndroidIcon, Editor",
+                              "InternalType": "Editor.Build.AndroidIcon, Editor",
                               "TypeId": "fc6bd7ae58d4e8ad12bd08b8c49944fd",
                               "ComplexType": "ComplexClass",
                               "Properties": [

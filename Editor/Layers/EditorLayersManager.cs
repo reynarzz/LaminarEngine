@@ -199,10 +199,9 @@ namespace Editor
                 //_test = Assets.GetShader("Shaders/Test/ShaderTest.shader");
 
 
-               // SerializerTypesFixer();
-                LoadScene();
+                SerializerTypesFixer();
+               // LoadScene();
             }
-
         }
 
         private void SerializerTypesFixer()
@@ -222,7 +221,7 @@ namespace Editor
             {
                 Console.WriteLine(file);
                 var txt = File.ReadAllText(file);
-                txt = txt.Replace("Engine.Graphics.UniformType, SharedTypes", "Engine.Graphics.UniformType, Engine");
+                txt = txt.Replace("TargetTypeName", "InternalType");
 
 				File.WriteAllText(file, txt);
             }
