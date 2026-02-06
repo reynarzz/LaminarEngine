@@ -147,13 +147,16 @@ namespace Editor
             }
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.A))
             {
-                var anim = new AnimationClip("Name");
-                var ir = EditorJsonUtils.Deserialize<List<SerializedPropertyIR>>(File.ReadAllText(AnimClipPath));
+                if (File.Exists(AnimClipPath))
+                {
+					var anim = new AnimationClip("Name");
+					var ir = EditorJsonUtils.Deserialize<List<SerializedPropertyIR>>(File.ReadAllText(AnimClipPath));
 
-                Deserializer.Deserialize(anim, ir);
-                var anim2 = Deserializer.Deserialize<AnimationClip>(ir);
+					Deserializer.Deserialize(anim, ir);
+					var anim2 = Deserializer.Deserialize<AnimationClip>(ir);
+				}
 
-                _materialTest = Assets.GetMaterial("Materials/Material.material");
+				_materialTest = Assets.GetMaterial("Materials/Material.material");
                 Selector.Selected = Assets.GetTexture("starkTileset.png");//_materialTest;
 
 
@@ -185,7 +188,7 @@ namespace Editor
                 //        Debug.Log($"Success: {type.FullName}");
                 //    }
                 //}
-                Editor.Cooker.Generator.TypeGenerationStage.GenerateTypeRegistry();
+                Cooker.Generator.TypeGenerationStage.GenerateTypeRegistry();
             }
 
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.R))
