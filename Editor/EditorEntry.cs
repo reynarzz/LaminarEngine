@@ -40,6 +40,8 @@ namespace Editor
     // - Forbid serialization of dictionaries that contains EObject as key?
     // - For runtime build, create a dictionary with all the types, so types can be saved and found quickly: Dictionary<Guid, Type>
     // - The TypeRegistry should only be used in ship builds. While binary serializing the assets, also add types to the TypeRegistryClassGenerator.
+    // - SpriteDefault.material, buildSettings.dat are the types that still use 'simpleClass', these should be updated to complex
+    //   so I can remove the the simpleClass, and simpleCollection enum types.
 
     // Refactor:
     // - Move Editor.Cooker to the editor project.

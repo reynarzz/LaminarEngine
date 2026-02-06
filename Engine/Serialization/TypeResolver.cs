@@ -13,6 +13,7 @@ namespace Engine.Serialization
         static abstract bool ResolveType(ComponentIR prop, out Type type);
         static abstract bool ResolveType(SerializedPropertyIR prop, out Type type);
     }
+    // TODO: These types should implement a interface that exposes a 'string InternalType' property, so I only would need to use one function. 
     internal struct TypeResolver : ITypeResolver
     {
         public static bool ResolveType(ComponentIR prop, out Type type)
