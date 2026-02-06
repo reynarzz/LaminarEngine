@@ -43,6 +43,7 @@ namespace Editor.Build
 
             var properties = new Dictionary<string, string>()
             {
+                ["ShipBuild"] = "true",
                 ["Configuration"] = settings.Type == BuildType.Release ? "Release" : "Debug",
                 ["Platform"] = "AnyCPU",
                 ["AndroidSdkDirectory"] = GetAndroidSdkPath(),
@@ -58,7 +59,7 @@ namespace Editor.Build
                 ["ApplicationId"] = packageName,
                 ["ApplicationDisplayVersion"] = GetVersion(settings.Version),
                 ["SupportedOSPlatformVersion"] = ((int)settings.MinimumApiLevel).ToString(),
-                ["AndroidTargetSdkVersion"] = ((int)settings.TargetApiLevel).ToString()
+                ["AndroidTargetSdkVersion"] = ((int)settings.TargetApiLevel).ToString(),
             };
 
             // NOTE: Not sure why do I have to define build type, msbuild should do it by default.

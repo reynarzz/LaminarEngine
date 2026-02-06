@@ -67,6 +67,7 @@
 
   <ItemGroup>
     <Folder Include="Graphics\Device\Null\" />
+    <Folder Include="Serialization\Binary\" />
     <Folder Include="Third\Native\bin\" />
   </ItemGroup>
 
@@ -79,5 +80,8 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\SharedTypes\SharedTypes.csproj" />
 	</ItemGroup>
-	
+
+	<ItemGroup Condition="'$(ShipBuild)' == 'true'">
+		<ProjectReference Include="..\Generated\Generated.csproj" />
+	</ItemGroup>
 </Project>

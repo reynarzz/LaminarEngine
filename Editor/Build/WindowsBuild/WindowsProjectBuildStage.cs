@@ -27,6 +27,7 @@ namespace Editor.Build
 
             var props = new Dictionary<string, string>()
             {
+                ["ShipBuild"] = "true",
                 ["Configuration"] = settings.Type == BuildType.Release ? "Release" : "Debug",
                 ["Platform"] = "x64",
                 ["TargetFramework"] = "net9.0",
@@ -56,7 +57,7 @@ namespace Editor.Build
 
                 ["AssemblyVersion"] = GetVersion(buildTypeSettings.Version),
                 ["FileVersion"] = GetVersion(buildTypeSettings.Version),
-                ["InformationalVersion"] = GetVersion(buildTypeSettings.Version)
+                ["InformationalVersion"] = GetVersion(buildTypeSettings.Version),
             };
 
             if(settings.Type == BuildType.Release)
