@@ -2,7 +2,7 @@
 
 namespace Editor
 {
-    internal class Program
+    internal class _Program
     {
         public static void Main(string[] args)
         {

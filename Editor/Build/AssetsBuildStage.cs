@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GameCooker;
+using Editor.Cooker;
 using SharedTypes;
 
 namespace Editor.Build

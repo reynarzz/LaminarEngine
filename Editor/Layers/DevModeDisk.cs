@@ -1,5 +1,5 @@
 ﻿using Editor;
-using GameCooker;
+using Editor.Cooker;
 using Newtonsoft.Json;
 using SharedTypes;
 using System;

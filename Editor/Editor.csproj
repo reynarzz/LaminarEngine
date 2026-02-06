@@ -34,7 +34,6 @@
 	
 	<ItemGroup>
 		<ProjectReference Include="..\Engine\Engine.csproj" />
-		<ProjectReference Include="..\GameCooker\GameCooker.csproj" />
 		<ProjectReference Include="..\SharedTypes\SharedTypes.csproj" />
 	</ItemGroup>
 
@@ -50,8 +49,8 @@
 
 		<Message Text="Copying from $(GlfwWinSrc)" Importance="high" />
 
-		<Copy SourceFiles="$(GlfwWinSrc)" DestinationFiles="$(TargetDir)glfw3.dll"  />
-		<Copy SourceFiles="$(ImGuiSrc)" DestinationFiles="$(TargetDir)EditorNatives.dll"  />
+		<Copy SourceFiles="$(GlfwWinSrc)" DestinationFiles="$(TargetDir)glfw3.dll" />
+		<Copy SourceFiles="$(ImGuiSrc)" DestinationFiles="$(TargetDir)EditorNatives.dll" />
 		<Copy SourceFiles="$(GlSlang)" DestinationFiles="$(TargetDir)glslang.dll" SkipUnchangedFiles="true" />
 		<Copy SourceFiles="$(SpirvCross)" DestinationFiles="$(TargetDir)spirv-cross.dll" SkipUnchangedFiles="true" />
 </Target>
@@ -69,11 +68,21 @@
   </PropertyGroup>
 
 
-  	<Copy SourceFiles="$(GlfwMacSrc)" DestinationFolder="$(TargetDir)"  />
-	<Copy SourceFiles="$(ImGuiSrc)" DestinationFiles="$(TargetDir)libEditorNatives.dylib"  />
+  	<Copy SourceFiles="$(GlfwMacSrc)" DestinationFolder="$(TargetDir)" />
+	<Copy SourceFiles="$(ImGuiSrc)" DestinationFiles="$(TargetDir)libEditorNatives.dylib" />
 	<Copy SourceFiles="$(GlSlang)" DestinationFiles="$(TargetDir)libglslang.dylib" SkipUnchangedFiles="true" />
 	<Copy SourceFiles="$(SpirvCross)" DestinationFiles="$(TargetDir)libspirv-cross.dylib" SkipUnchangedFiles="true" />
 </Target>
+
+
+	<ItemGroup>
+		<Reference Include="Glslang.NET">
+			<HintPath>Third\GlSlang.Net\Glslang.NET.dll</HintPath>
+		</Reference>
+		<Reference Include="SPIRV-Cross.NET">
+			<HintPath>Third\Spirv-Cross\SPIRV-Cross.NET.dll</HintPath>
+		</Reference>
+	</ItemGroup>
 
 
 </Project>

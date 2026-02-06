@@ -1,4 +1,4 @@
-﻿using GameCooker;
+﻿using Editor.Cooker;
 using SharedTypes;
 using System;
 using System.Collections.Generic;
@@ -11,6 +11,7 @@ namespace Editor
     internal static class EditorPaths
     {
         internal static string AppRoot { get; }
+        public static string EditorRoot { get; }
         internal static string DataRoot { get; }
         internal static string GameRoot { get; }
         internal static string SharedTypesRoot { get; }
@@ -46,7 +47,7 @@ namespace Editor
         public static string AndroidPublishFolderRoot => Path.Combine(AndroidProjectRoot, "bin", "Publish");
         public static string DesktopPublishFolderRoot => Path.Combine(DesktopProjectRoot, "bin", "Publish");
         public static string Win32PublishFolderRoot => Path.Combine(DesktopPublishFolderRoot, "win32");
-        
+
         public static string ShipWin32FolderRoot => Path.Combine(ShipFolderRoot, "win32");
         public static string Win32ShipGameDataFolderRoot => Path.Combine(ShipWin32FolderRoot, "Data");
 
@@ -57,18 +58,27 @@ namespace Editor
         public static string EngineNativesFolderRoot => Path.Combine(AppRoot, "Engine", "Third", "Native", "bin");
         public static string EngineWin32NativesFolderRoot => Path.Combine(EngineNativesFolderRoot, "win");
 
-
         static EditorPaths()
         {
-            var assemblyDir = Paths.ClearPathSeparation(Path.GetDirectoryName(AppContext.BaseDirectory)!);
-            var root = Path.Combine(assemblyDir.Substring(0, assemblyDir.LastIndexOf("Editor")));
+            var root = Paths.ClearPathSeparation(GetRootFolder(AppContext.BaseDirectory) + Path.DirectorySeparatorChar);
 
-            AppRoot = root;
-            DataRoot = Path.Combine(root, "Editor/Data");
+            AppRoot = Paths.ClearPathSeparation(root);
+            EditorRoot = Paths.ClearPathSeparation(Path.Combine(AppRoot, "Editor"));
+            DataRoot = Paths.ClearPathSeparation(Path.Combine(EditorRoot, "Data"));
             GameRoot = Paths.ClearPathSeparation(Path.Combine(AppRoot, Paths.GAME_FOLDER_NAME));
-            AndroidProjectRoot = Paths.ClearPathSeparation(Path.Combine(AppRoot, "Platforms/Android"));
-            DesktopProjectRoot = Paths.ClearPathSeparation(Path.Combine(AppRoot, "Platforms/Desktop"));
+            AndroidProjectRoot = Paths.ClearPathSeparation(Path.Combine(AppRoot, "Platforms", "Android"));
+            DesktopProjectRoot = Paths.ClearPathSeparation(Path.Combine(AppRoot, "Platforms", "Desktop"));
             SharedTypesRoot = Paths.ClearPathSeparation(Path.Combine(AppRoot, "SharedTypes"));
+        }
+
+        private static string GetRootFolder(string startPath)
+        {
+            if (File.Exists(startPath + "/GameScratch.sln"))
+            {
+                return startPath;
+            }
+
+            return GetRootFolder(Directory.GetParent(startPath).FullName);
         }
 
         public static string GetGameFolderAbsolutePath(string path)
@@ -88,6 +98,23 @@ namespace Editor
                 absoluteAssetPath = Paths.ClearPathSeparation(Path.Combine(CookerPaths.AssetsPath, relativePath));
             }
             return absoluteAssetPath;
+        }
+
+        public static class CookerPaths
+        {
+            public static string AssetsPath { get; }
+            public static string InternalAssetsPath { get; }
+            public static string ShadersPath { get; }
+            public static string CookerRoot { get; }
+            public const string INTERNAL_ASSET_FOLDER_NAME = "__InternalAssets__";
+
+            static CookerPaths()
+            {
+                CookerRoot = Path.Combine(EditorRoot, "Cooker");
+                AssetsPath = Paths.ClearPathSeparation(Path.Combine(CookerRoot, "Assets"));
+                InternalAssetsPath = Paths.ClearPathSeparation(Path.Combine(AssetsPath, INTERNAL_ASSET_FOLDER_NAME));
+                ShadersPath = Paths.ClearPathSeparation(Path.Combine(InternalAssetsPath, "Shaders"));
+            }
         }
     }
 }

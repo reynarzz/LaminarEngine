@@ -6,7 +6,7 @@ using Engine;
 using Engine.Layers;
 using Engine.Serialization;
 using Engine.Utils;
-using GameCooker;
+using Editor.Cooker;
 using SharedTypes;
 using System.Reflection;
 
@@ -185,7 +185,7 @@ namespace Editor
                 //        Debug.Log($"Success: {type.FullName}");
                 //    }
                 //}
-                GameCooker.Generator.TypeGenerationStage.GenerateTypeRegistry();
+                Editor.Cooker.Generator.TypeGenerationStage.GenerateTypeRegistry();
             }
 
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.R))

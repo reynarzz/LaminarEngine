@@ -6,7 +6,7 @@ using System.Reflection;
 using Microsoft.VisualBasic.FileIO;
 using Editor.Utils;
 using SharedTypes;
-using GameCooker;
+using Editor.Cooker;
 
 namespace Editor.Serialization
 {

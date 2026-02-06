@@ -10,7 +10,7 @@ using Engine.GUI;
 using Engine.IO;
 using Engine.Layers;
 using Engine.Layers.Input;
-using GameCooker;
+using Editor.Cooker;
 using GlmNet;
 using ImGuiNET;
 using SharedTypes;
@@ -28,7 +28,7 @@ namespace Editor
     // -The serializer has a possible bug related to delegates,
     //   collections do not search for all delegates(privates/public), but classes do.
     // -If I load the runtime mode, and the applicationLayer is enabled, the camera renders black.
-    // GameCooker, the asset database sometimes doesn't remove old assets correctly.
+    // Editor.Cooker, the asset database sometimes doesn't remove old assets correctly.
 
     // Fix:
     // Investigate why when the scene is reloaded old objects are still alive.
@@ -36,11 +36,14 @@ namespace Editor
     // Compilation can get stuck forever.
     // If a collider change from Trigger to normal (and viceversa), the ontrigerExit/onCollisionExit must be called.
 
-    // Serialization
+    // Serialization:
     // - Forbid serialization of dictionaries that contains EObject as key?
     // - For runtime build, create a dictionary with all the types, so types can be saved and found quickly: Dictionary<Guid, Type>
     // - The TypeRegistry should only be used in ship builds. While binary serializing the assets, also add types to the TypeRegistryClassGenerator.
 
+    // Refactor:
+    // - Move Editor.Cooker to the editor project.
+    // - Move classes from 'SharedTypes' project to the Engine and Editor projects accordingly.
 
 
     // Performance fix:
