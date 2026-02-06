@@ -6,9 +6,7 @@ using Engine;
 using Engine.Layers;
 using Engine.Serialization;
 using Engine.Utils;
-using Generated;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using GameCooker;
 using SharedTypes;
 using System.Reflection;
 
@@ -178,21 +176,6 @@ namespace Editor
 
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.W))
             {
-                var assemblies = new Assembly[] { GfsTypeRegistry.EngineAssembly, GfsTypeRegistry.SharedTypesAssembly };
-                foreach (var assembly in assemblies)
-                {
-                    if (assembly == null)
-                    {
-                        Debug.Error("Can't generate type for null assembly.");
-                        continue;
-                    }
-
-                    TypeRegistryClassGenerator.AddTypes(assembly.DefinedTypes.Select(x => x.AsType()).ToArray());
-                }
-
-                var str = TypeRegistryClassGenerator.Generate();
-
-                File.WriteAllText($"{EditorPaths.AppRoot}/Generated/TypeRegistry_Generated.cs", str);
 
                 //var a = new TypeRegistry();
                 //if (a.GetType(Guid.Parse("155b8de8a92b2bb630a8026d46704c61"), out Type type))
@@ -202,6 +185,7 @@ namespace Editor
                 //        Debug.Log($"Success: {type.FullName}");
                 //    }
                 //}
+                GameCooker.Generator.TypeGenerationStage.GenerateTypeRegistry();
             }
 
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.R))
@@ -212,8 +196,8 @@ namespace Editor
                 //_test = Assets.GetShader("Shaders/Test/ShaderTest.shader");
 
 
-                SerializerTypesFixer();
-                //LoadScene();
+                //SerializerTypesFixer();
+                LoadScene();
             }
 
         }

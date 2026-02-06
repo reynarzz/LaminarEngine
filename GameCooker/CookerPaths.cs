@@ -12,13 +12,15 @@ namespace GameCooker
         public static string AssetsPath { get; }
         public static string InternalAssetsPath { get; }
         public static string ShadersPath { get; }
+        public static string AppRoot { get; }
         public static string CookerRoot { get; }
         public const string INTERNAL_ASSET_FOLDER_NAME = "__InternalAssets__";
 
         static CookerPaths()
         {
             var assemblyDir = Paths.ClearPathSeparation(Path.GetDirectoryName(AppContext.BaseDirectory)!);
-            CookerRoot = Path.Combine(GetRootFolder(assemblyDir), "GameCooker");
+            AppRoot = GetRootFolder(assemblyDir);
+            CookerRoot = Path.Combine(AppRoot, "GameCooker");
 
             AssetsPath = Paths.ClearPathSeparation(Path.Combine(CookerRoot, "Assets"));
             InternalAssetsPath = Paths.ClearPathSeparation(Path.Combine(AssetsPath, INTERNAL_ASSET_FOLDER_NAME));

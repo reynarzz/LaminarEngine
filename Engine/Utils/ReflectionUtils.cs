@@ -496,21 +496,7 @@ namespace Engine.Utils
         }
         public static string GetFullTypeName(Type type)
         {
-            if (type == null)
-                return string.Empty;
-
-            var str = StripAssemblyMetadata(type.AssemblyQualifiedName);
-
-
-            return str;
-        }
-
-        public static string StripAssemblyMetadata(string typeName)
-        {
-            if (string.IsNullOrEmpty(typeName))
-                return typeName;
-
-            return Regex.Replace(typeName, @",\s*Version=[^,\]]+|\s*,\s*Culture=[^,\]]+|\s*,\s*PublicKeyToken=[^,\]]+", string.Empty);
+            return ReflectionUtilsShared.GetFullTypeName(type);
         }
 
         public static object GetMemberValue(object obj, MemberInfo member)
