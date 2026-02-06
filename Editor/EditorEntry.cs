@@ -39,6 +39,9 @@ namespace Editor
     // Serialization
     // - Forbid serialization of dictionaries that contains EObject as key?
     // - For runtime build, create a dictionary with all the types, so types can be saved and found quickly: Dictionary<Guid, Type>
+    // - The TypeRegistry should only be used in ship builds. While binary serializing the assets, also add types to the TypeRegistryClassGenerator.
+
+
 
     // Performance fix:
     // UI performance is pretty bad, rewrite the entire UI system.

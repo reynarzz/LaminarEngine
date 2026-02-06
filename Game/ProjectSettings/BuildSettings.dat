@@ -4,7 +4,7 @@
     "Type": "ComplexCollection",
     "InternalType": "System.Collections.Generic.List`1[[System.Guid, System.Private.CoreLib]], System.Private.CoreLib",
     "Data": {
-      "$type": "Engine.CollectionPropertyData, Engine",
+      "$type": "SharedTypes.CollectionPropertyData, SharedTypes",
       "$value": {
         "CollectionType": "List",
         "Collection": []
@@ -16,12 +16,12 @@
     "Type": "ComplexCollection",
     "InternalType": "System.Collections.Generic.Dictionary`2[[Editor.Build.PlatformBuild, Editor],[Editor.Build.PlatformBuildSettings, Editor]], System.Private.CoreLib",
     "Data": {
-      "$type": "Engine.CollectionPropertyData, Engine",
+      "$type": "SharedTypes.CollectionPropertyData, SharedTypes",
       "$value": {
         "CollectionType": "Dictionary",
         "Collection": [
           {
-            "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+            "$type": "SharedTypes.ComplexDictionaryData`2[[SharedTypes.ComplexTypeData, SharedTypes],[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
             "Key": {
               "TargetTypeName": "Editor.Build.PlatformBuild, Editor",
               "ComplexType": "Simple",
@@ -46,7 +46,7 @@
                   "Type": "ComplexClass",
                   "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
                   "Data": {
-                    "$type": "Engine.ComplexTypeData, Engine",
+                    "$type": "SharedTypes.ComplexTypeData, SharedTypes",
                     "$value": {
                       "TargetTypeName": "Editor.Build.WindowsBuildTypeSettings, Editor",
                       "ComplexType": "ComplexClass",
@@ -56,7 +56,7 @@
                           "Type": "TextureAsset",
                           "InternalType": "Engine.Texture2D, Engine",
                           "Data": {
-                            "$type": "Engine.ReferenceData, Engine",
+                            "$type": "SharedTypes.ReferenceData, SharedTypes",
                             "$value": {
                               "Id": "2cb4a5eb-9991-4a83-85bb-6a312dba842b"
                             }
@@ -156,7 +156,7 @@
                   "Type": "ComplexClass",
                   "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
                   "Data": {
-                    "$type": "Engine.ComplexTypeData, Engine",
+                    "$type": "SharedTypes.ComplexTypeData, SharedTypes",
                     "$value": {
                       "TargetTypeName": "Editor.Build.WindowsBuildTypeSettings, Editor",
                       "ComplexType": "ComplexClass",
@@ -258,7 +258,7 @@
                   "Type": "ComplexClass",
                   "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
                   "Data": {
-                    "$type": "Engine.ComplexTypeData, Engine",
+                    "$type": "SharedTypes.ComplexTypeData, SharedTypes",
                     "$value": {
                       "TargetTypeName": "Editor.Build.WindowsBuildTypeSettings, Editor",
                       "ComplexType": "ComplexClass",
@@ -378,7 +378,7 @@
             "Type": "ComplexClass"
           },
           {
-            "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+            "$type": "SharedTypes.ComplexDictionaryData`2[[SharedTypes.ComplexTypeData, SharedTypes],[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
             "Key": {
               "TargetTypeName": "Editor.Build.PlatformBuild, Editor",
               "ComplexType": "Simple",
@@ -470,7 +470,7 @@
                   "Type": "ComplexClass",
                   "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
                   "Data": {
-                    "$type": "Engine.ComplexTypeData, Engine",
+                    "$type": "SharedTypes.ComplexTypeData, SharedTypes",
                     "$value": {
                       "TargetTypeName": "Editor.Build.AndroidBuildTypeSettings, Editor",
                       "ComplexType": "ComplexClass",
@@ -480,7 +480,7 @@
                           "Type": "ComplexClass",
                           "InternalType": "Editor.Build.AndroidIcon, Editor",
                           "Data": {
-                            "$type": "Engine.ComplexTypeData, Engine",
+                            "$type": "SharedTypes.ComplexTypeData, SharedTypes",
                             "$value": {
                               "TargetTypeName": "Editor.Build.AndroidIcon, Editor",
                               "ComplexType": "ComplexClass",
@@ -490,7 +490,7 @@
                                   "Type": "TextureAsset",
                                   "InternalType": "Engine.Texture2D, Engine",
                                   "Data": {
-                                    "$type": "Engine.ReferenceData, Engine",
+                                    "$type": "SharedTypes.ReferenceData, SharedTypes",
                                     "$value": {
                                       "Id": "d682d746-edc8-4efe-895e-a31a2fbefd4d"
                                     }
@@ -501,7 +501,7 @@
                                   "Type": "TextureAsset",
                                   "InternalType": "Engine.Texture2D, Engine",
                                   "Data": {
-                                    "$type": "Engine.ReferenceData, Engine",
+                                    "$type": "SharedTypes.ReferenceData, SharedTypes",
                                     "$value": {
                                       "Id": "a70a6ebd-9c2c-40e5-a9bb-10dda953ecfb"
                                     }
@@ -512,7 +512,7 @@
                                   "Type": "TextureAsset",
                                   "InternalType": "Engine.Texture2D, Engine",
                                   "Data": {
-                                    "$type": "Engine.ReferenceData, Engine",
+                                    "$type": "SharedTypes.ReferenceData, SharedTypes",
                                     "$value": {
                                       "Id": "8c713ca8-3093-47d2-b19b-3a960bdbb0f2"
                                     }
@@ -527,32 +527,32 @@
                           "Type": "ComplexCollection",
                           "InternalType": "Editor.Build.AndroidIcon[], Editor",
                           "Data": {
-                            "$type": "Engine.CollectionPropertyData, Engine",
+                            "$type": "SharedTypes.CollectionPropertyData, SharedTypes",
                             "$value": {
                               "CollectionType": "Array",
                               "Collection": [
                                 {
-                                  "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                                  "$type": "SharedTypes.CollectionData`1[[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
                                   "Value": null,
                                   "Type": "None"
                                 },
                                 {
-                                  "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                                  "$type": "SharedTypes.CollectionData`1[[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
                                   "Value": null,
                                   "Type": "None"
                                 },
                                 {
-                                  "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                                  "$type": "SharedTypes.CollectionData`1[[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
                                   "Value": null,
                                   "Type": "None"
                                 },
                                 {
-                                  "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                                  "$type": "SharedTypes.CollectionData`1[[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
                                   "Value": null,
                                   "Type": "None"
                                 },
                                 {
-                                  "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                                  "$type": "SharedTypes.CollectionData`1[[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
                                   "Value": null,
                                   "Type": "None"
                                 }
@@ -623,7 +623,7 @@
                   "Type": "ComplexClass",
                   "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
                   "Data": {
-                    "$type": "Engine.ComplexTypeData, Engine",
+                    "$type": "SharedTypes.ComplexTypeData, SharedTypes",
                     "$value": {
                       "TargetTypeName": "Editor.Build.AndroidBuildTypeSettings, Editor",
                       "ComplexType": "ComplexClass",
@@ -633,7 +633,7 @@
                           "Type": "ComplexClass",
                           "InternalType": "Editor.Build.AndroidIcon, Editor",
                           "Data": {
-                            "$type": "Engine.ComplexTypeData, Engine",
+                            "$type": "SharedTypes.ComplexTypeData, SharedTypes",
                             "$value": {
                               "TargetTypeName": "Editor.Build.AndroidIcon, Editor",
                               "ComplexType": "ComplexClass",
@@ -665,32 +665,32 @@
                           "Type": "ComplexCollection",
                           "InternalType": "Editor.Build.AndroidIcon[], Editor",
                           "Data": {
-                            "$type": "Engine.CollectionPropertyData, Engine",
+                            "$type": "SharedTypes.CollectionPropertyData, SharedTypes",
                             "$value": {
                               "CollectionType": "Array",
                               "Collection": [
                                 {
-                                  "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                                  "$type": "SharedTypes.CollectionData`1[[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
                                   "Value": null,
                                   "Type": "None"
                                 },
                                 {
-                                  "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                                  "$type": "SharedTypes.CollectionData`1[[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
                                   "Value": null,
                                   "Type": "None"
                                 },
                                 {
-                                  "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                                  "$type": "SharedTypes.CollectionData`1[[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
                                   "Value": null,
                                   "Type": "None"
                                 },
                                 {
-                                  "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                                  "$type": "SharedTypes.CollectionData`1[[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
                                   "Value": null,
                                   "Type": "None"
                                 },
                                 {
-                                  "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                                  "$type": "SharedTypes.CollectionData`1[[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
                                   "Value": null,
                                   "Type": "None"
                                 }
@@ -761,7 +761,7 @@
                   "Type": "ComplexClass",
                   "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
                   "Data": {
-                    "$type": "Engine.ComplexTypeData, Engine",
+                    "$type": "SharedTypes.ComplexTypeData, SharedTypes",
                     "$value": {
                       "TargetTypeName": "Editor.Build.AndroidBuildTypeSettings, Editor",
                       "ComplexType": "ComplexClass",
@@ -771,7 +771,7 @@
                           "Type": "ComplexClass",
                           "InternalType": "Editor.Build.AndroidIcon, Editor",
                           "Data": {
-                            "$type": "Engine.ComplexTypeData, Engine",
+                            "$type": "SharedTypes.ComplexTypeData, SharedTypes",
                             "$value": {
                               "TargetTypeName": "Editor.Build.AndroidIcon, Editor",
                               "ComplexType": "ComplexClass",
@@ -803,32 +803,32 @@
                           "Type": "ComplexCollection",
                           "InternalType": "Editor.Build.AndroidIcon[], Editor",
                           "Data": {
-                            "$type": "Engine.CollectionPropertyData, Engine",
+                            "$type": "SharedTypes.CollectionPropertyData, SharedTypes",
                             "$value": {
                               "CollectionType": "Array",
                               "Collection": [
                                 {
-                                  "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                                  "$type": "SharedTypes.CollectionData`1[[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
                                   "Value": null,
                                   "Type": "None"
                                 },
                                 {
-                                  "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                                  "$type": "SharedTypes.CollectionData`1[[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
                                   "Value": null,
                                   "Type": "None"
                                 },
                                 {
-                                  "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                                  "$type": "SharedTypes.CollectionData`1[[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
                                   "Value": null,
                                   "Type": "None"
                                 },
                                 {
-                                  "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                                  "$type": "SharedTypes.CollectionData`1[[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
                                   "Value": null,
                                   "Type": "None"
                                 },
                                 {
-                                  "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+                                  "$type": "SharedTypes.CollectionData`1[[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
                                   "Value": null,
                                   "Type": "None"
                                 }

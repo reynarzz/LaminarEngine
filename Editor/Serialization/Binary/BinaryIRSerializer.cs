@@ -1,5 +1,6 @@
 ﻿using Engine;
 using Engine.Serialization;
+using SharedTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Editor.Serialization
 {
     internal class BinaryIRSerializer
     {
-        internal static byte[] Serialize(List<SerializedPropertyData> properties)
+        internal static byte[] Serialize(List<SerializedPropertyIR> properties)
         {
             return null;
         }

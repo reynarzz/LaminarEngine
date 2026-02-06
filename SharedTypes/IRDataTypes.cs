@@ -1,34 +1,32 @@
-﻿using Engine.Serialization;
-using Engine.Utils;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Engine
+namespace SharedTypes
 {
-    internal class ActorDataSceneAsset
+    internal class ActorIR
     {
         public string Name { get; set; }
         public int Layer { get; set; }
         public bool IsActiveSelf { get; set; }
         public Guid ID { get; set; }
         public Guid ParentID { get; set; } = Guid.Empty;
-        public List<ComponentDataSceneAsset> Components { get; set; }
+        public List<ComponentIR> Components { get; set; }
     }
 
-    internal class ComponentDataSceneAsset
+    internal class ComponentIR
     {
         [Obsolete("Use TypeId")]
         public string TypeName { get; set; }
         public Guid TypeId { get; set; }
         public bool IsEnabled { get; set; }
         public Guid ID { get; set; }
-        public List<SerializedPropertyData> SerializedProperties { get; set; }
+        public List<SerializedPropertyIR> SerializedProperties { get; set; }
     }
 
-    internal class SerializedPropertyData
+    internal class SerializedPropertyIR
     {
         public string Name { get; set; }
         public SerializedType Type { get; set; }
@@ -36,6 +34,11 @@ namespace Engine
         public string InternalType { get; set; }
         public Guid TypeId { get; set; }
         public object Data { get; set; }
+    }
+
+    internal class SerializedItem
+    {
+        public SerializedType Type { get; set; }
     }
 
     internal class ReferenceData
@@ -51,7 +54,7 @@ namespace Engine
 
     internal class CollectionPropertyData
     {
-        public ReflectionUtils.CollectionType CollectionType { get; set; }
+        public CollectionType CollectionType { get; set; }
         public List<object> Collection { get; set; } = new();
     }
 
@@ -91,7 +94,7 @@ namespace Engine
         public string TargetTypeName { get; set; }
         public Guid TypeId { get; set; }
         public SerializedType ComplexType { get; set; }
-        public List<SerializedPropertyData> Properties { get; set; }
+        public List<SerializedPropertyIR> Properties { get; set; }
     }
 
     internal enum SerializedType

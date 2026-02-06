@@ -6,6 +6,7 @@ using Engine;
 using Engine.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using SharedTypes;
 
 namespace Editor
 {
@@ -34,7 +35,7 @@ namespace Editor
                     }
                 }
 
-                if (p.DeclaringType == typeof(SerializedPropertyData) && p.PropertyName == nameof(SerializedPropertyData.Data))
+                if (p.DeclaringType == typeof(SerializedPropertyIR) && p.PropertyName == nameof(SerializedPropertyIR.Data))
                 {
                     p.Converter = new GFSDataProperty();
                 }

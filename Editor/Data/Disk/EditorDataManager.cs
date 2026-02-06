@@ -43,7 +43,7 @@ namespace Editor.Data
         {
             var projectSettings = Paths.GetProjectSettingsFolder();
             var json = File.ReadAllText(Path.Combine(projectSettings, $"{name}{EditorPaths.EDITOR_DATA_EXTENSION}"));
-            var ir = EditorJsonUtils.Deserialize<List<SerializedPropertyData>>(json);
+            var ir = EditorJsonUtils.Deserialize<List<SerializedPropertyIR>>(json);
             var value = Deserializer.Deserialize<T>(ir);
 
             if(value == null)

@@ -1,6 +1,7 @@
 ﻿using Engine;
 using Engine.Utils;
 using Newtonsoft.Json;
+using SharedTypes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace Editor.Serialization
     internal class SerializedScene
     {
         public string Name { get; set; }
-        public List<ActorDataSceneAsset> ActorsData { get; set; }
+        public List<ActorIR> ActorsData { get; set; }
         [JsonIgnore] internal List<Actor> Actors { get; set; }
     }
 
@@ -70,9 +71,9 @@ namespace Editor.Serialization
             return serializedScene;
         }
 
-        internal static ActorDataSceneAsset GetActor(Actor actor, SerializationOptions options)
+        internal static ActorIR GetActor(Actor actor, SerializationOptions options)
         {
-            return new ActorDataSceneAsset()
+            return new ActorIR()
             {
                 Name = actor.Name,
                 IsActiveSelf = actor.IsActiveSelf,
@@ -83,9 +84,9 @@ namespace Editor.Serialization
             };
         }
 
-        internal static List<ComponentDataSceneAsset> GetAllComponentsData(Actor actor, SerializationOptions options)
+        internal static List<ComponentIR> GetAllComponentsData(Actor actor, SerializationOptions options)
         {
-            var componentsData = new List<ComponentDataSceneAsset>();
+            var componentsData = new List<ComponentIR>();
 
             bool IsFromGameDll(Component component)
             {
@@ -110,9 +111,9 @@ namespace Editor.Serialization
             return componentsData;
         }
 
-        internal static ComponentDataSceneAsset GetComponentData(Component component)
+        internal static ComponentIR GetComponentData(Component component)
         {
-            return new ComponentDataSceneAsset()
+            return new ComponentIR()
             {
                 ID = component.GetID(),
                 IsEnabled = component.IsEnabled,

@@ -1,5 +1,6 @@
 ﻿using Engine;
 using Engine.Utils;
+using SharedTypes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,12 +13,12 @@ namespace Engine.Serialization
 {
     internal static class SceneDeserializer
     {
-        private readonly static Dictionary<Guid, (Actor value, ActorDataSceneAsset data)> _actorsByID = new();
-        private readonly static Dictionary<Guid, (Component value, ComponentDataSceneAsset data)> _componentsByID = new();
+        private readonly static Dictionary<Guid, (Actor value, ActorIR data)> _actorsByID = new();
+        private readonly static Dictionary<Guid, (Component value, ComponentIR data)> _componentsByID = new();
 
         private static readonly List<Component> _initializationComponents = new();
         private static readonly Dictionary<Guid, Component> _existantComponents = new();
-        public static void DeserializeSceneComponents(IReadOnlyList<Actor> actors, IReadOnlyList<ActorDataSceneAsset> actorsData)
+        public static void DeserializeSceneComponents(IReadOnlyList<Actor> actors, IReadOnlyList<ActorIR> actorsData)
         {
             _actorsByID.Clear();
             _componentsByID.Clear();
@@ -123,7 +124,7 @@ namespace Engine.Serialization
             _existantComponents.Clear();
         }
 
-        public static void DeserializeScene(IReadOnlyList<ActorDataSceneAsset> actors, WeakReference<Scene> scene)
+        public static void DeserializeScene(IReadOnlyList<ActorIR> actors, WeakReference<Scene> scene)
         {
             _actorsByID.Clear();
             _componentsByID.Clear();

@@ -1,4 +1,5 @@
 ﻿using GlmNet;
+using SharedTypes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -753,17 +754,7 @@ namespace Engine.Utils
             return IsCollection(type);
         }
 
-        internal enum CollectionType
-        {
-            None,
-            Array,
-            List,
-            Dictionary,
-            Stack,
-            Queue,
-            Hashset
-        }
-
+        
         public static bool IsCollection(Type type)
         {
             return IsCollection(type, out _);

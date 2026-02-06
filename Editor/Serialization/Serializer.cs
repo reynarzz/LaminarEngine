@@ -6,6 +6,7 @@ using System.Reflection;
 using Microsoft.VisualBasic.FileIO;
 using Generated;
 using Editor.Utils;
+using SharedTypes;
 
 namespace Editor.Serialization
 {
@@ -14,10 +15,10 @@ namespace Editor.Serialization
         /// <summary>
         /// Gets the IR of all the properties marked with the 'SerializedField' attribute.
         /// </summary>
-        internal static List<SerializedPropertyData> Serialize(object target)
+        internal static List<SerializedPropertyIR> Serialize(object target)
         {
             var serializedMembers = ReflectionUtils.GetAllMembersWithAttribute<SerializedFieldAttribute>(target.GetType());
-            var properties = new List<SerializedPropertyData>();
+            var properties = new List<SerializedPropertyIR>();
 
             foreach (var member in serializedMembers)
             {
@@ -26,7 +27,7 @@ namespace Editor.Serialization
                 var valueType = value?.GetType() ?? memberType;
                 var serializedType = GetSerializedType(valueType, value);
 
-                properties.Add(new SerializedPropertyData()
+                properties.Add(new SerializedPropertyIR()
                 {
                     Name = member.Name,
                     InternalType = GetInternalType(valueType),
@@ -102,7 +103,7 @@ namespace Editor.Serialization
                 var isSingleArgCollectionAEObject = elementsTypes.Length == 1 && elementsTypes.Any(x => x.IsAssignableTo(typeof(IObject)));
 
                 if (isSingleArgCollectionAEObject ||
-                    (collectionType == ReflectionUtils.CollectionType.Dictionary && IsPureReferenceDictionary(elementsTypes, value)))
+                    (collectionType == CollectionType.Dictionary && IsPureReferenceDictionary(elementsTypes, value)))
                 {
                     return SerializedType.ReferenceCollection;
                 }
@@ -274,7 +275,7 @@ namespace Editor.Serialization
                     CollectionType = collectionType
                 };
 
-                if (collectionType == ReflectionUtils.CollectionType.Dictionary)
+                if (collectionType == CollectionType.Dictionary)
                 {
                     var isKeyEObject = elementsType[0].IsAssignableTo(typeof(IObject));
                     var isValueEObject = elementsType[1].IsAssignableTo(typeof(IObject));
@@ -317,9 +318,9 @@ namespace Editor.Serialization
                                         ComplexType = argSerializedType,
                                         TargetTypeName = internalType,
                                         TypeId = typeId,
-                                        Properties = new List<SerializedPropertyData>()
+                                        Properties = new List<SerializedPropertyIR>()
                                         {
-                                            new SerializedPropertyData()
+                                            new SerializedPropertyIR()
                                             {
                                                Data = argValue,
                                                InternalType = internalType,
@@ -422,7 +423,7 @@ namespace Editor.Serialization
             // Get the concreate type, this makes sure to get the actual type even for inherit types.
             complexType = value?.GetType() ?? complexType;
 
-            SerializedPropertyData GetPropertyGraph(MemberInfo currentType, object target)
+            SerializedPropertyIR GetPropertyGraph(MemberInfo currentType, object target)
             {
                 var currentMemberType = ReflectionUtils.GetMemberType(currentType);
                 var serializedType = GetSerializedType(currentMemberType, null);
@@ -430,7 +431,7 @@ namespace Editor.Serialization
 
                 var valueType = value?.GetType() ?? currentMemberType;
 
-                return new SerializedPropertyData()
+                return new SerializedPropertyIR()
                 {
                     Name = currentType.Name,
                     Type = serializedType,
@@ -445,7 +446,7 @@ namespace Editor.Serialization
                 ComplexType = GetSerializedType(complexType, null),
                 TargetTypeName = GetInternalType(complexType),
                 TypeId = GetTypeId(complexType),
-                Properties = new List<SerializedPropertyData>()
+                Properties = new List<SerializedPropertyIR>()
             };
 
             var rootSerializedFields = ReflectionUtils.GetAllMembersWithAttribute<SerializedFieldAttribute>(complexType);

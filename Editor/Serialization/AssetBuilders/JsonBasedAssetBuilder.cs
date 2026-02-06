@@ -23,7 +23,7 @@ namespace Editor
 
             var assetInstance = Activator.CreateInstance(typeof(T), BindingFlags.Instance | BindingFlags.NonPublic,
                                                          null, [info.Path, guid], null);
-            var ir = EditorJsonUtils.Deserialize<List<SerializedPropertyData>>(text);
+            var ir = EditorJsonUtils.Deserialize<List<SerializedPropertyIR>>(text);
 
             Deserializer.Deserialize(assetInstance, ir);
 

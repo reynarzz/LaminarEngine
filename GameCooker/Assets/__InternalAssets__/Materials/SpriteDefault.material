@@ -4,12 +4,12 @@
     "Type": "ComplexCollection",
     "InternalType": "System.Collections.Generic.List`1[[Engine.RenderPass, Engine]], System.Private.CoreLib",
     "Data": {
-      "$type": "Engine.CollectionPropertyData, Engine",
+      "$type": "SharedTypes.CollectionPropertyData, SharedTypes",
       "$value": {
         "CollectionType": "List",
         "Collection": [
           {
-            "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
+            "$type": "SharedTypes.CollectionData`1[[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
             "Value": {
               "TargetTypeName": "Engine.RenderPass, Engine",
               "ComplexType": "ComplexClass",
@@ -28,7 +28,7 @@
                   "Type": "ShaderAsset",
                   "InternalType": "Engine.Shader, Engine",
                   "Data": {
-                    "$type": "Engine.ReferenceData, Engine",
+                    "$type": "SharedTypes.ReferenceData, SharedTypes",
                     "$value": {
                       "Id": "f29cbe33-ed4f-4214-bc46-b66e2c2053fc"
                     }
@@ -70,12 +70,12 @@
                   "Type": "ComplexCollection",
                   "InternalType": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib],[Engine.Graphics.UniformValue, Engine]], System.Private.CoreLib",
                   "Data": {
-                    "$type": "Engine.CollectionPropertyData, Engine",
+                    "$type": "SharedTypes.CollectionPropertyData, SharedTypes",
                     "$value": {
                       "CollectionType": "Dictionary",
                       "Collection": [
                         {
-                          "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+                          "$type": "SharedTypes.ComplexDictionaryData`2[[SharedTypes.ComplexTypeData, SharedTypes],[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
                           "Key": {
                             "TargetTypeName": "System.String, System.Private.CoreLib",
                             "ComplexType": "Simple",
@@ -230,7 +230,7 @@
                           "Type": "ComplexClass"
                         },
                         {
-                          "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+                          "$type": "SharedTypes.ComplexDictionaryData`2[[SharedTypes.ComplexTypeData, SharedTypes],[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
                           "Key": {
                             "TargetTypeName": "System.String, System.Private.CoreLib",
                             "ComplexType": "Simple",
@@ -385,7 +385,7 @@
                           "Type": "ComplexClass"
                         },
                         {
-                          "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+                          "$type": "SharedTypes.ComplexDictionaryData`2[[SharedTypes.ComplexTypeData, SharedTypes],[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
                           "Key": {
                             "TargetTypeName": "System.String, System.Private.CoreLib",
                             "ComplexType": "Simple",
@@ -540,7 +540,7 @@
                           "Type": "ComplexClass"
                         },
                         {
-                          "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+                          "$type": "SharedTypes.ComplexDictionaryData`2[[SharedTypes.ComplexTypeData, SharedTypes],[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
                           "Key": {
                             "TargetTypeName": "System.String, System.Private.CoreLib",
                             "ComplexType": "Simple",
@@ -695,7 +695,7 @@
                           "Type": "ComplexClass"
                         },
                         {
-                          "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+                          "$type": "SharedTypes.ComplexDictionaryData`2[[SharedTypes.ComplexTypeData, SharedTypes],[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
                           "Key": {
                             "TargetTypeName": "System.String, System.Private.CoreLib",
                             "ComplexType": "Simple",
@@ -850,7 +850,7 @@
                           "Type": "ComplexClass"
                         },
                         {
-                          "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+                          "$type": "SharedTypes.ComplexDictionaryData`2[[SharedTypes.ComplexTypeData, SharedTypes],[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
                           "Key": {
                             "TargetTypeName": "System.String, System.Private.CoreLib",
                             "ComplexType": "Simple",
@@ -1005,7 +1005,7 @@
                           "Type": "ComplexClass"
                         },
                         {
-                          "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+                          "$type": "SharedTypes.ComplexDictionaryData`2[[SharedTypes.ComplexTypeData, SharedTypes],[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
                           "Key": {
                             "TargetTypeName": "System.String, System.Private.CoreLib",
                             "ComplexType": "Simple",
@@ -1160,7 +1160,7 @@
                           "Type": "ComplexClass"
                         },
                         {
-                          "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+                          "$type": "SharedTypes.ComplexDictionaryData`2[[SharedTypes.ComplexTypeData, SharedTypes],[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
                           "Key": {
                             "TargetTypeName": "System.String, System.Private.CoreLib",
                             "ComplexType": "Simple",
@@ -1315,7 +1315,7 @@
                           "Type": "ComplexClass"
                         },
                         {
-                          "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+                          "$type": "SharedTypes.ComplexDictionaryData`2[[SharedTypes.ComplexTypeData, SharedTypes],[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
                           "Key": {
                             "TargetTypeName": "System.String, System.Private.CoreLib",
                             "ComplexType": "Simple",

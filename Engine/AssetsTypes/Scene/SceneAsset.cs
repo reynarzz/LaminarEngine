@@ -1,4 +1,5 @@
 ﻿using Engine;
+using SharedTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Engine
 {
     internal class SceneAsset : AssetResourceBase
     {
-        internal List<ActorDataSceneAsset> Actors { get; private set; } = new();
+        internal List<ActorIR> Actors { get; private set; } = new();
 
         internal SceneAsset(string path, Guid guid) : base(path, guid)
         {

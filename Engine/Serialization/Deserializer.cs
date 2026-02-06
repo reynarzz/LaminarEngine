@@ -1,4 +1,5 @@
 ﻿using Engine.Utils;
+using SharedTypes;
 using System;
 using System.Collections;
 using System.Reflection;
@@ -7,13 +8,13 @@ namespace Engine.Serialization
 {
     internal class DeserializerData
     {
-        internal Dictionary<Guid, (Actor value, ActorDataSceneAsset data)> ActorsByID = new();
-        internal Dictionary<Guid, (Component value, ComponentDataSceneAsset data)> ComponentsByID = new();
+        internal Dictionary<Guid, (Actor value, ActorIR data)> ActorsByID = new();
+        internal Dictionary<Guid, (Component value, ComponentIR data)> ComponentsByID = new();
     }
 
     internal static class Deserializer
     {
-        internal static T Deserialize<T>(IReadOnlyList<SerializedPropertyData> properties)
+        internal static T Deserialize<T>(IReadOnlyList<SerializedPropertyIR> properties)
         {
             if (properties == null)
                 return default;
@@ -26,11 +27,11 @@ namespace Engine.Serialization
             }
             return (T)target;
         }
-        internal static void Deserialize(object targetInstance, IReadOnlyList<SerializedPropertyData> properties)
+        internal static void Deserialize(object targetInstance, IReadOnlyList<SerializedPropertyIR> properties)
         {
             DeserializeTarget(targetInstance, properties, null);
         }
-        internal static void DeserializeTarget(object targetInstance, IReadOnlyList<SerializedPropertyData> properties,
+        internal static void DeserializeTarget(object targetInstance, IReadOnlyList<SerializedPropertyIR> properties,
                                                DeserializerData deserializerData)
         {
             if (targetInstance == null || properties == null)
@@ -78,7 +79,7 @@ namespace Engine.Serialization
             }
         }
 
-        private static void DeserializeReferencedProperty(object target, SerializedPropertyData property, DeserializerData deserializerData)
+        private static void DeserializeReferencedProperty(object target, SerializedPropertyIR property, DeserializerData deserializerData)
         {
             if (property.Data == null)
             {
@@ -97,7 +98,7 @@ namespace Engine.Serialization
             }
         }
 
-        private static void DeserializeSimpleProperty(object target, SerializedPropertyData property)
+        private static void DeserializeSimpleProperty(object target, SerializedPropertyIR property)
         {
             if (property.Data == null)
             {
@@ -107,7 +108,7 @@ namespace Engine.Serialization
             ReflectionUtils.SetMemberValue(target, property.Data, property.Name);
         }
 
-        private static void DeserializeReferenceCollectionProperty(object target, SerializedPropertyData property, DeserializerData deserializerData)
+        private static void DeserializeReferenceCollectionProperty(object target, SerializedPropertyIR property, DeserializerData deserializerData)
         {
             if (property.Data == null)
                 return;
@@ -118,12 +119,12 @@ namespace Engine.Serialization
             if (ReflectionUtils.IsCollection(target?.GetType(), out var colType))
             {
                 // Note: Nested collections
-                if (colType == ReflectionUtils.CollectionType.Dictionary)
+                if (colType == CollectionType.Dictionary)
                 {
                     // NOTE: This assumes that the reference is in the value side, so keys that are references will not be supported.
                     collectionPropertyType = ReflectionUtils.GetMemberType(target.GetType().GetGenericArguments()[1], property.Name);
                 }
-                else if (colType == ReflectionUtils.CollectionType.Array)
+                else if (colType == CollectionType.Array)
                 {
                     collectionPropertyType = ReflectionUtils.GetMemberType(target.GetType().GetElementType(), property.Name);
                 }
@@ -146,7 +147,7 @@ namespace Engine.Serialization
                 return;
             }
 
-            if (collectionData.CollectionType == ReflectionUtils.CollectionType.Dictionary)
+            if (collectionData.CollectionType == CollectionType.Dictionary)
             {
                 var args = collectionPropertyType.GetGenericArguments();
                 var dictType = typeof(Dictionary<,>).MakeGenericType(args[0], args[1]);
@@ -170,7 +171,7 @@ namespace Engine.Serialization
                 ReflectionUtils.SetMemberValue(target, dictionary, property.Name);
 
             }
-            else if (collectionData.CollectionType == ReflectionUtils.CollectionType.List)
+            else if (collectionData.CollectionType == CollectionType.List)
             {
                 var list = (IList)ReflectionUtils.GetDefaultValueInstance(collectionPropertyType);
 
@@ -179,7 +180,7 @@ namespace Engine.Serialization
                     list.Add(GetItemReferenceValue(item));
                 });
             }
-            else if (collectionData.CollectionType == ReflectionUtils.CollectionType.Array)
+            else if (collectionData.CollectionType == CollectionType.Array)
             {
                 var array = Array.CreateInstance(collectionPropertyType.GetElementType(), collectionData.Collection.Count);
 
@@ -228,7 +229,7 @@ namespace Engine.Serialization
             return (Guid)guid;
         }
 
-        internal static void DeserializeComplexClass(object target, SerializedPropertyData property, DeserializerData deserializerData)
+        internal static void DeserializeComplexClass(object target, SerializedPropertyIR property, DeserializerData deserializerData)
         {
             if (target == null || property == null || property.Data == null)
                 return;
@@ -242,7 +243,7 @@ namespace Engine.Serialization
             }
         }
 
-        internal static void DeserializeComplexCollection(object target, SerializedPropertyData property, DeserializerData deserializerData)
+        internal static void DeserializeComplexCollection(object target, SerializedPropertyIR property, DeserializerData deserializerData)
         {
             if (target == null || property == null || property.Data == null)
                 return;
@@ -278,7 +279,7 @@ namespace Engine.Serialization
             {
                 var collectionInstance = ReflectionUtils.GetDefaultValueInstance(type, collectionData.Collection.Count);
 
-                if (collectionData.CollectionType == ReflectionUtils.CollectionType.Dictionary)
+                if (collectionData.CollectionType == CollectionType.Dictionary)
                 {
                     var dictionary = collectionInstance as IDictionary;
                     for (int i = 0; i < collectionData.Collection.Count; i++)

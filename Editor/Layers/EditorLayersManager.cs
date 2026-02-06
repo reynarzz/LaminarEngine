@@ -16,7 +16,7 @@ namespace Editor
 {
     internal class EditorLayersManager : LayersManager
     {
-        private List<ActorDataSceneAsset> _actors;
+        private List<ActorIR> _actors;
         private string TestfilePath => $"{EditorPaths.AppRoot}Scene.bin";
         private string AnimClipPath => $"{EditorPaths.AppRoot}AnimClip.bin";
         private string AnimControllerPath => $"{EditorPaths.AppRoot}AnimController.bin";
@@ -150,7 +150,7 @@ namespace Editor
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.A))
             {
                 var anim = new AnimationClip("Name");
-                var ir = EditorJsonUtils.Deserialize<List<SerializedPropertyData>>(File.ReadAllText(AnimClipPath));
+                var ir = EditorJsonUtils.Deserialize<List<SerializedPropertyIR>>(File.ReadAllText(AnimClipPath));
 
                 Deserializer.Deserialize(anim, ir);
                 var anim2 = Deserializer.Deserialize<AnimationClip>(ir);
@@ -178,30 +178,30 @@ namespace Editor
 
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.W))
             {
-                //var assemblies = new Assembly[] { GfsTypeRegistry.EngineAssembly, GfsTypeRegistry.SharedTypesAssembly };
-                //foreach (var assembly in assemblies)
-                //{
-                //    if (assembly == null)
-                //    {
-                //        Debug.Error("Can't generate type for null assembly.");
-                //        continue;
-                //    }
-
-                //    TypeRegistryClassGenerator.AddTypes(assembly.DefinedTypes.Select(x => x.AsType()).ToArray());
-                //}
-
-                //var str = TypeRegistryClassGenerator.Generate();
-
-                //File.WriteAllText($"{EditorPaths.AppRoot}/TypeRegistry.bin", str);
-
-                var a = new TypeRegistry();
-                if (a.GetType(Guid.Parse("155b8de8a92b2bb630a8026d46704c61"), out Type type))
+                var assemblies = new Assembly[] { GfsTypeRegistry.EngineAssembly, GfsTypeRegistry.SharedTypesAssembly };
+                foreach (var assembly in assemblies)
                 {
-                    if (type != null)
+                    if (assembly == null)
                     {
-                        Debug.Log($"Success: {type.FullName}");
+                        Debug.Error("Can't generate type for null assembly.");
+                        continue;
                     }
+
+                    TypeRegistryClassGenerator.AddTypes(assembly.DefinedTypes.Select(x => x.AsType()).ToArray());
                 }
+
+                var str = TypeRegistryClassGenerator.Generate();
+
+                File.WriteAllText($"{EditorPaths.AppRoot}/Generated/TypeRegistry_Generated.cs", str);
+
+                //var a = new TypeRegistry();
+                //if (a.GetType(Guid.Parse("155b8de8a92b2bb630a8026d46704c61"), out Type type))
+                //{
+                //    if (type != null)
+                //    {
+                //        Debug.Log($"Success: {type.FullName}");
+                //    }
+                //}
             }
 
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.R))
@@ -212,9 +212,34 @@ namespace Editor
                 //_test = Assets.GetShader("Shaders/Test/ShaderTest.shader");
 
 
-                LoadScene();
+                SerializerTypesFixer();
+                //LoadScene();
             }
 
+        }
+
+        private void SerializerTypesFixer()
+        {
+            var files = new List<string>();
+            var shaders = Directory.GetFiles(EditorPaths.AppRoot, "*.shader", SearchOption.AllDirectories);
+            var materials = Directory.GetFiles(EditorPaths.AppRoot, "*.material", SearchOption.AllDirectories);
+            var metas = Directory.GetFiles(EditorPaths.AppRoot, "*.mt", SearchOption.AllDirectories);
+            var data = Directory.GetFiles(EditorPaths.AppRoot, "*.dat", SearchOption.AllDirectories);
+            files.AddRange(shaders);
+            files.AddRange(materials);
+            files.AddRange(metas);
+            files.AddRange(data);
+            string shared = "SharedTypes";
+
+            foreach (var file in files)
+            {
+                Console.WriteLine(file);
+                var txt = File.ReadAllText(file);
+                txt = txt.Replace("Engine.DictionaryData`2[[System.Object, System.Private.CoreLib],[System.Object, System.Private.CoreLib]], Engine",
+                                  "SharedTypes.DictionaryData`2[[System.Object, System.Private.CoreLib],[System.Object, System.Private.CoreLib]], SharedTypes");
+
+                File.WriteAllText(file, txt);
+            }
         }
 
         private void GenerateIconAndroidSizes(Texture defaultTexture, Texture foreground, Texture background)
@@ -292,7 +317,7 @@ namespace Editor
             if (File.Exists(TestfilePath))
             {
                 var file = File.ReadAllText(TestfilePath);
-                var actors = EditorJsonUtils.Deserialize<List<ActorDataSceneAsset>>(file);
+                var actors = EditorJsonUtils.Deserialize<List<ActorIR>>(file);
                 // var actors = _actors;
                 Debug.Log("Total actors in scene: " + actors.Count);
                 SceneManager.Initialize();
