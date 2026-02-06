@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharedTypes
+namespace Engine
 {
     [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
     public class DefaultMetaFile : AssetMetaFileBase

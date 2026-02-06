@@ -13,7 +13,7 @@ using Engine.Layers.Input;
 using Editor.Cooker;
 using GlmNet;
 using ImGuiNET;
-using SharedTypes;
+using Engine;
 using System.Numerics;
 
 namespace Editor

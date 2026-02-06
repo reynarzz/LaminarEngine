@@ -9,7 +9,7 @@ using Box2D.NET;
 using Engine.Types;
 using Engine.Utils;
 using System.Numerics;
-using SharedTypes;
+using Engine;
 
 namespace Engine
 {

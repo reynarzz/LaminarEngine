@@ -4,12 +4,12 @@
     "Type": "ComplexCollection",
     "InternalType": "System.Collections.Generic.List`1[[Engine.RenderPass, Engine]], System.Private.CoreLib",
     "Data": {
-      "$type": "SharedTypes.CollectionPropertyData, SharedTypes",
+      "$type": "Engine.CollectionPropertyData, Engine",
       "$value": {
         "CollectionType": "List",
         "Collection": [
           {
-            "$type": "SharedTypes.CollectionData`1[[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
+            "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
             "Value": {
               "TargetTypeName": "Engine.RenderPass, Engine",
               "ComplexType": "ComplexClass",
@@ -28,7 +28,7 @@
                   "Type": "ShaderAsset",
                   "InternalType": "Engine.Shader, Engine",
                   "Data": {
-                    "$type": "SharedTypes.ReferenceData, SharedTypes",
+                    "$type": "Engine.ReferenceData, Engine",
                     "$value": {
                       "Id": "2b583c4e-0861-4bdc-aba6-bf6598deda39"
                     }
@@ -70,12 +70,12 @@
                   "Type": "ComplexCollection",
                   "InternalType": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib],[Engine.Graphics.UniformValue, Engine]], System.Private.CoreLib",
                   "Data": {
-                    "$type": "SharedTypes.CollectionPropertyData, SharedTypes",
+                    "$type": "Engine.CollectionPropertyData, Engine",
                     "$value": {
                       "CollectionType": "Dictionary",
                       "Collection": [
                         {
-                          "$type": "SharedTypes.ComplexDictionaryData`2[[SharedTypes.ComplexTypeData, SharedTypes],[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
+                          "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
                           "Key": {
                             "TargetTypeName": "System.String, System.Private.CoreLib",
                             "ComplexType": "Simple",
@@ -134,9 +134,9 @@
                               {
                                 "Name": "Mat4Value",
                                 "Type": "Simple",
-                                "InternalType": "GlmNet.mat4, SharedTypes",
+                                "InternalType": "GlmNet.mat4, Engine",
                                 "Data": {
-                                  "$type": "GlmNet.mat4, SharedTypes",
+                                  "$type": "GlmNet.mat4, Engine",
                                   "$value": {
                                     "c0": {
                                       "x": 0.0,
@@ -168,9 +168,9 @@
                               {
                                 "Name": "Vec2Value",
                                 "Type": "Simple",
-                                "InternalType": "GlmNet.vec2, SharedTypes",
+                                "InternalType": "GlmNet.vec2, Engine",
                                 "Data": {
-                                  "$type": "GlmNet.vec2, SharedTypes",
+                                  "$type": "GlmNet.vec2, Engine",
                                   "$value": {
                                     "x": 0.0,
                                     "y": 0.0
@@ -180,9 +180,9 @@
                               {
                                 "Name": "Vec3Value",
                                 "Type": "Simple",
-                                "InternalType": "GlmNet.vec3, SharedTypes",
+                                "InternalType": "GlmNet.vec3, Engine",
                                 "Data": {
-                                  "$type": "GlmNet.vec3, SharedTypes",
+                                  "$type": "GlmNet.vec3, Engine",
                                   "$value": {
                                     "x": 0.0,
                                     "y": 0.0,
@@ -193,9 +193,9 @@
                               {
                                 "Name": "Vec4Value",
                                 "Type": "Simple",
-                                "InternalType": "GlmNet.vec4, SharedTypes",
+                                "InternalType": "GlmNet.vec4, Engine",
                                 "Data": {
-                                  "$type": "GlmNet.vec4, SharedTypes",
+                                  "$type": "GlmNet.vec4, Engine",
                                   "$value": {
                                     "x": 0.0,
                                     "y": 0.0,
@@ -213,9 +213,9 @@
                               {
                                 "Name": "Type",
                                 "Type": "Simple",
-                                "InternalType": "Engine.Graphics.UniformType, SharedTypes",
+                                "InternalType": "Engine.Graphics.UniformType, Engine",
                                 "Data": {
-                                  "$type": "Engine.Graphics.UniformType, SharedTypes",
+                                  "$type": "Engine.Graphics.UniformType, Engine",
                                   "$value": "Float"
                                 }
                               },
@@ -230,7 +230,7 @@
                           "Type": "ComplexClass"
                         },
                         {
-                          "$type": "SharedTypes.ComplexDictionaryData`2[[SharedTypes.ComplexTypeData, SharedTypes],[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
+                          "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
                           "Key": {
                             "TargetTypeName": "System.String, System.Private.CoreLib",
                             "ComplexType": "Simple",
@@ -289,9 +289,9 @@
                               {
                                 "Name": "Mat4Value",
                                 "Type": "Simple",
-                                "InternalType": "GlmNet.mat4, SharedTypes",
+                                "InternalType": "GlmNet.mat4, Engine",
                                 "Data": {
-                                  "$type": "GlmNet.mat4, SharedTypes",
+                                  "$type": "GlmNet.mat4, Engine",
                                   "$value": {
                                     "c0": {
                                       "x": 0.0,
@@ -323,9 +323,9 @@
                               {
                                 "Name": "Vec2Value",
                                 "Type": "Simple",
-                                "InternalType": "GlmNet.vec2, SharedTypes",
+                                "InternalType": "GlmNet.vec2, Engine",
                                 "Data": {
-                                  "$type": "GlmNet.vec2, SharedTypes",
+                                  "$type": "GlmNet.vec2, Engine",
                                   "$value": {
                                     "x": 0.0,
                                     "y": 0.0
@@ -335,9 +335,9 @@
                               {
                                 "Name": "Vec3Value",
                                 "Type": "Simple",
-                                "InternalType": "GlmNet.vec3, SharedTypes",
+                                "InternalType": "GlmNet.vec3, Engine",
                                 "Data": {
-                                  "$type": "GlmNet.vec3, SharedTypes",
+                                  "$type": "GlmNet.vec3, Engine",
                                   "$value": {
                                     "x": 1.6,
                                     "y": 1.0,
@@ -348,9 +348,9 @@
                               {
                                 "Name": "Vec4Value",
                                 "Type": "Simple",
-                                "InternalType": "GlmNet.vec4, SharedTypes",
+                                "InternalType": "GlmNet.vec4, Engine",
                                 "Data": {
-                                  "$type": "GlmNet.vec4, SharedTypes",
+                                  "$type": "GlmNet.vec4, Engine",
                                   "$value": {
                                     "x": 0.0,
                                     "y": 0.0,
@@ -368,9 +368,9 @@
                               {
                                 "Name": "Type",
                                 "Type": "Simple",
-                                "InternalType": "Engine.Graphics.UniformType, SharedTypes",
+                                "InternalType": "Engine.Graphics.UniformType, Engine",
                                 "Data": {
-                                  "$type": "Engine.Graphics.UniformType, SharedTypes",
+                                  "$type": "Engine.Graphics.UniformType, Engine",
                                   "$value": "Vec3"
                                 }
                               },
@@ -385,7 +385,7 @@
                           "Type": "ComplexClass"
                         },
                         {
-                          "$type": "SharedTypes.ComplexDictionaryData`2[[SharedTypes.ComplexTypeData, SharedTypes],[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
+                          "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
                           "Key": {
                             "TargetTypeName": "System.String, System.Private.CoreLib",
                             "ComplexType": "Simple",
@@ -444,9 +444,9 @@
                               {
                                 "Name": "Mat4Value",
                                 "Type": "Simple",
-                                "InternalType": "GlmNet.mat4, SharedTypes",
+                                "InternalType": "GlmNet.mat4, Engine",
                                 "Data": {
-                                  "$type": "GlmNet.mat4, SharedTypes",
+                                  "$type": "GlmNet.mat4, Engine",
                                   "$value": {
                                     "c0": {
                                       "x": 0.0,
@@ -478,9 +478,9 @@
                               {
                                 "Name": "Vec2Value",
                                 "Type": "Simple",
-                                "InternalType": "GlmNet.vec2, SharedTypes",
+                                "InternalType": "GlmNet.vec2, Engine",
                                 "Data": {
-                                  "$type": "GlmNet.vec2, SharedTypes",
+                                  "$type": "GlmNet.vec2, Engine",
                                   "$value": {
                                     "x": 0.0,
                                     "y": 0.0
@@ -490,9 +490,9 @@
                               {
                                 "Name": "Vec3Value",
                                 "Type": "Simple",
-                                "InternalType": "GlmNet.vec3, SharedTypes",
+                                "InternalType": "GlmNet.vec3, Engine",
                                 "Data": {
-                                  "$type": "GlmNet.vec3, SharedTypes",
+                                  "$type": "GlmNet.vec3, Engine",
                                   "$value": {
                                     "x": 0.0,
                                     "y": 0.0,
@@ -503,9 +503,9 @@
                               {
                                 "Name": "Vec4Value",
                                 "Type": "Simple",
-                                "InternalType": "GlmNet.vec4, SharedTypes",
+                                "InternalType": "GlmNet.vec4, Engine",
                                 "Data": {
-                                  "$type": "GlmNet.vec4, SharedTypes",
+                                  "$type": "GlmNet.vec4, Engine",
                                   "$value": {
                                     "x": 0.0,
                                     "y": 0.0,
@@ -523,9 +523,9 @@
                               {
                                 "Name": "Type",
                                 "Type": "Simple",
-                                "InternalType": "Engine.Graphics.UniformType, SharedTypes",
+                                "InternalType": "Engine.Graphics.UniformType, Engine",
                                 "Data": {
-                                  "$type": "Engine.Graphics.UniformType, SharedTypes",
+                                  "$type": "Engine.Graphics.UniformType, Engine",
                                   "$value": "Float"
                                 }
                               },
@@ -540,7 +540,7 @@
                           "Type": "ComplexClass"
                         },
                         {
-                          "$type": "SharedTypes.ComplexDictionaryData`2[[SharedTypes.ComplexTypeData, SharedTypes],[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
+                          "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
                           "Key": {
                             "TargetTypeName": "System.String, System.Private.CoreLib",
                             "ComplexType": "Simple",
@@ -599,9 +599,9 @@
                               {
                                 "Name": "Mat4Value",
                                 "Type": "Simple",
-                                "InternalType": "GlmNet.mat4, SharedTypes",
+                                "InternalType": "GlmNet.mat4, Engine",
                                 "Data": {
-                                  "$type": "GlmNet.mat4, SharedTypes",
+                                  "$type": "GlmNet.mat4, Engine",
                                   "$value": {
                                     "c0": {
                                       "x": 0.0,
@@ -633,9 +633,9 @@
                               {
                                 "Name": "Vec2Value",
                                 "Type": "Simple",
-                                "InternalType": "GlmNet.vec2, SharedTypes",
+                                "InternalType": "GlmNet.vec2, Engine",
                                 "Data": {
-                                  "$type": "GlmNet.vec2, SharedTypes",
+                                  "$type": "GlmNet.vec2, Engine",
                                   "$value": {
                                     "x": 0.0,
                                     "y": 0.0
@@ -645,9 +645,9 @@
                               {
                                 "Name": "Vec3Value",
                                 "Type": "Simple",
-                                "InternalType": "GlmNet.vec3, SharedTypes",
+                                "InternalType": "GlmNet.vec3, Engine",
                                 "Data": {
-                                  "$type": "GlmNet.vec3, SharedTypes",
+                                  "$type": "GlmNet.vec3, Engine",
                                   "$value": {
                                     "x": 0.0,
                                     "y": 0.0,
@@ -658,9 +658,9 @@
                               {
                                 "Name": "Vec4Value",
                                 "Type": "Simple",
-                                "InternalType": "GlmNet.vec4, SharedTypes",
+                                "InternalType": "GlmNet.vec4, Engine",
                                 "Data": {
-                                  "$type": "GlmNet.vec4, SharedTypes",
+                                  "$type": "GlmNet.vec4, Engine",
                                   "$value": {
                                     "x": 0.0,
                                     "y": 0.0,
@@ -678,9 +678,9 @@
                               {
                                 "Name": "Type",
                                 "Type": "Simple",
-                                "InternalType": "Engine.Graphics.UniformType, SharedTypes",
+                                "InternalType": "Engine.Graphics.UniformType, Engine",
                                 "Data": {
-                                  "$type": "Engine.Graphics.UniformType, SharedTypes",
+                                  "$type": "Engine.Graphics.UniformType, Engine",
                                   "$value": "Int"
                                 }
                               },
@@ -695,7 +695,7 @@
                           "Type": "ComplexClass"
                         },
                         {
-                          "$type": "SharedTypes.ComplexDictionaryData`2[[SharedTypes.ComplexTypeData, SharedTypes],[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
+                          "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
                           "Key": {
                             "TargetTypeName": "System.String, System.Private.CoreLib",
                             "ComplexType": "Simple",
@@ -754,9 +754,9 @@
                               {
                                 "Name": "Mat4Value",
                                 "Type": "Simple",
-                                "InternalType": "GlmNet.mat4, SharedTypes",
+                                "InternalType": "GlmNet.mat4, Engine",
                                 "Data": {
-                                  "$type": "GlmNet.mat4, SharedTypes",
+                                  "$type": "GlmNet.mat4, Engine",
                                   "$value": {
                                     "c0": {
                                       "x": 0.0,
@@ -788,9 +788,9 @@
                               {
                                 "Name": "Vec2Value",
                                 "Type": "Simple",
-                                "InternalType": "GlmNet.vec2, SharedTypes",
+                                "InternalType": "GlmNet.vec2, Engine",
                                 "Data": {
-                                  "$type": "GlmNet.vec2, SharedTypes",
+                                  "$type": "GlmNet.vec2, Engine",
                                   "$value": {
                                     "x": 0.0,
                                     "y": 0.0
@@ -800,9 +800,9 @@
                               {
                                 "Name": "Vec3Value",
                                 "Type": "Simple",
-                                "InternalType": "GlmNet.vec3, SharedTypes",
+                                "InternalType": "GlmNet.vec3, Engine",
                                 "Data": {
-                                  "$type": "GlmNet.vec3, SharedTypes",
+                                  "$type": "GlmNet.vec3, Engine",
                                   "$value": {
                                     "x": 0.0,
                                     "y": 0.0,
@@ -813,9 +813,9 @@
                               {
                                 "Name": "Vec4Value",
                                 "Type": "Simple",
-                                "InternalType": "GlmNet.vec4, SharedTypes",
+                                "InternalType": "GlmNet.vec4, Engine",
                                 "Data": {
-                                  "$type": "GlmNet.vec4, SharedTypes",
+                                  "$type": "GlmNet.vec4, Engine",
                                   "$value": {
                                     "x": 0.0,
                                     "y": 0.0,
@@ -833,9 +833,9 @@
                               {
                                 "Name": "Type",
                                 "Type": "Simple",
-                                "InternalType": "Engine.Graphics.UniformType, SharedTypes",
+                                "InternalType": "Engine.Graphics.UniformType, Engine",
                                 "Data": {
-                                  "$type": "Engine.Graphics.UniformType, SharedTypes",
+                                  "$type": "Engine.Graphics.UniformType, Engine",
                                   "$value": "Float"
                                 }
                               },
@@ -850,7 +850,7 @@
                           "Type": "ComplexClass"
                         },
                         {
-                          "$type": "SharedTypes.ComplexDictionaryData`2[[SharedTypes.ComplexTypeData, SharedTypes],[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
+                          "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
                           "Key": {
                             "TargetTypeName": "System.String, System.Private.CoreLib",
                             "ComplexType": "Simple",
@@ -909,9 +909,9 @@
                               {
                                 "Name": "Mat4Value",
                                 "Type": "Simple",
-                                "InternalType": "GlmNet.mat4, SharedTypes",
+                                "InternalType": "GlmNet.mat4, Engine",
                                 "Data": {
-                                  "$type": "GlmNet.mat4, SharedTypes",
+                                  "$type": "GlmNet.mat4, Engine",
                                   "$value": {
                                     "c0": {
                                       "x": 0.0,
@@ -943,9 +943,9 @@
                               {
                                 "Name": "Vec2Value",
                                 "Type": "Simple",
-                                "InternalType": "GlmNet.vec2, SharedTypes",
+                                "InternalType": "GlmNet.vec2, Engine",
                                 "Data": {
-                                  "$type": "GlmNet.vec2, SharedTypes",
+                                  "$type": "GlmNet.vec2, Engine",
                                   "$value": {
                                     "x": 0.0,
                                     "y": 0.0
@@ -955,9 +955,9 @@
                               {
                                 "Name": "Vec3Value",
                                 "Type": "Simple",
-                                "InternalType": "GlmNet.vec3, SharedTypes",
+                                "InternalType": "GlmNet.vec3, Engine",
                                 "Data": {
-                                  "$type": "GlmNet.vec3, SharedTypes",
+                                  "$type": "GlmNet.vec3, Engine",
                                   "$value": {
                                     "x": 0.0,
                                     "y": 0.0,
@@ -968,9 +968,9 @@
                               {
                                 "Name": "Vec4Value",
                                 "Type": "Simple",
-                                "InternalType": "GlmNet.vec4, SharedTypes",
+                                "InternalType": "GlmNet.vec4, Engine",
                                 "Data": {
-                                  "$type": "GlmNet.vec4, SharedTypes",
+                                  "$type": "GlmNet.vec4, Engine",
                                   "$value": {
                                     "x": 0.0,
                                     "y": 0.0,
@@ -988,9 +988,9 @@
                               {
                                 "Name": "Type",
                                 "Type": "Simple",
-                                "InternalType": "Engine.Graphics.UniformType, SharedTypes",
+                                "InternalType": "Engine.Graphics.UniformType, Engine",
                                 "Data": {
-                                  "$type": "Engine.Graphics.UniformType, SharedTypes",
+                                  "$type": "Engine.Graphics.UniformType, Engine",
                                   "$value": "Float"
                                 }
                               },
@@ -1005,7 +1005,7 @@
                           "Type": "ComplexClass"
                         },
                         {
-                          "$type": "SharedTypes.ComplexDictionaryData`2[[SharedTypes.ComplexTypeData, SharedTypes],[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
+                          "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
                           "Key": {
                             "TargetTypeName": "System.String, System.Private.CoreLib",
                             "ComplexType": "Simple",
@@ -1064,9 +1064,9 @@
                               {
                                 "Name": "Mat4Value",
                                 "Type": "Simple",
-                                "InternalType": "GlmNet.mat4, SharedTypes",
+                                "InternalType": "GlmNet.mat4, Engine",
                                 "Data": {
-                                  "$type": "GlmNet.mat4, SharedTypes",
+                                  "$type": "GlmNet.mat4, Engine",
                                   "$value": {
                                     "c0": {
                                       "x": 0.0,
@@ -1098,9 +1098,9 @@
                               {
                                 "Name": "Vec2Value",
                                 "Type": "Simple",
-                                "InternalType": "GlmNet.vec2, SharedTypes",
+                                "InternalType": "GlmNet.vec2, Engine",
                                 "Data": {
-                                  "$type": "GlmNet.vec2, SharedTypes",
+                                  "$type": "GlmNet.vec2, Engine",
                                   "$value": {
                                     "x": 0.0,
                                     "y": 0.0
@@ -1110,9 +1110,9 @@
                               {
                                 "Name": "Vec3Value",
                                 "Type": "Simple",
-                                "InternalType": "GlmNet.vec3, SharedTypes",
+                                "InternalType": "GlmNet.vec3, Engine",
                                 "Data": {
-                                  "$type": "GlmNet.vec3, SharedTypes",
+                                  "$type": "GlmNet.vec3, Engine",
                                   "$value": {
                                     "x": 0.0,
                                     "y": 0.0,
@@ -1123,9 +1123,9 @@
                               {
                                 "Name": "Vec4Value",
                                 "Type": "Simple",
-                                "InternalType": "GlmNet.vec4, SharedTypes",
+                                "InternalType": "GlmNet.vec4, Engine",
                                 "Data": {
-                                  "$type": "GlmNet.vec4, SharedTypes",
+                                  "$type": "GlmNet.vec4, Engine",
                                   "$value": {
                                     "x": 0.0,
                                     "y": 0.0,
@@ -1143,9 +1143,9 @@
                               {
                                 "Name": "Type",
                                 "Type": "Simple",
-                                "InternalType": "Engine.Graphics.UniformType, SharedTypes",
+                                "InternalType": "Engine.Graphics.UniformType, Engine",
                                 "Data": {
-                                  "$type": "Engine.Graphics.UniformType, SharedTypes",
+                                  "$type": "Engine.Graphics.UniformType, Engine",
                                   "$value": "Float"
                                 }
                               },
@@ -1160,7 +1160,7 @@
                           "Type": "ComplexClass"
                         },
                         {
-                          "$type": "SharedTypes.ComplexDictionaryData`2[[SharedTypes.ComplexTypeData, SharedTypes],[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
+                          "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
                           "Key": {
                             "TargetTypeName": "System.String, System.Private.CoreLib",
                             "ComplexType": "Simple",
@@ -1219,9 +1219,9 @@
                               {
                                 "Name": "Mat4Value",
                                 "Type": "Simple",
-                                "InternalType": "GlmNet.mat4, SharedTypes",
+                                "InternalType": "GlmNet.mat4, Engine",
                                 "Data": {
-                                  "$type": "GlmNet.mat4, SharedTypes",
+                                  "$type": "GlmNet.mat4, Engine",
                                   "$value": {
                                     "c0": {
                                       "x": 0.0,
@@ -1253,9 +1253,9 @@
                               {
                                 "Name": "Vec2Value",
                                 "Type": "Simple",
-                                "InternalType": "GlmNet.vec2, SharedTypes",
+                                "InternalType": "GlmNet.vec2, Engine",
                                 "Data": {
-                                  "$type": "GlmNet.vec2, SharedTypes",
+                                  "$type": "GlmNet.vec2, Engine",
                                   "$value": {
                                     "x": 0.0,
                                     "y": 0.0
@@ -1265,9 +1265,9 @@
                               {
                                 "Name": "Vec3Value",
                                 "Type": "Simple",
-                                "InternalType": "GlmNet.vec3, SharedTypes",
+                                "InternalType": "GlmNet.vec3, Engine",
                                 "Data": {
-                                  "$type": "GlmNet.vec3, SharedTypes",
+                                  "$type": "GlmNet.vec3, Engine",
                                   "$value": {
                                     "x": 0.0,
                                     "y": 0.0,
@@ -1278,9 +1278,9 @@
                               {
                                 "Name": "Vec4Value",
                                 "Type": "Simple",
-                                "InternalType": "GlmNet.vec4, SharedTypes",
+                                "InternalType": "GlmNet.vec4, Engine",
                                 "Data": {
-                                  "$type": "GlmNet.vec4, SharedTypes",
+                                  "$type": "GlmNet.vec4, Engine",
                                   "$value": {
                                     "x": 0.0,
                                     "y": 0.0,
@@ -1298,9 +1298,9 @@
                               {
                                 "Name": "Type",
                                 "Type": "Simple",
-                                "InternalType": "Engine.Graphics.UniformType, SharedTypes",
+                                "InternalType": "Engine.Graphics.UniformType, Engine",
                                 "Data": {
-                                  "$type": "Engine.Graphics.UniformType, SharedTypes",
+                                  "$type": "Engine.Graphics.UniformType, Engine",
                                   "$value": "Float"
                                 }
                               },
@@ -1315,7 +1315,7 @@
                           "Type": "ComplexClass"
                         },
                         {
-                          "$type": "SharedTypes.ComplexDictionaryData`2[[SharedTypes.ComplexTypeData, SharedTypes],[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
+                          "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
                           "Key": {
                             "TargetTypeName": "System.String, System.Private.CoreLib",
                             "ComplexType": "Simple",
@@ -1374,9 +1374,9 @@
                               {
                                 "Name": "Mat4Value",
                                 "Type": "Simple",
-                                "InternalType": "GlmNet.mat4, SharedTypes",
+                                "InternalType": "GlmNet.mat4, Engine",
                                 "Data": {
-                                  "$type": "GlmNet.mat4, SharedTypes",
+                                  "$type": "GlmNet.mat4, Engine",
                                   "$value": {
                                     "c0": {
                                       "x": 0.0,
@@ -1408,9 +1408,9 @@
                               {
                                 "Name": "Vec2Value",
                                 "Type": "Simple",
-                                "InternalType": "GlmNet.vec2, SharedTypes",
+                                "InternalType": "GlmNet.vec2, Engine",
                                 "Data": {
-                                  "$type": "GlmNet.vec2, SharedTypes",
+                                  "$type": "GlmNet.vec2, Engine",
                                   "$value": {
                                     "x": 0.0,
                                     "y": 0.0
@@ -1420,9 +1420,9 @@
                               {
                                 "Name": "Vec3Value",
                                 "Type": "Simple",
-                                "InternalType": "GlmNet.vec3, SharedTypes",
+                                "InternalType": "GlmNet.vec3, Engine",
                                 "Data": {
-                                  "$type": "GlmNet.vec3, SharedTypes",
+                                  "$type": "GlmNet.vec3, Engine",
                                   "$value": {
                                     "x": 0.0,
                                     "y": 0.0,
@@ -1433,9 +1433,9 @@
                               {
                                 "Name": "Vec4Value",
                                 "Type": "Simple",
-                                "InternalType": "GlmNet.vec4, SharedTypes",
+                                "InternalType": "GlmNet.vec4, Engine",
                                 "Data": {
-                                  "$type": "GlmNet.vec4, SharedTypes",
+                                  "$type": "GlmNet.vec4, Engine",
                                   "$value": {
                                     "x": 0.0,
                                     "y": 0.0,
@@ -1453,9 +1453,9 @@
                               {
                                 "Name": "Type",
                                 "Type": "Simple",
-                                "InternalType": "Engine.Graphics.UniformType, SharedTypes",
+                                "InternalType": "Engine.Graphics.UniformType, Engine",
                                 "Data": {
-                                  "$type": "Engine.Graphics.UniformType, SharedTypes",
+                                  "$type": "Engine.Graphics.UniformType, Engine",
                                   "$value": "Float"
                                 }
                               },
@@ -1486,28 +1486,28 @@
     "Type": "ReferenceCollection",
     "InternalType": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib],[Engine.Texture, Engine]], System.Private.CoreLib",
     "Data": {
-      "$type": "SharedTypes.CollectionPropertyData, SharedTypes",
+      "$type": "Engine.CollectionPropertyData, Engine",
       "$value": {
         "CollectionType": "Dictionary",
         "Collection": [
           {
-            "$type": "SharedTypes.DictionaryData`2[[System.Object, System.Private.CoreLib],[System.Object, System.Private.CoreLib]], SharedTypes",
+            "$type": "Engine.DictionaryData`2[[System.Object, System.Private.CoreLib],[System.Object, System.Private.CoreLib]], Engine",
             "keyType": "Simple",
             "ValueType": "TextureAsset",
             "Key": "uStarsTex",
             "Value": {
-              "$type": "SharedTypes.ReferenceData, SharedTypes",
+              "$type": "Engine.ReferenceData, Engine",
               "Id": "e0b82024-21a1-46f9-bbb8-67497e8460e3"
             },
             "Type": "TextureAsset"
           },
           {
-            "$type": "SharedTypes.DictionaryData`2[[System.Object, System.Private.CoreLib],[System.Object, System.Private.CoreLib]], SharedTypes",
+            "$type": "Engine.DictionaryData`2[[System.Object, System.Private.CoreLib],[System.Object, System.Private.CoreLib]], Engine",
             "keyType": "Simple",
             "ValueType": "TextureAsset",
             "Key": "uFrameTex",
             "Value": {
-              "$type": "SharedTypes.ReferenceData, SharedTypes",
+              "$type": "Engine.ReferenceData, Engine",
               "Id": "66ec47ec-bf10-489e-907b-0a00a7eef4ff"
             },
             "Type": "TextureAsset"

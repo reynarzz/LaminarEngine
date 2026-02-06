@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharedTypes
+namespace Engine
 {
-    public class GameDataMetaFile
+    public abstract class AssetMetaFileBase
     {
-        public long CreationDateBinary { get; set; }
-    }
+        public Guid GUID { get; set; }
+    } 
 }

@@ -4,12 +4,12 @@
     "Type": "ComplexCollection",
     "InternalType": "System.Collections.Generic.List`1[[Engine.RenderPass, Engine]], System.Private.CoreLib",
     "Data": {
-      "$type": "SharedTypes.CollectionPropertyData, SharedTypes",
+      "$type": "Engine.CollectionPropertyData, Engine",
       "$value": {
         "CollectionType": "List",
         "Collection": [
           {
-            "$type": "SharedTypes.CollectionData`1[[SharedTypes.ComplexTypeData, SharedTypes]], SharedTypes",
+            "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
             "Value": {
               "TargetTypeName": "Engine.RenderPass, Engine",
               "ComplexType": "ComplexClass",
@@ -28,7 +28,7 @@
                   "Type": "ShaderAsset",
                   "InternalType": "Engine.Shader, Engine",
                   "Data": {
-                    "$type": "SharedTypes.ReferenceData, SharedTypes",
+                    "$type": "Engine.ReferenceData, Engine",
                     "$value": {
                       "Id": "705a76e8-3c6a-4a2b-8265-574f05510c1f"
                     }
@@ -70,7 +70,7 @@
                   "Type": "ComplexCollection",
                   "InternalType": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib],[Engine.Graphics.UniformValue, Engine]], System.Private.CoreLib",
                   "Data": {
-                    "$type": "SharedTypes.CollectionPropertyData, SharedTypes",
+                    "$type": "Engine.CollectionPropertyData, Engine",
                     "$value": {
                       "CollectionType": "Dictionary",
                       "Collection": []
@@ -90,28 +90,28 @@
     "Type": "ReferenceCollection",
     "InternalType": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib],[Engine.Texture, Engine]], System.Private.CoreLib",
     "Data": {
-      "$type": "SharedTypes.CollectionPropertyData, SharedTypes",
+      "$type": "Engine.CollectionPropertyData, Engine",
       "$value": {
         "CollectionType": "Dictionary",
         "Collection": [
           {
-            "$type": "SharedTypes.DictionaryData`2[[System.Object, System.Private.CoreLib],[System.Object, System.Private.CoreLib]], SharedTypes",
+            "$type": "Engine.DictionaryData`2[[System.Object, System.Private.CoreLib],[System.Object, System.Private.CoreLib]], Engine",
             "keyType": "Simple",
             "ValueType": "TextureAsset",
             "Key": "uStarsTex",
             "Value": {
-              "$type": "SharedTypes.ReferenceData, SharedTypes",
+              "$type": "Engine.ReferenceData, Engine",
               "Id": "e0b82024-21a1-46f9-bbb8-67497e8460e3"
             },
             "Type": "TextureAsset"
           },
           {
-            "$type": "SharedTypes.DictionaryData`2[[System.Object, System.Private.CoreLib],[System.Object, System.Private.CoreLib]], SharedTypes",
+            "$type": "Engine.DictionaryData`2[[System.Object, System.Private.CoreLib],[System.Object, System.Private.CoreLib]], Engine",
             "keyType": "Simple",
             "ValueType": "TextureAsset",
             "Key": "uFrameTex",
             "Value": {
-              "$type": "SharedTypes.ReferenceData, SharedTypes",
+              "$type": "Engine.ReferenceData, Engine",
               "Id": "66ec47ec-bf10-489e-907b-0a00a7eef4ff"
             },
             "Type": "TextureAsset"

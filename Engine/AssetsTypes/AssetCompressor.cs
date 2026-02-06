@@ -2,7 +2,7 @@
 using K4os.Compression.LZ4;
 using K4os.Compression.LZ4.Streams;
 
-namespace SharedTypes
+namespace Engine
 {
     public static class AssetCompressor
     {

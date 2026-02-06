@@ -4,7 +4,7 @@ using Editor.Utils;
 using Engine;
 using Engine.Serialization;
 using Engine.Utils;
-using SharedTypes;
+using Engine;
 using System;
 using System.Collections.Generic;
 using System.Linq;

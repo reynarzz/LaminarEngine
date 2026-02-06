@@ -2,7 +2,7 @@
 using Android.Opengl;
 using Game;
 using Javax.Microedition.Khronos.Opengles;
-using SharedTypes;
+using Engine;
 using System.Text;
 
 namespace Engine.Android

@@ -34,7 +34,6 @@
 	
 	<ItemGroup>
 		<ProjectReference Include="..\Engine\Engine.csproj" />
-		<ProjectReference Include="..\SharedTypes\SharedTypes.csproj" />
 	</ItemGroup>
 
 	<Target Name="PostBuild_Windows" AfterTargets="CopyFilesToOutputDirectory" Condition="'$(OS)' == 'Windows_NT'">

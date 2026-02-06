@@ -2,7 +2,7 @@
 using System.IO;
 using System.Security.Cryptography;
 
-namespace SharedTypes
+namespace Engine
 {
     public static class AssetEncrypter
     {

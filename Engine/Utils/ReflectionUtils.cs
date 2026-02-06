@@ -1,5 +1,5 @@
 ﻿using GlmNet;
-using SharedTypes;
+using Engine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,6 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -494,11 +495,39 @@ namespace Engine.Utils
 
             return input.Remove(index, token.Length);
         }
+        
         public static string GetFullTypeName(Type type)
         {
-            return ReflectionUtilsShared.GetFullTypeName(type);
+            if (type == null)
+                return string.Empty;
+
+            var str = StripAssemblyMetadata(type.AssemblyQualifiedName);
+
+
+            return str;
         }
 
+        public static string StripAssemblyMetadata(string typeName)
+        {
+            if (string.IsNullOrEmpty(typeName))
+                return typeName;
+
+            return Regex.Replace(typeName, @",\s*Version=[^,\]]+|\s*,\s*Culture=[^,\]]+|\s*,\s*PublicKeyToken=[^,\]]+", string.Empty);
+        }
+
+        public static Guid GetStableGuid(Type type)
+        {
+            if (type == null)
+            {
+                return Guid.Empty;
+            }
+
+            // Deterministic GUID based on type full name
+            var key = GetFullTypeName(type);
+            using var md5 = MD5.Create();
+            var hash = md5.ComputeHash(Encoding.UTF8.GetBytes(key));
+            return new Guid(hash);
+        }
         public static object GetMemberValue(object obj, MemberInfo member)
         {
             if (obj == null)

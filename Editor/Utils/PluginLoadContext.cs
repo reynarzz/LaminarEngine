@@ -6,7 +6,7 @@ using System.Runtime.Loader;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharedTypes
+namespace Engine
 {
     internal class PluginLoadContext : AssemblyLoadContext
     {

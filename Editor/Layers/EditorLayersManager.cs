@@ -7,7 +7,7 @@ using Engine.Layers;
 using Engine.Serialization;
 using Engine.Utils;
 using Editor.Cooker;
-using SharedTypes;
+using Engine;
 using System.Reflection;
 
 namespace Editor
@@ -196,7 +196,7 @@ namespace Editor
                 //_test = Assets.GetShader("Shaders/Test/ShaderTest.shader");
 
 
-                //SerializerTypesFixer();
+               // SerializerTypesFixer();
                 LoadScene();
             }
 
@@ -213,16 +213,15 @@ namespace Editor
             files.AddRange(materials);
             files.AddRange(metas);
             files.AddRange(data);
-            string shared = "SharedTypes";
+            string shared = "Engine";
 
             foreach (var file in files)
             {
                 Console.WriteLine(file);
                 var txt = File.ReadAllText(file);
-                txt = txt.Replace("Engine.DictionaryData`2[[System.Object, System.Private.CoreLib],[System.Object, System.Private.CoreLib]], Engine",
-                                  "SharedTypes.DictionaryData`2[[System.Object, System.Private.CoreLib],[System.Object, System.Private.CoreLib]], SharedTypes");
+                txt = txt.Replace("Engine.Graphics.UniformType, SharedTypes", "Engine.Graphics.UniformType, Engine");
 
-                File.WriteAllText(file, txt);
+				File.WriteAllText(file, txt);
             }
         }
 

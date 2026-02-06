@@ -6,7 +6,7 @@ using Engine;
 using Engine.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using SharedTypes;
+using Engine;
 
 namespace Editor
 {

@@ -1,8 +1,9 @@
 ﻿using Engine;
+using Engine.Utils;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using SharedTypes;
+using Engine;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
@@ -64,7 +65,7 @@ namespace Editor.Cooker
                     continue;
                 }
 
-                ids.Add(ReflectionUtilsShared.GetStableGuid(type), type);
+                ids.Add(ReflectionUtils.GetStableGuid(type), type);
             }
 
             return GenerateTypeRegistry(ids, isEditMode).ToFullString();
@@ -318,7 +319,7 @@ namespace Editor.Cooker
                 if (type.Name.StartsWith("<") && type.Name.Contains(">"))
                     return null;
 
-                string typeString = ReflectionUtilsShared.GetFullTypeName(type);// GetReflectionFullName(type) + ", " + type.Assembly.GetName().Name;
+                string typeString = ReflectionUtils.GetFullTypeName(type);// GetReflectionFullName(type) + ", " + type.Assembly.GetName().Name;
                 //return SyntaxFactory.ParseExpression($"Type.GetType(\"{typeString}\", throwOnError: true)");
 
                 return SyntaxFactory.ParseExpression($"_GetType(\"{typeString}\")");

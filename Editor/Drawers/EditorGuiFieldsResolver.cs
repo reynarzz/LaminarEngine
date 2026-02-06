@@ -9,7 +9,7 @@ using Engine.Utils;
 using System.Collections;
 using Engine;
 using Engine.Layers;
-using SharedTypes;
+using Engine;
 
 namespace Editor.Utils
 {
@@ -1106,7 +1106,7 @@ namespace Editor.Utils
                     //    }
                     //}
 
-                    var assets = IOLayer.Database.Disk.GetAssetsInfo(SharedTypes.AssetType.Audio);
+                    var assets = IOLayer.Database.Disk.GetAssetsInfo(Engine.AssetType.Audio);
                     var items = assets.Select(a =>
                     {
                         var (id, info) = a;
@@ -1166,7 +1166,7 @@ namespace Editor.Utils
                 //    }
                 //}
 
-                var assets = IOLayer.Database.Disk.GetAssetsInfo(SharedTypes.AssetType.Texture);
+                var assets = IOLayer.Database.Disk.GetAssetsInfo(Engine.AssetType.Texture);
                 var spriteItems = new List<(string label, Action action)>();
 
                 foreach (var (id, info) in assets)

@@ -7,7 +7,7 @@ using Engine.Graphics;
 using Engine.Types;
 using Engine.Utils;
 using GlmNet;
-using SharedTypes;
+using Engine;
 
 namespace Engine
 {

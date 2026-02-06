@@ -4,8 +4,4 @@
     <TargetFramework>net9.0</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\SharedTypes\SharedTypes.csproj" />
-  </ItemGroup>
-
 </Project>

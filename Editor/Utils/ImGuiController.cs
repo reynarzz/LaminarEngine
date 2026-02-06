@@ -3,7 +3,7 @@ using Editor.Utils;
 using Engine;
 using GLFW;
 using ImGuiNET;
-using SharedTypes;
+using Engine;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Text;

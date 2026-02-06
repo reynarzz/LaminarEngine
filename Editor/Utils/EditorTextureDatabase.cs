@@ -1,7 +1,7 @@
 ﻿using Engine;
 using Engine.Graphics;
 using Engine.Graphics.OpenGL;
-using SharedTypes;
+using Engine;
 using StbImageSharp;
 using System;
 using System.Collections.Generic;

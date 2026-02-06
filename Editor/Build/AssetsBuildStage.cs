@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Editor.Cooker;
-using SharedTypes;
+using Engine;
 
 namespace Editor.Build
 {

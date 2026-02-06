@@ -22,7 +22,7 @@ namespace Engine
 }
 
 
-namespace SharedTypes
+namespace Engine
 {
     public class TextureConfig
     {

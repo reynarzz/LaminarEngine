@@ -5,7 +5,7 @@ using System.Collections;
 using System.Reflection;
 using Microsoft.VisualBasic.FileIO;
 using Editor.Utils;
-using SharedTypes;
+using Engine;
 using Editor.Cooker;
 
 namespace Editor.Serialization
@@ -471,7 +471,7 @@ namespace Editor.Serialization
 
         private static Guid GetTypeId(Type type)
         {
-            return ReflectionUtilsShared.GetStableGuid(type);
+            return ReflectionUtils.GetStableGuid(type);
         }
     }
 }

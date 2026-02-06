@@ -1,4 +1,4 @@
-﻿using SharedTypes;
+﻿using Engine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +21,7 @@ namespace Editor.Cooker
         private const string FRAGMENT_KEYWORD = "FRAGMENT_SHADER";
 
         private const string SHADER_HEADER = VERSION + "\n" + INCLUDE_EXTENSION + "\n";
-       AssetProccesResult IAssetProcessor.Process(string path, AssetMetaFileBase meta, CookingPlatform platform)
+        AssetProccesResult IAssetProcessor.Process(string path, AssetMetaFileBase meta, CookingPlatform platform)
         {
             var shaderFile = File.ReadAllText(path);
 
@@ -105,7 +105,7 @@ namespace Editor.Cooker
                     code = shaderData.shaderCode,
                     fileIncluder = FileIncluder
                 };
-                var shader = new Shader(input);
+                var shader = new Glslang.NET.Shader(input);
 
                 shader.SetOptions(ShaderOptions.AutoMapBindings | ShaderOptions.AutoMapLocations | ShaderOptions.MapUnusedUniforms);
 
@@ -215,7 +215,7 @@ namespace Editor.Cooker
             {
                 Shader = Encoding.UTF8.GetBytes(str),
                 Uniforms = GetUniforms(resources, compiler),
-                Stage = (SharedTypes.ShaderStage)shaderSource.stage
+                Stage = (Engine.ShaderStage)shaderSource.stage
             };
         }
 
