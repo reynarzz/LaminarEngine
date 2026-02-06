@@ -10,19 +10,10 @@ using System.Threading.Tasks;
 
 namespace Editor.Build
 {
-    public class AndroidConsts
-    {
-        internal const string DEFAULT_APP_NAME = "Application";
-        internal const string DEFAULT_APP_PACKAGE_NAME = "com.application.gfs";
-        internal const string BUILD_TARGET = "SignAndroidPackage";
-        internal const string INSTALL_TARGET = "Install";
-        internal const string START_TARGET = "Start";
-
-
-    }
     internal class AndroidProjectBuildStage : ProjectBuildStage
     {
         private readonly string[] _buildFilesExt = { ".aab", ".apk", ".idsig" };
+        private readonly string[] _targets = [AndroidConsts.BUILD_TARGET];
         public AndroidProjectBuildStage() : base(new BuildLogger()
         {
             DebugStatus = true
@@ -123,15 +114,9 @@ namespace Editor.Build
 
         protected override string[] GetTargetsToBuild()
         {
-            var settings = GetBuildSettings<AndroidBuildSettings>(PlatformBuild.Android);
-
-            if (settings.LaunchAfterBuild)
-            {
-                return ["Rebuild", AndroidConsts.BUILD_TARGET/*, AndroidConsts.INSTALL_TARGET, AndroidConsts.START_TARGET*/];
-            }
-
-            return [AndroidConsts.BUILD_TARGET];
+            return _targets;
         }
+
         private string GetVersion(ivec3 version)
         {
             return $"{version.x}.{version.y}.{version.z}.{0}";
@@ -159,5 +144,13 @@ namespace Editor.Build
 	<string name=""app_text"">{escapedName}</string>
 </resources>";
         }
+    }
+    public class AndroidConsts
+    {
+        internal const string DEFAULT_APP_NAME = "Application";
+        internal const string DEFAULT_APP_PACKAGE_NAME = "com.application.gfs";
+        internal const string BUILD_TARGET = "SignAndroidPackage";
+        internal const string INSTALL_TARGET = "Install";
+        internal const string START_TARGET = "Start";
     }
 }

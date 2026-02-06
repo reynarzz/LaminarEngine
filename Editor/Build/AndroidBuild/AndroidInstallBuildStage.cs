@@ -11,7 +11,7 @@ namespace Editor.Build
 {
     internal class AndroidInstallBuildStage : BuildStage
     {
-        public override async Task<BuildStageResult> Execute()
+        public override Task<BuildStageResult> Execute()
         {
             Debug.Log("Trying to install to device.");
 
@@ -31,7 +31,7 @@ namespace Editor.Build
 
                 var launchResult = AdbRunner.Run("adb", $"shell am start -n {current.PackageName}/crc64faceced24a29f4d5.MainActivity");
 
-                if(launchResult.exitCode == 0)
+                if (launchResult.exitCode == 0)
                 {
                     Debug.Log("App launch Success.");
                 }
@@ -41,10 +41,10 @@ namespace Editor.Build
                 Debug.Log($"Couldn't install, check android device's compatibility.");
             }
 
-            return new BuildStageResult()
+            return Task.FromResult(new BuildStageResult()
             {
-                IsSuccess = IsInstallSuccess
-            };
+                IsSuccess = IsInstallSuccess,
+            });
         }
     }
 }

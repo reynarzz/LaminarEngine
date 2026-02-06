@@ -13,7 +13,7 @@ namespace Editor.Serialization
     /// <summary>
     /// Registers all the types so is faster to deserialize them.
     /// </summary>
-    internal static class GfsTypeRegistry
+    internal static class GfsTypeRegistryEditor
     {
         private static readonly Dictionary<string, Type> _idToType = new();
         private static readonly Dictionary<Type, string> _typeToId = new();
@@ -22,14 +22,14 @@ namespace Editor.Serialization
         internal static List<Type> GameAppComponentTypes { get; private set; } = new();
 
         internal static Assembly EngineAssembly { get; }
-        internal static Assembly SharedTypesAssembly { get; }
         internal static Assembly EditorAssembly { get; }
         internal static Assembly GameAssembly { get; set; }
 
-        static GfsTypeRegistry()
+        static GfsTypeRegistryEditor()
         {
             foreach (var item in AppDomain.CurrentDomain.GetAssemblies())
             {
+                Debug.Log(item.GetName().Name);
                 if (item.GetName().Name.Equals("Editor"))
                 {
                     EditorAssembly = item;
@@ -37,10 +37,6 @@ namespace Editor.Serialization
                 else if (item.GetName().Name.Equals("Engine"))
                 {
                     EngineAssembly = item;
-                }
-                else if (item.GetName().Name.Equals("SharedTypes"))
-                {
-                    SharedTypesAssembly = item;
                 }
             }
         }

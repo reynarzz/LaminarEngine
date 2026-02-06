@@ -136,7 +136,12 @@ namespace Engine.IO
                 var bytesRead = 0;
                 while (bytesRead < data.Length)
                 {
+
+#if IOS
+                    int read = _reader.BaseStream.Read(data, bytesRead, data.Length - bytesRead);
+#else
                     int read = await _reader.BaseStream.ReadAsync(data, bytesRead, data.Length - bytesRead);
+#endif
                     if (read == 0)
                     {
                         throw new EndOfStreamException("Unexpected end of stream while reading asset data.");

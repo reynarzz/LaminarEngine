@@ -96,15 +96,15 @@ namespace Editor.Layers
             {
                 _gameAppAssembly = _assemblyLoadContext.LoadFromStream(asmStream);
             }
-            GfsTypeRegistry.GameAssembly = _gameAppAssembly;
-            ReflectionUtils.SetTypeRegistry(GfsTypeRegistry.Resolve);
+            GfsTypeRegistryEditor.GameAssembly = _gameAppAssembly;
+            ReflectionUtils.SetTypeRegistry(GfsTypeRegistryEditor.Resolve);
 
             foreach (var type in _gameAppAssembly.DefinedTypes)
             {
-                GfsTypeRegistry.RegisterRecursive(type);
+                GfsTypeRegistryEditor.RegisterRecursive(type);
             }
 
-            if (GfsTypeRegistry.GameAppType == null)
+            if (GfsTypeRegistryEditor.GameAppType == null)
             {
                 Debug.Error("No app layer is defined in the Game.dll");
             }
@@ -133,7 +133,7 @@ namespace Editor.Layers
                     SerializeScene();
                 }
 
-                GfsTypeRegistry.Clear();
+                GfsTypeRegistryEditor.Clear();
 
                 _assemblyLoadContext.Unload();
                 _assemblyLoadContext = null;

@@ -1,4 +1,5 @@
-﻿using Engine;
+﻿using Editor.Data;
+using Engine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,9 @@ namespace Editor.Build
 {
     internal class AndroidBuilder : PlatformBuilder
     {
+        private readonly AndroidInstallBuildStage _installBuildStage = new();
         public AndroidBuilder() : base([new AndroidAssetsBuildStage(),
-                                        new AndroidProjectBuildStage(),
-                                        new AndroidInstallBuildStage()])
+                                        new AndroidProjectBuildStage()])
         {
         }
 
@@ -29,12 +30,21 @@ namespace Editor.Build
                 }
             }
 
+            var androidSettings = EditorDataManager.BuildSettings.GetBuildSettings(PlatformBuild.Android) as AndroidBuildSettings;
+
+            if (androidSettings.RunAfterBuild)
+            {
+                AddStage(_installBuildStage);
+            }
+
             PerformOp(() => Directory.Delete(EditorPaths.AndroidShipFolderRoot, true));
             PerformOp(() => Directory.Delete(EditorPaths.AndroidPublishFolderRoot, true));
         }
 
         protected override void OnAfterBuild(BuildResult result)
         {
+            RemoveStage(_installBuildStage);
+
             if (result.IsSucess)
             {
                 EditorFileDialog.DisplayFolder(EditorPaths.AndroidShipFolderRoot);

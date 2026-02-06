@@ -167,11 +167,11 @@ namespace Editor
 
             _componentTypes.Clear();
 
-            AddComponentsFromAssembly(GfsTypeRegistry.EngineAssembly);
+            AddComponentsFromAssembly(GfsTypeRegistryEditor.EngineAssembly);
 
-            for (int i = 0; i < GfsTypeRegistry.GameAppComponentTypes.Count; i++)
+            for (int i = 0; i < GfsTypeRegistryEditor.GameAppComponentTypes.Count; i++)
             {
-                var componentType = GfsTypeRegistry.GameAppComponentTypes[i];
+                var componentType = GfsTypeRegistryEditor.GameAppComponentTypes[i];
 
                 _componentTypes.Add(componentType);
             }

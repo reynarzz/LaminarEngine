@@ -26,8 +26,9 @@ namespace Editor.Build
 
     internal abstract class PlatformBuildSettings
     {
-        [SerializedField] public BuildType Type;
-        [SerializedField] public bool ShareDefaultSettings = true;
+        [SerializedField] public BuildType Type { get; set; }
+        [SerializedField] public bool ShareDefaultSettings { get; set; } = true;
+        public bool RunAfterBuild { get; set; }
     }
 
     internal abstract class PlatformBuildSettings<T> : PlatformBuildSettings where T: BuildTypeSettings, new()

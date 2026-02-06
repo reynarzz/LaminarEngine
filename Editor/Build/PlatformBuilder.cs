@@ -5,11 +5,27 @@ namespace Editor.Build
 
     internal abstract class PlatformBuilder
     {
-        private readonly BuildStage[] _buildStages;
+        private readonly Dictionary<Type, BuildStage> _buildStages = new();
 
         protected PlatformBuilder(BuildStage[] buildStages)
         {
-            _buildStages = buildStages;
+            foreach (var stage in buildStages)
+            {
+                _buildStages.Add(stage.GetType(), stage);
+            }
+        }
+
+        protected void AddStage(BuildStage stage)
+        {
+            if (stage != null && !_buildStages.ContainsKey(stage.GetType()))
+            {
+                _buildStages.Add(stage.GetType(), stage);
+            }
+        }
+
+        protected void RemoveStage(BuildStage stage)
+        {
+            _buildStages.Remove(stage.GetType());
         }
 
         public async Task<BuildResult> Build()
@@ -26,7 +42,7 @@ namespace Editor.Build
             OnBeforeBuild();
             BuildResult buildResult = default;
 
-            foreach (var stage in _buildStages)
+            foreach (var (type, stage) in _buildStages)
             {
                 if (stage.ShouldExecute())
                 {

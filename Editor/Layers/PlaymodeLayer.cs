@@ -43,7 +43,7 @@ namespace Editor.Layers
                 Application.IsInPlayMode = true;
 
                 var gameLayer = _playmodeLayers[0];
-                gameLayer.layer = ReflectionUtils.GetDefaultValueInstance(GfsTypeRegistry.GameAppType) as LayerBase;
+                gameLayer.layer = ReflectionUtils.GetDefaultValueInstance(GfsTypeRegistryEditor.GameAppType) as LayerBase;
                 _playmodeLayers[0] = gameLayer;
                 for (int i = _playmodeLayers.Count - 1; i >= 0; --i)
                 {
