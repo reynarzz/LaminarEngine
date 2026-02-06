@@ -14,7 +14,7 @@ namespace Editor
         public static string EditorRoot { get; }
         internal static string DataRoot { get; }
         internal static string GameRoot { get; }
-        internal static string SharedTypesRoot { get; }
+        internal static string EngineRoot { get; }
         public static string AndroidProjectRoot { get; }
         public static string DesktopProjectRoot { get; }
 
@@ -68,7 +68,7 @@ namespace Editor
             GameRoot = Paths.ClearPathSeparation(Path.Combine(AppRoot, Paths.GAME_FOLDER_NAME));
             AndroidProjectRoot = Paths.ClearPathSeparation(Path.Combine(AppRoot, "Platforms", "Android"));
             DesktopProjectRoot = Paths.ClearPathSeparation(Path.Combine(AppRoot, "Platforms", "Desktop"));
-            SharedTypesRoot = Paths.ClearPathSeparation(Path.Combine(AppRoot, "SharedTypes"));
+            EngineRoot = Paths.ClearPathSeparation(Path.Combine(AppRoot, "Engine"));
         }
 
         private static string GetRootFolder(string startPath)

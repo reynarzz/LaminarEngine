@@ -111,7 +111,7 @@ namespace Editor.Build
 
             // Copy miniaudio dll
             string miniaudioDllName = "miniaudio.dll";
-            var miniaudioDllPath = Path.Combine(EditorPaths.SharedTypesRoot, "Third", "SoundFlow", "runtimes", "win-x64", "native", miniaudioDllName);
+            var miniaudioDllPath = Path.Combine(EditorPaths.EngineRoot, "Third", "SoundFlow", "runtimes", "win-x64", "native", miniaudioDllName);
             File.Copy(miniaudioDllPath, Path.Combine(assembliesFolder, miniaudioDllName), true);
         }
 
