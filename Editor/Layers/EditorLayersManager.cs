@@ -135,7 +135,13 @@ namespace Editor
 
                     Debug.Log("Saving scene to: " + TestfilePath);
                     var sceneIR = SceneSerializer.SerializeScene(SceneManager.Scenes[^1]);
+
+                    var fil = File.Open(EditorPaths.AppRoot + "/SceneBinary.bin", FileMode.Create, FileAccess.Write);
+                    using var bw = new BinaryWriter(fil, System.Text.Encoding.UTF8);
+                    BinaryIRSerializer.Serialize(sceneIR, bw);
+
                     File.WriteAllText(TestfilePath, EditorJsonUtils.Serialize(sceneIR));
+
                 }
                 //else
                 //{

@@ -1,4 +1,5 @@
 ﻿using Engine;
+using Engine.Utils;
 using GlmNet;
 using System;
 using System.Collections.Generic;
@@ -92,11 +93,11 @@ namespace Editor.Cooker
 
             if (ir.Type == SerializedType.Simple)
             {
-                WriteSimpleProperty(writer, ir);
+                WriteSimpleProperty(writer, ir.Data);
             }
             else if (ir.Type.HasFlag(SerializedType.EObject))
             {
-                WriteReferenceProperty(writer, ir);
+                WriteReferenceProperty(writer, ir.Data as ReferenceData);
             }
             else if (ir.Type.HasFlag(SerializedType.ReferenceCollection))
             {
@@ -110,14 +111,12 @@ namespace Editor.Cooker
             {
                 // TODO:
             }
-
         }
 
         private static void WriteSimpleProperty(BinaryWriter writer, object data)
         {
             var simpleType = GetSimpleType(data);
             writer.Write((int)simpleType);
-
             switch (simpleType)
             {
                 case SerializedSimpleType.None:
@@ -140,6 +139,12 @@ namespace Editor.Cooker
                 case SerializedSimpleType.UShort:
                     writer.Write((ushort)data);
                     break;
+                case SerializedSimpleType.Enum:
+                    {
+                        writer.Write(ReflectionUtils.GetStableGuid(data.GetType()).ToByteArray());
+                        writer.Write((int)data);
+                    }
+                    break;
                 case SerializedSimpleType.Int:
                     writer.Write((int)data);
                     break;
@@ -159,25 +164,25 @@ namespace Editor.Cooker
                     writer.Write((ulong)data);
                     break;
                 case SerializedSimpleType.Vec2:
-                    WriteVec2(writer, data);
+                    WriteVec2(writer, (vec2)data);
                     break;
                 case SerializedSimpleType.Vec3:
-                    WriteVec3(writer, data);
+                    WriteVec3(writer, (vec3)data);
                     break;
                 case SerializedSimpleType.Vec4:
-                    WriteVec4(writer, data);
+                    WriteVec4(writer, (vec4)data);
                     break;
                 case SerializedSimpleType.Ivec2:
-                    WriteIVec2(writer, data);
+                    WriteIVec2(writer, (ivec2)data);
                     break;
                 case SerializedSimpleType.Ivec3:
-                    WriteIVec3(writer, data);
+                    WriteIVec3(writer, (ivec3)data);
                     break;
                 case SerializedSimpleType.Ivec4:
-                    WriteIVec4(writer, data);
+                    WriteIVec4(writer, (ivec4)data);
                     break;
                 case SerializedSimpleType.Quat:
-                    WriteQuat(writer, data);
+                    WriteQuat(writer, (quat)data);
                     break;
                 case SerializedSimpleType.Mat2:
                     {
@@ -203,16 +208,25 @@ namespace Editor.Cooker
                         WriteVec4(writer, value.c3);
                     }
                     break;
-                default:
+                case SerializedSimpleType.Color:
+                    {
+                        WriteVec4(writer, (Color)data);
+                    }
                     break;
+                case SerializedSimpleType.Color32:
+                    {
+                        WriteIVec4(writer, (Color32)data);
+                    }
+                    break;
+                default:
+                    throw new NotImplementedException($"Writer not implemented for simple type: '{simpleType}'");
             }
         }
 
-        private static void WriteReferenceProperty(BinaryWriter writer, object data)
+        private static void WriteReferenceProperty(BinaryWriter writer, ReferenceData value)
         {
-            if (data != null)
+            if (value != null)
             {
-                var value = data as ReferenceData;
                 writer.Write(value.Id.ToByteArray());
             }
             else
@@ -221,55 +235,48 @@ namespace Editor.Cooker
             }
         }
 
-        private static void WriteVec2(BinaryWriter writer, object data)
+        private static void WriteVec2(BinaryWriter writer, vec2 value)
         {
-            var value = (vec2)data;
             writer.Write(value.x);
             writer.Write(value.y);
         }
-        private static void WriteVec3(BinaryWriter writer, object data)
+        private static void WriteVec3(BinaryWriter writer, vec3 value)
         {
-            var value = (vec3)data;
             writer.Write(value.x);
             writer.Write(value.y);
             writer.Write(value.z);
         }
-        private static void WriteVec4(BinaryWriter writer, object data)
+        private static void WriteVec4(BinaryWriter writer, vec4 value)
         {
-            var value = (vec4)data;
             writer.Write(value.x);
             writer.Write(value.y);
             writer.Write(value.z);
             writer.Write(value.w);
         }
-        private static void WriteQuat(BinaryWriter writer, object data)
+        private static void WriteQuat(BinaryWriter writer, quat value)
         {
-            var value = (quat)data;
             writer.Write(value.x);
             writer.Write(value.y);
             writer.Write(value.z);
             writer.Write(value.w);
         }
-        private static void WriteIVec2(BinaryWriter writer, object data)
+        private static void WriteIVec2(BinaryWriter writer, ivec2 value)
         {
-            var value = (ivec2)data;
             writer.Write(value.x);
             writer.Write(value.y);
         }
-        private static void WriteIVec3(BinaryWriter writer, object data)
+        private static void WriteIVec3(BinaryWriter writer, ivec3 value)
         {
-            var value = (ivec3)data;
             writer.Write(value.x);
             writer.Write(value.y);
             writer.Write(value.z);
         }
-        private static void WriteIVec4(BinaryWriter writer, object data)
+        private static void WriteIVec4(BinaryWriter writer, ivec4 value)
         {
-            //var value = (ivec4)data;
-            //writer.Write(value.x);
-            //writer.Write(value.y);
-            //writer.Write(value.z);
-            //writer.Write(value.w);
+            writer.Write(value.x);
+            writer.Write(value.y);
+            writer.Write(value.z);
+            writer.Write(value.w);
         }
         private static SerializedSimpleType GetSimpleType(object data)
         {
@@ -282,6 +289,7 @@ namespace Editor.Cooker
                 case byte _: return SerializedSimpleType.Byte;
                 case short _: return SerializedSimpleType.Short;
                 case ushort _: return SerializedSimpleType.UShort;
+                case Enum _: return SerializedSimpleType.Enum;
                 case int _: return SerializedSimpleType.Int;
                 case uint _: return SerializedSimpleType.Uint;
                 case float _: return SerializedSimpleType.Float;
@@ -293,14 +301,15 @@ namespace Editor.Cooker
                 case vec4 _: return SerializedSimpleType.Vec4;
                 case ivec2 _: return SerializedSimpleType.Ivec2;
                 case ivec3 _: return SerializedSimpleType.Ivec3;
-                // case ivec4 _: return SerializedSimpleType.Ivec4;
+                case ivec4 _: return SerializedSimpleType.Ivec4;
                 case quat _: return SerializedSimpleType.Quat;
                 case mat2 _: return SerializedSimpleType.Mat2;
                 case mat3 _: return SerializedSimpleType.Mat3;
                 case mat4 _: return SerializedSimpleType.Mat4;
-
+                case Color _: return SerializedSimpleType.Color;
+                case Color32 _: return SerializedSimpleType.Color32;
                 default:
-                    throw new NotImplementedException($"Type for '{data.GetType().Name}' is not handled by binary serializer.");
+                    throw new NotImplementedException($"Type for '{data.GetType().Name}' is not handled by the binary serializer.");
             }
         }
 

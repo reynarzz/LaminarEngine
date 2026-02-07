@@ -203,6 +203,11 @@ namespace Engine
         {
             return new Color32((byte)(color.R * 255.0f), (byte)(color.G * 255.0f), (byte)(color.B * 255.0f), (byte)(color.A * 255.0f));
         }
+
+        public static implicit operator ivec4(Color32 color)
+        {
+            return new ivec4(color.R, color.G, color.B, color.A);
+        }
     }
 
     public struct ColorPacketRGBA

@@ -137,6 +137,7 @@ namespace Engine
     internal enum SerializedSimpleType
     {
         None,
+        Enum,
         Char,
         String,
         Bool,
@@ -159,5 +160,7 @@ namespace Engine
         Mat2,
         Mat3,
         Mat4,
+        Color,
+        Color32
     }
 }
