@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,8 +6,16 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
+    internal class SceneIR
+    {
+        public int Version { get; set; }
+        public int TotalActors { get; set; }
+        public List<ActorIR> Actors { get; set; }
+    }
+
     internal class ActorIR
     {
+        public int Version { get; set; }
         public string Name { get; set; }
         public int Layer { get; set; }
         public bool IsActiveSelf { get; set; }
@@ -18,6 +26,7 @@ namespace Engine
 
     internal class ComponentIR
     {
+        public int Version { get; set; }
         public string InternalType { get; set; }
         public Guid TypeId { get; set; }
         public bool IsEnabled { get; set; }

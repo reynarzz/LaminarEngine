@@ -14,7 +14,6 @@ namespace Editor
 {
     internal class EditorLayersManager : LayersManager
     {
-        private List<ActorIR> _actors;
         private string TestfilePath => $"{EditorPaths.AppRoot}Scene.bin";
         private string AnimClipPath => $"{EditorPaths.AppRoot}AnimClip.bin";
         private string AnimControllerPath => $"{EditorPaths.AppRoot}AnimController.bin";
@@ -116,9 +115,7 @@ namespace Editor
             {
                 if (Application.IsInPlayMode || SceneManager.Scenes.FirstOrDefault() != null)
                 {
-                    Debug.Log("Saving scene to: " + TestfilePath);
-                    _actors = SceneSerializer.SerializeScene(SceneManager.Scenes[^1])?.ActorsData;
-
+                    
                     var obj = Actor.Find("Player");
                     if (obj)
                     {
@@ -136,8 +133,9 @@ namespace Editor
 
                     }
 
-                    File.WriteAllText(TestfilePath, EditorJsonUtils.Serialize(_actors));
-                    _actors.Clear();
+                    Debug.Log("Saving scene to: " + TestfilePath);
+                    var sceneIR = SceneSerializer.SerializeScene(SceneManager.Scenes[^1]);
+                    File.WriteAllText(TestfilePath, EditorJsonUtils.Serialize(sceneIR));
                 }
                 //else
                 //{
@@ -149,14 +147,14 @@ namespace Editor
             {
                 if (File.Exists(AnimClipPath))
                 {
-					var anim = new AnimationClip("Name");
-					var ir = EditorJsonUtils.Deserialize<List<SerializedPropertyIR>>(File.ReadAllText(AnimClipPath));
+                    var anim = new AnimationClip("Name");
+                    var ir = EditorJsonUtils.Deserialize<List<SerializedPropertyIR>>(File.ReadAllText(AnimClipPath));
 
-					Deserializer.Deserialize(anim, ir);
-					var anim2 = Deserializer.Deserialize<AnimationClip>(ir);
-				}
+                    Deserializer.Deserialize(anim, ir);
+                    var anim2 = Deserializer.Deserialize<AnimationClip>(ir);
+                }
 
-				_materialTest = Assets.GetMaterial("Materials/Material.material");
+                _materialTest = Assets.GetMaterial("Materials/Material.material");
                 Selector.Selected = Assets.GetTexture("starkTileset.png");//_materialTest;
 
 
@@ -167,7 +165,7 @@ namespace Editor
 
                 //ExportSlicedSprites();
                 // var material = Assets.GetMaterial("Materials/Portal_mobile.material");
-               // var json = EditorJsonUtils.Serialize(Serializer.Serialize(material));
+                // var json = EditorJsonUtils.Serialize(Serializer.Serialize(material));
 
                 //File.WriteAllText(EditorPaths.GameRoot + "/Assets/Materials/Portal_mobile.material", json);
 
@@ -204,7 +202,7 @@ namespace Editor
 
 
                 // SerializerTypesFixer();
-               LoadScene();
+                LoadScene();
             }
         }
 
@@ -227,7 +225,7 @@ namespace Editor
                 var txt = File.ReadAllText(file);
                 txt = txt.Replace("TargetTypeName", "InternalType");
 
-				File.WriteAllText(file, txt);
+                File.WriteAllText(file, txt);
             }
         }
 
@@ -306,12 +304,12 @@ namespace Editor
             if (File.Exists(TestfilePath))
             {
                 var file = File.ReadAllText(TestfilePath);
-                var actors = EditorJsonUtils.Deserialize<List<ActorIR>>(file);
+                var scene = EditorJsonUtils.Deserialize<SceneIR>(file);
                 // var actors = _actors;
-                Debug.Log("Total actors in scene: " + actors.Count);
+                Debug.Log("Total actors in scene: " + scene.TotalActors);
                 SceneManager.Initialize();
 
-                SceneDeserializer.DeserializeScene(actors, SceneManager.ActiveScene);
+                SceneDeserializer.DeserializeScene(scene, SceneManager.ActiveScene);
             }
         }
     }

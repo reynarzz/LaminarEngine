@@ -8,26 +8,25 @@ using System.Threading.Tasks;
 
 namespace Editor.Build
 {
-    internal class WindowsProjectBuildStage : ProjectBuildStage
+    internal class WindowsShipBuildStage : ShipBuildStage
     {
         private readonly string[] _targets = ["Rebuild", "Publish"];
 
         private readonly string[] _buildFilesExt = { ".exe", ".pdb" };
 
-        public WindowsProjectBuildStage() : base(new BuildLogger()
+        public WindowsShipBuildStage() : base(new BuildLogger()
         {
             DebugStatus = true
         })
         { }
 
-        protected override Dictionary<string, string> GetBuildProperties()
+        protected override Dictionary<string, string> GetAllBuildProperties()
         {
             var settings = GetBuildSettings<WindowsBuildSettings>(PlatformBuild.Windows);
             var buildTypeSettings = settings.GetCurrentBuildTypeSettings();
 
             var props = new Dictionary<string, string>()
             {
-                ["ShipBuild"] = "true",
                 ["Configuration"] = settings.Type == BuildType.Release ? "Release" : "Debug",
                 ["Platform"] = "x64",
                 ["TargetFramework"] = "net9.0",
@@ -60,7 +59,7 @@ namespace Editor.Build
                 ["InformationalVersion"] = GetVersion(buildTypeSettings.Version),
             };
 
-            var defaultConstants = "WINDOWS;WIN32;DESKTOP;SHIP_BUILD;";
+            var defaultConstants = "WINDOWS;WIN32;DESKTOP;";
 
             if (settings.Type == BuildType.Release)
             {

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Editor.Serialization
 {
-    internal class SerializedScene
+    internal class SerializedEditorScene
     {
         public string Name { get; set; }
         public List<ActorIR> ActorsData { get; set; }
@@ -29,11 +29,28 @@ namespace Editor.Serialization
             public bool CollectedPhysicalActors;
         }
         private readonly static List<Component> _componentsToRemove = new();
-        internal static SerializedScene SerializeScene(Scene scene, SerializationOptions options = default)
+        internal static SceneIR SerializeScene(Scene scene)
+        {
+            var options = new SerializationOptions()
+            {
+                CollectedPhysicalActors = false,
+                RemoveGameDLLComponentsFromActors = false
+            };
+
+            var sceneEditor = SerializeSceneEditor(scene, options);
+
+            return new SceneIR()
+            {
+                Version = 1,
+                Actors = sceneEditor.ActorsData,
+                TotalActors = sceneEditor.ActorsData.Count
+            };
+        }
+        internal static SerializedEditorScene SerializeSceneEditor(Scene scene, SerializationOptions options = default)
         {
             _componentsToRemove.Clear();
 
-            var serializedScene = new SerializedScene()
+            var serializedScene = new SerializedEditorScene()
             {
                 Name = scene.Name,
                 ActorsData = new(),

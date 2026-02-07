@@ -18,7 +18,7 @@ namespace Editor.Build
             var settings = EditorDataManager.BuildSettings.GetBuildSettings(PlatformBuild.Android) as AndroidBuildSettings;
             var current = settings.GetCurrentBuildTypeSettings();
 
-            var rootFolder = AndroidProjectBuildStage.GetOutputFolder(settings);
+            var rootFolder = AndroidShipBuildStage.GetOutputFolder(settings);
 
             var filename = Path.Combine(rootFolder, current.PackageName);
 

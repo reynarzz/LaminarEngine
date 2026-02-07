@@ -10,17 +10,17 @@ using System.Threading.Tasks;
 
 namespace Editor.Build
 {
-    internal class AndroidProjectBuildStage : ProjectBuildStage
+    internal class AndroidShipBuildStage : ShipBuildStage
     {
         private readonly string[] _buildFilesExt = { ".aab", ".apk", ".idsig" };
         private readonly string[] _targets = [AndroidConsts.BUILD_TARGET];
-        public AndroidProjectBuildStage() : base(new BuildLogger()
+        public AndroidShipBuildStage() : base(new BuildLogger()
         {
             DebugStatus = true
         })
         { }
 
-        protected override Dictionary<string, string> GetBuildProperties()
+        protected override Dictionary<string, string> GetAllBuildProperties()
         {
             var settings = GetBuildSettings<AndroidBuildSettings>(PlatformBuild.Android);
             var buildTypeSettings = settings.GetCurrentBuildTypeSettings();
@@ -34,7 +34,6 @@ namespace Editor.Build
 
             var properties = new Dictionary<string, string>()
             {
-                ["ShipBuild"] = "true",
                 ["Configuration"] = settings.Type == BuildType.Release ? "Release" : "Debug",
                 ["Platform"] = "AnyCPU",
                 ["AndroidSdkDirectory"] = GetAndroidSdkPath(),
@@ -45,7 +44,7 @@ namespace Editor.Build
                 ["OutputPath"] = EditorPaths.AndroidPublishFolderRoot + "/",
                 ["AndroidApplicationLabel"] = buildTypeSettings.ApplicationName,
                 ["PublishTrimmed"] = "true",
-                ["DefineConstants"] = "$(DefineConstants);ANDROID;MOBILE;SHIP_BUILD",
+                ["DefineConstants"] = "$(DefineConstants);ANDROID;MOBILE",
                 ["TrimMode"] = "link",
                 ["ApplicationId"] = packageName,
                 ["ApplicationDisplayVersion"] = GetVersion(settings.Version),

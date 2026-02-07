@@ -12,7 +12,7 @@ namespace Editor.Build
     {
         private readonly AndroidInstallBuildStage _installBuildStage = new();
         public AndroidBuilder() : base([new AndroidAssetsBuildStage(),
-                                        new AndroidProjectBuildStage()])
+                                        new AndroidShipBuildStage()])
         {
         }
 

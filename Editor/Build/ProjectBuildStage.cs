@@ -15,6 +15,12 @@ namespace Editor.Build
         private BuildParameters _parameters;
         private ProjectInstance _instance;
         private readonly ILogger _logger;
+
+        protected class DefaultPropertyConsts
+        {
+            internal const string DEFINE_CONSTANTS = "DefineConstants";
+        }
+
         protected ProjectBuildStage(ILogger logger)
         {
             _logger = logger;

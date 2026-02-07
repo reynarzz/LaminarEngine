@@ -125,11 +125,13 @@ namespace Engine.Serialization
             _existantComponents.Clear();
         }
 
-        public static void DeserializeScene(IReadOnlyList<ActorIR> actors, WeakReference<Scene> scene)
+        public static void DeserializeScene(SceneIR sceneIr, WeakReference<Scene> scene)
         {
             _actorsByID.Clear();
             _componentsByID.Clear();
             _initializationComponents.Clear();
+            var actors = sceneIr.Actors;
+
             if (actors == null || actors.Count == 0)
                 return;
 

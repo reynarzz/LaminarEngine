@@ -150,7 +150,7 @@ namespace Editor.Layers
             _actorsSerialized.Clear();
             foreach (var scene in SceneManager.Scenes)
             {
-                var sceneObj = SceneSerializer.SerializeScene(scene,
+                var sceneObj = SceneSerializer.SerializeSceneEditor(scene,
                     new SceneSerializer.SerializationOptions()
                     {
                         CollectedPhysicalActors = true,
@@ -169,7 +169,7 @@ namespace Editor.Layers
             {
                 for (int i = 0; i < _sceneList.Count; i++)
                 {
-                    var sceneSerialized = EditorJsonUtils.Deserialize<SerializedScene>(_sceneList[i]);
+                    var sceneSerialized = EditorJsonUtils.Deserialize<SerializedEditorScene>(_sceneList[i]);
                     SceneDeserializer.DeserializeSceneComponents(_actorsSerialized[i], sceneSerialized.ActorsData);
                 }
             }
