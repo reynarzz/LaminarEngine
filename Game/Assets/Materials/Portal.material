@@ -18,7 +18,7 @@
               "Properties": [
                 {
                   "Name": "IsScreenGrabPass",
-                  "Type": "Simple",
+                  "Type": "SimpleFlag",
                   "InternalType": "System.Boolean, System.Private.CoreLib",
                   "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
                   "Data": {
@@ -79,15 +79,15 @@
                       "CollectionType": "Dictionary",
                       "Collection": [
                         {
-                          "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+                          "$type": "Engine.ComplexDictionaryData, Engine",
                           "Key": {
                             "InternalType": "System.String, System.Private.CoreLib",
                             "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
-                            "ComplexType": "Simple",
+                            "ComplexType": "SimpleFlag",
                             "Properties": [
                               {
                                 "Name": "DictionaryKey",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.String, System.Private.CoreLib",
                                 "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                                 "Data": {
@@ -104,7 +104,7 @@
                             "Properties": [
                               {
                                 "Name": "Name",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.String, System.Private.CoreLib",
                                 "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                                 "Data": {
@@ -114,7 +114,7 @@
                               },
                               {
                                 "Name": "IntValue",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.Int32, System.Private.CoreLib",
                                 "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
                                 "Data": {
@@ -124,7 +124,7 @@
                               },
                               {
                                 "Name": "UIntValue",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.UInt32, System.Private.CoreLib",
                                 "TypeId": "0eb1f326-5a69-6e6a-caaa-206d0252204a",
                                 "Data": {
@@ -134,7 +134,7 @@
                               },
                               {
                                 "Name": "FloatValue",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.Single, System.Private.CoreLib",
                                 "TypeId": "8bb080fb-0417-4cec-2ad6-a37e93d2bde3",
                                 "Data": {
@@ -144,7 +144,7 @@
                               },
                               {
                                 "Name": "Mat4Value",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "GlmNet.mat4, Engine",
                                 "TypeId": "9b92fa99-dd8e-0ad0-4b55-3c0a16332b24",
                                 "Data": {
@@ -179,7 +179,7 @@
                               },
                               {
                                 "Name": "Vec2Value",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "GlmNet.vec2, Engine",
                                 "TypeId": "898ce777-3bb3-60cf-33cb-4c96808525ae",
                                 "Data": {
@@ -192,7 +192,7 @@
                               },
                               {
                                 "Name": "Vec3Value",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "GlmNet.vec3, Engine",
                                 "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
                                 "Data": {
@@ -206,7 +206,7 @@
                               },
                               {
                                 "Name": "Vec4Value",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "GlmNet.vec4, Engine",
                                 "TypeId": "000dd809-7bfa-df96-5dc1-02cdc5de5670",
                                 "Data": {
@@ -228,7 +228,7 @@
                               },
                               {
                                 "Name": "Type",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "Engine.Graphics.UniformType, Engine",
                                 "TypeId": "023ce8ea-812a-ad85-d77b-2c730e2ea07b",
                                 "Data": {
@@ -248,15 +248,15 @@
                           "Type": "ComplexClass"
                         },
                         {
-                          "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+                          "$type": "Engine.ComplexDictionaryData, Engine",
                           "Key": {
                             "InternalType": "System.String, System.Private.CoreLib",
                             "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
-                            "ComplexType": "Simple",
+                            "ComplexType": "SimpleFlag",
                             "Properties": [
                               {
                                 "Name": "DictionaryKey",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.String, System.Private.CoreLib",
                                 "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                                 "Data": {
@@ -273,7 +273,7 @@
                             "Properties": [
                               {
                                 "Name": "Name",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.String, System.Private.CoreLib",
                                 "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                                 "Data": {
@@ -283,7 +283,7 @@
                               },
                               {
                                 "Name": "IntValue",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.Int32, System.Private.CoreLib",
                                 "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
                                 "Data": {
@@ -293,7 +293,7 @@
                               },
                               {
                                 "Name": "UIntValue",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.UInt32, System.Private.CoreLib",
                                 "TypeId": "0eb1f326-5a69-6e6a-caaa-206d0252204a",
                                 "Data": {
@@ -303,7 +303,7 @@
                               },
                               {
                                 "Name": "FloatValue",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.Single, System.Private.CoreLib",
                                 "TypeId": "8bb080fb-0417-4cec-2ad6-a37e93d2bde3",
                                 "Data": {
@@ -313,7 +313,7 @@
                               },
                               {
                                 "Name": "Mat4Value",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "GlmNet.mat4, Engine",
                                 "TypeId": "9b92fa99-dd8e-0ad0-4b55-3c0a16332b24",
                                 "Data": {
@@ -348,7 +348,7 @@
                               },
                               {
                                 "Name": "Vec2Value",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "GlmNet.vec2, Engine",
                                 "TypeId": "898ce777-3bb3-60cf-33cb-4c96808525ae",
                                 "Data": {
@@ -361,7 +361,7 @@
                               },
                               {
                                 "Name": "Vec3Value",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "GlmNet.vec3, Engine",
                                 "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
                                 "Data": {
@@ -375,7 +375,7 @@
                               },
                               {
                                 "Name": "Vec4Value",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "GlmNet.vec4, Engine",
                                 "TypeId": "000dd809-7bfa-df96-5dc1-02cdc5de5670",
                                 "Data": {
@@ -397,7 +397,7 @@
                               },
                               {
                                 "Name": "Type",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "Engine.Graphics.UniformType, Engine",
                                 "TypeId": "023ce8ea-812a-ad85-d77b-2c730e2ea07b",
                                 "Data": {
@@ -417,15 +417,15 @@
                           "Type": "ComplexClass"
                         },
                         {
-                          "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+                          "$type": "Engine.ComplexDictionaryData, Engine",
                           "Key": {
                             "InternalType": "System.String, System.Private.CoreLib",
                             "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
-                            "ComplexType": "Simple",
+                            "ComplexType": "SimpleFlag",
                             "Properties": [
                               {
                                 "Name": "DictionaryKey",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.String, System.Private.CoreLib",
                                 "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                                 "Data": {
@@ -442,7 +442,7 @@
                             "Properties": [
                               {
                                 "Name": "Name",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.String, System.Private.CoreLib",
                                 "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                                 "Data": {
@@ -452,7 +452,7 @@
                               },
                               {
                                 "Name": "IntValue",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.Int32, System.Private.CoreLib",
                                 "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
                                 "Data": {
@@ -462,7 +462,7 @@
                               },
                               {
                                 "Name": "UIntValue",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.UInt32, System.Private.CoreLib",
                                 "TypeId": "0eb1f326-5a69-6e6a-caaa-206d0252204a",
                                 "Data": {
@@ -472,7 +472,7 @@
                               },
                               {
                                 "Name": "FloatValue",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.Single, System.Private.CoreLib",
                                 "TypeId": "8bb080fb-0417-4cec-2ad6-a37e93d2bde3",
                                 "Data": {
@@ -482,7 +482,7 @@
                               },
                               {
                                 "Name": "Mat4Value",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "GlmNet.mat4, Engine",
                                 "TypeId": "9b92fa99-dd8e-0ad0-4b55-3c0a16332b24",
                                 "Data": {
@@ -517,7 +517,7 @@
                               },
                               {
                                 "Name": "Vec2Value",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "GlmNet.vec2, Engine",
                                 "TypeId": "898ce777-3bb3-60cf-33cb-4c96808525ae",
                                 "Data": {
@@ -530,7 +530,7 @@
                               },
                               {
                                 "Name": "Vec3Value",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "GlmNet.vec3, Engine",
                                 "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
                                 "Data": {
@@ -544,7 +544,7 @@
                               },
                               {
                                 "Name": "Vec4Value",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "GlmNet.vec4, Engine",
                                 "TypeId": "000dd809-7bfa-df96-5dc1-02cdc5de5670",
                                 "Data": {
@@ -566,7 +566,7 @@
                               },
                               {
                                 "Name": "Type",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "Engine.Graphics.UniformType, Engine",
                                 "TypeId": "023ce8ea-812a-ad85-d77b-2c730e2ea07b",
                                 "Data": {
@@ -586,15 +586,15 @@
                           "Type": "ComplexClass"
                         },
                         {
-                          "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+                          "$type": "Engine.ComplexDictionaryData, Engine",
                           "Key": {
                             "InternalType": "System.String, System.Private.CoreLib",
                             "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
-                            "ComplexType": "Simple",
+                            "ComplexType": "SimpleFlag",
                             "Properties": [
                               {
                                 "Name": "DictionaryKey",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.String, System.Private.CoreLib",
                                 "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                                 "Data": {
@@ -611,7 +611,7 @@
                             "Properties": [
                               {
                                 "Name": "Name",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.String, System.Private.CoreLib",
                                 "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                                 "Data": {
@@ -621,7 +621,7 @@
                               },
                               {
                                 "Name": "IntValue",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.Int32, System.Private.CoreLib",
                                 "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
                                 "Data": {
@@ -631,7 +631,7 @@
                               },
                               {
                                 "Name": "UIntValue",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.UInt32, System.Private.CoreLib",
                                 "TypeId": "0eb1f326-5a69-6e6a-caaa-206d0252204a",
                                 "Data": {
@@ -641,7 +641,7 @@
                               },
                               {
                                 "Name": "FloatValue",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.Single, System.Private.CoreLib",
                                 "TypeId": "8bb080fb-0417-4cec-2ad6-a37e93d2bde3",
                                 "Data": {
@@ -651,7 +651,7 @@
                               },
                               {
                                 "Name": "Mat4Value",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "GlmNet.mat4, Engine",
                                 "TypeId": "9b92fa99-dd8e-0ad0-4b55-3c0a16332b24",
                                 "Data": {
@@ -686,7 +686,7 @@
                               },
                               {
                                 "Name": "Vec2Value",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "GlmNet.vec2, Engine",
                                 "TypeId": "898ce777-3bb3-60cf-33cb-4c96808525ae",
                                 "Data": {
@@ -699,7 +699,7 @@
                               },
                               {
                                 "Name": "Vec3Value",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "GlmNet.vec3, Engine",
                                 "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
                                 "Data": {
@@ -713,7 +713,7 @@
                               },
                               {
                                 "Name": "Vec4Value",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "GlmNet.vec4, Engine",
                                 "TypeId": "000dd809-7bfa-df96-5dc1-02cdc5de5670",
                                 "Data": {
@@ -735,7 +735,7 @@
                               },
                               {
                                 "Name": "Type",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "Engine.Graphics.UniformType, Engine",
                                 "TypeId": "023ce8ea-812a-ad85-d77b-2c730e2ea07b",
                                 "Data": {
@@ -755,15 +755,15 @@
                           "Type": "ComplexClass"
                         },
                         {
-                          "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+                          "$type": "Engine.ComplexDictionaryData, Engine",
                           "Key": {
                             "InternalType": "System.String, System.Private.CoreLib",
                             "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
-                            "ComplexType": "Simple",
+                            "ComplexType": "SimpleFlag",
                             "Properties": [
                               {
                                 "Name": "DictionaryKey",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.String, System.Private.CoreLib",
                                 "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                                 "Data": {
@@ -780,7 +780,7 @@
                             "Properties": [
                               {
                                 "Name": "Name",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.String, System.Private.CoreLib",
                                 "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                                 "Data": {
@@ -790,7 +790,7 @@
                               },
                               {
                                 "Name": "IntValue",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.Int32, System.Private.CoreLib",
                                 "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
                                 "Data": {
@@ -800,7 +800,7 @@
                               },
                               {
                                 "Name": "UIntValue",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.UInt32, System.Private.CoreLib",
                                 "TypeId": "0eb1f326-5a69-6e6a-caaa-206d0252204a",
                                 "Data": {
@@ -810,7 +810,7 @@
                               },
                               {
                                 "Name": "FloatValue",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.Single, System.Private.CoreLib",
                                 "TypeId": "8bb080fb-0417-4cec-2ad6-a37e93d2bde3",
                                 "Data": {
@@ -820,7 +820,7 @@
                               },
                               {
                                 "Name": "Mat4Value",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "GlmNet.mat4, Engine",
                                 "TypeId": "9b92fa99-dd8e-0ad0-4b55-3c0a16332b24",
                                 "Data": {
@@ -855,7 +855,7 @@
                               },
                               {
                                 "Name": "Vec2Value",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "GlmNet.vec2, Engine",
                                 "TypeId": "898ce777-3bb3-60cf-33cb-4c96808525ae",
                                 "Data": {
@@ -868,7 +868,7 @@
                               },
                               {
                                 "Name": "Vec3Value",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "GlmNet.vec3, Engine",
                                 "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
                                 "Data": {
@@ -882,7 +882,7 @@
                               },
                               {
                                 "Name": "Vec4Value",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "GlmNet.vec4, Engine",
                                 "TypeId": "000dd809-7bfa-df96-5dc1-02cdc5de5670",
                                 "Data": {
@@ -904,7 +904,7 @@
                               },
                               {
                                 "Name": "Type",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "Engine.Graphics.UniformType, Engine",
                                 "TypeId": "023ce8ea-812a-ad85-d77b-2c730e2ea07b",
                                 "Data": {
@@ -924,15 +924,15 @@
                           "Type": "ComplexClass"
                         },
                         {
-                          "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+                          "$type": "Engine.ComplexDictionaryData, Engine",
                           "Key": {
                             "InternalType": "System.String, System.Private.CoreLib",
                             "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
-                            "ComplexType": "Simple",
+                            "ComplexType": "SimpleFlag",
                             "Properties": [
                               {
                                 "Name": "DictionaryKey",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.String, System.Private.CoreLib",
                                 "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                                 "Data": {
@@ -949,7 +949,7 @@
                             "Properties": [
                               {
                                 "Name": "Name",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.String, System.Private.CoreLib",
                                 "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                                 "Data": {
@@ -959,7 +959,7 @@
                               },
                               {
                                 "Name": "IntValue",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.Int32, System.Private.CoreLib",
                                 "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
                                 "Data": {
@@ -969,7 +969,7 @@
                               },
                               {
                                 "Name": "UIntValue",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.UInt32, System.Private.CoreLib",
                                 "TypeId": "0eb1f326-5a69-6e6a-caaa-206d0252204a",
                                 "Data": {
@@ -979,7 +979,7 @@
                               },
                               {
                                 "Name": "FloatValue",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.Single, System.Private.CoreLib",
                                 "TypeId": "8bb080fb-0417-4cec-2ad6-a37e93d2bde3",
                                 "Data": {
@@ -989,7 +989,7 @@
                               },
                               {
                                 "Name": "Mat4Value",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "GlmNet.mat4, Engine",
                                 "TypeId": "9b92fa99-dd8e-0ad0-4b55-3c0a16332b24",
                                 "Data": {
@@ -1024,7 +1024,7 @@
                               },
                               {
                                 "Name": "Vec2Value",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "GlmNet.vec2, Engine",
                                 "TypeId": "898ce777-3bb3-60cf-33cb-4c96808525ae",
                                 "Data": {
@@ -1037,7 +1037,7 @@
                               },
                               {
                                 "Name": "Vec3Value",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "GlmNet.vec3, Engine",
                                 "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
                                 "Data": {
@@ -1051,7 +1051,7 @@
                               },
                               {
                                 "Name": "Vec4Value",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "GlmNet.vec4, Engine",
                                 "TypeId": "000dd809-7bfa-df96-5dc1-02cdc5de5670",
                                 "Data": {
@@ -1073,7 +1073,7 @@
                               },
                               {
                                 "Name": "Type",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "Engine.Graphics.UniformType, Engine",
                                 "TypeId": "023ce8ea-812a-ad85-d77b-2c730e2ea07b",
                                 "Data": {
@@ -1093,15 +1093,15 @@
                           "Type": "ComplexClass"
                         },
                         {
-                          "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+                          "$type": "Engine.ComplexDictionaryData, Engine",
                           "Key": {
                             "InternalType": "System.String, System.Private.CoreLib",
                             "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
-                            "ComplexType": "Simple",
+                            "ComplexType": "SimpleFlag",
                             "Properties": [
                               {
                                 "Name": "DictionaryKey",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.String, System.Private.CoreLib",
                                 "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                                 "Data": {
@@ -1118,7 +1118,7 @@
                             "Properties": [
                               {
                                 "Name": "Name",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.String, System.Private.CoreLib",
                                 "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                                 "Data": {
@@ -1128,7 +1128,7 @@
                               },
                               {
                                 "Name": "IntValue",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.Int32, System.Private.CoreLib",
                                 "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
                                 "Data": {
@@ -1138,7 +1138,7 @@
                               },
                               {
                                 "Name": "UIntValue",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.UInt32, System.Private.CoreLib",
                                 "TypeId": "0eb1f326-5a69-6e6a-caaa-206d0252204a",
                                 "Data": {
@@ -1148,7 +1148,7 @@
                               },
                               {
                                 "Name": "FloatValue",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.Single, System.Private.CoreLib",
                                 "TypeId": "8bb080fb-0417-4cec-2ad6-a37e93d2bde3",
                                 "Data": {
@@ -1158,7 +1158,7 @@
                               },
                               {
                                 "Name": "Mat4Value",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "GlmNet.mat4, Engine",
                                 "TypeId": "9b92fa99-dd8e-0ad0-4b55-3c0a16332b24",
                                 "Data": {
@@ -1193,7 +1193,7 @@
                               },
                               {
                                 "Name": "Vec2Value",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "GlmNet.vec2, Engine",
                                 "TypeId": "898ce777-3bb3-60cf-33cb-4c96808525ae",
                                 "Data": {
@@ -1206,7 +1206,7 @@
                               },
                               {
                                 "Name": "Vec3Value",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "GlmNet.vec3, Engine",
                                 "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
                                 "Data": {
@@ -1220,7 +1220,7 @@
                               },
                               {
                                 "Name": "Vec4Value",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "GlmNet.vec4, Engine",
                                 "TypeId": "000dd809-7bfa-df96-5dc1-02cdc5de5670",
                                 "Data": {
@@ -1242,7 +1242,7 @@
                               },
                               {
                                 "Name": "Type",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "Engine.Graphics.UniformType, Engine",
                                 "TypeId": "023ce8ea-812a-ad85-d77b-2c730e2ea07b",
                                 "Data": {
@@ -1262,15 +1262,15 @@
                           "Type": "ComplexClass"
                         },
                         {
-                          "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+                          "$type": "Engine.ComplexDictionaryData, Engine",
                           "Key": {
                             "InternalType": "System.String, System.Private.CoreLib",
                             "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
-                            "ComplexType": "Simple",
+                            "ComplexType": "SimpleFlag",
                             "Properties": [
                               {
                                 "Name": "DictionaryKey",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.String, System.Private.CoreLib",
                                 "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                                 "Data": {
@@ -1287,7 +1287,7 @@
                             "Properties": [
                               {
                                 "Name": "Name",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.String, System.Private.CoreLib",
                                 "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                                 "Data": {
@@ -1297,7 +1297,7 @@
                               },
                               {
                                 "Name": "IntValue",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.Int32, System.Private.CoreLib",
                                 "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
                                 "Data": {
@@ -1307,7 +1307,7 @@
                               },
                               {
                                 "Name": "UIntValue",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.UInt32, System.Private.CoreLib",
                                 "TypeId": "0eb1f326-5a69-6e6a-caaa-206d0252204a",
                                 "Data": {
@@ -1317,7 +1317,7 @@
                               },
                               {
                                 "Name": "FloatValue",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.Single, System.Private.CoreLib",
                                 "TypeId": "8bb080fb-0417-4cec-2ad6-a37e93d2bde3",
                                 "Data": {
@@ -1327,7 +1327,7 @@
                               },
                               {
                                 "Name": "Mat4Value",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "GlmNet.mat4, Engine",
                                 "TypeId": "9b92fa99-dd8e-0ad0-4b55-3c0a16332b24",
                                 "Data": {
@@ -1362,7 +1362,7 @@
                               },
                               {
                                 "Name": "Vec2Value",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "GlmNet.vec2, Engine",
                                 "TypeId": "898ce777-3bb3-60cf-33cb-4c96808525ae",
                                 "Data": {
@@ -1375,7 +1375,7 @@
                               },
                               {
                                 "Name": "Vec3Value",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "GlmNet.vec3, Engine",
                                 "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
                                 "Data": {
@@ -1389,7 +1389,7 @@
                               },
                               {
                                 "Name": "Vec4Value",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "GlmNet.vec4, Engine",
                                 "TypeId": "000dd809-7bfa-df96-5dc1-02cdc5de5670",
                                 "Data": {
@@ -1411,7 +1411,7 @@
                               },
                               {
                                 "Name": "Type",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "Engine.Graphics.UniformType, Engine",
                                 "TypeId": "023ce8ea-812a-ad85-d77b-2c730e2ea07b",
                                 "Data": {
@@ -1431,15 +1431,15 @@
                           "Type": "ComplexClass"
                         },
                         {
-                          "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+                          "$type": "Engine.ComplexDictionaryData, Engine",
                           "Key": {
                             "InternalType": "System.String, System.Private.CoreLib",
                             "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
-                            "ComplexType": "Simple",
+                            "ComplexType": "SimpleFlag",
                             "Properties": [
                               {
                                 "Name": "DictionaryKey",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.String, System.Private.CoreLib",
                                 "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                                 "Data": {
@@ -1456,7 +1456,7 @@
                             "Properties": [
                               {
                                 "Name": "Name",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.String, System.Private.CoreLib",
                                 "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                                 "Data": {
@@ -1466,7 +1466,7 @@
                               },
                               {
                                 "Name": "IntValue",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.Int32, System.Private.CoreLib",
                                 "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
                                 "Data": {
@@ -1476,7 +1476,7 @@
                               },
                               {
                                 "Name": "UIntValue",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.UInt32, System.Private.CoreLib",
                                 "TypeId": "0eb1f326-5a69-6e6a-caaa-206d0252204a",
                                 "Data": {
@@ -1486,7 +1486,7 @@
                               },
                               {
                                 "Name": "FloatValue",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "System.Single, System.Private.CoreLib",
                                 "TypeId": "8bb080fb-0417-4cec-2ad6-a37e93d2bde3",
                                 "Data": {
@@ -1496,7 +1496,7 @@
                               },
                               {
                                 "Name": "Mat4Value",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "GlmNet.mat4, Engine",
                                 "TypeId": "9b92fa99-dd8e-0ad0-4b55-3c0a16332b24",
                                 "Data": {
@@ -1531,7 +1531,7 @@
                               },
                               {
                                 "Name": "Vec2Value",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "GlmNet.vec2, Engine",
                                 "TypeId": "898ce777-3bb3-60cf-33cb-4c96808525ae",
                                 "Data": {
@@ -1544,7 +1544,7 @@
                               },
                               {
                                 "Name": "Vec3Value",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "GlmNet.vec3, Engine",
                                 "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
                                 "Data": {
@@ -1558,7 +1558,7 @@
                               },
                               {
                                 "Name": "Vec4Value",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "GlmNet.vec4, Engine",
                                 "TypeId": "000dd809-7bfa-df96-5dc1-02cdc5de5670",
                                 "Data": {
@@ -1580,7 +1580,7 @@
                               },
                               {
                                 "Name": "Type",
-                                "Type": "Simple",
+                                "Type": "SimpleFlag",
                                 "InternalType": "Engine.Graphics.UniformType, Engine",
                                 "TypeId": "023ce8ea-812a-ad85-d77b-2c730e2ea07b",
                                 "Data": {
@@ -1622,8 +1622,8 @@
         "CollectionType": "Dictionary",
         "Collection": [
           {
-            "$type": "Engine.DictionaryData`2[[System.Object, System.Private.CoreLib],[System.Object, System.Private.CoreLib]], Engine",
-            "keyType": "Simple",
+            "$type": "Engine.DictionaryData, Engine",
+            "keyType": "SimpleFlag",
             "ValueType": "TextureAsset",
             "Key": "uStarsTex",
             "Value": {
@@ -1633,8 +1633,8 @@
             "Type": "TextureAsset"
           },
           {
-            "$type": "Engine.DictionaryData`2[[System.Object, System.Private.CoreLib],[System.Object, System.Private.CoreLib]], Engine",
-            "keyType": "Simple",
+            "$type": "Engine.DictionaryData, Engine",
+            "keyType": "SimpleFlag",
             "ValueType": "TextureAsset",
             "Key": "uFrameTex",
             "Value": {

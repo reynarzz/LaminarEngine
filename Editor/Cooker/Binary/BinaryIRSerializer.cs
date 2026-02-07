@@ -40,7 +40,7 @@ namespace Editor.Cooker
                  Guid ID 
                  Guid ParentID 
                  List<ComponentIR> Components 
-             */
+            */
             writer.Write(ir.Version);
             writer.Write(ir.Name);
             writer.Write(ir.Layer);
@@ -80,32 +80,32 @@ namespace Editor.Cooker
         {
             /*
              string Name 
-             SerializedType Type 
              Guid TypeId 
+             SerializedType Type 
              object Data 
              */
-
+            var serializedType = ir.Type;
             writer.Write(ir.Name);
-            writer.Write((int)ir.Type);
             writer.Write(ir.TypeId.ToByteArray());
+            writer.Write((int)serializedType);
 
-            if (ir.Type == SerializedType.Simple)
+            if (serializedType.IsSimple())
             {
-                WriteSimpleProperty(writer, ir.Data);
+                WriteSimpleProperty(writer, ir.Data, serializedType);
             }
-            else if (ir.Type.HasFlag(SerializedType.EObject))
+            else if (serializedType.IsEObject())
             {
                 WriteReferenceProperty(writer, ir.Data as ReferenceData);
             }
-            else if (ir.Type.HasFlag(SerializedType.ReferenceCollection))
+            else if (serializedType == SerializedType.ReferenceCollection)
             {
                 WriteReferenceCollection(writer, ir.Data as CollectionPropertyData);
             }
-            else if (ir.Type.HasFlag(SerializedType.ComplexClass))
+            else if (serializedType == SerializedType.ComplexClass)
             {
                 WriteComplexClass(writer, ir.Data as ComplexTypeData);
             }
-            else if (ir.Type.HasFlag(SerializedType.ComplexCollection))
+            else if (serializedType == SerializedType.ComplexCollection)
             {
                 WriteComplexCollection(writer, ir.Data as CollectionPropertyData);
             }
@@ -161,7 +161,7 @@ namespace Editor.Cooker
                     {
                         for (int i = 0; i < data.Collection.Count; i++)
                         {
-                            var item = data.Collection[i] as ComplexDictionaryData<ComplexTypeData, ComplexTypeData>;
+                            var item = data.Collection[i] as ComplexDictionaryData;
                             writer.Write((int)item.Type);
                             WriteComplexClass(writer, item.Key);
                             WriteComplexClass(writer, item.Value);
@@ -205,28 +205,25 @@ namespace Editor.Cooker
                     {
                         for (int i = 0; i < data.Collection.Count; i++)
                         {
-                            var item = data.Collection[i] as DictionaryData<object, object>;
+                            var item = data.Collection[i] as DictionaryData;
                             writer.Write((int)item.Type);
-                            writer.Write((int)item.keyType);
+                            writer.Write((int)item.KeyType);
                             writer.Write((int)item.ValueType);
 
-                            if (item.keyType.HasFlag(SerializedType.Simple))
+                            void WriteArg(SerializedType type, object argData)
                             {
-                                WriteSimpleProperty(writer, item.Key);
-                            }
-                            else
-                            {
-                                WriteReferenceProperty(writer, item.Key as ReferenceData);
+                                if (type.IsSimple())
+                                {
+                                    WriteSimpleProperty(writer, argData, type);
+                                }
+                                else
+                                {
+                                    WriteReferenceProperty(writer, argData as ReferenceData);
+                                }
                             }
 
-                            if (item.ValueType.HasFlag(SerializedType.Simple))
-                            {
-                                WriteSimpleProperty(writer, item.Value);
-                            }
-                            else
-                            {
-                                WriteReferenceProperty(writer, item.Value as ReferenceData);
-                            }
+                            WriteArg(item.KeyType, item.Key);
+                            WriteArg(item.ValueType, item.Value);
                         }
                     }
                     break;
@@ -235,85 +232,84 @@ namespace Editor.Cooker
             }
         }
 
-        private static void WriteSimpleProperty(BinaryWriter writer, object data)
+        private static void WriteSimpleProperty(BinaryWriter writer, object data, SerializedType simpleType)
         {
-            var simpleType = GetSimpleType(data);
             writer.Write((int)simpleType);
             switch (simpleType)
             {
-                case SerializedSimpleType.None:
+                case SerializedType.None:
                     break;
-                case SerializedSimpleType.Char:
+                case SerializedType.Char:
                     writer.Write((char)data);
                     break;
-                case SerializedSimpleType.String:
+                case SerializedType.String:
                     writer.Write((string)data);
                     break;
-                case SerializedSimpleType.Bool:
+                case SerializedType.Bool:
                     writer.Write((bool)data);
                     break;
-                case SerializedSimpleType.Byte:
+                case SerializedType.Byte:
                     writer.Write((byte)data);
                     break;
-                case SerializedSimpleType.Short:
+                case SerializedType.Short:
                     writer.Write((short)data);
                     break;
-                case SerializedSimpleType.UShort:
+                case SerializedType.UShort:
                     writer.Write((ushort)data);
                     break;
-                case SerializedSimpleType.Enum:
+                case SerializedType.Enum:
                     {
                         writer.Write(ReflectionUtils.GetStableGuid(data.GetType()).ToByteArray());
                         writer.Write((int)data);
                     }
                     break;
-                case SerializedSimpleType.Int:
+                case SerializedType.Int:
                     writer.Write((int)data);
                     break;
-                case SerializedSimpleType.Uint:
+                case SerializedType.Uint:
                     writer.Write((uint)data);
                     break;
-                case SerializedSimpleType.Float:
+                case SerializedType.Float:
                     writer.Write((float)data);
                     break;
-                case SerializedSimpleType.Double:
+                case SerializedType.Double:
                     writer.Write((double)data);
                     break;
-                case SerializedSimpleType.Long:
+                case SerializedType.Long:
                     writer.Write((long)data);
                     break;
-                case SerializedSimpleType.Ulong:
+                case SerializedType.Ulong:
                     writer.Write((ulong)data);
                     break;
-                case SerializedSimpleType.Vec2:
+                case SerializedType.Vec2:
                     WriteVec2(writer, (vec2)data);
                     break;
-                case SerializedSimpleType.Vec3:
+                case SerializedType.Vec3:
                     WriteVec3(writer, (vec3)data);
                     break;
-                case SerializedSimpleType.Vec4:
+                case SerializedType.Vec4:
                     WriteVec4(writer, (vec4)data);
                     break;
-                case SerializedSimpleType.Ivec2:
+                case SerializedType.Ivec2:
                     WriteIVec2(writer, (ivec2)data);
                     break;
-                case SerializedSimpleType.Ivec3:
+                case SerializedType.Ivec3:
                     WriteIVec3(writer, (ivec3)data);
                     break;
-                case SerializedSimpleType.Ivec4:
+                case SerializedType.Ivec4:
                     WriteIVec4(writer, (ivec4)data);
                     break;
-                case SerializedSimpleType.Quat:
+                case SerializedType.Quat:
                     WriteQuat(writer, (quat)data);
                     break;
-                case SerializedSimpleType.Mat2:
+                case SerializedType.Mat2:
                     {
                         var value = (mat2)data;
                         WriteVec2(writer, value.c0);
                         WriteVec2(writer, value.c1);
                     }
                     break;
-                case SerializedSimpleType.Mat3:
+                case SerializedType.Mat3:
                     {
                         var value = (mat3)data;
                         WriteVec3(writer, value.c0);
@@ -321,7 +317,7 @@ namespace Editor.Cooker
                         WriteVec3(writer, value.c2);
                     }
                     break;
-                case SerializedSimpleType.Mat4:
+                case SerializedType.Mat4:
                     {
                         var value = (mat4)data;
                         WriteVec4(writer, value.c0);
@@ -330,12 +326,12 @@ namespace Editor.Cooker
                         WriteVec4(writer, value.c3);
                     }
                     break;
-                case SerializedSimpleType.Color:
+                case SerializedType.Color:
                     {
                         WriteVec4(writer, (Color)data);
                     }
                     break;
-                case SerializedSimpleType.Color32:
+                case SerializedType.Color32:
                     {
                         WriteIVec4(writer, (Color32)data);
                     }
@@ -400,41 +396,7 @@ namespace Editor.Cooker
             writer.Write(value.z);
             writer.Write(value.w);
         }
-        private static SerializedSimpleType GetSimpleType(object data)
-        {
-            switch (data)
-            {
-                case null: return SerializedSimpleType.None;
-                case char _: return SerializedSimpleType.Char;
-                case string _: return SerializedSimpleType.String;
-                case bool _: return SerializedSimpleType.Bool;
-                case byte _: return SerializedSimpleType.Byte;
-                case short _: return SerializedSimpleType.Short;
-                case ushort _: return SerializedSimpleType.UShort;
-                case Enum _: return SerializedSimpleType.Enum;
-                case int _: return SerializedSimpleType.Int;
-                case uint _: return SerializedSimpleType.Uint;
-                case float _: return SerializedSimpleType.Float;
-                case double _: return SerializedSimpleType.Double;
-                case long _: return SerializedSimpleType.Long;
-                case ulong _: return SerializedSimpleType.Ulong;
-                case vec2 _: return SerializedSimpleType.Vec2;
-                case vec3 _: return SerializedSimpleType.Vec3;
-                case vec4 _: return SerializedSimpleType.Vec4;
-                case ivec2 _: return SerializedSimpleType.Ivec2;
-                case ivec3 _: return SerializedSimpleType.Ivec3;
-                case ivec4 _: return SerializedSimpleType.Ivec4;
-                case quat _: return SerializedSimpleType.Quat;
-                case mat2 _: return SerializedSimpleType.Mat2;
-                case mat3 _: return SerializedSimpleType.Mat3;
-                case mat4 _: return SerializedSimpleType.Mat4;
-                case Color _: return SerializedSimpleType.Color;
-                case Color32 _: return SerializedSimpleType.Color32;
-                default:
-                    throw new NotImplementedException($"Type for '{data.GetType().Name}' is not handled by the binary serializer.");
-            }
-        }
-
+       
         private static Guid GetTypeId()
         {
             return Guid.NewGuid();

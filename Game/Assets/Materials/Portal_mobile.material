@@ -18,7 +18,7 @@
               "Properties": [
                 {
                   "Name": "IsScreenGrabPass",
-                  "Type": "Simple",
+                  "Type": "SimpleFlag",
                   "InternalType": "System.Boolean, System.Private.CoreLib",
                   "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
                   "Data": {
@@ -100,8 +100,8 @@
         "CollectionType": "Dictionary",
         "Collection": [
           {
-            "$type": "Engine.DictionaryData`2[[System.Object, System.Private.CoreLib],[System.Object, System.Private.CoreLib]], Engine",
-            "keyType": "Simple",
+            "$type": "Engine.DictionaryData, Engine",
+            "keyType": "SimpleFlag",
             "ValueType": "TextureAsset",
             "Key": "uStarsTex",
             "Value": {
@@ -111,8 +111,8 @@
             "Type": "TextureAsset"
           },
           {
-            "$type": "Engine.DictionaryData`2[[System.Object, System.Private.CoreLib],[System.Object, System.Private.CoreLib]], Engine",
-            "keyType": "Simple",
+            "$type": "Engine.DictionaryData, Engine",
+            "keyType": "SimpleFlag",
             "ValueType": "TextureAsset",
             "Key": "uFrameTex",
             "Value": {

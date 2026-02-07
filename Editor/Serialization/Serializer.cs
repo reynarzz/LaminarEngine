@@ -7,6 +7,7 @@ using Microsoft.VisualBasic.FileIO;
 using Editor.Utils;
 using Engine;
 using Editor.Cooker;
+using GlmNet;
 
 namespace Editor.Serialization
 {
@@ -84,7 +85,7 @@ namespace Editor.Serialization
                         return SerializedType.AnimatorControllerAsset;
                     }
 
-                    return SerializedType.Asset;
+                    return SerializedType.AssetFlag;
                 }
                 else
                 {
@@ -92,7 +93,7 @@ namespace Editor.Serialization
                     {
                         return SerializedType.SpriteAsset;
                     }
-                    return SerializedType.EObject;
+                    return SerializedType.EObjectFlag;
                 }
             }
             else if (ReflectionUtils.IsCollection(type, out var collectionType))
@@ -116,7 +117,7 @@ namespace Editor.Serialization
             }
             else if (ReflectionUtils.IsInternalType(type))
             {
-                return SerializedType.Simple;
+                return SerializedType.SimpleFlag;
             }
             else if (type.IsClass || ReflectionUtils.IsUserDefinedStruct(type))
             {
@@ -233,7 +234,7 @@ namespace Editor.Serialization
                 return null;
             }
 
-            if (serializedMemberType == SerializedType.Simple)
+            if (serializedMemberType.IsSimple())
             {
                 return value;
             }
@@ -296,12 +297,12 @@ namespace Editor.Serialization
 
                         if (serializedMemberType == SerializedType.ReferenceCollection)
                         {
-                            referenced.Collection.Add(new DictionaryData<object, object>()
+                            referenced.Collection.Add(new DictionaryData()
                             {
                                 Type = serializedType,
                                 Key = k,
                                 Value = v,
-                                keyType = keySerializedType,
+                                KeyType = keySerializedType,
                                 ValueType = ValueSerializedType
                             });
                         }
@@ -309,7 +310,7 @@ namespace Editor.Serialization
                         {
                             ComplexTypeData GetComplexTypeData(SerializedType argSerializedType, object argValue, string argName)
                             {
-                                if (argSerializedType == SerializedType.Simple)
+                                if (argSerializedType.IsSimple())
                                 {
                                     var internalType = GetInternalType(argValue?.GetType());
                                     var typeId = GetTypeId(argValue?.GetType());
@@ -335,7 +336,7 @@ namespace Editor.Serialization
                                 return CreateComplexType(argValue?.GetType(), argValue, serializedMemberType);
                             }
 
-                            referenced.Collection.Add(new ComplexDictionaryData<ComplexTypeData, ComplexTypeData>()
+                            referenced.Collection.Add(new ComplexDictionaryData()
                             {
                                 Type = serializedType,
                                 Key = GetComplexTypeData(keySerializedType, k, "DictionaryKey"),
@@ -385,33 +386,21 @@ namespace Editor.Serialization
 
         private static ReferenceData GetReferenceData(Guid id, SerializedType serializedMemberType, object value)
         {
-            switch (serializedMemberType)
+            if (serializedMemberType == SerializedType.SpriteAsset)
             {
-                case SerializedType.None:
-                    break;
-                case SerializedType.EObject:
-                case SerializedType.Component:
-                case SerializedType.Actor:
-                case SerializedType.Asset:
-                case SerializedType.TextureAsset:
-                case SerializedType.RenderTextureAsset:
-                case SerializedType.AudioClipAsset:
-                case SerializedType.ShaderAsset:
-                case SerializedType.MaterialAsset:
-                case SerializedType.AnimationAsset:
-                case SerializedType.AnimatorControllerAsset:
-                case SerializedType.ScriptableObject:
-                    return new ReferenceData() { Id = id };
-                case SerializedType.SpriteAsset:
-                    return new SpriteReferenceData()
-                    {
-                        Id = id,
-                        AtlasIndex = (value as Sprite).AtlasIndex,
-                        TextureId = (value as Sprite).Texture.GetID()
-                    };
-                default:
-                    break;
+                return new SpriteReferenceData()
+                {
+                    Id = id,
+                    AtlasIndex = (value as Sprite).AtlasIndex,
+                    TextureId = (value as Sprite).Texture.GetID()
+                };
             }
+            else if (serializedMemberType.IsEObject())
+            {
+                return new ReferenceData() { Id = id };
+            }
+
+            Debug.EngineError($"Reference type '{serializedMemberType}' not supported");
 
             return new ReferenceData() { Id = id };
         }
@@ -459,6 +448,22 @@ namespace Editor.Serialization
             return complexClass;
         }
 
+        private static SerializedType GetSimpleType(Type type)
+        {
+            if (type == null)
+                return SerializedType.None;
+
+            if (type.IsEnum)
+                return SerializedType.Enum;
+
+            if (_simpleTypeMap.TryGetValue(type, out var serializedType))
+            {
+                return serializedType;
+            }
+
+            throw new NotImplementedException($"Type for '{type.Name}' is not handled by the binary serializer.");
+        }
+
         private static string GetInternalType(Type type)
         {
             if (type.IsAssignableTo(typeof(Delegate)))
@@ -473,5 +478,36 @@ namespace Editor.Serialization
         {
             return ReflectionUtils.GetStableGuid(type);
         }
+
+        private static readonly Dictionary<Type, SerializedType> _simpleTypeMap = new()
+        {
+            // Basic Primitives
+            { typeof(char),    SerializedType.Char },
+            { typeof(string),  SerializedType.String },
+            { typeof(bool),    SerializedType.Bool },
+            { typeof(byte),    SerializedType.Byte },
+            { typeof(short),   SerializedType.Short },
+            { typeof(ushort),  SerializedType.UShort },
+            { typeof(int),     SerializedType.Int },
+            { typeof(uint),    SerializedType.Uint },
+            { typeof(long),    SerializedType.Long },
+            { typeof(ulong),   SerializedType.Ulong },
+            { typeof(float),   SerializedType.Float },
+            { typeof(double),  SerializedType.Double },
+
+            { typeof(vec2),    SerializedType.Vec2 },
+            { typeof(vec3),    SerializedType.Vec3 },
+            { typeof(vec4),    SerializedType.Vec4 },
+            { typeof(ivec2),   SerializedType.Ivec2 },
+            { typeof(ivec3),   SerializedType.Ivec3 },
+            { typeof(ivec4),   SerializedType.Ivec4 },
+            { typeof(quat),    SerializedType.Quat },
+            { typeof(mat2),    SerializedType.Mat2 },
+            { typeof(mat3),    SerializedType.Mat3 },
+            { typeof(mat4),    SerializedType.Mat4 },
+
+            { typeof(Color),   SerializedType.Color },
+            { typeof(Color32), SerializedType.Color32 }
+        };
     }
 }

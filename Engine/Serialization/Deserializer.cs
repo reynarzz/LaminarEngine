@@ -40,40 +40,30 @@ namespace Engine.Serialization
 
             foreach (var property in properties)
             {
-                switch (property.Type)
+                var serializedType = property.Type;
+                if (serializedType.IsEObject())
                 {
-                    case SerializedType.None:
-                        break;
-                    case SerializedType.EObject:
-                    case SerializedType.Component:
-                    case SerializedType.Actor:
-                    case SerializedType.Asset:
-                    case SerializedType.TextureAsset:
-                    case SerializedType.SpriteAsset:
-                    case SerializedType.RenderTextureAsset:
-                    case SerializedType.AudioClipAsset:
-                    case SerializedType.MaterialAsset:
-                    case SerializedType.ShaderAsset:
-                    case SerializedType.AnimationAsset:
-                    case SerializedType.AnimatorControllerAsset:
-                    case SerializedType.ScriptableObject:
-                        DeserializeReferencedProperty(targetInstance, property, deserializerData);
-                        break;
-                    case SerializedType.Simple:
-                        DeserializeSimpleProperty(targetInstance, property);
-                        break;
-                    case SerializedType.ReferenceCollection:
-                        DeserializeReferenceCollectionProperty(targetInstance, property, deserializerData);
-                        break;
-                    case SerializedType.ComplexClass:
-                        DeserializeComplexClass(targetInstance, property, deserializerData);
-                        break;
-                    case SerializedType.ComplexCollection:
-                        DeserializeComplexCollection(targetInstance, property, deserializerData);
-                        break;
-                    default:
-                        // Debug.Error($"Cannot deserialize property of type: {property.Type}, please implement it.");
-                        break;
+                    DeserializeReferencedProperty(targetInstance, property, deserializerData);
+                }
+                else if (serializedType.IsSimple())
+                {
+                    DeserializeSimpleProperty(targetInstance, property);
+                }
+                else if (serializedType == SerializedType.ReferenceCollection)
+                {
+                    DeserializeReferenceCollectionProperty(targetInstance, property, deserializerData);
+                }
+                else if (serializedType == SerializedType.ComplexClass)
+                {
+                    DeserializeComplexClass(targetInstance, property, deserializerData);
+                }
+                else if (serializedType == SerializedType.ComplexCollection)
+                {
+                    DeserializeComplexCollection(targetInstance, property, deserializerData);
+                }
+                else
+                {
+                    // Debug.Error($"Cannot deserialize property of type: {property.Type}, please implement it.");
                 }
             }
         }
@@ -154,8 +144,8 @@ namespace Engine.Serialization
                 var dictionary = (IDictionary)Activator.CreateInstance(dictType);
                 foreach (var item in collectionData.Collection)
                 {
-                    var serializedItem = (DictionaryData<object, object>)item;
-                    if (serializedItem.keyType == SerializedType.Simple && serializedItem.Key != null
+                    var serializedItem = (DictionaryData)item;
+                    if (serializedItem.KeyType.IsSimple() && serializedItem.Key != null
                         && serializedItem.Key.GetType() != args[0].GetType())
                     {
                         serializedItem.Key = Convert.ChangeType(serializedItem.Key, args[0]);
@@ -269,7 +259,7 @@ namespace Engine.Serialization
                         {
                             object deserializedArgValue = null;
 
-                            if (complexArg.ComplexType == SerializedType.Simple)
+                            if (complexArg.ComplexType.IsSimple())
                             {
                                 // if (complexArg.Properties != null && complexArg.Properties.Count > 0)
                                 {
@@ -287,7 +277,7 @@ namespace Engine.Serialization
                             return deserializedArgValue;
                         }
 
-                        var complexItem = collectionData.Collection[i] as ComplexDictionaryData<ComplexTypeData, ComplexTypeData>;
+                        var complexItem = collectionData.Collection[i] as ComplexDictionaryData;
 
                         var key = DeserializeArgValue(complexItem.Key);
                         var value = DeserializeArgValue(complexItem.Value);
@@ -339,21 +329,16 @@ namespace Engine.Serialization
                     return GetReferenceValue(deserializerData?.ComponentsByID, refData.Id);
                 case SerializedType.Actor:
                     return GetReferenceValue(deserializerData?.ActorsByID, refData.Id);
-                case SerializedType.Asset:
                 case SerializedType.TextureAsset:
                     return (Assets.GetAssetFromGuid(refData.Id) as TextureAsset)?.Texture;
                 case SerializedType.SpriteAsset:
                     return GetSprite(refData as SpriteReferenceData);
-                case SerializedType.RenderTextureAsset:
-                case SerializedType.AudioClipAsset:
-                case SerializedType.MaterialAsset:
-                case SerializedType.ShaderAsset:
-                case SerializedType.AnimationAsset:
-                case SerializedType.AnimatorControllerAsset:
-                case SerializedType.ScriptableObject:
+
+                // Rest of assets will be threated equal.
+                case var t when t.IsAsset():
                     return Assets.GetAssetFromGuid(refData.Id);
                 default:
-                    // Debug.Error($"Can't deserialize reference: '{type}' is not implemented.");
+                    Debug.Error($"Can't deserialize reference: '{type}' is not implemented.");
                     break;
             }
 

@@ -115,7 +115,7 @@ namespace Editor
             {
                 if (Application.IsInPlayMode || SceneManager.Scenes.FirstOrDefault() != null)
                 {
-                    
+
                     var obj = Actor.Find("Player");
                     if (obj)
                     {
@@ -207,8 +207,8 @@ namespace Editor
                 //_test = Assets.GetShader("Shaders/Test/ShaderTest.shader");
 
 
-                // SerializerTypesFixer();
-                LoadScene();
+                SerializerTypesFixer();
+                //LoadScene();
             }
         }
 
@@ -229,7 +229,8 @@ namespace Editor
             {
                 Console.WriteLine(file);
                 var txt = File.ReadAllText(file);
-                txt = txt.Replace("TargetTypeName", "InternalType");
+                txt = txt.Replace("Engine.DictionaryData`2[[System.Object, System.Private.CoreLib],[System.Object, System.Private.CoreLib]], Engine",
+                    "Engine.DictionaryData, Engine");
 
                 File.WriteAllText(file, txt);
             }

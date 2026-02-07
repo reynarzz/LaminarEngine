@@ -23,15 +23,15 @@
         "CollectionType": "Dictionary",
         "Collection": [
           {
-            "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+            "$type": "Engine.ComplexDictionaryData, Engine",
             "Key": {
               "InternalType": "Editor.Build.PlatformBuild, Editor",
               "TypeId": "b5d78a8f-ad76-27bc-a569-eb732e643f2a",
-              "ComplexType": "Simple",
+              "ComplexType": "SimpleFlag",
               "Properties": [
                 {
                   "Name": "DictionaryKey",
-                  "Type": "Simple",
+                  "Type": "SimpleFlag",
                   "InternalType": "Editor.Build.PlatformBuild, Editor",
                   "TypeId": "b5d78a8f-ad76-27bc-a569-eb732e643f2a",
                   "Data": {
@@ -72,7 +72,7 @@
                         },
                         {
                           "Name": "Description",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.String, System.Private.CoreLib",
                           "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
@@ -82,7 +82,7 @@
                         },
                         {
                           "Name": "Company",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.String, System.Private.CoreLib",
                           "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
@@ -92,7 +92,7 @@
                         },
                         {
                           "Name": "Authors",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.String, System.Private.CoreLib",
                           "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
@@ -102,7 +102,7 @@
                         },
                         {
                           "Name": "Version",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "GlmNet.ivec3, Engine",
                           "TypeId": "0eb55f0e-9fb6-9ca0-f707-35ea8c2c71b9",
                           "Data": {
@@ -116,7 +116,7 @@
                         },
                         {
                           "Name": "ApplicationName",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.String, System.Private.CoreLib",
                           "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
@@ -126,7 +126,7 @@
                         },
                         {
                           "Name": "OutputPath",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.String, System.Private.CoreLib",
                           "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
@@ -136,7 +136,7 @@
                         },
                         {
                           "Name": "EncryptAssets",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.Boolean, System.Private.CoreLib",
                           "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
                           "Data": {
@@ -146,7 +146,7 @@
                         },
                         {
                           "Name": "CompressAssets",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.Boolean, System.Private.CoreLib",
                           "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
                           "Data": {
@@ -156,7 +156,7 @@
                         },
                         {
                           "Name": "CompressionLevel",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.Int32, System.Private.CoreLib",
                           "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
                           "Data": {
@@ -189,7 +189,7 @@
                         },
                         {
                           "Name": "Description",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.String, System.Private.CoreLib",
                           "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
@@ -199,7 +199,7 @@
                         },
                         {
                           "Name": "Company",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.String, System.Private.CoreLib",
                           "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
@@ -209,7 +209,7 @@
                         },
                         {
                           "Name": "Authors",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.String, System.Private.CoreLib",
                           "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
@@ -219,7 +219,7 @@
                         },
                         {
                           "Name": "Version",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "GlmNet.ivec3, Engine",
                           "TypeId": "0eb55f0e-9fb6-9ca0-f707-35ea8c2c71b9",
                           "Data": {
@@ -233,7 +233,7 @@
                         },
                         {
                           "Name": "ApplicationName",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.String, System.Private.CoreLib",
                           "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
@@ -243,14 +243,14 @@
                         },
                         {
                           "Name": "OutputPath",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.String, System.Private.CoreLib",
                           "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": null
                         },
                         {
                           "Name": "EncryptAssets",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.Boolean, System.Private.CoreLib",
                           "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
                           "Data": {
@@ -260,7 +260,7 @@
                         },
                         {
                           "Name": "CompressAssets",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.Boolean, System.Private.CoreLib",
                           "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
                           "Data": {
@@ -270,7 +270,7 @@
                         },
                         {
                           "Name": "CompressionLevel",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.Int32, System.Private.CoreLib",
                           "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
                           "Data": {
@@ -303,7 +303,7 @@
                         },
                         {
                           "Name": "Description",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.String, System.Private.CoreLib",
                           "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
@@ -313,7 +313,7 @@
                         },
                         {
                           "Name": "Company",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.String, System.Private.CoreLib",
                           "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
@@ -323,7 +323,7 @@
                         },
                         {
                           "Name": "Authors",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.String, System.Private.CoreLib",
                           "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
@@ -333,7 +333,7 @@
                         },
                         {
                           "Name": "Version",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "GlmNet.ivec3, Engine",
                           "TypeId": "0eb55f0e-9fb6-9ca0-f707-35ea8c2c71b9",
                           "Data": {
@@ -347,7 +347,7 @@
                         },
                         {
                           "Name": "ApplicationName",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.String, System.Private.CoreLib",
                           "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
@@ -357,14 +357,14 @@
                         },
                         {
                           "Name": "OutputPath",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.String, System.Private.CoreLib",
                           "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": null
                         },
                         {
                           "Name": "EncryptAssets",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.Boolean, System.Private.CoreLib",
                           "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
                           "Data": {
@@ -374,7 +374,7 @@
                         },
                         {
                           "Name": "CompressAssets",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.Boolean, System.Private.CoreLib",
                           "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
                           "Data": {
@@ -384,7 +384,7 @@
                         },
                         {
                           "Name": "CompressionLevel",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.Int32, System.Private.CoreLib",
                           "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
                           "Data": {
@@ -398,7 +398,7 @@
                 },
                 {
                   "Name": "Type",
-                  "Type": "Simple",
+                  "Type": "SimpleFlag",
                   "InternalType": "Editor.Build.BuildType, Editor",
                   "TypeId": "ab1e56b1-7744-1df5-8d84-eda53bf8a4c5",
                   "Data": {
@@ -408,7 +408,7 @@
                 },
                 {
                   "Name": "ShareDefaultSettings",
-                  "Type": "Simple",
+                  "Type": "SimpleFlag",
                   "InternalType": "System.Boolean, System.Private.CoreLib",
                   "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
                   "Data": {
@@ -421,15 +421,15 @@
             "Type": "ComplexClass"
           },
           {
-            "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
+            "$type": "Engine.ComplexDictionaryData, Engine",
             "Key": {
               "InternalType": "Editor.Build.PlatformBuild, Editor",
               "TypeId": "b5d78a8f-ad76-27bc-a569-eb732e643f2a",
-              "ComplexType": "Simple",
+              "ComplexType": "SimpleFlag",
               "Properties": [
                 {
                   "Name": "DictionaryKey",
-                  "Type": "Simple",
+                  "Type": "SimpleFlag",
                   "InternalType": "Editor.Build.PlatformBuild, Editor",
                   "TypeId": "b5d78a8f-ad76-27bc-a569-eb732e643f2a",
                   "Data": {
@@ -446,7 +446,7 @@
               "Properties": [
                 {
                   "Name": "KeyAlias",
-                  "Type": "Simple",
+                  "Type": "SimpleFlag",
                   "InternalType": "System.String, System.Private.CoreLib",
                   "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                   "Data": {
@@ -456,7 +456,7 @@
                 },
                 {
                   "Name": "KeyPass",
-                  "Type": "Simple",
+                  "Type": "SimpleFlag",
                   "InternalType": "System.String, System.Private.CoreLib",
                   "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                   "Data": {
@@ -466,7 +466,7 @@
                 },
                 {
                   "Name": "StorePass",
-                  "Type": "Simple",
+                  "Type": "SimpleFlag",
                   "InternalType": "System.String, System.Private.CoreLib",
                   "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                   "Data": {
@@ -476,7 +476,7 @@
                 },
                 {
                   "Name": "MinimumApiLevel",
-                  "Type": "Simple",
+                  "Type": "SimpleFlag",
                   "InternalType": "Editor.Build.AndroidApiLevel, Editor",
                   "TypeId": "c3474a00-03b1-058f-c9d4-53ccb3cbb6a6",
                   "Data": {
@@ -486,7 +486,7 @@
                 },
                 {
                   "Name": "TargetApiLevel",
-                  "Type": "Simple",
+                  "Type": "SimpleFlag",
                   "InternalType": "Editor.Build.AndroidApiLevel, Editor",
                   "TypeId": "c3474a00-03b1-058f-c9d4-53ccb3cbb6a6",
                   "Data": {
@@ -496,7 +496,7 @@
                 },
                 {
                   "Name": "Version",
-                  "Type": "Simple",
+                  "Type": "SimpleFlag",
                   "InternalType": "GlmNet.ivec3, Engine",
                   "TypeId": "0eb55f0e-9fb6-9ca0-f707-35ea8c2c71b9",
                   "Data": {
@@ -613,7 +613,7 @@
                         },
                         {
                           "Name": "PackageName",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.String, System.Private.CoreLib",
                           "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
@@ -623,7 +623,7 @@
                         },
                         {
                           "Name": "ApplicationName",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.String, System.Private.CoreLib",
                           "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
@@ -633,7 +633,7 @@
                         },
                         {
                           "Name": "OutputPath",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.String, System.Private.CoreLib",
                           "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
@@ -643,7 +643,7 @@
                         },
                         {
                           "Name": "EncryptAssets",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.Boolean, System.Private.CoreLib",
                           "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
                           "Data": {
@@ -653,7 +653,7 @@
                         },
                         {
                           "Name": "CompressAssets",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.Boolean, System.Private.CoreLib",
                           "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
                           "Data": {
@@ -663,7 +663,7 @@
                         },
                         {
                           "Name": "CompressionLevel",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.Int32, System.Private.CoreLib",
                           "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
                           "Data": {
@@ -765,7 +765,7 @@
                         },
                         {
                           "Name": "PackageName",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.String, System.Private.CoreLib",
                           "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
@@ -775,7 +775,7 @@
                         },
                         {
                           "Name": "ApplicationName",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.String, System.Private.CoreLib",
                           "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
@@ -785,7 +785,7 @@
                         },
                         {
                           "Name": "OutputPath",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.String, System.Private.CoreLib",
                           "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
@@ -795,7 +795,7 @@
                         },
                         {
                           "Name": "EncryptAssets",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.Boolean, System.Private.CoreLib",
                           "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
                           "Data": {
@@ -805,7 +805,7 @@
                         },
                         {
                           "Name": "CompressAssets",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.Boolean, System.Private.CoreLib",
                           "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
                           "Data": {
@@ -815,7 +815,7 @@
                         },
                         {
                           "Name": "CompressionLevel",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.Int32, System.Private.CoreLib",
                           "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
                           "Data": {
@@ -917,7 +917,7 @@
                         },
                         {
                           "Name": "PackageName",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.String, System.Private.CoreLib",
                           "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
@@ -927,7 +927,7 @@
                         },
                         {
                           "Name": "ApplicationName",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.String, System.Private.CoreLib",
                           "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
@@ -937,7 +937,7 @@
                         },
                         {
                           "Name": "OutputPath",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.String, System.Private.CoreLib",
                           "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
@@ -947,7 +947,7 @@
                         },
                         {
                           "Name": "EncryptAssets",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.Boolean, System.Private.CoreLib",
                           "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
                           "Data": {
@@ -957,7 +957,7 @@
                         },
                         {
                           "Name": "CompressAssets",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.Boolean, System.Private.CoreLib",
                           "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
                           "Data": {
@@ -967,7 +967,7 @@
                         },
                         {
                           "Name": "CompressionLevel",
-                          "Type": "Simple",
+                          "Type": "SimpleFlag",
                           "InternalType": "System.Int32, System.Private.CoreLib",
                           "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
                           "Data": {
@@ -981,7 +981,7 @@
                 },
                 {
                   "Name": "Type",
-                  "Type": "Simple",
+                  "Type": "SimpleFlag",
                   "InternalType": "Editor.Build.BuildType, Editor",
                   "TypeId": "ab1e56b1-7744-1df5-8d84-eda53bf8a4c5",
                   "Data": {
@@ -991,7 +991,7 @@
                 },
                 {
                   "Name": "ShareDefaultSettings",
-                  "Type": "Simple",
+                  "Type": "SimpleFlag",
                   "InternalType": "System.Boolean, System.Private.CoreLib",
                   "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
                   "Data": {

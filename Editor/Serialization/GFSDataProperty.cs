@@ -71,7 +71,7 @@ namespace Editor.Serialization
                 }
                 catch (Exception e)
                 {
-                    Debug.Warn($"Cannot convert to type, it changed: {type.FullName}.");
+                    Debug.Warn($"Cannot convert to type, it changed. Was: {type.FullName}.\n{val}");
                 }
                 return obj;
 
