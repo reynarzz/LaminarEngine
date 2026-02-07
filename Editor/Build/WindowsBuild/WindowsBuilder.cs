@@ -18,7 +18,7 @@ namespace Editor.Build
 
         protected override void OnAfterBuild(BuildResult result)
         {
-            if (result.IsSucess)
+            if (result.IsSuccess)
             {
                 var rootOutputFolder = EditorPaths.ShipWin32FolderRoot;
 

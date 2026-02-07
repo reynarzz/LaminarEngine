@@ -42,8 +42,7 @@ namespace Editor.Serialization
             return new SceneIR()
             {
                 Version = 1,
-                Actors = sceneEditor.ActorsData,
-                TotalActors = sceneEditor.ActorsData.Count
+                Actors = sceneEditor.ActorsData
             };
         }
         internal static SerializedEditorScene SerializeSceneEditor(Scene scene, SerializationOptions options = default)

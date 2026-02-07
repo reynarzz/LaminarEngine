@@ -34,7 +34,7 @@ namespace Editor.Build
             {
                 return new BuildResult()
                 {
-                    IsSucess = true,
+                    IsSuccess = true,
                     AnyStageSkippedBuild = true
                 };
             }
@@ -53,7 +53,7 @@ namespace Editor.Build
                         buildResult = new BuildResult()
                         {
                             AnyStageSkippedBuild = false,
-                            IsSucess = false
+                            IsSuccess = false
                         };
 
                         OnAfterBuild(buildResult);
@@ -67,7 +67,7 @@ namespace Editor.Build
                 }
             }
 
-            buildResult.IsSucess = true;
+            buildResult.IsSuccess = true;
 
             OnAfterBuild(buildResult);
             return buildResult;

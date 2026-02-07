@@ -20,7 +20,7 @@ namespace Editor.Build
     }
     public struct BuildResult
     {
-        public bool IsSucess;
+        public bool IsSuccess;
         public bool AnyStageSkippedBuild;
         public PlatformBuild Platform;
     }

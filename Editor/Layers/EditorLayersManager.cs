@@ -306,7 +306,7 @@ namespace Editor
                 var file = File.ReadAllText(TestfilePath);
                 var scene = EditorJsonUtils.Deserialize<SceneIR>(file);
                 // var actors = _actors;
-                Debug.Log("Total actors in scene: " + scene.TotalActors);
+                Debug.Log("Total actors in scene: " + scene.Actors.Count);
                 SceneManager.Initialize();
 
                 SceneDeserializer.DeserializeScene(scene, SceneManager.ActiveScene);

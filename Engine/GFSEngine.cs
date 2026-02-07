@@ -43,6 +43,7 @@ namespace Engine
                     Debug.Log("Engine running editor");
 #endif
 #endif
+
             WindowManager.Window = window;
             Input.CurrentInput = input;
             AssetFileStream = assetFileStream;

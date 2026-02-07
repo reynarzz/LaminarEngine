@@ -34,7 +34,7 @@ namespace Editor.Layers
 
         private void OnBuildCompleted(BuildResult result)
         {
-            if (result.IsSucess && result.Platform == PlatformBuild.GameAppDomain)
+            if (result.IsSuccess && result.Platform == PlatformBuild.GameAppDomain)
             {
                 if (!result.AnyStageSkippedBuild || _gameAppAssembly == null)
                 {

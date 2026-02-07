@@ -45,7 +45,7 @@ namespace Editor.Build
         {
             RemoveStage(_installBuildStage);
 
-            if (result.IsSucess)
+            if (result.IsSuccess)
             {
                 EditorFileDialog.DisplayFolder(EditorPaths.AndroidShipFolderRoot);
 

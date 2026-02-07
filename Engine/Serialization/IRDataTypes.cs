@@ -9,7 +9,6 @@ namespace Engine
     internal class SceneIR
     {
         public int Version { get; set; }
-        public int TotalActors { get; set; }
         public List<ActorIR> Actors { get; set; }
     }
 
@@ -43,11 +42,11 @@ namespace Engine
         public object Data { get; set; }
     }
 
+
     internal class SerializedItem
     {
         public SerializedType Type { get; set; }
     }
-
     internal class ReferenceData
     {
         public Guid Id { get; set; }
@@ -103,30 +102,62 @@ namespace Engine
         public List<SerializedPropertyIR> Properties { get; set; }
     }
 
-    internal enum SerializedType
+    [Flags]
+    internal enum SerializedType : uint
+    {
+        None = 0,
+
+        // Categories
+        EObject = 1 << 0,   
+        Asset = EObject | 1 << 1,     
+        Simple = 1 << 2,    
+
+        // EObjects
+        Component = EObject | (1 << 3),
+        Actor = EObject | (1 << 4),
+        SpriteAsset = EObject | (1 << 5),
+
+        // Assets
+        TextureAsset = Asset | (1 << 6),
+        MaterialAsset = Asset | (1 << 7),
+        ShaderAsset = Asset | (1 << 8),
+        AudioClipAsset = Asset | (1 << 9),
+        AnimationAsset = Asset | (1 << 10),
+        RenderTextureAsset = Asset | (1 << 11),
+        AnimatorControllerAsset = Asset | (1 << 12),
+        ScriptableObject = Asset | (1 << 13),
+
+        // Collections
+        ComplexCollection = 1 << 14,
+        ReferenceCollection = 1 << 15,
+        ComplexClass = 1 << 16,
+        Delegate = 1 << 17,
+    }
+
+    internal enum SerializedSimpleType
     {
         None,
-        EObject, // Reference to a generic EObject...
-        Component,
-        Actor,
-        ComplexClass,
-        ComplexCollection,
-        Asset,
-        TextureAsset,
-        SpriteAsset,
-        RenderTextureAsset,
-        AudioClipAsset,
-        ShaderAsset,
-        MaterialAsset,
-        AnimationAsset,
-        AnimatorControllerAsset,
-        ScriptableObject,
-        Delegate,
-
-        /// <summary>
-        /// Internal engine types: int, string, Color32, enums etc...
-        /// </summary>
-        Simple,
-        ReferenceCollection,
+        Char,
+        String,
+        Bool,
+        Byte,
+        Short,
+        UShort,
+        Int,
+        Uint,
+        Float,
+        Double,
+        Long,
+        Ulong,
+        Vec2,
+        Vec3,
+        Vec4,
+        Ivec2,
+        Ivec3,
+        Ivec4,
+        Quat,
+        Mat2,
+        Mat3,
+        Mat4,
     }
 }
