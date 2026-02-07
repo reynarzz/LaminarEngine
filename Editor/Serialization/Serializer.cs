@@ -291,7 +291,7 @@ namespace Editor.Serialization
 
                         var k = isKeyEObject ? GetReferenceData((dKey as IObject)?.GetID() ?? Guid.Empty, keySerializedType, dKey) : dKey;
                         var v = isValueEObject ? GetReferenceData((dValue as IObject)?.GetID() ?? Guid.Empty, ValueSerializedType, dValue) : dValue;
-                        var referenceType = isKeyEObject ? dKey?.GetType() : dValue?.GetType();
+                        var referenceType = isKeyEObject ? dKey?.GetType() ?? elementsType[0] : dValue?.GetType() ?? elementsType[1];
                         var serializedType = GetSerializedType(referenceType, null);
 
                         if (serializedMemberType == SerializedType.ReferenceCollection)

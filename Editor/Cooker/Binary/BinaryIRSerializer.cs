@@ -101,18 +101,83 @@ namespace Editor.Cooker
             }
             else if (ir.Type.HasFlag(SerializedType.ReferenceCollection))
             {
-                // TODO:
+                WriteReferenceCollection(writer, ir.Data as CollectionPropertyData);
             }
             else if (ir.Type.HasFlag(SerializedType.ComplexClass))
             {
+                Debug.Log("complex class");
                 // TODO:
             }
             else if (ir.Type.HasFlag(SerializedType.ComplexCollection))
             {
                 // TODO:
+                Debug.Log("complex collection");
             }
         }
 
+
+        private static void WriteReferenceCollection(BinaryWriter writer, CollectionPropertyData data)
+        {
+            var count = data?.Collection?.Count ?? 0;
+
+            writer.Write(count);
+
+            if (count == 0)
+            {
+                return;
+            }
+
+            switch (data.CollectionType)
+            {
+                case CollectionType.None:
+                    break;
+                case CollectionType.Array:
+                case CollectionType.List:
+                case CollectionType.Stack:
+                case CollectionType.Queue:
+                case CollectionType.Hashset:
+                    {
+                        for (int i = 0; i < data.Collection.Count; i++)
+                        {
+                            var item = data.Collection[i] as CollectionData<ReferenceData>;
+                            writer.Write((int)item.Type);
+                            writer.Write(item.Value.Id.ToByteArray());
+                        }
+                    }
+                    break;
+                case CollectionType.Dictionary:
+                    {
+                        for (int i = 0; i < data.Collection.Count; i++)
+                        {
+                            var item = data.Collection[i] as DictionaryData<object, object>;
+                            writer.Write((int)item.Type);
+                            writer.Write((int)item.keyType);
+                            writer.Write((int)item.ValueType);
+
+                            if (item.keyType.HasFlag(SerializedType.Simple))
+                            {
+                                WriteSimpleProperty(writer, item.Key);
+                            }
+                            else
+                            {
+                                WriteReferenceProperty(writer, item.Key as ReferenceData);
+                            }
+
+                            if (item.ValueType.HasFlag(SerializedType.Simple))
+                            {
+                                WriteSimpleProperty(writer, item.Value);
+                            }
+                            else
+                            {
+                                WriteReferenceProperty(writer, item.Value as ReferenceData);
+                            }
+                        }
+                    }
+                    break;
+                default:
+                    throw new NotImplementedException($"Collection type '{data.CollectionType}' is not implemented.");
+            }
+        }
         private static void WriteSimpleProperty(BinaryWriter writer, object data)
         {
             var simpleType = GetSimpleType(data);
