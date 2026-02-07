@@ -39,7 +39,9 @@ namespace Editor
     // Serialization:
     // - Forbid serialization of dictionaries that contains EObject as key?
     // - The TypeRegistry should only be used in ship builds. While binary serializing the assets, also add types to the TypeRegistryClassGenerator.
-  
+    // - If a dictionary has a complexClass as a key/value, and a EObject as key/value, the dictionary should not
+    //   be recognized as ReferenceCollection (pure), but as complexCollection.
+
     // Refactor:
     // - 
 

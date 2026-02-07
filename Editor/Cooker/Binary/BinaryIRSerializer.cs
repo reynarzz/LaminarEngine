@@ -59,7 +59,6 @@ namespace Editor.Cooker
         {
             /*
                 int Version 
-                string InternalType 
                 Guid TypeId 
                 bool IsEnabled 
                 Guid ID 
@@ -82,7 +81,6 @@ namespace Editor.Cooker
             /*
              string Name 
              SerializedType Type 
-             string InternalType 
              Guid TypeId 
              object Data 
              */
@@ -105,17 +103,75 @@ namespace Editor.Cooker
             }
             else if (ir.Type.HasFlag(SerializedType.ComplexClass))
             {
-                Debug.Log("complex class");
-                // TODO:
+                WriteComplexClass(writer, ir.Data as ComplexTypeData);
             }
             else if (ir.Type.HasFlag(SerializedType.ComplexCollection))
             {
-                // TODO:
-                Debug.Log("complex collection");
+                WriteComplexCollection(writer, ir.Data as CollectionPropertyData);
             }
         }
 
+        private static void WriteComplexClass(BinaryWriter writer, ComplexTypeData data)
+        {
+            /*
+               SerializedType ComplexType 
+               Guid TypeId 
+               List<SerializedPropertyIR> Properties 
+            */
+            if (data == null)
+            {
+                writer.Write((int)SerializedType.None);
+                return;
+            }
+            writer.Write((int)data.ComplexType);
+            writer.Write(data.TypeId.ToByteArray());
+            Serialize(data.Properties, writer);
+        }
 
+        private static void WriteComplexCollection(BinaryWriter writer, CollectionPropertyData data)
+        {
+            var count = data?.Collection?.Count ?? 0;
+
+            writer.Write(count);
+
+            if (count == 0)
+            {
+                return;
+            }
+
+            switch (data.CollectionType)
+            {
+                case CollectionType.None:
+                    break;
+                case CollectionType.Array:
+                case CollectionType.List:
+                case CollectionType.Stack:
+                case CollectionType.Queue:
+                case CollectionType.Hashset:
+                    {
+                        for (int i = 0; i < data.Collection.Count; i++)
+                        {
+                            var item = data.Collection[i] as CollectionData<ComplexTypeData>;
+                            writer.Write((int)item.Type);
+                            WriteComplexClass(writer, item.Value);
+                        }
+                    }
+                    break;
+                case CollectionType.Dictionary:
+                    {
+                        for (int i = 0; i < data.Collection.Count; i++)
+                        {
+                            var item = data.Collection[i] as ComplexDictionaryData<ComplexTypeData, ComplexTypeData>;
+                            writer.Write((int)item.Type);
+                            WriteComplexClass(writer, item.Key);
+                            WriteComplexClass(writer, item.Value);
+                        }
+                    }
+                    break;
+                default:
+                    throw new NotImplementedException($"Collection type '{data.CollectionType}' is not implemented.");
+            }
+        }
         private static void WriteReferenceCollection(BinaryWriter writer, CollectionPropertyData data)
         {
             var count = data?.Collection?.Count ?? 0;
@@ -178,6 +234,7 @@ namespace Editor.Cooker
                     throw new NotImplementedException($"Collection type '{data.CollectionType}' is not implemented.");
             }
         }
+
         private static void WriteSimpleProperty(BinaryWriter writer, object data)
         {
             var simpleType = GetSimpleType(data);
