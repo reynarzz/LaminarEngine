@@ -19,7 +19,7 @@ namespace Editor.Utils
             Converters =
             {
                 new StringEnumConverter(),
-                new GuidNoHyphensConverter()
+                new GuidConverter()
             },
             ContractResolver = new SerializedFieldContractResolver()
         };

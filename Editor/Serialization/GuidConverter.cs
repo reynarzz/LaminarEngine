@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Editor.Serialization
 {
-    public class GuidNoHyphensConverter : JsonConverter<Guid>
+    public class GuidConverter : JsonConverter<Guid>
     {
         public override void WriteJson(JsonWriter writer, Guid value, JsonSerializer serializer)
         {
-            writer.WriteValue(value.ToString("N"));
+            writer.WriteValue(value.ToString());
         }
 
         public override Guid ReadJson(JsonReader reader, Type objectType, Guid existingValue, bool hasExistingValue, JsonSerializer serializer)
