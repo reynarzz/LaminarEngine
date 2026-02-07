@@ -166,7 +166,11 @@ namespace Editor
 
 
                 //ExportSlicedSprites();
-                //var material = Assets.GetMaterial("__InternalAssets__/Materials/SpriteDefault.material");
+                // var material = Assets.GetMaterial("Materials/Portal_mobile.material");
+               // var json = EditorJsonUtils.Serialize(Serializer.Serialize(material));
+
+                //File.WriteAllText(EditorPaths.GameRoot + "/Assets/Materials/Portal_mobile.material", json);
+
                 // material = Assets.GetMaterial("Materials/Material.material");
                 //Selector.Selected = material;
                 var obj = Actor.Find("Chest");

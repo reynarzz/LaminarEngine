@@ -101,9 +101,6 @@ namespace Engine
         Component,
         Actor,
         ComplexClass,
-        /// <summary>
-        /// Has multiple classes (any deep) and IObjects: classA -> classB -> reference.
-        /// </summary>
         ComplexCollection,
         Asset,
         TextureAsset,
@@ -121,10 +118,6 @@ namespace Engine
         /// Internal engine types: int, string, Color32, enums etc...
         /// </summary>
         Simple,
-        [Obsolete]
-        SimpleClass,
-        [Obsolete]
-        SimpleCollection,
         ReferenceCollection,
     }
 }

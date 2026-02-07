@@ -3,7 +3,7 @@
     "Name": "Scenes",
     "Type": "ComplexCollection",
     "InternalType": "System.Collections.Generic.List`1[[System.Guid, System.Private.CoreLib]], System.Private.CoreLib",
-    "TypeId": "b296fd12bde315f49d41fdf34414a159",
+    "TypeId": "b296fd12-bde3-15f4-9d41-fdf34414a159",
     "Data": {
       "$type": "Engine.CollectionPropertyData, Engine",
       "$value": {
@@ -16,7 +16,7 @@
     "Name": "_platformsBuildSettings",
     "Type": "ComplexCollection",
     "InternalType": "System.Collections.Generic.Dictionary`2[[Editor.Build.PlatformBuild, Editor],[Editor.Build.PlatformBuildSettings, Editor]], System.Private.CoreLib",
-    "TypeId": "412f0587f58a1ca10724b3d38eb2b38c",
+    "TypeId": "412f0587-f58a-1ca1-0724-b3d38eb2b38c",
     "Data": {
       "$type": "Engine.CollectionPropertyData, Engine",
       "$value": {
@@ -26,14 +26,14 @@
             "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
             "Key": {
               "InternalType": "Editor.Build.PlatformBuild, Editor",
-              "TypeId": "b5d78a8fad7627bca569eb732e643f2a",
+              "TypeId": "b5d78a8f-ad76-27bc-a569-eb732e643f2a",
               "ComplexType": "Simple",
               "Properties": [
                 {
                   "Name": "DictionaryKey",
                   "Type": "Simple",
                   "InternalType": "Editor.Build.PlatformBuild, Editor",
-                  "TypeId": "b5d78a8fad7627bca569eb732e643f2a",
+                  "TypeId": "b5d78a8f-ad76-27bc-a569-eb732e643f2a",
                   "Data": {
                     "$type": "Editor.Build.PlatformBuild, Editor",
                     "$value": "Windows"
@@ -43,30 +43,30 @@
             },
             "Value": {
               "InternalType": "Editor.Build.WindowsBuildSettings, Editor",
-              "TypeId": "d979e2851edce68d1867706c6fbbaee5",
+              "TypeId": "d979e285-1edc-e68d-1867-706c6fbbaee5",
               "ComplexType": "ComplexClass",
               "Properties": [
                 {
                   "Name": "Default",
                   "Type": "ComplexClass",
                   "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
-                  "TypeId": "b82153ebc244d04c00548eb0a05390ee",
+                  "TypeId": "b82153eb-c244-d04c-0054-8eb0a05390ee",
                   "Data": {
                     "$type": "Engine.ComplexTypeData, Engine",
                     "$value": {
                       "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
-                      "TypeId": "b82153ebc244d04c00548eb0a05390ee",
+                      "TypeId": "b82153eb-c244-d04c-0054-8eb0a05390ee",
                       "ComplexType": "ComplexClass",
                       "Properties": [
                         {
                           "Name": "Icon",
                           "Type": "TextureAsset",
                           "InternalType": "Engine.Texture2D, Engine",
-                          "TypeId": "22ad5e81a6e91514925c9a74599e46ba",
+                          "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
                           "Data": {
                             "$type": "Engine.ReferenceData, Engine",
                             "$value": {
-                              "Id": "2cb4a5eb99914a8385bb6a312dba842b"
+                              "Id": "2cb4a5eb-9991-4a83-85bb-6a312dba842b"
                             }
                           }
                         },
@@ -74,7 +74,7 @@
                           "Name": "Description",
                           "Type": "Simple",
                           "InternalType": "System.String, System.Private.CoreLib",
-                          "TypeId": "f084b6f834b7be357fe2a7ea0448d3dc",
+                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
                             "$type": "System.String, System.Private.CoreLib",
                             "$value": "Application description"
@@ -84,7 +84,7 @@
                           "Name": "Company",
                           "Type": "Simple",
                           "InternalType": "System.String, System.Private.CoreLib",
-                          "TypeId": "f084b6f834b7be357fe2a7ea0448d3dc",
+                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
                             "$type": "System.String, System.Private.CoreLib",
                             "$value": "My Company"
@@ -94,7 +94,7 @@
                           "Name": "Authors",
                           "Type": "Simple",
                           "InternalType": "System.String, System.Private.CoreLib",
-                          "TypeId": "f084b6f834b7be357fe2a7ea0448d3dc",
+                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
                             "$type": "System.String, System.Private.CoreLib",
                             "$value": "Reynarzz"
@@ -104,7 +104,7 @@
                           "Name": "Version",
                           "Type": "Simple",
                           "InternalType": "GlmNet.ivec3, Engine",
-                          "TypeId": "0eb55f0e9fb69ca0f70735ea8c2c71b9",
+                          "TypeId": "0eb55f0e-9fb6-9ca0-f707-35ea8c2c71b9",
                           "Data": {
                             "$type": "GlmNet.ivec3, Engine",
                             "$value": {
@@ -118,7 +118,7 @@
                           "Name": "ApplicationName",
                           "Type": "Simple",
                           "InternalType": "System.String, System.Private.CoreLib",
-                          "TypeId": "f084b6f834b7be357fe2a7ea0448d3dc",
+                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
                             "$type": "System.String, System.Private.CoreLib",
                             "$value": "Game GFS"
@@ -128,7 +128,7 @@
                           "Name": "OutputPath",
                           "Type": "Simple",
                           "InternalType": "System.String, System.Private.CoreLib",
-                          "TypeId": "f084b6f834b7be357fe2a7ea0448d3dc",
+                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
                             "$type": "System.String, System.Private.CoreLib",
                             "$value": ""
@@ -138,7 +138,7 @@
                           "Name": "EncryptAssets",
                           "Type": "Simple",
                           "InternalType": "System.Boolean, System.Private.CoreLib",
-                          "TypeId": "99af364bb73d5a12fa6aaba428f8595d",
+                          "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
                           "Data": {
                             "$type": "System.Boolean, System.Private.CoreLib",
                             "$value": false
@@ -148,7 +148,7 @@
                           "Name": "CompressAssets",
                           "Type": "Simple",
                           "InternalType": "System.Boolean, System.Private.CoreLib",
-                          "TypeId": "99af364bb73d5a12fa6aaba428f8595d",
+                          "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
                           "Data": {
                             "$type": "System.Boolean, System.Private.CoreLib",
                             "$value": false
@@ -158,7 +158,7 @@
                           "Name": "CompressionLevel",
                           "Type": "Simple",
                           "InternalType": "System.Int32, System.Private.CoreLib",
-                          "TypeId": "6c7bdc68ffcd0ba118b51e5239c15d37",
+                          "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
                           "Data": {
                             "$type": "System.Int32, System.Private.CoreLib",
                             "$value": 12
@@ -172,26 +172,26 @@
                   "Name": "Release",
                   "Type": "ComplexClass",
                   "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
-                  "TypeId": "b82153ebc244d04c00548eb0a05390ee",
+                  "TypeId": "b82153eb-c244-d04c-0054-8eb0a05390ee",
                   "Data": {
                     "$type": "Engine.ComplexTypeData, Engine",
                     "$value": {
                       "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
-                      "TypeId": "b82153ebc244d04c00548eb0a05390ee",
+                      "TypeId": "b82153eb-c244-d04c-0054-8eb0a05390ee",
                       "ComplexType": "ComplexClass",
                       "Properties": [
                         {
                           "Name": "Icon",
                           "Type": "TextureAsset",
                           "InternalType": "Engine.Texture2D, Engine",
-                          "TypeId": "22ad5e81a6e91514925c9a74599e46ba",
+                          "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
                           "Data": null
                         },
                         {
                           "Name": "Description",
                           "Type": "Simple",
                           "InternalType": "System.String, System.Private.CoreLib",
-                          "TypeId": "f084b6f834b7be357fe2a7ea0448d3dc",
+                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
                             "$type": "System.String, System.Private.CoreLib",
                             "$value": "Application description"
@@ -201,7 +201,7 @@
                           "Name": "Company",
                           "Type": "Simple",
                           "InternalType": "System.String, System.Private.CoreLib",
-                          "TypeId": "f084b6f834b7be357fe2a7ea0448d3dc",
+                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
                             "$type": "System.String, System.Private.CoreLib",
                             "$value": "My Company"
@@ -211,7 +211,7 @@
                           "Name": "Authors",
                           "Type": "Simple",
                           "InternalType": "System.String, System.Private.CoreLib",
-                          "TypeId": "f084b6f834b7be357fe2a7ea0448d3dc",
+                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
                             "$type": "System.String, System.Private.CoreLib",
                             "$value": "Author"
@@ -221,7 +221,7 @@
                           "Name": "Version",
                           "Type": "Simple",
                           "InternalType": "GlmNet.ivec3, Engine",
-                          "TypeId": "0eb55f0e9fb69ca0f70735ea8c2c71b9",
+                          "TypeId": "0eb55f0e-9fb6-9ca0-f707-35ea8c2c71b9",
                           "Data": {
                             "$type": "GlmNet.ivec3, Engine",
                             "$value": {
@@ -235,7 +235,7 @@
                           "Name": "ApplicationName",
                           "Type": "Simple",
                           "InternalType": "System.String, System.Private.CoreLib",
-                          "TypeId": "f084b6f834b7be357fe2a7ea0448d3dc",
+                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
                             "$type": "System.String, System.Private.CoreLib",
                             "$value": "Application"
@@ -245,14 +245,14 @@
                           "Name": "OutputPath",
                           "Type": "Simple",
                           "InternalType": "System.String, System.Private.CoreLib",
-                          "TypeId": "f084b6f834b7be357fe2a7ea0448d3dc",
+                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": null
                         },
                         {
                           "Name": "EncryptAssets",
                           "Type": "Simple",
                           "InternalType": "System.Boolean, System.Private.CoreLib",
-                          "TypeId": "99af364bb73d5a12fa6aaba428f8595d",
+                          "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
                           "Data": {
                             "$type": "System.Boolean, System.Private.CoreLib",
                             "$value": false
@@ -262,7 +262,7 @@
                           "Name": "CompressAssets",
                           "Type": "Simple",
                           "InternalType": "System.Boolean, System.Private.CoreLib",
-                          "TypeId": "99af364bb73d5a12fa6aaba428f8595d",
+                          "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
                           "Data": {
                             "$type": "System.Boolean, System.Private.CoreLib",
                             "$value": false
@@ -272,7 +272,7 @@
                           "Name": "CompressionLevel",
                           "Type": "Simple",
                           "InternalType": "System.Int32, System.Private.CoreLib",
-                          "TypeId": "6c7bdc68ffcd0ba118b51e5239c15d37",
+                          "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
                           "Data": {
                             "$type": "System.Int32, System.Private.CoreLib",
                             "$value": 0
@@ -286,26 +286,26 @@
                   "Name": "Debug",
                   "Type": "ComplexClass",
                   "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
-                  "TypeId": "b82153ebc244d04c00548eb0a05390ee",
+                  "TypeId": "b82153eb-c244-d04c-0054-8eb0a05390ee",
                   "Data": {
                     "$type": "Engine.ComplexTypeData, Engine",
                     "$value": {
                       "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
-                      "TypeId": "b82153ebc244d04c00548eb0a05390ee",
+                      "TypeId": "b82153eb-c244-d04c-0054-8eb0a05390ee",
                       "ComplexType": "ComplexClass",
                       "Properties": [
                         {
                           "Name": "Icon",
                           "Type": "TextureAsset",
                           "InternalType": "Engine.Texture2D, Engine",
-                          "TypeId": "22ad5e81a6e91514925c9a74599e46ba",
+                          "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
                           "Data": null
                         },
                         {
                           "Name": "Description",
                           "Type": "Simple",
                           "InternalType": "System.String, System.Private.CoreLib",
-                          "TypeId": "f084b6f834b7be357fe2a7ea0448d3dc",
+                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
                             "$type": "System.String, System.Private.CoreLib",
                             "$value": "Application description"
@@ -315,7 +315,7 @@
                           "Name": "Company",
                           "Type": "Simple",
                           "InternalType": "System.String, System.Private.CoreLib",
-                          "TypeId": "f084b6f834b7be357fe2a7ea0448d3dc",
+                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
                             "$type": "System.String, System.Private.CoreLib",
                             "$value": "My Company"
@@ -325,7 +325,7 @@
                           "Name": "Authors",
                           "Type": "Simple",
                           "InternalType": "System.String, System.Private.CoreLib",
-                          "TypeId": "f084b6f834b7be357fe2a7ea0448d3dc",
+                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
                             "$type": "System.String, System.Private.CoreLib",
                             "$value": "Author"
@@ -335,7 +335,7 @@
                           "Name": "Version",
                           "Type": "Simple",
                           "InternalType": "GlmNet.ivec3, Engine",
-                          "TypeId": "0eb55f0e9fb69ca0f70735ea8c2c71b9",
+                          "TypeId": "0eb55f0e-9fb6-9ca0-f707-35ea8c2c71b9",
                           "Data": {
                             "$type": "GlmNet.ivec3, Engine",
                             "$value": {
@@ -349,7 +349,7 @@
                           "Name": "ApplicationName",
                           "Type": "Simple",
                           "InternalType": "System.String, System.Private.CoreLib",
-                          "TypeId": "f084b6f834b7be357fe2a7ea0448d3dc",
+                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
                             "$type": "System.String, System.Private.CoreLib",
                             "$value": "Application"
@@ -359,14 +359,14 @@
                           "Name": "OutputPath",
                           "Type": "Simple",
                           "InternalType": "System.String, System.Private.CoreLib",
-                          "TypeId": "f084b6f834b7be357fe2a7ea0448d3dc",
+                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": null
                         },
                         {
                           "Name": "EncryptAssets",
                           "Type": "Simple",
                           "InternalType": "System.Boolean, System.Private.CoreLib",
-                          "TypeId": "99af364bb73d5a12fa6aaba428f8595d",
+                          "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
                           "Data": {
                             "$type": "System.Boolean, System.Private.CoreLib",
                             "$value": false
@@ -376,7 +376,7 @@
                           "Name": "CompressAssets",
                           "Type": "Simple",
                           "InternalType": "System.Boolean, System.Private.CoreLib",
-                          "TypeId": "99af364bb73d5a12fa6aaba428f8595d",
+                          "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
                           "Data": {
                             "$type": "System.Boolean, System.Private.CoreLib",
                             "$value": false
@@ -386,7 +386,7 @@
                           "Name": "CompressionLevel",
                           "Type": "Simple",
                           "InternalType": "System.Int32, System.Private.CoreLib",
-                          "TypeId": "6c7bdc68ffcd0ba118b51e5239c15d37",
+                          "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
                           "Data": {
                             "$type": "System.Int32, System.Private.CoreLib",
                             "$value": 0
@@ -400,7 +400,7 @@
                   "Name": "Type",
                   "Type": "Simple",
                   "InternalType": "Editor.Build.BuildType, Editor",
-                  "TypeId": "ab1e56b177441df58d84eda53bf8a4c5",
+                  "TypeId": "ab1e56b1-7744-1df5-8d84-eda53bf8a4c5",
                   "Data": {
                     "$type": "Editor.Build.BuildType, Editor",
                     "$value": "Release"
@@ -410,7 +410,7 @@
                   "Name": "ShareDefaultSettings",
                   "Type": "Simple",
                   "InternalType": "System.Boolean, System.Private.CoreLib",
-                  "TypeId": "99af364bb73d5a12fa6aaba428f8595d",
+                  "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
                   "Data": {
                     "$type": "System.Boolean, System.Private.CoreLib",
                     "$value": true
@@ -424,14 +424,14 @@
             "$type": "Engine.ComplexDictionaryData`2[[Engine.ComplexTypeData, Engine],[Engine.ComplexTypeData, Engine]], Engine",
             "Key": {
               "InternalType": "Editor.Build.PlatformBuild, Editor",
-              "TypeId": "b5d78a8fad7627bca569eb732e643f2a",
+              "TypeId": "b5d78a8f-ad76-27bc-a569-eb732e643f2a",
               "ComplexType": "Simple",
               "Properties": [
                 {
                   "Name": "DictionaryKey",
                   "Type": "Simple",
                   "InternalType": "Editor.Build.PlatformBuild, Editor",
-                  "TypeId": "b5d78a8fad7627bca569eb732e643f2a",
+                  "TypeId": "b5d78a8f-ad76-27bc-a569-eb732e643f2a",
                   "Data": {
                     "$type": "Editor.Build.PlatformBuild, Editor",
                     "$value": "Android"
@@ -441,14 +441,14 @@
             },
             "Value": {
               "InternalType": "Editor.Build.AndroidBuildSettings, Editor",
-              "TypeId": "3732c59f64ea5db52de11d230ce95cab",
+              "TypeId": "3732c59f-64ea-5db5-2de1-1d230ce95cab",
               "ComplexType": "ComplexClass",
               "Properties": [
                 {
                   "Name": "KeyAlias",
                   "Type": "Simple",
                   "InternalType": "System.String, System.Private.CoreLib",
-                  "TypeId": "f084b6f834b7be357fe2a7ea0448d3dc",
+                  "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                   "Data": {
                     "$type": "System.String, System.Private.CoreLib",
                     "$value": "myalias"
@@ -458,7 +458,7 @@
                   "Name": "KeyPass",
                   "Type": "Simple",
                   "InternalType": "System.String, System.Private.CoreLib",
-                  "TypeId": "f084b6f834b7be357fe2a7ea0448d3dc",
+                  "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                   "Data": {
                     "$type": "System.String, System.Private.CoreLib",
                     "$value": "mypassword"
@@ -468,7 +468,7 @@
                   "Name": "StorePass",
                   "Type": "Simple",
                   "InternalType": "System.String, System.Private.CoreLib",
-                  "TypeId": "f084b6f834b7be357fe2a7ea0448d3dc",
+                  "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                   "Data": {
                     "$type": "System.String, System.Private.CoreLib",
                     "$value": "storepassword"
@@ -478,7 +478,7 @@
                   "Name": "MinimumApiLevel",
                   "Type": "Simple",
                   "InternalType": "Editor.Build.AndroidApiLevel, Editor",
-                  "TypeId": "c3474a0003b1058fc9d453ccb3cbb6a6",
+                  "TypeId": "c3474a00-03b1-058f-c9d4-53ccb3cbb6a6",
                   "Data": {
                     "$type": "Editor.Build.AndroidApiLevel, Editor",
                     "$value": "Android_6_Marshmallow_API_23"
@@ -488,7 +488,7 @@
                   "Name": "TargetApiLevel",
                   "Type": "Simple",
                   "InternalType": "Editor.Build.AndroidApiLevel, Editor",
-                  "TypeId": "c3474a0003b1058fc9d453ccb3cbb6a6",
+                  "TypeId": "c3474a00-03b1-058f-c9d4-53ccb3cbb6a6",
                   "Data": {
                     "$type": "Editor.Build.AndroidApiLevel, Editor",
                     "$value": "Android_15_API_35"
@@ -498,7 +498,7 @@
                   "Name": "Version",
                   "Type": "Simple",
                   "InternalType": "GlmNet.ivec3, Engine",
-                  "TypeId": "0eb55f0e9fb69ca0f70735ea8c2c71b9",
+                  "TypeId": "0eb55f0e-9fb6-9ca0-f707-35ea8c2c71b9",
                   "Data": {
                     "$type": "GlmNet.ivec3, Engine",
                     "$value": {
@@ -512,35 +512,35 @@
                   "Name": "Default",
                   "Type": "ComplexClass",
                   "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
-                  "TypeId": "8a5456848915490a81177ccad9e1f6d7",
+                  "TypeId": "8a545684-8915-490a-8117-7ccad9e1f6d7",
                   "Data": {
                     "$type": "Engine.ComplexTypeData, Engine",
                     "$value": {
                       "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
-                      "TypeId": "8a5456848915490a81177ccad9e1f6d7",
+                      "TypeId": "8a545684-8915-490a-8117-7ccad9e1f6d7",
                       "ComplexType": "ComplexClass",
                       "Properties": [
                         {
                           "Name": "DefaultIcon",
                           "Type": "ComplexClass",
                           "InternalType": "Editor.Build.AndroidIcon, Editor",
-                          "TypeId": "fc6bd7ae58d4e8ad12bd08b8c49944fd",
+                          "TypeId": "fc6bd7ae-58d4-e8ad-12bd-08b8c49944fd",
                           "Data": {
                             "$type": "Engine.ComplexTypeData, Engine",
                             "$value": {
                               "InternalType": "Editor.Build.AndroidIcon, Editor",
-                              "TypeId": "fc6bd7ae58d4e8ad12bd08b8c49944fd",
+                              "TypeId": "fc6bd7ae-58d4-e8ad-12bd-08b8c49944fd",
                               "ComplexType": "ComplexClass",
                               "Properties": [
                                 {
                                   "Name": "Icon",
                                   "Type": "TextureAsset",
                                   "InternalType": "Engine.Texture2D, Engine",
-                                  "TypeId": "22ad5e81a6e91514925c9a74599e46ba",
+                                  "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
                                   "Data": {
                                     "$type": "Engine.ReferenceData, Engine",
                                     "$value": {
-                                      "Id": "d682d746edc84efe895ea31a2fbefd4d"
+                                      "Id": "d682d746-edc8-4efe-895e-a31a2fbefd4d"
                                     }
                                   }
                                 },
@@ -548,11 +548,11 @@
                                   "Name": "ForegroundIcon",
                                   "Type": "TextureAsset",
                                   "InternalType": "Engine.Texture2D, Engine",
-                                  "TypeId": "22ad5e81a6e91514925c9a74599e46ba",
+                                  "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
                                   "Data": {
                                     "$type": "Engine.ReferenceData, Engine",
                                     "$value": {
-                                      "Id": "a70a6ebd9c2c40e5a9bb10dda953ecfb"
+                                      "Id": "a70a6ebd-9c2c-40e5-a9bb-10dda953ecfb"
                                     }
                                   }
                                 },
@@ -560,11 +560,11 @@
                                   "Name": "BackgroundIcon",
                                   "Type": "TextureAsset",
                                   "InternalType": "Engine.Texture2D, Engine",
-                                  "TypeId": "22ad5e81a6e91514925c9a74599e46ba",
+                                  "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
                                   "Data": {
                                     "$type": "Engine.ReferenceData, Engine",
                                     "$value": {
-                                      "Id": "8c713ca8309347d2b19b3a960bdbb0f2"
+                                      "Id": "8c713ca8-3093-47d2-b19b-3a960bdbb0f2"
                                     }
                                   }
                                 }
@@ -576,7 +576,7 @@
                           "Name": "Icons",
                           "Type": "ComplexCollection",
                           "InternalType": "Editor.Build.AndroidIcon[], Editor",
-                          "TypeId": "5ee4bed7a2fd618a128bf8be6eee849c",
+                          "TypeId": "5ee4bed7-a2fd-618a-128b-f8be6eee849c",
                           "Data": {
                             "$type": "Engine.CollectionPropertyData, Engine",
                             "$value": {
@@ -615,7 +615,7 @@
                           "Name": "PackageName",
                           "Type": "Simple",
                           "InternalType": "System.String, System.Private.CoreLib",
-                          "TypeId": "f084b6f834b7be357fe2a7ea0448d3dc",
+                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
                             "$type": "System.String, System.Private.CoreLib",
                             "$value": "com.reynarzz.gfs"
@@ -625,7 +625,7 @@
                           "Name": "ApplicationName",
                           "Type": "Simple",
                           "InternalType": "System.String, System.Private.CoreLib",
-                          "TypeId": "f084b6f834b7be357fe2a7ea0448d3dc",
+                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
                             "$type": "System.String, System.Private.CoreLib",
                             "$value": "GFS"
@@ -635,7 +635,7 @@
                           "Name": "OutputPath",
                           "Type": "Simple",
                           "InternalType": "System.String, System.Private.CoreLib",
-                          "TypeId": "f084b6f834b7be357fe2a7ea0448d3dc",
+                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
                             "$type": "System.String, System.Private.CoreLib",
                             "$value": ""
@@ -645,7 +645,7 @@
                           "Name": "EncryptAssets",
                           "Type": "Simple",
                           "InternalType": "System.Boolean, System.Private.CoreLib",
-                          "TypeId": "99af364bb73d5a12fa6aaba428f8595d",
+                          "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
                           "Data": {
                             "$type": "System.Boolean, System.Private.CoreLib",
                             "$value": false
@@ -655,7 +655,7 @@
                           "Name": "CompressAssets",
                           "Type": "Simple",
                           "InternalType": "System.Boolean, System.Private.CoreLib",
-                          "TypeId": "99af364bb73d5a12fa6aaba428f8595d",
+                          "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
                           "Data": {
                             "$type": "System.Boolean, System.Private.CoreLib",
                             "$value": false
@@ -665,7 +665,7 @@
                           "Name": "CompressionLevel",
                           "Type": "Simple",
                           "InternalType": "System.Int32, System.Private.CoreLib",
-                          "TypeId": "6c7bdc68ffcd0ba118b51e5239c15d37",
+                          "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
                           "Data": {
                             "$type": "System.Int32, System.Private.CoreLib",
                             "$value": 0
@@ -679,45 +679,45 @@
                   "Name": "Release",
                   "Type": "ComplexClass",
                   "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
-                  "TypeId": "8a5456848915490a81177ccad9e1f6d7",
+                  "TypeId": "8a545684-8915-490a-8117-7ccad9e1f6d7",
                   "Data": {
                     "$type": "Engine.ComplexTypeData, Engine",
                     "$value": {
                       "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
-                      "TypeId": "8a5456848915490a81177ccad9e1f6d7",
+                      "TypeId": "8a545684-8915-490a-8117-7ccad9e1f6d7",
                       "ComplexType": "ComplexClass",
                       "Properties": [
                         {
                           "Name": "DefaultIcon",
                           "Type": "ComplexClass",
                           "InternalType": "Editor.Build.AndroidIcon, Editor",
-                          "TypeId": "fc6bd7ae58d4e8ad12bd08b8c49944fd",
+                          "TypeId": "fc6bd7ae-58d4-e8ad-12bd-08b8c49944fd",
                           "Data": {
                             "$type": "Engine.ComplexTypeData, Engine",
                             "$value": {
                               "InternalType": "Editor.Build.AndroidIcon, Editor",
-                              "TypeId": "fc6bd7ae58d4e8ad12bd08b8c49944fd",
+                              "TypeId": "fc6bd7ae-58d4-e8ad-12bd-08b8c49944fd",
                               "ComplexType": "ComplexClass",
                               "Properties": [
                                 {
                                   "Name": "Icon",
                                   "Type": "TextureAsset",
                                   "InternalType": "Engine.Texture2D, Engine",
-                                  "TypeId": "22ad5e81a6e91514925c9a74599e46ba",
+                                  "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
                                   "Data": null
                                 },
                                 {
                                   "Name": "ForegroundIcon",
                                   "Type": "TextureAsset",
                                   "InternalType": "Engine.Texture2D, Engine",
-                                  "TypeId": "22ad5e81a6e91514925c9a74599e46ba",
+                                  "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
                                   "Data": null
                                 },
                                 {
                                   "Name": "BackgroundIcon",
                                   "Type": "TextureAsset",
                                   "InternalType": "Engine.Texture2D, Engine",
-                                  "TypeId": "22ad5e81a6e91514925c9a74599e46ba",
+                                  "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
                                   "Data": null
                                 }
                               ]
@@ -728,7 +728,7 @@
                           "Name": "Icons",
                           "Type": "ComplexCollection",
                           "InternalType": "Editor.Build.AndroidIcon[], Editor",
-                          "TypeId": "5ee4bed7a2fd618a128bf8be6eee849c",
+                          "TypeId": "5ee4bed7-a2fd-618a-128b-f8be6eee849c",
                           "Data": {
                             "$type": "Engine.CollectionPropertyData, Engine",
                             "$value": {
@@ -767,7 +767,7 @@
                           "Name": "PackageName",
                           "Type": "Simple",
                           "InternalType": "System.String, System.Private.CoreLib",
-                          "TypeId": "f084b6f834b7be357fe2a7ea0448d3dc",
+                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
                             "$type": "System.String, System.Private.CoreLib",
                             "$value": "com.application.gfs"
@@ -777,7 +777,7 @@
                           "Name": "ApplicationName",
                           "Type": "Simple",
                           "InternalType": "System.String, System.Private.CoreLib",
-                          "TypeId": "f084b6f834b7be357fe2a7ea0448d3dc",
+                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
                             "$type": "System.String, System.Private.CoreLib",
                             "$value": "Application"
@@ -787,7 +787,7 @@
                           "Name": "OutputPath",
                           "Type": "Simple",
                           "InternalType": "System.String, System.Private.CoreLib",
-                          "TypeId": "f084b6f834b7be357fe2a7ea0448d3dc",
+                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
                             "$type": "System.String, System.Private.CoreLib",
                             "$value": ""
@@ -797,7 +797,7 @@
                           "Name": "EncryptAssets",
                           "Type": "Simple",
                           "InternalType": "System.Boolean, System.Private.CoreLib",
-                          "TypeId": "99af364bb73d5a12fa6aaba428f8595d",
+                          "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
                           "Data": {
                             "$type": "System.Boolean, System.Private.CoreLib",
                             "$value": false
@@ -807,7 +807,7 @@
                           "Name": "CompressAssets",
                           "Type": "Simple",
                           "InternalType": "System.Boolean, System.Private.CoreLib",
-                          "TypeId": "99af364bb73d5a12fa6aaba428f8595d",
+                          "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
                           "Data": {
                             "$type": "System.Boolean, System.Private.CoreLib",
                             "$value": false
@@ -817,7 +817,7 @@
                           "Name": "CompressionLevel",
                           "Type": "Simple",
                           "InternalType": "System.Int32, System.Private.CoreLib",
-                          "TypeId": "6c7bdc68ffcd0ba118b51e5239c15d37",
+                          "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
                           "Data": {
                             "$type": "System.Int32, System.Private.CoreLib",
                             "$value": 0
@@ -831,45 +831,45 @@
                   "Name": "Debug",
                   "Type": "ComplexClass",
                   "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
-                  "TypeId": "8a5456848915490a81177ccad9e1f6d7",
+                  "TypeId": "8a545684-8915-490a-8117-7ccad9e1f6d7",
                   "Data": {
                     "$type": "Engine.ComplexTypeData, Engine",
                     "$value": {
                       "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
-                      "TypeId": "8a5456848915490a81177ccad9e1f6d7",
+                      "TypeId": "8a545684-8915-490a-8117-7ccad9e1f6d7",
                       "ComplexType": "ComplexClass",
                       "Properties": [
                         {
                           "Name": "DefaultIcon",
                           "Type": "ComplexClass",
                           "InternalType": "Editor.Build.AndroidIcon, Editor",
-                          "TypeId": "fc6bd7ae58d4e8ad12bd08b8c49944fd",
+                          "TypeId": "fc6bd7ae-58d4-e8ad-12bd-08b8c49944fd",
                           "Data": {
                             "$type": "Engine.ComplexTypeData, Engine",
                             "$value": {
                               "InternalType": "Editor.Build.AndroidIcon, Editor",
-                              "TypeId": "fc6bd7ae58d4e8ad12bd08b8c49944fd",
+                              "TypeId": "fc6bd7ae-58d4-e8ad-12bd-08b8c49944fd",
                               "ComplexType": "ComplexClass",
                               "Properties": [
                                 {
                                   "Name": "Icon",
                                   "Type": "TextureAsset",
                                   "InternalType": "Engine.Texture2D, Engine",
-                                  "TypeId": "22ad5e81a6e91514925c9a74599e46ba",
+                                  "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
                                   "Data": null
                                 },
                                 {
                                   "Name": "ForegroundIcon",
                                   "Type": "TextureAsset",
                                   "InternalType": "Engine.Texture2D, Engine",
-                                  "TypeId": "22ad5e81a6e91514925c9a74599e46ba",
+                                  "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
                                   "Data": null
                                 },
                                 {
                                   "Name": "BackgroundIcon",
                                   "Type": "TextureAsset",
                                   "InternalType": "Engine.Texture2D, Engine",
-                                  "TypeId": "22ad5e81a6e91514925c9a74599e46ba",
+                                  "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
                                   "Data": null
                                 }
                               ]
@@ -880,7 +880,7 @@
                           "Name": "Icons",
                           "Type": "ComplexCollection",
                           "InternalType": "Editor.Build.AndroidIcon[], Editor",
-                          "TypeId": "5ee4bed7a2fd618a128bf8be6eee849c",
+                          "TypeId": "5ee4bed7-a2fd-618a-128b-f8be6eee849c",
                           "Data": {
                             "$type": "Engine.CollectionPropertyData, Engine",
                             "$value": {
@@ -919,7 +919,7 @@
                           "Name": "PackageName",
                           "Type": "Simple",
                           "InternalType": "System.String, System.Private.CoreLib",
-                          "TypeId": "f084b6f834b7be357fe2a7ea0448d3dc",
+                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
                             "$type": "System.String, System.Private.CoreLib",
                             "$value": "com.application.gfs"
@@ -929,7 +929,7 @@
                           "Name": "ApplicationName",
                           "Type": "Simple",
                           "InternalType": "System.String, System.Private.CoreLib",
-                          "TypeId": "f084b6f834b7be357fe2a7ea0448d3dc",
+                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
                             "$type": "System.String, System.Private.CoreLib",
                             "$value": "Application"
@@ -939,7 +939,7 @@
                           "Name": "OutputPath",
                           "Type": "Simple",
                           "InternalType": "System.String, System.Private.CoreLib",
-                          "TypeId": "f084b6f834b7be357fe2a7ea0448d3dc",
+                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                           "Data": {
                             "$type": "System.String, System.Private.CoreLib",
                             "$value": ""
@@ -949,7 +949,7 @@
                           "Name": "EncryptAssets",
                           "Type": "Simple",
                           "InternalType": "System.Boolean, System.Private.CoreLib",
-                          "TypeId": "99af364bb73d5a12fa6aaba428f8595d",
+                          "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
                           "Data": {
                             "$type": "System.Boolean, System.Private.CoreLib",
                             "$value": false
@@ -959,7 +959,7 @@
                           "Name": "CompressAssets",
                           "Type": "Simple",
                           "InternalType": "System.Boolean, System.Private.CoreLib",
-                          "TypeId": "99af364bb73d5a12fa6aaba428f8595d",
+                          "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
                           "Data": {
                             "$type": "System.Boolean, System.Private.CoreLib",
                             "$value": false
@@ -969,7 +969,7 @@
                           "Name": "CompressionLevel",
                           "Type": "Simple",
                           "InternalType": "System.Int32, System.Private.CoreLib",
-                          "TypeId": "6c7bdc68ffcd0ba118b51e5239c15d37",
+                          "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
                           "Data": {
                             "$type": "System.Int32, System.Private.CoreLib",
                             "$value": 0
@@ -983,7 +983,7 @@
                   "Name": "Type",
                   "Type": "Simple",
                   "InternalType": "Editor.Build.BuildType, Editor",
-                  "TypeId": "ab1e56b177441df58d84eda53bf8a4c5",
+                  "TypeId": "ab1e56b1-7744-1df5-8d84-eda53bf8a4c5",
                   "Data": {
                     "$type": "Editor.Build.BuildType, Editor",
                     "$value": "Release"
@@ -993,7 +993,7 @@
                   "Name": "ShareDefaultSettings",
                   "Type": "Simple",
                   "InternalType": "System.Boolean, System.Private.CoreLib",
-                  "TypeId": "99af364bb73d5a12fa6aaba428f8595d",
+                  "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
                   "Data": {
                     "$type": "System.Boolean, System.Private.CoreLib",
                     "$value": true

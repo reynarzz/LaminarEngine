@@ -3,6 +3,7 @@
     "Name": "_passes",
     "Type": "ComplexCollection",
     "InternalType": "System.Collections.Generic.List`1[[Engine.RenderPass, Engine]], System.Private.CoreLib",
+    "TypeId": "57d6bb1b-afae-e28c-b56c-5e72ac23cc73",
     "Data": {
       "$type": "Engine.CollectionPropertyData, Engine",
       "$value": {
@@ -12,12 +13,14 @@
             "$type": "Engine.CollectionData`1[[Engine.ComplexTypeData, Engine]], Engine",
             "Value": {
               "InternalType": "Engine.RenderPass, Engine",
+              "TypeId": "12e518de-5050-01f0-bbc0-aada33118a8e",
               "ComplexType": "ComplexClass",
               "Properties": [
                 {
                   "Name": "IsScreenGrabPass",
                   "Type": "Simple",
                   "InternalType": "System.Boolean, System.Private.CoreLib",
+                  "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
                   "Data": {
                     "$type": "System.Boolean, System.Private.CoreLib",
                     "$value": false
@@ -27,6 +30,7 @@
                   "Name": "Shader",
                   "Type": "ShaderAsset",
                   "InternalType": "Engine.Shader, Engine",
+                  "TypeId": "51ffe436-a1d3-b62f-e50a-35e5ead1b47e",
                   "Data": {
                     "$type": "Engine.ReferenceData, Engine",
                     "$value": {
@@ -36,32 +40,31 @@
                 },
                 {
                   "Name": "Blending",
-                  "Type": "SimpleClass",
+                  "Type": "ComplexClass",
                   "InternalType": "Engine.Blending, Engine",
+                  "TypeId": "214d9ab0-e82f-3989-8f39-c793cf3bcc02",
                   "Data": {
-                    "$type": "Engine.Blending, Engine",
+                    "$type": "Engine.ComplexTypeData, Engine",
                     "$value": {
-                      "Enabled": true,
-                      "SrcFactor": "SrcAlpha",
-                      "DstFactor": "OneMinusSrcAlpha",
-                      "Equation": "FuncAdd"
+                      "InternalType": "Engine.Blending, Engine",
+                      "TypeId": "214d9ab0-e82f-3989-8f39-c793cf3bcc02",
+                      "ComplexType": "ComplexClass",
+                      "Properties": []
                     }
                   }
                 },
                 {
                   "Name": "Stencil",
-                  "Type": "SimpleClass",
+                  "Type": "ComplexClass",
                   "InternalType": "Engine.Stencil, Engine",
+                  "TypeId": "69e35bb8-e8a9-b726-4465-6f0bf81adc98",
                   "Data": {
-                    "$type": "Engine.Stencil, Engine",
+                    "$type": "Engine.ComplexTypeData, Engine",
                     "$value": {
-                      "Enabled": false,
-                      "Func": "Never",
-                      "Ref": 0,
-                      "Mask": 255,
-                      "FailOp": "Keep",
-                      "ZFailOp": "Keep",
-                      "ZPassOp": "Keep"
+                      "InternalType": "Engine.Stencil, Engine",
+                      "TypeId": "69e35bb8-e8a9-b726-4465-6f0bf81adc98",
+                      "ComplexType": "ComplexClass",
+                      "Properties": []
                     }
                   }
                 },
@@ -69,6 +72,7 @@
                   "Name": "_uniforms",
                   "Type": "ComplexCollection",
                   "InternalType": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib],[Engine.Graphics.UniformValue, Engine]], System.Private.CoreLib",
+                  "TypeId": "5ff3c135-711b-d114-8a50-8b3589ab2973",
                   "Data": {
                     "$type": "Engine.CollectionPropertyData, Engine",
                     "$value": {
@@ -89,6 +93,7 @@
     "Name": "_textures",
     "Type": "ReferenceCollection",
     "InternalType": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib],[Engine.Texture, Engine]], System.Private.CoreLib",
+    "TypeId": "b149b3b1-461a-3c62-d6f1-df76ecaf9ea0",
     "Data": {
       "$type": "Engine.CollectionPropertyData, Engine",
       "$value": {

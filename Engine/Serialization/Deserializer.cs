@@ -60,8 +60,6 @@ namespace Engine.Serialization
                         DeserializeReferencedProperty(targetInstance, property, deserializerData);
                         break;
                     case SerializedType.Simple:
-                    case SerializedType.SimpleCollection:
-                    case SerializedType.SimpleClass:
                         DeserializeSimpleProperty(targetInstance, property);
                         break;
                     case SerializedType.ReferenceCollection:
@@ -157,9 +155,7 @@ namespace Engine.Serialization
                 foreach (var item in collectionData.Collection)
                 {
                     var serializedItem = (DictionaryData<object, object>)item;
-                    if ((serializedItem.keyType == SerializedType.Simple ||
-                        serializedItem.keyType == SerializedType.SimpleClass ||
-                        serializedItem.keyType == SerializedType.SimpleCollection) && serializedItem.Key != null
+                    if (serializedItem.keyType == SerializedType.Simple && serializedItem.Key != null
                         && serializedItem.Key.GetType() != args[0].GetType())
                     {
                         serializedItem.Key = Convert.ChangeType(serializedItem.Key, args[0]);
@@ -273,9 +269,7 @@ namespace Engine.Serialization
                         {
                             object deserializedArgValue = null;
 
-                            if (complexArg.ComplexType == SerializedType.Simple ||
-                                complexArg.ComplexType == SerializedType.SimpleClass ||
-                                complexArg.ComplexType == SerializedType.SimpleCollection)
+                            if (complexArg.ComplexType == SerializedType.Simple)
                             {
                                 // if (complexArg.Properties != null && complexArg.Properties.Count > 0)
                                 {
