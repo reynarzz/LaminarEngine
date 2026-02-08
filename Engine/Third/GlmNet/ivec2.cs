@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace GlmNet
 {
+    [StructLayout(LayoutKind.Sequential)]
     public struct ivec2
     {
         public int x;

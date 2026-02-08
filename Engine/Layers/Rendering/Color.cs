@@ -3,11 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Engine
 {
+    [StructLayout(LayoutKind.Sequential)]
     public struct Color
     {
         public float R, G, B, A;
@@ -151,6 +153,7 @@ namespace Engine
             return new Color(r / 255.0f, g / 255.0f, b / 255.0f, 1.0f);
         }
     }
+    [StructLayout(LayoutKind.Sequential)]
     public struct Color32
     {
         public byte R;
@@ -210,6 +213,7 @@ namespace Engine
         }
     }
 
+    [StructLayout(LayoutKind.Sequential)]
     public struct ColorPacketRGBA
     {
         public uint Value;

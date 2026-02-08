@@ -1,12 +1,14 @@
 using Newtonsoft.Json;
 using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace GlmNet
 {
     /// <summary>
     /// Represents a three dimensional vector.
     /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
     public struct vec3
     {
         public float x;

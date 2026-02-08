@@ -14,7 +14,7 @@ namespace Engine
 
     internal class ActorIR
     {
-        public int Version { get; set; }
+        public int Version { get; set; } = 1;
         public string Name { get; set; }
         public int Layer { get; set; }
         public bool IsActiveSelf { get; set; }
@@ -25,7 +25,7 @@ namespace Engine
 
     internal class ComponentIR
     {
-        public int Version { get; set; }
+        public int Version { get; set; } = 1;
         public string InternalType { get; set; }
         public Guid TypeId { get; set; }
         public bool IsEnabled { get; set; }
@@ -157,8 +157,8 @@ namespace Engine
         ShaderAsset = AssetFlag | (3003UL << 20),
         AudioClipAsset = AssetFlag | (3004UL << 20),
         AnimationAsset = AssetFlag | (3005UL << 20),
-        RenderTextureAsset = AssetFlag | (3006UL << 20),
-        AnimatorControllerAsset = AssetFlag | (3007UL << 20),
+        AnimatorControllerAsset = AssetFlag | (3006UL << 20),
+        RenderTextureAsset = AssetFlag | (3007UL << 20),
         ScriptableObject = AssetFlag | (3008UL << 20),
 
         // Collections and classes

@@ -1,10 +1,12 @@
 using System;
+using System.Runtime.InteropServices;
 
 namespace GlmNet
 {
     /// <summary>
     /// Represents a 3x3 matrix.
     /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
     public struct mat3
     {
         public vec3 c0, c1, c2;

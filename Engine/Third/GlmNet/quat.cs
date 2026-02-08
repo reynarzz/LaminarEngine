@@ -1,9 +1,11 @@
 ﻿using Engine;
 using Newtonsoft.Json;
 using System;
+using System.Runtime.InteropServices;
 
 namespace GlmNet
 {
+    [StructLayout(LayoutKind.Sequential)]
     public struct quat
     {
         public float x;

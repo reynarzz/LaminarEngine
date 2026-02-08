@@ -208,7 +208,11 @@ namespace Editor
 
 
                 // SerializerTypesFixer();
-                LoadScene();
+                // LoadScene();
+                var file = File.Open(EditorPaths.AppRoot + "/SceneBinary.bin", FileMode.Open, FileAccess.Read);
+                var reader = new BinaryReader(file);
+
+                var scene = BinaryIRDeserializer.DeserializeScene(reader);
             }
         }
 

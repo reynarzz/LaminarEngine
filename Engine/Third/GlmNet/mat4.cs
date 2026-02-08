@@ -1,12 +1,14 @@
 using System;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace GlmNet
 {
     /// <summary>
     /// Represents a 4x4 matrix.
     /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
     public struct mat4
     {
         public vec4 c0, c1, c2, c3;

@@ -1,12 +1,14 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace GlmNet
 {
     /// <summary>
     /// Represents a four dimensional integer vector.
     /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
     public struct ivec4
     {
         public int x;

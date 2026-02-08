@@ -44,7 +44,8 @@ namespace Editor.Cooker
                  List<ComponentIR> Components 
             */
             writer.Write(ir.Version);
-            writer.WriteObfuscatedString(ir.Name);
+            writer.Write(ir.Name.Length);
+            writer.Write(Encoding.UTF8.GetBytes(ir.Name), 0, ir.Name.Length);
             writer.Write(ir.Layer);
             writer.Write(ir.IsActiveSelf);
             writer.Write(ir.ID.ToByteArray());
@@ -87,9 +88,10 @@ namespace Editor.Cooker
              object Data 
              */
             var serializedType = ir.Type;
-            writer.WriteObfuscatedString(ir.Name);
+            writer.Write(ir.Name.Length);
+            writer.Write(Encoding.UTF8.GetBytes(ir.Name), 0, ir.Name.Length);
             writer.Write(ir.TypeId.ToByteArray());
-            writer.Write((int)serializedType);
+            writer.Write(Convert.ToUInt64(serializedType));
 
             if (serializedType.IsSimple())
             {
@@ -122,10 +124,10 @@ namespace Editor.Cooker
             */
             if (data == null)
             {
-                writer.Write((int)SerializedType.None);
+                writer.Write(Convert.ToUInt64(SerializedType.None));
                 return;
             }
-            writer.Write((int)data.ComplexType);
+            writer.Write(Convert.ToUInt64(data.ComplexType));
             writer.Write(data.TypeId.ToByteArray());
             Serialize(data.Properties, writer);
         }
@@ -154,7 +156,7 @@ namespace Editor.Cooker
                         for (int i = 0; i < data.Collection.Count; i++)
                         {
                             var item = data.Collection[i] as CollectionData<ComplexTypeData>;
-                            writer.Write((int)item.Type);
+                            writer.Write(Convert.ToUInt64(item.Type));
                             WriteComplexClass(writer, item.Value);
                         }
                     }
@@ -164,7 +166,7 @@ namespace Editor.Cooker
                         for (int i = 0; i < data.Collection.Count; i++)
                         {
                             var item = data.Collection[i] as ComplexDictionaryData;
-                            writer.Write((int)item.Type);
+                            writer.Write(Convert.ToUInt64(item.Type));
                             WriteComplexClass(writer, item.Key);
                             WriteComplexClass(writer, item.Value);
                         }
@@ -198,7 +200,7 @@ namespace Editor.Cooker
                         for (int i = 0; i < data.Collection.Count; i++)
                         {
                             var item = data.Collection[i] as CollectionData<ReferenceData>;
-                            writer.Write((int)item.Type);
+                            writer.Write(Convert.ToUInt64(item.Type));
                             writer.Write(item.Value.Id.ToByteArray());
                         }
                     }
@@ -208,9 +210,9 @@ namespace Editor.Cooker
                         for (int i = 0; i < data.Collection.Count; i++)
                         {
                             var item = data.Collection[i] as DictionaryData;
-                            writer.Write((int)item.Type);
-                            writer.Write((int)item.KeyType);
-                            writer.Write((int)item.ValueType);
+                            writer.Write(Convert.ToUInt64(item.Type));
+                            writer.Write(Convert.ToUInt64(item.KeyType));
+                            writer.Write(Convert.ToUInt64(item.ValueType));
 
                             void WriteArg(SerializedType type, object argData)
                             {
@@ -236,7 +238,6 @@ namespace Editor.Cooker
 
         private static void WriteSimpleProperty(BinaryWriter writer, object data, SerializedType simpleType)
         {
-            writer.Write((int)simpleType);
             switch (simpleType)
             {
                 case SerializedType.None:
@@ -245,7 +246,7 @@ namespace Editor.Cooker
                     writer.Write(GetSimpleValueSafe<char>(data));
                     break;
                 case SerializedType.String:
-                    writer.WriteObfuscatedString(GetSimpleValueSafe<string>(data));
+                    writer.Write(GetSimpleValueSafe<string>(data));
                     break;
                 case SerializedType.Bool:
                     writer.Write(GetSimpleValueSafe<bool>(data));
@@ -264,12 +265,12 @@ namespace Editor.Cooker
                         if (data != null)
                         {
                             writer.Write(ReflectionUtils.GetStableGuid(data.GetType()).ToByteArray());
-                            writer.Write((int)data);
+                            writer.Write(Convert.ToUInt64(data));
                         }
                         else
                         {
                             writer.Write(Guid.Empty.ToByteArray());
-                            writer.Write(0);
+                            writer.Write(0UL);
                         }
                     }
                     break;
