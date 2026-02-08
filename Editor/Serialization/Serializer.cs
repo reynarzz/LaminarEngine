@@ -117,7 +117,7 @@ namespace Editor.Serialization
             }
             else if (ReflectionUtils.IsInternalType(type))
             {
-                return SerializedType.SimpleFlag;
+                return GetSimpleType(type);
             }
             else if (type.IsClass || ReflectionUtils.IsUserDefinedStruct(type))
             {

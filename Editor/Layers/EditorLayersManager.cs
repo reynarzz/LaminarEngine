@@ -207,8 +207,8 @@ namespace Editor
                 //_test = Assets.GetShader("Shaders/Test/ShaderTest.shader");
 
 
-                SerializerTypesFixer();
-                //LoadScene();
+                // SerializerTypesFixer();
+                LoadScene();
             }
         }
 

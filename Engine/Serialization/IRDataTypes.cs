@@ -109,12 +109,12 @@ namespace Engine
 
         // Trait flags (Bits 0-19)
         // Category buckets.
-        SimpleFlag = 1L << 0,     // 1
-        EObjectFlag = 1L << 1,    // 2
-        AssetFlag = 1L << 2,      // 4
-        CollectionFlag = 1L << 3, // 8
-        ClassFlag = 1L << 4,      // 16
-        AssetBaseFlag = EObjectFlag | AssetFlag, // 6
+        SimpleFlag = 1L << 0,              // 1
+        EObjectFlag = 1L << 1,             // 2
+        AssetNoEObjectFlag = 1L << 2,      // 4
+        CollectionFlag = 1L << 3,          // 8
+        ClassFlag = 1L << 4,               // 16
+        AssetFlag = EObjectFlag | AssetNoEObjectFlag, // 6
 
         // ID Shift (20 Bits)
         // We use a 20-bit shift to move the Identity into the 'Millions' range.
@@ -151,15 +151,15 @@ namespace Engine
         Actor = EObjectFlag | (2001UL << 20),
 
         // Assets 
-        SpriteAsset = AssetBaseFlag | (3000UL << 20),
-        TextureAsset = AssetBaseFlag | (3001UL << 20),
-        MaterialAsset = AssetBaseFlag | (3002UL << 20),
-        ShaderAsset = AssetBaseFlag | (3003UL << 20),
-        AudioClipAsset = AssetBaseFlag | (3004UL << 20),
-        AnimationAsset = AssetBaseFlag | (3005UL << 20),
-        RenderTextureAsset = AssetBaseFlag | (3006UL << 20),
-        AnimatorControllerAsset = AssetBaseFlag | (3007UL << 20),
-        ScriptableObject = AssetBaseFlag | (3008UL << 20),
+        SpriteAsset = AssetFlag | (3000UL << 20),
+        TextureAsset = AssetFlag | (3001UL << 20),
+        MaterialAsset = AssetFlag | (3002UL << 20),
+        ShaderAsset = AssetFlag | (3003UL << 20),
+        AudioClipAsset = AssetFlag | (3004UL << 20),
+        AnimationAsset = AssetFlag | (3005UL << 20),
+        RenderTextureAsset = AssetFlag | (3006UL << 20),
+        AnimatorControllerAsset = AssetFlag | (3007UL << 20),
+        ScriptableObject = AssetFlag | (3008UL << 20),
 
         // Collections and classes
         ComplexCollection = CollectionFlag | (4000UL << 20),

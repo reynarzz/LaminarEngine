@@ -4,8 +4,10 @@ using GlmNet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Editor.Utils;
 
 namespace Editor.Cooker
 {
@@ -42,7 +44,7 @@ namespace Editor.Cooker
                  List<ComponentIR> Components 
             */
             writer.Write(ir.Version);
-            writer.Write(ir.Name);
+            writer.WriteObfuscatedString(ir.Name);
             writer.Write(ir.Layer);
             writer.Write(ir.IsActiveSelf);
             writer.Write(ir.ID.ToByteArray());
@@ -85,7 +87,7 @@ namespace Editor.Cooker
              object Data 
              */
             var serializedType = ir.Type;
-            writer.Write(ir.Name);
+            writer.WriteObfuscatedString(ir.Name);
             writer.Write(ir.TypeId.ToByteArray());
             writer.Write((int)serializedType);
 
@@ -240,105 +242,109 @@ namespace Editor.Cooker
                 case SerializedType.None:
                     break;
                 case SerializedType.Char:
-                    writer.Write((char)data);
+                    writer.Write(GetSimpleValueSafe<char>(data));
                     break;
                 case SerializedType.String:
-                    writer.Write((string)data);
+                    writer.WriteObfuscatedString(GetSimpleValueSafe<string>(data));
                     break;
                 case SerializedType.Bool:
-                    writer.Write((bool)data);
+                    writer.Write(GetSimpleValueSafe<bool>(data));
                     break;
                 case SerializedType.Byte:
-                    writer.Write((byte)data);
+                    writer.Write(GetSimpleValueSafe<byte>(data));
                     break;
                 case SerializedType.Short:
-                    writer.Write((short)data);
+                    writer.Write(GetSimpleValueSafe<short>(data));
                     break;
                 case SerializedType.UShort:
-                    writer.Write((ushort)data);
+                    writer.Write(GetSimpleValueSafe<ushort>(data));
                     break;
                 case SerializedType.Enum:
                     {
-                        writer.Write(ReflectionUtils.GetStableGuid(data.GetType()).ToByteArray());
-                        writer.Write((int)data);
+                        if (data != null)
+                        {
+                            writer.Write(ReflectionUtils.GetStableGuid(data.GetType()).ToByteArray());
+                            writer.Write((int)data);
+                        }
+                        else
+                        {
+                            writer.Write(Guid.Empty.ToByteArray());
+                            writer.Write(0);
+                        }
                     }
                     break;
                 case SerializedType.Int:
-                    writer.Write((int)data);
+                    writer.Write(GetSimpleValueSafe<int>(data));
                     break;
                 case SerializedType.Uint:
-                    writer.Write((uint)data);
+                    writer.Write(GetSimpleValueSafe<uint>(data));
                     break;
                 case SerializedType.Float:
-                    writer.Write((float)data);
+                    writer.Write(GetSimpleValueSafe<float>(data));
                     break;
                 case SerializedType.Double:
-                    writer.Write((double)data);
+                    writer.Write(GetSimpleValueSafe<double>(data));
                     break;
                 case SerializedType.Long:
-                    writer.Write((long)data);
+                    writer.Write(GetSimpleValueSafe<long>(data));
                     break;
                 case SerializedType.Ulong:
-                    writer.Write((ulong)data);
+                    writer.Write(GetSimpleValueSafe<ulong>(data));
                     break;
                 case SerializedType.Vec2:
-                    WriteVec2(writer, (vec2)data);
+                    WriteStruct(writer, GetSimpleValueSafe<vec2>(data));
                     break;
                 case SerializedType.Vec3:
-                    WriteVec3(writer, (vec3)data);
+                    WriteStruct(writer, GetSimpleValueSafe<vec3>(data));
                     break;
                 case SerializedType.Vec4:
-                    WriteVec4(writer, (vec4)data);
+                    WriteStruct(writer, GetSimpleValueSafe<vec4>(data));
                     break;
                 case SerializedType.Ivec2:
-                    WriteIVec2(writer, (ivec2)data);
+                    WriteStruct(writer, GetSimpleValueSafe<ivec2>(data));
                     break;
                 case SerializedType.Ivec3:
-                    WriteIVec3(writer, (ivec3)data);
+                    WriteStruct(writer, GetSimpleValueSafe<ivec3>(data));
                     break;
                 case SerializedType.Ivec4:
-                    WriteIVec4(writer, (ivec4)data);
+                    WriteStruct(writer, GetSimpleValueSafe<ivec4>(data));
                     break;
                 case SerializedType.Quat:
-                    WriteQuat(writer, (quat)data);
+                    WriteStruct(writer, GetSimpleValueSafe<quat>(data));
                     break;
                 case SerializedType.Mat2:
-                    {
-                        var value = (mat2)data;
-                        WriteVec2(writer, value.c0);
-                        WriteVec2(writer, value.c1);
-                    }
+                    WriteStruct(writer, GetSimpleValueSafe<mat2>(data));
                     break;
                 case SerializedType.Mat3:
-                    {
-                        var value = (mat3)data;
-                        WriteVec3(writer, value.c0);
-                        WriteVec3(writer, value.c1);
-                        WriteVec3(writer, value.c2);
-                    }
+                    WriteStruct(writer, GetSimpleValueSafe<mat3>(data));
                     break;
                 case SerializedType.Mat4:
-                    {
-                        var value = (mat4)data;
-                        WriteVec4(writer, value.c0);
-                        WriteVec4(writer, value.c1);
-                        WriteVec4(writer, value.c2);
-                        WriteVec4(writer, value.c3);
-                    }
+                    WriteStruct(writer, GetSimpleValueSafe<mat4>(data));
                     break;
                 case SerializedType.Color:
-                    {
-                        WriteVec4(writer, (Color)data);
-                    }
+                    writer.Write((uint)GetSimpleValueSafe<Color>(data));
                     break;
                 case SerializedType.Color32:
-                    {
-                        WriteIVec4(writer, (Color32)data);
-                    }
+                    writer.Write(((ColorPacketRGBA)GetSimpleValueSafe<Color32>(data)).Value);
                     break;
                 default:
                     throw new NotImplementedException($"Writer not implemented for simple type: '{simpleType}'");
             }
+        }
+
+        private static T GetSimpleValueSafe<T>(object data)
+        {
+            if (data != null)
+            {
+                return (T)data;
+            }
+
+            if (typeof(T) == typeof(string))
+            {
+                return (T)(object)string.Empty;
+            }
+
+            return default;
         }
 
         private static void WriteReferenceProperty(BinaryWriter writer, ReferenceData value)
@@ -353,53 +359,10 @@ namespace Editor.Cooker
             }
         }
 
-        private static void WriteVec2(BinaryWriter writer, vec2 value)
+        private static void WriteStruct<T>(BinaryWriter writer, T value) where T : unmanaged
         {
-            writer.Write(value.x);
-            writer.Write(value.y);
-        }
-        private static void WriteVec3(BinaryWriter writer, vec3 value)
-        {
-            writer.Write(value.x);
-            writer.Write(value.y);
-            writer.Write(value.z);
-        }
-        private static void WriteVec4(BinaryWriter writer, vec4 value)
-        {
-            writer.Write(value.x);
-            writer.Write(value.y);
-            writer.Write(value.z);
-            writer.Write(value.w);
-        }
-        private static void WriteQuat(BinaryWriter writer, quat value)
-        {
-            writer.Write(value.x);
-            writer.Write(value.y);
-            writer.Write(value.z);
-            writer.Write(value.w);
-        }
-        private static void WriteIVec2(BinaryWriter writer, ivec2 value)
-        {
-            writer.Write(value.x);
-            writer.Write(value.y);
-        }
-        private static void WriteIVec3(BinaryWriter writer, ivec3 value)
-        {
-            writer.Write(value.x);
-            writer.Write(value.y);
-            writer.Write(value.z);
-        }
-        private static void WriteIVec4(BinaryWriter writer, ivec4 value)
-        {
-            writer.Write(value.x);
-            writer.Write(value.y);
-            writer.Write(value.z);
-            writer.Write(value.w);
-        }
-       
-        private static Guid GetTypeId()
-        {
-            return Guid.NewGuid();
+            ReadOnlySpan<T> span = stackalloc T[] { value };
+            writer.Write(MemoryMarshal.AsBytes(span));
         }
     }
 }

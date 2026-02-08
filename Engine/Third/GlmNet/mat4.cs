@@ -111,16 +111,17 @@ namespace GlmNet
 
         #region Conversion
 
-        private static readonly float[] _cached = new float[16];
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float[] to_array()
         {
-            _cached[0] = c0.x; _cached[1] = c0.y; _cached[2] = c0.z; _cached[3] = c0.w;
-            _cached[4] = c1.x; _cached[5] = c1.y; _cached[6] = c1.z; _cached[7] = c1.w;
-            _cached[8] = c2.x; _cached[9] = c2.y; _cached[10] = c2.z; _cached[11] = c2.w;
-            _cached[12] = c3.x; _cached[13] = c3.y; _cached[14] = c3.z; _cached[15] = c3.w;
-            return _cached;
+            var arr = new float[16];
+
+            arr[0] = c0.x; arr[1] = c0.y; arr[2] = c0.z; arr[3] = c0.w;
+            arr[4] = c1.x; arr[5] = c1.y; arr[6] = c1.z; arr[7] = c1.w;
+            arr[8] = c2.x; arr[9] = c2.y; arr[10] = c2.z; arr[11] = c2.w;
+            arr[12] = c3.x; arr[13] = c3.y; arr[14] = c3.z; arr[15] = c3.w;
+            return arr;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
