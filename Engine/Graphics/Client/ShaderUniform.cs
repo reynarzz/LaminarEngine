@@ -11,8 +11,8 @@ namespace Engine
 {
     public struct ShaderUniform
     {
-        public string Name { get;  set; }
-        public UniformType Type { get; set; }
-        public int ElementCount { get; set; }
+        [SerializedField] public string Name { get;  set; }
+        [SerializedField] public UniformType Type { get; set; }
+        [SerializedField] public int ElementCount { get; set; }
     }
 }

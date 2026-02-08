@@ -1,10 +1,13 @@
+using GlmNet;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Engine
+namespace Engine.Serialization
 {
     internal class SceneIR
     {
@@ -61,18 +64,20 @@ namespace Engine
     internal class CollectionPropertyData
     {
         public CollectionType CollectionType { get; set; }
-        public List<object> Collection { get; set; } = new();
+        public SerializedType ItemsType { get; set; }
+        public ICollection Collection { get; set; }
     }
 
-    internal class DictionaryData : SerializedItem
+    internal class DictionaryDataT<T1, T2> : SerializedItem
     {
         public SerializedType KeyType { get; set; }
         public SerializedType ValueType { get; set; }
-
-        public object Key { get; set; }
-        public object Value { get; set; }
+        public T1 Key { get; set; }
+        public T2 Value { get; set; }
     }
 
+    internal class DictionaryData : DictionaryDataT<object, object> { }
+    internal class DictionaryDataSimple : DictionaryDataT<VariantIRValue, VariantIRValue> { }
     internal class ComplexDictionaryData : SerializedItem
     {
         public ComplexTypeData Key { get; set; }
@@ -163,8 +168,10 @@ namespace Engine
 
         // Collections and classes
         ComplexCollection = CollectionFlag | (4000UL << 20),
-        ReferenceCollection = CollectionFlag | (4001UL << 20),
-        ComplexClass = ClassFlag | (4002UL << 20),
-        Delegate = ClassFlag | (4003UL << 20)
+        SimpleCollection = CollectionFlag | (4001UL << 20),
+        ReferenceCollection = CollectionFlag | (4002UL << 20),
+        ComplexClass = ClassFlag | (4003UL << 20),
+        Delegate = ClassFlag | (4004UL << 20)
     }
+
 }

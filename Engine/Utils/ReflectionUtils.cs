@@ -781,7 +781,7 @@ namespace Engine.Utils
 
             if (type.IsGenericType)
             {
-                if (type.GetGenericTypeDefinition() == typeof(List<>))
+                if (type.IsAssignableTo(typeof(List<>)))
                 {
                     collectionType = CollectionType.List;
                     return true;

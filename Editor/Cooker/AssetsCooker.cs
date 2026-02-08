@@ -92,7 +92,7 @@ namespace Editor.Cooker
                 { AssetType.Audio, new AudioAssetProcessor() },
                 { AssetType.Text, new TextAssetProcessor() },
                 { AssetType.Shader, new ShaderAssetProcessorOld() },
-                { AssetType.ShaderV2, new ShaderAssetProcessor() },
+                { AssetType.ShaderV2, new ShaderAssetProcessorRelease() },
                 { AssetType.Font, new RawBytesAssetProcessor() },
                 { AssetType.AnimationClip, new RawBytesAssetProcessor() }, // TODO: binary serialization
                 { AssetType.AnimationController, new RawBytesAssetProcessor() }, // TODO: binary serialization

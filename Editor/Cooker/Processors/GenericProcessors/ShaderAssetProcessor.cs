@@ -75,7 +75,7 @@ namespace Editor.Cooker
         }
 
         // NOTE: for now this will write a json, for production ready code, it should be binary.
-        private byte[] GetAsset(ShaderSource[] sources)
+        protected virtual byte[] GetAsset(ShaderSource[] sources)
         {
             return Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new ShaderData() { Sources = sources }));
         }

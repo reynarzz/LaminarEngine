@@ -31,10 +31,11 @@ namespace Editor
     // Editor.Cooker, the asset database sometimes doesn't remove old assets correctly.
 
     // Fix:
-    // Investigate why when the scene is reloaded old objects are still alive.
-    // Rebuild the rendering system.
-    // Compilation can get stuck forever.
-    // If a collider change from Trigger to normal (and viceversa), the ontrigerExit/onCollisionExit must be called.
+    // - Investigate why when the scene is reloaded old objects are still alive.
+    // - Rebuild the rendering system.
+    // - Compilation can get stuck forever.
+    // - If a collider change from Trigger to normal (and viceversa), the ontrigerExit/onCollisionExit must be called.
+    // - SpriteDefault.material needs to specify the blending as srcApha, oneMinusSrcAlpha, the data got lost due serialization refactoring.
 
     // Serialization:
     // - Forbid serialization of dictionaries that contains EObject as key?

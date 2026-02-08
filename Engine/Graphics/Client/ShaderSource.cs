@@ -26,9 +26,9 @@ namespace Engine
 
     internal class ShaderSource
     {
-        public bool HasErrors { get; set; }
-        public ShaderStage Stage { get; set; }
-        public byte[] Shader { get; set; }
-        public ShaderUniform[] Uniforms { get; set; }
+        [SerializedField] public bool HasErrors { get; set; }
+        [SerializedField] public ShaderStage Stage { get; set; }
+        [SerializedField] public byte[] Shader { get; set; }
+        [SerializedField] public ShaderUniform[] Uniforms { get; set; }
     }
 }

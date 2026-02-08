@@ -1,0 +1,37 @@
+﻿using Engine;
+using Engine.Serialization;
+using Editor.Serialization;
+using System;
+using System.Linq;
+using System.Text;
+
+namespace Editor.Cooker
+{
+    internal class ShaderAssetProcessorRelease : ShaderAssetProcessor
+    {
+        protected override byte[] GetAsset(ShaderSource[] sources)
+        {
+            using var stream = new MemoryStream();
+            using var writer = new BinaryWriter(stream, Encoding.UTF8);
+            var properties = Serializer.Serialize(sources);
+
+            if (properties.Count > 1)
+            {
+                throw new Exception($"Invalid shader property count: {properties.Count}, has to be '1'");
+            }
+
+            var ir = new ShaderIR()
+            {
+                SourcesCollection = properties[0]
+            };
+
+            BinaryIRSerializer.Serialize(ir, writer);
+
+            writer.Flush();
+            var buf = stream.ToArray();
+            File.WriteAllBytes(EditorPaths.AppRoot + "/Shader.bin", buf);
+
+            return stream.ToArray();
+        }
+    }
+}

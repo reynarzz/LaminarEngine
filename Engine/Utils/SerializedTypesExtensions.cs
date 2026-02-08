@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Engine.Serialization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,11 @@ namespace Engine.Utils
         {
             return (type & SerializedType.EObjectFlag) != 0;
         }
+        public static bool IsCollection(this SerializedType type)
+        {
+            return (type & SerializedType.CollectionFlag) != 0;
+        }
+        
         public static ulong GetIdentity(this SerializedType type)
         {
             // Strip the flags (bits 0-19)

@@ -61,6 +61,10 @@ namespace Engine.Serialization
                 {
                     DeserializeComplexCollection(targetInstance, property, deserializerData);
                 }
+                else if (serializedType == SerializedType.SimpleCollection)
+                {
+                    DeserializeSimpleCollection(targetInstance, property, deserializerData);
+                }
                 else
                 {
                     // Debug.Error($"Cannot deserialize property of type: {property.Type}, please implement it.");
@@ -93,8 +97,16 @@ namespace Engine.Serialization
             {
                 return;
             }
-
-            ReflectionUtils.SetMemberValue(target, property.Data, property.Name);
+            object value = null;
+            if (property.Type == SerializedType.Enum)
+            {
+                value = DeserializeEnum((VariantIRValue)property.Data);
+            }
+            else
+            {
+                value = ((VariantIRValue)property.Data).GetValueAsObject();
+            }
+            ReflectionUtils.SetMemberValue(target, value, property.Name);
         }
 
         private static void DeserializeReferenceCollectionProperty(object target, SerializedPropertyIR property, DeserializerData deserializerData)
@@ -214,6 +226,109 @@ namespace Engine.Serialization
             }
         }
 
+        internal static void DeserializeSimpleCollection(object target, SerializedPropertyIR property, DeserializerData deserializerData)
+        {
+            if (target == null || property == null || property.Data == null)
+                return;
+
+            var collectionData = property.Data as CollectionPropertyData;
+            if (collectionData == null)
+            {
+                Debug.EngineError("FATAL: Not a collection to deserialize!");
+                return;
+            }
+            //void DeserializeItem(ComplexTypeData complexItem, Action<object> setValueCallback)
+            //{
+            //    if (complexItem == null)
+            //    {
+            //        setValueCallback(null);
+            //        return;
+            //    }
+            //    if (Tr.ResolveType(complexItem, out Type itemType))
+            //    {
+            //        var itemInstance = ReflectionUtils.GetDefaultValueInstance(itemType);
+            //        if (itemInstance == null)
+            //        {
+            //            throw new Exception($"Can't create an instance of type: {itemType}, check if a default constructor is available.");
+            //        }
+            //        DeserializeTarget(itemInstance, complexItem.Properties, deserializerData);
+            //        setValueCallback(itemInstance);
+            //    }
+            //}
+
+            //if (Tr.ResolveType(property, out Type type))
+            //{
+            //    var collectionInstance = ReflectionUtils.GetDefaultValueInstance(type, collectionData.Collection.Count);
+
+            //    if (collectionData.CollectionType == CollectionType.Dictionary)
+            //    {
+            //        var dictionary = collectionInstance as IDictionary;
+            //        foreach (var collItem in collectionData.Collection)
+            //        {
+            //            object DeserializeArgValue(ComplexTypeData complexArg)
+            //            {
+            //                object deserializedArgValue = null;
+
+            //                if (complexArg.ComplexType.IsSimple())
+            //                {
+            //                    // if (complexArg.Properties != null && complexArg.Properties.Count > 0)
+            //                    {
+            //                        deserializedArgValue = complexArg.Properties?[0].Data ?? null;
+            //                    }
+            //                }
+            //                else
+            //                {
+            //                    DeserializeItem(complexArg, item =>
+            //                    {
+            //                        deserializedArgValue = item;
+            //                    });
+            //                }
+
+            //                return deserializedArgValue;
+            //            }
+
+            //            var complexItem = collItem as ComplexDictionaryData;
+
+            //            var key = DeserializeArgValue(complexItem.Key);
+            //            var value = DeserializeArgValue(complexItem.Value);
+
+            //            if (key != null && !dictionary.Contains(key))
+            //            {
+            //                if (value is ReferenceData reference)
+            //                {
+            //                    value = GetReferenceValue(complexItem.Type, deserializerData, reference);
+            //                }
+            //                dictionary.Add(key, value);
+            //            }
+            //        }
+
+            //        ReflectionUtils.SetMemberValue(target, dictionary, property.Name);
+            //    }
+            //    else
+            //    {
+            //        collectionInstance = ReflectionUtils.EnsureCount(collectionInstance, collectionData.Collection.Count);
+            //        int colItemIndex = 0;
+            //        foreach (var colItem in collectionData.Collection)
+            //        {
+            //            var complexItem = colItem as CollectionData<ComplexTypeData>;
+
+            //            DeserializeItem(complexItem.Value, item =>
+            //            {
+            //                if (item is ReferenceData reference)
+            //                {
+            //                    item = GetReferenceValue(complexItem.Type, deserializerData, reference);
+            //                }
+
+            //                ReflectionUtils.SetMemberValueSafe(collectionInstance, item, default(MemberInfo), colItemIndex);
+            //            });
+            //            colItemIndex++;
+            //        }
+
+            //        ReflectionUtils.SetMemberValue(target, collectionInstance, property.Name);
+            //    }
+            //}
+        }
+
         internal static void DeserializeComplexCollection(object target, SerializedPropertyIR property, DeserializerData deserializerData)
         {
             if (target == null || property == null || property.Data == null)
@@ -242,7 +357,8 @@ namespace Engine.Serialization
                         throw new Exception($"Can't create an instance of type: {itemType}, check if a default constructor is available.");
                     }
                     DeserializeTarget(itemInstance, complexItem.Properties, deserializerData);
-                    setValueCallback(itemInstance);
+                    var itemValue = GetComplexTypeDataSafe(itemInstance, complexItem, complexItem.ComplexType, deserializerData);
+                    setValueCallback(itemValue);
                 }
             }
 
@@ -253,7 +369,7 @@ namespace Engine.Serialization
                 if (collectionData.CollectionType == CollectionType.Dictionary)
                 {
                     var dictionary = collectionInstance as IDictionary;
-                    for (int i = 0; i < collectionData.Collection.Count; i++)
+                    foreach (var collItem in collectionData.Collection)
                     {
                         object DeserializeArgValue(ComplexTypeData complexArg)
                         {
@@ -263,7 +379,8 @@ namespace Engine.Serialization
                             {
                                 // if (complexArg.Properties != null && complexArg.Properties.Count > 0)
                                 {
-                                    deserializedArgValue = complexArg.Properties?[0].Data ?? null;
+                                    deserializedArgValue = GetComplexTypeDataSafe(complexArg.Properties?[0].Data ?? null, complexArg, 
+                                                                                  complexArg.ComplexType, deserializerData);
                                 }
                             }
                             else
@@ -274,20 +391,17 @@ namespace Engine.Serialization
                                 });
                             }
 
+
                             return deserializedArgValue;
                         }
 
-                        var complexItem = collectionData.Collection[i] as ComplexDictionaryData;
+                        var complexItem = collItem as ComplexDictionaryData;
 
                         var key = DeserializeArgValue(complexItem.Key);
                         var value = DeserializeArgValue(complexItem.Value);
 
                         if (key != null && !dictionary.Contains(key))
                         {
-                            if (value is ReferenceData reference)
-                            {
-                                value = GetReferenceValue(complexItem.Type, deserializerData, reference);
-                            }
                             dictionary.Add(key, value);
                         }
                     }
@@ -297,24 +411,60 @@ namespace Engine.Serialization
                 else
                 {
                     collectionInstance = ReflectionUtils.EnsureCount(collectionInstance, collectionData.Collection.Count);
-                    for (int i = 0; i < collectionData.Collection.Count; i++)
+                    int colItemIndex = 0;
+                    foreach (var colItem in collectionData.Collection)
                     {
-                        var complexItem = collectionData.Collection[i] as CollectionData<ComplexTypeData>;
+                        var complexItem = colItem as CollectionData<ComplexTypeData>;
 
                         DeserializeItem(complexItem.Value, item =>
                         {
-                            if (item is ReferenceData reference)
-                            {
-                                item = GetReferenceValue(complexItem.Type, deserializerData, reference);
-                            }
-
-                            ReflectionUtils.SetMemberValueSafe(collectionInstance, item, default(MemberInfo), i);
+                            ReflectionUtils.SetMemberValueSafe(collectionInstance, item, default(MemberInfo), colItemIndex);
                         });
+                        colItemIndex++;
                     }
 
                     ReflectionUtils.SetMemberValue(target, collectionInstance, property.Name);
                 }
             }
+        }
+
+        private static object GetComplexTypeDataSafe(object arg, ComplexTypeData argComplexData, 
+                                                     SerializedType argType, DeserializerData deserializedData)
+        {
+            if (arg == null)
+                return null;
+
+            if (arg is ReferenceData reference)
+            {
+                return GetReferenceValue(argType, deserializedData, reference);
+            }
+            else if (argComplexData.ComplexType.IsSimple())
+            {
+                if (argComplexData.ComplexType == SerializedType.Enum)
+                {
+                    return DeserializeEnum((VariantIRValue)arg);
+                }
+
+                return ((VariantIRValue)arg).GetValueAsObject();
+            }
+
+            return arg;
+        }
+
+        private static Enum DeserializeEnum(in VariantIRValue variant)
+        {
+            if (variant.Kind != SerializedType.Enum)
+            {
+                Debug.EngineError("Is not enum!");
+                return null;
+            }
+
+            if (Tr.ResolveType(variant.Enum, out var enumType))
+            {
+                return (Enum)Enum.ToObject(enumType, variant.Enum.EnumValue);
+            }
+
+            return null;
         }
 
         private static object GetReferenceValue(SerializedType type, DeserializerData deserializerData,
