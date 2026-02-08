@@ -135,12 +135,62 @@ namespace Engine.Serialization
             {
                 property.Data = ReadComplexClass(reader);
             }
-            //else if (serializedType == SerializedType.ComplexCollection)
-            //{
-            //    ReadComplexCollection(reader, ir.Data as CollectionPropertyData);
-            //}
+            else if (serializedType == SerializedType.ComplexCollection)
+            {
+                property.Data = ReadComplexCollection(reader);
+            }
 
             return property;
+        }
+
+        private static CollectionPropertyData ReadComplexCollection(BinaryReader reader)
+        {
+            var count = reader.ReadInt32();
+
+            var collectionData = new CollectionPropertyData();
+            if (count == 0)
+            {
+                return collectionData;
+            }
+            collectionData.Collection = new List<object>();
+            CollectionsMarshal.SetCount(collectionData.Collection, count);
+            collectionData.CollectionType = (CollectionType)reader.ReadUInt64();
+            switch (collectionData.CollectionType)
+            {
+                case CollectionType.None:
+                    break;
+                case CollectionType.Array:
+                case CollectionType.List:
+                case CollectionType.Stack:
+                case CollectionType.Queue:
+                case CollectionType.Hashset:
+                    {
+                        for (int i = 0; i < count; i++)
+                        {
+                            var item = new CollectionData<ComplexTypeData>();
+                            item.Type = (SerializedType)reader.ReadUInt64();
+                            item.Value = ReadComplexClass(reader);
+                            collectionData.Collection[i] = item;
+                        }
+                    }
+                    break;
+                case CollectionType.Dictionary:
+                    {
+                        for (int i = 0; i < count; i++)
+                        {
+                            var item =  new ComplexDictionaryData();
+                            item.Type = (SerializedType)reader.ReadUInt64();
+                            item.Key = ReadComplexClass(reader);
+                            item.Value = ReadComplexClass(reader);
+                            collectionData.Collection[i] = item;
+                        }
+                    }
+                    break;
+                default:
+                    throw new NotImplementedException($"Collection type '{collectionData.CollectionType}' is not implemented.");
+            }
+
+            return collectionData;
         }
 
         private static CollectionPropertyData ReadReferenceCollection(BinaryReader reader)

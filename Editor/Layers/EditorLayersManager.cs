@@ -209,10 +209,19 @@ namespace Editor
 
                 // SerializerTypesFixer();
                 // LoadScene();
+
+                //if (File.Exists(TestfilePath))
+                //{
+                //    var sceneFile = File.ReadAllText(TestfilePath);
+                //    var sceneFileIR = EditorJsonUtils.Deserialize<SceneIR>(sceneFile);
+                //    LoadScene(sceneFileIR);
+                //}
+
                 var file = File.Open(EditorPaths.AppRoot + "/SceneBinary.bin", FileMode.Open, FileAccess.Read);
                 var reader = new BinaryReader(file);
 
                 var scene = BinaryIRDeserializer.DeserializeScene(reader);
+                LoadScene(scene);
             }
         }
 
@@ -310,12 +319,12 @@ namespace Editor
             }
         }
 
-        private void LoadScene()
+        private void LoadScene(SceneIR scene)
         {
-            if (File.Exists(TestfilePath))
+
+            if (scene != null)
             {
-                var file = File.ReadAllText(TestfilePath);
-                var scene = EditorJsonUtils.Deserialize<SceneIR>(file);
+
                 // var actors = _actors;
                 Debug.Log("Total actors in scene: " + scene.Actors.Count);
                 SceneManager.Initialize();

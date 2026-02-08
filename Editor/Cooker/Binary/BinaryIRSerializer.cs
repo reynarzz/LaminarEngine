@@ -143,6 +143,7 @@ namespace Editor.Cooker
                 return;
             }
 
+            writer.Write(Convert.ToUInt64(data.CollectionType));
             switch (data.CollectionType)
             {
                 case CollectionType.None:
