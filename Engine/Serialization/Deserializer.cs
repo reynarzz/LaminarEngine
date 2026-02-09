@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using Generated;
 
 namespace Engine.Serialization
 {
@@ -261,7 +262,7 @@ namespace Engine.Serialization
             }
             if (Tr.ResolveType(property, out Type type))
             {
-                var collectionInstance = ReflectionUtils.GetDefaultValueInstance(type, collectionData.Collection.Count);
+                var collectionInstance = ReflectionUtils.GetDefaultValueInstance(type);
                 if (collectionData.CollectionType == CollectionType.Dictionary)
                 {
                     var dictionary = collectionInstance as IDictionary;
@@ -280,12 +281,9 @@ namespace Engine.Serialization
                 else
                 {
                     var variantCollection = collectionData.Collection as VariantIRValue[];
-                    collectionInstance = ReflectionUtils.EnsureCount(collectionInstance, collectionData.Collection.Count);
-
-                    for (int i = 0; i < variantCollection.Length; i++)
+                    if(variantCollection.Length > 0)
                     {
-                        var itemObj = DeserializeVariantValueSafe(in variantCollection[i]);
-                        ReflectionUtils.SetMemberValueSafe(collectionInstance, itemObj, default(MemberInfo), i);
+                        VariantCollectionWriter.Write(collectionInstance, variantCollection, collectionData.ItemsType, collectionData.CollectionType);
                     }
                 }
 

@@ -197,7 +197,7 @@ namespace Editor.Cooker
                 case CollectionType.List:
                 case CollectionType.Stack:
                 case CollectionType.Queue:
-                case CollectionType.Hashset:
+                case CollectionType.HashSet:
                     {
                         foreach (var item in data.Collection)
                         {
@@ -242,7 +242,7 @@ namespace Editor.Cooker
                 case CollectionType.List:
                 case CollectionType.Stack:
                 case CollectionType.Queue:
-                case CollectionType.Hashset:
+                case CollectionType.HashSet:
                     {
                         foreach (var item in data.Collection)
                         {
@@ -339,7 +339,7 @@ namespace Editor.Cooker
                 case SerializedType.Int:
                     writer.Write(data.Payload.Int);
                     break;
-                case SerializedType.Uint:
+                case SerializedType.UInt:
                     writer.Write(data.Payload.Uint);
                     break;
                 case SerializedType.Float:
@@ -351,7 +351,7 @@ namespace Editor.Cooker
                 case SerializedType.Long:
                     writer.Write(data.Payload.Long);
                     break;
-                case SerializedType.Ulong:
+                case SerializedType.ULong:
                     writer.Write(data.Payload.Ulong);
                     break;
                 case SerializedType.Vec2:
@@ -363,13 +363,13 @@ namespace Editor.Cooker
                 case SerializedType.Vec4:
                     WriteStruct(writer, data.Payload.Vec4);
                     break;
-                case SerializedType.Ivec2:
+                case SerializedType.IVec2:
                     WriteStruct(writer, data.Payload.Ivec2);
                     break;
-                case SerializedType.Ivec3:
+                case SerializedType.IVec3:
                     WriteStruct(writer, data.Payload.Ivec3);
                     break;
-                case SerializedType.Ivec4:
+                case SerializedType.IVec4:
                     WriteStruct(writer, data.Payload.Ivec4);
                     break;
                 case SerializedType.Quat:

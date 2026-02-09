@@ -1117,13 +1117,13 @@
                           },
                           {
                             "Name": "Mask",
-                            "Type": "Uint",
+                            "Type": "UInt",
                             "InternalType": "System.UInt32, System.Private.CoreLib",
                             "TypeId": "0eb1f326-5a69-6e6a-caaa-206d0252204a",
                             "Data": {
                               "$type": "Engine.Serialization.VariantIRValue, Engine",
                               "$value": {
-                                "Kind": "Uint",
+                                "Kind": "UInt",
                                 "Payload": {
                                   "Char": "ÿ",
                                   "Bool": true,
@@ -1947,13 +1947,13 @@
                                   },
                                   {
                                     "Name": "UIntValue",
-                                    "Type": "Uint",
+                                    "Type": "UInt",
                                     "InternalType": "System.UInt32, System.Private.CoreLib",
                                     "TypeId": "0eb1f326-5a69-6e6a-caaa-206d0252204a",
                                     "Data": {
                                       "$type": "Engine.Serialization.VariantIRValue, Engine",
                                       "$value": {
-                                        "Kind": "Uint",
+                                        "Kind": "UInt",
                                         "Payload": {
                                           "Char": "\u0000",
                                           "Bool": false,
@@ -3174,13 +3174,13 @@
                                   },
                                   {
                                     "Name": "UIntValue",
-                                    "Type": "Uint",
+                                    "Type": "UInt",
                                     "InternalType": "System.UInt32, System.Private.CoreLib",
                                     "TypeId": "0eb1f326-5a69-6e6a-caaa-206d0252204a",
                                     "Data": {
                                       "$type": "Engine.Serialization.VariantIRValue, Engine",
                                       "$value": {
-                                        "Kind": "Uint",
+                                        "Kind": "UInt",
                                         "Payload": {
                                           "Char": "\u0000",
                                           "Bool": false,

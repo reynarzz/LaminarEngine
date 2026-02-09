@@ -45,7 +45,7 @@ namespace Engine.Serialization
                     return Payload.UShort;
                 case SerializedType.Int:
                     return Payload.Int;
-                case SerializedType.Uint:
+                case SerializedType.UInt:
                     return Payload.Uint;
                 case SerializedType.Float:
                     return Payload.Float;
@@ -53,7 +53,7 @@ namespace Engine.Serialization
                     return Payload.Double;
                 case SerializedType.Long:
                     return Payload.Long;
-                case SerializedType.Ulong:
+                case SerializedType.ULong:
                     return Payload.Ulong;
                 case SerializedType.Vec2:
                     return Payload.Vec2;
@@ -61,11 +61,11 @@ namespace Engine.Serialization
                     return Payload.Vec3;
                 case SerializedType.Vec4:
                     return Payload.Vec4;
-                case SerializedType.Ivec2:
+                case SerializedType.IVec2:
                     return Payload.Ivec2;
-                case SerializedType.Ivec3:
+                case SerializedType.IVec3:
                     return Payload.Ivec3;
-                case SerializedType.Ivec4:
+                case SerializedType.IVec4:
                     return Payload.Ivec4;
                 case SerializedType.Quat:
                     return Payload.Quat;
@@ -147,7 +147,7 @@ namespace Engine.Serialization
         {
             return new VariantIRValue
             {
-                Kind = SerializedType.Uint,
+                Kind = SerializedType.UInt,
                 Payload = ValuePayload.FromUInt(value),
                 String = null
             };
@@ -187,7 +187,7 @@ namespace Engine.Serialization
         {
             return new VariantIRValue
             {
-                Kind = SerializedType.Ulong,
+                Kind = SerializedType.ULong,
                 Payload = ValuePayload.FromULong(value),
                 String = null
             };
@@ -241,7 +241,7 @@ namespace Engine.Serialization
         {
             return new VariantIRValue
             {
-                Kind = SerializedType.Ivec2,
+                Kind = SerializedType.IVec2,
                 Payload = ValuePayload.FromIVec2(value),
                 String = null
             };
@@ -251,7 +251,7 @@ namespace Engine.Serialization
         {
             return new VariantIRValue
             {
-                Kind = SerializedType.Ivec3,
+                Kind = SerializedType.IVec3,
                 Payload = ValuePayload.FromIVec3(value),
                 String = null
             };
@@ -261,7 +261,7 @@ namespace Engine.Serialization
         {
             return new VariantIRValue
             {
-                Kind = SerializedType.Ivec4,
+                Kind = SerializedType.IVec4,
                 Payload = ValuePayload.FromIVec4(value),
                 String = null
             };

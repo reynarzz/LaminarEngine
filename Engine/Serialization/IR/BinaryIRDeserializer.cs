@@ -165,7 +165,7 @@ namespace Engine.Serialization
                 case CollectionType.List:
                 case CollectionType.Stack:
                 case CollectionType.Queue:
-                case CollectionType.Hashset:
+                case CollectionType.HashSet:
                     {
                         var result = new List<CollectionData<ComplexTypeData>>();
                         CollectionsMarshal.SetCount(result, count);
@@ -222,7 +222,7 @@ namespace Engine.Serialization
                 case CollectionType.List:
                 case CollectionType.Stack:
                 case CollectionType.Queue:
-                case CollectionType.Hashset:
+                case CollectionType.HashSet:
                     {
                         var result = new List<CollectionData<ReferenceData>>();
                         CollectionsMarshal.SetCount(result, count);
@@ -337,7 +337,7 @@ namespace Engine.Serialization
                     }
                 case SerializedType.Int:
                     return reader.ReadInt32();
-                case SerializedType.Uint:
+                case SerializedType.UInt:
                     return reader.ReadUInt32();
                 case SerializedType.Float:
                     return reader.ReadSingle();
@@ -345,7 +345,7 @@ namespace Engine.Serialization
                     return reader.ReadDouble();
                 case SerializedType.Long:
                     return reader.ReadInt64();
-                case SerializedType.Ulong:
+                case SerializedType.ULong:
                     return reader.ReadUInt64();
                 case SerializedType.Vec2:
                     return ReadStruct<vec2>(reader);
@@ -353,11 +353,11 @@ namespace Engine.Serialization
                     return ReadStruct<vec3>(reader);
                 case SerializedType.Vec4:
                     return ReadStruct<vec4>(reader);
-                case SerializedType.Ivec2:
+                case SerializedType.IVec2:
                     return ReadStruct<ivec2>(reader);
-                case SerializedType.Ivec3:
+                case SerializedType.IVec3:
                     return ReadStruct<ivec3>(reader);
-                case SerializedType.Ivec4:
+                case SerializedType.IVec4:
                     return ReadStruct<ivec4>(reader);
                 case SerializedType.Quat:
                     return ReadStruct<quat>(reader);

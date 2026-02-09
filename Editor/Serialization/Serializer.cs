@@ -389,14 +389,15 @@ namespace Editor.Serialization
 
                     if (serializedMemberType == SerializedType.SimpleCollection)
                     {
-                        foreach (var item in collection)
-                        {
-                            referenced.ItemsType = GetSimpleType(item?.GetType());
-                            break;
-                        }
+                        SerializedType? itemsType = null;
                         int index = 0;
                         foreach (var item in collection)
                         {
+                            if (itemsType == null)
+                            {
+                                itemsType = GetSimpleType(item?.GetType());
+                                referenced.ItemsType = itemsType.Value;
+                            }
                             valueCollection[index++] = GetVariantValue(item, referenced.ItemsType);
                         }
 
@@ -461,7 +462,7 @@ namespace Editor.Serialization
                     return VariantIRValue.FromUShort((ushort)val);
                 case SerializedType.Int:
                     return VariantIRValue.FromInt((int)val);
-                case SerializedType.Uint:
+                case SerializedType.UInt:
                     return VariantIRValue.FromUInt((uint)val);
                 case SerializedType.Float:
                     return VariantIRValue.FromFloat((float)val);
@@ -469,7 +470,7 @@ namespace Editor.Serialization
                     return VariantIRValue.FromDouble((double)val);
                 case SerializedType.Long:
                     return VariantIRValue.FromLong((long)val);
-                case SerializedType.Ulong:
+                case SerializedType.ULong:
                     return VariantIRValue.FromULong((ulong)val);
                 case SerializedType.Vec2:
                     return VariantIRValue.FromVec2((vec2)val);
@@ -477,11 +478,11 @@ namespace Editor.Serialization
                     return VariantIRValue.FromVec3((vec3)val);
                 case SerializedType.Vec4:
                     return VariantIRValue.FromVec4((vec4)val);
-                case SerializedType.Ivec2:
+                case SerializedType.IVec2:
                     return VariantIRValue.FromIVec2((ivec2)val);
-                case SerializedType.Ivec3:
+                case SerializedType.IVec3:
                     return VariantIRValue.FromIVec3((ivec3)val);
-                case SerializedType.Ivec4:
+                case SerializedType.IVec4:
                     return VariantIRValue.FromIVec4((ivec4)val);
                 case SerializedType.Quat:
                     return VariantIRValue.FromQuat((quat)val);
@@ -562,21 +563,6 @@ namespace Editor.Serialization
             return complexClass;
         }
 
-        private static SerializedType GetSimpleType(Type type)
-        {
-            if (type == null)
-                return SerializedType.None;
-
-            if (type.IsEnum)
-                return SerializedType.Enum;
-
-            if (_simpleTypeMap.TryGetValue(type, out var serializedType))
-            {
-                return serializedType;
-            }
-
-            throw new NotImplementedException($"Type for '{type.Name}' is not handled by the binary serializer.");
-        }
 
         private static string GetInternalType(Type type)
         {
@@ -593,6 +579,22 @@ namespace Editor.Serialization
             return ReflectionUtils.GetStableGuid(type);
         }
 
+        private static SerializedType GetSimpleType(Type type)
+        {
+            if (type == null)
+                return SerializedType.None;
+
+            if (type.IsEnum)
+                return SerializedType.Enum;
+
+            if (_simpleTypeMap.TryGetValue(type, out var serializedType))
+            {
+                return serializedType;
+            }
+
+            throw new NotImplementedException($"Type for '{type.Name}' is not handled by the binary serializer.");
+        }
+
         private static readonly Dictionary<Type, SerializedType> _simpleTypeMap = new()
         {
             // Basic Primitives
@@ -603,18 +605,18 @@ namespace Editor.Serialization
             { typeof(short),   SerializedType.Short },
             { typeof(ushort),  SerializedType.UShort },
             { typeof(int),     SerializedType.Int },
-            { typeof(uint),    SerializedType.Uint },
+            { typeof(uint),    SerializedType.UInt },
             { typeof(long),    SerializedType.Long },
-            { typeof(ulong),   SerializedType.Ulong },
+            { typeof(ulong),   SerializedType.ULong },
             { typeof(float),   SerializedType.Float },
             { typeof(double),  SerializedType.Double },
 
             { typeof(vec2),    SerializedType.Vec2 },
             { typeof(vec3),    SerializedType.Vec3 },
             { typeof(vec4),    SerializedType.Vec4 },
-            { typeof(ivec2),   SerializedType.Ivec2 },
-            { typeof(ivec3),   SerializedType.Ivec3 },
-            { typeof(ivec4),   SerializedType.Ivec4 },
+            { typeof(ivec2),   SerializedType.IVec2 },
+            { typeof(ivec3),   SerializedType.IVec3 },
+            { typeof(ivec4),   SerializedType.IVec4 },
             { typeof(quat),    SerializedType.Quat },
             { typeof(mat2),    SerializedType.Mat2 },
             { typeof(mat3),    SerializedType.Mat3 },

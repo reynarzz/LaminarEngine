@@ -622,7 +622,7 @@ namespace Engine.Utils
                 case CollectionType.List:
                 case CollectionType.Stack:
                 case CollectionType.Queue:
-                case CollectionType.Hashset:
+                case CollectionType.HashSet:
                 case CollectionType.Dictionary:
                     return type.GetGenericArguments();
             }
@@ -661,7 +661,7 @@ namespace Engine.Utils
                 case CollectionType.List:
                 case CollectionType.Stack:
                 case CollectionType.Queue:
-                case CollectionType.Hashset:
+                case CollectionType.HashSet:
                 case CollectionType.Dictionary:
                     {
                         if (!type.IsGenericType)
@@ -803,7 +803,7 @@ namespace Engine.Utils
                 }
                 else if (type.GetGenericTypeDefinition() == typeof(HashSet<>))
                 {
-                    collectionType = CollectionType.Hashset;
+                    collectionType = CollectionType.HashSet;
                     return true;
                 }
             }

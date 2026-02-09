@@ -14,6 +14,6 @@ namespace Engine
         Dictionary,
         Stack,
         Queue,
-        Hashset
+        HashSet
     }
 }
