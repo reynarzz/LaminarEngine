@@ -141,7 +141,11 @@ namespace Engine.Serialization
     internal class DictionaryIRReferences : DictionaryDataKVTypes<object, object, SerializedType[], SerializedType[]>
     {
         protected DictionaryIRReferences() { }
-        public DictionaryIRReferences(int size) : base(size) { }
+        public DictionaryIRReferences(int size) : base(size) 
+        {
+            KeyType = new SerializedType[size];
+            ValueType = new SerializedType[size];
+        }
     }
     internal class DictionaryIRVariants : DictionaryDataKVTypes<VariantIRValue, VariantIRValue, SerializedType, SerializedType>
     {

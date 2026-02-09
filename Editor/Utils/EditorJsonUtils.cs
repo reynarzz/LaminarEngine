@@ -19,7 +19,8 @@ namespace Editor.Utils
             Converters =
             {
                 new StringEnumConverter(),
-                new GuidConverter()
+                new GuidConverter(),
+                new VariantJsonConverter()
             },
             ContractResolver = new SerializedFieldContractResolver()
         };

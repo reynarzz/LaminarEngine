@@ -39,10 +39,16 @@ namespace Editor.Data
             File.WriteAllText(Path.Combine(projectSettings, $"{name}{EditorPaths.EDITOR_DATA_EXTENSION}"), json);
         }
 
-        private static T LoadProjectData<T>(string name) where T: class
+        private static T LoadProjectData<T>(string name) where T: class, new()
         {
             var projectSettings = Paths.GetProjectSettingsFolder();
-            var json = File.ReadAllText(Path.Combine(projectSettings, $"{name}{EditorPaths.EDITOR_DATA_EXTENSION}"));
+            var filePath = Path.Combine(projectSettings, $"{name}{EditorPaths.EDITOR_DATA_EXTENSION}");
+
+            if (!File.Exists(filePath))
+            {
+                return new T();
+            }
+                var json = File.ReadAllText(filePath);
             var ir = EditorJsonUtils.Deserialize<List<SerializedPropertyIR>>(json);
             var value = Deserializer.Deserialize<T>(ir);
 
