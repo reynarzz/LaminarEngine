@@ -102,7 +102,7 @@ namespace Editor.Cooker
 
             if (serializedType.IsSimple())
             {
-                WriteSimpleProperty(writer, (VariantIRValue)ir.Data, serializedType);
+                WriteSimpleProperty(writer, ObjectToVariantSafe(serializedType, ir.Data), serializedType);
             }
             else if (serializedType.IsEObject())
             {
@@ -265,7 +265,7 @@ namespace Editor.Cooker
                             {
                                 if (type.IsSimple())
                                 {
-                                    WriteSimpleProperty(writer, (VariantIRValue)argData, type);
+                                    WriteSimpleProperty(writer, ObjectToVariantSafe(type, argData), type);
                                 }
                                 else
                                 {
@@ -281,6 +281,21 @@ namespace Editor.Cooker
                 default:
                     throw new NotImplementedException($"Collection type '{data.CollectionType}' is not implemented.");
             }
+        }
+
+        private static VariantIRValue ObjectToVariantSafe(SerializedType type, object obj)
+        {
+            if (obj == null)
+            {
+                if (type == SerializedType.String)
+                {
+                    return VariantIRValue.FromString(string.Empty);
+                }
+
+                return default;
+            }
+
+            return (VariantIRValue)obj;
         }
 
         private static void WriteSimpleProperty(BinaryWriter writer, in VariantIRValue data, SerializedType simpleType)

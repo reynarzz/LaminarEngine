@@ -545,7 +545,7 @@ namespace Editor.Serialization
 
             var complexClass = new ComplexTypeData()
             {
-                ComplexType = GetSerializedType(complexType, null),
+                ComplexType = GetSerializedType(complexType, value),
                 InternalType = GetInternalType(complexType),
                 TypeId = GetTypeId(complexType),
                 Properties = new List<SerializedPropertyIR>()

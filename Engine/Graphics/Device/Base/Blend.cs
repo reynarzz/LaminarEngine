@@ -36,11 +36,11 @@ namespace Engine
 
     public class Blending
     {
-        public bool Enabled;
+        [SerializedField] public bool Enabled;
 
-        public BlendFactor SrcFactor = BlendFactor.One;
-        public BlendFactor DstFactor = BlendFactor.Zero;
-        public BlendEquation Equation = BlendEquation.FuncAdd;
+        [SerializedField] public BlendFactor SrcFactor = BlendFactor.One;
+        [SerializedField] public BlendFactor DstFactor = BlendFactor.Zero;
+        [SerializedField] public BlendEquation Equation = BlendEquation.FuncAdd;
 
         public static Blending Transparent => new Blending() { Enabled = true, SrcFactor = BlendFactor.SrcAlpha, DstFactor = BlendFactor.OneMinusSrcAlpha };
         public static Blending Additive => new Blending() { Enabled = true, SrcFactor = BlendFactor.One, DstFactor = BlendFactor.One };

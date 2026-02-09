@@ -16,7 +16,8 @@ namespace Engine
 
         [SerializedField] public bool IsScreenGrabPass { get; set; }
         [SerializedField] public Shader Shader { get; internal set; }
-        [SerializedField] public Blending Blending { get; private set; } = new()
+        [SerializedField]
+        public Blending Blending { get; private set; } = new()
         {
             Enabled = true,
             SrcFactor = BlendFactor.SrcAlpha,
@@ -33,6 +34,15 @@ namespace Engine
         {
             Shader = shader;
             _uniforms = new Dictionary<string, UniformValue>();
+
+            if(Shader?.Uniforms != null && Shader.Uniforms.Count > 0)
+            {
+                for (int i = 0; i < Shader.Uniforms.Count; i++)
+                {
+                    var uniform = Shader.Uniforms[i];
+                    _uniforms[uniform.Name] = default;
+                }
+            }
         }
 
         // Generic SetProperty uses precomputed Setter
@@ -79,7 +89,7 @@ namespace Engine
             }
         }
 
-        
+
     }
 
 }

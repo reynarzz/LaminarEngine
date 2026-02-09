@@ -139,6 +139,10 @@ namespace Engine.Serialization
             {
                 property.Data = ReadComplexCollection(reader);
             }
+            else if (serializedType == SerializedType.SimpleCollection)
+            {
+                // property.Data = ReadComplexCollection(reader);
+            }
 
             return property;
         }

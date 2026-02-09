@@ -32,32 +32,32 @@ namespace Engine
 
     public class Stencil
     {
-        public bool Enabled;
+        [SerializedField] public bool Enabled;
 
         /// <summary>
         /// Comparison function.
         /// </summary>
-        public StencilFunc Func;    
+        [SerializedField] public StencilFunc Func;
 
         /// <summary>
         /// Reference value.
         /// </summary>
-        public int Ref;             
-        public uint Mask = 0xFF;    // Bitmask for comparison
+        [SerializedField] public int Ref;
+        [SerializedField] public uint Mask = 0xFF;    // Bitmask for comparison
 
         /// <summary>
         /// WWhen stencil test fails.
         /// </summary>
-        public StencilOp FailOp;    
+        [SerializedField] public StencilOp FailOp;
 
         /// <summary>
         /// When stencil passes but depth fails.
         /// </summary>
-        public StencilOp ZFailOp;   
+        [SerializedField] public StencilOp ZFailOp;
 
         /// <summary>
         /// When both stencil and depth pass.
         /// </summary>
-        public StencilOp ZPassOp;    
+        [SerializedField] public StencilOp ZPassOp;    
     }
 }

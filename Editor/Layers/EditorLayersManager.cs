@@ -143,6 +143,8 @@ namespace Editor
                     File.WriteAllText(TestfilePath, EditorJsonUtils.Serialize(sceneIR));
 
                 }
+
+                // InternalAssetsCreator.GenerateAll();
                 //else
                 //{
                 //    Debug.Warn("Can't save in playmode.");

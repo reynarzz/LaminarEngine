@@ -44,7 +44,7 @@ namespace Editor
     //   be recognized as ReferenceCollection (pure), but as complexCollection.
 
     // Refactor:
-    // - 
+    // - Implement VariantIRValue json converter, to cleanup unused types.
 
     // Performance fix:
     // UI performance is pretty bad, rewrite the entire UI system.

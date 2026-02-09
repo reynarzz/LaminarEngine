@@ -237,6 +237,15 @@ namespace Engine.Serialization
                 Debug.EngineError("FATAL: Not a collection to deserialize!");
                 return;
             }
+
+            if (collectionData.CollectionType == CollectionType.Dictionary)
+            {
+
+            }
+            else
+            {
+
+            }
             //void DeserializeItem(ComplexTypeData complexItem, Action<object> setValueCallback)
             //{
             //    if (complexItem == null)
@@ -342,6 +351,11 @@ namespace Engine.Serialization
                 return;
             }
 
+            if(collectionData.Collection == null)
+            {
+                return;
+            }
+
             void DeserializeItem(ComplexTypeData complexItem, Action<object> setValueCallback)
             {
                 if (complexItem == null)
@@ -379,7 +393,7 @@ namespace Engine.Serialization
                             {
                                 // if (complexArg.Properties != null && complexArg.Properties.Count > 0)
                                 {
-                                    deserializedArgValue = GetComplexTypeDataSafe(complexArg.Properties?[0].Data ?? null, complexArg, 
+                                    deserializedArgValue = GetComplexTypeDataSafe(complexArg.Properties?[0].Data ?? null, complexArg,
                                                                                   complexArg.ComplexType, deserializerData);
                                 }
                             }
@@ -428,7 +442,7 @@ namespace Engine.Serialization
             }
         }
 
-        private static object GetComplexTypeDataSafe(object arg, ComplexTypeData argComplexData, 
+        private static object GetComplexTypeDataSafe(object arg, ComplexTypeData argComplexData,
                                                      SerializedType argType, DeserializerData deserializedData)
         {
             if (arg == null)
