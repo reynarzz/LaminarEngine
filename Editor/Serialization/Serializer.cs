@@ -49,6 +49,8 @@ namespace Editor.Serialization
 
         internal static SerializedType GetSerializedType(Type type, object value)
         {
+            type = value?.GetType() ?? type;
+
             if (type == null)
             {
                 return SerializedType.None;
@@ -290,156 +292,188 @@ namespace Editor.Serialization
             }
             else if (ReflectionUtils.IsCollection(type, out var collectionType))
             {
-                var elementsType = ReflectionUtils.GetCollectionElementsType(type);
-                var referenced = new CollectionPropertyData()
+                var collectionPropData = new CollectionPropertyData()
                 {
                     CollectionType = collectionType
                 };
 
                 if (collectionType == CollectionType.Dictionary)
                 {
-                    var isKeyEObject = elementsType[0].IsAssignableTo(typeof(IObject));
-                    var isValueEObject = elementsType[1].IsAssignableTo(typeof(IObject));
-
-                    var dictionary = (IDictionary)value;
-
-                    var collectionResult = new List<object>();
-
-                    foreach (var dKey in dictionary.Keys)
-                    {
-                        var dValue = dictionary[dKey];
-
-                        var keySerializedType = dKey != null ? GetSerializedType(dKey?.GetType(), null) : GetSerializedType(elementsType[0], null);
-                        var ValueSerializedType = dValue != null ? GetSerializedType(dValue?.GetType(), null) : GetSerializedType(elementsType[1], null);
-
-                        var k = isKeyEObject ? GetReferenceData((dKey as IObject)?.GetID() ?? Guid.Empty, keySerializedType, dKey) : dKey;
-                        var v = isValueEObject ? GetReferenceData((dValue as IObject)?.GetID() ?? Guid.Empty, ValueSerializedType, dValue) : dValue;
-                        var referenceType = isKeyEObject ? dKey?.GetType() ?? elementsType[0] : dValue?.GetType() ?? elementsType[1];
-                        var serializedType = GetSerializedType(referenceType, null);
-
-                        if (serializedMemberType == SerializedType.ReferenceCollection)
-                        {
-                            collectionResult.Add(new DictionaryData()
-                            {
-                                Type = serializedMemberType,
-                                Key = keySerializedType.IsSimple() ? GetVariantValue(k, keySerializedType) : k,
-                                Value = ValueSerializedType.IsSimple() ? GetVariantValue(v, ValueSerializedType) : v,
-                                KeyType = keySerializedType,
-                                ValueType = ValueSerializedType
-                            });
-
-                        }
-                        else if (serializedMemberType == SerializedType.SimpleCollection)
-                        {
-                            collectionResult.Add(new DictionaryDataSimple()
-                            {
-                                Type = serializedMemberType,
-                                Key = GetVariantValue(k, keySerializedType),
-                                Value = GetVariantValue(v, ValueSerializedType),
-                                KeyType = keySerializedType,
-                                ValueType = ValueSerializedType
-                            });
-                        }
-                        else
-                        {
-                            ComplexTypeData GetComplexTypeData(SerializedType argSerializedType, object argValue, string argName)
-                            {
-                                if (argSerializedType.IsSimple())
-                                {
-                                    var internalType = GetInternalType(argValue?.GetType());
-                                    var typeId = GetTypeId(argValue?.GetType());
-                                    return new ComplexTypeData()
-                                    {
-                                        ComplexType = argSerializedType,
-                                        InternalType = internalType,
-                                        TypeId = typeId,
-                                        Properties = new List<SerializedPropertyIR>()
-                                        {
-                                            new SerializedPropertyIR()
-                                            {
-                                               Data = GetVariantValue(argValue, argSerializedType),
-                                               InternalType = internalType,
-                                               TypeId = typeId,
-                                               Type = argSerializedType,
-                                               Name = argName
-                                            }
-                                        }
-                                    };
-                                }
-
-                                return CreateComplexType(argValue?.GetType(), argValue, serializedMemberType);
-                            }
-
-                            collectionResult.Add(new ComplexDictionaryData()
-                            {
-                                Type = serializedType,
-                                Key = GetComplexTypeData(keySerializedType, k, "DictionaryKey"),
-                                Value = GetComplexTypeData(ValueSerializedType, v, "DictionaryValue"),
-                            });
-                        }
-                        referenced.Collection = collectionResult;
-                    }
-
-                    return referenced;
+                    collectionPropData.Collection = GetDictionaryData(type, serializedMemberType, value);
                 }
                 else
                 {
-                    var collection = (ICollection)value;
-                    var valueCollection = new VariantIRValue[collection.Count];
-
-                    if (serializedMemberType == SerializedType.SimpleCollection)
-                    {
-                        SerializedType? itemsType = null;
-                        int index = 0;
-                        foreach (var item in collection)
-                        {
-                            if (itemsType == null)
-                            {
-                                itemsType = GetSimpleType(item?.GetType());
-                                referenced.ItemsType = itemsType.Value;
-                            }
-                            valueCollection[index++] = GetVariantValue(item, referenced.ItemsType);
-                        }
-
-                        referenced.Collection = valueCollection;
-                    }
-                    else
-                    {
-                        var collectionResult = new List<object>();
-
-                        foreach (var item in collection)
-                        {
-                            if (serializedMemberType == SerializedType.ReferenceCollection)
-                            {
-                                var itemSerializedType = GetSerializedType(item?.GetType(), null);
-                                collectionResult.Add(new CollectionData<ReferenceData>()
-                                {
-                                    Type = itemSerializedType,
-                                    Value = GetReferenceData((item as IObject)?.GetID() ?? Guid.Empty, itemSerializedType, item),
-                                });
-                            }
-                            else
-                            {
-                                var complex = CreateComplexType(item?.GetType(), item, serializedMemberType);
-
-                                collectionResult.Add(new CollectionData<ComplexTypeData>()
-                                {
-                                    Type = GetSerializedType(item?.GetType(), null),
-                                    Value = complex
-                                });
-                            }
-                        }
-                        referenced.Collection = collectionResult;
-                    }
-
-                    return referenced;
+                    collectionPropData.Collection = Get1DCollectionData(serializedMemberType, value, out var itemsType);
+                    collectionPropData.ItemsType = itemsType;
                 }
+
+                return collectionPropData;
             }
             else if (serializedMemberType == SerializedType.ComplexClass)
             {
-                return CreateComplexType(type, value, serializedMemberType);
+                return CreateComplexType(type, value);
             }
             return null;
+        }
+
+        private static CollectionData Get1DCollectionData(SerializedType serializedMemberType, object value, out SerializedType itemsType)
+        {
+            itemsType = SerializedType.None;
+            var collection = (ICollection)value;
+
+            if (serializedMemberType == SerializedType.SimpleCollection)
+            {
+                var valueCollection = new VariantIRValue[collection.Count];
+                int index = 0;
+                foreach (var item in collection)
+                {
+                    if (itemsType == SerializedType.None)
+                    {
+                        itemsType = GetSimpleType(item?.GetType());
+                    }
+                    valueCollection[index++] = GetVariantValue(item, itemsType);
+                }
+
+                return new CollectionData<VariantIRValue>(valueCollection);
+            }
+            else if (serializedMemberType == SerializedType.ReferenceCollection)
+            {
+                var references = new ReferenceData[collection.Count];
+                int index = 0;
+
+                foreach (var item in collection)
+                {
+                    var itemSerializedType = GetSerializedType(item?.GetType(), null);
+
+                    references[index++] = GetReferenceData((item as IObject)?.GetID() ?? Guid.Empty, itemSerializedType, item);
+                }
+
+                return new CollectionData<ReferenceData>(references);
+            }
+            else if (serializedMemberType == SerializedType.ComplexCollection)
+            {
+                var complexTypeArr = new ComplexTypeData[collection.Count];
+                int index = 0;
+
+                foreach (var item in collection)
+                {
+                    complexTypeArr[index++] = CreateComplexType(item?.GetType(), item);
+                }
+                return new CollectionData<ComplexTypeData>(complexTypeArr);
+            }
+
+            throw new NotSupportedException($"Collection is not supported '{serializedMemberType}', maybe is an error, or is not implemented?");
+        }
+
+        private static CollectionData GetDictionaryData(Type type, SerializedType serializedMemberType, object value)
+        {
+            var defaultElementsType = ReflectionUtils.GetCollectionElementsType(type);
+
+            var dictionary = (IDictionary)value;
+
+            CollectionData dictionaryCollection = null;
+
+            if (serializedMemberType == SerializedType.SimpleCollection)
+            {
+                dictionaryCollection = new DictionaryDataSimple(dictionary.Keys.Count);
+            }
+            else if (serializedMemberType == SerializedType.ReferenceCollection)
+            {
+                dictionaryCollection = new DictionaryData(dictionary.Keys.Count);
+            }
+            else if (serializedMemberType == SerializedType.ComplexCollection)
+            {
+                dictionaryCollection = new ComplexDictionaryData(dictionary.Keys.Count);
+            }
+            else
+            {
+                throw new NotImplementedException($"Collection type not implemented: {serializedMemberType}");
+            }
+
+            object GetArgData(object argData, Type argType, SerializedType argSerializedType)
+            {
+                var isArgEObject = (argData?.GetType() ?? argType).IsAssignableTo(typeof(IObject));
+                return isArgEObject ? GetReferenceData((argData as IObject)?.GetID() ?? Guid.Empty, argSerializedType, argData) : argData;
+            }
+
+
+            void PopulateDictionaryCollection(ICollection argCollection, Type argDefaultType, VariantIRValue[] simpleArg,
+                                               object[] referenceArg, ComplexTypeData[] complexArg, SerializedType[] refArgTypes,
+                                               out SerializedType simpleArgType, string complexPropKey)
+            {
+                simpleArgType = SerializedType.None;
+
+                int index = 0;
+                foreach (var arg in argCollection)
+                {
+                    var argSerializedType = GetSerializedType(argDefaultType, arg);
+                    var argData = GetArgData(arg, argDefaultType, argSerializedType);
+
+                    if (serializedMemberType == SerializedType.SimpleCollection)
+                    {
+                        simpleArg[index] = GetVariantValue(argData, argSerializedType);
+                        simpleArgType = argSerializedType;
+                    }
+                    else if (serializedMemberType == SerializedType.ReferenceCollection)
+                    {
+                        referenceArg[index] = argSerializedType.IsSimple() ? GetVariantValue(argData, argSerializedType) : argData;
+                        refArgTypes[index] = argSerializedType;
+                    }
+                    else if (serializedMemberType == SerializedType.ComplexCollection)
+                    {
+                        complexArg[index] = GetComplexTypeData(argSerializedType, argData, complexPropKey);
+                    }
+
+                    index++;
+                }
+            }
+
+            var simpleDictionary = dictionaryCollection as DictionaryDataSimple;
+            var referenceDictionary = dictionaryCollection as DictionaryData;
+            var complexDictionary = dictionaryCollection as ComplexDictionaryData;
+
+
+            PopulateDictionaryCollection(dictionary.Keys, defaultElementsType[0], simpleDictionary?.Keys, referenceDictionary?.Keys,
+                                         complexDictionary?.Keys, referenceDictionary?.KeyType, out var keySimpleType, "D_K");
+
+            PopulateDictionaryCollection(dictionary.Values, defaultElementsType[1], simpleDictionary?.Values, referenceDictionary?.Values,
+                                         complexDictionary?.Values, referenceDictionary?.ValueType, out var valueSimpleType, "D_V");
+
+            if (serializedMemberType == SerializedType.SimpleCollection)
+            {
+                simpleDictionary.KeyType = keySimpleType;
+                simpleDictionary.ValueType = valueSimpleType;
+            }
+
+            return dictionaryCollection;
+        }
+
+        private static ComplexTypeData GetComplexTypeData(SerializedType argSerializedType, object argValue, string argName)
+        {
+            if (argSerializedType.IsSimple())
+            {
+                var internalType = GetInternalType(argValue?.GetType());
+                var typeId = GetTypeId(argValue?.GetType());
+                return new ComplexTypeData()
+                {
+                    ComplexType = argSerializedType,
+                    InternalType = internalType,
+                    TypeId = typeId,
+                    Properties = new List<SerializedPropertyIR>()
+                    {
+                        new SerializedPropertyIR()
+                        {
+                           Data = GetVariantValue(argValue, argSerializedType),
+                           InternalType = internalType,
+                           TypeId = typeId,
+                           Type = argSerializedType,
+                           Name = argName
+                        }
+                    }
+                };
+            }
+
+            return CreateComplexType(argValue?.GetType(), argValue);
         }
 
         private static VariantIRValue GetVariantValue(object val, SerializedType type)
@@ -507,6 +541,7 @@ namespace Editor.Serialization
             {
                 return new SpriteReferenceData()
                 {
+                    Type = serializedMemberType,
                     Id = id,
                     AtlasIndex = (value as Sprite).AtlasIndex,
                     TextureId = (value as Sprite).Texture.GetID()
@@ -514,14 +549,22 @@ namespace Editor.Serialization
             }
             else if (serializedMemberType.IsEObject())
             {
-                return new ReferenceData() { Id = id };
+                return new ReferenceData()
+                {
+                    Type = serializedMemberType,
+                    Id = id
+                };
             }
 
             Debug.EngineError($"Reference type '{serializedMemberType}' not supported");
 
-            return new ReferenceData() { Id = id };
+            return new ReferenceData()
+            {
+                Type = serializedMemberType,
+                Id = id
+            };
         }
-        internal static ComplexTypeData CreateComplexType(Type complexType, object value, SerializedType serializedType)
+        internal static ComplexTypeData CreateComplexType(Type complexType, object value)
         {
             if (complexType == null)
                 return null;

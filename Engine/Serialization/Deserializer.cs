@@ -152,35 +152,37 @@ namespace Engine.Serialization
 
             if (collectionData.CollectionType == CollectionType.Dictionary)
             {
+                object GetArgValue(object argData, SerializedType argSerializedType, Type argType)
+                {
+                    if (argSerializedType.IsSimple())
+                    {
+                        if (argData != null && argData.GetType() != argType)
+                        {
+                            return DeserializeVariantValueSafe((VariantIRValue)argData);
+                        }
+
+                        return null;
+                    }
+
+                    return GetReferenceValue(argSerializedType, deserializerData, argData as ReferenceData);
+                }
+
                 var args = collectionPropertyType.GetGenericArguments();
                 var dictType = typeof(Dictionary<,>).MakeGenericType(args[0], args[1]);
 
                 var dictionary = (IDictionary)Activator.CreateInstance(dictType);
-                foreach (var item in collectionData.Collection)
+
+                var referenceCollection = collectionData.Collection as DictionaryData;
+
+                for (int i = 0; i < referenceCollection.Count; i++)
                 {
-                    var serializedItem = (DictionaryData)item;
+                    var rawKey = referenceCollection.Keys[i];
+                    var keyType = referenceCollection.KeyType[i];
+                    var rawValue = referenceCollection.Values[i];
+                    var valueType = referenceCollection.ValueType[i];
 
-                    object GetArgValue(object argData, SerializedType argSerializedType, Type argType)
-                    {
-                        if (argSerializedType.IsSimple())
-                        {
-                            if (argData != null && argData.GetType() != argType)
-                            {
-                                return DeserializeVariantValueSafe((VariantIRValue)argData);
-                            }
-
-                            return null;
-                        }
-
-                        return GetReferenceValue(argSerializedType, deserializerData, argData as ReferenceData);
-                    }
-                    //if (serializedItem.KeyType.IsSimple() && serializedItem.Key != null
-                    //    && serializedItem.Key.GetType() != args[0].GetType())
-                    //{
-                    //    serializedItem.Key = serializedItem.Key;
-                    //}
-                    var key = GetArgValue(serializedItem.Key, serializedItem.KeyType, args[0]);
-                    var value = GetArgValue(serializedItem.Value, serializedItem.ValueType, args[1]);
+                    var key = GetArgValue(rawKey, keyType, args[0]);
+                    var value = GetArgValue(rawValue, valueType, args[1]);
 
                     dictionary.Add(key, value);
                 }
@@ -207,20 +209,19 @@ namespace Engine.Serialization
                 });
             }
 
-            object GetItemReferenceValue(object item)
+            object GetItemReferenceValue(ReferenceData reference)
             {
-                var referenceElement = item as CollectionData<ReferenceData>;
-
-                if (referenceElement == null)
+                if (reference == null)
                     return null;
 
-                return GetReferenceValue(referenceElement.Type, deserializerData, referenceElement.Value);
+                return GetReferenceValue(reference.Type, deserializerData, reference);
             }
 
-            void SetValueToProperty(object collectionInstance, Action<object, int> setCollectionValueCallback)
+            void SetValueToProperty(object collectionInstance, Action<ReferenceData, int> setCollectionValueCallback)
             {
                 int collIndex = 0;
-                foreach (var item in collectionData.Collection)
+                var referenceCol = collectionData.Collection as CollectionData<ReferenceData>;
+                foreach (var item in referenceCol.Value)
                 {
                     setCollectionValueCallback(item, collIndex);
                     collIndex++;
@@ -267,11 +268,11 @@ namespace Engine.Serialization
                     var dictionary = collectionInstance as IDictionary;
 
                     // TODO: fix, This is boxing values. use the generated class.
-                    foreach (var item in collectionData.Collection)
+                    var dictionarySimple = collectionData.Collection as DictionaryDataSimple;
+                    for (int i = 0; i < dictionarySimple.Count; i++)
                     {
-                        var itemObj = item as DictionaryDataSimple;
-                        var key = DeserializeVariantValueSafe(itemObj.Key);
-                        var value = DeserializeVariantValueSafe(itemObj.Value);
+                        var key = DeserializeVariantValueSafe(dictionarySimple.Keys[i]);
+                        var value = DeserializeVariantValueSafe(dictionarySimple.Values[i]);
 
                         dictionary.Add(key, value);
                     }
@@ -280,8 +281,8 @@ namespace Engine.Serialization
                 }
                 else
                 {
-                    var variantCollection = collectionData.Collection as VariantIRValue[];
-                    if (variantCollection.Length > 0)
+                    var variantCollection = collectionData.Collection as CollectionData<VariantIRValue>;
+                    if (variantCollection.Count > 0)
                     {
                         if (collectionData.ItemsType == SerializedType.Enum)
                         {
@@ -289,15 +290,15 @@ namespace Engine.Serialization
                             // if we have performance issues related to this, I will change it.
                             collectionInstance = ReflectionUtils.EnsureCount(collectionInstance, collectionData.Collection.Count);
 
-                            for (int i = 0; i < variantCollection.Length; i++)
+                            for (int i = 0; i < variantCollection.Count; i++)
                             {
-                                var itemObj = DeserializeVariantValueSafe(in variantCollection[i]);
+                                var itemObj = DeserializeVariantValueSafe(in variantCollection.Value[i]);
                                 ReflectionUtils.SetMemberValueSafe(collectionInstance, itemObj, default(MemberInfo), i);
                             }
                         }
                         else
                         {
-                            collectionInstance = VariantCollectionWriter.Write(collectionInstance, variantCollection, collectionData.ItemsType, collectionData.CollectionType);
+                            collectionInstance = VariantCollectionWriter.Write(collectionInstance, variantCollection.Value, collectionData.ItemsType, collectionData.CollectionType);
                         }
                     }
                 }
@@ -351,7 +352,8 @@ namespace Engine.Serialization
                 if (collectionData.CollectionType == CollectionType.Dictionary)
                 {
                     var dictionary = collectionInstance as IDictionary;
-                    foreach (var collItem in collectionData.Collection)
+                    var complexDictionary = collectionData.Collection as ComplexDictionaryData;
+                    for (int i = 0; i < complexDictionary.Count; i++)
                     {
                         object DeserializeArgValue(ComplexTypeData complexArg)
                         {
@@ -373,14 +375,11 @@ namespace Engine.Serialization
                                 });
                             }
 
-
                             return deserializedArgValue;
                         }
 
-                        var complexItem = collItem as ComplexDictionaryData;
-
-                        var key = DeserializeArgValue(complexItem.Key);
-                        var value = DeserializeArgValue(complexItem.Value);
+                        var key = DeserializeArgValue(complexDictionary.Keys[i]);
+                        var value = DeserializeArgValue(complexDictionary.Values[i]);
 
                         if (key != null && !dictionary.Contains(key))
                         {
@@ -394,11 +393,10 @@ namespace Engine.Serialization
                 {
                     collectionInstance = ReflectionUtils.EnsureCount(collectionInstance, collectionData.Collection.Count);
                     int colItemIndex = 0;
-                    foreach (var colItem in collectionData.Collection)
+                    var complexCol = collectionData.Collection as CollectionData<ComplexTypeData>;
+                    foreach (var complexItem in complexCol.Value)
                     {
-                        var complexItem = colItem as CollectionData<ComplexTypeData>;
-
-                        DeserializeItem(complexItem.Value, item =>
+                        DeserializeItem(complexItem, item =>
                         {
                             ReflectionUtils.SetMemberValueSafe(collectionInstance, item, default(MemberInfo), colItemIndex);
                         });

@@ -52,6 +52,7 @@ namespace Engine.Serialization
     }
     internal class ReferenceData
     {
+        public SerializedType Type { get; set; }
         public Guid Id { get; set; }
     }
 
@@ -60,33 +61,81 @@ namespace Engine.Serialization
         public int AtlasIndex { get; set; }
         public Guid TextureId { get; set; }
     }
-
+ 
     internal class CollectionPropertyData
     {
         public CollectionType CollectionType { get; set; }
         public SerializedType ItemsType { get; set; }
-        public ICollection Collection { get; set; }
+        public CollectionData Collection { get; set; }
     }
 
-    internal class DictionaryDataT<T1, T2> : SerializedItem
+    internal abstract class CollectionData
     {
-        public SerializedType KeyType { get; set; }
-        public SerializedType ValueType { get; set; }
-        public T1 Key { get; set; }
-        public T2 Value { get; set; }
+        internal abstract int Count { get; }
     }
 
-    internal class DictionaryData : DictionaryDataT<object, object> { }
-    internal class DictionaryDataSimple : DictionaryDataT<VariantIRValue, VariantIRValue> { }
-    internal class ComplexDictionaryData : SerializedItem
+    internal abstract class CollectionDataWithType : CollectionData
     {
-        public ComplexTypeData Key { get; set; }
-        public ComplexTypeData Value { get; set; }
+        public SerializedType Type { get; set; }
+    }
+    internal class DictionaryDataT<K, V> : CollectionData
+    {
+        public K[] Keys { get; private set; }
+        public V[] Values { get; private set; }
+
+        internal override int Count => Keys?.Length ?? 0;
+
+        // Serializer
+        private DictionaryDataT() { }
+        public DictionaryDataT(int size)
+        {
+            Keys = new K[size];
+            Values = new V[size];
+        }
+
+        public void CopyTo(Array array, int index)
+        {
+            if (array == null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
+            for (int i = 0; i < Count; i++)
+            {
+                array.SetValue(new KeyValuePair<K, V>(Keys[i], Values[i]), index + i);
+            }
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            if (Keys == null || Values == null) yield break;
+
+            int length = Math.Min(Keys.Length, Values.Length);
+            for (int i = 0; i < length; i++)
+            {
+                yield return new KeyValuePair<K, V>(Keys[i], Values[i]);
+            }
+        }
     }
 
-    internal class CollectionData<V> : SerializedItem
+    internal class DictionaryDataKVTypes<K, V, KT, VT> : DictionaryDataT<K, V>
     {
-        public V Value { get; set; }
+        internal KT KeyType { get; set; }
+        internal VT ValueType { get; set; }
+        internal DictionaryDataKVTypes(int size) : base(size) { }
+    }
+    internal class DictionaryData : DictionaryDataKVTypes<object, object, SerializedType[], SerializedType[]> { public DictionaryData(int size) : base(size) { } }
+    internal class DictionaryDataSimple : DictionaryDataKVTypes<VariantIRValue, VariantIRValue, SerializedType, SerializedType> { public DictionaryDataSimple(int size) : base(size) { } }
+    internal class ComplexDictionaryData : DictionaryDataT<ComplexTypeData, ComplexTypeData> { public ComplexDictionaryData(int size) : base(size) { } }
+    internal class CollectionData<T> : CollectionDataWithType
+    {
+        public T[] Value { get; private set; }
+        internal override int Count => Value?.Length ?? 0;
+        private CollectionData() { }
+        public CollectionData(T[] value)
+        {
+            Value = value;
+        }
     }
 
     internal class DelegateData : SerializedItem

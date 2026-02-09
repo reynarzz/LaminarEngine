@@ -141,7 +141,7 @@ namespace Engine.Serialization
             }
             else if (serializedType == SerializedType.SimpleCollection)
             {
-                // property.Data = ReadComplexCollection(reader);
+                // property.Data = ReadSimpleCollection(reader);
             }
 
             return property;
@@ -167,33 +167,30 @@ namespace Engine.Serialization
                 case CollectionType.Queue:
                 case CollectionType.HashSet:
                     {
-                        var result = new List<CollectionData<ComplexTypeData>>();
-                        CollectionsMarshal.SetCount(result, count);
+                        //var result = new List<CollectionData<ComplexTypeData>>();
+                        //CollectionsMarshal.SetCount(result, count);
 
-                        for (int i = 0; i < count; i++)
-                        {
-                            var item = new CollectionData<ComplexTypeData>();
-                            item.Type = (SerializedType)reader.ReadInt64();
-                            item.Value = ReadComplexClass(reader);
-                            result[i] = item;
-                        }
-                        collectionData.Collection = result;
+                        //for (int i = 0; i < count; i++)
+                        //{
+                        //    var item = new CollectionData<ComplexTypeData>();
+                        //    item.Type = (SerializedType)reader.ReadInt64();
+                        //    item.Value = ReadComplexClass(reader);
+                        //    result[i] = item;
+                        //}
+                        //collectionData.Collection = result;
                     }
                     break;
                 case CollectionType.Dictionary:
                     {
-                        var result = new List<ComplexDictionaryData>();
-                        CollectionsMarshal.SetCount(result, count);
+                        //var result = new ComplexDictionaryData(count);
 
-                        for (int i = 0; i < count; i++)
-                        {
-                            var item =  new ComplexDictionaryData();
-                            item.Type = (SerializedType)reader.ReadInt64();
-                            item.Key = ReadComplexClass(reader);
-                            item.Value = ReadComplexClass(reader);
-                            result[i] = item;
-                        }
-                        collectionData.Collection = result;
+                        //for (int i = 0; i < count; i++)
+                        //{
+                        //    //result.Type = (SerializedType)reader.ReadInt64();
+                        //    result.Keys[i] = ReadComplexClass(reader);
+                        //    result.Values[i] = ReadComplexClass(reader);
+                        //}
+                        //collectionData.Collection = result;
                     }
                     break;
                 default:
@@ -212,7 +209,7 @@ namespace Engine.Serialization
             {
                 return collectionData;
             }
-            collectionData.Collection = new List<object>();
+            // collectionData.Collection = new List<object>();
             collectionData.CollectionType = (CollectionType)reader.ReadInt64();
             switch (collectionData.CollectionType)
             {
@@ -224,50 +221,49 @@ namespace Engine.Serialization
                 case CollectionType.Queue:
                 case CollectionType.HashSet:
                     {
-                        var result = new List<CollectionData<ReferenceData>>();
-                        CollectionsMarshal.SetCount(result, count);
+                        //var result = new List<CollectionData<ReferenceData>>();
+                        //CollectionsMarshal.SetCount(result, count);
 
-                        for (int i = 0; i < count; i++)
-                        {
-                            var item = new CollectionData<ReferenceData>();
-                            item.Type = (SerializedType)reader.ReadInt64();
-                            item.Value = new ReferenceData()
-                            {
-                                Id = new Guid(reader.ReadBytes(GUID_BYTES_SIZE))
-                            };
-                            result[i] = item;
-                        }
+                        //for (int i = 0; i < count; i++)
+                        //{
+                        //    var item = new CollectionData<ReferenceData>();
+                        //    item.Type = (SerializedType)reader.ReadInt64();
+                        //    item.Value = new ReferenceData()
+                        //    {
+                        //        Id = new Guid(reader.ReadBytes(GUID_BYTES_SIZE))
+                        //    };
+                        //    result[i] = item;
+                        //}
 
-                        collectionData.Collection = result;
+                        //collectionData.Collection = result;
                     }
                     break;
                 case CollectionType.Dictionary:
                     {
-                        var result = new List<DictionaryData>();
-                        CollectionsMarshal.SetCount(result, count);
+                        var result = new DictionaryData(count);
 
-                        for (int i = 0; i < count; i++)
-                        {
-                            var item = new DictionaryData();
-                            item.Type = (SerializedType)reader.ReadInt64();
-                            item.KeyType = (SerializedType)reader.ReadInt64();
-                            item.ValueType = (SerializedType)reader.ReadInt64();
+                        //for (int i = 0; i < count; i++)
+                        //{
+                        //    var item = new DictionaryData();
+                        //    result.Types = (SerializedType)reader.ReadInt64();
+                        //    result.KeyType = (SerializedType)reader.ReadInt64();
+                        //    result.ValueType = (SerializedType)reader.ReadInt64();
 
-                            object ReadArg(SerializedType type)
-                            {
-                                if (type.IsSimple())
-                                {
-                                    return ReadSimpleProperty(reader, type);
-                                }
+                        //    object ReadArg(SerializedType type)
+                        //    {
+                        //        if (type.IsSimple())
+                        //        {
+                        //            return ReadSimpleProperty(reader, type);
+                        //        }
 
-                                return ReadReferenceProperty(reader);
-                            }
+                        //        return ReadReferenceProperty(reader);
+                        //    }
 
-                            item.Key = ReadArg(item.KeyType);
-                            item.Value = ReadArg(item.ValueType);
+                        //    item.Key = ReadArg(item.KeyType);
+                        //    item.Value = ReadArg(item.ValueType);
 
-                            result[i] = item;
-                        }
+                        //    result[i] = item;
+                        //}
                         collectionData.Collection = result;
                     }
                     break;
@@ -376,21 +372,6 @@ namespace Engine.Serialization
             }
 
             return null;
-        }
-
-        private static T GetSimpleValueSafe<T>(object data)
-        {
-            if (data != null)
-            {
-                return (T)data;
-            }
-
-            if (typeof(T) == typeof(string))
-            {
-                return (T)(object)string.Empty;
-            }
-
-            return default;
         }
 
         public static T ReadStruct<T>(BinaryReader reader) where T : unmanaged

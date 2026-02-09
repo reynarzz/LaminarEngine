@@ -146,22 +146,23 @@ namespace Editor.Cooker
                 return;
             }
             writer.Write(Convert.ToInt64(data.CollectionType));
-            // TODO: improve writing, it should be a byte array, and not one by one.
             if (data.CollectionType == CollectionType.Dictionary)
             {
-                foreach (var item in data.Collection)
+                var simpleDictionary = data.Collection as DictionaryDataSimple;
+
+                writer.Write(Convert.ToInt64(simpleDictionary.KeyType));
+                writer.Write(Convert.ToInt64(simpleDictionary.ValueType));
+
+                for (var i = 0; i < simpleDictionary.Count; i++)
                 {
-                    var itemData = item as DictionaryDataSimple;
-                    writer.Write(Convert.ToInt64(itemData.KeyType));
-                    writer.Write(Convert.ToInt64(itemData.ValueType));
-                    WriteSimpleProperty(writer, itemData.Key, itemData.KeyType);
-                    WriteSimpleProperty(writer, itemData.Value, itemData.ValueType);
+                    WriteVariantArray(writer, simpleDictionary.KeyType, simpleDictionary.Keys);
+                    WriteVariantArray(writer, simpleDictionary.ValueType, simpleDictionary.Values);
                 }
             }
             else
             {
-                var variantCollection = data.Collection as VariantIRValue[];
-                WriteVariantArray(writer, data.ItemsType, variantCollection);
+                var variantCollection = data.Collection as CollectionData<VariantIRValue>;
+                WriteVariantArray(writer, data.ItemsType, variantCollection.Value);
             }
         }
 
@@ -304,22 +305,21 @@ namespace Editor.Cooker
                 case CollectionType.Queue:
                 case CollectionType.HashSet:
                     {
-                        foreach (var item in data.Collection)
+                        var col = data.Collection as CollectionData<ComplexTypeData>;
+                        foreach (var item in col.Value)
                         {
-                            var itemData = item as CollectionData<ComplexTypeData>;
-                            writer.Write(Convert.ToInt64(itemData.Type));
-                            WriteComplexClass(writer, itemData.Value);
+                            writer.Write(Convert.ToInt64(item.ComplexType));
+                            WriteComplexClass(writer, item);
                         }
                     }
                     break;
                 case CollectionType.Dictionary:
                     {
-                        foreach (var item in data.Collection)
+                        var dictComplexClass = data.Collection as ComplexDictionaryData;
+                        for (var i = 0; i < dictComplexClass.Count; i++)
                         {
-                            var itemData = item as ComplexDictionaryData;
-                            writer.Write(Convert.ToInt64(itemData.Type));
-                            WriteComplexClass(writer, itemData.Key);
-                            WriteComplexClass(writer, itemData.Value);
+                            WriteComplexClass(writer, dictComplexClass.Keys[i]);
+                            WriteComplexClass(writer, dictComplexClass.Values[i]);
                         }
                     }
                     break;
@@ -349,23 +349,26 @@ namespace Editor.Cooker
                 case CollectionType.Queue:
                 case CollectionType.HashSet:
                     {
-                        foreach (var item in data.Collection)
+                        var col = data.Collection as CollectionData<ReferenceData>;
+                        foreach (var item in col.Value)
                         {
-                            var itemData = item as CollectionData<ReferenceData>;
+                            var itemData = item;
                             writer.Write(Convert.ToInt64(itemData.Type));
-                            writer.Write(itemData.Value.Id.ToByteArray());
+                            writer.Write(itemData.Id.ToByteArray());
                         }
                     }
                     break;
                 case CollectionType.Dictionary:
                     {
-                        foreach (var item in data.Collection)
+                        var referenceDictionary = data.Collection as DictionaryData;
+                        for (int i = 0; i < referenceDictionary.Count; i++)
                         {
-                            var itemData = item as DictionaryData;
-                            writer.Write(Convert.ToInt64(itemData.Type));
-                            writer.Write(Convert.ToInt64(itemData.KeyType));
-                            writer.Write(Convert.ToInt64(itemData.ValueType));
+                            writer.Write(Convert.ToInt64(referenceDictionary.KeyType[i]));
+                            writer.Write(Convert.ToInt64(referenceDictionary.ValueType[i]));
+                        }
 
+                        for (var i = 0; i < referenceDictionary.Count; i++)
+                        {
                             void WriteArg(SerializedType type, object argData)
                             {
                                 if (type.IsSimple())
@@ -378,8 +381,8 @@ namespace Editor.Cooker
                                 }
                             }
 
-                            WriteArg(itemData.KeyType, itemData.Key);
-                            WriteArg(itemData.ValueType, itemData.Value);
+                            WriteArg(referenceDictionary.KeyType[i], referenceDictionary.Keys[i]);
+                            WriteArg(referenceDictionary.ValueType[i], referenceDictionary.Values[i]);
                         }
                     }
                     break;
@@ -547,7 +550,7 @@ namespace Editor.Cooker
         private static void WriteBoolPayloadSpan(BinaryWriter writer, VariantIRValue[] variants)
         {
             var count = variants.Length;
-            var  buffer = ArrayPool<byte>.Shared.Rent(count);
+            var buffer = ArrayPool<byte>.Shared.Rent(count);
             try
             {
                 var dst = buffer.AsSpan(0, count);
