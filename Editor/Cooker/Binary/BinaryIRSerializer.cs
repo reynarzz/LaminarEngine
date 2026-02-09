@@ -148,7 +148,7 @@ namespace Editor.Cooker
             writer.Write(Convert.ToInt64(data.CollectionType));
             if (data.CollectionType == CollectionType.Dictionary)
             {
-                var simpleDictionary = data.Collection as DictionaryDataSimple;
+                var simpleDictionary = data.Collection as DictionaryIRVariants;
 
                 writer.Write(Convert.ToInt64(simpleDictionary.KeyType));
                 writer.Write(Convert.ToInt64(simpleDictionary.ValueType));
@@ -161,8 +161,8 @@ namespace Editor.Cooker
             }
             else
             {
-                var variantCollection = data.Collection as CollectionData<VariantIRValue>;
-                WriteVariantArray(writer, data.ItemsType, variantCollection.Value);
+                var variantCollection = data.Collection as CollectionIRVariants;
+                WriteVariantArray(writer, variantCollection.ItemsType, variantCollection.Value);
             }
         }
 
@@ -305,7 +305,7 @@ namespace Editor.Cooker
                 case CollectionType.Queue:
                 case CollectionType.HashSet:
                     {
-                        var col = data.Collection as CollectionData<ComplexTypeData>;
+                        var col = data.Collection as CollectionIRComplexTypes;
                         foreach (var item in col.Value)
                         {
                             writer.Write(Convert.ToInt64(item.ComplexType));
@@ -315,7 +315,7 @@ namespace Editor.Cooker
                     break;
                 case CollectionType.Dictionary:
                     {
-                        var dictComplexClass = data.Collection as ComplexDictionaryData;
+                        var dictComplexClass = data.Collection as DictionaryIRComplexTypes;
                         for (var i = 0; i < dictComplexClass.Count; i++)
                         {
                             WriteComplexClass(writer, dictComplexClass.Keys[i]);
@@ -349,7 +349,7 @@ namespace Editor.Cooker
                 case CollectionType.Queue:
                 case CollectionType.HashSet:
                     {
-                        var col = data.Collection as CollectionData<ReferenceData>;
+                        var col = data.Collection as CollectionIRReferences;
                         foreach (var item in col.Value)
                         {
                             var itemData = item;
@@ -360,7 +360,7 @@ namespace Editor.Cooker
                     break;
                 case CollectionType.Dictionary:
                     {
-                        var referenceDictionary = data.Collection as DictionaryData;
+                        var referenceDictionary = data.Collection as DictionaryIRReferences;
                         for (int i = 0; i < referenceDictionary.Count; i++)
                         {
                             writer.Write(Convert.ToInt64(referenceDictionary.KeyType[i]));

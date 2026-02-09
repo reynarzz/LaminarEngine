@@ -40,6 +40,11 @@ namespace Editor
                 {
                     p.Converter = new GFSDataProperty();
                 }
+
+                if (p.DeclaringType == typeof(CollectionPropertyData) && p.PropertyName == nameof(CollectionPropertyData.Collection))
+                {
+                    p.Converter = new GFSDataProperty();
+                }
             }
 
             foreach (var member in ReflectionUtils.GetAllMembersWithAttribute<SerializedFieldAttribute>(type))

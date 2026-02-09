@@ -304,7 +304,6 @@ namespace Editor.Serialization
                 else
                 {
                     collectionPropData.Collection = Get1DCollectionData(serializedMemberType, value, out var itemsType);
-                    collectionPropData.ItemsType = itemsType;
                 }
 
                 return collectionPropData;
@@ -334,21 +333,24 @@ namespace Editor.Serialization
                     valueCollection[index++] = GetVariantValue(item, itemsType);
                 }
 
-                return new CollectionData<VariantIRValue>(valueCollection);
+                return new CollectionIRVariants(valueCollection, itemsType);
             }
             else if (serializedMemberType == SerializedType.ReferenceCollection)
             {
                 var references = new ReferenceData[collection.Count];
+                var referencesTypes = new SerializedType[collection.Count];
                 int index = 0;
 
                 foreach (var item in collection)
                 {
                     var itemSerializedType = GetSerializedType(item?.GetType(), null);
 
-                    references[index++] = GetReferenceData((item as IObject)?.GetID() ?? Guid.Empty, itemSerializedType, item);
+                    referencesTypes[index] = itemSerializedType;
+                    references[index] = GetReferenceData((item as IObject)?.GetID() ?? Guid.Empty, itemSerializedType, item);
+                    index++;
                 }
 
-                return new CollectionData<ReferenceData>(references);
+                return new CollectionIRReferences(references, referencesTypes);
             }
             else if (serializedMemberType == SerializedType.ComplexCollection)
             {
@@ -359,7 +361,7 @@ namespace Editor.Serialization
                 {
                     complexTypeArr[index++] = CreateComplexType(item?.GetType(), item);
                 }
-                return new CollectionData<ComplexTypeData>(complexTypeArr);
+                return new CollectionIRComplexTypes(complexTypeArr);
             }
 
             throw new NotSupportedException($"Collection is not supported '{serializedMemberType}', maybe is an error, or is not implemented?");
@@ -375,15 +377,15 @@ namespace Editor.Serialization
 
             if (serializedMemberType == SerializedType.SimpleCollection)
             {
-                dictionaryCollection = new DictionaryDataSimple(dictionary.Keys.Count);
+                dictionaryCollection = new DictionaryIRVariants(dictionary.Keys.Count);
             }
             else if (serializedMemberType == SerializedType.ReferenceCollection)
             {
-                dictionaryCollection = new DictionaryData(dictionary.Keys.Count);
+                dictionaryCollection = new DictionaryIRReferences(dictionary.Keys.Count);
             }
             else if (serializedMemberType == SerializedType.ComplexCollection)
             {
-                dictionaryCollection = new ComplexDictionaryData(dictionary.Keys.Count);
+                dictionaryCollection = new DictionaryIRComplexTypes(dictionary.Keys.Count);
             }
             else
             {
@@ -428,9 +430,9 @@ namespace Editor.Serialization
                 }
             }
 
-            var simpleDictionary = dictionaryCollection as DictionaryDataSimple;
-            var referenceDictionary = dictionaryCollection as DictionaryData;
-            var complexDictionary = dictionaryCollection as ComplexDictionaryData;
+            var simpleDictionary = dictionaryCollection as DictionaryIRVariants;
+            var referenceDictionary = dictionaryCollection as DictionaryIRReferences;
+            var complexDictionary = dictionaryCollection as DictionaryIRComplexTypes;
 
 
             PopulateDictionaryCollection(dictionary.Keys, defaultElementsType[0], simpleDictionary?.Keys, referenceDictionary?.Keys,

@@ -172,7 +172,7 @@ namespace Engine.Serialization
 
                 var dictionary = (IDictionary)Activator.CreateInstance(dictType);
 
-                var referenceCollection = collectionData.Collection as DictionaryData;
+                var referenceCollection = collectionData.Collection as DictionaryIRReferences;
 
                 for (int i = 0; i < referenceCollection.Count; i++)
                 {
@@ -220,7 +220,7 @@ namespace Engine.Serialization
             void SetValueToProperty(object collectionInstance, Action<ReferenceData, int> setCollectionValueCallback)
             {
                 int collIndex = 0;
-                var referenceCol = collectionData.Collection as CollectionData<ReferenceData>;
+                var referenceCol = collectionData.Collection as CollectionIRReferences;
                 foreach (var item in referenceCol.Value)
                 {
                     setCollectionValueCallback(item, collIndex);
@@ -268,7 +268,7 @@ namespace Engine.Serialization
                     var dictionary = collectionInstance as IDictionary;
 
                     // TODO: fix, This is boxing values. use the generated class.
-                    var dictionarySimple = collectionData.Collection as DictionaryDataSimple;
+                    var dictionarySimple = collectionData.Collection as DictionaryIRVariants;
                     for (int i = 0; i < dictionarySimple.Count; i++)
                     {
                         var key = DeserializeVariantValueSafe(dictionarySimple.Keys[i]);
@@ -281,10 +281,10 @@ namespace Engine.Serialization
                 }
                 else
                 {
-                    var variantCollection = collectionData.Collection as CollectionData<VariantIRValue>;
+                    var variantCollection = collectionData.Collection as CollectionIRVariants;
                     if (variantCollection.Count > 0)
                     {
-                        if (collectionData.ItemsType == SerializedType.Enum)
+                        if (variantCollection.ItemsType == SerializedType.Enum)
                         {
                             // Having huge collections of enums is unlikelly, also, I do not want to complicate the code generator.
                             // if we have performance issues related to this, I will change it.
@@ -298,7 +298,7 @@ namespace Engine.Serialization
                         }
                         else
                         {
-                            collectionInstance = VariantCollectionWriter.Write(collectionInstance, variantCollection.Value, collectionData.ItemsType, collectionData.CollectionType);
+                            collectionInstance = VariantCollectionWriter.Write(collectionInstance, variantCollection.Value, variantCollection.ItemsType, collectionData.CollectionType);
                         }
                     }
                 }
@@ -352,7 +352,7 @@ namespace Engine.Serialization
                 if (collectionData.CollectionType == CollectionType.Dictionary)
                 {
                     var dictionary = collectionInstance as IDictionary;
-                    var complexDictionary = collectionData.Collection as ComplexDictionaryData;
+                    var complexDictionary = collectionData.Collection as DictionaryIRComplexTypes;
                     for (int i = 0; i < complexDictionary.Count; i++)
                     {
                         object DeserializeArgValue(ComplexTypeData complexArg)
@@ -393,7 +393,7 @@ namespace Engine.Serialization
                 {
                     collectionInstance = ReflectionUtils.EnsureCount(collectionInstance, collectionData.Collection.Count);
                     int colItemIndex = 0;
-                    var complexCol = collectionData.Collection as CollectionData<ComplexTypeData>;
+                    var complexCol = collectionData.Collection as CollectionIRComplexTypes;
                     foreach (var complexItem in complexCol.Value)
                     {
                         DeserializeItem(complexItem, item =>

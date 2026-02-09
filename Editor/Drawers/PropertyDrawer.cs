@@ -31,6 +31,12 @@ namespace Editor
                                                   SetMemberValueSafeCallBack setValueCallback,
                                                   bool sameLine = true, Func<T, object> valueConverter = null)
         {
+            if (target == null)
+            {
+                Debug.Error($"Can't draw property '{propertyName}', target is null.");
+                return false;
+            }
+
             if (sameLine)
             {
                 ImGui.SameLine();
@@ -60,12 +66,24 @@ namespace Editor
 
         public static bool DrawVars(string objectId, object target, MemberInfo prop, bool enforceSerializedFieldAttribute = true)
         {
+            if (target == null)
+            {
+                Debug.Error($"Can't draw property, target is null.");
+                return false;
+            }
+
             return DrawVars(objectId, target, prop, 0, 0, 0, enforceSerializedFieldAttribute);
         }
 
         public static bool DrawVars(string objectId, object target, MemberInfo prop, float cursorX, int index, float width,
                                      bool enforceSerializedFieldAttribute, SetMemberValueSafeCallBack setMemberCallBack = null)
         {
+            if (target == null)
+            {
+                Debug.Error($"Can't draw property, target is null.");
+                return false;
+            }
+
             if (prop == null)
                 return false;
 

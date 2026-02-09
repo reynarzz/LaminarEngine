@@ -61,11 +61,10 @@ namespace Engine.Serialization
         public int AtlasIndex { get; set; }
         public Guid TextureId { get; set; }
     }
- 
+
     internal class CollectionPropertyData
     {
         public CollectionType CollectionType { get; set; }
-        public SerializedType ItemsType { get; set; }
         public CollectionData Collection { get; set; }
     }
 
@@ -80,13 +79,13 @@ namespace Engine.Serialization
     }
     internal class DictionaryDataT<K, V> : CollectionData
     {
-        public K[] Keys { get; private set; }
-        public V[] Values { get; private set; }
+        [SerializedField] public K[] Keys { get;  set; }
+        [SerializedField] public V[] Values { get;  set; }
 
         internal override int Count => Keys?.Length ?? 0;
 
         // Serializer
-        private DictionaryDataT() { }
+        protected DictionaryDataT() { }
         public DictionaryDataT(int size)
         {
             Keys = new K[size];
@@ -120,24 +119,58 @@ namespace Engine.Serialization
 
     internal class DictionaryDataKVTypes<K, V, KT, VT> : DictionaryDataT<K, V>
     {
-        internal KT KeyType { get; set; }
-        internal VT ValueType { get; set; }
+        public KT KeyType { get; set; }
+        public VT ValueType { get; set; }
+        protected DictionaryDataKVTypes() { }
         internal DictionaryDataKVTypes(int size) : base(size) { }
     }
-    internal class DictionaryData : DictionaryDataKVTypes<object, object, SerializedType[], SerializedType[]> { public DictionaryData(int size) : base(size) { } }
-    internal class DictionaryDataSimple : DictionaryDataKVTypes<VariantIRValue, VariantIRValue, SerializedType, SerializedType> { public DictionaryDataSimple(int size) : base(size) { } }
-    internal class ComplexDictionaryData : DictionaryDataT<ComplexTypeData, ComplexTypeData> { public ComplexDictionaryData(int size) : base(size) { } }
-    internal class CollectionData<T> : CollectionDataWithType
+    internal class CollectionData<T, IT> : CollectionDataWithType
     {
-        public T[] Value { get; private set; }
+        public T[] Value { get; set; }
         internal override int Count => Value?.Length ?? 0;
-        private CollectionData() { }
-        public CollectionData(T[] value)
+        public IT ItemsType { get; set; }
+
+        protected CollectionData() { }
+        public CollectionData(T[] value, IT itemsType)
         {
             Value = value;
+            ItemsType = itemsType;
         }
     }
 
+    internal class DictionaryIRReferences : DictionaryDataKVTypes<object, object, SerializedType[], SerializedType[]>
+    {
+        protected DictionaryIRReferences() { }
+        public DictionaryIRReferences(int size) : base(size) { }
+    }
+    internal class DictionaryIRVariants : DictionaryDataKVTypes<VariantIRValue, VariantIRValue, SerializedType, SerializedType>
+    {
+        protected DictionaryIRVariants() { }
+        public DictionaryIRVariants(int size) : base(size) { }
+    }
+    internal class DictionaryIRComplexTypes : DictionaryDataT<ComplexTypeData, ComplexTypeData>
+    {
+        protected DictionaryIRComplexTypes() { }
+        public DictionaryIRComplexTypes(int size) : base(size) { }
+    }
+    internal class CollectionIRVariants : CollectionData<VariantIRValue, SerializedType>
+    {
+        protected CollectionIRVariants() { }
+        public CollectionIRVariants(VariantIRValue[] value, SerializedType itemsType) : base(value, itemsType) { }
+    }
+    internal class CollectionIRReferences : CollectionData<ReferenceData, SerializedType[]>
+    {
+        protected CollectionIRReferences() { }
+        public CollectionIRReferences(ReferenceData[] value, SerializedType[] itemsType) : base(value, itemsType) { }
+    }
+    internal class CollectionIRComplexTypes : CollectionData<ComplexTypeData, SerializedType>
+    {
+        protected CollectionIRComplexTypes() { }
+        public CollectionIRComplexTypes(ComplexTypeData[] value) : base(value, value != null && value.Length > 0 ?
+                                                                                                SerializedType.ComplexClass :
+                                                                                                SerializedType.None)
+        { }
+    }
     internal class DelegateData : SerializedItem
     {
         internal class Subscriber

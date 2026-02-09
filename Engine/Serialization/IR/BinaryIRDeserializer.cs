@@ -240,7 +240,7 @@ namespace Engine.Serialization
                     break;
                 case CollectionType.Dictionary:
                     {
-                        var result = new DictionaryData(count);
+                        var result = new DictionaryIRReferences(count);
 
                         //for (int i = 0; i < count; i++)
                         //{

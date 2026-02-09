@@ -172,7 +172,8 @@ namespace Editor.Views
             ImGui.BeginChild("BuildSettingsContent");
             if (isValidPlatformBuild)
             {
-                drawer.OnDraw(EditorDataManager.BuildSettings.GetBuildSettings(GetSelectedPlatform()));
+                var settings = EditorDataManager.BuildSettings.GetBuildSettings(GetSelectedPlatform());
+                drawer.OnDraw(settings);
             }
             else
             {
