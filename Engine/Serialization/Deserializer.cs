@@ -157,14 +157,30 @@ namespace Engine.Serialization
                 foreach (var item in collectionData.Collection)
                 {
                     var serializedItem = (DictionaryData)item;
-                    if (serializedItem.KeyType.IsSimple() && serializedItem.Key != null
-                        && serializedItem.Key.GetType() != args[0].GetType())
-                    {
-                        serializedItem.Key = Convert.ChangeType(serializedItem.Key, args[0]);
-                    }
 
-                    var refVal = GetReferenceValue(serializedItem.Type, deserializerData, serializedItem.Value as ReferenceData);
-                    dictionary.Add(serializedItem.Key, refVal);
+                    object GetArgValue(object argData, SerializedType argSerializedType, Type argType)
+                    {
+                        if (argSerializedType.IsSimple())
+                        {
+                            if (argData != null && argData.GetType() != argType)
+                            {
+                                return DeserializeVariantValueSafe((VariantIRValue)argData);
+                            }
+
+                            return null;
+                        }
+
+                        return GetReferenceValue(argSerializedType, deserializerData, argData as ReferenceData);
+                    }
+                    //if (serializedItem.KeyType.IsSimple() && serializedItem.Key != null
+                    //    && serializedItem.Key.GetType() != args[0].GetType())
+                    //{
+                    //    serializedItem.Key = serializedItem.Key;
+                    //}
+                    var key = GetArgValue(serializedItem.Key, serializedItem.KeyType, args[0]);
+                    var value = GetArgValue(serializedItem.Value, serializedItem.ValueType, args[1]);
+
+                    dictionary.Add(key, value);
                 }
 
                 ReflectionUtils.SetMemberValue(target, dictionary, property.Name);
@@ -225,7 +241,7 @@ namespace Engine.Serialization
                 ReflectionUtils.SetMemberValue(target, inst, property.Name);
             }
         }
-
+        // TODO: This code is boxing like tyson in its prime.
         internal static void DeserializeSimpleCollection(object target, SerializedPropertyIR property, DeserializerData deserializerData)
         {
             if (target == null || property == null || property.Data == null)
@@ -238,13 +254,40 @@ namespace Engine.Serialization
                 return;
             }
 
-            if (collectionData.CollectionType == CollectionType.Dictionary)
+            if (collectionData.Collection == null)
             {
-
+                return;
             }
-            else
+            if (Tr.ResolveType(property, out Type type))
             {
+                var collectionInstance = ReflectionUtils.GetDefaultValueInstance(type, collectionData.Collection.Count);
+                if (collectionData.CollectionType == CollectionType.Dictionary)
+                {
+                    var dictionary = collectionInstance as IDictionary;
 
+                    foreach (var item in collectionData.Collection)
+                    {
+                        var itemObj = item as DictionaryDataSimple;
+                        var key = DeserializeVariantValueSafe(itemObj.Key);
+                        var value = DeserializeVariantValueSafe(itemObj.Value);
+
+                        dictionary.Add(key, value);
+                    }
+
+                    ReflectionUtils.SetMemberValue(target, dictionary, property.Name);
+                }
+                else
+                {
+                    var variantCollection = collectionData.Collection as VariantIRValue[];
+
+                    for (int i = 0; i < variantCollection.Length; i++)
+                    {
+                        var itemObj = DeserializeVariantValueSafe(in variantCollection[i]);
+                        ReflectionUtils.SetMemberValueSafe(collectionInstance, itemObj, default(MemberInfo), i);
+                    }
+                }
+
+                ReflectionUtils.SetMemberValue(target, collectionInstance, property.Name);
             }
             //void DeserializeItem(ComplexTypeData complexItem, Action<object> setValueCallback)
             //{
@@ -351,7 +394,7 @@ namespace Engine.Serialization
                 return;
             }
 
-            if(collectionData.Collection == null)
+            if (collectionData.Collection == null)
             {
                 return;
             }
@@ -463,6 +506,15 @@ namespace Engine.Serialization
             }
 
             return arg;
+        }
+        private static object DeserializeVariantValueSafe(in VariantIRValue variant)
+        {
+            if (variant.Kind == SerializedType.Enum)
+            {
+                return DeserializeEnum(variant);
+            }
+
+            return variant.GetValueAsObject();
         }
 
         private static Enum DeserializeEnum(in VariantIRValue variant)

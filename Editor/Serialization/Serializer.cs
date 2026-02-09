@@ -327,6 +327,7 @@ namespace Editor.Serialization
                                 KeyType = keySerializedType,
                                 ValueType = ValueSerializedType
                             });
+
                         }
                         else if (serializedMemberType == SerializedType.SimpleCollection)
                         {
@@ -375,8 +376,8 @@ namespace Editor.Serialization
                                 Key = GetComplexTypeData(keySerializedType, k, "DictionaryKey"),
                                 Value = GetComplexTypeData(ValueSerializedType, v, "DictionaryValue"),
                             });
-                            referenced.Collection = collectionResult;
                         }
+                        referenced.Collection = collectionResult;
                     }
 
                     return referenced;
