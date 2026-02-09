@@ -116,7 +116,7 @@ namespace Engine.Serialization
             int strLength = reader.ReadInt32();
             property.Name = Encoding.UTF8.GetString(reader.ReadBytes(strLength));
             property.TypeId = new Guid(reader.ReadBytes(GUID_BYTES_SIZE));
-            property.Type = (SerializedType)reader.ReadUInt64();
+            property.Type = (SerializedType)reader.ReadInt64();
             var serializedType = property.Type;
 
             if (serializedType.IsSimple())
@@ -156,7 +156,7 @@ namespace Engine.Serialization
             {
                 return collectionData;
             }
-            collectionData.CollectionType = (CollectionType)reader.ReadUInt64();
+            collectionData.CollectionType = (CollectionType)reader.ReadInt64();
             switch (collectionData.CollectionType)
             {
                 case CollectionType.None:
@@ -173,7 +173,7 @@ namespace Engine.Serialization
                         for (int i = 0; i < count; i++)
                         {
                             var item = new CollectionData<ComplexTypeData>();
-                            item.Type = (SerializedType)reader.ReadUInt64();
+                            item.Type = (SerializedType)reader.ReadInt64();
                             item.Value = ReadComplexClass(reader);
                             result[i] = item;
                         }
@@ -188,7 +188,7 @@ namespace Engine.Serialization
                         for (int i = 0; i < count; i++)
                         {
                             var item =  new ComplexDictionaryData();
-                            item.Type = (SerializedType)reader.ReadUInt64();
+                            item.Type = (SerializedType)reader.ReadInt64();
                             item.Key = ReadComplexClass(reader);
                             item.Value = ReadComplexClass(reader);
                             result[i] = item;
@@ -213,7 +213,7 @@ namespace Engine.Serialization
                 return collectionData;
             }
             collectionData.Collection = new List<object>();
-            collectionData.CollectionType = (CollectionType)reader.ReadUInt64();
+            collectionData.CollectionType = (CollectionType)reader.ReadInt64();
             switch (collectionData.CollectionType)
             {
                 case CollectionType.None:
@@ -230,7 +230,7 @@ namespace Engine.Serialization
                         for (int i = 0; i < count; i++)
                         {
                             var item = new CollectionData<ReferenceData>();
-                            item.Type = (SerializedType)reader.ReadUInt64();
+                            item.Type = (SerializedType)reader.ReadInt64();
                             item.Value = new ReferenceData()
                             {
                                 Id = new Guid(reader.ReadBytes(GUID_BYTES_SIZE))
@@ -249,9 +249,9 @@ namespace Engine.Serialization
                         for (int i = 0; i < count; i++)
                         {
                             var item = new DictionaryData();
-                            item.Type = (SerializedType)reader.ReadUInt64();
-                            item.KeyType = (SerializedType)reader.ReadUInt64();
-                            item.ValueType = (SerializedType)reader.ReadUInt64();
+                            item.Type = (SerializedType)reader.ReadInt64();
+                            item.KeyType = (SerializedType)reader.ReadInt64();
+                            item.ValueType = (SerializedType)reader.ReadInt64();
 
                             object ReadArg(SerializedType type)
                             {
@@ -294,7 +294,7 @@ namespace Engine.Serialization
            */
             var complexTypeData = new ComplexTypeData();
 
-            complexTypeData.ComplexType = (SerializedType)reader.ReadUInt64();
+            complexTypeData.ComplexType = (SerializedType)reader.ReadInt64();
 
             if (complexTypeData.ComplexType == SerializedType.None)
             {
@@ -346,7 +346,7 @@ namespace Engine.Serialization
                 case SerializedType.Long:
                     return reader.ReadInt64();
                 case SerializedType.ULong:
-                    return reader.ReadUInt64();
+                    return reader.ReadInt64();
                 case SerializedType.Vec2:
                     return ReadStruct<vec2>(reader);
                 case SerializedType.Vec3:

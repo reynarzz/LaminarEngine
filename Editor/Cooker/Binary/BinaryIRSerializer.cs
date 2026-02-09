@@ -9,11 +9,21 @@ using System.Text;
 using System.Threading.Tasks;
 using Editor.Utils;
 using Engine.Serialization;
+using System.Buffers;
+using System.Runtime.CompilerServices;
 
 namespace Editor.Cooker
 {
     internal class BinaryIRSerializer
     {
+        // TODO: this is temporal
+        static BinaryIRSerializer()
+        {
+            if (!BitConverter.IsLittleEndian)
+            {
+                throw new PlatformNotSupportedException("The serializer requires a little endian CPU.");
+            }
+        }
         internal static void Serialize(BinaryWriter writer, params List<SerializedPropertyIR> properties)
         {
             writer.Write(properties.Count);
@@ -51,8 +61,7 @@ namespace Editor.Cooker
                  List<ComponentIR> Components 
             */
             writer.Write(ir.Version);
-            writer.Write(ir.Name.Length);
-            writer.Write(Encoding.UTF8.GetBytes(ir.Name), 0, ir.Name.Length);
+            WriteString(writer, ir.Name);
             writer.Write(ir.Layer);
             writer.Write(ir.IsActiveSelf);
             writer.Write(ir.ID.ToByteArray());
@@ -86,6 +95,7 @@ namespace Editor.Cooker
             }
         }
 
+
         private static void WriteProperty(BinaryWriter writer, SerializedPropertyIR ir)
         {
             /*
@@ -95,8 +105,7 @@ namespace Editor.Cooker
              object Data 
              */
             var serializedType = ir.Type;
-            writer.Write(ir.Name.Length);
-            writer.Write(Encoding.UTF8.GetBytes(ir.Name), 0, ir.Name.Length);
+            WriteString(writer, ir.Name);
             writer.Write(ir.TypeId.ToByteArray());
             writer.Write(Convert.ToInt64(serializedType));
 
@@ -137,7 +146,7 @@ namespace Editor.Cooker
                 return;
             }
             writer.Write(Convert.ToInt64(data.CollectionType));
-            // TODO: improve writing, it should be a byte array, and no one by one.
+            // TODO: improve writing, it should be a byte array, and not one by one.
             if (data.CollectionType == CollectionType.Dictionary)
             {
                 foreach (var item in data.Collection)
@@ -151,12 +160,108 @@ namespace Editor.Cooker
             }
             else
             {
-                var variatCollection = data.Collection as VariantIRValue[];
-                for (int i = 0; i < variatCollection.Length; i++)
+                var variantCollection = data.Collection as VariantIRValue[];
+                WriteVariantArray(writer, data.ItemsType, variantCollection);
+            }
+        }
+
+        private static void WriteVariantArray(BinaryWriter writer, SerializedType kind, VariantIRValue[] variants)
+        {
+            if (variants == null || variants.Length == 0 || kind == SerializedType.None)
+                return;
+
+            if (kind == SerializedType.String)
+            {
+                foreach (var v in variants)
                 {
-                    ref var value = ref variatCollection[i];
-                    WriteSimpleProperty(writer, in value, data.ItemsType);
+                    WriteString(writer, v.String);
                 }
+                return;
+            }
+
+            if (kind == SerializedType.Enum)
+            {
+                foreach (var v in variants)
+                {
+                    writer.Write(v.Enum.TypeId.ToByteArray());
+                    writer.Write(v.Enum.EnumValue);
+                }
+                return;
+            }
+
+            switch (kind)
+            {
+                case SerializedType.Char:
+                    WritePayloadSpan<char>(writer, variants);
+                    break;
+                case SerializedType.Bool:
+                    WriteBoolPayloadSpan(writer, variants);
+                    break;
+                case SerializedType.Byte:
+                    WritePayloadSpan<byte>(writer, variants);
+                    break;
+                case SerializedType.Short:
+                    WritePayloadSpan<short>(writer, variants);
+                    break;
+                case SerializedType.UShort:
+                    WritePayloadSpan<ushort>(writer, variants);
+                    break;
+                case SerializedType.Int:
+                    WritePayloadSpan<int>(writer, variants);
+                    break;
+                case SerializedType.UInt:
+                    WritePayloadSpan<uint>(writer, variants);
+                    break;
+                case SerializedType.Long:
+                    WritePayloadSpan<long>(writer, variants);
+                    break;
+                case SerializedType.ULong:
+                    WritePayloadSpan<ulong>(writer, variants);
+                    break;
+                case SerializedType.Float:
+                    WritePayloadSpan<float>(writer, variants);
+                    break;
+                case SerializedType.Double:
+                    WritePayloadSpan<double>(writer, variants);
+                    break;
+                case SerializedType.Vec2:
+                    WritePayloadSpan<vec2>(writer, variants);
+                    break;
+                case SerializedType.Vec3:
+                    WritePayloadSpan<vec3>(writer, variants);
+                    break;
+                case SerializedType.Vec4:
+                    WritePayloadSpan<vec4>(writer, variants);
+                    break;
+                case SerializedType.IVec2:
+                    WritePayloadSpan<ivec2>(writer, variants);
+                    break;
+                case SerializedType.IVec3:
+                    WritePayloadSpan<ivec3>(writer, variants);
+                    break;
+                case SerializedType.IVec4:
+                    WritePayloadSpan<ivec4>(writer, variants);
+                    break;
+                case SerializedType.Quat:
+                    WritePayloadSpan<quat>(writer, variants);
+                    break;
+                case SerializedType.Mat2:
+                    WritePayloadSpan<mat2>(writer, variants);
+                    break;
+                case SerializedType.Mat3:
+                    WritePayloadSpan<mat3>(writer, variants);
+                    break;
+                case SerializedType.Mat4:
+                    WritePayloadSpan<mat4>(writer, variants);
+                    break;
+                case SerializedType.Color:
+                    WritePayloadSpan<Color>(writer, variants);
+                    break;
+                case SerializedType.Color32:
+                    WritePayloadSpan<Color32>(writer, variants);
+                    break;
+                default:
+                    throw new Exception($"Unsupported SerializedType: {kind}");
             }
         }
 
@@ -308,7 +413,7 @@ namespace Editor.Cooker
                     writer.Write(data.Payload.Char);
                     break;
                 case SerializedType.String:
-                    writer.Write(data.String);
+                    WriteString(writer, data.String);
                     break;
                 case SerializedType.Bool:
                     writer.Write(data.Payload.Bool);
@@ -332,7 +437,7 @@ namespace Editor.Cooker
                         else
                         {
                             writer.Write(Guid.Empty.ToByteArray());
-                            writer.Write(0UL);
+                            writer.Write((long)0);
                         }
                     }
                     break;
@@ -395,21 +500,6 @@ namespace Editor.Cooker
             }
         }
 
-        private static T GetSimpleValueSafe<T>(object data)
-        {
-            if (data != null)
-            {
-                return (T)data;
-            }
-
-            if (typeof(T) == typeof(string))
-            {
-                return (T)(object)string.Empty;
-            }
-
-            return default;
-        }
-
         private static void WriteReferenceProperty(BinaryWriter writer, ReferenceData value)
         {
             if (value != null)
@@ -426,6 +516,86 @@ namespace Editor.Cooker
         {
             ReadOnlySpan<T> span = stackalloc T[] { value };
             writer.Write(MemoryMarshal.AsBytes(span));
+        }
+
+        private static void WritePayloadSpan<T>(BinaryWriter writer, VariantIRValue[] variants) where T : unmanaged
+        {
+            var count = variants.Length;
+            var size = Unsafe.SizeOf<T>();
+
+            var buffer = ArrayPool<byte>.Shared.Rent(count * size);
+            try
+            {
+                Span<byte> dst = buffer.AsSpan(0, count * size);
+
+                for (int i = 0; i < count; i++)
+                {
+                    ref ValuePayload payload = ref variants[i].Payload;
+                    T value = Unsafe.As<ValuePayload, T>(ref payload);
+                    Unsafe.WriteUnaligned(ref dst[i * size], value);
+                }
+
+                writer.Write(dst);
+            }
+            finally
+            {
+                ArrayPool<byte>.Shared.Return(buffer);
+            }
+        }
+
+        // Makes sure bool is exactly 1 byte.
+        private static void WriteBoolPayloadSpan(BinaryWriter writer, VariantIRValue[] variants)
+        {
+            var count = variants.Length;
+            var  buffer = ArrayPool<byte>.Shared.Rent(count);
+            try
+            {
+                var dst = buffer.AsSpan(0, count);
+                for (int i = 0; i < count; i++)
+                {
+                    dst[i] = variants[i].Payload.Bool ? (byte)1 : (byte)0;
+                }
+                writer.Write(dst);
+            }
+            finally
+            {
+                ArrayPool<byte>.Shared.Return(buffer);
+            }
+        }
+
+        private static void WriteString(BinaryWriter writer, string str, int chunkSize = 8192)
+        {
+            if (string.IsNullOrEmpty(str))
+            {
+                writer.Write(0);
+                return;
+            }
+
+            var totalBytes = Encoding.UTF8.GetByteCount(str);
+            writer.Write(totalBytes);
+
+            var maxBufferSize = Encoding.UTF8.GetMaxByteCount(chunkSize);
+            var byteBuffer = ArrayPool<byte>.Shared.Rent(maxBufferSize);
+
+            try
+            {
+                int offset = 0;
+                var sourceSpan = str.AsSpan();
+
+                while (offset < str.Length)
+                {
+                    int charsToProcess = Math.Min(chunkSize, str.Length - offset);
+
+                    int bytesWritten = Encoding.UTF8.GetBytes(sourceSpan.Slice(offset, charsToProcess), byteBuffer);
+                    writer.Write(byteBuffer, 0, bytesWritten);
+
+                    offset += charsToProcess;
+                }
+            }
+            finally
+            {
+                ArrayPool<byte>.Shared.Return(byteBuffer);
+            }
         }
     }
 }
