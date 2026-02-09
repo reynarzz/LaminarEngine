@@ -243,7 +243,6 @@ namespace Engine.Serialization
                 ReflectionUtils.SetMemberValue(target, inst, property.Name);
             }
         }
-        // TODO: This code is boxing like tyson in its prime.
         internal static void DeserializeSimpleCollection(object target, SerializedPropertyIR property, DeserializerData deserializerData)
         {
             if (target == null || property == null || property.Data == null)
@@ -267,6 +266,7 @@ namespace Engine.Serialization
                 {
                     var dictionary = collectionInstance as IDictionary;
 
+                    // TODO: fix, This is boxing values. use the generated class.
                     foreach (var item in collectionData.Collection)
                     {
                         var itemObj = item as DictionaryDataSimple;
@@ -281,12 +281,12 @@ namespace Engine.Serialization
                 else
                 {
                     var variantCollection = collectionData.Collection as VariantIRValue[];
-                    if(variantCollection.Length > 0)
+                    if (variantCollection.Length > 0)
                     {
-                        if(collectionData.ItemsType == SerializedType.Enum)
+                        if (collectionData.ItemsType == SerializedType.Enum)
                         {
                             // Having huge collections of enums is unlikelly, also, I do not want to complicate the code generator.
-                            // is there are performance issues related to this, I will change it.
+                            // if we have performance issues related to this, I will change it.
                             collectionInstance = ReflectionUtils.EnsureCount(collectionInstance, collectionData.Collection.Count);
 
                             for (int i = 0; i < variantCollection.Length; i++)
