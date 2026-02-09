@@ -3,6 +3,7 @@ using Engine;
 using System;
 using System.Collections;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace Engine.Serialization
 {
@@ -279,6 +280,7 @@ namespace Engine.Serialization
                 else
                 {
                     var variantCollection = collectionData.Collection as VariantIRValue[];
+                    collectionInstance = ReflectionUtils.EnsureCount(collectionInstance, collectionData.Collection.Count);
 
                     for (int i = 0; i < variantCollection.Length; i++)
                     {
@@ -289,96 +291,6 @@ namespace Engine.Serialization
 
                 ReflectionUtils.SetMemberValue(target, collectionInstance, property.Name);
             }
-            //void DeserializeItem(ComplexTypeData complexItem, Action<object> setValueCallback)
-            //{
-            //    if (complexItem == null)
-            //    {
-            //        setValueCallback(null);
-            //        return;
-            //    }
-            //    if (Tr.ResolveType(complexItem, out Type itemType))
-            //    {
-            //        var itemInstance = ReflectionUtils.GetDefaultValueInstance(itemType);
-            //        if (itemInstance == null)
-            //        {
-            //            throw new Exception($"Can't create an instance of type: {itemType}, check if a default constructor is available.");
-            //        }
-            //        DeserializeTarget(itemInstance, complexItem.Properties, deserializerData);
-            //        setValueCallback(itemInstance);
-            //    }
-            //}
-
-            //if (Tr.ResolveType(property, out Type type))
-            //{
-            //    var collectionInstance = ReflectionUtils.GetDefaultValueInstance(type, collectionData.Collection.Count);
-
-            //    if (collectionData.CollectionType == CollectionType.Dictionary)
-            //    {
-            //        var dictionary = collectionInstance as IDictionary;
-            //        foreach (var collItem in collectionData.Collection)
-            //        {
-            //            object DeserializeArgValue(ComplexTypeData complexArg)
-            //            {
-            //                object deserializedArgValue = null;
-
-            //                if (complexArg.ComplexType.IsSimple())
-            //                {
-            //                    // if (complexArg.Properties != null && complexArg.Properties.Count > 0)
-            //                    {
-            //                        deserializedArgValue = complexArg.Properties?[0].Data ?? null;
-            //                    }
-            //                }
-            //                else
-            //                {
-            //                    DeserializeItem(complexArg, item =>
-            //                    {
-            //                        deserializedArgValue = item;
-            //                    });
-            //                }
-
-            //                return deserializedArgValue;
-            //            }
-
-            //            var complexItem = collItem as ComplexDictionaryData;
-
-            //            var key = DeserializeArgValue(complexItem.Key);
-            //            var value = DeserializeArgValue(complexItem.Value);
-
-            //            if (key != null && !dictionary.Contains(key))
-            //            {
-            //                if (value is ReferenceData reference)
-            //                {
-            //                    value = GetReferenceValue(complexItem.Type, deserializerData, reference);
-            //                }
-            //                dictionary.Add(key, value);
-            //            }
-            //        }
-
-            //        ReflectionUtils.SetMemberValue(target, dictionary, property.Name);
-            //    }
-            //    else
-            //    {
-            //        collectionInstance = ReflectionUtils.EnsureCount(collectionInstance, collectionData.Collection.Count);
-            //        int colItemIndex = 0;
-            //        foreach (var colItem in collectionData.Collection)
-            //        {
-            //            var complexItem = colItem as CollectionData<ComplexTypeData>;
-
-            //            DeserializeItem(complexItem.Value, item =>
-            //            {
-            //                if (item is ReferenceData reference)
-            //                {
-            //                    item = GetReferenceValue(complexItem.Type, deserializerData, reference);
-            //                }
-
-            //                ReflectionUtils.SetMemberValueSafe(collectionInstance, item, default(MemberInfo), colItemIndex);
-            //            });
-            //            colItemIndex++;
-            //        }
-
-            //        ReflectionUtils.SetMemberValue(target, collectionInstance, property.Name);
-            //    }
-            //}
         }
 
         internal static void DeserializeComplexCollection(object target, SerializedPropertyIR property, DeserializerData deserializerData)
