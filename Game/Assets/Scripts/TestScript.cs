@@ -128,7 +128,7 @@ namespace Game
         {
             [SerializedField] public T TValue;
             [SerializedField] public EnumerablePartitionerOptions Enumn;
-            [SerializedField] private int HotReloadThis;
+            [SerializedField] private int[] HotReloadThis;
             //[SerializedField] private RigidBody2D Something; 
             [SerializedField] private RigidBody2D _rigid2;
             [SerializedField] private Body2DType bod;

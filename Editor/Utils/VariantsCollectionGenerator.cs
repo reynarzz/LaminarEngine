@@ -114,93 +114,90 @@ internal static object Write(object collection, VariantIRValue[] values, Seriali
             return SyntaxFactory.ParseMemberDeclaration(sb.ToString())!;
         }
 
-
-        // ---------------- WRITERS ----------------
-
         private static MemberDeclarationSyntax GenerateArrayWriter(VariantTypeInfo t)
         {
             return ParseWriter($@"
-        private static object VariantArrayToArray_{t.Name}(object collection, VariantIRValue[] values)
-        {{
-            var array = ({t.ClrType}[])ReflectionUtils.EnsureCount(collection, values.Length);
-
-            for (int i = 0; i < values.Length; i++)
+            private static object VariantArrayToArray_{t.Name}(object collection, VariantIRValue[] values)
             {{
-                array[i] = values[i].Payload.{t.PayloadField};
-            }}
+                var array = ({t.ClrType}[])ReflectionUtils.EnsureCount(collection, values.Length);
 
-            return array;
-        }}");
+                for (int i = 0; i < values.Length; i++)
+                {{
+                    array[i] = values[i].Payload.{t.PayloadField};
+                }}
+
+                return array;
+            }}");
         }
 
         private static MemberDeclarationSyntax GenerateListWriter(VariantTypeInfo t)
         {
             return ParseWriter($@"
-        private static object VariantArrayToList_{t.Name}(object collection, VariantIRValue[] values)
-        {{
-            var list = (List<{t.ClrType}>)collection;
-            
-            System.Runtime.InteropServices.CollectionsMarshal.SetCount(list, values.Length);
-            Span<{t.ClrType}> span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan(list);
-
-            for (int i = 0; i < values.Length; i++)
+            private static object VariantArrayToList_{t.Name}(object collection, VariantIRValue[] values)
             {{
-                list[i] = values[i].Payload.{t.PayloadField};
-            }}
+                var list = (List<{t.ClrType}>)collection;
+            
+                System.Runtime.InteropServices.CollectionsMarshal.SetCount(list, values.Length);
+                Span<{t.ClrType}> span = System.Runtime.InteropServices.CollectionsMarshal.AsSpan(list);
 
-            return list;
-        }}");
+                for (int i = 0; i < values.Length; i++)
+                {{
+                    list[i] = values[i].Payload.{t.PayloadField};
+                }}
+
+                return list;
+            }}");
         }
 
         private static MemberDeclarationSyntax GenerateQueueWriter(VariantTypeInfo t)
         {
             return ParseWriter($@"
-        private static object VariantArrayToQueue_{t.Name}(object collection, VariantIRValue[] values)
-        {{
-            var queue = (Queue<{t.ClrType}>)collection;
-            queue.Clear();
-
-            for (int i = 0; i < values.Length; i++)
+            private static object VariantArrayToQueue_{t.Name}(object collection, VariantIRValue[] values)
             {{
-                queue.Enqueue(values[i].Payload.{t.PayloadField});
-            }}
+                var queue = (Queue<{t.ClrType}>)collection;
+                queue.Clear();
 
-            return queue;
-        }}");
+                for (int i = 0; i < values.Length; i++)
+                {{
+                    queue.Enqueue(values[i].Payload.{t.PayloadField});
+                }}
+
+                return queue;
+            }}");
         }
 
         private static MemberDeclarationSyntax GenerateStackWriter(VariantTypeInfo t)
         {
             return ParseWriter($@"
-        private static object VariantArrayToStack_{t.Name}(object collection, VariantIRValue[] values)
-        {{
-            var stack = (Stack<{t.ClrType}>)collection;
-            stack.Clear();
-
-            for (int i = values.Length - 1; i >= 0; i--)
+            private static object VariantArrayToStack_{t.Name}(object collection, VariantIRValue[] values)
             {{
-                stack.Push(values[i].Payload.{t.PayloadField});
-            }}
+                var stack = (Stack<{t.ClrType}>)collection;
+                stack.Clear();
 
-            return stack;
-        }}");
+                for (int i = values.Length - 1; i >= 0; i--)
+                {{
+                    stack.Push(values[i].Payload.{t.PayloadField});
+                }}
+
+                return stack;
+            }}");
         }
 
         private static MemberDeclarationSyntax GenerateHashSetWriter(VariantTypeInfo t)
         {
             return ParseWriter($@"
-        private static object VariantArrayToHashSet_{t.Name}(object collection, VariantIRValue[] values)
-        {{
-            var set = (HashSet<{t.ClrType}>)collection;
-            set.Clear();
-
-            for (int i = 0; i < values.Length; i++)
+            private static object VariantArrayToHashSet_{t.Name}(object collection, VariantIRValue[] values)
             {{
-                set.Add(values[i].Payload.{t.PayloadField});
-            }}
+                var set = (HashSet<{t.ClrType}>)collection;
+                set.Clear();
 
-            return set;
-        }}");
+                for (int i = 0; i < values.Length; i++)
+                {{
+                    set.Add(values[i].Payload.{t.PayloadField});
+                }}
+
+                return set;
+            }}");
         }
 
         private static MemberDeclarationSyntax ParseWriter(string src)

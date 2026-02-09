@@ -283,7 +283,22 @@ namespace Engine.Serialization
                     var variantCollection = collectionData.Collection as VariantIRValue[];
                     if(variantCollection.Length > 0)
                     {
-                        VariantCollectionWriter.Write(collectionInstance, variantCollection, collectionData.ItemsType, collectionData.CollectionType);
+                        if(collectionData.ItemsType == SerializedType.Enum)
+                        {
+                            // Having huge collections of enums is unlikelly, also, I do not want to complicate the code generator.
+                            // is there are performance issues related to this, I will change it.
+                            collectionInstance = ReflectionUtils.EnsureCount(collectionInstance, collectionData.Collection.Count);
+
+                            for (int i = 0; i < variantCollection.Length; i++)
+                            {
+                                var itemObj = DeserializeVariantValueSafe(in variantCollection[i]);
+                                ReflectionUtils.SetMemberValueSafe(collectionInstance, itemObj, default(MemberInfo), i);
+                            }
+                        }
+                        else
+                        {
+                            collectionInstance = VariantCollectionWriter.Write(collectionInstance, variantCollection, collectionData.ItemsType, collectionData.CollectionType);
+                        }
                     }
                 }
 
