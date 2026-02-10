@@ -9,7 +9,7 @@ namespace Engine.Serialization
 {
     internal interface ITypeResolver
     {
-        static abstract bool ResolveType(ComplexTypeData prop, out Type type);
+        static abstract bool ResolveType(ComplexClassData prop, out Type type);
         static abstract bool ResolveType(ComponentIR prop, out Type type);
         static abstract bool ResolveType(SerializedPropertyIR prop, out Type type);
         static abstract bool ResolveType(EnumIRValue prop, out Type type);
@@ -26,7 +26,7 @@ namespace Engine.Serialization
 #endif
         }
 
-        static bool ITypeResolver.ResolveType(ComplexTypeData prop, out Type type)
+        static bool ITypeResolver.ResolveType(ComplexClassData prop, out Type type)
         {
 #if SHIP_BUILD
             return Generated.TypeRegistryRuntime.ResolveType(prop.TypeId, out type);

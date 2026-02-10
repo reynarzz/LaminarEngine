@@ -76,14 +76,14 @@ namespace Engine.Serialization
 
         private static void DeserializeReferencedProperty(object target, SerializedPropertyIR property, DeserializerData deserializerData)
         {
-            if (property.Data == null)
+            if (property.Reference == null)
             {
                 // Debug.Warn($"Deserialization error: property '{property.Name}' data is null.");
                 return;
             }
             //if(Guid.TryParse((string)property.Data, out var guid))
 
-            var refData = property.Data as ReferenceData;
+            var refData = property.Reference;
 
             var referenceValue = GetReferenceValue(property.Type, deserializerData, refData);
 
@@ -95,29 +95,29 @@ namespace Engine.Serialization
 
         private static void DeserializeSimpleProperty(object target, SerializedPropertyIR property)
         {
-            if (property.Data == null)
+            if (property.Simple.Kind == SerializedType.None)
             {
                 return;
             }
             object value = null;
             if (property.Type == SerializedType.Enum)
             {
-                value = DeserializeEnum((VariantIRValue)property.Data);
+                value = DeserializeEnum(property.Simple);
             }
             else
             {
-                value = ((VariantIRValue)property.Data).GetValueAsObject();
+                value = property.Simple.GetValueAsObject();
             }
             ReflectionUtils.SetMemberValue(target, value, property.Name);
         }
 
         private static void DeserializeReferenceCollectionProperty(object target, SerializedPropertyIR property, DeserializerData deserializerData)
         {
-            if (property.Data == null)
+            if (property.Collection == null)
                 return;
 
             Type collectionPropertyType = null;
-            CollectionPropertyData collectionData = null;
+            CollectionData collectionData = property.Collection;
 
             if (ReflectionUtils.IsCollection(target?.GetType(), out var colType))
             {
@@ -137,15 +137,13 @@ namespace Engine.Serialization
                 }
 
                 // throw new Exception("Implement: Get value of collectionData.Collection");
-                collectionData = property.Data as CollectionPropertyData;
             }
             else
             {
                 collectionPropertyType = ReflectionUtils.GetMemberType(target.GetType(), property.Name);
-                collectionData = property.Data as CollectionPropertyData;
             }
 
-            if (collectionPropertyType == null || collectionData == null || collectionData.Collection == null)
+            if (collectionPropertyType == null || collectionData == null || collectionData == null)
             {
                 return;
             }
@@ -172,7 +170,7 @@ namespace Engine.Serialization
 
                 var dictionary = (IDictionary)Activator.CreateInstance(dictType);
 
-                var referenceCollection = collectionData.Collection as DictionaryIRReferences;
+                var referenceCollection = collectionData as DictionaryIRReferences;
 
                 for (int i = 0; i < referenceCollection.Count; i++)
                 {
@@ -201,7 +199,7 @@ namespace Engine.Serialization
             }
             else if (collectionData.CollectionType == CollectionType.Array)
             {
-                var array = Array.CreateInstance(collectionPropertyType.GetElementType(), collectionData.Collection.Count);
+                var array = Array.CreateInstance(collectionPropertyType.GetElementType(), collectionData.Count);
 
                 SetValueToProperty(array, (item, index) =>
                 {
@@ -220,7 +218,7 @@ namespace Engine.Serialization
             void SetValueToProperty(object collectionInstance, Action<ReferenceData, int> setCollectionValueCallback)
             {
                 int collIndex = 0;
-                var referenceCol = collectionData.Collection as CollectionIRReferences;
+                var referenceCol = collectionData as CollectionIRReferences;
                 foreach (var item in referenceCol.Value)
                 {
                     setCollectionValueCallback(item, collIndex);
@@ -233,10 +231,10 @@ namespace Engine.Serialization
 
         internal static void DeserializeComplexClass(object target, SerializedPropertyIR property, DeserializerData deserializerData)
         {
-            if (target == null || property == null || property.Data == null)
+            if (target == null || property == null || property.ComplexClass == null)
                 return;
 
-            var complexData = property.Data as ComplexTypeData;
+            var complexData = property.ComplexClass;
             if (Tr.ResolveType(complexData, out Type type))
             {
                 var inst = Activator.CreateInstance(type);
@@ -246,17 +244,17 @@ namespace Engine.Serialization
         }
         internal static void DeserializeSimpleCollection(object target, SerializedPropertyIR property, DeserializerData deserializerData)
         {
-            if (target == null || property == null || property.Data == null)
+            if (target == null || property == null || property.Collection == null)
                 return;
 
-            var collectionData = property.Data as CollectionPropertyData;
+            var collectionData = property.Collection;
             if (collectionData == null)
             {
                 Debug.EngineError("FATAL: Not a collection to deserialize!");
                 return;
             }
 
-            if (collectionData.Collection == null)
+            if (collectionData.Count == 0)
             {
                 return;
             }
@@ -268,7 +266,7 @@ namespace Engine.Serialization
                     var dictionary = collectionInstance as IDictionary;
 
                     // TODO: fix, This is boxing values. use the generated class.
-                    var dictionarySimple = collectionData.Collection as DictionaryIRVariants;
+                    var dictionarySimple = collectionData as DictionaryIRVariants;
                     for (int i = 0; i < dictionarySimple.Count; i++)
                     {
                         var key = DeserializeVariantValueSafe(dictionarySimple.Keys[i]);
@@ -281,14 +279,14 @@ namespace Engine.Serialization
                 }
                 else
                 {
-                    var variantCollection = collectionData.Collection as CollectionIRVariants;
+                    var variantCollection = collectionData as CollectionIRVariants;
                     if (variantCollection.Count > 0)
                     {
                         if (variantCollection.ItemsType == SerializedType.Enum)
                         {
                             // Having huge collections of enums is unlikelly, also, I do not want to complicate the code generator.
                             // if we have performance issues related to this, I will change it.
-                            collectionInstance = ReflectionUtils.EnsureCount(collectionInstance, collectionData.Collection.Count);
+                            collectionInstance = ReflectionUtils.EnsureCount(collectionInstance, collectionData.Count);
 
                             for (int i = 0; i < variantCollection.Count; i++)
                             {
@@ -309,10 +307,10 @@ namespace Engine.Serialization
 
         internal static void DeserializeComplexCollection(object target, SerializedPropertyIR property, DeserializerData deserializerData)
         {
-            if (target == null || property == null || property.Data == null)
+            if (target == null || property == null || property.Collection == null)
                 return;
 
-            var collectionData = property.Data as CollectionPropertyData;
+            var collectionData = property.Collection;
 
             if (collectionData == null)
             {
@@ -320,12 +318,12 @@ namespace Engine.Serialization
                 return;
             }
 
-            if (collectionData.Collection == null)
+            if (collectionData == null || collectionData.Count == 0)
             {
                 return;
             }
 
-            void DeserializeItem(ComplexTypeData complexItem, Action<object> setValueCallback)
+            void DeserializeItem(ComplexClassData complexItem, Action<object> setValueCallback)
             {
                 if (complexItem == null)
                 {
@@ -347,24 +345,23 @@ namespace Engine.Serialization
 
             if (Tr.ResolveType(property, out Type type))
             {
-                var collectionInstance = ReflectionUtils.GetDefaultValueInstance(type, collectionData.Collection.Count);
+                var collectionInstance = ReflectionUtils.GetDefaultValueInstance(type, collectionData.Count);
 
                 if (collectionData.CollectionType == CollectionType.Dictionary)
                 {
                     var dictionary = collectionInstance as IDictionary;
-                    var complexDictionary = collectionData.Collection as DictionaryIRComplexTypes;
+                    var complexDictionary = collectionData as DictionaryIRComplexTypes;
                     for (int i = 0; i < complexDictionary.Count; i++)
                     {
-                        object DeserializeArgValue(ComplexTypeData complexArg)
+                        object DeserializeArgValue(ComplexClassData complexArg)
                         {
                             object deserializedArgValue = null;
 
                             if (complexArg.ComplexType.IsSimple())
                             {
-                                // if (complexArg.Properties != null && complexArg.Properties.Count > 0)
+                                //if (complexArg.Properties != null && complexArg.Properties.Count > 0)
                                 {
-                                    deserializedArgValue = GetComplexTypeDataSafe(complexArg.Properties?[0].Data ?? null, complexArg,
-                                                                                  complexArg.ComplexType, deserializerData);
+                                    deserializedArgValue = DeserializeVariantValueSafe(complexArg.Properties[0].Simple);
                                 }
                             }
                             else
@@ -391,9 +388,9 @@ namespace Engine.Serialization
                 }
                 else
                 {
-                    collectionInstance = ReflectionUtils.EnsureCount(collectionInstance, collectionData.Collection.Count);
+                    collectionInstance = ReflectionUtils.EnsureCount(collectionInstance, collectionData.Count);
                     int colItemIndex = 0;
-                    var complexCol = collectionData.Collection as CollectionIRComplexTypes;
+                    var complexCol = collectionData as CollectionIRComplexTypes;
                     foreach (var complexItem in complexCol.Value)
                     {
                         DeserializeItem(complexItem, item =>
@@ -408,7 +405,7 @@ namespace Engine.Serialization
             }
         }
 
-        private static object GetComplexTypeDataSafe(object arg, ComplexTypeData argComplexData,
+        private static object GetComplexTypeDataSafe(object arg, ComplexClassData argComplexData,
                                                      SerializedType argType, DeserializerData deserializedData)
         {
             if (arg == null)
@@ -435,6 +432,10 @@ namespace Engine.Serialization
             if (variant.Kind == SerializedType.Enum)
             {
                 return DeserializeEnum(variant);
+            }
+            else if (variant.Kind == SerializedType.String && string.IsNullOrEmpty(variant.String))
+            {
+                return string.Empty;
             }
 
             return variant.GetValueAsObject();

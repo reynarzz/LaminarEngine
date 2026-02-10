@@ -6,6 +6,7 @@ using System.Reflection;
 using Editor.Utils;
 using GlmNet;
 using Engine.Serialization;
+using System.Xml.Schema;
 
 namespace Editor.Serialization
 {
@@ -34,13 +35,17 @@ namespace Editor.Serialization
                 var valueType = value?.GetType() ?? ReflectionUtils.GetMemberType(member);
                 var serializedType = GetSerializedType(valueType, value);
 
+                var propData = GetPropertyData(member, serializedType, value);
                 properties.Add(new SerializedPropertyIR()
                 {
                     Name = member.Name,
                     InternalType = GetInternalType(valueType),
                     TypeId = GetTypeId(valueType),
                     Type = serializedType,
-                    Data = GetPropertyData(member, serializedType, value)
+                    Simple = TryGetSimplePropertyData(propData, serializedType),
+                    Reference = TryGetReferencePropertyData(propData, serializedType),
+                    ComplexClass = TryGetComplexClassPropertyData(propData, serializedType),
+                    Collection = TryGetCollectionPropertyData(propData, serializedType)
                 });
             }
 
@@ -292,20 +297,21 @@ namespace Editor.Serialization
             }
             else if (ReflectionUtils.IsCollection(type, out var collectionType))
             {
-                var collectionPropData = new CollectionPropertyData()
-                {
-                    CollectionType = collectionType
-                };
+                CollectionData collectionPropData = null;
 
                 if (collectionType == CollectionType.Dictionary)
                 {
-                    collectionPropData.Collection = GetDictionaryData(type, serializedMemberType, value);
+                    collectionPropData = GetDictionaryData(type, serializedMemberType, value);
                 }
                 else
                 {
-                    collectionPropData.Collection = Get1DCollectionData(serializedMemberType, value, out var itemsType);
+                    collectionPropData = Get1DCollectionData(serializedMemberType, value, out var itemsType);
                 }
 
+                if (collectionPropData != null)
+                {
+                    collectionPropData.CollectionType = collectionType;
+                }
                 return collectionPropData;
             }
             else if (serializedMemberType == SerializedType.ComplexClass)
@@ -354,7 +360,7 @@ namespace Editor.Serialization
             }
             else if (serializedMemberType == SerializedType.ComplexCollection)
             {
-                var complexTypeArr = new ComplexTypeData[collection.Count];
+                var complexTypeArr = new ComplexClassData[collection.Count];
                 int index = 0;
 
                 foreach (var item in collection)
@@ -400,7 +406,7 @@ namespace Editor.Serialization
 
 
             void PopulateDictionaryCollection(ICollection argCollection, Type argDefaultType, VariantIRValue[] simpleArg,
-                                               object[] referenceArg, ComplexTypeData[] complexArg, SerializedType[] refArgTypes,
+                                               object[] referenceArg, ComplexClassData[] complexArg, SerializedType[] refArgTypes,
                                                out SerializedType simpleArgType, string complexPropKey)
             {
                 simpleArgType = SerializedType.None;
@@ -450,13 +456,13 @@ namespace Editor.Serialization
             return dictionaryCollection;
         }
 
-        private static ComplexTypeData GetComplexTypeData(SerializedType argSerializedType, object argValue, string argName)
+        private static ComplexClassData GetComplexTypeData(SerializedType argSerializedType, object argValue, string argName)
         {
             if (argSerializedType.IsSimple())
             {
                 var internalType = GetInternalType(argValue?.GetType());
                 var typeId = GetTypeId(argValue?.GetType());
-                return new ComplexTypeData()
+                return new ComplexClassData()
                 {
                     ComplexType = argSerializedType,
                     InternalType = internalType,
@@ -465,7 +471,7 @@ namespace Editor.Serialization
                     {
                         new SerializedPropertyIR()
                         {
-                           Data = GetVariantValue(argValue, argSerializedType),
+                           Simple = GetVariantValue(argValue, argSerializedType),
                            InternalType = internalType,
                            TypeId = typeId,
                            Type = argSerializedType,
@@ -566,7 +572,7 @@ namespace Editor.Serialization
                 Id = id
             };
         }
-        internal static ComplexTypeData CreateComplexType(Type complexType, object value)
+        internal static ComplexClassData CreateComplexType(Type complexType, object value)
         {
             if (complexType == null)
                 return null;
@@ -580,17 +586,21 @@ namespace Editor.Serialization
                 var valueType = value?.GetType() ?? ReflectionUtils.GetMemberType(currentType);
                 var serializedType = GetSerializedType(valueType, null);
 
+                var data = GetPropertyData(currentType, serializedType, value);
                 return new SerializedPropertyIR()
                 {
                     Name = currentType.Name,
                     Type = serializedType,
                     InternalType = GetInternalType(valueType),
                     TypeId = GetTypeId(valueType),
-                    Data = GetPropertyData(currentType, serializedType, value),
+                    Simple = TryGetSimplePropertyData(data, serializedType),
+                    Reference = TryGetReferencePropertyData(data, serializedType),
+                    ComplexClass = TryGetComplexClassPropertyData(data, serializedType),
+                    Collection = TryGetCollectionPropertyData(data, serializedType),
                 };
             }
 
-            var complexClass = new ComplexTypeData()
+            var complexClass = new ComplexClassData()
             {
                 ComplexType = GetSerializedType(complexType, value),
                 InternalType = GetInternalType(complexType),
@@ -608,6 +618,49 @@ namespace Editor.Serialization
             return complexClass;
         }
 
+        private static VariantIRValue TryGetSimplePropertyData(object obj, SerializedType type)
+        {
+            if (type.IsSimple())
+            {
+                if(type == SerializedType.String && obj == null)
+                {
+                    return VariantIRValue.FromString(string.Empty);
+                }
+
+                return (VariantIRValue)obj;
+            }
+
+            return default;
+        }
+
+        private static ReferenceData TryGetReferencePropertyData(object obj, SerializedType type)
+        {
+            if (type.IsEObject())
+            {
+                return obj as ReferenceData;
+            }
+
+            return null;
+        }
+        private static ComplexClassData TryGetComplexClassPropertyData(object obj, SerializedType type)
+        {
+            if (type.IsComplexClass())
+            {
+                return obj as ComplexClassData;
+            }
+
+            return null;
+        }
+
+        private static CollectionData TryGetCollectionPropertyData(object obj, SerializedType type)
+        {
+            if (type.IsCollection())
+            {
+                return obj as CollectionData;
+            }
+
+            return null;
+        }
 
         private static string GetInternalType(Type type)
         {

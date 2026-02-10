@@ -27,6 +27,11 @@ namespace Engine.Utils
         {
             return (type & SerializedType.CollectionFlag) != 0;
         }
+
+        public static bool IsComplexClass(this SerializedType type)
+        {
+            return (type & SerializedType.ComplexClass) != 0;
+        }
         
         public static ulong GetIdentity(this SerializedType type)
         {

@@ -207,6 +207,21 @@ namespace Engine.Serialization
                 String = null
             };
         }
+        internal static VariantIRValue FromEnum(Guid id, string internalType, long value)
+        {
+            return new VariantIRValue
+            {
+                Kind = SerializedType.Enum,
+                Enum = new EnumIRValue()
+                {
+                    TypeId = id,
+                    EnumInternalType = internalType,
+                    EnumValue = value
+                },
+                String = null
+            };
+        }
+
         internal static VariantIRValue FromVec2(vec2 value)
         {
             return new VariantIRValue

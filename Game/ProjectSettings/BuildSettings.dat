@@ -4,18 +4,22 @@
     "Type": "ComplexCollection",
     "InternalType": "System.Collections.Generic.List`1[[System.Guid, System.Private.CoreLib]], System.Private.CoreLib",
     "TypeId": "b296fd12-bde3-15f4-9d41-fdf34414a159",
-    "Data": {
-      "$type": "Engine.Serialization.CollectionPropertyData, Engine",
+    "Simple": {
+      "$type": "Engine.Serialization.VariantIRValue, Engine",
       "$value": {
-        "CollectionType": "List",
-        "Collection": {
-          "$type": "Engine.Serialization.CollectionIRComplexTypes, Engine",
-          "$value": {
-            "Value": [],
-            "ItemsType": "None",
-            "Type": "None"
-          }
-        }
+        "Kind": "None",
+        "Value": null
+      }
+    },
+    "Reference": null,
+    "ComplexClass": null,
+    "Collection": {
+      "$type": "Engine.Serialization.CollectionIRComplexTypes, Engine",
+      "$value": {
+        "Type": "None",
+        "Value": [],
+        "ItemsType": "None",
+        "CollectionType": "List"
       }
     }
   },
@@ -24,1110 +28,1516 @@
     "Type": "ComplexCollection",
     "InternalType": "System.Collections.Generic.Dictionary`2[[Editor.Build.PlatformBuild, Editor],[Editor.Build.PlatformBuildSettings, Editor]], System.Private.CoreLib",
     "TypeId": "412f0587-f58a-1ca1-0724-b3d38eb2b38c",
-    "Data": {
-      "$type": "Engine.Serialization.CollectionPropertyData, Engine",
+    "Simple": {
+      "$type": "Engine.Serialization.VariantIRValue, Engine",
       "$value": {
-        "CollectionType": "Dictionary",
-        "Collection": {
-          "$type": "Engine.Serialization.DictionaryIRComplexTypes, Engine",
-          "$value": {
-            "Keys": [
+        "Kind": "None",
+        "Value": null
+      }
+    },
+    "Reference": null,
+    "ComplexClass": null,
+    "Collection": {
+      "$type": "Engine.Serialization.DictionaryIRComplexTypes, Engine",
+      "$value": {
+        "Keys": [
+          {
+            "InternalType": "Editor.Build.PlatformBuild, Editor",
+            "TypeId": "b5d78a8f-ad76-27bc-a569-eb732e643f2a",
+            "ComplexType": "Enum",
+            "Properties": [
               {
+                "Name": "D_K",
+                "Type": "Enum",
                 "InternalType": "Editor.Build.PlatformBuild, Editor",
                 "TypeId": "b5d78a8f-ad76-27bc-a569-eb732e643f2a",
-                "ComplexType": "Enum",
-                "Properties": [
-                  {
-                    "Name": "D_K",
-                    "Type": "Enum",
-                    "InternalType": "Editor.Build.PlatformBuild, Editor",
-                    "TypeId": "b5d78a8f-ad76-27bc-a569-eb732e643f2a",
-                    "Data": {
-                      "$type": "Engine.Serialization.VariantIRValue, Engine",
-                      "$value": {
-                        "Kind": "Enum",
-                        "Enum": {
-                          "TypeId": "b5d78a8f-ad76-27bc-a569-eb732e643f2a",
-                          "EnumInternalType": "Editor.Build.PlatformBuild, Editor",
-                          "EnumValue": 1
-                        }
-                      }
+                "Simple": {
+                  "$type": "Engine.Serialization.VariantIRValue, Engine",
+                  "$value": {
+                    "Kind": "Enum",
+                    "Enum": {
+                      "TypeId": "b5d78a8f-ad76-27bc-a569-eb732e643f2a",
+                      "EnumInternalType": "Editor.Build.PlatformBuild, Editor",
+                      "EnumValue": 1
                     }
                   }
-                ]
-              },
-              {
-                "InternalType": "Editor.Build.PlatformBuild, Editor",
-                "TypeId": "b5d78a8f-ad76-27bc-a569-eb732e643f2a",
-                "ComplexType": "Enum",
-                "Properties": [
-                  {
-                    "Name": "D_K",
-                    "Type": "Enum",
-                    "InternalType": "Editor.Build.PlatformBuild, Editor",
-                    "TypeId": "b5d78a8f-ad76-27bc-a569-eb732e643f2a",
-                    "Data": {
-                      "$type": "Engine.Serialization.VariantIRValue, Engine",
-                      "$value": {
-                        "Kind": "Enum",
-                        "Enum": {
-                          "TypeId": "b5d78a8f-ad76-27bc-a569-eb732e643f2a",
-                          "EnumInternalType": "Editor.Build.PlatformBuild, Editor",
-                          "EnumValue": 3
-                        }
-                      }
-                    }
-                  }
-                ]
+                },
+                "Reference": null,
+                "ComplexClass": null,
+                "Collection": null
               }
-            ],
-            "Values": [
+            ]
+          },
+          {
+            "InternalType": "Editor.Build.PlatformBuild, Editor",
+            "TypeId": "b5d78a8f-ad76-27bc-a569-eb732e643f2a",
+            "ComplexType": "Enum",
+            "Properties": [
               {
-                "InternalType": "Editor.Build.WindowsBuildSettings, Editor",
-                "TypeId": "d979e285-1edc-e68d-1867-706c6fbbaee5",
-                "ComplexType": "ComplexClass",
-                "Properties": [
-                  {
-                    "Name": "Default",
-                    "Type": "ComplexClass",
-                    "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
-                    "TypeId": "b82153eb-c244-d04c-0054-8eb0a05390ee",
-                    "Data": {
-                      "$type": "Engine.Serialization.ComplexTypeData, Engine",
-                      "$value": {
-                        "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
-                        "TypeId": "b82153eb-c244-d04c-0054-8eb0a05390ee",
-                        "ComplexType": "ComplexClass",
-                        "Properties": [
-                          {
-                            "Name": "Icon",
-                            "Type": "TextureAsset",
-                            "InternalType": "Engine.Texture2D, Engine",
-                            "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
-                            "Data": {
-                              "$type": "Engine.Serialization.ReferenceData, Engine",
-                              "$value": {
-                                "Type": "TextureAsset",
-                                "Id": "1326d382-c23d-497a-912f-72334fe5516d"
-                              }
-                            }
-                          },
-                          {
-                            "Name": "Description",
-                            "Type": "String",
-                            "InternalType": "System.String, System.Private.CoreLib",
-                            "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "String",
-                                "Value": "Application description"
-                              }
-                            }
-                          },
-                          {
-                            "Name": "Company",
-                            "Type": "String",
-                            "InternalType": "System.String, System.Private.CoreLib",
-                            "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "String",
-                                "Value": "My Company"
-                              }
-                            }
-                          },
-                          {
-                            "Name": "Authors",
-                            "Type": "String",
-                            "InternalType": "System.String, System.Private.CoreLib",
-                            "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "String",
-                                "Value": "Author"
-                              }
-                            }
-                          },
-                          {
-                            "Name": "Version",
-                            "Type": "IVec3",
-                            "InternalType": "GlmNet.ivec3, Engine",
-                            "TypeId": "0eb55f0e-9fb6-9ca0-f707-35ea8c2c71b9",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "IVec3",
-                                "Value": {
-                                  "x": 1,
-                                  "y": 0,
-                                  "z": 0
-                                }
-                              }
-                            }
-                          },
-                          {
-                            "Name": "ApplicationName",
-                            "Type": "String",
-                            "InternalType": "System.String, System.Private.CoreLib",
-                            "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "String",
-                                "Value": "Application"
-                              }
-                            }
-                          },
-                          {
-                            "Name": "OutputPath",
-                            "Type": "String",
-                            "InternalType": "System.String, System.Private.CoreLib",
-                            "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "String",
-                                "Value": ""
-                              }
-                            }
-                          },
-                          {
-                            "Name": "EncryptAssets",
-                            "Type": "Bool",
-                            "InternalType": "System.Boolean, System.Private.CoreLib",
-                            "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "Bool",
-                                "Value": false
-                              }
-                            }
-                          },
-                          {
-                            "Name": "CompressAssets",
-                            "Type": "Bool",
-                            "InternalType": "System.Boolean, System.Private.CoreLib",
-                            "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "Bool",
-                                "Value": false
-                              }
-                            }
-                          },
-                          {
-                            "Name": "CompressionLevel",
-                            "Type": "Int",
-                            "InternalType": "System.Int32, System.Private.CoreLib",
-                            "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "Int",
-                                "Value": 0
-                              }
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  },
-                  {
-                    "Name": "Release",
-                    "Type": "ComplexClass",
-                    "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
-                    "TypeId": "b82153eb-c244-d04c-0054-8eb0a05390ee",
-                    "Data": {
-                      "$type": "Engine.Serialization.ComplexTypeData, Engine",
-                      "$value": {
-                        "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
-                        "TypeId": "b82153eb-c244-d04c-0054-8eb0a05390ee",
-                        "ComplexType": "ComplexClass",
-                        "Properties": [
-                          {
-                            "Name": "Icon",
-                            "Type": "TextureAsset",
-                            "InternalType": "Engine.Texture2D, Engine",
-                            "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
-                            "Data": null
-                          },
-                          {
-                            "Name": "Description",
-                            "Type": "String",
-                            "InternalType": "System.String, System.Private.CoreLib",
-                            "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "String",
-                                "Value": "Application description"
-                              }
-                            }
-                          },
-                          {
-                            "Name": "Company",
-                            "Type": "String",
-                            "InternalType": "System.String, System.Private.CoreLib",
-                            "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "String",
-                                "Value": "My Company"
-                              }
-                            }
-                          },
-                          {
-                            "Name": "Authors",
-                            "Type": "String",
-                            "InternalType": "System.String, System.Private.CoreLib",
-                            "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "String",
-                                "Value": "Author"
-                              }
-                            }
-                          },
-                          {
-                            "Name": "Version",
-                            "Type": "IVec3",
-                            "InternalType": "GlmNet.ivec3, Engine",
-                            "TypeId": "0eb55f0e-9fb6-9ca0-f707-35ea8c2c71b9",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "IVec3",
-                                "Value": {
-                                  "x": 1,
-                                  "y": 0,
-                                  "z": 0
-                                }
-                              }
-                            }
-                          },
-                          {
-                            "Name": "ApplicationName",
-                            "Type": "String",
-                            "InternalType": "System.String, System.Private.CoreLib",
-                            "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "String",
-                                "Value": "Application"
-                              }
-                            }
-                          },
-                          {
-                            "Name": "OutputPath",
-                            "Type": "String",
-                            "InternalType": "System.String, System.Private.CoreLib",
-                            "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
-                            "Data": null
-                          },
-                          {
-                            "Name": "EncryptAssets",
-                            "Type": "Bool",
-                            "InternalType": "System.Boolean, System.Private.CoreLib",
-                            "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "Bool",
-                                "Value": false
-                              }
-                            }
-                          },
-                          {
-                            "Name": "CompressAssets",
-                            "Type": "Bool",
-                            "InternalType": "System.Boolean, System.Private.CoreLib",
-                            "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "Bool",
-                                "Value": false
-                              }
-                            }
-                          },
-                          {
-                            "Name": "CompressionLevel",
-                            "Type": "Int",
-                            "InternalType": "System.Int32, System.Private.CoreLib",
-                            "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "Int",
-                                "Value": 0
-                              }
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  },
-                  {
-                    "Name": "Debug",
-                    "Type": "ComplexClass",
-                    "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
-                    "TypeId": "b82153eb-c244-d04c-0054-8eb0a05390ee",
-                    "Data": {
-                      "$type": "Engine.Serialization.ComplexTypeData, Engine",
-                      "$value": {
-                        "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
-                        "TypeId": "b82153eb-c244-d04c-0054-8eb0a05390ee",
-                        "ComplexType": "ComplexClass",
-                        "Properties": [
-                          {
-                            "Name": "Icon",
-                            "Type": "TextureAsset",
-                            "InternalType": "Engine.Texture2D, Engine",
-                            "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
-                            "Data": null
-                          },
-                          {
-                            "Name": "Description",
-                            "Type": "String",
-                            "InternalType": "System.String, System.Private.CoreLib",
-                            "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "String",
-                                "Value": "Application description"
-                              }
-                            }
-                          },
-                          {
-                            "Name": "Company",
-                            "Type": "String",
-                            "InternalType": "System.String, System.Private.CoreLib",
-                            "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "String",
-                                "Value": "My Company"
-                              }
-                            }
-                          },
-                          {
-                            "Name": "Authors",
-                            "Type": "String",
-                            "InternalType": "System.String, System.Private.CoreLib",
-                            "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "String",
-                                "Value": "Author"
-                              }
-                            }
-                          },
-                          {
-                            "Name": "Version",
-                            "Type": "IVec3",
-                            "InternalType": "GlmNet.ivec3, Engine",
-                            "TypeId": "0eb55f0e-9fb6-9ca0-f707-35ea8c2c71b9",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "IVec3",
-                                "Value": {
-                                  "x": 1,
-                                  "y": 0,
-                                  "z": 0
-                                }
-                              }
-                            }
-                          },
-                          {
-                            "Name": "ApplicationName",
-                            "Type": "String",
-                            "InternalType": "System.String, System.Private.CoreLib",
-                            "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "String",
-                                "Value": "Application"
-                              }
-                            }
-                          },
-                          {
-                            "Name": "OutputPath",
-                            "Type": "String",
-                            "InternalType": "System.String, System.Private.CoreLib",
-                            "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
-                            "Data": null
-                          },
-                          {
-                            "Name": "EncryptAssets",
-                            "Type": "Bool",
-                            "InternalType": "System.Boolean, System.Private.CoreLib",
-                            "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "Bool",
-                                "Value": false
-                              }
-                            }
-                          },
-                          {
-                            "Name": "CompressAssets",
-                            "Type": "Bool",
-                            "InternalType": "System.Boolean, System.Private.CoreLib",
-                            "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "Bool",
-                                "Value": false
-                              }
-                            }
-                          },
-                          {
-                            "Name": "CompressionLevel",
-                            "Type": "Int",
-                            "InternalType": "System.Int32, System.Private.CoreLib",
-                            "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "Int",
-                                "Value": 0
-                              }
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  },
-                  {
-                    "Name": "Type",
-                    "Type": "Enum",
-                    "InternalType": "Editor.Build.BuildType, Editor",
-                    "TypeId": "ab1e56b1-7744-1df5-8d84-eda53bf8a4c5",
-                    "Data": {
-                      "$type": "Engine.Serialization.VariantIRValue, Engine",
-                      "$value": {
-                        "Kind": "Enum",
-                        "Enum": {
-                          "TypeId": "ab1e56b1-7744-1df5-8d84-eda53bf8a4c5",
-                          "EnumInternalType": "Editor.Build.BuildType, Editor",
-                          "EnumValue": 0
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "Name": "ShareDefaultSettings",
-                    "Type": "Bool",
-                    "InternalType": "System.Boolean, System.Private.CoreLib",
-                    "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
-                    "Data": {
-                      "$type": "Engine.Serialization.VariantIRValue, Engine",
-                      "$value": {
-                        "Kind": "Bool",
-                        "Value": true
-                      }
+                "Name": "D_K",
+                "Type": "Enum",
+                "InternalType": "Editor.Build.PlatformBuild, Editor",
+                "TypeId": "b5d78a8f-ad76-27bc-a569-eb732e643f2a",
+                "Simple": {
+                  "$type": "Engine.Serialization.VariantIRValue, Engine",
+                  "$value": {
+                    "Kind": "Enum",
+                    "Enum": {
+                      "TypeId": "b5d78a8f-ad76-27bc-a569-eb732e643f2a",
+                      "EnumInternalType": "Editor.Build.PlatformBuild, Editor",
+                      "EnumValue": 3
                     }
                   }
-                ]
-              },
-              {
-                "InternalType": "Editor.Build.AndroidBuildSettings, Editor",
-                "TypeId": "3732c59f-64ea-5db5-2de1-1d230ce95cab",
-                "ComplexType": "ComplexClass",
-                "Properties": [
-                  {
-                    "Name": "KeyAlias",
-                    "Type": "String",
-                    "InternalType": "System.String, System.Private.CoreLib",
-                    "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
-                    "Data": {
-                      "$type": "Engine.Serialization.VariantIRValue, Engine",
-                      "$value": {
-                        "Kind": "String",
-                        "Value": "myalias"
-                      }
-                    }
-                  },
-                  {
-                    "Name": "KeyPass",
-                    "Type": "String",
-                    "InternalType": "System.String, System.Private.CoreLib",
-                    "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
-                    "Data": {
-                      "$type": "Engine.Serialization.VariantIRValue, Engine",
-                      "$value": {
-                        "Kind": "String",
-                        "Value": "mypassword"
-                      }
-                    }
-                  },
-                  {
-                    "Name": "StorePass",
-                    "Type": "String",
-                    "InternalType": "System.String, System.Private.CoreLib",
-                    "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
-                    "Data": {
-                      "$type": "Engine.Serialization.VariantIRValue, Engine",
-                      "$value": {
-                        "Kind": "String",
-                        "Value": "storepassword"
-                      }
-                    }
-                  },
-                  {
-                    "Name": "MinimumApiLevel",
-                    "Type": "Enum",
-                    "InternalType": "Editor.Build.AndroidApiLevel, Editor",
-                    "TypeId": "c3474a00-03b1-058f-c9d4-53ccb3cbb6a6",
-                    "Data": {
-                      "$type": "Engine.Serialization.VariantIRValue, Engine",
-                      "$value": {
-                        "Kind": "Enum",
-                        "Enum": {
-                          "TypeId": "c3474a00-03b1-058f-c9d4-53ccb3cbb6a6",
-                          "EnumInternalType": "Editor.Build.AndroidApiLevel, Editor",
-                          "EnumValue": 0
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "Name": "TargetApiLevel",
-                    "Type": "Enum",
-                    "InternalType": "Editor.Build.AndroidApiLevel, Editor",
-                    "TypeId": "c3474a00-03b1-058f-c9d4-53ccb3cbb6a6",
-                    "Data": {
-                      "$type": "Engine.Serialization.VariantIRValue, Engine",
-                      "$value": {
-                        "Kind": "Enum",
-                        "Enum": {
-                          "TypeId": "c3474a00-03b1-058f-c9d4-53ccb3cbb6a6",
-                          "EnumInternalType": "Editor.Build.AndroidApiLevel, Editor",
-                          "EnumValue": 35
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "Name": "Version",
-                    "Type": "IVec3",
-                    "InternalType": "GlmNet.ivec3, Engine",
-                    "TypeId": "0eb55f0e-9fb6-9ca0-f707-35ea8c2c71b9",
-                    "Data": {
-                      "$type": "Engine.Serialization.VariantIRValue, Engine",
-                      "$value": {
-                        "Kind": "IVec3",
-                        "Value": {
-                          "x": 1,
-                          "y": 0,
-                          "z": 0
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "Name": "Default",
-                    "Type": "ComplexClass",
-                    "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
-                    "TypeId": "8a545684-8915-490a-8117-7ccad9e1f6d7",
-                    "Data": {
-                      "$type": "Engine.Serialization.ComplexTypeData, Engine",
-                      "$value": {
-                        "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
-                        "TypeId": "8a545684-8915-490a-8117-7ccad9e1f6d7",
-                        "ComplexType": "ComplexClass",
-                        "Properties": [
-                          {
-                            "Name": "DefaultIcon",
-                            "Type": "ComplexClass",
-                            "InternalType": "Editor.Build.AndroidIcon, Editor",
-                            "TypeId": "fc6bd7ae-58d4-e8ad-12bd-08b8c49944fd",
-                            "Data": {
-                              "$type": "Engine.Serialization.ComplexTypeData, Engine",
-                              "$value": {
-                                "InternalType": "Editor.Build.AndroidIcon, Editor",
-                                "TypeId": "fc6bd7ae-58d4-e8ad-12bd-08b8c49944fd",
-                                "ComplexType": "ComplexClass",
-                                "Properties": [
-                                  {
-                                    "Name": "Icon",
-                                    "Type": "TextureAsset",
-                                    "InternalType": "Engine.Texture2D, Engine",
-                                    "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
-                                    "Data": null
-                                  },
-                                  {
-                                    "Name": "ForegroundIcon",
-                                    "Type": "TextureAsset",
-                                    "InternalType": "Engine.Texture2D, Engine",
-                                    "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
-                                    "Data": null
-                                  },
-                                  {
-                                    "Name": "BackgroundIcon",
-                                    "Type": "TextureAsset",
-                                    "InternalType": "Engine.Texture2D, Engine",
-                                    "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
-                                    "Data": null
-                                  }
-                                ]
-                              }
-                            }
-                          },
-                          {
-                            "Name": "Icons",
-                            "Type": "ComplexCollection",
-                            "InternalType": "Editor.Build.AndroidIcon[], Editor",
-                            "TypeId": "5ee4bed7-a2fd-618a-128b-f8be6eee849c",
-                            "Data": {
-                              "$type": "Engine.Serialization.CollectionPropertyData, Engine",
-                              "$value": {
-                                "CollectionType": "Array",
-                                "Collection": {
-                                  "$type": "Engine.Serialization.CollectionIRComplexTypes, Engine",
-                                  "$value": {
-                                    "Value": [
-                                      null,
-                                      null,
-                                      null,
-                                      null,
-                                      null
-                                    ],
-                                    "ItemsType": "ComplexClass",
-                                    "Type": "None"
-                                  }
-                                }
-                              }
-                            }
-                          },
-                          {
-                            "Name": "PackageName",
-                            "Type": "String",
-                            "InternalType": "System.String, System.Private.CoreLib",
-                            "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "String",
-                                "Value": "com.application.gfs"
-                              }
-                            }
-                          },
-                          {
-                            "Name": "ApplicationName",
-                            "Type": "String",
-                            "InternalType": "System.String, System.Private.CoreLib",
-                            "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "String",
-                                "Value": "Application"
-                              }
-                            }
-                          },
-                          {
-                            "Name": "OutputPath",
-                            "Type": "String",
-                            "InternalType": "System.String, System.Private.CoreLib",
-                            "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
-                            "Data": null
-                          },
-                          {
-                            "Name": "EncryptAssets",
-                            "Type": "Bool",
-                            "InternalType": "System.Boolean, System.Private.CoreLib",
-                            "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "Bool",
-                                "Value": false
-                              }
-                            }
-                          },
-                          {
-                            "Name": "CompressAssets",
-                            "Type": "Bool",
-                            "InternalType": "System.Boolean, System.Private.CoreLib",
-                            "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "Bool",
-                                "Value": false
-                              }
-                            }
-                          },
-                          {
-                            "Name": "CompressionLevel",
-                            "Type": "Int",
-                            "InternalType": "System.Int32, System.Private.CoreLib",
-                            "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "Int",
-                                "Value": 0
-                              }
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  },
-                  {
-                    "Name": "Release",
-                    "Type": "ComplexClass",
-                    "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
-                    "TypeId": "8a545684-8915-490a-8117-7ccad9e1f6d7",
-                    "Data": {
-                      "$type": "Engine.Serialization.ComplexTypeData, Engine",
-                      "$value": {
-                        "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
-                        "TypeId": "8a545684-8915-490a-8117-7ccad9e1f6d7",
-                        "ComplexType": "ComplexClass",
-                        "Properties": [
-                          {
-                            "Name": "DefaultIcon",
-                            "Type": "ComplexClass",
-                            "InternalType": "Editor.Build.AndroidIcon, Editor",
-                            "TypeId": "fc6bd7ae-58d4-e8ad-12bd-08b8c49944fd",
-                            "Data": {
-                              "$type": "Engine.Serialization.ComplexTypeData, Engine",
-                              "$value": {
-                                "InternalType": "Editor.Build.AndroidIcon, Editor",
-                                "TypeId": "fc6bd7ae-58d4-e8ad-12bd-08b8c49944fd",
-                                "ComplexType": "ComplexClass",
-                                "Properties": [
-                                  {
-                                    "Name": "Icon",
-                                    "Type": "TextureAsset",
-                                    "InternalType": "Engine.Texture2D, Engine",
-                                    "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
-                                    "Data": null
-                                  },
-                                  {
-                                    "Name": "ForegroundIcon",
-                                    "Type": "TextureAsset",
-                                    "InternalType": "Engine.Texture2D, Engine",
-                                    "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
-                                    "Data": null
-                                  },
-                                  {
-                                    "Name": "BackgroundIcon",
-                                    "Type": "TextureAsset",
-                                    "InternalType": "Engine.Texture2D, Engine",
-                                    "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
-                                    "Data": null
-                                  }
-                                ]
-                              }
-                            }
-                          },
-                          {
-                            "Name": "Icons",
-                            "Type": "ComplexCollection",
-                            "InternalType": "Editor.Build.AndroidIcon[], Editor",
-                            "TypeId": "5ee4bed7-a2fd-618a-128b-f8be6eee849c",
-                            "Data": {
-                              "$type": "Engine.Serialization.CollectionPropertyData, Engine",
-                              "$value": {
-                                "CollectionType": "Array",
-                                "Collection": {
-                                  "$type": "Engine.Serialization.CollectionIRComplexTypes, Engine",
-                                  "$value": {
-                                    "Value": [
-                                      null,
-                                      null,
-                                      null,
-                                      null,
-                                      null
-                                    ],
-                                    "ItemsType": "ComplexClass",
-                                    "Type": "None"
-                                  }
-                                }
-                              }
-                            }
-                          },
-                          {
-                            "Name": "PackageName",
-                            "Type": "String",
-                            "InternalType": "System.String, System.Private.CoreLib",
-                            "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "String",
-                                "Value": "com.application.gfs"
-                              }
-                            }
-                          },
-                          {
-                            "Name": "ApplicationName",
-                            "Type": "String",
-                            "InternalType": "System.String, System.Private.CoreLib",
-                            "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "String",
-                                "Value": "Application"
-                              }
-                            }
-                          },
-                          {
-                            "Name": "OutputPath",
-                            "Type": "String",
-                            "InternalType": "System.String, System.Private.CoreLib",
-                            "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
-                            "Data": null
-                          },
-                          {
-                            "Name": "EncryptAssets",
-                            "Type": "Bool",
-                            "InternalType": "System.Boolean, System.Private.CoreLib",
-                            "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "Bool",
-                                "Value": false
-                              }
-                            }
-                          },
-                          {
-                            "Name": "CompressAssets",
-                            "Type": "Bool",
-                            "InternalType": "System.Boolean, System.Private.CoreLib",
-                            "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "Bool",
-                                "Value": false
-                              }
-                            }
-                          },
-                          {
-                            "Name": "CompressionLevel",
-                            "Type": "Int",
-                            "InternalType": "System.Int32, System.Private.CoreLib",
-                            "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "Int",
-                                "Value": 0
-                              }
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  },
-                  {
-                    "Name": "Debug",
-                    "Type": "ComplexClass",
-                    "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
-                    "TypeId": "8a545684-8915-490a-8117-7ccad9e1f6d7",
-                    "Data": {
-                      "$type": "Engine.Serialization.ComplexTypeData, Engine",
-                      "$value": {
-                        "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
-                        "TypeId": "8a545684-8915-490a-8117-7ccad9e1f6d7",
-                        "ComplexType": "ComplexClass",
-                        "Properties": [
-                          {
-                            "Name": "DefaultIcon",
-                            "Type": "ComplexClass",
-                            "InternalType": "Editor.Build.AndroidIcon, Editor",
-                            "TypeId": "fc6bd7ae-58d4-e8ad-12bd-08b8c49944fd",
-                            "Data": {
-                              "$type": "Engine.Serialization.ComplexTypeData, Engine",
-                              "$value": {
-                                "InternalType": "Editor.Build.AndroidIcon, Editor",
-                                "TypeId": "fc6bd7ae-58d4-e8ad-12bd-08b8c49944fd",
-                                "ComplexType": "ComplexClass",
-                                "Properties": [
-                                  {
-                                    "Name": "Icon",
-                                    "Type": "TextureAsset",
-                                    "InternalType": "Engine.Texture2D, Engine",
-                                    "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
-                                    "Data": null
-                                  },
-                                  {
-                                    "Name": "ForegroundIcon",
-                                    "Type": "TextureAsset",
-                                    "InternalType": "Engine.Texture2D, Engine",
-                                    "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
-                                    "Data": null
-                                  },
-                                  {
-                                    "Name": "BackgroundIcon",
-                                    "Type": "TextureAsset",
-                                    "InternalType": "Engine.Texture2D, Engine",
-                                    "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
-                                    "Data": null
-                                  }
-                                ]
-                              }
-                            }
-                          },
-                          {
-                            "Name": "Icons",
-                            "Type": "ComplexCollection",
-                            "InternalType": "Editor.Build.AndroidIcon[], Editor",
-                            "TypeId": "5ee4bed7-a2fd-618a-128b-f8be6eee849c",
-                            "Data": {
-                              "$type": "Engine.Serialization.CollectionPropertyData, Engine",
-                              "$value": {
-                                "CollectionType": "Array",
-                                "Collection": {
-                                  "$type": "Engine.Serialization.CollectionIRComplexTypes, Engine",
-                                  "$value": {
-                                    "Value": [
-                                      null,
-                                      null,
-                                      null,
-                                      null,
-                                      null
-                                    ],
-                                    "ItemsType": "ComplexClass",
-                                    "Type": "None"
-                                  }
-                                }
-                              }
-                            }
-                          },
-                          {
-                            "Name": "PackageName",
-                            "Type": "String",
-                            "InternalType": "System.String, System.Private.CoreLib",
-                            "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "String",
-                                "Value": "com.application.gfs"
-                              }
-                            }
-                          },
-                          {
-                            "Name": "ApplicationName",
-                            "Type": "String",
-                            "InternalType": "System.String, System.Private.CoreLib",
-                            "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "String",
-                                "Value": "Application"
-                              }
-                            }
-                          },
-                          {
-                            "Name": "OutputPath",
-                            "Type": "String",
-                            "InternalType": "System.String, System.Private.CoreLib",
-                            "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
-                            "Data": null
-                          },
-                          {
-                            "Name": "EncryptAssets",
-                            "Type": "Bool",
-                            "InternalType": "System.Boolean, System.Private.CoreLib",
-                            "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "Bool",
-                                "Value": false
-                              }
-                            }
-                          },
-                          {
-                            "Name": "CompressAssets",
-                            "Type": "Bool",
-                            "InternalType": "System.Boolean, System.Private.CoreLib",
-                            "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "Bool",
-                                "Value": false
-                              }
-                            }
-                          },
-                          {
-                            "Name": "CompressionLevel",
-                            "Type": "Int",
-                            "InternalType": "System.Int32, System.Private.CoreLib",
-                            "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
-                            "Data": {
-                              "$type": "Engine.Serialization.VariantIRValue, Engine",
-                              "$value": {
-                                "Kind": "Int",
-                                "Value": 0
-                              }
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  },
-                  {
-                    "Name": "Type",
-                    "Type": "Enum",
-                    "InternalType": "Editor.Build.BuildType, Editor",
-                    "TypeId": "ab1e56b1-7744-1df5-8d84-eda53bf8a4c5",
-                    "Data": {
-                      "$type": "Engine.Serialization.VariantIRValue, Engine",
-                      "$value": {
-                        "Kind": "Enum",
-                        "Enum": {
-                          "TypeId": "ab1e56b1-7744-1df5-8d84-eda53bf8a4c5",
-                          "EnumInternalType": "Editor.Build.BuildType, Editor",
-                          "EnumValue": 0
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "Name": "ShareDefaultSettings",
-                    "Type": "Bool",
-                    "InternalType": "System.Boolean, System.Private.CoreLib",
-                    "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
-                    "Data": {
-                      "$type": "Engine.Serialization.VariantIRValue, Engine",
-                      "$value": {
-                        "Kind": "Bool",
-                        "Value": true
-                      }
-                    }
-                  }
-                ]
+                },
+                "Reference": null,
+                "ComplexClass": null,
+                "Collection": null
               }
             ]
           }
-        }
+        ],
+        "Values": [
+          {
+            "InternalType": "Editor.Build.WindowsBuildSettings, Editor",
+            "TypeId": "d979e285-1edc-e68d-1867-706c6fbbaee5",
+            "ComplexType": "ComplexClass",
+            "Properties": [
+              {
+                "Name": "Default",
+                "Type": "ComplexClass",
+                "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
+                "TypeId": "b82153eb-c244-d04c-0054-8eb0a05390ee",
+                "Simple": {
+                  "$type": "Engine.Serialization.VariantIRValue, Engine",
+                  "$value": {
+                    "Kind": "None",
+                    "Value": null
+                  }
+                },
+                "Reference": null,
+                "ComplexClass": {
+                  "$type": "Engine.Serialization.ComplexClassData, Engine",
+                  "$value": {
+                    "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
+                    "TypeId": "b82153eb-c244-d04c-0054-8eb0a05390ee",
+                    "ComplexType": "ComplexClass",
+                    "Properties": [
+                      {
+                        "Name": "Icon",
+                        "Type": "TextureAsset",
+                        "InternalType": "Engine.Texture2D, Engine",
+                        "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "None",
+                            "Value": null
+                          }
+                        },
+                        "Reference": {
+                          "$type": "Engine.Serialization.ReferenceData, Engine",
+                          "$value": {
+                            "Type": "TextureAsset",
+                            "Id": "ee4d6455-fa2e-42b2-b150-3eacd8c83b1e"
+                          }
+                        },
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "Description",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "String",
+                            "Value": "Application description"
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "Company",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "String",
+                            "Value": "My Company"
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "Authors",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "String",
+                            "Value": "Author"
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "Version",
+                        "Type": "IVec3",
+                        "InternalType": "GlmNet.ivec3, Engine",
+                        "TypeId": "0eb55f0e-9fb6-9ca0-f707-35ea8c2c71b9",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "IVec3",
+                            "Value": {
+                              "x": 1,
+                              "y": 0,
+                              "z": 0
+                            }
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "ApplicationName",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "String",
+                            "Value": "Application"
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "OutputPath",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "String",
+                            "Value": ""
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "EncryptAssets",
+                        "Type": "Bool",
+                        "InternalType": "System.Boolean, System.Private.CoreLib",
+                        "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "Bool",
+                            "Value": false
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "CompressAssets",
+                        "Type": "Bool",
+                        "InternalType": "System.Boolean, System.Private.CoreLib",
+                        "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "Bool",
+                            "Value": false
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "CompressionLevel",
+                        "Type": "Int",
+                        "InternalType": "System.Int32, System.Private.CoreLib",
+                        "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "Int",
+                            "Value": 0
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      }
+                    ]
+                  }
+                },
+                "Collection": null
+              },
+              {
+                "Name": "Release",
+                "Type": "ComplexClass",
+                "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
+                "TypeId": "b82153eb-c244-d04c-0054-8eb0a05390ee",
+                "Simple": {
+                  "$type": "Engine.Serialization.VariantIRValue, Engine",
+                  "$value": {
+                    "Kind": "None",
+                    "Value": null
+                  }
+                },
+                "Reference": null,
+                "ComplexClass": {
+                  "$type": "Engine.Serialization.ComplexClassData, Engine",
+                  "$value": {
+                    "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
+                    "TypeId": "b82153eb-c244-d04c-0054-8eb0a05390ee",
+                    "ComplexType": "ComplexClass",
+                    "Properties": [
+                      {
+                        "Name": "Icon",
+                        "Type": "TextureAsset",
+                        "InternalType": "Engine.Texture2D, Engine",
+                        "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "None",
+                            "Value": null
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "Description",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "String",
+                            "Value": "Application description"
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "Company",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "String",
+                            "Value": "My Company"
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "Authors",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "String",
+                            "Value": "Author"
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "Version",
+                        "Type": "IVec3",
+                        "InternalType": "GlmNet.ivec3, Engine",
+                        "TypeId": "0eb55f0e-9fb6-9ca0-f707-35ea8c2c71b9",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "IVec3",
+                            "Value": {
+                              "x": 1,
+                              "y": 0,
+                              "z": 0
+                            }
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "ApplicationName",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "String",
+                            "Value": "Application"
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "OutputPath",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "String",
+                            "Value": ""
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "EncryptAssets",
+                        "Type": "Bool",
+                        "InternalType": "System.Boolean, System.Private.CoreLib",
+                        "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "Bool",
+                            "Value": false
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "CompressAssets",
+                        "Type": "Bool",
+                        "InternalType": "System.Boolean, System.Private.CoreLib",
+                        "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "Bool",
+                            "Value": false
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "CompressionLevel",
+                        "Type": "Int",
+                        "InternalType": "System.Int32, System.Private.CoreLib",
+                        "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "Int",
+                            "Value": 0
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      }
+                    ]
+                  }
+                },
+                "Collection": null
+              },
+              {
+                "Name": "Debug",
+                "Type": "ComplexClass",
+                "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
+                "TypeId": "b82153eb-c244-d04c-0054-8eb0a05390ee",
+                "Simple": {
+                  "$type": "Engine.Serialization.VariantIRValue, Engine",
+                  "$value": {
+                    "Kind": "None",
+                    "Value": null
+                  }
+                },
+                "Reference": null,
+                "ComplexClass": {
+                  "$type": "Engine.Serialization.ComplexClassData, Engine",
+                  "$value": {
+                    "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
+                    "TypeId": "b82153eb-c244-d04c-0054-8eb0a05390ee",
+                    "ComplexType": "ComplexClass",
+                    "Properties": [
+                      {
+                        "Name": "Icon",
+                        "Type": "TextureAsset",
+                        "InternalType": "Engine.Texture2D, Engine",
+                        "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "None",
+                            "Value": null
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "Description",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "String",
+                            "Value": "Application description"
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "Company",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "String",
+                            "Value": "My Company"
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "Authors",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "String",
+                            "Value": "Author"
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "Version",
+                        "Type": "IVec3",
+                        "InternalType": "GlmNet.ivec3, Engine",
+                        "TypeId": "0eb55f0e-9fb6-9ca0-f707-35ea8c2c71b9",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "IVec3",
+                            "Value": {
+                              "x": 1,
+                              "y": 0,
+                              "z": 0
+                            }
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "ApplicationName",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "String",
+                            "Value": "Application"
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "OutputPath",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "String",
+                            "Value": ""
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "EncryptAssets",
+                        "Type": "Bool",
+                        "InternalType": "System.Boolean, System.Private.CoreLib",
+                        "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "Bool",
+                            "Value": false
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "CompressAssets",
+                        "Type": "Bool",
+                        "InternalType": "System.Boolean, System.Private.CoreLib",
+                        "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "Bool",
+                            "Value": false
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "CompressionLevel",
+                        "Type": "Int",
+                        "InternalType": "System.Int32, System.Private.CoreLib",
+                        "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "Int",
+                            "Value": 0
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      }
+                    ]
+                  }
+                },
+                "Collection": null
+              },
+              {
+                "Name": "Type",
+                "Type": "Enum",
+                "InternalType": "Editor.Build.BuildType, Editor",
+                "TypeId": "ab1e56b1-7744-1df5-8d84-eda53bf8a4c5",
+                "Simple": {
+                  "$type": "Engine.Serialization.VariantIRValue, Engine",
+                  "$value": {
+                    "Kind": "Enum",
+                    "Enum": {
+                      "TypeId": "ab1e56b1-7744-1df5-8d84-eda53bf8a4c5",
+                      "EnumInternalType": "Editor.Build.BuildType, Editor",
+                      "EnumValue": 0
+                    }
+                  }
+                },
+                "Reference": null,
+                "ComplexClass": null,
+                "Collection": null
+              },
+              {
+                "Name": "ShareDefaultSettings",
+                "Type": "Bool",
+                "InternalType": "System.Boolean, System.Private.CoreLib",
+                "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+                "Simple": {
+                  "$type": "Engine.Serialization.VariantIRValue, Engine",
+                  "$value": {
+                    "Kind": "Bool",
+                    "Value": true
+                  }
+                },
+                "Reference": null,
+                "ComplexClass": null,
+                "Collection": null
+              }
+            ]
+          },
+          {
+            "InternalType": "Editor.Build.AndroidBuildSettings, Editor",
+            "TypeId": "3732c59f-64ea-5db5-2de1-1d230ce95cab",
+            "ComplexType": "ComplexClass",
+            "Properties": [
+              {
+                "Name": "KeyAlias",
+                "Type": "String",
+                "InternalType": "System.String, System.Private.CoreLib",
+                "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                "Simple": {
+                  "$type": "Engine.Serialization.VariantIRValue, Engine",
+                  "$value": {
+                    "Kind": "String",
+                    "Value": "myalias"
+                  }
+                },
+                "Reference": null,
+                "ComplexClass": null,
+                "Collection": null
+              },
+              {
+                "Name": "KeyPass",
+                "Type": "String",
+                "InternalType": "System.String, System.Private.CoreLib",
+                "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                "Simple": {
+                  "$type": "Engine.Serialization.VariantIRValue, Engine",
+                  "$value": {
+                    "Kind": "String",
+                    "Value": "mypassword"
+                  }
+                },
+                "Reference": null,
+                "ComplexClass": null,
+                "Collection": null
+              },
+              {
+                "Name": "StorePass",
+                "Type": "String",
+                "InternalType": "System.String, System.Private.CoreLib",
+                "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                "Simple": {
+                  "$type": "Engine.Serialization.VariantIRValue, Engine",
+                  "$value": {
+                    "Kind": "String",
+                    "Value": "storepassword"
+                  }
+                },
+                "Reference": null,
+                "ComplexClass": null,
+                "Collection": null
+              },
+              {
+                "Name": "MinimumApiLevel",
+                "Type": "Enum",
+                "InternalType": "Editor.Build.AndroidApiLevel, Editor",
+                "TypeId": "c3474a00-03b1-058f-c9d4-53ccb3cbb6a6",
+                "Simple": {
+                  "$type": "Engine.Serialization.VariantIRValue, Engine",
+                  "$value": {
+                    "Kind": "Enum",
+                    "Enum": {
+                      "TypeId": "c3474a00-03b1-058f-c9d4-53ccb3cbb6a6",
+                      "EnumInternalType": "Editor.Build.AndroidApiLevel, Editor",
+                      "EnumValue": 0
+                    }
+                  }
+                },
+                "Reference": null,
+                "ComplexClass": null,
+                "Collection": null
+              },
+              {
+                "Name": "TargetApiLevel",
+                "Type": "Enum",
+                "InternalType": "Editor.Build.AndroidApiLevel, Editor",
+                "TypeId": "c3474a00-03b1-058f-c9d4-53ccb3cbb6a6",
+                "Simple": {
+                  "$type": "Engine.Serialization.VariantIRValue, Engine",
+                  "$value": {
+                    "Kind": "Enum",
+                    "Enum": {
+                      "TypeId": "c3474a00-03b1-058f-c9d4-53ccb3cbb6a6",
+                      "EnumInternalType": "Editor.Build.AndroidApiLevel, Editor",
+                      "EnumValue": 35
+                    }
+                  }
+                },
+                "Reference": null,
+                "ComplexClass": null,
+                "Collection": null
+              },
+              {
+                "Name": "Version",
+                "Type": "IVec3",
+                "InternalType": "GlmNet.ivec3, Engine",
+                "TypeId": "0eb55f0e-9fb6-9ca0-f707-35ea8c2c71b9",
+                "Simple": {
+                  "$type": "Engine.Serialization.VariantIRValue, Engine",
+                  "$value": {
+                    "Kind": "IVec3",
+                    "Value": {
+                      "x": 1,
+                      "y": 0,
+                      "z": 0
+                    }
+                  }
+                },
+                "Reference": null,
+                "ComplexClass": null,
+                "Collection": null
+              },
+              {
+                "Name": "Default",
+                "Type": "ComplexClass",
+                "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
+                "TypeId": "8a545684-8915-490a-8117-7ccad9e1f6d7",
+                "Simple": {
+                  "$type": "Engine.Serialization.VariantIRValue, Engine",
+                  "$value": {
+                    "Kind": "None",
+                    "Value": null
+                  }
+                },
+                "Reference": null,
+                "ComplexClass": {
+                  "$type": "Engine.Serialization.ComplexClassData, Engine",
+                  "$value": {
+                    "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
+                    "TypeId": "8a545684-8915-490a-8117-7ccad9e1f6d7",
+                    "ComplexType": "ComplexClass",
+                    "Properties": [
+                      {
+                        "Name": "DefaultIcon",
+                        "Type": "ComplexClass",
+                        "InternalType": "Editor.Build.AndroidIcon, Editor",
+                        "TypeId": "fc6bd7ae-58d4-e8ad-12bd-08b8c49944fd",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "None",
+                            "Value": null
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": {
+                          "$type": "Engine.Serialization.ComplexClassData, Engine",
+                          "$value": {
+                            "InternalType": "Editor.Build.AndroidIcon, Editor",
+                            "TypeId": "fc6bd7ae-58d4-e8ad-12bd-08b8c49944fd",
+                            "ComplexType": "ComplexClass",
+                            "Properties": [
+                              {
+                                "Name": "Icon",
+                                "Type": "TextureAsset",
+                                "InternalType": "Engine.Texture2D, Engine",
+                                "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
+                                "Simple": {
+                                  "$type": "Engine.Serialization.VariantIRValue, Engine",
+                                  "$value": {
+                                    "Kind": "None",
+                                    "Value": null
+                                  }
+                                },
+                                "Reference": null,
+                                "ComplexClass": null,
+                                "Collection": null
+                              },
+                              {
+                                "Name": "ForegroundIcon",
+                                "Type": "TextureAsset",
+                                "InternalType": "Engine.Texture2D, Engine",
+                                "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
+                                "Simple": {
+                                  "$type": "Engine.Serialization.VariantIRValue, Engine",
+                                  "$value": {
+                                    "Kind": "None",
+                                    "Value": null
+                                  }
+                                },
+                                "Reference": null,
+                                "ComplexClass": null,
+                                "Collection": null
+                              },
+                              {
+                                "Name": "BackgroundIcon",
+                                "Type": "TextureAsset",
+                                "InternalType": "Engine.Texture2D, Engine",
+                                "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
+                                "Simple": {
+                                  "$type": "Engine.Serialization.VariantIRValue, Engine",
+                                  "$value": {
+                                    "Kind": "None",
+                                    "Value": null
+                                  }
+                                },
+                                "Reference": null,
+                                "ComplexClass": null,
+                                "Collection": null
+                              }
+                            ]
+                          }
+                        },
+                        "Collection": null
+                      },
+                      {
+                        "Name": "Icons",
+                        "Type": "ComplexCollection",
+                        "InternalType": "Editor.Build.AndroidIcon[], Editor",
+                        "TypeId": "5ee4bed7-a2fd-618a-128b-f8be6eee849c",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "None",
+                            "Value": null
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": {
+                          "$type": "Engine.Serialization.CollectionIRComplexTypes, Engine",
+                          "$value": {
+                            "Type": "None",
+                            "Value": [
+                              null,
+                              null,
+                              null,
+                              null,
+                              null
+                            ],
+                            "ItemsType": "ComplexClass",
+                            "CollectionType": "Array"
+                          }
+                        }
+                      },
+                      {
+                        "Name": "PackageName",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "String",
+                            "Value": "com.application.gfs"
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "ApplicationName",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "String",
+                            "Value": "Application"
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "OutputPath",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "String",
+                            "Value": ""
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "EncryptAssets",
+                        "Type": "Bool",
+                        "InternalType": "System.Boolean, System.Private.CoreLib",
+                        "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "Bool",
+                            "Value": false
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "CompressAssets",
+                        "Type": "Bool",
+                        "InternalType": "System.Boolean, System.Private.CoreLib",
+                        "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "Bool",
+                            "Value": false
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "CompressionLevel",
+                        "Type": "Int",
+                        "InternalType": "System.Int32, System.Private.CoreLib",
+                        "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "Int",
+                            "Value": 0
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      }
+                    ]
+                  }
+                },
+                "Collection": null
+              },
+              {
+                "Name": "Release",
+                "Type": "ComplexClass",
+                "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
+                "TypeId": "8a545684-8915-490a-8117-7ccad9e1f6d7",
+                "Simple": {
+                  "$type": "Engine.Serialization.VariantIRValue, Engine",
+                  "$value": {
+                    "Kind": "None",
+                    "Value": null
+                  }
+                },
+                "Reference": null,
+                "ComplexClass": {
+                  "$type": "Engine.Serialization.ComplexClassData, Engine",
+                  "$value": {
+                    "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
+                    "TypeId": "8a545684-8915-490a-8117-7ccad9e1f6d7",
+                    "ComplexType": "ComplexClass",
+                    "Properties": [
+                      {
+                        "Name": "DefaultIcon",
+                        "Type": "ComplexClass",
+                        "InternalType": "Editor.Build.AndroidIcon, Editor",
+                        "TypeId": "fc6bd7ae-58d4-e8ad-12bd-08b8c49944fd",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "None",
+                            "Value": null
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": {
+                          "$type": "Engine.Serialization.ComplexClassData, Engine",
+                          "$value": {
+                            "InternalType": "Editor.Build.AndroidIcon, Editor",
+                            "TypeId": "fc6bd7ae-58d4-e8ad-12bd-08b8c49944fd",
+                            "ComplexType": "ComplexClass",
+                            "Properties": [
+                              {
+                                "Name": "Icon",
+                                "Type": "TextureAsset",
+                                "InternalType": "Engine.Texture2D, Engine",
+                                "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
+                                "Simple": {
+                                  "$type": "Engine.Serialization.VariantIRValue, Engine",
+                                  "$value": {
+                                    "Kind": "None",
+                                    "Value": null
+                                  }
+                                },
+                                "Reference": null,
+                                "ComplexClass": null,
+                                "Collection": null
+                              },
+                              {
+                                "Name": "ForegroundIcon",
+                                "Type": "TextureAsset",
+                                "InternalType": "Engine.Texture2D, Engine",
+                                "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
+                                "Simple": {
+                                  "$type": "Engine.Serialization.VariantIRValue, Engine",
+                                  "$value": {
+                                    "Kind": "None",
+                                    "Value": null
+                                  }
+                                },
+                                "Reference": null,
+                                "ComplexClass": null,
+                                "Collection": null
+                              },
+                              {
+                                "Name": "BackgroundIcon",
+                                "Type": "TextureAsset",
+                                "InternalType": "Engine.Texture2D, Engine",
+                                "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
+                                "Simple": {
+                                  "$type": "Engine.Serialization.VariantIRValue, Engine",
+                                  "$value": {
+                                    "Kind": "None",
+                                    "Value": null
+                                  }
+                                },
+                                "Reference": null,
+                                "ComplexClass": null,
+                                "Collection": null
+                              }
+                            ]
+                          }
+                        },
+                        "Collection": null
+                      },
+                      {
+                        "Name": "Icons",
+                        "Type": "ComplexCollection",
+                        "InternalType": "Editor.Build.AndroidIcon[], Editor",
+                        "TypeId": "5ee4bed7-a2fd-618a-128b-f8be6eee849c",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "None",
+                            "Value": null
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": {
+                          "$type": "Engine.Serialization.CollectionIRComplexTypes, Engine",
+                          "$value": {
+                            "Type": "None",
+                            "Value": [
+                              null,
+                              null,
+                              null,
+                              null,
+                              null
+                            ],
+                            "ItemsType": "ComplexClass",
+                            "CollectionType": "Array"
+                          }
+                        }
+                      },
+                      {
+                        "Name": "PackageName",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "String",
+                            "Value": "com.application.gfs"
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "ApplicationName",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "String",
+                            "Value": "Application"
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "OutputPath",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "String",
+                            "Value": ""
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "EncryptAssets",
+                        "Type": "Bool",
+                        "InternalType": "System.Boolean, System.Private.CoreLib",
+                        "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "Bool",
+                            "Value": false
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "CompressAssets",
+                        "Type": "Bool",
+                        "InternalType": "System.Boolean, System.Private.CoreLib",
+                        "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "Bool",
+                            "Value": false
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "CompressionLevel",
+                        "Type": "Int",
+                        "InternalType": "System.Int32, System.Private.CoreLib",
+                        "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "Int",
+                            "Value": 0
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      }
+                    ]
+                  }
+                },
+                "Collection": null
+              },
+              {
+                "Name": "Debug",
+                "Type": "ComplexClass",
+                "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
+                "TypeId": "8a545684-8915-490a-8117-7ccad9e1f6d7",
+                "Simple": {
+                  "$type": "Engine.Serialization.VariantIRValue, Engine",
+                  "$value": {
+                    "Kind": "None",
+                    "Value": null
+                  }
+                },
+                "Reference": null,
+                "ComplexClass": {
+                  "$type": "Engine.Serialization.ComplexClassData, Engine",
+                  "$value": {
+                    "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
+                    "TypeId": "8a545684-8915-490a-8117-7ccad9e1f6d7",
+                    "ComplexType": "ComplexClass",
+                    "Properties": [
+                      {
+                        "Name": "DefaultIcon",
+                        "Type": "ComplexClass",
+                        "InternalType": "Editor.Build.AndroidIcon, Editor",
+                        "TypeId": "fc6bd7ae-58d4-e8ad-12bd-08b8c49944fd",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "None",
+                            "Value": null
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": {
+                          "$type": "Engine.Serialization.ComplexClassData, Engine",
+                          "$value": {
+                            "InternalType": "Editor.Build.AndroidIcon, Editor",
+                            "TypeId": "fc6bd7ae-58d4-e8ad-12bd-08b8c49944fd",
+                            "ComplexType": "ComplexClass",
+                            "Properties": [
+                              {
+                                "Name": "Icon",
+                                "Type": "TextureAsset",
+                                "InternalType": "Engine.Texture2D, Engine",
+                                "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
+                                "Simple": {
+                                  "$type": "Engine.Serialization.VariantIRValue, Engine",
+                                  "$value": {
+                                    "Kind": "None",
+                                    "Value": null
+                                  }
+                                },
+                                "Reference": null,
+                                "ComplexClass": null,
+                                "Collection": null
+                              },
+                              {
+                                "Name": "ForegroundIcon",
+                                "Type": "TextureAsset",
+                                "InternalType": "Engine.Texture2D, Engine",
+                                "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
+                                "Simple": {
+                                  "$type": "Engine.Serialization.VariantIRValue, Engine",
+                                  "$value": {
+                                    "Kind": "None",
+                                    "Value": null
+                                  }
+                                },
+                                "Reference": null,
+                                "ComplexClass": null,
+                                "Collection": null
+                              },
+                              {
+                                "Name": "BackgroundIcon",
+                                "Type": "TextureAsset",
+                                "InternalType": "Engine.Texture2D, Engine",
+                                "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
+                                "Simple": {
+                                  "$type": "Engine.Serialization.VariantIRValue, Engine",
+                                  "$value": {
+                                    "Kind": "None",
+                                    "Value": null
+                                  }
+                                },
+                                "Reference": null,
+                                "ComplexClass": null,
+                                "Collection": null
+                              }
+                            ]
+                          }
+                        },
+                        "Collection": null
+                      },
+                      {
+                        "Name": "Icons",
+                        "Type": "ComplexCollection",
+                        "InternalType": "Editor.Build.AndroidIcon[], Editor",
+                        "TypeId": "5ee4bed7-a2fd-618a-128b-f8be6eee849c",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "None",
+                            "Value": null
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": {
+                          "$type": "Engine.Serialization.CollectionIRComplexTypes, Engine",
+                          "$value": {
+                            "Type": "None",
+                            "Value": [
+                              null,
+                              null,
+                              null,
+                              null,
+                              null
+                            ],
+                            "ItemsType": "ComplexClass",
+                            "CollectionType": "Array"
+                          }
+                        }
+                      },
+                      {
+                        "Name": "PackageName",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "String",
+                            "Value": "com.application.gfs"
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "ApplicationName",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "String",
+                            "Value": "Application"
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "OutputPath",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "String",
+                            "Value": ""
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "EncryptAssets",
+                        "Type": "Bool",
+                        "InternalType": "System.Boolean, System.Private.CoreLib",
+                        "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "Bool",
+                            "Value": false
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "CompressAssets",
+                        "Type": "Bool",
+                        "InternalType": "System.Boolean, System.Private.CoreLib",
+                        "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "Bool",
+                            "Value": false
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      },
+                      {
+                        "Name": "CompressionLevel",
+                        "Type": "Int",
+                        "InternalType": "System.Int32, System.Private.CoreLib",
+                        "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
+                        "Simple": {
+                          "$type": "Engine.Serialization.VariantIRValue, Engine",
+                          "$value": {
+                            "Kind": "Int",
+                            "Value": 0
+                          }
+                        },
+                        "Reference": null,
+                        "ComplexClass": null,
+                        "Collection": null
+                      }
+                    ]
+                  }
+                },
+                "Collection": null
+              },
+              {
+                "Name": "Type",
+                "Type": "Enum",
+                "InternalType": "Editor.Build.BuildType, Editor",
+                "TypeId": "ab1e56b1-7744-1df5-8d84-eda53bf8a4c5",
+                "Simple": {
+                  "$type": "Engine.Serialization.VariantIRValue, Engine",
+                  "$value": {
+                    "Kind": "Enum",
+                    "Enum": {
+                      "TypeId": "ab1e56b1-7744-1df5-8d84-eda53bf8a4c5",
+                      "EnumInternalType": "Editor.Build.BuildType, Editor",
+                      "EnumValue": 0
+                    }
+                  }
+                },
+                "Reference": null,
+                "ComplexClass": null,
+                "Collection": null
+              },
+              {
+                "Name": "ShareDefaultSettings",
+                "Type": "Bool",
+                "InternalType": "System.Boolean, System.Private.CoreLib",
+                "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+                "Simple": {
+                  "$type": "Engine.Serialization.VariantIRValue, Engine",
+                  "$value": {
+                    "Kind": "Bool",
+                    "Value": true
+                  }
+                },
+                "Reference": null,
+                "ComplexClass": null,
+                "Collection": null
+              }
+            ]
+          }
+        ],
+        "CollectionType": "Dictionary"
       }
     }
   }

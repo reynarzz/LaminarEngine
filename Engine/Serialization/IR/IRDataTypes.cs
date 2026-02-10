@@ -42,9 +42,12 @@ namespace Engine.Serialization
         public SerializedType Type { get; set; }
         public string InternalType { get; set; }
         public Guid TypeId { get; set; }
-        public object Data { get; set; }
-    }
 
+        public VariantIRValue Simple { get; set; }
+        public ReferenceData Reference { get; set; }
+        public ComplexClassData ComplexClass { get; set; }
+        public CollectionData Collection { get; set; }
+    }
 
     internal class SerializedItem
     {
@@ -62,21 +65,12 @@ namespace Engine.Serialization
         public Guid TextureId { get; set; }
     }
 
-    internal class CollectionPropertyData
-    {
-        public CollectionType CollectionType { get; set; }
-        public CollectionData Collection { get; set; }
-    }
-
     internal abstract class CollectionData
     {
+        public CollectionType CollectionType { get; set; }
         internal abstract int Count { get; }
     }
 
-    internal abstract class CollectionDataWithType : CollectionData
-    {
-        public SerializedType Type { get; set; }
-    }
     internal class DictionaryDataT<K, V> : CollectionData
     {
         [SerializedField] public K[] Keys { get;  set; }
@@ -124,8 +118,9 @@ namespace Engine.Serialization
         protected DictionaryDataKVTypes() { }
         internal DictionaryDataKVTypes(int size) : base(size) { }
     }
-    internal class CollectionData<T, IT> : CollectionDataWithType
+    internal class CollectionData<T, IT> : CollectionData
     {
+        public SerializedType Type { get; set; }
         public T[] Value { get; set; }
         internal override int Count => Value?.Length ?? 0;
         public IT ItemsType { get; set; }
@@ -152,7 +147,7 @@ namespace Engine.Serialization
         protected DictionaryIRVariants() { }
         public DictionaryIRVariants(int size) : base(size) { }
     }
-    internal class DictionaryIRComplexTypes : DictionaryDataT<ComplexTypeData, ComplexTypeData>
+    internal class DictionaryIRComplexTypes : DictionaryDataT<ComplexClassData, ComplexClassData>
     {
         protected DictionaryIRComplexTypes() { }
         public DictionaryIRComplexTypes(int size) : base(size) { }
@@ -167,10 +162,10 @@ namespace Engine.Serialization
         protected CollectionIRReferences() { }
         public CollectionIRReferences(ReferenceData[] value, SerializedType[] itemsType) : base(value, itemsType) { }
     }
-    internal class CollectionIRComplexTypes : CollectionData<ComplexTypeData, SerializedType>
+    internal class CollectionIRComplexTypes : CollectionData<ComplexClassData, SerializedType>
     {
         protected CollectionIRComplexTypes() { }
-        public CollectionIRComplexTypes(ComplexTypeData[] value) : base(value, value != null && value.Length > 0 ?
+        public CollectionIRComplexTypes(ComplexClassData[] value) : base(value, value != null && value.Length > 0 ?
                                                                                                 SerializedType.ComplexClass :
                                                                                                 SerializedType.None)
         { }
@@ -185,7 +180,7 @@ namespace Engine.Serialization
         }
     }
 
-    internal class ComplexTypeData
+    internal class ComplexClassData
     {
         public string InternalType { get; set; }
         public Guid TypeId { get; set; }

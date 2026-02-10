@@ -111,33 +111,33 @@ namespace Editor.Cooker
 
             if (serializedType.IsSimple())
             {
-                WriteSimpleProperty(writer, ObjectToVariantSafe(serializedType, ir.Data), serializedType);
+                WriteSimpleProperty(writer, ir.Simple, serializedType);
             }
             else if (serializedType.IsEObject())
             {
-                WriteReferenceProperty(writer, ir.Data as ReferenceData);
+                WriteReferenceProperty(writer, ir.Reference);
             }
             else if (serializedType == SerializedType.ReferenceCollection)
             {
-                WriteReferenceCollection(writer, ir.Data as CollectionPropertyData);
+                WriteReferenceCollection(writer, ir.Collection);
             }
             else if (serializedType == SerializedType.ComplexClass)
             {
-                WriteComplexClass(writer, ir.Data as ComplexTypeData);
+                WriteComplexClass(writer, ir.ComplexClass);
             }
             else if (serializedType == SerializedType.ComplexCollection)
             {
-                WriteComplexCollection(writer, ir.Data as CollectionPropertyData);
+                WriteComplexCollection(writer, ir.Collection);
             }
             else if (serializedType == SerializedType.SimpleCollection)
             {
-                WriteSimpleCollection(writer, ir.Data as CollectionPropertyData);
+                WriteSimpleCollection(writer, ir.Collection);
             }
         }
 
-        private static void WriteSimpleCollection(BinaryWriter writer, CollectionPropertyData data)
+        private static void WriteSimpleCollection(BinaryWriter writer, CollectionData collectionData)
         {
-            var count = data?.Collection?.Count ?? 0;
+            var count = collectionData?.Count ?? 0;
 
             writer.Write(count);
 
@@ -145,10 +145,10 @@ namespace Editor.Cooker
             {
                 return;
             }
-            writer.Write(Convert.ToInt64(data.CollectionType));
-            if (data.CollectionType == CollectionType.Dictionary)
+            writer.Write(Convert.ToInt64(collectionData.CollectionType));
+            if (collectionData.CollectionType == CollectionType.Dictionary)
             {
-                var simpleDictionary = data.Collection as DictionaryIRVariants;
+                var simpleDictionary = collectionData as DictionaryIRVariants;
 
                 writer.Write(Convert.ToInt64(simpleDictionary.KeyType));
                 writer.Write(Convert.ToInt64(simpleDictionary.ValueType));
@@ -161,7 +161,7 @@ namespace Editor.Cooker
             }
             else
             {
-                var variantCollection = data.Collection as CollectionIRVariants;
+                var variantCollection = collectionData as CollectionIRVariants;
                 WriteVariantArray(writer, variantCollection.ItemsType, variantCollection.Value);
             }
         }
@@ -266,7 +266,7 @@ namespace Editor.Cooker
             }
         }
 
-        private static void WriteComplexClass(BinaryWriter writer, ComplexTypeData data)
+        private static void WriteComplexClass(BinaryWriter writer, ComplexClassData data)
         {
             /*
                SerializedType ComplexType 
@@ -283,9 +283,9 @@ namespace Editor.Cooker
             Serialize(writer, data.Properties);
         }
 
-        private static void WriteComplexCollection(BinaryWriter writer, CollectionPropertyData data)
+        private static void WriteComplexCollection(BinaryWriter writer, CollectionData collectionData)
         {
-            var count = data?.Collection?.Count ?? 0;
+            var count = collectionData?.Count ?? 0;
 
             writer.Write(count);
 
@@ -294,8 +294,8 @@ namespace Editor.Cooker
                 return;
             }
 
-            writer.Write(Convert.ToInt64(data.CollectionType));
-            switch (data.CollectionType)
+            writer.Write(Convert.ToInt64(collectionData.CollectionType));
+            switch (collectionData.CollectionType)
             {
                 case CollectionType.None:
                     break;
@@ -305,7 +305,7 @@ namespace Editor.Cooker
                 case CollectionType.Queue:
                 case CollectionType.HashSet:
                     {
-                        var col = data.Collection as CollectionIRComplexTypes;
+                        var col = collectionData as CollectionIRComplexTypes;
                         foreach (var item in col.Value)
                         {
                             writer.Write(Convert.ToInt64(item.ComplexType));
@@ -315,7 +315,7 @@ namespace Editor.Cooker
                     break;
                 case CollectionType.Dictionary:
                     {
-                        var dictComplexClass = data.Collection as DictionaryIRComplexTypes;
+                        var dictComplexClass = collectionData as DictionaryIRComplexTypes;
                         for (var i = 0; i < dictComplexClass.Count; i++)
                         {
                             WriteComplexClass(writer, dictComplexClass.Keys[i]);
@@ -324,12 +324,12 @@ namespace Editor.Cooker
                     }
                     break;
                 default:
-                    throw new NotImplementedException($"Collection type '{data.CollectionType}' is not implemented.");
+                    throw new NotImplementedException($"Collection type '{collectionData.CollectionType}' is not implemented.");
             }
         }
-        private static void WriteReferenceCollection(BinaryWriter writer, CollectionPropertyData data)
+        private static void WriteReferenceCollection(BinaryWriter writer, CollectionData data)
         {
-            var count = data?.Collection?.Count ?? 0;
+            var count = data?.Count ?? 0;
 
             writer.Write(count);
 
@@ -349,7 +349,7 @@ namespace Editor.Cooker
                 case CollectionType.Queue:
                 case CollectionType.HashSet:
                     {
-                        var col = data.Collection as CollectionIRReferences;
+                        var col = data as CollectionIRReferences;
                         foreach (var item in col.Value)
                         {
                             var itemData = item;
@@ -360,7 +360,7 @@ namespace Editor.Cooker
                     break;
                 case CollectionType.Dictionary:
                     {
-                        var referenceDictionary = data.Collection as DictionaryIRReferences;
+                        var referenceDictionary = data as DictionaryIRReferences;
                         for (int i = 0; i < referenceDictionary.Count; i++)
                         {
                             writer.Write(Convert.ToInt64(referenceDictionary.KeyType[i]));
@@ -373,7 +373,7 @@ namespace Editor.Cooker
                             {
                                 if (type.IsSimple())
                                 {
-                                    WriteSimpleProperty(writer, ObjectToVariantSafe(type, argData), type);
+                                    WriteSimpleProperty(writer, _ObjectToVariantSafe(type, argData), type);
                                 }
                                 else
                                 {
@@ -391,7 +391,7 @@ namespace Editor.Cooker
             }
         }
 
-        private static VariantIRValue ObjectToVariantSafe(SerializedType type, object obj)
+        private static VariantIRValue _ObjectToVariantSafe(SerializedType type, object obj)
         {
             if (obj == null)
             {
@@ -405,7 +405,6 @@ namespace Editor.Cooker
 
             return (VariantIRValue)obj;
         }
-
         private static void WriteSimpleProperty(BinaryWriter writer, in VariantIRValue data, SerializedType simpleType)
         {
             switch (simpleType)

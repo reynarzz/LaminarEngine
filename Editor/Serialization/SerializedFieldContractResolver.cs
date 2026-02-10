@@ -36,12 +36,9 @@ namespace Editor
                     }
                 }
 
-                if (p.DeclaringType == typeof(SerializedPropertyIR) && p.PropertyName == nameof(SerializedPropertyIR.Data))
-                {
-                    p.Converter = new GFSDataProperty();
-                }
-
-                if (p.DeclaringType == typeof(CollectionPropertyData) && p.PropertyName == nameof(CollectionPropertyData.Collection))
+                if (p.DeclaringType == typeof(SerializedPropertyIR) && (p.PropertyName == nameof(SerializedPropertyIR.Reference) ||
+                    p.PropertyName == nameof(SerializedPropertyIR.Collection) || p.PropertyName == nameof(SerializedPropertyIR.ComplexClass) ||
+                    p.PropertyName == nameof(SerializedPropertyIR.Simple)))
                 {
                     p.Converter = new GFSDataProperty();
                 }

@@ -113,38 +113,39 @@ namespace Editor
 
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.S))
             {
-                //if (Application.IsInPlayMode || SceneManager.Scenes.FirstOrDefault() != null)
-                //{
+                if (Application.IsInPlayMode || SceneManager.Scenes.FirstOrDefault() != null)
+                {
 
-                //    var obj = Actor.Find("Player");
-                //    if (obj)
-                //    {
-                //        var animator = obj.GetComponent<Animator>();
-                //        var animIR = Serializer.Serialize(animator.CurrentState.Clip);
-                //        var animControlerIR = Serializer.Serialize(animator.Controller);
-                //        var renderer = Actor.Find("Portal").Transform.Children[1].GetComponent<SpriteRenderer>();
-                //        var materialIR = Serializer.Serialize(renderer.Material);
+                    var obj = Actor.Find("Player");
+                    if (obj)
+                    {
+                        var animator = obj.GetComponent<Animator>();
+                        var animIR = Serializer.Serialize(animator.CurrentState.Clip);
+                        var animControlerIR = Serializer.Serialize(animator.Controller);
+                        var renderer = Actor.Find("Portal").Transform.Children[1].GetComponent<SpriteRenderer>();
+                        var materialIR = Serializer.Serialize(renderer.Material);
 
-                //        var material = Assets.GetMaterial("Materials/Material.material");
+                        var material = Assets.GetMaterial("Materials/Material.material");
 
-                //        File.WriteAllText(AnimClipPath, EditorJsonUtils.Serialize(animIR));
-                //        File.WriteAllText(AnimControllerPath, EditorJsonUtils.Serialize(animControlerIR));
-                //        File.WriteAllText(MaterialPath, EditorJsonUtils.Serialize(materialIR));
+                        File.WriteAllText(AnimClipPath, EditorJsonUtils.Serialize(animIR));
+                        File.WriteAllText(AnimControllerPath, EditorJsonUtils.Serialize(animControlerIR));
+                        File.WriteAllText(MaterialPath, EditorJsonUtils.Serialize(materialIR));
 
-                //    }
+                    }
 
-                //    Debug.Log("Saving scene to: " + TestfilePath);
-                //    var sceneIR = SceneSerializer.SerializeScene(SceneManager.Scenes[^1]);
+                    Debug.Log("Saving scene to: " + TestfilePath);
+                    var sceneIR = SceneSerializer.SerializeScene(SceneManager.Scenes[^1]);
 
-                //    var fil = File.Open(EditorPaths.AppRoot + "/SceneBinary.bin", FileMode.Create, FileAccess.Write);
-                //    using var bw = new BinaryWriter(fil, System.Text.Encoding.UTF8);
-                //    BinaryIRSerializer.Serialize(sceneIR, bw);
+                    var fil = File.Open(EditorPaths.AppRoot + "/SceneBinary.bin", FileMode.Create, FileAccess.Write);
+                    using var bw = new BinaryWriter(fil, System.Text.Encoding.UTF8);
+                    BinaryIRSerializer.Serialize(sceneIR, bw);
 
-                //    File.WriteAllText(TestfilePath, EditorJsonUtils.Serialize(sceneIR));
+                    File.WriteAllText(TestfilePath, EditorJsonUtils.Serialize(sceneIR));
 
-                //}   
+                }
 
-                 InternalAssetsCreator.GenerateAll();
+                  InternalAssetsCreator.GenerateAll();
+
                 //else
                 //{
                 //    Debug.Warn("Can't save in playmode.");
