@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Engine;
+using Engine.Serialization;
 using Engine.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SoundFlow.Structs;
 
 namespace Editor.Serialization
 {
@@ -14,6 +16,7 @@ namespace Editor.Serialization
     {
         private const string _typeTag = "$type";
         private const string _valueTag = "$value";
+        private static readonly JsonConverter _variantConverter = new VariantJsonConverter();
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
@@ -23,6 +26,11 @@ namespace Editor.Serialization
                 return;
             }
 
+            if (value.GetType().IsAssignableTo(typeof(VariantIRValue)))
+            {
+                _variantConverter.WriteJson(writer, value, serializer);
+                return;
+            }
             var type = value.GetType();
 
             var wrapper = new JObject()
@@ -43,6 +51,11 @@ namespace Editor.Serialization
             if (reader.TokenType != JsonToken.StartObject)
             {
                 return serializer.Deserialize(reader);
+            }
+
+            if (objectType.IsAssignableTo(typeof(VariantIRValue)))
+            {
+                return _variantConverter.ReadJson(reader, objectType, existingValue, serializer);
             }
 
             JObject wrapper = JObject.Load(reader);

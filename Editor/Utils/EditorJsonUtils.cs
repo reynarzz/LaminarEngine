@@ -16,13 +16,10 @@ namespace Editor.Utils
         private readonly static JsonSerializerSettings _jsonSettings = new()
         {
             TypeNameHandling = TypeNameHandling.Auto, // Do not remove this.
-            //ReferenceLoopHandling = ReferenceLoopHandling.Serialize,
-
             Converters =
             {
                 new StringEnumConverter(),
                 new GuidConverter(),
-               // new VariantJsonConverter()
             },
             ContractResolver = new SerializedFieldContractResolver()
         };
