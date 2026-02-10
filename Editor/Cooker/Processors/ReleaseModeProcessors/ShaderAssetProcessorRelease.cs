@@ -28,9 +28,7 @@ namespace Editor.Cooker
             BinaryIRSerializer.Serialize(ir, writer);
 
             writer.Flush();
-            var buf = stream.ToArray();
-            File.WriteAllBytes(EditorPaths.AppRoot + "/Shader.bin", buf);
-
+            
             return stream.ToArray();
         }
     }

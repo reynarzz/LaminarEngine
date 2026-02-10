@@ -33,6 +33,7 @@ namespace Editor
     //   be recognized as ReferenceCollection (pure), but as complexCollection.
     // - (Serializer IR) Fix: in 'GetSerializedType()' get all the elements in the collection so they
     //   can be checked in case there is a reference.
+    // - Collection of simple types such as long makes the json to serialize the whole 'VariantIRValue', which causes data corruption
 
     // Refactor:
     // -

@@ -1,6 +1,7 @@
 ﻿using Engine.Utils;
 using GlmNet;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -58,10 +59,9 @@ namespace Engine.Serialization
 
             var actor = new ActorIR();
             actor.Version = reader.ReadInt32();
-            var strLength = reader.ReadInt32();
-            actor.Name = Encoding.UTF8.GetString(reader.ReadBytes(strLength));
+            actor.Name = ReadString(reader);
             actor.Layer = reader.ReadInt32();
-            actor.IsActiveSelf = reader.ReadBoolean();
+            actor.IsActiveSelf = ReadBool(reader);
             actor.ID = new Guid(reader.ReadBytes(GUID_BYTES_SIZE));
             actor.ParentID = new Guid(reader.ReadBytes(GUID_BYTES_SIZE));
             var componentsCount = reader.ReadInt32();
@@ -89,7 +89,7 @@ namespace Engine.Serialization
             var component = new ComponentIR();
             component.Version = reader.ReadInt32();
             component.TypeId = new Guid(reader.ReadBytes(GUID_BYTES_SIZE));
-            component.IsEnabled = reader.ReadBoolean();
+            component.IsEnabled = ReadBool(reader);
             component.ID = new Guid(reader.ReadBytes(GUID_BYTES_SIZE));
             var propertiesCount = reader.ReadInt32();
             component.SerializedProperties = new List<SerializedPropertyIR>();
@@ -113,8 +113,7 @@ namespace Engine.Serialization
           object Data 
           */
             var property = new SerializedPropertyIR();
-            int strLength = reader.ReadInt32();
-            property.Name = Encoding.UTF8.GetString(reader.ReadBytes(strLength));
+            property.Name = ReadString(reader);
             property.TypeId = new Guid(reader.ReadBytes(GUID_BYTES_SIZE));
             property.Type = (SerializedType)reader.ReadInt64();
             var serializedType = property.Type;
@@ -141,10 +140,195 @@ namespace Engine.Serialization
             }
             else if (serializedType == SerializedType.SimpleCollection)
             {
-                // property.Data = ReadSimpleCollection(reader);
+                property.Collection = ReadSimpleCollection(reader);
+            }
+            else
+            {
+                throw new NotImplementedException($"Can't deserialize type, not implemented, {serializedType}");
+            }
+            return property;
+        }
+
+        private static string ReadString(BinaryReader reader)
+        {
+            var totalBytes = reader.ReadInt32();
+
+            if (totalBytes == 0)
+            {
+                return string.Empty;
             }
 
-            return property;
+            var buffer = reader.ReadBytes(totalBytes);
+
+            if (buffer.Length != totalBytes)
+            {
+                throw new EndOfStreamException();
+            }
+
+            return Encoding.UTF8.GetString(buffer);
+        }
+
+        private static CollectionData ReadSimpleCollection(BinaryReader reader)
+        {
+            var count = reader.ReadInt32();
+
+            if (count == 0)
+            {
+                return null;
+            }
+            var collectionType = (CollectionType)reader.ReadInt64();
+            if (collectionType == CollectionType.Dictionary)
+            {
+                var simpleDictionary = new DictionaryIRVariants(count);
+                simpleDictionary.KeyType = (SerializedType)reader.ReadInt64();
+                simpleDictionary.ValueType = (SerializedType)reader.ReadInt64();
+                simpleDictionary.Keys = ReadVariantArray(reader, simpleDictionary.KeyType, simpleDictionary.Count);
+                simpleDictionary.Values = ReadVariantArray(reader, simpleDictionary.ValueType, simpleDictionary.Count);
+                return simpleDictionary;
+            }
+
+            var variantCollection = new CollectionIRVariants(count);
+            variantCollection.Value = ReadVariantArray(reader, variantCollection.ItemsType, count);
+            return variantCollection;
+        }
+
+        private static VariantIRValue[] ReadVariantArray(BinaryReader reader, SerializedType kind, int count)
+        {
+            if (kind == SerializedType.None)
+                return new VariantIRValue[count];
+
+            if (kind == SerializedType.String)
+            {
+                var strVariants = new VariantIRValue[count];
+                for (int i = 0; i < strVariants.Length; i++)
+                {
+                    strVariants[i] = VariantIRValue.FromString(ReadString(reader));
+                }
+                return strVariants;
+            }
+
+            if (kind == SerializedType.Enum)
+            {
+                var enumVariants = new VariantIRValue[count];
+                for (int i = 0; i < enumVariants.Length; i++)
+                {
+                    enumVariants[i] = ReadEnum(reader);
+                }
+                return enumVariants;
+            }
+
+            switch (kind)
+            {
+                case SerializedType.Char:
+                    return ReadPayloadSpan<char>(reader, count, kind);
+                case SerializedType.Bool:
+                    return ReadBoolPayloadSpan(reader, count);
+                case SerializedType.Byte:
+                    return ReadPayloadSpan<byte>(reader, count, kind);
+                case SerializedType.Short:
+                    return ReadPayloadSpan<short>(reader, count, kind);
+                case SerializedType.UShort:
+                    return ReadPayloadSpan<ushort>(reader, count, kind);
+                case SerializedType.Int:
+                    return ReadPayloadSpan<int>(reader, count, kind);
+                case SerializedType.UInt:
+                    return ReadPayloadSpan<uint>(reader, count, kind);
+                case SerializedType.Long:
+                    return ReadPayloadSpan<long>(reader, count, kind);
+                case SerializedType.ULong:
+                    return ReadPayloadSpan<ulong>(reader, count, kind);
+                case SerializedType.Float:
+                    return ReadPayloadSpan<float>(reader, count, kind);
+                case SerializedType.Double:
+                    return ReadPayloadSpan<double>(reader, count, kind);
+                case SerializedType.Vec2:
+                    return ReadPayloadSpan<vec2>(reader, count, kind);
+                case SerializedType.Vec3:
+                    return ReadPayloadSpan<vec3>(reader, count, kind);
+                case SerializedType.Vec4:
+                    return ReadPayloadSpan<vec4>(reader, count, kind);
+                case SerializedType.IVec2:
+                    return ReadPayloadSpan<ivec2>(reader, count, kind);
+                case SerializedType.IVec3:
+                    return ReadPayloadSpan<ivec3>(reader, count, kind);
+                case SerializedType.IVec4:
+                    return ReadPayloadSpan<ivec4>(reader, count, kind);
+                case SerializedType.Quat:
+                    return ReadPayloadSpan<quat>(reader, count, kind);
+                case SerializedType.Mat2:
+                    return ReadPayloadSpan<mat2>(reader, count, kind);
+                case SerializedType.Mat3:
+                    return ReadPayloadSpan<mat3>(reader, count, kind);
+                case SerializedType.Mat4:
+                    return ReadPayloadSpan<mat4>(reader, count, kind);
+                case SerializedType.Color:
+                    return ReadPayloadSpan<Color>(reader, count, kind);
+                case SerializedType.Color32:
+                    return ReadPayloadSpan<Color32>(reader, count, kind);
+                default:
+                    throw new Exception($"Unsupported SerializedType: {kind}");
+            }
+        }
+
+        private static VariantIRValue[] ReadPayloadSpan<T>(BinaryReader reader, int count, SerializedType kind)
+            where T : unmanaged
+        {
+            var variants = new VariantIRValue[count];
+
+            int elementSize = Unsafe.SizeOf<T>();
+            int totalBytes = count * elementSize;
+
+            var payloads = new ValuePayload[count];
+
+            var dst = MemoryMarshal.AsBytes(payloads.AsSpan());
+
+            int read = reader.Read(dst);
+            if (read != totalBytes)
+            {
+                throw new EndOfStreamException();
+            }
+
+            for (int i = 0; i < count; i++)
+            {
+                variants[i] = new VariantIRValue
+                {
+                    Kind = kind,
+                    Payload = payloads[i],
+                    String = null
+                };
+            }
+
+            return variants;
+        }
+
+
+        private static VariantIRValue[] ReadBoolPayloadSpan(BinaryReader reader, int count)
+        {
+            var variants = new VariantIRValue[count];
+            var buffer = reader.ReadBytes(count);
+
+            for (int i = 0; i < variants.Length; i++)
+            {
+                variants[i] = VariantIRValue.FromBool(ByteToBool(buffer[i]));
+            }
+            return variants;
+        }
+
+
+        private static bool ByteToBool(byte value)
+        {
+            return value != 0;
+        }
+        private static bool ReadBool(BinaryReader reader)
+        {
+           return ByteToBool(reader.ReadByte());
+        }
+
+        private static VariantIRValue ReadEnum(BinaryReader reader)
+        {
+            var id = new Guid(reader.ReadBytes(GUID_BYTES_SIZE));
+            var enumVal = reader.ReadInt64();
+            return VariantIRValue.FromEnum(id, null, enumVal);
         }
 
         private static CollectionData ReadComplexCollection(BinaryReader reader)
@@ -166,35 +350,24 @@ namespace Engine.Serialization
                 case CollectionType.Queue:
                 case CollectionType.HashSet:
                     {
-
-                        // var collectionData = new CollectionData();
-                        //var result = new List<CollectionData<ComplexTypeData>>();
-                        //CollectionsMarshal.SetCount(result, count);
-
-                        //for (int i = 0; i < count; i++)
-                        //{
-                        //    var item = new CollectionData<ComplexTypeData>();
-                        //    item.Type = (SerializedType)reader.ReadInt64();
-                        //    item.Value = ReadComplexClass(reader);
-                        //    result[i] = item;
-                        //}
-                        //return result;
+                        var collectionData = new CollectionIRComplexTypes(count);
+                        for (int i = 0; i < count; i++)
+                        {
+                            collectionData.Value[i] = ReadComplexClass(reader);
+                        }
+                        return collectionData;
                     }
-                    break;
                 case CollectionType.Dictionary:
                     {
-                        //var result = new ComplexDictionaryData(count);
+                        var result = new DictionaryIRComplexTypes(count);
 
-                        //for (int i = 0; i < count; i++)
-                        //{
-                        //    //result.Type = (SerializedType)reader.ReadInt64();
-                        //    result.Keys[i] = ReadComplexClass(reader);
-                        //    result.Values[i] = ReadComplexClass(reader);
-                        //}
-                        //collectionData.Collection = result;
-                        // return result;
+                        for (int i = 0; i < result.Count; i++)
+                        {
+                            result.Keys[i] = ReadComplexClass(reader);
+                            result.Values[i] = ReadComplexClass(reader);
+                        }
+                        return result;
                     }
-                    break;
                 default:
                     throw new NotImplementedException($"Collection type '{collectionType}' is not implemented.");
             }
@@ -211,7 +384,6 @@ namespace Engine.Serialization
                 return null;
             }
 
-            // collectionData.Collection = new List<object>();
             var collectionType = (CollectionType)reader.ReadInt64();
             switch (collectionType)
             {
@@ -223,51 +395,37 @@ namespace Engine.Serialization
                 case CollectionType.Queue:
                 case CollectionType.HashSet:
                     {
-                        // var collectionData = new CollectionData();
-
-                        //var result = new List<CollectionData<ReferenceData>>();
-                        //CollectionsMarshal.SetCount(result, count);
-
-                        //for (int i = 0; i < count; i++)
-                        //{
-                        //    var item = new CollectionData<ReferenceData>();
-                        //    item.Type = (SerializedType)reader.ReadInt64();
-                        //    item.Value = new ReferenceData()
-                        //    {
-                        //        Id = new Guid(reader.ReadBytes(GUID_BYTES_SIZE))
-                        //    };
-                        //    result[i] = item;
-                        //}
-
-                        //collectionData.Collection = result;
+                        var result = new CollectionIRReferences(count);
+                        for (int i = 0; i < result.Count; i++)
+                        {
+                            result.Value[i] = ReadReferenceProperty(reader);
+                        }
+                        return result;
                     }
-                    break;
                 case CollectionType.Dictionary:
                     {
                         var result = new DictionaryIRReferences(count);
 
-                        //for (int i = 0; i < count; i++)
-                        //{
-                        //    var item = new DictionaryData();
-                        //    result.Types = (SerializedType)reader.ReadInt64();
-                        //    result.KeyType = (SerializedType)reader.ReadInt64();
-                        //    result.ValueType = (SerializedType)reader.ReadInt64();
+                        for (int i = 0; i < result.Count; i++)
+                        {
+                            result.KeyType[i] = (SerializedType)reader.ReadInt64();
+                            result.ValueType[i] = (SerializedType)reader.ReadInt64();
+                        }
+                        for (int i = 0; i < result.Count; i++)
+                        {
+                            object ReadArg(SerializedType type)
+                            {
+                                if (type.IsSimple())
+                                {
+                                    return ReadSimpleProperty(reader, type);
+                                }
 
-                        //    object ReadArg(SerializedType type)
-                        //    {
-                        //        if (type.IsSimple())
-                        //        {
-                        //            return ReadSimpleProperty(reader, type);
-                        //        }
+                                return ReadReferenceProperty(reader);
+                            }
 
-                        //        return ReadReferenceProperty(reader);
-                        //    }
-
-                        //    item.Key = ReadArg(item.KeyType);
-                        //    item.Value = ReadArg(item.ValueType);
-
-                        //    result[i] = item;
-                        //}
+                            result.Keys[i] = ReadArg(result.KeyType[i]);
+                            result.Values[i] = ReadArg(result.ValueType[i]);
+                        }
                         return result;
                     }
                 default:
@@ -279,8 +437,16 @@ namespace Engine.Serialization
 
         private static ReferenceData ReadReferenceProperty(BinaryReader reader)
         {
+            var type = (SerializedType)reader.ReadInt64();
+
+            if (type == SerializedType.None)
+            {
+                return null;
+            }
+
             return new ReferenceData()
             {
+                Type = type,
                 Id = new Guid(reader.ReadBytes(GUID_BYTES_SIZE)),
             };
         }
@@ -293,7 +459,7 @@ namespace Engine.Serialization
            */
             var complexTypeData = new ComplexClassData();
 
-            complexTypeData.ComplexType = (SerializedType)reader.ReadInt64();
+            var complexType = (SerializedType)reader.ReadInt64();
 
             if (complexTypeData.ComplexType == SerializedType.None)
             {
@@ -316,9 +482,9 @@ namespace Engine.Serialization
                 case SerializedType.Char:
                     return VariantIRValue.FromChar(reader.ReadChar());
                 case SerializedType.String:
-                    return VariantIRValue.FromString(reader.ReadString());
+                    return VariantIRValue.FromString(ReadString(reader));
                 case SerializedType.Bool:
-                    return VariantIRValue.FromBool(reader.ReadBoolean());
+                    return VariantIRValue.FromBool(ReadBool(reader));
                 case SerializedType.Byte:
                     return VariantIRValue.FromByte(reader.ReadByte());
                 case SerializedType.Short:
@@ -326,11 +492,7 @@ namespace Engine.Serialization
                 case SerializedType.UShort:
                     return VariantIRValue.FromUShort(reader.ReadUInt16());
                 case SerializedType.Enum:
-                    {
-                        var enumTypeId = new Guid(reader.ReadBytes(GUID_BYTES_SIZE));
-                        var enumValue = reader.ReadInt64();
-                        return VariantIRValue.FromEnum(enumTypeId, string.Empty, enumValue);
-                    }
+                    return ReadEnum(reader);
                 case SerializedType.Int:
                     return VariantIRValue.FromInt(reader.ReadInt32());
                 case SerializedType.UInt:

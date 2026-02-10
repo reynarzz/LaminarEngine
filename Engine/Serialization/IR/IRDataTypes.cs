@@ -49,10 +49,6 @@ namespace Engine.Serialization
         public CollectionData Collection { get; set; }
     }
 
-    internal class SerializedItem
-    {
-        public SerializedType Type { get; set; }
-    }
     internal class ReferenceData
     {
         public SerializedType Type { get; set; }
@@ -71,10 +67,10 @@ namespace Engine.Serialization
         internal abstract int Count { get; }
     }
 
-    internal class DictionaryDataT<K, V> : CollectionData
+    internal abstract class DictionaryDataT<K, V> : CollectionData
     {
-        [SerializedField] public K[] Keys { get;  set; }
-        [SerializedField] public V[] Values { get;  set; }
+        [SerializedField] public K[] Keys { get; set; }
+        [SerializedField] public V[] Values { get; set; }
 
         internal override int Count => Keys?.Length ?? 0;
 
@@ -120,12 +116,15 @@ namespace Engine.Serialization
     }
     internal class CollectionData<T, IT> : CollectionData
     {
-        public SerializedType Type { get; set; }
         public T[] Value { get; set; }
         internal override int Count => Value?.Length ?? 0;
         public IT ItemsType { get; set; }
 
         protected CollectionData() { }
+        protected CollectionData(int size)
+        {
+            Value = new T[size];
+        }
         public CollectionData(T[] value, IT itemsType)
         {
             Value = value;
@@ -136,7 +135,7 @@ namespace Engine.Serialization
     internal class DictionaryIRReferences : DictionaryDataKVTypes<object, object, SerializedType[], SerializedType[]>
     {
         protected DictionaryIRReferences() { }
-        public DictionaryIRReferences(int size) : base(size) 
+        public DictionaryIRReferences(int size) : base(size)
         {
             KeyType = new SerializedType[size];
             ValueType = new SerializedType[size];
@@ -155,22 +154,28 @@ namespace Engine.Serialization
     internal class CollectionIRVariants : CollectionData<VariantIRValue, SerializedType>
     {
         protected CollectionIRVariants() { }
+        internal CollectionIRVariants(int size) : base(size) { }
         public CollectionIRVariants(VariantIRValue[] value, SerializedType itemsType) : base(value, itemsType) { }
     }
     internal class CollectionIRReferences : CollectionData<ReferenceData, SerializedType[]>
     {
         protected CollectionIRReferences() { }
+        internal CollectionIRReferences(int size) : base(size)
+        {
+            ItemsType = new SerializedType[size];
+        }
         public CollectionIRReferences(ReferenceData[] value, SerializedType[] itemsType) : base(value, itemsType) { }
     }
     internal class CollectionIRComplexTypes : CollectionData<ComplexClassData, SerializedType>
     {
         protected CollectionIRComplexTypes() { }
+        internal CollectionIRComplexTypes(int size) : base(size) { }
         public CollectionIRComplexTypes(ComplexClassData[] value) : base(value, value != null && value.Length > 0 ?
                                                                                                 SerializedType.ComplexClass :
                                                                                                 SerializedType.None)
         { }
     }
-    internal class DelegateData : SerializedItem
+    internal class DelegateData
     {
         internal class Subscriber
         {

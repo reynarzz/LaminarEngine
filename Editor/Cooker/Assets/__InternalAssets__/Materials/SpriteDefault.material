@@ -8,12 +8,9 @@
       "Kind": "None",
       "Value": null
     },
-    "Reference": null,
-    "ComplexClass": null,
     "Collection": {
       "$type": "Engine.Serialization.CollectionIRComplexTypes, Engine",
       "$value": {
-        "Type": "None",
         "Value": [
           {
             "InternalType": "Engine.RenderPass, Engine",
@@ -28,10 +25,7 @@
                 "Simple": {
                   "Kind": "Bool",
                   "Value": false
-                },
-                "Reference": null,
-                "ComplexClass": null,
-                "Collection": null
+                }
               },
               {
                 "Name": "Shader",
@@ -48,9 +42,7 @@
                     "Type": "ShaderAsset",
                     "Id": "f29cbe33-ed4f-4214-bc46-b66e2c2053fc"
                   }
-                },
-                "ComplexClass": null,
-                "Collection": null
+                }
               },
               {
                 "Name": "Blending",
@@ -61,7 +53,6 @@
                   "Kind": "None",
                   "Value": null
                 },
-                "Reference": null,
                 "ComplexClass": {
                   "$type": "Engine.Serialization.ComplexClassData, Engine",
                   "$value": {
@@ -77,10 +68,7 @@
                         "Simple": {
                           "Kind": "Bool",
                           "Value": true
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "SrcFactor",
@@ -94,10 +82,7 @@
                             "EnumInternalType": "Engine.BlendFactor, Engine",
                             "EnumValue": 6
                           }
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "DstFactor",
@@ -111,10 +96,7 @@
                             "EnumInternalType": "Engine.BlendFactor, Engine",
                             "EnumValue": 7
                           }
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "Equation",
@@ -128,15 +110,11 @@
                             "EnumInternalType": "Engine.BlendEquation, Engine",
                             "EnumValue": 0
                           }
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       }
                     ]
                   }
-                },
-                "Collection": null
+                }
               },
               {
                 "Name": "Stencil",
@@ -147,7 +125,6 @@
                   "Kind": "None",
                   "Value": null
                 },
-                "Reference": null,
                 "ComplexClass": {
                   "$type": "Engine.Serialization.ComplexClassData, Engine",
                   "$value": {
@@ -163,10 +140,7 @@
                         "Simple": {
                           "Kind": "Bool",
                           "Value": true
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "Func",
@@ -180,10 +154,7 @@
                             "EnumInternalType": "Engine.StencilFunc, Engine",
                             "EnumValue": 7
                           }
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "Ref",
@@ -193,10 +164,7 @@
                         "Simple": {
                           "Kind": "Int",
                           "Value": 3
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "Mask",
@@ -206,10 +174,7 @@
                         "Simple": {
                           "Kind": "UInt",
                           "Value": 255
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "FailOp",
@@ -223,10 +188,7 @@
                             "EnumInternalType": "Engine.StencilOp, Engine",
                             "EnumValue": 0
                           }
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "ZFailOp",
@@ -240,10 +202,7 @@
                             "EnumInternalType": "Engine.StencilOp, Engine",
                             "EnumValue": 0
                           }
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "ZPassOp",
@@ -257,15 +216,11 @@
                             "EnumInternalType": "Engine.StencilOp, Engine",
                             "EnumValue": 2
                           }
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       }
                     ]
                   }
-                },
-                "Collection": null
+                }
               },
               {
                 "Name": "_uniforms",
@@ -276,8 +231,6 @@
                   "Kind": "None",
                   "Value": null
                 },
-                "Reference": null,
-                "ComplexClass": null,
                 "Collection": {
                   "$type": "Engine.Serialization.DictionaryIRComplexTypes, Engine",
                   "$value": {
@@ -295,10 +248,7 @@
                             "Simple": {
                               "Kind": "String",
                               "Value": "uVP"
-                            },
-                            "Reference": null,
-                            "ComplexClass": null,
-                            "Collection": null
+                            }
                           }
                         ]
                       },
@@ -315,10 +265,7 @@
                             "Simple": {
                               "Kind": "String",
                               "Value": "uTextures"
-                            },
-                            "Reference": null,
-                            "ComplexClass": null,
-                            "Collection": null
+                            }
                           }
                         ]
                       }
@@ -337,10 +284,7 @@
                             "Simple": {
                               "Kind": "String",
                               "Value": ""
-                            },
-                            "Reference": null,
-                            "ComplexClass": null,
-                            "Collection": null
+                            }
                           },
                           {
                             "Name": "IntValue",
@@ -350,10 +294,7 @@
                             "Simple": {
                               "Kind": "Int",
                               "Value": 0
-                            },
-                            "Reference": null,
-                            "ComplexClass": null,
-                            "Collection": null
+                            }
                           },
                           {
                             "Name": "UIntValue",
@@ -363,10 +304,7 @@
                             "Simple": {
                               "Kind": "UInt",
                               "Value": 0
-                            },
-                            "Reference": null,
-                            "ComplexClass": null,
-                            "Collection": null
+                            }
                           },
                           {
                             "Name": "FloatValue",
@@ -376,10 +314,7 @@
                             "Simple": {
                               "Kind": "Float",
                               "Value": 0.0
-                            },
-                            "Reference": null,
-                            "ComplexClass": null,
-                            "Collection": null
+                            }
                           },
                           {
                             "Name": "Mat4Value",
@@ -414,10 +349,7 @@
                                   "w": 0.0
                                 }
                               }
-                            },
-                            "Reference": null,
-                            "ComplexClass": null,
-                            "Collection": null
+                            }
                           },
                           {
                             "Name": "Vec2Value",
@@ -430,10 +362,7 @@
                                 "x": 0.0,
                                 "y": 0.0
                               }
-                            },
-                            "Reference": null,
-                            "ComplexClass": null,
-                            "Collection": null
+                            }
                           },
                           {
                             "Name": "Vec3Value",
@@ -447,10 +376,7 @@
                                 "y": 0.0,
                                 "z": 0.0
                               }
-                            },
-                            "Reference": null,
-                            "ComplexClass": null,
-                            "Collection": null
+                            }
                           },
                           {
                             "Name": "Vec4Value",
@@ -465,10 +391,7 @@
                                 "z": 0.0,
                                 "w": 0.0
                               }
-                            },
-                            "Reference": null,
-                            "ComplexClass": null,
-                            "Collection": null
+                            }
                           },
                           {
                             "Name": "IntArrValue",
@@ -478,10 +401,7 @@
                             "Simple": {
                               "Kind": "None",
                               "Value": null
-                            },
-                            "Reference": null,
-                            "ComplexClass": null,
-                            "Collection": null
+                            }
                           },
                           {
                             "Name": "Type",
@@ -495,10 +415,7 @@
                                 "EnumInternalType": "Engine.Graphics.UniformType, Engine",
                                 "EnumValue": 0
                               }
-                            },
-                            "Reference": null,
-                            "ComplexClass": null,
-                            "Collection": null
+                            }
                           },
                           {
                             "Name": "RenderTextureValue",
@@ -508,10 +425,7 @@
                             "Simple": {
                               "Kind": "None",
                               "Value": null
-                            },
-                            "Reference": null,
-                            "ComplexClass": null,
-                            "Collection": null
+                            }
                           }
                         ]
                       },
@@ -528,10 +442,7 @@
                             "Simple": {
                               "Kind": "String",
                               "Value": ""
-                            },
-                            "Reference": null,
-                            "ComplexClass": null,
-                            "Collection": null
+                            }
                           },
                           {
                             "Name": "IntValue",
@@ -541,10 +452,7 @@
                             "Simple": {
                               "Kind": "Int",
                               "Value": 0
-                            },
-                            "Reference": null,
-                            "ComplexClass": null,
-                            "Collection": null
+                            }
                           },
                           {
                             "Name": "UIntValue",
@@ -554,10 +462,7 @@
                             "Simple": {
                               "Kind": "UInt",
                               "Value": 0
-                            },
-                            "Reference": null,
-                            "ComplexClass": null,
-                            "Collection": null
+                            }
                           },
                           {
                             "Name": "FloatValue",
@@ -567,10 +472,7 @@
                             "Simple": {
                               "Kind": "Float",
                               "Value": 0.0
-                            },
-                            "Reference": null,
-                            "ComplexClass": null,
-                            "Collection": null
+                            }
                           },
                           {
                             "Name": "Mat4Value",
@@ -605,10 +507,7 @@
                                   "w": 0.0
                                 }
                               }
-                            },
-                            "Reference": null,
-                            "ComplexClass": null,
-                            "Collection": null
+                            }
                           },
                           {
                             "Name": "Vec2Value",
@@ -621,10 +520,7 @@
                                 "x": 0.0,
                                 "y": 0.0
                               }
-                            },
-                            "Reference": null,
-                            "ComplexClass": null,
-                            "Collection": null
+                            }
                           },
                           {
                             "Name": "Vec3Value",
@@ -638,10 +534,7 @@
                                 "y": 0.0,
                                 "z": 0.0
                               }
-                            },
-                            "Reference": null,
-                            "ComplexClass": null,
-                            "Collection": null
+                            }
                           },
                           {
                             "Name": "Vec4Value",
@@ -656,10 +549,7 @@
                                 "z": 0.0,
                                 "w": 0.0
                               }
-                            },
-                            "Reference": null,
-                            "ComplexClass": null,
-                            "Collection": null
+                            }
                           },
                           {
                             "Name": "IntArrValue",
@@ -669,10 +559,7 @@
                             "Simple": {
                               "Kind": "None",
                               "Value": null
-                            },
-                            "Reference": null,
-                            "ComplexClass": null,
-                            "Collection": null
+                            }
                           },
                           {
                             "Name": "Type",
@@ -686,10 +573,7 @@
                                 "EnumInternalType": "Engine.Graphics.UniformType, Engine",
                                 "EnumValue": 0
                               }
-                            },
-                            "Reference": null,
-                            "ComplexClass": null,
-                            "Collection": null
+                            }
                           },
                           {
                             "Name": "RenderTextureValue",
@@ -699,10 +583,7 @@
                             "Simple": {
                               "Kind": "None",
                               "Value": null
-                            },
-                            "Reference": null,
-                            "ComplexClass": null,
-                            "Collection": null
+                            }
                           }
                         ]
                       }
@@ -728,8 +609,6 @@
       "Kind": "None",
       "Value": null
     },
-    "Reference": null,
-    "ComplexClass": null,
     "Collection": {
       "$type": "Engine.Serialization.DictionaryIRComplexTypes, Engine",
       "$value": {

@@ -543,6 +543,11 @@ namespace Editor.Serialization
 
         private static ReferenceData GetReferenceData(Guid id, SerializedType serializedMemberType, object value)
         {
+            if(serializedMemberType == SerializedType.None)
+            {
+                return null;
+            }
+
             if (serializedMemberType == SerializedType.SpriteAsset)
             {
                 return new SpriteReferenceData()

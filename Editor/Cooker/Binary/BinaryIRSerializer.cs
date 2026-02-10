@@ -63,7 +63,7 @@ namespace Editor.Cooker
             writer.Write(ir.Version);
             WriteString(writer, ir.Name);
             writer.Write(ir.Layer);
-            writer.Write(ir.IsActiveSelf);
+            WriteBool(writer, ir.IsActiveSelf);
             writer.Write(ir.ID.ToByteArray());
             writer.Write(ir.ParentID.ToByteArray());
             writer.Write(ir.Components.Count);
@@ -85,7 +85,7 @@ namespace Editor.Cooker
              */
             writer.Write(ir.Version);
             writer.Write(ir.TypeId.ToByteArray());
-            writer.Write(ir.IsEnabled);
+            WriteBool(writer, ir.IsEnabled);
             writer.Write(ir.ID.ToByteArray());
             writer.Write(ir.SerializedProperties.Count);
 
@@ -132,6 +132,10 @@ namespace Editor.Cooker
             else if (serializedType == SerializedType.SimpleCollection)
             {
                 WriteSimpleCollection(writer, ir.Collection);
+            }
+            else
+            {
+                throw new NotImplementedException($"Can't serialize type, not implemented: '{serializedType}'");
             }
         }
 
@@ -184,8 +188,7 @@ namespace Editor.Cooker
             {
                 foreach (var v in variants)
                 {
-                    writer.Write(v.Enum.TypeId.ToByteArray());
-                    writer.Write(v.Enum.EnumValue);
+                    WriteEnum(writer, v.Enum);
                 }
                 return;
             }
@@ -308,7 +311,6 @@ namespace Editor.Cooker
                         var col = collectionData as CollectionIRComplexTypes;
                         foreach (var item in col.Value)
                         {
-                            writer.Write(Convert.ToInt64(item.ComplexType));
                             WriteComplexClass(writer, item);
                         }
                     }
@@ -352,9 +354,13 @@ namespace Editor.Cooker
                         var col = data as CollectionIRReferences;
                         foreach (var item in col.Value)
                         {
-                            var itemData = item;
-                            writer.Write(Convert.ToInt64(itemData.Type));
-                            writer.Write(itemData.Id.ToByteArray());
+                            if (item == null)
+                            {
+                                writer.Write(Convert.ToInt64(SerializedType.None));
+                                continue;
+                            }
+                            writer.Write(Convert.ToInt64(item.Type));
+                            writer.Write(item.Id.ToByteArray());
                         }
                     }
                     break;
@@ -405,6 +411,15 @@ namespace Editor.Cooker
 
             return (VariantIRValue)obj;
         }
+
+        private static byte BoolToByte(bool value)
+        {
+            return value ? (byte)1 : (byte)0;
+        }
+        private static void WriteBool(BinaryWriter writer, bool value)
+        {
+            writer.Write(BoolToByte(value));
+        }
         private static void WriteSimpleProperty(BinaryWriter writer, in VariantIRValue data, SerializedType simpleType)
         {
             switch (simpleType)
@@ -418,7 +433,7 @@ namespace Editor.Cooker
                     WriteString(writer, data.String);
                     break;
                 case SerializedType.Bool:
-                    writer.Write(data.Payload.Bool);
+                    WriteBool(writer, data.Payload.Bool);
                     break;
                 case SerializedType.Byte:
                     writer.Write(data.Payload.Byte);
@@ -430,18 +445,7 @@ namespace Editor.Cooker
                     writer.Write(data.Payload.UShort);
                     break;
                 case SerializedType.Enum:
-                    {
-                        if (!string.IsNullOrEmpty(data.Enum.EnumInternalType))
-                        {
-                            writer.Write(data.Enum.TypeId.ToByteArray());
-                            writer.Write(data.Enum.EnumValue);
-                        }
-                        else
-                        {
-                            writer.Write(Guid.Empty.ToByteArray());
-                            writer.Write((long)0);
-                        }
-                    }
+                    WriteEnum(writer, data.Enum);
                     break;
                 case SerializedType.Int:
                     writer.Write(data.Payload.Int);
@@ -506,11 +510,26 @@ namespace Editor.Cooker
         {
             if (value != null)
             {
+                writer.Write(Convert.ToInt64(value.Type));
                 writer.Write(value.Id.ToByteArray());
             }
             else
             {
+                writer.Write(Convert.ToInt64(SerializedType.None));
+            }
+        }
+
+        private static void WriteEnum(BinaryWriter writer, in EnumIRValue value)
+        {
+            if (!string.IsNullOrEmpty(value.EnumInternalType))
+            {
+                writer.Write(value.TypeId.ToByteArray());
+                writer.Write(value.EnumValue);
+            }
+            else
+            {
                 writer.Write(Guid.Empty.ToByteArray());
+                writer.Write((long)0);
             }
         }
 
@@ -555,7 +574,7 @@ namespace Editor.Cooker
                 var dst = buffer.AsSpan(0, count);
                 for (int i = 0; i < count; i++)
                 {
-                    dst[i] = variants[i].Payload.Bool ? (byte)1 : (byte)0;
+                    dst[i] = BoolToByte(variants[i].Payload.Bool);
                 }
                 writer.Write(dst);
             }

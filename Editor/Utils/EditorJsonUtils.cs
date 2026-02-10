@@ -16,6 +16,7 @@ namespace Editor.Utils
         private readonly static JsonSerializerSettings _jsonSettings = new()
         {
             TypeNameHandling = TypeNameHandling.Auto, // Do not remove this.
+            NullValueHandling = NullValueHandling.Ignore,
             Converters =
             {
                 new StringEnumConverter(),

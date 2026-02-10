@@ -129,7 +129,7 @@ namespace Game
         {
             [SerializedField] public T TValue;
             [SerializedField] public EnumerablePartitionerOptions Enumn;
-            [SerializedField] private int[] HotReloadThis;
+            [SerializedField] private long[] HotReloadThis;
             //[SerializedField] private RigidBody2D Something; 
             [SerializedField] private RigidBody2D _rigid2;
             [SerializedField] private Body2DType bod;
@@ -191,7 +191,7 @@ namespace Game
         private Dictionary<int, quat> _quatDictionary =
           new Dictionary<int, quat> { { 3, default }, { 51, new quat(1, 0, 0, 0) } };
 
-
+        [SerializedField] private ITestInterface<int>[] _interfaceArray { get; set; } = new TestScript.ITestInterface<int>[] { new InterA() { Texture = Assets.GetTexture("starkTileset.png") } };
         [SerializedField]
         private Dictionary<EnlistmentOptions, string> _enumByStringDictionary;
 
