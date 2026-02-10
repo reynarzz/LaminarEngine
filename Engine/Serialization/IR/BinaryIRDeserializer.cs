@@ -107,10 +107,10 @@ namespace Engine.Serialization
         private static SerializedPropertyIR ReadPropertyIR(BinaryReader reader)
         {
             /*
-          string Name 
-          Guid TypeId 
-          SerializedType Type 
-          object Data 
+              string Name 
+              Guid TypeId 
+              SerializedType Type 
+              object Data 
           */
             var property = new SerializedPropertyIR();
             property.Name = ReadString(reader);
@@ -179,7 +179,7 @@ namespace Engine.Serialization
             var collectionType = (CollectionType)reader.ReadInt64();
             if (collectionType == CollectionType.Dictionary)
             {
-                var simpleDictionary = new DictionaryIRVariants(count);
+                var simpleDictionary = new DictionaryIRVariants(count, collectionType);
                 simpleDictionary.KeyType = (SerializedType)reader.ReadInt64();
                 simpleDictionary.ValueType = (SerializedType)reader.ReadInt64();
                 simpleDictionary.Keys = ReadVariantArray(reader, simpleDictionary.KeyType, simpleDictionary.Count);
@@ -187,7 +187,8 @@ namespace Engine.Serialization
                 return simpleDictionary;
             }
 
-            var variantCollection = new CollectionIRVariants(count);
+            var variantCollection = new CollectionIRVariants(count, collectionType);
+            variantCollection.ItemsType = (SerializedType)reader.ReadInt64();
             variantCollection.Value = ReadVariantArray(reader, variantCollection.ItemsType, count);
             return variantCollection;
         }
@@ -278,22 +279,17 @@ namespace Engine.Serialization
             int elementSize = Unsafe.SizeOf<T>();
             int totalBytes = count * elementSize;
 
-            var payloads = new ValuePayload[count];
-
-            var dst = MemoryMarshal.AsBytes(payloads.AsSpan());
-
-            int read = reader.Read(dst);
-            if (read != totalBytes)
-            {
-                throw new EndOfStreamException();
-            }
+            var buffer = reader.ReadBytes(totalBytes).AsSpan();
 
             for (int i = 0; i < count; i++)
             {
-                variants[i] = new VariantIRValue
+                ref byte b = ref buffer[i * elementSize];
+                T value = Unsafe.ReadUnaligned<T>(ref b);
+
+                variants[i] = new VariantIRValue()
                 {
                     Kind = kind,
-                    Payload = payloads[i],
+                    Payload = Unsafe.As<T, ValuePayload>(ref value),
                     String = null
                 };
             }
@@ -350,7 +346,7 @@ namespace Engine.Serialization
                 case CollectionType.Queue:
                 case CollectionType.HashSet:
                     {
-                        var collectionData = new CollectionIRComplexTypes(count);
+                        var collectionData = new CollectionIRComplexTypes(count, collectionType);
                         for (int i = 0; i < count; i++)
                         {
                             collectionData.Value[i] = ReadComplexClass(reader);
@@ -359,7 +355,7 @@ namespace Engine.Serialization
                     }
                 case CollectionType.Dictionary:
                     {
-                        var result = new DictionaryIRComplexTypes(count);
+                        var result = new DictionaryIRComplexTypes(count, collectionType);
 
                         for (int i = 0; i < result.Count; i++)
                         {
@@ -395,7 +391,7 @@ namespace Engine.Serialization
                 case CollectionType.Queue:
                 case CollectionType.HashSet:
                     {
-                        var result = new CollectionIRReferences(count);
+                        var result = new CollectionIRReferences(count, collectionType);
                         for (int i = 0; i < result.Count; i++)
                         {
                             result.Value[i] = ReadReferenceProperty(reader);
@@ -404,7 +400,7 @@ namespace Engine.Serialization
                     }
                 case CollectionType.Dictionary:
                     {
-                        var result = new DictionaryIRReferences(count);
+                        var result = new DictionaryIRReferences(count, collectionType);
 
                         for (int i = 0; i < result.Count; i++)
                         {
@@ -459,7 +455,7 @@ namespace Engine.Serialization
            */
             var complexTypeData = new ComplexClassData();
 
-            var complexType = (SerializedType)reader.ReadInt64();
+            complexTypeData.ComplexType = (SerializedType)reader.ReadInt64();
 
             if (complexTypeData.ComplexType == SerializedType.None)
             {

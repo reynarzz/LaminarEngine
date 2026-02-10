@@ -299,17 +299,13 @@ namespace Editor.Serialization
 
                 if (collectionType == CollectionType.Dictionary)
                 {
-                    collectionPropData = GetDictionaryData(type, serializedMemberType, value);
+                    collectionPropData = GetDictionaryData(type, serializedMemberType, collectionType, value);
                 }
                 else
                 {
-                    collectionPropData = Get1DCollectionData(serializedMemberType, value, out var itemsType);
+                    collectionPropData = Get1DCollectionData(serializedMemberType, collectionType, value, out var itemsType);
                 }
 
-                if (collectionPropData != null)
-                {
-                    collectionPropData.CollectionType = collectionType;
-                }
                 return collectionPropData;
             }
             else if (serializedMemberType == SerializedType.ComplexClass)
@@ -319,7 +315,8 @@ namespace Editor.Serialization
             return null;
         }
 
-        private static CollectionData Get1DCollectionData(SerializedType serializedMemberType, object value, out SerializedType itemsType)
+        private static CollectionData Get1DCollectionData(SerializedType serializedMemberType, CollectionType collectionType,
+                                                          object value, out SerializedType itemsType)
         {
             itemsType = SerializedType.None;
             var collection = (ICollection)value;
@@ -337,7 +334,7 @@ namespace Editor.Serialization
                     valueCollection[index++] = GetVariantValue(item, itemsType);
                 }
 
-                return new CollectionIRVariants(valueCollection, itemsType);
+                return new CollectionIRVariants(valueCollection, itemsType, collectionType);
             }
             else if (serializedMemberType == SerializedType.ReferenceCollection)
             {
@@ -354,7 +351,7 @@ namespace Editor.Serialization
                     index++;
                 }
 
-                return new CollectionIRReferences(references, referencesTypes);
+                return new CollectionIRReferences(references, referencesTypes, collectionType);
             }
             else if (serializedMemberType == SerializedType.ComplexCollection)
             {
@@ -365,13 +362,14 @@ namespace Editor.Serialization
                 {
                     complexTypeArr[index++] = CreateComplexType(item?.GetType(), item);
                 }
-                return new CollectionIRComplexTypes(complexTypeArr);
+                return new CollectionIRComplexTypes(complexTypeArr, collectionType);
             }
 
             throw new NotSupportedException($"Collection is not supported '{serializedMemberType}', maybe is an error, or is not implemented?");
         }
 
-        private static CollectionData GetDictionaryData(Type type, SerializedType serializedMemberType, object value)
+        private static CollectionData GetDictionaryData(Type type, SerializedType serializedMemberType,
+                                                        CollectionType collectionType, object value)
         {
             var defaultElementsType = ReflectionUtils.GetCollectionElementsType(type);
 
@@ -381,15 +379,15 @@ namespace Editor.Serialization
 
             if (serializedMemberType == SerializedType.SimpleCollection)
             {
-                dictionaryCollection = new DictionaryIRVariants(dictionary.Keys.Count);
+                dictionaryCollection = new DictionaryIRVariants(dictionary.Keys.Count, collectionType);
             }
             else if (serializedMemberType == SerializedType.ReferenceCollection)
             {
-                dictionaryCollection = new DictionaryIRReferences(dictionary.Keys.Count);
+                dictionaryCollection = new DictionaryIRReferences(dictionary.Keys.Count, collectionType);
             }
             else if (serializedMemberType == SerializedType.ComplexCollection)
             {
-                dictionaryCollection = new DictionaryIRComplexTypes(dictionary.Keys.Count);
+                dictionaryCollection = new DictionaryIRComplexTypes(dictionary.Keys.Count, collectionType);
             }
             else
             {
@@ -543,7 +541,7 @@ namespace Editor.Serialization
 
         private static ReferenceData GetReferenceData(Guid id, SerializedType serializedMemberType, object value)
         {
-            if(serializedMemberType == SerializedType.None)
+            if (serializedMemberType == SerializedType.None)
             {
                 return null;
             }
@@ -625,7 +623,7 @@ namespace Editor.Serialization
         {
             if (type.IsSimple())
             {
-                if(type == SerializedType.String && obj == null)
+                if (type == SerializedType.String && obj == null)
                 {
                     return VariantIRValue.FromString(string.Empty);
                 }

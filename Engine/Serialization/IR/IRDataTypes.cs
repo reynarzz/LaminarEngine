@@ -76,10 +76,11 @@ namespace Engine.Serialization
 
         // Serializer
         protected DictionaryDataT() { }
-        public DictionaryDataT(int size)
+        public DictionaryDataT(int size, CollectionType collectionType)
         {
             Keys = new K[size];
             Values = new V[size];
+            CollectionType = collectionType;
         }
 
         public void CopyTo(Array array, int index)
@@ -112,7 +113,7 @@ namespace Engine.Serialization
         public KT KeyType { get; set; }
         public VT ValueType { get; set; }
         protected DictionaryDataKVTypes() { }
-        internal DictionaryDataKVTypes(int size) : base(size) { }
+        internal DictionaryDataKVTypes(int size, CollectionType collectionType) : base(size, collectionType) { }
     }
     internal class CollectionData<T, IT> : CollectionData
     {
@@ -121,21 +122,23 @@ namespace Engine.Serialization
         public IT ItemsType { get; set; }
 
         protected CollectionData() { }
-        protected CollectionData(int size)
+        protected CollectionData(int size, CollectionType collectionType)
         {
             Value = new T[size];
+            CollectionType = collectionType;
         }
-        public CollectionData(T[] value, IT itemsType)
+        public CollectionData(T[] value, IT itemsType, CollectionType collectionType)
         {
             Value = value;
             ItemsType = itemsType;
+            CollectionType = collectionType;
         }
     }
 
     internal class DictionaryIRReferences : DictionaryDataKVTypes<object, object, SerializedType[], SerializedType[]>
     {
         protected DictionaryIRReferences() { }
-        public DictionaryIRReferences(int size) : base(size)
+        public DictionaryIRReferences(int size, CollectionType collectionType) : base(size, collectionType)
         {
             KeyType = new SerializedType[size];
             ValueType = new SerializedType[size];
@@ -144,35 +147,43 @@ namespace Engine.Serialization
     internal class DictionaryIRVariants : DictionaryDataKVTypes<VariantIRValue, VariantIRValue, SerializedType, SerializedType>
     {
         protected DictionaryIRVariants() { }
-        public DictionaryIRVariants(int size) : base(size) { }
+        public DictionaryIRVariants(int size, CollectionType collectionType) :
+            base(size, collectionType)
+        { }
     }
     internal class DictionaryIRComplexTypes : DictionaryDataT<ComplexClassData, ComplexClassData>
     {
         protected DictionaryIRComplexTypes() { }
-        public DictionaryIRComplexTypes(int size) : base(size) { }
+        public DictionaryIRComplexTypes(int size, CollectionType collectionType) :
+            base(size, collectionType)
+        { }
     }
     internal class CollectionIRVariants : CollectionData<VariantIRValue, SerializedType>
     {
         protected CollectionIRVariants() { }
-        internal CollectionIRVariants(int size) : base(size) { }
-        public CollectionIRVariants(VariantIRValue[] value, SerializedType itemsType) : base(value, itemsType) { }
+        internal CollectionIRVariants(int size, CollectionType collectionType) : base(size, collectionType) { }
+        public CollectionIRVariants(VariantIRValue[] value, SerializedType itemsType, CollectionType colType) :
+            base(value, itemsType, colType)
+        { }
     }
     internal class CollectionIRReferences : CollectionData<ReferenceData, SerializedType[]>
     {
         protected CollectionIRReferences() { }
-        internal CollectionIRReferences(int size) : base(size)
+        internal CollectionIRReferences(int size, CollectionType colType) : base(size, colType)
         {
             ItemsType = new SerializedType[size];
         }
-        public CollectionIRReferences(ReferenceData[] value, SerializedType[] itemsType) : base(value, itemsType) { }
+        public CollectionIRReferences(ReferenceData[] value, SerializedType[] itemsType, CollectionType collectionType) :
+            base(value, itemsType, collectionType)
+        { }
     }
     internal class CollectionIRComplexTypes : CollectionData<ComplexClassData, SerializedType>
     {
         protected CollectionIRComplexTypes() { }
-        internal CollectionIRComplexTypes(int size) : base(size) { }
-        public CollectionIRComplexTypes(ComplexClassData[] value) : base(value, value != null && value.Length > 0 ?
+        internal CollectionIRComplexTypes(int size, CollectionType collectionType) : base(size, collectionType) { }
+        public CollectionIRComplexTypes(ComplexClassData[] value, CollectionType colType) : base(value, value != null && value.Length > 0 ?
                                                                                                 SerializedType.ComplexClass :
-                                                                                                SerializedType.None)
+                                                                                                SerializedType.None, colType)
         { }
     }
     internal class DelegateData

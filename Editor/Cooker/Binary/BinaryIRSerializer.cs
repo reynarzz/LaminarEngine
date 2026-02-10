@@ -153,19 +153,15 @@ namespace Editor.Cooker
             if (collectionData.CollectionType == CollectionType.Dictionary)
             {
                 var simpleDictionary = collectionData as DictionaryIRVariants;
-
                 writer.Write(Convert.ToInt64(simpleDictionary.KeyType));
                 writer.Write(Convert.ToInt64(simpleDictionary.ValueType));
-
-                for (var i = 0; i < simpleDictionary.Count; i++)
-                {
-                    WriteVariantArray(writer, simpleDictionary.KeyType, simpleDictionary.Keys);
-                    WriteVariantArray(writer, simpleDictionary.ValueType, simpleDictionary.Values);
-                }
+                WriteVariantArray(writer, simpleDictionary.KeyType, simpleDictionary.Keys);
+                WriteVariantArray(writer, simpleDictionary.ValueType, simpleDictionary.Values);
             }
             else
             {
                 var variantCollection = collectionData as CollectionIRVariants;
+                writer.Write(Convert.ToInt64(variantCollection.ItemsType));
                 WriteVariantArray(writer, variantCollection.ItemsType, variantCollection.Value);
             }
         }
