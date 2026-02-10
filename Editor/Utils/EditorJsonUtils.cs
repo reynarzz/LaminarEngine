@@ -22,7 +22,7 @@ namespace Editor.Utils
             {
                 new StringEnumConverter(),
                 new GuidConverter(),
-                new VariantJsonConverter()
+               // new VariantJsonConverter()
             },
             ContractResolver = new SerializedFieldContractResolver()
         };
