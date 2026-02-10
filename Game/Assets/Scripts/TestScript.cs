@@ -197,6 +197,8 @@ namespace Game
 
         [SerializedField]
         private Dictionary<BlendFactor, GamePadAxis> _enumByEnumDictionary;
+        [SerializedField]
+        private Dictionary<BlendFactor, mat4> _mat4ByEnumDictionary;
 
         [ShowMethodInEditor]
         public void AMethodCallingFromEditor()
