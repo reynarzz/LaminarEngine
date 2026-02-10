@@ -11,6 +11,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Engine.Serialization;
 
 namespace Engine.Utils
 {
@@ -945,5 +946,36 @@ namespace Engine.Utils
 
             return false;
         }
+
+        internal static object DeserializeVariantValueSafe<T>(in VariantIRValue variant) where T : ITypeResolver
+        {
+            if (variant.Kind == SerializedType.Enum)
+            {
+                return DeserializeEnum<T>(variant);
+            }
+            else if (variant.Kind == SerializedType.String && string.IsNullOrEmpty(variant.String))
+            {
+                return string.Empty;
+            }
+
+            return variant.GetValueAsObject();
+        }
+
+        internal static Enum DeserializeEnum<T>(in VariantIRValue variant) where T : ITypeResolver
+        {
+            if (variant.Kind != SerializedType.Enum)
+            {
+                Debug.EngineError("Is not enum!");
+                return null;
+            }
+
+            if (T.ResolveType(variant.Enum, out var enumType))
+            {
+                return (Enum)Enum.ToObject(enumType, variant.Enum.EnumValue);
+            }
+
+            return null;
+        }
+
     }
 }

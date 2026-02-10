@@ -34,8 +34,7 @@ namespace Engine.Serialization
         {
             DeserializeTarget(targetInstance, properties, null);
         }
-        internal static void DeserializeTarget(object targetInstance, IReadOnlyList<SerializedPropertyIR> properties,
-                                               DeserializerData deserializerData)
+        internal static void DeserializeTarget(object targetInstance, IReadOnlyList<SerializedPropertyIR> properties, DeserializerData deserializerData)
         {
             if (targetInstance == null || properties == null)
                 return;
@@ -69,7 +68,7 @@ namespace Engine.Serialization
                 }
                 else
                 {
-                    // Debug.Error($"Cannot deserialize property of type: {property.Type}, please implement it.");
+                    Debug.Error($"Cannot deserialize property of type: {property.Type}, please implement it.");
                 }
             }
         }
@@ -102,7 +101,7 @@ namespace Engine.Serialization
             object value = null;
             if (property.Type == SerializedType.Enum)
             {
-                value = DeserializeEnum(property.Simple);
+                value = ReflectionUtils.DeserializeEnum<Tr>(property.Simple);
             }
             else
             {
@@ -156,7 +155,7 @@ namespace Engine.Serialization
                     {
                         if (argData != null && argData.GetType() != argType)
                         {
-                            return DeserializeVariantValueSafe((VariantIRValue)argData);
+                            return ReflectionUtils.DeserializeVariantValueSafe<Tr>((VariantIRValue)argData);
                         }
 
                         return null;
@@ -263,19 +262,27 @@ namespace Engine.Serialization
                 var collectionInstance = ReflectionUtils.GetDefaultValueInstance(type);
                 if (collectionData.CollectionType == CollectionType.Dictionary)
                 {
-                    var dictionary = collectionInstance as IDictionary;
-
-                    // TODO: fix, This is boxing values. use the generated class.
                     var dictionarySimple = collectionData as DictionaryIRVariants;
-                    for (int i = 0; i < dictionarySimple.Count; i++)
-                    {
-                        var key = DeserializeVariantValueSafe(dictionarySimple.Keys[i]);
-                        var value = DeserializeVariantValueSafe(dictionarySimple.Values[i]);
 
-                        dictionary.Add(key, value);
+                    // NOTE: Only enums will be boxed.
+                    if (dictionarySimple.Count > 0 && (dictionarySimple.KeyType == SerializedType.Enum ||
+                                                       dictionarySimple.ValueType == SerializedType.Enum))
+                    {
+                        var dictionary = collectionInstance as IDictionary;
+                        for (int i = 0; i < dictionarySimple.Count; i++)
+                        {
+                            var key = ReflectionUtils.DeserializeVariantValueSafe<Tr>(dictionarySimple.Keys[i]);
+                            var value = ReflectionUtils.DeserializeVariantValueSafe<Tr>(dictionarySimple.Values[i]);
+                            dictionary.Add(key, value);
+                        }
+                    }
+                    else
+                    {
+                        collectionInstance = VariantCollectionWriter.Write(collectionInstance, dictionarySimple.Keys, dictionarySimple.Values,
+                                                                           dictionarySimple.KeyType, dictionarySimple.ValueType);
                     }
 
-                    ReflectionUtils.SetMemberValue(target, dictionary, property.Name);
+                    ReflectionUtils.SetMemberValue(target, collectionInstance, property.Name);
                 }
                 else
                 {
@@ -290,7 +297,7 @@ namespace Engine.Serialization
 
                             for (int i = 0; i < variantCollection.Count; i++)
                             {
-                                var itemObj = DeserializeVariantValueSafe(in variantCollection.Value[i]);
+                                var itemObj = ReflectionUtils.DeserializeVariantValueSafe<Tr>(in variantCollection.Value[i]);
                                 ReflectionUtils.SetMemberValueSafe(collectionInstance, itemObj, default(MemberInfo), i);
                             }
                         }
@@ -361,7 +368,7 @@ namespace Engine.Serialization
                             {
                                 //if (complexArg.Properties != null && complexArg.Properties.Count > 0)
                                 {
-                                    deserializedArgValue = DeserializeVariantValueSafe(complexArg.Properties[0].Simple);
+                                    deserializedArgValue = ReflectionUtils.DeserializeVariantValueSafe<Tr>(complexArg.Properties[0].Simple);
                                 }
                             }
                             else
@@ -419,42 +426,13 @@ namespace Engine.Serialization
             {
                 if (argComplexData.ComplexType == SerializedType.Enum)
                 {
-                    return DeserializeEnum((VariantIRValue)arg);
+                    return ReflectionUtils.DeserializeEnum<Tr>((VariantIRValue)arg);
                 }
 
                 return ((VariantIRValue)arg).GetValueAsObject();
             }
 
             return arg;
-        }
-        private static object DeserializeVariantValueSafe(in VariantIRValue variant)
-        {
-            if (variant.Kind == SerializedType.Enum)
-            {
-                return DeserializeEnum(variant);
-            }
-            else if (variant.Kind == SerializedType.String && string.IsNullOrEmpty(variant.String))
-            {
-                return string.Empty;
-            }
-
-            return variant.GetValueAsObject();
-        }
-
-        private static Enum DeserializeEnum(in VariantIRValue variant)
-        {
-            if (variant.Kind != SerializedType.Enum)
-            {
-                Debug.EngineError("Is not enum!");
-                return null;
-            }
-
-            if (Tr.ResolveType(variant.Enum, out var enumType))
-            {
-                return (Enum)Enum.ToObject(enumType, variant.Enum.EnumValue);
-            }
-
-            return null;
         }
 
         private static object GetReferenceValue(SerializedType type, DeserializerData deserializerData,

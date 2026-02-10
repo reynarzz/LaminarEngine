@@ -493,7 +493,7 @@ namespace Editor.Serialization
                 case SerializedType.Char:
                     return VariantIRValue.FromChar((char)val);
                 case SerializedType.String:
-                    return VariantIRValue.FromString(val != null ? (string)val : string.Empty);
+                    return VariantIRValue.FromString(val as string ?? string.Empty);
                 case SerializedType.Bool:
                     return VariantIRValue.FromBool((bool)val);
                 case SerializedType.Byte:

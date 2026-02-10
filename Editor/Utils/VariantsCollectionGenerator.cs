@@ -19,6 +19,7 @@ namespace Editor.Cooker
         private static readonly VariantTypeInfo[] VariantTypes =
         {
             new("Char", "char", "Char", SerializedType.Char),
+            new("String", "string", "String", SerializedType.String),
             new("Bool", "bool", "Bool", SerializedType.Bool),
             new("Byte", "byte", "Byte", SerializedType.Byte),
             new("Short", "short", "Short", SerializedType.Short),
@@ -130,102 +131,117 @@ namespace Editor.Cooker
             var sb = new StringBuilder();
 
             sb.AppendLine(@"
-            internal static object WriteDictionary(object collection, ICollection dictObj)
+            internal static object Write(object collection, VariantIRValue[] keys, VariantIRValue[] values, 
+                                          SerializedType keyType, SerializedType valueType)
             {
                 ulong keyId = keyType.GetIdentity();
                 ulong valueId = valueType.GetIdentity();");
 
+            bool firstKey = true;
             foreach (var key in VariantTypes)
             {
-                sb.AppendLine($"        if (keyId == SerializedType.{key.Type}.GetIdentity())");
-                sb.AppendLine("        {");
+                var keyCond = firstKey ? "if" : "else if";
+                sb.AppendLine($"    {keyCond} (keyId == SerializedType.{key.Type}.GetIdentity())");
+                sb.AppendLine("    {");
+
+                bool firstValue = true;
                 foreach (var value in VariantTypes)
                 {
-                    sb.AppendLine($"            if (valueId == SerializedType.{value.Type}.GetIdentity()) return VariantArrayToDictionary_{key.Name}_{value.Name}(collection, keys, values);");
+                    var valueCond = firstValue ? "if" : "else if";
+                    sb.AppendLine($"        {valueCond} (valueId == SerializedType.{value.Type}.GetIdentity()) return VariantArrayToDictionary_{key.Name}_{value.Name}(collection, keys, values);");
+                    firstValue = false;
                 }
-                sb.AppendLine("        }");
+
+                sb.AppendLine("    }");
+                firstKey = false;
             }
 
             sb.AppendLine(@"
-                throw new NotSupportedException();
+                    throw new NotSupportedException();
             }");
 
             return ParseWriter(sb.ToString());
         }
-
         private static MemberDeclarationSyntax GenerateArrayWriter(VariantTypeInfo t)
         {
+            var isStr = t.Type == SerializedType.String;
             return ParseWriter($@"
             private static object VariantArrayToArray_{t.Name}(object collection, VariantIRValue[] values)
             {{
                 var array = ({t.ClrType}[])ReflectionUtils.EnsureCount(collection, values.Length);
                 for (int i = 0; i < values.Length; i++)
-                    array[i] = values[i].Payload.{t.PayloadField};
+                    array[i] = values[i]{(isStr ? "" : ".Payload")}.{t.PayloadField};
                 return array;
             }}");
         }
 
         private static MemberDeclarationSyntax GenerateListWriter(VariantTypeInfo t)
         {
+            var isStr = t.Type == SerializedType.String;
             return ParseWriter($@"
             private static object VariantArrayToList_{t.Name}(object collection, VariantIRValue[] values)
             {{
                 var list = (List<{t.ClrType}>)collection;
                 System.Runtime.InteropServices.CollectionsMarshal.SetCount(list, values.Length);
                 for (int i = 0; i < values.Length; i++)
-                    list[i] = values[i].Payload.{t.PayloadField};
+                    list[i] = values[i]{(isStr ? "" : ".Payload")}.{t.PayloadField};
                 return list;
             }}");
         }
 
         private static MemberDeclarationSyntax GenerateQueueWriter(VariantTypeInfo t)
         {
+            var isStr = t.Type == SerializedType.String;
             return ParseWriter($@"
             private static object VariantArrayToQueue_{t.Name}(object collection, VariantIRValue[] values)
             {{
                 var queue = (Queue<{t.ClrType}>)collection;
                 queue.Clear();
                 for (int i = 0; i < values.Length; i++)
-                    queue.Enqueue(values[i].Payload.{t.PayloadField});
+                    queue.Enqueue(values[i]{(isStr ? "" : ".Payload")}.{t.PayloadField});
                 return queue;
             }}");
         }
 
         private static MemberDeclarationSyntax GenerateStackWriter(VariantTypeInfo t)
         {
+            var isStr = t.Type == SerializedType.String;
             return ParseWriter($@"
             private static object VariantArrayToStack_{t.Name}(object collection, VariantIRValue[] values)
             {{
                 var stack = (Stack<{t.ClrType}>)collection;
                 stack.Clear();
                 for (int i = values.Length - 1; i >= 0; i--)
-                    stack.Push(values[i].Payload.{t.PayloadField});
+                    stack.Push(values[i]{(isStr ? "" : ".Payload")}.{t.PayloadField});
                 return stack;
             }}");
         }
 
         private static MemberDeclarationSyntax GenerateHashSetWriter(VariantTypeInfo t)
         {
+            var isStr = t.Type == SerializedType.String;
             return ParseWriter($@"
             private static object VariantArrayToHashSet_{t.Name}(object collection, VariantIRValue[] values)
             {{
                 var set = (HashSet<{t.ClrType}>)collection;
                 set.Clear();
                 for (int i = 0; i < values.Length; i++)
-                    set.Add(values[i].Payload.{t.PayloadField});
+                    set.Add(values[i]{(isStr ? "" : ".Payload")}.{t.PayloadField});
                 return set;
             }}");
         }
 
         private static MemberDeclarationSyntax GenerateDictionaryWriter(VariantTypeInfo key, VariantTypeInfo value)
         {
+            var isKStr = key.Type == SerializedType.String;
+            var isVStr = value.Type == SerializedType.String;
             return ParseWriter($@"
             private static object VariantArrayToDictionary_{key.Name}_{value.Name}(object collection, VariantIRValue[] keys, VariantIRValue[] values)
             {{
                 var dict = (Dictionary<{key.ClrType}, {value.ClrType}>)collection;
                 dict.Clear();
                 for (int i = 0; i < keys.Length; i++)
-                    dict.Add(keys[i].Payload.{key.PayloadField}, values[i].Payload.{value.PayloadField});
+                    dict.Add(keys[i]{(isKStr ? "" : ".Payload")}.{key.PayloadField}, values[i]{(isVStr ? "" : ".Payload")}.{value.PayloadField});
                 return dict;
             }}");
         }

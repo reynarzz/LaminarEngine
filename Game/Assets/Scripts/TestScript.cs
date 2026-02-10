@@ -3,6 +3,7 @@ using GlmNet;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Transactions;
 
 namespace Game
 {
@@ -190,6 +191,12 @@ namespace Game
         private Dictionary<int, quat> _quatDictionary =
           new Dictionary<int, quat> { { 3, default }, { 51, new quat(1, 0, 0, 0) } };
 
+
+        [SerializedField]
+        private Dictionary<EnlistmentOptions, string> _enumByStringDictionary;
+
+        [SerializedField]
+        private Dictionary<BlendFactor, GamePadAxis> _enumByEnumDictionary;
 
         [ShowMethodInEditor]
         public void AMethodCallingFromEditor()

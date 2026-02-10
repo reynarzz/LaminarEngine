@@ -219,8 +219,8 @@ namespace Editor
                     var sceneFileIR = EditorJsonUtils.Deserialize<SceneIR>(sceneFile);
                     LoadScene(sceneFileIR);
                 }
-                File.WriteAllText(EditorPaths.AppRoot + "/Engine/Utils/VariantCollectionPopulator_Generated.cs",
-                                  VariantCollectionWriterGenerator.Generate(false));
+                //File.WriteAllText(EditorPaths.AppRoot + "/Engine/Utils/VariantCollectionPopulator_Generated.cs",
+                //                  VariantCollectionWriterGenerator.Generate(true));
 
                 //var file = File.Open(EditorPaths.AppRoot + "/SceneBinary.bin", FileMode.Open, FileAccess.Read);
                 //var reader = new BinaryReader(file);
