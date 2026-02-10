@@ -35,10 +35,8 @@ namespace Engine.Utils
         
         public static ulong GetIdentity(this SerializedType type)
         {
-            // Strip the flags (bits 0-19)
-            ulong identity = (ulong)type & ~TraitMask;
-            // Shift back down so we get "1007" instead of "1055834112"
-            return identity >> 20;
+            // Strip the flags: bits 0 to 19, and then, shift back down.
+            return ((ulong)type & ~TraitMask) >> 20;
         }
     }
 }

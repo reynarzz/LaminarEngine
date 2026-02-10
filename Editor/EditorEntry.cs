@@ -1,20 +1,10 @@
-﻿using Editor.Build;
-using Editor.Data;
-using Editor.Layers;
-using Editor.Rendering;
+﻿using Editor.Layers;
 using Editor.Utils;
-using Editor.Views;
 using Engine;
 using Engine.Graphics;
-using Engine.GUI;
-using Engine.IO;
 using Engine.Layers;
 using Engine.Layers.Input;
 using Editor.Cooker;
-using GlmNet;
-using ImGuiNET;
-using Engine;
-using System.Numerics;
 
 namespace Editor
 {
@@ -25,8 +15,6 @@ namespace Editor
     // -Changing cameras causes to render prevCamera.
     // -Weird rendering issue, related to mouse picking pink materials, is it the RenderingSystem, batcher?
     // -Implement Asset files for: Tilemap.
-    // -The serializer has a possible bug related to delegates,
-    //   collections do not search for all delegates(privates/public), but classes do.
     // -If I load the runtime mode, and the applicationLayer is enabled, the camera renders black.
     // Editor.Cooker, the asset database sometimes doesn't remove old assets correctly.
 
@@ -35,7 +23,6 @@ namespace Editor
     // - Rebuild the rendering system.
     // - Compilation can get stuck forever.
     // - If a collider change from Trigger to normal (and viceversa), the ontrigerExit/onCollisionExit must be called.
-    // - SpriteDefault.material needs to specify the blending as srcApha, oneMinusSrcAlpha, the data got lost due serialization refactoring.
     // - The renderData is not removed from renderingLayer dictionary if the Actor starts disabled in the first frame, and then try to enable it.
 
 
@@ -44,9 +31,11 @@ namespace Editor
     // - The TypeRegistry should only be used in ship builds. While binary serializing the assets, also add types to the TypeRegistryClassGenerator.
     // - If a dictionary has a complexClass as a key/value, and a EObject as key/value, the dictionary should not
     //   be recognized as ReferenceCollection (pure), but as complexCollection.
+    // - (Serializer IR) Fix: in 'GetSerializedType()' get all the elements in the collection so they
+    //   can be checked in case there is a reference.
 
     // Refactor:
-    // - Implement VariantIRValue json converter, to cleanup unused types.
+    // -
 
     // Performance fix:
     // UI performance is pretty bad, rewrite the entire UI system.

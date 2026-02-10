@@ -3,10 +3,8 @@ using Engine;
 using Engine.Utils;
 using System.Collections;
 using System.Reflection;
-using Editor.Utils;
 using GlmNet;
 using Engine.Serialization;
-using System.Xml.Schema;
 
 namespace Editor.Serialization
 {
