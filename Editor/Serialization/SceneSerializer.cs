@@ -41,7 +41,6 @@ namespace Editor.Serialization
 
             return new SceneIR()
             {
-                Version = 1,
                 Actors = sceneEditor.ActorsData
             };
         }

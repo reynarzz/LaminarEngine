@@ -213,17 +213,17 @@ namespace Editor
                 // SerializerTypesFixer();
                 // LoadScene();
 
-                if (File.Exists(TestfilePath))
-                {
-                    var sceneFile = File.ReadAllText(TestfilePath);
-                    var sceneFileIR = EditorJsonUtils.Deserialize<SceneIR>(sceneFile);
-                    LoadScene(sceneFileIR);
-                }
+                //if (File.Exists(TestfilePath))
+                //{
+                //    var sceneFile = File.ReadAllText(TestfilePath);
+                //    var sceneFileIR = EditorJsonUtils.Deserialize<SceneIR>(sceneFile);
+                //    LoadScene(sceneFileIR);
+                //}
 
-                //var file = File.Open(EditorPaths.AppRoot + "/SceneBinary.bin", FileMode.Open, FileAccess.Read);
-                //var reader = new BinaryReader(file);
-                //var scene = BinaryIRDeserializer.DeserializeScene(reader);
-                //LoadScene(scene);
+                var file = File.Open(EditorPaths.AppRoot + "/SceneBinary.bin", FileMode.Open, FileAccess.Read);
+                var reader = new BinaryReader(file);
+                var scene = BinaryIRDeserializer.DeserializeScene(reader);
+                LoadScene(scene);
 
 
                 //File.WriteAllText(EditorPaths.AppRoot + "/Engine/Utils/VariantCollectionPopulator_Generated.cs",

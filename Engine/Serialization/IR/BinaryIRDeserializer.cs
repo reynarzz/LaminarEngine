@@ -13,11 +13,10 @@ namespace Engine.Serialization
 {
     internal class BinaryIRDeserializer
     {
-        internal static List<SerializedPropertyIR> Deserialize(BinaryReader reader)
+        internal static SerializedPropertyIR[] Deserialize(BinaryReader reader)
         {
             var count = reader.ReadInt32();
-            var properties = new List<SerializedPropertyIR>();
-            CollectionsMarshal.SetCount(properties, count);
+            var properties = new SerializedPropertyIR[count];
 
             for (int i = 0; i < count; i++)
             {
@@ -30,7 +29,10 @@ namespace Engine.Serialization
         internal static SceneIR DeserializeScene(BinaryReader reader)
         {
             var scene = new SceneIR();
-            scene.Version = reader.ReadInt32();
+            scene.SceneVersion = reader.ReadInt32();
+            scene.ActorsVersion = reader.ReadInt32();
+            scene.ComponentsVersion = reader.ReadInt32();
+
             var count = reader.ReadInt32();
 
             scene.Actors = new List<ActorIR>();
@@ -47,7 +49,6 @@ namespace Engine.Serialization
         private static ActorIR ReadActorIR(BinaryReader reader)
         {
             /*
-                 int Version 
                  string Name 
                  int Layer 
                  bool IsActiveSelf 
@@ -57,7 +58,6 @@ namespace Engine.Serialization
             */
 
             var actor = new ActorIR();
-            actor.Version = reader.ReadInt32();
             actor.Name = ReadString(reader);
             actor.Layer = reader.ReadInt32();
             actor.IsActiveSelf = ReadBool(reader);
@@ -79,14 +79,12 @@ namespace Engine.Serialization
         private static ComponentIR ReadComponentIR(BinaryReader reader)
         {
             /*
-               int Version 
                Guid TypeId 
                bool IsEnabled 
                Guid ID 
                List<SerializedPropertyIR> SerializedProperties 
             */
             var component = new ComponentIR();
-            component.Version = reader.ReadInt32();
             component.TypeId = ReadGuidNoAlloc(reader);
             component.IsEnabled = ReadBool(reader);
             component.ID = ReadGuidNoAlloc(reader);
@@ -517,7 +515,6 @@ namespace Engine.Serialization
             return complexTypeData;
         }
 
-        // TODO: use Variant
         private static Variant ReadSimpleProperty(BinaryReader reader, SerializedType simpleType)
         {
             switch (simpleType)

@@ -24,9 +24,9 @@ namespace Editor.Cooker
                 throw new PlatformNotSupportedException("The serializer requires a little endian CPU.");
             }
         }
-        internal static void Serialize(BinaryWriter writer, params List<SerializedPropertyIR> properties)
+        internal static void Serialize(BinaryWriter writer, params SerializedPropertyIR[] properties)
         {
-            writer.Write(properties.Count);
+            writer.Write(properties.Length);
             foreach (var property in properties)
             {
                 WriteProperty(writer, property);
@@ -35,7 +35,10 @@ namespace Editor.Cooker
 
         internal static void Serialize(SceneIR scene, BinaryWriter writer)
         {
-            writer.Write(scene.Version);
+            writer.Write(scene.SceneVersion);
+            writer.Write(scene.ActorsVersion);
+            writer.Write(scene.ComponentsVersion);
+
             writer.Write(scene.Actors.Count);
             for (int i = 0; i < scene.Actors.Count; i++)
             {
@@ -52,7 +55,6 @@ namespace Editor.Cooker
         private static void WriteActorIR(BinaryWriter writer, ActorIR ir)
         {
             /*
-                 int Version 
                  string Name 
                  int Layer 
                  bool IsActiveSelf 
@@ -60,7 +62,6 @@ namespace Editor.Cooker
                  Guid ParentID 
                  List<ComponentIR> Components 
             */
-            writer.Write(ir.Version);
             WriteString(writer, ir.Name);
             writer.Write(ir.Layer);
             WriteBool(writer, ir.IsActiveSelf);
@@ -77,13 +78,11 @@ namespace Editor.Cooker
         private static void WriteComponentIR(BinaryWriter writer, ComponentIR ir)
         {
             /*
-                int Version 
                 Guid TypeId 
                 bool IsEnabled 
                 Guid ID 
                 List<SerializedPropertyIR> SerializedProperties 
              */
-            writer.Write(ir.Version);
             WriteGuidNoAlloc(writer, ir.TypeId);
             WriteBool(writer, ir.IsEnabled);
             WriteGuidNoAlloc(writer, ir.ID);

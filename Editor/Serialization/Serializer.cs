@@ -464,8 +464,8 @@ namespace Editor.Serialization
                     ComplexType = argSerializedType,
                     InternalType = internalType,
                     TypeId = typeId,
-                    Properties = new List<SerializedPropertyIR>()
-                    {
+                    Properties =
+                    [
                         new SerializedPropertyIR()
                         {
                            Simple = GetVariantValue(argValue, argSerializedType),
@@ -474,7 +474,7 @@ namespace Editor.Serialization
                            Type = argSerializedType,
                            Name = argName
                         }
-                    }
+                    ]
                 };
             }
 
@@ -602,19 +602,19 @@ namespace Editor.Serialization
                 };
             }
 
+            var rootSerializedFields = ReflectionUtils.GetAllMembersWithAttributeArray<SerializedFieldAttribute>(complexType);
+
             var complexClass = new ComplexData()
             {
                 ComplexType = GetSerializedType(complexType, value),
                 InternalType = GetInternalType(complexType),
                 TypeId = GetTypeId(complexType),
-                Properties = new List<SerializedPropertyIR>()
+                Properties = new SerializedPropertyIR[rootSerializedFields.Length]
             };
 
-            var rootSerializedFields = ReflectionUtils.GetAllMembersWithAttribute<SerializedFieldAttribute>(complexType);
-
-            foreach (var field in rootSerializedFields)
+            for (int i = 0; i < rootSerializedFields.Length; i++)
             {
-                complexClass.Properties.Add(GetPropertyGraph(field, value));
+                complexClass.Properties[i] = GetPropertyGraph(rootSerializedFields[i], value);
             }
 
             return complexClass;

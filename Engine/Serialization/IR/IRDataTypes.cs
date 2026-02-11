@@ -11,13 +11,15 @@ namespace Engine.Serialization
 {
     internal class SceneIR
     {
-        public int Version { get; set; }
+        public int SceneVersion { get; set; } = 1;
+        public int ActorsVersion { get; set; } = 1;
+        public int ComponentsVersion { get; set; } = 1;
+
         public List<ActorIR> Actors { get; set; }
     }
 
     internal class ActorIR
     {
-        public int Version { get; set; } = 1;
         public string Name { get; set; }
         public int Layer { get; set; }
         public bool IsActiveSelf { get; set; }
@@ -28,7 +30,6 @@ namespace Engine.Serialization
 
     internal class ComponentIR
     {
-        public int Version { get; set; } = 1;
         public string InternalType { get; set; }
         public Guid TypeId { get; set; }
         public bool IsEnabled { get; set; }
@@ -201,7 +202,7 @@ namespace Engine.Serialization
         public string InternalType { get; set; }
         public Guid TypeId { get; set; }
         public SerializedType ComplexType { get; set; }
-        public List<SerializedPropertyIR> Properties { get; set; }
+        public SerializedPropertyIR[] Properties { get; set; }
     }
 
     [Flags]
