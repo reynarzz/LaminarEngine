@@ -19,7 +19,7 @@ namespace Editor.Data
         public static BuildSettings BuildSettings => _buildSettings ?? (_buildSettings = LoadProjectData<BuildSettings>(BUILD_SETTINGS));
 
         private const string BUILD_SETTINGS = "BuildSettings";
-        
+
         public static void SaveAll()
         {
             // TODO: Save all unsaved data to disk.
@@ -39,7 +39,7 @@ namespace Editor.Data
             File.WriteAllText(Path.Combine(projectSettings, $"{name}{EditorPaths.EDITOR_DATA_EXTENSION}"), json);
         }
 
-        private static T LoadProjectData<T>(string name) where T: class, new()
+        private static T LoadProjectData<T>(string name) where T : class, new()
         {
             var projectSettings = Paths.GetProjectSettingsFolder();
             var filePath = Path.Combine(projectSettings, $"{name}{EditorPaths.EDITOR_DATA_EXTENSION}");
@@ -48,11 +48,11 @@ namespace Editor.Data
             {
                 return new T();
             }
-                var json = File.ReadAllText(filePath);
+            var json = File.ReadAllText(filePath);
             var ir = EditorJsonUtils.Deserialize<List<SerializedPropertyIR>>(json);
             var value = Deserializer.Deserialize<T>(ir);
 
-            if(value == null)
+            if (value == null)
             {
                 value = ReflectionUtils.GetDefaultValueInstance(typeof(T)) as T;
             }

@@ -10,7 +10,12 @@ using System.Threading.Tasks;
 
 namespace Engine.Serialization
 {
+
+#if SHIP_BUILD
     internal class SceneDeserializer : SceneDeserializer<TypeResolver> { }
+#else
+    internal class SceneDeserializer : SceneDeserializer<CombinedTypeResolver> { }
+#endif
     internal class SceneDeserializer<T> where T: ITypeResolver
     {
         private readonly static Dictionary<Guid, (Actor value, ActorIR data)> _actorsByID = new();
@@ -168,7 +173,7 @@ namespace Engine.Serialization
                 {
                     var componentData = actorData.Components[j];
 
-                    if (ReflectionUtils.ResolveType(componentData.InternalType, out var componentType))
+                    if (T.ResolveType(componentData, out var componentType))
                     {
                         // TODO: fix the component initialization for the ones that auto add other required components.
                         // When 'Application.IsInPlayMode' is on, it will auto add components, making this not usable.

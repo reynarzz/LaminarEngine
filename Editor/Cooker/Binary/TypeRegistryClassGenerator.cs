@@ -182,45 +182,7 @@ namespace Editor.Cooker
                 reverseInitializerExpressions = reverseInitializerExpressions.Add(kvpExpression);
             }
 
-            // Build GetType(Guid id, out Type type) method
-            var getTypeMethod = SyntaxFactory.MethodDeclaration(
-                    SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.BoolKeyword)),
-                    "ResolveType"
-                )
-                .AddModifiers(SyntaxFactory.Token(SyntaxKind.InternalKeyword),
-                              SyntaxFactory.Token(SyntaxKind.StaticKeyword))
-                .AddParameterListParameters(
-                    SyntaxFactory.Parameter(SyntaxFactory.Identifier("id"))
-                                 .WithType(SyntaxFactory.ParseTypeName("Guid")),
-                    SyntaxFactory.Parameter(SyntaxFactory.Identifier("type"))
-                                 .WithType(SyntaxFactory.ParseTypeName("Type"))
-                                 .WithModifiers(
-                                     SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.OutKeyword))
-                                 )
-                )
-                .WithBody(SyntaxFactory.Block(
-                    SyntaxFactory.ParseStatement("return _types.TryGetValue(id, out type);")
-                ));
-
-            // Build GetID(Type type, out Guid id) method
-            var getIDMethod = SyntaxFactory.MethodDeclaration(
-                    SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.BoolKeyword)),
-                    "GetID"
-                )
-                .AddModifiers(SyntaxFactory.Token(SyntaxKind.InternalKeyword),
-                              SyntaxFactory.Token(SyntaxKind.StaticKeyword))
-                .AddParameterListParameters(
-                    SyntaxFactory.Parameter(SyntaxFactory.Identifier("type"))
-                                 .WithType(SyntaxFactory.ParseTypeName("Type")),
-                    SyntaxFactory.Parameter(SyntaxFactory.Identifier("id"))
-                                 .WithType(SyntaxFactory.ParseTypeName("Guid"))
-                                 .WithModifiers(
-                                     SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.OutKeyword))
-                                 )
-                )
-                .WithBody(SyntaxFactory.Block(
-                    SyntaxFactory.ParseStatement("return _typesReverse.TryGetValue(type, out id);")
-                ));
+           
 
             // Build class and implement ITypeRegistry
             var classDecl = SyntaxFactory.ClassDeclaration("TypeRegistryRuntime")
@@ -259,10 +221,30 @@ namespace Editor.Cooker
                     SyntaxFactory.Token(SyntaxKind.ReadOnlyKeyword)
                 );
 
+                // Build GetID(Type type, out Guid id) method
+                var getIDMethod = SyntaxFactory.MethodDeclaration(
+                        SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.BoolKeyword)),
+                        "GetID"
+                    )
+                    .AddModifiers(SyntaxFactory.Token(SyntaxKind.InternalKeyword),
+                                  SyntaxFactory.Token(SyntaxKind.StaticKeyword))
+                    .AddParameterListParameters(
+                        SyntaxFactory.Parameter(SyntaxFactory.Identifier("type"))
+                                     .WithType(SyntaxFactory.ParseTypeName("Type")),
+                        SyntaxFactory.Parameter(SyntaxFactory.Identifier("id"))
+                                     .WithType(SyntaxFactory.ParseTypeName("Guid"))
+                                     .WithModifiers(
+                                         SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.OutKeyword))
+                                     )
+                    )
+                    .WithBody(SyntaxFactory.Block(
+                        SyntaxFactory.ParseStatement("return _typesReverse.TryGetValue(type, out id);")
+                    ));
+
                 classDecl = classDecl.AddMembers(dictionaryReverseField, getIDMethod);
             }
 
-            classDecl = classDecl.AddMembers(getTypeMethod, GenerateGetTypeMethod(), GenerateResolveAssemblyMethod());
+            classDecl = classDecl.AddMembers(GetResolveTypeMethod(), GenerateGetTypeMethod(), GenerateResolveAssemblyMethod());
 
             // Build namespace
             var ns = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.ParseName("Generated"))
@@ -287,6 +269,26 @@ namespace Editor.Cooker
             ";
 
             return SyntaxFactory.ParseMemberDeclaration(methodSource)!;
+        }
+
+        private static MemberDeclarationSyntax GetResolveTypeMethod()
+        {
+            const string methodSrc = @"
+            internal static bool ResolveType(Guid id, out Type type)
+            {
+                type = null;
+                try
+                {
+                    return _types.TryGetValue(id, out type);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.ToString());
+                    return false;
+                }
+            }";
+
+            return SyntaxFactory.ParseMemberDeclaration(methodSrc)!;
         }
         private static MemberDeclarationSyntax GenerateResolveAssemblyMethod()
         {

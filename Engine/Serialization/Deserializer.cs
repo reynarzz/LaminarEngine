@@ -14,7 +14,11 @@ namespace Engine.Serialization
         internal Dictionary<Guid, (Actor value, ActorIR data)> ActorsByID = new();
         internal Dictionary<Guid, (Component value, ComponentIR data)> ComponentsByID = new();
     }
+#if SHIP_BUILD
     internal class Deserializer : Deserializer<TypeResolver> { }
+#else
+    internal class Deserializer : Deserializer<CombinedTypeResolver> { }
+#endif
     internal class Deserializer<Tr> where Tr : ITypeResolver
     {
         internal static T Deserialize<T>(IReadOnlyList<SerializedPropertyIR> properties)

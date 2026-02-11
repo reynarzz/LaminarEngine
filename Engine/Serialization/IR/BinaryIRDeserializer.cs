@@ -479,11 +479,40 @@ namespace Engine.Serialization
                 return null;
             }
 
-            return new ReferenceData()
+            // TODO: use a factory
+            switch (type)
             {
-                Type = type,
-                Id = ReadGuidNoAlloc(reader),
-            };
+                case SerializedType.SpriteAsset:
+                    return new SpriteReferenceData()
+                    {
+                        Type = type,
+                        Id = ReadGuidNoAlloc(reader),
+                        AtlasIndex = reader.ReadInt32(),
+                        TextureId = ReadGuidNoAlloc(reader)
+                    };
+                //case SerializedType.TextureAsset:
+                //    break;
+                //case SerializedType.MaterialAsset:
+                //    break;
+                //case SerializedType.ShaderAsset:
+                //    break;
+                //case SerializedType.AudioClipAsset:
+                //    break;
+                //case SerializedType.AnimationAsset:
+                //    break;
+                //case SerializedType.AnimatorControllerAsset:
+                //    break;
+                //case SerializedType.RenderTextureAsset:
+                //    break;
+                //case SerializedType.ScriptableObject:
+                //    break;
+                default:
+                    return new ReferenceData()
+                    {
+                        Type = type,
+                        Id = ReadGuidNoAlloc(reader),
+                    };
+            }
         }
 
         private static unsafe Guid ReadGuidNoAlloc(BinaryReader reader)

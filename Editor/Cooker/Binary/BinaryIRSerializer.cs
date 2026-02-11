@@ -145,6 +145,12 @@ namespace Editor.Cooker
             writer.Write(bytes);
         }
 
+        private static void WriteSpriteAsset(BinaryWriter writer, SpriteReferenceData reference)
+        {
+            writer.Write(reference.AtlasIndex);
+            WriteGuidNoAlloc(writer, reference.TextureId);
+        }
+
         private static void WriteSimpleCollection(BinaryWriter writer, CollectionData collectionData)
         {
             var count = collectionData?.Count ?? 0;
@@ -514,6 +520,12 @@ namespace Editor.Cooker
             {
                 writer.Write((ulong)(value.Type));
                 WriteGuidNoAlloc(writer, value.Id);
+
+                // TODO: use a factory
+                if (value is SpriteReferenceData spriteRef)
+                {
+                    WriteSpriteAsset(writer, spriteRef);
+                }
             }
             else
             {
