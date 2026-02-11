@@ -453,6 +453,7 @@ namespace Editor.Serialization
             return dictionaryCollection;
         }
 
+        // This is only used for dictionaries. The performance is not ideal for Simple types, but it balances the complexity.
         private static ComplexData GetComplexTypeData(SerializedType argSerializedType, object argValue, string argName)
         {
             if (argSerializedType.IsSimple())
