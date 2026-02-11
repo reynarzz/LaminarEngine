@@ -1,11 +1,6 @@
 ﻿using Engine.Utils;
 using GlmNet;
-using Newtonsoft.Json.Serialization;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace Engine.Serialization
 {
@@ -50,121 +45,6 @@ namespace Engine.Serialization
             [FieldOffset(0), SerializedField] internal mat4 Mat4;
             [FieldOffset(0), SerializedField] internal Color Color;
             [FieldOffset(0), SerializedField] internal Color32 Color32;
-
-            internal static Value FromChar(char value)
-            {
-                return new Value { Char = value };
-            }
-
-            internal static Value FromBool(bool value)
-            {
-                return new Value { Bool = value };
-            }
-
-            internal static Value FromByte(byte value)
-            {
-                return new Value { Byte = value };
-            }
-
-            internal static Value FromShort(short value)
-            {
-                return new Value { Short = value };
-            }
-
-            internal static Value FromUShort(ushort value)
-            {
-                return new Value { UShort = value };
-            }
-
-            internal static Value FromInt(int value)
-            {
-                return new Value { Int = value };
-            }
-
-            internal static Value FromUInt(uint value)
-            {
-                return new Value { Uint = value };
-            }
-
-            internal static Value FromFloat(float value)
-            {
-                return new Value { Float = value };
-            }
-
-            internal static Value FromDouble(double value)
-            {
-                return new Value { Double = value };
-            }
-
-            internal static Value FromLong(long value)
-            {
-                return new Value { Long = value };
-            }
-
-            internal static Value FromULong(ulong value)
-            {
-                return new Value { Ulong = value };
-            }
-
-            internal static Value FromVec2(vec2 value)
-            {
-                return new Value { Vec2 = value };
-            }
-
-            internal static Value FromVec3(vec3 value)
-            {
-                return new Value { Vec3 = value };
-            }
-
-            internal static Value FromVec4(vec4 value)
-            {
-                return new Value { Vec4 = value };
-            }
-
-            internal static Value FromIVec2(ivec2 value)
-            {
-                return new Value { Ivec2 = value };
-            }
-
-            internal static Value FromIVec3(ivec3 value)
-            {
-                return new Value { Ivec3 = value };
-            }
-
-            internal static Value FromIVec4(ivec4 value)
-            {
-                return new Value { Ivec4 = value };
-            }
-
-            internal static Value FromQuat(quat value)
-            {
-                return new Value { Quat = value };
-            }
-
-            internal static Value FromMat2(mat2 value)
-            {
-                return new Value { Mat2 = value };
-            }
-
-            internal static Value FromMat3(mat3 value)
-            {
-                return new Value { Mat3 = value };
-            }
-
-            internal static Value FromMat4(mat4 value)
-            {
-                return new Value { Mat4 = value };
-            }
-
-            internal static Value FromColor(Color value)
-            {
-                return new Value { Color = value };
-            }
-
-            internal static Value FromColor32(Color32 value)
-            {
-                return new Value { Color32 = value };
-            }
         }
         internal object GetValueAsObject()
         {
@@ -226,117 +106,176 @@ namespace Engine.Serialization
                     throw new Exception($"value kind '{Kind}' Not implements");
             }
         }
-        internal static Variant FromChar(char value)
+        internal static Variant GetDefault(SerializedType type)
+        {
+            switch (type)
+            {
+                case SerializedType.None:
+                case SerializedType.Enum:
+                    return default;
+                case SerializedType.Char:
+                    return '\0';
+                case SerializedType.String:
+                    return string.Empty;
+                case SerializedType.Bool:
+                    return false;
+                case SerializedType.Byte:
+                    return (byte)0;
+                case SerializedType.Short:
+                    return (short)0;
+                case SerializedType.UShort:
+                    return (ushort)0;
+                case SerializedType.Int:
+                    return (int)0;
+                case SerializedType.UInt:
+                    return (uint)0;
+                case SerializedType.Float:
+                    return (float)0;
+                case SerializedType.Double:
+                    return (double)0;
+                case SerializedType.Long:
+                    return (long)0;
+                case SerializedType.ULong:
+                    return (ulong)0;
+                case SerializedType.Vec2:
+                    return new vec2();
+                case SerializedType.Vec3:
+                    return new vec3();
+                case SerializedType.Vec4:
+                    return new vec4();
+                case SerializedType.IVec2:
+                    return new ivec2();
+                case SerializedType.IVec3:
+                    return new ivec3();
+                case SerializedType.IVec4:
+                    return new ivec4();
+                case SerializedType.Quat:
+                    return new quat();
+                case SerializedType.Mat2:
+                    return new mat2();
+                case SerializedType.Mat3:
+                    return new mat3();
+                case SerializedType.Mat4:
+                    return new mat4();
+                case SerializedType.Color:
+                    return new Color(1, 1, 1, 1);
+                case SerializedType.Color32:
+                    return new Color32(255, 255, 255, 255);
+                default:
+                    throw new Exception($"value kind '{type}' Not implements");
+            }
+        }
+        public static implicit operator Variant(char value)
         {
             return new Variant
             {
                 Kind = SerializedType.Char,
-                value = Value.FromChar(value),
+                value = new Value { Char = value },
                 String = null
             };
         }
 
-        internal static Variant FromBool(bool value)
+        public static implicit operator Variant(bool value)
         {
             return new Variant
             {
                 Kind = SerializedType.Bool,
-                value = Value.FromBool(value),
+                value = new Value { Bool = value },
                 String = null
             };
         }
 
-        internal static Variant FromByte(byte value)
+        public static implicit operator Variant(byte value)
         {
             return new Variant
             {
                 Kind = SerializedType.Byte,
-                value = Value.FromByte(value),
+                value = new Value { Byte = value },
                 String = null
             };
         }
 
-        internal static Variant FromShort(short value)
+        public static implicit operator Variant(short value)
         {
             return new Variant
             {
                 Kind = SerializedType.Short,
-                value = Value.FromShort(value),
+                value = new Value { Short = value },
                 String = null
             };
         }
 
-        internal static Variant FromUShort(ushort value)
+        public static implicit operator Variant(ushort value)
         {
             return new Variant
             {
                 Kind = SerializedType.UShort,
-                value = Value.FromUShort(value),
+                value = new Value { UShort = value },
                 String = null
             };
         }
 
-        internal static Variant FromInt(int value)
+        public static implicit operator Variant(int value)
         {
             return new Variant
             {
                 Kind = SerializedType.Int,
-                value = Value.FromInt(value),
+                value = new Value { Int = value },
                 String = null
             };
         }
 
-        internal static Variant FromUInt(uint value)
+        public static implicit operator Variant(uint value)
         {
             return new Variant
             {
                 Kind = SerializedType.UInt,
-                value = Value.FromUInt(value),
+                value = new Value { Uint = value },
                 String = null
             };
         }
 
-        internal static Variant FromFloat(float value)
+        public static implicit operator Variant(float value)
         {
             return new Variant
             {
                 Kind = SerializedType.Float,
-                value = Value.FromFloat(value),
+                value = new Value { Float = value },
                 String = null
             };
         }
 
-        internal static Variant FromDouble(double value)
+        public static implicit operator Variant(double value)
         {
             return new Variant
             {
                 Kind = SerializedType.Double,
-                value = Value.FromDouble(value),
+                value = new Value { Double = value },
                 String = null
             };
         }
 
-        internal static Variant FromLong(long value)
+        public static implicit operator Variant(long value)
         {
             return new Variant
             {
                 Kind = SerializedType.Long,
-                value = Value.FromLong(value),
+                value = new Value { Long = value },
                 String = null
             };
         }
 
-        internal static Variant FromULong(ulong value)
+        public static implicit operator Variant(ulong value)
         {
             return new Variant
             {
                 Kind = SerializedType.ULong,
-                value = Value.FromULong(value),
+                value = new Value { Ulong = value },
                 String = null
             };
         }
 
-        internal static Variant FromEnum(Enum value)
+        public static implicit operator Variant(Enum value)
         {
             return new Variant
             {
@@ -347,7 +286,8 @@ namespace Engine.Serialization
                     EnumInternalType = ReflectionUtils.GetFullTypeName(value.GetType()),
                     EnumValue = Convert.ToInt64(value)
                 },
-                String = null
+                String = null,
+                value = default
             };
         }
         internal static Variant FromEnum(Guid id, string internalType, long value)
@@ -361,131 +301,132 @@ namespace Engine.Serialization
                     EnumInternalType = internalType,
                     EnumValue = value
                 },
-                String = null
+                String = null,
+                value = default
             };
         }
 
-        internal static Variant FromVec2(vec2 value)
+        public static implicit operator Variant(vec2 value)
         {
             return new Variant
             {
                 Kind = SerializedType.Vec2,
-                value = Value.FromVec2(value),
+                value = new Value { Vec2 = value },
                 String = null
             };
         }
 
-        internal static Variant FromVec3(vec3 value)
+        public static implicit operator Variant(vec3 value)
         {
             return new Variant
             {
                 Kind = SerializedType.Vec3,
-                value = Value.FromVec3(value),
+                value = new Value { Vec3 = value },
                 String = null
             };
         }
 
-        internal static Variant FromVec4(vec4 value)
+        public static implicit operator Variant(vec4 value)
         {
             return new Variant
             {
                 Kind = SerializedType.Vec4,
-                value = Value.FromVec4(value),
+                value = new Value { Vec4 = value },
                 String = null
             };
         }
 
-        internal static Variant FromIVec2(ivec2 value)
+        public static implicit operator Variant(ivec2 value)
         {
             return new Variant
             {
                 Kind = SerializedType.IVec2,
-                value = Value.FromIVec2(value),
+                value = new Value { Ivec2 = value },
                 String = null
             };
         }
 
-        internal static Variant FromIVec3(ivec3 value)
+        public static implicit operator Variant(ivec3 value)
         {
             return new Variant
             {
                 Kind = SerializedType.IVec3,
-                value = Value.FromIVec3(value),
+                value = new Value { Ivec3 = value },
                 String = null
             };
         }
 
-        internal static Variant FromIVec4(ivec4 value)
+        public static implicit operator Variant(ivec4 value)
         {
             return new Variant
             {
                 Kind = SerializedType.IVec4,
-                value = Value.FromIVec4(value),
+                value = new Value { Ivec4 = value },
                 String = null
             };
         }
 
-        internal static Variant FromQuat(quat value)
+        public static implicit operator Variant(quat value)
         {
             return new Variant
             {
                 Kind = SerializedType.Quat,
-                value = Value.FromQuat(value),
+                value = new Value { Quat = value },
                 String = null
             };
         }
 
-        internal static Variant FromMat2(mat2 value)
+        public static implicit operator Variant(mat2 value)
         {
             return new Variant
             {
                 Kind = SerializedType.Mat2,
-                value = Value.FromMat2(value),
+                value = new Value { Mat2 = value },
                 String = null
             };
         }
 
-        internal static Variant FromMat3(mat3 value)
+        public static implicit operator Variant(mat3 value)
         {
             return new Variant
             {
                 Kind = SerializedType.Mat3,
-                value = Value.FromMat3(value),
+                value = new Value { Mat3 = value },
                 String = null
             };
         }
 
-        internal static Variant FromMat4(mat4 value)
+        public static implicit operator Variant(mat4 value)
         {
             return new Variant
             {
                 Kind = SerializedType.Mat4,
-                value = Value.FromMat4(value),
+                value = new Value { Mat4 = value },
                 String = null
             };
         }
 
-        internal static Variant FromColor(Color value)
+        public static implicit operator Variant(Color value)
         {
             return new Variant
             {
                 Kind = SerializedType.Color,
-                value = Value.FromColor(value),
+                value = new Value { Color = value },
                 String = null
             };
         }
 
-        internal static Variant FromColor32(Color32 value)
+        public static implicit operator Variant(Color32 value)
         {
             return new Variant
             {
                 Kind = SerializedType.Color32,
-                value = Value.FromColor32(value),
+                value = new Value { Color32 = value },
                 String = null
             };
         }
 
-        internal static Variant FromString(string value)
+        public static implicit operator Variant(string value)
         {
             return new Variant
             {
@@ -494,6 +435,30 @@ namespace Engine.Serialization
                 String = value
             };
         }
-    }
 
+        public override string ToString()
+        {
+            object obj = GetValueAsObject();
+            string valueStr;
+
+            if (obj == null)
+            {
+                valueStr = "null";
+            }
+            else if (obj is EnumIRValue e)
+            {
+                valueStr = $"(id: {e.TypeId}, internal: {e.EnumInternalType}, val: {e.EnumValue})";
+            }
+            else if (obj is string s)
+            {
+                valueStr = $"\"{s}\"";
+            }
+            else
+            {
+                valueStr = obj.ToString();
+            }
+
+            return $"Kind: {Kind}, Value: {valueStr}";
+        }
+    }
 }

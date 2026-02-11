@@ -405,7 +405,7 @@ namespace Editor.Cooker
             {
                 if (type == SerializedType.String)
                 {
-                    return Variant.FromString(string.Empty);
+                    return string.Empty;
                 }
 
                 return default;

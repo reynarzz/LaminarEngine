@@ -4,10 +4,7 @@
     "Type": "ComplexCollection",
     "InternalType": "System.Collections.Generic.List`1[[Engine.RenderPass, Engine]], System.Private.CoreLib",
     "TypeId": "57d6bb1b-afae-e28c-b56c-5e72ac23cc73",
-    "Simple": {
-      "Kind": "None",
-      "Value": null
-    },
+    "Simple": null,
     "Collection": {
       "$type": "Engine.Serialization.CollectionIRComplexTypes, Engine",
       "$value": {
@@ -32,10 +29,7 @@
                 "Type": "ShaderAsset",
                 "InternalType": "Engine.Shader, Engine",
                 "TypeId": "51ffe436-a1d3-b62f-e50a-35e5ead1b47e",
-                "Simple": {
-                  "Kind": "None",
-                  "Value": null
-                },
+                "Simple": null,
                 "Reference": {
                   "$type": "Engine.Serialization.ReferenceData, Engine",
                   "$value": {
@@ -49,10 +43,7 @@
                 "Type": "ComplexClass",
                 "InternalType": "Engine.Blending, Engine",
                 "TypeId": "214d9ab0-e82f-3989-8f39-c793cf3bcc02",
-                "Simple": {
-                  "Kind": "None",
-                  "Value": null
-                },
+                "Simple": null,
                 "Complex": {
                   "$type": "Engine.Serialization.ComplexData, Engine",
                   "$value": {
@@ -121,10 +112,7 @@
                 "Type": "ComplexClass",
                 "InternalType": "Engine.Stencil, Engine",
                 "TypeId": "69e35bb8-e8a9-b726-4465-6f0bf81adc98",
-                "Simple": {
-                  "Kind": "None",
-                  "Value": null
-                },
+                "Simple": null,
                 "Complex": {
                   "$type": "Engine.Serialization.ComplexData, Engine",
                   "$value": {
@@ -227,10 +215,7 @@
                 "Type": "ComplexCollection",
                 "InternalType": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib],[Engine.Graphics.UniformValue, Engine]], System.Private.CoreLib",
                 "TypeId": "5ff3c135-711b-d114-8a50-8b3589ab2973",
-                "Simple": {
-                  "Kind": "None",
-                  "Value": null
-                },
+                "Simple": null,
                 "Collection": {
                   "$type": "Engine.Serialization.DictionaryIRComplexTypes, Engine",
                   "$value": {
@@ -398,10 +383,7 @@
                             "Type": "SimpleCollection",
                             "InternalType": "System.Int32[], System.Private.CoreLib",
                             "TypeId": "1f7dc9a1-7f79-e7e9-c900-f27c46af0d82",
-                            "Simple": {
-                              "Kind": "None",
-                              "Value": null
-                            }
+                            "Simple": null
                           },
                           {
                             "Name": "Type",
@@ -422,10 +404,7 @@
                             "Type": "TextureAsset",
                             "InternalType": "Engine.RenderTexture, Engine",
                             "TypeId": "0f7da4ae-2b24-3437-19e0-13fcc53b26d5",
-                            "Simple": {
-                              "Kind": "None",
-                              "Value": null
-                            }
+                            "Simple": null
                           }
                         ]
                       },
@@ -556,10 +535,7 @@
                             "Type": "SimpleCollection",
                             "InternalType": "System.Int32[], System.Private.CoreLib",
                             "TypeId": "1f7dc9a1-7f79-e7e9-c900-f27c46af0d82",
-                            "Simple": {
-                              "Kind": "None",
-                              "Value": null
-                            }
+                            "Simple": null
                           },
                           {
                             "Name": "Type",
@@ -580,10 +556,7 @@
                             "Type": "TextureAsset",
                             "InternalType": "Engine.RenderTexture, Engine",
                             "TypeId": "0f7da4ae-2b24-3437-19e0-13fcc53b26d5",
-                            "Simple": {
-                              "Kind": "None",
-                              "Value": null
-                            }
+                            "Simple": null
                           }
                         ]
                       }
@@ -605,10 +578,7 @@
     "Type": "ComplexCollection",
     "InternalType": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib],[Engine.Texture, Engine]], System.Private.CoreLib",
     "TypeId": "b149b3b1-461a-3c62-d6f1-df76ecaf9ea0",
-    "Simple": {
-      "Kind": "None",
-      "Value": null
-    },
+    "Simple": null,
     "Collection": {
       "$type": "Engine.Serialization.DictionaryIRComplexTypes, Engine",
       "$value": {

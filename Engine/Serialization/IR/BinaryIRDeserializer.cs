@@ -210,7 +210,7 @@ namespace Engine.Serialization
                 var strVariants = new Variant[count];
                 for (int i = 0; i < strVariants.Length; i++)
                 {
-                    strVariants[i] = Variant.FromString(ReadString(reader));
+                    strVariants[i] = ReadString(reader);
                 }
                 return strVariants;
             }
@@ -324,7 +324,7 @@ namespace Engine.Serialization
 
                 for (int i = 0; i < count; i++)
                 {
-                    variants[i] = Variant.FromBool(ByteToBool(buffer[i]));
+                    variants[i] = ByteToBool(buffer[i]);
                 }
             }
             else
@@ -337,7 +337,7 @@ namespace Engine.Serialization
 
                     for (int i = 0; i < count; i++)
                     {
-                        variants[i] = Variant.FromBool(ByteToBool(buffer[i]));
+                        variants[i] = ByteToBool(buffer[i]);
                     }
                 }
                 finally
@@ -522,55 +522,55 @@ namespace Engine.Serialization
                 case SerializedType.None:
                     return default;
                 case SerializedType.Char:
-                    return Variant.FromChar(reader.ReadChar());
+                    return reader.ReadChar();
                 case SerializedType.String:
-                    return Variant.FromString(ReadString(reader));
+                    return ReadString(reader);
                 case SerializedType.Bool:
-                    return Variant.FromBool(ReadBool(reader));
+                    return ReadBool(reader);
                 case SerializedType.Byte:
-                    return Variant.FromByte(reader.ReadByte());
+                    return reader.ReadByte();
                 case SerializedType.Short:
-                    return Variant.FromShort(reader.ReadInt16());
+                    return reader.ReadInt16();
                 case SerializedType.UShort:
-                    return Variant.FromUShort(reader.ReadUInt16());
+                    return reader.ReadUInt16();
                 case SerializedType.Enum:
                     return ReadEnum(reader);
                 case SerializedType.Int:
-                    return Variant.FromInt(reader.ReadInt32());
+                    return reader.ReadInt32();
                 case SerializedType.UInt:
-                    return Variant.FromUInt(reader.ReadUInt32());
+                    return reader.ReadUInt32();
                 case SerializedType.Float:
-                    return Variant.FromFloat(reader.ReadSingle());
+                    return reader.ReadSingle();
                 case SerializedType.Double:
-                    return Variant.FromDouble(reader.ReadDouble());
+                    return reader.ReadDouble();
                 case SerializedType.Long:
-                    return Variant.FromLong(reader.ReadInt64());
+                    return reader.ReadInt64();
                 case SerializedType.ULong:
-                    return Variant.FromULong(reader.ReadUInt64());
+                    return reader.ReadUInt64();
                 case SerializedType.Vec2:
-                    return Variant.FromVec2(ReadStructNoAlloc<vec2>(reader));
+                    return ReadStructNoAlloc<vec2>(reader);
                 case SerializedType.Vec3:
-                    return Variant.FromVec3(ReadStructNoAlloc<vec3>(reader));
+                    return ReadStructNoAlloc<vec3>(reader);
                 case SerializedType.Vec4:
-                    return Variant.FromVec4(ReadStructNoAlloc<vec4>(reader));
+                    return ReadStructNoAlloc<vec4>(reader);
                 case SerializedType.IVec2:
-                    return Variant.FromIVec2(ReadStructNoAlloc<ivec2>(reader));
+                    return ReadStructNoAlloc<ivec2>(reader);
                 case SerializedType.IVec3:
-                    return Variant.FromIVec3(ReadStructNoAlloc<ivec3>(reader));
+                    return ReadStructNoAlloc<ivec3>(reader);
                 case SerializedType.IVec4:
-                    return Variant.FromIVec4(ReadStructNoAlloc<ivec4>(reader));
+                    return ReadStructNoAlloc<ivec4>(reader);
                 case SerializedType.Quat:
-                    return Variant.FromQuat(ReadStructNoAlloc<quat>(reader));
+                    return ReadStructNoAlloc<quat>(reader);
                 case SerializedType.Mat2:
-                    return Variant.FromMat2(ReadStructNoAlloc<mat2>(reader));
+                    return ReadStructNoAlloc<mat2>(reader);
                 case SerializedType.Mat3:
-                    return Variant.FromMat3(ReadStructNoAlloc<mat3>(reader));
+                    return ReadStructNoAlloc<mat3>(reader);
                 case SerializedType.Mat4:
-                    return Variant.FromMat4(ReadStructNoAlloc<mat4>(reader));
+                    return ReadStructNoAlloc<mat4>(reader);
                 case SerializedType.Color:
-                    return Variant.FromColor((Color)reader.ReadUInt32());
+                    return (Color)reader.ReadUInt32();
                 case SerializedType.Color32:
-                    return Variant.FromColor32((Color32)(ColorPacketRGBA)reader.ReadUInt32());
+                    return (Color32)(ColorPacketRGBA)reader.ReadUInt32();
                 default:
                     throw new NotImplementedException($"Reader not implemented for simple type: '{simpleType}'");
             }

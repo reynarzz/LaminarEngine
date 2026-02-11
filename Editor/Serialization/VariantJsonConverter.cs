@@ -1,5 +1,6 @@
 ﻿using Engine;
 using Engine.Serialization;
+using Engine.Utils;
 using GlmNet;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -13,13 +14,17 @@ namespace Editor.Serialization
         private const string VALUE_ID = "Value";
         private const string ENUM_ID = "Enum";
 
-        // A private serializer without VariantJsonConverter to avoid the self-referencing loop
-        private static readonly JsonSerializer _internalSerializer = new JsonSerializer();
-
         public override void WriteJson(JsonWriter writer, Variant value, JsonSerializer serializer)
         {
+            if (value.Kind == SerializedType.None)
+            {
+                writer.WriteNull();
+                return;
+            }
+
             var obj = new JObject
             {
+                //["$type"] = ReflectionUtils.GetFullTypeName(typeof(Variant)),
                 [KIND_ID] = value.Kind.ToString()
             };
 
@@ -34,7 +39,7 @@ namespace Editor.Serialization
                     break;
 
                 case SerializedType.Enum:
-                    obj[ENUM_ID] = JToken.FromObject(value.Enum, _internalSerializer);
+                    obj[ENUM_ID] = JToken.FromObject(value.Enum);
                     break;
 
                 default:
@@ -53,12 +58,27 @@ namespace Editor.Serialization
             if (reader.TokenType != JsonToken.StartObject)
                 throw new JsonSerializationException($"Expected object for VariantIRValue, got {reader.TokenType}");
 
-            JObject obj = JObject.Load(reader);
+            JObject objLoad = JObject.Load(reader);
 
-            if (!obj.TryGetValue(KIND_ID, out var kindToken))
-                throw new JsonSerializationException("Missing Kind property");
+            if (!objLoad.TryGetValue("$value", out var valueToken))
+            {
+                valueToken = objLoad;
+            }
 
-            SerializedType kind = Enum.Parse<SerializedType>(kindToken.Value<string>());
+            if (valueToken.Type == JTokenType.Null)
+                return default;
+
+            var kind = Enum.Parse<SerializedType>(valueToken[KIND_ID].Value<string>());
+
+            var val = ParseValue(valueToken, kind);
+         
+            return val;
+        }
+
+        private Variant ParseValue(JToken obj, SerializedType kind)
+        {
+            if (obj == null || obj.Type == JTokenType.Null)
+                return default;
 
             switch (kind)
             {
@@ -66,45 +86,44 @@ namespace Editor.Serialization
                     return default;
 
                 case SerializedType.String:
-                    return Variant.FromString(obj[VALUE_ID]?.Value<string>());
+                    return (obj[VALUE_ID]?.ToObject<string>()) ?? string.Empty;
 
                 case SerializedType.Enum:
                     return new Variant
                     {
                         Kind = SerializedType.Enum,
-                        Enum = obj[ENUM_ID]!.ToObject<EnumIRValue>(_internalSerializer)
+                        Enum = obj[ENUM_ID]?.ToObject<EnumIRValue>() ?? default
                     };
 
-                case SerializedType.Char: return Variant.FromChar(obj[VALUE_ID]!.Value<char>());
-                case SerializedType.Bool: return Variant.FromBool(obj[VALUE_ID]!.Value<bool>());
-                case SerializedType.Byte: return Variant.FromByte(obj[VALUE_ID]!.Value<byte>());
-                case SerializedType.Short: return Variant.FromShort(obj[VALUE_ID]!.Value<short>());
-                case SerializedType.UShort: return Variant.FromUShort(obj[VALUE_ID]!.Value<ushort>());
-                case SerializedType.Int: return Variant.FromInt(obj[VALUE_ID]!.Value<int>());
-                case SerializedType.UInt: return Variant.FromUInt(obj[VALUE_ID]!.Value<uint>());
-                case SerializedType.Float: return Variant.FromFloat(obj[VALUE_ID]!.Value<float>());
-                case SerializedType.Double: return Variant.FromDouble(obj[VALUE_ID]!.Value<double>());
-                case SerializedType.Long: return Variant.FromLong(obj[VALUE_ID]!.Value<long>());
-                case SerializedType.ULong: return Variant.FromULong(ulong.Parse(obj[VALUE_ID]!.Value<string>()));
+                case SerializedType.Char: return obj[VALUE_ID]?.ToObject<char>() ?? default;
+                case SerializedType.Bool: return obj[VALUE_ID]?.ToObject<bool>() ?? default;
+                case SerializedType.Byte: return obj[VALUE_ID]?.ToObject<byte>() ?? default;
+                case SerializedType.Short: return obj[VALUE_ID]?.ToObject<short>() ?? default;
+                case SerializedType.UShort: return obj[VALUE_ID]?.ToObject<ushort>() ?? default;
+                case SerializedType.Int: return obj[VALUE_ID]?.ToObject<int>() ?? 0;
+                case SerializedType.UInt: return obj[VALUE_ID]?.ToObject<uint>() ?? 0;
+                case SerializedType.Float: return obj[VALUE_ID]?.ToObject<float>() ?? 0f;
+                case SerializedType.Double: return obj[VALUE_ID]?.ToObject<double>() ?? 0.0;
+                case SerializedType.Long: return obj[VALUE_ID]?.ToObject<long>() ?? 0L;
+                case SerializedType.ULong: return obj[VALUE_ID]?.ToObject<ulong>() ?? 0UL;
 
-                case SerializedType.Vec2: return Variant.FromVec2(obj[VALUE_ID]!.ToObject<vec2>(_internalSerializer));
-                case SerializedType.Vec3: return Variant.FromVec3(obj[VALUE_ID]!.ToObject<vec3>(_internalSerializer));
-                case SerializedType.Vec4: return Variant.FromVec4(obj[VALUE_ID]!.ToObject<vec4>(_internalSerializer));
-                case SerializedType.IVec2: return Variant.FromIVec2(obj[VALUE_ID]!.ToObject<ivec2>(_internalSerializer));
-                case SerializedType.IVec3: return Variant.FromIVec3(obj[VALUE_ID]!.ToObject<ivec3>(_internalSerializer));
-                case SerializedType.IVec4: return Variant.FromIVec4(obj[VALUE_ID]!.ToObject<ivec4>(_internalSerializer));
-                case SerializedType.Quat: return Variant.FromQuat(obj[VALUE_ID]!.ToObject<quat>(_internalSerializer));
-                case SerializedType.Mat2: return Variant.FromMat2(obj[VALUE_ID]!.ToObject<mat2>(_internalSerializer));
-                case SerializedType.Mat3: return Variant.FromMat3(obj[VALUE_ID]!.ToObject<mat3>(_internalSerializer));
-                case SerializedType.Mat4: return Variant.FromMat4(obj[VALUE_ID]!.ToObject<mat4>(_internalSerializer));
-                case SerializedType.Color: return Variant.FromColor(obj[VALUE_ID]!.ToObject<Color>(_internalSerializer));
-                case SerializedType.Color32: return Variant.FromColor32(obj[VALUE_ID]!.ToObject<Color32>(_internalSerializer));
+                case SerializedType.Vec2: return obj[VALUE_ID]?.ToObject<vec2>() ?? default;
+                case SerializedType.Vec3: return obj[VALUE_ID]?.ToObject<vec3>() ?? default;
+                case SerializedType.Vec4: return obj[VALUE_ID]?.ToObject<vec4>() ?? default;
+                case SerializedType.IVec2: return obj[VALUE_ID]?.ToObject<ivec2>() ?? default;
+                case SerializedType.IVec3: return obj[VALUE_ID]?.ToObject<ivec3>() ?? default;
+                case SerializedType.IVec4: return obj[VALUE_ID]?.ToObject<ivec4>() ?? default;
+                case SerializedType.Quat: return obj[VALUE_ID]?.ToObject<quat>() ?? default;
+                case SerializedType.Mat2: return obj[VALUE_ID]?.ToObject<mat2>() ?? default;
+                case SerializedType.Mat3: return obj[VALUE_ID]?.ToObject<mat3>() ?? default;
+                case SerializedType.Mat4: return obj[VALUE_ID]?.ToObject<mat4>() ?? default;
+                case SerializedType.Color: return obj[VALUE_ID]?.ToObject<Color>() ?? default;
+                case SerializedType.Color32: return obj[VALUE_ID]?.ToObject<Color32>() ?? default;
 
                 default:
                     throw new JsonSerializationException($"Unsupported SerializedType {kind}");
             }
         }
-
         private static JToken CreatePayloadToken(Variant value)
         {
             return value.Kind switch
@@ -125,7 +144,7 @@ namespace Editor.Serialization
                 SerializedType.IVec2 or SerializedType.IVec3 or SerializedType.IVec4 or
                 SerializedType.Quat or SerializedType.Mat2 or SerializedType.Mat3 or
                 SerializedType.Mat4 or SerializedType.Color or SerializedType.Color32
-                    => JToken.FromObject(value.GetValueAsObject(), _internalSerializer),
+                    => JToken.FromObject(value.GetValueAsObject()),
 
                 _ => throw new JsonSerializationException($"Unsupported SerializedType {value.Kind}")
             };

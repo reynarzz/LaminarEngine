@@ -487,55 +487,55 @@ namespace Editor.Serialization
             switch (type)
             {
                 case SerializedType.Enum:
-                    return Variant.FromEnum((Enum)val);
+                    return (Enum)val;
                 case SerializedType.Char:
-                    return Variant.FromChar((char)val);
+                    return (char)val;
                 case SerializedType.String:
-                    return Variant.FromString(val as string ?? string.Empty);
+                    return val as string ?? string.Empty;
                 case SerializedType.Bool:
-                    return Variant.FromBool((bool)val);
+                    return (bool)val;
                 case SerializedType.Byte:
-                    return Variant.FromByte((byte)val);
+                    return (byte)val;
                 case SerializedType.Short:
-                    return Variant.FromShort((short)val);
+                    return (short)val;
                 case SerializedType.UShort:
-                    return Variant.FromUShort((ushort)val);
+                    return (ushort)val;
                 case SerializedType.Int:
-                    return Variant.FromInt((int)val);
+                    return (int)val;
                 case SerializedType.UInt:
-                    return Variant.FromUInt((uint)val);
+                    return (uint)val;
                 case SerializedType.Float:
-                    return Variant.FromFloat((float)val);
+                    return (float)val;
                 case SerializedType.Double:
-                    return Variant.FromDouble((double)val);
+                    return (double)val;
                 case SerializedType.Long:
-                    return Variant.FromLong((long)val);
+                    return (long)val;
                 case SerializedType.ULong:
-                    return Variant.FromULong((ulong)val);
+                    return (ulong)val;
                 case SerializedType.Vec2:
-                    return Variant.FromVec2((vec2)val);
+                    return (vec2)val;
                 case SerializedType.Vec3:
-                    return Variant.FromVec3((vec3)val);
+                    return (vec3)val;
                 case SerializedType.Vec4:
-                    return Variant.FromVec4((vec4)val);
+                    return (vec4)val;
                 case SerializedType.IVec2:
-                    return Variant.FromIVec2((ivec2)val);
+                    return (ivec2)val;
                 case SerializedType.IVec3:
-                    return Variant.FromIVec3((ivec3)val);
+                    return (ivec3)val;
                 case SerializedType.IVec4:
-                    return Variant.FromIVec4((ivec4)val);
+                    return (ivec4)val;
                 case SerializedType.Quat:
-                    return Variant.FromQuat((quat)val);
+                    return (quat)val;
                 case SerializedType.Mat2:
-                    return Variant.FromMat2((mat2)val);
+                    return (mat2)val;
                 case SerializedType.Mat3:
-                    return Variant.FromMat3((mat3)val);
+                    return (mat3)val;
                 case SerializedType.Mat4:
-                    return Variant.FromMat4((mat4)val);
+                    return (mat4)val;
                 case SerializedType.Color:
-                    return Variant.FromColor((Color)val);
+                    return (Color)val;
                 case SerializedType.Color32:
-                    return Variant.FromColor32((Color32)val);
+                    return (Color32)val;
                 default:
                     throw new ArgumentException($"Probably not a simple type: {type}");
             }
@@ -627,7 +627,7 @@ namespace Editor.Serialization
             {
                 if (type == SerializedType.String && obj == null)
                 {
-                    return Variant.FromString(string.Empty);
+                    return string.Empty;
                 }
 
                 return (Variant)obj;
