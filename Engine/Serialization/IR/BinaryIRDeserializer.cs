@@ -132,7 +132,7 @@ namespace Engine.Serialization
             }
             else if (serializedType == SerializedType.ComplexClass)
             {
-                property.ComplexClass = ReadComplexClass(reader);
+                property.Complex = ReadComplexClass(reader);
             }
             else if (serializedType == SerializedType.ComplexCollection)
             {
@@ -193,24 +193,24 @@ namespace Engine.Serialization
             return variantCollection;
         }
 
-        private static VariantIRValue[] ReadVariantArray(BinaryReader reader, SerializedType kind, int count)
+        private static Variant[] ReadVariantArray(BinaryReader reader, SerializedType kind, int count)
         {
             if (kind == SerializedType.None)
-                return new VariantIRValue[count];
+                return new Variant[count];
 
             if (kind == SerializedType.String)
             {
-                var strVariants = new VariantIRValue[count];
+                var strVariants = new Variant[count];
                 for (int i = 0; i < strVariants.Length; i++)
                 {
-                    strVariants[i] = VariantIRValue.FromString(ReadString(reader));
+                    strVariants[i] = Variant.FromString(ReadString(reader));
                 }
                 return strVariants;
             }
 
             if (kind == SerializedType.Enum)
             {
-                var enumVariants = new VariantIRValue[count];
+                var enumVariants = new Variant[count];
                 for (int i = 0; i < enumVariants.Length; i++)
                 {
                     enumVariants[i] = ReadEnum(reader);
@@ -271,10 +271,10 @@ namespace Engine.Serialization
             }
         }
 
-        private static VariantIRValue[] ReadPayloadSpan<T>(BinaryReader reader, int count, SerializedType kind)
+        private static Variant[] ReadPayloadSpan<T>(BinaryReader reader, int count, SerializedType kind)
             where T : unmanaged
         {
-            var variants = new VariantIRValue[count];
+            var variants = new Variant[count];
 
             int elementSize = Unsafe.SizeOf<T>();
             int totalBytes = count * elementSize;
@@ -286,10 +286,10 @@ namespace Engine.Serialization
                 ref byte b = ref buffer[i * elementSize];
                 T value = Unsafe.ReadUnaligned<T>(ref b);
 
-                variants[i] = new VariantIRValue()
+                variants[i] = new Variant()
                 {
                     Kind = kind,
-                    Payload = Unsafe.As<T, ValuePayload>(ref value),
+                    value = Unsafe.As<T, Variant.Value>(ref value),
                     String = null
                 };
             }
@@ -298,14 +298,14 @@ namespace Engine.Serialization
         }
 
 
-        private static VariantIRValue[] ReadBoolPayloadSpan(BinaryReader reader, int count)
+        private static Variant[] ReadBoolPayloadSpan(BinaryReader reader, int count)
         {
-            var variants = new VariantIRValue[count];
+            var variants = new Variant[count];
             var buffer = reader.ReadBytes(count);
 
             for (int i = 0; i < variants.Length; i++)
             {
-                variants[i] = VariantIRValue.FromBool(ByteToBool(buffer[i]));
+                variants[i] = Variant.FromBool(ByteToBool(buffer[i]));
             }
             return variants;
         }
@@ -320,11 +320,11 @@ namespace Engine.Serialization
            return ByteToBool(reader.ReadByte());
         }
 
-        private static VariantIRValue ReadEnum(BinaryReader reader)
+        private static Variant ReadEnum(BinaryReader reader)
         {
             var id = new Guid(reader.ReadBytes(GUID_BYTES_SIZE));
             var enumVal = reader.ReadInt64();
-            return VariantIRValue.FromEnum(id, null, enumVal);
+            return Variant.FromEnum(id, null, enumVal);
         }
 
         private static CollectionData ReadComplexCollection(BinaryReader reader)
@@ -446,14 +446,14 @@ namespace Engine.Serialization
                 Id = new Guid(reader.ReadBytes(GUID_BYTES_SIZE)),
             };
         }
-        private static ComplexClassData ReadComplexClass(BinaryReader reader)
+        private static ComplexData ReadComplexClass(BinaryReader reader)
         {
             /*
               SerializedType ComplexType 
               Guid TypeId 
               List<SerializedPropertyIR> Properties 
            */
-            var complexTypeData = new ComplexClassData();
+            var complexTypeData = new ComplexData();
 
             complexTypeData.ComplexType = (SerializedType)reader.ReadInt64();
 
@@ -469,62 +469,62 @@ namespace Engine.Serialization
         }
 
         // TODO: use Variant
-        private static VariantIRValue ReadSimpleProperty(BinaryReader reader, SerializedType simpleType)
+        private static Variant ReadSimpleProperty(BinaryReader reader, SerializedType simpleType)
         {
             switch (simpleType)
             {
                 case SerializedType.None:
                     return default;
                 case SerializedType.Char:
-                    return VariantIRValue.FromChar(reader.ReadChar());
+                    return Variant.FromChar(reader.ReadChar());
                 case SerializedType.String:
-                    return VariantIRValue.FromString(ReadString(reader));
+                    return Variant.FromString(ReadString(reader));
                 case SerializedType.Bool:
-                    return VariantIRValue.FromBool(ReadBool(reader));
+                    return Variant.FromBool(ReadBool(reader));
                 case SerializedType.Byte:
-                    return VariantIRValue.FromByte(reader.ReadByte());
+                    return Variant.FromByte(reader.ReadByte());
                 case SerializedType.Short:
-                    return VariantIRValue.FromShort(reader.ReadInt16());
+                    return Variant.FromShort(reader.ReadInt16());
                 case SerializedType.UShort:
-                    return VariantIRValue.FromUShort(reader.ReadUInt16());
+                    return Variant.FromUShort(reader.ReadUInt16());
                 case SerializedType.Enum:
                     return ReadEnum(reader);
                 case SerializedType.Int:
-                    return VariantIRValue.FromInt(reader.ReadInt32());
+                    return Variant.FromInt(reader.ReadInt32());
                 case SerializedType.UInt:
-                    return VariantIRValue.FromUInt(reader.ReadUInt32());
+                    return Variant.FromUInt(reader.ReadUInt32());
                 case SerializedType.Float:
-                    return VariantIRValue.FromFloat(reader.ReadSingle());
+                    return Variant.FromFloat(reader.ReadSingle());
                 case SerializedType.Double:
-                    return VariantIRValue.FromDouble(reader.ReadDouble());
+                    return Variant.FromDouble(reader.ReadDouble());
                 case SerializedType.Long:
-                    return VariantIRValue.FromLong(reader.ReadInt64());
+                    return Variant.FromLong(reader.ReadInt64());
                 case SerializedType.ULong:
-                    return VariantIRValue.FromULong(reader.ReadUInt64());
+                    return Variant.FromULong(reader.ReadUInt64());
                 case SerializedType.Vec2:
-                    return VariantIRValue.FromVec2(ReadStruct<vec2>(reader));
+                    return Variant.FromVec2(ReadStruct<vec2>(reader));
                 case SerializedType.Vec3:
-                    return VariantIRValue.FromVec3(ReadStruct<vec3>(reader));
+                    return Variant.FromVec3(ReadStruct<vec3>(reader));
                 case SerializedType.Vec4:
-                    return VariantIRValue.FromVec4(ReadStruct<vec4>(reader));
+                    return Variant.FromVec4(ReadStruct<vec4>(reader));
                 case SerializedType.IVec2:
-                    return VariantIRValue.FromIVec2(ReadStruct<ivec2>(reader));
+                    return Variant.FromIVec2(ReadStruct<ivec2>(reader));
                 case SerializedType.IVec3:
-                    return VariantIRValue.FromIVec3(ReadStruct<ivec3>(reader));
+                    return Variant.FromIVec3(ReadStruct<ivec3>(reader));
                 case SerializedType.IVec4:
-                    return VariantIRValue.FromIVec4(ReadStruct<ivec4>(reader));
+                    return Variant.FromIVec4(ReadStruct<ivec4>(reader));
                 case SerializedType.Quat:
-                    return VariantIRValue.FromQuat(ReadStruct<quat>(reader));
+                    return Variant.FromQuat(ReadStruct<quat>(reader));
                 case SerializedType.Mat2:
-                    return VariantIRValue.FromMat2(ReadStruct<mat2>(reader));
+                    return Variant.FromMat2(ReadStruct<mat2>(reader));
                 case SerializedType.Mat3:
-                    return VariantIRValue.FromMat3(ReadStruct<mat3>(reader));
+                    return Variant.FromMat3(ReadStruct<mat3>(reader));
                 case SerializedType.Mat4:
-                    return VariantIRValue.FromMat4(ReadStruct<mat4>(reader));
+                    return Variant.FromMat4(ReadStruct<mat4>(reader));
                 case SerializedType.Color:
-                    return VariantIRValue.FromColor((Color)reader.ReadUInt32());
+                    return Variant.FromColor((Color)reader.ReadUInt32());
                 case SerializedType.Color32:
-                    return VariantIRValue.FromColor32((Color32)(ColorPacketRGBA)reader.ReadUInt32());
+                    return Variant.FromColor32((Color32)(ColorPacketRGBA)reader.ReadUInt32());
                 default:
                     throw new NotImplementedException($"Reader not implemented for simple type: '{simpleType}'");
             }

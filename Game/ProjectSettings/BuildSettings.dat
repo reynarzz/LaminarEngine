@@ -8,12 +8,9 @@
       "Kind": "None",
       "Value": null
     },
-    "Reference": null,
-    "ComplexClass": null,
     "Collection": {
       "$type": "Engine.Serialization.CollectionIRComplexTypes, Engine",
       "$value": {
-        "Type": "None",
         "Value": [],
         "ItemsType": "None",
         "CollectionType": "List"
@@ -29,8 +26,6 @@
       "Kind": "None",
       "Value": null
     },
-    "Reference": null,
-    "ComplexClass": null,
     "Collection": {
       "$type": "Engine.Serialization.DictionaryIRComplexTypes, Engine",
       "$value": {
@@ -52,10 +47,7 @@
                     "EnumInternalType": "Editor.Build.PlatformBuild, Editor",
                     "EnumValue": 1
                   }
-                },
-                "Reference": null,
-                "ComplexClass": null,
-                "Collection": null
+                }
               }
             ]
           },
@@ -76,10 +68,7 @@
                     "EnumInternalType": "Editor.Build.PlatformBuild, Editor",
                     "EnumValue": 3
                   }
-                },
-                "Reference": null,
-                "ComplexClass": null,
-                "Collection": null
+                }
               }
             ]
           }
@@ -99,9 +88,8 @@
                   "Kind": "None",
                   "Value": null
                 },
-                "Reference": null,
-                "ComplexClass": {
-                  "$type": "Engine.Serialization.ComplexClassData, Engine",
+                "Complex": {
+                  "$type": "Engine.Serialization.ComplexData, Engine",
                   "$value": {
                     "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
                     "TypeId": "b82153eb-c244-d04c-0054-8eb0a05390ee",
@@ -120,11 +108,9 @@
                           "$type": "Engine.Serialization.ReferenceData, Engine",
                           "$value": {
                             "Type": "TextureAsset",
-                            "Id": "7fb5812e-1be5-40fd-ac13-7fcba46b52ff"
+                            "Id": "9e698fe7-e3db-48ba-bac0-e0c7e7da33e1"
                           }
-                        },
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "Description",
@@ -134,10 +120,7 @@
                         "Simple": {
                           "Kind": "String",
                           "Value": "Application description"
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "Company",
@@ -147,10 +130,7 @@
                         "Simple": {
                           "Kind": "String",
                           "Value": "My Company"
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "Authors",
@@ -160,10 +140,7 @@
                         "Simple": {
                           "Kind": "String",
                           "Value": "Author"
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "Version",
@@ -177,10 +154,7 @@
                             "y": 0,
                             "z": 0
                           }
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "ApplicationName",
@@ -190,10 +164,7 @@
                         "Simple": {
                           "Kind": "String",
                           "Value": "Application"
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "OutputPath",
@@ -203,10 +174,7 @@
                         "Simple": {
                           "Kind": "String",
                           "Value": ""
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "EncryptAssets",
@@ -216,10 +184,7 @@
                         "Simple": {
                           "Kind": "Bool",
                           "Value": false
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "CompressAssets",
@@ -229,10 +194,7 @@
                         "Simple": {
                           "Kind": "Bool",
                           "Value": false
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "CompressionLevel",
@@ -242,15 +204,11 @@
                         "Simple": {
                           "Kind": "Int",
                           "Value": 0
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       }
                     ]
                   }
-                },
-                "Collection": null
+                }
               },
               {
                 "Name": "Release",
@@ -261,9 +219,8 @@
                   "Kind": "None",
                   "Value": null
                 },
-                "Reference": null,
-                "ComplexClass": {
-                  "$type": "Engine.Serialization.ComplexClassData, Engine",
+                "Complex": {
+                  "$type": "Engine.Serialization.ComplexData, Engine",
                   "$value": {
                     "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
                     "TypeId": "b82153eb-c244-d04c-0054-8eb0a05390ee",
@@ -277,10 +234,7 @@
                         "Simple": {
                           "Kind": "None",
                           "Value": null
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "Description",
@@ -290,10 +244,7 @@
                         "Simple": {
                           "Kind": "String",
                           "Value": "Application description"
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "Company",
@@ -303,10 +254,7 @@
                         "Simple": {
                           "Kind": "String",
                           "Value": "My Company"
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "Authors",
@@ -316,10 +264,7 @@
                         "Simple": {
                           "Kind": "String",
                           "Value": "Author"
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "Version",
@@ -333,10 +278,7 @@
                             "y": 0,
                             "z": 0
                           }
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "ApplicationName",
@@ -346,10 +288,7 @@
                         "Simple": {
                           "Kind": "String",
                           "Value": "Application"
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "OutputPath",
@@ -359,10 +298,7 @@
                         "Simple": {
                           "Kind": "String",
                           "Value": ""
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "EncryptAssets",
@@ -372,10 +308,7 @@
                         "Simple": {
                           "Kind": "Bool",
                           "Value": false
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "CompressAssets",
@@ -385,10 +318,7 @@
                         "Simple": {
                           "Kind": "Bool",
                           "Value": false
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "CompressionLevel",
@@ -398,15 +328,11 @@
                         "Simple": {
                           "Kind": "Int",
                           "Value": 0
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       }
                     ]
                   }
-                },
-                "Collection": null
+                }
               },
               {
                 "Name": "Debug",
@@ -417,9 +343,8 @@
                   "Kind": "None",
                   "Value": null
                 },
-                "Reference": null,
-                "ComplexClass": {
-                  "$type": "Engine.Serialization.ComplexClassData, Engine",
+                "Complex": {
+                  "$type": "Engine.Serialization.ComplexData, Engine",
                   "$value": {
                     "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
                     "TypeId": "b82153eb-c244-d04c-0054-8eb0a05390ee",
@@ -433,10 +358,7 @@
                         "Simple": {
                           "Kind": "None",
                           "Value": null
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "Description",
@@ -446,10 +368,7 @@
                         "Simple": {
                           "Kind": "String",
                           "Value": "Application description"
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "Company",
@@ -459,10 +378,7 @@
                         "Simple": {
                           "Kind": "String",
                           "Value": "My Company"
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "Authors",
@@ -472,10 +388,7 @@
                         "Simple": {
                           "Kind": "String",
                           "Value": "Author"
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "Version",
@@ -489,10 +402,7 @@
                             "y": 0,
                             "z": 0
                           }
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "ApplicationName",
@@ -502,10 +412,7 @@
                         "Simple": {
                           "Kind": "String",
                           "Value": "Application"
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "OutputPath",
@@ -515,10 +422,7 @@
                         "Simple": {
                           "Kind": "String",
                           "Value": ""
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "EncryptAssets",
@@ -528,10 +432,7 @@
                         "Simple": {
                           "Kind": "Bool",
                           "Value": false
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "CompressAssets",
@@ -541,10 +442,7 @@
                         "Simple": {
                           "Kind": "Bool",
                           "Value": false
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "CompressionLevel",
@@ -554,15 +452,11 @@
                         "Simple": {
                           "Kind": "Int",
                           "Value": 0
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       }
                     ]
                   }
-                },
-                "Collection": null
+                }
               },
               {
                 "Name": "Type",
@@ -576,10 +470,7 @@
                     "EnumInternalType": "Editor.Build.BuildType, Editor",
                     "EnumValue": 0
                   }
-                },
-                "Reference": null,
-                "ComplexClass": null,
-                "Collection": null
+                }
               },
               {
                 "Name": "ShareDefaultSettings",
@@ -589,10 +480,7 @@
                 "Simple": {
                   "Kind": "Bool",
                   "Value": true
-                },
-                "Reference": null,
-                "ComplexClass": null,
-                "Collection": null
+                }
               }
             ]
           },
@@ -609,10 +497,7 @@
                 "Simple": {
                   "Kind": "String",
                   "Value": "myalias"
-                },
-                "Reference": null,
-                "ComplexClass": null,
-                "Collection": null
+                }
               },
               {
                 "Name": "KeyPass",
@@ -622,10 +507,7 @@
                 "Simple": {
                   "Kind": "String",
                   "Value": "mypassword"
-                },
-                "Reference": null,
-                "ComplexClass": null,
-                "Collection": null
+                }
               },
               {
                 "Name": "StorePass",
@@ -635,10 +517,7 @@
                 "Simple": {
                   "Kind": "String",
                   "Value": "storepassword"
-                },
-                "Reference": null,
-                "ComplexClass": null,
-                "Collection": null
+                }
               },
               {
                 "Name": "MinimumApiLevel",
@@ -652,10 +531,7 @@
                     "EnumInternalType": "Editor.Build.AndroidApiLevel, Editor",
                     "EnumValue": 0
                   }
-                },
-                "Reference": null,
-                "ComplexClass": null,
-                "Collection": null
+                }
               },
               {
                 "Name": "TargetApiLevel",
@@ -669,10 +545,7 @@
                     "EnumInternalType": "Editor.Build.AndroidApiLevel, Editor",
                     "EnumValue": 35
                   }
-                },
-                "Reference": null,
-                "ComplexClass": null,
-                "Collection": null
+                }
               },
               {
                 "Name": "Version",
@@ -686,10 +559,7 @@
                     "y": 0,
                     "z": 0
                   }
-                },
-                "Reference": null,
-                "ComplexClass": null,
-                "Collection": null
+                }
               },
               {
                 "Name": "Default",
@@ -700,9 +570,8 @@
                   "Kind": "None",
                   "Value": null
                 },
-                "Reference": null,
-                "ComplexClass": {
-                  "$type": "Engine.Serialization.ComplexClassData, Engine",
+                "Complex": {
+                  "$type": "Engine.Serialization.ComplexData, Engine",
                   "$value": {
                     "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
                     "TypeId": "8a545684-8915-490a-8117-7ccad9e1f6d7",
@@ -717,9 +586,8 @@
                           "Kind": "None",
                           "Value": null
                         },
-                        "Reference": null,
-                        "ComplexClass": {
-                          "$type": "Engine.Serialization.ComplexClassData, Engine",
+                        "Complex": {
+                          "$type": "Engine.Serialization.ComplexData, Engine",
                           "$value": {
                             "InternalType": "Editor.Build.AndroidIcon, Editor",
                             "TypeId": "fc6bd7ae-58d4-e8ad-12bd-08b8c49944fd",
@@ -733,10 +601,7 @@
                                 "Simple": {
                                   "Kind": "None",
                                   "Value": null
-                                },
-                                "Reference": null,
-                                "ComplexClass": null,
-                                "Collection": null
+                                }
                               },
                               {
                                 "Name": "ForegroundIcon",
@@ -746,10 +611,7 @@
                                 "Simple": {
                                   "Kind": "None",
                                   "Value": null
-                                },
-                                "Reference": null,
-                                "ComplexClass": null,
-                                "Collection": null
+                                }
                               },
                               {
                                 "Name": "BackgroundIcon",
@@ -759,15 +621,11 @@
                                 "Simple": {
                                   "Kind": "None",
                                   "Value": null
-                                },
-                                "Reference": null,
-                                "ComplexClass": null,
-                                "Collection": null
+                                }
                               }
                             ]
                           }
-                        },
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "Icons",
@@ -778,12 +636,9 @@
                           "Kind": "None",
                           "Value": null
                         },
-                        "Reference": null,
-                        "ComplexClass": null,
                         "Collection": {
                           "$type": "Engine.Serialization.CollectionIRComplexTypes, Engine",
                           "$value": {
-                            "Type": "None",
                             "Value": [
                               null,
                               null,
@@ -804,10 +659,7 @@
                         "Simple": {
                           "Kind": "String",
                           "Value": "com.application.gfs"
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "ApplicationName",
@@ -817,10 +669,7 @@
                         "Simple": {
                           "Kind": "String",
                           "Value": "Application"
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "OutputPath",
@@ -830,10 +679,7 @@
                         "Simple": {
                           "Kind": "String",
                           "Value": ""
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "EncryptAssets",
@@ -843,10 +689,7 @@
                         "Simple": {
                           "Kind": "Bool",
                           "Value": false
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "CompressAssets",
@@ -856,10 +699,7 @@
                         "Simple": {
                           "Kind": "Bool",
                           "Value": false
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "CompressionLevel",
@@ -869,15 +709,11 @@
                         "Simple": {
                           "Kind": "Int",
                           "Value": 0
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       }
                     ]
                   }
-                },
-                "Collection": null
+                }
               },
               {
                 "Name": "Release",
@@ -888,9 +724,8 @@
                   "Kind": "None",
                   "Value": null
                 },
-                "Reference": null,
-                "ComplexClass": {
-                  "$type": "Engine.Serialization.ComplexClassData, Engine",
+                "Complex": {
+                  "$type": "Engine.Serialization.ComplexData, Engine",
                   "$value": {
                     "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
                     "TypeId": "8a545684-8915-490a-8117-7ccad9e1f6d7",
@@ -905,9 +740,8 @@
                           "Kind": "None",
                           "Value": null
                         },
-                        "Reference": null,
-                        "ComplexClass": {
-                          "$type": "Engine.Serialization.ComplexClassData, Engine",
+                        "Complex": {
+                          "$type": "Engine.Serialization.ComplexData, Engine",
                           "$value": {
                             "InternalType": "Editor.Build.AndroidIcon, Editor",
                             "TypeId": "fc6bd7ae-58d4-e8ad-12bd-08b8c49944fd",
@@ -921,10 +755,7 @@
                                 "Simple": {
                                   "Kind": "None",
                                   "Value": null
-                                },
-                                "Reference": null,
-                                "ComplexClass": null,
-                                "Collection": null
+                                }
                               },
                               {
                                 "Name": "ForegroundIcon",
@@ -934,10 +765,7 @@
                                 "Simple": {
                                   "Kind": "None",
                                   "Value": null
-                                },
-                                "Reference": null,
-                                "ComplexClass": null,
-                                "Collection": null
+                                }
                               },
                               {
                                 "Name": "BackgroundIcon",
@@ -947,15 +775,11 @@
                                 "Simple": {
                                   "Kind": "None",
                                   "Value": null
-                                },
-                                "Reference": null,
-                                "ComplexClass": null,
-                                "Collection": null
+                                }
                               }
                             ]
                           }
-                        },
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "Icons",
@@ -966,12 +790,9 @@
                           "Kind": "None",
                           "Value": null
                         },
-                        "Reference": null,
-                        "ComplexClass": null,
                         "Collection": {
                           "$type": "Engine.Serialization.CollectionIRComplexTypes, Engine",
                           "$value": {
-                            "Type": "None",
                             "Value": [
                               null,
                               null,
@@ -992,10 +813,7 @@
                         "Simple": {
                           "Kind": "String",
                           "Value": "com.application.gfs"
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "ApplicationName",
@@ -1005,10 +823,7 @@
                         "Simple": {
                           "Kind": "String",
                           "Value": "Application"
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "OutputPath",
@@ -1018,10 +833,7 @@
                         "Simple": {
                           "Kind": "String",
                           "Value": ""
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "EncryptAssets",
@@ -1031,10 +843,7 @@
                         "Simple": {
                           "Kind": "Bool",
                           "Value": false
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "CompressAssets",
@@ -1044,10 +853,7 @@
                         "Simple": {
                           "Kind": "Bool",
                           "Value": false
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "CompressionLevel",
@@ -1057,15 +863,11 @@
                         "Simple": {
                           "Kind": "Int",
                           "Value": 0
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       }
                     ]
                   }
-                },
-                "Collection": null
+                }
               },
               {
                 "Name": "Debug",
@@ -1076,9 +878,8 @@
                   "Kind": "None",
                   "Value": null
                 },
-                "Reference": null,
-                "ComplexClass": {
-                  "$type": "Engine.Serialization.ComplexClassData, Engine",
+                "Complex": {
+                  "$type": "Engine.Serialization.ComplexData, Engine",
                   "$value": {
                     "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
                     "TypeId": "8a545684-8915-490a-8117-7ccad9e1f6d7",
@@ -1093,9 +894,8 @@
                           "Kind": "None",
                           "Value": null
                         },
-                        "Reference": null,
-                        "ComplexClass": {
-                          "$type": "Engine.Serialization.ComplexClassData, Engine",
+                        "Complex": {
+                          "$type": "Engine.Serialization.ComplexData, Engine",
                           "$value": {
                             "InternalType": "Editor.Build.AndroidIcon, Editor",
                             "TypeId": "fc6bd7ae-58d4-e8ad-12bd-08b8c49944fd",
@@ -1109,10 +909,7 @@
                                 "Simple": {
                                   "Kind": "None",
                                   "Value": null
-                                },
-                                "Reference": null,
-                                "ComplexClass": null,
-                                "Collection": null
+                                }
                               },
                               {
                                 "Name": "ForegroundIcon",
@@ -1122,10 +919,7 @@
                                 "Simple": {
                                   "Kind": "None",
                                   "Value": null
-                                },
-                                "Reference": null,
-                                "ComplexClass": null,
-                                "Collection": null
+                                }
                               },
                               {
                                 "Name": "BackgroundIcon",
@@ -1135,15 +929,11 @@
                                 "Simple": {
                                   "Kind": "None",
                                   "Value": null
-                                },
-                                "Reference": null,
-                                "ComplexClass": null,
-                                "Collection": null
+                                }
                               }
                             ]
                           }
-                        },
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "Icons",
@@ -1154,12 +944,9 @@
                           "Kind": "None",
                           "Value": null
                         },
-                        "Reference": null,
-                        "ComplexClass": null,
                         "Collection": {
                           "$type": "Engine.Serialization.CollectionIRComplexTypes, Engine",
                           "$value": {
-                            "Type": "None",
                             "Value": [
                               null,
                               null,
@@ -1180,10 +967,7 @@
                         "Simple": {
                           "Kind": "String",
                           "Value": "com.application.gfs"
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "ApplicationName",
@@ -1193,10 +977,7 @@
                         "Simple": {
                           "Kind": "String",
                           "Value": "Application"
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "OutputPath",
@@ -1206,10 +987,7 @@
                         "Simple": {
                           "Kind": "String",
                           "Value": ""
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "EncryptAssets",
@@ -1219,10 +997,7 @@
                         "Simple": {
                           "Kind": "Bool",
                           "Value": false
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "CompressAssets",
@@ -1232,10 +1007,7 @@
                         "Simple": {
                           "Kind": "Bool",
                           "Value": false
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       },
                       {
                         "Name": "CompressionLevel",
@@ -1245,15 +1017,11 @@
                         "Simple": {
                           "Kind": "Int",
                           "Value": 0
-                        },
-                        "Reference": null,
-                        "ComplexClass": null,
-                        "Collection": null
+                        }
                       }
                     ]
                   }
-                },
-                "Collection": null
+                }
               },
               {
                 "Name": "Type",
@@ -1267,10 +1035,7 @@
                     "EnumInternalType": "Editor.Build.BuildType, Editor",
                     "EnumValue": 0
                   }
-                },
-                "Reference": null,
-                "ComplexClass": null,
-                "Collection": null
+                }
               },
               {
                 "Name": "ShareDefaultSettings",
@@ -1280,10 +1045,7 @@
                 "Simple": {
                   "Kind": "Bool",
                   "Value": true
-                },
-                "Reference": null,
-                "ComplexClass": null,
-                "Collection": null
+                }
               }
             ]
           }

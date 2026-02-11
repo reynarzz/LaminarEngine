@@ -123,7 +123,7 @@ namespace Editor.Cooker
             }
             else if (serializedType == SerializedType.ComplexClass)
             {
-                WriteComplexClass(writer, ir.ComplexClass);
+                WriteComplexClass(writer, ir.Complex);
             }
             else if (serializedType == SerializedType.ComplexCollection)
             {
@@ -181,7 +181,7 @@ namespace Editor.Cooker
             }
         }
 
-        private static void WriteVariantArray(BinaryWriter writer, SerializedType kind, VariantIRValue[] variants)
+        private static void WriteVariantArray(BinaryWriter writer, SerializedType kind, Variant[] variants)
         {
             if (variants == null || variants.Length == 0 || kind == SerializedType.None)
                 return;
@@ -280,7 +280,7 @@ namespace Editor.Cooker
             }
         }
 
-        private static void WriteComplexClass(BinaryWriter writer, ComplexClassData data)
+        private static void WriteComplexClass(BinaryWriter writer, ComplexData data)
         {
             /*
                SerializedType ComplexType 
@@ -408,19 +408,19 @@ namespace Editor.Cooker
             }
         }
 
-        private static VariantIRValue _ObjectToVariantSafe(SerializedType type, object obj)
+        private static Variant _ObjectToVariantSafe(SerializedType type, object obj)
         {
             if (obj == null)
             {
                 if (type == SerializedType.String)
                 {
-                    return VariantIRValue.FromString(string.Empty);
+                    return Variant.FromString(string.Empty);
                 }
 
                 return default;
             }
 
-            return (VariantIRValue)obj;
+            return (Variant)obj;
         }
 
         private static byte BoolToByte(bool value)
@@ -431,86 +431,86 @@ namespace Editor.Cooker
         {
             writer.Write(BoolToByte(value));
         }
-        private static void WriteSimpleProperty(BinaryWriter writer, in VariantIRValue data, SerializedType simpleType)
+        private static void WriteSimpleProperty(BinaryWriter writer, in Variant data, SerializedType simpleType)
         {
             switch (simpleType)
             {
                 case SerializedType.None:
                     break;
                 case SerializedType.Char:
-                    writer.Write(data.Payload.Char);
+                    writer.Write(data.value.Char);
                     break;
                 case SerializedType.String:
                     WriteString(writer, data.String);
                     break;
                 case SerializedType.Bool:
-                    WriteBool(writer, data.Payload.Bool);
+                    WriteBool(writer, data.value.Bool);
                     break;
                 case SerializedType.Byte:
-                    writer.Write(data.Payload.Byte);
+                    writer.Write(data.value.Byte);
                     break;
                 case SerializedType.Short:
-                    writer.Write(data.Payload.Short);
+                    writer.Write(data.value.Short);
                     break;
                 case SerializedType.UShort:
-                    writer.Write(data.Payload.UShort);
+                    writer.Write(data.value.UShort);
                     break;
                 case SerializedType.Enum:
                     WriteEnum(writer, data.Enum);
                     break;
                 case SerializedType.Int:
-                    writer.Write(data.Payload.Int);
+                    writer.Write(data.value.Int);
                     break;
                 case SerializedType.UInt:
-                    writer.Write(data.Payload.Uint);
+                    writer.Write(data.value.Uint);
                     break;
                 case SerializedType.Float:
-                    writer.Write(data.Payload.Float);
+                    writer.Write(data.value.Float);
                     break;
                 case SerializedType.Double:
-                    writer.Write(data.Payload.Double);
+                    writer.Write(data.value.Double);
                     break;
                 case SerializedType.Long:
-                    writer.Write(data.Payload.Long);
+                    writer.Write(data.value.Long);
                     break;
                 case SerializedType.ULong:
-                    writer.Write(data.Payload.Ulong);
+                    writer.Write(data.value.Ulong);
                     break;
                 case SerializedType.Vec2:
-                    WriteStruct(writer, data.Payload.Vec2);
+                    WriteStruct(writer, data.value.Vec2);
                     break;
                 case SerializedType.Vec3:
-                    WriteStruct(writer, data.Payload.Vec3);
+                    WriteStruct(writer, data.value.Vec3);
                     break;
                 case SerializedType.Vec4:
-                    WriteStruct(writer, data.Payload.Vec4);
+                    WriteStruct(writer, data.value.Vec4);
                     break;
                 case SerializedType.IVec2:
-                    WriteStruct(writer, data.Payload.Ivec2);
+                    WriteStruct(writer, data.value.Ivec2);
                     break;
                 case SerializedType.IVec3:
-                    WriteStruct(writer, data.Payload.Ivec3);
+                    WriteStruct(writer, data.value.Ivec3);
                     break;
                 case SerializedType.IVec4:
-                    WriteStruct(writer, data.Payload.Ivec4);
+                    WriteStruct(writer, data.value.Ivec4);
                     break;
                 case SerializedType.Quat:
-                    WriteStruct(writer, data.Payload.Quat);
+                    WriteStruct(writer, data.value.Quat);
                     break;
                 case SerializedType.Mat2:
-                    WriteStruct(writer, data.Payload.Mat2);
+                    WriteStruct(writer, data.value.Mat2);
                     break;
                 case SerializedType.Mat3:
-                    WriteStruct(writer, data.Payload.Mat3);
+                    WriteStruct(writer, data.value.Mat3);
                     break;
                 case SerializedType.Mat4:
-                    WriteStruct(writer, data.Payload.Mat4);
+                    WriteStruct(writer, data.value.Mat4);
                     break;
                 case SerializedType.Color:
-                    writer.Write((uint)data.Payload.Color);
+                    writer.Write((uint)data.value.Color);
                     break;
                 case SerializedType.Color32:
-                    writer.Write(((ColorPacketRGBA)data.Payload.Color32).Value);
+                    writer.Write(((ColorPacketRGBA)data.value.Color32).Value);
                     break;
                 default:
                     throw new NotImplementedException($"Writer not implemented for simple type: '{simpleType}'");
@@ -550,7 +550,7 @@ namespace Editor.Cooker
             writer.Write(MemoryMarshal.AsBytes(span));
         }
 
-        private static void WritePayloadSpan<T>(BinaryWriter writer, VariantIRValue[] variants) where T : unmanaged
+        private static void WritePayloadSpan<T>(BinaryWriter writer, Variant[] variants) where T : unmanaged
         {
             var count = variants.Length;
             var size = Unsafe.SizeOf<T>();
@@ -562,8 +562,8 @@ namespace Editor.Cooker
 
                 for (int i = 0; i < count; i++)
                 {
-                    ref ValuePayload payload = ref variants[i].Payload;
-                    T value = Unsafe.As<ValuePayload, T>(ref payload);
+                    ref Variant.Value payload = ref variants[i].value;
+                    T value = Unsafe.As<Variant.Value, T>(ref payload);
                     Unsafe.WriteUnaligned(ref dst[i * size], value);
                 }
 
@@ -576,7 +576,7 @@ namespace Editor.Cooker
         }
 
         // Makes sure bool is exactly 1 byte.
-        private static void WriteBoolPayloadSpan(BinaryWriter writer, VariantIRValue[] variants)
+        private static void WriteBoolPayloadSpan(BinaryWriter writer, Variant[] variants)
         {
             var count = variants.Length;
             var buffer = ArrayPool<byte>.Shared.Rent(count);
@@ -585,7 +585,7 @@ namespace Editor.Cooker
                 var dst = buffer.AsSpan(0, count);
                 for (int i = 0; i < count; i++)
                 {
-                    dst[i] = BoolToByte(variants[i].Payload.Bool);
+                    dst[i] = BoolToByte(variants[i].value.Bool);
                 }
                 writer.Write(dst);
             }
@@ -608,8 +608,8 @@ namespace Editor.Cooker
 
             // Use a single rented buffer for everything to avoid heap allocations
             // We rent based on the total bytes (if small) or chunkSize (if large)
-            int bufferSize = (str.Length < 1024) ? totalBytes : Encoding.UTF8.GetMaxByteCount(chunkSize);
-            byte[] byteBuffer = ArrayPool<byte>.Shared.Rent(bufferSize);
+            var bufferSize = (str.Length < 1024) ? totalBytes : Encoding.UTF8.GetMaxByteCount(chunkSize);
+            var byteBuffer = ArrayPool<byte>.Shared.Rent(bufferSize);
 
             try
             {

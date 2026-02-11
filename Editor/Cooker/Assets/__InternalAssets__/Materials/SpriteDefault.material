@@ -53,8 +53,8 @@
                   "Kind": "None",
                   "Value": null
                 },
-                "ComplexClass": {
-                  "$type": "Engine.Serialization.ComplexClassData, Engine",
+                "Complex": {
+                  "$type": "Engine.Serialization.ComplexData, Engine",
                   "$value": {
                     "InternalType": "Engine.Blending, Engine",
                     "TypeId": "214d9ab0-e82f-3989-8f39-c793cf3bcc02",
@@ -125,8 +125,8 @@
                   "Kind": "None",
                   "Value": null
                 },
-                "ComplexClass": {
-                  "$type": "Engine.Serialization.ComplexClassData, Engine",
+                "Complex": {
+                  "$type": "Engine.Serialization.ComplexData, Engine",
                   "$value": {
                     "InternalType": "Engine.Stencil, Engine",
                     "TypeId": "69e35bb8-e8a9-b726-4465-6f0bf81adc98",

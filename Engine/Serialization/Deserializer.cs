@@ -155,7 +155,7 @@ namespace Engine.Serialization
                     {
                         if (argData != null && argData.GetType() != argType)
                         {
-                            return ReflectionUtils.DeserializeVariantValueSafe<Tr>((VariantIRValue)argData);
+                            return ReflectionUtils.DeserializeVariantValueSafe<Tr>((Variant)argData);
                         }
 
                         return null;
@@ -230,10 +230,10 @@ namespace Engine.Serialization
 
         internal static void DeserializeComplexClass(object target, SerializedPropertyIR property, DeserializerData deserializerData)
         {
-            if (target == null || property == null || property.ComplexClass == null)
+            if (target == null || property == null || property.Complex == null)
                 return;
 
-            var complexData = property.ComplexClass;
+            var complexData = property.Complex;
             if (Tr.ResolveType(complexData, out Type type))
             {
                 var inst = Activator.CreateInstance(type);
@@ -330,7 +330,7 @@ namespace Engine.Serialization
                 return;
             }
 
-            void DeserializeItem(ComplexClassData complexItem, Action<object> setValueCallback)
+            void DeserializeItem(ComplexData complexItem, Action<object> setValueCallback)
             {
                 if (complexItem == null)
                 {
@@ -360,7 +360,7 @@ namespace Engine.Serialization
                     var complexDictionary = collectionData as DictionaryIRComplexTypes;
                     for (int i = 0; i < complexDictionary.Count; i++)
                     {
-                        object DeserializeArgValue(ComplexClassData complexArg)
+                        object DeserializeArgValue(ComplexData complexArg)
                         {
                             object deserializedArgValue = null;
 
@@ -412,7 +412,7 @@ namespace Engine.Serialization
             }
         }
 
-        private static object GetComplexTypeDataSafe(object arg, ComplexClassData argComplexData,
+        private static object GetComplexTypeDataSafe(object arg, ComplexData argComplexData,
                                                      SerializedType argType, DeserializerData deserializedData)
         {
             if (arg == null)
@@ -426,10 +426,10 @@ namespace Engine.Serialization
             {
                 if (argComplexData.ComplexType == SerializedType.Enum)
                 {
-                    return ReflectionUtils.DeserializeEnum<Tr>((VariantIRValue)arg);
+                    return ReflectionUtils.DeserializeEnum<Tr>((Variant)arg);
                 }
 
-                return ((VariantIRValue)arg).GetValueAsObject();
+                return ((Variant)arg).GetValueAsObject();
             }
 
             return arg;

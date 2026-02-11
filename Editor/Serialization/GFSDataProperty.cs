@@ -26,7 +26,7 @@ namespace Editor.Serialization
                 return;
             }
 
-            if (value.GetType().IsAssignableTo(typeof(VariantIRValue)))
+            if (value.GetType().IsAssignableTo(typeof(Variant)))
             {
                 _variantConverter.WriteJson(writer, value, serializer);
                 return;
@@ -53,7 +53,7 @@ namespace Editor.Serialization
                 return serializer.Deserialize(reader);
             }
 
-            if (objectType.IsAssignableTo(typeof(VariantIRValue)))
+            if (objectType.IsAssignableTo(typeof(Variant)))
             {
                 return _variantConverter.ReadJson(reader, objectType, existingValue, serializer);
             }

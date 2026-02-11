@@ -947,7 +947,7 @@ namespace Engine.Utils
             return false;
         }
 
-        internal static object DeserializeVariantValueSafe<T>(in VariantIRValue variant) where T : ITypeResolver
+        internal static object DeserializeVariantValueSafe<T>(in Variant variant) where T : ITypeResolver
         {
             if (variant.Kind == SerializedType.Enum)
             {
@@ -961,7 +961,7 @@ namespace Engine.Utils
             return variant.GetValueAsObject();
         }
 
-        internal static Enum DeserializeEnum<T>(in VariantIRValue variant) where T : ITypeResolver
+        internal static Enum DeserializeEnum<T>(in Variant variant) where T : ITypeResolver
         {
             if (variant.Kind != SerializedType.Enum)
             {
