@@ -105,6 +105,12 @@ namespace Engine.Utils
             }
         }
 
+        public static MemberInfo[] GetAllMembersWithAttributeArray<T>(Type type, bool inherit = true, bool order = false,
+                                                                            BindingFlags flags = _flags) where T : Attribute
+        {
+            return GetAllMembersWithAttribute<T>(type, inherit, order, flags).ToArray();
+        }
+
         public static IEnumerable<MemberInfo> GetAllMembersWithAttribute<T>(Type type, bool inherit = true, bool order = false,
                                                                             BindingFlags flags = _flags) where T : Attribute
         {

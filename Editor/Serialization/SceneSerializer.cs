@@ -135,7 +135,7 @@ namespace Editor.Serialization
                 TypeId = ReflectionUtils.GetStableGuid(component.GetType()),
                 IsEnabled = component.IsEnabled,
                 InternalType = ReflectionUtils.GetFullTypeName(component.GetType()),
-                SerializedProperties = Serializer.Serialize(component)
+                Properties = Serializer.Serialize(component)
             };
         }
     }

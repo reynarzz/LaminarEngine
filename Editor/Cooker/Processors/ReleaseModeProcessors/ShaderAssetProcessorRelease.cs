@@ -15,9 +15,9 @@ namespace Editor.Cooker
             using var writer = new BinaryWriter(stream, Encoding.UTF8);
             var properties = Serializer.Serialize(sources);
 
-            if (properties.Count > 1)
+            if (properties.Length > 1)
             {
-                throw new Exception($"Invalid shader property count: {properties.Count}, has to be '1'");
+                throw new Exception($"Invalid shader property count: {properties.Length}, has to be '1'");
             }
 
             var ir = new ShaderIR()

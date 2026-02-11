@@ -91,13 +91,11 @@ namespace Engine.Serialization
             component.IsEnabled = ReadBool(reader);
             component.ID = ReadGuidNoAlloc(reader);
             var propertiesCount = reader.ReadInt32();
-            component.SerializedProperties = new List<SerializedPropertyIR>();
-
-            CollectionsMarshal.SetCount(component.SerializedProperties, propertiesCount);
+            component.Properties = new SerializedPropertyIR[propertiesCount];
 
             for (int i = 0; i < propertiesCount; i++)
             {
-                component.SerializedProperties[i] = ReadPropertyIR(reader);
+                component.Properties[i] = ReadPropertyIR(reader);
             }
 
             return component;

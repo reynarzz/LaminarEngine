@@ -18,23 +18,24 @@ namespace Editor.Serialization
         {
             [SerializedField] public object Collection;
         }
-        internal static List<SerializedPropertyIR> Serialize(object target)
+        internal static SerializedPropertyIR[] Serialize(object target)
         {
             if (ReflectionUtils.IsCollection(target.GetType()))
             {
                 target = new CollectionWrapper() { Collection = target };
             }
-            var serializedMembers = ReflectionUtils.GetAllMembersWithAttribute<SerializedFieldAttribute>(target.GetType());
-            var properties = new List<SerializedPropertyIR>();
+            var serializedMembers = ReflectionUtils.GetAllMembersWithAttributeArray<SerializedFieldAttribute>(target.GetType());
+            var properties = new SerializedPropertyIR[serializedMembers.Length];
 
-            foreach (var member in serializedMembers)
+            for (int i = 0; i < serializedMembers.Length; ++i)
             {
+                var member = serializedMembers[i];
                 var value = ReflectionUtils.GetMemberValue(target, member);
                 var valueType = value?.GetType() ?? ReflectionUtils.GetMemberType(member);
                 var serializedType = GetSerializedType(valueType, value);
 
                 var propData = GetPropertyData(member, serializedType, value);
-                properties.Add(new SerializedPropertyIR()
+                properties[i] = new SerializedPropertyIR()
                 {
                     Name = member.Name,
                     InternalType = GetInternalType(valueType),
@@ -44,7 +45,7 @@ namespace Editor.Serialization
                     Reference = TryGetReferencePropertyData(propData, serializedType),
                     Complex = TryGetComplexClassPropertyData(propData, serializedType),
                     Collection = TryGetCollectionPropertyData(propData, serializedType)
-                });
+                };
             }
 
             return properties;

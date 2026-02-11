@@ -116,7 +116,7 @@ namespace Engine.Serialization
             // Deserialize components data, and resolve references.
             foreach (var (id, componentValue) in _componentsByID)
             {
-                Deserializer.DeserializeTarget(componentValue.value, componentValue.data.SerializedProperties, deserializerData);
+                Deserializer.DeserializeTarget(componentValue.value, componentValue.data.Properties, deserializerData);
             }
 
             _actorsByID.Clear();
@@ -227,7 +227,7 @@ namespace Engine.Serialization
             // Deserialize components data, and resolve references.
             foreach (var (id, componentValue) in _componentsByID)
             {
-                Deserializer.DeserializeTarget(componentValue.value, componentValue.data.SerializedProperties, deserializerData);
+                Deserializer.DeserializeTarget(componentValue.value, componentValue.data.Properties, deserializerData);
             }
 
             if (Application.IsInPlayMode)

@@ -87,11 +87,11 @@ namespace Editor.Cooker
             WriteGuidNoAlloc(writer, ir.TypeId);
             WriteBool(writer, ir.IsEnabled);
             WriteGuidNoAlloc(writer, ir.ID);
-            writer.Write(ir.SerializedProperties.Count);
+            writer.Write(ir.Properties.Length);
 
-            for (int i = 0; i < ir.SerializedProperties.Count; i++)
+            for (int i = 0; i < ir.Properties.Length; i++)
             {
-                WriteProperty(writer, ir.SerializedProperties[i]);
+                WriteProperty(writer, ir.Properties[i]);
             }
         }
 

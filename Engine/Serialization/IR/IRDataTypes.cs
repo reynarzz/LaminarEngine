@@ -33,7 +33,7 @@ namespace Engine.Serialization
         public Guid TypeId { get; set; }
         public bool IsEnabled { get; set; }
         public Guid ID { get; set; }
-        public List<SerializedPropertyIR> SerializedProperties { get; set; }
+        public SerializedPropertyIR[] Properties { get; set; }
     }
 
     internal class SerializedPropertyIR
