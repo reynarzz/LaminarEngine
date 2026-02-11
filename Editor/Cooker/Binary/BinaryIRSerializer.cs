@@ -16,6 +16,7 @@ namespace Editor.Cooker
 {
     internal class BinaryIRSerializer
     {
+        private readonly static ReferenceBinaryWriterFactory _referenceWriter = new();
         // TODO: this is temporal
         static BinaryIRSerializer()
         {
@@ -65,8 +66,8 @@ namespace Editor.Cooker
             WriteString(writer, ir.Name);
             writer.Write(ir.Layer);
             WriteBool(writer, ir.IsActiveSelf);
-            WriteGuidNoAlloc(writer, ir.ID);
-            WriteGuidNoAlloc(writer, ir.ParentID);
+            EditorUtils.WriteGuidNoAlloc(writer, ir.ID);
+            EditorUtils.WriteGuidNoAlloc(writer, ir.ParentID);
             writer.Write(ir.Components.Count);
 
             for (int i = 0; i < ir.Components.Count; i++)
@@ -83,9 +84,9 @@ namespace Editor.Cooker
                 Guid ID 
                 List<SerializedPropertyIR> SerializedProperties 
              */
-            WriteGuidNoAlloc(writer, ir.TypeId);
+            EditorUtils.WriteGuidNoAlloc(writer, ir.TypeId);
             WriteBool(writer, ir.IsEnabled);
-            WriteGuidNoAlloc(writer, ir.ID);
+            EditorUtils.WriteGuidNoAlloc(writer, ir.ID);
             writer.Write(ir.Properties.Length);
 
             for (int i = 0; i < ir.Properties.Length; i++)
@@ -105,7 +106,7 @@ namespace Editor.Cooker
              */
             var serializedType = ir.Type;
             WriteString(writer, ir.Name);
-            WriteGuidNoAlloc(writer, ir.TypeId);
+            EditorUtils.WriteGuidNoAlloc(writer, ir.TypeId);
             writer.Write((ulong)(serializedType));
 
             if (serializedType.IsSimple())
@@ -138,18 +139,6 @@ namespace Editor.Cooker
             }
         }
 
-        private static unsafe void WriteGuidNoAlloc(BinaryWriter writer, in Guid id)
-        {
-            Span<byte> bytes = stackalloc byte[sizeof(Guid)];
-            id.TryWriteBytes(bytes);
-            writer.Write(bytes);
-        }
-
-        private static void WriteSpriteAsset(BinaryWriter writer, SpriteReferenceData reference)
-        {
-            writer.Write(reference.AtlasIndex);
-            WriteGuidNoAlloc(writer, reference.TextureId);
-        }
 
         private static void WriteSimpleCollection(BinaryWriter writer, CollectionData collectionData)
         {
@@ -290,7 +279,7 @@ namespace Editor.Cooker
                 return;
             }
             writer.Write((ulong)(data.ComplexType));
-            WriteGuidNoAlloc(writer, data.TypeId);
+            EditorUtils.WriteGuidNoAlloc(writer, data.TypeId);
             Serialize(writer, data.Properties);
         }
 
@@ -368,7 +357,7 @@ namespace Editor.Cooker
                                 continue;
                             }
                             writer.Write((ulong)(item.Type));
-                            WriteGuidNoAlloc(writer, item.Id);
+                            EditorUtils.WriteGuidNoAlloc(writer, item.Id);
                         }
                     }
                     break;
@@ -516,33 +505,19 @@ namespace Editor.Cooker
 
         private static void WriteReferenceProperty(BinaryWriter writer, ReferenceData value)
         {
-            if (value != null)
-            {
-                writer.Write((ulong)(value.Type));
-                WriteGuidNoAlloc(writer, value.Id);
-
-                // TODO: use a factory
-                if (value is SpriteReferenceData spriteRef)
-                {
-                    WriteSpriteAsset(writer, spriteRef);
-                }
-            }
-            else
-            {
-                writer.Write((ulong)(SerializedType.None));
-            }
+            _referenceWriter.WriteReference(writer, value);
         }
 
         private static void WriteEnum(BinaryWriter writer, in EnumIRValue value)
         {
             if (!string.IsNullOrEmpty(value.EnumInternalType))
             {
-                WriteGuidNoAlloc(writer, value.TypeId);
+                EditorUtils.WriteGuidNoAlloc(writer, value.TypeId);
                 writer.Write(value.EnumValue);
             }
             else
             {
-                WriteGuidNoAlloc(writer, Guid.Empty);
+                EditorUtils.WriteGuidNoAlloc(writer, Guid.Empty);
                 writer.Write((long)0);
             }
         }

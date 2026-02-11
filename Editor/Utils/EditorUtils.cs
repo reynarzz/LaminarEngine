@@ -64,5 +64,13 @@ namespace Editor.Utils
 
             return Encoding.UTF8.GetString(bytes);
         }
+
+        internal static unsafe void WriteGuidNoAlloc(BinaryWriter writer, in Guid id)
+        {
+            Span<byte> bytes = stackalloc byte[sizeof(Guid)];
+            id.TryWriteBytes(bytes);
+            writer.Write(bytes);
+        }
+
     }
 }
