@@ -64,8 +64,8 @@ namespace Editor.Cooker
             WriteString(writer, ir.Name);
             writer.Write(ir.Layer);
             WriteBool(writer, ir.IsActiveSelf);
-            WriteGUID(writer, ir.ID);
-            WriteGUID(writer, ir.ParentID);
+            WriteGuidNoAlloc(writer, ir.ID);
+            WriteGuidNoAlloc(writer, ir.ParentID);
             writer.Write(ir.Components.Count);
 
             for (int i = 0; i < ir.Components.Count; i++)
@@ -84,9 +84,9 @@ namespace Editor.Cooker
                 List<SerializedPropertyIR> SerializedProperties 
              */
             writer.Write(ir.Version);
-            WriteGUID(writer, ir.TypeId);
+            WriteGuidNoAlloc(writer, ir.TypeId);
             WriteBool(writer, ir.IsEnabled);
-            WriteGUID(writer, ir.ID);
+            WriteGuidNoAlloc(writer, ir.ID);
             writer.Write(ir.SerializedProperties.Count);
 
             for (int i = 0; i < ir.SerializedProperties.Count; i++)
@@ -106,8 +106,8 @@ namespace Editor.Cooker
              */
             var serializedType = ir.Type;
             WriteString(writer, ir.Name);
-            WriteGUID(writer, ir.TypeId);
-            writer.Write((long)(serializedType));
+            WriteGuidNoAlloc(writer, ir.TypeId);
+            writer.Write((ulong)(serializedType));
 
             if (serializedType.IsSimple())
             {
@@ -139,19 +139,11 @@ namespace Editor.Cooker
             }
         }
 
-        private static void WriteGUID(BinaryWriter writer, in Guid id)
+        private static unsafe void WriteGuidNoAlloc(BinaryWriter writer, in Guid id)
         {
-            const int GUID_SIZE = 16;
-            Span<byte> bytes = stackalloc byte[GUID_SIZE];
-            if (id.TryWriteBytes(bytes))
-            {
-                writer.Write(bytes);
-            }
-            else
-            {
-                writer.Write(id.ToByteArray());
-                Debug.Warn("Default guid writer");
-            }
+            Span<byte> bytes = stackalloc byte[sizeof(Guid)];
+            id.TryWriteBytes(bytes);
+            writer.Write(bytes);
         }
 
         private static void WriteSimpleCollection(BinaryWriter writer, CollectionData collectionData)
@@ -164,19 +156,19 @@ namespace Editor.Cooker
             {
                 return;
             }
-            writer.Write((long)(collectionData.CollectionType));
+            writer.Write((int)(collectionData.CollectionType));
             if (collectionData.CollectionType == CollectionType.Dictionary)
             {
                 var simpleDictionary = collectionData as DictionaryIRVariants;
-                writer.Write((long)(simpleDictionary.KeyType));
-                writer.Write((long)(simpleDictionary.ValueType));
+                writer.Write((ulong)(simpleDictionary.KeyType));
+                writer.Write((ulong)(simpleDictionary.ValueType));
                 WriteVariantArray(writer, simpleDictionary.KeyType, simpleDictionary.Keys);
                 WriteVariantArray(writer, simpleDictionary.ValueType, simpleDictionary.Values);
             }
             else
             {
                 var variantCollection = collectionData as CollectionIRVariants;
-                writer.Write((long)(variantCollection.ItemsType));
+                writer.Write((ulong)(variantCollection.ItemsType));
                 WriteVariantArray(writer, variantCollection.ItemsType, variantCollection.Value);
             }
         }
@@ -289,11 +281,11 @@ namespace Editor.Cooker
             */
             if (data == null)
             {
-                writer.Write((long)(SerializedType.None));
+                writer.Write((ulong)(SerializedType.None));
                 return;
             }
-            writer.Write((long)(data.ComplexType));
-            WriteGUID(writer, data.TypeId);
+            writer.Write((ulong)(data.ComplexType));
+            WriteGuidNoAlloc(writer, data.TypeId);
             Serialize(writer, data.Properties);
         }
 
@@ -308,7 +300,7 @@ namespace Editor.Cooker
                 return;
             }
 
-            writer.Write((long)(collectionData.CollectionType));
+            writer.Write((int)(collectionData.CollectionType));
             switch (collectionData.CollectionType)
             {
                 case CollectionType.None:
@@ -351,7 +343,7 @@ namespace Editor.Cooker
                 return;
             }
 
-            writer.Write((long)(data.CollectionType));
+            writer.Write((int)(data.CollectionType));
             switch (data.CollectionType)
             {
                 case CollectionType.None:
@@ -367,11 +359,11 @@ namespace Editor.Cooker
                         {
                             if (item == null)
                             {
-                                writer.Write((long)(SerializedType.None));
+                                writer.Write((ulong)(SerializedType.None));
                                 continue;
                             }
-                            writer.Write((long)(item.Type));
-                            writer.Write(item.Id.ToByteArray());
+                            writer.Write((ulong)(item.Type));
+                            WriteGuidNoAlloc(writer, item.Id);
                         }
                     }
                     break;
@@ -380,8 +372,8 @@ namespace Editor.Cooker
                         var referenceDictionary = data as DictionaryIRReferences;
                         for (int i = 0; i < referenceDictionary.Count; i++)
                         {
-                            writer.Write((long)(referenceDictionary.KeyType[i]));
-                            writer.Write((long)(referenceDictionary.ValueType[i]));
+                            writer.Write((ulong)(referenceDictionary.KeyType[i]));
+                            writer.Write((ulong)(referenceDictionary.ValueType[i]));
                         }
 
                         for (var i = 0; i < referenceDictionary.Count; i++)
@@ -521,12 +513,12 @@ namespace Editor.Cooker
         {
             if (value != null)
             {
-                writer.Write((long)(value.Type));
-                writer.Write(value.Id.ToByteArray());
+                writer.Write((ulong)(value.Type));
+                WriteGuidNoAlloc(writer, value.Id);
             }
             else
             {
-                writer.Write((long)(SerializedType.None));
+                writer.Write((ulong)(SerializedType.None));
             }
         }
 
@@ -534,20 +526,20 @@ namespace Editor.Cooker
         {
             if (!string.IsNullOrEmpty(value.EnumInternalType))
             {
-                WriteGUID(writer, value.TypeId);
+                WriteGuidNoAlloc(writer, value.TypeId);
                 writer.Write(value.EnumValue);
             }
             else
             {
-                WriteGUID(writer, Guid.Empty);
+                WriteGuidNoAlloc(writer, Guid.Empty);
                 writer.Write((long)0);
             }
         }
 
-        private static void WriteStruct<T>(BinaryWriter writer, T value) where T : unmanaged
+        private static unsafe void WriteStruct<T>(BinaryWriter writer, T value) where T : unmanaged
         {
-            ReadOnlySpan<T> span = stackalloc T[] { value };
-            writer.Write(MemoryMarshal.AsBytes(span));
+            Span<byte> span = new Span<byte>(&value, sizeof(T));
+            writer.BaseStream.Write(span);
         }
 
         private static void WritePayloadSpan<T>(BinaryWriter writer, Variant[] variants) where T : unmanaged
@@ -575,7 +567,6 @@ namespace Editor.Cooker
             }
         }
 
-        // Makes sure bool is exactly 1 byte.
         private static void WriteBoolPayloadSpan(BinaryWriter writer, Variant[] variants)
         {
             var count = variants.Length;
@@ -603,37 +594,36 @@ namespace Editor.Cooker
                 return;
             }
 
-            var totalBytes = Encoding.UTF8.GetByteCount(str);
+            int totalBytes = Encoding.UTF8.GetByteCount(str);
             writer.Write(totalBytes);
 
-            // Use a single rented buffer for everything to avoid heap allocations
-            // We rent based on the total bytes (if small) or chunkSize (if large)
-            var bufferSize = (str.Length < 1024) ? totalBytes : Encoding.UTF8.GetMaxByteCount(chunkSize);
-            var byteBuffer = ArrayPool<byte>.Shared.Rent(bufferSize);
-
-            try
+            if (totalBytes <= 1024) // a kb
             {
-                if (str.Length < 1024)
-                {
-                    int bytesWritten = Encoding.UTF8.GetBytes(str.AsSpan(), byteBuffer);
-                    writer.Write(byteBuffer, 0, bytesWritten);
-                }
-                else
+                Span<byte> buff = stackalloc byte[totalBytes];
+                Encoding.UTF8.GetBytes(str, buff);
+                writer.BaseStream.Write(buff);
+            }
+            else
+            {
+                var bufferSize = Encoding.UTF8.GetMaxByteCount(chunkSize);
+                var byteBuffer = ArrayPool<byte>.Shared.Rent(bufferSize);
+                try
                 {
                     int offset = 0;
                     var sourceSpan = str.AsSpan();
+
                     while (offset < str.Length)
                     {
                         int charsToProcess = Math.Min(chunkSize, str.Length - offset);
                         int bytesWritten = Encoding.UTF8.GetBytes(sourceSpan.Slice(offset, charsToProcess), byteBuffer);
-                        writer.Write(byteBuffer, 0, bytesWritten);
+                        writer.BaseStream.Write(byteBuffer.AsSpan(0, bytesWritten));
                         offset += charsToProcess;
                     }
                 }
-            }
-            finally
-            {
-                ArrayPool<byte>.Shared.Return(byteBuffer);
+                finally
+                {
+                    ArrayPool<byte>.Shared.Return(byteBuffer);
+                }
             }
         }
     }

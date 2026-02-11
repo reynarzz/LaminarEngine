@@ -16,6 +16,7 @@ namespace Engine.Serialization
         [SerializedField] public long EnumValue;
     }
 
+    [StructLayout(LayoutKind.Sequential)]
     internal struct Variant
     {
         [SerializedField] public SerializedType Kind;

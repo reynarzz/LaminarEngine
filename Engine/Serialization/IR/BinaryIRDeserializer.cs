@@ -13,7 +13,6 @@ namespace Engine.Serialization
 {
     internal class BinaryIRDeserializer
     {
-        private const int GUID_BYTES_SIZE = 16;
         internal static List<SerializedPropertyIR> Deserialize(BinaryReader reader)
         {
             var count = reader.ReadInt32();
@@ -62,8 +61,8 @@ namespace Engine.Serialization
             actor.Name = ReadString(reader);
             actor.Layer = reader.ReadInt32();
             actor.IsActiveSelf = ReadBool(reader);
-            actor.ID = new Guid(reader.ReadBytes(GUID_BYTES_SIZE));
-            actor.ParentID = new Guid(reader.ReadBytes(GUID_BYTES_SIZE));
+            actor.ID = ReadGuidNoAlloc(reader);
+            actor.ParentID = ReadGuidNoAlloc(reader);
             var componentsCount = reader.ReadInt32();
 
             actor.Components = new List<ComponentIR>();
@@ -88,9 +87,9 @@ namespace Engine.Serialization
             */
             var component = new ComponentIR();
             component.Version = reader.ReadInt32();
-            component.TypeId = new Guid(reader.ReadBytes(GUID_BYTES_SIZE));
+            component.TypeId = ReadGuidNoAlloc(reader);
             component.IsEnabled = ReadBool(reader);
-            component.ID = new Guid(reader.ReadBytes(GUID_BYTES_SIZE));
+            component.ID = ReadGuidNoAlloc(reader);
             var propertiesCount = reader.ReadInt32();
             component.SerializedProperties = new List<SerializedPropertyIR>();
 
@@ -114,8 +113,8 @@ namespace Engine.Serialization
           */
             var property = new SerializedPropertyIR();
             property.Name = ReadString(reader);
-            property.TypeId = new Guid(reader.ReadBytes(GUID_BYTES_SIZE));
-            property.Type = (SerializedType)reader.ReadInt64();
+            property.TypeId = ReadGuidNoAlloc(reader);
+            property.Type = (SerializedType)reader.ReadUInt64();
             var serializedType = property.Type;
 
             if (serializedType.IsSimple())
@@ -153,19 +152,31 @@ namespace Engine.Serialization
         {
             var totalBytes = reader.ReadInt32();
 
-            if (totalBytes == 0)
+            if (totalBytes <= 0)
             {
                 return string.Empty;
             }
 
-            var buffer = reader.ReadBytes(totalBytes);
-
-            if (buffer.Length != totalBytes)
+            if (totalBytes <= 1024) // a kb
             {
-                throw new EndOfStreamException();
+                Span<byte> buffer = stackalloc byte[totalBytes];
+                reader.BaseStream.ReadExactly(buffer);
+                return Encoding.UTF8.GetString(buffer);
             }
-
-            return Encoding.UTF8.GetString(buffer);
+            else
+            {
+                var buffer = ArrayPool<byte>.Shared.Rent(totalBytes);
+                try
+                {
+                    var span = buffer.AsSpan(0, totalBytes);
+                    reader.BaseStream.ReadExactly(span);
+                    return Encoding.UTF8.GetString(span);
+                }
+                finally
+                {
+                    ArrayPool<byte>.Shared.Return(buffer);
+                }
+            }
         }
 
         private static CollectionData ReadSimpleCollection(BinaryReader reader)
@@ -176,19 +187,19 @@ namespace Engine.Serialization
             {
                 return null;
             }
-            var collectionType = (CollectionType)reader.ReadInt64();
+            var collectionType = (CollectionType)reader.ReadInt32();
             if (collectionType == CollectionType.Dictionary)
             {
                 var simpleDictionary = new DictionaryIRVariants(count, collectionType);
-                simpleDictionary.KeyType = (SerializedType)reader.ReadInt64();
-                simpleDictionary.ValueType = (SerializedType)reader.ReadInt64();
+                simpleDictionary.KeyType = (SerializedType)reader.ReadUInt64();
+                simpleDictionary.ValueType = (SerializedType)reader.ReadUInt64();
                 simpleDictionary.Keys = ReadVariantArray(reader, simpleDictionary.KeyType, simpleDictionary.Count);
                 simpleDictionary.Values = ReadVariantArray(reader, simpleDictionary.ValueType, simpleDictionary.Count);
                 return simpleDictionary;
             }
 
             var variantCollection = new CollectionIRVariants(count, collectionType);
-            variantCollection.ItemsType = (SerializedType)reader.ReadInt64();
+            variantCollection.ItemsType = (SerializedType)reader.ReadUInt64();
             variantCollection.Value = ReadVariantArray(reader, variantCollection.ItemsType, count);
             return variantCollection;
         }
@@ -271,27 +282,34 @@ namespace Engine.Serialization
             }
         }
 
-        private static Variant[] ReadPayloadSpan<T>(BinaryReader reader, int count, SerializedType kind)
+        private static unsafe Variant[] ReadPayloadSpan<T>(BinaryReader reader, int count, SerializedType kind)
             where T : unmanaged
         {
             var variants = new Variant[count];
 
-            int elementSize = Unsafe.SizeOf<T>();
-            int totalBytes = count * elementSize;
+            int totalBytes = count * sizeof(T);
+            var buffer = ArrayPool<byte>.Shared.Rent(totalBytes);
 
-            var buffer = reader.ReadBytes(totalBytes).AsSpan();
-
-            for (int i = 0; i < count; i++)
+            try
             {
-                ref byte b = ref buffer[i * elementSize];
-                T value = Unsafe.ReadUnaligned<T>(ref b);
+                reader.BaseStream.ReadExactly(buffer.AsSpan(0, totalBytes));
 
-                variants[i] = new Variant()
+                for (int i = 0; i < count; i++)
                 {
-                    Kind = kind,
-                    value = Unsafe.As<T, Variant.Value>(ref value),
-                    String = null
-                };
+                    ref byte b = ref buffer[i * sizeof(T)];
+                    T tmp = Unsafe.ReadUnaligned<T>(ref b);
+                    variants[i] = new Variant
+                    {
+                        Kind = kind,
+                        value = Unsafe.As<T, Variant.Value>(ref tmp),
+                        String = null,
+                        Enum = default
+                    };
+                }
+            }
+            finally
+            {
+                ArrayPool<byte>.Shared.Return(buffer);
             }
 
             return variants;
@@ -301,12 +319,37 @@ namespace Engine.Serialization
         private static Variant[] ReadBoolPayloadSpan(BinaryReader reader, int count)
         {
             var variants = new Variant[count];
-            var buffer = reader.ReadBytes(count);
 
-            for (int i = 0; i < variants.Length; i++)
+            if (count <= 512) // half a kb
             {
-                variants[i] = Variant.FromBool(ByteToBool(buffer[i]));
+                // Small array, use stackalloc to avoid heap allocation
+                Span<byte> buffer = stackalloc byte[count];
+                reader.BaseStream.ReadExactly(buffer);
+
+                for (int i = 0; i < count; i++)
+                {
+                    variants[i] = Variant.FromBool(ByteToBool(buffer[i]));
+                }
             }
+            else
+            {
+                // large array, rent from ArrayPool to avoid GC pressure
+                var buffer = ArrayPool<byte>.Shared.Rent(count);
+                try
+                {
+                    reader.BaseStream.ReadExactly(buffer.AsSpan(0, count));
+
+                    for (int i = 0; i < count; i++)
+                    {
+                        variants[i] = Variant.FromBool(ByteToBool(buffer[i]));
+                    }
+                }
+                finally
+                {
+                    ArrayPool<byte>.Shared.Return(buffer, clearArray: false);
+                }
+            }
+
             return variants;
         }
 
@@ -317,12 +360,12 @@ namespace Engine.Serialization
         }
         private static bool ReadBool(BinaryReader reader)
         {
-           return ByteToBool(reader.ReadByte());
+            return ByteToBool(reader.ReadByte());
         }
 
         private static Variant ReadEnum(BinaryReader reader)
         {
-            var id = new Guid(reader.ReadBytes(GUID_BYTES_SIZE));
+            var id = ReadGuidNoAlloc(reader);
             var enumVal = reader.ReadInt64();
             return Variant.FromEnum(id, null, enumVal);
         }
@@ -335,7 +378,7 @@ namespace Engine.Serialization
             {
                 return null;
             }
-            var collectionType = (CollectionType)reader.ReadInt64();
+            var collectionType = (CollectionType)reader.ReadInt32();
             switch (collectionType)
             {
                 case CollectionType.None:
@@ -380,7 +423,7 @@ namespace Engine.Serialization
                 return null;
             }
 
-            var collectionType = (CollectionType)reader.ReadInt64();
+            var collectionType = (CollectionType)reader.ReadInt32();
             switch (collectionType)
             {
                 case CollectionType.None:
@@ -404,8 +447,8 @@ namespace Engine.Serialization
 
                         for (int i = 0; i < result.Count; i++)
                         {
-                            result.KeyType[i] = (SerializedType)reader.ReadInt64();
-                            result.ValueType[i] = (SerializedType)reader.ReadInt64();
+                            result.KeyType[i] = (SerializedType)reader.ReadUInt64();
+                            result.ValueType[i] = (SerializedType)reader.ReadUInt64();
                         }
                         for (int i = 0; i < result.Count; i++)
                         {
@@ -433,7 +476,7 @@ namespace Engine.Serialization
 
         private static ReferenceData ReadReferenceProperty(BinaryReader reader)
         {
-            var type = (SerializedType)reader.ReadInt64();
+            var type = (SerializedType)reader.ReadUInt64();
 
             if (type == SerializedType.None)
             {
@@ -443,9 +486,17 @@ namespace Engine.Serialization
             return new ReferenceData()
             {
                 Type = type,
-                Id = new Guid(reader.ReadBytes(GUID_BYTES_SIZE)),
+                Id = ReadGuidNoAlloc(reader),
             };
         }
+
+        private static unsafe Guid ReadGuidNoAlloc(BinaryReader reader)
+        {
+            Guid guid;
+            reader.Read(new Span<byte>(&guid, sizeof(Guid)));
+            return guid;
+        }
+
         private static ComplexData ReadComplexClass(BinaryReader reader)
         {
             /*
@@ -455,14 +506,14 @@ namespace Engine.Serialization
            */
             var complexTypeData = new ComplexData();
 
-            complexTypeData.ComplexType = (SerializedType)reader.ReadInt64();
+            complexTypeData.ComplexType = (SerializedType)reader.ReadUInt64();
 
             if (complexTypeData.ComplexType == SerializedType.None)
             {
                 return complexTypeData;
             }
 
-            complexTypeData.TypeId = new Guid(reader.ReadBytes(GUID_BYTES_SIZE));
+            complexTypeData.TypeId = ReadGuidNoAlloc(reader);
             complexTypeData.Properties = Deserialize(reader);
 
             return complexTypeData;
@@ -502,25 +553,25 @@ namespace Engine.Serialization
                 case SerializedType.ULong:
                     return Variant.FromULong(reader.ReadUInt64());
                 case SerializedType.Vec2:
-                    return Variant.FromVec2(ReadStruct<vec2>(reader));
+                    return Variant.FromVec2(ReadStructNoAlloc<vec2>(reader));
                 case SerializedType.Vec3:
-                    return Variant.FromVec3(ReadStruct<vec3>(reader));
+                    return Variant.FromVec3(ReadStructNoAlloc<vec3>(reader));
                 case SerializedType.Vec4:
-                    return Variant.FromVec4(ReadStruct<vec4>(reader));
+                    return Variant.FromVec4(ReadStructNoAlloc<vec4>(reader));
                 case SerializedType.IVec2:
-                    return Variant.FromIVec2(ReadStruct<ivec2>(reader));
+                    return Variant.FromIVec2(ReadStructNoAlloc<ivec2>(reader));
                 case SerializedType.IVec3:
-                    return Variant.FromIVec3(ReadStruct<ivec3>(reader));
+                    return Variant.FromIVec3(ReadStructNoAlloc<ivec3>(reader));
                 case SerializedType.IVec4:
-                    return Variant.FromIVec4(ReadStruct<ivec4>(reader));
+                    return Variant.FromIVec4(ReadStructNoAlloc<ivec4>(reader));
                 case SerializedType.Quat:
-                    return Variant.FromQuat(ReadStruct<quat>(reader));
+                    return Variant.FromQuat(ReadStructNoAlloc<quat>(reader));
                 case SerializedType.Mat2:
-                    return Variant.FromMat2(ReadStruct<mat2>(reader));
+                    return Variant.FromMat2(ReadStructNoAlloc<mat2>(reader));
                 case SerializedType.Mat3:
-                    return Variant.FromMat3(ReadStruct<mat3>(reader));
+                    return Variant.FromMat3(ReadStructNoAlloc<mat3>(reader));
                 case SerializedType.Mat4:
-                    return Variant.FromMat4(ReadStruct<mat4>(reader));
+                    return Variant.FromMat4(ReadStructNoAlloc<mat4>(reader));
                 case SerializedType.Color:
                     return Variant.FromColor((Color)reader.ReadUInt32());
                 case SerializedType.Color32:
@@ -530,18 +581,11 @@ namespace Engine.Serialization
             }
         }
 
-        public static T ReadStruct<T>(BinaryReader reader) where T : unmanaged
+        public static unsafe T ReadStructNoAlloc<T>(BinaryReader reader) where T : unmanaged
         {
-            int size = Unsafe.SizeOf<T>();
-
-            var buffer = reader.ReadBytes(size);
-
-            if (buffer.Length < size)
-            {
-                throw new EndOfStreamException($"Expected {size} bytes, but reached end of stream.");
-            }
-
-            return MemoryMarshal.Read<T>(buffer);
+            Span<byte> buff = stackalloc byte[sizeof(T)];
+            reader.BaseStream.ReadExactly(buff);
+            return MemoryMarshal.Read<T>(buff);
         }
     }
 }

@@ -200,6 +200,7 @@ namespace Game
         [SerializedField]
         private Dictionary<BlendFactor, mat4> _mat4ByEnumDictionary;
 
+        [SerializedField] private bool[] _boolArray;
         [ShowMethodInEditor]
         public void AMethodCallingFromEditor()
         {
