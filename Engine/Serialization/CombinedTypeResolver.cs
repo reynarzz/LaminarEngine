@@ -17,7 +17,7 @@ namespace Engine.Serialization
             return Resolve(prop.InternalType, prop.TypeId, out type);
         }
 
-        public static bool ResolveType(ComplexData prop, out Type type)
+        public static bool ResolveType(ClassData prop, out Type type)
         {
             return Resolve(prop.InternalType, prop.TypeId, out type);
         }

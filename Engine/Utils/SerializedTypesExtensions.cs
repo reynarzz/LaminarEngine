@@ -19,6 +19,21 @@ namespace Engine.Utils
         {
             return (type & SerializedType.AssetFlag) != 0; 
         }
+
+        public static bool IsDefaultAssetRef(this SerializedType type)
+        {
+            return (type & (SerializedType.Component |
+                            SerializedType.Actor |
+                            SerializedType.TextureAsset |
+                            SerializedType.MaterialAsset |
+                            SerializedType.ShaderAsset |
+                            SerializedType.AudioClipAsset |
+                            SerializedType.AnimationAsset |
+                            SerializedType.AnimatorControllerAsset |
+                            SerializedType.RenderTextureAsset |
+                            SerializedType.ScriptableObject)) != 0;
+        }
+
         public static bool IsEObject(this SerializedType type)
         {
             return (type & SerializedType.EObjectFlag) != 0;
@@ -28,9 +43,9 @@ namespace Engine.Utils
             return (type & SerializedType.CollectionFlag) != 0;
         }
 
-        public static bool IsComplexClass(this SerializedType type)
+        public static bool IsClass(this SerializedType type)
         {
-            return (type & SerializedType.ComplexClass) != 0;
+            return (type & SerializedType.ClassFlag) != 0;
         }
         
         public static ulong GetIdentity(this SerializedType type)

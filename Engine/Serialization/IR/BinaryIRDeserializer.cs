@@ -13,6 +13,7 @@ namespace Engine.Serialization
 {
     internal class BinaryIRDeserializer
     {
+        private readonly static ReferenceBinaryReaderFactory _referenceReader = new();
         internal static SerializedPropertyIR[] Deserialize(BinaryReader reader)
         {
             var count = reader.ReadInt32();
@@ -61,8 +62,8 @@ namespace Engine.Serialization
             actor.Name = ReadString(reader);
             actor.Layer = reader.ReadInt32();
             actor.IsActiveSelf = ReadBool(reader);
-            actor.ID = ReadGuidNoAlloc(reader);
-            actor.ParentID = ReadGuidNoAlloc(reader);
+            actor.ID = FileUtils.ReadGuidNoAlloc(reader);
+            actor.ParentID = FileUtils.ReadGuidNoAlloc(reader);
             var componentsCount = reader.ReadInt32();
 
             actor.Components = new List<ComponentIR>();
@@ -85,9 +86,9 @@ namespace Engine.Serialization
                List<SerializedPropertyIR> SerializedProperties 
             */
             var component = new ComponentIR();
-            component.TypeId = ReadGuidNoAlloc(reader);
+            component.TypeId = FileUtils.ReadGuidNoAlloc(reader);
             component.IsEnabled = ReadBool(reader);
-            component.ID = ReadGuidNoAlloc(reader);
+            component.ID = FileUtils.ReadGuidNoAlloc(reader);
             var propertiesCount = reader.ReadInt32();
             component.Properties = new SerializedPropertyIR[propertiesCount];
 
@@ -109,7 +110,7 @@ namespace Engine.Serialization
           */
             var property = new SerializedPropertyIR();
             property.Name = ReadString(reader);
-            property.TypeId = ReadGuidNoAlloc(reader);
+            property.TypeId = FileUtils.ReadGuidNoAlloc(reader);
             property.Type = (SerializedType)reader.ReadUInt64();
             var serializedType = property.Type;
 
@@ -125,9 +126,10 @@ namespace Engine.Serialization
             {
                 property.Collection = ReadReferenceCollection(reader);
             }
-            else if (serializedType == SerializedType.ComplexClass)
+            else if (serializedType.IsClass())
             {
-                property.Complex = ReadComplexClass(reader);
+                // TODO: split between class types.
+                property.Class = ReadComplexClass(reader);
             }
             else if (serializedType == SerializedType.ComplexCollection)
             {
@@ -186,7 +188,7 @@ namespace Engine.Serialization
             var collectionType = (CollectionType)reader.ReadInt32();
             if (collectionType == CollectionType.Dictionary)
             {
-                var simpleDictionary = new DictionaryIRVariants(count, collectionType);
+                var simpleDictionary = new DictionarySimple(count, collectionType);
                 simpleDictionary.KeyType = (SerializedType)reader.ReadUInt64();
                 simpleDictionary.ValueType = (SerializedType)reader.ReadUInt64();
                 simpleDictionary.Keys = ReadVariantArray(reader, simpleDictionary.KeyType, simpleDictionary.Count);
@@ -194,7 +196,7 @@ namespace Engine.Serialization
                 return simpleDictionary;
             }
 
-            var variantCollection = new CollectionIRVariants(count, collectionType);
+            var variantCollection = new CollectionSimples(count, collectionType);
             variantCollection.ItemsType = (SerializedType)reader.ReadUInt64();
             variantCollection.Value = ReadVariantArray(reader, variantCollection.ItemsType, count);
             return variantCollection;
@@ -361,7 +363,7 @@ namespace Engine.Serialization
 
         private static Variant ReadEnum(BinaryReader reader)
         {
-            var id = ReadGuidNoAlloc(reader);
+            var id = FileUtils.ReadGuidNoAlloc(reader);
             var enumVal = reader.ReadInt64();
             return Variant.FromEnum(id, null, enumVal);
         }
@@ -385,7 +387,7 @@ namespace Engine.Serialization
                 case CollectionType.Queue:
                 case CollectionType.HashSet:
                     {
-                        var collectionData = new CollectionIRComplexTypes(count, collectionType);
+                        var collectionData = new CollectionClasses(count, collectionType);
                         for (int i = 0; i < count; i++)
                         {
                             collectionData.Value[i] = ReadComplexClass(reader);
@@ -394,7 +396,7 @@ namespace Engine.Serialization
                     }
                 case CollectionType.Dictionary:
                     {
-                        var result = new DictionaryIRComplexTypes(count, collectionType);
+                        var result = new DictionaryClass(count, collectionType);
 
                         for (int i = 0; i < result.Count; i++)
                         {
@@ -430,7 +432,7 @@ namespace Engine.Serialization
                 case CollectionType.Queue:
                 case CollectionType.HashSet:
                     {
-                        var result = new CollectionIRReferences(count, collectionType);
+                        var result = new CollectionReferences(count, collectionType);
                         for (int i = 0; i < result.Count; i++)
                         {
                             result.Value[i] = ReadReferenceProperty(reader);
@@ -472,73 +474,26 @@ namespace Engine.Serialization
 
         private static ReferenceData ReadReferenceProperty(BinaryReader reader)
         {
-            var type = (SerializedType)reader.ReadUInt64();
-
-            if (type == SerializedType.None)
-            {
-                return null;
-            }
-
-            // TODO: use a factory
-            switch (type)
-            {
-                case SerializedType.SpriteAsset:
-                    return new SpriteReferenceData()
-                    {
-                        Type = type,
-                        Id = ReadGuidNoAlloc(reader),
-                        AtlasIndex = reader.ReadInt32(),
-                        TextureId = ReadGuidNoAlloc(reader)
-                    };
-                //case SerializedType.TextureAsset:
-                //    break;
-                //case SerializedType.MaterialAsset:
-                //    break;
-                //case SerializedType.ShaderAsset:
-                //    break;
-                //case SerializedType.AudioClipAsset:
-                //    break;
-                //case SerializedType.AnimationAsset:
-                //    break;
-                //case SerializedType.AnimatorControllerAsset:
-                //    break;
-                //case SerializedType.RenderTextureAsset:
-                //    break;
-                //case SerializedType.ScriptableObject:
-                //    break;
-                default:
-                    return new ReferenceData()
-                    {
-                        Type = type,
-                        Id = ReadGuidNoAlloc(reader),
-                    };
-            }
+            return _referenceReader.ReadReference(reader);
         }
 
-        private static unsafe Guid ReadGuidNoAlloc(BinaryReader reader)
-        {
-            Guid guid;
-            reader.Read(new Span<byte>(&guid, sizeof(Guid)));
-            return guid;
-        }
-
-        private static ComplexData ReadComplexClass(BinaryReader reader)
+        private static ClassData ReadComplexClass(BinaryReader reader)
         {
             /*
               SerializedType ComplexType 
               Guid TypeId 
               List<SerializedPropertyIR> Properties 
            */
-            var complexTypeData = new ComplexData();
+            var complexTypeData = new ClassData();
 
-            complexTypeData.ComplexType = (SerializedType)reader.ReadUInt64();
+            complexTypeData.ClassType = (SerializedType)reader.ReadUInt64();
 
-            if (complexTypeData.ComplexType == SerializedType.None)
+            if (complexTypeData.ClassType == SerializedType.None)
             {
                 return complexTypeData;
             }
 
-            complexTypeData.TypeId = ReadGuidNoAlloc(reader);
+            complexTypeData.TypeId = FileUtils.ReadGuidNoAlloc(reader);
             complexTypeData.Properties = Deserialize(reader);
 
             return complexTypeData;

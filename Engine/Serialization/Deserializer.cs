@@ -58,8 +58,9 @@ namespace Engine.Serialization
                 {
                     DeserializeReferenceCollectionProperty(targetInstance, property, deserializerData);
                 }
-                else if (serializedType == SerializedType.ComplexClass)
+                else if (serializedType.IsClass())
                 {
+                    // TODO: split to complex class and other type of classes.
                     DeserializeComplexClass(targetInstance, property, deserializerData);
                 }
                 else if (serializedType == SerializedType.ComplexCollection)
@@ -221,7 +222,7 @@ namespace Engine.Serialization
             void SetValueToProperty(object collectionInstance, Action<ReferenceData, int> setCollectionValueCallback)
             {
                 int collIndex = 0;
-                var referenceCol = collectionData as CollectionIRReferences;
+                var referenceCol = collectionData as CollectionReferences;
                 foreach (var item in referenceCol.Value)
                 {
                     setCollectionValueCallback(item, collIndex);
@@ -234,10 +235,10 @@ namespace Engine.Serialization
 
         internal static void DeserializeComplexClass(object target, SerializedPropertyIR property, DeserializerData deserializerData)
         {
-            if (target == null || property == null || property.Complex == null)
+            if (target == null || property == null || property.Class == null)
                 return;
 
-            var complexData = property.Complex;
+            var complexData = property.Class;
             if (Tr.ResolveType(complexData, out Type type))
             {
                 var inst = Activator.CreateInstance(type);
@@ -266,7 +267,7 @@ namespace Engine.Serialization
                 var collectionInstance = ReflectionUtils.GetDefaultValueInstance(type);
                 if (collectionData.CollectionType == CollectionType.Dictionary)
                 {
-                    var dictionarySimple = collectionData as DictionaryIRVariants;
+                    var dictionarySimple = collectionData as DictionarySimple;
 
                     // NOTE: Only enums will be boxed.
                     if (dictionarySimple.Count > 0 && (dictionarySimple.KeyType == SerializedType.Enum ||
@@ -290,7 +291,7 @@ namespace Engine.Serialization
                 }
                 else
                 {
-                    var variantCollection = collectionData as CollectionIRVariants;
+                    var variantCollection = collectionData as CollectionSimples;
                     if (variantCollection.Count > 0)
                     {
                         if (variantCollection.ItemsType == SerializedType.Enum)
@@ -334,7 +335,7 @@ namespace Engine.Serialization
                 return;
             }
 
-            void DeserializeItem(ComplexData complexItem, Action<object> setValueCallback)
+            void DeserializeItem(ClassData complexItem, Action<object> setValueCallback)
             {
                 if (complexItem == null)
                 {
@@ -349,7 +350,7 @@ namespace Engine.Serialization
                         throw new Exception($"Can't create an instance of type: {itemType}, check if a default constructor is available.");
                     }
                     DeserializeTarget(itemInstance, complexItem.Properties, deserializerData);
-                    var itemValue = GetComplexTypeDataSafe(itemInstance, complexItem, complexItem.ComplexType, deserializerData);
+                    var itemValue = GetComplexTypeDataSafe(itemInstance, complexItem, complexItem.ClassType, deserializerData);
                     setValueCallback(itemValue);
                 }
             }
@@ -361,14 +362,14 @@ namespace Engine.Serialization
                 if (collectionData.CollectionType == CollectionType.Dictionary)
                 {
                     var dictionary = collectionInstance as IDictionary;
-                    var complexDictionary = collectionData as DictionaryIRComplexTypes;
+                    var complexDictionary = collectionData as DictionaryClass;
                     for (int i = 0; i < complexDictionary.Count; i++)
                     {
-                        object DeserializeArgValue(ComplexData complexArg)
+                        object DeserializeArgValue(ClassData complexArg)
                         {
                             object deserializedArgValue = null;
 
-                            if (complexArg.ComplexType.IsSimple())
+                            if (complexArg.ClassType.IsSimple())
                             {
                                 //if (complexArg.Properties != null && complexArg.Properties.Count > 0)
                                 {
@@ -401,7 +402,7 @@ namespace Engine.Serialization
                 {
                     collectionInstance = ReflectionUtils.EnsureCount(collectionInstance, collectionData.Count);
                     int colItemIndex = 0;
-                    var complexCol = collectionData as CollectionIRComplexTypes;
+                    var complexCol = collectionData as CollectionClasses;
                     foreach (var complexItem in complexCol.Value)
                     {
                         DeserializeItem(complexItem, item =>
@@ -416,7 +417,7 @@ namespace Engine.Serialization
             }
         }
 
-        private static object GetComplexTypeDataSafe(object arg, ComplexData argComplexData,
+        private static object GetComplexTypeDataSafe(object arg, ClassData argComplexData,
                                                      SerializedType argType, DeserializerData deserializedData)
         {
             if (arg == null)
@@ -426,9 +427,9 @@ namespace Engine.Serialization
             {
                 return GetReferenceValue(argType, deserializedData, reference);
             }
-            else if (argComplexData.ComplexType.IsSimple())
+            else if (argComplexData.ClassType.IsSimple())
             {
-                if (argComplexData.ComplexType == SerializedType.Enum)
+                if (argComplexData.ClassType == SerializedType.Enum)
                 {
                     return ReflectionUtils.DeserializeEnum<Tr>((Variant)arg);
                 }
@@ -442,23 +443,23 @@ namespace Engine.Serialization
         private static object GetReferenceValue(SerializedType type, DeserializerData deserializerData,
                                                 ReferenceData refData)
         {
-            if (type == SerializedType.None || refData == null || refData.Id == Guid.Empty)
+            if (type == SerializedType.None || refData == null || refData.RefId == Guid.Empty)
                 return null;
 
             switch (type)
             {
                 case SerializedType.Component:
-                    return GetReferenceValue(deserializerData?.ComponentsByID, refData.Id);
+                    return GetReferenceValue(deserializerData?.ComponentsByID, refData.RefId);
                 case SerializedType.Actor:
-                    return GetReferenceValue(deserializerData?.ActorsByID, refData.Id);
+                    return GetReferenceValue(deserializerData?.ActorsByID, refData.RefId);
                 case SerializedType.TextureAsset:
-                    return (Assets.GetAssetFromGuid(refData.Id) as TextureAsset)?.Texture;
+                    return (Assets.GetAssetFromGuid(refData.RefId) as TextureAsset)?.Texture;
                 case SerializedType.SpriteAsset:
                     return GetSprite(refData as SpriteReferenceData);
 
                 // Rest of assets will be threated equal.
                 case var t when t.IsAsset():
-                    return Assets.GetAssetFromGuid(refData.Id);
+                    return Assets.GetAssetFromGuid(refData.RefId);
                 default:
                     Debug.Error($"Can't deserialize reference: '{type}' is not implemented.");
                     break;
@@ -469,7 +470,7 @@ namespace Engine.Serialization
 
         private static Sprite GetSprite(SpriteReferenceData refData)
         {
-            var asset = Assets.GetAssetFromGuid(refData.TextureId);
+            var asset = Assets.GetAssetFromGuid(refData.TexRefId);
             var atlas = (asset as TextureAsset)?.Atlas;
             if (atlas != null)
             {

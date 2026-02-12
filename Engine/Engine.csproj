@@ -67,7 +67,6 @@
 
   <ItemGroup>
     <Folder Include="Graphics\Device\Null\" />
-    <Folder Include="Serialization\Binary\" />
     <Folder Include="Third\Native\bin\" />
   </ItemGroup>
 

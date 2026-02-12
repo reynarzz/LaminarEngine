@@ -4,12 +4,9 @@
     "Type": "ComplexCollection",
     "InternalType": "System.Collections.Generic.List`1[[System.Guid, System.Private.CoreLib]], System.Private.CoreLib",
     "TypeId": "b296fd12-bde3-15f4-9d41-fdf34414a159",
-    "Simple": {
-      "Kind": "None",
-      "Value": null
-    },
+    "Simple": null,
     "Collection": {
-      "$type": "Engine.Serialization.CollectionIRComplexTypes, Engine",
+      "$type": "Engine.Serialization.CollectionClasses, Engine",
       "$value": {
         "Value": [],
         "ItemsType": "None",
@@ -22,18 +19,17 @@
     "Type": "ComplexCollection",
     "InternalType": "System.Collections.Generic.Dictionary`2[[Editor.Build.PlatformBuild, Editor],[Editor.Build.PlatformBuildSettings, Editor]], System.Private.CoreLib",
     "TypeId": "412f0587-f58a-1ca1-0724-b3d38eb2b38c",
-    "Simple": {
-      "Kind": "None",
-      "Value": null
-    },
+    "Simple": null,
     "Collection": {
-      "$type": "Engine.Serialization.DictionaryIRComplexTypes, Engine",
+      "$type": "Engine.Serialization.DictionaryClass, Engine",
       "$value": {
+        "KeyType": "None",
+        "ValueType": "None",
         "Keys": [
           {
             "InternalType": "Editor.Build.PlatformBuild, Editor",
             "TypeId": "b5d78a8f-ad76-27bc-a569-eb732e643f2a",
-            "ComplexType": "Enum",
+            "ClassType": "Enum",
             "Properties": [
               {
                 "Name": "D_K",
@@ -54,7 +50,7 @@
           {
             "InternalType": "Editor.Build.PlatformBuild, Editor",
             "TypeId": "b5d78a8f-ad76-27bc-a569-eb732e643f2a",
-            "ComplexType": "Enum",
+            "ClassType": "Enum",
             "Properties": [
               {
                 "Name": "D_K",
@@ -77,38 +73,32 @@
           {
             "InternalType": "Editor.Build.WindowsBuildSettings, Editor",
             "TypeId": "d979e285-1edc-e68d-1867-706c6fbbaee5",
-            "ComplexType": "ComplexClass",
+            "ClassType": "ComplexClass",
             "Properties": [
               {
                 "Name": "Default",
                 "Type": "ComplexClass",
                 "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
                 "TypeId": "b82153eb-c244-d04c-0054-8eb0a05390ee",
-                "Simple": {
-                  "Kind": "None",
-                  "Value": null
-                },
-                "Complex": {
-                  "$type": "Engine.Serialization.ComplexData, Engine",
+                "Simple": null,
+                "Class": {
+                  "$type": "Engine.Serialization.ClassData, Engine",
                   "$value": {
                     "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
                     "TypeId": "b82153eb-c244-d04c-0054-8eb0a05390ee",
-                    "ComplexType": "ComplexClass",
+                    "ClassType": "ComplexClass",
                     "Properties": [
                       {
                         "Name": "Icon",
                         "Type": "TextureAsset",
                         "InternalType": "Engine.Texture2D, Engine",
                         "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
-                        "Simple": {
-                          "Kind": "None",
-                          "Value": null
-                        },
+                        "Simple": null,
                         "Reference": {
                           "$type": "Engine.Serialization.ReferenceData, Engine",
                           "$value": {
                             "Type": "TextureAsset",
-                            "Id": "9e698fe7-e3db-48ba-bac0-e0c7e7da33e1"
+                            "RefId": "5e84edc9-8244-4490-9e67-fa3817db99a0"
                           }
                         }
                       },
@@ -215,26 +205,20 @@
                 "Type": "ComplexClass",
                 "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
                 "TypeId": "b82153eb-c244-d04c-0054-8eb0a05390ee",
-                "Simple": {
-                  "Kind": "None",
-                  "Value": null
-                },
-                "Complex": {
-                  "$type": "Engine.Serialization.ComplexData, Engine",
+                "Simple": null,
+                "Class": {
+                  "$type": "Engine.Serialization.ClassData, Engine",
                   "$value": {
                     "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
                     "TypeId": "b82153eb-c244-d04c-0054-8eb0a05390ee",
-                    "ComplexType": "ComplexClass",
+                    "ClassType": "ComplexClass",
                     "Properties": [
                       {
                         "Name": "Icon",
                         "Type": "TextureAsset",
                         "InternalType": "Engine.Texture2D, Engine",
                         "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
-                        "Simple": {
-                          "Kind": "None",
-                          "Value": null
-                        }
+                        "Simple": null
                       },
                       {
                         "Name": "Description",
@@ -339,26 +323,20 @@
                 "Type": "ComplexClass",
                 "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
                 "TypeId": "b82153eb-c244-d04c-0054-8eb0a05390ee",
-                "Simple": {
-                  "Kind": "None",
-                  "Value": null
-                },
-                "Complex": {
-                  "$type": "Engine.Serialization.ComplexData, Engine",
+                "Simple": null,
+                "Class": {
+                  "$type": "Engine.Serialization.ClassData, Engine",
                   "$value": {
                     "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
                     "TypeId": "b82153eb-c244-d04c-0054-8eb0a05390ee",
-                    "ComplexType": "ComplexClass",
+                    "ClassType": "ComplexClass",
                     "Properties": [
                       {
                         "Name": "Icon",
                         "Type": "TextureAsset",
                         "InternalType": "Engine.Texture2D, Engine",
                         "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
-                        "Simple": {
-                          "Kind": "None",
-                          "Value": null
-                        }
+                        "Simple": null
                       },
                       {
                         "Name": "Description",
@@ -487,7 +465,7 @@
           {
             "InternalType": "Editor.Build.AndroidBuildSettings, Editor",
             "TypeId": "3732c59f-64ea-5db5-2de1-1d230ce95cab",
-            "ComplexType": "ComplexClass",
+            "ClassType": "ComplexClass",
             "Properties": [
               {
                 "Name": "KeyAlias",
@@ -566,62 +544,47 @@
                 "Type": "ComplexClass",
                 "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
                 "TypeId": "8a545684-8915-490a-8117-7ccad9e1f6d7",
-                "Simple": {
-                  "Kind": "None",
-                  "Value": null
-                },
-                "Complex": {
-                  "$type": "Engine.Serialization.ComplexData, Engine",
+                "Simple": null,
+                "Class": {
+                  "$type": "Engine.Serialization.ClassData, Engine",
                   "$value": {
                     "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
                     "TypeId": "8a545684-8915-490a-8117-7ccad9e1f6d7",
-                    "ComplexType": "ComplexClass",
+                    "ClassType": "ComplexClass",
                     "Properties": [
                       {
                         "Name": "DefaultIcon",
                         "Type": "ComplexClass",
                         "InternalType": "Editor.Build.AndroidIcon, Editor",
                         "TypeId": "fc6bd7ae-58d4-e8ad-12bd-08b8c49944fd",
-                        "Simple": {
-                          "Kind": "None",
-                          "Value": null
-                        },
-                        "Complex": {
-                          "$type": "Engine.Serialization.ComplexData, Engine",
+                        "Simple": null,
+                        "Class": {
+                          "$type": "Engine.Serialization.ClassData, Engine",
                           "$value": {
                             "InternalType": "Editor.Build.AndroidIcon, Editor",
                             "TypeId": "fc6bd7ae-58d4-e8ad-12bd-08b8c49944fd",
-                            "ComplexType": "ComplexClass",
+                            "ClassType": "ComplexClass",
                             "Properties": [
                               {
                                 "Name": "Icon",
                                 "Type": "TextureAsset",
                                 "InternalType": "Engine.Texture2D, Engine",
                                 "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
-                                "Simple": {
-                                  "Kind": "None",
-                                  "Value": null
-                                }
+                                "Simple": null
                               },
                               {
                                 "Name": "ForegroundIcon",
                                 "Type": "TextureAsset",
                                 "InternalType": "Engine.Texture2D, Engine",
                                 "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
-                                "Simple": {
-                                  "Kind": "None",
-                                  "Value": null
-                                }
+                                "Simple": null
                               },
                               {
                                 "Name": "BackgroundIcon",
                                 "Type": "TextureAsset",
                                 "InternalType": "Engine.Texture2D, Engine",
                                 "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
-                                "Simple": {
-                                  "Kind": "None",
-                                  "Value": null
-                                }
+                                "Simple": null
                               }
                             ]
                           }
@@ -632,12 +595,9 @@
                         "Type": "ComplexCollection",
                         "InternalType": "Editor.Build.AndroidIcon[], Editor",
                         "TypeId": "5ee4bed7-a2fd-618a-128b-f8be6eee849c",
-                        "Simple": {
-                          "Kind": "None",
-                          "Value": null
-                        },
+                        "Simple": null,
                         "Collection": {
-                          "$type": "Engine.Serialization.CollectionIRComplexTypes, Engine",
+                          "$type": "Engine.Serialization.CollectionClasses, Engine",
                           "$value": {
                             "Value": [
                               null,
@@ -720,62 +680,47 @@
                 "Type": "ComplexClass",
                 "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
                 "TypeId": "8a545684-8915-490a-8117-7ccad9e1f6d7",
-                "Simple": {
-                  "Kind": "None",
-                  "Value": null
-                },
-                "Complex": {
-                  "$type": "Engine.Serialization.ComplexData, Engine",
+                "Simple": null,
+                "Class": {
+                  "$type": "Engine.Serialization.ClassData, Engine",
                   "$value": {
                     "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
                     "TypeId": "8a545684-8915-490a-8117-7ccad9e1f6d7",
-                    "ComplexType": "ComplexClass",
+                    "ClassType": "ComplexClass",
                     "Properties": [
                       {
                         "Name": "DefaultIcon",
                         "Type": "ComplexClass",
                         "InternalType": "Editor.Build.AndroidIcon, Editor",
                         "TypeId": "fc6bd7ae-58d4-e8ad-12bd-08b8c49944fd",
-                        "Simple": {
-                          "Kind": "None",
-                          "Value": null
-                        },
-                        "Complex": {
-                          "$type": "Engine.Serialization.ComplexData, Engine",
+                        "Simple": null,
+                        "Class": {
+                          "$type": "Engine.Serialization.ClassData, Engine",
                           "$value": {
                             "InternalType": "Editor.Build.AndroidIcon, Editor",
                             "TypeId": "fc6bd7ae-58d4-e8ad-12bd-08b8c49944fd",
-                            "ComplexType": "ComplexClass",
+                            "ClassType": "ComplexClass",
                             "Properties": [
                               {
                                 "Name": "Icon",
                                 "Type": "TextureAsset",
                                 "InternalType": "Engine.Texture2D, Engine",
                                 "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
-                                "Simple": {
-                                  "Kind": "None",
-                                  "Value": null
-                                }
+                                "Simple": null
                               },
                               {
                                 "Name": "ForegroundIcon",
                                 "Type": "TextureAsset",
                                 "InternalType": "Engine.Texture2D, Engine",
                                 "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
-                                "Simple": {
-                                  "Kind": "None",
-                                  "Value": null
-                                }
+                                "Simple": null
                               },
                               {
                                 "Name": "BackgroundIcon",
                                 "Type": "TextureAsset",
                                 "InternalType": "Engine.Texture2D, Engine",
                                 "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
-                                "Simple": {
-                                  "Kind": "None",
-                                  "Value": null
-                                }
+                                "Simple": null
                               }
                             ]
                           }
@@ -786,12 +731,9 @@
                         "Type": "ComplexCollection",
                         "InternalType": "Editor.Build.AndroidIcon[], Editor",
                         "TypeId": "5ee4bed7-a2fd-618a-128b-f8be6eee849c",
-                        "Simple": {
-                          "Kind": "None",
-                          "Value": null
-                        },
+                        "Simple": null,
                         "Collection": {
-                          "$type": "Engine.Serialization.CollectionIRComplexTypes, Engine",
+                          "$type": "Engine.Serialization.CollectionClasses, Engine",
                           "$value": {
                             "Value": [
                               null,
@@ -874,62 +816,47 @@
                 "Type": "ComplexClass",
                 "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
                 "TypeId": "8a545684-8915-490a-8117-7ccad9e1f6d7",
-                "Simple": {
-                  "Kind": "None",
-                  "Value": null
-                },
-                "Complex": {
-                  "$type": "Engine.Serialization.ComplexData, Engine",
+                "Simple": null,
+                "Class": {
+                  "$type": "Engine.Serialization.ClassData, Engine",
                   "$value": {
                     "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
                     "TypeId": "8a545684-8915-490a-8117-7ccad9e1f6d7",
-                    "ComplexType": "ComplexClass",
+                    "ClassType": "ComplexClass",
                     "Properties": [
                       {
                         "Name": "DefaultIcon",
                         "Type": "ComplexClass",
                         "InternalType": "Editor.Build.AndroidIcon, Editor",
                         "TypeId": "fc6bd7ae-58d4-e8ad-12bd-08b8c49944fd",
-                        "Simple": {
-                          "Kind": "None",
-                          "Value": null
-                        },
-                        "Complex": {
-                          "$type": "Engine.Serialization.ComplexData, Engine",
+                        "Simple": null,
+                        "Class": {
+                          "$type": "Engine.Serialization.ClassData, Engine",
                           "$value": {
                             "InternalType": "Editor.Build.AndroidIcon, Editor",
                             "TypeId": "fc6bd7ae-58d4-e8ad-12bd-08b8c49944fd",
-                            "ComplexType": "ComplexClass",
+                            "ClassType": "ComplexClass",
                             "Properties": [
                               {
                                 "Name": "Icon",
                                 "Type": "TextureAsset",
                                 "InternalType": "Engine.Texture2D, Engine",
                                 "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
-                                "Simple": {
-                                  "Kind": "None",
-                                  "Value": null
-                                }
+                                "Simple": null
                               },
                               {
                                 "Name": "ForegroundIcon",
                                 "Type": "TextureAsset",
                                 "InternalType": "Engine.Texture2D, Engine",
                                 "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
-                                "Simple": {
-                                  "Kind": "None",
-                                  "Value": null
-                                }
+                                "Simple": null
                               },
                               {
                                 "Name": "BackgroundIcon",
                                 "Type": "TextureAsset",
                                 "InternalType": "Engine.Texture2D, Engine",
                                 "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
-                                "Simple": {
-                                  "Kind": "None",
-                                  "Value": null
-                                }
+                                "Simple": null
                               }
                             ]
                           }
@@ -940,12 +867,9 @@
                         "Type": "ComplexCollection",
                         "InternalType": "Editor.Build.AndroidIcon[], Editor",
                         "TypeId": "5ee4bed7-a2fd-618a-128b-f8be6eee849c",
-                        "Simple": {
-                          "Kind": "None",
-                          "Value": null
-                        },
+                        "Simple": null,
                         "Collection": {
-                          "$type": "Engine.Serialization.CollectionIRComplexTypes, Engine",
+                          "$type": "Engine.Serialization.CollectionClasses, Engine",
                           "$value": {
                             "Value": [
                               null,

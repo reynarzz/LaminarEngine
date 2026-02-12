@@ -1,5 +1,6 @@
 ﻿using Editor.Utils;
 using Engine.Serialization;
+using Engine.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,23 +11,11 @@ namespace Editor.Cooker
 {
     internal class ReferenceBinaryWriterFactory
     {
-        private readonly Dictionary<SerializedType, Action<BinaryWriter, ReferenceData>> _referenceWriters;
+        private readonly Dictionary<SerializedType, Action<BinaryWriter, ReferenceData>> _customRefWriters;
         public ReferenceBinaryWriterFactory()
         {
-            _referenceWriters = new()
+            _customRefWriters = new()
             {
-                // Defaults
-                { SerializedType.Actor, WriteDefaultReference },
-                { SerializedType.Component, WriteDefaultReference },
-                { SerializedType.TextureAsset, WriteDefaultReference },
-                { SerializedType.MaterialAsset, WriteDefaultReference },
-                { SerializedType.ShaderAsset, WriteDefaultReference },
-                { SerializedType.AudioClipAsset, WriteDefaultReference },
-                { SerializedType.AnimationAsset, WriteDefaultReference },
-                { SerializedType.AnimatorControllerAsset, WriteDefaultReference },
-                { SerializedType.RenderTextureAsset, WriteDefaultReference },
-                { SerializedType.ScriptableObject, WriteDefaultReference },
-
                 // Custom
                 { SerializedType.SpriteAsset, BaseWriter<SpriteReferenceData>(WriteSpriteAssetReference) },
             };
@@ -34,20 +23,31 @@ namespace Editor.Cooker
 
         public void WriteReference(BinaryWriter writer, ReferenceData reference)
         {
-            if (_referenceWriters.TryGetValue(reference.Type, out var writerFunction))
+            var type = reference?.Type ?? SerializedType.None;
+            writer.Write((ulong)type);
+
+            if (type == SerializedType.None)
+            {
+                return;
+            }
+
+            EditorUtils.WriteGuidNoAlloc(writer, reference.RefId);
+
+            if (_customRefWriters.TryGetValue(reference.Type, out var writerFunction))
             {
                 writerFunction(writer, reference);
             }
-            else
+            else if (!reference.Type.IsDefaultAssetRef())
             {
                 throw new NotImplementedException($"Writer for reference '{reference.Type}'is not implemented");
             }
         }
 
+       
         private void WriteSpriteAssetReference(BinaryWriter writer, SpriteReferenceData reference)
         {
             writer.Write(reference.AtlasIndex);
-            EditorUtils.WriteGuidNoAlloc(writer, reference.TextureId);
+            EditorUtils.WriteGuidNoAlloc(writer, reference.TexRefId);
         }
 
         private Action<BinaryWriter, ReferenceData> BaseWriter<T>(Action<BinaryWriter, T> writerFunction)
@@ -55,32 +55,10 @@ namespace Editor.Cooker
         {
             return (writer, reference) =>
             {
-                if (WriteReferenceHeader(writer, reference))
-                {
-                    writerFunction(writer, reference as T);
-                }
+                writerFunction(writer, reference as T);
             };
         }
 
-        private void WriteDefaultReference(BinaryWriter writer, ReferenceData reference)
-        {
-            WriteReferenceHeader(writer, reference);
-        }
-
-        private bool WriteReferenceHeader(BinaryWriter writer, ReferenceData value)
-        {
-            var hasData = value != null;
-            if (hasData)
-            {
-                writer.Write((ulong)value.Type);
-                EditorUtils.WriteGuidNoAlloc(writer, value.Id);
-            }
-            else
-            {
-                writer.Write((ulong)SerializedType.None);
-            }
-
-            return hasData;
-        }
+        
     }
 }

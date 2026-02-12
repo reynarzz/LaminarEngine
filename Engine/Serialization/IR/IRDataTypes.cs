@@ -46,20 +46,20 @@ namespace Engine.Serialization
 
         public Variant Simple { get; set; }
         public ReferenceData Reference { get; set; }
-        public ComplexData Complex { get; set; }
+        public ClassData Class { get; set; }
         public CollectionData Collection { get; set; }
     }
 
     internal class ReferenceData
     {
         public SerializedType Type { get; set; }
-        public Guid Id { get; set; }
+        public Guid RefId { get; set; }
     }
 
     internal class SpriteReferenceData : ReferenceData
     {
         public int AtlasIndex { get; set; }
-        public Guid TextureId { get; set; }
+        public Guid TexRefId { get; set; }
     }
 
     internal abstract class CollectionData
@@ -77,6 +77,7 @@ namespace Engine.Serialization
 
         // Serializer
         protected DictionaryDataT() { }
+        // NOTE: the collectionType is to support orderedDictionary in the future.
         public DictionaryDataT(int size, CollectionType collectionType)
         {
             Keys = new K[size];
@@ -135,59 +136,104 @@ namespace Engine.Serialization
             CollectionType = collectionType;
         }
     }
-
-    internal class DictionaryIRReferences : DictionaryDataKVTypes<object, object, SerializedType[], SerializedType[]>
+    internal class DictionaryReference<K, V> : DictionaryDataKVTypes<K, V, SerializedType[], SerializedType[]>
     {
-        protected DictionaryIRReferences() { }
-        public DictionaryIRReferences(int size, CollectionType collectionType) : base(size, collectionType)
+        protected DictionaryReference() { }
+        public DictionaryReference(int size, CollectionType collectionType) : base(size, collectionType)
         {
             KeyType = new SerializedType[size];
             ValueType = new SerializedType[size];
         }
     }
-    internal class DictionaryIRVariants : DictionaryDataKVTypes<Variant, Variant, SerializedType, SerializedType>
+    // Remove this and use the concrete ones.------
+    internal class DictionaryIRReferences : DictionaryReference<object, object>
     {
-        protected DictionaryIRVariants() { }
-        public DictionaryIRVariants(int size, CollectionType collectionType) :
+        protected DictionaryIRReferences() { }
+        public DictionaryIRReferences(int size, CollectionType collectionType) : base(size, collectionType) { }
+    }
+    //---------------------
+
+
+    internal class DictionaryKeyRefValueRef : DictionaryDataKVTypes<ReferenceData, ReferenceData, SerializedType[], SerializedType[]>
+    {
+        protected DictionaryKeyRefValueRef() { }
+        public DictionaryKeyRefValueRef(int size, CollectionType collectionType) : base(size, collectionType)
+        {
+            KeyType = new SerializedType[size];
+            ValueType = new SerializedType[size];
+        }
+    }
+    internal class DictionaryKeyRefValueSimple : DictionaryDataKVTypes<ReferenceData, Variant, SerializedType[], SerializedType>
+    {
+        protected DictionaryKeyRefValueSimple() { }
+        public DictionaryKeyRefValueSimple(int size, CollectionType collectionType) : base(size, collectionType) { }
+    }
+    internal class DictionaryKeyRefValueClass : DictionaryDataKVTypes<ReferenceData, ClassData, SerializedType[], SerializedType>
+    {
+        protected DictionaryKeyRefValueClass() { }
+        public DictionaryKeyRefValueClass(int size, CollectionType collectionType) : base(size, collectionType) { }
+    }
+    internal class DictionaryKeySimpleValueRef : DictionaryDataKVTypes<Variant, ReferenceData, SerializedType, SerializedType[]>
+    {
+        protected DictionaryKeySimpleValueRef() { }
+        public DictionaryKeySimpleValueRef(int size, CollectionType collectionType) : base(size, collectionType) { }
+    }
+    internal class DictionaryKeyClassValueRef : DictionaryDataKVTypes<ClassData, ReferenceData, SerializedType, SerializedType[]>
+    {
+        protected DictionaryKeyClassValueRef() { }
+        public DictionaryKeyClassValueRef(int size, CollectionType collectionType) : base(size, collectionType) { }
+    }
+    internal class DictionarySimple : DictionaryDataKVTypes<Variant, Variant, SerializedType, SerializedType>
+    {
+        protected DictionarySimple() { }
+        public DictionarySimple(int size, CollectionType collectionType) :
             base(size, collectionType)
         { }
     }
-    internal class DictionaryIRComplexTypes : DictionaryDataT<ComplexData, ComplexData>
+    internal class DictionaryClass : DictionaryDataKVTypes<ClassData, ClassData, SerializedType, SerializedType>
     {
-        protected DictionaryIRComplexTypes() { }
-        public DictionaryIRComplexTypes(int size, CollectionType collectionType) :
+        protected DictionaryClass() { }
+        public DictionaryClass(int size, CollectionType collectionType) :
             base(size, collectionType)
         { }
     }
-    internal class CollectionIRVariants : CollectionData<Variant, SerializedType>
+    internal class CollectionSimples : CollectionData<Variant, SerializedType>
     {
-        protected CollectionIRVariants() { }
-        internal CollectionIRVariants(int size, CollectionType collectionType) : base(size, collectionType) { }
-        public CollectionIRVariants(Variant[] value, SerializedType itemsType, CollectionType colType) :
+        protected CollectionSimples() { }
+        internal CollectionSimples(int size, CollectionType collectionType) : base(size, collectionType) { }
+        public CollectionSimples(Variant[] value, SerializedType itemsType, CollectionType colType) :
             base(value, itemsType, colType)
         { }
     }
-    internal class CollectionIRReferences : CollectionData<ReferenceData, SerializedType[]>
+    internal class CollectionReferences : CollectionData<ReferenceData, SerializedType[]>
     {
-        protected CollectionIRReferences() { }
-        internal CollectionIRReferences(int size, CollectionType colType) : base(size, colType)
+        protected CollectionReferences() { }
+        internal CollectionReferences(int size, CollectionType colType) : base(size, colType)
         {
             ItemsType = new SerializedType[size];
         }
-        public CollectionIRReferences(ReferenceData[] value, SerializedType[] itemsType, CollectionType collectionType) :
+        public CollectionReferences(ReferenceData[] value, SerializedType[] itemsType, CollectionType collectionType) :
             base(value, itemsType, collectionType)
         { }
     }
-    internal class CollectionIRComplexTypes : CollectionData<ComplexData, SerializedType>
+    internal class CollectionClasses : CollectionData<ClassData, SerializedType>
     {
-        protected CollectionIRComplexTypes() { }
-        internal CollectionIRComplexTypes(int size, CollectionType collectionType) : base(size, collectionType) { }
-        public CollectionIRComplexTypes(ComplexData[] value, CollectionType colType) : base(value, value != null && value.Length > 0 ?
+        protected CollectionClasses() { }
+        internal CollectionClasses(int size, CollectionType collectionType) : base(size, collectionType) { }
+        public CollectionClasses(ClassData[] value, CollectionType colType) : base(value, value != null && value.Length > 0 ?
                                                                                                 SerializedType.ComplexClass :
                                                                                                 SerializedType.None, colType)
         { }
     }
-    internal class DelegateData
+    internal class ClassData
+    {
+        public string InternalType { get; set; }
+        public Guid TypeId { get; set; }
+        public SerializedType ClassType { get; set; } // remove
+        public SerializedPropertyIR[] Properties { get; set; } // remove
+    }
+
+    internal class DelegateClassData : ClassData
     {
         internal class Subscriber
         {
@@ -197,27 +243,27 @@ namespace Engine.Serialization
         }
     }
 
-    internal class ComplexData
+
+    // TODO: After the refactoring, ClassData still behaves as ComplexClass, I will spli concerns once I implement delegates.
+    internal class ComplexClass : ClassData
     {
-        public string InternalType { get; set; }
-        public Guid TypeId { get; set; }
-        public SerializedType ComplexType { get; set; }
+        public SerializedType ClassType { get; set; }
         public SerializedPropertyIR[] Properties { get; set; }
     }
+
 
     [Flags]
     internal enum SerializedType : ulong
     {
         None = 0,
 
-        // Trait flags (Bits 0-19)
+        // Trait flags
         // Category buckets.
         SimpleFlag = 1L << 0,              // 1
         EObjectFlag = 1L << 1,             // 2
-        AssetNoEObjectFlag = 1L << 2,      // 4
+        AssetFlag = 1L << 2,                // 6
         CollectionFlag = 1L << 3,          // 8
         ClassFlag = 1L << 4,               // 16
-        AssetFlag = EObjectFlag | AssetNoEObjectFlag, // 6
 
         // ID Shift (20 Bits)
         // We use a 20-bit shift to move the Identity into the 'Millions' range.
@@ -254,15 +300,15 @@ namespace Engine.Serialization
         Actor = EObjectFlag | (2001UL << 20),
 
         // Assets 
-        SpriteAsset = AssetFlag | (3000UL << 20),
-        TextureAsset = AssetFlag | (3001UL << 20),
-        MaterialAsset = AssetFlag | (3002UL << 20),
-        ShaderAsset = AssetFlag | (3003UL << 20),
-        AudioClipAsset = AssetFlag | (3004UL << 20),
-        AnimationAsset = AssetFlag | (3005UL << 20),
-        AnimatorControllerAsset = AssetFlag | (3006UL << 20),
-        RenderTextureAsset = AssetFlag | (3007UL << 20),
-        ScriptableObject = AssetFlag | (3008UL << 20),
+        SpriteAsset = AssetFlag | EObjectFlag | (3000UL << 20),
+        TextureAsset = AssetFlag | EObjectFlag | (3001UL << 20),
+        MaterialAsset = AssetFlag | EObjectFlag | (3002UL << 20),
+        ShaderAsset = AssetFlag | EObjectFlag | (3003UL << 20),
+        AudioClipAsset = AssetFlag | EObjectFlag | (3004UL << 20),
+        AnimationAsset = AssetFlag | EObjectFlag | (3005UL << 20),
+        AnimatorControllerAsset = AssetFlag | EObjectFlag | (3006UL << 20),
+        RenderTextureAsset = AssetFlag | EObjectFlag | (3007UL << 20),
+        ScriptableObject = AssetFlag | EObjectFlag | (3008UL << 20),
 
         // Collections and classes
         ComplexCollection = CollectionFlag | (4000UL << 20),
@@ -271,5 +317,4 @@ namespace Engine.Serialization
         ComplexClass = ClassFlag | (4003UL << 20),
         Delegate = ClassFlag | (4004UL << 20)
     }
-
 }

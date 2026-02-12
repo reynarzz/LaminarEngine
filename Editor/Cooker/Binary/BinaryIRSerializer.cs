@@ -121,9 +121,9 @@ namespace Editor.Cooker
             {
                 WriteReferenceCollection(writer, ir.Collection);
             }
-            else if (serializedType == SerializedType.ComplexClass)
+            else if (serializedType.IsClass())
             {
-                WriteComplexClass(writer, ir.Complex);
+                WriteComplexClass(writer, ir.Class);
             }
             else if (serializedType == SerializedType.ComplexCollection)
             {
@@ -153,7 +153,7 @@ namespace Editor.Cooker
             writer.Write((int)(collectionData.CollectionType));
             if (collectionData.CollectionType == CollectionType.Dictionary)
             {
-                var simpleDictionary = collectionData as DictionaryIRVariants;
+                var simpleDictionary = collectionData as DictionarySimple;
                 writer.Write((ulong)(simpleDictionary.KeyType));
                 writer.Write((ulong)(simpleDictionary.ValueType));
                 WriteVariantArray(writer, simpleDictionary.KeyType, simpleDictionary.Keys);
@@ -161,7 +161,7 @@ namespace Editor.Cooker
             }
             else
             {
-                var variantCollection = collectionData as CollectionIRVariants;
+                var variantCollection = collectionData as CollectionSimples;
                 writer.Write((ulong)(variantCollection.ItemsType));
                 WriteVariantArray(writer, variantCollection.ItemsType, variantCollection.Value);
             }
@@ -266,7 +266,7 @@ namespace Editor.Cooker
             }
         }
 
-        private static void WriteComplexClass(BinaryWriter writer, ComplexData data)
+        private static void WriteComplexClass(BinaryWriter writer, ClassData data)
         {
             /*
                SerializedType ComplexType 
@@ -278,7 +278,7 @@ namespace Editor.Cooker
                 writer.Write((ulong)(SerializedType.None));
                 return;
             }
-            writer.Write((ulong)(data.ComplexType));
+            writer.Write((ulong)(data.ClassType));
             EditorUtils.WriteGuidNoAlloc(writer, data.TypeId);
             Serialize(writer, data.Properties);
         }
@@ -305,7 +305,7 @@ namespace Editor.Cooker
                 case CollectionType.Queue:
                 case CollectionType.HashSet:
                     {
-                        var col = collectionData as CollectionIRComplexTypes;
+                        var col = collectionData as CollectionClasses;
                         foreach (var item in col.Value)
                         {
                             WriteComplexClass(writer, item);
@@ -314,7 +314,7 @@ namespace Editor.Cooker
                     break;
                 case CollectionType.Dictionary:
                     {
-                        var dictComplexClass = collectionData as DictionaryIRComplexTypes;
+                        var dictComplexClass = collectionData as DictionaryClass;
                         for (var i = 0; i < dictComplexClass.Count; i++)
                         {
                             WriteComplexClass(writer, dictComplexClass.Keys[i]);
@@ -348,7 +348,7 @@ namespace Editor.Cooker
                 case CollectionType.Queue:
                 case CollectionType.HashSet:
                     {
-                        var col = data as CollectionIRReferences;
+                        var col = data as CollectionReferences;
                         foreach (var item in col.Value)
                         {
                             if (item == null)
@@ -357,7 +357,7 @@ namespace Editor.Cooker
                                 continue;
                             }
                             writer.Write((ulong)(item.Type));
-                            EditorUtils.WriteGuidNoAlloc(writer, item.Id);
+                            EditorUtils.WriteGuidNoAlloc(writer, item.RefId);
                         }
                     }
                     break;

@@ -37,7 +37,7 @@ namespace Editor
                 }
 
                 if (p.DeclaringType == typeof(SerializedPropertyIR) && (p.PropertyName == nameof(SerializedPropertyIR.Reference) ||
-                    p.PropertyName == nameof(SerializedPropertyIR.Collection) || p.PropertyName == nameof(SerializedPropertyIR.Complex) ||
+                    p.PropertyName == nameof(SerializedPropertyIR.Collection) || p.PropertyName == nameof(SerializedPropertyIR.Class) ||
                     p.PropertyName == nameof(SerializedPropertyIR.Simple)))
                 {
                     p.Converter = new GFSDataProperty();
