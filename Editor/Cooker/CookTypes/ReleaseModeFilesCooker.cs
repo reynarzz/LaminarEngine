@@ -129,6 +129,7 @@ namespace Editor.Cooker
 
                     using var fileStream = File.OpenRead(filePath);
                     using var reader = new BinaryReader(fileStream);
+                    reader.BaseStream.Position = 0;
 
                     var assetData = await Task.Run(() => ProcessAsset(platform, assetType, meta, reader));
 

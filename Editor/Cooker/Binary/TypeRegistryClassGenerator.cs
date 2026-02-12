@@ -19,7 +19,7 @@ namespace Editor.Cooker
                 {
                     return false;
                 }
-                return x.StartsWith(y) || y.StartsWith(x);
+                return x.Contains(y) || y.Contains(x);
             }
 
             public int GetHashCode(string obj)
@@ -33,7 +33,7 @@ namespace Editor.Cooker
             }
         }
 
-        private static readonly HashSet<string> _forbiddenNameSpaces = new(new ContainsAComparer())
+        private static readonly HashSet<string> _exclusionList = new(new ContainsAComparer())
         {
             { "Box2D" },
             { "ldtk" },
@@ -42,6 +42,7 @@ namespace Editor.Cooker
             { "OpenGL" },
             { "JetBrains" },
             { "Generated" },
+            { "Engine.Serialization.CombinedTypeResolver" }
         };
 
         private static HashSet<Type> _typesLibrary = new();
@@ -59,12 +60,16 @@ namespace Editor.Cooker
             {
                 if (type.IsSpecialName ||
                     type.FullName.TrimStart().StartsWith("<") ||
-                    _forbiddenNameSpaces.Contains(type.FullName))
+                    _exclusionList.Contains(ReflectionUtils.GetFullTypeName(type)))
                 {
                     continue;
                 }
 
-                ids.Add(ReflectionUtils.GetStableGuid(type), type);
+                var id = ReflectionUtils.GetStableGuid(type);
+                if (!ids.ContainsKey(id))
+                {
+                    ids.Add(id, type);
+                }
             }
 
             return GenerateTypeRegistry(ids, isEditMode).ToFullString();
@@ -85,14 +90,14 @@ namespace Editor.Cooker
                 _typesLibrary.Add(type);
             }
         }
-        internal static void AddType(Type type)
+        internal static bool AddType(Type type)
         {
             if (type == null)
             {
                 Console.WriteLine("Can't add null type to registry generator");
-                return;
+                return false;
             }
-            _typesLibrary.Add(type);
+            return _typesLibrary.Add(type);
         }
 
         /// <summary>
@@ -182,7 +187,7 @@ namespace Editor.Cooker
                 reverseInitializerExpressions = reverseInitializerExpressions.Add(kvpExpression);
             }
 
-           
+
 
             // Build class and implement ITypeRegistry
             var classDecl = SyntaxFactory.ClassDeclaration("TypeRegistryRuntime")

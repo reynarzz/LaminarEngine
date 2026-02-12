@@ -1,8 +1,8 @@
 ﻿using Editor.Build;
+using Editor.Serialization;
 using Engine;
 using Engine.IO;
 using Engine.Layers;
-using Engine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +29,7 @@ namespace Editor
                 { AssetType.Texture, new TextureAssetBuilder() },
                 { AssetType.Text, new TextAssetBuilder() },
                 { AssetType.Shader, new TextAssetBuilder() },
-                { AssetType.ShaderV2, new ShaderAssetBuilder() },
+                { AssetType.ShaderV2, new ShaderAssetBuilderEditor() },
                 { AssetType.Audio, new AudioClipAssetBuilder() },
                 { AssetType.Font, new FontAssetBuilder() },
                 { AssetType.AnimationClip, new AnimationClipAssetBuilderEditor() },

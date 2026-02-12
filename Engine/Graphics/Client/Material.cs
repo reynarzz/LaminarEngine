@@ -82,12 +82,15 @@ namespace Engine
 
         public void AddTexture(string name, Texture texture)
         {
-            if (_textures.Count < GfxDeviceManager.Current.GetDeviceInfo().MaxHardwareTextureUnits)
+            var maxTextures = GfxDeviceManager.Current.GetDeviceInfo().MaxHardwareTextureUnits;
+            if (_textures.Count < maxTextures)
             {
                 _textures[name] = texture;
             }
-
-            Debug.Error("Max textures per slot was reached");
+            else
+            {
+                Debug.Error($"Max textures per slot was reached: {maxTextures}");
+            }
         }
 
         public void SetProperty<T>(string name, T value) where T : unmanaged

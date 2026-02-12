@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace Editor
 {
-    internal class AnimationClipAssetBuilderEditor : JsonBasedAssetBuilder<AnimationClip, AssetMeta>
+    internal class AnimationClipAssetBuilderEditor : JsonBasedAssetBuilder<AnimationClip, AssetMeta, AnimClipIR>
     {
         public override void UpdateAsset(ref readonly AssetInfo info, AnimationClip asset, AssetMeta meta, BinaryReader reader)
         {
-            throw new NotImplementedException();
+            
         }
     }
 }

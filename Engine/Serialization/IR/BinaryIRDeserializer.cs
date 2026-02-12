@@ -26,7 +26,27 @@ namespace Engine.Serialization
 
             return properties;
         }
+        internal static MaterialIR DeserializeMaterial(BinaryReader reader)
+        {
+            var material = new MaterialIR();
+            material.Version = reader.ReadInt32();
+            var propCount = reader.ReadInt32();
+            
+            material.Properties = new SerializedPropertyIR[propCount];
+            for (int i = 0; i < propCount; i++)
+            {
+                material.Properties[i] = ReadPropertyIR(reader);
+            }
 
+            return material;
+        }
+        internal static ShaderIR DeserializeShader(BinaryReader reader)
+        {
+            var shader = new ShaderIR();
+            shader.Version = reader.ReadInt32();
+            shader.Properties = Deserialize(reader);
+            return shader;
+        }
         internal static SceneIR DeserializeScene(BinaryReader reader)
         {
             var scene = new SceneIR();
@@ -388,6 +408,7 @@ namespace Engine.Serialization
                 case CollectionType.HashSet:
                     {
                         var collectionData = new CollectionClasses(count, collectionType);
+                        collectionData.ItemsType = (SerializedType)reader.ReadUInt64(); 
                         for (int i = 0; i < count; i++)
                         {
                             collectionData.Value[i] = ReadComplexClass(reader);
@@ -397,6 +418,8 @@ namespace Engine.Serialization
                 case CollectionType.Dictionary:
                     {
                         var result = new DictionaryClass(count, collectionType);
+                        result.KeyType = (SerializedType)reader.ReadUInt64();
+                        result.ValueType = (SerializedType)reader.ReadUInt64();
 
                         for (int i = 0; i < result.Count; i++)
                         {
@@ -433,6 +456,10 @@ namespace Engine.Serialization
                 case CollectionType.HashSet:
                     {
                         var result = new CollectionReferences(count, collectionType);
+                        for (int i = 0; i < result.Count; i++)
+                        {
+                            result.ItemsType[i] = (SerializedType)reader.ReadUInt64();
+                        }
                         for (int i = 0; i < result.Count; i++)
                         {
                             result.Value[i] = ReadReferenceProperty(reader);

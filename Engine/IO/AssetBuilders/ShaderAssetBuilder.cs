@@ -1,10 +1,10 @@
 ﻿using Engine.Graphics;
-using Newtonsoft.Json;
 using Engine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Engine.Serialization;
 
 namespace Engine.IO
 {
@@ -24,22 +24,10 @@ namespace Engine.IO
 
         private ShaderSource[] GetSources(BinaryReader reader)
         {
-            var length = (int)reader.BaseStream.Length;
-            ShaderSource[] shaderSources = null;
-
-            if (length > 0)
-            {
-                var data = new byte[length];
-                reader.BaseStream.ReadExactly(data, 0, length);
-                var text = Encoding.UTF8.GetString(data, 0, length);
-
-                if (!string.IsNullOrEmpty(text))
-                {
-                    var shaderData = JsonConvert.DeserializeObject<ShaderData>(text);
-                    shaderSources = shaderData.Sources;
-                }
-            }
-            return shaderSources;
+            var shaderIR = BinaryIRDeserializer.DeserializeShader(reader);
+            var shaderData = new ShaderData();
+            Deserializer.Deserialize(shaderData, shaderIR.Properties);
+            return shaderData.Sources;
         }
     }
 }

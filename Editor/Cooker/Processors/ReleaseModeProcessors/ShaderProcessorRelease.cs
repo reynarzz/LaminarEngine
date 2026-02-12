@@ -22,7 +22,7 @@ namespace Editor.Cooker
 
             var ir = new ShaderIR()
             {
-                SourcesCollection = properties[0]
+                Properties = properties
             };
 
             BinaryIRSerializer.Serialize(ir, writer);

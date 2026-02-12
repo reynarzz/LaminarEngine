@@ -9,6 +9,9 @@ using Newtonsoft.Json;
 using Engine.Graphics;
 using System.Text.RegularExpressions;
 using Glslang.NET;
+using Editor.Serialization;
+using Engine.Serialization;
+using Editor.Utils;
 
 namespace Editor.Cooker
 {
@@ -77,7 +80,14 @@ namespace Editor.Cooker
         // NOTE: for now this will write a json, for production ready code, it should be binary.
         protected virtual byte[] GetAsset(ShaderSource[] sources)
         {
-            return Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new ShaderData() { Sources = sources }));
+            var shaderData = new ShaderData() { Sources = sources };
+
+            var ir = new ShaderIR()
+            {
+                Properties = Serializer.Serialize(shaderData)
+            };
+            // return Encoding.UTF8.GetBytes(EditorJsonUtils.Serialize(ir));
+            return Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(shaderData));
         }
 
         private (Glslang.NET.ShaderStage stage, byte[] spirv)[] CompileToSpirV((Glslang.NET.ShaderStage stage,

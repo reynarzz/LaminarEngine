@@ -8,11 +8,11 @@ namespace Engine
     {
         public Material BuildAsset(ref readonly AssetInfo info, AssetMeta meta, BinaryReader reader)
         {
-            var ir = BinaryIRDeserializer.Deserialize(reader);
+            var materialIR = BinaryIRDeserializer.DeserializeMaterial(reader);
 
             var material = new Material(info.Path, meta.GUID);
 
-            Deserializer.Deserialize(material, ir);
+            Deserializer.Deserialize(material, materialIR.Properties);
 
             return material;
 
@@ -24,7 +24,5 @@ namespace Engine
         public void UpdateAsset(ref readonly AssetInfo info, Material asset, AssetMeta meta, BinaryReader reader)
         {
         }
-
-
     }
 }

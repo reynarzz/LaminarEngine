@@ -11,8 +11,9 @@ using System.Threading.Tasks;
 
 namespace Editor
 {
-    internal abstract class JsonBasedAssetBuilder<TAsset, TMeta> : IAssetBuilder<TAsset, TMeta> where TAsset : AssetResourceBase
-                                                                                                where TMeta : AssetMeta
+    internal abstract class JsonBasedAssetBuilder<TAsset, TMeta, TTypeIR> : IAssetBuilder<TAsset, TMeta> where TAsset : AssetResourceBase
+                                                                                                         where TMeta : AssetMeta
+                                                                                                         where TTypeIR : TypeIR
     {
         TAsset IAssetBuilder<TAsset, TMeta>.BuildAsset(ref readonly AssetInfo info, TMeta meta, BinaryReader reader)
         {
@@ -23,9 +24,9 @@ namespace Editor
 
             var assetInstance = Activator.CreateInstance(typeof(TAsset), BindingFlags.Instance | BindingFlags.NonPublic,
                                                          null, [info.Path, meta.GUID], null);
-            var ir = EditorJsonUtils.Deserialize<List<SerializedPropertyIR>>(text);
+            var ir = EditorJsonUtils.Deserialize<TTypeIR>(text);
 
-            Deserializer.Deserialize(assetInstance, ir);
+            Deserializer.Deserialize(assetInstance, ir.Properties);
 
             return assetInstance as TAsset;
         }

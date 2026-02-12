@@ -34,6 +34,17 @@ namespace Editor.Cooker
             }
         }
 
+        internal static void Serialize(BinaryWriter writer, MaterialIR material)
+        {
+            writer.Write(material.Version);
+            writer.Write(material.Properties.Length);
+
+            foreach (var property in material.Properties)
+            {
+                WriteProperty(writer, property);
+            }
+        }
+
         internal static void Serialize(SceneIR scene, BinaryWriter writer)
         {
             writer.Write(scene.SceneVersion);
@@ -49,8 +60,8 @@ namespace Editor.Cooker
 
         internal static void Serialize(ShaderIR shader, BinaryWriter writer)
         {
-            writer.Write(ShaderIR.Version);
-            Serialize(writer, shader.SourcesCollection);
+            writer.Write(shader.Version);
+            Serialize(writer, shader.Properties);
         }
 
         private static void WriteActorIR(BinaryWriter writer, ActorIR ir)
@@ -89,12 +100,13 @@ namespace Editor.Cooker
             EditorUtils.WriteGuidNoAlloc(writer, ir.ID);
             writer.Write(ir.Properties.Length);
 
+            RegisterType(ir.InternalType);
+
             for (int i = 0; i < ir.Properties.Length; i++)
             {
                 WriteProperty(writer, ir.Properties[i]);
             }
         }
-
 
         private static void WriteProperty(BinaryWriter writer, SerializedPropertyIR ir)
         {
@@ -108,6 +120,8 @@ namespace Editor.Cooker
             WriteString(writer, ir.Name);
             EditorUtils.WriteGuidNoAlloc(writer, ir.TypeId);
             writer.Write((ulong)(serializedType));
+
+            RegisterType(ir.InternalType);
 
             if (serializedType.IsSimple())
             {
@@ -123,6 +137,7 @@ namespace Editor.Cooker
             }
             else if (serializedType.IsClass())
             {
+                // TODO: split for all classes
                 WriteComplexClass(writer, ir.Class);
             }
             else if (serializedType == SerializedType.ComplexCollection)
@@ -306,6 +321,8 @@ namespace Editor.Cooker
                 case CollectionType.HashSet:
                     {
                         var col = collectionData as CollectionClasses;
+                        writer.Write((ulong)col.ItemsType);
+
                         foreach (var item in col.Value)
                         {
                             WriteComplexClass(writer, item);
@@ -315,6 +332,9 @@ namespace Editor.Cooker
                 case CollectionType.Dictionary:
                     {
                         var dictComplexClass = collectionData as DictionaryClass;
+                        writer.Write((ulong)dictComplexClass.KeyType);
+                        writer.Write((ulong)dictComplexClass.ValueType);
+
                         for (var i = 0; i < dictComplexClass.Count; i++)
                         {
                             WriteComplexClass(writer, dictComplexClass.Keys[i]);
@@ -349,6 +369,10 @@ namespace Editor.Cooker
                 case CollectionType.HashSet:
                     {
                         var col = data as CollectionReferences;
+                        for (int i = 0; i < col.ItemsType.Length; i++)
+                        {
+                            writer.Write((ulong)col.ItemsType[i]);
+                        }
                         foreach (var item in col.Value)
                         {
                             if (item == null)
@@ -611,6 +635,18 @@ namespace Editor.Cooker
                     ArrayPool<byte>.Shared.Return(byteBuffer);
                 }
             }
+        }
+
+        private static void RegisterType(string internalType)
+        {
+            if (ReflectionUtils.ResolveType(internalType, out var type))
+            {
+                if (TypeRegistryClassGenerator.AddType(type))
+                {
+                    Debug.Info("Registers type: " + internalType);
+                }
+            }
+
         }
     }
 }

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Editor
 {
-    internal class AnimationControllerAssetBuilderEditor : JsonBasedAssetBuilder<AnimatorController, AssetMeta>
+    internal class AnimationControllerAssetBuilderEditor : JsonBasedAssetBuilder<AnimatorController, AssetMeta, AnimControllerIR>
     {
         public override void UpdateAsset(ref readonly AssetInfo info, AnimatorController asset, AssetMeta meta, BinaryReader reader)
         {

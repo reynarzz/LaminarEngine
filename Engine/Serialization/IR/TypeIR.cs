@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Engine.Serialization
 {
-    internal class ShaderIR : TypeIR
+    internal class TypeIR
     {
+        public int Version = 1;
+        public SerializedPropertyIR[] Properties { get; set; }
     }
 }

@@ -11,8 +11,9 @@ namespace Editor.Build
 {
     internal class WindowsBuilder : PlatformBuilder
     {
-        public WindowsBuilder() : base([new WindowsShipBuildStage(),
-                                        new WindowsAssetsBuildStage()])
+        public WindowsBuilder() : base([ /*new CheckCodeCompilation()*/
+            new WindowsAssetsBuildStage(),
+            new WindowsShipBuildStage()])
         {
         }
 

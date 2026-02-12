@@ -58,39 +58,7 @@ namespace Game
             FontAnimatedMaterial.SetProperty(0, "uFrequency", 6.0f);
         }
         
-        private static Material InitPortalMaterial()
-        {
-            var screenShader = new Shader(Assets.GetText("Shaders/VertScreenGrab.vert").Text, Assets.GetText("Shaders/Portal_mobile.frag").Text);
-            var material = new Material(screenShader);
-            material.Name = "Portal Material";
-            material.AddTexture("uStarsTex", Assets.GetTexture("stars.png"));
-            material.AddTexture("uFrameTex", GameTextures.GetSprite("portal_frame").Texture);
-             
-            var pass = material.GetPass(0);
-            pass.IsScreenGrabPass = true;
-            material.SetProperty("uDistortionAmount", 0.009f);
-            material.SetProperty("uOutlineColor", new vec3(1.6f, 1.0f, 1.0f));
-            material.SetProperty("uOutlineThickness", 0.02f);
-            material.SetProperty("uDotted", 0);
-            material.SetProperty("uDotSpacing", 0.15f);
-            material.SetProperty("uGlitchMaxOffset", 0.03f);
-            material.SetProperty("uGlitchFreq", 20.0f);
-            material.SetProperty("uColorSplit", 0.001f);
-            material.SetProperty("uPixelationAmount", 2.0f);
-            
-            return material;
-        }
-
-        private Material InitPortalMobileMaterial()
-        {
-            var screenShader = new Shader(Assets.GetText("Shaders/VertScreenGrab.vert").Text, Assets.GetText("Shaders/Portal_mobile_cheap.frag").Text);
-            var material = new Material(screenShader);
-            material.Name = "Portal Material";
-            material.AddTexture("uStarsTex", Assets.GetTexture("stars.png"));
-            material.AddTexture("uFrameTex", GameTextures.GetSprite("portal_frame").Texture);
-            return material;
-        }
-
+      
         private static Material GetMaterial(string name, string vertexPath, string fragmentPath)
         {
             var material = new Material(new Shader(Assets.GetText(vertexPath).Text, Assets.GetText(fragmentPath).Text, vertexPath, fragmentPath));

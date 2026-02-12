@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Engine;
 using System.Reflection;
+using Editor.Cooker.Generator;
 
 namespace Editor.Cooker
 {
@@ -96,7 +97,7 @@ namespace Editor.Cooker
                 { AssetType.Font, new RawBytesAssetProcessor() },
                 { AssetType.AnimationClip, new RawBytesAssetProcessor() }, // TODO: binary serialization
                 { AssetType.AnimationController, new RawBytesAssetProcessor() }, // TODO: binary serialization
-                { AssetType.Material, new RawBytesAssetProcessor() }, // TODO: binary serialization
+                { AssetType.Material, new MaterialProcessorRelease() }, 
             };
 
             _assetCookers = new Dictionary<CookingType, AssetsCookerBase>()
@@ -120,6 +121,9 @@ namespace Editor.Cooker
 
             if (options.Type == CookingType.ReleaseMode && options.MatchingFiles != null && options.MatchingFiles.Length > 0)
             {
+                // This clears all the types that will be collected by the typeRegistry.
+                TypeRegistryClassGenerator.ClearTypesLibrary();
+
                 Console.WriteLine("Warning: Building only selected files, make sure these are updated!");
                 selectedFiles = selectedFiles.Where(x =>
                 {
@@ -141,7 +145,11 @@ namespace Editor.Cooker
             var collectedFiles = selectedFiles.ToArray();
             var result = await _assetCookers[options.Type].CookAssetsAsync(options.FileOptions, options.Platform,
                                              collectedFiles, options.ExportFolderPath);
-
+            if (result)
+            {
+                // This generates the whole type registry after all the types where collected from the assets.
+                TypeGenerationStage.GenerateTypeRegistry();
+            }
             return new DishResult()
             {
                 IsSuccess = result,

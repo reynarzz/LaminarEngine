@@ -13,8 +13,7 @@ namespace Editor.Cooker.Generator
     {
         public static void GenerateTypeRegistry()
         {
-            TypeRegistryClassGenerator.ClearTypesLibrary();
-
+            // Move this to 
             var engineBin = Path.Combine(EditorPaths.AppRoot, "Engine", "bin");
             var engineTypes = GetAssemblyTypes(GetAssemblyPath(engineBin, "Engine.dll"));
             var gameTypes = GetAssemblyTypes(GetAssemblyPath(Path.Combine(EditorPaths.AppRoot, "Game", "bin"), "Game.dll"));

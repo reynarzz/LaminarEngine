@@ -8,6 +8,6 @@ namespace Engine
 {
     internal class ShaderData
     {
-        public ShaderSource[] Sources { get; set; }
+        [SerializedField] public ShaderSource[] Sources { get; set; }
     }
 }
