@@ -9,12 +9,15 @@ namespace Editor.Cooker
 {
     internal class RawBytesAssetProcessor : IAssetProcessor
     {
-        AssetProccesResult IAssetProcessor.Process(string path, AssetMetaFileBase meta, CookingPlatform platform)
+        AssetProccesResult IAssetProcessor.Process(BinaryReader reader, AssetMeta meta, CookingPlatform platform)
         {
+            var bytes = new byte[(int)reader.BaseStream.Length];
+            reader.BaseStream.ReadExactly(bytes, 0, bytes.Length);
+
             return new AssetProccesResult()
             {
                 IsSuccess = true,
-                Data = File.ReadAllBytes(path)
+                Data = bytes
             };
         }
     }

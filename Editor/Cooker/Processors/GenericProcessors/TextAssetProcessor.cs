@@ -10,14 +10,15 @@ namespace Editor.Cooker
 {
     internal class TextAssetProcessor : IAssetProcessor
     {
-        AssetProccesResult IAssetProcessor.Process(string path, AssetMetaFileBase meta, CookingPlatform platform)
+        public virtual AssetProccesResult Process(BinaryReader reader, AssetMeta meta, CookingPlatform platform)
         {
-            using var reader = new StreamReader(path, Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
+            var bytes = new byte[(int)reader.BaseStream.Length];
+            reader.BaseStream.ReadExactly(bytes, 0, bytes.Length);
 
             return new AssetProccesResult()
             {
                 IsSuccess = true,
-                Data = Encoding.UTF8.GetBytes(reader.ReadToEnd())
+                Data = bytes
             };
         }
     }

@@ -15,15 +15,20 @@ namespace Engine
             public const string HEADER = "GFSD";
         }
 
-        internal static void WriteMeta(string relativeAssetPath, AssetMetaFileBase meta)
+        internal static void WriteMeta(string relativeAssetPath, AssetMeta meta)
         {
             File.WriteAllText(Paths.GetAbsoluteAssetPath(relativeAssetPath) + Paths.ASSET_META_EXT_NAME,
                 JsonConvert.SerializeObject(meta, Formatting.Indented));
         }
 
-
-        internal static AssetMetaFileBase GetMeta(string path, AssetType assetType)
+        internal static AssetMeta GetMeta(string path, AssetType assetType)
         {
+            if (assetType == AssetType.Invalid)
+            {
+                Debug.Error("Asset type is invalid");
+                return null;
+            }
+
             string metaJson = null;
 
             if (File.Exists(path))
@@ -31,7 +36,7 @@ namespace Engine
                 metaJson = File.ReadAllText(path);
             }
 
-            AssetMetaFileBase GetMeta<T>(string json) where T : AssetMetaFileBase, new()
+            AssetMeta GetMeta<T>(string json) where T : AssetMeta, new()
             {
                 if (!string.IsNullOrEmpty(json))
                 {

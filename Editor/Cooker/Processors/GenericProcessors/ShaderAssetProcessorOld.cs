@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace Editor.Cooker
 {
-    internal class ShaderAssetProcessorOld : IAssetProcessor
+    internal class ShaderAssetProcessorOld : TextAssetProcessor
     {
         private readonly StringBuilder _sb = new();
 
-        AssetProccesResult IAssetProcessor.Process(string path, AssetMetaFileBase meta, CookingPlatform platform)
+        public override AssetProccesResult Process(BinaryReader reader, AssetMeta meta, CookingPlatform platform)
         {
-            using var reader = new StreamReader(path, Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
-            var str = reader.ReadToEnd();
+            var result = base.Process(reader, meta, platform);
+            var str = Encoding.UTF8.GetString(result.Data);
 
             _sb.Clear();
 
@@ -33,7 +33,7 @@ namespace Editor.Cooker
                             _sb.AppendLine(lines[i]);
 
                         }
-                        else if(platform == CookingPlatform.Android)
+                        else if (platform == CookingPlatform.Android)
                         {
                             lines[i] = "#version 300 es";
                             _sb.AppendLine(lines[i]);

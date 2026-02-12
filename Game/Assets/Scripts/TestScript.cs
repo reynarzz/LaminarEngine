@@ -200,7 +200,15 @@ namespace Game
         [SerializedField]
         private Dictionary<BlendFactor, mat4> _mat4ByEnumDictionary;
 
+        private class Dclas
+        {
+            [SerializedField] private int[] _intArr;
+        }
+
+        [SerializedField]
+        private Dictionary<BlendFactor, Dclas> _intArrByEnumDictionary;
         [SerializedField] private bool[] _boolArray;
+
         [ShowMethodInEditor]
         public void AMethodCallingFromEditor()
         {

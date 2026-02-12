@@ -20,18 +20,28 @@ namespace Engine.Utils
             return (type & SerializedType.AssetFlag) != 0; 
         }
 
-        public static bool IsDefaultAssetRef(this SerializedType type)
+        public static bool IsDefaultRef(this SerializedType type)
         {
-            return (type & (SerializedType.Component |
-                            SerializedType.Actor |
-                            SerializedType.TextureAsset |
-                            SerializedType.MaterialAsset |
-                            SerializedType.ShaderAsset |
-                            SerializedType.AudioClipAsset |
-                            SerializedType.AnimationAsset |
-                            SerializedType.AnimatorControllerAsset |
-                            SerializedType.RenderTextureAsset |
-                            SerializedType.ScriptableObject)) != 0;
+            switch (type)
+            {
+                case SerializedType.Component:
+                case SerializedType.Actor:
+                case SerializedType.TextureAsset:
+                case SerializedType.MaterialAsset:
+                case SerializedType.ShaderAsset:
+                case SerializedType.AudioClipAsset:
+                case SerializedType.AnimationAsset:
+                case SerializedType.AnimatorControllerAsset:
+                case SerializedType.RenderTextureAsset:
+                case SerializedType.ScriptableObject:
+                    return true;
+            }
+
+            if(type.IsEObject())
+            {
+                Debug.Warn($"EObject type '{type}' is not a default reference");
+            }
+            return false;
         }
 
         public static bool IsEObject(this SerializedType type)

@@ -10,14 +10,14 @@ namespace Editor
 {
     internal class EditorAssetUtils
     {
-        internal static AssetMetaFileBase GetAssetMeta(AssetResourceBase asset)
+        internal static AssetMeta GetAssetMeta(AssetResourceBase asset)
         {
             var path = EditorPaths.GetAbsolutePathSafe(asset.Path) + Paths.ASSET_META_EXT_NAME;
-            var meta = AssetUtils.GetMeta(path, EditorIOLayer.Database.GetAssetInfo(asset).Type);
+            var meta = AssetUtils.GetMeta(path, EditorIOLayer.Database.GetAssetInfo(asset.GetID()).Type);
             return meta;
         }
 
-        internal static AssetMetaFileBase GetAssetMeta(string asstPathRelative, AssetType type)
+        internal static AssetMeta GetAssetMeta(string asstPathRelative, AssetType type)
         {
             var path = EditorPaths.GetAbsolutePathSafe(asstPathRelative) + Paths.ASSET_META_EXT_NAME;
             var meta = AssetUtils.GetMeta(path, type);

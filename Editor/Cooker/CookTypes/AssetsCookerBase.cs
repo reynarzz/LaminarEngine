@@ -21,13 +21,14 @@ namespace Editor.Cooker
             _assetProcessor = processor;
         }
 
-        internal abstract Task<bool> CookAssetsAsync(CookFileOptions fileOptions, CookingPlatform platform, (string, AssetType)[] files, string outFolder);
+        internal abstract Task<bool> CookAssetsAsync(CookFileOptions fileOptions, CookingPlatform platform, 
+                                                     (string filePath, AssetType assetType)[] files, string outFolder);
 
-        protected AssetProccesResult ProcessAsset(CookingPlatform platform, AssetType type, AssetMetaFileBase meta, string path)
+        protected AssetProccesResult ProcessAsset(CookingPlatform platform, AssetType type, AssetMeta meta, BinaryReader reader)
         {
             if (_assetProcessor.TryGetValue(type, out var processor))
             {
-                return processor.Process(path, meta, platform);
+                return processor.Process(reader, meta, platform);
             }
 
             return default;

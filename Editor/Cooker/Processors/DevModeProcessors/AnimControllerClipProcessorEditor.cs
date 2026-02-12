@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Engine
+namespace Editor.Cooker
 {
-    public abstract class AssetMetaFileBase
+    internal class AnimControllerClipProcessorEditor : TextAssetProcessor
     {
-        public Guid GUID { get; set; }
-    } 
+    }
 }

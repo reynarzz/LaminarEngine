@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Editor.Cooker
 {
-    internal class ShaderAssetProcessorRelease : ShaderAssetProcessor
+    internal class ShaderProcessorRelease : ShaderAssetProcessor
     {
         protected override byte[] GetAsset(ShaderSource[] sources)
         {

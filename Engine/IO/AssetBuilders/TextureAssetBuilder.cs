@@ -9,24 +9,22 @@ using System.Threading.Tasks;
 
 namespace Engine.IO
 {
-    internal class TextureAssetBuilder : AssetBuilderBase
+    internal class TextureAssetBuilder : IAssetBuilder<TextureAsset, TextureMetaFile>
     {
-        internal override AssetResourceBase BuildAsset(AssetInfo info, AssetMetaFileBase meta, Guid guid, BinaryReader reader)
+        public TextureAsset BuildAsset(ref readonly AssetInfo info, TextureMetaFile meta, BinaryReader reader)
         {
             var data = GetData(reader, meta);
 
-            var texture = new Texture2D(info.Path, guid, data.Config.Mode, data.Config.Filter,data.Width, data.Height,
+            var texture = new Texture2D(info.Path, meta.GUID, data.Config.Mode, data.Config.Filter,data.Width, data.Height,
                                         data.Channels, data.Config.PixelPerUnit, data.Data);
 
-            return new TextureAsset(info.Path, guid, texture, new SpriteAtlas(meta as TextureMetaFile, texture, guid));
+            return new TextureAsset(info.Path, meta.GUID, texture, new SpriteAtlas(meta, texture, meta.GUID));
         }
 
-        internal override void UpdateAsset(AssetResourceBase asset, AssetMetaFileBase meta, BinaryReader reader)
+        public void UpdateAsset(ref readonly AssetInfo info, TextureAsset asset, TextureMetaFile meta, BinaryReader reader)
         {
-            var textureAsset = asset as TextureAsset;
-            var updatedPath = textureAsset.Texture.Path;
             var data = GetData(reader, meta);
-            textureAsset.Texture.UpdateResource(data, updatedPath, meta.GUID);
+            asset.Texture.UpdateResource(data, info.Path, meta.GUID);
         }
 
         internal class TextureDeserializedData
@@ -37,7 +35,7 @@ namespace Engine.IO
             public byte[] Data { get; set; }
             public TextureConfig Config { get; set; }
         }
-        private TextureDeserializedData GetData(BinaryReader reader, AssetMetaFileBase meta)
+        private TextureDeserializedData GetData(BinaryReader reader, AssetMeta meta)
         {
             var width = reader.ReadInt32();
             var height = reader.ReadInt32();

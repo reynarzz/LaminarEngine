@@ -2,7 +2,6 @@
 using Engine;
 using Engine.IO;
 using Engine.Serialization;
-using Engine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace Editor
 {
-    internal class AnimationClipAssetBuilderEditor : JsonBasedAssetBuilder<AnimationClip>
+    internal class AnimationClipAssetBuilderEditor : JsonBasedAssetBuilder<AnimationClip, AssetMeta>
     {
-        internal override void UpdateAsset(AssetResourceBase asset, AssetMetaFileBase meta, BinaryReader reader)
+        public override void UpdateAsset(ref readonly AssetInfo info, AnimationClip asset, AssetMeta meta, BinaryReader reader)
         {
             throw new NotImplementedException();
         }

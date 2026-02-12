@@ -127,7 +127,10 @@ namespace Editor.Cooker
                     // encrypt files path
                     bufWritter.Write(fileOptions.EncryptFilesPath);
 
-                    var assetData = await Task.Run(() => ProcessAsset(platform, assetType, meta, filePath));
+                    using var fileStream = File.OpenRead(filePath);
+                    using var reader = new BinaryReader(fileStream);
+
+                    var assetData = await Task.Run(() => ProcessAsset(platform, assetType, meta, reader));
 
                     if (!assetData.IsSuccess)
                     {

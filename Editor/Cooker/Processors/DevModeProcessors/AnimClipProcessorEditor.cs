@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Editor.Cooker
 {
-    internal class AnimControllerClipAssetProcessorDevMode : TextAssetProcessor
+    internal class AnimClipProcessorEditor : TextAssetProcessor
     {
     }
 }

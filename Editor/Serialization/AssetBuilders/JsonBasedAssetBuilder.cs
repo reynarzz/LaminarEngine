@@ -11,22 +11,24 @@ using System.Threading.Tasks;
 
 namespace Editor
 {
-    internal abstract class JsonBasedAssetBuilder<T> : AssetBuilderBase
+    internal abstract class JsonBasedAssetBuilder<TAsset, TMeta> : IAssetBuilder<TAsset, TMeta> where TAsset : AssetResourceBase
+                                                                                                where TMeta : AssetMeta
     {
-        internal override AssetResourceBase BuildAsset(AssetInfo info, AssetMetaFileBase meta, Guid guid, BinaryReader reader)
+        TAsset IAssetBuilder<TAsset, TMeta>.BuildAsset(ref readonly AssetInfo info, TMeta meta, BinaryReader reader)
         {
             var length = reader.BaseStream.Length;
             var data = new byte[length];
             int bytesRead = reader.BaseStream.Read(data, 0, (int)length);
             string text = Encoding.UTF8.GetString(data, 0, bytesRead);
 
-            var assetInstance = Activator.CreateInstance(typeof(T), BindingFlags.Instance | BindingFlags.NonPublic,
-                                                         null, [info.Path, guid], null);
+            var assetInstance = Activator.CreateInstance(typeof(TAsset), BindingFlags.Instance | BindingFlags.NonPublic,
+                                                         null, [info.Path, meta.GUID], null);
             var ir = EditorJsonUtils.Deserialize<List<SerializedPropertyIR>>(text);
 
             Deserializer.Deserialize(assetInstance, ir);
 
-            return assetInstance as AssetResourceBase;
+            return assetInstance as TAsset;
         }
+        public abstract void UpdateAsset(ref readonly AssetInfo info, TAsset asset, TMeta meta, BinaryReader reader);
     }
 }

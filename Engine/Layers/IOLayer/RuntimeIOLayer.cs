@@ -18,7 +18,7 @@ namespace Engine.Layers
 #elif MOBILE
             disk = new ReleaseModeDisk(GFSEngine.AssetFileStream);
 #endif
-            var assetbuilder = new Dictionary<AssetType, AssetBuilderBase>()
+            var assetbuilder = new Dictionary<AssetType, IAssetBuilder>()
             {
                 { AssetType.Texture, new TextureAssetBuilder() },
                 { AssetType.Text, new TextAssetBuilder() },

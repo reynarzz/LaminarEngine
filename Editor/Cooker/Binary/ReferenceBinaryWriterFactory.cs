@@ -37,7 +37,7 @@ namespace Editor.Cooker
             {
                 writerFunction(writer, reference);
             }
-            else if (!reference.Type.IsDefaultAssetRef())
+            else if (!reference.Type.IsDefaultRef())
             {
                 throw new NotImplementedException($"Writer for reference '{reference.Type}'is not implemented");
             }

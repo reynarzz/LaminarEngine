@@ -20,16 +20,14 @@ namespace Editor.Cooker
 
     internal class TextureAssetProcessor : IAssetProcessor
     {
-        AssetProccesResult IAssetProcessor.Process(string path, AssetMetaFileBase meta, CookingPlatform platform)
+        AssetProccesResult IAssetProcessor.Process(BinaryReader reader, AssetMeta meta, CookingPlatform platform)
         {
-            if (!File.Exists(path))
-            {
-                return default;
-            }
-
             StbImage.stbi_set_flip_vertically_on_load(1);
 
-            var result = ImageResult.FromMemory(File.ReadAllBytes(path));
+            var bytes = new byte[reader.BaseStream.Length];
+            reader.BaseStream.ReadExactly(bytes, 0, bytes.Length);
+
+            var result = ImageResult.FromMemory(bytes);
 
             using (MemoryStream ms = new MemoryStream())
             {

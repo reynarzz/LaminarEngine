@@ -24,7 +24,7 @@ namespace Editor
 
         public override Task InitializeAsync()
         {
-            InitializeIO(_devDisk, new Dictionary<AssetType, AssetBuilderBase>()
+            InitializeIO(_devDisk, new Dictionary<AssetType, IAssetBuilder>()
             {
                 { AssetType.Texture, new TextureAssetBuilder() },
                 { AssetType.Text, new TextAssetBuilder() },

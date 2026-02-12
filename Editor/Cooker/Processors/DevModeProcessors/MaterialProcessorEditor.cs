@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Engine;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Editor.Cooker
 {
-    internal class AnimClipAssetProcessorDevMode : TextAssetProcessor
+    internal class MaterialProcessorEditor : TextAssetProcessor
     {
     }
 }

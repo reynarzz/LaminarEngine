@@ -9,7 +9,7 @@ namespace Engine
 {
     [Serializable]
     [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
-    public class AudioMetaFile : AssetMetaFileBase
+    public class AudioMetaFile : AssetMeta
     {
     }
 }

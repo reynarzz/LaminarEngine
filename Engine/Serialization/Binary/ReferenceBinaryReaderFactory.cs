@@ -32,7 +32,7 @@ namespace Engine.Serialization
                 return readerFunc(reader, type);
             }
 
-            if (type.IsDefaultAssetRef())
+            if (type.IsDefaultRef())
             {
                 return ReadDefaultReference(reader, type);
             }

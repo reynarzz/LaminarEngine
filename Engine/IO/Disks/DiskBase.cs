@@ -45,7 +45,7 @@ namespace Engine.IO
             return AssetDatabaseInfo.Assets.Where(x => x.Value.Type == assetType).ToArray();
         }
 
-        public AssetMetaFileBase GetAssetMeta(Guid guid)
+        public AssetMeta GetAssetMeta(Guid guid)
         {
             if (AssetDatabaseInfo.Assets.TryGetValue(guid, out var info))
             {

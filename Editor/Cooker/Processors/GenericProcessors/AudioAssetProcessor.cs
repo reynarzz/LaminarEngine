@@ -18,18 +18,16 @@ namespace Editor.Cooker
     {
         private readonly static MiniAudioEngine _engine = new MiniAudioEngine();
 
-        AssetProccesResult IAssetProcessor.Process(string path, AssetMetaFileBase meta, CookingPlatform platform)
+        AssetProccesResult IAssetProcessor.Process(BinaryReader reader, AssetMeta meta, CookingPlatform platform)
         {
-            using var fs = new FileStream(path, FileMode.Open, FileAccess.Read);
-
             var format = AudioFormat.DvdHq;
 
-            using var provider = new StreamDataProvider(_engine, format, fs);
+            using var provider = new StreamDataProvider(_engine, format, reader.BaseStream);
 
             float[] buffer = new float[provider.Length];
 
             int samplesData = provider.ReadBytes(buffer);
-           
+
             using var ms = new MemoryStream();
             using var bw = new BinaryWriter(ms);
 

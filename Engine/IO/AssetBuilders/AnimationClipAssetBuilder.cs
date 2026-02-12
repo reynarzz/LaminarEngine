@@ -8,16 +8,16 @@ using System.Threading.Tasks;
 
 namespace Engine.IO
 {
-    internal class AnimationClipAssetBuilder : AssetBuilderBase
+    internal class AnimationClipAssetBuilder : IAssetBuilder<AnimationClip, AssetMeta>
     {
-        internal override AssetResourceBase BuildAsset(AssetInfo info, AssetMetaFileBase meta, Guid guid, BinaryReader reader)
+        public AnimationClip BuildAsset(ref readonly AssetInfo info, AssetMeta meta, BinaryReader reader)
         {
             // TODO: implement for binary based derialization, the IR reconstruction. 
             var length = reader.BaseStream.Length;
             var data = new byte[length];
             int bytesRead = reader.BaseStream.Read(data, 0, (int)length);
 
-            var anim = new AnimationClip(info.Path, guid);
+            var anim = new AnimationClip(info.Path, meta.GUID);
 
             // TODO: populate anim data.
 
@@ -26,7 +26,7 @@ namespace Engine.IO
             return anim;
         }
 
-        internal override void UpdateAsset(AssetResourceBase asset, AssetMetaFileBase meta, BinaryReader reader)
+        public void UpdateAsset(ref readonly AssetInfo info, AnimationClip asset, AssetMeta meta, BinaryReader reader)
         {
             throw new NotImplementedException();
         }

@@ -1,21 +1,30 @@
 ﻿using Engine.IO;
 using Engine;
+using Engine.Serialization;
 
 namespace Engine
 {
-    internal class MaterialAssetBuilder : AssetBuilderBase
+    internal class MaterialAssetBuilder : IAssetBuilder<Material, AssetMeta>
     {
-        internal override AssetResourceBase BuildAsset(AssetInfo info, AssetMetaFileBase meta, Guid guid, BinaryReader reader)
+        public Material BuildAsset(ref readonly AssetInfo info, AssetMeta meta, BinaryReader reader)
         {
-            // TODO: read material correctly
-           // throw new NotImplementedException("Implement Material Asset Builder");
+            var ir = BinaryIRDeserializer.Deserialize(reader);
 
-            return new Material(new Shader(Assets.GetText("Shaders/SpriteVert.vert").Text, Assets.GetText("Shaders/SpriteFrag.frag").Text, 
-                "Invalid builder", "invalid builder"));
+            var material = new Material(info.Path, meta.GUID);
+
+            Deserializer.Deserialize(material, ir);
+
+            return material;
+
+
+            //new Material(new Shader(Assets.GetText("Shaders/SpriteVert.vert").Text, Assets.GetText("Shaders/SpriteFrag.frag").Text,
+            //"Invalid builder", "invalid builder"));
         }
 
-        internal override void UpdateAsset(AssetResourceBase asset, AssetMetaFileBase meta, BinaryReader reader)
+        public void UpdateAsset(ref readonly AssetInfo info, Material asset, AssetMeta meta, BinaryReader reader)
         {
         }
+
+
     }
 }

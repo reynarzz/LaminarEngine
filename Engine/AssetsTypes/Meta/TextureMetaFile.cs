@@ -34,7 +34,7 @@ namespace Engine
 
     [Serializable]
     [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
-    public class TextureMetaFile : AssetMetaFileBase
+    public class TextureMetaFile : AssetMeta
     {
         public TextureConfig Config { get; set; } = new TextureConfig() { PixelPerUnit = 16 };
         public TextureAtlasData AtlasData { get; set; } = new();

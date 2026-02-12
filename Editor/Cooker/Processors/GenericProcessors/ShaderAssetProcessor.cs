@@ -12,7 +12,7 @@ using Glslang.NET;
 
 namespace Editor.Cooker
 {
-    internal class ShaderAssetProcessor : IAssetProcessor
+    internal class ShaderAssetProcessor : TextAssetProcessor
     {
         private static Context _context = new Context();
         private const string INCLUDE_EXTENSION = "#extension GL_GOOGLE_include_directive : enable";
@@ -21,9 +21,9 @@ namespace Editor.Cooker
         private const string FRAGMENT_KEYWORD = "FRAGMENT_SHADER";
 
         private const string SHADER_HEADER = VERSION + "\n" + INCLUDE_EXTENSION + "\n";
-        AssetProccesResult IAssetProcessor.Process(string path, AssetMetaFileBase meta, CookingPlatform platform)
+        public override AssetProccesResult Process(BinaryReader reader, AssetMeta meta, CookingPlatform platform)
         {
-            var shaderFile = File.ReadAllText(path);
+            var shaderFile = Encoding.UTF8.GetString(base.Process(reader, meta, platform).Data);
 
             if (string.IsNullOrEmpty(shaderFile))
             {

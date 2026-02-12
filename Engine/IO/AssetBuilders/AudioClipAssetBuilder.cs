@@ -1,12 +1,4 @@
 ﻿using Engine;
-using SoundFlow.Abstracts;
-using SoundFlow.Backends.MiniAudio;
-using SoundFlow.Components;
-using SoundFlow.Enums;
-using SoundFlow.Interfaces;
-using SoundFlow.Modifiers;
-using SoundFlow.Providers;
-using SoundFlow.Structs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,9 +6,9 @@ using System.Text;
 
 namespace Engine.IO
 {
-    internal class AudioClipAssetBuilder : AssetBuilderBase
+    internal class AudioClipAssetBuilder : IAssetBuilder<AudioClip, AssetMeta>
     {
-        internal override AssetResourceBase BuildAsset(AssetInfo info, AssetMetaFileBase meta, Guid guid, BinaryReader reader)
+        public AudioClip BuildAsset(ref readonly AssetInfo info, AssetMeta meta, BinaryReader reader)
         {
             var sampleRate = reader.ReadInt32();
             var channels = reader.ReadInt32();
@@ -30,12 +22,12 @@ namespace Engine.IO
                 data[i] = reader.ReadSingle();
             }
 
-            return new AudioClip(info.Path, 
-                                 guid, data, sampleRate, 
+            return new AudioClip(info.Path,
+                                 meta.GUID, data, sampleRate, 
                                  samplesLength, channels, sampleFormat);
         }
 
-        internal override void UpdateAsset(AssetResourceBase asset, AssetMetaFileBase meta, BinaryReader reader)
+        public void UpdateAsset(ref readonly AssetInfo info, AudioClip asset, AssetMeta meta, BinaryReader reader)
         {
             throw new NotImplementedException();
         }

@@ -41,9 +41,7 @@ namespace Editor.Cooker
 
                     var meta = AssetUtils.GetMeta(metaPath, assetType);
 
-                    AssetInfo assetInfo = null;
-
-                    bool constainsAssetInfo = _database.Assets.TryGetValue(meta.GUID, out assetInfo);
+                    bool containsAssetInfo = _database.Assets.TryGetValue(meta.GUID, out var assetInfo);
 
                     bool isInLibrary = false;
 
@@ -57,10 +55,13 @@ namespace Editor.Cooker
                     var latestWriteTime = File.GetLastWriteTime(filePath);
                     var metaLatestWriteTime = File.GetLastWriteTime(metaPath);
 
-                    if (!constainsAssetInfo || latestWriteTime > assetInfo.LastWriteTime ||
+                    if (!containsAssetInfo || latestWriteTime > assetInfo.LastWriteTime ||
                        !isInLibrary || metaLatestWriteTime > assetInfo.MetaWriteTime)
                     {
-                        var data = ProcessAsset(platform, assetType, meta, filePath);
+                        using var fileStream = File.OpenRead(filePath);
+                        using var reader = new BinaryReader(fileStream);
+
+                        var data = ProcessAsset(platform, assetType, meta, reader);
 
                         if (!data.IsSuccess)
                         {
@@ -68,7 +69,7 @@ namespace Editor.Cooker
                         }
 
                         var assetRelPath = Paths.GetRelativeAssetPath(filePath);
-                        if (constainsAssetInfo)
+                        if (containsAssetInfo)
                         {
                             Console.WriteLine("Updating asset file: " + filePath);
                             assetInfo = _database.Assets[meta.GUID];
@@ -76,6 +77,8 @@ namespace Editor.Cooker
                             assetInfo.LastWriteTime = latestWriteTime;
                             assetInfo.MetaWriteTime = metaLatestWriteTime;
                             assetInfo.Path = assetRelPath;
+                            _database.Assets[meta.GUID] = assetInfo;
+
                             _database.UpdatedAssets.Add(meta.GUID);
                         }
                         else
@@ -157,7 +160,7 @@ namespace Editor.Cooker
                 {
                     Console.WriteLine("Check Permission: Dev mode files cooker.");
                 }
-                
+
                 return !someAssetFailImport;
             });
         }

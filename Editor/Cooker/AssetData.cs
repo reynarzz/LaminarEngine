@@ -11,6 +11,6 @@ namespace Editor.Cooker
     {
         internal AssetType Type { get; set; }
         internal byte[] Data { get; set; }
-        internal AssetMetaFileBase Meta { get; set; }
+        internal AssetMeta Meta { get; set; }
     }
 }

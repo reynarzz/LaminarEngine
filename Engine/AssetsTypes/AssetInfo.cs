@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    public class AssetInfo
+    public struct AssetInfo
     {
-        public AssetType Type { get; set; } = AssetType.Invalid;
-        public DateTime LastWriteTime { get; set; }
-        public string Path { get; set; }
-        public bool IsCompressed { get; set; }
-        public bool IsEncrypted { get; set; }
-        public DateTime MetaWriteTime { get; set; }
+        public AssetType Type;
+        public DateTime LastWriteTime;
+        public string Path;
+        public bool IsCompressed;
+        public bool IsEncrypted;
+        public DateTime MetaWriteTime;
     }
 
 }

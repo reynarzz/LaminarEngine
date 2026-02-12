@@ -9,6 +9,6 @@ namespace Editor.Cooker
 {
     internal interface IAssetProcessor
     {
-        AssetProccesResult Process(string path, AssetMetaFileBase meta, CookingPlatform platform);
+        AssetProccesResult Process(BinaryReader reader, AssetMeta meta, CookingPlatform platform);
     }
 }

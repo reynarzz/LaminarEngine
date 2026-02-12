@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace Engine.IO
 {
-    internal class FontAssetBuilder : AssetBuilderBase
+    internal class FontAssetBuilder : IAssetBuilder<FontAsset, AssetMeta>
     {
-        internal override AssetResourceBase BuildAsset(AssetInfo info, AssetMetaFileBase meta, Guid guid, BinaryReader reader)
+        public FontAsset BuildAsset(ref readonly AssetInfo info, AssetMeta meta, BinaryReader reader)
         {
-            return new FontAsset(info.Path, guid, reader.ReadBytes((int)reader.BaseStream.Length));
+            return new FontAsset(info.Path, meta.GUID, reader.ReadBytes((int)reader.BaseStream.Length));
         }
 
-        internal override void UpdateAsset(AssetResourceBase asset, AssetMetaFileBase meta, BinaryReader reader)
+        public void UpdateAsset(ref readonly AssetInfo info, FontAsset asset, AssetMeta meta, BinaryReader reader)
         {
             throw new NotImplementedException();
         }

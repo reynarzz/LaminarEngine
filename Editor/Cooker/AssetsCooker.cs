@@ -81,9 +81,9 @@ namespace Editor.Cooker
                 { AssetType.Shader, new ShaderAssetProcessorOld() },
                 { AssetType.ShaderV2, new ShaderAssetProcessor() },
                 { AssetType.Font, new RawBytesAssetProcessor() },
-                { AssetType.AnimationClip, new AnimClipAssetProcessorDevMode() },
-                { AssetType.AnimationController, new AnimControllerClipAssetProcessorDevMode() },
-                { AssetType.Material, new MaterialAssetProcessorDevMode() },
+                { AssetType.AnimationClip, new AnimClipProcessorEditor() },
+                { AssetType.AnimationController, new AnimControllerClipProcessorEditor() },
+                { AssetType.Material, new MaterialProcessorEditor() },
             };
 
             var releaseModeAssetsProcessors = new Dictionary<AssetType, IAssetProcessor>()
@@ -92,7 +92,7 @@ namespace Editor.Cooker
                 { AssetType.Audio, new AudioAssetProcessor() },
                 { AssetType.Text, new TextAssetProcessor() },
                 { AssetType.Shader, new ShaderAssetProcessorOld() },
-                { AssetType.ShaderV2, new ShaderAssetProcessorRelease() },
+                { AssetType.ShaderV2, new ShaderProcessorRelease() },
                 { AssetType.Font, new RawBytesAssetProcessor() },
                 { AssetType.AnimationClip, new RawBytesAssetProcessor() }, // TODO: binary serialization
                 { AssetType.AnimationController, new RawBytesAssetProcessor() }, // TODO: binary serialization

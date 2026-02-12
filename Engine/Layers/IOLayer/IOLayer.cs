@@ -14,7 +14,7 @@ namespace Engine.Layers
         private static AssetDatabase _assetDatabase;
         internal static AssetDatabase Database => _assetDatabase; // Remove this.
 
-        private protected void InitializeIO(DiskBase disk, Dictionary<AssetType, AssetBuilderBase> assetsBuilder)
+        private protected void InitializeIO(DiskBase disk, Dictionary<AssetType, IAssetBuilder> assetsBuilder)
         {
             _assetDatabase = new AssetDatabase(assetsBuilder);
 

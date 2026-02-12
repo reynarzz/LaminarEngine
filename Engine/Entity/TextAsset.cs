@@ -8,7 +8,7 @@ namespace Engine
 {
     public class TextAsset : AssetResourceBase
     {
-        public string Text { get; }
+        public string Text { get; private set; }
 
         public TextAsset(string text, string path, Guid guid) : base(path, guid)
         {
@@ -17,7 +17,7 @@ namespace Engine
 
         internal override void UpdateResource(object data, string path, Guid guid)
         {
-            throw new NotImplementedException();
+            Text = data as string;
         }
     }
 }

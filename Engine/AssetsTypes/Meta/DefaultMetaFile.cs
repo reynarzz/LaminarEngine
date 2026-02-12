@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Engine
 {
     [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
-    public class DefaultMetaFile : AssetMetaFileBase
+    public class DefaultMetaFile : AssetMeta
     {
     }
 }

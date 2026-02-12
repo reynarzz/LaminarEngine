@@ -1,4 +1,5 @@
 ﻿using Engine;
+using Engine.Layers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,21 +8,24 @@ using System.Threading.Tasks;
 
 namespace Engine.IO
 {
-    internal class TextAssetBuilder : AssetBuilderBase
+    internal class TextAssetBuilder : IAssetBuilder<TextAsset, AssetMeta>
     {
-        internal override AssetResourceBase BuildAsset(AssetInfo info, AssetMetaFileBase meta, Guid guid, BinaryReader reader)
+        public TextAsset BuildAsset(ref readonly AssetInfo info, AssetMeta meta, BinaryReader reader)
         {
-            var length = reader.BaseStream.Length;
-            var data = new byte[length];
-            int bytesRead =  reader.BaseStream.Read(data, 0, (int)length);
-            string text = Encoding.UTF8.GetString(data, 0, bytesRead);
-
-            return new TextAsset(text, info.Path, guid);
+            return new TextAsset(ReadText(reader), info.Path, meta.GUID);
         }
 
-        internal override void UpdateAsset(AssetResourceBase asset, AssetMetaFileBase meta, BinaryReader reader)
+        public void UpdateAsset(ref readonly AssetInfo info, TextAsset asset, AssetMeta meta, BinaryReader reader)
         {
-            throw new NotImplementedException();
+            asset.UpdateResource(ReadText(reader), info.Path, meta.GUID);
+        }
+
+        private string ReadText(BinaryReader reader)
+        {
+            var length = (int)reader.BaseStream.Length;
+            var data = new byte[length];
+            reader.BaseStream.ReadExactly(data, 0, length);
+            return Encoding.UTF8.GetString(data, 0, length);
         }
     }
 }

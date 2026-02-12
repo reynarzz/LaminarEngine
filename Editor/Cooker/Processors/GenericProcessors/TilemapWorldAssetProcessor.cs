@@ -10,14 +10,13 @@ namespace Editor.Cooker
 {
     internal class TilemapWorldAssetProcessor : IAssetProcessor
     {
-        AssetProccesResult IAssetProcessor.Process(string path, AssetMetaFileBase meta, CookingPlatform platform)
+        AssetProccesResult IAssetProcessor.Process(BinaryReader reader, AssetMeta meta, CookingPlatform platform)
         {
-            using var reader = new StreamReader(path, Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
-
+            
             return new AssetProccesResult()
             {
                 IsSuccess = true,
-                Data = Encoding.UTF8.GetBytes(reader.ReadToEnd())
+                //Data = Encoding.UTF8.GetBytes(reader.ReadToEnd())
             };
         }
     }
