@@ -14,6 +14,14 @@ namespace Editor.Serialization
         /// Gets the IR of all the properties marked with the 'SerializedField' attribute.
         /// </summary>
 
+        internal static CollectionData Serialize<T>(T collection) where T : IList
+        {
+            var type = collection.GetType();
+            var serializedType = GetSerializedType(type);
+
+            return GetPropertyData(type, serializedType, collection) as CollectionData;
+        }
+
         internal static SerializedPropertyIR[] Serialize(object target)
         {
             if (target is IEnumerable && target is not string)
@@ -31,7 +39,7 @@ namespace Editor.Serialization
                 var valueType = value?.GetType() ?? ReflectionUtils.GetMemberType(member);
                 var serializedType = GetSerializedType(valueType, value);
 
-                var propData = GetPropertyData(member, serializedType, value);
+                var propData = GetPropertyData(valueType, serializedType, value);
                 properties[i] = new SerializedPropertyIR()
                 {
                     Name = member.Name,
@@ -48,7 +56,7 @@ namespace Editor.Serialization
             return properties;
         }
 
-        internal static SerializedType GetSerializedType(Type type, object value)
+        internal static SerializedType GetSerializedType(Type type, object value = null)
         {
             type = value?.GetType() ?? type;
 
@@ -247,7 +255,7 @@ namespace Editor.Serialization
         }
 
         // This only returns reference ids, simple and complex property data.
-        internal static object GetPropertyData(MemberInfo member, SerializedType serializedMemberType, object value)
+        internal static object GetPropertyData(Type type, SerializedType serializedMemberType, object value)
         {
             // Note: For runtime-created resource assets such as Materials, Shaders, Textures etc... maybe should have a empty guid, so the serializer,
             //       does not point to a invalid physical asset.
@@ -262,7 +270,10 @@ namespace Editor.Serialization
                 return GetVariantValue(value, serializedMemberType);
             }
 
-            var type = value?.GetType() ?? ReflectionUtils.GetMemberType(member);
+            if (value != null)
+            {
+                type = value?.GetType();
+            }
 
             if (type.IsAssignableTo(typeof(Delegate)))
             {
@@ -587,7 +598,7 @@ namespace Editor.Serialization
                 var valueType = value?.GetType() ?? ReflectionUtils.GetMemberType(currentType);
                 var serializedType = GetSerializedType(valueType, null);
 
-                var data = GetPropertyData(currentType, serializedType, value);
+                var data = GetPropertyData(valueType, serializedType, value);
                 return new SerializedPropertyIR()
                 {
                     Name = currentType.Name,

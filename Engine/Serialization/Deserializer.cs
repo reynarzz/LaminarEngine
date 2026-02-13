@@ -34,6 +34,12 @@ namespace Engine.Serialization
             }
             return (T)target;
         }
+
+        internal static void Deserialize<T>(IReadOnlyList<T> collection)
+        {
+            throw new NotImplementedException("Implement direct collection deserializer");
+        }
+
         internal static void Deserialize(object targetInstance, IReadOnlyList<SerializedPropertyIR> properties)
         {
             DeserializeTarget(targetInstance, properties, null);
