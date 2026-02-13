@@ -249,7 +249,7 @@ namespace Engine.Utils
                 type = type.BaseType;
             }
 
-            Debug.Error($"Could not find member named: {memberName}");
+            Debug.Error($"Could not find member named: {memberName}, target: {GetFullTypeName(target.GetType())}");
         }
 
         public static MemberInfo GetMember(Type type, string name, BindingFlags flags = _flags)
@@ -303,7 +303,7 @@ namespace Engine.Utils
                             BindingFlags.Public |
                             BindingFlags.NonPublic;
 
-                        field.SetValue(target, value, flags, Type.DefaultBinder, CultureInfo.InvariantCulture);
+                        field.SetValue(target, value, _flags, Type.DefaultBinder, CultureInfo.InvariantCulture);
                         break;
                     }
 

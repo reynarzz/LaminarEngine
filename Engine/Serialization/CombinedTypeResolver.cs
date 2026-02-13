@@ -35,7 +35,7 @@ namespace Engine.Serialization
         private static bool Resolve(string internalType, Guid id, out Type type)
         {
             type = null;
-            var success =  Generated.TypeRegistryRuntime.ResolveType(id, out type);
+            var success = false;//Generated.TypeRegistryRuntime.ResolveType(id, out type);
 
             if (!success)
             {

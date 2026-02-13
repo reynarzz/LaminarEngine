@@ -9,11 +9,15 @@ namespace Editor.Cooker
 {
     internal class ShaderProcessorRelease : ShaderAssetProcessor
     {
+        private static ShaderData _shaderDataTemp = new ShaderData();
+
         protected override byte[] GetAsset(ShaderSource[] sources)
         {
             using var stream = new MemoryStream();
             using var writer = new BinaryWriter(stream, Encoding.UTF8);
-            var properties = Serializer.Serialize(sources);
+
+            _shaderDataTemp.Sources = sources;
+            var properties = Serializer.Serialize(_shaderDataTemp);
 
             if (properties.Length > 1)
             {

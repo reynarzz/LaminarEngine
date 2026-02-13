@@ -14,16 +14,13 @@ namespace Editor.Serialization
         /// Gets the IR of all the properties marked with the 'SerializedField' attribute.
         /// </summary>
 
-        private struct CollectionWrapper
-        {
-            [SerializedField] public object Collection;
-        }
         internal static SerializedPropertyIR[] Serialize(object target)
         {
-            if (ReflectionUtils.IsCollection(target.GetType()))
+            if (target is IEnumerable && target is not string)
             {
-                target = new CollectionWrapper() { Collection = target };
+                throw new ArgumentException("Collections are not allowed.", nameof(target));
             }
+
             var serializedMembers = ReflectionUtils.GetAllMembersWithAttributeArray<SerializedFieldAttribute>(target.GetType());
             var properties = new SerializedPropertyIR[serializedMembers.Length];
 

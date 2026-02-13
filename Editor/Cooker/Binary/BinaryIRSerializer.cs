@@ -25,7 +25,7 @@ namespace Editor.Cooker
                 throw new PlatformNotSupportedException("The serializer requires a little endian CPU.");
             }
         }
-        internal static void Serialize(BinaryWriter writer, params SerializedPropertyIR[] properties)
+        private static void Serialize(BinaryWriter writer, params SerializedPropertyIR[] properties)
         {
             writer.Write(properties.Length);
             foreach (var property in properties)
@@ -37,12 +37,7 @@ namespace Editor.Cooker
         internal static void Serialize(BinaryWriter writer, MaterialIR material)
         {
             writer.Write(material.Version);
-            writer.Write(material.Properties.Length);
-
-            foreach (var property in material.Properties)
-            {
-                WriteProperty(writer, property);
-            }
+            Serialize(writer, material.Properties);
         }
 
         internal static void Serialize(SceneIR scene, BinaryWriter writer)
@@ -120,7 +115,7 @@ namespace Editor.Cooker
             WriteString(writer, ir.Name);
             EditorUtils.WriteGuidNoAlloc(writer, ir.TypeId);
             writer.Write((ulong)(serializedType));
-
+      
             RegisterType(ir.InternalType);
 
             if (serializedType.IsSimple())
