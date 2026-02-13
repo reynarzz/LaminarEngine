@@ -145,7 +145,7 @@ namespace Editor.Cooker
             var collectedFiles = selectedFiles.ToArray();
             var result = await _assetCookers[options.Type].CookAssetsAsync(options.FileOptions, options.Platform,
                                              collectedFiles, options.ExportFolderPath);
-            if (result)
+            if (result && options.Type == CookingType.ReleaseMode)
             {
                 // This generates the whole type registry after all the types where collected from the assets.
                 TypeGenerationStage.GenerateTypeRegistry();

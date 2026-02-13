@@ -251,6 +251,10 @@ namespace Engine.Serialization
                 DeserializeTarget(inst, complexData.Properties, deserializerData);
                 ReflectionUtils.SetMemberValue(target, inst, property.Name);
             }
+            else
+            {
+                Debug.Warn($"Couldn't resolve type for property: {property.Name}, target: {ReflectionUtils.GetFullTypeName(target.GetType())}");
+            }
         }
         internal static void DeserializeSimpleCollection(object target, SerializedPropertyIR property, DeserializerData deserializerData)
         {
@@ -320,6 +324,10 @@ namespace Engine.Serialization
                 }
 
                 ReflectionUtils.SetMemberValue(target, collectionInstance, property.Name);
+            }
+            else
+            {
+                Debug.Warn($"Couldn't resolve type for property: {property.Name}, target: {ReflectionUtils.GetFullTypeName(target.GetType())}");
             }
         }
 
@@ -420,6 +428,10 @@ namespace Engine.Serialization
 
                     ReflectionUtils.SetMemberValue(target, collectionInstance, property.Name);
                 }
+            }
+            else
+            {
+                Debug.Warn($"Couldn't resolve type for property: {property.Name}, target: {ReflectionUtils.GetFullTypeName(target.GetType())}");
             }
         }
 

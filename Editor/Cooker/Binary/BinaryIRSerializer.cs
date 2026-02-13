@@ -288,6 +288,8 @@ namespace Editor.Cooker
                 writer.Write((ulong)(SerializedType.None));
                 return;
             }
+            RegisterType(data.InternalType);
+
             writer.Write((ulong)(data.ClassType));
             EditorUtils.WriteGuidNoAlloc(writer, data.TypeId);
             Serialize(writer, data.Properties);
@@ -533,6 +535,7 @@ namespace Editor.Cooker
             {
                 EditorUtils.WriteGuidNoAlloc(writer, value.TypeId);
                 writer.Write(value.EnumValue);
+                RegisterType(value.EnumInternalType);
             }
             else
             {

@@ -9,6 +9,7 @@ using Engine.Utils;
 using Editor.Cooker;
 using Engine;
 using System.Reflection;
+using Editor.Test;
 
 namespace Editor
 {
@@ -125,8 +126,6 @@ namespace Editor
                         var renderer = Actor.Find("Portal").Transform.Children[1].GetComponent<SpriteRenderer>();
                         var materialIR = Serializer.Serialize(renderer.Material);
 
-                        var material = Assets.GetMaterial("Materials/Material.material");
-
                         File.WriteAllText(AnimClipPath, EditorJsonUtils.Serialize(animIR));
                         File.WriteAllText(AnimControllerPath, EditorJsonUtils.Serialize(animControlerIR));
                         File.WriteAllText(MaterialPath, EditorJsonUtils.Serialize(materialIR));
@@ -144,7 +143,8 @@ namespace Editor
 
                 }
 
-                  InternalAssetsCreator.GenerateAll();
+                InternalAssetsCreator.GenerateAll();
+                Cooker.Generator.TypeGenerationStage.GenerateTypeRegistry();
 
                 //else
                 //{
@@ -199,7 +199,7 @@ namespace Editor
                 //        Debug.Log($"Success: {type.FullName}");
                 //    }
                 //}
-                Cooker.Generator.TypeGenerationStage.GenerateTypeRegistry();
+               // Test_MaterialBinary.RunTest_Windows();
             }
 
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.R))
@@ -220,7 +220,7 @@ namespace Editor
                 //    LoadScene(sceneFileIR);
                 //}
 
-                var file = File.Open(EditorPaths.AppRoot + "/SceneBinary.bin", FileMode.Open, FileAccess.Read);
+                using var file = File.OpenRead(EditorPaths.AppRoot + "/SceneBinary.bin");
                 var reader = new BinaryReader(file);
                 var scene = BinaryIRDeserializer.DeserializeScene(reader);
                 LoadScene(scene);
