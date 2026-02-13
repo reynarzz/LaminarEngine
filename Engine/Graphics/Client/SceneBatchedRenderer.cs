@@ -188,15 +188,18 @@ namespace Engine.Graphics
 
                 // Adds extra uniforms needed by renderers.
                 int uniformOffset = 0;
-                foreach (var uniform in pass.Uniforms.Values)
+                if(pass.Uniforms != null && pass.Uniforms.Count > 0)
                 {
-                    if (_drawCallData.Uniforms.Length <= uniformOffset)
+                    foreach (var uniform in pass.Uniforms.Values)
                     {
-                        Debug.Error($"Max uniform per drawcall reached: {_drawCallData.Uniforms.Length}");
-                        break;
+                        if (_drawCallData.Uniforms.Length <= uniformOffset)
+                        {
+                            Debug.Error($"Max uniform per drawcall reached: {_drawCallData.Uniforms.Length}");
+                            break;
+                        }
+                        _drawCallData.Uniforms[uniformOffset + (int)Consts.Graphics.Uniforms.COUNT] = uniform;
+                        uniformOffset++;
                     }
-                    _drawCallData.Uniforms[uniformOffset + (int)Consts.Graphics.Uniforms.COUNT] = uniform;
-                    uniformOffset++;
                 }
 
                 // Draw

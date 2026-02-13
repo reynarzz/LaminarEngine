@@ -11,7 +11,7 @@ namespace Engine
 {
     public class RenderPass
     {
-        [SerializedField] private Dictionary<string, UniformValue> _uniforms;
+        [SerializedField] private Dictionary<string, UniformValue> _uniforms = new();
         internal Dictionary<string, UniformValue> Uniforms => _uniforms;
 
         [SerializedField] public bool IsScreenGrabPass { get; set; }
@@ -33,16 +33,6 @@ namespace Engine
         internal RenderPass(Shader shader)
         {
             Shader = shader;
-            _uniforms = new Dictionary<string, UniformValue>();
-
-            if(Shader?.Uniforms != null && Shader.Uniforms.Count > 0)
-            {
-                for (int i = 0; i < Shader.Uniforms.Count; i++)
-                {
-                    var uniform = Shader.Uniforms[i];
-                    _uniforms[uniform.Name] = default;
-                }
-            }
         }
 
         // Generic SetProperty uses precomputed Setter

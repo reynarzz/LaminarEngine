@@ -24,7 +24,7 @@ namespace Editor
     // - Compilation can get stuck forever.
     // - If a collider change from Trigger to normal (and viceversa), the ontrigerExit/onCollisionExit must be called.
     // - The renderData is not removed from renderingLayer dictionary if the Actor starts disabled in the first frame, and then try to enable it.
-
+    // - Forbid materials to send system uniforms: example: uTime, MVp, etc...
 
     // Serialization:
     // - Forbid serialization of dictionaries that contains EObject as key?
