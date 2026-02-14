@@ -305,7 +305,16 @@ namespace Engine.Serialization
                 value = default
             };
         }
-
+        internal static Variant FromEnum(EnumIRValue value)
+        {
+            return new Variant
+            {
+                Kind = SerializedType.Enum,
+                Enum = value,
+                String = null,
+                value = default
+            };
+        }
         public static implicit operator Variant(vec2 value)
         {
             return new Variant

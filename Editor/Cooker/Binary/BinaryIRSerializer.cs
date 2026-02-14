@@ -171,14 +171,108 @@ namespace Editor.Cooker
             }
             else
             {
-                // TODO: Apply the new collections
-
-                //var variantCollection = collectionData as CollectionSimples;
-                //writer.Write((ulong)(variantCollection.ItemsType));
-                //WriteVariantArray(writer, variantCollection.ItemsType, variantCollection.Value);
+                var variantCollection = collectionData;
+                var itemsType = (variantCollection as IItemType<SerializedType>).ItemsType;
+                writer.Write((ulong)itemsType);
+                WriteSimpleArray(writer, itemsType, variantCollection);
             }
         }
 
+        private static void WriteSimpleArray(BinaryWriter writer, SerializedType itemsType, CollectionData array)
+        {
+            switch (itemsType)
+            {
+                case SerializedType.None:
+                    break;
+                case SerializedType.Enum:
+                    {
+                        foreach (var v in (array as CollectionDataEnum).Value)
+                        {
+                            WriteEnum(writer, in v);
+                        }
+                    }
+                    break;
+                case SerializedType.Char:
+                    WriteSpan(writer, (array as CollectionDataChar).Value);
+                    break;
+                case SerializedType.String:
+                    {
+                        foreach (var v in (array as CollectionDataString).Value)
+                        {
+                            WriteString(writer, v);
+                        }
+                    }
+                    break;
+                case SerializedType.Bool:
+                    WriteSpan(writer, (array as CollectionDataBool).Value);
+                    break;
+                case SerializedType.Byte:
+                    WriteSpan(writer, (array as CollectionDataByte).Value);
+                    break;
+                case SerializedType.Short:
+                    WriteSpan(writer, (array as CollectionDataShort).Value);
+                    break;
+                case SerializedType.UShort:
+                    WriteSpan(writer, (array as CollectionDataUShort).Value);
+                    break;
+                case SerializedType.Int:
+                    WriteSpan(writer, (array as CollectionDataInt).Value);
+                    break;
+                case SerializedType.UInt:
+                    WriteSpan(writer, (array as CollectionDataUInt).Value);
+                    break;
+                case SerializedType.Float:
+                    WriteSpan(writer, (array as CollectionDataFloat).Value);
+                    break;
+                case SerializedType.Double:
+                    WriteSpan(writer, (array as CollectionDataDouble).Value);
+                    break;
+                case SerializedType.Long:
+                    WriteSpan(writer, (array as CollectionDataLong).Value);
+                    break;
+                case SerializedType.ULong:
+                    WriteSpan(writer, (array as CollectionDataULong).Value);
+                    break;
+                case SerializedType.Vec2:
+                    WriteSpan(writer, (array as CollectionDataVec2).Value);
+                    break;
+                case SerializedType.Vec3:
+                    WriteSpan(writer, (array as CollectionDataVec3).Value);
+                    break;
+                case SerializedType.Vec4:
+                    WriteSpan(writer, (array as CollectionDataVec4).Value);
+                    break;
+                case SerializedType.IVec2:
+                    WriteSpan(writer, (array as CollectionDataIvec2).Value);
+                    break;
+                case SerializedType.IVec3:
+                    WriteSpan(writer, (array as CollectionDataIvec3).Value);
+                    break;
+                case SerializedType.IVec4:
+                    WriteSpan(writer, (array as CollectionDataIvec4).Value);
+                    break;
+                case SerializedType.Quat:
+                    WriteSpan(writer, (array as CollectionDataQuat).Value);
+                    break;
+                case SerializedType.Mat2:
+                    WriteSpan(writer, (array as CollectionDataMat2).Value);
+                    break;
+                case SerializedType.Mat3:
+                    WriteSpan(writer, (array as CollectionDataMat3).Value);
+                    break;
+                case SerializedType.Mat4:
+                    WriteSpan(writer, (array as CollectionDataMat4).Value);
+                    break;
+                case SerializedType.Color:
+                    WriteSpan(writer, (array as CollectionDataColor).Value);
+                    break;
+                case SerializedType.Color32:
+                    WriteSpan(writer, (array as CollectionDataColor32).Value);
+                    break;
+                default:
+                    break;
+            }
+        }
         private static void WriteVariantArray(BinaryWriter writer, SerializedType kind, Variant[] variants)
         {
             if (variants == null || variants.Length == 0 || kind == SerializedType.None)
@@ -577,6 +671,12 @@ namespace Editor.Cooker
             }
         }
 
+        private static void WriteSpan<T>(BinaryWriter writer, T[] values) where T : unmanaged
+        {
+            ReadOnlySpan<byte> bytes = MemoryMarshal.AsBytes(values.AsSpan());
+            writer.Write(bytes);
+        }
+
         private static void WriteBoolPayloadSpan(BinaryWriter writer, Variant[] variants)
         {
             var count = variants.Length;
@@ -595,7 +695,24 @@ namespace Editor.Cooker
                 ArrayPool<byte>.Shared.Return(buffer);
             }
         }
-
+        private static void WriteBoolSpan(BinaryWriter writer, bool[] values)
+        {
+            var count = values.Length;
+            var buffer = ArrayPool<byte>.Shared.Rent(count);
+            try
+            {
+                var dst = buffer.AsSpan(0, count);
+                for (int i = 0; i < count; i++)
+                {
+                    dst[i] = BoolToByte(values[i]);
+                }
+                writer.Write(dst);
+            }
+            finally
+            {
+                ArrayPool<byte>.Shared.Return(buffer);
+            }
+        }
         private static void WriteString(BinaryWriter writer, string str, int chunkSize = 8192)
         {
             if (string.IsNullOrEmpty(str))

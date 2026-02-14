@@ -957,7 +957,7 @@ namespace Engine.Utils
         {
             if (variant.Kind == SerializedType.Enum)
             {
-                return DeserializeEnum<T>(variant);
+                return DeserializeEnum<T>(variant.Enum);
             }
             else if (variant.Kind == SerializedType.String && string.IsNullOrEmpty(variant.String))
             {
@@ -967,17 +967,11 @@ namespace Engine.Utils
             return variant.GetValueAsObject();
         }
 
-        internal static Enum DeserializeEnum<T>(in Variant variant) where T : ITypeResolver
+        internal static Enum DeserializeEnum<T>(in EnumIRValue value) where T : ITypeResolver
         {
-            if (variant.Kind != SerializedType.Enum)
+            if (T.ResolveType(value, out var enumType))
             {
-                Debug.EngineError("Is not enum!");
-                return null;
-            }
-
-            if (T.ResolveType(variant.Enum, out var enumType))
-            {
-                return (Enum)Enum.ToObject(enumType, variant.Enum.EnumValue);
+                return (Enum)Enum.ToObject(enumType, value.EnumValue);
             }
 
             return null;

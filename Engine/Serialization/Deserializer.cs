@@ -112,7 +112,7 @@ namespace Engine.Serialization
             object value = null;
             if (property.Type == SerializedType.Enum)
             {
-                value = ReflectionUtils.DeserializeEnum<Tr>(property.Simple);
+                value = ReflectionUtils.DeserializeEnum<Tr>(property.Simple.Enum);
             }
             else
             {
@@ -301,24 +301,30 @@ namespace Engine.Serialization
                 }
                 else
                 {
-                    var variantCollection = collectionData as CollectionSimples;
-                    if (variantCollection.Count > 0)
+                    if (collectionData.Count > 0)
                     {
-                        if (variantCollection.ItemsType == SerializedType.Enum)
+                        var itemsType = (collectionData as IItemType<SerializedType>).ItemsType;
+
+
+                        if (itemsType == SerializedType.Enum)
                         {
+                            var enumCollection = collectionData as CollectionDataEnum;
+
                             // Having huge collections of enums is unlikelly, also, I do not want to complicate the code generator.
                             // if we have performance issues related to this, I will change it.
                             collectionInstance = ReflectionUtils.EnsureCount(collectionInstance, collectionData.Count);
 
-                            for (int i = 0; i < variantCollection.Count; i++)
+                            for (int i = 0; i < enumCollection.Count; i++)
                             {
-                                var itemObj = ReflectionUtils.DeserializeVariantValueSafe<Tr>(in variantCollection.Value[i]);
+                                var itemObj = ReflectionUtils.DeserializeEnum<Tr>(in enumCollection.Value[i]);
                                 ReflectionUtils.SetMemberValueSafe(collectionInstance, itemObj, default(MemberInfo), i);
                             }
                         }
                         else
                         {
-                            collectionInstance = VariantCollectionWriter.Write(collectionInstance, variantCollection.Value, variantCollection.ItemsType, collectionData.CollectionType);
+                            // TODO: implement new collectionData for concrete simple types.
+                            // var variantCollection = collectionData as CollectionSimples;
+                            // collectionInstance = VariantCollectionWriter.Write(collectionInstance, variantCollection.Value, variantCollection.ItemsType, collectionData.CollectionType);
                         }
                     }
                 }
@@ -449,7 +455,7 @@ namespace Engine.Serialization
             {
                 if (argComplexData.ClassType == SerializedType.Enum)
                 {
-                    return ReflectionUtils.DeserializeEnum<Tr>((Variant)arg);
+                    return ReflectionUtils.DeserializeEnum<Tr>(((Variant)arg).Enum);
                 }
 
                 return ((Variant)arg).GetValueAsObject();

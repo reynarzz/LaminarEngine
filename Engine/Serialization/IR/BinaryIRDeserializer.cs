@@ -31,7 +31,7 @@ namespace Engine.Serialization
             var material = new MaterialIR();
             material.Version = reader.ReadInt32();
             var propCount = reader.ReadInt32();
-            
+
             material.Properties = new SerializedPropertyIR[propCount];
             for (int i = 0; i < propCount; i++)
             {
@@ -216,10 +216,84 @@ namespace Engine.Serialization
                 return simpleDictionary;
             }
 
-            var variantCollection = new CollectionSimples(count, collectionType);
-            variantCollection.ItemsType = (SerializedType)reader.ReadUInt64();
-            variantCollection.Value = ReadVariantArray(reader, variantCollection.ItemsType, count);
-            return variantCollection;
+            var itemsType = (SerializedType)reader.ReadUInt64();
+            return ReadSimpleArray(reader, itemsType, count, collectionType);
+        }
+
+        private static CollectionData ReadSimpleArray(BinaryReader reader, SerializedType itemsType, int count, CollectionType collectionType)
+        {
+            switch (itemsType)
+            {
+                case SerializedType.None:
+                    return null;
+                case SerializedType.Enum:
+                    {
+                        var values = new EnumIRValue[count];
+                        for (int i = 0; i < count; i++)
+                        {
+                            values[i] = ReadEnum(reader);
+                        }
+                        return new CollectionDataEnum(values, collectionType);
+                    }
+                case SerializedType.Char:
+                    return new CollectionDataChar(ReadArray<char>(reader, count), collectionType);
+                case SerializedType.String:
+                    {
+                        var values = new string[count];
+
+                        for (int i = 0; i < count; i++)
+                        {
+                            values[i] = ReadString(reader);
+                        }
+                        return new CollectionDataString(values, collectionType);
+                    }
+                case SerializedType.Bool:
+                    return new CollectionDataBool(ReadArray<bool>(reader, count), collectionType);
+                case SerializedType.Byte:
+                    return new CollectionDataByte(ReadArray<byte>(reader, count), collectionType);
+                case SerializedType.Short:
+                    return new CollectionDataShort(ReadArray<short>(reader, count), collectionType);
+                case SerializedType.UShort:
+                    return new CollectionDataUShort(ReadArray<ushort>(reader, count), collectionType);
+                case SerializedType.Int:
+                    return new CollectionDataInt(ReadArray<int>(reader, count), collectionType);
+                case SerializedType.UInt:
+                    return new CollectionDataUInt(ReadArray<uint>(reader, count), collectionType);
+                case SerializedType.Float:
+                    return new CollectionDataFloat(ReadArray<float>(reader, count), collectionType);
+                case SerializedType.Double:
+                    return new CollectionDataDouble(ReadArray<double>(reader, count), collectionType);
+                case SerializedType.Long:
+                    return new CollectionDataLong(ReadArray<long>(reader, count), collectionType);
+                case SerializedType.ULong:
+                    return new CollectionDataULong(ReadArray<ulong>(reader, count), collectionType);
+                case SerializedType.Vec2:
+                    return new CollectionDataVec2(ReadArray<vec2>(reader, count), collectionType);
+                case SerializedType.Vec3:
+                    return new CollectionDataVec3(ReadArray<vec3>(reader, count), collectionType);
+                case SerializedType.Vec4:
+                    return new CollectionDataVec4(ReadArray<vec4>(reader, count), collectionType);
+                case SerializedType.IVec2:
+                    return new CollectionDataIvec2(ReadArray<ivec2>(reader, count), collectionType);
+                case SerializedType.IVec3:
+                    return new CollectionDataIvec3(ReadArray<ivec3>(reader, count), collectionType);
+                case SerializedType.IVec4:
+                    return new CollectionDataIvec4(ReadArray<ivec4>(reader, count), collectionType);
+                case SerializedType.Quat:
+                    return new CollectionDataQuat(ReadArray<quat>(reader, count), collectionType);
+                case SerializedType.Mat2:
+                    return new CollectionDataMat2(ReadArray<mat2>(reader, count), collectionType);
+                case SerializedType.Mat3:
+                    return new CollectionDataMat3(ReadArray<mat3>(reader, count), collectionType);
+                case SerializedType.Mat4:
+                    return new CollectionDataMat4(ReadArray<mat4>(reader, count), collectionType);
+                case SerializedType.Color:
+                    return new CollectionDataColor(ReadArray<Color>(reader, count), collectionType);
+                case SerializedType.Color32:
+                    return new CollectionDataColor32(ReadArray<Color32>(reader, count), collectionType);
+                default:
+                    throw new NotImplementedException($"Item not implemented: {itemsType}");
+            }
         }
 
         private static Variant[] ReadVariantArray(BinaryReader reader, SerializedType kind, int count)
@@ -242,7 +316,7 @@ namespace Engine.Serialization
                 var enumVariants = new Variant[count];
                 for (int i = 0; i < enumVariants.Length; i++)
                 {
-                    enumVariants[i] = ReadEnum(reader);
+                    enumVariants[i] = Variant.FromEnum(ReadEnum(reader));
                 }
                 return enumVariants;
             }
@@ -333,6 +407,13 @@ namespace Engine.Serialization
             return variants;
         }
 
+        private static T[] ReadArray<T>(BinaryReader reader, int count) where T : unmanaged
+        {
+            var values = new T[count];
+            Span<byte> bytes = MemoryMarshal.AsBytes(values.AsSpan());
+            reader.BaseStream.ReadExactly(bytes);
+            return values;
+        }
 
         private static Variant[] ReadBoolPayloadSpan(BinaryReader reader, int count)
         {
@@ -381,11 +462,16 @@ namespace Engine.Serialization
             return ByteToBool(reader.ReadByte());
         }
 
-        private static Variant ReadEnum(BinaryReader reader)
+        private static EnumIRValue ReadEnum(BinaryReader reader)
         {
             var id = FileUtils.ReadGuidNoAlloc(reader);
             var enumVal = reader.ReadInt64();
-            return Variant.FromEnum(id, null, enumVal);
+            return new EnumIRValue()
+            {
+                TypeId = id,
+                EnumInternalType = null,
+                EnumValue = enumVal
+            };
         }
 
         private static CollectionData ReadComplexCollection(BinaryReader reader)
@@ -408,7 +494,7 @@ namespace Engine.Serialization
                 case CollectionType.HashSet:
                     {
                         var collectionData = new CollectionClasses(count, collectionType);
-                        collectionData.ItemsType = (SerializedType)reader.ReadUInt64(); 
+                        collectionData.ItemsType = (SerializedType)reader.ReadUInt64();
                         for (int i = 0; i < count; i++)
                         {
                             collectionData.Value[i] = ReadComplexClass(reader);
@@ -545,7 +631,7 @@ namespace Engine.Serialization
                 case SerializedType.UShort:
                     return reader.ReadUInt16();
                 case SerializedType.Enum:
-                    return ReadEnum(reader);
+                    return Variant.FromEnum(ReadEnum(reader));
                 case SerializedType.Int:
                     return reader.ReadInt32();
                 case SerializedType.UInt:

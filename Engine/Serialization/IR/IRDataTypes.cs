@@ -67,7 +67,12 @@ namespace Engine.Serialization
         public CollectionType CollectionType { get; set; }
         internal abstract int Count { get; }
     }
-    internal abstract class CollectionData<T, IT> : CollectionData
+    internal interface IItemType<T> 
+    {
+        public T ItemsType { get; }
+    }
+
+    internal abstract class CollectionData<T, IT> : CollectionData, IItemType<IT>
     {
         public T[] Value { get; set; }
         internal override int Count => Value?.Length ?? 0;
@@ -89,7 +94,6 @@ namespace Engine.Serialization
     internal class CollectionData<T> : CollectionData<T, SerializedType>
     {
         protected CollectionData() { }
-        internal CollectionData(int size, CollectionType collectionType) : base(size, collectionType) { }
         public CollectionData(T[] value, SerializedType itemsType, CollectionType colType) : base(value, itemsType, colType) { }
     }
 
@@ -204,14 +208,14 @@ namespace Engine.Serialization
             base(size, collectionType)
         { }
     }
-    internal class CollectionSimples : CollectionData<Variant, SerializedType>
-    {
-        protected CollectionSimples() { }
-        internal CollectionSimples(int size, CollectionType collectionType) : base(size, collectionType) { }
-        public CollectionSimples(Variant[] value, SerializedType itemsType, CollectionType colType) :
-            base(value, itemsType, colType)
-        { }
-    }
+    //internal class CollectionSimples : CollectionData<Variant, SerializedType>
+    //{
+    //    protected CollectionSimples() { }
+    //    internal CollectionSimples(int size, CollectionType collectionType) : base(size, collectionType) { }
+    //    public CollectionSimples(Variant[] value, SerializedType itemsType, CollectionType colType) :
+    //        base(value, itemsType, colType)
+    //    { }
+    //}
     internal class CollectionReferences : CollectionData<ReferenceData, SerializedType[]>
     {
         protected CollectionReferences() { }
