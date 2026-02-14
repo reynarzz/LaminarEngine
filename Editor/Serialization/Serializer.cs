@@ -14,11 +14,10 @@ namespace Editor.Serialization
         /// Gets the IR of all the properties marked with the 'SerializedField' attribute.
         /// </summary>
 
-        internal static CollectionData Serialize<T>(T collection) where T : IList
+        internal static CollectionData Serialize(IList collection)
         {
             var type = collection.GetType();
             var serializedType = GetSerializedType(type);
-
             return GetPropertyData(type, serializedType, collection) as CollectionData;
         }
 

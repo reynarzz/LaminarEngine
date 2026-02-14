@@ -67,6 +67,31 @@ namespace Engine.Serialization
         public CollectionType CollectionType { get; set; }
         internal abstract int Count { get; }
     }
+    internal abstract class CollectionData<T, IT> : CollectionData
+    {
+        public T[] Value { get; set; }
+        internal override int Count => Value?.Length ?? 0;
+        public IT ItemsType { get; set; }
+
+        protected CollectionData() { }
+        protected CollectionData(int size, CollectionType collectionType)
+        {
+            Value = new T[size];
+            CollectionType = collectionType;
+        }
+        public CollectionData(T[] value, IT itemsType, CollectionType collectionType)
+        {
+            Value = value;
+            ItemsType = itemsType;
+            CollectionType = collectionType;
+        }
+    }
+    internal abstract class CollectionData<T> : CollectionData<T, SerializedType>
+    {
+        protected CollectionData() { }
+        internal CollectionData(int size, CollectionType collectionType) : base(size, collectionType) { }
+        public CollectionData(T[] value, SerializedType itemsType, CollectionType colType) : base(value, itemsType, colType) { }
+    }
 
     internal abstract class DictionaryDataT<K, V> : CollectionData
     {
@@ -117,25 +142,7 @@ namespace Engine.Serialization
         protected DictionaryDataKVTypes() { }
         internal DictionaryDataKVTypes(int size, CollectionType collectionType) : base(size, collectionType) { }
     }
-    internal class CollectionData<T, IT> : CollectionData
-    {
-        public T[] Value { get; set; }
-        internal override int Count => Value?.Length ?? 0;
-        public IT ItemsType { get; set; }
-
-        protected CollectionData() { }
-        protected CollectionData(int size, CollectionType collectionType)
-        {
-            Value = new T[size];
-            CollectionType = collectionType;
-        }
-        public CollectionData(T[] value, IT itemsType, CollectionType collectionType)
-        {
-            Value = value;
-            ItemsType = itemsType;
-            CollectionType = collectionType;
-        }
-    }
+ 
     internal class DictionaryReference<K, V> : DictionaryDataKVTypes<K, V, SerializedType[], SerializedType[]>
     {
         protected DictionaryReference() { }
