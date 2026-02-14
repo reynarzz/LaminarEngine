@@ -115,7 +115,7 @@ namespace Editor.Cooker
             WriteString(writer, ir.Name);
             EditorUtils.WriteGuidNoAlloc(writer, ir.TypeId);
             writer.Write((ulong)(serializedType));
-      
+
             RegisterType(ir.InternalType);
 
             if (serializedType.IsSimple())
@@ -171,9 +171,11 @@ namespace Editor.Cooker
             }
             else
             {
-                var variantCollection = collectionData as CollectionSimples;
-                writer.Write((ulong)(variantCollection.ItemsType));
-                WriteVariantArray(writer, variantCollection.ItemsType, variantCollection.Value);
+                // TODO: Apply the new collections
+
+                //var variantCollection = collectionData as CollectionSimples;
+                //writer.Write((ulong)(variantCollection.ItemsType));
+                //WriteVariantArray(writer, variantCollection.ItemsType, variantCollection.Value);
             }
         }
 

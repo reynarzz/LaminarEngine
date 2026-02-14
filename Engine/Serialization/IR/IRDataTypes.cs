@@ -86,7 +86,7 @@ namespace Engine.Serialization
             CollectionType = collectionType;
         }
     }
-    internal abstract class CollectionData<T> : CollectionData<T, SerializedType>
+    internal class CollectionData<T> : CollectionData<T, SerializedType>
     {
         protected CollectionData() { }
         internal CollectionData(int size, CollectionType collectionType) : base(size, collectionType) { }

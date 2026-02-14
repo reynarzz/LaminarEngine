@@ -324,6 +324,97 @@ namespace Editor.Serialization
             return null;
         }
 
+        private static CollectionData Get1DCollectionSimpleData(ICollection collection, CollectionType collectionType,
+            out SerializedType itemsType)
+        {
+            itemsType = SerializedType.None;
+            foreach (var item in collection)
+            {
+                if (itemsType == SerializedType.None)
+                {
+                    itemsType = GetSimpleType(item?.GetType());
+                    break;
+                }
+            }
+            if (itemsType == SerializedType.None)
+            {
+                return null;
+            }
+            T[] GetCollectionValues<T>()
+            {
+                var values = new T[collection.Count];
+                int index = 0;
+                foreach (var item in collection)
+                {
+                    values[index++] = (T)item;
+                }
+                return values;
+            }
+
+            switch (itemsType)
+            {
+                case SerializedType.Enum:
+                    {
+                        var collectionDataEnum = new EnumIRValue[collection.Count];
+                        int index = 0;
+                        foreach (var item in collection)
+                        {
+                            collectionDataEnum[index++] = ((Variant)(Enum)item).Enum;
+                        }
+                        return new CollectionDataEnum(collectionDataEnum, collectionType);
+                    }
+                case SerializedType.Char:
+                    return new CollectionDataChar(GetCollectionValues<char>(), collectionType);
+                case SerializedType.String:
+                    return new CollectionDataString(GetCollectionValues<string>(), collectionType);
+                case SerializedType.Bool:
+                    return new CollectionDataBool(GetCollectionValues<bool>(), collectionType);
+                case SerializedType.Byte:
+                    return new CollectionDataByte(GetCollectionValues<byte>(), collectionType);
+                case SerializedType.Short:
+                    return new CollectionDataShort(GetCollectionValues<short>(), collectionType);
+                case SerializedType.UShort:
+                    return new CollectionDataUShort(GetCollectionValues<ushort>(), collectionType);
+                case SerializedType.Int:
+                    return new CollectionDataInt(GetCollectionValues<int>(), collectionType);
+                case SerializedType.UInt:
+                    return new CollectionDataUInt(GetCollectionValues<uint>(), collectionType);
+                case SerializedType.Float:
+                    return new CollectionDataFloat(GetCollectionValues<float>(), collectionType);
+                case SerializedType.Double:
+                    return new CollectionDataDouble(GetCollectionValues<double>(), collectionType);
+                case SerializedType.Long:
+                    return new CollectionDataLong(GetCollectionValues<long>(), collectionType);
+                case SerializedType.ULong:
+                    return new CollectionDataULong(GetCollectionValues<ulong>(), collectionType);
+                case SerializedType.Vec2:
+                    return new CollectionDataVec2(GetCollectionValues<vec2>(), collectionType);
+                case SerializedType.Vec3:
+                    return new CollectionDataVec3(GetCollectionValues<vec3>(), collectionType);
+                case SerializedType.Vec4:
+                    return new CollectionDataVec4(GetCollectionValues<vec4>(), collectionType);
+                case SerializedType.IVec2:
+                    return new CollectionDataIvec2(GetCollectionValues<ivec2>(), collectionType);
+                case SerializedType.IVec3:
+                    return new CollectionDataIvec3(GetCollectionValues<ivec3>(), collectionType);
+                case SerializedType.IVec4:
+                    return new CollectionDataIvec4(GetCollectionValues<ivec4>(), collectionType);
+                case SerializedType.Quat:
+                    return new CollectionDataQuat(GetCollectionValues<quat>(), collectionType);
+                case SerializedType.Mat2:
+                    return new CollectionDataMat2(GetCollectionValues<mat2>(), collectionType);
+                case SerializedType.Mat3:
+                    return new CollectionDataMat3(GetCollectionValues<mat3>(), collectionType);
+                case SerializedType.Mat4:
+                    return new CollectionDataMat4(GetCollectionValues<mat4>(), collectionType);
+                case SerializedType.Color:
+                    return new CollectionDataColor(GetCollectionValues<Color>(), collectionType);
+                case SerializedType.Color32:
+                    return new CollectionDataColor32(GetCollectionValues<Color32>(), collectionType);
+                default:
+                    throw new NotImplementedException($"Simple type: '{itemsType}' is not implemented");
+            }
+        }
         private static CollectionData Get1DCollectionData(SerializedType serializedMemberType, CollectionType collectionType,
                                                           object value, out SerializedType itemsType)
         {
@@ -332,18 +423,7 @@ namespace Editor.Serialization
 
             if (serializedMemberType == SerializedType.SimpleCollection)
             {
-                var valueCollection = new Variant[collection.Count];
-                int index = 0;
-                foreach (var item in collection)
-                {
-                    if (itemsType == SerializedType.None)
-                    {
-                        itemsType = GetSimpleType(item?.GetType());
-                    }
-                    valueCollection[index++] = GetVariantValue(item, itemsType);
-                }
-
-                return new CollectionSimples(valueCollection, itemsType, collectionType);
+                return Get1DCollectionSimpleData(collection, collectionType, out itemsType);
             }
             else if (serializedMemberType == SerializedType.ReferenceCollection)
             {
