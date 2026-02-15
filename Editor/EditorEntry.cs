@@ -17,6 +17,7 @@ namespace Editor
     // -Implement Asset files for: Tilemap.
     // -If I load the runtime mode, and the applicationLayer is enabled, the camera renders black.
     // Editor.Cooker, the asset database sometimes doesn't remove old assets correctly.
+    // - Improve Editor property UI
 
     // Fix:
     // - Investigate why when the scene is reloaded old objects are still alive.

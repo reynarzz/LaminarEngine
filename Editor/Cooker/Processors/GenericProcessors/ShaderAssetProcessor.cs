@@ -77,7 +77,6 @@ namespace Editor.Cooker
             return default;
         }
 
-        // NOTE: for now this will write a json, for production ready code, it should be binary.
         protected virtual byte[] GetAsset(ShaderSource[] sources)
         {
             var shaderData = new ShaderData() { Sources = sources };
@@ -87,7 +86,6 @@ namespace Editor.Cooker
                 Properties = Serializer.Serialize(shaderData)
             };
             return Encoding.UTF8.GetBytes(EditorJsonUtils.Serialize(ir));
-            // return Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(shaderData));
         }
 
         private (Glslang.NET.ShaderStage stage, byte[] spirv)[] CompileToSpirV((Glslang.NET.ShaderStage stage,

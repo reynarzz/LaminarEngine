@@ -318,9 +318,16 @@ namespace Editor.Serialization
             }
             else if (serializedMemberType.IsClass())
             {
-                // TODO: split between complex and other classes such as Delegates.
-                return CreateComplexType(type, value);
+                if (serializedMemberType == SerializedType.ComplexClass)
+                {
+                    return CreateComplexType(type, value);
+                }
+                else
+                {
+                    throw new NotImplementedException($"Class type '{serializedMemberType}' is not implemented.");
+                }
             }
+
             return null;
         }
 
@@ -548,7 +555,7 @@ namespace Editor.Serialization
             {
                 var internalType = GetInternalType(argValue?.GetType());
                 var typeId = GetTypeId(argValue?.GetType());
-                return new ClassData()
+                return new ComplexClass()
                 {
                     ClassType = argSerializedType,
                     InternalType = internalType,
@@ -693,7 +700,7 @@ namespace Editor.Serialization
 
             var rootSerializedFields = ReflectionUtils.GetAllMembersWithAttributeArray<SerializedFieldAttribute>(complexType);
 
-            var complexClass = new ClassData()
+            var complexClass = new ComplexClass()
             {
                 ClassType = GetSerializedType(complexType, value),
                 InternalType = GetInternalType(complexType),

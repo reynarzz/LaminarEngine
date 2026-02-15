@@ -240,8 +240,6 @@ namespace Engine.Serialization
     {
         public string InternalType { get; set; }
         public Guid TypeId { get; set; }
-        public SerializedType ClassType { get; set; } // remove
-        public SerializedPropertyIR[] Properties { get; set; } // remove
     }
 
     internal class DelegateClassData : ClassData

@@ -148,8 +148,14 @@ namespace Engine.Serialization
             }
             else if (serializedType.IsClass())
             {
-                // TODO: split between class types.
-                property.Class = ReadComplexClass(reader);
+                if (serializedType == SerializedType.ComplexClass)
+                {
+                    property.Class = ReadComplexClass(reader);
+                }
+                else
+                {
+                    throw new NotImplementedException($"Class type '{serializedType}' is not implemented.");
+                }
             }
             else if (serializedType == SerializedType.ComplexCollection)
             {
@@ -597,7 +603,7 @@ namespace Engine.Serialization
               Guid TypeId 
               List<SerializedPropertyIR> Properties 
            */
-            var complexTypeData = new ClassData();
+            var complexTypeData = new ComplexClass();
 
             complexTypeData.ClassType = (SerializedType)reader.ReadUInt64();
 

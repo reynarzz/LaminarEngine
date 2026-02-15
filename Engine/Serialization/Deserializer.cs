@@ -66,8 +66,14 @@ namespace Engine.Serialization
                 }
                 else if (serializedType.IsClass())
                 {
-                    // TODO: split to complex class and other type of classes.
-                    DeserializeComplexClass(targetInstance, property, deserializerData);
+                    if (serializedType == SerializedType.ComplexClass)
+                    {
+                        DeserializeComplexClass(targetInstance, property, deserializerData);
+                    }
+                    else
+                    {
+                        throw new NotImplementedException($"Class type '{serializedType}' is not implemented.");
+                    }
                 }
                 else if (serializedType == SerializedType.ComplexCollection)
                 {
@@ -244,7 +250,7 @@ namespace Engine.Serialization
             if (target == null || property == null || property.Class == null)
                 return;
 
-            var complexData = property.Class;
+            var complexData = property.Class as ComplexClass;
             if (Tr.ResolveType(complexData, out Type type))
             {
                 var inst = Activator.CreateInstance(type);
@@ -320,7 +326,7 @@ namespace Engine.Serialization
                         }
                         else
                         {
-                             collectionInstance = CollectionDeserializer.Deserialize1D(collectionInstance, collectionData, itemsType, collectionData.CollectionType);
+                            collectionInstance = CollectionDeserializer.Deserialize1D(collectionInstance, collectionData, itemsType, collectionData.CollectionType);
                         }
                     }
                 }
@@ -351,7 +357,7 @@ namespace Engine.Serialization
                 return;
             }
 
-            void DeserializeItem(ClassData complexItem, Action<object> setValueCallback)
+            void DeserializeItem(ComplexClass complexItem, Action<object> setValueCallback)
             {
                 if (complexItem == null)
                 {
@@ -381,7 +387,7 @@ namespace Engine.Serialization
                     var complexDictionary = collectionData as DictionaryClass;
                     for (int i = 0; i < complexDictionary.Count; i++)
                     {
-                        object DeserializeArgValue(ClassData complexArg)
+                        object DeserializeArgValue(ComplexClass complexArg)
                         {
                             object deserializedArgValue = null;
 
@@ -403,8 +409,8 @@ namespace Engine.Serialization
                             return deserializedArgValue;
                         }
 
-                        var key = DeserializeArgValue(complexDictionary.Keys[i]);
-                        var value = DeserializeArgValue(complexDictionary.Values[i]);
+                        var key = DeserializeArgValue(complexDictionary.Keys[i] as ComplexClass);
+                        var value = DeserializeArgValue(complexDictionary.Values[i] as ComplexClass);
 
                         if (key != null && !dictionary.Contains(key))
                         {
@@ -421,7 +427,7 @@ namespace Engine.Serialization
                     var complexCol = collectionData as CollectionClasses;
                     foreach (var complexItem in complexCol.Value)
                     {
-                        DeserializeItem(complexItem, item =>
+                        DeserializeItem(complexItem as ComplexClass, item =>
                         {
                             ReflectionUtils.SetMemberValueSafe(collectionInstance, item, default(MemberInfo), colItemIndex);
                         });
@@ -437,7 +443,7 @@ namespace Engine.Serialization
             }
         }
 
-        private static object GetComplexTypeDataSafe(object arg, ClassData argComplexData,
+        private static object GetComplexTypeDataSafe(object arg, ComplexClass argComplexData,
                                                      SerializedType argType, DeserializerData deserializedData)
         {
             if (arg == null)

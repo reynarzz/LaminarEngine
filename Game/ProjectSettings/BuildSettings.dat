@@ -27,8 +27,7 @@
         "ValueType": "None",
         "Keys": [
           {
-            "InternalType": "Editor.Build.PlatformBuild, Editor",
-            "TypeId": "b5d78a8f-ad76-27bc-a569-eb732e643f2a",
+            "$type": "Engine.Serialization.ComplexClass, Engine",
             "ClassType": "Enum",
             "Properties": [
               {
@@ -45,11 +44,12 @@
                   }
                 }
               }
-            ]
+            ],
+            "InternalType": "Editor.Build.PlatformBuild, Editor",
+            "TypeId": "b5d78a8f-ad76-27bc-a569-eb732e643f2a"
           },
           {
-            "InternalType": "Editor.Build.PlatformBuild, Editor",
-            "TypeId": "b5d78a8f-ad76-27bc-a569-eb732e643f2a",
+            "$type": "Engine.Serialization.ComplexClass, Engine",
             "ClassType": "Enum",
             "Properties": [
               {
@@ -66,13 +66,14 @@
                   }
                 }
               }
-            ]
+            ],
+            "InternalType": "Editor.Build.PlatformBuild, Editor",
+            "TypeId": "b5d78a8f-ad76-27bc-a569-eb732e643f2a"
           }
         ],
         "Values": [
           {
-            "InternalType": "Editor.Build.WindowsBuildSettings, Editor",
-            "TypeId": "d979e285-1edc-e68d-1867-706c6fbbaee5",
+            "$type": "Engine.Serialization.ComplexClass, Engine",
             "ClassType": "ComplexClass",
             "Properties": [
               {
@@ -82,10 +83,8 @@
                 "TypeId": "b82153eb-c244-d04c-0054-8eb0a05390ee",
                 "Simple": null,
                 "Class": {
-                  "$type": "Engine.Serialization.ClassData, Engine",
+                  "$type": "Engine.Serialization.ComplexClass, Engine",
                   "$value": {
-                    "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
-                    "TypeId": "b82153eb-c244-d04c-0054-8eb0a05390ee",
                     "ClassType": "ComplexClass",
                     "Properties": [
                       {
@@ -98,7 +97,7 @@
                           "$type": "Engine.Serialization.ReferenceData, Engine",
                           "$value": {
                             "Type": "TextureAsset",
-                            "RefId": "5e84edc9-8244-4490-9e67-fa3817db99a0"
+                            "RefId": "c091be34-5183-4780-83df-cb42cc215937"
                           }
                         }
                       },
@@ -196,7 +195,9 @@
                           "Value": 0
                         }
                       }
-                    ]
+                    ],
+                    "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
+                    "TypeId": "b82153eb-c244-d04c-0054-8eb0a05390ee"
                   }
                 }
               },
@@ -207,10 +208,8 @@
                 "TypeId": "b82153eb-c244-d04c-0054-8eb0a05390ee",
                 "Simple": null,
                 "Class": {
-                  "$type": "Engine.Serialization.ClassData, Engine",
+                  "$type": "Engine.Serialization.ComplexClass, Engine",
                   "$value": {
-                    "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
-                    "TypeId": "b82153eb-c244-d04c-0054-8eb0a05390ee",
                     "ClassType": "ComplexClass",
                     "Properties": [
                       {
@@ -314,7 +313,9 @@
                           "Value": 0
                         }
                       }
-                    ]
+                    ],
+                    "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
+                    "TypeId": "b82153eb-c244-d04c-0054-8eb0a05390ee"
                   }
                 }
               },
@@ -325,10 +326,8 @@
                 "TypeId": "b82153eb-c244-d04c-0054-8eb0a05390ee",
                 "Simple": null,
                 "Class": {
-                  "$type": "Engine.Serialization.ClassData, Engine",
+                  "$type": "Engine.Serialization.ComplexClass, Engine",
                   "$value": {
-                    "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
-                    "TypeId": "b82153eb-c244-d04c-0054-8eb0a05390ee",
                     "ClassType": "ComplexClass",
                     "Properties": [
                       {
@@ -432,7 +431,9 @@
                           "Value": 0
                         }
                       }
-                    ]
+                    ],
+                    "InternalType": "Editor.Build.WindowsBuildTypeSettings, Editor",
+                    "TypeId": "b82153eb-c244-d04c-0054-8eb0a05390ee"
                   }
                 }
               },
@@ -460,11 +461,12 @@
                   "Value": true
                 }
               }
-            ]
+            ],
+            "InternalType": "Editor.Build.WindowsBuildSettings, Editor",
+            "TypeId": "d979e285-1edc-e68d-1867-706c6fbbaee5"
           },
           {
-            "InternalType": "Editor.Build.AndroidBuildSettings, Editor",
-            "TypeId": "3732c59f-64ea-5db5-2de1-1d230ce95cab",
+            "$type": "Engine.Serialization.ComplexClass, Engine",
             "ClassType": "ComplexClass",
             "Properties": [
               {
@@ -546,10 +548,8 @@
                 "TypeId": "8a545684-8915-490a-8117-7ccad9e1f6d7",
                 "Simple": null,
                 "Class": {
-                  "$type": "Engine.Serialization.ClassData, Engine",
+                  "$type": "Engine.Serialization.ComplexClass, Engine",
                   "$value": {
-                    "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
-                    "TypeId": "8a545684-8915-490a-8117-7ccad9e1f6d7",
                     "ClassType": "ComplexClass",
                     "Properties": [
                       {
@@ -559,10 +559,8 @@
                         "TypeId": "fc6bd7ae-58d4-e8ad-12bd-08b8c49944fd",
                         "Simple": null,
                         "Class": {
-                          "$type": "Engine.Serialization.ClassData, Engine",
+                          "$type": "Engine.Serialization.ComplexClass, Engine",
                           "$value": {
-                            "InternalType": "Editor.Build.AndroidIcon, Editor",
-                            "TypeId": "fc6bd7ae-58d4-e8ad-12bd-08b8c49944fd",
                             "ClassType": "ComplexClass",
                             "Properties": [
                               {
@@ -586,7 +584,9 @@
                                 "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
                                 "Simple": null
                               }
-                            ]
+                            ],
+                            "InternalType": "Editor.Build.AndroidIcon, Editor",
+                            "TypeId": "fc6bd7ae-58d4-e8ad-12bd-08b8c49944fd"
                           }
                         }
                       },
@@ -671,7 +671,9 @@
                           "Value": 0
                         }
                       }
-                    ]
+                    ],
+                    "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
+                    "TypeId": "8a545684-8915-490a-8117-7ccad9e1f6d7"
                   }
                 }
               },
@@ -682,10 +684,8 @@
                 "TypeId": "8a545684-8915-490a-8117-7ccad9e1f6d7",
                 "Simple": null,
                 "Class": {
-                  "$type": "Engine.Serialization.ClassData, Engine",
+                  "$type": "Engine.Serialization.ComplexClass, Engine",
                   "$value": {
-                    "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
-                    "TypeId": "8a545684-8915-490a-8117-7ccad9e1f6d7",
                     "ClassType": "ComplexClass",
                     "Properties": [
                       {
@@ -695,10 +695,8 @@
                         "TypeId": "fc6bd7ae-58d4-e8ad-12bd-08b8c49944fd",
                         "Simple": null,
                         "Class": {
-                          "$type": "Engine.Serialization.ClassData, Engine",
+                          "$type": "Engine.Serialization.ComplexClass, Engine",
                           "$value": {
-                            "InternalType": "Editor.Build.AndroidIcon, Editor",
-                            "TypeId": "fc6bd7ae-58d4-e8ad-12bd-08b8c49944fd",
                             "ClassType": "ComplexClass",
                             "Properties": [
                               {
@@ -722,7 +720,9 @@
                                 "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
                                 "Simple": null
                               }
-                            ]
+                            ],
+                            "InternalType": "Editor.Build.AndroidIcon, Editor",
+                            "TypeId": "fc6bd7ae-58d4-e8ad-12bd-08b8c49944fd"
                           }
                         }
                       },
@@ -807,7 +807,9 @@
                           "Value": 0
                         }
                       }
-                    ]
+                    ],
+                    "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
+                    "TypeId": "8a545684-8915-490a-8117-7ccad9e1f6d7"
                   }
                 }
               },
@@ -818,10 +820,8 @@
                 "TypeId": "8a545684-8915-490a-8117-7ccad9e1f6d7",
                 "Simple": null,
                 "Class": {
-                  "$type": "Engine.Serialization.ClassData, Engine",
+                  "$type": "Engine.Serialization.ComplexClass, Engine",
                   "$value": {
-                    "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
-                    "TypeId": "8a545684-8915-490a-8117-7ccad9e1f6d7",
                     "ClassType": "ComplexClass",
                     "Properties": [
                       {
@@ -831,10 +831,8 @@
                         "TypeId": "fc6bd7ae-58d4-e8ad-12bd-08b8c49944fd",
                         "Simple": null,
                         "Class": {
-                          "$type": "Engine.Serialization.ClassData, Engine",
+                          "$type": "Engine.Serialization.ComplexClass, Engine",
                           "$value": {
-                            "InternalType": "Editor.Build.AndroidIcon, Editor",
-                            "TypeId": "fc6bd7ae-58d4-e8ad-12bd-08b8c49944fd",
                             "ClassType": "ComplexClass",
                             "Properties": [
                               {
@@ -858,7 +856,9 @@
                                 "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
                                 "Simple": null
                               }
-                            ]
+                            ],
+                            "InternalType": "Editor.Build.AndroidIcon, Editor",
+                            "TypeId": "fc6bd7ae-58d4-e8ad-12bd-08b8c49944fd"
                           }
                         }
                       },
@@ -943,7 +943,9 @@
                           "Value": 0
                         }
                       }
-                    ]
+                    ],
+                    "InternalType": "Editor.Build.AndroidBuildTypeSettings, Editor",
+                    "TypeId": "8a545684-8915-490a-8117-7ccad9e1f6d7"
                   }
                 }
               },
@@ -971,7 +973,9 @@
                   "Value": true
                 }
               }
-            ]
+            ],
+            "InternalType": "Editor.Build.AndroidBuildSettings, Editor",
+            "TypeId": "3732c59f-64ea-5db5-2de1-1d230ce95cab"
           }
         ],
         "CollectionType": "Dictionary"

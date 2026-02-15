@@ -132,8 +132,14 @@ namespace Editor.Cooker
             }
             else if (serializedType.IsClass())
             {
-                // TODO: split for all classes
-                WriteComplexClass(writer, ir.Class);
+                if (serializedType == SerializedType.ComplexClass)
+                {
+                    WriteComplexClass(writer, ir.Class as ComplexClass);
+                }
+                else
+                {
+                    throw new NotImplementedException($"Class type '{serializedType}' is not implemented.");
+                }
             }
             else if (serializedType == SerializedType.ComplexCollection)
             {
@@ -372,7 +378,7 @@ namespace Editor.Cooker
             }
         }
 
-        private static void WriteComplexClass(BinaryWriter writer, ClassData data)
+        private static void WriteComplexClass(BinaryWriter writer, ComplexClass data)
         {
             /*
                SerializedType ComplexType 
@@ -418,7 +424,7 @@ namespace Editor.Cooker
 
                         foreach (var item in col.Value)
                         {
-                            WriteComplexClass(writer, item);
+                            WriteComplexClass(writer, item as ComplexClass);
                         }
                     }
                     break;
@@ -430,8 +436,8 @@ namespace Editor.Cooker
 
                         for (var i = 0; i < dictComplexClass.Count; i++)
                         {
-                            WriteComplexClass(writer, dictComplexClass.Keys[i]);
-                            WriteComplexClass(writer, dictComplexClass.Values[i]);
+                            WriteComplexClass(writer, dictComplexClass.Keys[i] as ComplexClass);
+                            WriteComplexClass(writer, dictComplexClass.Values[i] as ComplexClass);
                         }
                     }
                     break;

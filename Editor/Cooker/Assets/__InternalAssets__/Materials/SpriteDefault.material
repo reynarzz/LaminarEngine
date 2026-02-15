@@ -12,8 +12,7 @@
         "$value": {
           "Value": [
             {
-              "InternalType": "Engine.RenderPass, Engine",
-              "TypeId": "12e518de-5050-01f0-bbc0-aada33118a8e",
+              "$type": "Engine.Serialization.ComplexClass, Engine",
               "ClassType": "ComplexClass",
               "Properties": [
                 {
@@ -47,10 +46,8 @@
                   "TypeId": "214d9ab0-e82f-3989-8f39-c793cf3bcc02",
                   "Simple": null,
                   "Class": {
-                    "$type": "Engine.Serialization.ClassData, Engine",
+                    "$type": "Engine.Serialization.ComplexClass, Engine",
                     "$value": {
-                      "InternalType": "Engine.Blending, Engine",
-                      "TypeId": "214d9ab0-e82f-3989-8f39-c793cf3bcc02",
                       "ClassType": "ComplexClass",
                       "Properties": [
                         {
@@ -105,7 +102,9 @@
                             }
                           }
                         }
-                      ]
+                      ],
+                      "InternalType": "Engine.Blending, Engine",
+                      "TypeId": "214d9ab0-e82f-3989-8f39-c793cf3bcc02"
                     }
                   }
                 },
@@ -116,10 +115,8 @@
                   "TypeId": "69e35bb8-e8a9-b726-4465-6f0bf81adc98",
                   "Simple": null,
                   "Class": {
-                    "$type": "Engine.Serialization.ClassData, Engine",
+                    "$type": "Engine.Serialization.ComplexClass, Engine",
                     "$value": {
-                      "InternalType": "Engine.Stencil, Engine",
-                      "TypeId": "69e35bb8-e8a9-b726-4465-6f0bf81adc98",
                       "ClassType": "ComplexClass",
                       "Properties": [
                         {
@@ -208,7 +205,9 @@
                             }
                           }
                         }
-                      ]
+                      ],
+                      "InternalType": "Engine.Stencil, Engine",
+                      "TypeId": "69e35bb8-e8a9-b726-4465-6f0bf81adc98"
                     }
                   }
                 },
@@ -229,7 +228,9 @@
                     }
                   }
                 }
-              ]
+              ],
+              "InternalType": "Engine.RenderPass, Engine",
+              "TypeId": "12e518de-5050-01f0-bbc0-aada33118a8e"
             }
           ],
           "ItemsType": "ComplexClass",

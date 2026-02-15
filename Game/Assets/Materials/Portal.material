@@ -12,8 +12,7 @@
         "$value": {
           "Value": [
             {
-              "InternalType": "Engine.RenderPass, Engine",
-              "TypeId": "12e518de-5050-01f0-bbc0-aada33118a8e",
+              "$type": "Engine.Serialization.ComplexClass, Engine",
               "ClassType": "ComplexClass",
               "Properties": [
                 {
@@ -47,10 +46,8 @@
                   "TypeId": "214d9ab0-e82f-3989-8f39-c793cf3bcc02",
                   "Simple": null,
                   "Class": {
-                    "$type": "Engine.Serialization.ClassData, Engine",
+                    "$type": "Engine.Serialization.ComplexClass, Engine",
                     "$value": {
-                      "InternalType": "Engine.Blending, Engine",
-                      "TypeId": "214d9ab0-e82f-3989-8f39-c793cf3bcc02",
                       "ClassType": "ComplexClass",
                       "Properties": [
                         {
@@ -105,7 +102,9 @@
                             }
                           }
                         }
-                      ]
+                      ],
+                      "InternalType": "Engine.Blending, Engine",
+                      "TypeId": "214d9ab0-e82f-3989-8f39-c793cf3bcc02"
                     }
                   }
                 },
@@ -116,10 +115,8 @@
                   "TypeId": "69e35bb8-e8a9-b726-4465-6f0bf81adc98",
                   "Simple": null,
                   "Class": {
-                    "$type": "Engine.Serialization.ClassData, Engine",
+                    "$type": "Engine.Serialization.ComplexClass, Engine",
                     "$value": {
-                      "InternalType": "Engine.Stencil, Engine",
-                      "TypeId": "69e35bb8-e8a9-b726-4465-6f0bf81adc98",
                       "ClassType": "ComplexClass",
                       "Properties": [
                         {
@@ -208,7 +205,9 @@
                             }
                           }
                         }
-                      ]
+                      ],
+                      "InternalType": "Engine.Stencil, Engine",
+                      "TypeId": "69e35bb8-e8a9-b726-4465-6f0bf81adc98"
                     }
                   }
                 },
@@ -225,8 +224,7 @@
                       "ValueType": "None",
                       "Keys": [
                         {
-                          "InternalType": "System.String, System.Private.CoreLib",
-                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                          "$type": "Engine.Serialization.ComplexClass, Engine",
                           "ClassType": "String",
                           "Properties": [
                             {
@@ -239,11 +237,12 @@
                                 "Value": "uDistortionAmount"
                               }
                             }
-                          ]
+                          ],
+                          "InternalType": "System.String, System.Private.CoreLib",
+                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc"
                         },
                         {
-                          "InternalType": "System.String, System.Private.CoreLib",
-                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                          "$type": "Engine.Serialization.ComplexClass, Engine",
                           "ClassType": "String",
                           "Properties": [
                             {
@@ -256,11 +255,12 @@
                                 "Value": "uOutlineColor"
                               }
                             }
-                          ]
+                          ],
+                          "InternalType": "System.String, System.Private.CoreLib",
+                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc"
                         },
                         {
-                          "InternalType": "System.String, System.Private.CoreLib",
-                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                          "$type": "Engine.Serialization.ComplexClass, Engine",
                           "ClassType": "String",
                           "Properties": [
                             {
@@ -273,11 +273,12 @@
                                 "Value": "uOutlineThickness"
                               }
                             }
-                          ]
+                          ],
+                          "InternalType": "System.String, System.Private.CoreLib",
+                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc"
                         },
                         {
-                          "InternalType": "System.String, System.Private.CoreLib",
-                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                          "$type": "Engine.Serialization.ComplexClass, Engine",
                           "ClassType": "String",
                           "Properties": [
                             {
@@ -290,11 +291,12 @@
                                 "Value": "uDotted"
                               }
                             }
-                          ]
+                          ],
+                          "InternalType": "System.String, System.Private.CoreLib",
+                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc"
                         },
                         {
-                          "InternalType": "System.String, System.Private.CoreLib",
-                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                          "$type": "Engine.Serialization.ComplexClass, Engine",
                           "ClassType": "String",
                           "Properties": [
                             {
@@ -307,11 +309,12 @@
                                 "Value": "uDotSpacing"
                               }
                             }
-                          ]
+                          ],
+                          "InternalType": "System.String, System.Private.CoreLib",
+                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc"
                         },
                         {
-                          "InternalType": "System.String, System.Private.CoreLib",
-                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                          "$type": "Engine.Serialization.ComplexClass, Engine",
                           "ClassType": "String",
                           "Properties": [
                             {
@@ -324,11 +327,12 @@
                                 "Value": "uGlitchMaxOffset"
                               }
                             }
-                          ]
+                          ],
+                          "InternalType": "System.String, System.Private.CoreLib",
+                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc"
                         },
                         {
-                          "InternalType": "System.String, System.Private.CoreLib",
-                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                          "$type": "Engine.Serialization.ComplexClass, Engine",
                           "ClassType": "String",
                           "Properties": [
                             {
@@ -341,11 +345,12 @@
                                 "Value": "uGlitchFreq"
                               }
                             }
-                          ]
+                          ],
+                          "InternalType": "System.String, System.Private.CoreLib",
+                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc"
                         },
                         {
-                          "InternalType": "System.String, System.Private.CoreLib",
-                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                          "$type": "Engine.Serialization.ComplexClass, Engine",
                           "ClassType": "String",
                           "Properties": [
                             {
@@ -358,11 +363,12 @@
                                 "Value": "uColorSplit"
                               }
                             }
-                          ]
+                          ],
+                          "InternalType": "System.String, System.Private.CoreLib",
+                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc"
                         },
                         {
-                          "InternalType": "System.String, System.Private.CoreLib",
-                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                          "$type": "Engine.Serialization.ComplexClass, Engine",
                           "ClassType": "String",
                           "Properties": [
                             {
@@ -375,13 +381,14 @@
                                 "Value": "uPixelationAmount"
                               }
                             }
-                          ]
+                          ],
+                          "InternalType": "System.String, System.Private.CoreLib",
+                          "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc"
                         }
                       ],
                       "Values": [
                         {
-                          "InternalType": "Engine.Graphics.UniformValue, Engine",
-                          "TypeId": "63a3591b-81e4-be8a-181f-b3c871649a32",
+                          "$type": "Engine.Serialization.ComplexClass, Engine",
                           "ClassType": "ComplexClass",
                           "Properties": [
                             {
@@ -529,11 +536,12 @@
                               "TypeId": "0f7da4ae-2b24-3437-19e0-13fcc53b26d5",
                               "Simple": null
                             }
-                          ]
+                          ],
+                          "InternalType": "Engine.Graphics.UniformValue, Engine",
+                          "TypeId": "63a3591b-81e4-be8a-181f-b3c871649a32"
                         },
                         {
-                          "InternalType": "Engine.Graphics.UniformValue, Engine",
-                          "TypeId": "63a3591b-81e4-be8a-181f-b3c871649a32",
+                          "$type": "Engine.Serialization.ComplexClass, Engine",
                           "ClassType": "ComplexClass",
                           "Properties": [
                             {
@@ -681,11 +689,12 @@
                               "TypeId": "0f7da4ae-2b24-3437-19e0-13fcc53b26d5",
                               "Simple": null
                             }
-                          ]
+                          ],
+                          "InternalType": "Engine.Graphics.UniformValue, Engine",
+                          "TypeId": "63a3591b-81e4-be8a-181f-b3c871649a32"
                         },
                         {
-                          "InternalType": "Engine.Graphics.UniformValue, Engine",
-                          "TypeId": "63a3591b-81e4-be8a-181f-b3c871649a32",
+                          "$type": "Engine.Serialization.ComplexClass, Engine",
                           "ClassType": "ComplexClass",
                           "Properties": [
                             {
@@ -833,11 +842,12 @@
                               "TypeId": "0f7da4ae-2b24-3437-19e0-13fcc53b26d5",
                               "Simple": null
                             }
-                          ]
+                          ],
+                          "InternalType": "Engine.Graphics.UniformValue, Engine",
+                          "TypeId": "63a3591b-81e4-be8a-181f-b3c871649a32"
                         },
                         {
-                          "InternalType": "Engine.Graphics.UniformValue, Engine",
-                          "TypeId": "63a3591b-81e4-be8a-181f-b3c871649a32",
+                          "$type": "Engine.Serialization.ComplexClass, Engine",
                           "ClassType": "ComplexClass",
                           "Properties": [
                             {
@@ -985,11 +995,12 @@
                               "TypeId": "0f7da4ae-2b24-3437-19e0-13fcc53b26d5",
                               "Simple": null
                             }
-                          ]
+                          ],
+                          "InternalType": "Engine.Graphics.UniformValue, Engine",
+                          "TypeId": "63a3591b-81e4-be8a-181f-b3c871649a32"
                         },
                         {
-                          "InternalType": "Engine.Graphics.UniformValue, Engine",
-                          "TypeId": "63a3591b-81e4-be8a-181f-b3c871649a32",
+                          "$type": "Engine.Serialization.ComplexClass, Engine",
                           "ClassType": "ComplexClass",
                           "Properties": [
                             {
@@ -1137,11 +1148,12 @@
                               "TypeId": "0f7da4ae-2b24-3437-19e0-13fcc53b26d5",
                               "Simple": null
                             }
-                          ]
+                          ],
+                          "InternalType": "Engine.Graphics.UniformValue, Engine",
+                          "TypeId": "63a3591b-81e4-be8a-181f-b3c871649a32"
                         },
                         {
-                          "InternalType": "Engine.Graphics.UniformValue, Engine",
-                          "TypeId": "63a3591b-81e4-be8a-181f-b3c871649a32",
+                          "$type": "Engine.Serialization.ComplexClass, Engine",
                           "ClassType": "ComplexClass",
                           "Properties": [
                             {
@@ -1289,11 +1301,12 @@
                               "TypeId": "0f7da4ae-2b24-3437-19e0-13fcc53b26d5",
                               "Simple": null
                             }
-                          ]
+                          ],
+                          "InternalType": "Engine.Graphics.UniformValue, Engine",
+                          "TypeId": "63a3591b-81e4-be8a-181f-b3c871649a32"
                         },
                         {
-                          "InternalType": "Engine.Graphics.UniformValue, Engine",
-                          "TypeId": "63a3591b-81e4-be8a-181f-b3c871649a32",
+                          "$type": "Engine.Serialization.ComplexClass, Engine",
                           "ClassType": "ComplexClass",
                           "Properties": [
                             {
@@ -1441,11 +1454,12 @@
                               "TypeId": "0f7da4ae-2b24-3437-19e0-13fcc53b26d5",
                               "Simple": null
                             }
-                          ]
+                          ],
+                          "InternalType": "Engine.Graphics.UniformValue, Engine",
+                          "TypeId": "63a3591b-81e4-be8a-181f-b3c871649a32"
                         },
                         {
-                          "InternalType": "Engine.Graphics.UniformValue, Engine",
-                          "TypeId": "63a3591b-81e4-be8a-181f-b3c871649a32",
+                          "$type": "Engine.Serialization.ComplexClass, Engine",
                           "ClassType": "ComplexClass",
                           "Properties": [
                             {
@@ -1593,11 +1607,12 @@
                               "TypeId": "0f7da4ae-2b24-3437-19e0-13fcc53b26d5",
                               "Simple": null
                             }
-                          ]
+                          ],
+                          "InternalType": "Engine.Graphics.UniformValue, Engine",
+                          "TypeId": "63a3591b-81e4-be8a-181f-b3c871649a32"
                         },
                         {
-                          "InternalType": "Engine.Graphics.UniformValue, Engine",
-                          "TypeId": "63a3591b-81e4-be8a-181f-b3c871649a32",
+                          "$type": "Engine.Serialization.ComplexClass, Engine",
                           "ClassType": "ComplexClass",
                           "Properties": [
                             {
@@ -1745,14 +1760,18 @@
                               "TypeId": "0f7da4ae-2b24-3437-19e0-13fcc53b26d5",
                               "Simple": null
                             }
-                          ]
+                          ],
+                          "InternalType": "Engine.Graphics.UniformValue, Engine",
+                          "TypeId": "63a3591b-81e4-be8a-181f-b3c871649a32"
                         }
                       ],
                       "CollectionType": "Dictionary"
                     }
                   }
                 }
-              ]
+              ],
+              "InternalType": "Engine.RenderPass, Engine",
+              "TypeId": "12e518de-5050-01f0-bbc0-aada33118a8e"
             }
           ],
           "ItemsType": "ComplexClass",
