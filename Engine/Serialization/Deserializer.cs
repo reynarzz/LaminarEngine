@@ -293,11 +293,9 @@ namespace Engine.Serialization
                     }
                     else
                     {
-                        collectionInstance = VariantCollectionWriter.Write(collectionInstance, dictionarySimple.Keys, dictionarySimple.Values,
-                                                                           dictionarySimple.KeyType, dictionarySimple.ValueType);
+                        collectionInstance = CollectionDeserializer.Deserialize(collectionInstance, dictionarySimple.Keys, dictionarySimple.Values,
+                                                                                dictionarySimple.KeyType, dictionarySimple.ValueType);
                     }
-
-                    ReflectionUtils.SetMemberValue(target, collectionInstance, property.Name);
                 }
                 else
                 {
@@ -322,9 +320,7 @@ namespace Engine.Serialization
                         }
                         else
                         {
-                            // TODO: implement new collectionData for concrete simple types.
-                            // var variantCollection = collectionData as CollectionSimples;
-                            // collectionInstance = VariantCollectionWriter.Write(collectionInstance, variantCollection.Value, variantCollection.ItemsType, collectionData.CollectionType);
+                             collectionInstance = CollectionDeserializer.Deserialize1D(collectionInstance, collectionData, itemsType, collectionData.CollectionType);
                         }
                     }
                 }

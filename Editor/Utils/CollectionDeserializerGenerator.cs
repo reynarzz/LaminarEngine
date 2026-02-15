@@ -1,4 +1,5 @@
-﻿using Engine.Serialization;
+﻿using Engine;
+using Engine.Serialization;
 using Engine.Utils;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -7,41 +8,42 @@ using System.Text;
 
 namespace Editor.Cooker
 {
-    internal static class VariantCollectionWriterGenerator
+    internal static class CollectionDeserializerGenerator
     {
         private sealed record VariantTypeInfo(
             string Name,
             string ClrType,
-            string PayloadField,
+            string Field,
+            string CollectionDataType,
             SerializedType Type
         );
 
         private static readonly VariantTypeInfo[] VariantTypes =
         {
-            new("Char", "char", "Char", SerializedType.Char),
-            new("String", "string", "String", SerializedType.String),
-            new("Bool", "bool", "Bool", SerializedType.Bool),
-            new("Byte", "byte", "Byte", SerializedType.Byte),
-            new("Short", "short", "Short", SerializedType.Short),
-            new("UShort", "ushort", "UShort", SerializedType.UShort),
-            new("Int", "int", "Int", SerializedType.Int),
-            new("UInt", "uint", "Uint", SerializedType.UInt),
-            new("Long", "long", "Long", SerializedType.Long),
-            new("ULong", "ulong", "Ulong", SerializedType.ULong),
-            new("Float", "float", "Float", SerializedType.Float),
-            new("Double", "double", "Double", SerializedType.Double),
-            new("Vec2", "vec2", "Vec2", SerializedType.Vec2),
-            new("Vec3", "vec3", "Vec3", SerializedType.Vec3),
-            new("Vec4", "vec4", "Vec4", SerializedType.Vec4),
-            new("IVec2", "ivec2", "Ivec2", SerializedType.IVec2),
-            new("IVec3", "ivec3", "Ivec3", SerializedType.IVec3),
-            new("IVec4", "ivec4", "Ivec4", SerializedType.IVec4),
-            new("Quat", "quat", "Quat", SerializedType.Quat),
-            new("Mat2", "mat2", "Mat2", SerializedType.Mat2),
-            new("Mat3", "mat3", "Mat3", SerializedType.Mat3),
-            new("Mat4", "mat4", "Mat4", SerializedType.Mat4),
-            new("Color", "Color", "Color", SerializedType.Color),
-            new("Color32", "Color32", "Color32", SerializedType.Color32)
+            new("Char", "char", "Char", nameof(CollectionDataChar), SerializedType.Char),
+            new("String", "string", "String",nameof(CollectionDataString), SerializedType.String),
+            new("Bool", "bool", "Bool", nameof(CollectionDataBool), SerializedType.Bool),
+            new("Byte", "byte", "Byte", nameof(CollectionDataByte), SerializedType.Byte),
+            new("Short", "short", "Short", nameof(CollectionDataShort), SerializedType.Short),
+            new("UShort", "ushort", "UShort", nameof(CollectionDataUShort), SerializedType.UShort),
+            new("Int", "int", "Int", nameof(CollectionDataInt), SerializedType.Int),
+            new("UInt", "uint", "Uint",nameof(CollectionDataUInt), SerializedType.UInt),
+            new("Long", "long", "Long", nameof(CollectionDataLong), SerializedType.Long),
+            new("ULong", "ulong", "Ulong", nameof(CollectionDataULong), SerializedType.ULong),
+            new("Float", "float", "Float", nameof(CollectionDataFloat), SerializedType.Float),
+            new("Double", "double", "Double", nameof(CollectionDataDouble), SerializedType.Double),
+            new("Vec2", "vec2", "Vec2", nameof(CollectionDataVec2), SerializedType.Vec2),
+            new("Vec3", "vec3", "Vec3", nameof(CollectionDataVec3), SerializedType.Vec3),
+            new("Vec4", "vec4", "Vec4", nameof(CollectionDataVec4), SerializedType.Vec4),
+            new("IVec2", "ivec2", "Ivec2", nameof(CollectionDataIvec2), SerializedType.IVec2),
+            new("IVec3", "ivec3", "Ivec3", nameof(CollectionDataIvec3), SerializedType.IVec3),
+            new("IVec4", "ivec4", "Ivec4", nameof(CollectionDataIvec4), SerializedType.IVec4),
+            new("Quat", "quat", "Quat", nameof(CollectionDataQuat), SerializedType.Quat),
+            new("Mat2", "mat2", "Mat2", nameof(CollectionDataMat2), SerializedType.Mat2),
+            new("Mat3", "mat3", "Mat3", nameof(CollectionDataMat3), SerializedType.Mat3),
+            new("Mat4", "mat4", "Mat4", nameof(CollectionDataMat4), SerializedType.Mat4),
+            new("Color", nameof(Color), "Color", nameof(CollectionDataColor), SerializedType.Color),
+            new("Color32", nameof(Color32), "Color32", nameof(CollectionDataColor32), SerializedType.Color32)
         };
 
         internal static string Generate(bool generatedDictionary)
@@ -62,7 +64,7 @@ namespace Editor.Cooker
                 SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("Engine.Utils")),
             });
 
-            var classDecl = SyntaxFactory.ClassDeclaration("VariantCollectionWriter")
+            var classDecl = SyntaxFactory.ClassDeclaration("CollectionDeserializer")
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.InternalKeyword), SyntaxFactory.Token(SyntaxKind.StaticKeyword))
                 .AddMembers(GenerateDispatchMethod());
 
@@ -103,19 +105,20 @@ namespace Editor.Cooker
             var sb = new StringBuilder();
 
             sb.AppendLine(@"
-            internal static object Write(object collection, VariantIRValue[] values, SerializedType itemType, CollectionType kind)
+            internal static object Deserialize1D(object collection, CollectionData data, SerializedType itemType, CollectionType kind)
             {
                 ulong identity = itemType.GetIdentity();");
 
-            foreach (var t in VariantTypes)
+            foreach (var info in VariantTypes)
             {
-                sb.AppendLine($"        if (identity == SerializedType.{t.Type}.GetIdentity())");
+                sb.AppendLine($"        if (identity == SerializedType.{info.Type}.GetIdentity())");
                 sb.AppendLine("        {");
-                sb.AppendLine("            if (kind == CollectionType.Array) return VariantArrayToArray_" + t.Name + "(collection, values);");
-                sb.AppendLine("            else if (kind == CollectionType.List) return VariantArrayToList_" + t.Name + "(collection, values);");
-                sb.AppendLine("            else if (kind == CollectionType.Queue) return VariantArrayToQueue_" + t.Name + "(collection, values);");
-                sb.AppendLine("            else if (kind == CollectionType.Stack) return VariantArrayToStack_" + t.Name + "(collection, values);");
-                sb.AppendLine("            else if (kind == CollectionType.HashSet) return VariantArrayToHashSet_" + t.Name + "(collection, values);");
+                sb.AppendLine($"           var {info.ClrType}Collection = data as {info.CollectionDataType};");
+                sb.AppendLine("            if (kind == CollectionType.Array) return ReadToArray_" + info.Name + $"(collection, {info.ClrType}Collection);");
+                sb.AppendLine("            else if (kind == CollectionType.List) return ReadToList_" + info.Name + $"(collection, {info.ClrType}Collection);");
+                sb.AppendLine("            else if (kind == CollectionType.Queue) return ReadToQueue_" + info.Name + $"(collection, {info.ClrType}Collection);");
+                sb.AppendLine("            else if (kind == CollectionType.Stack) return ReadToStack_" + info.Name + $"(collection, {info.ClrType}Collection);");
+                sb.AppendLine("            else if (kind == CollectionType.HashSet) return ReadToHashSet_" + info.Name + $"(collection, {info.ClrType}Collection);");
                 sb.AppendLine("        }");
             }
 
@@ -131,7 +134,7 @@ namespace Editor.Cooker
             var sb = new StringBuilder();
 
             sb.AppendLine(@"
-            internal static object Write(object collection, VariantIRValue[] keys, VariantIRValue[] values, 
+            internal static object Deserialize(object collection, Variant[] keys, Variant[] values, 
                                           SerializedType keyType, SerializedType valueType)
             {
                 ulong keyId = keyType.GetIdentity();
@@ -148,7 +151,7 @@ namespace Editor.Cooker
                 foreach (var value in VariantTypes)
                 {
                     var valueCond = firstValue ? "if" : "else if";
-                    sb.AppendLine($"        {valueCond} (valueId == SerializedType.{value.Type}.GetIdentity()) return VariantArrayToDictionary_{key.Name}_{value.Name}(collection, keys, values);");
+                    sb.AppendLine($"        {valueCond} (valueId == SerializedType.{value.Type}.GetIdentity()) return ReadToDictionary_{key.Name}_{value.Name}(collection, keys, values);");
                     firstValue = false;
                 }
 
@@ -164,13 +167,12 @@ namespace Editor.Cooker
         }
         private static MemberDeclarationSyntax GenerateArrayWriter(VariantTypeInfo t)
         {
-            var isStr = t.Type == SerializedType.String;
             return ParseWriter($@"
-            private static object VariantArrayToArray_{t.Name}(object collection, VariantIRValue[] values)
+            private static object ReadToArray_{t.Name}(object collection, {t.CollectionDataType} data)
             {{
-                var array = ({t.ClrType}[])ReflectionUtils.EnsureCount(collection, values.Length);
-                for (int i = 0; i < values.Length; i++)
-                    array[i] = values[i]{(isStr ? "" : ".Payload")}.{t.PayloadField};
+                var array = ({t.ClrType}[])ReflectionUtils.EnsureCount(collection, data.Value.Length);
+                for (int i = 0; i < data.Value.Length; i++)
+                    array[i] = data.Value[i];
                 return array;
             }}");
         }
@@ -179,54 +181,51 @@ namespace Editor.Cooker
         {
             var isStr = t.Type == SerializedType.String;
             return ParseWriter($@"
-            private static object VariantArrayToList_{t.Name}(object collection, VariantIRValue[] values)
+            private static object ReadToList_{t.Name}(object collection, {t.CollectionDataType} data)
             {{
                 var list = (List<{t.ClrType}>)collection;
-                System.Runtime.InteropServices.CollectionsMarshal.SetCount(list, values.Length);
-                for (int i = 0; i < values.Length; i++)
-                    list[i] = values[i]{(isStr ? "" : ".Payload")}.{t.PayloadField};
+                System.Runtime.InteropServices.CollectionsMarshal.SetCount(list, data.Value.Length);
+                for (int i = 0; i < data.Value.Length; i++)
+                    list[i] = data.Value[i];
                 return list;
             }}");
         }
 
         private static MemberDeclarationSyntax GenerateQueueWriter(VariantTypeInfo t)
         {
-            var isStr = t.Type == SerializedType.String;
             return ParseWriter($@"
-            private static object VariantArrayToQueue_{t.Name}(object collection, VariantIRValue[] values)
+            private static object ReadToQueue_{t.Name}(object collection, {t.CollectionDataType} data)
             {{
                 var queue = (Queue<{t.ClrType}>)collection;
                 queue.Clear();
-                for (int i = 0; i < values.Length; i++)
-                    queue.Enqueue(values[i]{(isStr ? "" : ".Payload")}.{t.PayloadField});
+                for (int i = 0; i < data.Value.Length; i++)
+                    queue.Enqueue(data.Value[i]);
                 return queue;
             }}");
         }
 
         private static MemberDeclarationSyntax GenerateStackWriter(VariantTypeInfo t)
         {
-            var isStr = t.Type == SerializedType.String;
             return ParseWriter($@"
-            private static object VariantArrayToStack_{t.Name}(object collection, VariantIRValue[] values)
+            private static object ReadToStack_{t.Name}(object collection, {t.CollectionDataType} data)
             {{
                 var stack = (Stack<{t.ClrType}>)collection;
                 stack.Clear();
-                for (int i = values.Length - 1; i >= 0; i--)
-                    stack.Push(values[i]{(isStr ? "" : ".Payload")}.{t.PayloadField});
+                for (int i = data.Value.Length - 1; i >= 0; i--)
+                    stack.Push(data.Value[i]);
                 return stack;
             }}");
         }
 
         private static MemberDeclarationSyntax GenerateHashSetWriter(VariantTypeInfo t)
         {
-            var isStr = t.Type == SerializedType.String;
             return ParseWriter($@"
-            private static object VariantArrayToHashSet_{t.Name}(object collection, VariantIRValue[] values)
+            private static object ReadToHashSet_{t.Name}(object collection, {t.CollectionDataType} data)
             {{
                 var set = (HashSet<{t.ClrType}>)collection;
                 set.Clear();
-                for (int i = 0; i < values.Length; i++)
-                    set.Add(values[i]{(isStr ? "" : ".Payload")}.{t.PayloadField});
+                for (int i = 0; i < data.Value.Length; i++)
+                    set.Add(data.Value[i]);
                 return set;
             }}");
         }
@@ -236,12 +235,12 @@ namespace Editor.Cooker
             var isKStr = key.Type == SerializedType.String;
             var isVStr = value.Type == SerializedType.String;
             return ParseWriter($@"
-            private static object VariantArrayToDictionary_{key.Name}_{value.Name}(object collection, VariantIRValue[] keys, VariantIRValue[] values)
+            private static object ReadToDictionary_{key.Name}_{value.Name}(object collection, {nameof(Variant)}[] keys, {nameof(Variant)}[] values)
             {{
                 var dict = (Dictionary<{key.ClrType}, {value.ClrType}>)collection;
                 dict.Clear();
                 for (int i = 0; i < keys.Length; i++)
-                    dict.Add(keys[i]{(isKStr ? "" : ".Payload")}.{key.PayloadField}, values[i]{(isVStr ? "" : ".Payload")}.{value.PayloadField});
+                    dict.Add(keys[i]{(isKStr ? "" : ".value")}.{key.Field}, values[i]{(isVStr ? "" : ".value")}.{value.Field});
                 return dict;
             }}");
         }
