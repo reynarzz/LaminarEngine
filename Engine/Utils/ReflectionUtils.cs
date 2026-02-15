@@ -502,7 +502,7 @@ namespace Engine.Utils
 
             return input.Remove(index, token.Length);
         }
-        
+
         public static string GetFullTypeName(Type type)
         {
             if (type == null)
@@ -529,12 +529,20 @@ namespace Engine.Utils
                 return Guid.Empty;
             }
 
-            // Deterministic GUID based on type full name
             var key = GetFullTypeName(type);
+
+            int byteCount = Encoding.UTF8.GetByteCount(key);
+
+            Span<byte> utf8 = byteCount <= 512 ? stackalloc byte[byteCount] : new byte[byteCount];
+
+            Encoding.UTF8.GetBytes(key, utf8);
+            Span<byte> hash = stackalloc byte[16];
             using var md5 = MD5.Create();
-            var hash = md5.ComputeHash(Encoding.UTF8.GetBytes(key));
+            md5.TryComputeHash(utf8, hash, out _);
+
             return new Guid(hash);
         }
+
         public static object GetMemberValue(object obj, MemberInfo member)
         {
             if (obj == null)
@@ -776,7 +784,7 @@ namespace Engine.Utils
             return IsCollection(type);
         }
 
-        
+
         public static bool IsCollection(Type type)
         {
             return IsCollection(type, out _);
@@ -854,7 +862,7 @@ namespace Engine.Utils
                 if (targetValue != null)
                 {
                     var arr = targetValue as IList;
-                    
+
                     foreach (var item in arr)
                     {
                         var itemType = item?.GetType() ?? current.GetElementType();
@@ -928,7 +936,7 @@ namespace Engine.Utils
                     }
                 }
             }
-            
+
             IEnumerable<MemberInfo> members = null;
             if (checkOnlySerialized)
             {

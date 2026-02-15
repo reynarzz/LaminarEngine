@@ -38,10 +38,12 @@ namespace Editor.Serialization
 
                 if (!string.IsNullOrEmpty(text))
                 {
-                    //var ir = EditorJsonUtils.Deserialize<ShaderIR>(text);
-                    //var shaderData = new ShaderData();
-                    //Deserializer.Deserialize(shaderData, ir.Properties);
-                    var shaderData = JsonConvert.DeserializeObject<ShaderData>(text);
+                    var ir = EditorJsonUtils.Deserialize<ShaderIR>(text);
+                    var shaderData = new ShaderData();
+                    Deserializer.Deserialize(shaderData, ir.Properties);
+
+
+                    //var shaderData = JsonConvert.DeserializeObject<ShaderData>(text);
                     shaderSources = shaderData.Sources;
                 }
             }

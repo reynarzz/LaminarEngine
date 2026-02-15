@@ -111,14 +111,15 @@ namespace Editor.Cooker
 
             foreach (var info in VariantTypes)
             {
+                var varName = $"{info.ClrType}Collection";
                 sb.AppendLine($"        if (identity == SerializedType.{info.Type}.GetIdentity())");
                 sb.AppendLine("        {");
-                sb.AppendLine($"           var {info.ClrType}Collection = data as {info.CollectionDataType};");
-                sb.AppendLine("            if (kind == CollectionType.Array) return ReadToArray_" + info.Name + $"(collection, {info.ClrType}Collection);");
-                sb.AppendLine("            else if (kind == CollectionType.List) return ReadToList_" + info.Name + $"(collection, {info.ClrType}Collection);");
-                sb.AppendLine("            else if (kind == CollectionType.Queue) return ReadToQueue_" + info.Name + $"(collection, {info.ClrType}Collection);");
-                sb.AppendLine("            else if (kind == CollectionType.Stack) return ReadToStack_" + info.Name + $"(collection, {info.ClrType}Collection);");
-                sb.AppendLine("            else if (kind == CollectionType.HashSet) return ReadToHashSet_" + info.Name + $"(collection, {info.ClrType}Collection);");
+                sb.AppendLine($"           var {varName} = data as {info.CollectionDataType};");
+                sb.AppendLine("            if (kind == CollectionType.Array) return ReadToArray_" + info.Name + $"(collection, {varName});");
+                sb.AppendLine("            else if (kind == CollectionType.List) return ReadToList_" + info.Name + $"(collection, {varName});");
+                sb.AppendLine("            else if (kind == CollectionType.Queue) return ReadToQueue_" + info.Name + $"(collection, {varName});");
+                sb.AppendLine("            else if (kind == CollectionType.Stack) return ReadToStack_" + info.Name + $"(collection, {varName});");
+                sb.AppendLine("            else if (kind == CollectionType.HashSet) return ReadToHashSet_" + info.Name + $"(collection, {varName});");
                 sb.AppendLine("        }");
             }
 
