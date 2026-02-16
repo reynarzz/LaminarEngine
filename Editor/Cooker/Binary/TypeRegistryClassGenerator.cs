@@ -271,7 +271,15 @@ namespace Editor.Cooker
             const string methodSource = @"
             private static Type _GetType(string typeStr)
             {
-                return Type.GetType(typeStr, ResolveAssembly, null, true);
+                try
+                {
+                    return Type.GetType(typeStr, ResolveAssembly, null, true);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(""[ERROR]:"" + e.ToString());
+                    return null;
+                }
             }
             ";
 
