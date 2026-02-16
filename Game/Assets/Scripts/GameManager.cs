@@ -282,7 +282,7 @@ namespace Game
             if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.F11))
             {
                 Screen.IsFullScreen = !Screen.IsFullScreen;
-                // Window.MouseVisible = !Window.IsFullScreen;
+                WindowManager.Window.CursorVisible = !WindowManager.Window.IsFullScreen;
             }
         }
 

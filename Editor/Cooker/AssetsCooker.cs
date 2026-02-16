@@ -50,14 +50,16 @@ namespace Editor.Cooker
                 { ".ttf", AssetType.Font },
                 { ".otf", AssetType.Font },
 
+                // animation
                 { ".anim", AssetType.AnimationClip },
                 { ".animctrl", AssetType.AnimationController },
 
+                // scene
+                { ".scene", AssetType.Scene }
             };
 
             InitAssetCookers();
         }
-
 
         private void InitAssetCookers()
         {
@@ -85,6 +87,7 @@ namespace Editor.Cooker
                 { AssetType.AnimationClip, new AnimClipProcessorEditor() },
                 { AssetType.AnimationController, new AnimControllerClipProcessorEditor() },
                 { AssetType.Material, new MaterialProcessorEditor() },
+                { AssetType.Scene, new SceneAssetProcessorEditor() }
             };
 
             var releaseModeAssetsProcessors = new Dictionary<AssetType, IAssetProcessor>()
@@ -98,6 +101,7 @@ namespace Editor.Cooker
                 { AssetType.AnimationClip, new RawBytesAssetProcessor() }, // TODO: binary serialization
                 { AssetType.AnimationController, new RawBytesAssetProcessor() }, // TODO: binary serialization
                 { AssetType.Material, new MaterialProcessorRelease() }, 
+                { AssetType.Scene, new SceneAssetProcessorRelease() },
             };
 
             _assetCookers = new Dictionary<CookingType, AssetsCookerBase>()

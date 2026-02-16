@@ -17,6 +17,7 @@ namespace Engine
         AnimationClip,
         AnimationController,
         Material,
-        ShaderV2
+        ShaderV2,
+        Scene
     }
 }

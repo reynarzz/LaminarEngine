@@ -40,7 +40,7 @@ namespace Editor.Cooker
             Serialize(writer, material.Properties);
         }
 
-        internal static void Serialize(SceneIR scene, BinaryWriter writer)
+        internal static void Serialize(BinaryWriter writer, SceneIR scene)
         {
             writer.Write(scene.SceneVersion);
             writer.Write(scene.ActorsVersion);

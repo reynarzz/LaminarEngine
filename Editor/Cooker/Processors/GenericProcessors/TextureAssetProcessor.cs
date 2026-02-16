@@ -9,15 +9,6 @@ using System.Threading.Tasks;
 
 namespace Editor.Cooker
 {
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct TextureBinary
-    {
-        public int Width;
-        public int Height;
-        public int Comp;
-        public byte[] Bytes;
-    }
-
     internal class TextureAssetProcessor : IAssetProcessor
     {
         AssetProccesResult IAssetProcessor.Process(BinaryReader reader, AssetMeta meta, CookingPlatform platform)

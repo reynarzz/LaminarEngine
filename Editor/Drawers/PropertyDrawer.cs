@@ -161,8 +161,12 @@ namespace Editor
 
             ImGui.PushStyleColor(ImGuiCol.HeaderHovered, new Vector4(0));
             ImGui.PushStyleColor(ImGuiCol.HeaderActive, new Vector4(0));
-
+            var spacing = ImGui.GetStyle().ItemSpacing;
+            
+            ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(spacing.X, 5));
             var show = ImGui.TreeNodeEx($"{propertyName}##{objectId}{index}", flags);
+            ImGui.PopStyleVar();
+
             if (!show)
             {
                 ImGui.PopStyleColor(2);

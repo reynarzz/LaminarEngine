@@ -381,7 +381,7 @@ namespace Engine
 
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
-                    GL.glLineWidth(3);
+                    GL.glLineWidth(4);
                     GL.glEnable(GL.GL_LINE_SMOOTH);
                 }
 
