@@ -217,8 +217,14 @@ namespace Editor
             var imageSize = new Vector2(19, 19);
             ImGui.SetCursorPosY(cursorY + 3);
 
+            var imagePtr = EditorTextureDatabase.GetIconImGui(component.GetType()); 
+            
+            if(imagePtr == 0)
+            {
+                imagePtr = EditorTextureDatabase.GetIconImGui(EditorIcon.ScriptFile);
+            }
 
-            ImGui.Image(EditorTextureDatabase.GetIconImGui(EditorIcon.ScriptFile), imageSize, new Vector2(0, 1), new Vector2(1, 0));
+            ImGui.Image(imagePtr, imageSize, new Vector2(0, 1), new Vector2(1, 0));
 
 
             // Component name

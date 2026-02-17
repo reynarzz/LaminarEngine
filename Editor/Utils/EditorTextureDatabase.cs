@@ -25,7 +25,16 @@ namespace Editor.Utils
         AndroidSmall,
         AppleSmall,
         LinuxSmall,
-        CirclePicker
+        CirclePicker,
+        Texture,
+        Audio,
+        Animator,
+        AnimationClip,
+        Camera,
+        Transform,
+        CircleCollider,
+        CapsuleCollider,
+        Physics
     }
 
     internal sealed class EditorTextureDatabase
@@ -42,7 +51,7 @@ namespace Editor.Utils
                 { EditorIcon.Pause, LoadIconFromDisk("pause.png") },
                 { EditorIcon.Stop, LoadIconFromDisk("stop.png") },
                 { EditorIcon.Skip, LoadIconFromDisk("skip_hq.png") },
-                { EditorIcon.Material, LoadIconFromDisk("material_icon.png") },
+                { EditorIcon.Material, LoadIconFromDisk("material24x24_2.png") },
                 { EditorIcon.Text, LoadIconFromDisk("text_icon.png") },
                 { EditorIcon.Scene, LoadIconFromDisk("scene.png") },
                 { EditorIcon.ScriptFile, LoadIconFromDisk("csharp.png") },
@@ -50,14 +59,36 @@ namespace Editor.Utils
                 { EditorIcon.AndroidSmall, LoadIconFromDisk("android32x32.png") },
                 { EditorIcon.AppleSmall, LoadIconFromDisk("apple32x32.png") },
                 { EditorIcon.LinuxSmall, LoadIconFromDisk("linux32x32.png") },
-                { EditorIcon.CirclePicker, LoadIconFromDisk("circlepicker32x32.png") },
+                { EditorIcon.CirclePicker, LoadIconFromDisk("circlepicker24x24.png") },
+                { EditorIcon.Texture, LoadIconFromDisk("sprite26x24.png") },
+                { EditorIcon.Audio, LoadIconFromDisk("audio.png") },
+                { EditorIcon.Animator, LoadIconFromDisk("skeleton24x24_2.png") },
+                { EditorIcon.AnimationClip, LoadIconFromDisk("skeleton24x24_1.png") },
+                { EditorIcon.Camera, LoadIconFromDisk("camera.png") },
+                { EditorIcon.Transform, LoadIconFromDisk("xyz gizmo.png") },
+                { EditorIcon.CircleCollider, LoadIconFromDisk("circlecollider24x24.png") },
+                { EditorIcon.CapsuleCollider, LoadIconFromDisk("capsule24x24.png") },
+                { EditorIcon.Physics, LoadIconFromDisk("physics24x24.png") },
             };
 
             _typesToIconTypeMapper = new Dictionary<Type, EditorIcon>()
             {
                 { typeof(Material), EditorIcon.Material },
+                { typeof(Camera), EditorIcon.Camera },
                 { typeof(TextAsset), EditorIcon.Text },
+                { typeof(Texture), EditorIcon.Texture },
+                { typeof(Texture2D), EditorIcon.Texture },
+                { typeof(Sprite), EditorIcon.Texture },
                 { typeof(SceneAsset), EditorIcon.Scene },
+                { typeof(AudioClip), EditorIcon.Audio },
+                { typeof(AudioSource), EditorIcon.Audio },
+                { typeof(AnimatorController), EditorIcon.Animator },
+                { typeof(Animator), EditorIcon.Animator },
+                { typeof(AnimationClip), EditorIcon.AnimationClip },
+                { typeof(Transform), EditorIcon.Transform},
+                { typeof(CircleCollider2D), EditorIcon.CircleCollider },
+                { typeof(CapsuleCollider2D), EditorIcon.CapsuleCollider },
+                { typeof(RigidBody2D), EditorIcon.Physics },
             };
         }
 
@@ -106,12 +137,18 @@ namespace Editor.Utils
 
         public static nint GetIconImGui(Type targetType)
         {
-            return GetIconImGui(GetIcon(targetType));
+            var tex = GetIcon(targetType);
+            if (tex != null)
+            {
+                return GetIconImGui(tex);
+            }
+
+            return 0;
 
         }
         internal static nint GetIconImGui(Texture2D texture)
         {
-            if(texture != null)
+            if (texture != null)
             {
                 return (nint)(texture.NativeResource as GLTexture).Handle;
             }

@@ -1033,9 +1033,9 @@ namespace Editor.Utils
             drawList.AddRectFilled(min, max, ImGui.ColorConvertFloat4ToU32(new(0.1f, 0.1f, 0.1f, 1f)), ImGui.GetStyle().FrameRounding);
             if (hasObject)
             {
-                ImGui.SetCursorPos(preRectCursor + new Vector2(-3, 5));
-                ImGui.Image(EditorTextureDatabase.GetIconImGui(EditorIcon.CirclePicker), new Vector2(16, 16));
-                ImGui.SetCursorPos(preRectCursor + new Vector2(14, 0));
+                ImGui.SetCursorPos(preRectCursor + new Vector2(-2, 5));
+                ImGui.Image(EditorTextureDatabase.GetIconImGui(eObject.GetType()), new Vector2(16, 16), new Vector2(0, 1), new Vector2(1, 0));
+                ImGui.SetCursorPos(preRectCursor + new Vector2(16, 0));
             }
 
             string suffix = $"({valueType.Name})";
