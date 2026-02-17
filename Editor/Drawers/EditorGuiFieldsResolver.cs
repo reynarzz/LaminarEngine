@@ -193,7 +193,7 @@ namespace Editor.Utils
             if (_openColorPicker)
             {
                 
-                Vector2 popupPos = ImGui.GetWindowViewport().Pos+ new Vector2(itemMin.X, itemMin.Y);
+                Vector2 popupPos = new Vector2(itemMin.X - 20, itemMin.Y + 26);
                 ImGui.SetNextWindowViewport(ImGui.GetWindowViewport().ID);
                 ImGui.SetNextWindowPos(popupPos, ImGuiCond.Appearing);
                 ImGui.OpenPopup("Color Picker");
