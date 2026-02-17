@@ -320,6 +320,7 @@ namespace Editor
                 {
                     value = ReflectionUtils.GetDefaultValueInstance(type);
                     idx = 0;
+                    setMemberValueCallBack(target, Enum.Parse(type, names[idx]), prop, index);
                 }
                 if (resultChanged = EditorGuiFieldsResolver.DrawCombo(propertyName, ref idx, names, width))
                 {

@@ -45,8 +45,6 @@ namespace Editor
     // UI performance is pretty bad, rewrite the entire UI system.
 
     // Assets:
-    // Implement MaterialAssetBuilder.
-    // Write binary serializer for runtime build.
     // Metadata of every asset should be binary on final build.
 
     // Features
