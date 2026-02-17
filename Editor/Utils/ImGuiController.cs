@@ -62,7 +62,7 @@ namespace Editor
             var style = ImGui.GetStyle();
             var green = EditorColors.MainColor.ToVector4();
             style.Alpha = 1.0f;
-            float rounding = 2.0f;
+            float rounding = 3.0f;
 
             style.DisabledAlpha = 0.6000000238418579f;
             style.WindowPadding = new Vector2(4.0f, 5.0f);

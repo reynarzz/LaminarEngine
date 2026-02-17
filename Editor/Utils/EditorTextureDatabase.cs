@@ -24,7 +24,8 @@ namespace Editor.Utils
         WindowsSmall,
         AndroidSmall,
         AppleSmall,
-        LinuxSmall
+        LinuxSmall,
+        CirclePicker
     }
 
     internal sealed class EditorTextureDatabase
@@ -49,6 +50,7 @@ namespace Editor.Utils
                 { EditorIcon.AndroidSmall, LoadIconFromDisk("android32x32.png") },
                 { EditorIcon.AppleSmall, LoadIconFromDisk("apple32x32.png") },
                 { EditorIcon.LinuxSmall, LoadIconFromDisk("linux32x32.png") },
+                { EditorIcon.CirclePicker, LoadIconFromDisk("circlepicker32x32.png") },
             };
 
             _typesToIconTypeMapper = new Dictionary<Type, EditorIcon>()

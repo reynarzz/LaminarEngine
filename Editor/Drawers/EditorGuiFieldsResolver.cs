@@ -167,22 +167,37 @@ namespace Editor.Utils
 
             var col = new Vector4(value.R, value.G, value.B, value.A);
 
-            // Determine button size
-            Vector2 buttonSize = new Vector2(ImGui.GetContentRegionAvail().X - 5, 22f);
+            var buttonSize = new Vector2(ImGui.GetContentRegionAvail().X - 5, 24f);
 
             bool changed = false;
 
-            // Draw the color button
             if (ImGui.ColorButton(name, col, ImGuiColorEditFlags.NoTooltip | ImGuiColorEditFlags.NoDragDrop, buttonSize))
             {
-                _openColorPicker = true; // open popup on click
+                _openColorPicker = true;
             }
+            
+            var drawList = ImGui.GetWindowDrawList();
 
-            // Open popup if requested
+            var barSizeOffset = new Vector2(1,0);
+            var barPositionOffset = new Vector2(0,-3);
+
+            var itemMin = ImGui.GetItemRectMin() + barSizeOffset + barPositionOffset;
+            var itemMax = ImGui.GetItemRectMax() - barSizeOffset + barPositionOffset;
+
+
+            var barMin = new Vector2(itemMin.X, itemMax.Y);
+            var barMax = new Vector2(Mathf.Lerp(itemMin.X, itemMax.X, value.A), itemMax.Y + 2.0f);
+
+            drawList.AddRectFilled(barMin, new Vector2(itemMax.X, itemMax.Y + 2.0f), ImGui.ColorConvertFloat4ToU32(new Vector4(0.1f, 0.1f, 0.1f, 1f)));
+            drawList.AddRectFilled(barMin, barMax, ImGui.ColorConvertFloat4ToU32(new Vector4(1f, 1f, 1f, 1f)));
             if (_openColorPicker)
             {
+                
+                Vector2 popupPos = ImGui.GetWindowViewport().Pos+ new Vector2(itemMin.X, itemMin.Y);
+                ImGui.SetNextWindowViewport(ImGui.GetWindowViewport().ID);
+                ImGui.SetNextWindowPos(popupPos, ImGuiCond.Appearing);
                 ImGui.OpenPopup("Color Picker");
-                _openColorPicker = false; // reset flag
+                _openColorPicker = false;
             }
 
             if (ImGui.BeginPopup("Color Picker"))
@@ -256,6 +271,14 @@ namespace Editor.Utils
             SetNextItemWidth(itemWidth);
             ImGui.PushStyleVar(ImGuiStyleVar.ItemInnerSpacing, VECTOR_INNER_SPACING);
             var result = ImGui.DragInt3($"##{name}", ref value.x, 0.2f);
+            ImGui.PopStyleVar();
+            return result;
+        }
+        public static bool DrawIVec4Field(string name, ref ivec4 value, float itemWidth = 0, bool pressEnterToConfirm = false)
+        {
+            SetNextItemWidth(itemWidth);
+            ImGui.PushStyleVar(ImGuiStyleVar.ItemInnerSpacing, VECTOR_INNER_SPACING);
+            var result = ImGui.DragInt4($"##{name}", ref value.x, 0.2f);
             ImGui.PopStyleVar();
             return result;
         }
@@ -619,6 +642,42 @@ namespace Editor.Utils
                 }
                 return result;
             }
+            else if (type == typeof(ivec2))
+            {
+                ivec2 refValue = CastSafe<ivec2>(value);
+
+                bool result = false;
+
+                if (result = DrawIVec2Field(name, ref refValue, itemWidth, pressEnterToConfirm))
+                {
+                    value = refValue;
+                }
+                return result;
+            }
+            else if (type == typeof(ivec3))
+            {
+                ivec3 refValue = CastSafe<ivec3>(value);
+
+                bool result = false;
+
+                if (result = DrawIVec3Field(name, ref refValue, itemWidth, pressEnterToConfirm))
+                {
+                    value = refValue;
+                }
+                return result;
+            }
+            else if (type == typeof(ivec4))
+            {
+                ivec4 refValue = CastSafe<ivec4>(value);
+
+                bool result = false;
+
+                if (result = DrawIVec4Field(name, ref refValue, itemWidth, pressEnterToConfirm))
+                {
+                    value = refValue;
+                }
+                return result;
+            }
             else if (type == typeof(quat))
             {
                 quat refValue = CastSafe<quat>(value);
@@ -941,10 +1000,10 @@ namespace Editor.Utils
         {
             ImGui.SameLine();
             ImGui.SetCursorPosX(MathF.Max(XPosOffset, ImGui.GetCursorPosX()) + 5);
+            var hasObject = eObject != null;
+            string label = hasObject ? $"{eObject.Name}" : $"None";
 
-            string label = eObject != null ? $"{eObject.Name}" : $"Null";
-
-            if (eObject != null)
+            if (hasObject)
             {
                 if (eObject is AssetResourceBase res)
                 {
@@ -955,15 +1014,29 @@ namespace Editor.Utils
                     ImGui.SetItemTooltip(eObject.GetID().ToString());
                 }
             }
+            else
+            {
+
+            }
 
             var drawList = ImGui.GetWindowDrawList();
             var pos = ImGui.GetCursorScreenPos();
             var size = ImGui.CalcTextSize(label);
 
             var min = new Vector2(pos.X - 5, pos.Y);
-            var max = new Vector2(pos.X + ImGui.GetContentRegionAvail().X - 5, pos.Y + size.Y + 2);
+            var max = new Vector2(pos.X + ImGui.GetContentRegionAvail().X - 5, pos.Y + size.Y + 7);
 
-            drawList.AddRectFilled(min, max, ImGui.ColorConvertFloat4ToU32(new(0.1f, 0.1f, 0.1f, 1f)));
+            var preRectCursor = ImGui.GetCursorPos();
+
+            ImGui.SetCursorPos(preRectCursor);
+
+            drawList.AddRectFilled(min, max, ImGui.ColorConvertFloat4ToU32(new(0.1f, 0.1f, 0.1f, 1f)), ImGui.GetStyle().FrameRounding);
+            if (hasObject)
+            {
+                ImGui.SetCursorPos(preRectCursor + new Vector2(-3, 5));
+                ImGui.Image(EditorTextureDatabase.GetIconImGui(EditorIcon.CirclePicker), new Vector2(16, 16));
+                ImGui.SetCursorPos(preRectCursor + new Vector2(14, 0));
+            }
 
             string suffix = $"({valueType.Name})";
             float suffixWidth = ImGui.CalcTextSize(suffix).X;
@@ -977,6 +1050,17 @@ namespace Editor.Utils
             string displayLabel = label;
 
             float labelWidth = ImGui.CalcTextSize(label).X;
+            ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 2);
+
+            if (hasObject)
+            {
+                ImGui.PushStyleColor(ImGuiCol.Text, ImGui.ColorConvertFloat4ToU32(new(1.0f, 1.0f, 1.0f, 1f)));
+            }
+            else
+            {
+                ImGui.PushStyleColor(ImGuiCol.Text, ImGui.ColorConvertFloat4ToU32(new(0.7f, 0.7f, 0.7f, 1f)));
+            }
+
             if (labelWidth > availableLabelWidth)
             {
                 const string ellipsis = "...";
@@ -1004,7 +1088,7 @@ namespace Editor.Utils
                 ImGui.Text($"{displayLabel} {suffix}");
             }
 
-
+            ImGui.PopStyleColor();
             if (ImGui.IsItemClicked())
             {
                 _openPopup = true;
@@ -1012,6 +1096,7 @@ namespace Editor.Utils
                 _selectedSetter = setValue;
             }
 
+            ImGui.Dummy(new Vector2(0, ImGui.GetStyle().ItemSpacing.Y - 2));
             PickObjectPopup(valueType, setValue);
         }
         static int count = 0;
@@ -1137,7 +1222,7 @@ namespace Editor.Utils
                     RenderItemsInColumns(items);
                 }
             }
-         
+
             else if (valueType == typeof(Sprite))
             {
                 //var assets = IOLayer.Database.Disk.GetAssetsInfo(SharedTypes.AssetType.Texture);
@@ -1189,7 +1274,8 @@ namespace Editor.Utils
                         spriteItems.Add((label, () =>
                         {
                             setValue(atlas.GetSprite(iCopy));
-                        }));
+                        }
+                        ));
                     }
                 }
 
