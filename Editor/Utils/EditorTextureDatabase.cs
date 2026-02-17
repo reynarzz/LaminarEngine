@@ -146,7 +146,13 @@ namespace Editor.Utils
             return 0;
 
         }
-        internal static nint GetIconImGui(Texture2D texture)
+        internal static nint GetIconImGui(RenderTexture texture)
+        {
+            if (texture == null)
+                return 0;
+            return (nint)(texture.NativeResource as GLFrameBuffer).ColorTexture.Handle;
+        }
+        internal static nint GetIconImGui(Texture texture)
         {
             if (texture != null)
             {
