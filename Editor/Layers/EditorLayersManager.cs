@@ -137,20 +137,14 @@ namespace Editor
 
                     var fil = File.Open(EditorPaths.AppRoot + "/SceneBinary.bin", FileMode.Create, FileAccess.Write);
                     using var bw = new BinaryWriter(fil, System.Text.Encoding.UTF8);
-                    BinaryIRSerializer.Serialize(sceneIR, bw);
+                    BinaryIRSerializer.Serialize(bw, sceneIR);
 
                     File.WriteAllText(TestfilePath, EditorJsonUtils.Serialize(sceneIR));
 
                 }
 
                 InternalAssetsCreator.GenerateAll();
-                Cooker.Generator.TypeGenerationStage.GenerateTypeRegistry();
-
-                //else
-                //{
-                //    Debug.Warn("Can't save in playmode.");
-                //}
-
+                //Cooker.Generator.TypeGenerationStage.GenerateTypeRegistry();
             }
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.A))
             {
@@ -213,21 +207,21 @@ namespace Editor
                 // SerializerTypesFixer();
                 // LoadScene();
 
-                //if (File.Exists(TestfilePath))
-                //{
-                //    var sceneFile = File.ReadAllText(TestfilePath);
-                //    var sceneFileIR = EditorJsonUtils.Deserialize<SceneIR>(sceneFile);
-                //    LoadScene(sceneFileIR);
-                //}
+                if (File.Exists(TestfilePath))
+                {
+                    var sceneFile = File.ReadAllText(TestfilePath);
+                    var sceneFileIR = EditorJsonUtils.Deserialize<SceneIR>(sceneFile);
+                    LoadScene(sceneFileIR);
+                }
 
-                using var file = File.OpenRead(EditorPaths.AppRoot + "/SceneBinary.bin");
-                var reader = new BinaryReader(file);
-                var scene = BinaryIRDeserializer.DeserializeScene(reader);
-                LoadScene(scene);
+                //using var file = File.OpenRead(EditorPaths.AppRoot + "/SceneBinary.bin");
+                //var reader = new BinaryReader(file);
+                //var scene = BinaryIRDeserializer.DeserializeScene(reader);
+                //LoadScene(scene);
 
 
-                //File.WriteAllText(EditorPaths.AppRoot + "/Engine/Utils/VariantCollectionPopulator_Generated.cs",
-                //                  VariantCollectionWriterGenerator.Generate(true));
+                //File.WriteAllText(EditorPaths.AppRoot + "/Engine/Utils/CollectionDeserializer_Generated.cs",
+                //                  CollectionDeserializerGenerator.Generate(true));
             }
         }
 
