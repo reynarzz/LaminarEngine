@@ -19,7 +19,7 @@ add_subdirectory(Source)
 # ============================================
 # Audio Module (opcional)
 # ============================================
-set(AUDIO_MODULE_PATH "${CMAKE_SOURCE_DIR}/Libs/miniaudio")
+set(AUDIO_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/Libs/miniaudio")
 
 if(EXISTS "${AUDIO_MODULE_PATH}/miniaudio.h")
     target_sources(GamepadCore PRIVATE "${AUDIO_MODULE_PATH}/miniaudio_impl.cpp")
