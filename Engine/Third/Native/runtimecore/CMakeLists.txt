@@ -28,11 +28,17 @@ set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 
 add_subdirectory("../glfw" glfw_build)
-#add_subdirectory("../dualsense" dualsense_build)
+add_subdirectory("../dualsense" dualsense_build)
 
-target_include_directories(RuntimeCore PRIVATE "../glfw/include")
+target_include_directories(RuntimeCore PRIVATE 
+"../glfw/include"
+"../dualsense/Source/Public"
+)
 
-target_link_libraries(RuntimeCore PRIVATE glfw)
+target_link_libraries(RuntimeCore PRIVATE 
+glfw )
+
+target_sources(RuntimeCore PRIVATE $<TARGET_OBJECTS:GamepadCore>)
 
 if(APPLE)
     target_link_libraries(RuntimeCore PRIVATE "-framework Cocoa" "-framework OpenGL" "-framework IOKit" "-framework CoreVideo")

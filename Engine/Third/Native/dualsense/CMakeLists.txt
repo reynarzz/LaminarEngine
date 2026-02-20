@@ -1,24 +1,46 @@
 cmake_minimum_required(VERSION 3.20)
 
-# Main project name
 project(GamepadCore LANGUAGES CXX)
 
-# --- Global C++ Settings ---
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-
-# Enable Unicode support for Windows targets
+set(SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Source")
+# Enable Unicode for Windows
 if(WIN32)
     add_compile_definitions(UNICODE _UNICODE)
 endif()
 
-add_subdirectory(Source)
+file(GLOB_RECURSE GAMEPADCORE_HEADERS
+    "${SOURCE_DIR}/Public/*.h"
+    "${SOURCE_DIR}/Public/*.hpp"
+    "${SOURCE_DIR}/Private/*.h"
+    "${SOURCE_DIR}/Private/*.hpp"
+)
 
+file(GLOB_RECURSE GAMEPADCORE_SOURCES
+    "${SOURCE_DIR}/Private/*.cpp"
+    "${SOURCE_DIR}/Private/*.cxx"
+)
 
-# ============================================
-# Audio Module (opcional)
-# ============================================
+add_library(GamepadCore OBJECT
+    ${GAMEPADCORE_HEADERS}
+    ${GAMEPADCORE_SOURCES}
+    ${SOURCE_DIR}/Public/GImplementations/Utils/GamepadAudio.h
+)
+
+target_include_directories(GamepadCore
+    PUBLIC "${SOURCE_DIR}/Public"
+    PRIVATE "${SOURCE_DIR}/Private"
+)
+
+target_compile_features(GamepadCore PUBLIC cxx_std_20)
+
+set_target_properties(GamepadCore PROPERTIES
+    CXX_EXTENSIONS OFF
+    POSITION_INDEPENDENT_CODE ON
+)
+
 set(AUDIO_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/Libs/miniaudio")
 
 if(EXISTS "${AUDIO_MODULE_PATH}/miniaudio.h")
@@ -33,7 +55,7 @@ else()
 endif()
 
 # ============================================
-# Tests Module (opcional)
+# Optional Tests Module
 # ============================================
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/Tests/Integration/CMakeLists.txt")
     # Global definition for test-specific code blocks
