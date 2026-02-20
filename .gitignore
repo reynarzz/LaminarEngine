@@ -39,3 +39,8 @@ Platforms/Android/Resources/values/strings.xml
 Generated/bin/
 Generated/TypeRegistry_Generated.cs
 Engine/Third/Native/dualsense/build/
+Engine/Third/Native/runtimecore/build/
+Engine/Third/Native/bin/win/Debug/
+Engine/Third/Native/bin/lib/Release/
+Engine/Third/Native/bin/lib/Debug/
+Engine/Third/Native/bin/win/Release/
