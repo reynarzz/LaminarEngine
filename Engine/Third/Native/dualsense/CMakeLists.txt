@@ -23,15 +23,37 @@ file(GLOB_RECURSE GAMEPADCORE_SOURCES
     "${SOURCE_DIR}/Private/*.cxx"
 )
 
+if(WIN32)
+file(GLOB_RECURSE PLATFORM_FILES
+    "${SOURCE_DIR}/Platform/windows/*.cpp"
+    "${SOURCE_DIR}/Private/windows/*.cxx"
+)
+else()
+file(GLOB_RECURSE PLATFORM_FILES
+    "${SOURCE_DIR}/Platform/linux/*.cpp"
+    "${SOURCE_DIR}/Private/linux/*.cxx"
+)
+endif()
+
 add_library(GamepadCore OBJECT
     ${GAMEPADCORE_HEADERS}
     ${GAMEPADCORE_SOURCES}
+    ${PLATFORM_FILES}
+
     ${SOURCE_DIR}/Public/GImplementations/Utils/GamepadAudio.h
+    #${SOURCE_DIR}/Features/test_audio_haptics.cpp
+    #${SOURCE_DIR}/Features/test_channels_haptics.cpp
+    #${SOURCE_DIR}/Features/test_gamepad_outputs.cpp
+    #${SOURCE_DIR}/test_utils.h
 )
+
+
 
 target_include_directories(GamepadCore
     PUBLIC "${SOURCE_DIR}/Public"
     PRIVATE "${SOURCE_DIR}/Private"
+    PUBLIC "${SOURCE_DIR}"
+    PUBLIC "${SOURCE_DIR}/Platform"
 )
 
 target_compile_features(GamepadCore PUBLIC cxx_std_20)

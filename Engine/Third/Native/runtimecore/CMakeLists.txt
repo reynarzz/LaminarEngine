@@ -3,8 +3,10 @@ project(RuntimeCore LANGUAGES C CXX)
 
 set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
 set(OUTPUT_DIR ${PROJECT_SOURCE_DIR}../../bin)
+
 add_library(RuntimeCore SHARED
     RuntimeCore.cpp
+    PlayStationGamepad.cpp
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
@@ -14,8 +16,10 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 )
 
 
-target_compile_definitions(RuntimeCore PRIVATE RUNTIMECORE_EXPORTS)
-
+target_compile_definitions(RuntimeCore PUBLIC 
+RUNTIMECORE_EXPORTS
+GAMEPAD_CORE_HAS_AUDIO=1
+)
 set_target_properties(RuntimeCore PROPERTIES
     CXX_STANDARD 20
     CXX_STANDARD_REQUIRED ON
@@ -33,6 +37,9 @@ add_subdirectory("../dualsense" dualsense_build)
 target_include_directories(RuntimeCore PRIVATE 
 "../glfw/include"
 "../dualsense/Source/Public"
+"../dualsense/Source"
+"../dualsense/Libs/miniaudio"
+
 )
 
 target_link_libraries(RuntimeCore PRIVATE 
@@ -42,6 +49,10 @@ target_sources(RuntimeCore PRIVATE $<TARGET_OBJECTS:GamepadCore>)
 
 if(APPLE)
     target_link_libraries(RuntimeCore PRIVATE "-framework Cocoa" "-framework OpenGL" "-framework IOKit" "-framework CoreVideo")
+elseif(WIN32)
+    target_link_libraries(RuntimeCore PRIVATE 
+    SetupAPI
+    hid)
 elseif(UNIX AND NOT APPLE)
     find_package(X11 REQUIRED)
     target_include_directories(RuntimeCore PRIVATE ${X11_INCLUDE_DIR})
