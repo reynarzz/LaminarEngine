@@ -5,6 +5,7 @@ using Engine.Graphics;
 using Engine.Layers;
 using Engine.Layers.Input;
 using Editor.Cooker;
+using ImGuiNET;
 
 namespace Editor
 {
@@ -109,9 +110,12 @@ namespace Editor
                 editorLayerManager.PublishEvent(focused ? EventType.WindowFocusEnter : EventType.WindowFocusExit, null);
             };
 
+            // RuntimeCore.InitSonyGamepad();
+
             while (!_win.ShouldClose)
             {
                 UpdateAll();
+                // RuntimeCore.UpdateSonyGamepad(ImGui.GetIO().DeltaTime);
             }
 
             editorLayerManager.OnClose();
