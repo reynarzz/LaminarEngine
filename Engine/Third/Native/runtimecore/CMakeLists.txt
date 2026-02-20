@@ -2,11 +2,17 @@ cmake_minimum_required(VERSION 3.20)
 project(RuntimeCore LANGUAGES C CXX)
 
 set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
-
-# DLL target
+set(OUTPUT_DIR ${PROJECT_SOURCE_DIR}../../bin)
 add_library(RuntimeCore SHARED
     RuntimeCore.cpp
 )
+
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${OUTPUT_DIR}/win"   # Windows DLL
+    LIBRARY_OUTPUT_DIRECTORY "${OUTPUT_DIR}/osx"   # .so / .dylib
+    ARCHIVE_OUTPUT_DIRECTORY "${OUTPUT_DIR}/lib"   # .lib / .a
+)
+
 
 target_compile_definitions(RuntimeCore PRIVATE RUNTIMECORE_EXPORTS)
 
@@ -22,13 +28,12 @@ set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 
 add_subdirectory("../glfw" glfw_build)
-add_subdirectory("../dualsense" dualsense_build)
+#add_subdirectory("../dualsense" dualsense_build)
 
 target_include_directories(RuntimeCore PRIVATE "../glfw/include")
 
 target_link_libraries(RuntimeCore PRIVATE glfw)
 
-# Platform specific linking
 if(APPLE)
     target_link_libraries(RuntimeCore PRIVATE "-framework Cocoa" "-framework OpenGL" "-framework IOKit" "-framework CoreVideo")
 elseif(UNIX AND NOT APPLE)
