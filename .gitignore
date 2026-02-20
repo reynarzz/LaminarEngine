@@ -38,3 +38,4 @@ Platforms/Android/Resources/values/strings.xml
 #Editor/Data/imgui.ini
 Generated/bin/
 Generated/TypeRegistry_Generated.cs
+Engine/Third/Native/dualsense/build/
