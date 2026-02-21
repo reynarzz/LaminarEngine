@@ -39,7 +39,7 @@ RUNTIMECORE_API void InitSonyGamepad()
 	std::cout << "Reading inputs. Press Ctrl+C to stop." << std::endl;
 	std::cout << std::fixed << std::setprecision(3);
 }
-
+float _t = 0;
 RUNTIMECORE_API void UpdateSonyGamepad(float deltaTime)
 {
 
@@ -86,7 +86,7 @@ RUNTIMECORE_API void UpdateSonyGamepad(float deltaTime)
 		Gamepad->UpdateInput(deltaTime);
 		FDeviceContext* Context = Gamepad->GetMutableDeviceContext();
 		FInputContext* Input = Context->GetInputState();
-
+		
 		if (Input)
 		{
 			std::cout << "\r";
@@ -156,6 +156,11 @@ RUNTIMECORE_API void UpdateSonyGamepad(float deltaTime)
 				Gamepad->SetLightbar({ 0, 0, 0 });
 				Gamepad->UpdateOutput();
 			}
+			
+			/*_t += deltaTime;
+			Gamepad->SetLightbar({ (uint8_t)(((cos(_t)  + 1.0f )* 0.5f) * 255.0f), (uint8_t)(((sin(_t) + 1.0f) * 0.5f) * 255.0f), 255});
+			Gamepad->UpdateOutput();*/
+
 		}
 	}
 	else

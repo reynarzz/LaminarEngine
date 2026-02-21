@@ -53,7 +53,9 @@ namespace Sandbox
             }
             catch (Exception e)
             {
+#if DEBUG
                 File.WriteAllText("Error.txt", e.ToString());
+#endif
             }
             _mutex.ReleaseMutex();
         }

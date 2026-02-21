@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
+    [StructLayout(LayoutKind.Sequential)]
     public struct QuadVertices
     {
         public Vertex v0;

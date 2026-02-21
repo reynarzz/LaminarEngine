@@ -10,12 +10,12 @@ using ImGuiNET;
 namespace Editor
 {
     // TODO:
+    // -Implement Asset files for Tilemap, custom binary format.
     // -The current code is very slow, and contains tons of bad practices to cut corners, leading to memory leaks, and slowdowns,
     //    most of it is in 'prototype' phase a nice (big) refactor is on the way.
     // -Refactor.
     // -Changing cameras causes to render prevCamera.
     // -Weird rendering issue, related to mouse picking pink materials, is it the RenderingSystem, batcher?
-    // -Implement Asset files for: Tilemap.
     // -If I load the runtime mode, and the applicationLayer is enabled, the camera renders black.
     // Editor.Cooker, the asset database sometimes doesn't remove old assets correctly.
     // - Improve Editor property UI
@@ -110,12 +110,12 @@ namespace Editor
                 editorLayerManager.PublishEvent(focused ? EventType.WindowFocusEnter : EventType.WindowFocusExit, null);
             };
 
-            // RuntimeCore.InitSonyGamepad();
+            //RuntimeCore.InitSonyGamepad();
 
             while (!_win.ShouldClose)
             {
                 UpdateAll();
-                // RuntimeCore.UpdateSonyGamepad(ImGui.GetIO().DeltaTime);
+                //RuntimeCore.UpdateSonyGamepad(ImGui.GetIO().DeltaTime);
             }
 
             editorLayerManager.OnClose();
