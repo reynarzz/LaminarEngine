@@ -1,19 +1,22 @@
 cmake_minimum_required(VERSION 3.20)
 
 # Force clang-cl BEFORE project()
+
+set(PROJECT_NAME EditorNatives)
 if (WIN32)
     set(CMAKE_C_COMPILER clang CACHE STRING "" FORCE)
     set(CMAKE_CXX_COMPILER clang++ CACHE STRING "" FORCE)
 
-set(PROJECT_NAME EditorNatives)
 
-project(${PROJECT_NAME} LANGUAGES C CXX)
+ project(${PROJECT_NAME} LANGUAGES C CXX)
 
 endif()
 
 if(APPLE)
     set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64" CACHE STRING "" FORCE)
 project(${PROJECT_NAME} LANGUAGES C CXX OBJCXX)
+else()
+
 
 endif()
 
@@ -98,6 +101,7 @@ elseif (APPLE)
         ${IOKIT_LIBRARY}
         ${COREVIDEO_LIBRARY}
     ${ENGINE_NATIVES}/bin/osx/libglfw.3.4.dylib
+    nfd
 
         
     )
