@@ -99,56 +99,49 @@ namespace Editor.Cooker
         }
 
         /* Tilemap file format
-        Header char[4]
         Version char[4]
 
         -Metadata
         Levels count (u32)
-        Vertices chunk location (u64)
-        Levels chunk location (u64)
-        
-        Vertices chunk size bytes (u64)
-         
+        Levels (Level format)
         */
-
 
         /*Level format
              identifier str len (u32)
              Identifier (string)
-             iid str len (u32)
-             iid (string)
+             iid (guid)
              WorldX (s32)
              WorldY (s32)
              Level width px (u32)
              Level height px (u32)
              Depth (s32)
-             Bounding box (vec4)
+             BGColor (u32)
              Layers count (u32)
-             Layers locations (u64[])
+             Layers (Layer format)
+             Bounding box (vec4)
          */
 
         /* Layer format
             identifier str len (u32)
             Identifier (string)
-            iid str len (u32)
-            iid (string)
+            iid (guid)
             Visible (bool)
             PixelsPerUnit (u32) (16px default)
-            Grid based height (u32)
-            Grid based width (u32)
+            Grid based size (ivec2)
             Grid size (u32)
             Opacity (float)
             Offset Pixels X (s32) 
             Offset Pixels Y (s32) 
-            Bounding box (vec4)
             
             Layer type (s32)
             Tiles count (u32)
-            Tiles worldPositions (vec2)
+            Tiles vertices (Vertex[])
+            Tiles worldPositions (vec2[])
+            Bounding box (vec4)
         */
 
-        public const float DEFAULT_PIXEL_PER_UNIT = 16;
-
+        private const float DEFAULT_PIXEL_PER_UNIT = 16;
+        private const int VERSION = 1;
         AssetProccesResult IAssetProcessor.Process(BinaryReader reader, AssetMeta meta, CookingPlatform platform)
         {
             var bytes = new byte[(int)reader.BaseStream.Length];
@@ -156,63 +149,149 @@ namespace Editor.Cooker
             var json = Encoding.UTF8.GetString(bytes);
             var ldtk = LdtkJson.FromJson(json);
 
+            using var mem = new MemoryStream();
+            using var writer = new BinaryWriter(mem);
+
+            // Version
+            writer.Write(VERSION);
+
+            WriteTilemap(writer, ldtk, meta as TilemapMeta);
+
             return new AssetProccesResult()
             {
                 IsSuccess = true,
-                //Data = Encoding.UTF8.GetBytes(reader.ReadToEnd())
+                Data = mem.ToArray()
             };
         }
 
         public void WriteTilemap(BinaryWriter writer, LdtkJson project, TilemapMeta meta)
         {
+            // Levels count
+            writer.Write(project.Levels.Length);
+
             for (var i = 0; i < project.Levels.Length; i++)
             {
                 var level = project.Levels[i];
                 var levelBounds = Bounds.GetInitialized();
-                var levelConfig = meta.LevelConfig[i];
+                var levelConfig = meta.LevelConfig?.Length == project.Levels.Length ? meta.LevelConfig[i] : null;
+
+                EditorUtils.WriteString(writer, level.Identifier);
+                EditorUtils.WriteGuidNoAlloc(writer, Guid.Parse(level.Iid));
+
+                // Level position
+                EditorUtils.WriteStruct(writer, new ivec2((int)level.WorldX, (int)level.WorldY));
+
+                // Level size
+                EditorUtils.WriteStruct(writer, new ivec2((int)level.PxWid, (int)level.PxHei));
+
+                // Level depth
+                writer.Write((int)level.WorldDepth);
+
+                // Level Background color
+                writer.Write(HexToRgbaUint(level.BgColor));
+
+                // Layers count
+                writer.Write(level.LayerInstances.Length);
 
                 for (int j = 0; j < level.LayerInstances.Length; j++)
                 {
                     var layer = level.LayerInstances[j];
-                    var gridSize = new vec2(layer.CWid, layer.CHei);
+                    var texture = levelConfig != null ? Assets.GetAssetFromGuid(levelConfig.LayersTextureRef[j]) as Texture2D : null;
+                    float ppu = texture?.PixelPerUnit ?? DEFAULT_PIXEL_PER_UNIT;
 
-                    var texture = levelConfig != null ? Assets.GetAssetFromGuid(levelConfig.LayersTextureRef[j]) as Texture2D: null;
+                    // Layer Identifier
+                    EditorUtils.WriteString(writer, layer.Identifier);
+
+                    // Layer IID
+                    EditorUtils.WriteGuidNoAlloc(writer, Guid.Parse(layer.Iid));
+
+                    // Layer visible
+                    EditorUtils.WriteBool(writer, layer.Visible);
+
+                    // Pixels per unit.
+                    writer.Write(ppu);
+
+                    // Grid based size
+                    EditorUtils.WriteStruct(writer, new ivec2((int)layer.CWid, (int)layer.CHei));
+
+                    // Grid size
+                    writer.Write((int)layer.GridSize);
+
+                    // Opacity
+                    writer.Write((float)layer.Opacity);
+
+                    // Total Offset in pixels
+                    EditorUtils.WriteStruct(writer, new ivec2((int)layer.PxTotalOffsetX, (int)layer.PxTotalOffsetY));
 
                     if (!layer.Visible)
                         continue;
 
-                    switch (layer.Type)
+                    var layerType = Enum.Parse<TilemapLayerType>(layer.Type);
+
+                    // Layer type
+                    writer.Write((int)layerType);
+
+                    switch (layerType)
                     {
-                        case "AutoLayer":
-                        case "IntGrid":
-                            PaintLayerTiles(writer, level, j, layer, layer.AutoLayerTiles, texture, ref levelBounds);
+                        case TilemapLayerType.AutoLayer:
+                        case TilemapLayerType.IntGrid:
+                            WriteLayerTiles(writer, level, j, layer, layer.AutoLayerTiles, texture, ppu, ref levelBounds);
                             break;
-                        case "Tiles":
-                            PaintLayerTiles(writer, level, j, layer, layer.GridTiles, texture, ref levelBounds);
+                        case TilemapLayerType.Tiles:
+                            WriteLayerTiles(writer, level, j, layer, layer.GridTiles, texture, ppu, ref levelBounds);
+                            break;
+                        case TilemapLayerType.Entities:
+                            WriteEntityInstances(layer);
                             break;
                         default:
                             break;
                     }
-
-                    for (int k = 0; k < layer.EntityInstances.Length; k++)
-                    {
-                        var entity = layer.EntityInstances[k];
-
-                    }
                 }
+
+                EditorUtils.WriteStruct(writer, levelBounds);
             }
         }
 
-        private void PaintLayerTiles(BinaryWriter writer, ldtk.Level level, int layerIndex, ldtk.LayerInstance layer,
-                                     ldtk.TileInstance[] tiles, Texture2D texture, ref Bounds levelBounds)
+        private void WriteEntityInstances(ldtk.LayerInstance layer)
+        {
+            for (int k = 0; k < layer.EntityInstances.Length; k++)
+            {
+                var entity = layer.EntityInstances[k];
+
+            }
+        }
+
+        public static uint HexToRgbaUint(string hex)
+        {
+            if (string.IsNullOrWhiteSpace(hex))
+            {
+                throw new ArgumentException("Invalid hex color.");
+            }
+
+            hex = hex.TrimStart('#');
+
+            if (hex.Length != 6)
+            {
+                throw new ArgumentException("Hex color must be 6 characters (RRGGBB).");
+            }
+
+            var r = byte.Parse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
+            var g = byte.Parse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
+            var b = byte.Parse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
+            return (uint)(ColorPacketRGBA)new Color32(r, g, b, 255);
+        }
+
+        private void WriteLayerTiles(BinaryWriter writer, ldtk.Level level, int layerIndex, ldtk.LayerInstance layer,
+                                     ldtk.TileInstance[] tiles, Texture2D texture, float ppu, ref Bounds levelBounds)
         {
             int indexToDraw = tiles.Length * 6;
             var layerBounds = Bounds.GetInitialized();
             var tilesPositions = new vec2[tiles.Length];
 
-            float ppu = texture?.PixelPerUnit ?? DEFAULT_PIXEL_PER_UNIT;
+            // Tiles count
+            writer.Write(tiles.Length);
 
-            for (int i = 0; i < tiles.Length; i++) 
+            for (int i = 0; i < tiles.Length; i++)
             {
                 var tile = tiles[i];
                 bool isFlippedX = (tile.F & 1) != 0 || tile.F == 3;
@@ -231,10 +310,18 @@ namespace Editor.Cooker
                 WriteTile(writer, new Tile((int)tile.T, isFlippedX, isFlippedY), position, texture, ppu, ref layerBounds);
             }
 
+            if (tiles.Length > 0)
+            {
+                // Tiles positions
+                EditorUtils.WriteSpan(writer, tilesPositions);
+            }
+
             layerBounds.Min -= vec3.One * 0.5f;
             layerBounds.Max += vec3.One * 0.5f;
             layerBounds.Min.z = 0;
             layerBounds.Max.z = 0;
+
+            EditorUtils.WriteStruct(writer, layerBounds);
 
             ref var max = ref levelBounds.Max;
             ref var min = ref levelBounds.Min;
@@ -244,7 +331,12 @@ namespace Editor.Cooker
 
         public void WriteTile(BinaryWriter writer, Tile tile, vec3 position, Texture2D texture, float ppu, ref Bounds layerBounds)
         {
-            var chunk = Assets.GetSpriteAtlas(texture.Path).GetSprite(tile.Index).GetAtlasCell();
+            var chunk = TextureAtlasCell.DefaultChunk;
+
+            if (texture)
+            {
+                chunk = Assets.GetSpriteAtlas(texture.Path)?.GetSprite(tile.Index).GetAtlasCell() ?? TextureAtlasCell.DefaultChunk;
+            }
 
             var width = (float)chunk.Width / ppu;
             var height = (float)chunk.Height / ppu;
@@ -259,7 +351,7 @@ namespace Editor.Cooker
             QuadVertices vertices = default;
             GraphicsHelper.CreateQuad(ref vertices, chunk.Uvs, width, height, chunk.Pivot, Color.White, tileMatrix);
 
-            WriteStruct(writer, vertices);
+            EditorUtils.WriteStruct(writer, vertices);
 
             ref var max = ref layerBounds.Max;
             ref var min = ref layerBounds.Min;
@@ -276,13 +368,6 @@ namespace Editor.Cooker
                 y *= layer.GridSize;
             }
             return new vec2(level.WorldX + x + layer.PxOffsetX, -level.WorldY + -y + -layer.PxOffsetY);
-        }
-
-        public static void WriteStruct<T>(BinaryWriter writer, in T value) where T : unmanaged
-        {
-            Span<byte> buffer = stackalloc byte[Marshal.SizeOf<T>()];
-            MemoryMarshal.Write(buffer, in value);
-            writer.Write(buffer);
         }
     }
 }

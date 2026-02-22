@@ -58,6 +58,11 @@ namespace Editor
     // Project settings: project name, icon, physics, audio etc..
     // Project build settings: 
 
+
+    // Tilemap:
+    // TilemapRenderer will have a menu to decide which layers from a level will be rendererd.
+    // TilemapCollider will decide which layers in a level will contain colliders.
+
     internal class EditorEntry
     {
         private WindowStandalone _win;

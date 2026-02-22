@@ -69,9 +69,9 @@ namespace Editor.Cooker
                  Guid ParentID 
                  List<ComponentIR> Components 
             */
-            WriteString(writer, ir.Name);
+            EditorUtils.WriteString(writer, ir.Name);
             writer.Write(ir.Layer);
-            WriteBool(writer, ir.IsActiveSelf);
+            EditorUtils.WriteBool(writer, ir.IsActiveSelf);
             EditorUtils.WriteGuidNoAlloc(writer, ir.ID);
             EditorUtils.WriteGuidNoAlloc(writer, ir.ParentID);
             writer.Write(ir.Components.Count);
@@ -91,7 +91,7 @@ namespace Editor.Cooker
                 List<SerializedPropertyIR> SerializedProperties 
              */
             EditorUtils.WriteGuidNoAlloc(writer, ir.TypeId);
-            WriteBool(writer, ir.IsEnabled);
+            EditorUtils.WriteBool(writer, ir.IsEnabled);
             EditorUtils.WriteGuidNoAlloc(writer, ir.ID);
             writer.Write(ir.Properties.Length);
 
@@ -112,7 +112,7 @@ namespace Editor.Cooker
              object Data 
              */
             var serializedType = ir.Type;
-            WriteString(writer, ir.Name);
+            EditorUtils.WriteString(writer, ir.Name);
             EditorUtils.WriteGuidNoAlloc(writer, ir.TypeId);
             writer.Write((ulong)(serializedType));
 
@@ -199,81 +199,82 @@ namespace Editor.Cooker
                     }
                     break;
                 case SerializedType.Char:
-                    WriteSpan(writer, (array as CollectionDataChar).Value);
+                    EditorUtils.WriteSpan(writer, (array as CollectionDataChar).Value);
                     break;
                 case SerializedType.String:
                     {
                         foreach (var v in (array as CollectionDataString).Value)
                         {
-                            WriteString(writer, v);
+                            EditorUtils.WriteString(writer, v);
                         }
                     }
                     break;
                 case SerializedType.Bool:
-                    WriteSpan(writer, (array as CollectionDataBool).Value);
+                    EditorUtils.WriteSpan(writer, (array as CollectionDataBool).Value); // Remove
+                    // WriteBoolSpan(writer, (array as CollectionDataBool).Value); // TODO: use this instead.
                     break;
                 case SerializedType.Byte:
-                    WriteSpan(writer, (array as CollectionDataByte).Value);
+                    EditorUtils.WriteSpan(writer, (array as CollectionDataByte).Value);
                     break;
                 case SerializedType.Short:
-                    WriteSpan(writer, (array as CollectionDataShort).Value);
+                    EditorUtils.WriteSpan(writer, (array as CollectionDataShort).Value);
                     break;
                 case SerializedType.UShort:
-                    WriteSpan(writer, (array as CollectionDataUShort).Value);
+                    EditorUtils.WriteSpan(writer, (array as CollectionDataUShort).Value);
                     break;
                 case SerializedType.Int:
-                    WriteSpan(writer, (array as CollectionDataInt).Value);
+                    EditorUtils.WriteSpan(writer, (array as CollectionDataInt).Value);
                     break;
                 case SerializedType.UInt:
-                    WriteSpan(writer, (array as CollectionDataUInt).Value);
+                    EditorUtils.WriteSpan(writer, (array as CollectionDataUInt).Value);
                     break;
                 case SerializedType.Float:
-                    WriteSpan(writer, (array as CollectionDataFloat).Value);
+                    EditorUtils.WriteSpan(writer, (array as CollectionDataFloat).Value);
                     break;
                 case SerializedType.Double:
-                    WriteSpan(writer, (array as CollectionDataDouble).Value);
+                    EditorUtils.WriteSpan(writer, (array as CollectionDataDouble).Value);
                     break;
                 case SerializedType.Long:
-                    WriteSpan(writer, (array as CollectionDataLong).Value);
+                    EditorUtils.WriteSpan(writer, (array as CollectionDataLong).Value);
                     break;
                 case SerializedType.ULong:
-                    WriteSpan(writer, (array as CollectionDataULong).Value);
+                    EditorUtils.WriteSpan(writer, (array as CollectionDataULong).Value);
                     break;
                 case SerializedType.Vec2:
-                    WriteSpan(writer, (array as CollectionDataVec2).Value);
+                    EditorUtils.WriteSpan(writer, (array as CollectionDataVec2).Value);
                     break;
                 case SerializedType.Vec3:
-                    WriteSpan(writer, (array as CollectionDataVec3).Value);
+                    EditorUtils.WriteSpan(writer, (array as CollectionDataVec3).Value);
                     break;
                 case SerializedType.Vec4:
-                    WriteSpan(writer, (array as CollectionDataVec4).Value);
+                    EditorUtils.WriteSpan(writer, (array as CollectionDataVec4).Value);
                     break;
                 case SerializedType.IVec2:
-                    WriteSpan(writer, (array as CollectionDataIvec2).Value);
+                    EditorUtils.WriteSpan(writer, (array as CollectionDataIvec2).Value);
                     break;
                 case SerializedType.IVec3:
-                    WriteSpan(writer, (array as CollectionDataIvec3).Value);
+                    EditorUtils.WriteSpan(writer, (array as CollectionDataIvec3).Value);
                     break;
                 case SerializedType.IVec4:
-                    WriteSpan(writer, (array as CollectionDataIvec4).Value);
+                    EditorUtils.WriteSpan(writer, (array as CollectionDataIvec4).Value);
                     break;
                 case SerializedType.Quat:
-                    WriteSpan(writer, (array as CollectionDataQuat).Value);
+                    EditorUtils.WriteSpan(writer, (array as CollectionDataQuat).Value);
                     break;
                 case SerializedType.Mat2:
-                    WriteSpan(writer, (array as CollectionDataMat2).Value);
+                    EditorUtils.WriteSpan(writer, (array as CollectionDataMat2).Value);
                     break;
                 case SerializedType.Mat3:
-                    WriteSpan(writer, (array as CollectionDataMat3).Value);
+                    EditorUtils.WriteSpan(writer, (array as CollectionDataMat3).Value);
                     break;
                 case SerializedType.Mat4:
-                    WriteSpan(writer, (array as CollectionDataMat4).Value);
+                    EditorUtils.WriteSpan(writer, (array as CollectionDataMat4).Value);
                     break;
                 case SerializedType.Color:
-                    WriteSpan(writer, (array as CollectionDataColor).Value);
+                    EditorUtils.WriteSpan(writer, (array as CollectionDataColor).Value);
                     break;
                 case SerializedType.Color32:
-                    WriteSpan(writer, (array as CollectionDataColor32).Value);
+                    EditorUtils.WriteSpan(writer, (array as CollectionDataColor32).Value);
                     break;
                 default:
                     break;
@@ -288,7 +289,7 @@ namespace Editor.Cooker
             {
                 foreach (var v in variants)
                 {
-                    WriteString(writer, v.String);
+                    EditorUtils.WriteString(writer, v.String);
                 }
                 return;
             }
@@ -532,14 +533,6 @@ namespace Editor.Cooker
             return (Variant)obj;
         }
 
-        private static byte BoolToByte(bool value)
-        {
-            return value ? (byte)1 : (byte)0;
-        }
-        private static void WriteBool(BinaryWriter writer, bool value)
-        {
-            writer.Write(BoolToByte(value));
-        }
         private static void WriteSimpleProperty(BinaryWriter writer, in Variant data, SerializedType simpleType)
         {
             switch (simpleType)
@@ -550,10 +543,10 @@ namespace Editor.Cooker
                     writer.Write(data.value.Char);
                     break;
                 case SerializedType.String:
-                    WriteString(writer, data.String);
+                    EditorUtils.WriteString(writer, data.String);
                     break;
                 case SerializedType.Bool:
-                    WriteBool(writer, data.value.Bool);
+                    EditorUtils.WriteBool(writer, data.value.Bool);
                     break;
                 case SerializedType.Byte:
                     writer.Write(data.value.Byte);
@@ -677,12 +670,6 @@ namespace Editor.Cooker
             }
         }
 
-        private static void WriteSpan<T>(BinaryWriter writer, T[] values) where T : unmanaged
-        {
-            ReadOnlySpan<byte> bytes = MemoryMarshal.AsBytes(values.AsSpan());
-            writer.Write(bytes);
-        }
-
         private static void WriteBoolPayloadSpan(BinaryWriter writer, Variant[] variants)
         {
             var count = variants.Length;
@@ -692,7 +679,7 @@ namespace Editor.Cooker
                 var dst = buffer.AsSpan(0, count);
                 for (int i = 0; i < count; i++)
                 {
-                    dst[i] = BoolToByte(variants[i].value.Bool);
+                    dst[i] = EditorUtils.BoolToByte(variants[i].value.Bool);
                 }
                 writer.Write(dst);
             }
@@ -710,7 +697,7 @@ namespace Editor.Cooker
                 var dst = buffer.AsSpan(0, count);
                 for (int i = 0; i < count; i++)
                 {
-                    dst[i] = BoolToByte(values[i]);
+                    dst[i] = EditorUtils.BoolToByte(values[i]);
                 }
                 writer.Write(dst);
             }
@@ -719,46 +706,7 @@ namespace Editor.Cooker
                 ArrayPool<byte>.Shared.Return(buffer);
             }
         }
-        private static void WriteString(BinaryWriter writer, string str, int chunkSize = 8192)
-        {
-            if (string.IsNullOrEmpty(str))
-            {
-                writer.Write(0);
-                return;
-            }
 
-            int totalBytes = Encoding.UTF8.GetByteCount(str);
-            writer.Write(totalBytes);
-
-            if (totalBytes <= 1024) // a kb
-            {
-                Span<byte> buff = stackalloc byte[totalBytes];
-                Encoding.UTF8.GetBytes(str, buff);
-                writer.BaseStream.Write(buff);
-            }
-            else
-            {
-                var bufferSize = Encoding.UTF8.GetMaxByteCount(chunkSize);
-                var byteBuffer = ArrayPool<byte>.Shared.Rent(bufferSize);
-                try
-                {
-                    int offset = 0;
-                    var sourceSpan = str.AsSpan();
-
-                    while (offset < str.Length)
-                    {
-                        int charsToProcess = Math.Min(chunkSize, str.Length - offset);
-                        int bytesWritten = Encoding.UTF8.GetBytes(sourceSpan.Slice(offset, charsToProcess), byteBuffer);
-                        writer.BaseStream.Write(byteBuffer.AsSpan(0, bytesWritten));
-                        offset += charsToProcess;
-                    }
-                }
-                finally
-                {
-                    ArrayPool<byte>.Shared.Return(byteBuffer);
-                }
-            }
-        }
 
         private static void RegisterType(string internalType)
         {

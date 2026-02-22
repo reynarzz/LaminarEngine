@@ -8,7 +8,7 @@ namespace Engine
 {
     internal class TilemapLevelConfig
     {
-        internal Guid[] LayersTextureRef { get; set; }
+        public Guid[] LayersTextureRef { get; set; }
     }
     internal class TilemapMeta : AssetMeta
     {

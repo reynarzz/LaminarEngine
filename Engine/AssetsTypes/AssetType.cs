@@ -18,6 +18,7 @@ namespace Engine
         AnimationController,
         Material,
         ShaderV2,
-        Scene
+        Scene,
+        Tilemap
     }
 }

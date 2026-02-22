@@ -45,6 +45,10 @@ namespace Engine
         }
         internal static AssetResourceBase GetAssetFromGuid(Guid guid)
         {
+            if(guid == default)
+            {
+                return null;
+            }
             return IOLayer.GetDatabase().GetAsset<AssetResourceBase>(guid);
         }
 

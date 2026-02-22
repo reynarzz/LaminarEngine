@@ -34,7 +34,7 @@ namespace Editor.Cooker
 
                 // Text
                 { ".txt", AssetType.Text },
-                { ".ldtk", AssetType.Text },
+                // { ".ldtk", AssetType.Text },
                 { ".json", AssetType.Text },
                 { ".xml", AssetType.Text },
                 { ".csv", AssetType.Text },
@@ -55,7 +55,8 @@ namespace Editor.Cooker
                 { ".animctrl", AssetType.AnimationController },
 
                 // scene
-                { ".scene", AssetType.Scene }
+                { ".scene", AssetType.Scene },
+                { ".ldtk", AssetType.Tilemap },
             };
 
             InitAssetCookers();
@@ -87,7 +88,8 @@ namespace Editor.Cooker
                 { AssetType.AnimationClip, new AnimClipProcessorEditor() },
                 { AssetType.AnimationController, new AnimControllerClipProcessorEditor() },
                 { AssetType.Material, new MaterialProcessorEditor() },
-                { AssetType.Scene, new SceneAssetProcessorEditor() }
+                { AssetType.Scene, new SceneAssetProcessorEditor() },
+                { AssetType.Tilemap, new TilemapAssetProcessor() }
             };
 
             var releaseModeAssetsProcessors = new Dictionary<AssetType, IAssetProcessor>()
@@ -102,6 +104,7 @@ namespace Editor.Cooker
                 { AssetType.AnimationController, new RawBytesAssetProcessor() }, // TODO: binary serialization
                 { AssetType.Material, new MaterialProcessorRelease() }, 
                 { AssetType.Scene, new SceneAssetProcessorRelease() },
+                { AssetType.Tilemap, new TilemapAssetProcessor() }
             };
 
             _assetCookers = new Dictionary<CookingType, AssetsCookerBase>()

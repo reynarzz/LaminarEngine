@@ -1,4 +1,5 @@
-﻿using Engine;
+﻿using Editor.Utils;
+using Engine;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -37,9 +38,8 @@ namespace Editor.Cooker
                     {
                         continue;
                     }
-                    var metaPath = filePath + Paths.ASSET_META_EXT_NAME;
 
-                    var meta = AssetUtils.GetMeta(metaPath, assetType);
+                    var meta = EditorAssetUtils.GetMetaFromAssetPath(filePath, assetType);
 
                     bool containsAssetInfo = _database.Assets.TryGetValue(meta.GUID, out var assetInfo);
 
@@ -52,6 +52,7 @@ namespace Editor.Cooker
                         isInLibrary = true;
                     }
 
+                    var metaPath = filePath + Paths.ASSET_META_EXT_NAME;
                     var latestWriteTime = File.GetLastWriteTime(filePath);
                     var metaLatestWriteTime = File.GetLastWriteTime(metaPath);
 
@@ -86,7 +87,7 @@ namespace Editor.Cooker
                             Console.WriteLine("Importing asset file: " + filePath);
 
                             // Write meta
-                            await File.WriteAllTextAsync(metaPath, JsonConvert.SerializeObject(meta, Formatting.Indented));
+                            await File.WriteAllTextAsync(metaPath, EditorJsonUtils.Serialize(meta));
 
                             _database.Assets.Add(meta.GUID, new AssetInfo()
                             {

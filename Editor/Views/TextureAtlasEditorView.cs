@@ -360,7 +360,7 @@ namespace Editor.Views
             if (ImGui.Button("Apply All", new Vector2(ImGui.GetContentRegionAvail().X, 23)))
             {
                 _meta.AtlasData = atlasData;
-                AssetUtils.WriteMeta(texture.Path, _meta);
+                EditorAssetUtils.WriteMeta(texture.Path, _meta);
 
                 EditorAssetUtils.RefreshAssetDatabase();
             }

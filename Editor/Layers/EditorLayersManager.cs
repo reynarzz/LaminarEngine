@@ -292,7 +292,7 @@ namespace Editor
                 var meta = EditorAssetUtils.GetAssetMeta(texture) as TextureMetaFile;
                 meta.Config.IsAtlas = true;
                 TextureAtlasUtils.SliceTiles(meta.AtlasData, sliceX, sliceY, texture.Width, texture.Height, pivotX, pivotY);
-                AssetUtils.WriteMeta(texture.Path, meta);
+                EditorAssetUtils.WriteMeta(texture.Path, meta);
             }
 
             var paths = new string[]

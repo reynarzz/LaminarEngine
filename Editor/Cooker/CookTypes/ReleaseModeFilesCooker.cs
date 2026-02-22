@@ -86,7 +86,7 @@ namespace Editor.Cooker
                 {
                     long startAssetBlockPos = bufWritter.BaseStream.Position;
 
-                    var meta = AssetUtils.GetMeta(filePath + Paths.ASSET_META_EXT_NAME, assetType);
+                    var meta = EditorAssetUtils.GetMetaFromAssetPath(filePath, assetType);
                     var relAssetPath = Paths.GetRelativeAssetPath(filePath);
 
                     var guidBinary = meta.GUID.ToByteArray();
