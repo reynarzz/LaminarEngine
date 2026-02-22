@@ -9,6 +9,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Editor.Cooker
 {
@@ -64,6 +65,7 @@ namespace Editor.Cooker
         public class TilemapEntity
         {
             public string Identifier { get; set; }
+
             // Instance identifier
             public string IID { get; set; }
 
@@ -77,16 +79,29 @@ namespace Editor.Cooker
         {
             public string Identifier { get; set; }
             public EntityPropertyValue Value { get; set; }
-
         }
 
         public enum PropertyValueType
         {
+            Unknown,
             String,
+            Bool,
             Int,
             Float,
             Vec2,
-            MultiLine
+            Enum,
+            Color,
+            EntityRef,
+
+            StringArray,
+            BoolArray,
+            IntArray,
+            FloatArray,
+            Vec2Array,
+            EnumArray,
+            ColorArray,
+            EntityRefArray,
+            ComplexJson
         }
 
         public struct EntityPropertyValue
@@ -131,11 +146,13 @@ namespace Editor.Cooker
             Grid based size (ivec2)
             Grid size (u32)
             Opacity (float)
-            Offset Pixels X (s32) 
-            Offset Pixels Y (s32) 
-            
+            Offset Pixels X (s32)
+            Offset Pixels Y (s32)
+
             Layer type (s32)
             Tiles count (u32)
+            Indices to draw (u32)
+
             Tiles vertices (Vertex[])
             Tiles worldPositions (vec2[])
             Bounding box (vec4)
@@ -150,6 +167,7 @@ namespace Editor.Cooker
 
         private const float DEFAULT_PIXEL_PER_UNIT = 16;
         private const int VERSION = 1;
+
         AssetProccesResult IAssetProcessor.Process(BinaryReader reader, AssetMeta meta, CookingPlatform platform)
         {
             var bytes = new byte[(int)reader.BaseStream.Length];
@@ -215,7 +233,9 @@ namespace Editor.Cooker
                             if (!_texturesMeta.TryGetValue(guid, out textureMeta))
                             {
                                 var assetPath = EditorIOLayer.Database.GetAssetInfo(guid).Path;
-                                textureMeta = EditorAssetUtils.GetMetaFromAssetPath(assetPath, AssetType.Texture) as TextureMetaFile;
+                                textureMeta =
+                                    EditorAssetUtils.GetMetaFromAssetPath(assetPath, AssetType.Texture) as
+                                        TextureMetaFile;
                                 _texturesMeta.Add(guid, textureMeta);
                             }
                         }
@@ -259,10 +279,12 @@ namespace Editor.Cooker
                     {
                         case TilemapLayerType.AutoLayer:
                         case TilemapLayerType.IntGrid:
-                            WriteLayerTiles(writer, level, j, layer, layer.AutoLayerTiles, textureMeta, ppu, ref levelBounds);
+                            WriteLayerTiles(writer, level, j, layer, layer.AutoLayerTiles, textureMeta, ppu,
+                                ref levelBounds);
                             break;
                         case TilemapLayerType.Tiles:
-                            WriteLayerTiles(writer, level, j, layer, layer.GridTiles, textureMeta, ppu, ref levelBounds);
+                            WriteLayerTiles(writer, level, j, layer, layer.GridTiles, textureMeta, ppu,
+                                ref levelBounds);
                             break;
                         case TilemapLayerType.Entities:
                             WriteEntityInstances(writer, level, layer, ppu);
@@ -278,53 +300,158 @@ namespace Editor.Cooker
             _texturesMeta.Clear();
         }
 
-        private void WriteEntityInstances(BinaryWriter writer, ldtk.Level level, ldtk.LayerInstance layer, float pixelPerUnit)
+        private void WriteEntityInstances(BinaryWriter writer, ldtk.Level level, ldtk.LayerInstance layer,
+            float pixelPerUnit)
         {
+            T[] ParseJsonArray<T>(object value)
+            {
+                if (value != null)
+                {
+                    return JsonConvert.DeserializeObject<T[]>(value.ToString());
+                }
+
+                return Array.Empty<T>();
+            }
+
             for (int i = 0; i < layer.EntityInstances.Length; i++)
             {
                 var entity = layer.EntityInstances[i];
+                
+                EditorUtils.WriteString(writer, entity.Identifier);
+                
+                writer.Write(entity.Tags.Length);
+                
+                foreach (var tag in entity.Tags)
+                {
+                    EditorUtils.WriteString(writer, tag);
+                }
+                
                 var worldPosition = ConvertToWorld(entity.Px[0], entity.Px[1], pixelPerUnit, level, layer);
-
+                EditorUtils.WriteStruct(writer, worldPosition);
+                
                 for (int j = 0; j < entity.FieldInstances.Length; j++)
                 {
                     var field = entity.FieldInstances[j];
                     EditorUtils.WriteString(writer, field.Identifier);
+                    var ValType = field.Type;
+                    var propType = ParsePropertyType(field.Type);
+                    Debug.Log(ValType);
 
-                    if (field.Value is GridPoint gridPoint)
+                    if (propType == PropertyValueType.Vec2)
                     {
-                        var pointWorldPos = ConvertToWorld(gridPoint.Cx, gridPoint.Cy, pixelPerUnit, level, layer, true);
-
+                        var gridPoint = field.Value as GridPoint;
+                        var pointWorldPos =
+                            ConvertToWorld(gridPoint.Cx, gridPoint.Cy, pixelPerUnit, level, layer, true);
                     }
-                    else if (field.Value is int intVal)
+                    else if (propType == PropertyValueType.Float)
                     {
-
                     }
-                    else if (field.Value is float floatVal)
+                    else if (propType == PropertyValueType.Bool)
                     {
-
+                        bool boolVal = field.Value != null ? (bool)field.Value : false;
                     }
-                    else if (field.Value is bool boolVal)
+                    else if (propType == PropertyValueType.Int)
                     {
-
+                        int intVal = field.Value != null ? (int)(long)field.Value : 0;
                     }
-                    else if (field.Value is string strVal)
+                    else if (propType == PropertyValueType.Enum)
                     {
-                        // If is color
-                        if (strVal.StartsWith("#") && strVal.Length == 7)
+                        var enumFieldName = field.Type.Substring(field.Type.IndexOf('.') + 1);
+                        var enumVal = field?.Value?.ToString() ?? string.Empty;
+
+                        if (string.IsNullOrEmpty(enumVal))
                         {
-                            // Save as color (u32)
                         }
-                        else
+                    }
+                    else if (propType == PropertyValueType.EnumArray)
+                    {
+                        var startIndex = field.Type.IndexOf('.') + 1;
+                        var count = field.Type.LastIndexOf('>') - startIndex;
+                        var enumFieldName = field.Type.Substring(startIndex, count);
+                        
+                        var enumArrVals = ParseJsonArray<string>(field.Value);
+                    }
+                    else if (propType == PropertyValueType.Vec2Array)
+                    {
+                        var points = ParseJsonArray<GridPoint>(field.Value);
+                        
+                        foreach (var point in points)
                         {
-                            // Save as enum (s32)
+                            var pointWorldPos = ConvertToWorld(point.Cx, point.Cy, pixelPerUnit, level, layer, true);
                         }
+                    }
+                    else if (propType == PropertyValueType.IntArray)
+                    {
+                        var arrVal = ParseJsonArray<int>(field.Value);
+                    }
+                    else if (propType == PropertyValueType.BoolArray)
+                    {
+                        var arrVal = ParseJsonArray<bool>(field.Value);
+                    }
+                    else if (propType == PropertyValueType.FloatArray)
+                    {
+                        var arrVal = ParseJsonArray<float>(field.Value);
+                    }
+                    else if (propType == PropertyValueType.StringArray)
+                    {
+                        var arrVal = ParseJsonArray<string>(field.Value);
+                    }
+                    else if (propType == PropertyValueType.Color)
+                    {
+                        if (field.Value != null)
+                        {
+                            HexToRgbaUint(field.Value.ToString());
+                        }
+                    }
+                    else if (propType == PropertyValueType.String)
+                    {
                     }
                 }
             }
         }
 
+        private PropertyValueType ParsePropertyType(string type)
+        {
+            if (type.StartsWith("LocalEnum."))
+            {
+                return PropertyValueType.Enum;
+            }
+            else if (type.StartsWith("Array<LocalEnum."))
+            {
+                return PropertyValueType.EnumArray;
+            }
+            else if (type.StartsWith('#') && type.Length == 7)
+            {
+                return PropertyValueType.Color;
+            }
+
+            switch (type)
+            {
+                case "Int":
+                    return PropertyValueType.Int;
+                case "Float":
+                    return PropertyValueType.Float;
+                case "Bool":
+                    return PropertyValueType.Bool;
+                case "String":
+                    return PropertyValueType.String;
+                case "Array<Point>":
+                    return PropertyValueType.Vec2Array;
+                case "Array<Int>":
+                    return PropertyValueType.IntArray;
+                case "Array<Bool>":
+                    return PropertyValueType.BoolArray;
+                case "Array<Float>":
+                    return PropertyValueType.FloatArray;
+                case "Point":
+                    return PropertyValueType.Vec2;
+                default:
+                    return PropertyValueType.Unknown;
+            }
+        }
+
         private void WriteLayerTiles(BinaryWriter writer, ldtk.Level level, int layerIndex, ldtk.LayerInstance layer,
-                                     ldtk.TileInstance[] tiles, TextureMetaFile texture, float ppu, ref Bounds levelBounds)
+            ldtk.TileInstance[] tiles, TextureMetaFile texture, float ppu, ref Bounds levelBounds)
         {
             int indexToDraw = tiles.Length * 6;
             var layerBounds = Bounds.GetInitialized();
@@ -332,6 +459,9 @@ namespace Editor.Cooker
 
             // Tiles count
             writer.Write(tiles.Length);
+
+            // Indices to draw
+            writer.Write(indexToDraw);
 
             for (int i = 0; i < tiles.Length; i++)
             {
@@ -349,7 +479,8 @@ namespace Editor.Cooker
 
                 tilesPositions[i] = new vec2(position.x, position.y);
 
-                WriteTile(writer, new Tile((int)tile.T, isFlippedX, isFlippedY), position, texture, ppu, ref layerBounds);
+                WriteTile(writer, new Tile((int)tile.T, isFlippedX, isFlippedY), position, texture, ppu,
+                    ref layerBounds);
             }
 
             if (tiles.Length > 0)
@@ -371,7 +502,8 @@ namespace Editor.Cooker
             levelBounds.Min = new vec3(Math.Min(min.x, layerBounds.Min.x), Math.Min(min.y, layerBounds.Min.y), 0);
         }
 
-        public void WriteTile(BinaryWriter writer, Tile tile, vec3 position, TextureMetaFile texture, float ppu, ref Bounds layerBounds)
+        public void WriteTile(BinaryWriter writer, Tile tile, vec3 position, TextureMetaFile texture, float ppu,
+            ref Bounds layerBounds)
         {
             var chunk = TextureAtlasCell.DefaultChunk;
 
@@ -384,9 +516,9 @@ namespace Editor.Cooker
             var height = (float)chunk.Height / ppu;
 
             var tileMatrix = new mat4(new vec4(1, 0, 0, position.x),
-                                      new vec4(0, 1, 0, position.y),
-                                      new vec4(0, 0, 1, position.z),
-                                      new vec4(0, 0, 0, 1));
+                new vec4(0, 1, 0, position.y),
+                new vec4(0, 0, 1, position.z),
+                new vec4(0, 0, 0, 1));
 
             chunk.Uvs = QuadUV.FlipUV(chunk.Uvs, tile.FlipX, tile.FlipY);
 
@@ -402,7 +534,8 @@ namespace Editor.Cooker
         }
 
         //Convert to world position, pixel unit division must be applied later.
-        private vec2 ConvertToWorld(long x, long y, float pixelPerUnit, ldtk.Level level, LayerInstance layer, bool isGridPos = false)
+        private vec2 ConvertToWorld(long x, long y, float pixelPerUnit, ldtk.Level level, LayerInstance layer,
+            bool isGridPos = false)
         {
             // NOTE: Points from 'entity fields data' are in grid position.
             if (isGridPos)
@@ -410,6 +543,7 @@ namespace Editor.Cooker
                 x *= layer.GridSize;
                 y *= layer.GridSize;
             }
+
             return new vec2(level.WorldX + x + layer.PxOffsetX, -level.WorldY + -y + -layer.PxOffsetY) / pixelPerUnit;
         }
 
@@ -432,6 +566,5 @@ namespace Editor.Cooker
             var b = byte.Parse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
             return (uint)(ColorPacketRGBA)new Color32(r, g, b, 255);
         }
-
     }
 }
