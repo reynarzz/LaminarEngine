@@ -1,12 +1,10 @@
 {
   "Config": {
     "IsAtlas": false,
-    "Mode": 1,
-    "Filter": 0,
+    "Mode": "Repeat",
+    "Filter": "Nearest",
     "PixelPerUnit": 100
   },
-  "AtlasData": {
-    "_chunks": null
-  },
+  "AtlasData": {},
   "GUID": "e0b82024-21a1-46f9-bbb8-67497e8460e3"
 }

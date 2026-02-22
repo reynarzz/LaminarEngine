@@ -207,6 +207,7 @@ namespace Game
 
         private vec2 ConvertToWorld(long x, long y, Level level, float pixelPerUnit, LayerInstance layer, bool isGridPos = false)
         {
+            // NOTE: Points from entity fields data are in grid position
             if (isGridPos)
             {
                 x *= layer.GridSize;

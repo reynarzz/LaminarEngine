@@ -45,7 +45,7 @@ namespace Engine
         }
         internal static AssetResourceBase GetAssetFromGuid(Guid guid)
         {
-            if(guid == default)
+            if(guid == Guid.Empty)
             {
                 return null;
             }

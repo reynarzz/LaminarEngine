@@ -1,5 +1,6 @@
 ﻿using Editor.Utils;
 using Engine;
+using Engine.IO;
 using GlmNet;
 using ldtk;
 using System;
@@ -140,6 +141,13 @@ namespace Editor.Cooker
             Bounding box (vec4)
         */
 
+        // TODO: FIX:
+        // 1-Meta arrays for levels and layers should be always in sync.
+        // 2-I have to read texture metadata directly from here since AssetDatabase is not ready before importing all the assets.
+
+
+        private readonly Dictionary<Guid, TextureMetaFile> _texturesMeta = new();
+
         private const float DEFAULT_PIXEL_PER_UNIT = 16;
         private const int VERSION = 1;
         AssetProccesResult IAssetProcessor.Process(BinaryReader reader, AssetMeta meta, CookingPlatform platform)
@@ -196,8 +204,24 @@ namespace Editor.Cooker
                 for (int j = 0; j < level.LayerInstances.Length; j++)
                 {
                     var layer = level.LayerInstances[j];
-                    var texture = levelConfig != null ? Assets.GetAssetFromGuid(levelConfig.LayersTextureRef[j]) as Texture2D : null;
-                    float ppu = texture?.PixelPerUnit ?? DEFAULT_PIXEL_PER_UNIT;
+                    TextureMetaFile textureMeta = null;
+
+                    if (levelConfig != null && levelConfig.LayersTextureRef.Length > j)
+                    {
+                        var guid = levelConfig.LayersTextureRef[j];
+
+                        if (guid != Guid.Empty)
+                        {
+                            if (!_texturesMeta.TryGetValue(guid, out textureMeta))
+                            {
+                                var assetPath = EditorIOLayer.Database.GetAssetInfo(guid).Path;
+                                textureMeta = EditorAssetUtils.GetMetaFromAssetPath(assetPath, AssetType.Texture) as TextureMetaFile;
+                                _texturesMeta.Add(guid, textureMeta);
+                            }
+                        }
+                    }
+
+                    float ppu = textureMeta?.Config?.PixelPerUnit ?? DEFAULT_PIXEL_PER_UNIT;
 
                     // Layer Identifier
                     EditorUtils.WriteString(writer, layer.Identifier);
@@ -235,13 +259,13 @@ namespace Editor.Cooker
                     {
                         case TilemapLayerType.AutoLayer:
                         case TilemapLayerType.IntGrid:
-                            WriteLayerTiles(writer, level, j, layer, layer.AutoLayerTiles, texture, ppu, ref levelBounds);
+                            WriteLayerTiles(writer, level, j, layer, layer.AutoLayerTiles, textureMeta, ppu, ref levelBounds);
                             break;
                         case TilemapLayerType.Tiles:
-                            WriteLayerTiles(writer, level, j, layer, layer.GridTiles, texture, ppu, ref levelBounds);
+                            WriteLayerTiles(writer, level, j, layer, layer.GridTiles, textureMeta, ppu, ref levelBounds);
                             break;
                         case TilemapLayerType.Entities:
-                            WriteEntityInstances(layer);
+                            WriteEntityInstances(writer, level, layer, ppu);
                             break;
                         default:
                             break;
@@ -250,39 +274,57 @@ namespace Editor.Cooker
 
                 EditorUtils.WriteStruct(writer, levelBounds);
             }
+
+            _texturesMeta.Clear();
         }
 
-        private void WriteEntityInstances(ldtk.LayerInstance layer)
+        private void WriteEntityInstances(BinaryWriter writer, ldtk.Level level, ldtk.LayerInstance layer, float pixelPerUnit)
         {
-            for (int k = 0; k < layer.EntityInstances.Length; k++)
+            for (int i = 0; i < layer.EntityInstances.Length; i++)
             {
-                var entity = layer.EntityInstances[k];
+                var entity = layer.EntityInstances[i];
+                var worldPosition = ConvertToWorld(entity.Px[0], entity.Px[1], pixelPerUnit, level, layer);
 
+                for (int j = 0; j < entity.FieldInstances.Length; j++)
+                {
+                    var field = entity.FieldInstances[j];
+                    EditorUtils.WriteString(writer, field.Identifier);
+
+                    if (field.Value is GridPoint gridPoint)
+                    {
+                        var pointWorldPos = ConvertToWorld(gridPoint.Cx, gridPoint.Cy, pixelPerUnit, level, layer, true);
+
+                    }
+                    else if (field.Value is int intVal)
+                    {
+
+                    }
+                    else if (field.Value is float floatVal)
+                    {
+
+                    }
+                    else if (field.Value is bool boolVal)
+                    {
+
+                    }
+                    else if (field.Value is string strVal)
+                    {
+                        // If is color
+                        if (strVal.StartsWith("#") && strVal.Length == 7)
+                        {
+                            // Save as color (u32)
+                        }
+                        else
+                        {
+                            // Save as enum (s32)
+                        }
+                    }
+                }
             }
-        }
-
-        public static uint HexToRgbaUint(string hex)
-        {
-            if (string.IsNullOrWhiteSpace(hex))
-            {
-                throw new ArgumentException("Invalid hex color.");
-            }
-
-            hex = hex.TrimStart('#');
-
-            if (hex.Length != 6)
-            {
-                throw new ArgumentException("Hex color must be 6 characters (RRGGBB).");
-            }
-
-            var r = byte.Parse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
-            var g = byte.Parse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
-            var b = byte.Parse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
-            return (uint)(ColorPacketRGBA)new Color32(r, g, b, 255);
         }
 
         private void WriteLayerTiles(BinaryWriter writer, ldtk.Level level, int layerIndex, ldtk.LayerInstance layer,
-                                     ldtk.TileInstance[] tiles, Texture2D texture, float ppu, ref Bounds levelBounds)
+                                     ldtk.TileInstance[] tiles, TextureMetaFile texture, float ppu, ref Bounds levelBounds)
         {
             int indexToDraw = tiles.Length * 6;
             var layerBounds = Bounds.GetInitialized();
@@ -329,13 +371,13 @@ namespace Editor.Cooker
             levelBounds.Min = new vec3(Math.Min(min.x, layerBounds.Min.x), Math.Min(min.y, layerBounds.Min.y), 0);
         }
 
-        public void WriteTile(BinaryWriter writer, Tile tile, vec3 position, Texture2D texture, float ppu, ref Bounds layerBounds)
+        public void WriteTile(BinaryWriter writer, Tile tile, vec3 position, TextureMetaFile texture, float ppu, ref Bounds layerBounds)
         {
             var chunk = TextureAtlasCell.DefaultChunk;
 
-            if (texture)
+            if (texture != null)
             {
-                chunk = Assets.GetSpriteAtlas(texture.Path)?.GetSprite(tile.Index).GetAtlasCell() ?? TextureAtlasCell.DefaultChunk;
+                chunk = texture?.AtlasData?.GetCell(tile.Index) ?? TextureAtlasCell.DefaultChunk;
             }
 
             var width = (float)chunk.Width / ppu;
@@ -360,14 +402,36 @@ namespace Editor.Cooker
         }
 
         //Convert to world position, pixel unit division must be applied later.
-        private vec2 ConvertToWorld_NoPixelUnit(long x, long y, ldtk.Level level, LayerInstance layer, bool isGridPos = false)
+        private vec2 ConvertToWorld(long x, long y, float pixelPerUnit, ldtk.Level level, LayerInstance layer, bool isGridPos = false)
         {
+            // NOTE: Points from 'entity fields data' are in grid position.
             if (isGridPos)
             {
                 x *= layer.GridSize;
                 y *= layer.GridSize;
             }
-            return new vec2(level.WorldX + x + layer.PxOffsetX, -level.WorldY + -y + -layer.PxOffsetY);
+            return new vec2(level.WorldX + x + layer.PxOffsetX, -level.WorldY + -y + -layer.PxOffsetY) / pixelPerUnit;
         }
+
+        public static uint HexToRgbaUint(string hex)
+        {
+            if (string.IsNullOrWhiteSpace(hex))
+            {
+                throw new ArgumentException("Invalid hex color.");
+            }
+
+            hex = hex.TrimStart('#');
+
+            if (hex.Length != 6)
+            {
+                throw new ArgumentException("Hex color must be 6 characters (RRGGBB).");
+            }
+
+            var r = byte.Parse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
+            var g = byte.Parse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
+            var b = byte.Parse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
+            return (uint)(ColorPacketRGBA)new Color32(r, g, b, 255);
+        }
+
     }
 }

@@ -7,14 +7,14 @@ namespace Editor.Cooker
 {
     public class AssetsCooker
     {
-        private Dictionary<string, AssetType> _assetsTypes;
+        private readonly OrderedDictionary<string, AssetType> _assetsTypes;
         private Dictionary<CookingType, AssetsCookerBase> _assetCookers;
 
         private AssetsDatabaseInfo _databaseInfo;
 
         public AssetsCooker()
         {
-            _assetsTypes = new Dictionary<string, AssetType>(StringComparer.OrdinalIgnoreCase)
+            _assetsTypes = new(StringComparer.OrdinalIgnoreCase)
             {
                 // Image
                 { ".png", AssetType.Texture },
@@ -123,8 +123,14 @@ namespace Editor.Cooker
 
             files.AddRange(cookersFiles);
 
-            var selectedFiles = files.Where(path => _assetsTypes.TryGetValue(Path.GetExtension(path), out _))
-                                     .Select(path => (path: Paths.ClearPathSeparation(path), assetType: _assetsTypes[Path.GetExtension(path)]));
+            var extensionOrder = _assetsTypes.Keys.Select((ext, index) => new { ext, index })
+                                                  .ToDictionary(x => x.ext, x => x.index, StringComparer.OrdinalIgnoreCase);
+
+            var selectedFiles = files.Where(path => extensionOrder.ContainsKey(Path.GetExtension(path)))
+                                     .Select(path => (path: Paths.ClearPathSeparation(path), assetType: _assetsTypes[Path.GetExtension(path)],
+                                                                                             order: extensionOrder[Path.GetExtension(path)]))
+                                     .OrderBy(x => x.order)
+                                     .Select(x => (x.path, x.assetType));
 
             if (options.Type == CookingType.ReleaseMode && options.MatchingFiles != null && options.MatchingFiles.Length > 0)
             {
