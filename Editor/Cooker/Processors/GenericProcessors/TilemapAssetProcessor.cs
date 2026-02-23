@@ -72,7 +72,7 @@ namespace Editor.Cooker
             public vec2 Pivot { get; set; }
             public string[] Tags { get; set; }
             public ivec2 SizeInPixels { get; set; }
-            public ivec2 WorldPosition { get; set; }
+            public vec2 WorldPosition { get; set; }
         }
 
         public class EntityProperty
@@ -102,8 +102,7 @@ namespace Editor.Cooker
             EnumArray,
             ColorArray,
             EntityRefArray,
-            TileArray,
-            ComplexJson
+            TileArray
         }
 
         public struct EntityPropertyValue
@@ -287,7 +286,7 @@ namespace Editor.Cooker
 
                             if (EditorIOLayer.Database != null)
                             {
-                                assetPath = EditorIOLayer.Database.GetAssetInfo(guid).Path;
+                                assetPath = EditorPaths.GetAbsolutePathSafe(EditorIOLayer.Database.GetAssetInfo(guid).Path);
                             }
                             else
                             {
@@ -752,8 +751,7 @@ namespace Editor.Cooker
 
                 tilesPositions[i] = new vec2(position.x, position.y);
 
-                WriteTile(writer, new Tile((int)tile.T, isFlippedX, isFlippedY), position, texture, ppu,
-                    ref layerBounds);
+                WriteTile(writer, new Tile((int)tile.T, isFlippedX, isFlippedY), position, texture, ppu, ref layerBounds);
             }
 
             if (tiles.Length > 0)
@@ -775,23 +773,22 @@ namespace Editor.Cooker
             levelBounds.Min = new vec3(Math.Min(min.x, layerBounds.Min.x), Math.Min(min.y, layerBounds.Min.y), 0);
         }
 
-        public void WriteTile(BinaryWriter writer, Tile tile, vec3 position, TextureMetaFile texture, float ppu,
-            ref Bounds layerBounds)
+        public void WriteTile(BinaryWriter writer, Tile tile, vec3 position, TextureMetaFile meta, float ppu, ref Bounds layerBounds)
         {
             var chunk = TextureAtlasCell.DefaultChunk;
 
-            if (texture != null)
+            if (meta != null)
             {
-                chunk = texture?.AtlasData?.GetCell(tile.Index) ?? TextureAtlasCell.DefaultChunk;
+                chunk = meta?.AtlasData?.GetCell(tile.Index) ?? TextureAtlasCell.DefaultChunk;
             }
 
             var width = (float)chunk.Width / ppu;
             var height = (float)chunk.Height / ppu;
 
-            var tileMatrix = new mat4(new vec4(1, 0, 0, position.x),
-                new vec4(0, 1, 0, position.y),
-                new vec4(0, 0, 1, position.z),
-                new vec4(0, 0, 0, 1));
+            var tileMatrix = new mat4(new vec4(1, 0, 0, 0),
+                                      new vec4(0, 1, 0, 0),
+                                      new vec4(0, 0, 1, 0),
+                                      new vec4(position.x, position.y, position.z, 1));
 
             chunk.Uvs = QuadUV.FlipUV(chunk.Uvs, tile.FlipX, tile.FlipY);
 
@@ -824,7 +821,7 @@ namespace Editor.Cooker
         {
             if (string.IsNullOrWhiteSpace(hex))
             {
-                throw new ArgumentException("Invalid hex color.");
+                return uint.MaxValue;
             }
 
             hex = hex.TrimStart('#');

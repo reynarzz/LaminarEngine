@@ -88,6 +88,11 @@ namespace Editor
 
         internal static string GetAbsolutePathSafe(string relativePath)
         {
+            if (string.IsNullOrEmpty(relativePath))
+            {
+                Debug.Error("Path is empty");
+                return string.Empty;
+            }
             string absoluteAssetPath = null;
             if (!relativePath.StartsWith(CookerPaths.INTERNAL_ASSET_FOLDER_NAME))
             {
