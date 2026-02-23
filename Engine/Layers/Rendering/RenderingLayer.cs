@@ -70,12 +70,14 @@ namespace Engine.Layers
 
         internal static void PushRenderer(Renderer renderer)
         {
+            renderer.RendererData.OnDestroyRenderer -= OnRendererDestroyed;
             renderer.RendererData.OnDestroyRenderer += OnRendererDestroyed;
             _renderersById.Add(renderer.GetID(), renderer.RendererData as RendererData2D);
         }
 
         internal static void PushUIRenderer(UIElement element)
         {
+            element.RendererData.OnDestroyRenderer -= OnUIRendererDestroyed;
             element.RendererData.OnDestroyRenderer += OnUIRendererDestroyed;
             _uiRenderersById.Add(element.GetID(), element.RendererData as RendererData2D);
         }

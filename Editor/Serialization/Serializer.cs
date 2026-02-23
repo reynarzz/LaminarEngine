@@ -100,7 +100,11 @@ namespace Editor.Serialization
                     {
                         return SerializedType.AnimatorControllerAsset;
                     }
-
+                    else if (type.IsAssignableTo(typeof(TilemapAsset)))
+                    {
+                        return SerializedType.Tilemap;
+                    }
+                    
                     return SerializedType.AssetFlag;
                 }
                 else

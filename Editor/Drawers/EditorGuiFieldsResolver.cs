@@ -9,7 +9,6 @@ using Engine.Utils;
 using System.Collections;
 using Engine;
 using Engine.Layers;
-using Engine;
 
 namespace Editor.Utils
 {
@@ -1141,7 +1140,7 @@ namespace Editor.Utils
                 return;
             }
 
-            void RenderItemsInColumns(IEnumerable<(string label, Action action)> items)
+            void RenderItemsInColumns(IEnumerable<(string label, Action action, string path)> items)
             {
                 if (!items.Any())
                     return;
@@ -1160,6 +1159,7 @@ namespace Editor.Utils
                         item.action();
                         ImGui.CloseCurrentPopup();
                     }
+                    ImGui.SetItemTooltip(item.path);
 
                     count++;
                 }
@@ -1188,7 +1188,7 @@ namespace Editor.Utils
                     {
                         var (id, info) = a;
                         string label = $"{Path.GetFileName(info.Path)}##{id}{info.Path}";
-                        return (label, (Action)(() => setValue(Assets.GetMaterial(info.Path))));
+                        return (label, (Action)(() => setValue(Assets.GetMaterial(info.Path))), info.Path);
                     });
                     RenderItemsInColumns(items);
                 }
@@ -1210,7 +1210,7 @@ namespace Editor.Utils
                     {
                         var (id, info) = a;
                         string label = $"{Path.GetFileName(info.Path)}##{id}";
-                        return (label, (Action)(() => setValue(Assets.GetAudioClip(info.Path))));
+                        return (label, (Action)(() => setValue(Assets.GetAssetFromGuid(id))), info.Path);
                     });
                     RenderItemsInColumns(items);
                 }
@@ -1231,9 +1231,24 @@ namespace Editor.Utils
                     {
                         var (id, info) = a;
                         string label = $"{Path.GetFileName(info.Path)}##{id}";
-                        return (label, (Action)(() => setValue(Assets.GetTexture(info.Path))));
+                        return (label, (Action)(() => setValue(Assets.GetTexture(info.Path))), info.Path);
                     });
                     RenderItemsInColumns(items);
+                }
+                else if (valueType == typeof(TilemapAsset))
+                {
+                    var assets = IOLayer.Database.Disk.GetAssetsInfo(AssetType.Tilemap);
+                    var path = string.Empty;
+
+                    var items = assets.Select(a =>
+                    {
+                        var (id, info) = a;
+                        string label = $"{Path.GetFileName(info.Path)}##{id}";
+
+                        return (label, (Action)(() => setValue(Assets.GetAssetFromGuid(id))), info.Path);
+                    });
+                    RenderItemsInColumns(items);
+
                 }
             }
 
@@ -1266,7 +1281,7 @@ namespace Editor.Utils
                 //}
 
                 var assets = IOLayer.Database.Disk.GetAssetsInfo(Engine.AssetType.Texture);
-                var spriteItems = new List<(string label, Action action)>();
+                var spriteItems = new List<(string label, Action action, string path)>();
 
                 foreach (var (id, info) in assets)
                 {
@@ -1288,8 +1303,7 @@ namespace Editor.Utils
                         spriteItems.Add((label, () =>
                         {
                             setValue(atlas.GetSprite(iCopy));
-                        }
-                        ));
+                        }, info.Path));
                     }
                 }
 

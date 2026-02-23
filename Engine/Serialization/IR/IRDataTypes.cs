@@ -318,6 +318,7 @@ namespace Engine.Serialization
         AnimatorControllerAsset = AssetFlag | EObjectFlag | (3006UL << 20),
         RenderTextureAsset = AssetFlag | EObjectFlag | (3007UL << 20),
         ScriptableObject = AssetFlag | EObjectFlag | (3008UL << 20),
+        Tilemap = AssetFlag | EObjectFlag | (3009UL << 20),
 
         // Collections and classes
         ComplexCollection = CollectionFlag | (4000UL << 20),

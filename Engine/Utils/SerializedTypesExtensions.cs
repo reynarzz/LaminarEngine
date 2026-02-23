@@ -34,6 +34,7 @@ namespace Engine.Utils
                 case SerializedType.AnimatorControllerAsset:
                 case SerializedType.RenderTextureAsset:
                 case SerializedType.ScriptableObject:
+                case SerializedType.Tilemap:
                     return true;
             }
 
