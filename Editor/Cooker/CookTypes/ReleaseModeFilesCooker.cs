@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Editor.Utils;
 
 namespace Editor.Cooker
 {
@@ -89,15 +90,8 @@ namespace Editor.Cooker
                     var meta = EditorAssetUtils.GetMetaFromAssetPath(filePath, assetType);
                     var relAssetPath = Paths.GetRelativeAssetPath(filePath);
 
-                    var guidBinary = meta.GUID.ToByteArray();
-                    // asset guid size
-                    bufWritter.Write(guidBinary.Length);
-                    //if (guidBinary.Length != 16)
-                    //{
-                    //    throw new Exception("Bigger than 16");
-                    //}
-                    // asset guid
-                    bufWritter.Write(guidBinary);
+                    // asset guid 
+                    EditorUtils.WriteGuidNoAlloc(bufWritter, meta.GUID);
 
                     var pathBytes = Encoding.UTF8.GetBytes(relAssetPath);
 
@@ -167,7 +161,7 @@ namespace Editor.Cooker
 
                     long assetEndPos = bufWritter.BaseStream.Position;
 
-                    // ---- Set table position to write asset info
+                    // Set table position to write asset info
                     bufWritter.BaseStream.Position = currentFileIdPosition;
 
 

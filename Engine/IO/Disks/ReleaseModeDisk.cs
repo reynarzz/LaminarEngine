@@ -1,4 +1,5 @@
 ﻿using Engine;
+using Engine.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -76,8 +77,7 @@ namespace Engine.IO
 
                 _reader.BaseStream.Position = assetBlockLoc;
 
-                int guidSize = _reader.ReadInt32();
-                var guid = new Guid(_reader.ReadBytes(guidSize));
+                Guid guid = FileUtils.ReadGuidNoAlloc(_reader);
 
                 int pathSize = _reader.ReadInt32();
 

@@ -93,7 +93,7 @@ namespace Editor.Cooker
             Color,
             EntityRef,
             Tile,
-            
+
             StringArray,
             BoolArray,
             IntArray,
@@ -124,14 +124,22 @@ namespace Editor.Cooker
             public string EnumValStr { get; set; }
         }
 
+        [StructLayout(LayoutKind.Sequential)]
         public struct EntityRef
         {
-            public Guid entityIid { get; set; }
-            public Guid layerIid { get; set; }
-            public Guid levelIid { get; set; }
-            public Guid worldIid { get; set; }
+            public Guid entityIid;
+            public Guid layerIid;
+            public Guid levelIid;
+            public Guid worldIid;
         }
 
+        [StructLayout(LayoutKind.Sequential)]
+        public struct TileRef
+        {
+            public int TilesetUid;
+            public ivec2 SizePx;
+            public ivec2 PositionPx;
+        }
         /* Tilemap file format
         Version char[4]
 
@@ -175,6 +183,17 @@ namespace Editor.Cooker
             Tiles worldPositions (vec2[])
             Bounding box (vec4)
         */
+
+        /* Entity format
+            identifier str len (u32)
+            identifier (string)
+            iid (guid)
+            tags count (s32)
+            tags (string)
+            worldPosition (vec2)
+            pivot (vec2)
+            properties data count (s32)
+         */
 
         // TODO: FIX:
         // 1-Meta arrays for levels and layers should be always in sync.
@@ -264,9 +283,7 @@ namespace Editor.Cooker
                             if (!_texturesMeta.TryGetValue(guid, out textureMeta))
                             {
                                 var assetPath = EditorIOLayer.Database.GetAssetInfo(guid).Path;
-                                textureMeta =
-                                    EditorAssetUtils.GetMetaFromAssetPath(assetPath, AssetType.Texture) as
-                                        TextureMetaFile;
+                                textureMeta = EditorAssetUtils.GetMetaFromAssetPath(assetPath, AssetType.Texture) as TextureMetaFile;
                                 _texturesMeta.Add(guid, textureMeta);
                             }
                         }
@@ -310,11 +327,10 @@ namespace Editor.Cooker
                     {
                         case TilemapLayerType.AutoLayer:
                         case TilemapLayerType.IntGrid:
-                            WriteLayerTiles(writer, level, j, layer, layer.AutoLayerTiles, textureMeta, ppu,
-                                ref levelBounds);
+                            WriteLayerTiles(writer, level, layer, layer.AutoLayerTiles, textureMeta, ppu, ref levelBounds);
                             break;
                         case TilemapLayerType.Tiles:
-                            WriteLayerTiles(writer, level, j, layer, layer.GridTiles, textureMeta, ppu,
+                            WriteLayerTiles(writer, level, layer, layer.GridTiles, textureMeta, ppu,
                                 ref levelBounds);
                             break;
                         case TilemapLayerType.Entities:
@@ -331,8 +347,7 @@ namespace Editor.Cooker
             _texturesMeta.Clear();
         }
 
-        private void WriteEntityInstances(BinaryWriter writer, ldtk.Level level, ldtk.LayerInstance layer,
-            float pixelPerUnit)
+        private void WriteEntityInstances(BinaryWriter writer, ldtk.Level level, ldtk.LayerInstance layer, float pixelPerUnit)
         {
             T[] ParseJsonArray<T>(object value)
             {
@@ -356,12 +371,13 @@ namespace Editor.Cooker
                 }
             }
 
-            for (int i = 0; i < layer.EntityInstances.Length; i++)
+            foreach (var entity in layer.EntityInstances)
             {
-                var entity = layer.EntityInstances[i];
-
                 // Entity identifier
                 EditorUtils.WriteString(writer, entity.Identifier);
+
+                // Write entity iiD
+                EditorUtils.WriteGuidNoAlloc(writer, Guid.Parse(entity.Iid));
 
                 // Tags count
                 writer.Write(entity.Tags.Length);
@@ -377,13 +393,13 @@ namespace Editor.Cooker
                 // Entity position
                 EditorUtils.WriteStruct(writer, worldPosition);
 
-                // Properties count
+                // Write pivot
+                EditorUtils.WriteStruct(writer, new vec2((float)entity.Pivot[0], (float)entity.Pivot[1]));
+
+                // Write Properties count
                 writer.Write(entity.FieldInstances.Length);
-
-                for (int j = 0; j < entity.FieldInstances.Length; j++)
+                foreach (var field in entity.FieldInstances)
                 {
-                    var field = entity.FieldInstances[j];
-
                     // Field identifier
                     EditorUtils.WriteString(writer, field.Identifier);
 
@@ -394,25 +410,26 @@ namespace Editor.Cooker
                     writer.Write((int)propType);
 
                     Debug.Log(ValType);
-
-                    if (propType == PropertyValueType.Vec2)
+                    if (propType == PropertyValueType.Color)
                     {
-                        vec2 pointWorldPos = default;
-
+                        // Write Color
+                        writer.Write(DeserializeColorSafe(field.Value));
+                    }
+                    else if (propType == PropertyValueType.String)
+                    {
+                        string str = null;
                         if (field.Value != null)
                         {
-                            var gridPoint = JsonConvert.DeserializeObject<GridPoint>(field.Value.ToString());
-                            pointWorldPos =
-                                ConvertToWorld(gridPoint.Cx, gridPoint.Cy, pixelPerUnit, level, layer, true);
+                            str = field.Value.ToString();
                         }
 
-                        // Write point coords.
-                        EditorUtils.WriteStruct(writer, pointWorldPos);
+                        // Write string
+                        EditorUtils.WriteString(writer, str);
                     }
                     else if (propType == PropertyValueType.Float)
                     {
                         float floatVal = field.Value != null ? Convert.ToSingle(field.Value) : 0;
-                        
+
                         // Write Float
                         writer.Write(floatVal);
                     }
@@ -429,6 +446,19 @@ namespace Editor.Cooker
                         // Write int 
                         writer.Write(intVal);
                     }
+                    else if (propType == PropertyValueType.Vec2)
+                    {
+                        vec2 pointWorldPos = default;
+
+                        if (field.Value != null)
+                        {
+                            var gridPoint = JsonConvert.DeserializeObject<GridPoint>(field.Value.ToString());
+                            pointWorldPos = ConvertToWorld(gridPoint.Cx, gridPoint.Cy, pixelPerUnit, level, layer, true);
+                        }
+
+                        // Write point coords.
+                        EditorUtils.WriteStruct(writer, pointWorldPos);
+                    }
                     else if (propType == PropertyValueType.Enum)
                     {
                         var enumFieldName = field.Type.Substring(field.Type.IndexOf('.') + 1);
@@ -440,19 +470,19 @@ namespace Editor.Cooker
                         // Enum value str
                         EditorUtils.WriteString(writer, enumVal);
                     }
+                    else if (propType == PropertyValueType.Tile)
+                    {
+                        var tileRef = GetTileRefStruct(DeserializeJsonFieldSafe<ldtk.TilesetRectangle>(field));
+
+                        // Write Tile ref
+                        EditorUtils.WriteStruct(writer, tileRef);
+                    }
                     else if (propType == PropertyValueType.EntityRef)
                     {
-                        EntityRef entityRef = default;
-                        if (field.Value != null)
-                        {
-                            entityRef = JsonConvert.DeserializeObject<EntityRef>(field.Value.ToString());
-                        }
-                        // Write EntityRef
+                        var entityRef = DeserializeEntityRefSafe(field);
 
-                        EditorUtils.WriteGuidNoAlloc(writer, entityRef.entityIid);
-                        EditorUtils.WriteGuidNoAlloc(writer, entityRef.layerIid);
-                        EditorUtils.WriteGuidNoAlloc(writer, entityRef.levelIid);
-                        EditorUtils.WriteGuidNoAlloc(writer, entityRef.worldIid);
+                        // Write entity ref
+                        WriteEntityRef(writer, entityRef);
                     }
                     else if (propType == PropertyValueType.EnumArray)
                     {
@@ -514,21 +544,51 @@ namespace Editor.Cooker
                             EditorUtils.WriteString(writer, str);
                         }
                     }
-                    else if (propType == PropertyValueType.Color)
+                    else if (propType == PropertyValueType.EntityRefArray)
                     {
-                        // Write Color
-                        writer.Write(DeserializeColorSafe(field.Value));
-                    }
-                    else if (propType == PropertyValueType.String)
-                    {
-                        string str = null;
-                        if (field.Value != null)
-                        {
-                            str = field.Value.ToString();
-                        }
+                        var arrVal = ParseJsonArray<EntityRef>(field.Value);
 
-                        // Write string
-                        EditorUtils.WriteString(writer, str);
+                        // Entity ref count
+                        writer.Write(arrVal.Length);
+
+                        // Write EntityRef array
+                        foreach (var entityRef in arrVal)
+                        {
+                            WriteEntityRef(writer, entityRef);
+                        }
+                    }
+                    else if (propType == PropertyValueType.ColorArray)
+                    {
+                        var arrVal = ParseJsonArray<string>(field.Value);
+
+                        // Color count
+                        writer.Write(arrVal.Length);
+
+                        // Write color array
+                        foreach (var coloStr in arrVal)
+                        {
+                            writer.Write(DeserializeColorSafe(coloStr));
+                        }
+                    }
+                    else if (propType == PropertyValueType.TileArray)
+                    {
+                        var tilesRefArr = ParseJsonArray<ldtk.TilesetRectangle>(field.Value);
+
+                        if (tilesRefArr == null || tilesRefArr.Length == 0)
+                        {
+                            writer.Write((int)0);
+                        }
+                        else
+                        {
+                            // Write tile count
+                            writer.Write(tilesRefArr.Length);
+
+                            // Write tile array
+                            foreach (var tile in tilesRefArr)
+                            {
+                                EditorUtils.WriteStruct(writer, GetTileRefStruct(tile));
+                            }
+                        }
                     }
                     else
                     {
@@ -537,7 +597,16 @@ namespace Editor.Cooker
                 }
             }
         }
-            
+
+        private void WriteEntityRef(BinaryWriter writer, EntityRef entityRef)
+        {
+            // Write EntityRef
+            EditorUtils.WriteGuidNoAlloc(writer, entityRef.entityIid);
+            EditorUtils.WriteGuidNoAlloc(writer, entityRef.layerIid);
+            EditorUtils.WriteGuidNoAlloc(writer, entityRef.levelIid);
+            EditorUtils.WriteGuidNoAlloc(writer, entityRef.worldIid);
+        }
+
         private uint DeserializeColorSafe(object value)
         {
             uint color = uint.MaxValue;
@@ -546,11 +615,48 @@ namespace Editor.Cooker
             {
                 color = HexToRgbaUint(value.ToString());
             }
-            
+
             return color;
         }
-        
 
+        private EntityRef DeserializeEntityRefSafe(FieldInstance field)
+        {
+            EntityRef entityRef = default;
+            if (field.Value != null)
+            {
+                entityRef = JsonConvert.DeserializeObject<EntityRef>(field.Value.ToString());
+            }
+            return entityRef;
+        }
+
+        private T DeserializeJsonFieldSafe<T>(FieldInstance field)
+        {
+            if (field.Value != null)
+            {
+                return JsonConvert.DeserializeObject<T>(field.Value.ToString());
+            }
+
+            return default;
+        }
+        private TileRef GetTileRefStruct(ldtk.TilesetRectangle tileRefInst)
+        {
+            var tileDef = new TileRef()
+            {
+                TilesetUid = -1
+            };
+
+            if (tileRefInst != null)
+            {
+                tileDef = new TileRef()
+                {
+                    TilesetUid = (int)tileRefInst.TilesetUid,
+                    PositionPx = new ivec2((int)tileRefInst.X, (int)tileRefInst.Y),
+                    SizePx = new ivec2((int)tileRefInst.W, (int)tileRefInst.H)
+                };
+            }
+
+            return tileDef;
+        }
         private PropertyValueType ParsePropertyType(string type)
         {
             if (type.StartsWith("LocalEnum."))
@@ -604,8 +710,8 @@ namespace Editor.Cooker
                     throw new Exception("Unknown property type: " + type);
             }
         }
-        
-        private void WriteLayerTiles(BinaryWriter writer, ldtk.Level level, int layerIndex, ldtk.LayerInstance layer,
+
+        private void WriteLayerTiles(BinaryWriter writer, ldtk.Level level, ldtk.LayerInstance layer,
             ldtk.TileInstance[] tiles, TextureMetaFile texture, float ppu, ref Bounds levelBounds)
         {
             int indexToDraw = tiles.Length * 6;
