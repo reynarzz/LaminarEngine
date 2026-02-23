@@ -1,4 +1,5 @@
-﻿using GlmNet;
+﻿using Engine;
+using GlmNet;
 using ldtk;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace Game
 {
     public class LevelMusicEntityBuilder : GameEntityBuilderBase
     {
-        public override GameEntity Build(EntityInstanceData entityData, WorldData worldData, Func<vec2, bool, vec2> positionConverter)
+        public override GameEntity Build(TilemapEntity entityData, TilemapData worldData)
         {
             return null;
         }

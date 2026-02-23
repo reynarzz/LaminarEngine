@@ -147,6 +147,7 @@ namespace Game
             SceneManager.LoadScene("Level: " + levelIndex);
             // WaterTest();
             new Actor<TestScript>("Test Editor script");
+            CreateCamera();
 
             var result = _tilemapManager.BuildLevel(new LevelInstantiateInfo()
             {
@@ -155,40 +156,40 @@ namespace Game
                 WorldSpacePixelsPerUnit = GameTextures.GetAtlas("sunny_land_tileset")[0].Texture.PixelPerUnit,
                 Tilemaps =
                 {
-                    new TilemapData()
+                    new TilemapInstanceData()
                     {
                         Name = "Foreground tilemap",
                         EnableCollision = true,
-                        LayersToDraw = 1 << 4,
+                        LayerIndex = 4,
                         SortingOrder = 5,
                         SpriteIndex = 0
                     },
-                    new TilemapData()
+                    new TilemapInstanceData()
                     {
                         Name = "Background tilemap",
                         EnableCollision = false,
-                        LayersToDraw = 1 << 5,
+                        LayerIndex = 5,
                         SortingOrder = -2,
                         SpriteIndex = 0
                     },
-                    new TilemapData()
+                    new TilemapInstanceData()
                     {
                         Name = "Decoration tilemap",
                         EnableCollision = false,
-                        LayersToDraw = 1 << 1,
+                        LayerIndex = 1,
                         SortingOrder = 6,
                         SpriteIndex = 0
                     },
-                    new TilemapData()
+                    new TilemapInstanceData()
                     {
                         Name = "Deadly tilemap",
                         EnableCollision = true,
                         IsTriggerCollision = true,
-                        LayersToDraw = 1 << 0,
+                        LayerIndex = 0,
                         SortingOrder = 6,
                         SpriteIndex = 1,
                         ColliderOffset = new vec2(0, -0.8f),
-                        TilemapAction = x => 
+                        TilemapAction = x =>
                         {
                             var damageTo = x.AddComponent<DamageTo>();
 
@@ -233,7 +234,7 @@ namespace Game
 #endif
         }
 
-        private void InitializeCamera(Transform target, Bounds levelBounds)
+        private void CreateCamera()
         {
             if (!Camera)
             {
@@ -246,6 +247,10 @@ namespace Game
                 Camera.Transform.Parent = Transform;
             }
 
+        }
+        private void InitializeCamera(Transform target, Bounds levelBounds)
+        {
+            
             var cameraFollow = Camera.GetComponent<CameraFollow>();
             cameraFollow.Target = target;
             cameraFollow.LevelBounds = levelBounds;

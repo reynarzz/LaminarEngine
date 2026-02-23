@@ -12,20 +12,23 @@ namespace Engine.IO
     {
         public TilemapAsset BuildAsset(ref readonly AssetInfo info, TilemapMeta meta, BinaryReader reader)
         {
-
             var tilemapData = new TilemapData()
             {
                 // Read version
                 Version = reader.ReadUInt32(),
 
                 // Read levels count
-                Levels = new TilemapLevel[reader.ReadInt32()]
+                Levels = new()
             };
 
-            for (int i = 0; i < tilemapData.Levels.Length; i++)
+            var levelsCount = reader.ReadInt32();
+
+            for (int i = 0; i < levelsCount; i++)
             {
                 // Read level data
-                tilemapData.Levels[i] = ReadLevel(reader);
+                var level = ReadLevel(reader);
+                level.LevelIndex = i;
+                tilemapData.Levels.Add(level.IID, level);
             }
             return new TilemapAsset(info.Path, meta.GUID, tilemapData);
         }
@@ -53,11 +56,13 @@ namespace Engine.IO
 
             var layersCount = reader.ReadInt32();
 
-            level.Layers = new TilemapLevelLayer[layersCount];
+            level.Layers = new(layersCount);
 
             for (int i = 0; i < layersCount; i++)
             {
-                level.Layers[i] = ReadLayer(reader);
+                var layer = ReadLayer(reader, level);
+                layer.LayerIndex = i;
+                level.Layers.Add(layer.IID, layer);
             }
 
             // Read level bounds.
@@ -66,7 +71,7 @@ namespace Engine.IO
             return level;
         }
 
-        private TilemapLevelLayer ReadLayer(BinaryReader reader)
+        private TilemapLevelLayer ReadLayer(BinaryReader reader, TilemapLevel level)
         {
             var layer = new TilemapLevelLayer();
 
@@ -92,7 +97,7 @@ namespace Engine.IO
                     ReadTiles(reader, layer);
                     break;
                 case TilemapLayerType.Entities:
-                    ReadEntities(reader, layer);
+                    ReadEntities(reader, layer, level);
                     break;
                 default:
                     throw new NotImplementedException(layerType.ToString());
@@ -114,25 +119,27 @@ namespace Engine.IO
             layer.Bounds = EngineFileUtils.ReadStructNoAlloc<Bounds>(reader);
         }
 
-        private void ReadEntities(BinaryReader reader, TilemapLevelLayer layer)
+        private void ReadEntities(BinaryReader reader, TilemapLevelLayer layer, TilemapLevel level)
         {
             var entitiesCount = reader.ReadInt32();
 
             if (entitiesCount == 0)
                 return;
 
-            layer.Entities = new TilemapEntity[entitiesCount];
+            layer.Entities = new(entitiesCount);
 
             for (int i = 0; i < entitiesCount; i++)
             {
                 var entity = new TilemapEntity();
-                layer.Entities[i] = entity;
 
                 // Read identifier
                 entity.Identifier = EngineFileUtils.ReadString(reader);
 
                 // Read iid
                 entity.IID = EngineFileUtils.ReadGuidNoAlloc(reader);
+
+                entity.LayerIID = layer.IID;
+                entity.LevelIID = level.IID;
 
                 var tagsCount = reader.ReadInt32();
                 if (tagsCount > 0)
@@ -154,18 +161,19 @@ namespace Engine.IO
 
                 var propertiesCount = reader.ReadInt32();
 
+                layer.Entities.Add(entity.IID, entity);
+
                 if (propertiesCount == 0)
                     continue;
 
-                entity.Properties = new EntityPropertyData[propertiesCount];
+                entity.Properties = new(propertiesCount);
 
                 for (int j = 0; j < propertiesCount; j++)
                 {
-                    entity.Properties[j] = ReadEntityProperty(reader);
+                    var property = ReadEntityProperty(reader);
+                    entity.Properties.Add(property.Identifier, property);
                 }
             }
-
-
         }
 
         private EntityPropertyData ReadEntityProperty(BinaryReader reader)

@@ -29,13 +29,13 @@ namespace Game
             };
         }
 
-        public GameEntity BuildEntity(EntityInstanceData entityData, WorldData worldData, Func<vec2, bool, vec2> positionConverter)
+        public GameEntity BuildEntity(TilemapEntity entityData, TilemapData worldData)
         {
-            if (_entityBuilders.TryGetValue(entityData.Entity.Identifier, out var builder))
+            if (_entityBuilders.TryGetValue(entityData.Identifier, out var builder))
             {
-                var gameEntity = builder.Build(entityData, worldData, positionConverter);
+                var gameEntity = builder.Build(entityData, worldData);
 
-                foreach (var tag in entityData.Entity.Tags)
+                foreach (var tag in entityData.Tags)
                 {
                     if (tag.Equals(DONT_DESTROY_ON_LOAD))
                     {

@@ -12,17 +12,13 @@ namespace Game
 {
     internal class PlatformEntityBuilder : GameEntityBuilderBase
     {
-        private struct PlatformPoints
+        public override GameEntity Build(TilemapEntity entityData, TilemapData worldData)
         {
-            public long cx { get; set; }
-            public long cy { get; set; }
-        }
-        public override GameEntity Build(EntityInstanceData entityData, WorldData worldData, Func<vec2, bool, vec2> positionConverter)
-        {
-            var yPositions = default(vec2[]);
-            if (Deserialize<PlatformPoints[]>(entityData, "positions", out var value))
+            vec2[] yPositions = null;
+
+            if (entityData.Properties.TryGetValue("positions", out var data))
             {
-                yPositions = value.Select(x => positionConverter(new vec2(x.cx, x.cy), true)).ToArray();
+                yPositions = data.Value.Vec2Array;
             }
 
             return GamePrefabs.World.InstantiatePlatform(entityData.WorldPosition, yPositions);

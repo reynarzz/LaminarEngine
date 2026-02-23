@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    public class TilemapData
+    public class TilemapInstanceData
     {
         public string Name { get; set; }
         public bool EnableCollision { get; set; }
@@ -17,7 +17,7 @@ namespace Game
         public int SortingOrder { get; set; }
         public int SpriteIndex { get; set; }
         public Material Material { get; set; }
-        public ulong LayersToDraw { get; set; }
+        public int LayerIndex { get; set; }
         public Action<TilemapRenderer> TilemapAction { get; set; }
     }
 
@@ -25,7 +25,7 @@ namespace Game
     {
         public int LevelIndex { get; set; }
         public Sprite[] TilemapSprites { get; set; }
-        public List<TilemapData> Tilemaps { get; set; } = new List<TilemapData>();
+        public List<TilemapInstanceData> Tilemaps { get; set; } = new List<TilemapInstanceData>();
         public int WorldSpacePixelsPerUnit { get; set; }
     }
 }

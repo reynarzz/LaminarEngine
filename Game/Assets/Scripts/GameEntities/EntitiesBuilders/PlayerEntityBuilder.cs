@@ -13,7 +13,7 @@ namespace Game
     internal class PlayerEntityBuilder : GameEntityBuilderBase
     {
         private static Player _player;
-        public override GameEntity Build(EntityInstanceData entityData, WorldData worldData, Func<vec2, bool, vec2> positionConverter)
+        public override GameEntity Build(TilemapEntity entityData, TilemapData worldData)
         {
             GetBool(entityData, "look_to_right", out bool lookToRight);
 

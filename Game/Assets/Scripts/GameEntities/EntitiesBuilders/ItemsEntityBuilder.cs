@@ -11,7 +11,7 @@ namespace Game
 {
     internal class ItemsEntityBuilder : GameEntityBuilderBase
     {
-        public override GameEntity Build(EntityInstanceData entityData, WorldData worldData, Func<vec2, bool, vec2> positionConverter)
+        public override GameEntity Build(TilemapEntity entityData, TilemapData worldData)
         {
             //foreach (var field in entityData)
             //{

@@ -44,11 +44,11 @@ namespace Engine
 
         private B2Polygon[] GetPolygons()
         {
-            var boxes = MergeTiles(_renderer.TilesPositions);
+            var layer = _renderer.GetLayer();
+            var boxes = MergeTiles(layer.TilesPosition);
             var polygons = new B2Polygon[boxes.Count];
             for (int i = 0; i < boxes.Count; i++)
             {
-
                 polygons[i] = B2Geometries.b2MakeOffsetBox(boxes[i].Size.x / 2.0f, boxes[i].Size.y / 2.0f, (boxes[i].Position + Offset).ToB2Vec2(), glm.radians(RotationOffset).ToB2Rot());
             }
             return polygons;

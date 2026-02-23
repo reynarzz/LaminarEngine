@@ -1,19 +1,8 @@
-﻿using Box2D.NET;
-using Engine.Graphics;
+﻿using Engine.Graphics;
 using Engine.Layers;
 using Engine.Types;
-using Engine.Utils;
 using GlmNet;
-using ldtk;
 using Engine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace Engine
 {
@@ -40,14 +29,11 @@ namespace Engine
         [SerializedField]
         public override int SortOrder { get => base.SortOrder; set => base.SortOrder = value; }
 
-        [SerializedField] public LDtkOptions Options { get; set; }
+        [SerializedField] public TilemapRenderingOptions Options { get; set; }
 
-        [SerializedField] public TilemapAsset Tilemap { get; set; } 
+        [SerializedField] public TilemapAsset Tilemap { get; private set; }
 
-        public IReadOnlyList<vec2> TilesPositions => _tilesPositions;
-        private List<vec2> _tilesPositions = new();
         private RendererData2D _rendererData;
-        public vec2 GridSize { get; private set; }
 
         internal override void OnInternalInitialize()
         {
@@ -72,134 +58,35 @@ namespace Engine
             RenderingLayer.PushRenderer(this);
         }
 
-        protected override void OnAwake()
+        public void SetTilemap(TilemapAsset tilemap, TilemapRenderingOptions options)
         {
-            base.OnAwake();
+            Tilemap = tilemap;
+            Options = options;
 
+            var data = tilemap.GetData();
+
+            var layer = GetLayer();
+            // TODO: Mesh should use arrays instead.
+            _rendererData.Mesh.Vertices = layer.Vertices.ToList();
+            _rendererData.Mesh.IndicesToDrawCount = layer.IndicesToDraw;
         }
 
-        public void AddTile(Tile tile, vec3 position, float rot = 0)
+        internal TilemapLevelLayer GetLayer()
         {
-            QuadVertices vertices = default;
+            // TODO: check for null
 
-            var texture = Sprite.Texture;
-            var chunk = Assets.GetSpriteAtlas(texture.Path).GetSprite(tile.Index).GetAtlasCell();
-
-            float ppu = texture.PixelPerUnit;
-            var width = (float)chunk.Width / ppu;
-            var height = (float)chunk.Height / ppu;
-
-            var tileMatrix = Transform.WorldMatrix * glm.translate(mat4.identity(), position) * glm.rotate(glm.radians(rot), new vec3(0, 0, 1));
-
-            chunk.Uvs = QuadUV.FlipUV(chunk.Uvs, tile.FlipX, tile.FlipY);
-
-            GraphicsHelper.CreateQuad(ref vertices, chunk.Uvs, width, height, chunk.Pivot, Color, tileMatrix);
-
-            _rendererData.Mesh.Vertices.Add(vertices.v0);
-            _rendererData.Mesh.Vertices.Add(vertices.v1);
-            _rendererData.Mesh.Vertices.Add(vertices.v2);
-            _rendererData.Mesh.Vertices.Add(vertices.v3);
-
-            _rendererData.Mesh.IndicesToDrawCount += 6;
-
-            RendererData.IsDirty = true;
-
-            var max = _rendererData.Bounds.Max;
-            var min = _rendererData.Bounds.Min;
-            _rendererData.Bounds.Max = new vec3(Math.Max(max.x, position.x), Math.Max(max.y, position.y), 0);
-            _rendererData.Bounds.Min = new vec3(Math.Min(min.x, position.x), Math.Min(min.y, position.y), 0);
-
-
-            //var index = (uint)Mesh.Vertices.Count - 4;
-            //Mesh.Indices.Add(index + 0);
-            //Mesh.Indices.Add(index + 1);
-            //Mesh.Indices.Add(index + 2);
-            //Mesh.Indices.Add(index + 2);
-            //Mesh.Indices.Add(index + 3);
-            //Mesh.Indices.Add(index + 0);
-
-            // Debug.Log("Quads count: " + Mesh.Vertices.Count / 4);
-        }
-
-        private void PaintTiles(ldtk.Level level, ldtk.LayerInstance layer, ldtk.TileInstance[] tiles)
-        {
-            foreach (var tile in tiles)
-            {
-                bool isFlippedX = (tile.F & 1) != 0 || tile.F == 3;
-                bool isFlippedY = (tile.F & 2) != 0 || tile.F == 3;
-
-                float tilePxX = tile.Px[0];
-                float tilePxY = tile.Px[1];
-
-                float worldX = level.WorldX + tilePxX + layer.PxTotalOffsetX;
-                float worldY = -level.WorldY + -tilePxY + -layer.PxTotalOffsetY;
-
-                var position = new vec3(
-                    (worldX / Sprite.Texture.PixelPerUnit),
-                    (worldY / Sprite.Texture.PixelPerUnit),
-                    0
-                );
-
-                _tilesPositions.Add(new vec2(position.x, position.y));
-
-                AddTile(new Tile((int)tile.T, isFlippedX, isFlippedY), position);
-            }
-
-            _rendererData.Bounds.Min -= vec3.One * 0.5f;
-            _rendererData.Bounds.Max += vec3.One * 0.5f;
-
-            _rendererData.Bounds.Min.z = 0;
-            _rendererData.Bounds.Max.z = 0;
-        }
-
-        public void SetTilemapLDtk(LdtkJson project, LDtkOptions options)
-        {
-            _tilesPositions.Clear();
-
-            var level = project.Levels[options.LevelToLoad];
-
-            //if (level.WorldDepth != options.WorldDepth)
-            //    continue;
-
-            for (int j = level.LayerInstances.Length - 1; j >= 0; j--)
-            {
-                if (((options.LayersToLoadMask & (1UL << j)) == 0) && options.LayersToLoadMask != 0)
-                    continue;
-
-
-                var layer = level.LayerInstances[j];
-                GridSize = new vec2(layer.CWid, layer.CHei);
-
-                if (!layer.Visible)
-                    continue;
-
-                var type = layer.Type;
-
-                switch (type)
-                {
-                    case "AutoLayer":
-                    case "IntGrid":
-                        PaintTiles(level, layer, layer.AutoLayerTiles);
-                        break;
-                    case "Tiles":
-                        PaintTiles(level, layer, layer.GridTiles);
-                        break;
-                    case "Entities":
-                        break;
-                    default:
-                        break;
-                }
-            }
+            var level = Tilemap.GetData().Levels.FirstOrDefault(x => x.Value.LevelIndex == Options.LevelIndex).Value;
+            return level.Layers.FirstOrDefault(x => x.Value.LayerIndex == Options.LayerIndex).Value;
         }
     }
 
-    public struct LDtkOptions
+    public struct TilemapRenderingOptions
     {
         [SerializedField] public bool RenderIntGridLayer { get; set; }
         [SerializedField] public bool RenderTilesLayer { get; set; }
         [SerializedField] public bool RenderAutoLayer { get; set; }
-        [SerializedField] public int LevelToLoad { get; set; }
-        [SerializedField] public ulong LayersToLoadMask { get; set; }
+        [SerializedField] public int LevelIndex { get; set; }
+        [SerializedField] public int LayerIndex { get; set; }
         [SerializedField] public int WorldDepth { get; set; }
     }
 }

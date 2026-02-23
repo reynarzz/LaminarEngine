@@ -19,7 +19,7 @@ namespace Game
     }
     internal class EnemyEntityBuilder : GameEntityBuilderBase
     {
-        public override GameEntity Build(EntityInstanceData entityData, WorldData worldData, Func<vec2, bool, vec2> positionConverter)
+        public override GameEntity Build(TilemapEntity entityData, TilemapData worldData)
         {
             var enemyData = new EnemyInstanceData()
             {

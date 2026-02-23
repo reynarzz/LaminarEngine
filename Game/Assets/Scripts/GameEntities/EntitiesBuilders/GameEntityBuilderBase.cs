@@ -1,7 +1,6 @@
 ﻿using Engine;
 using GlmNet;
 using ldtk;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,29 +11,23 @@ namespace Game
 {
     public abstract class GameEntityBuilderBase
     {
-        public abstract GameEntity Build(EntityInstanceData entityData, WorldData worldData, Func<vec2, bool, vec2> positionConverter);
+        public abstract GameEntity Build(TilemapEntity entityData, TilemapData worldData);
 
-        protected bool Deserialize<T>(EntityInstanceData target, string id, out T value)
+        protected bool GetEnumArray<T>(TilemapEntity target, string id, out T[] value) where T : unmanaged, Enum
         {
             value = default;
-            if (!TryGetField(target, id, out var field, true))
+            if (!target.Properties.TryGetValue(id, out var field))
                 return false;
-            value = JsonConvert.DeserializeObject<T>(field.Value.ToString());
-            return true;
-        }
 
-        protected bool GetEnumArray<T>(EntityInstanceData target, string id, out T[] value) where T : unmanaged, Enum
-        {
-            value = default;
-            if (Deserialize<string[]>(target, id, out var enumsStr))
+            if (field.Value.EnumArray != null && field.Value.EnumArray.Length > 0)
             {
-                var enums = new T[enumsStr.Length];
+                var enums = new T[field.Value.EnumArray.Length];
 
-                for (int i = 0; i < enumsStr.Length; i++)
+                for (int i = 0; i < field.Value.EnumArray.Length; i++)
                 {
-                    if (!ParseEnum(enumsStr[i], out enums[i]))
+                    if (!ParseEnum(field.Value.EnumArray[i].EnumValStr, out enums[i]))
                     {
-                        Debug.Error($"Can't parse enum: {enumsStr[i]}, is not part of enum type: {typeof(T).Name}");
+                        Debug.Error($"Can't parse enum: {field.Value.EnumArray[i].EnumValStr}, is not part of enum type: {typeof(T).Name}");
                     }
                 }
                 value = enums;
@@ -44,109 +37,47 @@ namespace Game
             return false;
         }
 
-        protected bool GetEnum<T>(EntityInstanceData target, string id, out T value) where T : unmanaged, Enum
+        protected bool GetEnum<T>(TilemapEntity target, string id, out T value) where T : unmanaged, Enum
         {
             value = default;
-            if (!TryGetField(target, id, out var field))
+            if (!target.Properties.TryGetValue(id, out var field))
                 return false;
 
-            return ParseEnum(field.Value?.ToString(), out value);
-        }
-
-        protected bool GetEnum<T>(FieldInstance field, string id, out T value) where T : unmanaged, Enum
-        {
-            value = default;
-            if (!IsField(field, id))
-                return false;
-
-            return ParseEnum(field.Value?.ToString(), out value);
+            return ParseEnum(field.Value.Enum.EnumValStr, out value);
         }
 
         private bool ParseEnum<T>(string str, out T value) where T : unmanaged, Enum
         {
             return Enum.TryParse(str, true, out value);
         }
-        protected bool GetBool(EntityInstanceData target, string id, out bool value)
+        protected bool GetBool(TilemapEntity target, string id, out bool value)
         {
             value = default;
-            if (!TryGetField(target, id, out var field))
+            if (!target.Properties.TryGetValue(id, out var property))
                 return false;
-
-            value = bool.Parse(field.Value?.ToString());
-
+            value = property.Value.Bool;
             return true;
         }
 
-        protected bool GetEntityRef(EntityInstanceData target, string id, WorldData data, out EntityInstanceData value)
+        protected bool GetEntityRef(TilemapEntity target, string id, TilemapData data, out TilemapEntity value)
         {
             value = default;
-            if (GetDictionary(target, id, out var dict))
-            {
-                value = data.Levels[dict["levelIid"]].Layers[dict["layerIid"]].EntitiesData[dict["entityIid"]];
-                return true;
-            }
-
-            return false;
-        }
-
-
-        protected bool GetDictionary(EntityInstanceData target, string id, out Dictionary<string, string> value)
-        {
-            value = default;
-            if (!TryGetField(target, id, out var field))
+            if (!target.Properties.TryGetValue(id, out var property))
                 return false;
 
-            if (field.Value == null)
-            {
-                return false;
-            }
-            value = JsonConvert.DeserializeObject<Dictionary<string, string>>(field.Value.ToString());
+            value = data.Levels[property.Value.EntityRef.levelIid]
+                        .Layers[property.Value.EntityRef.layerIid]
+                        .Entities[property.Value.EntityRef.entityIid];
             return true;
         }
 
-        protected bool GetInt(EntityInstanceData target, string id, out int value)
+        protected bool GetInt(TilemapEntity target, string id, out int value)
         {
             value = default;
-            if (!TryGetField(target, id, out var field))
+            if (!target.Properties.TryGetValue(id, out var property))
                 return false;
-
-            value = int.Parse(field.Value?.ToString());
-
+            value = property.Value.Int;
             return true;
-        }
-
-        protected bool GetInt(FieldInstance field, string id, out int value)
-        {
-            value = default;
-            if (!IsField(field, id))
-                return false;
-
-            value = int.Parse(field.Value?.ToString());
-
-            return true;
-        }
-
-        private bool TryGetField(EntityInstanceData target, string id, out FieldInstance fieldOut, bool failIfValueIsNull = false)
-        {
-            fieldOut = null;
-            foreach (var field in target.Entity.FieldInstances)
-            {
-                if (IsField(field, id))
-                {
-                    if (failIfValueIsNull && field.Value == null)
-                    {
-                        break;
-                    }
-                    fieldOut = field;
-                }
-            }
-
-            return fieldOut != null;
-        }
-
-        private bool IsField(FieldInstance field, string id)
-        {
-            return field.Identifier.Equals(id, StringComparison.OrdinalIgnoreCase);
         }
 
         protected Predicate<Player> PlayerHasItem_Condition(ItemId item, int amount)

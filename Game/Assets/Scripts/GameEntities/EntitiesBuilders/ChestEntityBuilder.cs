@@ -12,7 +12,7 @@ namespace Game
 {
     internal class ChestEntityBuilder : GameEntityBuilderBase
     {
-        public override GameEntity Build(EntityInstanceData entityData, WorldData worldData, Func<vec2, bool, vec2> positionConverter)
+        public override GameEntity Build(TilemapEntity entityData, TilemapData worldData)
         {
             var lootItems = default(ItemAmountPair[]);
 
@@ -28,19 +28,20 @@ namespace Game
                 }
             }
 
-            if (Deserialize<int[]>(entityData, "items_amount", out var lootAmount))
+            if (entityData.Properties.TryGetValue("items_amount", out var lootAmount))
             {
-                if(lootAmount.Length == lootItems.Length)
+                if(lootAmount.Value.IntArray != null && lootItems != null && lootAmount.Value.IntArray.Length == lootItems.Length)
                 {
-                    for (int j = 0; j < lootAmount.Length; j++)
+                    for (int j = 0; j < lootAmount.Value.IntArray.Length; j++)
                     {
                         ref var loot = ref lootItems[j];
-                        loot.Amount = lootAmount[j];
+                        loot.Amount = lootAmount.Value.IntArray[j];
                     }
                 }
                 else
                 {
-                    Debug.Error($"Items amount {lootAmount.Length} for chest are not in sync for items type: {lootItems.Length}: " + entityData.Entity.Iid);
+                    var len = lootAmount.Value.IntArray?.Length ?? 0;
+                    Debug.Error($"Items amount {len} for chest are not in sync for items type: {lootItems.Length}: " + entityData.IID);
                 }
             }
 

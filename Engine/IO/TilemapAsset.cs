@@ -14,6 +14,11 @@ namespace Engine
             _data = data;
         }
 
+        // TODO: do not let that the client get direct access to this.
+        public TilemapData GetData()
+        {
+            return _data;
+        }
         internal override void UpdateResource(object data, string path, Guid guid)
         {
             throw new NotImplementedException();

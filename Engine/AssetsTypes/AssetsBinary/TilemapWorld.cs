@@ -11,18 +11,19 @@ namespace Engine
     public class TilemapData
     {
         public uint Version { get; set; }
-        public TilemapLevel[] Levels { get; set; }
+        public Dictionary<Guid, TilemapLevel> Levels { get; set; }
     }
 
     public class TilemapLevel
     {
+        public int LevelIndex { get; set; }
         public string Identifier { get; set; }
         public Guid IID { get; set; }
         public ivec2 WorldPositionPx { get; set; }
         public ivec2 SizePx { get; set; }
         public int Depth { get; set; }
         public Bounds Bounds { get; set; }
-        public TilemapLevelLayer[] Layers { get; set; }
+        public Dictionary<Guid, TilemapLevelLayer> Layers { get; set; }
         public Color32 BackgroundColor { get; internal set; }
     }
 
@@ -36,6 +37,7 @@ namespace Engine
 
     public class TilemapLevelLayer
     {
+        public int LayerIndex { get; set; }
         public string Identifier { get; set; }
         public Guid IID { get; set; }
         public ivec2 SizeGridBased { get; set; }
@@ -44,8 +46,8 @@ namespace Engine
         public ivec2 OffsetPx { get; set; }
         public Bounds Bounds { get; set; }
         public TilemapLayerType Type { get; set; }
-        public vec2[] TilesPosition { get; set; }
-        public TilemapEntity[] Entities { get; set; }
+        internal vec2[] TilesPosition { get; set; }
+        public Dictionary<Guid, TilemapEntity> Entities { get; set; }
         public bool IsVisible { get; internal set; }
         internal Vertex[] Vertices { get; set; }
         internal int IndicesToDraw { get; set; }
@@ -59,8 +61,6 @@ namespace Engine
     public class TilemapEntity
     {
         public string Identifier { get; set; }
-
-        // Instance identifier
         public Guid IID { get; set; }
         public Guid LayerIID { get; set; }
         public Guid LevelIID { get; set; }
@@ -69,7 +69,7 @@ namespace Engine
         public ivec2 SizeInPixels { get; set; }
         public vec2 WorldPosition { get; set; }
 
-        public EntityPropertyData[] Properties { get; set; }
+        public Dictionary<string, EntityPropertyData> Properties { get; set; }
     }
 
     public class EntityPropertyData

@@ -22,7 +22,7 @@ namespace ldtk
     /// array of levels, - a group of definitions (that can probably be safely ignored for most
     /// users).
     /// </summary>
-    public partial class LdtkJson
+    internal partial class LdtkJson
     {
         /// <summary>
         /// This object is not actually used by LDtk. It ONLY exists to force explicit references to
@@ -2397,12 +2397,12 @@ namespace ldtk
     /// </summary>
     public enum ImageExportMode { LayersAndLevels, None, OneImagePerLayer, OneImagePerLevel };
 
-    public partial class LdtkJson
+    internal partial class LdtkJson
     {
         public static LdtkJson FromJson(string json) => JsonConvert.DeserializeObject<LdtkJson>(json, ldtk.Converter.Settings);
     }
 
-    public static class Serialize
+    internal static class Serialize
     {
         public static string ToJson(this LdtkJson self) => JsonConvert.SerializeObject(self, ldtk.Converter.Settings);
     }
