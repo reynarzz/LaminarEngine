@@ -65,10 +65,17 @@ namespace Game
             if (!target.Properties.TryGetValue(id, out var property))
                 return false;
 
-            value = data.Levels[property.Value.EntityRef.levelIid]
-                        .Layers[property.Value.EntityRef.layerIid]
-                        .Entities[property.Value.EntityRef.entityIid];
-            return true;
+            if (data.Levels.TryGetValue(property.Value.EntityRef.levelIid, out var level))
+            {
+                if (level.Layers.TryGetValue(property.Value.EntityRef.layerIid, out var layer))
+                {
+                    if (layer.Entities.TryGetValue(property.Value.EntityRef.entityIid, out value))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         protected bool GetInt(TilemapEntity target, string id, out int value)
