@@ -31,7 +31,7 @@ namespace Editor.Cooker
                 return;
             }
 
-            EditorUtils.WriteGuidNoAlloc(writer, reference.RefId);
+            EditorFileUtils.WriteGuidNoAlloc(writer, reference.RefId);
 
             if (_customRefWriters.TryGetValue(reference.Type, out var writerFunction))
             {
@@ -47,7 +47,7 @@ namespace Editor.Cooker
         private void WriteSpriteAssetReference(BinaryWriter writer, SpriteReferenceData reference)
         {
             writer.Write(reference.AtlasIndex);
-            EditorUtils.WriteGuidNoAlloc(writer, reference.TexRefId);
+            EditorFileUtils.WriteGuidNoAlloc(writer, reference.TexRefId);
         }
 
         private Action<BinaryWriter, ReferenceData> BaseWriter<T>(Action<BinaryWriter, T> writerFunction)

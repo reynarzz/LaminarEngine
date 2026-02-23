@@ -68,6 +68,10 @@ namespace Engine
             return Get<AudioClip>(path);
         }
 
+        public static TilemapAsset GetTilemap(string path)
+        {
+            return Get<TilemapAsset>(path);
+        }
         public static AssetResourceBase Get(string path)
         {
             return Get<AssetResourceBase>(path);

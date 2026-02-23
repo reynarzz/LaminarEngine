@@ -43,7 +43,7 @@ namespace Engine.Serialization
         private void ReadSpriteAssetReference(BinaryReader reader, SpriteReferenceData reference)
         {
             reference.AtlasIndex = reader.ReadInt32();
-            reference.TexRefId = FileUtils.ReadGuidNoAlloc(reader);
+            reference.TexRefId = EngineFileUtils.ReadGuidNoAlloc(reader);
         }
 
         private Func<BinaryReader, SerializedType, ReferenceData> BaseReader<T>(Action<BinaryReader, T> readFunction)
@@ -66,7 +66,7 @@ namespace Engine.Serialization
             return new T()
             {
                 Type = type,
-                RefId = FileUtils.ReadGuidNoAlloc(reader)
+                RefId = EngineFileUtils.ReadGuidNoAlloc(reader)
             };
         }
     }

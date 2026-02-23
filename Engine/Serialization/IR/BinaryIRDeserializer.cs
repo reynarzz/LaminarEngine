@@ -79,11 +79,11 @@ namespace Engine.Serialization
             */
 
             var actor = new ActorIR();
-            actor.Name = ReadString(reader);
+            actor.Name = EngineFileUtils.ReadString(reader);
             actor.Layer = reader.ReadInt32();
-            actor.IsActiveSelf = ReadBool(reader);
-            actor.ID = FileUtils.ReadGuidNoAlloc(reader);
-            actor.ParentID = FileUtils.ReadGuidNoAlloc(reader);
+            actor.IsActiveSelf = EngineFileUtils.ReadBool(reader);
+            actor.ID = EngineFileUtils.ReadGuidNoAlloc(reader);
+            actor.ParentID = EngineFileUtils.ReadGuidNoAlloc(reader);
             var componentsCount = reader.ReadInt32();
 
             actor.Components = new List<ComponentIR>();
@@ -106,9 +106,9 @@ namespace Engine.Serialization
                List<SerializedPropertyIR> SerializedProperties 
             */
             var component = new ComponentIR();
-            component.TypeId = FileUtils.ReadGuidNoAlloc(reader);
-            component.IsEnabled = ReadBool(reader);
-            component.ID = FileUtils.ReadGuidNoAlloc(reader);
+            component.TypeId = EngineFileUtils.ReadGuidNoAlloc(reader);
+            component.IsEnabled = EngineFileUtils.ReadBool(reader);
+            component.ID = EngineFileUtils.ReadGuidNoAlloc(reader);
             var propertiesCount = reader.ReadInt32();
             component.Properties = new SerializedPropertyIR[propertiesCount];
 
@@ -129,8 +129,8 @@ namespace Engine.Serialization
               object Data 
           */
             var property = new SerializedPropertyIR();
-            property.Name = ReadString(reader);
-            property.TypeId = FileUtils.ReadGuidNoAlloc(reader);
+            property.Name = EngineFileUtils.ReadString(reader);
+            property.TypeId = EngineFileUtils.ReadGuidNoAlloc(reader);
             property.Type = (SerializedType)reader.ReadUInt64();
             var serializedType = property.Type;
 
@@ -172,36 +172,6 @@ namespace Engine.Serialization
             return property;
         }
 
-        private static string ReadString(BinaryReader reader)
-        {
-            var totalBytes = reader.ReadInt32();
-
-            if (totalBytes <= 0)
-            {
-                return string.Empty;
-            }
-
-            if (totalBytes <= 1024) // a kb
-            {
-                Span<byte> buffer = stackalloc byte[totalBytes];
-                reader.BaseStream.ReadExactly(buffer);
-                return Encoding.UTF8.GetString(buffer);
-            }
-            else
-            {
-                var buffer = ArrayPool<byte>.Shared.Rent(totalBytes);
-                try
-                {
-                    var span = buffer.AsSpan(0, totalBytes);
-                    reader.BaseStream.ReadExactly(span);
-                    return Encoding.UTF8.GetString(span);
-                }
-                finally
-                {
-                    ArrayPool<byte>.Shared.Return(buffer);
-                }
-            }
-        }
 
         private static CollectionData ReadSimpleCollection(BinaryReader reader)
         {
@@ -242,61 +212,61 @@ namespace Engine.Serialization
                         return new CollectionDataEnum(values, collectionType);
                     }
                 case SerializedType.Char:
-                    return new CollectionDataChar(ReadArray<char>(reader, count), collectionType);
+                    return new CollectionDataChar(EngineFileUtils.ReadArray<char>(reader, count), collectionType);
                 case SerializedType.String:
                     {
                         var values = new string[count];
 
                         for (int i = 0; i < count; i++)
                         {
-                            values[i] = ReadString(reader);
+                            values[i] = EngineFileUtils.ReadString(reader);
                         }
                         return new CollectionDataString(values, collectionType);
                     }
                 case SerializedType.Bool:
-                    return new CollectionDataBool(ReadArray<bool>(reader, count), collectionType);
+                    return new CollectionDataBool(EngineFileUtils.ReadArray<bool>(reader, count), collectionType);
                 case SerializedType.Byte:
-                    return new CollectionDataByte(ReadArray<byte>(reader, count), collectionType);
+                    return new CollectionDataByte(EngineFileUtils.ReadArray<byte>(reader, count), collectionType);
                 case SerializedType.Short:
-                    return new CollectionDataShort(ReadArray<short>(reader, count), collectionType);
+                    return new CollectionDataShort(EngineFileUtils.ReadArray<short>(reader, count), collectionType);
                 case SerializedType.UShort:
-                    return new CollectionDataUShort(ReadArray<ushort>(reader, count), collectionType);
+                    return new CollectionDataUShort(EngineFileUtils.ReadArray<ushort>(reader, count), collectionType);
                 case SerializedType.Int:
-                    return new CollectionDataInt(ReadArray<int>(reader, count), collectionType);
+                    return new CollectionDataInt(EngineFileUtils.ReadArray<int>(reader, count), collectionType);
                 case SerializedType.UInt:
-                    return new CollectionDataUInt(ReadArray<uint>(reader, count), collectionType);
+                    return new CollectionDataUInt(EngineFileUtils.ReadArray<uint>(reader, count), collectionType);
                 case SerializedType.Float:
-                    return new CollectionDataFloat(ReadArray<float>(reader, count), collectionType);
+                    return new CollectionDataFloat(EngineFileUtils.ReadArray<float>(reader, count), collectionType);
                 case SerializedType.Double:
-                    return new CollectionDataDouble(ReadArray<double>(reader, count), collectionType);
+                    return new CollectionDataDouble(EngineFileUtils.ReadArray<double>(reader, count), collectionType);
                 case SerializedType.Long:
-                    return new CollectionDataLong(ReadArray<long>(reader, count), collectionType);
+                    return new CollectionDataLong(EngineFileUtils.ReadArray<long>(reader, count), collectionType);
                 case SerializedType.ULong:
-                    return new CollectionDataULong(ReadArray<ulong>(reader, count), collectionType);
+                    return new CollectionDataULong(EngineFileUtils.ReadArray<ulong>(reader, count), collectionType);
                 case SerializedType.Vec2:
-                    return new CollectionDataVec2(ReadArray<vec2>(reader, count), collectionType);
+                    return new CollectionDataVec2(EngineFileUtils.ReadArray<vec2>(reader, count), collectionType);
                 case SerializedType.Vec3:
-                    return new CollectionDataVec3(ReadArray<vec3>(reader, count), collectionType);
+                    return new CollectionDataVec3(EngineFileUtils.ReadArray<vec3>(reader, count), collectionType);
                 case SerializedType.Vec4:
-                    return new CollectionDataVec4(ReadArray<vec4>(reader, count), collectionType);
+                    return new CollectionDataVec4(EngineFileUtils.ReadArray<vec4>(reader, count), collectionType);
                 case SerializedType.IVec2:
-                    return new CollectionDataIvec2(ReadArray<ivec2>(reader, count), collectionType);
+                    return new CollectionDataIvec2(EngineFileUtils.ReadArray<ivec2>(reader, count), collectionType);
                 case SerializedType.IVec3:
-                    return new CollectionDataIvec3(ReadArray<ivec3>(reader, count), collectionType);
+                    return new CollectionDataIvec3(EngineFileUtils.ReadArray<ivec3>(reader, count), collectionType);
                 case SerializedType.IVec4:
-                    return new CollectionDataIvec4(ReadArray<ivec4>(reader, count), collectionType);
+                    return new CollectionDataIvec4(EngineFileUtils.ReadArray<ivec4>(reader, count), collectionType);
                 case SerializedType.Quat:
-                    return new CollectionDataQuat(ReadArray<quat>(reader, count), collectionType);
+                    return new CollectionDataQuat(EngineFileUtils.ReadArray<quat>(reader, count), collectionType);
                 case SerializedType.Mat2:
-                    return new CollectionDataMat2(ReadArray<mat2>(reader, count), collectionType);
+                    return new CollectionDataMat2(EngineFileUtils.ReadArray<mat2>(reader, count), collectionType);
                 case SerializedType.Mat3:
-                    return new CollectionDataMat3(ReadArray<mat3>(reader, count), collectionType);
+                    return new CollectionDataMat3(EngineFileUtils.ReadArray<mat3>(reader, count), collectionType);
                 case SerializedType.Mat4:
-                    return new CollectionDataMat4(ReadArray<mat4>(reader, count), collectionType);
+                    return new CollectionDataMat4(EngineFileUtils.ReadArray<mat4>(reader, count), collectionType);
                 case SerializedType.Color:
-                    return new CollectionDataColor(ReadArray<Color>(reader, count), collectionType);
+                    return new CollectionDataColor(EngineFileUtils.ReadArray<Color>(reader, count), collectionType);
                 case SerializedType.Color32:
-                    return new CollectionDataColor32(ReadArray<Color32>(reader, count), collectionType);
+                    return new CollectionDataColor32(EngineFileUtils.ReadArray<Color32>(reader, count), collectionType);
                 default:
                     throw new NotImplementedException($"Item not implemented: {itemsType}");
             }
@@ -312,7 +282,7 @@ namespace Engine.Serialization
                 var strVariants = new Variant[count];
                 for (int i = 0; i < strVariants.Length; i++)
                 {
-                    strVariants[i] = ReadString(reader);
+                    strVariants[i] = EngineFileUtils.ReadString(reader);
                 }
                 return strVariants;
             }
@@ -413,14 +383,6 @@ namespace Engine.Serialization
             return variants;
         }
 
-        private static T[] ReadArray<T>(BinaryReader reader, int count) where T : unmanaged
-        {
-            var values = new T[count];
-            Span<byte> bytes = MemoryMarshal.AsBytes(values.AsSpan());
-            reader.BaseStream.ReadExactly(bytes);
-            return values;
-        }
-
         private static Variant[] ReadBoolPayloadSpan(BinaryReader reader, int count)
         {
             var variants = new Variant[count];
@@ -433,7 +395,7 @@ namespace Engine.Serialization
 
                 for (int i = 0; i < count; i++)
                 {
-                    variants[i] = ByteToBool(buffer[i]);
+                    variants[i] = EngineFileUtils.ByteToBool(buffer[i]);
                 }
             }
             else
@@ -446,7 +408,7 @@ namespace Engine.Serialization
 
                     for (int i = 0; i < count; i++)
                     {
-                        variants[i] = ByteToBool(buffer[i]);
+                        variants[i] = EngineFileUtils.ByteToBool(buffer[i]);
                     }
                 }
                 finally
@@ -459,18 +421,10 @@ namespace Engine.Serialization
         }
 
 
-        private static bool ByteToBool(byte value)
-        {
-            return value != 0;
-        }
-        private static bool ReadBool(BinaryReader reader)
-        {
-            return ByteToBool(reader.ReadByte());
-        }
 
         private static EnumIRValue ReadEnum(BinaryReader reader)
         {
-            var id = FileUtils.ReadGuidNoAlloc(reader);
+            var id = EngineFileUtils.ReadGuidNoAlloc(reader);
             var enumVal = reader.ReadInt64();
             return new EnumIRValue()
             {
@@ -612,7 +566,7 @@ namespace Engine.Serialization
                 return complexTypeData;
             }
 
-            complexTypeData.TypeId = FileUtils.ReadGuidNoAlloc(reader);
+            complexTypeData.TypeId = EngineFileUtils.ReadGuidNoAlloc(reader);
             complexTypeData.Properties = Deserialize(reader);
 
             return complexTypeData;
@@ -627,9 +581,9 @@ namespace Engine.Serialization
                 case SerializedType.Char:
                     return reader.ReadChar();
                 case SerializedType.String:
-                    return ReadString(reader);
+                    return EngineFileUtils.ReadString(reader);
                 case SerializedType.Bool:
-                    return ReadBool(reader);
+                    return EngineFileUtils.ReadBool(reader);
                 case SerializedType.Byte:
                     return reader.ReadByte();
                 case SerializedType.Short:
@@ -651,25 +605,25 @@ namespace Engine.Serialization
                 case SerializedType.ULong:
                     return reader.ReadUInt64();
                 case SerializedType.Vec2:
-                    return ReadStructNoAlloc<vec2>(reader);
+                    return EngineFileUtils.ReadStructNoAlloc<vec2>(reader);
                 case SerializedType.Vec3:
-                    return ReadStructNoAlloc<vec3>(reader);
+                    return EngineFileUtils.ReadStructNoAlloc<vec3>(reader);
                 case SerializedType.Vec4:
-                    return ReadStructNoAlloc<vec4>(reader);
+                    return EngineFileUtils.ReadStructNoAlloc<vec4>(reader);
                 case SerializedType.IVec2:
-                    return ReadStructNoAlloc<ivec2>(reader);
+                    return EngineFileUtils.ReadStructNoAlloc<ivec2>(reader);
                 case SerializedType.IVec3:
-                    return ReadStructNoAlloc<ivec3>(reader);
+                    return EngineFileUtils.ReadStructNoAlloc<ivec3>(reader);
                 case SerializedType.IVec4:
-                    return ReadStructNoAlloc<ivec4>(reader);
+                    return EngineFileUtils.ReadStructNoAlloc<ivec4>(reader);
                 case SerializedType.Quat:
-                    return ReadStructNoAlloc<quat>(reader);
+                    return EngineFileUtils.ReadStructNoAlloc<quat>(reader);
                 case SerializedType.Mat2:
-                    return ReadStructNoAlloc<mat2>(reader);
+                    return EngineFileUtils.ReadStructNoAlloc<mat2>(reader);
                 case SerializedType.Mat3:
-                    return ReadStructNoAlloc<mat3>(reader);
+                    return EngineFileUtils.ReadStructNoAlloc<mat3>(reader);
                 case SerializedType.Mat4:
-                    return ReadStructNoAlloc<mat4>(reader);
+                    return EngineFileUtils.ReadStructNoAlloc<mat4>(reader);
                 case SerializedType.Color:
                     return (Color)reader.ReadUInt32();
                 case SerializedType.Color32:
@@ -679,11 +633,5 @@ namespace Engine.Serialization
             }
         }
 
-        public static unsafe T ReadStructNoAlloc<T>(BinaryReader reader) where T : unmanaged
-        {
-            Span<byte> buff = stackalloc byte[sizeof(T)];
-            reader.BaseStream.ReadExactly(buff);
-            return MemoryMarshal.Read<T>(buff);
-        }
     }
 }

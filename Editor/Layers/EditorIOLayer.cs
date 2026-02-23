@@ -35,7 +35,9 @@ namespace Editor
                 { AssetType.AnimationClip, new AnimationClipAssetBuilderEditor() },
                 { AssetType.AnimationController, new AnimationControllerAssetBuilderEditor() },
                 { AssetType.Material, new MaterialAssetBuilderEditor() },
+                { AssetType.Tilemap, new TilemapAssetBuilder() },
             });
+
             _intiialized = true;
             return Task.CompletedTask;
         }

@@ -29,6 +29,7 @@ namespace Engine.Layers
                 { AssetType.AnimationClip, new AnimationClipAssetBuilder() },
                 { AssetType.Material, new MaterialAssetBuilder() },
                 //{ AssetType.AnimationController, new FontAssetBuilder() },
+                { AssetType.Tilemap, new TilemapAssetBuilder() },
             };
 
             InitializeIO(disk, assetbuilder);

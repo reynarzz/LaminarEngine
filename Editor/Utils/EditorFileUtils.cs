@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Editor.Utils
 {
-    internal static class EditorUtils
+    internal static class EditorFileUtils
     {
         public static bool IsNativeDll(string dllPath)
         {

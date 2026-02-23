@@ -69,11 +69,11 @@ namespace Editor.Cooker
                  Guid ParentID 
                  List<ComponentIR> Components 
             */
-            EditorUtils.WriteString(writer, ir.Name);
+            EditorFileUtils.WriteString(writer, ir.Name);
             writer.Write(ir.Layer);
-            EditorUtils.WriteBool(writer, ir.IsActiveSelf);
-            EditorUtils.WriteGuidNoAlloc(writer, ir.ID);
-            EditorUtils.WriteGuidNoAlloc(writer, ir.ParentID);
+            EditorFileUtils.WriteBool(writer, ir.IsActiveSelf);
+            EditorFileUtils.WriteGuidNoAlloc(writer, ir.ID);
+            EditorFileUtils.WriteGuidNoAlloc(writer, ir.ParentID);
             writer.Write(ir.Components.Count);
 
             for (int i = 0; i < ir.Components.Count; i++)
@@ -90,9 +90,9 @@ namespace Editor.Cooker
                 Guid ID 
                 List<SerializedPropertyIR> SerializedProperties 
              */
-            EditorUtils.WriteGuidNoAlloc(writer, ir.TypeId);
-            EditorUtils.WriteBool(writer, ir.IsEnabled);
-            EditorUtils.WriteGuidNoAlloc(writer, ir.ID);
+            EditorFileUtils.WriteGuidNoAlloc(writer, ir.TypeId);
+            EditorFileUtils.WriteBool(writer, ir.IsEnabled);
+            EditorFileUtils.WriteGuidNoAlloc(writer, ir.ID);
             writer.Write(ir.Properties.Length);
 
             RegisterType(ir.InternalType);
@@ -112,8 +112,8 @@ namespace Editor.Cooker
              object Data 
              */
             var serializedType = ir.Type;
-            EditorUtils.WriteString(writer, ir.Name);
-            EditorUtils.WriteGuidNoAlloc(writer, ir.TypeId);
+            EditorFileUtils.WriteString(writer, ir.Name);
+            EditorFileUtils.WriteGuidNoAlloc(writer, ir.TypeId);
             writer.Write((ulong)(serializedType));
 
             RegisterType(ir.InternalType);
@@ -199,81 +199,81 @@ namespace Editor.Cooker
                     }
                     break;
                 case SerializedType.Char:
-                    EditorUtils.WriteSpan(writer, (array as CollectionDataChar).Value);
+                    EditorFileUtils.WriteSpan(writer, (array as CollectionDataChar).Value);
                     break;
                 case SerializedType.String:
                     {
                         foreach (var v in (array as CollectionDataString).Value)
                         {
-                            EditorUtils.WriteString(writer, v);
+                            EditorFileUtils.WriteString(writer, v);
                         }
                     }
                     break;
                 case SerializedType.Bool:
-                    EditorUtils.WriteSpan(writer, (array as CollectionDataBool).Value); 
+                    EditorFileUtils.WriteSpan(writer, (array as CollectionDataBool).Value); 
                     break;
                 case SerializedType.Byte:
-                    EditorUtils.WriteSpan(writer, (array as CollectionDataByte).Value);
+                    EditorFileUtils.WriteSpan(writer, (array as CollectionDataByte).Value);
                     break;
                 case SerializedType.Short:
-                    EditorUtils.WriteSpan(writer, (array as CollectionDataShort).Value);
+                    EditorFileUtils.WriteSpan(writer, (array as CollectionDataShort).Value);
                     break;
                 case SerializedType.UShort:
-                    EditorUtils.WriteSpan(writer, (array as CollectionDataUShort).Value);
+                    EditorFileUtils.WriteSpan(writer, (array as CollectionDataUShort).Value);
                     break;
                 case SerializedType.Int:
-                    EditorUtils.WriteSpan(writer, (array as CollectionDataInt).Value);
+                    EditorFileUtils.WriteSpan(writer, (array as CollectionDataInt).Value);
                     break;
                 case SerializedType.UInt:
-                    EditorUtils.WriteSpan(writer, (array as CollectionDataUInt).Value);
+                    EditorFileUtils.WriteSpan(writer, (array as CollectionDataUInt).Value);
                     break;
                 case SerializedType.Float:
-                    EditorUtils.WriteSpan(writer, (array as CollectionDataFloat).Value);
+                    EditorFileUtils.WriteSpan(writer, (array as CollectionDataFloat).Value);
                     break;
                 case SerializedType.Double:
-                    EditorUtils.WriteSpan(writer, (array as CollectionDataDouble).Value);
+                    EditorFileUtils.WriteSpan(writer, (array as CollectionDataDouble).Value);
                     break;
                 case SerializedType.Long:
-                    EditorUtils.WriteSpan(writer, (array as CollectionDataLong).Value);
+                    EditorFileUtils.WriteSpan(writer, (array as CollectionDataLong).Value);
                     break;
                 case SerializedType.ULong:
-                    EditorUtils.WriteSpan(writer, (array as CollectionDataULong).Value);
+                    EditorFileUtils.WriteSpan(writer, (array as CollectionDataULong).Value);
                     break;
                 case SerializedType.Vec2:
-                    EditorUtils.WriteSpan(writer, (array as CollectionDataVec2).Value);
+                    EditorFileUtils.WriteSpan(writer, (array as CollectionDataVec2).Value);
                     break;
                 case SerializedType.Vec3:
-                    EditorUtils.WriteSpan(writer, (array as CollectionDataVec3).Value);
+                    EditorFileUtils.WriteSpan(writer, (array as CollectionDataVec3).Value);
                     break;
                 case SerializedType.Vec4:
-                    EditorUtils.WriteSpan(writer, (array as CollectionDataVec4).Value);
+                    EditorFileUtils.WriteSpan(writer, (array as CollectionDataVec4).Value);
                     break;
                 case SerializedType.IVec2:
-                    EditorUtils.WriteSpan(writer, (array as CollectionDataIvec2).Value);
+                    EditorFileUtils.WriteSpan(writer, (array as CollectionDataIvec2).Value);
                     break;
                 case SerializedType.IVec3:
-                    EditorUtils.WriteSpan(writer, (array as CollectionDataIvec3).Value);
+                    EditorFileUtils.WriteSpan(writer, (array as CollectionDataIvec3).Value);
                     break;
                 case SerializedType.IVec4:
-                    EditorUtils.WriteSpan(writer, (array as CollectionDataIvec4).Value);
+                    EditorFileUtils.WriteSpan(writer, (array as CollectionDataIvec4).Value);
                     break;
                 case SerializedType.Quat:
-                    EditorUtils.WriteSpan(writer, (array as CollectionDataQuat).Value);
+                    EditorFileUtils.WriteSpan(writer, (array as CollectionDataQuat).Value);
                     break;
                 case SerializedType.Mat2:
-                    EditorUtils.WriteSpan(writer, (array as CollectionDataMat2).Value);
+                    EditorFileUtils.WriteSpan(writer, (array as CollectionDataMat2).Value);
                     break;
                 case SerializedType.Mat3:
-                    EditorUtils.WriteSpan(writer, (array as CollectionDataMat3).Value);
+                    EditorFileUtils.WriteSpan(writer, (array as CollectionDataMat3).Value);
                     break;
                 case SerializedType.Mat4:
-                    EditorUtils.WriteSpan(writer, (array as CollectionDataMat4).Value);
+                    EditorFileUtils.WriteSpan(writer, (array as CollectionDataMat4).Value);
                     break;
                 case SerializedType.Color:
-                    EditorUtils.WriteSpan(writer, (array as CollectionDataColor).Value);
+                    EditorFileUtils.WriteSpan(writer, (array as CollectionDataColor).Value);
                     break;
                 case SerializedType.Color32:
-                    EditorUtils.WriteSpan(writer, (array as CollectionDataColor32).Value);
+                    EditorFileUtils.WriteSpan(writer, (array as CollectionDataColor32).Value);
                     break;
                 default:
                     break;
@@ -288,7 +288,7 @@ namespace Editor.Cooker
             {
                 foreach (var v in variants)
                 {
-                    EditorUtils.WriteString(writer, v.String);
+                    EditorFileUtils.WriteString(writer, v.String);
                 }
                 return;
             }
@@ -393,7 +393,7 @@ namespace Editor.Cooker
             RegisterType(data.InternalType);
 
             writer.Write((ulong)(data.ClassType));
-            EditorUtils.WriteGuidNoAlloc(writer, data.TypeId);
+            EditorFileUtils.WriteGuidNoAlloc(writer, data.TypeId);
             Serialize(writer, data.Properties);
         }
 
@@ -480,7 +480,7 @@ namespace Editor.Cooker
                                 continue;
                             }
                             writer.Write((ulong)(item.Type));
-                            EditorUtils.WriteGuidNoAlloc(writer, item.RefId);
+                            EditorFileUtils.WriteGuidNoAlloc(writer, item.RefId);
                         }
                     }
                     break;
@@ -542,10 +542,10 @@ namespace Editor.Cooker
                     writer.Write(data.value.Char);
                     break;
                 case SerializedType.String:
-                    EditorUtils.WriteString(writer, data.String);
+                    EditorFileUtils.WriteString(writer, data.String);
                     break;
                 case SerializedType.Bool:
-                    EditorUtils.WriteBool(writer, data.value.Bool);
+                    EditorFileUtils.WriteBool(writer, data.value.Bool);
                     break;
                 case SerializedType.Byte:
                     writer.Write(data.value.Byte);
@@ -627,13 +627,13 @@ namespace Editor.Cooker
         {
             if (!string.IsNullOrEmpty(value.EnumInternalType))
             {
-                EditorUtils.WriteGuidNoAlloc(writer, value.TypeId);
+                EditorFileUtils.WriteGuidNoAlloc(writer, value.TypeId);
                 writer.Write(value.EnumValue);
                 RegisterType(value.EnumInternalType);
             }
             else
             {
-                EditorUtils.WriteGuidNoAlloc(writer, Guid.Empty);
+                EditorFileUtils.WriteGuidNoAlloc(writer, Guid.Empty);
                 writer.Write((long)0);
             }
         }
@@ -678,7 +678,7 @@ namespace Editor.Cooker
                 var dst = buffer.AsSpan(0, count);
                 for (int i = 0; i < count; i++)
                 {
-                    dst[i] = EditorUtils.BoolToByte(variants[i].value.Bool);
+                    dst[i] = EditorFileUtils.BoolToByte(variants[i].value.Bool);
                 }
                 writer.Write(dst);
             }

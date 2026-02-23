@@ -91,7 +91,7 @@ namespace Editor.Cooker
                     var relAssetPath = Paths.GetRelativeAssetPath(filePath);
 
                     // asset guid 
-                    EditorUtils.WriteGuidNoAlloc(bufWritter, meta.GUID);
+                    EditorFileUtils.WriteGuidNoAlloc(bufWritter, meta.GUID);
 
                     var pathBytes = Encoding.UTF8.GetBytes(relAssetPath);
 

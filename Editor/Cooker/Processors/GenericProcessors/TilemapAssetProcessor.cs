@@ -15,132 +15,9 @@ namespace Editor.Cooker
 {
     internal class TilemapAssetProcessor : IAssetProcessor
     {
-        public class Tilemap
-        {
-            public int Version { get; set; }
 
-            public TilemapLevel[] Levels { get; set; }
-        }
-
-        public class TilemapLevel
-        {
-            public string Identifier { get; set; }
-            public string IID { get; set; }
-            public ivec2 WorldPosition { get; set; }
-            public ivec2 SizeInPixels { get; set; }
-            public int Depth { get; set; }
-            public Bounds Bounds { get; set; }
-            public TilemapLevelLayer[] Layers { get; set; }
-        }
-
-        public enum TilemapLayerType
-        {
-            IntGrid,
-            Entities,
-            Tiles,
-            AutoLayer
-        }
-
-        public class TilemapLevelLayer
-        {
-            public string Identifier { get; set; }
-            public string IID { get; set; }
-            public ivec2 SizeGridBased { get; set; }
-            public int GridSize { get; set; }
-            public float Opacity { get; set; }
-            public ivec2 Offset { get; set; }
-            public Bounds Bounds { get; set; }
-            public TilemapLayerType Type { get; set; }
-            public vec2[] TilesPosition { get; set; }
-            public TilemapEntity[] Entities { get; set; }
-            internal Vertex[] Vertices { get; set; }
-            internal int IndicesToDraw { get; set; }
-
-            public ReadOnlySpan<vec2> GetTilesPosition()
-            {
-                return TilesPosition;
-            }
-        }
-
-        public class TilemapEntity
-        {
-            public string Identifier { get; set; }
-
-            // Instance identifier
-            public string IID { get; set; }
-
-            public vec2 Pivot { get; set; }
-            public string[] Tags { get; set; }
-            public ivec2 SizeInPixels { get; set; }
-            public vec2 WorldPosition { get; set; }
-        }
-
-        public class EntityProperty
-        {
-            public string Identifier { get; set; }
-            public EntityPropertyValue Value { get; set; }
-        }
-
-        public enum PropertyValueType
-        {
-            Unknown,
-            String,
-            Bool,
-            Int,
-            Float,
-            Vec2,
-            Enum,
-            Color,
-            EntityRef,
-            Tile,
-
-            StringArray,
-            BoolArray,
-            IntArray,
-            FloatArray,
-            Vec2Array,
-            EnumArray,
-            ColorArray,
-            EntityRefArray,
-            TileArray
-        }
-
-        public struct EntityPropertyValue
-        {
-            public PropertyValueType Type { get; set; }
-            public int IntValue { get; set; }
-            public string StringValue { get; set; }
-            public EnumValue EnumValue { get; set; }
-            public float FloatValue { get; set; }
-            public float BoolValue { get; set; }
-            public vec2 PointValue { get; set; }
-            public EntityRef EntityRef { get; set; }
-        }
-
-        public struct EnumValue
-        {
-            public string EnumTitle { get; set; }
-            public string EnumValStr { get; set; }
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct EntityRef
-        {
-            public Guid entityIid;
-            public Guid layerIid;
-            public Guid levelIid;
-            public Guid worldIid;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct TileRef
-        {
-            public int TilesetUid;
-            public ivec2 SizePx;
-            public ivec2 PositionPx;
-        }
         /* Tilemap file format
-        Version char[4]
+        Version (uint)
 
         -Metadata
         Levels count (u32)
@@ -167,7 +44,6 @@ namespace Editor.Cooker
             Identifier (string)
             iid (guid)
             Visible (bool)
-            PixelsPerUnit (u32) (16px default)
             Grid based size (ivec2)
             Grid size (u32)
             Opacity (float)
@@ -202,7 +78,7 @@ namespace Editor.Cooker
         private readonly Dictionary<Guid, TextureMetaFile> _texturesMeta = new();
 
         private const float DEFAULT_PIXEL_PER_UNIT = 16;
-        private const int VERSION = 1;
+        private const uint VERSION = 1;
 
         AssetProccesResult IAssetProcessor.Process(BinaryReader reader, AssetMeta meta, CookingPlatform platform)
         {
@@ -215,7 +91,7 @@ namespace Editor.Cooker
             using var writer = new BinaryWriter(mem);
 
             // Version
-            writer.Write(VERSION);
+            writer.Write((uint)VERSION);
 
             try
             {
@@ -251,16 +127,16 @@ namespace Editor.Cooker
                 var levelConfig = meta.LevelConfig?.Length == project.Levels.Length ? meta.LevelConfig[i] : null;
 
                 // Write level identifier
-                EditorUtils.WriteString(writer, level.Identifier);
+                EditorFileUtils.WriteString(writer, level.Identifier);
 
                 // Write level iid
-                EditorUtils.WriteGuidNoAlloc(writer, Guid.Parse(level.Iid));
+                EditorFileUtils.WriteGuidNoAlloc(writer, Guid.Parse(level.Iid));
 
                 // Level position
-                EditorUtils.WriteStruct(writer, new ivec2((int)level.WorldX, (int)level.WorldY));
+                EditorFileUtils.WriteStruct(writer, new ivec2((int)level.WorldX, (int)level.WorldY));
 
                 // Level size
-                EditorUtils.WriteStruct(writer, new ivec2((int)level.PxWid, (int)level.PxHei));
+                EditorFileUtils.WriteStruct(writer, new ivec2((int)level.PxWid, (int)level.PxHei));
 
                 // Level depth
                 writer.Write((int)level.WorldDepth);
@@ -269,7 +145,7 @@ namespace Editor.Cooker
                 writer.Write(HexToRgbaUint(level.BgColor));
 
                 // Layers count
-                writer.Write(level.LayerInstances.Length);
+                writer.Write((int)level.LayerInstances.Length);
 
                 for (int j = 0; j < level.LayerInstances.Length; j++)
                 {
@@ -291,7 +167,7 @@ namespace Editor.Cooker
                             else
                             {
                                 // HACK, this is provisional
-                                if(DevModeFilesCooker._database.Assets.TryGetValue(guid, out var info))
+                                if (DevModeFilesCooker._database.Assets.TryGetValue(guid, out var info))
                                 {
                                     assetPath = info.Path;
                                 }
@@ -309,19 +185,16 @@ namespace Editor.Cooker
                     float ppu = textureMeta?.Config?.PixelPerUnit ?? DEFAULT_PIXEL_PER_UNIT;
 
                     // Layer Identifier
-                    EditorUtils.WriteString(writer, layer.Identifier);
+                    EditorFileUtils.WriteString(writer, layer.Identifier);
 
                     // Layer IID
-                    EditorUtils.WriteGuidNoAlloc(writer, Guid.Parse(layer.Iid));
+                    EditorFileUtils.WriteGuidNoAlloc(writer, Guid.Parse(layer.Iid));
 
                     // Layer visible
-                    EditorUtils.WriteBool(writer, layer.Visible);
-
-                    // Pixels per unit.
-                    writer.Write(ppu);
+                    EditorFileUtils.WriteBool(writer, layer.Visible);
 
                     // Grid based size
-                    EditorUtils.WriteStruct(writer, new ivec2((int)layer.CWid, (int)layer.CHei));
+                    EditorFileUtils.WriteStruct(writer, new ivec2((int)layer.CWid, (int)layer.CHei));
 
                     // Grid size
                     writer.Write((int)layer.GridSize);
@@ -330,7 +203,7 @@ namespace Editor.Cooker
                     writer.Write((float)layer.Opacity);
 
                     // Total Offset in pixels
-                    EditorUtils.WriteStruct(writer, new ivec2((int)layer.PxTotalOffsetX, (int)layer.PxTotalOffsetY));
+                    EditorFileUtils.WriteStruct(writer, new ivec2((int)layer.PxTotalOffsetX, (int)layer.PxTotalOffsetY));
 
                     if (!layer.Visible)
                         continue;
@@ -358,7 +231,7 @@ namespace Editor.Cooker
                     }
                 }
 
-                EditorUtils.WriteStruct(writer, levelBounds);
+                EditorFileUtils.WriteStruct(writer, levelBounds);
             }
 
             _texturesMeta.Clear();
@@ -384,17 +257,17 @@ namespace Editor.Cooker
                 if (arr.Length > 0)
                 {
                     // Write array
-                    EditorUtils.WriteSpan(writer, arr);
+                    EditorFileUtils.WriteSpan(writer, arr);
                 }
             }
 
             foreach (var entity in layer.EntityInstances)
             {
                 // Entity identifier
-                EditorUtils.WriteString(writer, entity.Identifier);
+                EditorFileUtils.WriteString(writer, entity.Identifier);
 
                 // Write entity iiD
-                EditorUtils.WriteGuidNoAlloc(writer, Guid.Parse(entity.Iid));
+                EditorFileUtils.WriteGuidNoAlloc(writer, Guid.Parse(entity.Iid));
 
                 // Tags count
                 writer.Write(entity.Tags.Length);
@@ -402,23 +275,23 @@ namespace Editor.Cooker
                 // Entity Tags
                 foreach (var tag in entity.Tags)
                 {
-                    EditorUtils.WriteString(writer, tag);
+                    EditorFileUtils.WriteString(writer, tag);
                 }
 
                 var worldPosition = ConvertToWorld(entity.Px[0], entity.Px[1], pixelPerUnit, level, layer);
 
                 // Entity position
-                EditorUtils.WriteStruct(writer, worldPosition);
+                EditorFileUtils.WriteStruct(writer, worldPosition);
 
                 // Write pivot
-                EditorUtils.WriteStruct(writer, new vec2((float)entity.Pivot[0], (float)entity.Pivot[1]));
+                EditorFileUtils.WriteStruct(writer, new vec2((float)entity.Pivot[0], (float)entity.Pivot[1]));
 
                 // Write Properties count
                 writer.Write(entity.FieldInstances.Length);
                 foreach (var field in entity.FieldInstances)
                 {
                     // Field identifier
-                    EditorUtils.WriteString(writer, field.Identifier);
+                    EditorFileUtils.WriteString(writer, field.Identifier);
 
                     var propType = ParsePropertyType(field.Type);
 
@@ -439,7 +312,7 @@ namespace Editor.Cooker
                         }
 
                         // Write string
-                        EditorUtils.WriteString(writer, str);
+                        EditorFileUtils.WriteString(writer, str);
                     }
                     else if (propType == PropertyValueType.Float)
                     {
@@ -453,7 +326,7 @@ namespace Editor.Cooker
                         bool boolVal = field.Value != null ? (bool)field.Value : false;
 
                         // Write Bool 
-                        EditorUtils.WriteBool(writer, boolVal);
+                        EditorFileUtils.WriteBool(writer, boolVal);
                     }
                     else if (propType == PropertyValueType.Int)
                     {
@@ -472,7 +345,7 @@ namespace Editor.Cooker
                         }
 
                         // Write point coords.
-                        EditorUtils.WriteStruct(writer, pointWorldPos);
+                        EditorFileUtils.WriteStruct(writer, pointWorldPos);
                     }
                     else if (propType == PropertyValueType.Enum)
                     {
@@ -480,17 +353,17 @@ namespace Editor.Cooker
                         var enumVal = field?.Value?.ToString() ?? string.Empty;
 
                         // Enum field name
-                        EditorUtils.WriteString(writer, enumFieldName);
+                        EditorFileUtils.WriteString(writer, enumFieldName);
 
                         // Enum value str
-                        EditorUtils.WriteString(writer, enumVal);
+                        EditorFileUtils.WriteString(writer, enumVal);
                     }
                     else if (propType == PropertyValueType.Tile)
                     {
                         var tileRef = GetTileRefStruct(DeserializeJsonFieldSafe<ldtk.TilesetRectangle>(field));
 
                         // Write Tile ref
-                        EditorUtils.WriteStruct(writer, tileRef);
+                        EditorFileUtils.WriteStruct(writer, tileRef);
                     }
                     else if (propType == PropertyValueType.EntityRef)
                     {
@@ -506,7 +379,7 @@ namespace Editor.Cooker
                         var enumFieldName = field.Type.Substring(startIndex, count);
                         var enumArrVals = ParseJsonArray<string>(field.Value);
                         // Enums field name
-                        EditorUtils.WriteString(writer, enumFieldName);
+                        EditorFileUtils.WriteString(writer, enumFieldName);
 
                         // Enums count
                         writer.Write(enumArrVals.Length);
@@ -514,7 +387,7 @@ namespace Editor.Cooker
                         // Enums str
                         foreach (var str in enumArrVals)
                         {
-                            EditorUtils.WriteString(writer, str);
+                            EditorFileUtils.WriteString(writer, str);
                         }
                     }
                     else if (propType == PropertyValueType.Vec2Array)
@@ -528,7 +401,7 @@ namespace Editor.Cooker
                             var pointWorldPos = ConvertToWorld(point.Cx, point.Cy, pixelPerUnit, level, layer, true);
 
                             // Points coord
-                            EditorUtils.WriteStruct(writer, pointWorldPos);
+                            EditorFileUtils.WriteStruct(writer, pointWorldPos);
                         }
                     }
                     else if (propType == PropertyValueType.IntArray)
@@ -556,7 +429,7 @@ namespace Editor.Cooker
                         // Write str array 
                         foreach (var str in arrVal)
                         {
-                            EditorUtils.WriteString(writer, str);
+                            EditorFileUtils.WriteString(writer, str);
                         }
                     }
                     else if (propType == PropertyValueType.EntityRefArray)
@@ -601,7 +474,7 @@ namespace Editor.Cooker
                             // Write tile array
                             foreach (var tile in tilesRefArr)
                             {
-                                EditorUtils.WriteStruct(writer, GetTileRefStruct(tile));
+                                EditorFileUtils.WriteStruct(writer, GetTileRefStruct(tile));
                             }
                         }
                     }
@@ -616,10 +489,10 @@ namespace Editor.Cooker
         private void WriteEntityRef(BinaryWriter writer, EntityRef entityRef)
         {
             // Write EntityRef
-            EditorUtils.WriteGuidNoAlloc(writer, entityRef.entityIid);
-            EditorUtils.WriteGuidNoAlloc(writer, entityRef.layerIid);
-            EditorUtils.WriteGuidNoAlloc(writer, entityRef.levelIid);
-            EditorUtils.WriteGuidNoAlloc(writer, entityRef.worldIid);
+            EditorFileUtils.WriteGuidNoAlloc(writer, entityRef.entityIid);
+            EditorFileUtils.WriteGuidNoAlloc(writer, entityRef.layerIid);
+            EditorFileUtils.WriteGuidNoAlloc(writer, entityRef.levelIid);
+            EditorFileUtils.WriteGuidNoAlloc(writer, entityRef.worldIid);
         }
 
         private uint DeserializeColorSafe(object value)
@@ -729,12 +602,21 @@ namespace Editor.Cooker
         private void WriteLayerTiles(BinaryWriter writer, ldtk.Level level, ldtk.LayerInstance layer,
             ldtk.TileInstance[] tiles, TextureMetaFile texture, float ppu, ref Bounds levelBounds)
         {
+            if (tiles == null)
+            {
+                writer.Write((int)0);
+                return;
+            }
+            // Tiles count
+            writer.Write((int)tiles.Length);
+
+            if (tiles.Length == 0)
+            {
+                return;
+            }
             int indexToDraw = tiles.Length * 6;
             var layerBounds = Bounds.GetInitialized();
             var tilesPositions = new vec2[tiles.Length];
-
-            // Tiles count
-            writer.Write(tiles.Length);
 
             // Indices to draw
             writer.Write(indexToDraw);
@@ -758,18 +640,15 @@ namespace Editor.Cooker
                 WriteTile(writer, new Tile((int)tile.T, isFlippedX, isFlippedY), position, texture, ppu, ref layerBounds);
             }
 
-            if (tiles.Length > 0)
-            {
-                // Tiles positions
-                EditorUtils.WriteSpan(writer, tilesPositions);
-            }
+            // Tiles positions
+            EditorFileUtils.WriteSpan(writer, tilesPositions);
 
             layerBounds.Min -= vec3.One * 0.5f;
             layerBounds.Max += vec3.One * 0.5f;
             layerBounds.Min.z = 0;
             layerBounds.Max.z = 0;
 
-            EditorUtils.WriteStruct(writer, layerBounds);
+            EditorFileUtils.WriteStruct(writer, layerBounds);
 
             ref var max = ref levelBounds.Max;
             ref var min = ref levelBounds.Min;
@@ -799,7 +678,7 @@ namespace Editor.Cooker
             QuadVertices vertices = default;
             GraphicsHelper.CreateQuad(ref vertices, chunk.Uvs, width, height, chunk.Pivot, Color.White, tileMatrix);
 
-            EditorUtils.WriteStruct(writer, vertices);
+            EditorFileUtils.WriteStruct(writer, vertices);
 
             ref var max = ref layerBounds.Max;
             ref var min = ref layerBounds.Min;

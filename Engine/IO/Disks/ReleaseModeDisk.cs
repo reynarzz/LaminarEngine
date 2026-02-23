@@ -77,7 +77,7 @@ namespace Engine.IO
 
                 _reader.BaseStream.Position = assetBlockLoc;
 
-                Guid guid = FileUtils.ReadGuidNoAlloc(_reader);
+                Guid guid = EngineFileUtils.ReadGuidNoAlloc(_reader);
 
                 int pathSize = _reader.ReadInt32();
 
