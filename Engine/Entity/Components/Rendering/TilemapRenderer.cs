@@ -3,6 +3,7 @@ using Engine.Layers;
 using Engine.Types;
 using GlmNet;
 using Engine;
+using Engine.Drawers;
 
 namespace Engine
 {
@@ -30,7 +31,7 @@ namespace Engine
         public override int SortOrder { get => base.SortOrder; set => base.SortOrder = value; }
 
         private TilemapAsset _tilemapAsset;
-        [SerializedField]
+        [SerializedField, CustomPropertyDrawer<TilemapPropertyDrawer>]
         public TilemapAsset Tilemap
         {
             get => _tilemapAsset;
@@ -64,7 +65,7 @@ namespace Engine
         internal override void OnInternalInitialize()
         {
             base.OnInternalInitialize();
-            _rendererData = (RendererData as RendererData2D);
+            _rendererData = RendererData as RendererData2D;
             _rendererData.Mesh = new Mesh();
             _rendererData.Mesh.IndicesToDrawCount = 0;
             _rendererData.PrivateBatch = true;

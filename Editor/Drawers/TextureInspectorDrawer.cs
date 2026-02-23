@@ -48,7 +48,7 @@ namespace Editor
             }
             foreach (var property in _configProperties)
             {
-                PropertyDrawer.DrawVars(target.GetID().ToString(), _meta.Config, property, false);
+                PropertiesDrawerEditor.DrawVars(target.GetID().ToString(), _meta.Config, property, false);
             }
 
             ImGui.BeginDisabled(!_meta.Config.IsAtlas);

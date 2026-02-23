@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Editor
 {
-    internal class PropertyDrawer
+    internal class PropertiesDrawerEditor
     {
         private static object _copiedValue;
 
@@ -46,7 +46,25 @@ namespace Editor
             ImGui.BeginDisabled(isReadOnly);
             var v = (T)value;
             var result = false;
-            if (drawField(propertyName, ref v, width, false))
+
+            var customDrawer = prop.GetCustomAttribute<CustomPropertyDrawerAttribute>();
+
+            var valueChanged = false;
+
+            if (customDrawer != null)
+            {
+                ImGui.Dummy(new Vector2(0, ImGui.GetStyle().ItemSpacing.Y));
+                valueChanged = customDrawer.GetDrawer().Draw(propertyName, target, in value, out var valueOut);
+                if (valueChanged && valueOut != null)
+                {
+                    v = (T)valueOut;
+                }
+            }
+            else
+            {
+                valueChanged = drawField(propertyName, ref v, width, false);
+            }
+            if (valueChanged)
             {
                 if (valueConverter != null)
                 {
@@ -162,7 +180,7 @@ namespace Editor
             ImGui.PushStyleColor(ImGuiCol.HeaderHovered, new Vector4(0));
             ImGui.PushStyleColor(ImGuiCol.HeaderActive, new Vector4(0));
             var spacing = ImGui.GetStyle().ItemSpacing;
-            
+
             ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(spacing.X, 4));
             var show = ImGui.TreeNodeEx($"{propertyName}##{objectId}{index}", flags);
             ImGui.PopStyleVar();

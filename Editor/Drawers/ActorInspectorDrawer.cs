@@ -40,11 +40,11 @@ namespace Editor
                         int index = 0;
                         foreach (var member in members)
                         {
-                            PropertyDrawer.DrawVars(x.GetID().ToString(), component, member, 0, index, 0, true);
+                            PropertiesDrawerEditor.DrawVars(x.GetID().ToString(), component, member, 0, index, 0, true);
                             index++;
                         }
 
-                        PropertyDrawer.DrawMethods(component, x.GetID().ToString());
+                        PropertiesDrawerEditor.DrawMethods(component, x.GetID().ToString());
 
                     }
                 });

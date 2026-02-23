@@ -62,7 +62,7 @@ namespace Editor
 
             foreach (var member in members)
             {
-                PropertyDrawer.DrawVars(target.GetID().ToString(), target, member);
+                PropertiesDrawerEditor.DrawVars(target.GetID().ToString(), target, member);
             }
         }
 
