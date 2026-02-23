@@ -27,6 +27,7 @@ namespace Editor
     // - If a collider change from Trigger to normal (and viceversa), the ontrigerExit/onCollisionExit must be called.
     // - The renderData is not removed from renderingLayer dictionary if the Actor starts disabled in the first frame, and then try to enable it.
     // - Forbid materials to send system uniforms: example: uTime, MVp, etc...
+    // - Tilemap entity worldPosition is misaligned
 
     // Serialization:
     // - Forbid serialization of dictionaries that contains EObject as key?
@@ -60,6 +61,7 @@ namespace Editor
 
 
     // Tilemap:
+
     // TilemapRenderer will have a menu to decide which layers from a level will be rendererd.
     // TilemapCollider will decide which layers in a level will contain colliders.
 

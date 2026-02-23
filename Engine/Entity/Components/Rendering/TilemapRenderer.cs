@@ -29,10 +29,36 @@ namespace Engine
         [SerializedField]
         public override int SortOrder { get => base.SortOrder; set => base.SortOrder = value; }
 
-        [SerializedField] public TilemapRenderingOptions Options { get; set; }
+        private TilemapAsset _tilemapAsset;
+        [SerializedField]
+        public TilemapAsset Tilemap
+        {
+            get => _tilemapAsset;
+            private set
+            {
+                if (_tilemapAsset == value)
+                    return;
 
-        [SerializedField] public TilemapAsset Tilemap { get; private set; }
+                _tilemapAsset = value;
+                SetTilemap(_tilemapAsset, Options);
+            }
+        }
 
+
+        private TilemapRenderingOptions _renderingOptions;
+        [SerializedField]
+        public TilemapRenderingOptions Options
+        {
+            get => _renderingOptions;
+            private set
+            {
+                if (_renderingOptions.LevelIndex == value.LevelIndex && _renderingOptions.LayerIndex == value.LayerIndex)
+                    return;
+
+                _renderingOptions = value;
+                SetTilemap(Tilemap, _renderingOptions);
+            }
+        }
         private RendererData2D _rendererData;
 
         internal override void OnInternalInitialize()
@@ -60,33 +86,59 @@ namespace Engine
 
         public void SetTilemap(TilemapAsset tilemap, TilemapRenderingOptions options)
         {
-            Tilemap = tilemap;
-            Options = options;
-
-            var data = tilemap.GetData();
+            _tilemapAsset = tilemap;
+            _renderingOptions = options;
 
             var layer = GetLayer();
-            // TODO: Mesh should use arrays instead.
-            _rendererData.Mesh.Vertices = layer.Vertices.ToList();
-            _rendererData.Mesh.IndicesToDrawCount = layer.IndicesToDraw;
+
+            if (layer != null)
+            {
+                // TODO: Mesh should use arrays instead.
+                var vertices = layer.Vertices?.ToList() ?? new();
+                _rendererData.Mesh.Vertices = vertices;
+                _rendererData.Mesh.IndicesToDrawCount = vertices.Count == 0 ? 0 : layer.IndicesToDraw;
+                _rendererData.Bounds = layer.Bounds;
+            }
+            else
+            {
+                _rendererData.Mesh.Vertices = new();
+                _rendererData.Mesh.IndicesToDrawCount = 0;
+                _rendererData.Bounds = default;
+            }
+
+            _rendererData.IsDirty = true;
         }
 
         internal TilemapLevelLayer GetLayer()
         {
-            // TODO: check for null
+            var data = _tilemapAsset?.GetData();
 
-            var level = Tilemap.GetData().Levels.FirstOrDefault(x => x.Value.LevelIndex == Options.LevelIndex).Value;
-            return level.Layers.FirstOrDefault(x => x.Value.LayerIndex == Options.LayerIndex).Value;
+            if (data == null)
+                return null;
+
+            _renderingOptions.LevelIndex = Mathf.Clamp(_renderingOptions.LevelIndex, 0, data.Levels.Count - 1);
+
+            var levelIndex = data.Levels.Count > _renderingOptions.LevelIndex ? _renderingOptions.LevelIndex : data.Levels.Count - 1;
+
+            if (levelIndex < 0)
+                return null;
+
+            var level = data.Levels.FirstOrDefault(x => x.Value.LevelIndex == levelIndex).Value;
+
+            _renderingOptions.LayerIndex = Mathf.Clamp(_renderingOptions.LayerIndex, 0, level.Layers.Count - 1);
+
+            var layerIndex = level.Layers.Count > _renderingOptions.LayerIndex ? _renderingOptions.LayerIndex : level.Layers.Count - 1;
+
+            if (layerIndex < 0)
+                return null;
+
+            return level.Layers.FirstOrDefault(x => x.Value.LayerIndex == layerIndex).Value;
         }
     }
 
     public struct TilemapRenderingOptions
     {
-        [SerializedField] public bool RenderIntGridLayer { get; set; }
-        [SerializedField] public bool RenderTilesLayer { get; set; }
-        [SerializedField] public bool RenderAutoLayer { get; set; }
         [SerializedField] public int LevelIndex { get; set; }
         [SerializedField] public int LayerIndex { get; set; }
-        [SerializedField] public int WorldDepth { get; set; }
     }
 }

@@ -87,11 +87,7 @@ namespace Game
 
                 tilemap.SetTilemap(tilemapAsset, new TilemapRenderingOptions()
                 {
-                    RenderIntGridLayer = true,
-                    RenderTilesLayer = true,
-                    RenderAutoLayer = true,
                     LayerIndex = tilemapData.LayerIndex,
-                    WorldDepth = tilemapLevelData.Depth,
                     LevelIndex = levelInstanceInfo.LevelIndex
                 });
 

@@ -20,10 +20,10 @@ namespace Game
             {
                 lootItems = new ItemAmountPair[items.Length];
 
-                for (int j = 0; j < items.Length; j++)
+                for (int i = 0; i < items.Length; i++)
                 {
-                    ref var loot = ref lootItems[j];
-                    loot.Item = items[j];
+                    ref var loot = ref lootItems[i];
+                    loot.Item = items[i];
                     loot.Amount = 1;
                 }
             }
@@ -32,10 +32,10 @@ namespace Game
             {
                 if(lootAmount.Value.IntArray != null && lootItems != null && lootAmount.Value.IntArray.Length == lootItems.Length)
                 {
-                    for (int j = 0; j < lootAmount.Value.IntArray.Length; j++)
+                    for (int i = 0; i < lootAmount.Value.IntArray.Length; i++)
                     {
-                        ref var loot = ref lootItems[j];
-                        loot.Amount = lootAmount.Value.IntArray[j];
+                        ref var loot = ref lootItems[i];
+                        loot.Amount = lootAmount.Value.IntArray[i];
                     }
                 }
                 else
