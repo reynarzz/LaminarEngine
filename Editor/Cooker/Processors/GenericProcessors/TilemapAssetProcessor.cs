@@ -15,7 +15,6 @@ namespace Editor.Cooker
 {
     internal class TilemapAssetProcessor : IAssetProcessor
     {
-
         /* Tilemap file format
         Version (uint)
 
@@ -172,11 +171,14 @@ namespace Editor.Cooker
                                     assetPath = info.Path;
                                 }
                             }
+
                             assetPath = EditorPaths.GetAbsolutePathSafe(assetPath);
 
                             if (!string.IsNullOrEmpty(assetPath))
                             {
-                                textureMeta = EditorAssetUtils.GetMetaFromAssetPath(assetPath, AssetType.Texture) as TextureMetaFile;
+                                textureMeta =
+                                    EditorAssetUtils.GetMetaFromAssetPath(assetPath, AssetType.Texture) as
+                                        TextureMetaFile;
                                 _texturesMeta.Add(guid, textureMeta);
                             }
                         }
@@ -200,7 +202,8 @@ namespace Editor.Cooker
                     writer.Write((float)layer.Opacity);
 
                     // Total Offset in pixels
-                    EditorFileUtils.WriteStruct(writer, new ivec2((int)layer.PxTotalOffsetX, (int)layer.PxTotalOffsetY));
+                    EditorFileUtils.WriteStruct(writer,
+                        new ivec2((int)layer.PxTotalOffsetX, (int)layer.PxTotalOffsetY));
 
                     // Layer visible
                     EditorFileUtils.WriteBool(writer, layer.Visible);
@@ -217,7 +220,8 @@ namespace Editor.Cooker
                     {
                         case TilemapLayerType.AutoLayer:
                         case TilemapLayerType.IntGrid:
-                            WriteLayerTiles(writer, level, layer, layer.AutoLayerTiles, textureMeta, ppu, ref levelBounds);
+                            WriteLayerTiles(writer, level, layer, layer.AutoLayerTiles, textureMeta, ppu,
+                                ref levelBounds);
                             break;
                         case TilemapLayerType.Tiles:
                             WriteLayerTiles(writer, level, layer, layer.GridTiles, textureMeta, ppu,
@@ -237,7 +241,8 @@ namespace Editor.Cooker
             _texturesMeta.Clear();
         }
 
-        private void WriteEntityInstances(BinaryWriter writer, ldtk.Level level, ldtk.LayerInstance layer, float pixelPerUnit)
+        private void WriteEntityInstances(BinaryWriter writer, ldtk.Level level, ldtk.LayerInstance layer,
+            float pixelPerUnit)
         {
             T[] ParseJsonArray<T>(object value)
             {
@@ -296,7 +301,7 @@ namespace Editor.Cooker
                     writer.Write((int)0);
                 }
 
-                var worldPosition = ConvertToWorld(entity.Px[0], entity.Px[1], pixelPerUnit, level, layer);
+                var worldPosition = ConvertToWorld(entity.Px[0], entity.Px[1], pixelPerUnit, level, layer, new vec2((float)entity.Pivot[0], (float)entity.Pivot[1]));
 
                 // Entity position
                 EditorFileUtils.WriteStruct(writer, worldPosition);
@@ -304,7 +309,7 @@ namespace Editor.Cooker
                 // Write pivot
                 EditorFileUtils.WriteStruct(writer, new vec2((float)entity.Pivot[0], (float)entity.Pivot[1]));
 
-                if(entity.FieldInstances == null || entity.FieldInstances.Length == 0)
+                if (entity.FieldInstances == null || entity.FieldInstances.Length == 0)
                 {
                     // Write properties count 0
                     writer.Write((int)0);
@@ -366,7 +371,8 @@ namespace Editor.Cooker
                         if (field.Value != null)
                         {
                             var gridPoint = JsonConvert.DeserializeObject<GridPoint>(field.Value.ToString());
-                            pointWorldPos = ConvertToWorld(gridPoint.Cx, gridPoint.Cy, pixelPerUnit, level, layer, true);
+                            pointWorldPos = ConvertToWorld(gridPoint.Cx, gridPoint.Cy, pixelPerUnit, level, layer, default,
+                                true);
                         }
 
                         // Write point coords.
@@ -430,7 +436,7 @@ namespace Editor.Cooker
 
                         foreach (var point in points)
                         {
-                            var pointWorldPos = ConvertToWorld(point.Cx, point.Cy, pixelPerUnit, level, layer, true);
+                            var pointWorldPos = ConvertToWorld(point.Cx, point.Cy, pixelPerUnit, level, layer, default, true);
 
                             // Points coord
                             EditorFileUtils.WriteStruct(writer, pointWorldPos);
@@ -546,6 +552,7 @@ namespace Editor.Cooker
             {
                 entityRef = JsonConvert.DeserializeObject<EntityRef>(field.Value.ToString());
             }
+
             return entityRef;
         }
 
@@ -558,6 +565,7 @@ namespace Editor.Cooker
 
             return default;
         }
+
         private TileRef GetTileRefStruct(ldtk.TilesetRectangle tileRefInst)
         {
             var tileDef = new TileRef()
@@ -577,6 +585,7 @@ namespace Editor.Cooker
 
             return tileDef;
         }
+
         private PropertyValueType ParsePropertyType(string type)
         {
             if (type.StartsWith("LocalEnum."))
@@ -666,7 +675,8 @@ namespace Editor.Cooker
 
                 tilesPositions[i] = new vec2(position.x, position.y);
 
-                WriteTile(writer, new Tile((int)tile.T, isFlippedX, isFlippedY), position, texture, ppu, ref layerBounds);
+                WriteTile(writer, new Tile((int)tile.T, isFlippedX, isFlippedY), position, texture, ppu,
+                    ref layerBounds);
             }
 
             // Tiles positions
@@ -686,7 +696,8 @@ namespace Editor.Cooker
             levelBounds.Min = new vec3(Math.Min(min.x, layerBounds.Min.x), Math.Min(min.y, layerBounds.Min.y), 0);
         }
 
-        public void WriteTile(BinaryWriter writer, Tile tile, vec3 position, TextureMetaFile meta, float ppu, ref Bounds layerBounds)
+        public void WriteTile(BinaryWriter writer, Tile tile, vec3 position, TextureMetaFile meta, float ppu,
+            ref Bounds layerBounds)
         {
             var chunk = TextureAtlasCell.DefaultChunk;
 
@@ -699,9 +710,9 @@ namespace Editor.Cooker
             var height = (float)chunk.Height / ppu;
 
             var tileMatrix = new mat4(new vec4(1, 0, 0, 0),
-                                      new vec4(0, 1, 0, 0),
-                                      new vec4(0, 0, 1, 0),
-                                      new vec4(position.x, position.y, position.z, 1));
+                new vec4(0, 1, 0, 0),
+                new vec4(0, 0, 1, 0),
+                new vec4(position.x, position.y, position.z, 1));
 
             chunk.Uvs = QuadUV.FlipUV(chunk.Uvs, tile.FlipX, tile.FlipY);
 
@@ -718,17 +729,29 @@ namespace Editor.Cooker
         }
 
         //Convert to world position.
-        private vec2 ConvertToWorld(long x, long y, float pixelPerUnit, ldtk.Level level, LayerInstance layer,
-            bool isGridPos = false)
+        private vec2 ConvertToWorld(long x, long y, float pixelPerUnit, ldtk.Level level, LayerInstance layer, vec2 pivot = default, bool isGridPos = false)
         {
+            if (pivot == default)
+            {
+                pivot = new vec2(0.5f, 0.5f);
+            }
+
             // NOTE: Points from 'entity fields data' are in grid position.
             if (isGridPos)
             {
                 x *= layer.GridSize;
                 y *= layer.GridSize;
             }
-
-            return new vec2(level.WorldX + x + layer.PxOffsetX, -level.WorldY + -y + -layer.PxOffsetY) / pixelPerUnit;
+            else
+            {
+                float width = layer.GridSize;
+                float height = layer.GridSize;
+            
+                x -= (int)(width * pivot.x);
+                y -= (int)(height * pivot.y);
+            }
+          
+            return new vec2(level.WorldX + x + layer.PxOffsetX, -level.WorldY - y - layer.PxOffsetY) / pixelPerUnit;
         }
 
         public static uint HexToRgbaUint(string hex)

@@ -38,8 +38,15 @@ namespace Engine
 
             private static unsafe VertexAtrib[] _attribs =
             [
-                new VertexAtrib() { Count = 3, Normalized = false, Type = GfxValueType.Float, Stride = sizeof(DebugVertex), Offset = 0 }, // Position
-                new VertexAtrib() { Count = 1, Normalized = false, Type = GfxValueType.Uint, Stride = sizeof(DebugVertex), Offset = sizeof(float) * 3 }, // Color
+                new VertexAtrib()
+                {
+                    Count = 3, Normalized = false, Type = GfxValueType.Float, Stride = sizeof(DebugVertex), Offset = 0
+                }, // Position
+                new VertexAtrib()
+                {
+                    Count = 1, Normalized = false, Type = GfxValueType.Uint, Stride = sizeof(DebugVertex),
+                    Offset = sizeof(float) * 3
+                }, // Color
             ];
 
             static VertexAtrib[] IVertex<DebugVertex>.GetVertexAttributes()
@@ -54,6 +61,7 @@ namespace Engine
             layout(location = 1) in uint color; 
             out vec4 vColor;
             uniform mat4 uVP;
+            uniform vec2 uScreenSize;
             vec4 unpackColor(uint c) 
             {
                 float r = float((c >> 24) & 0xFFu) / 255.0;
@@ -65,8 +73,8 @@ namespace Engine
         
             void main() 
             {
-                vColor = unpackColor(color);
-                gl_Position = uVP * vec4(position, 1.0);
+               vColor = unpackColor(color); 
+               gl_Position = uVP * vec4(position, 1.0);
             }
         ";
 
@@ -80,8 +88,6 @@ namespace Engine
             }}
         ";
 
-
-
         private static void Initialize()
         {
 #if DEBUG
@@ -89,9 +95,11 @@ namespace Engine
             {
                 _initializedGraphics = true;
 
-                _linesGeometry = GraphicsHelper.GetEmptyGeometry<DebugVertex>(LINES_MAX_VERTICES, 0, ref _linesGeoDescriptor);
+                _linesGeometry =
+                    GraphicsHelper.GetEmptyGeometry<DebugVertex>(LINES_MAX_VERTICES, 0, ref _linesGeoDescriptor);
 
-                _shader = new Shader(InternalShaderUtils.ShaderPlatformCleaner(DebugVertexShader), InternalShaderUtils.ShaderPlatformCleaner(DebugFragmentShader));
+                _shader = new Shader(InternalShaderUtils.ShaderPlatformCleaner(DebugVertexShader),
+                    InternalShaderUtils.ShaderPlatformCleaner(DebugFragmentShader));
                 _linesVertexPositions = new DebugVertex[LINES_MAX_VERTICES];
                 _uiLinesVertexPositions = new DebugVertex[LINES_MAX_VERTICES];
             }
@@ -123,7 +131,8 @@ namespace Engine
 #endif
         }
 
-        private static void DrawLine(vec3 start, vec3 end, Color color, Span<DebugVertex> vertices, ref int verticesToDraw)
+        private static void DrawLine(vec3 start, vec3 end, Color color, Span<DebugVertex> vertices,
+            ref int verticesToDraw)
         {
 #if !DEBUG
             return;
@@ -135,6 +144,7 @@ namespace Engine
                 Debug.Error($"Can't draw more lines, lines vertices max is: {LINES_MAX_VERTICES}");
                 return;
             }
+
             vertices[verticesToDraw + 0] = new DebugVertex() { Position = start, Color = color };
             vertices[verticesToDraw + 1] = new DebugVertex() { Position = end, Color = color };
 
@@ -181,8 +191,8 @@ namespace Engine
             DrawLine(start - perp, end - perp, color);
 
             // Draw semicircles at ends
-            DrawSemicircle(start, new vec3(-dir.x, -dir.y, -dir.z), radius, color, true);   // start end
-            DrawSemicircle(end, new vec3(dir.x, dir.y, dir.z), radius, color, true);    // end end flipped axis
+            DrawSemicircle(start, new vec3(-dir.x, -dir.y, -dir.z), radius, color, true); // start end
+            DrawSemicircle(end, new vec3(dir.x, dir.y, dir.z), radius, color, true); // end end flipped axis
         }
 
         // semicircle perpendicular to the axis
@@ -214,6 +224,7 @@ namespace Engine
                 DrawLine(p0, p1, color);
             }
         }
+
         public static void DrawBoxUI(vec3 origin, vec3 size, Color color)
         {
 #if !DEBUG
@@ -223,6 +234,7 @@ namespace Engine
             DrawBox(origin, size, color);
             _drawUIVertices = false;
         }
+
         public static void DrawBox(vec3 origin, vec3 size, Color color)
         {
 #if !DEBUG
@@ -296,58 +308,141 @@ namespace Engine
             // c0: (-x,-y,-z)
             {
                 float x = -half.x, y = -half.y, z = -half.z;
-                float y1 = y * cx - z * sx, z1 = y * sx + z * cx; y = y1; z = z1;
-                float x2 = x * cy + z * sy, z2 = -x * sy + z * cy; x = x2; z = z2;
-                float x3 = x * cz - y * sz, y3 = x * sz + y * cz; x = x3; y = y3;
+                float y1 = y * cx - z * sx, z1 = y * sx + z * cx;
+                y = y1;
+                z = z1;
+                float x2 = x * cy + z * sy, z2 = -x * sy + z * cy;
+                x = x2;
+                z = z2;
+                float x3 = x * cz - y * sz, y3 = x * sz + y * cz;
+                x = x3;
+                y = y3;
                 vec3 c0 = new vec3(x + ox, y + oy, z + oz);
 
                 // c1: (x,-y,-z)
-                x = half.x; y = -half.y; z = -half.z;
-                y1 = y * cx - z * sx; z1 = y * sx + z * cx; y = y1; z = z1;
-                x2 = x * cy + z * sy; z2 = -x * sy + z * cy; x = x2; z = z2;
-                x3 = x * cz - y * sz; y3 = x * sz + y * cz; x = x3; y = y3;
+                x = half.x;
+                y = -half.y;
+                z = -half.z;
+                y1 = y * cx - z * sx;
+                z1 = y * sx + z * cx;
+                y = y1;
+                z = z1;
+                x2 = x * cy + z * sy;
+                z2 = -x * sy + z * cy;
+                x = x2;
+                z = z2;
+                x3 = x * cz - y * sz;
+                y3 = x * sz + y * cz;
+                x = x3;
+                y = y3;
                 vec3 c1 = new vec3(x + ox, y + oy, z + oz);
 
                 // c2: (x,y,-z)
-                x = half.x; y = half.y; z = -half.z;
-                y1 = y * cx - z * sx; z1 = y * sx + z * cx; y = y1; z = z1;
-                x2 = x * cy + z * sy; z2 = -x * sy + z * cy; x = x2; z = z2;
-                x3 = x * cz - y * sz; y3 = x * sz + y * cz; x = x3; y = y3;
+                x = half.x;
+                y = half.y;
+                z = -half.z;
+                y1 = y * cx - z * sx;
+                z1 = y * sx + z * cx;
+                y = y1;
+                z = z1;
+                x2 = x * cy + z * sy;
+                z2 = -x * sy + z * cy;
+                x = x2;
+                z = z2;
+                x3 = x * cz - y * sz;
+                y3 = x * sz + y * cz;
+                x = x3;
+                y = y3;
                 vec3 c2 = new vec3(x + ox, y + oy, z + oz);
 
                 // c3: (-x,y,-z)
-                x = -half.x; y = half.y; z = -half.z;
-                y1 = y * cx - z * sx; z1 = y * sx + z * cx; y = y1; z = z1;
-                x2 = x * cy + z * sy; z2 = -x * sy + z * cy; x = x2; z = z2;
-                x3 = x * cz - y * sz; y3 = x * sz + y * cz; x = x3; y = y3;
+                x = -half.x;
+                y = half.y;
+                z = -half.z;
+                y1 = y * cx - z * sx;
+                z1 = y * sx + z * cx;
+                y = y1;
+                z = z1;
+                x2 = x * cy + z * sy;
+                z2 = -x * sy + z * cy;
+                x = x2;
+                z = z2;
+                x3 = x * cz - y * sz;
+                y3 = x * sz + y * cz;
+                x = x3;
+                y = y3;
                 vec3 c3 = new vec3(x + ox, y + oy, z + oz);
 
                 // c4: (-x,-y,z)
-                x = -half.x; y = -half.y; z = half.z;
-                y1 = y * cx - z * sx; z1 = y * sx + z * cx; y = y1; z = z1;
-                x2 = x * cy + z * sy; z2 = -x * sy + z * cy; x = x2; z = z2;
-                x3 = x * cz - y * sz; y3 = x * sz + y * cz; x = x3; y = y3;
+                x = -half.x;
+                y = -half.y;
+                z = half.z;
+                y1 = y * cx - z * sx;
+                z1 = y * sx + z * cx;
+                y = y1;
+                z = z1;
+                x2 = x * cy + z * sy;
+                z2 = -x * sy + z * cy;
+                x = x2;
+                z = z2;
+                x3 = x * cz - y * sz;
+                y3 = x * sz + y * cz;
+                x = x3;
+                y = y3;
                 vec3 c4 = new vec3(x + ox, y + oy, z + oz);
 
                 // c5: (x,-y,z)
-                x = half.x; y = -half.y; z = half.z;
-                y1 = y * cx - z * sx; z1 = y * sx + z * cx; y = y1; z = z1;
-                x2 = x * cy + z * sy; z2 = -x * sy + z * cy; x = x2; z = z2;
-                x3 = x * cz - y * sz; y3 = x * sz + y * cz; x = x3; y = y3;
+                x = half.x;
+                y = -half.y;
+                z = half.z;
+                y1 = y * cx - z * sx;
+                z1 = y * sx + z * cx;
+                y = y1;
+                z = z1;
+                x2 = x * cy + z * sy;
+                z2 = -x * sy + z * cy;
+                x = x2;
+                z = z2;
+                x3 = x * cz - y * sz;
+                y3 = x * sz + y * cz;
+                x = x3;
+                y = y3;
                 vec3 c5 = new vec3(x + ox, y + oy, z + oz);
 
                 // c6: (x,y,z)
-                x = half.x; y = half.y; z = half.z;
-                y1 = y * cx - z * sx; z1 = y * sx + z * cx; y = y1; z = z1;
-                x2 = x * cy + z * sy; z2 = -x * sy + z * cy; x = x2; z = z2;
-                x3 = x * cz - y * sz; y3 = x * sz + y * cz; x = x3; y = y3;
+                x = half.x;
+                y = half.y;
+                z = half.z;
+                y1 = y * cx - z * sx;
+                z1 = y * sx + z * cx;
+                y = y1;
+                z = z1;
+                x2 = x * cy + z * sy;
+                z2 = -x * sy + z * cy;
+                x = x2;
+                z = z2;
+                x3 = x * cz - y * sz;
+                y3 = x * sz + y * cz;
+                x = x3;
+                y = y3;
                 vec3 c6 = new vec3(x + ox, y + oy, z + oz);
 
                 // c7: (-x,y,z)
-                x = -half.x; y = half.y; z = half.z;
-                y1 = y * cx - z * sx; z1 = y * sx + z * cx; y = y1; z = z1;
-                x2 = x * cy + z * sy; z2 = -x * sy + z * cy; x = x2; z = z2;
-                x3 = x * cz - y * sz; y3 = x * sz + y * cz; x = x3; y = y3;
+                x = -half.x;
+                y = half.y;
+                z = half.z;
+                y1 = y * cx - z * sx;
+                z1 = y * sx + z * cx;
+                y = y1;
+                z = z1;
+                x2 = x * cy + z * sy;
+                z2 = -x * sy + z * cy;
+                x = x2;
+                z = z2;
+                x3 = x * cz - y * sz;
+                y3 = x * sz + y * cz;
+                x = x3;
+                y = y3;
                 vec3 c7 = new vec3(x + ox, y + oy, z + oz);
 
                 // --- Draw edges ---
@@ -395,6 +490,7 @@ namespace Engine
                 void Draw(ref mat4 viewProj, DebugVertex[] vertices, ref int verticesToDrawCount)
                 {
                     shader.SetUniform(Consts.VIEW_PROJ_UNIFORM_NAME, viewProj);
+                    shader.SetUniform(Consts.SCREEN_SIZE_UNIFORM_NAME, new vec2(renderTexture.Width, renderTexture.Height));
                     PushLineGeometries(vertices, verticesToDrawCount);
                     DrawLines(ref verticesToDrawCount);
                 }

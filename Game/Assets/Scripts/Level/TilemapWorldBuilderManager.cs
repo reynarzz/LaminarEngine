@@ -101,7 +101,7 @@ namespace Game
 
                     if (entityData.Identifier.Equals("Player"))
                     {
-                        GamePrefabs.World.InstantiateDoor(entityData.WorldPosition + new vec2(0, 1), new DoorData() { InteractCondition = x => false });
+                        GamePrefabs.World.InstantiateDoor(entityData.WorldPosition + new vec2(0, 0.5f), new DoorData() { InteractCondition = x => false });
 
                         player = gameEntity.GetComponent<Player>();
                     }
