@@ -12,7 +12,7 @@ namespace Editor.Cooker
 {
     internal class DevModeFilesCooker : AssetsCookerBase
     {
-        private AssetsDatabaseInfo _database;
+        internal static AssetsDatabaseInfo _database; // make this private, this is a hack to make the tilemap importer work.
 
         public DevModeFilesCooker(AssetsDatabaseInfo database, Dictionary<AssetType, IAssetProcessor> assetProcessor) :
             base(assetProcessor)

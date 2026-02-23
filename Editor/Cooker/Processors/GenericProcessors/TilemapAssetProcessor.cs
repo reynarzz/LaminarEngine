@@ -286,13 +286,17 @@ namespace Editor.Cooker
 
                             if (EditorIOLayer.Database != null)
                             {
-                                assetPath = EditorPaths.GetAbsolutePathSafe(EditorIOLayer.Database.GetAssetInfo(guid).Path);
+                                assetPath = EditorIOLayer.Database.GetAssetInfo(guid).Path;
                             }
                             else
                             {
-                                // TODO: find texture path.
-                                assetPath = "";
+                                // HACK, this is provisional
+                                if(DevModeFilesCooker._database.Assets.TryGetValue(guid, out var info))
+                                {
+                                    assetPath = info.Path;
+                                }
                             }
+                            assetPath = EditorPaths.GetAbsolutePathSafe(assetPath);
 
                             if (!string.IsNullOrEmpty(assetPath))
                             {

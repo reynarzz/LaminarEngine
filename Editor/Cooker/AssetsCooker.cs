@@ -114,6 +114,8 @@ namespace Editor.Cooker
             };
         }
 
+        // TODO: implement multi pass import.
+
         public async Task<DishResult> CookAllAsync(CookOptions options)
         {
             // Search project's files first
