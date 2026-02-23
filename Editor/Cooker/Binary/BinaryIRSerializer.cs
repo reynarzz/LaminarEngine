@@ -210,8 +210,7 @@ namespace Editor.Cooker
                     }
                     break;
                 case SerializedType.Bool:
-                    EditorUtils.WriteSpan(writer, (array as CollectionDataBool).Value); // Remove
-                    // WriteBoolSpan(writer, (array as CollectionDataBool).Value); // TODO: use this instead.
+                    EditorUtils.WriteSpan(writer, (array as CollectionDataBool).Value); 
                     break;
                 case SerializedType.Byte:
                     EditorUtils.WriteSpan(writer, (array as CollectionDataByte).Value);
@@ -680,24 +679,6 @@ namespace Editor.Cooker
                 for (int i = 0; i < count; i++)
                 {
                     dst[i] = EditorUtils.BoolToByte(variants[i].value.Bool);
-                }
-                writer.Write(dst);
-            }
-            finally
-            {
-                ArrayPool<byte>.Shared.Return(buffer);
-            }
-        }
-        private static void WriteBoolSpan(BinaryWriter writer, bool[] values)
-        {
-            var count = values.Length;
-            var buffer = ArrayPool<byte>.Shared.Rent(count);
-            try
-            {
-                var dst = buffer.AsSpan(0, count);
-                for (int i = 0; i < count; i++)
-                {
-                    dst[i] = EditorUtils.BoolToByte(values[i]);
                 }
                 writer.Write(dst);
             }

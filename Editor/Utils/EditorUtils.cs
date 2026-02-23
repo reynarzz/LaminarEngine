@@ -126,6 +126,24 @@ namespace Editor.Utils
             }
         }
 
+        internal static void WriteSpan(BinaryWriter writer, bool[] values)
+        {
+            var count = values.Length;
+            var buffer = ArrayPool<byte>.Shared.Rent(count);
+            try
+            {
+                var dst = buffer.AsSpan(0, count);
+                for (int i = 0; i < count; i++)
+                {
+                    dst[i] = BoolToByte(values[i]);
+                }
+                writer.Write(dst);
+            }
+            finally
+            {
+                ArrayPool<byte>.Shared.Return(buffer);
+            }
+        }
         internal static byte BoolToByte(bool value)
         {
             return value ? (byte)1 : (byte)0;

@@ -109,9 +109,25 @@ namespace Editor.Cooker
             public PropertyValueType Type { get; set; }
             public int IntValue { get; set; }
             public string StringValue { get; set; }
-            public string EnumValue { get; set; }
+            public EnumValue EnumValue { get; set; }
             public float FloatValue { get; set; }
+            public float BoolValue { get; set; }
             public vec2 PointValue { get; set; }
+            public EntityRef EntityRef { get; set; }
+        }
+
+        public struct EnumValue
+        {
+            public string EnumTitle { get; set; }
+            public string EnumValStr { get; set; }
+        }
+
+        public struct EntityRef
+        {
+            public Guid entityIid { get; set; }
+            public Guid layerIid { get; set; }
+            public Guid levelIid { get; set; }
+            public Guid worldIid { get; set; }
         }
 
         /* Tilemap file format
@@ -313,28 +329,51 @@ namespace Editor.Cooker
                 return Array.Empty<T>();
             }
 
+            void WriteArray<T>(BinaryWriter writer, T[] arr) where T : unmanaged
+            {
+                // Write Count
+                writer.Write(arr.Length);
+                // Write array
+                EditorUtils.WriteSpan(writer, arr);
+            }
+
             for (int i = 0; i < layer.EntityInstances.Length; i++)
             {
                 var entity = layer.EntityInstances[i];
-                
+
+                // Entity identifier
                 EditorUtils.WriteString(writer, entity.Identifier);
-                
+
+                // Tags count
                 writer.Write(entity.Tags.Length);
-                
+
+                // Entity Tags
                 foreach (var tag in entity.Tags)
                 {
                     EditorUtils.WriteString(writer, tag);
                 }
-                
+
                 var worldPosition = ConvertToWorld(entity.Px[0], entity.Px[1], pixelPerUnit, level, layer);
+
+                // Entity position
                 EditorUtils.WriteStruct(writer, worldPosition);
-                
+
+                // Properties count
+                writer.Write(entity.FieldInstances.Length);
+
                 for (int j = 0; j < entity.FieldInstances.Length; j++)
                 {
                     var field = entity.FieldInstances[j];
+
+                    // Field identifier
                     EditorUtils.WriteString(writer, field.Identifier);
+
                     var ValType = field.Type;
                     var propType = ParsePropertyType(field.Type);
+
+                    // Property type
+                    writer.Write((int)propType);
+
                     Debug.Log(ValType);
 
                     if (propType == PropertyValueType.Vec2)
@@ -342,73 +381,142 @@ namespace Editor.Cooker
                         var gridPoint = field.Value as GridPoint;
                         var pointWorldPos =
                             ConvertToWorld(gridPoint.Cx, gridPoint.Cy, pixelPerUnit, level, layer, true);
+                        
+                        // Write point coords.
+                        EditorUtils.WriteStruct(writer, pointWorldPos);
                     }
                     else if (propType == PropertyValueType.Float)
                     {
+                        float floatVal = field.Value != null ? (float)(double)field.Value : 0;
+                        
+                        // Write Float
+                        writer.Write(floatVal);
                     }
                     else if (propType == PropertyValueType.Bool)
                     {
                         bool boolVal = field.Value != null ? (bool)field.Value : false;
+                        
+                        // Write Bool 
+                        EditorUtils.WriteBool(writer, boolVal);
                     }
                     else if (propType == PropertyValueType.Int)
                     {
                         int intVal = field.Value != null ? (int)(long)field.Value : 0;
+                        // Write int 
+                        writer.Write(intVal);
                     }
                     else if (propType == PropertyValueType.Enum)
                     {
                         var enumFieldName = field.Type.Substring(field.Type.IndexOf('.') + 1);
                         var enumVal = field?.Value?.ToString() ?? string.Empty;
-
-                        if (string.IsNullOrEmpty(enumVal))
+                        
+                        // Enum field name
+                        EditorUtils.WriteString(writer, enumFieldName);
+                        
+                        // Enum value str
+                        EditorUtils.WriteString(writer, enumVal);
+                    }
+                    else if (propType == PropertyValueType.EntityRef)
+                    {
+                        EntityRef entityRef = default;
+                        if (field.Value != null)
                         {
+                             entityRef = JsonConvert.DeserializeObject<EntityRef>(field.Value.ToString());
                         }
+                        // Write EntityRef
+                        
+                        EditorUtils.WriteGuidNoAlloc(writer, entityRef.entityIid);
+                        EditorUtils.WriteGuidNoAlloc(writer, entityRef.layerIid);
+                        EditorUtils.WriteGuidNoAlloc(writer, entityRef.levelIid);
+                        EditorUtils.WriteGuidNoAlloc(writer, entityRef.worldIid);
                     }
                     else if (propType == PropertyValueType.EnumArray)
                     {
                         var startIndex = field.Type.IndexOf('.') + 1;
                         var count = field.Type.LastIndexOf('>') - startIndex;
                         var enumFieldName = field.Type.Substring(startIndex, count);
-                        
                         var enumArrVals = ParseJsonArray<string>(field.Value);
+                        // Enums field name
+                        EditorUtils.WriteString(writer, enumFieldName);
+                        
+                        // Enums count
+                        writer.Write(enumArrVals.Length);
+
+                        // Enums str
+                        foreach (var str in enumArrVals)
+                        {
+                            EditorUtils.WriteString(writer, str);
+                        }
                     }
                     else if (propType == PropertyValueType.Vec2Array)
                     {
                         var points = ParseJsonArray<GridPoint>(field.Value);
-                        
+                        // Points count
+                        writer.Write(points.Length);
+
                         foreach (var point in points)
                         {
                             var pointWorldPos = ConvertToWorld(point.Cx, point.Cy, pixelPerUnit, level, layer, true);
+
+                            // Points coord
+                            EditorUtils.WriteStruct(writer, pointWorldPos);
                         }
                     }
                     else if (propType == PropertyValueType.IntArray)
                     {
-                        var arrVal = ParseJsonArray<int>(field.Value);
+                        // Int array
+                        WriteArray(writer, ParseJsonArray<int>(field.Value));
                     }
                     else if (propType == PropertyValueType.BoolArray)
                     {
-                        var arrVal = ParseJsonArray<bool>(field.Value);
+                        // Bool array
+                        WriteArray(writer, ParseJsonArray<bool>(field.Value));
                     }
                     else if (propType == PropertyValueType.FloatArray)
                     {
-                        var arrVal = ParseJsonArray<float>(field.Value);
+                        // Float array
+                        WriteArray(writer, ParseJsonArray<float>(field.Value));
                     }
                     else if (propType == PropertyValueType.StringArray)
                     {
                         var arrVal = ParseJsonArray<string>(field.Value);
+
+                        // String array len
+                        writer.Write(arrVal.Length);
+
+                        // Write str array 
+                        foreach (var str in arrVal)
+                        {
+                            EditorUtils.WriteString(writer, str);
+                        }
                     }
                     else if (propType == PropertyValueType.Color)
                     {
+                        uint color = uint.MaxValue;
+
                         if (field.Value != null)
                         {
-                            HexToRgbaUint(field.Value.ToString());
+                            color = HexToRgbaUint(field.Value.ToString());
                         }
+                        
+                        // Write Color
+                        writer.Write(color);
                     }
                     else if (propType == PropertyValueType.String)
                     {
+                        string str = null;
+                        if (field.Value != null)
+                        {
+                            str = field.Value.ToString();
+                        }
+                        
+                        // Write string
+                        EditorUtils.WriteString(writer, str);
                     }
                 }
             }
         }
+
 
         private PropertyValueType ParsePropertyType(string type)
         {
@@ -424,7 +532,7 @@ namespace Editor.Cooker
             {
                 return PropertyValueType.Color;
             }
-
+            
             switch (type)
             {
                 case "Int":
@@ -435,6 +543,10 @@ namespace Editor.Cooker
                     return PropertyValueType.Bool;
                 case "String":
                     return PropertyValueType.String;
+                case "Point":
+                    return PropertyValueType.Vec2;
+                case "EntityRef":
+                    return PropertyValueType.EntityRef;
                 case "Array<Point>":
                     return PropertyValueType.Vec2Array;
                 case "Array<Int>":
@@ -443,10 +555,14 @@ namespace Editor.Cooker
                     return PropertyValueType.BoolArray;
                 case "Array<Float>":
                     return PropertyValueType.FloatArray;
-                case "Point":
-                    return PropertyValueType.Vec2;
+                case "Array<EntityRef>":
+                    return PropertyValueType.EntityRefArray;
+                case "Array<Color>":
+                    return PropertyValueType.ColorArray;
+                case "Array<String>":
+                    return PropertyValueType.StringArray;
                 default:
-                    return PropertyValueType.Unknown;
+                    throw new Exception("Unknown property type: " + type);
             }
         }
 
@@ -456,13 +572,13 @@ namespace Editor.Cooker
             int indexToDraw = tiles.Length * 6;
             var layerBounds = Bounds.GetInitialized();
             var tilesPositions = new vec2[tiles.Length];
-
+            
             // Tiles count
             writer.Write(tiles.Length);
-
+            
             // Indices to draw
             writer.Write(indexToDraw);
-
+            
             for (int i = 0; i < tiles.Length; i++)
             {
                 var tile = tiles[i];
@@ -533,7 +649,7 @@ namespace Editor.Cooker
             layerBounds.Min = new vec3(Math.Min(min.x, position.x), Math.Min(min.y, position.y), 0);
         }
 
-        //Convert to world position, pixel unit division must be applied later.
+        //Convert to world position.
         private vec2 ConvertToWorld(long x, long y, float pixelPerUnit, ldtk.Level level, LayerInstance layer,
             bool isGridPos = false)
         {
