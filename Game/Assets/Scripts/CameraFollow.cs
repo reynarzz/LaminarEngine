@@ -23,7 +23,7 @@ namespace Game
         [RequiredProperty] private Camera _camera;
         private readonly float _zPosition = -10;
         [SerializedField] private bool _clampBounds = true;
-       // [ShowFieldNoSerialize] private bool _showBounds;
+        [ShowFieldNoSerialize] private bool _showBounds;
 
         protected override void OnAwake()
         {

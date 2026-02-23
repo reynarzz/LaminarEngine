@@ -76,10 +76,10 @@ namespace Game
                 tilemapData.TilemapAction?.Invoke(tilemap);
                 result[i] = new TilemapResult()
                 {
-                    Bounds = tilemapLevelData.Bounds,
+                    Bounds = tilemapLevelData.Layers.FirstOrDefault(x => x.Value.LayerIndex == tilemapData.LayerIndex).Value.Bounds,
                 };
             }
-
+            
             return result;
         }
 
