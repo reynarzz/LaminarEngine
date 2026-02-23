@@ -69,10 +69,10 @@ namespace Engine
         public ivec2 SizeInPixels { get; set; }
         public vec2 WorldPosition { get; set; }
 
-        public EntityProperty[] Properties { get; set; }
+        public EntityPropertyData[] Properties { get; set; }
     }
 
-    public class EntityProperty
+    public class EntityPropertyData
     {
         public string Identifier { get; set; }
         public EntityPropertyValue Value { get; set; }
@@ -102,22 +102,32 @@ namespace Engine
         TileArray
     }
 
-    public struct EntityPropertyValue
+    public class EntityPropertyValue
     {
         public PropertyValueType Type { get; set; }
-        public int IntValue { get; set; }
-        public int ColorValue { get; set; }
-        public string StringValue { get; set; }
-        public EnumValue EnumValue { get; set; }
-        public float FloatValue { get; set; }
-        public bool BoolValue { get; set; }
-        public vec2 PointValue { get; set; }
+        public string String { get; set; }
+        public bool Bool { get; set; }
+        public int Int { get; set; }
+        public float Float { get; set; }
+        public vec2 Vec2 { get; set; }
+        public EnumValue Enum { get; set; }
+        public Color32 Color { get; set; }
         public EntityRef EntityRef { get; set; }
+        public TileRef Tile { get; set; }
+        public string[] StringArray { get; set; }
+        public bool[] BoolArray { get; set; }
+        public int[] IntArray { get; set; }
+        public float[] FloatArray { get; set; }
+        public vec2[] Vec2Array { get; set; }
+        public EnumValue[] EnumArray { get; set; }
+        public Color32[] ColorArray { get; set; }
+        public EntityRef[] EntityRefArray { get; set; }
+        public TileRef[] TileArray { get; set; }
     }
 
     public struct EnumValue
     {
-        public string EnumTitle { get; set; }
+        public string EnumName { get; set; }
         public string EnumValStr { get; set; }
     }
 

@@ -193,7 +193,9 @@ namespace Editor
                 //        Debug.Log($"Success: {type.FullName}");
                 //    }
                 //}
-               // Test_MaterialBinary.RunTest_Windows();
+                // Test_MaterialBinary.RunTest_Windows();
+
+                var tilemap = Assets.GetTilemap("Tilemap/WorldTilemap_test.ldtk");
             }
 
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.R))

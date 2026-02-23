@@ -60,6 +60,9 @@ namespace Engine.IO
                 level.Layers[i] = ReadLayer(reader);
             }
 
+            // Read level bounds.
+            level.Bounds = EngineFileUtils.ReadStructNoAlloc<Bounds>(reader);
+
             return level;
         }
 
@@ -69,10 +72,11 @@ namespace Engine.IO
 
             layer.Identifier = EngineFileUtils.ReadString(reader);
             layer.IID = EngineFileUtils.ReadGuidNoAlloc(reader);
-            layer.IsVisible = EngineFileUtils.ReadBool(reader);
             layer.SizeGridBased = EngineFileUtils.ReadStructNoAlloc<ivec2>(reader);
+            layer.GridSize = reader.ReadInt32();
             layer.Opacity = reader.ReadSingle();
             layer.OffsetPx = EngineFileUtils.ReadStructNoAlloc<ivec2>(reader);
+            layer.IsVisible = EngineFileUtils.ReadBool(reader);
 
             if (!layer.IsVisible)
             {
@@ -85,12 +89,13 @@ namespace Engine.IO
                 case TilemapLayerType.IntGrid:
                 case TilemapLayerType.Tiles:
                 case TilemapLayerType.AutoLayer:
-
+                    ReadTiles(reader, layer);
                     break;
                 case TilemapLayerType.Entities:
+                    ReadEntities(reader, layer);
                     break;
                 default:
-                    break;
+                    throw new NotImplementedException(layerType.ToString());
             }
 
             return layer;
@@ -105,14 +110,207 @@ namespace Engine.IO
 
             layer.IndicesToDraw = reader.ReadInt32();
             layer.Vertices = EngineFileUtils.ReadArray<Vertex>(reader, tilesCount * 4);
-            layer.TilesPosition = new vec2[tilesCount];
-
+            layer.TilesPosition = EngineFileUtils.ReadArray<vec2>(reader, tilesCount);
+            layer.Bounds = EngineFileUtils.ReadStructNoAlloc<Bounds>(reader);
         }
 
-        private void ReadEntities()
+        private void ReadEntities(BinaryReader reader, TilemapLevelLayer layer)
         {
+            var entitiesCount = reader.ReadInt32();
+
+            if (entitiesCount == 0)
+                return;
+
+            layer.Entities = new TilemapEntity[entitiesCount];
+
+            for (int i = 0; i < entitiesCount; i++)
+            {
+                var entity = new TilemapEntity();
+                layer.Entities[i] = entity;
+
+                // Read identifier
+                entity.Identifier = EngineFileUtils.ReadString(reader);
+
+                // Read iid
+                entity.IID = EngineFileUtils.ReadGuidNoAlloc(reader);
+
+                var tagsCount = reader.ReadInt32();
+                if (tagsCount > 0)
+                {
+                    entity.Tags = new string[tagsCount];
+
+                    for (int j = 0; j < tagsCount; j++)
+                    {
+                        // Read tag
+                        entity.Tags[j] = EngineFileUtils.ReadString(reader);
+                    }
+                }
+
+                // Read world position.
+                entity.WorldPosition = EngineFileUtils.ReadStructNoAlloc<vec2>(reader);
+
+                // Read pivot
+                entity.Pivot = EngineFileUtils.ReadStructNoAlloc<vec2>(reader);
+
+                var propertiesCount = reader.ReadInt32();
+
+                if (propertiesCount == 0)
+                    continue;
+
+                entity.Properties = new EntityPropertyData[propertiesCount];
+
+                for (int j = 0; j < propertiesCount; j++)
+                {
+                    entity.Properties[j] = ReadEntityProperty(reader);
+                }
+            }
+
 
         }
+
+        private EntityPropertyData ReadEntityProperty(BinaryReader reader)
+        {
+            var propertyData = new EntityPropertyData();
+            propertyData.Value = new EntityPropertyValue();
+
+            // Read property identifier
+            propertyData.Identifier = EngineFileUtils.ReadString(reader);
+
+            // Read property type
+            propertyData.Value.Type = (PropertyValueType)reader.ReadInt32();
+
+            switch (propertyData.Value.Type)
+            {
+                case PropertyValueType.Unknown:
+                    break;
+                case PropertyValueType.String:
+                    propertyData.Value.String = EngineFileUtils.ReadString(reader);
+                    break;
+                case PropertyValueType.Bool:
+                    propertyData.Value.Bool = EngineFileUtils.ReadBool(reader);
+                    break;
+                case PropertyValueType.Int:
+                    propertyData.Value.Int = reader.ReadInt32();
+                    break;
+                case PropertyValueType.Float:
+                    propertyData.Value.Float = reader.ReadSingle();
+                    break;
+                case PropertyValueType.Vec2:
+                    propertyData.Value.Vec2 = EngineFileUtils.ReadStructNoAlloc<vec2>(reader);
+                    break;
+                case PropertyValueType.Enum:
+                    {
+                        propertyData.Value.Enum = new EnumValue()
+                        {
+                            EnumName = EngineFileUtils.ReadString(reader),
+                            EnumValStr = EngineFileUtils.ReadString(reader),
+                        };
+                    }
+                    break;
+                case PropertyValueType.Color:
+                    propertyData.Value.Color = (Color32)(ColorPacketRGBA)reader.ReadUInt32();
+                    break;
+                case PropertyValueType.EntityRef:
+                    propertyData.Value.EntityRef = EngineFileUtils.ReadStructNoAlloc<EntityRef>(reader);
+                    break;
+                case PropertyValueType.Tile:
+                    propertyData.Value.Tile = EngineFileUtils.ReadStructNoAlloc<TileRef>(reader);
+                    break;
+                case PropertyValueType.StringArray:
+                    propertyData.Value.StringArray = ReadStringArray(reader);
+                    break;
+                case PropertyValueType.BoolArray:
+                    propertyData.Value.BoolArray = ReadArray<bool>(reader);
+                    break;
+                case PropertyValueType.IntArray:
+                    propertyData.Value.IntArray = ReadArray<int>(reader);
+                    break;
+                case PropertyValueType.FloatArray:
+                    propertyData.Value.FloatArray = ReadArray<float>(reader);
+                    break;
+                case PropertyValueType.Vec2Array:
+                    propertyData.Value.Vec2Array = ReadArray<vec2>(reader);
+                    break;
+                case PropertyValueType.EnumArray:
+                    propertyData.Value.EnumArray = ReadEnumArray(reader);
+                    break;
+                case PropertyValueType.ColorArray:
+                    {
+                        var colorUintArr = ReadArray<uint>(reader);
+
+                        if (colorUintArr != null && colorUintArr.Length > 0)
+                        {
+                            var colors32Arr = new Color32[colorUintArr.Length];
+
+                            for (uint i = 0; i < colorUintArr.Length; i++)
+                            {
+                                colors32Arr[i] = (Color32)(ColorPacketRGBA)colorUintArr[i];
+                            }
+                            propertyData.Value.ColorArray = colors32Arr;
+                        }
+                    }
+                    break;
+                case PropertyValueType.EntityRefArray:
+                    propertyData.Value.EntityRefArray = ReadArray<EntityRef>(reader);
+                    break;
+                case PropertyValueType.TileArray:
+                    propertyData.Value.TileArray = ReadArray<TileRef>(reader);
+                    break;
+                default:
+                    throw new NotImplementedException(propertyData.Value.Type.ToString());
+            }
+
+            return propertyData;
+        }
+
+        private T[] ReadArray<T>(BinaryReader reader) where T : unmanaged
+        {
+            var count = reader.ReadInt32();
+            if (count == 0)
+                return null;
+
+            return EngineFileUtils.ReadArray<T>(reader, count);
+        }
+
+        private string[] ReadStringArray(BinaryReader reader)
+        {
+            var count = reader.ReadInt32();
+
+            if (count == 0)
+                return null;
+
+            var arr = new string[count];
+
+            for (int i = 0; i < arr.Length; i++)
+            {
+                arr[i] = EngineFileUtils.ReadString(reader);
+            }
+
+            return arr;
+        }
+
+
+        private EnumValue[] ReadEnumArray(BinaryReader reader)
+        {
+            var count = reader.ReadInt32();
+
+            if (count == 0)
+                return null;
+
+            var enumName = EngineFileUtils.ReadString(reader);
+            var enumsArr = new EnumValue[count];
+            for (int i = 0; i < enumsArr.Length; i++)
+            {
+                enumsArr[i] = new EnumValue()
+                {
+                    EnumName = enumName,
+                    EnumValStr = EngineFileUtils.ReadString(reader),
+                };
+            }
+
+            return enumsArr;
+        }
+
         public void UpdateAsset(ref readonly AssetInfo info, TilemapAsset asset, TilemapMeta meta, BinaryReader reader)
         {
             throw new NotImplementedException();

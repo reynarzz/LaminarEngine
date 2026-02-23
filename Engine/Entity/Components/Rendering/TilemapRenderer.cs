@@ -42,7 +42,7 @@ namespace Engine
 
         [SerializedField] public LDtkOptions Options { get; set; }
 
-        [SerializedField] public LdtkJson Map { get; set; } 
+        [SerializedField] public TilemapAsset Tilemap { get; set; } 
 
         public IReadOnlyList<vec2> TilesPositions => _tilesPositions;
         private List<vec2> _tilesPositions = new();

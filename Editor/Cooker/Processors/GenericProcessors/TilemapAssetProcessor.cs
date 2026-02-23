@@ -190,9 +190,6 @@ namespace Editor.Cooker
                     // Layer IID
                     EditorFileUtils.WriteGuidNoAlloc(writer, Guid.Parse(layer.Iid));
 
-                    // Layer visible
-                    EditorFileUtils.WriteBool(writer, layer.Visible);
-
                     // Grid based size
                     EditorFileUtils.WriteStruct(writer, new ivec2((int)layer.CWid, (int)layer.CHei));
 
@@ -204,6 +201,9 @@ namespace Editor.Cooker
 
                     // Total Offset in pixels
                     EditorFileUtils.WriteStruct(writer, new ivec2((int)layer.PxTotalOffsetX, (int)layer.PxTotalOffsetY));
+
+                    // Layer visible
+                    EditorFileUtils.WriteBool(writer, layer.Visible);
 
                     if (!layer.Visible)
                         continue;
@@ -261,6 +261,16 @@ namespace Editor.Cooker
                 }
             }
 
+            if (layer.EntityInstances == null || layer.EntityInstances.Length == 0)
+            {
+                // Entities count empty
+                writer.Write((int)0);
+                return;
+            }
+
+            // Entities count
+            writer.Write(layer.EntityInstances.Length);
+
             foreach (var entity in layer.EntityInstances)
             {
                 // Entity identifier
@@ -269,13 +279,21 @@ namespace Editor.Cooker
                 // Write entity iiD
                 EditorFileUtils.WriteGuidNoAlloc(writer, Guid.Parse(entity.Iid));
 
-                // Tags count
-                writer.Write(entity.Tags.Length);
-
-                // Entity Tags
-                foreach (var tag in entity.Tags)
+                if (entity.Tags != null && entity.Tags.Length > 0)
                 {
-                    EditorFileUtils.WriteString(writer, tag);
+                    // Tags count
+                    writer.Write((int)entity.Tags.Length);
+
+                    // Entity Tags
+                    foreach (var tag in entity.Tags)
+                    {
+                        EditorFileUtils.WriteString(writer, tag);
+                    }
+                }
+                else
+                {
+                    // Write no Tags
+                    writer.Write((int)0);
                 }
 
                 var worldPosition = ConvertToWorld(entity.Px[0], entity.Px[1], pixelPerUnit, level, layer);
@@ -285,6 +303,13 @@ namespace Editor.Cooker
 
                 // Write pivot
                 EditorFileUtils.WriteStruct(writer, new vec2((float)entity.Pivot[0], (float)entity.Pivot[1]));
+
+                if(entity.FieldInstances == null || entity.FieldInstances.Length == 0)
+                {
+                    // Write properties count 0
+                    writer.Write((int)0);
+                    continue;
+                }
 
                 // Write Properties count
                 writer.Write(entity.FieldInstances.Length);
@@ -376,13 +401,20 @@ namespace Editor.Cooker
                     {
                         var startIndex = field.Type.IndexOf('.') + 1;
                         var count = field.Type.LastIndexOf('>') - startIndex;
-                        var enumFieldName = field.Type.Substring(startIndex, count);
+                        var enumName = field.Type.Substring(startIndex, count);
                         var enumArrVals = ParseJsonArray<string>(field.Value);
-                        // Enums field name
-                        EditorFileUtils.WriteString(writer, enumFieldName);
+
+                        if (enumArrVals == null || enumArrVals.Length == 0)
+                        {
+                            writer.Write((int)0);
+                            continue;
+                        }
 
                         // Enums count
-                        writer.Write(enumArrVals.Length);
+                        writer.Write((int)enumArrVals.Length);
+
+                        // Enums field name
+                        EditorFileUtils.WriteString(writer, enumName);
 
                         // Enums str
                         foreach (var str in enumArrVals)
@@ -602,25 +634,22 @@ namespace Editor.Cooker
         private void WriteLayerTiles(BinaryWriter writer, ldtk.Level level, ldtk.LayerInstance layer,
             ldtk.TileInstance[] tiles, TextureMetaFile texture, float ppu, ref Bounds levelBounds)
         {
-            if (tiles == null)
+            if (tiles == null || tiles.Length == 0)
             {
                 writer.Write((int)0);
                 return;
             }
+
+            var layerBounds = Bounds.GetInitialized();
+
             // Tiles count
             writer.Write((int)tiles.Length);
 
-            if (tiles.Length == 0)
-            {
-                return;
-            }
-            int indexToDraw = tiles.Length * 6;
-            var layerBounds = Bounds.GetInitialized();
-            var tilesPositions = new vec2[tiles.Length];
-
             // Indices to draw
+            int indexToDraw = tiles.Length * 6;
             writer.Write(indexToDraw);
 
+            var tilesPositions = new vec2[tiles.Length];
             for (int i = 0; i < tiles.Length; i++)
             {
                 var tile = tiles[i];
@@ -648,6 +677,7 @@ namespace Editor.Cooker
             layerBounds.Min.z = 0;
             layerBounds.Max.z = 0;
 
+            // Layer bounds
             EditorFileUtils.WriteStruct(writer, layerBounds);
 
             ref var max = ref levelBounds.Max;
@@ -678,6 +708,7 @@ namespace Editor.Cooker
             QuadVertices vertices = default;
             GraphicsHelper.CreateQuad(ref vertices, chunk.Uvs, width, height, chunk.Pivot, Color.White, tileMatrix);
 
+            // Write vertices.
             EditorFileUtils.WriteStruct(writer, vertices);
 
             ref var max = ref layerBounds.Max;

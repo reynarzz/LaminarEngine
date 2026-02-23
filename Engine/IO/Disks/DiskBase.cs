@@ -74,6 +74,8 @@ namespace Engine.IO
                         return JsonConvert.DeserializeObject<DefaultMetaFile>(json);
                     case AssetType.Material:
                         return JsonConvert.DeserializeObject<DefaultMetaFile>(json);
+                    case AssetType.Tilemap:
+                        return JsonConvert.DeserializeObject<TilemapMeta>(json);
                     default:
                         throw new NotImplementedException($"Asset type for meta is not implemented: {info.Type}");
                 }
