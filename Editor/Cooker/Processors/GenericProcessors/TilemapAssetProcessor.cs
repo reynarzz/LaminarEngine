@@ -251,7 +251,10 @@ namespace Editor.Cooker
                 var levelBounds = Bounds.GetInitialized();
                 var levelConfig = meta.LevelConfig?.Length == project.Levels.Length ? meta.LevelConfig[i] : null;
 
+                // Write level identifier
                 EditorUtils.WriteString(writer, level.Identifier);
+
+                // Write level iid
                 EditorUtils.WriteGuidNoAlloc(writer, Guid.Parse(level.Iid));
 
                 // Level position
@@ -278,11 +281,22 @@ namespace Editor.Cooker
                     {
                         var guid = levelConfig.LayersTextureRef[j];
 
-                        if (guid != Guid.Empty)
+                        if (guid != Guid.Empty && !_texturesMeta.TryGetValue(guid, out textureMeta))
                         {
-                            if (!_texturesMeta.TryGetValue(guid, out textureMeta))
+                            var assetPath = string.Empty;
+
+                            if (EditorIOLayer.Database != null)
                             {
-                                var assetPath = EditorIOLayer.Database.GetAssetInfo(guid).Path;
+                                assetPath = EditorIOLayer.Database.GetAssetInfo(guid).Path;
+                            }
+                            else
+                            {
+                                // TODO: find texture path.
+                                assetPath = "";
+                            }
+
+                            if (!string.IsNullOrEmpty(assetPath))
+                            {
                                 textureMeta = EditorAssetUtils.GetMetaFromAssetPath(assetPath, AssetType.Texture) as TextureMetaFile;
                                 _texturesMeta.Add(guid, textureMeta);
                             }
@@ -403,13 +417,11 @@ namespace Editor.Cooker
                     // Field identifier
                     EditorUtils.WriteString(writer, field.Identifier);
 
-                    var ValType = field.Type;
                     var propType = ParsePropertyType(field.Type);
 
                     // Property type
                     writer.Write((int)propType);
 
-                    Debug.Log(ValType);
                     if (propType == PropertyValueType.Color)
                     {
                         // Write Color
