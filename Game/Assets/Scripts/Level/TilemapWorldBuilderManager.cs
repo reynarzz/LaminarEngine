@@ -9,27 +9,6 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    //public class EntityInstanceData
-    //{
-    //    public string LayerIID { get; set; }
-    //    public string LevelIID { get; set; }
-    //    public EntityInstance Entity { get; set; }
-    //    public vec2 WorldPosition { get; set; }
-    //}
-
-    //public class LayerData
-    //{
-    //    public LayerInstance Layer { get; set; }
-    //    public Dictionary<string, EntityInstanceData> EntitiesData { get; set; }
-    //}
-
-    //public class LevelData
-    //{
-    //    public Level Level { get; set; }
-    //    public int LevelIndex { get; set; }
-    //    public Dictionary<string, LayerData> Layers { get; set; }
-    //}
-
     public class LevelBuildResult
     {
         public Player Player { get; set; }
@@ -39,16 +18,7 @@ namespace Game
     {
         public Bounds Bounds;
     }
-    //public class WorldData
-    //{
-    //    public IReadOnlyDictionary<string, LevelData> Levels => _levelsData;
-    //    private readonly Dictionary<string, LevelData> _levelsData;
-    //    public WorldData(Dictionary<string, LevelData> levelsData)
-    //    {
-    //        _levelsData = levelsData;
-    //    }
-    //}
-
+  
     public class TilemapWorldBuilderManager
     {
         private readonly GameEntityManager _entityManager;

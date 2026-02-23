@@ -11,11 +11,11 @@ namespace Engine
     [StructLayout(LayoutKind.Sequential)]
     public struct Bounds
     {
-        public vec3 Max;
-        public vec3 Min;
-        public vec3 Size => Max - Min;
-        public vec3 Center => (Min + Max) * 0.5f;
-        public vec3 Extents => (Max - Min) * 0.5f;
+        [SerializedField] public vec3 Max;
+        [SerializedField] public vec3 Min;
+        [ShowFieldNoSerialize(true)] public vec3 Size => Max - Min;
+        [ShowFieldNoSerialize(true)] public vec3 Center => (Min + Max) * 0.5f;
+        [ShowFieldNoSerialize(true)] public vec3 Extents => (Max - Min) * 0.5f;
 
         internal static Bounds GetInitialized()
         {

@@ -13,16 +13,18 @@ namespace Game
     [RequireComponent(typeof(Camera))]
     public class CameraFollow : ScriptBehavior
     {
-        public Transform Target { get; set; }
-        public float FollowSpeed { get; set; } = 5f;
+        [SerializedField] public Transform Target { get; set; }
+        [SerializedField] public float FollowSpeed { get; set; } = 5f;
 
         private vec2 deadZoneSize = new vec2(0f, 4f);
-        private float smoothTime = 0.2f;
+        [SerializedField] private float smoothTime = 0.2f;
         private vec3 velocity;
-        public Bounds LevelBounds { get; set; }
+        [ShowFieldNoSerialize(true)] public Bounds LevelBounds { get; set; }
         [RequiredProperty] private Camera _camera;
         private readonly float _zPosition = -10;
         [SerializedField] private bool _clampBounds = true;
+       // [ShowFieldNoSerialize] private bool _showBounds;
+
         protected override void OnAwake()
         {
             Actor.DontDestroyOnLoad(this);
@@ -67,7 +69,20 @@ namespace Game
 
             if (_clampBounds)
             {
-                Transform.WorldPosition = AdjustPositionInsideBounds(Mathf.SmoothDamp(camPos, AdjustPositionInsideBounds(targetCameraPos), ref velocity, smoothTime));
+                var clampedTarget = AdjustPositionInsideBounds(targetCameraPos);
+                //var smooth = Mathf.Lerp(camPos, clampedTarget, FollowSpeed * Time.DeltaTime);
+                var smooth = Mathf.SmoothDamp(camPos, clampedTarget, ref velocity, smoothTime);
+
+
+                var final = AdjustPositionInsideBounds(smooth);
+
+                if (final.x != smooth.x)
+                    velocity.x = 0;
+
+                if (final.y != smooth.y)
+                    velocity.y = 0;
+
+                Transform.WorldPosition = final;
             }
             else
             {
@@ -80,7 +95,13 @@ namespace Game
                 Debug.DrawBox(new vec3(Transform.WorldPosition.x, Transform.WorldPosition.y, 0), new vec3(deadZoneSize.x, deadZoneSize.y, 0), Color.Green);
             }
         }
-
+        protected override void OnDrawGizmo()
+        {
+            if (_showBounds)
+            {
+                // Debug.DrawBox(Transform.WorldPosition, LevelBounds.Max, Color.Cyan);
+            }
+        }
         private vec3 AdjustPositionInsideBounds(vec3 pos)
         {
             var frustum = _camera.GetFrustumBoundsWorld();

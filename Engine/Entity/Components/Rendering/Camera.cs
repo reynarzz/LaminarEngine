@@ -90,7 +90,7 @@ namespace Engine
             get => _fov;
             set
             {
-                _fov = value;
+                _fov = Mathf.Clamp(value, 0.001f, value + 1.0f);
                 UpdateCurrent();
             }
         }
@@ -101,7 +101,7 @@ namespace Engine
             get => _orthoSize;
             set
             {
-                _orthoSize = value;
+                _orthoSize = Mathf.Clamp(value, 0.001f, value + 1.0f);
                 UpdateCurrent();
             }
         }
