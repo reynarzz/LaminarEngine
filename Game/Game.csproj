@@ -65,6 +65,10 @@
 		<None Remove="**\*.jpg" />
 		<None Remove="**\*.zip" />
 		<None Remove="**\*.ldtk" />
+		<None Remove="**\*.material" />
+		<None Remove="**\*.scene" />
+		<None Remove="**\*.dat" />
+		<None Remove="**\*.ttf" />
 		<None Remove="obj\**" />
 	</ItemGroup>
 

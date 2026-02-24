@@ -1,5 +1,6 @@
 Fonts/windows-bold[1].ttf
 Materials/Portal.material
+Materials/Portal_mobile.material
 Shaders/Portal.shader
 Shaders/Portal_mobile.shader
 Shaders/ScreenVert.vert

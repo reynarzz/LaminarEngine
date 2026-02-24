@@ -186,21 +186,12 @@ namespace Editor
                 case OPERATION.BOUNDS:
                     break;
                 case OPERATION.TRANSLATE:
-                    if (mode == MODE.LOCAL)
-                        selectedTransform.LocalPosition += deltaPosition;
-                    else
                         selectedTransform.WorldPosition += deltaPosition;
                     break;
                 case OPERATION.ROTATE:
-                    if (mode == MODE.LOCAL)
-                        selectedTransform.LocalEulerAngles = rotation;
-                    else
                         selectedTransform.WorldEulerAngles = rotation;
                     break;
                 case OPERATION.SCALE:
-                    if (mode == MODE.LOCAL)
-                        selectedTransform.LocalScale = scale;
-                    else
                         selectedTransform.WorldScale = scale;
                     break;
                 default:

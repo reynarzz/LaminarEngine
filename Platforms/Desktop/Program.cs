@@ -18,18 +18,15 @@ namespace Sandbox
 
             string extension = string.Empty;
 
-            if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(
-                System.Runtime.InteropServices.OSPlatform.Windows))
+            if (OperatingSystem.IsWindows())
             {
                 extension = ".dll";
             }
-            else if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(
-                     System.Runtime.InteropServices.OSPlatform.Linux))
+            else if (OperatingSystem.IsLinux())
             {
                 extension = ".so";
             }
-            else if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(
-                     System.Runtime.InteropServices.OSPlatform.OSX))
+            else if (OperatingSystem.IsMacOS())
             {
                 extension = ".dylib";
             }
