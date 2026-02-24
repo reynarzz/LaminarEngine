@@ -24,23 +24,23 @@ namespace Game
             _defaultFont = Assets.GetFont("Fonts/windows-bold[1].ttf");
             _camera.BackgroundColor = Color.Black;
 
-            PostProcessingStack.Push(new BloomPostProcessing());
+            PostProcessingStackInternal.Push(new BloomPostProcessing());
 
             var wobble = new PostProcessingSinglePass(new Shader(Assets.GetText("Shaders/ScreenVert.vert").Text, Assets.GetText("Shaders/ScreenGrabWobble.frag").Text));
             wobble.SetValue("uDistortionAmount", 0.0003f);
             wobble.SetValue("uColorSplit", 0.0017f);
             wobble.SetValue("uPixelationAmount", 0.0f);
-            PostProcessingStack.Push(wobble);
+            PostProcessingStackInternal.Push(wobble);
 
             var filmGrain = new PostProcessingSinglePass(new Shader(Assets.GetText("Shaders/ScreenVert.vert").Text, Assets.GetText("Shaders/FilmGrain.frag").Text));
             filmGrain.SetValue("uNoiseStrength", 0.1f);
             filmGrain.SetValue("uNoiseSize", 1.0f);
-            PostProcessingStack.Push(filmGrain);
+            PostProcessingStackInternal.Push(filmGrain);
 
             var scanlines = new PostProcessingSinglePass(new Shader(Assets.GetText("Shaders/ScreenVert.vert").Text, Assets.GetText("Shaders/ScanLines.frag").Text));
             scanlines.SetValue("uScanlineIntensity", 0.2f);
             scanlines.SetValue("uScanlineSpacing", 2);
-            PostProcessingStack.Push(scanlines);
+            PostProcessingStackInternal.Push(scanlines);
 
 #if DEBUG
             OnComplete();

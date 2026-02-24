@@ -18,7 +18,7 @@ namespace Game
 
         protected override void OnAwake()
         {
-            PostProcessingStack.Push(_fadePostProcessing);
+            PostProcessingStackInternal.Push(_fadePostProcessing);
             _fadePostProcessing.Color = Color.Black;
              _fadePostProcessing.Value = 1;
             _instance = this;

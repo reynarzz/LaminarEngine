@@ -297,7 +297,7 @@ namespace Engine.Layers
 
         private void RenderPostProcessing(ref RenderTexture screenRenderTexture)
         {
-            foreach (var pass in PostProcessingStack.Passes)
+            foreach (var pass in PostProcessingStackInternal.Passes)
             {
                 screenRenderTexture = pass.Render(screenRenderTexture, _drawPostProcessCallback);
             }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Engine.Graphics
 {
-    public class PostProcessingStack
+    public class PostProcessingStackInternal
     {
         private static List<PostProcessingPass> _passes = new();
         public static IReadOnlyList<PostProcessingPass> Passes => _passes;

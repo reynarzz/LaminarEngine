@@ -50,7 +50,7 @@ namespace Engine.Graphics
 
             EngineInfo.Renderer.WBatches = geoBatchesInfo.BatchesCount;
             EngineInfo.Renderer.GrabScreenPass = geoBatchesInfo.ScreenGrabPasses;
-            EngineInfo.Renderer.PostProcessingPasses = PostProcessingStack.Passes.Count;
+            EngineInfo.Renderer.PostProcessingPasses = PostProcessingStackInternal.Passes.Count;
             EngineInfo.Renderer.SavedByBatching = (geoBatchesInfo.TotalRenderers - geoBatchesInfo.BatchesCount) * (uiBatchesInfo.ScreenGrabPasses + 1);
 
             return targetRenderTexture;

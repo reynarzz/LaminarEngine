@@ -106,10 +106,10 @@ namespace Game
 
         private void InitializeWorld()
         {
-            PostProcessingStack.Clear();
+            PostProcessingStackInternal.Clear();
             ScreenGrabTest();
 #if DESKTOP
-            PostProcessingStack.Push(new BloomPostProcessing());
+            PostProcessingStackInternal.Push(new BloomPostProcessing());
             ScreenGrabTest3();
 #endif
             _fadeInOutManager = new Actor("FadeInOutManager").AddComponent<FadeInOutManager>();
@@ -379,7 +379,7 @@ uniform float uOutlineThickness = 0.04f
             pass.SetValue("uVignetteStrength", 0.01f);
             pass.SetValue("uJitterStrength", 0.5f);
 
-            PostProcessingStack.Insert(pass, 0);
+            PostProcessingStackInternal.Insert(pass, 0);
         }
 
         private void ScreenGrabTest3()
@@ -391,12 +391,12 @@ uniform float uOutlineThickness = 0.04f
             var chormaticAberration = new PostProcessingSinglePass(new Shader(vertex, Assets.GetText("Shaders/ChromaticAberration.frag").Text));
             chormaticAberration.SetValue("uAberrationStrength", 0.004f);
 
-            PostProcessingStack.Push(chormaticAberration);
+            PostProcessingStackInternal.Push(chormaticAberration);
 
             var scanlines = new PostProcessingSinglePass(new Shader(vertex, Assets.GetText("Shaders/ScanLines.frag").Text));
             scanlines.SetValue("uScanlineIntensity", 0.2f);
             scanlines.SetValue("uScanlineSpacing", 2);
-            PostProcessingStack.Push(scanlines);
+            PostProcessingStackInternal.Push(scanlines);
         }
     }
 }
