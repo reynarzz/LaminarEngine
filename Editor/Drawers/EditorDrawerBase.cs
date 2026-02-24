@@ -36,6 +36,7 @@ namespace Editor
 
             ImGui.Dummy(new Vector2(0, 2));
         }
+
     }
 
     internal abstract class EditorDrawerBase<T> : EditorDrawerBase where T : class, IObject

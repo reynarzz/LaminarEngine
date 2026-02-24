@@ -86,6 +86,7 @@ namespace Editor
 
         private Shader _test;
         private Material _materialTest;
+        private TilemapAsset _tilemapAssetTest;
         internal override void Update()
         {
             base.Update();
@@ -144,7 +145,6 @@ namespace Editor
                 }
 
                 InternalAssetsCreator.GenerateAll();
-                //Cooker.Generator.TypeGenerationStage.GenerateTypeRegistry();
             }
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.A))
             {
@@ -194,10 +194,11 @@ namespace Editor
                 //    }
                 //}
                 // Test_MaterialBinary.RunTest_Windows();
-
-                var tilemap = Assets.GetTilemap("Tilemap/WorldTilemap_test.ldtk");
+                Debug.Log("ctrl w");
+                _tilemapAssetTest= Assets.GetTilemap("Tilemap/WorldTilemap.ldtk");
+                Selector.Selected = _tilemapAssetTest;
             }
-
+            
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.R))
             {
                 //var clip = Assets.Get<AnimationClip>("Animation/AnimClip.anim");

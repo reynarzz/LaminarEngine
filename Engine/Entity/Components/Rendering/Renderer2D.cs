@@ -80,6 +80,7 @@ namespace Engine
                     return;
 
                 _renderData.SortOrder = value;
+                _renderData.IsDirty = true;
             }
         }
 

@@ -28,7 +28,8 @@ namespace Editor
                 { typeof(Actor), new ActorInspectorDrawer() },
                 { typeof(Material), new MaterialInspectorDrawer() },
                 { typeof(Texture2D), new TextureInspectorDrawer() },
-
+                { typeof(TilemapAsset), new TilemapInspectorDrawer() },
+                
             };
         }
 
