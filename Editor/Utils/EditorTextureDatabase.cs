@@ -35,7 +35,8 @@ namespace Editor.Utils
         CircleCollider,
         CapsuleCollider,
         Physics,
-        Tilemap
+        Tilemap,
+        Actor
     }
 
     internal sealed class EditorTextureDatabase
@@ -71,6 +72,7 @@ namespace Editor.Utils
                 { EditorIcon.CapsuleCollider, LoadIconFromDisk("capsule24x24.png") },
                 { EditorIcon.Physics, LoadIconFromDisk("physics24x24.png") },
                 { EditorIcon.Tilemap, LoadIconFromDisk("tilemap50x50.png") },
+                { EditorIcon.Actor, LoadIconFromDisk("cube32x32.png") },
             };
 
             _typesToIconTypeMapper = new Dictionary<Type, EditorIcon>()
@@ -92,6 +94,7 @@ namespace Editor.Utils
                 { typeof(CapsuleCollider2D), EditorIcon.CapsuleCollider },
                 { typeof(RigidBody2D), EditorIcon.Physics },
                 { typeof(TilemapAsset), EditorIcon.Tilemap },
+                { typeof(Actor), EditorIcon.Actor },
             };
         }
 

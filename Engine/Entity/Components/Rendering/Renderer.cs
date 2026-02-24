@@ -16,9 +16,14 @@ namespace Engine
         internal abstract RendererData RendererData { get; protected private set; }
         [SerializedField] public Material Material { get => RendererData.Material; set => RendererData.Material = value; }
 
+        internal override void OnInternalInitialize()
+        {
+            base.OnInternalInitialize();
+            Transform.OnChanged -= Transform_OnChanged;
+            Transform.OnChanged += Transform_OnChanged;
+        } 
         protected override void OnAwake()
         {
-            Transform.OnChanged += Transform_OnChanged;
             RendererData.IsDirty = true;
         }
 
@@ -51,9 +56,8 @@ namespace Engine
         protected internal override void OnDestroy()
         {
             base.OnDestroy();
-
             Transform.OnChanged -= Transform_OnChanged;
-            RendererData.OnDestroy();
+            RendererData?.OnDestroy();
         }
     }
 }

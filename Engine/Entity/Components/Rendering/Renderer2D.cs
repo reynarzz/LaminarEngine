@@ -22,6 +22,8 @@ namespace Engine
 
         internal override void OnInternalInitialize()
         {
+            base.OnInternalInitialize();
+
            _renderData = new RendererData2D(GetID(), Transform, Draw, () => IsEnabled && Actor.IsActiveInHierarchy);
         }
 
