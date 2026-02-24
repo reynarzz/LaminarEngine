@@ -84,6 +84,15 @@ namespace Engine.Graphics
             _isEnabledFunc = isEnabled;
         }
 
+        internal virtual mat4 GetRenderingWorldMatrix()
+        {
+            return Transform.GetRenderingWorldMatrix();
+        }
+
+        internal virtual bool NeedsInterpolation()
+        {
+            return Transform.NeedsInterpolation;
+        }
         public Color Color
         {
             get => _colorpacket;

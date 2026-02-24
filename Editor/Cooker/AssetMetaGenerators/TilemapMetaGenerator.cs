@@ -18,12 +18,13 @@ namespace Editor.Cooker
             var project = LdtkJson.FromJson(json);
 
             var meta = new TilemapMeta();
-            meta.LevelConfig = new TilemapLevelConfig[project.Levels.Length];
-            for (int i = 0; i < project.Levels.Length; i++)
+            meta.Layers = new TilemapLayerConfig[project.Defs.Layers.Length];
+            for (int i = 0; i < project.Defs.Layers.Length; i++)
             {
-                meta.LevelConfig[i] = new TilemapLevelConfig() 
-                { 
-                    LayersTextureRef = new Guid[project.Levels[i].LayerInstances.Length] 
+                meta.Layers[i] = new TilemapLayerConfig()
+                {
+                    EntityPixelPerUnit = 16,
+                    TextureRef = Guid.Empty
                 };
             }
 

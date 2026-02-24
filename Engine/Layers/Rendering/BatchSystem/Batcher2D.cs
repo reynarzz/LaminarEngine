@@ -111,7 +111,7 @@ namespace Engine.Rendering
                 {
                     renderer.Draw();
 
-                    if (!renderer.IsDirty && !renderer.Transform.NeedsInterpolation)
+                    if (!renderer.IsDirty && !renderer.NeedsInterpolation())
                     {
                         continue;
                     }
@@ -138,7 +138,7 @@ namespace Engine.Rendering
 
                         var currentBatch = _batchesPool.Get(renderer, VerticesPerQuad, MaxBatchVertexSize, texture, material);
 
-                        var worldMatrix = renderer.Transform.GetRenderingWorldMatrix();
+                        var worldMatrix = renderer.GetRenderingWorldMatrix();
 
                         QuadVertices quad = default;
                         GraphicsHelper.CreateQuad(ref quad, chunk.Uvs, width, height, chunk.Pivot, renderer.Color, worldMatrix);

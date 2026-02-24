@@ -123,7 +123,6 @@ namespace Editor.Cooker
             {
                 var level = project.Levels[i];
                 var levelBounds = Bounds.GetInitialized();
-                var levelConfig = meta.LevelConfig?.Length == project.Levels.Length ? meta.LevelConfig[i] : null;
 
                 // Write level identifier
                 EditorFileUtils.WriteString(writer, level.Identifier);
@@ -150,37 +149,35 @@ namespace Editor.Cooker
                 {
                     var layer = level.LayerInstances[j];
                     TextureMetaFile textureMeta = null;
+                    var layerConfig = meta.Layers[j];
 
-                    if (levelConfig != null && levelConfig.LayersTextureRef.Length > j)
+                    var guid = layerConfig.TextureRef;
+
+                    if (guid != Guid.Empty && !_texturesMeta.TryGetValue(guid, out textureMeta))
                     {
-                        var guid = levelConfig.LayersTextureRef[j];
+                        var assetPath = string.Empty;
 
-                        if (guid != Guid.Empty && !_texturesMeta.TryGetValue(guid, out textureMeta))
+                        if (EditorIOLayer.Database != null)
                         {
-                            var assetPath = string.Empty;
-
-                            if (EditorIOLayer.Database != null)
+                            assetPath = EditorIOLayer.Database.GetAssetInfo(guid).Path;
+                        }
+                        else
+                        {
+                            // HACK, this is provisional
+                            if (DevModeFilesCooker._database.Assets.TryGetValue(guid, out var info))
                             {
-                                assetPath = EditorIOLayer.Database.GetAssetInfo(guid).Path;
+                                assetPath = info.Path;
                             }
-                            else
-                            {
-                                // HACK, this is provisional
-                                if (DevModeFilesCooker._database.Assets.TryGetValue(guid, out var info))
-                                {
-                                    assetPath = info.Path;
-                                }
-                            }
+                        }
 
-                            assetPath = EditorPaths.GetAbsolutePathSafe(assetPath);
+                        assetPath = EditorPaths.GetAbsolutePathSafe(assetPath);
 
-                            if (!string.IsNullOrEmpty(assetPath))
-                            {
-                                textureMeta =
-                                    EditorAssetUtils.GetMetaFromAssetPath(assetPath, AssetType.Texture) as
-                                        TextureMetaFile;
-                                _texturesMeta.Add(guid, textureMeta);
-                            }
+                        if (!string.IsNullOrEmpty(assetPath))
+                        {
+                            textureMeta =
+                                EditorAssetUtils.GetMetaFromAssetPath(assetPath, AssetType.Texture) as
+                                    TextureMetaFile;
+                            _texturesMeta.Add(guid, textureMeta);
                         }
                     }
 
@@ -228,7 +225,7 @@ namespace Editor.Cooker
                                 ref levelBounds);
                             break;
                         case TilemapLayerType.Entities:
-                            WriteEntityInstances(writer, level, layer, ppu);
+                            WriteEntityInstances(writer, level, layer, layerConfig.EntityPixelPerUnit);
                             break;
                         default:
                             break;
@@ -675,8 +672,7 @@ namespace Editor.Cooker
 
                 tilesPositions[i] = new vec2(position.x, position.y);
 
-                WriteTile(writer, new Tile((int)tile.T, isFlippedX, isFlippedY), position, texture, ppu,
-                    ref layerBounds);
+                WriteTile(writer, new Tile((int)tile.T, isFlippedX, isFlippedY), position, texture, ppu, ref layerBounds);
             }
 
             // Tiles positions
@@ -746,11 +742,11 @@ namespace Editor.Cooker
             {
                 float width = layer.GridSize;
                 float height = layer.GridSize;
-            
+
                 x -= (int)(width * pivot.x);
                 y -= (int)(height * pivot.y);
             }
-          
+
             return new vec2(level.WorldX + x + layer.PxOffsetX, -level.WorldY - y - layer.PxOffsetY) / pixelPerUnit;
         }
 

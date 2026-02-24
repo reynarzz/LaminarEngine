@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    internal class TilemapLevelConfig
+    internal struct TilemapLayerConfig
     {
-        public Guid[] LayersTextureRef { get; set; }
+        [SerializedField] public int EntityPixelPerUnit;
+        [SerializedField] public Guid TextureRef;
     }
     internal class TilemapMeta : AssetMeta
     {
-        public TilemapLevelConfig[] LevelConfig { get; set; }
+        [SerializedField] public TilemapLayerConfig[] Layers { get; set; }
     }
 }

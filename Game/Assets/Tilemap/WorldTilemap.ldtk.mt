@@ -1,25 +1,29 @@
 {
-  "LevelConfig": [
+  "Layers": [
     {
-      "LayersTextureRef": [
-        "2f779d6a-a4bb-4860-b3d7-9a2ed747698b",
-        "da64b85c-92f1-4a6f-a576-0ac668e7e2a7",
-        "da64b85c-92f1-4a6f-a576-0ac668e7e2a7",
-        "da64b85c-92f1-4a6f-a576-0ac668e7e2a7",
-        "da64b85c-92f1-4a6f-a576-0ac668e7e2a7",
-        "da64b85c-92f1-4a6f-a576-0ac668e7e2a7"
-      ]
+      "EntityPixelPerUnit": 16,
+      "TextureRef": "2f779d6a-a4bb-4860-b3d7-9a2ed747698b"
     },
     {
-      "LayersTextureRef": [
-        "2f779d6a-a4bb-4860-b3d7-9a2ed747698b",
-        "da64b85c-92f1-4a6f-a576-0ac668e7e2a7",
-        "da64b85c-92f1-4a6f-a576-0ac668e7e2a7",
-        "da64b85c-92f1-4a6f-a576-0ac668e7e2a7",
-        "da64b85c-92f1-4a6f-a576-0ac668e7e2a7",
-        "da64b85c-92f1-4a6f-a576-0ac668e7e2a7"
-      ]
+      "EntityPixelPerUnit": 16,
+      "TextureRef": "da64b85c-92f1-4a6f-a576-0ac668e7e2a7"
+    },
+    {
+      "EntityPixelPerUnit": 16,
+      "TextureRef": "00000000-0000-0000-0000-000000000000" 
+    },
+    {
+      "EntityPixelPerUnit": 16,
+      "TextureRef": "da64b85c-92f1-4a6f-a576-0ac668e7e2a7"
+    },
+    {
+      "EntityPixelPerUnit": 16,
+      "TextureRef": "da64b85c-92f1-4a6f-a576-0ac668e7e2a7"
+    },
+    {
+      "EntityPixelPerUnit": 16,
+      "TextureRef": "da64b85c-92f1-4a6f-a576-0ac668e7e2a7"
     }
   ],
-  "GUID": "29de9d29-d7e6-4b76-b634-ab248c00357c"
+  "GUID": "349b5840-9578-4504-bfa3-b74141eab3fa"
 }

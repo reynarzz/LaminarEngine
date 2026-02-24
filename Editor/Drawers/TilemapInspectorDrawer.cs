@@ -20,51 +20,89 @@ namespace Editor
         protected override bool AutoDrawTitle { get; } = true;
 
         private TilemapMeta _meta;
-        private TilemapLevelConfig[] _levelConfig;
+        private TilemapLayerConfig[] _layerConfig;
+        internal struct LayerInfo
+        {
+            public string Identifier { get; set; }
+            public TilemapLayerType Type { get; set; }
+        }
+
+        private LayerInfo[] _layersInfo;
+
         internal override void OnOpen(TilemapAsset target)
         {
             _meta = EditorAssetUtils.GetAssetMeta(target) as TilemapMeta;
-            
-            // TODO: maintain the meta in sync with the tilemap level and layers here
+
 
             var data = target.GetData();
+            var level = data.Levels.FirstOrDefault().Value;
+
+            if(level != null)
+            {
+                if(level.Layers != null && level.Layers.Count > 0)
+                {
+                    var layers = level.Layers.Values.ToArray();
+                    _layersInfo = new LayerInfo[layers.Length];
+
+                    for ( int i = 0; i < layers.Length; i++ ) 
+                    {
+                        _layersInfo[i] = new LayerInfo()
+                        {
+                            Identifier = layers[i].Identifier,
+                            Type = layers[i].Type
+                        };
+                    }
+                }
+            }
+
+            // TODO: maintain the meta in sync with the tilemap level and layers here
+
             // data.Levels.Layers
-            _levelConfig = _meta.LevelConfig;
+            _layerConfig = _meta.Layers;
         }
 
         protected override void OnDraw(TilemapAsset target)
         {
             var data = target.GetData();
-            
-            for (int i = 0; i < data.Levels.Count; i++)
+
+          //  var show = ImGui.TreeNodeEx($"Layer");
+
+          //  if (show)
             {
-                var level = data.Levels[data.Levels.Keys.ElementAt(i)];
-
-                var levelConfig = _levelConfig[i];
-                var show = ImGui.TreeNodeEx($"{level.Identifier}##{i}");
-
-                if (show)
+                for (int j = 0; j < _layerConfig.Length; j++)
                 {
-                    for (int j = 0; j < level.Layers.Count; j++)
-                    {
-                        var layer = level.Layers[level.Layers.Keys.ElementAt(j)];
+                    ref var layerConfig = ref _layerConfig[j];
+                    ref var layer = ref _layersInfo[j];
+                    ImGui.PushID($"{j}");
 
-                        var guid = levelConfig.LayersTextureRef[j];
-                        var texture = Assets.GetAssetFromGuid(guid) as TextureAsset;
-                        ImGui.Text(layer.Identifier);
+                    if (layer.Type == TilemapLayerType.Entities)
+                    {
+                        ImGui.Text(layer.Identifier + " (Pixels per unit)");
                         ImGui.SameLine();
-                        ImGui.PushID($"{i}.{j}");
+                        ImGui.SetCursorPosX(MathF.Max(EditorGuiFieldsResolver.XPosOffset, ImGui.GetCursorPosX()));
+
+                        EditorGuiFieldsResolver.DrawIntField("##Pixels Per unit", ref layerConfig.EntityPixelPerUnit);
+                    }
+                    else
+                    {
+                        ImGui.Text(layer.Identifier);
+
+                        var guid = layerConfig.TextureRef;
+                        var texture = Assets.GetAssetFromGuid(guid) as TextureAsset;
+                        ImGui.SameLine();
                         EditorGuiFieldsResolver.DrawEObjectSlot(texture?.Texture, typeof(Texture2D), (val) =>
                         {
                             guid = (val as EObject)?.GetID() ?? Guid.Empty;
                             return true;
                         });
-                        ImGui.PopID();
-                        levelConfig.LayersTextureRef[j] = guid;
+                        layerConfig.TextureRef = guid;
+
                     }
 
-                    ImGui.TreePop();
+                    ImGui.PopID();
                 }
+
+                //ImGui.TreePop();
             }
 
             ApplyMeta(target, _meta);

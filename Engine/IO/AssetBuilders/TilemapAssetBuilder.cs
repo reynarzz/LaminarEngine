@@ -88,8 +88,8 @@ namespace Engine.IO
                 return layer;
             }
 
-            var layerType = (TilemapLayerType)reader.ReadInt32();
-            switch (layerType)
+            layer.Type = (TilemapLayerType)reader.ReadInt32();
+            switch (layer.Type)
             {
                 case TilemapLayerType.IntGrid:
                 case TilemapLayerType.Tiles:
@@ -100,7 +100,7 @@ namespace Engine.IO
                     ReadEntities(reader, layer, level);
                     break;
                 default:
-                    throw new NotImplementedException(layerType.ToString());
+                    throw new NotImplementedException(layer.Type.ToString());
             }
 
             return layer;
