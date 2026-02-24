@@ -38,7 +38,7 @@ namespace Game
                         loot.Amount = lootAmount.Value.IntArray[i];
                     }
                 }
-                else
+                else if(lootItems != null)
                 {
                     var len = lootAmount.Value.IntArray?.Length ?? 0;
                     Debug.Error($"Items amount {len} for chest are not in sync for items type: {lootItems.Length}: " + entityData.IID);
