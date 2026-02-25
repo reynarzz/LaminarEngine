@@ -17,7 +17,9 @@ namespace Editor.Drawers
         {
             valueOut = valueIn;
             ImGui.Text("This should be a property");
-            return defaultPropertyDrawer();
+            //return defaultPropertyDrawer();
+
+            return false;
         }
     }
 }
