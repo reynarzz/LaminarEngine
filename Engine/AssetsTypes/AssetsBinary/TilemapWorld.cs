@@ -47,6 +47,7 @@ namespace Engine
         public Bounds Bounds { get; set; }
         public TilemapLayerType Type { get; set; }
         internal vec2[] TilesPosition { get; set; }
+        internal Box[] CollisionBoxes { get; set; }
         public Dictionary<Guid, TilemapEntity> Entities { get; set; }
         public bool IsVisible { get; internal set; }
         internal Vertex[] Vertices { get; set; }

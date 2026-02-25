@@ -55,6 +55,9 @@ namespace Editor.Cooker
 
             Tiles vertices (Vertex[])
             Tiles worldPositions (vec2[])
+            Boxes count (s32)
+            Collision Boxes (Box[])
+            
             Bounding box (vec4)
         */
 
@@ -678,6 +681,16 @@ namespace Editor.Cooker
             // Tiles positions
             EditorFileUtils.WriteSpan(writer, tilesPositions);
 
+            var collisionBoxes = MergeTiles(tilesPositions);
+            
+            // Collision boxes count
+            writer.Write(collisionBoxes?.Length ?? (int)0);
+
+            if(collisionBoxes.Length > 0)
+            {
+                EditorFileUtils.WriteSpan(writer, collisionBoxes);
+            }
+
             layerBounds.Min -= vec3.One * 0.5f;
             layerBounds.Max += vec3.One * 0.5f;
             layerBounds.Min.z = 0;
@@ -768,6 +781,123 @@ namespace Editor.Cooker
             var g = byte.Parse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
             var b = byte.Parse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
             return (uint)(ColorPacketRGBA)new Color32(r, g, b, 255);
+        }
+
+
+        private Box[] MergeTiles(IReadOnlyList<vec2> tilePositions)
+        {
+            if (tilePositions == null || tilePositions.Count == 0)
+            {
+                return Array.Empty<Box>();
+            }
+
+            var tiles = new HashSet<(int x, int y)>();
+            int minX = int.MaxValue, minY = int.MaxValue;
+            int maxX = int.MinValue, maxY = int.MinValue;
+
+            foreach (var pos in tilePositions)
+            {
+                int tx = (int)MathF.Round(pos.x);
+                int ty = (int)MathF.Round(pos.y);
+
+                if (!tiles.Add((tx, ty))) { continue; }
+
+                if (tx < minX) { minX = tx; }
+                if (ty < minY) { minY = ty; }
+                if (tx > maxX) { maxX = tx; }
+                if (ty > maxY) { maxY = ty; }
+            }
+
+            int width = maxX - minX + 1;
+            int height = maxY - minY + 1;
+
+            var grid = new int[width, height];
+            foreach (var t in tiles)
+            {
+                grid[t.x - minX, t.y - minY] = 1;
+            }
+
+            var boxes = new List<Box>();
+            int remaining = tiles.Count;
+
+            var histogram = new int[width];
+
+            while (remaining > 0)
+            {
+                int bestArea = 0;
+                int bestX = 0, bestY = 0, bestW = 0, bestH = 0;
+
+                Array.Clear(histogram, 0, histogram.Length);
+
+                for (int y = 0; y < height; y++)
+                {
+                    for (int x = 0; x < width; x++)
+                    {
+                        histogram[x] = grid[x, y] == 0 ? 0 : histogram[x] + 1;
+                    }
+
+                    FindLargestRectangleInHistogram(histogram, width, (start, w, h) =>
+                    {
+                        int area = w * h;
+                        if (area > bestArea)
+                        {
+                            bestArea = area;
+                            bestW = w;
+                            bestH = h;
+                            bestX = start;
+                            bestY = y - h + 1;
+                        }
+                    });
+                }
+
+                if (bestArea == 0)
+                {
+                    break;
+                }
+
+                for (int dx = 0; dx < bestW; dx++)
+                {
+                    for (int dy = 0; dy < bestH; dy++)
+                    {
+                        if (grid[bestX + dx, bestY + dy] == 1)
+                        {
+                            grid[bestX + dx, bestY + dy] = 0;
+                            remaining--;
+                        }
+                    }
+                }
+
+                float worldX = bestX + minX + bestW * 0.5f - 0.5f;
+                float worldY = bestY + minY + bestH * 0.5f - 0.5f;
+
+                boxes.Add(new Box(new vec2(worldX, worldY), new vec2(bestW, bestH)));
+            }
+
+            return boxes.ToArray();
+        }
+
+        private void FindLargestRectangleInHistogram(int[] heights, int length, Action<int, int, int> onRectangle)
+        {
+            var stack = new Stack<int>();
+
+            for (int i = 0; i <= length; i++)
+            {
+                int h = (i == length) ? 0 : heights[i];
+
+                while (stack.Count > 0 && h < heights[stack.Peek()])
+                {
+                    int top = stack.Pop();
+                    int height = heights[top];
+
+                    int width = stack.Count == 0 ? i : i - stack.Peek() - 1;
+
+                    int start = stack.Count == 0 ? 0 : stack.Peek() + 1;
+
+                    onRectangle(start, width, height);
+                }
+
+                stack.Push(i);
+            }
         }
     }
 }
