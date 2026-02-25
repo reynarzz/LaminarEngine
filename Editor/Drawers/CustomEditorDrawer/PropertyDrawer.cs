@@ -18,10 +18,10 @@ namespace Editor.Drawers
                                                       out object valueOut, Func<bool> defaultPropertyDrawer)
         {
             var valueInV = valueIn != null ? (V)valueIn : default;
-            return OnDrawProperty(type, name, target, in valueInV, out valueOut, defaultPropertyDrawer);
+            return OnDrawProperty(type, name, target, ref valueInV, out valueOut, defaultPropertyDrawer);
         }
 
-        internal virtual protected bool OnDrawProperty(Type type, string name, object target, in V valueIn,
+        internal virtual protected bool OnDrawProperty(Type type, string name, object target, ref V valueIn,
                                                       out object valueOut, Func<bool> defaultPropertyDrawer)
         {
             valueOut = null;

@@ -134,7 +134,7 @@ namespace Engine
 
     public struct TilemapRenderingOptions
     {
-        [SerializedField] public int LevelIndex { get; set; }
-        [SerializedField] public int LayerIndex { get; set; }
+        [SerializedField] public int LevelIndex;
+        [SerializedField] public int LayerIndex;
     }
 }
