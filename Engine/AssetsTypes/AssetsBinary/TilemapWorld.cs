@@ -148,10 +148,11 @@ namespace Engine
         public ivec2 PositionPx;
     }
 
+    [StructLayout(LayoutKind.Sequential)]
     public struct Box
     {
-        public vec2 Position;
-        public vec2 Size;
+        [SerializedField] public vec2 Position;
+        [SerializedField] public vec2 Size;
 
         public Box(vec2 pos, vec2 size)
         {

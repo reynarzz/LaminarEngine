@@ -46,6 +46,7 @@ namespace Engine
         {
             var layer = _renderer.GetLayer();
             var boxes = MergeTiles(layer.TilesPosition);
+            Debug.Log("Polygon count: " + boxes.Count);
             var polygons = new B2Polygon[boxes.Count];
             for (int i = 0; i < boxes.Count; i++)
             {
@@ -64,6 +65,121 @@ namespace Engine
             }
         }
 
+        //private List<Box> MergeTiles(IReadOnlyList<vec2> tilePositions)
+        //{
+        //    if (tilePositions == null || tilePositions.Count == 0)
+        //    {
+        //        return new List<Box>();
+        //    }
+
+        //    // Deduplicate + bounds
+        //    var tiles = new HashSet<(int x, int y)>();
+        //    int minX = int.MaxValue, minY = int.MaxValue;
+        //    int maxX = int.MinValue, maxY = int.MinValue;
+
+        //    foreach (var pos in tilePositions)
+        //    {
+        //        int tx = (int)MathF.Round(pos.x);
+        //        int ty = (int)MathF.Round(pos.y);
+        //        if (!tiles.Add((tx, ty))) { continue; }
+
+        //        if (tx < minX) { minX = tx; }
+        //        if (ty < minY) { minY = ty; }
+        //        if (tx > maxX) { maxX = tx; }
+        //        if (ty > maxY) { maxY = ty; }
+        //    }
+
+        //    if (tiles.Count == 0) { return new List<Box>(); }
+
+        //    int width = maxX - minX + 1;
+        //    int height = maxY - minY + 1;
+        //    int totalTiles = tiles.Count;
+
+        //    // Convert grid to int array for SIMD (1 = tile present, 0 = empty)
+        //    int[] grid = new int[width * height];
+        //    foreach (var t in tiles)
+        //    {
+        //        int gx = t.x - minX;
+        //        int gy = t.y - minY;
+        //        grid[gy * width + gx] = 1;
+        //    }
+
+        //    var boxes = new List<Box>(Math.Max(4, totalTiles / 2));
+        //    int consumed = 0;
+
+        //    // Row-strip merging
+        //    for (int y = 0; y < height; y++)
+        //    {
+        //        int x = 0;
+        //        while (x < width)
+        //        {
+        //            int idx = y * width + x;
+        //            if (grid[idx] == 0)
+        //            {
+        //                x++;
+        //                continue;
+        //            }
+
+        //            int runStart = x;
+        //            while (x < width && grid[y * width + x] == 1) { x++; }
+        //            int runLength = x - runStart;
+
+        //            // SIMD downward extension
+        //            int rectHeight = 1;
+        //            bool canExtend = true;
+        //            while (canExtend && (y + rectHeight) < height)
+        //            {
+        //                int rowStart = (y + rectHeight) * width + runStart;
+        //                int i = 0;
+        //                int simdWidth = Vector<int>.Count;
+
+        //                // Process vectorized chunks
+        //                for (; i <= runLength - simdWidth; i += simdWidth)
+        //                {
+        //                    var block = new Vector<int>(grid, rowStart + i);
+        //                    if (!Vector.EqualsAll(block, Vector<int>.One))
+        //                    {
+        //                        canExtend = false;
+        //                        break;
+        //                    }
+        //                }
+
+        //                // Process remaining elements
+        //                for (; i < runLength && canExtend; i++)
+        //                {
+        //                    if (grid[rowStart + i] == 0)
+        //                    {
+        //                        canExtend = false;
+        //                        break;
+        //                    }
+        //                }
+
+        //                if (canExtend) { rectHeight++; }
+        //            }
+
+        //            // Clear merged tiles
+        //            for (int dy = 0; dy < rectHeight; dy++)
+        //            {
+        //                int rowStart = (y + dy) * width + runStart;
+        //                for (int dx = 0; dx < runLength; dx++)
+        //                {
+        //                    grid[rowStart + dx] = 0;
+        //                }
+        //            }
+
+        //            float worldX = runStart + minX + runLength * 0.5f - 0.5f;
+        //            float worldY = y + minY + rectHeight * 0.5f - 0.5f;
+
+        //            boxes.Add(new Box(new vec2(worldX, worldY), new vec2(runLength, rectHeight)));
+
+        //            consumed += runLength * rectHeight;
+        //            if (consumed >= totalTiles) { return boxes; }
+        //        }
+        //    }
+
+        //    return boxes;
+        //}
+
         private List<Box> MergeTiles(IReadOnlyList<vec2> tilePositions)
         {
             if (tilePositions == null || tilePositions.Count == 0)
@@ -71,7 +187,6 @@ namespace Engine
                 return new List<Box>();
             }
 
-            // Deduplicate + bounds
             var tiles = new HashSet<(int x, int y)>();
             int minX = int.MaxValue, minY = int.MaxValue;
             int maxX = int.MinValue, maxY = int.MinValue;
@@ -80,6 +195,7 @@ namespace Engine
             {
                 int tx = (int)MathF.Round(pos.x);
                 int ty = (int)MathF.Round(pos.y);
+
                 if (!tiles.Add((tx, ty))) { continue; }
 
                 if (tx < minX) { minX = tx; }
@@ -88,96 +204,96 @@ namespace Engine
                 if (ty > maxY) { maxY = ty; }
             }
 
-            if (tiles.Count == 0) { return new List<Box>(); }
-
             int width = maxX - minX + 1;
             int height = maxY - minY + 1;
-            int totalTiles = tiles.Count;
 
-            // Convert grid to int array for SIMD (1 = tile present, 0 = empty)
-            int[] grid = new int[width * height];
+            var grid = new int[width, height];
             foreach (var t in tiles)
             {
-                int gx = t.x - minX;
-                int gy = t.y - minY;
-                grid[gy * width + gx] = 1;
+                grid[t.x - minX, t.y - minY] = 1;
             }
 
-            var boxes = new List<Box>(Math.Max(4, totalTiles / 2));
-            int consumed = 0;
+            var boxes = new List<Box>();
+            int remaining = tiles.Count;
 
-            // Row-strip merging
-            for (int y = 0; y < height; y++)
+            var histogram = new int[width];
+
+            while (remaining > 0)
             {
-                int x = 0;
-                while (x < width)
+                int bestArea = 0;
+                int bestX = 0, bestY = 0, bestW = 0, bestH = 0;
+
+                Array.Clear(histogram, 0, histogram.Length);
+
+                for (int y = 0; y < height; y++)
                 {
-                    int idx = y * width + x;
-                    if (grid[idx] == 0)
+                    for (int x = 0; x < width; x++)
                     {
-                        x++;
-                        continue;
+                        histogram[x] = grid[x, y] == 0 ? 0 : histogram[x] + 1;
                     }
 
-                    int runStart = x;
-                    while (x < width && grid[y * width + x] == 1) { x++; }
-                    int runLength = x - runStart;
-
-                    // SIMD downward extension
-                    int rectHeight = 1;
-                    bool canExtend = true;
-                    while (canExtend && (y + rectHeight) < height)
+                    FindLargestRectangleInHistogram(histogram, width, (start, w, h) =>
                     {
-                        int rowStart = (y + rectHeight) * width + runStart;
-                        int i = 0;
-                        int simdWidth = Vector<int>.Count;
-
-                        // Process vectorized chunks
-                        for (; i <= runLength - simdWidth; i += simdWidth)
+                        int area = w * h;
+                        if (area > bestArea)
                         {
-                            var block = new Vector<int>(grid, rowStart + i);
-                            if (!Vector.EqualsAll(block, Vector<int>.One))
-                            {
-                                canExtend = false;
-                                break;
-                            }
+                            bestArea = area;
+                            bestW = w;
+                            bestH = h;
+                            bestX = start;
+                            bestY = y - h + 1;
                         }
-
-                        // Process remaining elements
-                        for (; i < runLength && canExtend; i++)
-                        {
-                            if (grid[rowStart + i] == 0)
-                            {
-                                canExtend = false;
-                                break;
-                            }
-                        }
-
-                        if (canExtend) { rectHeight++; }
-                    }
-
-                    // Clear merged tiles
-                    for (int dy = 0; dy < rectHeight; dy++)
-                    {
-                        int rowStart = (y + dy) * width + runStart;
-                        for (int dx = 0; dx < runLength; dx++)
-                        {
-                            grid[rowStart + dx] = 0;
-                        }
-                    }
-
-                    float worldX = runStart + minX + runLength * 0.5f - 0.5f;
-                    float worldY = y + minY + rectHeight * 0.5f - 0.5f;
-
-                    boxes.Add(new Box(new vec2(worldX, worldY), new vec2(runLength, rectHeight)));
-
-                    consumed += runLength * rectHeight;
-                    if (consumed >= totalTiles) { return boxes; }
+                    });
                 }
+
+                if (bestArea == 0)
+                {
+                    break;
+                }
+
+                for (int dx = 0; dx < bestW; dx++)
+                {
+                    for (int dy = 0; dy < bestH; dy++)
+                    {
+                        if (grid[bestX + dx, bestY + dy] == 1)
+                        {
+                            grid[bestX + dx, bestY + dy] = 0;
+                            remaining--;
+                        }
+                    }
+                }
+
+                float worldX = bestX + minX + bestW * 0.5f - 0.5f;
+                float worldY = bestY + minY + bestH * 0.5f - 0.5f;
+
+                boxes.Add(new Box(new vec2(worldX, worldY), new vec2(bestW, bestH)));
             }
 
             return boxes;
         }
 
+        private void FindLargestRectangleInHistogram(int[] heights, int length, Action<int, int, int> onRectangle)
+        {
+            var stack = new Stack<int>();
+
+            for (int i = 0; i <= length; i++)
+            {
+                int h = (i == length) ? 0 : heights[i];
+
+                while (stack.Count > 0 && h < heights[stack.Peek()])
+                {
+                    int top = stack.Pop();
+                    int height = heights[top];
+
+                    int width = stack.Count == 0 ? i : i - stack.Peek() - 1;
+
+                    int start = stack.Count == 0 ? 0 : stack.Peek() + 1;
+
+                    onRectangle(start, width, height);
+                }
+
+                stack.Push(i);
+            }
+        }
     }
 }
