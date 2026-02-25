@@ -56,9 +56,14 @@ namespace Editor.Drawers
 
         private bool DrawLevelCombo(string name, ref int index, string[] elements)
         {
+            IndentProperty();
             ImGui.Text(name);
             ImGui.SameLine();
-            return EditorGuiFieldsResolver.DrawCombo("##__Tilemap_Option__" + name, ref index, elements);
+            AlignProperty();
+            var result = EditorGuiFieldsResolver.DrawCombo("##__Tilemap_Option__" + name, ref index, elements);
+            UnindentProperty();
+
+            return result;
         }
     }
 }

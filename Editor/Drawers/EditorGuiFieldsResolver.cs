@@ -26,6 +26,12 @@ namespace Editor.Utils
         {
         }
 
+        internal static void SetPropertyDefaultCursorPos()
+        {
+            ImGui.SetCursorPosX(Math.Max(XPosOffset, ImGui.GetCursorPosX()));
+            SetNextItemWidth(0);
+        }
+
         private static void SetNextItemWidth(float width, bool trueWidth = false)
         {
             if (trueWidth)

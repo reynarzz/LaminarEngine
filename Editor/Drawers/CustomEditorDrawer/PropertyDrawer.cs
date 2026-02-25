@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Editor.Utils;
+using ImGuiNET;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,8 +12,29 @@ namespace Editor.Drawers
     {
         internal abstract protected bool DrawProperty(Type type, string name, object target, in object valueIn,
                                                       out object valueOut, Func<bool> defaultPropertyDrawer);
+
+        protected void IndentProperty()
+        {
+            ImGui.Indent(ImGui.GetTreeNodeToLabelSpacing());
+        }
+
+        protected void UnindentProperty()
+        {
+            ImGui.Unindent(ImGui.GetTreeNodeToLabelSpacing());
+        }
+
+        protected void AlignProperty()
+        {
+            EditorGuiFieldsResolver.SetPropertyDefaultCursorPos();
+        }
+
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T">Target that contains the property to override.</typeparam>
+    /// <typeparam name="V">Type of the property.</typeparam>
     public abstract class PropertyDrawer<T, V> : PropertyDrawer
     {
         protected sealed internal override bool DrawProperty(Type type, string name, object target, in object valueIn,
@@ -29,14 +52,14 @@ namespace Editor.Drawers
         }
     }
 
+    /// <summary>
+    /// Use this attribute to specify the exact property name to override the drawing.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public class PropertyDrawerAttribute : Attribute
     {
         internal string PropertyName { get; }
-        private PropertyDrawerAttribute()
-        {
-        }
-
+        private PropertyDrawerAttribute() { }
         public PropertyDrawerAttribute(string propertyName)
         {
             PropertyName = propertyName;
