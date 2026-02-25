@@ -12,7 +12,7 @@ using Editor.Serialization;
 using System.Reflection;
 using GlmNet;
 
-namespace Editor
+namespace Editor.Drawers
 {
     internal class ActorInspectorDrawer : EditorDrawerBase<Actor>
     {
@@ -40,14 +40,13 @@ namespace Editor
                         int index = 0;
                         foreach (var member in members)
                         {
-                            PropertiesDrawerEditor.DrawVars(x.GetID().ToString(), component, member, 0, index, 0, true);
+                            PropertiesGUIDrawEditor.DrawVars(x.GetID().ToString(), component, member, 0, index, 0, true);
                             index++;
                         }
-
-                        PropertiesDrawerEditor.DrawMethods(component, x.GetID().ToString());
-
                     }
                 });
+
+                PropertiesGUIDrawEditor.DrawMethods(component, component.GetID().ToString());
             }
         }
 
@@ -181,7 +180,7 @@ namespace Editor
 
         private static object _componentClipboard;
 
-        public static void DrawComponentTree(Component component, int componentIndex, Action<Component> drawProperties)
+        public static void DrawComponentTree(Component component, int componentIndex, Action<Component> drawPropertiesDefault)
         {
             string componentID = component.GetID().ToString();
             string baseID = $"__COMPONENT_{componentID}";
@@ -217,9 +216,9 @@ namespace Editor
             var imageSize = new Vector2(19, 19);
             ImGui.SetCursorPosY(cursorY + 3);
 
-            var imagePtr = EditorTextureDatabase.GetIconImGui(component.GetType()); 
-            
-            if(imagePtr == 0)
+            var imagePtr = EditorTextureDatabase.GetIconImGui(component.GetType());
+
+            if (imagePtr == 0)
             {
                 imagePtr = EditorTextureDatabase.GetIconImGui(EditorIcon.ScriptFile);
             }
@@ -278,7 +277,14 @@ namespace Editor
             // Draw component properties
             void DrawComponentProperties()
             {
-                drawProperties?.Invoke(component);
+                if (CustomEditorDatabase.TryGetCustomEditorDrawer(component.GetType(), out var drawer))
+                {
+                    drawer.Draw(component, () => drawPropertiesDefault?.Invoke(component));
+                }
+                else
+                {
+                    drawPropertiesDefault?.Invoke(component);
+                }
             }
 
             if (componentHeader)

@@ -1,4 +1,5 @@
-﻿using Editor.Utils;
+﻿using Editor.Drawers;
+using Editor.Utils;
 using Engine;
 using Engine.Layers;
 using Engine.Utils;
@@ -16,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Editor
 {
-    internal class PropertiesDrawerEditor
+    internal class PropertiesGUIDrawEditor
     {
         private static object _copiedValue;
 
@@ -46,15 +47,15 @@ namespace Editor
             ImGui.BeginDisabled(isReadOnly);
             var v = (T)value;
             var result = false;
-
-            var customDrawer = prop.GetCustomAttribute<CustomPropertyDrawerAttribute>();
-
             var valueChanged = false;
 
-            if (customDrawer != null)
+            var propType = ReflectionUtils.GetMemberType(prop);
+
+            if (CustomEditorDatabase.TryGetCustomPropertyDrawer(target.GetType(), propType, propertyName, out var customDrawer))
             {
                 ImGui.Dummy(new Vector2(0, ImGui.GetStyle().ItemSpacing.Y));
-                valueChanged = customDrawer.GetDrawer().Draw(propertyName, target, in value, out var valueOut);
+                valueChanged = customDrawer.DrawProperty(propType, propertyName, target, in value,
+                                                         out var valueOut, () => drawField(propertyName, ref v, width, false));
                 if (valueChanged && valueOut != null)
                 {
                     v = (T)valueOut;
@@ -64,6 +65,7 @@ namespace Editor
             {
                 valueChanged = drawField(propertyName, ref v, width, false);
             }
+
             if (valueChanged)
             {
                 if (valueConverter != null)

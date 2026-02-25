@@ -22,7 +22,7 @@ namespace Editor.Views
         {
             foreach (var member in _properties)
             {
-                PropertiesDrawerEditor.DrawVars("WindowsBuildSettings", settings, member);
+                PropertiesGUIDrawEditor.DrawVars("WindowsBuildSettings", settings, member);
             }
         }
     }

@@ -8,6 +8,7 @@ using Engine.Utils;
 using Engine;
 using System.Reflection;
 using System.Runtime.Loader;
+using Editor.Drawers;
 
 namespace Editor.Layers
 {
@@ -108,7 +109,60 @@ namespace Editor.Layers
             {
                 Debug.Error("No app layer is defined in the Game.dll");
             }
+
+            UpdateCustomEditor();
+
             DeserializeScenes();
+        }
+
+        private void UpdateCustomEditor()
+        {
+            CustomEditorDatabase.InitCustomInspector(GetDrawers(typeof(CustomEditorDrawer<>), typeof(CustomEditorDrawer)));
+
+            var properties = GetDrawers(typeof(PropertyDrawer<>), typeof(PropertyDrawer));
+
+            // Only get the properties that implement the attribute.
+            properties = properties.Where(x => x.GetCustomAttribute<PropertyDrawerAttribute>() != null).ToList();
+
+            CustomEditorDatabase.InitCustomProperties(properties);
+
+            List<Type> GetDrawers(Type baseGenericDrawerType, Type baseDrawerType)
+            {
+                var customEditorTypes = new List<Type>();
+                AddCustomEditorTypes(GfsTypeRegistryEditor.GameAssembly, customEditorTypes, baseGenericDrawerType, baseDrawerType);
+                AddCustomEditorTypes(GfsTypeRegistryEditor.EngineAssembly, customEditorTypes, baseGenericDrawerType, baseDrawerType);
+                AddCustomEditorTypes(GfsTypeRegistryEditor.EditorAssembly, customEditorTypes, baseGenericDrawerType, baseDrawerType);
+                return customEditorTypes;
+            }
+
+            void AddCustomEditorTypes(Assembly assembly, List<Type> types, Type baseGenericDrawerType, Type baseDrawerType)
+            {
+                foreach (var typeInfo in assembly.DefinedTypes)
+                {
+                    var type = typeInfo.AsType();
+
+                    if (InheritsFromGenericDrawer(type) && type != baseDrawerType &&
+                        type != baseGenericDrawerType)
+                    {
+                        Debug.Log($"Custom drawer type found: {type.Name}");
+                        types.Add(type);
+                    }
+                }
+
+                bool InheritsFromGenericDrawer(Type type)
+                {
+                    for (var current = type; current != null && current != typeof(object); current = current.BaseType)
+                    {
+                        if (!current.IsGenericType)
+                            continue;
+
+                        if (current.GetGenericTypeDefinition() == baseGenericDrawerType)
+                            return true;
+                    }
+
+                    return false;
+                }
+            }
         }
 
 

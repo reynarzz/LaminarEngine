@@ -1,10 +1,8 @@
 using Engine;
 using Editor.Utils;
 using Editor.Views;
-using Engine;
 using Engine.Utils;
 using ImGuiNET;
-using Engine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +11,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Editor
+namespace Editor.Drawers
 {
     internal class TilemapInspectorDrawer : EditorDrawerBase<TilemapAsset>
     {

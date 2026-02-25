@@ -1,4 +1,5 @@
 ﻿using Editor.Build;
+using Editor.Drawers;
 using Engine;
 using Engine.Utils;
 using System;
@@ -22,7 +23,7 @@ namespace Editor.Views
         {
             foreach (var member in _properties)
             {
-                PropertiesDrawerEditor.DrawVars("AndroidBuildSettings", settings, member);
+                PropertiesGUIDrawEditor.DrawVars("AndroidBuildSettings", settings, member);
             }
         }
     }

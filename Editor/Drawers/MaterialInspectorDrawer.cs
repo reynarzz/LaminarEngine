@@ -2,7 +2,6 @@
 using Engine;
 using Engine.Utils;
 using ImGuiNET;
-using Engine;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -10,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Editor
+namespace Editor.Drawers
 {
     internal class MaterialInspectorDrawer : EditorDrawerBase<Material>
     {
@@ -62,7 +61,7 @@ namespace Editor
 
             foreach (var member in members)
             {
-                PropertiesDrawerEditor.DrawVars(target.GetID().ToString(), target, member);
+                PropertiesGUIDrawEditor.DrawVars(target.GetID().ToString(), target, member);
             }
         }
 
