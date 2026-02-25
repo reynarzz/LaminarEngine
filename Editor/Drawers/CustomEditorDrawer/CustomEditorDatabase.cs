@@ -33,13 +33,14 @@ namespace Editor.Drawers
 
             foreach (var type in customEditorTypes)
             {
-                var targetType = GetDrawerTargetType(type, typeof(PropertyDrawer<>));
+                var targetType = GetDrawerTargetType(type, typeof(PropertyDrawer<,>));
                 var attribute = type.GetCustomAttribute<PropertyDrawerAttribute>();
 
                 _targetToPropertyDrawerTypes.Add(targetType, new PropertyDrawerInfo()
                 {
                     DrawerType = type,
-                    MatchTargetPropertyName = attribute.PropertyName,
+                    MatchTargetPropertyName = attribute?.PropertyName ?? string.Empty,
+                    MatchTargetPropertyType = GetDrawerTargetType(type, typeof(PropertyDrawer<,>), 1)
                 });
             }
         }
@@ -55,13 +56,13 @@ namespace Editor.Drawers
             }
         }
 
-        private static Type GetDrawerTargetType(Type type, Type drawerType)
+        private static Type GetDrawerTargetType(Type type, Type drawerType, int argIndex = 0)
         {
             while (type != null && type != typeof(object))
             {
                 if (type.IsGenericType && type.GetGenericTypeDefinition() == drawerType)
                 {
-                    return type.GetGenericArguments()[0];
+                    return type.GetGenericArguments()[argIndex];
                 }
 
                 type = type.BaseType;
@@ -82,24 +83,20 @@ namespace Editor.Drawers
             {
                 return false;
             }
-
-            if (!_propertyDrawers.TryGetValue(target, out var propDrawer))
+            var drawerInfo = _targetToPropertyDrawerTypes[target];
+            PropertyDrawer propDrawer = null;
+            if (drawerInfo.MatchTargetPropertyType == propertyType &&
+                    (drawerInfo.MatchTargetPropertyName.Equals(propertyName) || string.IsNullOrEmpty(drawerInfo.MatchTargetPropertyName)))
             {
-                var drawerInfo = _targetToPropertyDrawerTypes[target];
-
-                if(drawerInfo.MatchTargetPropertyType == propertyType || drawerInfo.MatchTargetPropertyName.Equals(propertyName))
+                if (!_propertyDrawers.TryGetValue(target, out propDrawer))
                 {
-
                     propDrawer = Activator.CreateInstance(drawerInfo.DrawerType) as PropertyDrawer;
                     _propertyDrawers.Add(target, propDrawer);
-                    drawer = propDrawer;
-                    return true;
-
                 }
-
             }
+            drawer = propDrawer;
 
-            return false;
+            return drawer != null;
         }
 
         internal static bool TryGetCustomEditorDrawer(Type target, out CustomEditorDrawer drawer)

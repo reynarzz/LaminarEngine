@@ -118,13 +118,7 @@ namespace Editor.Layers
         private void UpdateCustomEditor()
         {
             CustomEditorDatabase.InitCustomInspector(GetDrawers(typeof(CustomEditorDrawer<>), typeof(CustomEditorDrawer)));
-
-            var properties = GetDrawers(typeof(PropertyDrawer<>), typeof(PropertyDrawer));
-
-            // Only get the properties that implement the attribute.
-            properties = properties.Where(x => x.GetCustomAttribute<PropertyDrawerAttribute>() != null).ToList();
-
-            CustomEditorDatabase.InitCustomProperties(properties);
+            CustomEditorDatabase.InitCustomProperties(GetDrawers(typeof(PropertyDrawer<,>), typeof(PropertyDrawer)));
 
             List<Type> GetDrawers(Type baseGenericDrawerType, Type baseDrawerType)
             {

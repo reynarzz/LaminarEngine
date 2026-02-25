@@ -12,19 +12,20 @@ namespace Editor.Drawers
                                                       out object valueOut, Func<bool> defaultPropertyDrawer);
     }
 
-    public abstract class PropertyDrawer<T> : PropertyDrawer
+    public abstract class PropertyDrawer<T, V> : PropertyDrawer
     {
-        protected internal override bool DrawProperty(Type type, string name, object target, in object valueIn,
+        protected sealed internal override bool DrawProperty(Type type, string name, object target, in object valueIn,
                                                       out object valueOut, Func<bool> defaultPropertyDrawer)
         {
-           return OnDrawProperty(type, name, target, valueIn != null ? (T)valueIn : default, out valueOut, defaultPropertyDrawer);
+            var valueInV = valueIn != null ? (V)valueIn : default;
+            return OnDrawProperty(type, name, target, in valueInV, out valueOut, defaultPropertyDrawer);
         }
 
-        internal virtual protected bool OnDrawProperty(Type type, string name, object target, T valueIn,
+        internal virtual protected bool OnDrawProperty(Type type, string name, object target, in V valueIn,
                                                       out object valueOut, Func<bool> defaultPropertyDrawer)
         {
             valueOut = null;
-           return defaultPropertyDrawer?.Invoke() ?? false;
+            return defaultPropertyDrawer?.Invoke() ?? false;
         }
     }
 
@@ -32,14 +33,8 @@ namespace Editor.Drawers
     public class PropertyDrawerAttribute : Attribute
     {
         internal string PropertyName { get; }
-        internal Type PropertyType { get; }
         private PropertyDrawerAttribute()
         {
-        }
-
-        public PropertyDrawerAttribute(Type propertyType)
-        {
-            PropertyType = propertyType;
         }
 
         public PropertyDrawerAttribute(string propertyName)

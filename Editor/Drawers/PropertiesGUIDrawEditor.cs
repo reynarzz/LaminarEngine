@@ -342,13 +342,23 @@ namespace Editor
                     idx = 0;
                     setMemberValueCallBack(target, Enum.Parse(type, names[idx]), prop, index);
                 }
-                if (resultChanged = EditorGuiFieldsResolver.DrawCombo(propertyName, ref idx, names, width))
+
+                if (CustomEditorDatabase.TryGetCustomPropertyDrawer(target.GetType(), type, propertyName, out var customDrawer))
+                {
+                    Debug.Error("implement custom drawer for enums");
+                }
+                else if (resultChanged = EditorGuiFieldsResolver.DrawCombo(propertyName, ref idx, names, width))
                 {
                     setMemberValueCallBack(target, Enum.Parse(type, names[idx]), prop, index);
                 }
             }
             else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
             {
+                if (CustomEditorDatabase.TryGetCustomPropertyDrawer(target.GetType(), type, propertyName, out var customDrawer))
+                {
+                    Debug.Error("implement custom drawer for list");
+                }
+
                 if (value == null)
                 {
                     value = ReflectionUtils.GetDefaultValueInstance(type);
@@ -386,6 +396,10 @@ namespace Editor
             }
             else if (type.IsArray)
             {
+                if (CustomEditorDatabase.TryGetCustomPropertyDrawer(target.GetType(), type, propertyName, out var customDrawer))
+                {
+                    Debug.Error("implement custom drawer for arrays");
+                }
                 if (value == null)
                 {
                     value = ReflectionUtils.GetDefaultValueInstance(type);
@@ -440,6 +454,10 @@ namespace Editor
             }
             else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Dictionary<,>))
             {
+                if (CustomEditorDatabase.TryGetCustomPropertyDrawer(target.GetType(), type, propertyName, out var customDrawer))
+                {
+                    Debug.Error("implement custom drawer for Dictionary");
+                }
                 if (value == null)
                 {
                     value = ReflectionUtils.GetDefaultValueInstance(type);
@@ -472,23 +490,42 @@ namespace Editor
             }
             else if (type.IsClass || ReflectionUtils.IsUserDefinedStruct(type))
             {
-                var members = ReflectionUtils.GetAllMembersWithAttributes(type, _visibilityAttributes, true, true);
+                if (CustomEditorDatabase.TryGetCustomPropertyDrawer(target.GetType(), type, propertyName, out var customDrawer))
+                {
+                    var changed = customDrawer.DrawProperty(type, propertyName, target, in value, out var valueOut, DefaultDraw);
+
+                    if (changed && valueOut != null)
+                    {
+                        value = valueOut;
+                        resultChanged = true;
+                    }
+                }
+                else if (DefaultDraw())
+                {
+                    resultChanged = true;
+                }
                 var propIndex = index;
 
-                foreach (var subProp in members)
+                bool DefaultDraw()
                 {
-                    if (value != null)
+                    var valueChanged = false;
+                    var members = ReflectionUtils.GetAllMembersWithAttributes(type, _visibilityAttributes, true, true);
+                    foreach (var subProp in members)
                     {
-                        var changed = DrawVars(objectId, value, subProp, cursorX, index,
-                                               width, true, setMemberValueCallBack);
-
-                        if (changed)
+                        if (value != null)
                         {
-                            resultChanged = true;
-                        }
+                            var changed = DrawVars(objectId, value, subProp, cursorX, index, width, true, setMemberValueCallBack);
 
-                        index++;
+                            if (changed)
+                            {
+                                valueChanged = true;
+                            }
+
+                            index++;
+                        }
                     }
+
+                    return valueChanged;
                 }
                 setMemberValueCallBack(target, value, prop, propIndex);
                 DrawMethods(value, objectId);

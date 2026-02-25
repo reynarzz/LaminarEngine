@@ -46,7 +46,7 @@ namespace Engine
 
 
         private TilemapRenderingOptions _renderingOptions;
-        [SerializedField, HideFromInspector]
+        [SerializedField]
         public TilemapRenderingOptions Options
         {
             get => _renderingOptions;
