@@ -269,8 +269,9 @@ namespace Engine.Rendering
             }
             else
             {
-                removedVertexCount = renderer.Mesh.Vertices.Count;
-                removedIndexCount = renderer.Mesh.IndicesToDrawCount;
+                
+                removedVertexCount = removedInfo.VertexCount;
+                removedIndexCount = removedInfo.IndexCount;
             }
 
             int oldVertexCount = VertexCount;
@@ -348,7 +349,7 @@ namespace Engine.Rendering
 
                     if(info.RendererId < 0)
                     {
-                        Debug.EngineError("RendererId is less than 0");
+                        Debug.EngineError($"RendererId is less than 0: {info.RendererId}");
                         info.RendererId = 0;
                     }
                     _renderers[key] = info;

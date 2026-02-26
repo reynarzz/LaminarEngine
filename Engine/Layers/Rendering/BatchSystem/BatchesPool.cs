@@ -28,8 +28,9 @@ namespace Engine.Rendering
             {
                 if (batch.Contains(renderer))
                 {
-                    if (batch.Material != renderer.Material || batch.SortOrder != renderer.SortOrder 
-                        || (renderer.Mesh?.Indices != null && renderer.Mesh.IndicesToDrawCount != batch.IndexCount))
+                    if (batch.Material != renderer.Material || batch.SortOrder != renderer.SortOrder || 
+                       (renderer.Mesh?.Indices != null && renderer.Mesh.IndicesToDrawCount != batch.IndexCount) ||
+                       (renderer.Mesh?.Vertices.Count > batch.VertexCount))
                     {
                         batch.RemoveRenderer(renderer);
 
@@ -47,7 +48,7 @@ namespace Engine.Rendering
                             return false;
                         }
                     }
-                    
+
                     batchOut = batch;
                     return true;
                 }
@@ -89,7 +90,7 @@ namespace Engine.Rendering
                     }
                 }
             }
-         
+
 
             if (selectedBatch != null)
             {
