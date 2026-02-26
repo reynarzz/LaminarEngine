@@ -291,17 +291,25 @@ namespace Engine
         }
 
         public static vec2 Clamp(vec2 v, vec2 min, vec2 max)
-            => new vec2(
-                Clamp(v.x, min.x, max.x),
-                Clamp(v.y, min.y, max.y));
+        {
+            return new vec2(Clamp(v.x, min.x, max.x),
+                            Clamp(v.y, min.y, max.y));
+        }
+           
 
         public static vec3 Clamp(vec3 v, vec3 min, vec3 max)
         {
             return new vec3(Clamp(v.x, min.x, max.x),
-                 Clamp(v.y, min.y, max.y),
-                 Clamp(v.z, min.z, max.z));
+                            Clamp(v.y, min.y, max.y),
+                            Clamp(v.z, min.z, max.z));
         }
-
+        public static vec4 Clamp(vec4 v, vec4 min, vec4 max)
+        {
+            return new vec4(Clamp(v.x, min.x, max.x),
+                            Clamp(v.y, min.y, max.y),
+                            Clamp(v.z, min.z, max.z),
+                            Clamp(v.w, min.w, max.w));
+        }
 
 
         public static mat4 QuatToMat4(quat q)

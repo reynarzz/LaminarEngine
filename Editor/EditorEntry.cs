@@ -29,7 +29,7 @@ namespace Editor
     // - Forbid materials to send system uniforms: example: uTime, MVp, etc...
     // - Batcher doesn't create a new one when the geometry vertex size changes, it should be dynamic.
     // - The importer doesn't call to update the assets, the counter is cleared back to 0, this only happens when the assetDatabase variable is static.
-
+    // - Screen render target size should take into account the camera viewport values.
 
     // Serialization:
     // - Forbid serialization of dictionaries that contains EObject as key?

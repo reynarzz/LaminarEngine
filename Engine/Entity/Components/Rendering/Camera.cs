@@ -121,17 +121,15 @@ namespace Engine
         public vec3 Right => Transform.Right;
         public vec3 Up => Transform.Up;
 
-        public vec4 _viewport = new vec4(0, 0, 1, 1);
+        //public vec4 _viewport = new vec4(0.3f, 0, 0.3f, 0.8000f);
+        public vec4 _viewport = new vec4(0.0f, 0.0f, 1.0f, 1.0f);
         [SerializedField]
         public vec4 Viewport
         {
-            get
-            {
-                return _viewport;
-            }
+            get => _viewport;
             set
             {
-                _viewport = value;
+                _viewport = Mathf.Clamp(value, new vec4(-1.0f, -1.0f, 0.001f, 0.001f), new vec4(1, 1, 1, 1));
                 UpdateCurrent();
             }
         }
@@ -151,7 +149,6 @@ namespace Engine
 
         private void UpdateCurrent()
         {
-            //float aspect = Viewport.z / Viewport.w;
             float aspect = GetAspectRatio();
 
             if (_projectionMode == CameraProjectionMode.Orthographic)
@@ -236,14 +233,12 @@ namespace Engine
 
         private float GetAspectRatio()
         {
-            //return Viewport.z / Viewport.w;
             return (Screen.Width * Viewport.z) / (Screen.Height * Viewport.w);
 
         }
 
         public Bounds GetFrustumBoundsWorld()
         {
-            //float aspect = Screen.Width Viewport.z / Viewport.w;
             float aspect = GetAspectRatio();
 
             FrustumCorners cornersVS;
