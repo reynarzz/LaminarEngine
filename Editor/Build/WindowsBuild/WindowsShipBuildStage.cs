@@ -107,8 +107,8 @@ namespace Editor.Build
             Directory.CreateDirectory(assembliesFolder);
 
             // Copy glfw dll
-            string glfwDllName = "glfw3.dll";
-            File.Copy(Path.Combine(EditorPaths.EngineWin32NativesFolderRoot, glfwDllName), Path.Combine(assembliesFolder, glfwDllName), true);
+            string runtimeCore = "RuntimeCore.dll";
+            File.Copy(Path.Combine(EditorPaths.EngineWin32NativesFolderRoot, runtimeCore), Path.Combine(assembliesFolder, runtimeCore), true);
 
             // Copy miniaudio dll
             string miniaudioDllName = "miniaudio.dll";

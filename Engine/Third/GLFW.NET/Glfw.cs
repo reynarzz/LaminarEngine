@@ -21,6 +21,15 @@ namespace GLFW
         ///     The native library name,
         ///     <para>For Unix users using an installed version of GLFW, this needs refactored to <c>glfw</c>.</para>
         /// </summary>
+#if SHIP_BUILD
+#if WINDOWS
+        public const string LIBRARY = "RuntimeCore";
+#elif MACOS
+        public const string LIBRARY = "libRuntimeCore.dylib"; // mac
+#else
+        public const string LIBRARY = "RuntimeCore";
+#endif
+#else
 #if WINDOWS
         public const string LIBRARY = "glfw3";
 #elif MACOS
@@ -28,7 +37,8 @@ namespace GLFW
 #else
         public const string LIBRARY = "glfw3";
 #endif
-         
+
+#endif
         private static readonly ErrorCallback errorCallback = GlfwError;
 
         #endregion
