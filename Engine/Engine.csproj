@@ -13,10 +13,6 @@
 	  <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
   </PropertyGroup>
 
-	<PropertyGroup Condition="'$(BuildAndroid)' == 'true'">
-		<TargetFrameworks>$(TargetFrameworks);net9.0-android</TargetFrameworks>
-	</PropertyGroup>
-
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0'">
 		<DefineConstants>DESKTOP;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>
@@ -27,19 +23,14 @@
 	</PropertyGroup>
 
 	<!-- Android -->
-	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
-		<DefineConstants>ANDROID;MOBILE;$(DefineConstants)</DefineConstants>
-		<RuntimeIdentifiers>$(RuntimeIdentifiers)</RuntimeIdentifiers>
-
-		<AndroidLinkMode>None</AndroidLinkMode>
-		<EnableAot>false</EnableAot>
-		<PublishAot>false</PublishAot>
+	<PropertyGroup Condition="'$(BuildAndroid)' == 'true'">
 	</PropertyGroup>
 
 	<!-- iOS -->
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios'">
 		<DefineConstants>IOS;MOBILE;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>
+	
 	<!-- Linux -->
 	<PropertyGroup Condition="'$(OS)' == 'Unix' AND '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'True'">
 		<DefineConstants>LINUX;UNIX;DESKTOP;$(DefineConstants)</DefineConstants>
