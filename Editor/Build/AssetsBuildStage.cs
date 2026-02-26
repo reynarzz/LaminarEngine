@@ -17,12 +17,10 @@ namespace Editor.Build
     internal abstract class AssetsBuildStage : BuildStage
     {
         private readonly CookOptions _cookOptions;
-        private readonly AssetsCooker _assetsCooker;
 
         private readonly AssetsBuildType _assetsBuildType;
         public AssetsBuildStage(CookingPlatform platform, CookingType cookType, AssetsBuildType buildType)
         {
-            _assetsCooker = new AssetsCooker();
             _assetsBuildType = buildType;
 
             var assetsFolderPath = Paths.GetAssetsFolderPath();
@@ -42,7 +40,7 @@ namespace Editor.Build
             _cookOptions.ExportFolderPath = cookData.ExportFolderPath;
             _cookOptions.FileOptions = cookData.FileOptions;
 
-            var result = await _assetsCooker.CookAllAsync(_cookOptions);
+            var result = await AssetsCooker.CookAllAsync(_cookOptions);
 
             return new BuildStageResult()
             {

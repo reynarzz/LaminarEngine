@@ -5,21 +5,16 @@ using Editor.Cooker.Generator;
 
 namespace Editor.Cooker
 {
-    public class AssetsCooker
+    internal class AssetsCooker
     {
-        private readonly OrderedDictionary<string, AssetType> _assetsTypes;
-        private Dictionary<CookingType, AssetsCookerBase> _assetCookers;
+        private static readonly OrderedDictionary<string, AssetType> _assetsTypes;
+        private static Dictionary<CookingType, AssetsCookerBase> _assetCookers;
 
-        private AssetsDatabaseInfo _databaseInfo;
+        private static AssetsDatabaseInfo _databaseInfo;
+        internal static AssetsDatabaseInfo DatabaseInfo => _databaseInfo; // Remove this.
 
-        // HACK, Remove
-        private static AssetsCooker _instance; // Remove this
-        internal static AssetsDatabaseInfo DatabaseInfo => _instance._databaseInfo; // Remove this.
-        // --
-        public AssetsCooker()
+        static AssetsCooker()
         {
-            _instance = this; // Remove this
-
             // Asset types, order of insertion matters so assets can import correctly. Ex: Tilemaps need textures to be imported already.
             _assetsTypes = new(StringComparer.OrdinalIgnoreCase)
             {
@@ -69,7 +64,7 @@ namespace Editor.Cooker
             InitAssetCookers();
         }
 
-        private void InitAssetCookers()
+        private static void InitAssetCookers()
         {
             if (File.Exists(Paths.GetAssetDatabaseFilePath()))
             {
@@ -109,7 +104,7 @@ namespace Editor.Cooker
                 { AssetType.Font, new RawBytesAssetProcessor() },
                 { AssetType.AnimationClip, new RawBytesAssetProcessor() }, // TODO: binary serialization
                 { AssetType.AnimationController, new RawBytesAssetProcessor() }, // TODO: binary serialization
-                { AssetType.Material, new MaterialProcessorRelease() }, 
+                { AssetType.Material, new MaterialProcessorRelease() },
                 { AssetType.Scene, new SceneAssetProcessorRelease() },
                 { AssetType.Tilemap, new TilemapAssetProcessor() }
             };
@@ -122,8 +117,7 @@ namespace Editor.Cooker
         }
 
         // TODO: implement multi pass import.
-
-        public async Task<DishResult> CookAllAsync(CookOptions options)
+        public static async Task<DishResult> CookAllAsync(CookOptions options)
         {
             // Search project's files first
             var files = Directory.GetFiles(options.AssetsFolderPath, "*", SearchOption.AllDirectories).ToList();
@@ -167,7 +161,6 @@ namespace Editor.Cooker
             var result = await _assetCookers[options.Type].CookAssetsAsync(options.FileOptions, options.Platform,
                                              collectedFiles, options.ExportFolderPath);
 
-            // Debug.Log("-Cooking inside: " + _databaseInfo.UpdatedAssets.Count);
             if (result && options.Type == CookingType.ReleaseMode)
             {
                 // This generates the whole type registry after all the types where collected from the assets.
