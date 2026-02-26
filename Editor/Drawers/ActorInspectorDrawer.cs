@@ -73,9 +73,15 @@ namespace Editor.Drawers
             var layerNames = LayerMask.GetAllLayerNames();
             int layerIndex = Array.IndexOf(layerNames, LayerMask.LayerToName(actor.Layer));
 
-            if (EditorGuiFieldsResolver.DrawCombo("Layers", ref layerIndex, layerNames))
+            if (EditorGuiFieldsResolver.DrawCombo("Layers", ref layerIndex, layerNames, 46))
             {
                 actor.Layer = LayerMask.NameToLayer(layerNames[layerIndex]);
+            }
+            ImGui.SameLine();
+            if (ImGui.ImageButton("##_ACTOR_EDIT_LAYER_", EditorTextureDatabase.GetIconImGui(EditorIcon.Edit), new Vector2(20, 20),
+                new Vector2(0, 1), new Vector2(1, 0)))
+            {
+
             }
             if (ImGui.Button("Add Component", new Vector2(ImGui.GetContentRegionAvail().X - 5, 23)))
             {
