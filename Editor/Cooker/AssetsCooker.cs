@@ -19,6 +19,8 @@ namespace Editor.Cooker
         public AssetsCooker()
         {
             _instance = this; // Remove this
+
+            // Asset types, order of insertion matters so assets can import correctly. Ex: Tilemaps need textures to be imported already.
             _assetsTypes = new(StringComparer.OrdinalIgnoreCase)
             {
                 // Image
@@ -161,12 +163,11 @@ namespace Editor.Cooker
                     return false;
                 });
             }
-            //DevModeFilesCooker._database = _databaseInfo;
             var collectedFiles = selectedFiles.ToArray();
             var result = await _assetCookers[options.Type].CookAssetsAsync(options.FileOptions, options.Platform,
                                              collectedFiles, options.ExportFolderPath);
 
-            Debug.Log("-Cooking inside: " + _databaseInfo.UpdatedAssets.Count);
+            // Debug.Log("-Cooking inside: " + _databaseInfo.UpdatedAssets.Count);
             if (result && options.Type == CookingType.ReleaseMode)
             {
                 // This generates the whole type registry after all the types where collected from the assets.

@@ -160,26 +160,14 @@ namespace Editor.Cooker
                     {
                         var assetPath = string.Empty;
 
-                        if (EditorIOLayer.Database != null)
+                        if (AssetsCooker.DatabaseInfo.Assets.TryGetValue(guid, out var info))
                         {
-                            assetPath = EditorIOLayer.Database.GetAssetInfo(guid).Path;
+                            assetPath = EditorPaths.GetAbsolutePathSafe(info.Path);
                         }
-                        else
-                        {
-                            // HACK, this is provisional
-                            if (AssetsCooker.DatabaseInfo.Assets.TryGetValue(guid, out var info))
-                            {
-                                assetPath = info.Path;
-                            }
-                        }
-
-                        assetPath = EditorPaths.GetAbsolutePathSafe(assetPath);
 
                         if (!string.IsNullOrEmpty(assetPath))
                         {
-                            textureMeta =
-                                EditorAssetUtils.GetMetaFromAssetPath(assetPath, AssetType.Texture) as
-                                    TextureMetaFile;
+                            textureMeta =EditorAssetUtils.GetMetaFromAssetPath(assetPath, AssetType.Texture) as TextureMetaFile;
                             _texturesMeta.Add(guid, textureMeta);
                         }
                     }
@@ -682,11 +670,11 @@ namespace Editor.Cooker
             EditorFileUtils.WriteSpan(writer, tilesPositions);
 
             var collisionBoxes = MergeTiles(tilesPositions);
-            
+
             // Collision boxes count
             writer.Write(collisionBoxes?.Length ?? (int)0);
 
-            if(collisionBoxes.Length > 0)
+            if (collisionBoxes.Length > 0)
             {
                 EditorFileUtils.WriteSpan(writer, collisionBoxes);
             }
