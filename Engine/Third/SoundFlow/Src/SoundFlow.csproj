@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <IsAotCompatible>true</IsAotCompatible>
+        <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+        <Title>SoundFlow</Title>
+        <Description>A powerful and extensible cross-platform .NET audio engine. provides comprehensive audio processing capabilities including playback, recording, effects, analysis, and visualization, built with a modular and high-performance architecture.</Description>
+        <Copyright>Copyright (c) 2025 LSXPrime</Copyright>
+        <PackageProjectUrl>https://github.com/LSXPrime/SoundFlow</PackageProjectUrl>
+        <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+        <RepositoryUrl>https://github.com/LSXPrime/SoundFlow</RepositoryUrl>
+        <RepositoryType>Github</RepositoryType>
+        <PackageIcon>logo.png</PackageIcon>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageTags>audio, sound, mp3, wav, playback, record, voice, volume, fft, simd, crossplatform, miniaudio, c#, .net, echo, noise</PackageTags>
+        <Version>1.4.0</Version>
+        <PackageReleaseNotes>https://github.com/LSXPrime/SoundFlow/releases</PackageReleaseNotes>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <Company>LSXPrime</Company>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="Backends\MiniAudio\runtimes\**\*.*">
+            <Link>runtimes\%(RecursiveDir)%(Filename)%(Extension)</Link>
+            <PackagePath>runtimes</PackagePath>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+            <Pack>true</Pack>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\README.md" Pack="true" PackagePath="" />
+        <None Include="..\LICENSE.md" Pack="true" PackagePath="" />
+        <None Include="..\CONTRIBUTING.md" Pack="true" PackagePath="" />
+        <None Include="..\logo.png" Pack="true" PackagePath="" />
+        <None Include="SoundFlow.targets" Pack="true" PackagePath="" />
+    </ItemGroup>
+</Project>

@@ -109,11 +109,6 @@ namespace Editor.Build
             // Copy glfw dll
             string runtimeCore = "RuntimeCore.dll";
             File.Copy(Path.Combine(EditorPaths.EngineWin32NativesFolderRoot, runtimeCore), Path.Combine(assembliesFolder, runtimeCore), true);
-
-            // Copy miniaudio dll
-            string miniaudioDllName = "miniaudio.dll";
-            var miniaudioDllPath = Path.Combine(EditorPaths.EngineRoot, "Third", "SoundFlow", "runtimes", "win-x64", "native", miniaudioDllName);
-            File.Copy(miniaudioDllPath, Path.Combine(assembliesFolder, miniaudioDllName), true);
         }
 
         protected override string GetCSProjPath()

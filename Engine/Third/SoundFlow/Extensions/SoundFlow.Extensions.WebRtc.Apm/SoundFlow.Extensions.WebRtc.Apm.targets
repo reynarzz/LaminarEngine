@@ -1,0 +1,63 @@
+<Project>
+    <ItemGroup>
+        <!-- Windows Runtimes -->
+        <RuntimeTargets Include="$(MSBuildThisFileDirectory)..\runtimes\win-x64\native\webrtc-apm.dll" AssetKind="Native">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+            <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+            <OutputPath>webrtc-apm.dll</OutputPath>
+        </RuntimeTargets>
+        <RuntimeTargets Include="$(MSBuildThisFileDirectory)..\runtimes\win-x86\native\webrtc-apm.dll" AssetKind="Native">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+            <RuntimeIdentifier>win-x86</RuntimeIdentifier>
+            <OutputPath>webrtc-apm.dll</OutputPath>
+        </RuntimeTargets>
+
+        <!-- Linux Runtimes -->
+        <RuntimeTargets Include="$(MSBuildThisFileDirectory)..\runtimes\linux-x64\native\libwebrtc-apm.so" AssetKind="Native">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+            <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
+            <OutputPath>libwebrtc-apm.so</OutputPath>
+        </RuntimeTargets>
+        <RuntimeTargets Include="$(MSBuildThisFileDirectory)..\runtimes\linux-arm\native\libwebrtc-apm.so" AssetKind="Native">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+            <RuntimeIdentifier>linux-arm</RuntimeIdentifier>
+            <OutputPath>libwebrtc-apm.so</OutputPath>
+        </RuntimeTargets>
+        <RuntimeTargets Include="$(MSBuildThisFileDirectory)..\runtimes\linux-arm64\native\libwebrtc-apm.so" AssetKind="Native">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+            <RuntimeIdentifier>linux-arm64</RuntimeIdentifier>
+            <OutputPath>libwebrtc-apm.so</OutputPath>
+        </RuntimeTargets>
+
+        <!-- macOS Runtimes -->
+        <RuntimeTargets Include="$(MSBuildThisFileDirectory)..\runtimes\osx-x64\native\libwebrtc-apm.dylib" AssetKind="Native">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+            <RuntimeIdentifier>osx-x64</RuntimeIdentifier>
+            <OutputPath>libwebrtc-apm.dylib</OutputPath>
+        </RuntimeTargets>
+        <RuntimeTargets Include="$(MSBuildThisFileDirectory)..\runtimes\osx-arm64\native\libwebrtc-apm.dylib" AssetKind="Native">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+            <RuntimeIdentifier>osx-arm64</RuntimeIdentifier>
+            <OutputPath>libwebrtc-apm.dylib</OutputPath>
+        </RuntimeTargets>
+
+        <!-- Android Runtimes -->
+        <RuntimeTargets Include="$(MSBuildThisFileDirectory)..\runtimes\android-arm64\native\libwebrtc-apm.so" AssetKind="Native">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+            <RuntimeIdentifier>android-arm64</RuntimeIdentifier>
+            <OutputPath>libwebrtc-apm.so</OutputPath>
+        </RuntimeTargets>
+        <RuntimeTargets Include="$(MSBuildThisFileDirectory)..\runtimes\android-x64\native\libwebrtc-apm.so" AssetKind="Native">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+            <RuntimeIdentifier>android-x64</RuntimeIdentifier>
+            <OutputPath>libwebrtc-apm.so</OutputPath>
+        </RuntimeTargets>
+
+        <!-- iOS Runtime -->
+        <RuntimeTargets Include="$(MSBuildThisFileDirectory)..\runtimes\ios-arm64\native\libwebrtc-apm.dylib" AssetKind="Native">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+            <RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
+            <OutputPath>libwebrtc-apm.dylib</OutputPath>
+        </RuntimeTargets>
+    </ItemGroup>
+</Project>

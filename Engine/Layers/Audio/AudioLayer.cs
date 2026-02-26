@@ -25,27 +25,27 @@ namespace Engine.Layers
 
         public override Task InitializeAsync()
         {
-            _engine = new MiniAudioEngine();
-            var defaultDevice = _engine.PlaybackDevices?.FirstOrDefault(x => x.IsDefault) ?? default;
-            
-            if (!defaultDevice.IsDefault)
-            {
-                Debug.Warn($"No default playback device found. Using first available, Total: {_engine.PlaybackDevices.Length}");
-                defaultDevice = _engine.PlaybackDevices.FirstOrDefault();
-            }
-
             try
             {
+                _engine = new MiniAudioEngine();
+                var defaultDevice = _engine.PlaybackDevices?.FirstOrDefault(x => x.IsDefault) ?? default;
+
+                if (!defaultDevice.IsDefault)
+                {
+                    Debug.Warn($"No default playback device found. Using first available, Total: {_engine.PlaybackDevices.Length}");
+                    defaultDevice = _engine.PlaybackDevices.FirstOrDefault();
+                }
+
                 _currentDevice = _engine.InitializePlaybackDevice(defaultDevice, _defaultFormat);
                 _currentDevice.Start();
+
+                var mixer = new Mixer(_engine, _defaultFormat, true);
+                _masterMixer = new AudioMixer("Master", mixer);
             }
             catch (Exception e)
             {
                 Debug.Error(e.ToString());
             }
-
-            var mixer = new Mixer(_engine, _defaultFormat, true);
-            _masterMixer = new AudioMixer("Master", mixer);
 
             // Effects:
             // ParametricEqualizer 

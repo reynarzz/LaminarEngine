@@ -9,6 +9,8 @@
 	  <PublishTrimmed>false</PublishTrimmed>
 	  <TrimMode>partial</TrimMode>
 	  <TrimmerDefaultAction>Preserve</TrimmerDefaultAction>
+	  <IsAotCompatible>true</IsAotCompatible>
+	  <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
   </PropertyGroup>
 
 	<PropertyGroup Condition="'$(BuildAndroid)' == 'true'">
@@ -54,15 +56,21 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+    <Compile Remove="Library\**" />
     <Compile Remove="Scene\**" />
     <Compile Remove="Third\Glfw\**" />
     <Compile Remove="Third\Native\glfw\_bin\**" />
+    <Compile Remove="Third\SoundFlow\Samples\**" />
+    <EmbeddedResource Remove="Library\**" />
     <EmbeddedResource Remove="Scene\**" />
     <EmbeddedResource Remove="Third\Glfw\**" />
     <EmbeddedResource Remove="Third\Native\glfw\_bin\**" />
+    <EmbeddedResource Remove="Third\SoundFlow\Samples\**" />
+    <None Remove="Library\**" />
     <None Remove="Scene\**" />
     <None Remove="Third\Glfw\**" />
     <None Remove="Third\Native\glfw\_bin\**" />
+    <None Remove="Third\SoundFlow\Samples\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -75,10 +83,17 @@
     <PackageReference Include="K4os.Compression.LZ4" Version="1.3.8" />
     <PackageReference Include="K4os.Compression.LZ4.Streams" Version="1.3.8" />
 	  <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-	  <PackageReference Include="SoundFlow" Version="1.3.0" />
   </ItemGroup>
 
 	<ItemGroup Condition="'$(ShipBuild)' == 'true'">
 		<ProjectReference Include="..\Generated\Generated.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="Third\Soundflow\Src\Backends\MiniAudio\runtimes\**\*.*">
+			<TargetPath>runtimes\%(RecursiveDir)%(Filename)%(Extension)</TargetPath>
+			<PackagePath>runtimes</PackagePath>
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<Pack>true</Pack>
+		</None>
 	</ItemGroup>
 </Project>

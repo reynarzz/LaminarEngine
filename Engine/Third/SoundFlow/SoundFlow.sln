@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36511.14 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoundFlow", "Src\SoundFlow.csproj", "{D4326C2E-CDB3-47D4-8116-BB3872E81323}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{7841F9AA-861F-4684-8DEC-2828FB3AE048}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", "{E17494BE-7B68-48EF-8541-0E0C213FAE40}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoundFlow.Extensions.WebRtc.Apm", "Extensions\SoundFlow.Extensions.WebRtc.Apm\SoundFlow.Extensions.WebRtc.Apm.csproj", "{961D254C-F8F7-4FD4-A2D3-D3F7821BC768}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Codecs", "Codecs", "{AD561654-6740-4A00-853A-F32FAEAB6D3F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoundFlow.Codecs.FFMpeg", "Codecs\SoundFlow.Codecs.FFMpeg\SoundFlow.Codecs.FFMpeg.csproj", "{7B85E093-500A-4CF4-95F5-D9BA0296D5D9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Midi", "Midi", "{C5A0147C-9D3D-42D2-8FFB-F581C2B15E4A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoundFlow.Midi.PortMidi", "Midi\SoundFlow.Midi.PortMidi\SoundFlow.Midi.PortMidi.csproj", "{01F6F541-589C-4C0A-8D49-7BDE83CCB6E1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D4326C2E-CDB3-47D4-8116-BB3872E81323}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4326C2E-CDB3-47D4-8116-BB3872E81323}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4326C2E-CDB3-47D4-8116-BB3872E81323}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4326C2E-CDB3-47D4-8116-BB3872E81323}.Release|Any CPU.Build.0 = Release|Any CPU
+		{961D254C-F8F7-4FD4-A2D3-D3F7821BC768}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{961D254C-F8F7-4FD4-A2D3-D3F7821BC768}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{961D254C-F8F7-4FD4-A2D3-D3F7821BC768}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{961D254C-F8F7-4FD4-A2D3-D3F7821BC768}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B85E093-500A-4CF4-95F5-D9BA0296D5D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B85E093-500A-4CF4-95F5-D9BA0296D5D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B85E093-500A-4CF4-95F5-D9BA0296D5D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B85E093-500A-4CF4-95F5-D9BA0296D5D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01F6F541-589C-4C0A-8D49-7BDE83CCB6E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01F6F541-589C-4C0A-8D49-7BDE83CCB6E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01F6F541-589C-4C0A-8D49-7BDE83CCB6E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01F6F541-589C-4C0A-8D49-7BDE83CCB6E1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D4326C2E-CDB3-47D4-8116-BB3872E81323} = {7841F9AA-861F-4684-8DEC-2828FB3AE048}
+		{961D254C-F8F7-4FD4-A2D3-D3F7821BC768} = {E17494BE-7B68-48EF-8541-0E0C213FAE40}
+		{7B85E093-500A-4CF4-95F5-D9BA0296D5D9} = {AD561654-6740-4A00-853A-F32FAEAB6D3F}
+		{01F6F541-589C-4C0A-8D49-7BDE83CCB6E1} = {C5A0147C-9D3D-42D2-8FFB-F581C2B15E4A}
+	EndGlobalSection
+EndGlobal
