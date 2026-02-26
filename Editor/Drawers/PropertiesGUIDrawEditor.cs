@@ -44,7 +44,6 @@ namespace Editor
             }
             ImGui.SetCursorPosX(Math.Max(EditorGuiFieldsResolver.XPosOffset, ImGui.GetCursorPosX()));
 
-            ImGui.BeginDisabled(isReadOnly);
             var v = (T)value;
             var result = false;
 
@@ -61,7 +60,6 @@ namespace Editor
 
                 result = true;
             }
-            ImGui.EndDisabled();
 
             return result;
         }
@@ -131,6 +129,9 @@ namespace Editor
             bool changed = false;
             if (CustomEditorDatabase.TryGetCustomPropertyDrawer(target.GetType(), type, propertyName, out var customDrawer))
             {
+                // Readonly will be automatically disabled for custom properties
+                isReadOnly = false;
+
                 changed = customDrawer.DrawProperty(type, propertyName, target, in value, out var valueOut, DefaultDrawVar);
 
                 if (changed && valueOut != null)
@@ -191,6 +192,7 @@ namespace Editor
             if (!show)
             {
                 ImGui.PopStyleColor(2);
+
                 return false;
             }
 
@@ -202,19 +204,21 @@ namespace Editor
                 if (ImGui.Selectable("Copy"))
                     _copiedValue = value;
 
+                ImGui.BeginDisabled(isReadOnly);
                 if (ImGui.Selectable("Paste") && _copiedValue?.GetType() == type)
                 {
                     ReflectionUtils.SetMemberValue(target, prop, _copiedValue);
                 }
-
                 if (ImGui.Selectable("Clear"))
                 {
                     var valueClear = type.IsValueType ? Activator.CreateInstance(type) : null;
                     ReflectionUtils.SetMemberValue(target, prop, valueClear);
                 }
+                ImGui.EndDisabled();
 
                 ImGui.EndPopup();
             }
+            ImGui.BeginDisabled(isReadOnly);
 
             bool resultChanged = false;
             // EObject
@@ -493,7 +497,7 @@ namespace Editor
                 setMemberValueCallBack(target, value, prop, propIndex);
                 DrawMethods(value, objectId);
             }
-
+            ImGui.EndDisabled();
             ImGui.TreePop();
 
             return resultChanged;
