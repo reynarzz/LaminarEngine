@@ -110,7 +110,8 @@ namespace Engine
         private float _farPlane = 100.0f;
         [SerializedField] public float NearPlane { get => _nearPlane; set { _nearPlane = Math.Clamp(value, 0.0001f, FarPlane - 1); UpdateCurrent(); } }
         [SerializedField] public float FarPlane { get => _farPlane; set { _farPlane = Math.Clamp(value, NearPlane + 1, 5000); UpdateCurrent(); } }
-        public float Aspect => Viewport.z / Viewport.w;
+        public float Aspect => GetAspectRatio();
+
         [SerializedField] public RenderTexture RenderTexture { get; set; }
         RenderTexture ICamera.OutRenderTexture { get; set; }
 
@@ -120,20 +121,18 @@ namespace Engine
         public vec3 Right => Transform.Right;
         public vec3 Up => Transform.Up;
 
-        public vec4 _viewport;
+        public vec4 _viewport = new vec4(0, 0, 1, 1);
+        [SerializedField]
         public vec4 Viewport
         {
             get
             {
-                _viewport.z = Screen.Width;
-                _viewport.w = Screen.Height;
-
                 return _viewport;
             }
             set
             {
-                _viewport.x = value.x;
-                _viewport.y = value.y;
+                _viewport = value;
+                UpdateCurrent();
             }
         }
 
@@ -152,7 +151,8 @@ namespace Engine
 
         private void UpdateCurrent()
         {
-            float aspect = Viewport.z / Viewport.w;
+            //float aspect = Viewport.z / Viewport.w;
+            float aspect = GetAspectRatio();
 
             if (_projectionMode == CameraProjectionMode.Orthographic)
             {
@@ -233,9 +233,18 @@ namespace Engine
             w.FarBottomLeft = new vec3(worldMatrix * new vec4(viewSpaceCorners.FarBottomLeft, 1));
             return w;
         }
+
+        private float GetAspectRatio()
+        {
+            //return Viewport.z / Viewport.w;
+            return (Screen.Width * Viewport.z) / (Screen.Height * Viewport.w);
+
+        }
+
         public Bounds GetFrustumBoundsWorld()
         {
-            float aspect = Viewport.z / Viewport.w;
+            //float aspect = Screen.Width Viewport.z / Viewport.w;
+            float aspect = GetAspectRatio();
 
             FrustumCorners cornersVS;
             if (ProjectionMode == CameraProjectionMode.Orthographic)

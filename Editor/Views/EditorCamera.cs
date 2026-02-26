@@ -40,6 +40,8 @@ namespace Editor
         public float OrthographicSize { get; set; } = 32;
         public CameraProjectionMode ProjectionMode { get; set; } = CameraProjectionMode.Perspective;
 
+        public vec4 Viewport { get; set; } = new vec4(0, 0, 1, 1);
+
         public EditorCamera(float aspect = 16f / 9f)
         {
             _screenSize = new Vector2(Screen.Width, Screen.Height);
@@ -120,7 +122,7 @@ namespace Editor
                 _distance *= 1.0f - io.MouseWheel * zoomSpeed;
                 _distance = Mathf.Clamp(_distance, MinDistance, MaxDistance);
 
-                if(ProjectionMode == CameraProjectionMode.Orthographic)
+                if (ProjectionMode == CameraProjectionMode.Orthographic)
                 {
                     OrthographicSize = _distance;
                     UpdateProjection();

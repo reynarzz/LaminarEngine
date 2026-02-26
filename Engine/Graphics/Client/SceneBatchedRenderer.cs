@@ -171,7 +171,8 @@ namespace Engine.Graphics
                 _drawCallData.Geometry = batch.Geometry;
                 _drawCallData.Features = _pipelineFeatures;
                 _drawCallData.RenderTarget = renderTarget.NativeResource;
-                _drawCallData.Viewport = new vec4(0, 0, renderTarget.Width, renderTarget.Height);
+                _drawCallData.Viewport = new vec4(camera.Viewport.x * renderTarget.Width, camera.Viewport.y * renderTarget.Height,
+                                                    renderTarget.Width * camera.Viewport.z, renderTarget.Height * camera.Viewport.w);
 
                 // Uniforms
                 _drawCallData.Uniforms[(int)Consts.Graphics.Uniforms.VP_MATRIX].SetMat4(Consts.VIEW_PROJ_UNIFORM_NAME, VP);

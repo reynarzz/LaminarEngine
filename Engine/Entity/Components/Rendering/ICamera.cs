@@ -23,6 +23,7 @@ namespace Engine
         public vec3 Forward { get; }
         public vec3 Right { get; }
         public vec3 Up { get; }
+        public vec4 Viewport { get; }
         public RenderTexture RenderTexture { get; }
         public RenderTexture OutRenderTexture { get; internal set; }
     }

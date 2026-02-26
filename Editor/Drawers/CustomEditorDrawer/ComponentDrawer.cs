@@ -13,11 +13,10 @@ namespace Editor.Drawers
     {
         private object _target;
         private readonly MemberInfo _property;
-        public string Name { get; }
+        public string Name => _property.Name;
         public Type Type { get; }
         public SerializedProperty( MemberInfo member)
         {
-            Name = member.Name;
             Type = ReflectionUtils.GetMemberType(member);
             _property = member;
         }
