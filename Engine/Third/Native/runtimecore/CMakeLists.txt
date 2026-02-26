@@ -20,6 +20,9 @@ target_compile_definitions(RuntimeCore PUBLIC
 RUNTIMECORE_EXPORTS
 GAMEPAD_CORE_HAS_AUDIO=1
 )
+
+target_compile_definitions(RuntimeCore PRIVATE GLFW_STATIC)
+
 set_target_properties(RuntimeCore PROPERTIES
     CXX_STANDARD 20
     CXX_STANDARD_REQUIRED ON
@@ -43,7 +46,8 @@ target_include_directories(RuntimeCore PRIVATE
 )
 
 target_link_libraries(RuntimeCore PRIVATE 
-glfw )
+glfw 
+)
 
 target_sources(RuntimeCore PRIVATE $<TARGET_OBJECTS:GamepadCore>)
 
@@ -59,9 +63,9 @@ elseif(UNIX AND NOT APPLE)
     target_link_libraries(RuntimeCore PRIVATE ${X11_LIBRARIES} dl pthread)
 endif()
 
-# Compiler optimizations
 if(MSVC)
     target_compile_options(RuntimeCore PRIVATE $<$<CONFIG:Release>:/O2 /DNDEBUG>)
+    target_link_options(RuntimeCore PRIVATE "/WHOLEARCHIVE:glfw3") #make sure whole contents are added to the library.
 else()
     target_compile_options(RuntimeCore PRIVATE $<$<CONFIG:Release>:-O3 -DNDEBUG>)
 endif()
