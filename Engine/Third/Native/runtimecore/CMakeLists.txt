@@ -10,11 +10,10 @@ add_library(RuntimeCore SHARED
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY "${OUTPUT_DIR}/win"   # Windows DLL
-    LIBRARY_OUTPUT_DIRECTORY "${OUTPUT_DIR}/osx"   # .so / .dylib
-    ARCHIVE_OUTPUT_DIRECTORY "${OUTPUT_DIR}/lib"   # .lib / .a
+    RUNTIME_OUTPUT_DIRECTORY_RELEASE "${OUTPUT_DIR}/win"
+    LIBRARY_OUTPUT_DIRECTORY_RELEASE "${OUTPUT_DIR}/osx"
+    ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OUTPUT_DIR}/lib"
 )
-
 
 target_compile_definitions(RuntimeCore PUBLIC 
 RUNTIMECORE_EXPORTS
