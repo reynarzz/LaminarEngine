@@ -167,7 +167,7 @@ namespace Editor.Cooker
                         else
                         {
                             // HACK, this is provisional
-                            if (DevModeFilesCooker._database.Assets.TryGetValue(guid, out var info))
+                            if (AssetsCooker.DatabaseInfo.Assets.TryGetValue(guid, out var info))
                             {
                                 assetPath = info.Path;
                             }

@@ -28,6 +28,8 @@ namespace Editor
     // - The renderData is not removed from renderingLayer dictionary if the Actor starts disabled in the first frame, and then try to enable it.
     // - Forbid materials to send system uniforms: example: uTime, MVp, etc...
     // - Batcher doesn't create a new one when the geometry vertex size changes, it should be dynamic.
+    // - The importer doesn't call to update the assets, the counter is cleared back to 0, this only happens when the assetDatabase variable is static.
+
 
     // Serialization:
     // - Forbid serialization of dictionaries that contains EObject as key?
@@ -61,7 +63,6 @@ namespace Editor
 
 
     // Tilemap:
-    // - Save tilemap collider data.
     // TilemapRenderer will have a menu to decide which layers from a level will be rendererd.
     // TilemapCollider will decide which layers in a level will contain colliders.
 

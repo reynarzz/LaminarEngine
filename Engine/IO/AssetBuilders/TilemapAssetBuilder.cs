@@ -12,14 +12,25 @@ namespace Engine.IO
     {
         public TilemapAsset BuildAsset(ref readonly AssetInfo info, TilemapMeta meta, BinaryReader reader)
         {
-            var tilemapData = new TilemapData()
-            {
-                // Read version
-                Version = reader.ReadUInt32(),
+            var data = ReadTilemap(reader);
+            return new TilemapAsset(info.Path, meta.GUID, data);
+        }
 
-                // Read levels count
-                Levels = new()
-            };
+        public void UpdateAsset(ref readonly AssetInfo info, TilemapAsset asset, TilemapMeta meta, BinaryReader reader)
+        {
+            var data = ReadTilemap(reader);
+            asset.UpdateResource(data, info.Path, meta.GUID);
+        }
+
+        private TilemapData ReadTilemap(BinaryReader reader)
+        {
+            var tilemapData = new TilemapData();
+
+            // Read version
+            tilemapData.Version = reader.ReadUInt32();
+
+            // Read levels count
+            tilemapData.Levels = new();
 
             var levelsCount = reader.ReadInt32();
 
@@ -30,7 +41,8 @@ namespace Engine.IO
                 level.LevelIndex = i;
                 tilemapData.Levels.Add(level.IID, level);
             }
-            return new TilemapAsset(info.Path, meta.GUID, tilemapData);
+
+            return tilemapData;
         }
 
         private TilemapLevel ReadLevel(BinaryReader reader)
@@ -321,9 +333,5 @@ namespace Engine.IO
             return enumsArr;
         }
 
-        public void UpdateAsset(ref readonly AssetInfo info, TilemapAsset asset, TilemapMeta meta, BinaryReader reader)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

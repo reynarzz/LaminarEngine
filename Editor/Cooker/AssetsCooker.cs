@@ -12,8 +12,13 @@ namespace Editor.Cooker
 
         private AssetsDatabaseInfo _databaseInfo;
 
+        // HACK, Remove
+        private static AssetsCooker _instance; // Remove this
+        internal static AssetsDatabaseInfo DatabaseInfo => _instance._databaseInfo; // Remove this.
+        // --
         public AssetsCooker()
         {
+            _instance = this; // Remove this
             _assetsTypes = new(StringComparer.OrdinalIgnoreCase)
             {
                 // Image
@@ -156,10 +161,12 @@ namespace Editor.Cooker
                     return false;
                 });
             }
-
+            //DevModeFilesCooker._database = _databaseInfo;
             var collectedFiles = selectedFiles.ToArray();
             var result = await _assetCookers[options.Type].CookAssetsAsync(options.FileOptions, options.Platform,
                                              collectedFiles, options.ExportFolderPath);
+
+            Debug.Log("-Cooking inside: " + _databaseInfo.UpdatedAssets.Count);
             if (result && options.Type == CookingType.ReleaseMode)
             {
                 // This generates the whole type registry after all the types where collected from the assets.
@@ -170,11 +177,6 @@ namespace Editor.Cooker
                 IsSuccess = result,
                 DataInfo = _databaseInfo
             };
-        }
-
-        public DishResult CookAll(CookOptions options)
-        {
-            return CookAllAsync(options).GetAwaiter().GetResult();
         }
     }
 

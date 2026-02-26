@@ -21,7 +21,8 @@ namespace Engine
         }
         internal override void UpdateResource(object data, string path, Guid guid)
         {
-            throw new NotImplementedException();
+            _data = data as TilemapData;
+
         }
     }
 }
