@@ -219,6 +219,8 @@ namespace Engine.IO
                 reader.Dispose();
                 return asset;
             }
+            
+            reader.Dispose();
 
             Debug.Error($"Builder for asset type '{info.Type}' was not found");
             return null;

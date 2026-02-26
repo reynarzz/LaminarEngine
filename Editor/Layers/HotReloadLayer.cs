@@ -117,8 +117,8 @@ namespace Editor.Layers
 
         private void UpdateCustomEditor()
         {
-            CustomEditorDatabase.InitCustomInspector(GetDrawers(typeof(CustomEditorDrawer<>), typeof(CustomEditorDrawer)));
-            CustomEditorDatabase.InitCustomProperties(GetDrawers(typeof(PropertyDrawer<,>), typeof(PropertyDrawer)));
+            CustomEditorDatabase.InitCustomComponentDrawers(GetDrawers(typeof(ComponentDrawer<>), typeof(ComponentDrawer)));
+            CustomEditorDatabase.InitCustomPropertiesDrawers(GetDrawers(typeof(PropertyDrawer<,>), typeof(PropertyDrawer)));
 
             List<Type> GetDrawers(Type baseGenericDrawerType, Type baseDrawerType)
             {

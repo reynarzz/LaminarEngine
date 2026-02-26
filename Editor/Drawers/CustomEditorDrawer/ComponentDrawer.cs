@@ -36,7 +36,7 @@ namespace Editor.Drawers
         }
     }
 
-    public abstract class CustomEditorDrawer
+    public abstract class ComponentDrawer
     {
         private Dictionary<string, SerializedProperty> _properties = new();
         internal void InitializeProperties(Type target)
@@ -73,7 +73,7 @@ namespace Editor.Drawers
         internal protected abstract void Draw(object target, Action defaultInspectorDrawer);
     }
 
-    public abstract class CustomEditorDrawer<T> : CustomEditorDrawer where T : Component
+    public abstract class ComponentDrawer<T> : ComponentDrawer where T : Component
     {
         internal sealed override protected void Open(object target)
         {

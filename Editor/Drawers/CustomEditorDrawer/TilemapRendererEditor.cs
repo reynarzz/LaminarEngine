@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Editor.Drawers
 {
-    internal class TilemapRendererEditor : CustomEditorDrawer<TilemapRenderer>
+    internal class TilemapRendererEditor : ComponentDrawer<TilemapRenderer>
     {
         protected internal override void OnDrawInspector(TilemapRenderer target, Action defaultDrawer)
         {

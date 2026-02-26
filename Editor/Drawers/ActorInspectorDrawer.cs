@@ -277,7 +277,7 @@ namespace Editor.Drawers
             // Draw component properties
             void DrawComponentProperties()
             {
-                if (CustomEditorDatabase.TryGetCustomEditorDrawer(component.GetType(), out var drawer))
+                if (CustomEditorDatabase.TryGetCustomComponentDrawer(component.GetType(), out var drawer))
                 {
                     drawer.Draw(component, () => drawPropertiesDefault?.Invoke(component));
                 }

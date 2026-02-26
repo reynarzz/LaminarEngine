@@ -10,9 +10,9 @@ namespace Editor.Drawers
 {
     internal class CustomEditorDatabase
     {
-        private static Dictionary<Type, Type> _targetToEditorDrawerTypes = new();
+        private static Dictionary<Type, Type> _targetToComponentDrawerTypes = new();
         private static Dictionary<Type, PropertyDrawerInfo> _targetToPropertyDrawerTypes = new();
-        private static Dictionary<Type, CustomEditorDrawer> _editorDrawers = new();
+        private static Dictionary<Type, ComponentDrawer> _componentDrawers = new();
         private static Dictionary<Type, PropertyDrawer> _propertyDrawers = new();
 
         private class PropertyDrawerInfo
@@ -22,12 +22,12 @@ namespace Editor.Drawers
             public Type MatchTargetPropertyType { get; set; }
         }
 
-        internal static void InitCustomInspector(List<Type> customEditorTypes)
+        internal static void InitCustomComponentDrawers(List<Type> customEditorTypes)
         {
-            InitCustomDrawer(_targetToEditorDrawerTypes, customEditorTypes, typeof(CustomEditorDrawer<>));
+            InitCustomDrawer(_targetToComponentDrawerTypes, customEditorTypes, typeof(ComponentDrawer<>));
         }
 
-        internal static void InitCustomProperties(List<Type> customEditorTypes)
+        internal static void InitCustomPropertiesDrawers(List<Type> customEditorTypes)
         {
             _targetToPropertyDrawerTypes.Clear();
 
@@ -99,7 +99,7 @@ namespace Editor.Drawers
             return drawer != null;
         }
 
-        internal static bool TryGetCustomEditorDrawer(Type target, out CustomEditorDrawer drawer)
+        internal static bool TryGetCustomComponentDrawer(Type target, out ComponentDrawer drawer)
         {
             drawer = null;
 
@@ -108,15 +108,15 @@ namespace Editor.Drawers
                 Debug.Error("Target is null, can't create custom editor.");
                 return false;
             }
-            if (!_targetToEditorDrawerTypes.ContainsKey(target))
+            if (!_targetToComponentDrawerTypes.ContainsKey(target))
             {
                 return false;
             }
-            if (!_editorDrawers.TryGetValue(target, out var editorDrawer))
+            if (!_componentDrawers.TryGetValue(target, out var editorDrawer))
             {
-                editorDrawer = Activator.CreateInstance(_targetToEditorDrawerTypes[target]) as CustomEditorDrawer;
+                editorDrawer = Activator.CreateInstance(_targetToComponentDrawerTypes[target]) as ComponentDrawer;
                 editorDrawer.InitializeProperties(target);
-                _editorDrawers.Add(target, editorDrawer);
+                _componentDrawers.Add(target, editorDrawer);
             }
 
             drawer = editorDrawer;
