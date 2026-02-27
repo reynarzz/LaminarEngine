@@ -41,11 +41,13 @@ namespace Editor.Layers
         {
             if (!Application.IsInPlayMode)
             {
+                // Serialize all the opened scenes.
                 SceneManagerEditor.SerializeScenesPlaymode();
-
-                _time.InitializeAsync();
                 Application.IsInPlayMode = true;
 
+                _time.InitializeAsync();
+
+                // Push the needed layers for playmode.
                 var gameLayer = _playmodeLayers[0];
                 gameLayer.layer = ReflectionUtils.GetDefaultValueInstance(GfsTypeRegistryEditor.GameAppType) as LayerBase;
                 _playmodeLayers[0] = gameLayer;
@@ -55,6 +57,7 @@ namespace Editor.Layers
                     _manager.PushLayer(layerData.layer, layerData.priorityIndex);
                 }
 
+                // Deserialize all scenes that will be used in playmode.
                 SceneManagerEditor.DeserializePlaymodeScene();
             }
         }

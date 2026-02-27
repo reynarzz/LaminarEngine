@@ -143,6 +143,10 @@ namespace Editor.Views
                 ImGui.PopStyleVar();
             }
 
+            if(Selector.Selected is Actor actor && ImGui.IsKeyDown(ImGuiKey.Delete))
+            {
+                Actor.Destroy(actor);
+            }
             OnEndWindow();
         }
     }

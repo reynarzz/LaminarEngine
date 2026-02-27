@@ -19,14 +19,13 @@ namespace Editor
 
         internal static void SerializeScenesHotReload()
         {
-            _hotReloadActorsSerialized.Clear();
-            
-            SerializeScenes(new SceneSerializer.SerializationOptions()
+            SerializeScenes(_sceneList, new SceneSerializer.SerializationOptions()
             {
                 CollectedPhysicalActors = true,
                 RemoveGameDLLComponentsFromActors = true,
-            }, _sceneList);
+            });
 
+            _hotReloadActorsSerialized.Clear();
             foreach (var scene in _sceneList)
             {
                 _hotReloadActorsSerialized.Add(scene.Actors);
@@ -35,20 +34,19 @@ namespace Editor
 
         internal static void SerializeScenesPlaymode()
         {
-            _editModeScenes.Clear();
-            SerializeScenes(new SceneSerializer.SerializationOptions()
+            SerializeScenes(_editModeScenes, new SceneSerializer.SerializationOptions()
             {
                 CollectedPhysicalActors = false,
                 RemoveGameDLLComponentsFromActors = false,
-            }, _editModeScenes);
+            });
         }
 
-        internal static void SerializeScenes(in SceneSerializer.SerializationOptions options, List<SerializedEditorScene> scenes)
+        internal static void SerializeScenes(List<SerializedEditorScene> scenes, in SceneSerializer.SerializationOptions options)
         {
             scenes.Clear();
-            foreach (var scene in SceneManager.Scenes)
+            for (int i = 1; i < SceneManager.Scenes.Count; i++)
             {
-                scenes.Add(SceneSerializer.SerializeSceneEditor(scene, options));
+                scenes.Add(SceneSerializer.SerializeSceneEditor(SceneManager.Scenes[i], options));
             }
         }
 
@@ -71,15 +69,15 @@ namespace Editor
         {
             SceneManager.Initialize();
 
-            for (int i = 1; i < _editModeScenes.Count; i++)
+            for (int i = 0; i < _editModeScenes.Count; i++)
             {
                 var editorScene = _editModeScenes[i];
                 if (SceneManager.Scenes.Count - 1 <= i) // -1 to remove the DontDestroyOnLoad Scene
                 {
                     SceneManager.LoadSceneAdditive(editorScene.Name);
                 }
-                
-                SceneDeserializer.DeserializeScene(editorScene.ActorsData, SceneManager.Scenes[i]);
+
+                SceneDeserializer.DeserializeScene(editorScene.ActorsData, SceneManager.Scenes[i + 1]);
             }
         }
     }
