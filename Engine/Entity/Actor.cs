@@ -17,6 +17,9 @@ namespace Engine
         public string Tag { get; set; }
         public int Layer { get; set; } = 0;
 
+        internal Prefab PrefabSource { get; set; }
+        internal Guid PrefabSourceActorID { get; set; }
+
         internal WeakReference<Scene> Scene { get; private set; }
         private List<Component> _components;
         internal List<Component> Components => _components;

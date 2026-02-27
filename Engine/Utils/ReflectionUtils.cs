@@ -984,6 +984,21 @@ namespace Engine.Utils
 
             return null;
         }
+        public static string GetFriendlyTypeName(Type type)
+        {
+            if (!type.IsGenericType)
+                return type.Name;
 
+            var baseName = type.Name;
+            int index = baseName.IndexOf('`');
+            if (index > 0)
+            {
+                baseName = baseName.Substring(0, index);
+            }
+
+            var args = type.GetGenericArguments();
+
+            return $"{baseName}<{string.Join(", ", args.Select(GetFriendlyTypeName))}>";
+        }
     }
 }

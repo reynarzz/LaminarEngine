@@ -52,7 +52,12 @@ namespace Editor
     // Metadata of every asset should be binary on final build.
 
     // Features
+    // - Finish Scene system: When the Editor hits playmode, it will grab the current opened scenes, copy them and go into playmode.
+    //   When the user exits playmode, i will first exit playmode, and rebuild the original scenes.
     // - Fully async scene load in the background: async asset loading (mainThreadSync for graphic assets)
+    // - Audio mixer
+    // - Animator using nodes
+
 
     // Save Editor config:
     // Current loaded scene name.
@@ -63,7 +68,6 @@ namespace Editor
 
 
     // Tilemap:
-    // TilemapRenderer will have a menu to decide which layers from a level will be rendererd.
     // TilemapCollider will decide which layers in a level will contain colliders.
 
     internal class EditorEntry

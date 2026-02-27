@@ -19,7 +19,7 @@ namespace Engine.Layers
         private static MiniAudioEngine _engine;
         private static AudioPlaybackDevice _currentDevice;
         private static AudioMixer _masterMixer;
-        private const float FIND_DEVICE_RETRY_TIME = 1;
+        private const float FIND_DEVICE_RETRY_TIME = 3;
         private float _currentRetryTime = 0;
         private static readonly AudioFormat _defaultFormat = AudioFormat.DvdHq;
 

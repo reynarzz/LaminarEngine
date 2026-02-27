@@ -135,6 +135,10 @@ namespace Game
             [SerializedField] private Body2DType bod;
             [SerializedField] public AStruct[] AStructTypeArray { get; set; }
         }
+        [SerializedField] private Prefab<SpriteRenderer> _spritePrefab;
+        [SerializedField] private Prefab _generalPrefab;
+
+
         [SerializedField] AAA<int> AAAClass;
         [SerializedField] AAA<string, Body2DType> AAAClass2v;
         [SerializedField] AAA<int, TestClass, float> AAAClass3v;

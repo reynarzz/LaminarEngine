@@ -51,17 +51,32 @@
     <Compile Remove="Scene\**" />
     <Compile Remove="Third\Glfw\**" />
     <Compile Remove="Third\Native\glfw\_bin\**" />
+    <Compile Remove="Third\Native\runtimecore\build\**" />
+    <Compile Remove="Third\SoundFlow\Codecs\SoundFlow.Codecs.FFMpeg\obj\**" />
+    <Compile Remove="Third\SoundFlow\Extensions\SoundFlow.Extensions.WebRtc.Apm\obj\**" />
+    <Compile Remove="Third\SoundFlow\Midi\SoundFlow.Midi.PortMidi\obj\**" />
     <Compile Remove="Third\SoundFlow\Samples\**" />
+    <Compile Remove="Third\SoundFlow\Src\obj\**" />
     <EmbeddedResource Remove="Library\**" />
     <EmbeddedResource Remove="Scene\**" />
     <EmbeddedResource Remove="Third\Glfw\**" />
     <EmbeddedResource Remove="Third\Native\glfw\_bin\**" />
+    <EmbeddedResource Remove="Third\Native\runtimecore\build\**" />
+    <EmbeddedResource Remove="Third\SoundFlow\Codecs\SoundFlow.Codecs.FFMpeg\obj\**" />
+    <EmbeddedResource Remove="Third\SoundFlow\Extensions\SoundFlow.Extensions.WebRtc.Apm\obj\**" />
+    <EmbeddedResource Remove="Third\SoundFlow\Midi\SoundFlow.Midi.PortMidi\obj\**" />
     <EmbeddedResource Remove="Third\SoundFlow\Samples\**" />
+    <EmbeddedResource Remove="Third\SoundFlow\Src\obj\**" />
     <None Remove="Library\**" />
     <None Remove="Scene\**" />
     <None Remove="Third\Glfw\**" />
     <None Remove="Third\Native\glfw\_bin\**" />
+    <None Remove="Third\Native\runtimecore\build\**" />
+    <None Remove="Third\SoundFlow\Codecs\SoundFlow.Codecs.FFMpeg\obj\**" />
+    <None Remove="Third\SoundFlow\Extensions\SoundFlow.Extensions.WebRtc.Apm\obj\**" />
+    <None Remove="Third\SoundFlow\Midi\SoundFlow.Midi.PortMidi\obj\**" />
     <None Remove="Third\SoundFlow\Samples\**" />
+    <None Remove="Third\SoundFlow\Src\obj\**" />
   </ItemGroup>
 
   <ItemGroup>

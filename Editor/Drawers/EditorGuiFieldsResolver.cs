@@ -1057,7 +1057,8 @@ namespace Editor.Utils
                 ImGui.SetCursorPos(preRectCursor + new Vector2(16, 0));
             }
 
-            string suffix = $"({valueType.Name})";
+
+            string suffix = $"({ReflectionUtils.GetFriendlyTypeName(valueType)})";
             float suffixWidth = ImGui.CalcTextSize(suffix).X;
 
             const float offset = 6;

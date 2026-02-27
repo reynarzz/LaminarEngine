@@ -35,6 +35,7 @@ namespace Engine.Utils
                 case SerializedType.RenderTextureAsset:
                 case SerializedType.ScriptableObject:
                 case SerializedType.Tilemap:
+                case SerializedType.Prefab:
                     return true;
             }
 
