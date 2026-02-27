@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Engine.Serialization
 {
-    internal class ShaderIR : TypeIR
+    internal class ShaderIR : TypeIRBase
     {
     }
 }

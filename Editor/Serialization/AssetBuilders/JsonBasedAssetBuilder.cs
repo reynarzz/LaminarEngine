@@ -13,7 +13,7 @@ namespace Editor
 {
     internal abstract class JsonBasedAssetBuilder<TAsset, TMeta, TTypeIR> : IAssetBuilder<TAsset, TMeta> where TAsset : AssetResourceBase
                                                                                                          where TMeta : AssetMeta
-                                                                                                         where TTypeIR : TypeIR
+                                                                                                         where TTypeIR : TypeIRBase
     {
         TAsset IAssetBuilder<TAsset, TMeta>.BuildAsset(ref readonly AssetInfo info, TMeta meta, BinaryReader reader)
         {

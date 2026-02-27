@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Engine.Serialization
 {
-    internal class TypeIR
+    internal class TypeIRBase
     {
         public int Version = 1;
         public SerializedPropertyIR[] Properties { get; set; }

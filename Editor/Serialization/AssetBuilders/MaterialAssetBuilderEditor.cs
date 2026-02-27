@@ -12,7 +12,7 @@ namespace Editor
     {
         public override void UpdateAsset(ref readonly AssetInfo info, Material asset, AssetMeta meta, BinaryReader reader)
         {
-            throw new NotImplementedException();
+            Debug.Error("Implement material asset update");
         }
     }
 }

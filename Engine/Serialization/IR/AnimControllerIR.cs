@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Engine.Serialization
 {
-    internal class AnimControllerIR : TypeIR
+    internal class AnimControllerIR : TypeIRBase
     {
     }
 }
