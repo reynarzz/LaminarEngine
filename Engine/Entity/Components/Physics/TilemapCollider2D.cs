@@ -16,14 +16,7 @@ namespace Engine
     [UniqueComponent, RequireComponent(typeof(TilemapRenderer))]
     public class TilemapCollider2D : Collider2D
     {
-        private TilemapRenderer _renderer;
-
-        protected override void OnAwake()
-        {
-            _renderer = GetComponent<TilemapRenderer>();
-
-            base.OnAwake();
-        }
+        [RequiredProperty] private TilemapRenderer _renderer;
 
         protected override B2ShapeId[] CreateShape(B2BodyId bodyId)
         {
@@ -63,6 +56,13 @@ namespace Engine
             {
                 B2Shapes.b2Shape_SetPolygon(ShapesId[i], ref polygons[i]);
             }
+        }
+
+        protected internal override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            _renderer = null;
         }
     }
 }

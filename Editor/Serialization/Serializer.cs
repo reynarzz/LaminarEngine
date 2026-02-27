@@ -104,7 +104,12 @@ namespace Editor.Serialization
                     {
                         return SerializedType.Tilemap;
                     }
-                    
+                    else if (type.IsAssignableTo(typeof(Prefab)))
+                    {
+                        return SerializedType.Prefab;
+                    }
+
+                    Debug.Error($"Type: '{ReflectionUtils.GetFriendlyTypeName(type)}' is an asset but is not added to the serializer 'SerializedType', this could cause a crash if trying to save.");
                     return SerializedType.AssetFlag;
                 }
                 else

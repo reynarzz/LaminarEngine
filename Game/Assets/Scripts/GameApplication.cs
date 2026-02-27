@@ -52,22 +52,22 @@ namespace Game
         protected override void OnInitialize()
         {
 #if DEBUG
-    #if WIN32
+#if WIN32
                 Debug.Log("Running windows");
-    #elif ANDROID
+#elif ANDROID
                 Debug.Log("Running android");
-    #elif MACOS
+#elif IOS
+                Debug.Log("Running android");
+#elif MACOS
                 Debug.Log("Running macOs");
-    #elif EDITOR
+#elif EDITOR
                 Debug.Log("Running editor");
-    #endif
+#endif
 #endif
 #if RELEASE
             Screen.IsFullScreen = true;
             WindowManager.Window.CursorVisible = false;
 #endif
-
-            new Actor<LaunchScreen>("Launch Screen");
         }
 
         public override void Close() 

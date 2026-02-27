@@ -528,7 +528,8 @@ namespace Engine
         }
 
 #if DEBUG
-        void IDrawableGizmo.OnDrawGizmo()
+
+        protected virtual void OnDrawGizmo()
         {
             if (Physics2D.DrawColliders && ShapesId != null && IsEnabled)
             {
@@ -550,7 +551,10 @@ namespace Engine
                 }
             }
         }
-
+        void IDrawableGizmo.OnDrawGizmo()
+        {
+            OnDrawGizmo();
+        }
 #endif
     }
 }

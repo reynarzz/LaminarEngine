@@ -70,11 +70,11 @@ namespace Editor.Layers
                     _manager.PopLayer(layerData.priorityIndex);
                 }
                 _playmodeLayers[0] = (null, _playmodeLayers[0].priorityIndex);
-
-                SceneManagerEditor.DeserializePlaymodeScene();
             }
 
             Application.IsInPlayMode = false;
+
+            SceneManagerEditor.DeserializePlaymodeScene();
         }
     }
 }
