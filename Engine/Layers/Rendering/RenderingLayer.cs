@@ -23,6 +23,9 @@ namespace Engine.Layers
         internal static event Action OnRenderingEnd;
         internal static event Action OnDrawOverlay;
         private RenderTexture _defaultRenderTexture;
+
+        private static readonly Action<RendererData> _onUIRendererDestroyed = OnUIRendererDestroyed;
+        private static readonly Action<RendererData> _onRendererDestroyed = OnRendererDestroyed;
         public RenderingLayer() : base()
         {
             _drawPostProcessCallback = PostProcessDraw;
@@ -70,16 +73,24 @@ namespace Engine.Layers
 
         internal static void PushRenderer(Renderer renderer)
         {
-            renderer.RendererData.OnDestroyRenderer -= OnRendererDestroyed;
-            renderer.RendererData.OnDestroyRenderer += OnRendererDestroyed;
-            _renderersById.Add(renderer.GetID(), renderer.RendererData as RendererData2D);
+            PushRenderer(renderer, _renderersById, _onRendererDestroyed);
         }
 
         internal static void PushUIRenderer(UIElement element)
         {
-            element.RendererData.OnDestroyRenderer -= OnUIRendererDestroyed;
-            element.RendererData.OnDestroyRenderer += OnUIRendererDestroyed;
-            _uiRenderersById.Add(element.GetID(), element.RendererData as RendererData2D);
+            PushRenderer(element, _uiRenderersById, _onUIRendererDestroyed);
+        }
+
+        private static void PushRenderer(Renderer renderer, Dictionary<Guid, RendererData2D> dictionary, Action<RendererData> onDestroyed) 
+        {
+            renderer.RendererData.OnDestroyRenderer -= onDestroyed;
+            renderer.RendererData.OnDestroyRenderer += onDestroyed;
+
+            if (dictionary.ContainsKey(renderer.GetID()))
+            {
+                dictionary.Remove(renderer.GetID());
+            }
+            dictionary.Add(renderer.GetID(), renderer.RendererData as RendererData2D);
         }
 
         private static void OnRendererDestroyed(RendererData renderer)

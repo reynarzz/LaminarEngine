@@ -20,7 +20,7 @@ namespace Engine
         internal Prefab PrefabSource { get; set; }
         internal Guid PrefabSourceActorID { get; set; }
 
-        internal WeakReference<Scene> Scene { get; private set; }
+        internal Scene Scene { get; private set; }
         private List<Component> _components;
         internal List<Component> Components => _components;
         private List<IComponent> _toDeleteComponents = new();
@@ -103,7 +103,7 @@ namespace Engine
         internal Actor(string name, Guid id) : this(name, id, SceneManager.ActiveScene)
         {
         }
-        internal Actor(string name, Guid id, WeakReference<Scene> scene) : base(name, id)
+        internal Actor(string name, Guid id, Scene scene) : base(name, id)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -121,7 +121,7 @@ namespace Engine
             _onEnablePendingComponents = new();
             _transform = AddComponent<Transform>();
 
-            if (scene != null && scene.TryGetTarget(out var s) && s != null)
+            if (scene != null)
             {
                 Scene = scene;
             }
@@ -130,14 +130,7 @@ namespace Engine
                 Scene = SceneManager.ActiveScene;
             }
 
-            if (Scene.TryGetTarget(out var sceneTarget))
-            {
-                sceneTarget.RegisterRootActor(this);
-            }
-            else
-            {
-                Debug.EngineError("Not a valid scene was found!");
-            }
+            Scene.RegisterRootActor(this);
         }
 
         public Component AddComponent([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
@@ -554,12 +547,10 @@ namespace Engine
                 return;
 
             // Remove from current scene.
-            actor.Scene.TryGetTarget(out var scene);
-            scene.RemoveActor(actor);
+            actor.Scene.RemoveActor(actor);
 
             // Add to 'DontDestroyOnLoad' scene.
-            SceneManager.DontDestroyOnLoadScene.TryGetTarget(out var dontDestroyOnLoadscene);
-            dontDestroyOnLoadscene.RegisterRootActor(actor);
+            SceneManager.DontDestroyOnLoadScene.RegisterRootActor(actor);
             actor.Scene = SceneManager.DontDestroyOnLoadScene;
         }
 
@@ -731,8 +722,6 @@ namespace Engine
                     }
                 }
 
-                Scene.TryGetTarget(out var scene);
-
                 void OnCleanUpChildren(Actor actor)
                 {
                     for (int i = actor._components.Count - 1; i >= 0; i--)
@@ -746,14 +735,15 @@ namespace Engine
                     }
 
                     actor.IsAlive = false;
-                    scene.RemoveActor(actor);
-                    // actor.Scene = null;
+                    Scene.RemoveActor(actor);
+                    //actor.Scene = null;
                 }
 
                 OnDestroyEventNotify(this);
                 OnCleanUpChildren(this);
 
                 IsPendingToDestroy = false;
+                Scene = null;
             }
 
             if (_pendingToDeleteComponents.Count > 0)
@@ -796,6 +786,7 @@ namespace Engine
                 CallOnDestroy();
 #endif
             }
+
         }
         internal void RecalculateHierarchyActivation()
         {

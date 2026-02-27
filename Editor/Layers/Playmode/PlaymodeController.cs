@@ -20,6 +20,9 @@ namespace Editor.Layers
         private static PlaymodeController _instanceTest;
         public static PlaymodeController Instance => _instanceTest; // Remove, refactor
         public static bool IsPaused { get; private set; }
+        public event Action OnBeforePlaymode;
+        public event Action OnAfterEditMode;
+
         public PlaymodeController(LayersManager manager, TimeLayer time, HotReloadLayer hotReload)
         {
             _instanceTest = this;
@@ -38,7 +41,8 @@ namespace Editor.Layers
         {
             if (!Application.IsInPlayMode)
             {
-                _hotReload.SwapDll();
+                SceneManagerEditor.SerializeScenesPlaymode();
+
                 _time.InitializeAsync();
                 Application.IsInPlayMode = true;
 
@@ -50,6 +54,8 @@ namespace Editor.Layers
                     var layerData = _playmodeLayers[i];
                     _manager.PushLayer(layerData.layer, layerData.priorityIndex);
                 }
+
+                SceneManagerEditor.DeserializePlaymodeScene();
             }
         }
 
@@ -65,8 +71,7 @@ namespace Editor.Layers
                 }
                 _playmodeLayers[0] = (null, _playmodeLayers[0].priorityIndex);
 
-                _hotReload.SwapDll(false); // TODO: if compilation finishes this will call swap, but hot reload also calls swap automatically.
-
+                SceneManagerEditor.DeserializePlaymodeScene();
             }
 
             Application.IsInPlayMode = false;

@@ -208,14 +208,6 @@ namespace Engine.Serialization
             base(size, collectionType)
         { }
     }
-    //internal class CollectionSimples : CollectionData<Variant, SerializedType>
-    //{
-    //    protected CollectionSimples() { }
-    //    internal CollectionSimples(int size, CollectionType collectionType) : base(size, collectionType) { }
-    //    public CollectionSimples(Variant[] value, SerializedType itemsType, CollectionType colType) :
-    //        base(value, itemsType, colType)
-    //    { }
-    //}
     internal class CollectionReferences : CollectionData<ReferenceData, SerializedType[]>
     {
         protected CollectionReferences() { }

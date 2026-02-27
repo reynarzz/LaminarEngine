@@ -9,10 +9,9 @@ namespace Engine
 {
     public class SceneManager
     {
-        internal static WeakReference<Scene> ActiveScene { get; private set; }
-        internal static WeakReference<Scene> DontDestroyOnLoadScene { get; private set; }
+        internal static Scene ActiveScene { get; private set; }
+        internal static Scene DontDestroyOnLoadScene => _scenes[0];
         internal static Scene Dont => _scenes[0];
-        private static Scene _activeScene;
 
         private static readonly List<Scene> _scenesToDestroy = new();
         private static readonly List<Scene> _scenes = new();
@@ -25,9 +24,7 @@ namespace Engine
             LoadSceneAdditive("DontDestroyOnLoad");
             LoadSceneAdditive("DefaultScene");
 
-            _activeScene = _scenes[1];
-            DontDestroyOnLoadScene = new WeakReference<Scene>(_scenes[0]);
-            ActiveScene = new WeakReference<Scene>(_activeScene);
+            ActiveScene = _scenes[1];
         }
 
         public static void LoadScene(string name)
@@ -37,10 +34,8 @@ namespace Engine
 
             // TODO: Load scene from file (Probably will never be implemented since all scenes are built at runtime, without a editor)
             var scene = new Scene(name);
-            _activeScene = scene;
-            ActiveScene.SetTarget(_activeScene);
+            ActiveScene = scene;
             _scenes.Add(scene);
-            DontDestroyOnLoadScene.SetTarget(_scenes[0]);
         }
 
         internal static void UnloadScene(Scene scene)
@@ -54,7 +49,6 @@ namespace Engine
 
         internal static void UnloadAll()
         {
-            _activeScene = null;
             for (int i = 0; i < _scenes.Count; i++)
             {
                 _scenesToDestroy.Add(_scenes[i]);
@@ -80,7 +74,8 @@ namespace Engine
             if (IsSceneAlreadyAdded(name))
                 return;
 
-            _scenes.Add(new Scene(name));
+            var scene = new Scene(name);
+            _scenes.Add(scene);
         }
 
         public void UnloadScene(string name)

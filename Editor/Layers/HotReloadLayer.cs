@@ -5,7 +5,6 @@ using Engine;
 using Engine.Layers;
 using Engine.Serialization;
 using Engine.Utils;
-using Engine;
 using System.Reflection;
 using System.Runtime.Loader;
 using Editor.Drawers;
@@ -16,8 +15,6 @@ namespace Editor.Layers
     {
         private PluginLoadContext _assemblyLoadContext;
         private Assembly _gameAppAssembly = null;
-        private readonly List<string> _sceneList = new();
-        private readonly List<List<Actor>> _actorsSerialized = new();
         private bool _canSwapDll = false;
         private bool _isSwappingDll = false;
 
@@ -112,7 +109,7 @@ namespace Editor.Layers
 
             UpdateCustomEditor();
 
-            DeserializeScenes();
+            SceneManagerEditor.DeserializeScenesHotReload();
         }
 
         private void UpdateCustomEditor()
@@ -178,7 +175,7 @@ namespace Editor.Layers
             {
                 if (serializeCurrentScene)
                 {
-                    SerializeScene();
+                    SceneManagerEditor.SerializeScenesHotReload();
                 }
 
                 GfsTypeRegistryEditor.Clear();
@@ -190,40 +187,6 @@ namespace Editor.Layers
                 GC.WaitForPendingFinalizers();
                 GC.Collect();
             }
-        }
-
-        private void SerializeScene()
-        {
-            _sceneList.Clear();
-            _actorsSerialized.Clear();
-            foreach (var scene in SceneManager.Scenes)
-            {
-                var sceneObj = SceneSerializer.SerializeSceneEditor(scene,
-                    new SceneSerializer.SerializationOptions()
-                    {
-                        CollectedPhysicalActors = true,
-                        RemoveGameDLLComponentsFromActors = true,
-                    });
-                var serializedScene = EditorJsonUtils.Serialize(sceneObj);
-                _actorsSerialized.Add(sceneObj.Actors);
-
-                _sceneList.Add(serializedScene);
-            }
-        }
-
-        private void DeserializeScenes()
-        {
-            if (_sceneList.Count > 0)
-            {
-                for (int i = 0; i < _sceneList.Count; i++)
-                {
-                    var sceneSerialized = EditorJsonUtils.Deserialize<SerializedEditorScene>(_sceneList[i]);
-                    SceneDeserializer.DeserializeSceneComponents(_actorsSerialized[i], sceneSerialized.ActorsData);
-                }
-            }
-
-            _sceneList.Clear();
-            _actorsSerialized.Clear();
         }
 
         public override void OnEvent(EventType currentEvent, object value)

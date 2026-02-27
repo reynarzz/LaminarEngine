@@ -16,7 +16,7 @@ namespace Editor.Serialization
     {
         public string Name { get; set; }
         public List<ActorIR> ActorsData { get; set; }
-        [JsonIgnore] internal List<Actor> Actors { get; set; }
+        internal List<Actor> Actors { get; set; }
     }
 
     // Note: This is a very naive serializaton, renaming types, changing to another assembly will cause references to break.
@@ -52,7 +52,7 @@ namespace Editor.Serialization
             {
                 Name = scene.Name,
                 ActorsData = new(),
-                Actors = new()
+                Actors = new(),
             };
 
             void SerializeActors(Actor actor)

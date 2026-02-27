@@ -16,7 +16,7 @@ namespace Engine.Serialization
 #else
     internal class SceneDeserializer : SceneDeserializer<CombinedTypeResolver> { }
 #endif
-    internal class SceneDeserializer<T> where T: ITypeResolver
+    internal class SceneDeserializer<T> where T : ITypeResolver
     {
         private readonly static Dictionary<Guid, (Actor value, ActorIR data)> _actorsByID = new();
         private readonly static Dictionary<Guid, (Component value, ComponentIR data)> _componentsByID = new();
@@ -58,7 +58,7 @@ namespace Engine.Serialization
             //        }));
             //    }
             //}
-           
+
             for (int i = 0; i < actorsData.Count; i++)
             {
                 var actorData = actorsData[i];
@@ -75,7 +75,7 @@ namespace Engine.Serialization
 
                         Component component = null;
 
-                        if(!_existantComponents.TryGetValue(componentData.ID, out component))
+                        if (!_existantComponents.TryGetValue(componentData.ID, out component))
                         {
                             component = actor.AddComponent(componentType, componentData.ID, false,
                                                            componentData.IsEnabled, true, out var isPendingToInitialize);
@@ -128,13 +128,15 @@ namespace Engine.Serialization
             _componentsByID.Clear();
             _existantComponents.Clear();
         }
-
-        public static void DeserializeScene(SceneIR sceneIr, WeakReference<Scene> scene)
+        public static void DeserializeScene(SceneIR sceneIr, Scene scene)
+        {
+            DeserializeScene(sceneIr.Actors, scene);
+        }
+        public static void DeserializeScene(List<ActorIR> actors, Scene scene)
         {
             _actorsByID.Clear();
             _componentsByID.Clear();
             _initializationComponents.Clear();
-            var actors = sceneIr.Actors;
 
             if (actors == null || actors.Count == 0)
                 return;
