@@ -64,6 +64,27 @@ namespace Editor
             return result;
         }
 
+        public static bool DrawObject(string objectId, object target)
+        {
+            if(target == null)
+            {
+                Debug.Error($"Can't draw target with id: {objectId}, is null.");
+                return false;
+            }
+            var members = ReflectionUtils.GetAllMembersWithAttribute<SerializedFieldAttribute>(target.GetType(), true, true);
+            var anyChange = false;
+            foreach (var member in members) 
+            {
+                var hasChanged = DrawVars(objectId, target, member, true);
+                if (hasChanged)
+                {
+                    anyChange = hasChanged;
+                }
+            }
+            return anyChange;
+        }
+
+
         public static bool DrawVars(string objectId, object target, MemberInfo prop, bool enforceSerializedFieldAttribute = true)
         {
             if (target == null)

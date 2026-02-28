@@ -10,10 +10,6 @@ namespace Editor.Views
 {
     internal abstract class PlatformBuildSettingsDrawer
     {
-        protected PlatformBuildSettingsDrawer()
-        {
-        }
-
         public abstract void OnDraw(PlatformBuildSettings settings);
     }
 }

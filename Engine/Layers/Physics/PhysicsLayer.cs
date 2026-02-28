@@ -30,7 +30,7 @@ namespace Engine.Layers
             _accumulator = 0;
             _rigidbodies.Clear();
 
-            _fixedTimeStep = EngineServices.GetService<EngineDataRegistryService>().GetProjectData().Physics.FixedTimeStep;
+            _fixedTimeStep = EngineServices.GetService<EngineDataService>().GetProjectData().Physics.FixedTimeStep;
             return Task.CompletedTask;
         }
 

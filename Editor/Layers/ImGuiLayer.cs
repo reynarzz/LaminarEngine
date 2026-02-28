@@ -104,7 +104,8 @@ namespace Editor.Layers
                     new AnimatorEditorView(),
                     new RenderingStatsView(),
                     new BuildWindow(),
-                    new TaskWindow()
+                    new TaskWindow(),
+                    new ProjectSettingsWindow(),
                     // new ConsoleEditorView()
                 };
 

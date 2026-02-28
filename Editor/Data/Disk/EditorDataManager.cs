@@ -33,7 +33,7 @@ namespace Editor.Data
 
         private static void InitProjectSettings()
         {
-            var service = EngineServices.GetService<EngineDataRegistryService>();
+            var service = EngineServices.GetService<EngineDataService>();
             _projectSettings = LoadData<ProjectSettings>(PROJECT_SETTINGS);
             service.Initialize(_projectSettings);
         }
@@ -43,7 +43,7 @@ namespace Editor.Data
             // TODO: Save all unsaved data to disk.
 
             SaveBuildSettings();
-            SaveProjectData();
+            SaveProjectSettings();
         }
 
         private static void SaveBuildSettings()
@@ -51,7 +51,7 @@ namespace Editor.Data
             WriteData(BUILD_SETTINGS, _buildSettings);
         }
 
-        private static void SaveProjectData()
+        internal static void SaveProjectSettings()
         {
             WriteData(PROJECT_SETTINGS, ProjectSettings);
         }

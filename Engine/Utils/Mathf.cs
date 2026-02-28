@@ -16,6 +16,8 @@ namespace Engine
 
         public const float Tau = 6.283185307179586476925f;
         public const float Epsilon = 1e-6f;
+        public const float Rad2Deg = 180.0f / PI;
+        public const float Deg2Rad = PI / 180.0f;
 
         public static float Clamp(float value, float min, float max)
            => value < min ? min : (value > max ? max : value);

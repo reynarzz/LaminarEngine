@@ -1,0 +1,95 @@
+[
+  {
+    "Name": "LayerSettings",
+    "Type": "ComplexClass",
+    "InternalType": "Engine.Data.LayersSettings, Engine",
+    "TypeId": "af714270-4573-3523-af2b-736ac060699e",
+    "Simple": null,
+    "Class": {
+      "$type": "Engine.Serialization.ComplexClass, Engine",
+      "$value": {
+        "ClassType": "ComplexClass",
+        "Properties": [
+          {
+            "Name": "Layers",
+            "Type": "SimpleCollection",
+            "InternalType": "System.String[], System.Private.CoreLib",
+            "TypeId": "b030ecf5-5e0a-0178-0c3a-b186f4e8f4e5",
+            "Simple": null,
+            "Collection": {
+              "$type": "Engine.Serialization.CollectionDataString, Engine",
+              "$value": {
+                "Value": [
+                  "Default"
+                ],
+                "ItemsType": "String",
+                "CollectionType": "Array"
+              }
+            }
+          }
+        ],
+        "InternalType": "Engine.Data.LayersSettings, Engine",
+        "TypeId": "af714270-4573-3523-af2b-736ac060699e"
+      }
+    }
+  },
+  {
+    "Name": "SceneSettings",
+    "Type": "ComplexClass",
+    "InternalType": "Engine.Data.SceneSettings, Engine",
+    "TypeId": "bc94490a-54fa-5d75-6697-b3ad0392f755",
+    "Simple": null,
+    "Class": {
+      "$type": "Engine.Serialization.ComplexClass, Engine",
+      "$value": {
+        "ClassType": "ComplexClass",
+        "Properties": [
+          {
+            "Name": "Scenes",
+            "Type": "ComplexCollection",
+            "InternalType": "System.Collections.Generic.List`1[[Engine.Data.SceneSettings+SceneConfig, Engine]], System.Private.CoreLib",
+            "TypeId": "114bc2e7-59b9-97ed-158b-31b7055057df",
+            "Simple": null,
+            "Collection": {
+              "$type": "Engine.Serialization.CollectionClasses, Engine",
+              "$value": {
+                "Value": [],
+                "ItemsType": "None",
+                "CollectionType": "List"
+              }
+            }
+          }
+        ],
+        "InternalType": "Engine.Data.SceneSettings, Engine",
+        "TypeId": "bc94490a-54fa-5d75-6697-b3ad0392f755"
+      }
+    }
+  },
+  {
+    "Name": "Physics",
+    "Type": "ComplexClass",
+    "InternalType": "Engine.Data.PhysicsSettings, Engine",
+    "TypeId": "0de433b6-c128-8ed8-0b84-5be5bf7f84fc",
+    "Simple": null,
+    "Class": {
+      "$type": "Engine.Serialization.ComplexClass, Engine",
+      "$value": {
+        "ClassType": "ComplexClass",
+        "Properties": [
+          {
+            "Name": "FixedTimeStep",
+            "Type": "Float",
+            "InternalType": "System.Single, System.Private.CoreLib",
+            "TypeId": "8bb080fb-0417-4cec-2ad6-a37e93d2bde3",
+            "Simple": {
+              "Kind": "Float",
+              "Value": 0.52
+            }
+          }
+        ],
+        "InternalType": "Engine.Data.PhysicsSettings, Engine",
+        "TypeId": "0de433b6-c128-8ed8-0b84-5be5bf7f84fc"
+      }
+    }
+  }
+]
