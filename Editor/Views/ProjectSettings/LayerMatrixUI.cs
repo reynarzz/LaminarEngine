@@ -55,7 +55,7 @@ namespace Editor.Views
 
         private void DrawHeaderRow(int count)
         {
-            float headerHeight = GetRotatedHeaderHeight();
+            float headerHeight = GetMaxTextSize();
 
             ImGui.TableNextRow(ImGuiTableRowFlags.None, headerHeight + 20);
 
@@ -76,7 +76,7 @@ namespace Editor.Views
             }
         }
 
-        private float GetRotatedHeaderHeight()
+        private float GetMaxTextSize()
         {
             float max = 0;
             for (int i = 0; i < _layerNames.Length; i++)
@@ -88,15 +88,22 @@ namespace Editor.Views
 
         private void DrawRows(int count)
         {
+            float columnWidth = ImGui.GetColumnWidth();
+            var maxTextSize = GetMaxTextSize();
+
             for (int row = 0; row < count; row++)
             {
                 var rowName = _layerNames[row];
                 if (string.IsNullOrEmpty(rowName))
                     continue;
 
+
                 ImGui.TableNextRow();
 
+                // Right-align row text in the first column with margin
                 ImGui.TableSetColumnIndex(0);
+                var textSize = ImGui.CalcTextSize(rowName);
+                ImGui.SetCursorPosX(ImGui.GetCursorPosX() + columnWidth - textSize.X + maxTextSize);
                 ImGui.Text(rowName);
 
                 int colTable = 0;
@@ -137,11 +144,10 @@ namespace Editor.Views
             }
         }
 
-
         private void DrawRotatedText(string text, float angleRad, float headerHeight)
         {
             ImDrawListPtr drawList = ImGui.GetWindowDrawList();
-
+         
             Vector2 cellMin = ImGui.GetCursorScreenPos();
             float columnWidth = ImGui.GetColumnWidth();
 
