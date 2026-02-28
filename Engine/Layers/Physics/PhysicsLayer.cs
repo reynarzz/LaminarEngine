@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Box2D.NET;
+using Engine.Data;
 using Engine.Graphics;
 using Engine.Utils;
 
@@ -19,7 +20,7 @@ namespace Engine.Layers
         private static List<RigidBody2D> _rigidbodies = new();
 
         private static double _accumulator = 0f;
-        private const float _fixedTimeStep = 0.02f;
+        private float _fixedTimeStep = 0.02f;
 
         public override Task InitializeAsync()
         {
@@ -29,6 +30,7 @@ namespace Engine.Layers
             _accumulator = 0;
             _rigidbodies.Clear();
 
+            _fixedTimeStep = EngineServices.GetService<EngineDataRegistryService>().GetProjectData().Physics.FixedTimeStep;
             return Task.CompletedTask;
         }
 

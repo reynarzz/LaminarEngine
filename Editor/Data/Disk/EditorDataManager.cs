@@ -2,9 +2,9 @@
 using Editor.Serialization;
 using Editor.Utils;
 using Engine;
+using Engine.Data;
 using Engine.Serialization;
 using Engine.Utils;
-using Engine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,30 +16,54 @@ namespace Editor.Data
     internal static class EditorDataManager
     {
         private static BuildSettings _buildSettings;
-        public static BuildSettings BuildSettings => _buildSettings ?? (_buildSettings = LoadProjectData<BuildSettings>(BUILD_SETTINGS));
+        public static BuildSettings BuildSettings => _buildSettings ?? (_buildSettings = LoadData<BuildSettings>(BUILD_SETTINGS));
+
+        public static ProjectSettings _projectSettings;
+
+        public static ProjectSettings ProjectSettings => _projectSettings;
 
         private const string BUILD_SETTINGS = "BuildSettings";
+        private const string PROJECT_SETTINGS = "ProjectSettings";
+
+
+        internal static void Init()
+        {
+            InitProjectSettings();
+        }
+
+        private static void InitProjectSettings()
+        {
+            var service = EngineServices.GetService<EngineDataRegistryService>();
+            _projectSettings = LoadData<ProjectSettings>(PROJECT_SETTINGS);
+            service.Initialize(_projectSettings);
+        }
 
         public static void SaveAll()
         {
             // TODO: Save all unsaved data to disk.
 
             SaveBuildSettings();
+            SaveProjectData();
         }
 
         private static void SaveBuildSettings()
         {
-            WriteProjectData(BUILD_SETTINGS, _buildSettings);
+            WriteData(BUILD_SETTINGS, _buildSettings);
         }
 
-        private static void WriteProjectData(string name, object data)
+        private static void SaveProjectData()
+        {
+            WriteData(PROJECT_SETTINGS, ProjectSettings);
+        }
+
+        private static void WriteData(string name, object data)
         {
             var projectSettings = Paths.GetProjectSettingsFolder();
             var json = EditorJsonUtils.Serialize(Serializer.Serialize(data));
             File.WriteAllText(Path.Combine(projectSettings, $"{name}{EditorPaths.EDITOR_DATA_EXTENSION}"), json);
         }
 
-        private static T LoadProjectData<T>(string name) where T : class, new()
+        private static T LoadData<T>(string name) where T : class, new()
         {
             var projectSettings = Paths.GetProjectSettingsFolder();
             var filePath = Path.Combine(projectSettings, $"{name}{EditorPaths.EDITOR_DATA_EXTENSION}");
@@ -58,5 +82,6 @@ namespace Editor.Data
             }
             return value;
         }
+
     }
 }

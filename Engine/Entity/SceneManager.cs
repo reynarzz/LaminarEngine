@@ -160,6 +160,10 @@ namespace Engine
         {
             return Find<Actor, ActorMatcher, string>(name);
         }
+        internal static Actor FindActorByID(Guid id)
+        {
+            return Find<Actor, ActorIDMatcher, Guid>(id);
+        }
 
         internal static List<T> FindAll<T>(bool findDisabled, Actor rootActor) where T : Component
         {

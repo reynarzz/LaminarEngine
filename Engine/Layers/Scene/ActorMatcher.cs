@@ -18,6 +18,18 @@ namespace Engine
         }
     }
 
+    internal struct ActorIDMatcher : IMatcher<Actor, Guid>
+    {
+        public Actor Invoke(Actor actor, Guid comparer)
+        {
+            if (actor && actor.GetID() == comparer)
+            {
+                return actor;
+            }
+            return null;
+        }
+    }
+
     internal struct ActorTagMatcher : IMatcher<Actor, string>
     {
         public Actor Invoke(Actor actor, string comparer)

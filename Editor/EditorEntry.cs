@@ -50,8 +50,7 @@ namespace Editor
     // Metadata of every asset should be binary on final build.
 
     // Features
-    // - Finish Scene system: When the Editor hits playmode, it will grab the current opened scenes, copy them and go into playmode.
-    //   When the user exits playmode, i will first exit playmode, and rebuild the original scenes.
+    // - Project data: Serialize/Deserialize Layers, scenes, and any other data that the game might need.
     // - Fully async scene load in the background: async asset loading (mainThreadSync for graphic assets)
     // - Audio mixer
     // - Animator using nodes

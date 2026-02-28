@@ -1,4 +1,5 @@
 ﻿using Editor.Build;
+using Editor.Data;
 using Editor.Serialization;
 using Engine;
 using Engine.IO;
@@ -37,6 +38,8 @@ namespace Editor
                 { AssetType.Material, new MaterialAssetBuilderEditor() },
                 { AssetType.Tilemap, new TilemapAssetBuilder() },
             });
+
+            EditorDataManager.Init();
 
             _intiialized = true;
             return Task.CompletedTask;
