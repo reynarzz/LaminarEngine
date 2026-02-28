@@ -26155,6 +26155,12 @@ namespace ImGuiNET
             byte ret = ImGuiNative.igTableSetColumnIndex(column_n);
             return ret != 0;
         }
+
+        public static void TableSetColumnWidth(int column_n, float width)
+        {
+            ImGuiNative.igTableSetColumnWidth(column_n, width);
+        }
+
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER
         public static void TableSetupColumn(ReadOnlySpan<char> label)
         {

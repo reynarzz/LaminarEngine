@@ -734,6 +734,10 @@ namespace ImGuiNET
         public static extern void igTableSetColumnEnabled(int column_n, byte v);
         [DllImport("EditorNatives", CallingConvention = CallingConvention.Cdecl)]
         public static extern byte igTableSetColumnIndex(int column_n);
+
+        [DllImport("EditorNatives", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void igTableSetColumnWidth(int column_n, float width);
+
         [DllImport("EditorNatives", CallingConvention = CallingConvention.Cdecl)]
         public static extern void igTableSetupColumn(byte* label, ImGuiTableColumnFlags flags, float init_width_or_weight, uint user_id);
         [DllImport("EditorNatives", CallingConvention = CallingConvention.Cdecl)]
