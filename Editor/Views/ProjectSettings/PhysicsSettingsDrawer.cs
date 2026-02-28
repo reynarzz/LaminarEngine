@@ -1,4 +1,5 @@
 ﻿using Engine.Data;
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,32 @@ namespace Editor.Views
 {
     internal class PhysicsSettingsDrawer : ProjectMenuDrawer
     {
+        private LayerMatrixUI _gridUI;
+        private string[] _layersTest = ["Default", "UI", "Light", "Player", "Enemy", "Ground", "Floor"];
+        public PhysicsSettingsDrawer()
+        {
+            _gridUI = new LayerMatrixUI();
+        }
         protected override void OnDraw(ProjectSettings settings)
         {
             PropertiesGUIDrawEditor.DrawObject("Physics_Settings", settings.Physics);
+
+            _gridUI.Matrix = settings.Physics.CollisionMatrix ?? new bool[settings.LayerSettings.Layers.Length, settings.LayerSettings.Layers.Length];
+            _gridUI.Layers = settings.LayerSettings.Layers;
+
+            ImGui.Text("Collision Matrix");
+
+            if(ImGui.Button("Enable all"))
+            {
+                _gridUI.SetAll(true);
+            }
+            ImGui.SameLine();
+            if (ImGui.Button("Disable all"))
+            {
+                _gridUI.SetAll(false);
+            }
+            _gridUI.Draw();
+            settings.Physics.CollisionMatrix = _gridUI.Matrix;
         }
     }
 }

@@ -13,6 +13,8 @@ namespace Editor.Utils
 {
     internal static class EditorJsonUtils
     {
+        private readonly static SerializedFieldContractResolver _serializationContract = new SerializedFieldContractResolver();
+
         private readonly static JsonSerializerSettings _jsonSettings = new()
         {
             TypeNameHandling = TypeNameHandling.Auto, // Do not remove this.
@@ -21,8 +23,10 @@ namespace Editor.Utils
             {
                 new StringEnumConverter(),
                 new GuidConverter(),
+                new JaggedArrayConverter<bool>(),
+                new TwoDimensionalArrayConverter<bool>()
             },
-            ContractResolver = new SerializedFieldContractResolver()
+            ContractResolver = _serializationContract
         };
 
         internal static string Serialize(object obj)

@@ -20,7 +20,18 @@
               "$type": "Engine.Serialization.CollectionDataString, Engine",
               "$value": {
                 "Value": [
-                  "Default"
+                  "Default",
+                  "Player",
+                  "Floor",
+                  "Enemy",
+                  "character_dead",
+                  "EnemyConfused",
+                  "Platform",
+                  "Collectible",
+                  "Interactable",
+                  "character_Ignore",
+                  "no_walkable",
+                  "bullet"
                 ],
                 "ItemsType": "String",
                 "CollectionType": "Array"
@@ -77,14 +88,35 @@
         "ClassType": "ComplexClass",
         "Properties": [
           {
+            "Name": "Gravity",
+            "Type": "Vec3",
+            "InternalType": "GlmNet.vec3, Engine",
+            "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
+            "Simple": {
+              "Kind": "Vec3",
+              "Value": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+              }
+            }
+          },
+          {
             "Name": "FixedTimeStep",
             "Type": "Float",
             "InternalType": "System.Single, System.Private.CoreLib",
             "TypeId": "8bb080fb-0417-4cec-2ad6-a37e93d2bde3",
             "Simple": {
               "Kind": "Float",
-              "Value": 0.52
+              "Value": 0.02
             }
+          },
+          {
+            "Name": "CollisionMatrix",
+            "Type": "SimpleCollection",
+            "InternalType": "System.Boolean[,], System.Private.CoreLib",
+            "TypeId": "69ed2ab8-6c13-d250-0085-9a4c03b6813a",
+            "Simple": null
           }
         ],
         "InternalType": "Engine.Data.PhysicsSettings, Engine",

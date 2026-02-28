@@ -11,6 +11,7 @@ namespace Engine.Data
     {
         [SerializedField] public vec3 Gravity { get; set; }
         [SerializedField] internal float FixedTimeStep { get; set; } = 0.02f;
+        [SerializedField, HideFromInspector] public bool[,] CollisionMatrix { get; set; }
     }
     internal class LayersSettings
     {

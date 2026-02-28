@@ -12,7 +12,6 @@ namespace Editor.Views
     public class LayerMatrixUI
     {
         private string[] _layerNames;
-        private bool[,] _matrix;
 
         public string[] Layers
         {
@@ -22,14 +21,21 @@ namespace Editor.Views
                 if (value != _layerNames || value.Length != _layerNames.Length)
                 {
                     _layerNames = value;
-                    _matrix = new bool[_layerNames.Length, _layerNames.Length];
                 }
             }
         }
 
-        public bool[,] Matrix
+        public bool[,] Matrix { get; set; }
+
+        public void SetAll(bool value)
         {
-            get { return _matrix; }
+            for (int i = 0; i < _layerNames.Length; i++)
+            {
+                for (int j = 0; j < _layerNames.Length; j++)
+                {
+                    Matrix[i, j] = value;
+                }
+            }
         }
 
         public void Draw()
@@ -120,21 +126,21 @@ namespace Editor.Views
                     }
                     else if (col == row)
                     {
-                        bool value = _matrix[row, col];
+                        bool value = Matrix[row, col];
 
                         if (ImGui.Checkbox("##cell", ref value))
                         {
-                            _matrix[row, col] = value;
+                            Matrix[row, col] = value;
                         }
                     }
                     else
                     {
-                        bool value = _matrix[row, col];
+                        bool value = Matrix[row, col];
 
                         if (ImGui.Checkbox("##cell", ref value))
                         {
-                            _matrix[row, col] = value;
-                            _matrix[col, row] = value;
+                            Matrix[row, col] = value;
+                            Matrix[col, row] = value;
                         }
                     }
 
