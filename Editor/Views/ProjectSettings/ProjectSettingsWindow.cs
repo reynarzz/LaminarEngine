@@ -15,15 +15,15 @@ namespace Editor.Views
 {
     public enum ProjectSettingsMenuType
     {
-        Layer,
-        Scene,
+        Layers,
+        Scenes,
         Physics
     }
 
     internal class ProjectSettingsWindow : EditorWindow
     {
 
-        private int _selectedSettings = 0;
+        private int _selectedSettings = 2;
 
         private float _leftPaneWidth = 150f;
         private const float SplitterWidth = 6f;
@@ -40,8 +40,8 @@ namespace Editor.Views
             _drawers = new()
             {
                 { ProjectSettingsMenuType.Physics, new PhysicsSettingsDrawer() },
-                { ProjectSettingsMenuType.Layer, new LayerSettingsDrawer() },
-
+                { ProjectSettingsMenuType.Layers, new LayerSettingsDrawer() },
+                { ProjectSettingsMenuType.Scenes, new ScenesSettingsDrawer() }
             };
         }
 
@@ -196,11 +196,11 @@ namespace Editor.Views
             switch (menu)
             {
                 case ProjectSettingsMenuType.Physics:
+                    return EditorTextureDatabase.GetIconImGui(EditorIcon.Physics);
+                case ProjectSettingsMenuType.Layers:
                     return EditorTextureDatabase.GetIconImGui(EditorIcon.Actor);
-                case ProjectSettingsMenuType.Layer:
-                    return EditorTextureDatabase.GetIconImGui(EditorIcon.Actor);
-                case ProjectSettingsMenuType.Scene:
-                    return EditorTextureDatabase.GetIconImGui(EditorIcon.Actor);
+                case ProjectSettingsMenuType.Scenes:
+                    return EditorTextureDatabase.GetIconImGui(EditorIcon.Scene);
                 default:
                     break;
             }

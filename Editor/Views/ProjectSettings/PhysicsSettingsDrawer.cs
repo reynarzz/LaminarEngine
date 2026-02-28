@@ -11,7 +11,7 @@ namespace Editor.Views
     internal class PhysicsSettingsDrawer : ProjectMenuDrawer
     {
         private LayerMatrixUI _gridUI;
-        private string[] _layersTest = ["Default", "UI", "Light", "Player", "Enemy", "Ground", "Floor"];
+
         public PhysicsSettingsDrawer()
         {
             _gridUI = new LayerMatrixUI();

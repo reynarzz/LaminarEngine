@@ -1257,6 +1257,21 @@ namespace Editor.Utils
                     RenderItemsInColumns(items);
 
                 }
+                else if (valueType == typeof(SceneAsset))
+                {
+                    var assets = IOLayer.Database.Disk.GetAssetsInfo(AssetType.Scene);
+                    var path = string.Empty;
+
+                    var items = assets.Select(a =>
+                    {
+                        var (id, info) = a;
+                        string label = $"{Path.GetFileName(info.Path)}##{id}";
+
+                        return (label, (Action)(() => setValue(Assets.GetAssetFromGuid(id))), info.Path);
+                    });
+                    RenderItemsInColumns(items);
+
+                }
             }
 
             else if (valueType == typeof(Sprite))

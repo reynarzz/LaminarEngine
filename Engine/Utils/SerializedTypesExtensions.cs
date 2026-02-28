@@ -36,6 +36,7 @@ namespace Engine.Utils
                 case SerializedType.ScriptableObject:
                 case SerializedType.Tilemap:
                 case SerializedType.Prefab:
+                case SerializedType.Scene:
                     return true;
             }
 

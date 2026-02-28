@@ -25,8 +25,8 @@ namespace Engine.Data
             public Guid Id { get; set; }
             public bool Build { get; set; }
         }
-        [SerializedField] internal List<SceneConfig> Scenes { get; set; } = new();
-
+        [SerializedField] public SceneAsset LaunchScene { get; set; }
+        [SerializedField] internal List<SceneAsset> Scenes { get; set; } = new();
     }
     internal class ProjectSettings : IEngineService
     {
