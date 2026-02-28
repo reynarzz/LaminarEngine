@@ -9,7 +9,7 @@ namespace Engine.Data
 {
     internal class PhysicsSettings
     {
-        [SerializedField] public vec3 Gravity { get; set; }
+        [SerializedField] public vec3 Gravity { get; set; } = new vec3(0, -9.8f, 0);
         [SerializedField] internal float FixedTimeStep { get; set; } = 0.02f;
         [SerializedField, HideFromInspector] public bool[,] CollisionMatrix { get; set; }
     }

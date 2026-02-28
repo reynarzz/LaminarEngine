@@ -24,13 +24,17 @@ namespace Engine.Layers
 
         public override Task InitializeAsync()
         {
-            PhysicWorld.Initialize();
             _contactDispatcher = new ContactsDispatcher();
-            B2Worlds.b2World_SetCustomFilterCallback(PhysicWorld.WorldID, CustomFilter, this);
+
+            var physicsData = EngineServices.GetService<EngineDataService>().GetProjectData().Physics;
+            _fixedTimeStep = physicsData.FixedTimeStep;
             _accumulator = 0;
+
+            PhysicWorld.Initialize(physicsData.Gravity);
+            B2Worlds.b2World_SetCustomFilterCallback(PhysicWorld.WorldID, CustomFilter, this);
+
             _rigidbodies.Clear();
 
-            _fixedTimeStep = EngineServices.GetService<EngineDataService>().GetProjectData().Physics.FixedTimeStep;
             return Task.CompletedTask;
         }
 

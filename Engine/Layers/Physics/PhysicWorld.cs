@@ -16,7 +16,7 @@ namespace Engine
         private static B2DebugDraw _debugDraw;
         internal static B2DebugDraw DebugDraw => _debugDraw;
 
-        internal static void Initialize()
+        internal static void Initialize(vec3 initialGravity)
         {
             B2WorldDef worldDef = B2Types.b2DefaultWorldDef();
             worldDef.gravity = new B2Vec2(0, -9.8f);
