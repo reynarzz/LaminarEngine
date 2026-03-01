@@ -56,13 +56,18 @@ namespace Editor.Views
             }
 
             var flags = ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.HighlightHoveredColumn;
-
+            ImGui.PushStyleVar(ImGuiStyleVar.FramePadding, new Vector2(1, 1));
+            ImGui.PushStyleVar(ImGuiStyleVar.CellPadding, new Vector2(2, 2));
+            ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2());
+            ImGui.PushStyleVar(ImGuiStyleVar.ItemInnerSpacing, new Vector2(0, 0));
             if (ImGui.BeginTable("LayerCollisionMatrix", count + 1, flags))
             {
                 DrawHeaderRow(count);
                 DrawRows(count);
                 ImGui.EndTable();
             }
+            ImGui.PopStyleVar(4);
+
         }
 
         private void DrawHeaderRow(int count)
@@ -75,6 +80,7 @@ namespace Editor.Views
             ImGui.Text("");
 
             int colIndex = 0;
+
             for (int col = 0; col < count; col++)
             {
                 var name = _layerNames[col];
@@ -99,10 +105,12 @@ namespace Editor.Views
         }
 
         private void DrawRows(int count)
+
         {
+         
             float columnWidth = ImGui.GetColumnWidth();
             var maxTextSize = GetMaxTextSize();
-
+         
             for (int row = 0; row < count; row++)
             {
                 var rowName = _layerNames[row];
@@ -113,7 +121,7 @@ namespace Editor.Views
 
                 ImGui.TableSetColumnIndex(0);
                 var textSize = ImGui.CalcTextSize(rowName);
-                ImGui.SetCursorPosX(ImGui.GetCursorPosX() + columnWidth - textSize.X + maxTextSize);
+                ImGui.SetCursorPosX(ImGui.GetCursorPosX() - textSize.X + maxTextSize);
                 ImGui.Text(rowName);
 
                 int colTable = 0;
@@ -147,6 +155,7 @@ namespace Editor.Views
                     ImGui.PopID();
                 }
             }
+
         }
 
         private void DrawRotatedText(string text, float angleRad, float headerHeight)
