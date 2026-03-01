@@ -13,7 +13,7 @@ namespace Engine.Layers
         public sealed override Task InitializeAsync()
         {
 #if SHIP_BUILD
-            var result = LoadLaunchScene();
+            var result = LoadMainScene();
             if (!result)
             {
                 return Task.FromCanceled(new CancellationToken(true));
@@ -22,7 +22,7 @@ namespace Engine.Layers
             return MainThreadDispatcher.EnqueueAsync(OnInitialize);
         }
 #if SHIP_BUILD
-        private bool LoadLaunchScene()
+        private bool LoadMainScene()
         {
             Guid GetGuidSafe(string str)
             {
@@ -44,14 +44,13 @@ namespace Engine.Layers
 
                 return false;
             }
-            Debug.Log("Load Launch Scene");
             var sceneSettings = EngineServices.GetService<EngineDataService>().GetProjectSettings().SceneSettings;
             SceneManager.Initialize();
-            var scene = (SceneAsset)Assets.GetAssetFromGuid(GetGuidSafe(sceneSettings.LaunchScene));
+            var scene = (SceneAsset)Assets.GetAssetFromGuid(GetGuidSafe(sceneSettings.MainScene));
 
             if (!scene)
             {
-                Debug.Warn("Launch scene wasn't found, make sure it's added to the project settings.");
+                Debug.Warn("Main scene wasn't found, make sure it's added to the project settings.");
 
                 if (!TryGetSceneAssetSafe(sceneSettings, out scene))
                 {

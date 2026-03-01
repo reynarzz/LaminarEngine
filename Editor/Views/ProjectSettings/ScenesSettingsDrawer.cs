@@ -15,12 +15,12 @@ namespace Editor.Views
         protected override void OnDraw(ProjectSettings settings)
         {
             // TODO: Draw from scratch
-            var launchScene = Assets.GetAssetFromGuid(GetGuidSafe(settings.SceneSettings.LaunchScene));
+            var launchScene = Assets.GetAssetFromGuid(GetGuidSafe(settings.SceneSettings.MainScene));
             ImGui.Text("Launch Scene");
             ImGui.SameLine();
             EditorGuiFieldsResolver.DrawEObjectSlot(launchScene, typeof(SceneAsset), x =>
             {
-                settings.SceneSettings.LaunchScene = ((x as SceneAsset)?.GetID() ?? Guid.Empty).ToString();
+                settings.SceneSettings.MainScene = ((x as SceneAsset)?.GetID() ?? Guid.Empty).ToString();
                 return true;
             });
 

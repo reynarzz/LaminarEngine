@@ -149,7 +149,7 @@ namespace Engine.IO
 
             // ----Scenes:
             // Read launch scene
-            settings.SceneSettings.LaunchScene = EngineFileUtils.ReadGuidNoAlloc(reader).ToString();
+            settings.SceneSettings.MainScene = EngineFileUtils.ReadGuidNoAlloc(reader).ToString();
 
             // Read scenes count
             var scenesCount = reader.ReadInt32();

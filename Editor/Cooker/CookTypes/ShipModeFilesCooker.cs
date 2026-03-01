@@ -269,7 +269,7 @@ namespace Editor.Cooker
             }
 
             // ----Scenes
-            EditorFileUtils.WriteGuidNoAlloc(writer, Guid.Parse(settings.SceneSettings.LaunchScene));
+            EditorFileUtils.WriteGuidNoAlloc(writer, Guid.Parse(settings.SceneSettings.MainScene));
 
             // Scenes count
             writer.Write(settings.SceneSettings.Scenes.Count);

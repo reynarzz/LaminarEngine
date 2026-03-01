@@ -22,8 +22,44 @@ namespace Engine.Data
     // TODO: I cannot serialize Guids directly, so for now I'm using strings.
     internal class SceneSettings
     {
-        [SerializedField] public string LaunchScene { get; set; } = Guid.Empty.ToString();
+        [SerializedField] public string MainScene { get; set; } = Guid.Empty.ToString();
         [SerializedField] internal List<string> Scenes { get; set; } = [];
+
+        internal Guid[] GetAllScenesId()
+        {
+            bool isValid(string str, out Guid guid)
+            {
+                guid = Guid.Empty;
+                return !string.IsNullOrEmpty(str) && Guid.TryParse(str, out guid) && guid != Guid.Empty;
+            }
+
+            int count = Scenes.Count + 1;
+            var scenesId = new Guid[count];
+            int index = 0;
+
+            for (int i = 0; i < Scenes.Count; i++)
+            {
+                string str = Scenes[i];
+
+                if (isValid(str, out var guid))
+                {
+                    scenesId[index++] = guid;
+                }
+            }
+
+            if (isValid(MainScene, out var mainId))
+            {
+                scenesId[index++] = mainId;
+            }
+
+            if (index == scenesId.Length)
+            {
+                return scenesId;
+            }
+
+            Array.Resize(ref scenesId, index);
+            return scenesId;
+        }
     }
 
     internal class ProjectSettings : IEngineService

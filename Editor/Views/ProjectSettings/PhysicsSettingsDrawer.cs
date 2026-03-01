@@ -26,6 +26,7 @@ namespace Editor.Views
             _gridUI.Layers = settings.LayerSettings.Layers;
 
             ImGui.Text("Collision Matrix");
+            _gridUI.Draw();
 
             if (ImGui.Button("Enable all"))
             {
@@ -36,7 +37,6 @@ namespace Editor.Views
             {
                 _gridUI.SetAll(false);
             }
-            _gridUI.Draw();
             settings.Physics.CollisionMatrix = _gridUI.Matrix;
         }
     }
