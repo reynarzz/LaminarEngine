@@ -134,7 +134,7 @@ namespace Engine.Serialization
             ReflectionUtils.SetMemberValue(target, value, property.Name);
         }
 
-        private static void DeserializeReferenceCollectionProperty(object target, SerializedPropertyIR property, 
+        private static void DeserializeReferenceCollectionProperty(object target, SerializedPropertyIR property,
                                                                    DeserializerData deserializerData)
         {
             if (property.Collection == null)
@@ -151,31 +151,14 @@ namespace Engine.Serialization
                 if (colType == CollectionType.Dictionary)
                 {
                     // NOTE: This assumes that the reference is in the value side, so keys that are references will not be supported.
-                    if (!args[0].IsAssignableTo(typeof(EObject)) && !args[1].IsAssignableTo(typeof(EObject)))
-                    {
-                        Debug.Warn($"Can't deserialize Dictionary property '{target.GetType().Name}.{property.Name}', is not a EObject");
-                        return;
-                    }
                     collectionPropertyType = ReflectionUtils.GetMemberType(args[1], property.Name);
                 }
                 else if (colType == CollectionType.Array)
                 {
-                    var arrElementType = target.GetType().GetElementType();
-                    if (!arrElementType.IsAssignableTo(typeof(EObject)))
-                    {
-                        Debug.Warn($"Can't deserialize Array property '{target.GetType().Name}.{property.Name}', is not a EObject");
-                        return;
-                    }
-                    collectionPropertyType = ReflectionUtils.GetMemberType(arrElementType, property.Name);
+                    collectionPropertyType = ReflectionUtils.GetMemberType(target.GetType().GetElementType(), property.Name);
                 }
                 else
                 {
-                    if (!args[0].IsAssignableTo(typeof(EObject)))
-                    {
-                        Debug.Warn($"Can't deserialize Collection property '{target.GetType().Name}.{property.Name}', elements are not a EObject");
-                        return;
-                    }
-
                     collectionPropertyType = ReflectionUtils.GetMemberType(target.GetType().GetGenericArguments()[0], property.Name);
                 }
 
@@ -183,11 +166,6 @@ namespace Engine.Serialization
             }
             else
             {
-                if (!target.GetType().IsAssignableTo(typeof(EObject)))
-                {
-                    Debug.Warn($"Can't deserialize Collection property '{target.GetType().Name}.{property.Name}', elements are not a EObject");
-                    return;
-                }
                 collectionPropertyType = ReflectionUtils.GetMemberType(target.GetType(), property.Name);
             }
 
@@ -198,22 +176,12 @@ namespace Engine.Serialization
 
             if (collectionData.CollectionType == CollectionType.Dictionary)
             {
-                object GetArgValue(object argData, SerializedType argSerializedType, Type argType)
-                {
-                    if (argSerializedType.IsSimple())
-                    {
-                        if (argData != null && argData.GetType() != argType)
-                        {
-                            return ReflectionUtils.DeserializeVariantValueSafe<Tr>((Variant)argData);
-                        }
-
-                        return null;
-                    }
-
-                    return GetReferenceValue(argSerializedType, deserializerData, argData as ReferenceData);
-                }
-
                 var args = collectionPropertyType.GetGenericArguments();
+                if (!args[0].IsAssignableTo(typeof(EObject)) && !args[1].IsAssignableTo(typeof(EObject)))
+                {
+                    Debug.Warn($"Can't deserialize Dictionary property '{target.GetType().Name}.{property.Name}', elements are not a EObject");
+                    return;
+                }
                 var dictType = typeof(Dictionary<,>).MakeGenericType(args[0], args[1]);
 
                 var dictionary = (IDictionary)Activator.CreateInstance(dictType);
@@ -233,11 +201,32 @@ namespace Engine.Serialization
                     dictionary.Add(key, value);
                 }
 
+                object GetArgValue(object argData, SerializedType argSerializedType, Type argType)
+                {
+                    if (argSerializedType.IsSimple())
+                    {
+                        if (argData != null && argData.GetType() != argType)
+                        {
+                            return ReflectionUtils.DeserializeVariantValueSafe<Tr>((Variant)argData);
+                        }
+
+                        return null;
+                    }
+
+                    return GetReferenceValue(argSerializedType, deserializerData, argData as ReferenceData);
+                }
+
                 ReflectionUtils.SetMemberValue(target, dictionary, property.Name);
 
             }
             else if (collectionData.CollectionType == CollectionType.List)
             {
+                if (!collectionPropertyType.GetGenericArguments()[0].IsAssignableTo(typeof(EObject)))
+                {
+                    Debug.Warn($"Can't deserialize List property '{target.GetType().Name}.{property.Name}', elements are not a EObject");
+                    return;
+                }
+
                 var list = (IList)ReflectionUtils.GetDefaultValueInstance(collectionPropertyType);
 
                 SetValueToProperty(list, (item, _) =>
@@ -247,6 +236,12 @@ namespace Engine.Serialization
             }
             else if (collectionData.CollectionType == CollectionType.Array)
             {
+                if (!collectionPropertyType.GetGenericArguments()[0].IsAssignableTo(typeof(EObject)))
+                {
+                    Debug.Warn($"Can't deserialize Array property '{target.GetType().Name}.{property.Name}', elements are not a EObject");
+                    return;
+                }
+
                 var array = Array.CreateInstance(collectionPropertyType.GetElementType(), collectionData.Count);
 
                 SetValueToProperty(array, (item, index) =>
