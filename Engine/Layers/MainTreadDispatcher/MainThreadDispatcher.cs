@@ -20,7 +20,14 @@ namespace Engine.Layers
         {
             while (_queue.TryDequeue(out var action))
             {
-                action();
+                try
+                {
+                    action();
+                }
+                catch (Exception e)
+                {
+                    Debug.Error(e);
+                }
             }
         }
 

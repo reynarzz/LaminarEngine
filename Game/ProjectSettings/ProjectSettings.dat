@@ -57,34 +57,104 @@
         "Properties": [
           {
             "Name": "LaunchScene",
-            "Type": "Scene",
-            "InternalType": "Engine.SceneAsset, Engine",
-            "TypeId": "15395071-0bd7-ff47-c639-ebd9257dd835",
-            "Simple": null
+            "Type": "ComplexClass",
+            "InternalType": "Engine.Data.SceneSettings+SceneConfig, Engine",
+            "TypeId": "db0da9b6-b7bc-b0d9-edbd-494755b07d42",
+            "Simple": null,
+            "Class": {
+              "$type": "Engine.Serialization.ComplexClass, Engine",
+              "$value": {
+                "ClassType": "ComplexClass",
+                "Properties": [
+                  {
+                    "Name": "Scene",
+                    "Type": "Scene",
+                    "InternalType": "Engine.SceneAsset, Engine",
+                    "TypeId": "15395071-0bd7-ff47-c639-ebd9257dd835",
+                    "Simple": null,
+                    "Reference": {
+                      "$type": "Engine.Serialization.ReferenceData, Engine",
+                      "$value": {
+                        "Type": "Scene",
+                        "RefId": "e185a5b6-1dc1-463b-b964-4db54454067f"
+                      }
+                    }
+                  },
+                  {
+                    "Name": "Build",
+                    "Type": "Bool",
+                    "InternalType": "System.Boolean, System.Private.CoreLib",
+                    "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+                    "Simple": {
+                      "Kind": "Bool",
+                      "Value": false
+                    }
+                  }
+                ],
+                "InternalType": "Engine.Data.SceneSettings+SceneConfig, Engine",
+                "TypeId": "db0da9b6-b7bc-b0d9-edbd-494755b07d42"
+              }
+            }
           },
           {
-            "Name": "Scenes",
-            "Type": "ReferenceCollection",
-            "InternalType": "System.Collections.Generic.List`1[[Engine.SceneAsset, Engine]], System.Private.CoreLib",
-            "TypeId": "ea05a455-a0fe-96b7-13a5-46e051ccc791",
+            "Name": "ScenesDebug",
+            "Type": "ComplexCollection",
+            "InternalType": "System.Collections.Generic.List`1[[Engine.Data.SceneSettings+SceneConfig, Engine]], System.Private.CoreLib",
+            "TypeId": "114bc2e7-59b9-97ed-158b-31b7055057df",
             "Simple": null,
             "Collection": {
-              "$type": "Engine.Serialization.CollectionReferences, Engine",
+              "$type": "Engine.Serialization.CollectionClasses, Engine",
               "$value": {
                 "Value": [
-                  null,
-                  null,
-                  null,
-                  null,
-                  null
+                  {
+                    "$type": "Engine.Serialization.ComplexClass, Engine",
+                    "ClassType": "ComplexClass",
+                    "Properties": [
+                      {
+                        "Name": "Scene",
+                        "Type": "Scene",
+                        "InternalType": "Engine.SceneAsset, Engine",
+                        "TypeId": "15395071-0bd7-ff47-c639-ebd9257dd835",
+                        "Simple": null,
+                        "Reference": {
+                          "$type": "Engine.Serialization.ReferenceData, Engine",
+                          "$value": {
+                            "Type": "Scene",
+                            "RefId": "98234458-8336-42b2-85e3-0fdc5b26d6ba"
+                          }
+                        }
+                      },
+                      {
+                        "Name": "Build",
+                        "Type": "Bool",
+                        "InternalType": "System.Boolean, System.Private.CoreLib",
+                        "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+                        "Simple": {
+                          "Kind": "Bool",
+                          "Value": false
+                        }
+                      }
+                    ],
+                    "InternalType": "Engine.Data.SceneSettings+SceneConfig, Engine",
+                    "TypeId": "db0da9b6-b7bc-b0d9-edbd-494755b07d42"
+                  }
                 ],
-                "ItemsType": [
-                  "None",
-                  "None",
-                  "None",
-                  "None",
-                  "None"
-                ],
+                "ItemsType": "ComplexClass",
+                "CollectionType": "List"
+              }
+            }
+          },
+          {
+            "Name": "ScenesRelease",
+            "Type": "ComplexCollection",
+            "InternalType": "System.Collections.Generic.List`1[[Engine.Data.SceneSettings+SceneConfig, Engine]], System.Private.CoreLib",
+            "TypeId": "114bc2e7-59b9-97ed-158b-31b7055057df",
+            "Simple": null,
+            "Collection": {
+              "$type": "Engine.Serialization.CollectionClasses, Engine",
+              "$value": {
+                "Value": [],
+                "ItemsType": "None",
                 "CollectionType": "List"
               }
             }
@@ -115,7 +185,7 @@
               "Kind": "Vec3",
               "Value": {
                 "x": 0.0,
-                "y": 0.0,
+                "y": -9.8,
                 "z": 0.0
               }
             }

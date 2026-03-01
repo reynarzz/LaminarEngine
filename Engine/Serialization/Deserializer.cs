@@ -51,41 +51,48 @@ namespace Engine.Serialization
 
             foreach (var property in properties)
             {
-                var serializedType = property.Type;
-                if (serializedType.IsEObject())
+                try
                 {
-                    DeserializeReferencedProperty(targetInstance, property, deserializerData);
-                }
-                else if (serializedType.IsSimple())
-                {
-                    DeserializeSimpleProperty(targetInstance, property);
-                }
-                else if (serializedType == SerializedType.ReferenceCollection)
-                {
-                    DeserializeReferenceCollectionProperty(targetInstance, property, deserializerData);
-                }
-                else if (serializedType.IsClass())
-                {
-                    if (serializedType == SerializedType.ComplexClass)
+                    var serializedType = property.Type;
+                    if (serializedType.IsEObject())
                     {
-                        DeserializeComplexClass(targetInstance, property, deserializerData);
+                        DeserializeReferencedProperty(targetInstance, property, deserializerData);
+                    }
+                    else if (serializedType.IsSimple())
+                    {
+                        DeserializeSimpleProperty(targetInstance, property);
+                    }
+                    else if (serializedType == SerializedType.ReferenceCollection)
+                    {
+                        DeserializeReferenceCollectionProperty(targetInstance, property, deserializerData);
+                    }
+                    else if (serializedType.IsClass())
+                    {
+                        if (serializedType == SerializedType.ComplexClass)
+                        {
+                            DeserializeComplexClass(targetInstance, property, deserializerData);
+                        }
+                        else
+                        {
+                            throw new NotImplementedException($"Class type '{serializedType}' is not implemented.");
+                        }
+                    }
+                    else if (serializedType == SerializedType.ComplexCollection)
+                    {
+                        DeserializeComplexCollection(targetInstance, property, deserializerData);
+                    }
+                    else if (serializedType == SerializedType.SimpleCollection)
+                    {
+                        DeserializeSimpleCollection(targetInstance, property, deserializerData);
                     }
                     else
                     {
-                        throw new NotImplementedException($"Class type '{serializedType}' is not implemented.");
+                        Debug.Error($"Cannot deserialize property of type: {property.Type}, please implement it.");
                     }
                 }
-                else if (serializedType == SerializedType.ComplexCollection)
+                catch (Exception e)
                 {
-                    DeserializeComplexCollection(targetInstance, property, deserializerData);
-                }
-                else if (serializedType == SerializedType.SimpleCollection)
-                {
-                    DeserializeSimpleCollection(targetInstance, property, deserializerData);
-                }
-                else
-                {
-                    Debug.Error($"Cannot deserialize property of type: {property.Type}, please implement it.");
+                    Debug.Error(e);
                 }
             }
         }
@@ -127,7 +134,8 @@ namespace Engine.Serialization
             ReflectionUtils.SetMemberValue(target, value, property.Name);
         }
 
-        private static void DeserializeReferenceCollectionProperty(object target, SerializedPropertyIR property, DeserializerData deserializerData)
+        private static void DeserializeReferenceCollectionProperty(object target, SerializedPropertyIR property, 
+                                                                   DeserializerData deserializerData)
         {
             if (property.Collection == null)
                 return;
@@ -137,18 +145,37 @@ namespace Engine.Serialization
 
             if (ReflectionUtils.IsCollection(target?.GetType(), out var colType))
             {
+                var args = target.GetType().GetGenericArguments();
+
                 // Note: Nested collections
                 if (colType == CollectionType.Dictionary)
                 {
                     // NOTE: This assumes that the reference is in the value side, so keys that are references will not be supported.
-                    collectionPropertyType = ReflectionUtils.GetMemberType(target.GetType().GetGenericArguments()[1], property.Name);
+                    if (!args[0].IsAssignableTo(typeof(EObject)) && !args[1].IsAssignableTo(typeof(EObject)))
+                    {
+                        Debug.Warn($"Can't deserialize Dictionary property '{target.GetType().Name}.{property.Name}', is not a EObject");
+                        return;
+                    }
+                    collectionPropertyType = ReflectionUtils.GetMemberType(args[1], property.Name);
                 }
                 else if (colType == CollectionType.Array)
                 {
-                    collectionPropertyType = ReflectionUtils.GetMemberType(target.GetType().GetElementType(), property.Name);
+                    var arrElementType = target.GetType().GetElementType();
+                    if (!arrElementType.IsAssignableTo(typeof(EObject)))
+                    {
+                        Debug.Warn($"Can't deserialize Array property '{target.GetType().Name}.{property.Name}', is not a EObject");
+                        return;
+                    }
+                    collectionPropertyType = ReflectionUtils.GetMemberType(arrElementType, property.Name);
                 }
                 else
                 {
+                    if (!args[0].IsAssignableTo(typeof(EObject)))
+                    {
+                        Debug.Warn($"Can't deserialize Collection property '{target.GetType().Name}.{property.Name}', elements are not a EObject");
+                        return;
+                    }
+
                     collectionPropertyType = ReflectionUtils.GetMemberType(target.GetType().GetGenericArguments()[0], property.Name);
                 }
 
@@ -156,6 +183,11 @@ namespace Engine.Serialization
             }
             else
             {
+                if (!target.GetType().IsAssignableTo(typeof(EObject)))
+                {
+                    Debug.Warn($"Can't deserialize Collection property '{target.GetType().Name}.{property.Name}', elements are not a EObject");
+                    return;
+                }
                 collectionPropertyType = ReflectionUtils.GetMemberType(target.GetType(), property.Name);
             }
 

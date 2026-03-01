@@ -1,0 +1,74 @@
+{
+  "SceneVersion": 1,
+  "ActorsVersion": 1,
+  "ComponentsVersion": 1,
+  "Actors": [
+    {
+      "Name": "LaunchGame",
+      "Layer": 0,
+      "IsActiveSelf": true,
+      "ID": "68c64702-ca41-463f-a58b-aa21ed59bef1",
+      "ParentID": "00000000-0000-0000-0000-000000000000",
+      "Components": [
+        {
+          "InternalType": "Engine.Transform, Engine",
+          "TypeId": "a0a8e468-8126-f549-138c-b26e62da1186",
+          "IsEnabled": true,
+          "ID": "a066eda2-6f9e-4297-a46a-e907f6101b68",
+          "Properties": [
+            {
+              "Name": "LocalPosition",
+              "Type": "Vec3",
+              "InternalType": "GlmNet.vec3, Engine",
+              "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
+              "Simple": {
+                "Kind": "Vec3",
+                "Value": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                }
+              }
+            },
+            {
+              "Name": "LocalRotation",
+              "Type": "Quat",
+              "InternalType": "GlmNet.quat, Engine",
+              "TypeId": "bd9d317e-0216-6052-93b0-a68d64e1c1a1",
+              "Simple": {
+                "Kind": "Quat",
+                "Value": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0,
+                  "w": 1.0
+                }
+              }
+            },
+            {
+              "Name": "LocalScale",
+              "Type": "Vec3",
+              "InternalType": "GlmNet.vec3, Engine",
+              "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
+              "Simple": {
+                "Kind": "Vec3",
+                "Value": {
+                  "x": 1.0,
+                  "y": 1.0,
+                  "z": 1.0
+                }
+              }
+            }
+          ]
+        },
+        {
+          "InternalType": "Game.LaunchScreen, Game",
+          "TypeId": "da4ba3d8-1d40-6fb2-7667-eedf3ef0971b",
+          "IsEnabled": true,
+          "ID": "0e1ad83d-1929-4711-86d2-d16f7399972a",
+          "Properties": []
+        }
+      ]
+    }
+  ]
+}

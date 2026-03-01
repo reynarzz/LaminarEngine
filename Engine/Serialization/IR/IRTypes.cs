@@ -301,6 +301,8 @@ namespace Engine.Serialization
         Actor = EObjectFlag | (2001UL << 20),
 
         // Assets 
+        ASSETS_START = AssetFlag | EObjectFlag | (2999UL << 20), // Assets start
+
         SpriteAsset = AssetFlag | EObjectFlag | (3000UL << 20),
         TextureAsset = AssetFlag | EObjectFlag | (3001UL << 20),
         MaterialAsset = AssetFlag | EObjectFlag | (3002UL << 20),
@@ -314,6 +316,9 @@ namespace Engine.Serialization
         Prefab = AssetFlag | EObjectFlag | (3010UL << 20),
         Scene = AssetFlag | EObjectFlag | (3011UL << 20),
 
+
+
+        ASSETS_END = AssetFlag | EObjectFlag | (3999UL << 20), // max asset boundary
 
         // Collections and classes
         ComplexCollection = CollectionFlag | (4000UL << 20),

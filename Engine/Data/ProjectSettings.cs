@@ -15,19 +15,16 @@ namespace Engine.Data
     }
     internal class LayersSettings
     {
-        [SerializedField] internal string[] Layers { get; set; } = new[] { "Default" };
+        [SerializedField] internal string[] Layers { get; set; } = ["Default", "Background", "Foreground", "Player", "UI"];
     }
 
     internal class SceneSettings
     {
-        public class SceneConfig
-        {
-            public Guid Id { get; set; }
-            public bool Build { get; set; }
-        }
         [SerializedField] public SceneAsset LaunchScene { get; set; }
-        [SerializedField] internal List<SceneAsset> Scenes { get; set; } = new();
+        [SerializedField] internal List<SceneAsset> ScenesDebug { get; set; } = new();
+        [SerializedField] internal List<SceneAsset> ScenesRelease { get; set; } = new();
     }
+
     internal class ProjectSettings : IEngineService
     {
         [SerializedField] internal LayersSettings LayerSettings { get; set; } = new();

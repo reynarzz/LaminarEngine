@@ -25,6 +25,7 @@ namespace Editor
 
         public override Task InitializeAsync()
         {
+            // Editor asset builders
             InitializeIO(_devDisk, new Dictionary<AssetType, IAssetBuilder>()
             {
                 { AssetType.Texture, new TextureAssetBuilder() },
@@ -37,6 +38,7 @@ namespace Editor
                 { AssetType.AnimationController, new AnimationControllerAssetBuilderEditor() },
                 { AssetType.Material, new MaterialAssetBuilderEditor() },
                 { AssetType.Tilemap, new TilemapAssetBuilder() },
+                { AssetType.Scene, new SceneAssetBuilderEditor() },
             });
 
             EditorDataManager.Init();

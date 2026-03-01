@@ -54,7 +54,8 @@ namespace Editor
     // - Fully async scene load in the background: async asset loading (mainThreadSync for graphic assets)
     // - Audio mixer
     // - Animator using nodes
-
+    // - Assets lazy loading: Selecting assets in the inspector should not load the asset, but when the playmode starts,
+    //   create a ImmediateAssetLoad<T> to load as soon as it gets in the property inspector.
 
     // Save Editor config:
     // Current loaded scene name.
