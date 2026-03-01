@@ -12,7 +12,7 @@ namespace Editor.Test
 
         public static void RunTest_Windows()
         {
-            var processor = new Cooker.MaterialProcessorRelease();
+            var processor = new Cooker.MaterialProcessorShip();
 
             var path = Path.Combine(EditorPaths.CookerPaths.InternalAssetsPath, "Materials", "SpriteDefault.material");
 

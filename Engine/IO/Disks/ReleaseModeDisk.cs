@@ -1,4 +1,5 @@
 ﻿using Engine;
+using Engine.Data;
 using Engine.Utils;
 using System;
 using System.Collections.Generic;
@@ -60,6 +61,15 @@ namespace Engine.IO
                 throw new Exception("Corrupted file data");
             }
 
+            // File version
+            var version = _reader.ReadUInt64();
+
+            // Creation date
+            var creationData = DateTime.FromBinary(_reader.ReadInt64());
+
+            // Read engine data
+            ReadEngineData(_reader);
+
             var totalAssets = _reader.ReadInt32();
             AssetDatabaseInfo.Assets.EnsureCapacity(totalAssets);
             _assetsLocations.EnsureCapacity(totalAssets);
@@ -114,6 +124,59 @@ namespace Engine.IO
             }
 
             return true;
+        }
+
+        private void ReadEngineData(BinaryReader reader)
+        {
+            var data = EngineServices.GetService<EngineDataService>();
+            data.Initialize(ReadProjectSettings(reader));
+        }
+
+        private ProjectSettings ReadProjectSettings(BinaryReader reader)
+        {
+            var settings = new ProjectSettings();
+
+            // ----Layers:
+
+            // Read layers count
+            settings.LayerSettings.Layers = new string[reader.ReadInt32()];
+
+            for (int i = 0; i < settings.LayerSettings.Layers.Length; i++)
+            {
+                // Read layer
+                settings.LayerSettings.Layers[i] = EngineFileUtils.ReadString(reader);
+            }
+
+            // ----Scenes:
+            // Read launch scene
+            settings.SceneSettings.LaunchScene = EngineFileUtils.ReadGuidNoAlloc(reader);
+
+            // Read scenes count
+            var scenesCount = reader.ReadInt32();
+            settings.SceneSettings.ScenesRelease = new Guid[scenesCount];
+            for (int i = 0; i < scenesCount; i++)
+            {
+                settings.SceneSettings.ScenesRelease[i] = EngineFileUtils.ReadGuidNoAlloc(reader);
+            }
+
+            // ----Physics:
+            // Read gravity
+            settings.Physics.Gravity = EngineFileUtils.ReadStructNoAlloc<GlmNet.vec3>(reader);
+
+            // Read fixed time step
+            settings.Physics.FixedTimeStep = reader.ReadSingle();
+
+            // Read collision matrix count
+            var count = reader.ReadInt32();
+            settings.Physics.CollisionMatrix = new bool[count];
+
+            // Read collision matrix
+            for (int i = 0; i < count; i++)
+            {
+                settings.Physics.CollisionMatrix[i] = EngineFileUtils.ReadBool(reader);
+            }
+
+            return settings;
         }
 
         protected override byte[] LoadAssetFromDisk(Guid guid)

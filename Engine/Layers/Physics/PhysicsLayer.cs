@@ -26,7 +26,7 @@ namespace Engine.Layers
         {
             _contactDispatcher = new ContactsDispatcher();
 
-            var physicsData = EngineServices.GetService<EngineDataService>().GetProjectData().Physics;
+            var physicsData = EngineServices.GetService<EngineDataService>().GetProjectSettings().Physics;
             _fixedTimeStep = physicsData.FixedTimeStep;
             _accumulator = 0;
 

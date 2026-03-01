@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Editor.Cooker
 {
 
-    internal class SceneAssetProcessorRelease : AssetBinaryProcessorReleaseBase<SceneIR>
+    internal class SceneAssetProcessorShip : AssetBinaryProcessorReleaseBase<SceneIR>
     {
         protected override void WriteBinary(BinaryWriter writer, SceneIR asset)
         {

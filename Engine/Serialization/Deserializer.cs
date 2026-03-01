@@ -221,6 +221,12 @@ namespace Engine.Serialization
             }
             else if (collectionData.CollectionType == CollectionType.List)
             {
+                if(collectionPropertyType.GetGenericArguments().Length == 0)
+                {
+                    Debug.Error("Type changed from List<T> to array or another non generic collection type and this change didn't got serialized properly.");
+                    return;
+                }
+
                 if (!collectionPropertyType.GetGenericArguments()[0].IsAssignableTo(typeof(EObject)))
                 {
                     Debug.Warn($"Can't deserialize List property '{target.GetType().Name}.{property.Name}', elements are not a EObject");
@@ -236,7 +242,13 @@ namespace Engine.Serialization
             }
             else if (collectionData.CollectionType == CollectionType.Array)
             {
-                if (!collectionPropertyType.GetGenericArguments()[0].IsAssignableTo(typeof(EObject)))
+                if (collectionPropertyType.GetGenericArguments().Length > 0)
+                {
+                    Debug.Error("Type changed from array to List<T> or another generic collection type and this change didn't got serialized properly.");
+                    return;
+                }
+
+                if (!collectionPropertyType.GetElementType().IsAssignableTo(typeof(EObject)))
                 {
                     Debug.Warn($"Can't deserialize Array property '{target.GetType().Name}.{property.Name}', elements are not a EObject");
                     return;

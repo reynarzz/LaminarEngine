@@ -14,7 +14,7 @@ namespace Engine.Data
             _projectData = projectData;
         }
 
-        public ProjectSettings GetProjectData()
+        public ProjectSettings GetProjectSettings()
         {
             return _projectData;
         }

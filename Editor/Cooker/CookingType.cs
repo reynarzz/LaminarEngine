@@ -8,7 +8,7 @@ namespace Editor.Cooker
 {
     public enum CookingType
     {
-        ReleaseMode,
+        ShipMode,
         DevMode
     }
 }

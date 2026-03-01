@@ -9,15 +9,16 @@ namespace Engine
 {
     internal class SceneAsset : AssetResourceBase
     {
-        internal List<ActorIR> Actors { get; private set; } = new();
+        internal SceneIR SceneIR { get; private set; } = new();
 
-        internal SceneAsset(string path, Guid guid) : base(path, guid)
+        internal SceneAsset(SceneIR sceneIR, string path, Guid guid) : base(path, guid)
         {
+            SceneIR = sceneIR;
         }
 
         internal override void UpdateResource(object data, string path, Guid guid)
         {
-            throw new NotImplementedException();
+            Debug.Error($"Scene update resource is not implemented, triggered by: {path}.");
         }
     }
 }

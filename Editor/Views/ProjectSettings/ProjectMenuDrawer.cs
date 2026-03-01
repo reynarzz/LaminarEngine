@@ -15,7 +15,7 @@ namespace Editor.Views
 
         public void OnDraw()
         {
-            OnDraw(EngineServices.GetService<EngineDataService>().GetProjectData());
+            OnDraw(EngineServices.GetService<EngineDataService>().GetProjectSettings());
         }
 
         protected abstract void OnDraw(ProjectSettings settings);

@@ -94,25 +94,25 @@ namespace Editor.Cooker
                 { AssetType.Tilemap, new TilemapAssetProcessor() }
             };
 
-            var releaseModeAssetsProcessors = new Dictionary<AssetType, IAssetProcessor>()
+            var shipModeAssetsProcessors = new Dictionary<AssetType, IAssetProcessor>()
             {
                 { AssetType.Texture, new TextureAssetProcessor() },
                 { AssetType.Audio, new AudioAssetProcessor() },
                 { AssetType.Text, new TextAssetProcessor() },
                 { AssetType.Shader, new ShaderAssetProcessorOld() },
-                { AssetType.ShaderV2, new ShaderProcessorRelease() },
+                { AssetType.ShaderV2, new ShaderProcessorShip() },
                 { AssetType.Font, new RawBytesAssetProcessor() },
                 { AssetType.AnimationClip, new RawBytesAssetProcessor() }, // TODO: binary serialization
                 { AssetType.AnimationController, new RawBytesAssetProcessor() }, // TODO: binary serialization
-                { AssetType.Material, new MaterialProcessorRelease() },
-                { AssetType.Scene, new SceneAssetProcessorRelease() },
+                { AssetType.Material, new MaterialProcessorShip() },
+                { AssetType.Scene, new SceneAssetProcessorShip() },
                 { AssetType.Tilemap, new TilemapAssetProcessor() }
             };
 
             _assetCookers = new Dictionary<CookingType, AssetsCookerBase>()
             {
                 {  CookingType.DevMode, new DevModeFilesCooker(_databaseInfo, devModeAssetsProcessors) },
-                {  CookingType.ReleaseMode, new ReleaseModeFilesCooker(releaseModeAssetsProcessors) },
+                {  CookingType.ShipMode, new ShipModeFilesCooker(shipModeAssetsProcessors) },
             };
         }
 
@@ -135,7 +135,7 @@ namespace Editor.Cooker
                                      .OrderBy(x => x.order)
                                      .Select(x => (x.path, x.assetType));
 
-            if (options.Type == CookingType.ReleaseMode && options.MatchingFiles != null && options.MatchingFiles.Length > 0)
+            if (options.Type == CookingType.ShipMode && options.MatchingFiles != null && options.MatchingFiles.Length > 0)
             {
                 // This clears all the types that will be collected by the typeRegistry.
                 TypeRegistryClassGenerator.ClearTypesLibrary();
@@ -161,7 +161,7 @@ namespace Editor.Cooker
             var result = await _assetCookers[options.Type].CookAssetsAsync(options.FileOptions, options.Platform,
                                              collectedFiles, options.ExportFolderPath);
 
-            if (result && options.Type == CookingType.ReleaseMode)
+            if (result && options.Type == CookingType.ShipMode)
             {
                 // This generates the whole type registry after all the types where collected from the assets.
                 TypeGenerationStage.GenerateTypeRegistry();

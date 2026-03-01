@@ -12,7 +12,7 @@ namespace Editor.Build
     internal class WindowsAssetsBuildStage : AssetsBuildStage
     {
         public WindowsAssetsBuildStage() : base(CookingPlatform.Windows,
-                                                CookingType.ReleaseMode,
+                                                CookingType.ShipMode,
                                                 AssetsBuildType.OnlyMatchingFiles)
         {
         }

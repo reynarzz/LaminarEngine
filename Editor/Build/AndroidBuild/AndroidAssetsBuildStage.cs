@@ -12,7 +12,7 @@ namespace Editor.Build
     internal class AndroidAssetsBuildStage : AssetsBuildStage
     {
         public AndroidAssetsBuildStage() : base(CookingPlatform.Android,
-                                                CookingType.ReleaseMode,
+                                                CookingType.ShipMode,
                                                 AssetsBuildType.OnlyMatchingFiles)
         {
         }

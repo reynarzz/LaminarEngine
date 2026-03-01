@@ -126,6 +126,7 @@ namespace Game
         {
             if (LayerMask.AreValid(collider.Actor.Layer, GameConsts.CHARACTER_MASK))
             {
+                Debug.Log("Child of platform: " + collider.Name);
                 collider.Actor.Transform.Parent = Transform;
             }
         }

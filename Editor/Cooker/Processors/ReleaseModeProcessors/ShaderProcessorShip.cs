@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Editor.Cooker
 {
-    internal class ShaderProcessorRelease : ShaderAssetProcessor
+    internal class ShaderProcessorShip : ShaderAssetProcessor
     {
         private static ShaderData _shaderDataTemp = new ShaderData();
 

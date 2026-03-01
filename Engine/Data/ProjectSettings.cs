@@ -11,8 +11,9 @@ namespace Engine.Data
     {
         [SerializedField] public vec3 Gravity { get; set; } = new vec3(0, -9.8f, 0);
         [SerializedField] internal float FixedTimeStep { get; set; } = 0.02f;
-        [SerializedField, HideFromInspector] public bool[,] CollisionMatrix { get; set; }
+        [SerializedField, HideFromInspector] public bool[] CollisionMatrix { get; set; }
     }
+
     internal class LayersSettings
     {
         [SerializedField] internal string[] Layers { get; set; } = ["Default", "Background", "Foreground", "Player", "UI"];
@@ -20,9 +21,9 @@ namespace Engine.Data
 
     internal class SceneSettings
     {
-        [SerializedField] public SceneAsset LaunchScene { get; set; }
-        [SerializedField] internal List<SceneAsset> ScenesDebug { get; set; } = new();
-        [SerializedField] internal List<SceneAsset> ScenesRelease { get; set; } = new();
+        [SerializedField] public Guid LaunchScene { get; set; }
+        [SerializedField] internal Guid[] ScenesDebug { get; set; } = [];
+        [SerializedField] internal Guid[] ScenesRelease { get; set; } = [];
     }
 
     internal class ProjectSettings : IEngineService

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Editor.Cooker
 {
-    internal class MaterialProcessorRelease : AssetBinaryProcessorReleaseBase<MaterialIR>
+    internal class MaterialProcessorShip : AssetBinaryProcessorReleaseBase<MaterialIR>
     {
         protected override void WriteBinary(BinaryWriter writer, MaterialIR asset)
         {

@@ -7,15 +7,43 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Editor.Utils;
+using Engine.Data;
 
 namespace Editor.Cooker
 {
-    internal class ReleaseModeFilesCooker : AssetsCookerBase
+    internal class ShipModeFilesCooker : AssetsCookerBase
     {
         /* .gfs file format
          
             - Magic (char[4])
+            - Version (u32)
+            - Creation Date (s64)
             
+            EngineData
+            [
+                ProjectSettings
+                [
+                    Layers
+                    [
+                        - Layers count (s32)
+                        - Layers (string[])  
+                    ]
+                    ScenesSettings
+                    [
+                        - LaunchScene (guid)
+                        - Scenes count (s32)
+                        - Scenes guid (guid[])
+                    ],
+                    PhysicsSettings
+                    [
+                        - Gravity (vec2)
+                        - FixedTimeStep (f32)
+                        - CollisionMatrix count (s32)
+                        - Collision matrix (bool[])
+                    ]  
+                ]
+            ]
+
             Data info    
             [
                 - total assets (int32)
@@ -31,8 +59,7 @@ namespace Editor.Cooker
             
             Assets block (n assets)
             [
-                - asset guid size (int32)
-                - asset guid (byte[])
+                - asset guid (guid)
                 - asset path size (int32)
                 - asset path (byte[])
                 - asset type (int32)
@@ -51,7 +78,9 @@ namespace Editor.Cooker
         private const long fieldIfOffset = assetBlockLocSize + assetDataLocSize + metaLocSize;
 
         private const int TEMP_BUFFER_SIZE = 81920;
-        public ReleaseModeFilesCooker(Dictionary<AssetType, IAssetProcessor> processor) : base(processor)
+        private const uint VERSION = 1;
+
+        public ShipModeFilesCooker(Dictionary<AssetType, IAssetProcessor> processor) : base(processor)
         {
         }
 
@@ -69,6 +98,15 @@ namespace Editor.Cooker
 
                 // Writes header
                 bufWritter.Write(Encoding.ASCII.GetBytes(AssetUtils.GFSFileFormat.HEADER));
+
+                // Write version
+                bufWritter.Write(VERSION);
+
+                // Creation date
+                bufWritter.Write(DateTime.Now.ToBinary());
+
+                // Write engine data
+                WriteEngineData(bufWritter);
 
                 // Writes total asset files
                 bufWritter.Write(files.Length);
@@ -208,6 +246,58 @@ namespace Editor.Cooker
 
             return true;
             // File.WriteAllText(Path.Combine(outFolder, Paths.ASSET_BUILD_DATA_FILE_META_NAME), JsonConvert.SerializeObject(new GameDataMetaFile() {  CreationDateBinary = creationDate }));
+        }
+
+        private void WriteEngineData(BinaryWriter writer)
+        {
+            var data = EngineServices.GetService<EngineDataService>();
+            var projectSettings = data.GetProjectSettings();
+
+            WriteProjectSettings(writer, projectSettings);
+        }
+
+        private void WriteProjectSettings(BinaryWriter writer, ProjectSettings settings)
+        {
+            // ----Layers
+
+            // Write layers count
+            writer.Write(settings.LayerSettings.Layers.Length);
+            foreach (var layer in settings.LayerSettings.Layers)
+            {
+                // Write layers
+                EditorFileUtils.WriteString(writer, layer);
+            }
+
+            // ----Scenes
+            EditorFileUtils.WriteGuidNoAlloc(writer, settings.SceneSettings.LaunchScene);
+
+            // Scenes count
+            writer.Write(settings.SceneSettings.ScenesRelease.Length);
+
+            foreach (var sceneId in settings.SceneSettings.ScenesRelease)
+            {
+                // Write scenes id
+                EditorFileUtils.WriteGuidNoAlloc(writer, sceneId);
+            }
+
+            // ----Physics
+
+            // Write gravity
+            EditorFileUtils.WriteStruct(writer, settings.Physics.Gravity);
+
+            // Write fixed time step
+            writer.Write(settings.Physics.FixedTimeStep);
+
+            // Write collision matrix count
+            var collisionMatrixCount = settings.Physics.CollisionMatrix.Length;
+            writer.Write((int)collisionMatrixCount);
+
+            // Write collision matrix
+            for (var i = 0; i < collisionMatrixCount; i++)
+            {
+                // Write collision values
+                EditorFileUtils.WriteBool(writer, settings.Physics.CollisionMatrix[collisionMatrixCount]);
+            }
         }
     }
 }
