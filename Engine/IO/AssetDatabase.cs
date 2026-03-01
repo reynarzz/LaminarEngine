@@ -167,6 +167,10 @@ namespace Engine.IO
 
                 return asset;
             }
+            else
+            {
+                Debug.Error($"Couldn't get asset: {guid}");
+            }
             return null;
         }
 
@@ -219,7 +223,7 @@ namespace Engine.IO
                 reader.Dispose();
                 return asset;
             }
-            
+
             reader.Dispose();
 
             Debug.Error($"Builder for asset type '{info.Type}' was not found");

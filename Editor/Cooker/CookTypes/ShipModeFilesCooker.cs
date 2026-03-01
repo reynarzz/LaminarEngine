@@ -289,14 +289,21 @@ namespace Editor.Cooker
             writer.Write(settings.Physics.FixedTimeStep);
 
             // Write collision matrix count
-            var collisionMatrixCount = settings.Physics.CollisionMatrix.Length;
-            writer.Write((int)collisionMatrixCount);
-
-            // Write collision matrix
-            for (var i = 0; i < collisionMatrixCount; i++)
+            if (settings.Physics.CollisionMatrix != null && settings.Physics.CollisionMatrix.Length > 0)
             {
-                // Write collision values
-                EditorFileUtils.WriteBool(writer, settings.Physics.CollisionMatrix[collisionMatrixCount]);
+                var collisionMatrixCount = settings.Physics.CollisionMatrix.Length;
+                writer.Write((int)collisionMatrixCount);
+
+                // Write collision matrix
+                for (var i = 0; i < collisionMatrixCount; i++)
+                {
+                    // Write collision values
+                    EditorFileUtils.WriteBool(writer, settings.Physics.CollisionMatrix[i]);
+                }
+            }
+            else
+            {
+                writer.Write((int)0);
             }
         }
     }

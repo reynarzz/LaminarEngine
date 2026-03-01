@@ -62,7 +62,7 @@ namespace Engine.IO
             }
 
             // File version
-            var version = _reader.ReadUInt64();
+            var version = _reader.ReadUInt32();
 
             // Creation date
             var creationData = DateTime.FromBinary(_reader.ReadInt64());

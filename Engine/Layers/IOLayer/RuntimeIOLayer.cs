@@ -31,8 +31,14 @@ namespace Engine.Layers
                 //{ AssetType.AnimationController, new FontAssetBuilder() },
                 { AssetType.Tilemap, new TilemapAssetBuilder() },
             };
-
-            InitializeIO(disk, assetbuilder);
+            try
+            {
+                InitializeIO(disk, assetbuilder);
+            }
+            catch (Exception e)
+            {
+                Debug.Error(e);   
+            }
 
             return Task.CompletedTask;
         }
