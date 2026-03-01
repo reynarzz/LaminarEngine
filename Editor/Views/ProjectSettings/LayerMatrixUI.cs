@@ -55,18 +55,16 @@ namespace Editor.Views
                 return;
             }
 
-            var flags = ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.HighlightHoveredColumn;
+            var flags = ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.BordersInner;
             ImGui.PushStyleVar(ImGuiStyleVar.FramePadding, new Vector2(1, 1));
             ImGui.PushStyleVar(ImGuiStyleVar.CellPadding, new Vector2(2, 2));
-            ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2());
-            ImGui.PushStyleVar(ImGuiStyleVar.ItemInnerSpacing, new Vector2(0, 0));
             if (ImGui.BeginTable("LayerCollisionMatrix", count + 1, flags))
             {
                 DrawHeaderRow(count);
                 DrawRows(count);
                 ImGui.EndTable();
             }
-            ImGui.PopStyleVar(4);
+            ImGui.PopStyleVar(2);
 
         }
 
@@ -167,7 +165,7 @@ namespace Editor.Views
 
             var textSize = ImGui.CalcTextSize(text);
 
-            var center = new Vector2(cellMin.X + columnWidth - (textSize.Y * 0.5f),
+            var center = new Vector2(cellMin.X + columnWidth - (textSize.Y * 0.5f) + 4,
                                      cellMin.Y + headerHeight - textSize.X);
 
             drawList.PushClipRectFullScreen();
