@@ -149,14 +149,15 @@ namespace Engine.IO
 
             // ----Scenes:
             // Read launch scene
-            settings.SceneSettings.LaunchScene = EngineFileUtils.ReadGuidNoAlloc(reader);
+            settings.SceneSettings.LaunchScene = EngineFileUtils.ReadGuidNoAlloc(reader).ToString();
 
             // Read scenes count
             var scenesCount = reader.ReadInt32();
-            settings.SceneSettings.ScenesRelease = new Guid[scenesCount];
+            settings.SceneSettings.Scenes = new List<string>();
+            CollectionsMarshal.SetCount(settings.SceneSettings.Scenes, scenesCount);
             for (int i = 0; i < scenesCount; i++)
             {
-                settings.SceneSettings.ScenesRelease[i] = EngineFileUtils.ReadGuidNoAlloc(reader);
+                settings.SceneSettings.Scenes[i] = EngineFileUtils.ReadGuidNoAlloc(reader).ToString();
             }
 
             // ----Physics:

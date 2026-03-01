@@ -19,11 +19,11 @@ namespace Engine.Data
         [SerializedField] internal string[] Layers { get; set; } = ["Default", "Background", "Foreground", "Player", "UI"];
     }
 
+    // TODO: I cannot serialize Guids directly, so for now I'm using strings.
     internal class SceneSettings
     {
-        [SerializedField] public Guid LaunchScene { get; set; }
-        [SerializedField] internal Guid[] ScenesDebug { get; set; } = [];
-        [SerializedField] internal Guid[] ScenesRelease { get; set; } = [];
+        [SerializedField] public string LaunchScene { get; set; } = Guid.Empty.ToString();
+        [SerializedField] internal List<string> Scenes { get; set; } = [];
     }
 
     internal class ProjectSettings : IEngineService

@@ -9,6 +9,7 @@ using Engine.Utils;
 using System.Collections;
 using Engine;
 using Engine.Layers;
+using System.ComponentModel.Design;
 
 namespace Editor.Utils
 {
@@ -180,11 +181,11 @@ namespace Editor.Utils
             {
                 _openColorPicker = true;
             }
-            
+
             var drawList = ImGui.GetWindowDrawList();
 
-            var barSizeOffset = new Vector2(1,0);
-            var barPositionOffset = new Vector2(0,-3);
+            var barSizeOffset = new Vector2(1, 0);
+            var barPositionOffset = new Vector2(0, -3);
 
             var itemMin = ImGui.GetItemRectMin() + barSizeOffset + barPositionOffset;
             var itemMax = ImGui.GetItemRectMax() - barSizeOffset + barPositionOffset;
@@ -197,7 +198,7 @@ namespace Editor.Utils
             drawList.AddRectFilled(barMin, barMax, ImGui.ColorConvertFloat4ToU32(new Vector4(1f, 1f, 1f, 1f)));
             if (_openColorPicker)
             {
-                
+
                 Vector2 popupPos = new Vector2(itemMin.X - 20, itemMin.Y + 26);
                 ImGui.SetNextWindowViewport(ImGui.GetWindowViewport().ID);
                 ImGui.SetNextWindowPos(popupPos, ImGuiCond.Appearing);
@@ -735,8 +736,38 @@ namespace Editor.Utils
             return false;
         }
 
+        public delegate bool ListFieldDrawDelegate(int index, float width, object element);
+        public static bool DrawListField<T>(string name, List<T> listObj, bool itemAsTree, ListFieldDrawDelegate drawCallback)
+        {
+            void OnAdd(IList list, int totalLength)
+            {
+                while (list.Count < totalLength)
+                {
+                    list.Add(ReflectionUtils.GetDefaultValueInstance(typeof(T)));
+                }
+            }
+
+            void OnRemove(IList list, int itemIndex)
+            {
+                if (list.Count > 0)
+                {
+                    list.RemoveAt(itemIndex);
+                }
+            }
+
+            void OnRemoveCount(IList list, int totalLength)
+            {
+                for (int i = list.Count - 1; i >= totalLength; --i)
+                {
+                    list.RemoveAt(i);
+                }
+            }
+
+            return DrawListField(name, listObj, itemAsTree, OnAdd, OnRemove, OnRemoveCount, drawCallback);
+        }
+
         public static bool DrawListField(string name, IList list, bool itemAsTree, Action<IList, int> onAddCallback, Action<IList, int> onRemoveCallback,
-                                         Action<IList, int> removeCount, Func<int, float, object, bool> drawCallback)
+                                         Action<IList, int> removeCount, ListFieldDrawDelegate drawCallback)
         {
 
             ImGui.SameLine();
@@ -746,7 +777,7 @@ namespace Editor.Utils
             var size = list.Count;
 
             ImGui.BeginDisabled(size - 1 < 0);
-            if (ImGui.Button("-", new Vector2(22, 22)))
+            if (ImGui.Button($"-##Remove_{name}", new Vector2(22, 22)))
             {
                 changed = true;
 
@@ -757,7 +788,7 @@ namespace Editor.Utils
             }
             ImGui.EndDisabled();
             ImGui.SameLine();
-            if (ImGui.Button("+", new Vector2(22, 22)))
+            if (ImGui.Button($"+##Add_{name}", new Vector2(22, 22)))
             {
                 changed = true;
                 onAddCallback(list, size + 1);
@@ -1052,7 +1083,7 @@ namespace Editor.Utils
                 {
                     imagePtr = EditorTextureDatabase.GetIconImGui(eObject.GetType());
                 }
-               
+
                 ImGui.Image(imagePtr, new Vector2(16, 16), new Vector2(0, 1), new Vector2(1, 0));
                 ImGui.SetCursorPos(preRectCursor + new Vector2(16, 0));
             }

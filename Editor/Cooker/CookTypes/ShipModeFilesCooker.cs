@@ -269,15 +269,15 @@ namespace Editor.Cooker
             }
 
             // ----Scenes
-            EditorFileUtils.WriteGuidNoAlloc(writer, settings.SceneSettings.LaunchScene);
+            EditorFileUtils.WriteGuidNoAlloc(writer, Guid.Parse(settings.SceneSettings.LaunchScene));
 
             // Scenes count
-            writer.Write(settings.SceneSettings.ScenesRelease.Length);
+            writer.Write(settings.SceneSettings.Scenes.Count);
 
-            foreach (var sceneId in settings.SceneSettings.ScenesRelease)
+            foreach (var sceneId in settings.SceneSettings.Scenes)
             {
                 // Write scenes id
-                EditorFileUtils.WriteGuidNoAlloc(writer, sceneId);
+                EditorFileUtils.WriteGuidNoAlloc(writer, Guid.Parse(sceneId));
             }
 
             // ----Physics
