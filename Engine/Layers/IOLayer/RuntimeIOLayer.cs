@@ -30,7 +30,9 @@ namespace Engine.Layers
                 { AssetType.Material, new MaterialAssetBuilder() },
                 //{ AssetType.AnimationController, new FontAssetBuilder() },
                 { AssetType.Tilemap, new TilemapAssetBuilder() },
+                { AssetType.Scene, new SceneAssetBuilder() },
             };
+
             try
             {
                 InitializeIO(disk, assetbuilder);

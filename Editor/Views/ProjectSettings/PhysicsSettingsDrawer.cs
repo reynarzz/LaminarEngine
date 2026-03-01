@@ -21,13 +21,13 @@ namespace Editor.Views
             PropertiesGUIDrawEditor.DrawObject("Physics_Settings", settings.Physics);
 
             var length = settings.LayerSettings.Layers.Length;
-            
-            //_gridUI.Matrix = settings.Physics.CollisionMatrix ?? new bool[length * (length - 1) / 2];
-            //_gridUI.Layers = settings.LayerSettings.Layers;
+
+            _gridUI.Matrix = settings.Physics.CollisionMatrix ?? new bool[length * (length - 1) / 2];
+            _gridUI.Layers = settings.LayerSettings.Layers;
 
             ImGui.Text("Collision Matrix");
 
-            if(ImGui.Button("Enable all"))
+            if (ImGui.Button("Enable all"))
             {
                 _gridUI.SetAll(true);
             }
@@ -36,8 +36,8 @@ namespace Editor.Views
             {
                 _gridUI.SetAll(false);
             }
-            //_gridUI.Draw();
-           // settings.Physics.CollisionMatrix = _gridUI.Matrix;
+            _gridUI.Draw();
+            settings.Physics.CollisionMatrix = _gridUI.Matrix;
         }
     }
 }

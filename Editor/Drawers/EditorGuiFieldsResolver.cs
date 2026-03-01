@@ -19,7 +19,7 @@ namespace Editor.Utils
         private static bool _openPopup;
 
         private static object _selectedValue;
-        private static Func<object, bool> _selectedSetter;
+        private static Func<EObject, bool> _selectedSetter;
         public delegate (object valueOut, bool result) onDrawDictionaryArgCallback(Type argKey, string argName, object argValue);
 
         public EditorGuiFieldsResolver()
@@ -1001,7 +1001,7 @@ namespace Editor.Utils
         }
 
 
-        public static void DrawEObjectSlot(IObject eObject, Type valueType, Func<object, bool> setValue)
+        public static void DrawEObjectSlot(IObject eObject, Type valueType, Func<EObject, bool> setValue)
         {
             ImGui.SameLine();
             ImGui.SetCursorPosX(MathF.Max(XPosOffset, ImGui.GetCursorPosX()) + 5);
@@ -1121,7 +1121,7 @@ namespace Editor.Utils
         }
         static int count = 0;
 
-        private static void PickObjectPopup(Type valueType, Func<object, bool> setValue, int columnCount = 4)
+        private static void PickObjectPopup(Type valueType, Func<EObject, bool> setValue, int columnCount = 4)
         {
             if (_openPopup)
             {
@@ -1348,7 +1348,7 @@ namespace Editor.Utils
         }
 
 
-        private static void DrawSceneObjectPropertyPicker(Transform root, Type targetType, Func<object, bool> setValue)
+        private static void DrawSceneObjectPropertyPicker(Transform root, Type targetType, Func<EObject, bool> setValue)
         {
             if (typeof(Actor).IsAssignableFrom(targetType))
             {

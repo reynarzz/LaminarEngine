@@ -21,16 +21,28 @@ namespace Editor.Views
             }
         }
 
-        public bool[,] Matrix { get; set; }
+        public bool[] Matrix { get; set; }
+
+        private int GetIndex(int i, int j, int count)
+        {
+            if (i > j)
+            {
+                int temp = i;
+                i = j;
+                j = temp;
+            }
+
+            return i * count - (i * (i - 1)) / 2 + (j - i);
+        }
 
         public void SetAll(bool value)
         {
-            for (int i = 0; i < _layerNames.Length; i++)
+            if (Matrix == null)
+                return;
+
+            for (int i = 0; i < Matrix.Length; i++)
             {
-                for (int j = 0; j < _layerNames.Length; j++)
-                {
-                    Matrix[i, j] = value;
-                }
+                Matrix[i] = value;
             }
         }
 
@@ -97,10 +109,8 @@ namespace Editor.Views
                 if (string.IsNullOrEmpty(rowName))
                     continue;
 
-
                 ImGui.TableNextRow();
 
-                // Right-align row text in the first column with margin
                 ImGui.TableSetColumnIndex(0);
                 var textSize = ImGui.CalcTextSize(rowName);
                 ImGui.SetCursorPosX(ImGui.GetCursorPosX() + columnWidth - textSize.X + maxTextSize);
@@ -119,23 +129,18 @@ namespace Editor.Views
 
                     ImGui.PushID(row * 1000 + col);
 
+                    int index = GetIndex(row, col, count);
+
                     if (col > row)
                     {
                         ImGui.Text("");
                     }
-                    else if (col == row)
-                    {
-                        bool value = Matrix[row, col];
-                        if (ImGui.Checkbox("##cell", ref value))
-                            Matrix[row, col] = value;
-                    }
                     else
                     {
-                        bool value = Matrix[row, col];
+                        bool value = Matrix[index];
                         if (ImGui.Checkbox("##cell", ref value))
                         {
-                            Matrix[row, col] = value;
-                            Matrix[col, row] = value;
+                            Matrix[index] = value;
                         }
                     }
 
@@ -147,7 +152,7 @@ namespace Editor.Views
         private void DrawRotatedText(string text, float angleRad, float headerHeight)
         {
             ImDrawListPtr drawList = ImGui.GetWindowDrawList();
-         
+
             Vector2 cellMin = ImGui.GetCursorScreenPos();
             float columnWidth = ImGui.GetColumnWidth();
 
@@ -164,6 +169,7 @@ namespace Editor.Views
 
             ImGui.Dummy(new Vector2(columnWidth, headerHeight));
         }
+
         public static unsafe void AddTextRotated(ImDrawListPtr drawList, ImFontPtr font, float fontSize, Vector2 pos, uint col, string text, float angle)
         {
             int vtxStart = drawList.VtxBuffer.Size;
