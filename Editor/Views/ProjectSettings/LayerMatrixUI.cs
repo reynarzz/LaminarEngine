@@ -46,13 +46,13 @@ namespace Editor.Views
             }
         }
 
-        public void Draw()
+        public bool Draw()
         {
             int count = _layerNames.Length;
-
+            bool changed = false;
             if (count <= 0)
             {
-                return;
+                return changed;
             }
 
             var flags = ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.BordersInner;
@@ -61,11 +61,11 @@ namespace Editor.Views
             if (ImGui.BeginTable("LayerCollisionMatrix", count + 1, flags))
             {
                 DrawHeaderRow(count);
-                DrawRows(count);
+                changed = DrawRows(count);
                 ImGui.EndTable();
             }
             ImGui.PopStyleVar(2);
-
+            return changed;
         }
 
         private void DrawHeaderRow(int count)
@@ -102,10 +102,10 @@ namespace Editor.Views
             return max;
         }
 
-        private void DrawRows(int count)
+        private bool DrawRows(int count)
 
         {
-         
+            bool changed = false;
             float columnWidth = ImGui.GetColumnWidth();
             var maxTextSize = GetMaxTextSize();
          
@@ -146,6 +146,7 @@ namespace Editor.Views
                         bool value = Matrix[index];
                         if (ImGui.Checkbox("##cell", ref value))
                         {
+                            changed = true;
                             Matrix[index] = value;
                         }
                     }
@@ -153,7 +154,7 @@ namespace Editor.Views
                     ImGui.PopID();
                 }
             }
-
+            return changed;
         }
 
         private void DrawRotatedText(string text, float angleRad, float headerHeight)

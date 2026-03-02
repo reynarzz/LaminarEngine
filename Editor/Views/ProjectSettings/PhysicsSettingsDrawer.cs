@@ -1,4 +1,5 @@
-﻿using Engine.Data;
+﻿using Engine;
+using Engine.Data;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -26,16 +27,21 @@ namespace Editor.Views
             _gridUI.Layers = settings.LayerSettings.Layers;
 
             ImGui.Text("Collision Matrix");
-            _gridUI.Draw();
+            if (_gridUI.Draw())
+            {
+                LayerMask.UpdateLayers(_gridUI.Matrix, settings.LayerSettings.Layers);
+            }
 
             if (ImGui.Button("Enable all"))
             {
                 _gridUI.SetAll(true);
+                LayerMask.UpdateLayers(_gridUI.Matrix, settings.LayerSettings.Layers);
             }
             ImGui.SameLine();
             if (ImGui.Button("Disable all"))
             {
                 _gridUI.SetAll(false);
+                LayerMask.UpdateLayers(_gridUI.Matrix, settings.LayerSettings.Layers);
             }
             settings.Physics.CollisionMatrix = _gridUI.Matrix;
         }

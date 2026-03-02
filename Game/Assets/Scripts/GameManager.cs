@@ -81,10 +81,10 @@ namespace Game
 
             var names = GetConstStringValues(typeof(GameConsts));
 
-            for (int i = 0; i < names.Length; i++)
-            {
-                LayerMask.AssignName(i, names[i]);
-            }
+            //for (int i = 0; i < names.Length; i++)
+            //{
+            //    LayerMask.AssignName(i, names[i]);
+            //}
 
             LayerMask.TurnOff(GameConsts.PLAYER, GameConsts.PLAYER);
             LayerMask.TurnOff(GameConsts.PLAYER, GameConsts.CHARACTER_IGNORE);

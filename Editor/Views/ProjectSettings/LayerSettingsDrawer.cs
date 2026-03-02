@@ -12,10 +12,12 @@ namespace Editor.Views
 {
     internal class LayerSettingsDrawer : ProjectMenuDrawer
     {
-
         protected override void OnDraw(ProjectSettings settings)
         {
-            PropertiesGUIDrawEditor.DrawObject("Layer_Settings", settings.LayerSettings);
+            if(PropertiesGUIDrawEditor.DrawObject("Layer_Settings", settings.LayerSettings))
+            {
+                LayerMask.UpdateLayers(settings.Physics.CollisionMatrix, settings.LayerSettings.Layers);
+            }
         }
     }
 }

@@ -600,7 +600,7 @@ namespace Engine.Utils
                 return type.IsValueType && (type.IsPrimitive || type.IsEnum ||
                        type.Namespace.Equals(typeof(vec2).Namespace) ||
                        type == typeof(Color) || type == typeof(Color32)) ||
-                       type == typeof(string);
+                       type == typeof(string) || type == typeof(Guid);
             }
             return false;
         }

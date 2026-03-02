@@ -14,23 +14,76 @@ namespace Engine
         private const int ARRAY_SIZE = sizeof(ulong) * 8;
         public const ulong All = ulong.MaxValue;
 
-        static LayerMask()
+        internal static void UpdateLayers(bool[] matrix, string[] names)
         {
-            MaskBits = new ulong[ARRAY_SIZE];
-            Names = new Dictionary<string, int>(ARRAY_SIZE, StringComparer.OrdinalIgnoreCase);
-
-            for (int i = 0; i < MaskBits.Length; i++)
+            if(names == null || matrix == null)
             {
-                MaskBits[i] = ulong.MaxValue;
+                Debug.Error("Can't set layers, matrix or names are null");
+                return;
+            }
+            if(names.Length == 0)
+            {
+                Debug.Error("No layer names are valid");
+                return;
+            }
+            names = names.Where(x => !string.IsNullOrEmpty(x)).ToArray();
+            int count = names.Length;
+            MaskBits = new ulong[count];
+            Names = new Dictionary<string, int>(count, StringComparer.OrdinalIgnoreCase);
+
+            if (names.Length > ARRAY_SIZE)
+            {
+                Debug.EngineError($"Layers count cannot be bigger than: {ARRAY_SIZE}");
+                return;
+            }
+           
+            for (int i = 0; i < count; i++)
+            {
+                MaskBits[i] = 0;
+                AssignName(i, names[i]);
+            }
+
+            int index = 0;
+
+            for (int i = 0; i < count; i++)
+            {
+                for (int j = i; j < count; j++)
+                {
+                    bool enabled = matrix[index++];
+
+                    if (enabled)
+                    {
+                        MaskBits[i] |= LayerToBits(j);
+                        MaskBits[j] |= LayerToBits(i);
+                    }
+                }
             }
         }
+        internal static bool[] BuildMatrixFromMasks()
+        {
+            int count = MaskBits.Length;
 
-        public static ulong GetMaskBits(int layer)
+            int size = count * (count + 1) / 2;
+            var matrix = new bool[size];
+
+            int index = 0;
+
+            for (int i = 0; i < count; i++)
+            {
+                for (int j = i; j < count; j++)
+                {
+                    matrix[index++] = (MaskBits[i] & LayerToBits(j)) != 0;
+                }
+            }
+
+            return matrix;
+        }
+        internal static ulong GetMaskBits(int layer)
         {
             return MaskBits[layer];
         }
 
-        public static int LayerToIndex(ulong layer)
+        internal static int LayerToIndex(ulong layer)
         {
             return BitOperations.TrailingZeroCount(layer);
         }
@@ -45,7 +98,7 @@ namespace Engine
             return (LayerToBits(layer) & mask) != 0;
         }
 
-        public static void TurnOff(int layerA, int layerB)
+        internal static void TurnOff(int layerA, int layerB)
         {
             ModifyLayers(layerA, layerB, (mask, bit) => mask & ~bit);
         }
@@ -55,7 +108,7 @@ namespace Engine
             TurnOffAll(NameToLayer(name));
         }
 
-        public static void TurnOffAll(int layer)
+        internal static void TurnOffAll(int layer)
         {
             var bit = LayerToBits(layer);
 
@@ -65,12 +118,12 @@ namespace Engine
             }
         }
 
-        public static void TurnOn(int layerA, int layerB)
+        internal static void TurnOn(int layerA, int layerB)
         {
             ModifyLayers(layerA, layerB, (mask, bit) => mask | bit);
         }
 
-        public static void TurnOnAll(int layer)
+        internal static void TurnOnAll(int layer)
         {
             var bit = LayerToBits(layer);
 
@@ -101,12 +154,12 @@ namespace Engine
             MaskBits[layerB] = op(MaskBits[layerB], LayerToBits(layerA));
         }
 
-        public static bool AreEnabled(int layerA, int layerB)
+        internal static bool AreEnabled(int layerA, int layerB)
         {
             return (MaskBits[layerA] & LayerToBits(layerB)) != 0; // Checking just one since both MaskBits are in sync.
         }
 
-        public static void AssignName(int layer, string name)
+        private static void AssignName(int layer, string name)
         {
             if (Names.ContainsKey(name))
             {
@@ -157,7 +210,7 @@ namespace Engine
             return validNames;
         }
 
-        public static string LayerToName(int layer)
+        internal static string LayerToName(int layer)
         {
             foreach (var kvp in Names)
             {
@@ -188,6 +241,8 @@ namespace Engine
 
             return 0;
         }
+
+
 
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Engine.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,9 @@ namespace Engine.Layers
         public override Task InitializeAsync()
         {
             SceneManager.Initialize();
+
+            var data = EngineServices.GetService<EngineDataService>().GetProjectSettings();
+            LayerMask.UpdateLayers(data.Physics.CollisionMatrix, data.LayerSettings.Layers);
 
             return Task.CompletedTask;
         }

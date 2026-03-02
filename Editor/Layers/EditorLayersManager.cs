@@ -7,9 +7,6 @@ using Engine.Layers;
 using Engine.Serialization;
 using Engine.Utils;
 using Editor.Cooker;
-using Engine;
-using System.Reflection;
-using Editor.Test;
 
 namespace Editor
 {
@@ -32,6 +29,7 @@ namespace Editor
             var renderingLayer = new RenderingLayer();
             var editorLayer = new EditorIOLayer();
             var hotReloadLayer = new HotReloadLayer();
+            var sceneLayer = new SceneLayer();
 
             Layers =
             [
@@ -39,7 +37,7 @@ namespace Editor
                 inputLayer,
                 null, // App Layer
                 mainThreadDispLayer,
-                null, // Scene layer
+                sceneLayer, // Scene layer
                 audioLayer,
                 null, // Physics layer.
                 editorLayer,
@@ -195,10 +193,10 @@ namespace Editor
                 //}
                 // Test_MaterialBinary.RunTest_Windows();
                 Debug.Log("ctrl w");
-                _tilemapAssetTest= Assets.GetTilemap("Tilemap/WorldTilemap.ldtk");
+                _tilemapAssetTest = Assets.GetTilemap("Tilemap/WorldTilemap.ldtk");
                 Selector.Selected = _tilemapAssetTest;
             }
-            
+
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.R))
             {
                 //var clip = Assets.Get<AnimationClip>("Animation/AnimClip.anim");
