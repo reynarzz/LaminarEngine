@@ -153,11 +153,14 @@ namespace Engine.IO
 
             // Read scenes count
             var scenesCount = reader.ReadInt32();
-            settings.SceneSettings.Scenes = new List<string>();
-            CollectionsMarshal.SetCount(settings.SceneSettings.Scenes, scenesCount);
+            settings.SceneSettings.Scenes = new SceneSettings.SceneBuildInfo[scenesCount];
             for (int i = 0; i < scenesCount; i++)
             {
-                settings.SceneSettings.Scenes[i] = EngineFileUtils.ReadGuidNoAlloc(reader).ToString();
+                settings.SceneSettings.Scenes[i] = new SceneSettings.SceneBuildInfo()
+                {
+                    Id = EngineFileUtils.ReadGuidNoAlloc(reader).ToString(),
+                    IsBuildAdded = true,
+                };
             }
 
             // ----Physics:

@@ -30,6 +30,9 @@ namespace Editor
     // - The importer doesn't call to update the assets, the counter is cleared back to 0, this only happens when the assetDatabase variable is static.
     // - Screen render target size should take into account the camera viewport values.
     // - Compile c# Soundflow library when shipping, and have a binary compipled ready for the editor, engine project should not include the files directly.
+    // - Layer mask doesn't enable the correct bit using the matrix data from layer mask ui,   
+
+
 
     // Serialization:
     // - Forbid serialization of dictionaries that contains EObject as key?
@@ -51,12 +54,14 @@ namespace Editor
     // Metadata of every asset should be binary on final build.
 
     // Features
-    // - Project data: Serialize/Deserialize Layers, scenes, and any other data that the game might need.
     // - Fully async scene load in the background: async asset loading (mainThreadSync for graphic assets)
-    // - Audio mixer
+    // - Audio mixer editor ui
     // - Animator using nodes
     // - Assets lazy loading: Selecting assets in the inspector should not load the asset, but when the playmode starts,
     //   create a ImmediateAssetLoad<T> to load as soon as it gets in the property inspector.
+    // - Generate the assets to be added to the build reading all the scenes that will be added to the build.
+
+
 
     // Save Editor config:
     // Current loaded scene name.

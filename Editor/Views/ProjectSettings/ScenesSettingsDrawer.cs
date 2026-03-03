@@ -24,7 +24,7 @@ namespace Editor.Views
                 return true;
             });
 
-            DrawSceneList("Scenes", settings.SceneSettings.Scenes);
+            DrawSceneList("Scenes", ref settings.SceneSettings.Scenes);
             // PropertiesGUIDrawEditor.DrawObject("__Scene_Settings__", settings.SceneSettings);
         }
 
@@ -33,19 +33,28 @@ namespace Editor.Views
             Guid.TryParse(str, out var id);
             return id;
         }
-        private void DrawSceneList(string title, List<string> sceneList)
+
+        private void DrawSceneList(string title, ref SceneSettings.SceneBuildInfo[] sceneList)
         {
             ImGui.Text(title);
-            EditorGuiFieldsResolver.DrawListField(title, sceneList, false, (index, width, item) =>
+
+            void OnAdded(SceneSettings.SceneBuildInfo sceneInfo)
+            {
+                sceneInfo.IsBuildAdded = true;
+                sceneInfo.Id = Guid.Empty.ToString();
+            }
+
+            EditorGuiFieldsResolver.DrawArrayField(title, ref sceneList, false, (index, width, item) =>
             {
                 SceneAsset scene = null;
-                if (Guid.TryParse(sceneList[index], out var guid))
+                var sceneInfo = (SceneSettings.SceneBuildInfo)item;
+                if (Guid.TryParse(sceneInfo.Id, out var guid))
                 {
                     scene = Assets.GetAssetFromGuid(guid) as SceneAsset;
                 }
-                bool build = false;
                 EditorGuiFieldsResolver.SetPropertyDefaultCursorPos();
-                EditorGuiFieldsResolver.DrawBoolField("##Build", ref build);
+                var isBuildAdded = sceneInfo.IsBuildAdded;
+                EditorGuiFieldsResolver.DrawBoolField($"##IsAddedToTheBuild_{index}", ref isBuildAdded);
                 ImGui.SameLine();
                 ImGui.PushID($"{title}_SCENES_SETTINGS_{index}");
                 EditorGuiFieldsResolver.DrawEObjectSlot(scene, typeof(SceneAsset), x =>
@@ -57,14 +66,20 @@ namespace Editor.Views
 
                 var id = (scene?.GetID() ?? Guid.Empty).ToString();
 
-                if (!sceneList[index].Equals(id))
+                if (!sceneInfo.Id.Equals(id))
                 {
-                    sceneList[index] = id;
+                    sceneInfo.Id = id;
+                    return true;
+                }
+
+                if (sceneInfo.IsBuildAdded != isBuildAdded)
+                {
+                    sceneInfo.IsBuildAdded = isBuildAdded;
                     return true;
                 }
 
                 return false;
-            });
+            }, OnAdded);
         }
     }
 }

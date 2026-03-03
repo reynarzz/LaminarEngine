@@ -18,6 +18,7 @@ namespace Editor
         private string MaterialPath => $"{EditorPaths.AppRoot}Material.bin";
 
         private PlaymodeController _playmodeController; // Remove from here
+        private SceneLayer _sceneLayer = new SceneLayer(); // Move this, remove from here
 
         private readonly LayerBase[] _initializationLayers;
         public EditorLayersManager(InputLayerBase inputLayer, WindowStandalone win)
@@ -29,7 +30,6 @@ namespace Editor
             var renderingLayer = new RenderingLayer();
             var editorLayer = new EditorIOLayer();
             var hotReloadLayer = new HotReloadLayer();
-            var sceneLayer = new SceneLayer();
 
             Layers =
             [
@@ -37,7 +37,7 @@ namespace Editor
                 inputLayer,
                 null, // App Layer
                 mainThreadDispLayer,
-                sceneLayer, // Scene layer
+                _sceneLayer, // Scene layer
                 audioLayer,
                 null, // Physics layer.
                 editorLayer,

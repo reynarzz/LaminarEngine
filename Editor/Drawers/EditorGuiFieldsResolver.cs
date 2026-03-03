@@ -737,7 +737,7 @@ namespace Editor.Utils
         }
 
         public delegate bool ListFieldDrawDelegate(int index, float width, object element);
-        public static bool DrawListField<T>(string name, List<T> listObj, bool itemAsTree, ListFieldDrawDelegate drawCallback)
+        public static bool DrawListField<T>(string name, List<T> collection, bool itemAsTree, ListFieldDrawDelegate drawCallback)
         {
             void OnAdd(IList list, int totalLength)
             {
@@ -763,7 +763,62 @@ namespace Editor.Utils
                 }
             }
 
-            return DrawListField(name, listObj, itemAsTree, OnAdd, OnRemove, OnRemoveCount, drawCallback);
+            return DrawListField(name, collection, itemAsTree, OnAdd, OnRemove, OnRemoveCount, drawCallback);
+        }
+        public static bool DrawArrayField<T>(string name, ref T[] collection, bool itemAsTree, ListFieldDrawDelegate drawCallback)
+        {
+            return DrawArrayField(name, ref collection, itemAsTree, drawCallback, null);
+        }
+        public static bool DrawArrayField<T>(string name, ref T[] collection, bool itemAsTree, ListFieldDrawDelegate drawCallback, Action<T> onAdded)
+        {
+            var elementType = collection.GetType().GetElementType();
+            var colNew = collection;
+
+            void OnAdd(IList list, int totalLength)
+            {
+                var array = list as Array;
+                var copy = Array.CreateInstance(elementType, totalLength);
+                Array.Copy(array, copy, array.Length);
+                colNew = copy as T[];
+                var defaultValue = (T)ReflectionUtils.GetDefaultValueInstance(typeof(T));
+                colNew[^1] = defaultValue;
+                onAdded?.Invoke(defaultValue);
+            }
+
+            void OnRemove(IList list, int itemIndex)
+            {
+                var array = list as Array;
+                var copy = Array.CreateInstance(elementType, array.Length - 1);
+
+                int copyIndex = 0;
+                for (int i = 0; i < list.Count; i++)
+                {
+                    if (i != itemIndex)
+                    {
+                        copy.SetValue(array.GetValue(i), copyIndex);
+                        copyIndex++;
+                    }
+                }
+
+                colNew = copy as T[];
+            }
+
+            void OnRemoveCount(IList list, int totalLength)
+            {
+                var array = list as Array;
+                var copy = Array.CreateInstance(elementType, totalLength);
+                Array.Copy(array, copy, totalLength);
+                colNew = copy as T[];
+            }
+
+            var resultChanged = DrawListField(name, collection, false, OnAdd, OnRemove, OnRemoveCount, drawCallback);
+
+            if (resultChanged)
+            {
+                collection = colNew;
+            }
+
+            return resultChanged;
         }
 
         public static bool DrawListField(string name, IList list, bool itemAsTree, Action<IList, int> onAddCallback, Action<IList, int> onRemoveCallback,
