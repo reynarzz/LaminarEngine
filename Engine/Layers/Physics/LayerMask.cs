@@ -14,6 +14,12 @@ namespace Engine
         private const int ARRAY_SIZE = sizeof(ulong) * 8;
         public const ulong All = ulong.MaxValue;
 
+        static LayerMask()
+        {
+            MaskBits = new ulong[ARRAY_SIZE];
+            Names = new Dictionary<string, int>(ARRAY_SIZE, StringComparer.OrdinalIgnoreCase);
+        }
+
         internal static void UpdateLayers(bool[] matrix, string[] names)
         {
             if(names == null || matrix == null)
@@ -28,15 +34,14 @@ namespace Engine
             }
             names = names.Where(x => !string.IsNullOrEmpty(x)).ToArray();
             int count = names.Length;
-            MaskBits = new ulong[count];
-            Names = new Dictionary<string, int>(count, StringComparer.OrdinalIgnoreCase);
-
+            Names.Clear();
+            MaskBits = new ulong[ARRAY_SIZE];
             if (names.Length > ARRAY_SIZE)
             {
                 Debug.EngineError($"Layers count cannot be bigger than: {ARRAY_SIZE}");
                 return;
             }
-           
+             
             for (int i = 0; i < count; i++)
             {
                 MaskBits[i] = 0;

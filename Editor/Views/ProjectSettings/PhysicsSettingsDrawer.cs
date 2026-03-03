@@ -28,10 +28,13 @@ namespace Editor.Views
 
             ImGui.Text("Collision Matrix");
             if (_gridUI.Draw())
-            {
+            { 
                 LayerMask.UpdateLayers(_gridUI.Matrix, settings.LayerSettings.Layers);
             }
-
+            if(ImGui.Button("Set layers"))
+            {
+                _gridUI.Matrix = LayerMask.BuildMatrixFromMasks();
+            }
             if (ImGui.Button("Enable all"))
             {
                 _gridUI.SetAll(true);

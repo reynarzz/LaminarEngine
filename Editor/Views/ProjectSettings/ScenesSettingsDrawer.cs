@@ -14,7 +14,6 @@ namespace Editor.Views
     {
         protected override void OnDraw(ProjectSettings settings)
         {
-            // TODO: Draw from scratch
             var launchScene = Assets.GetAssetFromGuid(GetGuidSafe(settings.SceneSettings.MainScene));
             ImGui.Text("Launch Scene");
             ImGui.SameLine();
@@ -25,7 +24,6 @@ namespace Editor.Views
             });
 
             DrawSceneList("Scenes", ref settings.SceneSettings.Scenes);
-            // PropertiesGUIDrawEditor.DrawObject("__Scene_Settings__", settings.SceneSettings);
         }
 
         private Guid GetGuidSafe(string str)

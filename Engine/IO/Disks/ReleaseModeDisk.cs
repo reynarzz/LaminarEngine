@@ -228,7 +228,7 @@ namespace Engine.IO
                 _reader.BaseStream.Position = locations.AssetMetaLoc;
                 var meta = new byte[locations.AssetMetaSize];
 
-                _reader.BaseStream.Read(meta, 0, meta.Length);
+                _reader.BaseStream.ReadExactly(meta, 0, meta.Length);
 
                 return meta;
             }

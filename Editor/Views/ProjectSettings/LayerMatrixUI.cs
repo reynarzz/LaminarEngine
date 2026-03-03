@@ -49,16 +49,16 @@ namespace Editor.Views
         public bool Draw()
         {
             int count = _layerNames.Length;
-            bool changed = false;
             if (count <= 0)
             {
-                return changed;
+                return false;
             }
 
             var flags = ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.BordersInner;
             ImGui.PushStyleVar(ImGuiStyleVar.FramePadding, new Vector2(1, 1));
             ImGui.PushStyleVar(ImGuiStyleVar.CellPadding, new Vector2(2, 2));
-
+            bool changed = false;
+            // TODO: This is very slow, and allocates every frame this window is visisble. Fix this.
             var tableCount = _layerNames.Where(x => !string.IsNullOrEmpty(x)).Count();
             if (ImGui.BeginTable("LayerCollisionMatrix", tableCount + 1, flags))
             {
