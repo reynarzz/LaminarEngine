@@ -25,15 +25,15 @@ namespace GLFW
 #if WINDOWS
         public const string LIBRARY = "RuntimeCore";
 #elif MACOS
-        public const string LIBRARY = "libRuntimeCore.dylib"; // mac
+        public const string LIBRARY = "RuntimeCore"; // mac
 #else
         public const string LIBRARY = "RuntimeCore";
 #endif
 #else
 #if WINDOWS
-        public const string LIBRARY = "glfw3";
+        public const string LIBRARY = "EditorNatives";
 #elif MACOS
-        public const string LIBRARY = "libglfw.dylib"; // mac
+        public const string LIBRARY = "EditorNatives"; // mac
 #else
         public const string LIBRARY = "glfw3";
 #endif
