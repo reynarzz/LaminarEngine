@@ -32,7 +32,7 @@ namespace Engine
                 Debug.Error("No layer names are valid");
                 return;
             }
-            names = names.Where(x => !string.IsNullOrEmpty(x)).ToArray();
+           // names = names.Where(x => !string.IsNullOrEmpty(x)).ToArray();
             int count = names.Length;
             Names.Clear();
             MaskBits = new ulong[ARRAY_SIZE];
@@ -166,6 +166,10 @@ namespace Engine
 
         private static void AssignName(int layer, string name)
         {
+            if (string.IsNullOrEmpty(name))
+            {
+                return;
+            }
             if (Names.ContainsKey(name))
             {
                 Names[name] = layer;

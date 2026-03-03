@@ -81,27 +81,19 @@ namespace Game
 
             var names = GetConstStringValues(typeof(GameConsts));
 
-            //for (int i = 0; i < names.Length; i++)
-            //{
-            //    LayerMask.AssignName(i, names[i]);
-            //}
-
-            LayerMask.TurnOff(GameConsts.PLAYER, GameConsts.PLAYER);
-            LayerMask.TurnOff(GameConsts.PLAYER, GameConsts.CHARACTER_IGNORE);
-            LayerMask.TurnOff(GameConsts.PLAYER, GameConsts.CHARACTER_DEAD);
-            LayerMask.TurnOff(GameConsts.ENEMY, GameConsts.CHARACTER_IGNORE);
-            LayerMask.TurnOff(GameConsts.ENEMY, GameConsts.PLAYER);
-            LayerMask.TurnOff(GameConsts.ENEMY, GameConsts.CHARACTER_DEAD);
-            LayerMask.TurnOff(GameConsts.COLLECTIBLE, GameConsts.CHARACTER_DEAD);
-            LayerMask.TurnOff(GameConsts.COLLECTIBLE, GameConsts.ENEMY);
-            // LayerMask.TurnOff(GameConsts.ENEMY, GameConsts.ENEMY);
-            LayerMask.TurnOff(GameConsts.ENEMY_CONFUSED, GameConsts.CHARACTER_IGNORE);
-            LayerMask.TurnOff(GameConsts.COLLECTIBLE, GameConsts.CHARACTER_IGNORE);
-            LayerMask.TurnOff(GameConsts.PLATFORM, GameConsts.COLLECTIBLE);
-            LayerMask.TurnOffAll(GameConsts.BULLET);
-            LayerMask.TurnOn(GameConsts.BULLET, GameConsts.COLLECTIBLE);
-
-            //LayerMask.TurnOn(GameLayers.PLAYER, GameLayers.Default);
+            //LayerMask.TurnOff(GameConsts.PLAYER, GameConsts.PLAYER);
+            //LayerMask.TurnOff(GameConsts.PLAYER, GameConsts.CHARACTER_IGNORE);
+            //LayerMask.TurnOff(GameConsts.PLAYER, GameConsts.CHARACTER_DEAD);
+            //LayerMask.TurnOff(GameConsts.ENEMY, GameConsts.CHARACTER_IGNORE);
+            //LayerMask.TurnOff(GameConsts.ENEMY, GameConsts.PLAYER);
+            //LayerMask.TurnOff(GameConsts.ENEMY, GameConsts.CHARACTER_DEAD);
+            //LayerMask.TurnOff(GameConsts.COLLECTIBLE, GameConsts.CHARACTER_DEAD);
+            //LayerMask.TurnOff(GameConsts.COLLECTIBLE, GameConsts.ENEMY);
+            //LayerMask.TurnOff(GameConsts.ENEMY_CONFUSED, GameConsts.CHARACTER_IGNORE);
+            //LayerMask.TurnOff(GameConsts.COLLECTIBLE, GameConsts.CHARACTER_IGNORE);
+            //LayerMask.TurnOff(GameConsts.PLATFORM, GameConsts.COLLECTIBLE);
+            //LayerMask.TurnOffAll(GameConsts.BULLET);
+            //LayerMask.TurnOn(GameConsts.BULLET, GameConsts.COLLECTIBLE);
         }
 
         private void InitializeWorld()
