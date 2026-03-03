@@ -16,7 +16,7 @@ namespace Engine.Data
 
     internal class LayersSettings
     {
-        [SerializedField] internal string[] Layers { get; set; } = ["Default", "Background", "Foreground", "Player", "UI"];
+        [SerializedField] internal string[] Layers = ["Default", "Background", "Foreground", "Player", "UI"];
     }
 
     // TODO: I cannot serialize Guids directly, so for now I'm using strings.

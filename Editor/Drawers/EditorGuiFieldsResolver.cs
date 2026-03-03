@@ -22,6 +22,7 @@ namespace Editor.Utils
         private static object _selectedValue;
         private static Func<EObject, bool> _selectedSetter;
         public delegate (object valueOut, bool result) onDrawDictionaryArgCallback(Type argKey, string argName, object argValue);
+        private const string DEFAULT_COLLECTION_ITEM_TITLE = "item";
 
         public EditorGuiFieldsResolver()
         {
@@ -769,7 +770,12 @@ namespace Editor.Utils
         {
             return DrawArrayField(name, ref collection, itemAsTree, drawCallback, null);
         }
+
         public static bool DrawArrayField<T>(string name, ref T[] collection, bool itemAsTree, ListFieldDrawDelegate drawCallback, Action<T> onAdded)
+        {
+            return DrawArrayField(name, ref collection, itemAsTree, 0, DEFAULT_COLLECTION_ITEM_TITLE, true, drawCallback, onAdded);
+        }
+        public static bool DrawArrayField<T>(string name, ref T[] collection, bool itemAsTree, int maxLength, string itemsTitle, bool canChangeSize, ListFieldDrawDelegate drawCallback, Action<T> onAdded)
         {
             var elementType = collection.GetType().GetElementType();
             var colNew = collection;
@@ -811,7 +817,7 @@ namespace Editor.Utils
                 colNew = copy as T[];
             }
 
-            var resultChanged = DrawListField(name, collection, false, OnAdd, OnRemove, OnRemoveCount, drawCallback);
+            var resultChanged = DrawListField(name, collection, false, maxLength, itemsTitle, canChangeSize, OnAdd, OnRemove, OnRemoveCount, drawCallback);
 
             if (resultChanged)
             {
@@ -820,79 +826,101 @@ namespace Editor.Utils
 
             return resultChanged;
         }
-
         public static bool DrawListField(string name, IList list, bool itemAsTree, Action<IList, int> onAddCallback, Action<IList, int> onRemoveCallback,
+                                        Action<IList, int> removeCount, ListFieldDrawDelegate drawCallback)
+        {
+            return DrawListField(name, list, itemAsTree, 0, DEFAULT_COLLECTION_ITEM_TITLE, true, onAddCallback, onRemoveCallback, removeCount, drawCallback);
+        }
+
+        public static bool DrawListField(string name, IList list, bool itemAsTree, int maxLength, string itemsTitle, bool canChangeSize, Action<IList, int> onAddCallback, Action<IList, int> onRemoveCallback,
                                          Action<IList, int> removeCount, ListFieldDrawDelegate drawCallback)
         {
-
-            ImGui.SameLine();
-            ImGui.SetCursorPosX(ImGui.GetWindowWidth() - 120);
-
             bool changed = false;
             var size = list.Count;
 
-            ImGui.BeginDisabled(size - 1 < 0);
-            if (ImGui.Button($"-##Remove_{name}", new Vector2(22, 22)))
+            if (canChangeSize)
             {
-                changed = true;
+                ImGui.SameLine();
+                ImGui.SetCursorPosX(ImGui.GetWindowWidth() - 120);
 
-                if (size - 1 >= 0)
+                ImGui.BeginDisabled(size - 1 < 0);
+                if (ImGui.Button($"-##Remove_{name}", new Vector2(22, 22)))
                 {
-                    onRemoveCallback(list, size - 1);
+                    changed = true;
+
+                    if (size - 1 >= 0)
+                    {
+                        onRemoveCallback(list, size - 1);
+                    }
                 }
-            }
-            ImGui.EndDisabled();
-            ImGui.SameLine();
-            if (ImGui.Button($"+##Add_{name}", new Vector2(22, 22)))
-            {
-                changed = true;
-                onAddCallback(list, size + 1);
+
+                ImGui.EndDisabled();
+                ImGui.SameLine();
             }
 
-            ImGui.SameLine();
+            var isMaxLengthReached = maxLength > 0 && size == maxLength;
+
+            if (canChangeSize)
+            {
+                ImGui.BeginDisabled(isMaxLengthReached);
+                if (ImGui.Button($"+##Add_{name}", new Vector2(22, 22)))
+                {
+                    changed = true;
+                    onAddCallback(list, size + 1);
+                }
+                ImGui.EndDisabled();
+                ImGui.SameLine();
+            }
 
             string lenText = size.ToString();
-            ImGui.SetNextItemWidth(53);
-
-            if (DrawStringField($"##_size_{name}", ref lenText, 0, true))
+            if (canChangeSize)
             {
-                if (int.TryParse(lenText, out var val) && val >= 0)
+                ImGui.SetNextItemWidth(53);
+                if (DrawStringField($"##_size_{name}", ref lenText, 0, true))
                 {
-                    if (size < val)
+                    if (int.TryParse(lenText, out var val) && val >= 0)
                     {
-                        onAddCallback(list, val);
-                    }
-                    else if (size > val)
-                    {
-                        removeCount(list, val);
-                    }
+                        if (size < val)
+                        {
+                            onAddCallback(list, val);
+                        }
+                        else if (size > val)
+                        {
+                            removeCount(list, val);
+                        }
 
-                    size = val;
-                    changed = true;
+                        size = val;
+                        changed = true;
+                    }
+                    changed = false;
                 }
-                changed = false;
             }
+           
             bool skip = false;
 
             for (int i = 0; i < list.Count; i++)
             {
                 bool show;
                 skip = false;
-                if (ImGui.Button($"X##_DELETE_BUTTON_{i}_{name}", new Vector2(22, 22)))
+                if (canChangeSize)
                 {
-                    onRemoveCallback(list, i);
-                    changed = true;
-                    skip = true;
-                    break;
+                    if (ImGui.Button($"X##_DELETE_BUTTON_{i}_{name}", new Vector2(22, 22)))
+                    {
+                        onRemoveCallback(list, i);
+                        changed = true;
+                        skip = true;
+                        break;
+                    }
+                    ImGui.SameLine();
                 }
-                ImGui.SameLine();
+                
                 if (itemAsTree)
                 {
                     show = ImGui.TreeNode($"item {i}_{name}");
                 }
                 else
                 {
-                    ImGui.Text($"item {i}");
+                    ImGui.Text($"{itemsTitle} {i}");
                     show = true;
                 }
 

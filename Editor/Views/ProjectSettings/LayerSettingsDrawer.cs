@@ -1,4 +1,5 @@
-﻿using Engine;
+﻿using Editor.Utils;
+using Engine;
 using Engine.Data;
 using ImGuiNET;
 using System;
@@ -14,10 +15,12 @@ namespace Editor.Views
     {
         protected override void OnDraw(ProjectSettings settings)
         {
-            if(PropertiesGUIDrawEditor.DrawObject("Layer_Settings", settings.LayerSettings))
+            ImGui.Text("Layers");
+            EditorGuiFieldsResolver.DrawArrayField("##Layers_ARRAY", ref settings.LayerSettings.Layers, false, 64, "Layer", false, (index, width, item) =>
             {
-                LayerMask.UpdateLayers(settings.Physics.CollisionMatrix, settings.LayerSettings.Layers);
-            }
+                ref var str = ref settings.LayerSettings.Layers[index];
+                return EditorGuiFieldsResolver.DrawStringField($"##_LAYER__{index}", ref str);
+            }, null);
         }
     }
 }
