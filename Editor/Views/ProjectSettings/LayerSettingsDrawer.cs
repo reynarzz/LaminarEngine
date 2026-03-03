@@ -17,14 +17,19 @@ namespace Editor.Views
         protected override void OnDraw(ProjectSettings settings)
         {
             ImGui.Text("Layers");
-            EditorGuiFieldsResolver.DrawArrayField("##Layers_ARRAY", ref settings.LayerSettings.Layers, false, 64, Layer_TITLE, false, (index, width, item) =>
+
+            for (int i = 0; i < settings.LayerSettings.Layers.Length; i++)
             {
-                var textSize = ImGui.CalcTextSize($"{Layer_TITLE} {index}");
+                ImGui.BeginDisabled(i == 0);
+                var title = $"{Layer_TITLE} {i}";
+                ImGui.Text(title);
+                ImGui.SameLine();
+                var textSize = ImGui.CalcTextSize(title);
                 ImGui.Dummy(new Vector2(-textSize.X + 50, 0));
                 ImGui.SameLine();
-                ref var str = ref settings.LayerSettings.Layers[index];
-                return EditorGuiFieldsResolver.DrawStringField($"##_LAYER__{index}", ref str);
-            }, null);
+                EditorGuiFieldsResolver.DrawStringField($"##_LAYER__{i}", ref settings.LayerSettings.Layers[i]);
+                ImGui.EndDisabled();
+            }
         }
     }
 }
