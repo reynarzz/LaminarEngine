@@ -58,7 +58,9 @@ namespace Editor.Views
             var flags = ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.BordersInner;
             ImGui.PushStyleVar(ImGuiStyleVar.FramePadding, new Vector2(1, 1));
             ImGui.PushStyleVar(ImGuiStyleVar.CellPadding, new Vector2(2, 2));
-            if (ImGui.BeginTable("LayerCollisionMatrix", count + 1, flags))
+
+            var tableCount = _layerNames.Where(x => !string.IsNullOrEmpty(x)).Count();
+            if (ImGui.BeginTable("LayerCollisionMatrix", tableCount + 1, flags))
             {
                 DrawHeaderRow(count);
                 changed = DrawRows(count);
