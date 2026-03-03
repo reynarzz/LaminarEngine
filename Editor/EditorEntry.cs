@@ -45,7 +45,7 @@ namespace Editor
 
 
     // Refactor:
-    // -
+    // - Batch2D, this class maintains the vertices in the ram at all times, once the vertex data is send to the gpu, the ram should be freed.
 
     // Performance fix:
     // UI performance is pretty bad, rewrite the entire UI system.

@@ -10,14 +10,16 @@ namespace Engine
     public static class LayerMask
     {
         private static ulong[] MaskBits;
-        private static Dictionary<string, int> Names;
+        private static Dictionary<string, int> _namesToLayers;
+        private static Dictionary<int, string> _layersToNames;
         private const int ARRAY_SIZE = sizeof(ulong) * 8;
         public const ulong All = ulong.MaxValue;
 
         static LayerMask()
         {
             MaskBits = new ulong[ARRAY_SIZE];
-            Names = new Dictionary<string, int>(ARRAY_SIZE, StringComparer.OrdinalIgnoreCase);
+            _namesToLayers = new Dictionary<string, int>(ARRAY_SIZE, StringComparer.OrdinalIgnoreCase);
+            _layersToNames = new(ARRAY_SIZE);
         }
 
         internal static void UpdateLayers(bool[] matrix, string[] names)
@@ -33,7 +35,7 @@ namespace Engine
                 return;
             }
             int count = names.Length;
-            Names.Clear();
+            _namesToLayers.Clear();
             if (names.Length > ARRAY_SIZE)
             {
                 Debug.EngineError($"Layers count cannot be bigger than: {ARRAY_SIZE}");
@@ -162,19 +164,28 @@ namespace Engine
             return (MaskBits[layerA] & LayerToBits(layerB)) != 0; // Checking just one since both MaskBits are in sync.
         }
 
-        private static void AssignName(int layer, string name)
+        internal static void AssignName(int layer, string name)
         {
             if (string.IsNullOrEmpty(name))
             {
                 return;
             }
-            if (Names.ContainsKey(name))
+            if (_namesToLayers.ContainsKey(name))
             {
-                Names[name] = layer;
+                _namesToLayers[name] = layer;
             }
             else
             {
-                Names.Add(name, layer);
+                _namesToLayers.Add(name, layer);
+            }
+
+            if (_layersToNames.ContainsKey(layer))
+            {
+                _layersToNames[layer] = name;
+            }
+            else
+            {
+                _layersToNames.Add(layer, name);
             }
         }
 
@@ -182,7 +193,7 @@ namespace Engine
         {
             var validNames = new List<KeyValuePair<string, int>>();
 
-            foreach (var kvp in Names)
+            foreach (var kvp in _namesToLayers)
             {
                 if (!string.IsNullOrEmpty(kvp.Key))
                 {
@@ -196,7 +207,7 @@ namespace Engine
         public static string[] GetAllLayerNames()
         {
             int count = 0;
-            foreach (var kvp in Names)
+            foreach (var kvp in _namesToLayers)
             {
                 if (!string.IsNullOrEmpty(kvp.Key))
                 {
@@ -206,7 +217,7 @@ namespace Engine
             var validNames = new string[count];
 
             int index = 0;
-            foreach (var kvp in Names)
+            foreach (var kvp in _namesToLayers)
             {
                 if (!string.IsNullOrEmpty(kvp.Key))
                 {
@@ -219,17 +230,16 @@ namespace Engine
 
         internal static string LayerToName(int layer)
         {
-            foreach (var kvp in Names)
+            if (_layersToNames.TryGetValue(layer, out var name))
             {
-                if (kvp.Value == layer)
-                    return kvp.Key;
+                return name;
             }
             return string.Empty;
         }
 
         public static int NameToLayer(string name)
         {
-            if (Names.TryGetValue(name, out var layer))
+            if (_namesToLayers.TryGetValue(name, out var layer))
             {
                 return layer;
             }

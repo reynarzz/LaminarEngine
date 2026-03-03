@@ -18,12 +18,10 @@ namespace Editor.Data
         private static BuildSettings _buildSettings;
         public static BuildSettings BuildSettings => _buildSettings ?? (_buildSettings = LoadData<BuildSettings>(BUILD_SETTINGS));
 
-        public static ProjectSettings _projectSettings;
-
-        public static ProjectSettings ProjectSettings => _projectSettings;
 
         private const string BUILD_SETTINGS = "BuildSettings";
         private const string PROJECT_SETTINGS = "ProjectSettings";
+        private const string EDITOR_SETTINGS = "EditorSettings";
 
 
         internal static void Init()
@@ -34,8 +32,8 @@ namespace Editor.Data
         private static void InitProjectSettings()
         {
             var service = EngineServices.GetService<EngineDataService>();
-            _projectSettings = LoadData<ProjectSettings>(PROJECT_SETTINGS);
-            service.Initialize(_projectSettings);
+            var projectSettings = LoadData<ProjectSettings>(PROJECT_SETTINGS);
+            service.Initialize(projectSettings);
         }
 
         public static void SaveAll()
@@ -53,7 +51,8 @@ namespace Editor.Data
 
         internal static void SaveProjectSettings()
         {
-            WriteData(PROJECT_SETTINGS, ProjectSettings);
+            var service = EngineServices.GetService<EngineDataService>();
+            WriteData(PROJECT_SETTINGS, service.GetProjectSettings());
         }
 
         private static void WriteData(string name, object data)

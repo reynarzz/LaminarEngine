@@ -18,17 +18,27 @@ namespace Editor.Views
         {
             ImGui.Text("Layers");
 
+            bool anyChanged = false;
             for (int i = 0; i < settings.LayerSettings.Layers.Length; i++)
             {
-                ImGui.BeginDisabled(i == 0);
                 var title = $"{Layer_TITLE} {i}";
                 ImGui.Text(title);
                 ImGui.SameLine();
                 var textSize = ImGui.CalcTextSize(title);
                 ImGui.Dummy(new Vector2(-textSize.X + 50, 0));
                 ImGui.SameLine();
-                EditorGuiFieldsResolver.DrawStringField($"##_LAYER__{i}", ref settings.LayerSettings.Layers[i]);
+                ImGui.BeginDisabled(i == 0);
+                var changed = EditorGuiFieldsResolver.DrawStringField($"##_LAYER__{i}", ref settings.LayerSettings.Layers[i]);
+                if (changed)
+                {
+                    anyChanged = true;
+                }
                 ImGui.EndDisabled();
+            }
+
+            if (anyChanged)
+            {
+                LayerMask.UpdateLayers(settings.Physics.CollisionMatrix, settings.LayerSettings.Layers);
             }
         }
     }
