@@ -1,4 +1,5 @@
-﻿#include "test_utils.h"
+﻿
+#include "test_utils.h"
 #include <chrono>
 #include <iostream>
 #include <memory>
@@ -26,38 +27,12 @@ RUNTIMECORE_API void InitSonyGamepad()
 		bLogAnalogs = true;
 	}
 
-	std::cout << "--- Gamepad Input Test ---" << std::endl;
-
 	std::unique_ptr<IPlatformHardwareInfo> Hardware;
 	test_utils::initialize_test_environment(Hardware, Registry);
-
-#ifdef AUTOMATED_TESTS
-	std::cout << "[Test] Automated mode active. The test will end in 30s." << std::endl;
-	auto startTime = std::chrono::steady_clock::now();
-#endif
-
-	std::cout << "Reading inputs. Press Ctrl+C to stop." << std::endl;
-	std::cout << std::fixed << std::setprecision(3);
 }
 float _t = 0;
 RUNTIMECORE_API void UpdateSonyGamepad(float deltaTime)
 {
-
-#ifdef AUTOMATED_TESTS
-	auto now = std::chrono::steady_clock::now();
-	if (std::chrono::duration_cast<std::chrono::seconds>(now - startTime).count() >= 30)
-	{
-		if (bWasConnected)
-		{
-			std::cout << "\n[Test] Timeout reached (30s). Finishing..." << std::endl;
-		}
-		else
-		{
-			std::cout << "\n[Test] No controller found in automated mode after 30s. Exiting." << std::endl;
-		}
-		break;
-	}
-#endif
 	Registry->PlugAndPlay(deltaTime);
 
 	ISonyGamepad* Gamepad = Registry->GetLibrary(TargetDeviceId);
@@ -89,55 +64,55 @@ RUNTIMECORE_API void UpdateSonyGamepad(float deltaTime)
 		
 		if (Input)
 		{
-			std::cout << "\r";
-			if (bLogAnalogs)
-			{
-				std::cout << "LStick: [" << std::setw(6) << Input->LeftAnalog.X << ", " << std::setw(6) << Input->LeftAnalog.Y << "] | "
-					<< "RStick: [" << std::setw(6) << Input->RightAnalog.X << ", " << std::setw(6) << Input->RightAnalog.Y << "] | "
-					<< "LTrig: " << std::setw(5) << Input->LeftTriggerAnalog << " | "
-					<< "RTrig: " << std::setw(5) << Input->RightTriggerAnalog << " | ";
-			}
+			// std::cout << "\r";
+			// if (bLogAnalogs)
+			// {
+			// 	std::cout << "LStick: [" << std::setw(6) << Input->LeftAnalog.X << ", " << std::setw(6) << Input->LeftAnalog.Y << "] | "
+			// 		<< "RStick: [" << std::setw(6) << Input->RightAnalog.X << ", " << std::setw(6) << Input->RightAnalog.Y << "] | "
+			// 		<< "LTrig: " << std::setw(5) << Input->LeftTriggerAnalog << " | "
+			// 		<< "RTrig: " << std::setw(5) << Input->RightTriggerAnalog << " | ";
+			// }
 
-			if (bLogButtons)
-			{
-				std::cout << "Btns: "
-					<< (Input->bCross ? "X " : "_ ")
-					<< (Input->bCircle ? "O " : "_ ")
-					<< (Input->bTriangle ? "T " : "_ ")
-					<< (Input->bSquare ? "S " : "_ ")
-					<< (Input->bDpadUp ? "U " : "_ ")
-					<< (Input->bDpadDown ? "D " : "_ ")
-					<< (Input->bDpadLeft ? "L " : "_ ")
-					<< (Input->bDpadRight ? "R " : "_ ")
-					<< (Input->bLeftShoulder ? "L1 " : "__ ")
-					<< (Input->bRightShoulder ? "R1 " : "__ ")
-					<< (Input->bLeftStick ? "L3 " : "__ ")
-					<< (Input->bRightStick ? "R3 " : "__ ")
-					<< (Input->bShare ? "Sh " : "__ ")
-					<< (Input->bStart ? "St " : "__ ")
-					<< (Input->bPSButton ? "PS " : "__ ")
-					<< (Input->bMute ? "M " : "_ ")
-					<< "| ";
-			}
+			// if (bLogButtons)
+			// {
+			// 	std::cout << "Btns: "
+			// 		<< (Input->bCross ? "X " : "_ ")
+			// 		<< (Input->bCircle ? "O " : "_ ")
+			// 		<< (Input->bTriangle ? "T " : "_ ")
+			// 		<< (Input->bSquare ? "S " : "_ ")
+			// 		<< (Input->bDpadUp ? "U " : "_ ")
+			// 		<< (Input->bDpadDown ? "D " : "_ ")
+			// 		<< (Input->bDpadLeft ? "L " : "_ ")
+			// 		<< (Input->bDpadRight ? "R " : "_ ")
+			// 		<< (Input->bLeftShoulder ? "L1 " : "__ ")
+			// 		<< (Input->bRightShoulder ? "R1 " : "__ ")
+			// 		<< (Input->bLeftStick ? "L3 " : "__ ")
+			// 		<< (Input->bRightStick ? "R3 " : "__ ")
+			// 		<< (Input->bShare ? "Sh " : "__ ")
+			// 		<< (Input->bStart ? "St " : "__ ")
+			// 		<< (Input->bPSButton ? "PS " : "__ ")
+			// 		<< (Input->bMute ? "M " : "_ ")
+			// 		<< "| ";
+			// }
 
-			if (bLogTouch)
-			{
-				std::cout << "Touch: [" << (Input->bIsTouching ? "YES" : "NO ") << "] "
-					<< "ID: " << std::setw(2) << Input->TouchId << " "
-					<< "Fng: " << Input->TouchFingerCount << " "
-					<< "Dir: 0x" << std::hex << std::setw(2) << std::setfill('0') << (int)Input->DirectionRaw << std::dec << std::setfill(' ') << " "
-					<< "Pos: [" << std::setw(6) << Input->TouchPosition.X << ", " << std::setw(6) << Input->TouchPosition.Y << "] "
-					<< "Rel: [" << std::setw(6) << Input->TouchRelative.X << ", " << std::setw(6) << Input->TouchRelative.Y << "] "
-					<< "Rad: [" << std::setw(6) << Input->TouchRadius.X << ", " << std::setw(6) << Input->TouchRadius.Y << "] | ";
-			}
-
-			if (bLogSensors)
-			{
-				std::cout << "Gyro: [" << std::setw(6) << Input->Gyroscope.X << ", " << std::setw(6) << Input->Gyroscope.Y << ", " << std::setw(6) << Input->Gyroscope.Z << "] | "
-					<< "Accel: [" << std::setw(6) << Input->Accelerometer.X << ", " << std::setw(6) << Input->Accelerometer.Y << ", " << std::setw(6) << Input->Accelerometer.Z << "] | ";
-			}
-
-			std::cout << std::flush;
+			// if (bLogTouch)
+			// {
+			// 	std::cout << "Touch: [" << (Input->bIsTouching ? "YES" : "NO ") << "] "
+			// 		<< "ID: " << std::setw(2) << Input->TouchId << " "
+			// 		<< "Fng: " << Input->TouchFingerCount << " "
+			// 		<< "Dir: 0x" << std::hex << std::setw(2) << std::setfill('0') << (int)Input->DirectionRaw << std::dec << std::setfill(' ') << " "
+			// 		<< "Pos: [" << std::setw(6) << Input->TouchPosition.X << ", " << std::setw(6) << Input->TouchPosition.Y << "] "
+			// 		<< "Rel: [" << std::setw(6) << Input->TouchRelative.X << ", " << std::setw(6) << Input->TouchRelative.Y << "] "
+			// 		<< "Rad: [" << std::setw(6) << Input->TouchRadius.X << ", " << std::setw(6) << Input->TouchRadius.Y << "] | ";
+			// }
+			//
+			// if (bLogSensors)
+			// {
+			// 	std::cout << "Gyro: [" << std::setw(6) << Input->Gyroscope.X << ", " << std::setw(6) << Input->Gyroscope.Y << ", " << std::setw(6) << Input->Gyroscope.Z << "] | "
+			// 		<< "Accel: [" << std::setw(6) << Input->Accelerometer.X << ", " << std::setw(6) << Input->Accelerometer.Y << ", " << std::setw(6) << Input->Accelerometer.Z << "] | ";
+			// }
+			//
+			// std::cout << std::flush;
 
 			// Keep some original logic for visual feedback on controller
 			if (Input->bCross)

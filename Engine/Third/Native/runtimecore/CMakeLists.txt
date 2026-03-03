@@ -54,6 +54,10 @@ target_sources(RuntimeCore PRIVATE $<TARGET_OBJECTS:miniaudio>)
 
 if(APPLE)
     target_link_libraries(RuntimeCore PRIVATE "-framework Cocoa" "-framework OpenGL" "-framework IOKit" "-framework CoreVideo")
+target_compile_definitions(RuntimeCore PUBLIC 
+APPLE
+MACOS
+)
 elseif(WIN32)
     target_link_libraries(RuntimeCore PRIVATE 
     SetupAPI

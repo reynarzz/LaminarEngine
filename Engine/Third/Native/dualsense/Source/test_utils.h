@@ -10,7 +10,7 @@
 #ifdef _WIN32
 #include "Platform/windows/windows_hardware_policy.h"
 using platform_hardware = windows_platform::windows_hardware;
-#else
+#elif __linux__
 #include "Platform/linux/linux_hardware_policy.h"
 using platform_hardware = linux_platform::linux_hardware;
 #endif
@@ -58,6 +58,8 @@ namespace test_utils
 	    std::unique_ptr<IPlatformHardwareInfo>& OutHardware,
 	    std::unique_ptr<test_device_registry>& OutRegistry)
 	{
+		// TODO: implement macOs platform hardware.
+#ifndef MACOS
 		OutHardware = std::make_unique<platform_hardware>();
 		IPlatformHardwareInfo::SetInstance(std::move(OutHardware));
 		// Get it back for reference if needed, although it's now owned by the static instance
@@ -67,7 +69,9 @@ namespace test_utils
 		OutRegistry = std::make_unique<test_device_registry>();
 
 		std::cout << "[test_utils] Environment initialized." << std::endl;
+#endif
 	}
+	
 } // namespace test_utils
 
 
