@@ -17,15 +17,27 @@ namespace Engine.Data
     internal class LayersSettings
     {
         [SerializedField] internal string[] Layers = ["Default", "Background", "Foreground", "Player", "UI"];
+
+        internal string[] GetDefaultLayers()
+        {
+            var layers = new string[sizeof(ulong)*8];
+            layers[0] = "Default";
+            layers[1] = "Background";
+            layers[2] = "Foreground";
+            layers[3] = "UI";
+            layers[4] = "Player";
+
+            return layers;
+        }
     }
 
-    // TODO: I cannot serialize Guids directly, so for now I'm using strings.
     internal class SceneSettings
     {
         internal class SceneBuildInfo
         {
             [SerializedField] public bool IsBuildAdded { get; set; }
-            [SerializedField] public string Id { get; set; }
+            // TODO: I cannot serialize Guids directly, so for now I'm using strings.
+            [SerializedField] public string RefId { get; set; }
         }
 
         [SerializedField] public string MainScene { get; set; } = Guid.Empty.ToString();
@@ -49,7 +61,7 @@ namespace Engine.Data
                 if (!sceneInfo.IsBuildAdded)
                     continue;
 
-                if (isValid(sceneInfo.Id, out var guid))
+                if (isValid(sceneInfo.RefId, out var guid))
                 {
                     scenesId[index++] = guid;
                 }

@@ -271,8 +271,8 @@ namespace Editor.Cooker
             // ----Scenes
             EditorFileUtils.WriteGuidNoAlloc(writer, Guid.Parse(settings.SceneSettings.MainScene));
 
-            var scenes = settings.SceneSettings.Scenes.Where(x => x.IsBuildAdded && !string.IsNullOrEmpty(x.Id))
-                                                      .Select(x => { Guid.TryParse(x.Id, out var scenId); return scenId; }).ToArray();
+            var scenes = settings.SceneSettings.Scenes.Where(x => x.IsBuildAdded && !string.IsNullOrEmpty(x.RefId))
+                                                      .Select(x => { Guid.TryParse(x.RefId, out var scenId); return scenId; }).ToArray();
             // Write Scenes count
             writer.Write(scenes.Length);
 

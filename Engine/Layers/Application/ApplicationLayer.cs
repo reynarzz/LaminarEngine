@@ -34,7 +34,7 @@ namespace Engine.Layers
                 asset = null;
                 for (int i = 0; i < settings.Scenes.Length; i++)
                 {
-                    asset = (SceneAsset)Assets.GetAssetFromGuid(GetGuidSafe(settings.Scenes[i].Id));
+                    asset = (SceneAsset)Assets.GetAssetFromGuid(GetGuidSafe(settings.Scenes[i].RefId));
 
                     if (asset)
                     {

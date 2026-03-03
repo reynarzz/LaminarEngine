@@ -39,14 +39,14 @@ namespace Editor.Views
             void OnAdded(SceneSettings.SceneBuildInfo sceneInfo)
             {
                 sceneInfo.IsBuildAdded = true;
-                sceneInfo.Id = Guid.Empty.ToString();
+                sceneInfo.RefId = Guid.Empty.ToString();
             }
 
             EditorGuiFieldsResolver.DrawArrayField(title, ref sceneList, false, (index, width, item) =>
             {
                 SceneAsset scene = null;
                 var sceneInfo = (SceneSettings.SceneBuildInfo)item;
-                if (Guid.TryParse(sceneInfo.Id, out var guid))
+                if (Guid.TryParse(sceneInfo.RefId, out var guid))
                 {
                     scene = Assets.GetAssetFromGuid(guid) as SceneAsset;
                 }
@@ -64,9 +64,9 @@ namespace Editor.Views
 
                 var id = (scene?.GetID() ?? Guid.Empty).ToString();
 
-                if (!sceneInfo.Id.Equals(id))
+                if (!sceneInfo.RefId?.Equals(id) ?? true)
                 {
-                    sceneInfo.Id = id;
+                    sceneInfo.RefId = id;
                     return true;
                 }
 

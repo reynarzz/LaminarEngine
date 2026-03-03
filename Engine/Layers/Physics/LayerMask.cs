@@ -22,26 +22,24 @@ namespace Engine
 
         internal static void UpdateLayers(bool[] matrix, string[] names)
         {
-            if(names == null || matrix == null)
+            if (names == null || matrix == null)
             {
                 Debug.Error("Can't set layers, matrix or names are null");
                 return;
             }
-            if(names.Length == 0)
+            if (names.Length == 0)
             {
                 Debug.Error("No layer names are valid");
                 return;
             }
-           // names = names.Where(x => !string.IsNullOrEmpty(x)).ToArray();
             int count = names.Length;
             Names.Clear();
-            MaskBits = new ulong[ARRAY_SIZE];
             if (names.Length > ARRAY_SIZE)
             {
                 Debug.EngineError($"Layers count cannot be bigger than: {ARRAY_SIZE}");
                 return;
             }
-             
+
             for (int i = 0; i < count; i++)
             {
                 MaskBits[i] = 0;
@@ -180,13 +178,13 @@ namespace Engine
             }
         }
 
-        public static List<KeyValuePair<string, int>> GetAllAssignedNames() 
+        public static List<KeyValuePair<string, int>> GetAllAssignedNames()
         {
             var validNames = new List<KeyValuePair<string, int>>();
 
             foreach (var kvp in Names)
             {
-                if(!string.IsNullOrEmpty(kvp.Key))
+                if (!string.IsNullOrEmpty(kvp.Key))
                 {
                     validNames.Add(new KeyValuePair<string, int>(kvp.Key, kvp.Value));
                 }
@@ -243,7 +241,7 @@ namespace Engine
         {
             var layer = NameToLayer(name);
 
-            if(layer >= 0)
+            if (layer >= 0)
             {
                 return LayerToBits(layer);
             }

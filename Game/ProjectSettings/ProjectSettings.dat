@@ -142,7 +142,7 @@
                         }
                       },
                       {
-                        "Name": "Id",
+                        "Name": "RefId",
                         "Type": "String",
                         "InternalType": "System.String, System.Private.CoreLib",
                         "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
@@ -170,7 +170,7 @@
                         }
                       },
                       {
-                        "Name": "Id",
+                        "Name": "RefId",
                         "Type": "String",
                         "InternalType": "System.String, System.Private.CoreLib",
                         "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",

@@ -158,7 +158,7 @@ namespace Engine.IO
             {
                 settings.SceneSettings.Scenes[i] = new SceneSettings.SceneBuildInfo()
                 {
-                    Id = EngineFileUtils.ReadGuidNoAlloc(reader).ToString(),
+                    RefId = EngineFileUtils.ReadGuidNoAlloc(reader).ToString(),
                     IsBuildAdded = true,
                 };
             }
