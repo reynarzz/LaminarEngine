@@ -79,7 +79,19 @@ namespace Editor.Views
                         if (ImGui.MenuItem("Duplicate"))
                         {
                         }
-
+                        ImGui.BeginDisabled(!actor.Transform.Parent);
+                        if (ImGui.MenuItem("Unparent to previous"))
+                        {
+                            if (actor.Transform.Parent.Parent)
+                            {
+                                actor.Transform.Parent = actor.Transform.Parent.Parent;
+                            }
+                            else
+                            {
+                                actor.Transform.Parent = null;
+                            }
+                        }
+                        ImGui.EndDisabled();
                         ImGui.Separator();
                         if (ImGui.MenuItem("Delete"))
                         {
@@ -99,8 +111,11 @@ namespace Editor.Views
 
                     if (open && hasChildren)
                     {
-                        foreach (var child in actor.Transform.Children)
+                        for (int i = 0; i < actor.Transform.Children.Count; i++)
+                        {
+                            var child = actor.Transform.Children[i];
                             DrawActor(child.Actor);
+                        }
 
                         ImGui.TreePop();
                     }

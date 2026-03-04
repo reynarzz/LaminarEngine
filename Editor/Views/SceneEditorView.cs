@@ -64,11 +64,11 @@ namespace Editor
                 // ImGui.FocusWindow(ImGui.GetCurrentWindow());
             }
         }
-             
-        private void RenderGuizmo() 
+
+        private void RenderGuizmo()
         {
             ImGuizmo.Enable(true);
-              
+
             var offset = ImGui.GetFrameHeight();// + ImGui.GetStyle().FrameBorderSize;
 
             var windowAdjustSize = new vec2(WindowSize.X, WindowSize.Y - offset);
@@ -103,41 +103,43 @@ namespace Editor
             if (Selector.SelectedTransform())
             {
                 var selectedTransform = Selector.SelectedTransform();
-                 
+
                 mat4 model = selectedTransform.GetRenderingWorldMatrix();
                 mat4 delta = default;
                 OPERATION operation = OPERATION.TRANSLATE;
                 MODE mode = MODE.LOCAL;
 
 
-                  
+
 
                 // This prevents the guizmo from disappearing when any scale scale component is zero.
-                const float minValue = 0.01f;
+                const float minValue = 1.0f;
                 var s = model[0];
-                if (Mathf.IsAlmostZero(s.x))
+                if (operation != OPERATION.SCALE)
                 {
-                    s.x = minValue;
-                    model[0] = s;
-                }
-                s = model[1];
-                if (Mathf.IsAlmostZero(s.y))
-                {
-                    s.y = minValue;
-                    model[1] = s;
-                }
-                s = model[2];
-                if (Mathf.IsAlmostZero(s.z))
-                {
-                    s.z = minValue;
-                    model[2] = s;
+                    if (Mathf.IsAlmostZero(s.x))
+                    {
+                        s.x = minValue;
+                        model[0] = s;
+                    }
+                    s = model[1];
+                    if (Mathf.IsAlmostZero(s.y))
+                    {
+                        s.y = minValue;
+                        model[1] = s;
+                    }
+                    s = model[2];
+                    if (Mathf.IsAlmostZero(s.z))
+                    {
+                        s.z = minValue;
+                        model[2] = s;
+                    }
                 }
 
                 if (ImGuizmo.Manipulate(ref view.c0.x, ref projection.c0.x, operation, mode, ref model.c0.x, ref delta.c0.x))
                 {
                     if (ImGui.IsWindowHovered())
                     {
-
                         vec3 position = default;
                         vec3 rotation = default;
                         vec3 scale = default;
@@ -154,7 +156,7 @@ namespace Editor
                 }
             }
 
-            ImGuizmo.ViewManipulate(ref view.c0.x, 30, new Vector2(WindowPosition.X + WindowSize.X - 90, WindowPosition.Y+ 10), new Vector2(100, 100), 0);
+            ImGuizmo.ViewManipulate(ref view.c0.x, 30, new Vector2(WindowPosition.X + WindowSize.X - 90, WindowPosition.Y + 10), new Vector2(100, 100), 0);
         }
 
         private void SetTransform(OPERATION operation, MODE mode, Transform selectedTransform,
@@ -186,13 +188,13 @@ namespace Editor
                 case OPERATION.BOUNDS:
                     break;
                 case OPERATION.TRANSLATE:
-                        selectedTransform.WorldPosition += deltaPosition;
+                    selectedTransform.WorldPosition += deltaPosition;
                     break;
                 case OPERATION.ROTATE:
-                        selectedTransform.WorldEulerAngles = rotation;
+                    selectedTransform.WorldEulerAngles = rotation;
                     break;
                 case OPERATION.SCALE:
-                        selectedTransform.WorldScale = scale;
+                    selectedTransform.WorldScale = scale;
                     break;
                 default:
                     break;
