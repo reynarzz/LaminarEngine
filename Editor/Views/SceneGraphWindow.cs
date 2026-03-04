@@ -67,11 +67,13 @@ namespace Editor.Views
                         if (SceneManager.Scenes[i].RootActors.Count > 0)
                         {
                             ImGui.Dummy(0, 4);
+                            ImGui.PushStyleVar(ImGuiStyleVar.IndentSpacing, 15.5f);
 
                             for (int j = 0; j < SceneManager.Scenes[i].RootActors.Count; j++)
                             {
                                 DrawActor(SceneManager.Scenes[i].RootActors[j]);
                             }
+                            ImGui.PopStyleVar();
                         }
 
                         ImGui.TreePop();
@@ -140,9 +142,8 @@ namespace Editor.Views
             }
 
             ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(1f, 1f, 1f, 1f));
-
             bool open = ImGui.TreeNodeEx("##node", flags);
-
+  
             var id = actor.GetID();
 
             if (ImGui.IsItemActivated())
