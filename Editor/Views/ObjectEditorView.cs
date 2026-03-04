@@ -3,6 +3,7 @@ using Editor.Utils;
 using Editor.Views;
 using Engine;
 using Engine.Utils;
+using GlmNet;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,7 @@ namespace Editor
         private const string NothingSelectedLabel = "Nothing is selected.";
         private bool _isTextSizeCalculated;
         private Vector2 _textSize;
+        private vec2 _windowsPadding = default;
 
         public ObjectEditorView() : base("Window/Object Editor")
         {
@@ -30,13 +32,13 @@ namespace Editor
                 { typeof(Material), new MaterialInspectorDrawer() },
                 { typeof(Texture2D), new TextureInspectorDrawer() },
                 { typeof(TilemapAsset), new TilemapInspectorDrawer() },
-                
+
             };
         }
 
         public override void OnDraw()
         {
-            if (OnBeginWindow("Object Editor"))
+            if (OnBeginWindow("Object Editor", ImGuiWindowFlags.None, true, _windowsPadding != default ? _windowsPadding : null))
             {
                 if (Selector.Selected)
                 {
@@ -72,6 +74,7 @@ namespace Editor
 
         private void InitDrawer(EditorDrawerBase drawer)
         {
+            _windowsPadding = drawer.WindowsPadding;
             if (_prevSelected != drawer)
             {
                 if (_prevSelected != null)

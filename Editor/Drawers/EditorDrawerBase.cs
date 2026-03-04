@@ -1,6 +1,8 @@
 ﻿using Editor.Utils;
 using Engine;
+using GlmNet;
 using ImGuiNET;
+using SPIRVCross.NET;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +14,7 @@ namespace Editor
 {
     internal abstract class EditorDrawerBase
     {
+        internal virtual vec2 WindowsPadding { get; } = default;
         protected abstract bool AutoDrawTitle { get; }
         internal virtual void OnOpen(IObject target) { }
         internal virtual void OnClose() { }
@@ -25,8 +28,7 @@ namespace Editor
             var cursorY = ImGui.GetCursorPosY();
             ImGui.Dummy(new Vector2(2, 0));
             ImGui.SameLine();
-            ImGui.Image(EditorTextureDatabase.GetIconImGui(GetIcon(target)), new Vector2(30, 30), 
-                        new Vector2(0, 1), new Vector2(1, 0));
+            EditorImGui.Image(EditorTextureDatabase.GetIconImGui(GetIcon(target)), new vec2(30, 30));
             ImGui.SameLine();
             ImGui.SetCursorPosY(cursorY + 6);
             ImGui.Text(target.Name);

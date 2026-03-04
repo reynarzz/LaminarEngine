@@ -1,4 +1,5 @@
 ﻿using Engine;
+using GlmNet;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -67,7 +68,7 @@ namespace Editor.Views
         public virtual void OnUpdate() { }
         public abstract void OnDraw();
 
-        protected bool OnBeginWindow(string name, ImGuiWindowFlags flags = ImGuiWindowFlags.None, bool canClose = true)
+        protected bool OnBeginWindow(string name, ImGuiWindowFlags flags = ImGuiWindowFlags.None, bool canClose = true, vec2? windowsPadding = default)
         {
             if (!_isOpened)
                 return false;
@@ -80,7 +81,11 @@ namespace Editor.Views
             {
                 Debug.Error($"Window error: Needs to call {nameof(OnEndWindow)}");
             }
-
+            if (windowsPadding != null)
+            {
+                var val = windowsPadding.GetValueOrDefault();
+                ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, new System.Numerics.Vector2(val.x, val.y));
+            }
             if (canClose)
             {
                 if (flags == ImGuiWindowFlags.None)
@@ -91,10 +96,15 @@ namespace Editor.Views
                 {
                     ImGui.Begin(name, ref _isOpened, flags);
                 }
-
+               
                 if (!_isOpened)
                 {
                     Close();
+                }
+
+                if (windowsPadding != null)
+                {
+                    ImGui.PopStyleVar();
                 }
                 return _isOpened;
             }
@@ -105,7 +115,10 @@ namespace Editor.Views
             }
 
             ImGui.Begin(name, flags);
-
+            if (windowsPadding != null)
+            {
+                ImGui.PopStyleVar();
+            }
             return true;
         }
 

@@ -20,7 +20,7 @@ namespace Editor.Drawers
 
         private readonly static Type[] _visibilityAttributes = [typeof(SerializedFieldAttribute), typeof(ShowFieldNoSerialize)];
         protected override bool AutoDrawTitle => false;
-
+        // internal override Vec2 WindowsPadding => new Vec2(0, 0.00001f);
         public ActorInspectorDrawer()
         {
         }
@@ -78,8 +78,7 @@ namespace Editor.Drawers
                 actor.Layer = LayerMask.NameToLayer(layerNames[layerIndex]);
             }
             ImGui.SameLine();
-            if (ImGui.ImageButton("##_ACTOR_EDIT_LAYER_", EditorTextureDatabase.GetIconImGui(EditorIcon.Edit), new Vector2(20, 20),
-                new Vector2(0, 1), new Vector2(1, 0)))
+            if (EditorImGui.ImageButton("##_ACTOR_EDIT_LAYER_", EditorTextureDatabase.GetIconImGui(EditorIcon.Edit), new vec2(20, 20)))
             {
 
             }
@@ -114,7 +113,7 @@ namespace Editor.Drawers
 
                 foreach (var componentType in _componentTypes)
                 {
-                    ImGui.Image(EditorTextureDatabase.GetIconImGui(EditorIcon.ScriptFile), new Vector2(15, 15), new Vector2(0, 1), new Vector2(1, 0));
+                    EditorImGui.Image(EditorTextureDatabase.GetIconImGui(EditorIcon.ScriptFile), new vec2(15, 15));
                     ImGui.SameLine();
 
                     if (ImGui.Selectable($"{componentType.Name}##{componentType.AssemblyQualifiedName}"))
@@ -193,9 +192,9 @@ namespace Editor.Drawers
 
             var flags = ImGuiTreeNodeFlags.DefaultOpen | ImGuiTreeNodeFlags.AllowOverlap |
                 ImGuiTreeNodeFlags.Framed | ImGuiTreeNodeFlags.NoTreePushOnOpen;
-
+            ImGui.PushStyleVar(ImGuiStyleVar.FrameRounding, 0);
             bool componentHeader = ImGui.TreeNodeEx($"##{baseID}", flags);
-
+            ImGui.PopStyleVar();
             if (ImGui.IsItemHovered() && ImGui.IsMouseClicked(ImGuiMouseButton.Right))
             {
                 ImGui.OpenPopup($"##POPUP_{baseID}");
@@ -229,7 +228,7 @@ namespace Editor.Drawers
                 imagePtr = EditorTextureDatabase.GetIconImGui(EditorIcon.ScriptFile);
             }
 
-            ImGui.Image(imagePtr, imageSize, new Vector2(0, 1), new Vector2(1, 0));
+            EditorImGui.Image(imagePtr, new vec2(imageSize.X, imageSize.Y));
 
 
             // Component name

@@ -3,6 +3,7 @@ using Editor.Build;
 using Editor.Data;
 using Editor.Utils;
 using Engine;
+using GlmNet;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -120,7 +121,7 @@ namespace Editor.Views
 
             for (int i = 0; i < _settingsNames.Length; i++)
             {
-                ImGui.Image(GetSettingsIcon((ProjectSettingsMenuType)i), new Vector2(16, 16), new Vector2(0, 1), new Vector2(1, 0));
+                EditorImGui.Image(GetSettingsIcon((ProjectSettingsMenuType)i), new vec2(16, 16));
                 ImGui.SameLine();
                 if (ImGui.Selectable(_settingsNames[i], _selectedSettings == i))
                 {
@@ -147,7 +148,7 @@ namespace Editor.Views
                 isValidSettings = true;
             }
 
-            ImGui.Image(GetSettingsIcon(GetSelectedSettingsMenu()), new Vector2(32, 32), new Vector2(0, 1), new Vector2(1, 0));
+            EditorImGui.Image(GetSettingsIcon(GetSelectedSettingsMenu()), new vec2(32, 32));
             ImGui.SameLine();
             var title = GetSelectedSettingsMenu().ToString();
             var size = ImGui.CalcTextSize(title);

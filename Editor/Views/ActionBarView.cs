@@ -2,6 +2,7 @@
 using Editor.Layers;
 using Editor.Utils;
 using Engine;
+using GlmNet;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace Editor.Views
         private bool _shouldSkip = false;
         private bool _shouldStop = false;
         
-        private readonly Vector2 _buttonSize = new Vector2(20, 20);
+        private readonly vec2 _buttonSize = new vec2(20, 20);
         private const float _barHeight = 38;
 
         public override void OnDraw()
@@ -47,8 +48,8 @@ namespace Editor.Views
 
             var playIcon = Application.IsInPlayMode ? EditorTextureDatabase.GetIconImGui(Utils.EditorIcon.Stop) :
                                                       EditorTextureDatabase.GetIconImGui(Utils.EditorIcon.Play);
-            ImGui.SetCursorPosX(viewport.Size.X / 2.0f - (_buttonSize.X * 3.0f / 2.0f) - (ImGui.GetStyle().ItemSpacing.X * 3.0f));
-            ImGui.SetCursorPosY(_barHeight / 2.0f - _buttonSize.Y / 2.0f - ImGui.GetStyle().FramePadding.Y);
+            ImGui.SetCursorPosX(viewport.Size.X / 2.0f - (_buttonSize.x * 3.0f / 2.0f) - (ImGui.GetStyle().ItemSpacing.X * 3.0f));
+            ImGui.SetCursorPosY(_barHeight / 2.0f - _buttonSize.y / 2.0f - ImGui.GetStyle().FramePadding.Y);
 
             if (Application.IsInPlayMode)
             {
@@ -57,7 +58,7 @@ namespace Editor.Views
                 ImGui.PushStyleColor(ImGuiCol.ButtonHovered, EditorColors.MainColor.ToVector4());
             }
 
-            if (ImGui.ImageButton("##Play", playIcon, _buttonSize))
+            if (EditorImGui.ImageButton("##Play", playIcon, _buttonSize))
             {
                 if (!Application.IsInPlayMode)
                 {
@@ -74,13 +75,13 @@ namespace Editor.Views
             }
 
             ImGui.SameLine();
-            if (ImGui.ImageButton("##Pause", EditorTextureDatabase.GetIconImGui(Utils.EditorIcon.Pause), _buttonSize))
+            if (EditorImGui.ImageButton("##Pause", EditorTextureDatabase.GetIconImGui(Utils.EditorIcon.Pause), _buttonSize))
             {
                 _shouldPause = true;
             }
             ImGui.SameLine();
             ImGui.BeginDisabled(!Application.IsInPlayMode);
-            if (ImGui.ImageButton("##Skip", EditorTextureDatabase.GetIconImGui(Utils.EditorIcon.Skip), _buttonSize))
+            if (EditorImGui.ImageButton("##Skip", EditorTextureDatabase.GetIconImGui(Utils.EditorIcon.Skip), _buttonSize))
             {
                 _shouldSkip = true;
             }

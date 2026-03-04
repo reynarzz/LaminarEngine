@@ -63,64 +63,61 @@ namespace Editor
         protected virtual void OnRenderChildWindows() { }
         public override void OnDraw()
         {
-            ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Vector2.Zero);
             ImGui.PushStyleColor(ImGuiCol.WindowBg, _canRenderWindow ? new Vector4(0.1f, 0.1f, 0.1f, 1.0f) : new Vector4(0, 0, 0, 1));
-            ImGui.PushID(_surfaceViewId);
-            ImGui.Begin(_viewName, WindowFlags);
-            OnRenderChildWindows();
-
-            var prevWinSize = WindowSize;
-            WindowSize = ImGui.GetWindowSize();
-            _contentRegionAvail = ImGui.GetContentRegionAvail().ToVec2();
-
-            if (Mathf.RoundToInt(prevWinSize.ToVec2()) != Mathf.RoundToInt(WindowSize.ToVec2()))
+            if (OnBeginWindow(_viewName, WindowFlags, true, new vec2()))
             {
-                OnImguiWindowSizeChanged();
-            }
+                OnRenderChildWindows();
 
-            var pos = ImGui.GetWindowPos();
-            var imageCursorPos = GetViewPosition().ToVector2();
-            var imageSize = GetViewSize().ToVector2();
-            WindowPosition = pos;
-            WindowPositionRender = pos + imageCursorPos;
+                var prevWinSize = WindowSize;
+                WindowSize = ImGui.GetWindowSize();
+                _contentRegionAvail = ImGui.GetContentRegionAvail().ToVec2();
 
-            
-            ICamera camera = null;
-            var surfaceCamerasInUse = _surface.Cameras != null && _surface.Cameras.Length > 0 &&
-                                      (_surface.Cameras?[0]?.TryGetTarget(out camera) ?? false) && camera != null &&
-                                      camera.IsAlive && camera.IsEnabled;
-            if (surfaceCamerasInUse)
-            {
-                var cameraRenderTarget = camera.OutRenderTexture?.NativeResource;
-
-                if (cameraRenderTarget == null && _surface.RenderTextures != null && _surface.RenderTextures.Length > 0)
+                if (Mathf.RoundToInt(prevWinSize.ToVec2()) != Mathf.RoundToInt(WindowSize.ToVec2()))
                 {
-                    cameraRenderTarget = _surface.RenderTextures[0].NativeResource;
+                    OnImguiWindowSizeChanged();
                 }
 
-                if (cameraRenderTarget != null)
+                var pos = ImGui.GetWindowPos();
+                var imageCursorPos = GetViewPosition().ToVector2();
+                var imageSize = GetViewSize().ToVector2();
+                WindowPosition = pos;
+                WindowPositionRender = pos + imageCursorPos;
+
+
+                ICamera camera = null;
+                var surfaceCamerasInUse = _surface.Cameras != null && _surface.Cameras.Length > 0 &&
+                                          (_surface.Cameras?[0]?.TryGetTarget(out camera) ?? false) && camera != null &&
+                                          camera.IsAlive && camera.IsEnabled;
+                if (surfaceCamerasInUse)
                 {
-                    _canRenderWindow = true;
-                    var frameBuffer = cameraRenderTarget as GLFrameBuffer;
-                    ImGui.SetCursorPos(imageCursorPos);
-                    ImGui.Image((nint)frameBuffer.ColorTexture.Handle, imageSize, new Vector2(0, 1), new Vector2(1, 0));
+                    var cameraRenderTarget = camera.OutRenderTexture?.NativeResource;
+
+                    if (cameraRenderTarget == null && _surface.RenderTextures != null && _surface.RenderTextures.Length > 0)
+                    {
+                        cameraRenderTarget = _surface.RenderTextures[0].NativeResource;
+                    }
+
+                    if (cameraRenderTarget != null)
+                    {
+                        _canRenderWindow = true;
+                        var frameBuffer = cameraRenderTarget as GLFrameBuffer;
+                        ImGui.SetCursorPos(imageCursorPos);
+                        ImGui.Image((nint)frameBuffer.ColorTexture.Handle, imageSize, new Vector2(0, 1), new Vector2(1, 0));
+                    }
+                    else
+                    {
+                        DefaultNoCamerasFound();
+                    }
                 }
                 else
                 {
                     DefaultNoCamerasFound();
                 }
-            }
-            else
-            {
-                DefaultNoCamerasFound();
-            }
 
-            OnWindowRender();
-
-            ImGui.End();
-            ImGui.PopID();
+                OnWindowRender();
+            }
+            OnEndWindow();
             ImGui.PopStyleColor();
-            ImGui.PopStyleVar();
         }
 
         private void DefaultNoCamerasFound()
