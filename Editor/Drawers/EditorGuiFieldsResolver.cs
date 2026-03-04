@@ -67,7 +67,8 @@ namespace Editor.Utils
                 value = refStr;
             }
 
-            return changed;
+            var isEnterPressed = ImGui.IsKeyDown(ImGuiKey.Enter) || ImGui.IsKeyDown(ImGuiKey.KeypadEnter);
+            return changed && ((pressEnterToConfirm && isEnterPressed) || !pressEnterToConfirm);
         }
 
         public static bool DrawDoubleField(string name, ref double value, float itemWidth = 0, bool pressEnterToConfirm = false)

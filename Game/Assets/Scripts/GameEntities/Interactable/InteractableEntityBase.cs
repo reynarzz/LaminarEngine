@@ -65,7 +65,11 @@ namespace Game
         protected override void OnLateUpdate()
         {
             base.OnLateUpdate();
-            InteractableRenderer.Transform.LocalPosition += vec3.Up * MathF.Sin(Time.TimeCurrent * 5) * Time.DeltaTime;
+
+            if (InteractableRenderer)
+            {
+                InteractableRenderer.Transform.LocalPosition += vec3.Up * MathF.Sin(Time.TimeCurrent * 5) * Time.DeltaTime;
+            }
         }
 
         public abstract bool TryInteract(Player player);

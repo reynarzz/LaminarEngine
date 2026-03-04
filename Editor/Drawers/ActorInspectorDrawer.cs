@@ -63,9 +63,10 @@ namespace Editor.Drawers
             ImGui.SameLine();
 
             var actorName = actor.Name;
-            if (EditorGuiFieldsResolver.DrawStringField("##_ACTOR_NAME_", ref actorName))
+            if (EditorGuiFieldsResolver.DrawStringField("##_ACTOR_NAME_", ref actorName, 0, true))
             {
                 actor.Name = actorName;
+                Debug.Log("Changed name: " + actor.Name);
             }
 
             ImGui.Text("Layer");
