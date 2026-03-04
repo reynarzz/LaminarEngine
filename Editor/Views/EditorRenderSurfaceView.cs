@@ -1,4 +1,5 @@
-﻿using Editor.Views;
+﻿using Editor.Utils;
+using Editor.Views;
 using Engine;
 using Engine.Graphics;
 using Engine.Layers;
@@ -79,7 +80,7 @@ namespace Editor
 
                 var pos = ImGui.GetWindowPos();
                 var imageCursorPos = GetViewPosition().ToVector2();
-                var imageSize = GetViewSize().ToVector2();
+                var imageSize = GetViewSize();
                 WindowPosition = pos;
                 WindowPositionRender = pos + imageCursorPos;
 
@@ -102,7 +103,7 @@ namespace Editor
                         _canRenderWindow = true;
                         var frameBuffer = cameraRenderTarget as GLFrameBuffer;
                         ImGui.SetCursorPos(imageCursorPos);
-                        ImGui.Image((nint)frameBuffer.ColorTexture.Handle, imageSize, new Vector2(0, 1), new Vector2(1, 0));
+                        EditorImGui.Image((nint)frameBuffer.ColorTexture.Handle, imageSize);
                     }
                     else
                     {
