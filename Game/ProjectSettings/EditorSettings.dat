@@ -1,0 +1,58 @@
+[
+  {
+    "Name": "CameraPosition",
+    "Type": "Vec3",
+    "InternalType": "GlmNet.vec3, Engine",
+    "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
+    "Simple": {
+      "Kind": "Vec3",
+      "Value": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      }
+    }
+  },
+  {
+    "Name": "CameraRotation",
+    "Type": "Quat",
+    "InternalType": "GlmNet.quat, Engine",
+    "TypeId": "bd9d317e-0216-6052-93b0-a68d64e1c1a1",
+    "Simple": {
+      "Kind": "Quat",
+      "Value": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+      }
+    }
+  },
+  {
+    "Name": "OpenedSceneRefId",
+    "Type": "String",
+    "InternalType": "System.String, System.Private.CoreLib",
+    "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+    "Simple": {
+      "Kind": "String",
+      "Value": "e185a5b6-1dc1-463b-b964-4db54454067f"
+    }
+  },
+  {
+    "Name": "WindowsSettings",
+    "Type": "ComplexCollection",
+    "InternalType": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib],[Editor.WindowSettings, Editor]], System.Private.CoreLib",
+    "TypeId": "73ec587f-4945-7ff4-837f-289f097e5cea",
+    "Simple": null,
+    "Collection": {
+      "$type": "Engine.Serialization.DictionaryClass, Engine",
+      "$value": {
+        "KeyType": "None",
+        "ValueType": "None",
+        "Keys": [],
+        "Values": [],
+        "CollectionType": "Dictionary"
+      }
+    }
+  }
+]

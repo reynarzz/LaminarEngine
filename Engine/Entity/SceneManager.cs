@@ -1,4 +1,5 @@
 ﻿using Engine.Layers;
+using Engine.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +28,7 @@ namespace Engine
             ActiveScene = _scenes[1];
         }
 
-        public static void LoadScene(string name)
+        public static Scene LoadEmptyScene(string name)
         {
             ClearScenes();
             OnCleanupUpdate();
@@ -36,7 +37,36 @@ namespace Engine
             var scene = new Scene(name);
             ActiveScene = scene;
             _scenes.Add(scene);
+
+            return scene;
         }
+        public static void LoadScene(string path)
+        {
+            var sceneAsset = Assets.GetScene(path);
+            LoadSceneFromAsset(sceneAsset);
+        }
+
+        public static void LoadScene(Guid id)
+        {
+            if (id == Guid.Empty)
+            {
+                Debug.Error("Empty scene id");
+                return;
+            }
+
+            var sceneAsset = Assets.GetAssetFromGuid(id) as SceneAsset;
+            LoadSceneFromAsset(sceneAsset);
+        }
+
+        private static void LoadSceneFromAsset(SceneAsset sceneAsset)
+        {
+            if (sceneAsset)
+            {
+                var scene = LoadEmptyScene(sceneAsset.Name);
+                SceneDeserializer.DeserializeScene(sceneAsset.SceneIR, scene);
+            }
+        }
+        
 
         internal static void UnloadScene(Scene scene)
         {

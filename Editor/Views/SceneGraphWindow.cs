@@ -141,7 +141,7 @@ namespace Editor.Views
 
             ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(1f, 1f, 1f, 1f));
 
-            bool open = ImGui.TreeNodeEx("##" + actor.GetID().ToString(), flags);
+            bool open = ImGui.TreeNodeEx("##node", flags);
 
             var id = actor.GetID();
 

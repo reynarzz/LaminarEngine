@@ -18,15 +18,12 @@ namespace Editor.Layers
         private bool _canSwapDll = false;
         private bool _isSwappingDll = false;
 
-        public HotReloadLayer()
+        public override async Task InitializeAsync()
         {
+            await BuildSystem.BuildAsync(PlatformBuild.GameAppDomain);
+            _canSwapDll = true;
+            UpdateLayer();
             BuildSystem.OnBuildCompleted += OnBuildCompleted;
-
-        }
-
-        public override Task InitializeAsync()
-        {
-            return BuildSystem.BuildAsync(PlatformBuild.GameAppDomain);
         }
 
 

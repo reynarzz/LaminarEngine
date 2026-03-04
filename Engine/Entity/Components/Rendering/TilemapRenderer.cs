@@ -89,7 +89,9 @@ namespace Engine
 
             if (layer != null)
             {
-                _rendererData.Mesh.Vertices = layer.Vertices ?? Array.Empty<Vertex>();
+                layer.Vertices = layer.Vertices ?? Array.Empty<Vertex>();
+
+                _rendererData.Mesh.Vertices = layer.Vertices;
                 _rendererData.Mesh.IndicesToDrawCount = layer.Vertices.Length == 0 ? 0 : layer.IndicesToDraw;
                 _rendererData.Bounds = layer.Bounds;
             }

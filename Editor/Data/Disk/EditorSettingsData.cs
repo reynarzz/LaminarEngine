@@ -12,8 +12,8 @@ namespace Editor
     {
         [SerializedField] internal vec3 CameraPosition { get; set; }
         [SerializedField] internal quat CameraRotation { get; set; }
-        [SerializedField] internal string OpenedSceneRefId { get; set; }
-        [SerializedField] internal Dictionary<string, WindowSettings>  WindowsSettings { get; set; }
+        [SerializedField] internal string OpenedSceneRefId { get; set; } = string.Empty;
+        [SerializedField] internal Dictionary<string, WindowSettings> WindowsSettings { get; set; } = new();
     }
 
     internal class WindowSettings

@@ -93,7 +93,12 @@ namespace Engine
             return _loadedPaths.ToArray();
         }
 
-       
+        internal static SceneAsset GetScene(string name)
+        {
+            return Get<SceneAsset>(name);
+        }
+
+
 #endif
     }
 }

@@ -132,7 +132,7 @@ namespace Game
 
         private void OnComplete()
         {
-            SceneManager.LoadScene("Game");
+            SceneManager.LoadEmptyScene("Game");
             new Actor<GameManager>("GameManager");
         }
     }

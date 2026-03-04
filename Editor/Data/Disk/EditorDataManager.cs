@@ -16,7 +16,9 @@ namespace Editor.Data
     internal static class EditorDataManager
     {
         private static BuildSettings _buildSettings;
+        private static EditorSettingsData _editorSettings;
         public static BuildSettings BuildSettings => _buildSettings ?? (_buildSettings = LoadData<BuildSettings>(BUILD_SETTINGS));
+        public static EditorSettingsData EditorSettings => _editorSettings ?? (_editorSettings = LoadData<EditorSettingsData>(EDITOR_SETTINGS));
 
 
         private const string BUILD_SETTINGS = "BuildSettings";
@@ -42,6 +44,7 @@ namespace Editor.Data
 
             SaveBuildSettings();
             SaveProjectSettings();
+            SaveEditorSettings();
         }
 
         private static void SaveBuildSettings()
@@ -53,6 +56,11 @@ namespace Editor.Data
         {
             var service = EngineServices.GetService<EngineDataService>();
             WriteData(PROJECT_SETTINGS, service.GetProjectSettings());
+        }
+
+        internal static void SaveEditorSettings()
+        {
+            WriteData(EDITOR_SETTINGS, _editorSettings);
         }
 
         private static void WriteData(string name, object data)

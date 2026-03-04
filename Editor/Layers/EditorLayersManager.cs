@@ -7,6 +7,7 @@ using Engine.Layers;
 using Engine.Serialization;
 using Engine.Utils;
 using Editor.Cooker;
+using Editor.Data;
 
 namespace Editor
 {
@@ -77,9 +78,32 @@ namespace Editor
 
                 Debug.Log("Layers fully initialized");
                 LayersInitialized = true;
+
+                await MainThreadDispatcher.EnqueueAsync(OnLayersInitialized);
             }
 
             Task.Run(InitializeLayers);
+        }
+
+        private void OnLayersInitialized()
+        {
+            LoadScene();
+        }
+
+        private void LoadScene()
+        {
+            if (Guid.TryParse(EditorDataManager.EditorSettings.OpenedSceneRefId, out var id))
+            {
+                SceneManager.LoadScene(id);
+            }
+            else
+            {
+                // TODO: load default scene from another place.
+                SceneManager.LoadEmptyScene("Default Scene");
+                var camera = new Actor("Main Camera").AddComponent<Camera>();
+                camera.Transform.LocalPosition = new GlmNet.vec3(0, 0, -10);
+                camera.BackgroundColor = new Color32(49, 121, 79, 255);
+            }
         }
 
         private Shader _test;
@@ -226,29 +250,6 @@ namespace Editor
             }
         }
 
-        private void SerializerTypesFixer()
-        {
-            var files = new List<string>();
-            var shaders = Directory.GetFiles(EditorPaths.AppRoot, "*.shader", SearchOption.AllDirectories);
-            var materials = Directory.GetFiles(EditorPaths.AppRoot, "*.material", SearchOption.AllDirectories);
-            var metas = Directory.GetFiles(EditorPaths.AppRoot, "*.mt", SearchOption.AllDirectories);
-            var data = Directory.GetFiles(EditorPaths.AppRoot, "*.dat", SearchOption.AllDirectories);
-            files.AddRange(shaders);
-            files.AddRange(materials);
-            files.AddRange(metas);
-            files.AddRange(data);
-            string shared = "Engine";
-
-            foreach (var file in files)
-            {
-                Console.WriteLine(file);
-                var txt = File.ReadAllText(file);
-                txt = txt.Replace("Engine.DictionaryData`2[[System.Object, System.Private.CoreLib],[System.Object, System.Private.CoreLib]], Engine",
-                    "Engine.DictionaryData, Engine");
-
-                File.WriteAllText(file, txt);
-            }
-        }
 
         private void GenerateIconAndroidSizes(Texture defaultTexture, Texture foreground, Texture background)
         {
@@ -284,40 +285,6 @@ namespace Editor
             AddIcons("appicon_foreground", foreground);
             AddIcons("appicon_background", background);
 
-        }
-
-        private void ExportSlicedSprites()
-        {
-            void Slice(Texture2D texture, int sliceX, int sliceY, float pivotX, float pivotY)
-            {
-                var meta = EditorAssetUtils.GetAssetMeta(texture) as TextureMetaFile;
-                meta.Config.IsAtlas = true;
-                TextureAtlasUtils.SliceTiles(meta.AtlasData, sliceX, sliceY, texture.Width, texture.Height, pivotX, pivotY);
-                EditorAssetUtils.WriteMeta(texture.Path, meta);
-            }
-
-            var paths = new string[]
-            {
-                "KingsAndPigsSprites/01-King Human/Idle (78x58)S.png",
-                "KingsAndPigsSprites/01-King Human/Run (78x58)S.png",
-                "KingsAndPigsSprites/01-King Human/Jump (78x58)S.png",
-                "KingsAndPigsSprites/01-King Human/Fall (78x58)S.png",
-                "KingsAndPigsSprites/01-King Human/Hit (78x58).png",
-                "KingsAndPigsSprites/01-King Human/Dead (78x58).png",
-                "KingsAndPigsSprites/01-King Human/Attack (78x58).png",
-                "KingsAndPigsSprites/01-King Human/Door In (78x58).png",
-                "KingsAndPigsSprites/01-King Human/Door Out (78x58).png"
-
-
-
-
-
-            };
-
-            foreach (var path in paths)
-            {
-                Slice(Assets.GetTexture(path), 78, 58, 0.4f, 0.42f);
-            }
         }
 
         private void LoadScene(SceneIR scene)

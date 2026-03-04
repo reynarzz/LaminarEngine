@@ -1,20 +1,5 @@
 [
   {
-    "Name": "Scenes",
-    "Type": "ComplexCollection",
-    "InternalType": "System.Collections.Generic.List`1[[System.Guid, System.Private.CoreLib]], System.Private.CoreLib",
-    "TypeId": "b296fd12-bde3-15f4-9d41-fdf34414a159",
-    "Simple": null,
-    "Collection": {
-      "$type": "Engine.Serialization.CollectionClasses, Engine",
-      "$value": {
-        "Value": [],
-        "ItemsType": "None",
-        "CollectionType": "List"
-      }
-    }
-  },
-  {
     "Name": "_platformsBuildSettings",
     "Type": "ComplexCollection",
     "InternalType": "System.Collections.Generic.Dictionary`2[[Editor.Build.PlatformBuild, Editor],[Editor.Build.PlatformBuildSettings, Editor]], System.Private.CoreLib",

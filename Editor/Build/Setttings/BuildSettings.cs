@@ -9,7 +9,6 @@ namespace Editor.Build
 {
     internal class BuildSettings
     {
-        [SerializedField] public List<Guid> Scenes { get; private set; } = new();
         [SerializedField] private Dictionary<PlatformBuild, PlatformBuildSettings> _platformsBuildSettings; 
         
         public BuildSettings()
