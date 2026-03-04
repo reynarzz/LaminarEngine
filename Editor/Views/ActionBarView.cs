@@ -51,6 +51,11 @@ namespace Editor.Views
             ImGui.SetCursorPosX(viewport.Size.X / 2.0f - (_buttonSize.x * 3.0f / 2.0f) - (ImGui.GetStyle().ItemSpacing.X * 3.0f));
             ImGui.SetCursorPosY(_barHeight / 2.0f - _buttonSize.y / 2.0f - ImGui.GetStyle().FramePadding.Y);
 
+            unsafe
+            {
+                ImGui.PushStyleColor(ImGuiCol.ButtonActive, *ImGui.GetStyleColorVec4(ImGuiCol.ButtonHovered));
+            }
+
             if (Application.IsInPlayMode)
             {
                 ImGui.PushStyleColor(ImGuiCol.Button, EditorColors.MainColor.ToVector4());
@@ -85,6 +90,7 @@ namespace Editor.Views
             {
                 _shouldSkip = true;
             }
+            ImGui.PopStyleColor();
             ImGui.EndDisabled();
             ImGui.EndDisabled();
 

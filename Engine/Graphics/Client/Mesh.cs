@@ -71,7 +71,6 @@ namespace Engine
         public uint Color;
         private int _textureIndex;
         public int VertexIndex;
-        public vec3 WorldCenter;
 
         public int TextureIndex { get => _textureIndex; set => _textureIndex = value; }
 

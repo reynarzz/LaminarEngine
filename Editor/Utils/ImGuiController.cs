@@ -3,7 +3,6 @@ using Editor.Utils;
 using Engine;
 using GLFW;
 using ImGuiNET;
-using Engine;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -124,7 +123,7 @@ namespace Editor
 
             style.Colors[(int)ImGuiCol.Button] = new Vector4(0.2f, 0.2f, 0.21568628f, 1);
             style.Colors[(int)ImGuiCol.ButtonHovered] = new Vector4(0.23f, 0.23f, 0.23f, 1);
-            style.Colors[(int)ImGuiCol.ButtonActive] = new Vector4(0.23f, 0.23f, 0.23f, 1);
+            style.Colors[(int)ImGuiCol.ButtonActive] = new Vector4(0.20f, 0.20f, 0.20f, 1);
 
             style.Colors[(int)ImGuiCol.Header] = new Vector4(0.2f, 0.2f, 0.21568628f, 1);
             style.Colors[(int)ImGuiCol.HeaderHovered] = new Vector4(0.23f, 0.23f, 0.23f, 1);

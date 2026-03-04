@@ -133,7 +133,6 @@ namespace Engine
                 Color = color,
                 Position = new vec3(worldMatrix * new vec4(-px, -py, 0, 1)),
                 UV = uvs.BottomLeftUV,
-                WorldCenter = new vec3(worldMatrix[3])
             };
 
             vertices.v1 = new Vertex()
@@ -141,7 +140,6 @@ namespace Engine
                 Color = color,
                 Position = new vec3(worldMatrix * new vec4(-px, height - py, 0, 1)),
                 UV = uvs.TopLeftUV,
-                WorldCenter = new vec3(worldMatrix[3])
             };
 
             vertices.v2 = new Vertex()
@@ -149,7 +147,6 @@ namespace Engine
                 Color = color,
                 Position = new vec3(worldMatrix * new vec4(width - px, height - py, 0, 1)),
                 UV = uvs.TopRightUV,
-                WorldCenter = new vec3(worldMatrix[3])
             };
 
             vertices.v3 = new Vertex()
@@ -157,7 +154,6 @@ namespace Engine
                 Color = color,
                 Position = new vec3(worldMatrix * new vec4(width - px, -py, 0, 1)),
                 UV = uvs.BottomRightUV,
-                WorldCenter = new vec3(worldMatrix[3])
             };
         }
 
@@ -246,7 +242,7 @@ namespace Engine
                     UV = new vec2(side, 0),
                     Color = color,
                     VertexIndex = vertexIndex,
-                    WorldCenter = dir.Normalized
+                    // WorldCenter = dir.Normalized // TODO: Implement in a different vertex type.
                 };
             }
 

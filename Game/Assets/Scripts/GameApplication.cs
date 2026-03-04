@@ -36,8 +36,6 @@ namespace Game
         // when a interactable is locked by items show the items needed.
 
         // -Stretch goals:
-        // Bake tilemaps quads vertices, and collision data in binary file, the geometry should be already converted to the memory layout of the vertex array.
-        // Implement bounds in sprites/renderers.
         // Implement event in transform to know when scale changed, and get the delta scale.
         // Add 'CheckIfValidObject()' to all properties of the engine's components and actor.
         // Game using both assets, and using stencil buffer to change between them sphere.
@@ -63,8 +61,7 @@ namespace Game
 #elif EDITOR
                 Debug.Log("Running editor");
 #endif
-#endif
-#if RELEASE
+#elif RELEASE
             Screen.IsFullScreen = true;
             WindowManager.Window.CursorVisible = false;
 #endif
@@ -72,14 +69,6 @@ namespace Game
 
         public override void Close() 
         {
-//#if DEBUG
-//            var sb = new StringBuilder();
-//            foreach (var item in Assets.LoadedPaths())
-//            {
-//                sb.AppendLine(item);
-//            }
-//            File.WriteAllText(Paths.GetShipAssetsFilePath(), sb.ToString());
-//#endif
         }
     }
 }
