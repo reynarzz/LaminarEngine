@@ -57,11 +57,9 @@ Recommended
 This project is licensed under the Non-Commercial Copyleft License (NCCL).
 
 ### You are allowed to:
-- View and learn from the code
 - Fork and modify it for non-commercial purposes
 - Use parts of it in your own non-commercial projects, with attribution
 
 ### You are NOT allowed to:
-- Use this code in commercial games, engines, or products
+- Use this code in commercial games, engines, or revenue-generating products
 - Sell or monetize any part of it
-- Use it in revenue-generating projects
