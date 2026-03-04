@@ -12442,6 +12442,10 @@ namespace ImGuiNET
             }
             return ret != 0;
         }
+        public static void Dummy(float width, float height)
+        {
+            Dummy(new Vector2(width, height));
+        }
         public static void Dummy(Vector2 size)
         {
             ImGuiNative.igDummy(size);

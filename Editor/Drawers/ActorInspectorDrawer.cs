@@ -20,7 +20,7 @@ namespace Editor.Drawers
 
         private readonly static Type[] _visibilityAttributes = [typeof(SerializedFieldAttribute), typeof(ShowFieldNoSerialize)];
         protected override bool AutoDrawTitle => false;
-        // internal override Vec2 WindowsPadding => new Vec2(0, 0.00001f);
+        internal override vec2? WindowsPadding => new vec2();
         public ActorInspectorDrawer()
         {
         }
@@ -52,8 +52,19 @@ namespace Editor.Drawers
 
         private void DrawActor(Actor actor)
         {
-            BeginGroupPanel(actor.Name, new(ImGui.GetContentRegionAvail().X, 0));
+            var drawList = ImGui.GetWindowDrawList();
 
+            var pos = ImGui.GetCursorScreenPos();
+            float width = ImGui.GetContentRegionAvail().X;
+            float height = 100.0f;
+
+            uint color = ImGui.GetColorU32(new Vector4(0.14f, 0.14f, 0.14f, 1.0f));
+
+            drawList.AddRectFilled(pos, new Vector2(pos.X + width + 1, pos.Y + height), color);
+            // BeginGroupPanel(actor.Name, new(ImGui.GetContentRegionAvail().X, 0));
+            var identationAmount = 6;
+            ImGui.Indent(identationAmount);
+            ImGui.Dummy(0, 10);
             var isEnabled = actor.IsActiveSelf;
             if (EditorGuiFieldsResolver.DrawBoolField("##__ENABLE_ACTOR__", ref isEnabled))
             {
@@ -88,7 +99,8 @@ namespace Editor.Drawers
                 PopulateAllComponentTypes();
                 ImGui.OpenPopup("DropdownPopup");
             }
-
+            ImGui.Unindent(identationAmount);
+            ImGui.Dummy(0, 5);
             // Set the position and size for the popup
             Vector2 popupPos = ImGui.GetCursorScreenPos();
             popupPos.Y -= 3.5f;
@@ -96,7 +108,7 @@ namespace Editor.Drawers
             ImGui.SetNextWindowPos(new Vector2(popupPos.X, popupPos.Y));
             ImGui.SetNextWindowSize(new Vector2(ImGui.GetContentRegionAvail().X, 260.0f));
 
-            if (ImGui.BeginPopup("DropdownPopup"))
+            if (EditorImGui.BeginPopup("DropdownPopup"))
             {
                 string search = string.Empty;
 
@@ -128,7 +140,7 @@ namespace Editor.Drawers
                 ImGui.EndPopup();
             }
 
-            EndGroupPanel();
+            // EndGroupPanel();
         }
 
 
@@ -239,7 +251,7 @@ namespace Editor.Drawers
             ImGui.Text(component.GetType().Name);
 
             // Context menu
-            if (ImGui.BeginPopup($"##POPUP_{baseID}"))
+            if (EditorImGui.BeginPopup($"##POPUP_{baseID}"))
             {
                 if (ImGui.MenuItem("Reset"))
                 {

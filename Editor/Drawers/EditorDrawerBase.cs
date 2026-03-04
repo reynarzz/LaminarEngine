@@ -14,7 +14,7 @@ namespace Editor
 {
     internal abstract class EditorDrawerBase
     {
-        internal virtual vec2 WindowsPadding { get; } = default;
+        internal virtual vec2? WindowsPadding { get; } = default;
         protected abstract bool AutoDrawTitle { get; }
         internal virtual void OnOpen(IObject target) { }
         internal virtual void OnClose() { }

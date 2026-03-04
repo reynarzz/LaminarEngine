@@ -1,4 +1,5 @@
-﻿using Engine;
+﻿using Editor.Utils;
+using Engine;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -48,7 +49,7 @@ namespace Editor.Views
                     if (ImGui.IsItemClicked())
                         Selector.Selected = actor;
 
-                    if (ImGui.BeginPopupContextItem("ActorContext"))
+                    if (EditorImGui.BeginPopupContextItem("ActorContext"))
                     {
                         Selector.Selected = actor;
 
@@ -104,7 +105,7 @@ namespace Editor.Views
                     ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.OpenOnArrow | ImGuiTreeNodeFlags.SpanFullWidth | ImGuiTreeNodeFlags.DefaultOpen;
 
                     bool open = ImGui.TreeNodeEx(SceneManager.Scenes[i].Name, flags);
-                    if (ImGui.BeginPopupContextItem("SceneContext"))
+                    if (EditorImGui.BeginPopupContextItem("SceneContext"))
                     {
                         if (i > 0 && ImGui.MenuItem("Unload Scene"))
                         {

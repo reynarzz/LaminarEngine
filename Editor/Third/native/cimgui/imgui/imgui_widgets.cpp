@@ -1874,7 +1874,7 @@ bool ImGui::BeginCombo(const char* label, const char* preview_value, ImGuiComboF
 
             //RenderArrow(window->DrawList, ImVec2(value_x2 + style.FramePadding.y, bb.Min.y + style.FramePadding.y), text_col, ImGuiDir_Down, 1.0f);
 
-            // Reynarzz
+            // Reynarzz arrow
             RenderArrow(window->DrawList, ImVec2(value_x2 + style.FramePadding.y, bb.Min.y + style.FramePadding.y + 1.2f), ColorConvertFloat4ToU32({ 0.5f, 0.5f , 0.5f , 1.0f }), ImGuiDir_Down, 0.9f);
 
         }
@@ -6739,7 +6739,7 @@ bool ImGui::TreeNodeBehavior(ImGuiID id, ImGuiTreeNodeFlags flags, const char* l
             else if (!is_leaf)
                 //RenderArrow(window->DrawList, ImVec2(text_pos.x - text_offset_x + padding.x, text_pos.y), text_col, is_open ? ((flags & ImGuiTreeNodeFlags_UpsideDownArrow) ? ImGuiDir_Up : ImGuiDir_Down) : ImGuiDir_Right, 1.0f);
                 // Reynarzz
-                RenderArrow(window->DrawList, ImVec2(text_pos.x - text_offset_x + padding.x, text_pos.y + 1.2f), ColorConvertFloat4ToU32({ 0.5f, 0.5f , 0.5f , 1.0f }), is_open ? ((flags & ImGuiTreeNodeFlags_UpsideDownArrow) ? ImGuiDir_Up : ImGuiDir_Down) : ImGuiDir_Right, 0.9f);
+                RenderArrow(window->DrawList, ImVec2(text_pos.x - text_offset_x + padding.x, text_pos.y + 1.9f), ColorConvertFloat4ToU32({ 0.5f, 0.5f , 0.5f , 1.0f }), is_open ? ((flags & ImGuiTreeNodeFlags_UpsideDownArrow) ? ImGuiDir_Up : ImGuiDir_Down) : ImGuiDir_Right, 0.8f);
             else // Leaf without bullet, left-adjusted text
                 text_pos.x -= text_offset_x - padding.x;
             if (flags & ImGuiTreeNodeFlags_ClipLabelForTrailingButton)

@@ -22,7 +22,6 @@ namespace Editor
         private const string NothingSelectedLabel = "Nothing is selected.";
         private bool _isTextSizeCalculated;
         private Vector2 _textSize;
-        private vec2 _windowsPadding = default;
 
         public ObjectEditorView() : base("Window/Object Editor")
         {
@@ -38,7 +37,8 @@ namespace Editor
 
         public override void OnDraw()
         {
-            if (OnBeginWindow("Object Editor", ImGuiWindowFlags.None, true, _windowsPadding != default ? _windowsPadding : null))
+            var padding = GetDrawerWindowsPadding();
+            if (OnBeginWindow("Object Editor", ImGuiWindowFlags.None, true, padding))
             {
                 if (Selector.Selected)
                 {
@@ -72,9 +72,22 @@ namespace Editor
             OnEndWindow();
         }
 
+        private vec2? GetDrawerWindowsPadding()
+        {
+            if (Selector.Selected)
+            {
+                var transform = Selector.SelectedTransform();
+
+                var type = transform?.Actor ? typeof(Actor) : Selector.Selected.GetType();
+                if (_drawers.TryGetValue(type, out var drawer))
+                {
+                    return drawer.WindowsPadding;
+                }
+            }
+            return null;
+        }
         private void InitDrawer(EditorDrawerBase drawer)
         {
-            _windowsPadding = drawer.WindowsPadding;
             if (_prevSelected != drawer)
             {
                 if (_prevSelected != null)

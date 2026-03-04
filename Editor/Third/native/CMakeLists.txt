@@ -3,6 +3,11 @@ cmake_minimum_required(VERSION 3.20)
 # Force clang-cl BEFORE project()
 
 set(PROJECT_NAME EditorNatives)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 if (WIN32)
     set(CMAKE_C_COMPILER clang CACHE STRING "" FORCE)
     set(CMAKE_CXX_COMPILER clang++ CACHE STRING "" FORCE)
@@ -63,6 +68,16 @@ target_sources(${PROJECT_NAME} PRIVATE
     $<TARGET_OBJECTS:cimnodes_obj>
     $<TARGET_OBJECTS:cimguizmo_obj>
 )
+
+if(MSVC)
+foreach(config DEBUG RELEASE RELWITHDEBINFO MINSIZEREL)
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY_${config} "${OUTPUT_DIR}/win"
+        LIBRARY_OUTPUT_DIRECTORY_${config} "${OUTPUT_DIR}/win"
+        ARCHIVE_OUTPUT_DIRECTORY_${config} "${OUTPUT_DIR}/lib"
+    )
+endforeach()
+endif()
 
 message(STATUS "GLFW include path: ${ENGINE_NATIVES}/glfw/include")
 

@@ -838,14 +838,15 @@ namespace Editor.Utils
         {
             bool changed = false;
             var size = list.Count;
-
+            var cursorPosY = ImGui.GetCursorPosY();
             if (canChangeSize)
             {
                 ImGui.SameLine();
                 ImGui.SetCursorPosX(ImGui.GetWindowWidth() - 120);
+                ImGui.SetCursorPosY(cursorPosY + 3);
 
                 ImGui.BeginDisabled(size - 1 < 0);
-                if (ImGui.Button($"-##Remove_{name}", new Vector2(22, 22)))
+                if (EditorImGui.ImageButtonFromIcon($"-##Remove_{name}", EditorIcon.Minus, new vec2(12, 12)))
                 {
                     changed = true;
 
@@ -864,7 +865,8 @@ namespace Editor.Utils
             if (canChangeSize)
             {
                 ImGui.BeginDisabled(isMaxLengthReached);
-                if (ImGui.Button($"+##Add_{name}", new Vector2(22, 22)))
+                ImGui.SetCursorPosY(cursorPosY + 3);
+                if (EditorImGui.ImageButtonFromIcon($"+##Add_{name}", EditorIcon.Plus, new vec2(12, 12)))
                 {
                     changed = true;
                     onAddCallback(list, size + 1);
@@ -896,16 +898,19 @@ namespace Editor.Utils
                     changed = false;
                 }
             }
-           
+
             bool skip = false;
 
             for (int i = 0; i < list.Count; i++)
             {
                 bool show;
                 skip = false;
+                var cursorPosX = ImGui.GetCursorPosX();
+                 
                 if (canChangeSize)
                 {
-                    if (ImGui.Button($"X##_DELETE_BUTTON_{i}_{name}", new Vector2(22, 22)))
+                    ImGui.SetCursorPosX(cursorPosX + 12);
+                    if (EditorImGui.ImageButtonFromIcon($"_DELETE_BUTTON_{i}_{name}", EditorIcon.Close, new vec2(10, 10)))
                     {
                         onRemoveCallback(list, i);
                         changed = true;
@@ -914,7 +919,10 @@ namespace Editor.Utils
                     }
                     ImGui.SameLine();
                 }
-                
+                cursorPosY = ImGui.GetCursorPosY();
+                ImGui.SetCursorPosY(cursorPosY - 2);
+                cursorPosX = ImGui.GetCursorPosX();
+                ImGui.SetCursorPosX(cursorPosX - 2);
                 if (itemAsTree)
                 {
                     show = ImGui.TreeNode($"item {i}_{name}");
@@ -929,6 +937,8 @@ namespace Editor.Utils
 
                 if (show)
                 {
+                    cursorPosY = ImGui.GetCursorPosY();
+                    ImGui.SetCursorPosY(cursorPosY - 2);
                     // if (!skip)
                     {
                         if (drawCallback(i, 0, list[i]))
@@ -966,7 +976,7 @@ namespace Editor.Utils
             }
 
             ImGui.BeginDisabled(dictionary.Count - 1 < 0);
-            if (ImGui.Button("-", new Vector2(22, 22)))
+            if (EditorImGui.ImageButtonFromIcon($"-##Remove_Dict{name}", EditorIcon.Minus, new vec2(12, 12)))
             {
                 if (dictionary.Count - 1 >= 0)
                 {
@@ -977,7 +987,7 @@ namespace Editor.Utils
             }
             ImGui.EndDisabled();
             ImGui.SameLine();
-            if (ImGui.Button("+", new Vector2(22, 22)))
+            if (EditorImGui.ImageButtonFromIcon($"+##Add_{name}", EditorIcon.Plus, new vec2(12, 12)))
             {
                 object GetDefaultArgValue(IDictionary dict, int argIndex)
                 {
@@ -1008,7 +1018,11 @@ namespace Editor.Utils
                 var value = dictionary[keysList[i]];
                 skip = false;
 
-                if (ImGui.Button($"X##_DELETE_BUTTON_{i}_{name}", new Vector2(22, 22)))
+                var cursorPosX = ImGui.GetCursorPosX();
+                ImGui.SetCursorPosX(cursorPosX + 12);
+                var cursorPosY = ImGui.GetCursorPosY();
+                ImGui.SetCursorPosY(cursorPosY + 5);
+                if (EditorImGui.ImageButtonFromIcon($"_DELETE_BUTTON_{i}_{name}", EditorIcon.Close, new vec2(10, 10)))
                 {
                     dictionary.Remove(key);
                     changed = true;
@@ -1018,6 +1032,11 @@ namespace Editor.Utils
                 var itemTitleCursorX = ImGui.GetCursorPosX();
 
                 bool show;
+
+                cursorPosY = ImGui.GetCursorPosY();
+                ImGui.SetCursorPosY(cursorPosY - 2);
+                cursorPosX = ImGui.GetCursorPosX();
+                ImGui.SetCursorPosX(cursorPosX - 2);
                 if (drawElementsAsTrees)
                 {
                     show = ImGui.TreeNode($"key {i}_{name}");

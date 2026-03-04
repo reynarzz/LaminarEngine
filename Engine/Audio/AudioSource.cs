@@ -221,11 +221,11 @@ namespace Engine
 
             if (Mixer)
             {
-                Mixer.RemoveSource(this);
+                Mixer?.RemoveSource(this);
             }
             else
             {
-                AudioLayer.GetMasterAudioMixer().RemoveSource(this);
+                AudioLayer.GetMasterAudioMixer()?.RemoveSource(this);
             }
 
             _soundPlayer?.Dispose();

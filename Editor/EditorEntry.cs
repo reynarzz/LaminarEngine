@@ -60,7 +60,7 @@ namespace Editor
     // - Assets lazy loading: Selecting assets in the inspector should not load the asset, but when the playmode starts,
     //   create a ImmediateAssetLoad<T> to load as soon as it gets in the property inspector.
     // - Generate the assets to be added to the build reading all the scenes that will be added to the build.
-
+    // - When an asset is updated, other assets that depend on it should be notified/updated as well, ex: Texture2D->Tilemap
 
 
     // Save Editor config:

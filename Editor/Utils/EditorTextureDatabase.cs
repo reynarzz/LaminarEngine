@@ -37,7 +37,10 @@ namespace Editor.Utils
         Physics,
         Tilemap,
         Actor,
-        Edit
+        Edit,
+        Close,
+        Plus,
+        Minus
     }
 
     internal sealed class EditorTextureDatabase
@@ -75,6 +78,9 @@ namespace Editor.Utils
                 { EditorIcon.Tilemap, LoadIconFromDisk("tilemap50x50.png") },
                 { EditorIcon.Actor, LoadIconFromDisk("cube32x32.png") },
                 { EditorIcon.Edit, LoadIconFromDisk("edit.png") },
+                { EditorIcon.Close, LoadIconFromDisk("close22x22.png") },
+                { EditorIcon.Plus, LoadIconFromDisk("plus24x24.png") },
+                { EditorIcon.Minus, LoadIconFromDisk("minus30x30.png") },
             };
 
             _typesToIconTypeMapper = new Dictionary<Type, EditorIcon>()
