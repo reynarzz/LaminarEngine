@@ -110,7 +110,9 @@ namespace Editor.Views
                 ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(0.5f));
             }
 
-            ImGui.PushStyleColor(ImGuiCol.HeaderActive, EditorColors.MainColor.ToVector4());
+            var greenSelected = EditorColors.MainColor.ToVector4();
+            greenSelected.W = 0.6f;
+            ImGui.PushStyleColor(ImGuiCol.HeaderActive, greenSelected);
 
             bool isSelected = Selector.Selected && Selector.Selected == actor;
             var headerColor = ImGui.GetStyle().Colors[(int)ImGuiCol.Header];
@@ -122,7 +124,7 @@ namespace Editor.Views
                 if (anotherIsDrag)
                 {
                     ImGui.PushStyleColor(ImGuiCol.Header, headerColor);
-                    ImGui.PushStyleColor(ImGuiCol.HeaderHovered, EditorColors.MainColor.ToVector4());
+                    ImGui.PushStyleColor(ImGuiCol.HeaderHovered, greenSelected);
                 }
                 else
                 {
@@ -133,13 +135,13 @@ namespace Editor.Views
             }
             else
             {
-                ImGui.PushStyleColor(ImGuiCol.Header, EditorColors.MainColor.ToVector4());
-                ImGui.PushStyleColor(ImGuiCol.HeaderHovered, EditorColors.MainColor.ToVector4());
+                ImGui.PushStyleColor(ImGuiCol.Header, greenSelected);
+                ImGui.PushStyleColor(ImGuiCol.HeaderHovered, greenSelected);
             }
 
             ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(1f, 1f, 1f, 1f));
 
-            bool open = ImGui.TreeNodeEx("##node", flags);
+            bool open = ImGui.TreeNodeEx("##" + actor.GetID().ToString(), flags);
 
             var id = actor.GetID();
 
