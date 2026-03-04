@@ -43,14 +43,16 @@ namespace Engine.GUI
         public int Length => _text.Length;
         ITexture2DManager IFontStashRenderer2.TextureManager => FontManager.Instance.TextureManager;
         [SerializedField] public string Text { get => _text.ToString(); set => SetText(value); }
+
+        private List<Vertex> _vertex;
         protected override void OnAwake()
         {
             base.OnAwake();
             _rendererData = (RendererData as RendererData2D);
             _rendererData.Mesh = new Mesh();
             _rendererData.Name = nameof(UIText);
-
-            _rendererData.Mesh.Vertices.Capacity = Consts.Graphics.MAX_QUADS_PER_BATCH * 4;
+            _vertex = new List<Vertex>(Consts.Graphics.MAX_QUADS_PER_BATCH * 4);
+            _rendererData.Mesh.Vertices = _vertex;
         }
 
         public void DrawQuad(object texture, ref VertexPositionColorTexture topLeft,
@@ -73,7 +75,7 @@ namespace Engine.GUI
                     _rendererData.Mesh.Vertices.Add(default);
                     _rendererData.Mesh.Vertices.Add(default);
                 }
-                var verts = CollectionsMarshal.AsSpan(_rendererData.Mesh.Vertices);
+                var verts = _rendererData.Mesh.Vertices;
                 SetFontVertex(verts, ref bottomLeft, vertIndex + 0);
                 SetFontVertex(verts, ref topLeft, vertIndex + 1);
                 SetFontVertex(verts, ref topRight, vertIndex + 2);
@@ -90,12 +92,14 @@ namespace Engine.GUI
             return (uint)(r << 24 | g << 16 | b << 8 | a);
         }
 
-        private void SetFontVertex(Span<Vertex> fVertex, ref VertexPositionColorTexture vertex, int vertexIndex)
+        private void SetFontVertex(IList<Vertex> fVertex, ref VertexPositionColorTexture vertex, int vertexIndex)
         {
-            fVertex[vertexIndex].Position = new vec2(vertex.Position.X, vertex.Position.Y);
-            fVertex[vertexIndex].UV = new vec2(vertex.TextureCoordinate.X, vertex.TextureCoordinate.Y);
-            fVertex[vertexIndex].Color = ARGBtoRGBA(vertex.Color.PackedValue);
-            fVertex[vertexIndex].VertexIndex = vertexIndex;
+            var vert = fVertex[vertexIndex];
+            vert.Position = new vec2(vertex.Position.X, vertex.Position.Y);
+            vert.UV = new vec2(vertex.TextureCoordinate.X, vertex.TextureCoordinate.Y);
+            vert.Color = ARGBtoRGBA(vertex.Color.PackedValue);
+            vert.VertexIndex = vertexIndex;
+            fVertex[vertexIndex] = vert;
         }
 
         internal override void OnCanvasDraw(UICanvas canvas)

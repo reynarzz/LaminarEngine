@@ -89,15 +89,13 @@ namespace Engine
 
             if (layer != null)
             {
-                // TODO: Mesh should use arrays instead.
-                var vertices = layer.Vertices?.ToList() ?? new();
-                _rendererData.Mesh.Vertices = vertices;
-                _rendererData.Mesh.IndicesToDrawCount = vertices.Count == 0 ? 0 : layer.IndicesToDraw;
+                _rendererData.Mesh.Vertices = layer.Vertices ?? Array.Empty<Vertex>();
+                _rendererData.Mesh.IndicesToDrawCount = layer.Vertices.Length == 0 ? 0 : layer.IndicesToDraw;
                 _rendererData.Bounds = layer.Bounds;
             }
             else
             {
-                _rendererData.Mesh.Vertices = new();
+                _rendererData.Mesh.Vertices = Array.Empty<Vertex>();
                 _rendererData.Mesh.IndicesToDrawCount = 0;
                 _rendererData.Bounds = default;
             }

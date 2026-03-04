@@ -152,6 +152,7 @@ namespace Engine.Rendering
                     }
                     else
                     {
+                        Debug.Log(renderer.Transform.Name);
                         // TODO: implement proper mesh drawing, for now, since it is used just for tilemap, this works
                         var vertexCount = Math.Max(MaxBatchVertexSize, renderer.Mesh.Vertices.Count);
 
@@ -170,7 +171,7 @@ namespace Engine.Rendering
                             currentBatch = _batchesPool.Get(renderer, renderer.Mesh.Vertices.Count, vertexCount, texture, material, indices);
                         }
 
-                        currentBatch.PushGeometry(renderer, material, texture, renderer.Mesh.IndicesToDrawCount, CollectionsMarshal.AsSpan(renderer.Mesh.Vertices));
+                        currentBatch.PushGeometry(renderer, material, texture, renderer.Mesh.IndicesToDrawCount, renderer.Mesh.Vertices);
                     }
                 }
             }

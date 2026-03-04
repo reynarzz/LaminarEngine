@@ -164,7 +164,7 @@ namespace Engine.Rendering
 
             return textureIndex >= 0;
         }
-        internal void PushGeometry(RendererData2D renderer, Material material, Texture texture, int indicesCount, Span<Vertex> vertices)
+        internal void PushGeometry(RendererData2D renderer, Material material, Texture texture, int indicesCount, IList<Vertex> vertices)
         {
             _isDirty = true;
             IsActive = true;
@@ -188,7 +188,7 @@ namespace Engine.Rendering
 
             if (existId)
             {
-                rendererIds.VertexCount = vertices.Length;
+                rendererIds.VertexCount = vertices.Count;
                 rendererIds.IndexCount = indicesCount;
                 rendererIds.TextureId = textureIndex; // added recently, if causes problems remove
                 _renderers[renderer.GetID()] = rendererIds;
@@ -203,17 +203,17 @@ namespace Engine.Rendering
                     Renderer = renderer,
                     RendererId = startIndex,
                     TextureId = textureIndex,
-                    VertexCount = vertices.Length,
+                    VertexCount = vertices.Count,
                     IndexCount = indicesCount
                 });
             }
 
             // Copies vertices data
-            for (int i = 0; i < vertices.Length; i++)
+            for (int i = 0; i < vertices.Count; i++)
             {
-                vertices[i].TextureIndex = textureIndex;
-                ref var vert = ref vertices[i];
-                _verticesData[startIndex + i] = vert;
+                var vertex = vertices[i];
+                vertex.TextureIndex = textureIndex;
+                _verticesData[startIndex + i] = vertex;
                 _vertexOffset = Math.Min(_vertexOffset, startIndex + i);
             }
         }

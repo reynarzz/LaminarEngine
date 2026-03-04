@@ -71,6 +71,7 @@ namespace Engine
         public uint Color;
         private int _textureIndex;
         public int VertexIndex;
+        public vec3 WorldCenter;
 
         public int TextureIndex { get => _textureIndex; set => _textureIndex = value; }
 
@@ -124,7 +125,7 @@ namespace Engine
     public class Mesh : EObject
     {
         internal bool IsDirty { get; private set; }
-        public List<Vertex> Vertices { get; set; }
+        public IList<Vertex> Vertices { get; set; }
         public uint[] Indices { get; set; }
         public int IndicesToDrawCount { get; set; }
 

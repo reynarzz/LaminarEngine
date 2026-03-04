@@ -39,6 +39,7 @@ namespace Engine
         private RendererData2D _rendererData;
 
         public event Action OnEmitFinished;
+        private List<Vertex> _vertices;
         protected override void OnAwake()
         {
             base.OnAwake();
@@ -52,7 +53,9 @@ namespace Engine
             const float bufferOffset = 1.2f;
 
             _particles.Capacity = (int)MathF.Ceiling(EmitRate * ParticleLife * bufferOffset);
-            _rendererData.Mesh.Vertices.Capacity = _particles.Capacity * 4;
+
+            _vertices = new List<Vertex>(_particles.Capacity * 4);
+            _rendererData.Mesh.Vertices = _vertices;
             Sprite = new Sprite(0, Texture2D.White); // Remove this, reference default sprite
             _rendererData.PrivateBatch = true; // TODO: Remove this
         }
