@@ -18,7 +18,7 @@ namespace Game
         private FontAsset _defaultFont;
         private UIText _textLabel;
         private UIText _textPresents;
-        protected override void OnAwake()
+        protected override void OnStart()
         {
             _camera = new Actor<Camera>("Camera").GetComponent<Camera>();
             _defaultFont = Assets.GetFont("Fonts/windows-bold[1].ttf");

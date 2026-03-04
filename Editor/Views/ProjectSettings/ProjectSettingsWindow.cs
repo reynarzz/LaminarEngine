@@ -34,7 +34,7 @@ namespace Editor.Views
         private readonly string[] _settingsNames;
         private Dictionary<ProjectSettingsMenuType, ProjectMenuDrawer> _drawers;
 
-        public ProjectSettingsWindow() : base("Window/Project Settings")
+        public ProjectSettingsWindow() : base("Edit/Project Settings")
         {
             _settingsNames = Enum.GetNames<ProjectSettingsMenuType>().ToArray();
 

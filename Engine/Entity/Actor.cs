@@ -621,11 +621,11 @@ namespace Engine
 
                 for (int i = 0; i < components.Count; ++i)
                 {
-                    if (components[i] is T component && component.IsValid() && (!checkIfComponentIsEnabled || (checkIfComponentIsEnabled && component.IsEnabled)))
+                    var comp = components[i];
+                    if (comp is T component && component.IsValid() && (!checkIfComponentIsEnabled || (checkIfComponentIsEnabled && component.IsEnabled)))
                     {
                         if (actor.IsActiveInHierarchy)
                         {
-#if DEBUG
                             try
                             {
                                 action(component);
@@ -634,13 +634,17 @@ namespace Engine
                             {
                                 Debug.Error(e);
                             }
-#else
-                            action(component);
-#endif
                         }
                     }
+                    else
+                    {
+                        comp = null;
+                    }
 
-                    actor._toDeleteComponents.Add(components[i]);
+                    if (comp != null && comp.IsValid())
+                    {
+                        actor._toDeleteComponents.Add(comp);
+                    }
                 }
 
                 for (int i = 0; i < actor._toDeleteComponents.Count; i++)

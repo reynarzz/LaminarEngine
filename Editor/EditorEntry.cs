@@ -164,7 +164,6 @@ namespace Editor
             EditorMenu.PushMenu("File/Quit", () => Debug.Warn("Quit"));
 
             // Edit
-            EditorMenu.PushMenu("Edit/Project Settings", () => Debug.Warn("proj"));
             EditorMenu.PushMenu("Edit/Preferences", () => { });
 
             // Assets

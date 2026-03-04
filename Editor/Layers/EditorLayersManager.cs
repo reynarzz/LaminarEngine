@@ -124,6 +124,8 @@ namespace Editor
                     }
                 }
             }
+            
+            return; // Temporal to prevent test code to run in main.
 
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {

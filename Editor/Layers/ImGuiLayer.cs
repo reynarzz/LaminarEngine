@@ -105,7 +105,7 @@ namespace Editor.Layers
                     new RenderingStatsView(),
                     new BuildWindow(),
                     new TaskWindow(),
-                    new ProjectSettingsWindow(),
+                    // new ProjectSettingsWindow(),
                     // new ConsoleEditorView()
                 };
 
