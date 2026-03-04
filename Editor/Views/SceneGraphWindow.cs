@@ -2,22 +2,20 @@
 using Engine;
 using ImGuiNET;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Editor.Views
 {
     internal class SceneGraphWindow : EditorWindow
     {
+        private Guid? _pressedActorId;
+
         public SceneGraphWindow() : base("Window/Scene Graph")
         {
         }
+
         public override void OnDraw()
         {
-
             if (OnBeginWindow("Scene graph"))
             {
                 ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2());
@@ -26,7 +24,6 @@ namespace Editor.Views
                 {
                     ImGui.PushID(SceneManager.Scenes[i].GetID().ToString());
                     ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.OpenOnArrow | ImGuiTreeNodeFlags.SpanFullWidth | ImGuiTreeNodeFlags.DefaultOpen;
-
 
                     bool open = ImGui.TreeNodeEx("##scene_node", flags);
                     bool isClicked = ImGui.IsItemClicked();
@@ -41,6 +38,7 @@ namespace Editor.Views
                     iconCursorX = ImGui.GetCursorPosX();
                     ImGui.SetCursorPosX(iconCursorX + iconOffset - 4);
                     ImGui.TextUnformatted(SceneManager.Scenes[i].Name);
+
                     if (EditorImGui.BeginPopupContextItem("SceneContext"))
                     {
                         if (i > 0 && ImGui.MenuItem("Unload Scene"))
@@ -63,6 +61,7 @@ namespace Editor.Views
 
                         ImGui.EndPopup();
                     }
+
                     if (open)
                     {
                         if (SceneManager.Scenes[i].RootActors.Count > 0)
@@ -77,8 +76,10 @@ namespace Editor.Views
 
                         ImGui.TreePop();
                     }
+
                     ImGui.PopID();
                 }
+
                 ImGui.PopStyleVar();
             }
 
@@ -86,6 +87,7 @@ namespace Editor.Views
             {
                 Actor.Destroy(actor);
             }
+
             OnEndWindow();
         }
 
@@ -109,20 +111,53 @@ namespace Editor.Views
             }
 
             ImGui.PushStyleColor(ImGuiCol.HeaderActive, EditorColors.MainColor.ToVector4());
+
             bool isSelected = Selector.Selected && Selector.Selected == actor;
             var headerColor = ImGui.GetStyle().Colors[(int)ImGuiCol.Header];
-            if (!isSelected)
+
+            var anotherIsDrag = (_pressedActorId != null && _pressedActorId != actor.GetID());
+
+            if (!isSelected || anotherIsDrag)
             {
-                ImGui.PushStyleColor(ImGuiCol.Header, headerColor);
-                ImGui.PushStyleColor(ImGuiCol.HeaderHovered, headerColor);
+                if (anotherIsDrag)
+                {
+                    ImGui.PushStyleColor(ImGuiCol.Header, headerColor);
+                    ImGui.PushStyleColor(ImGuiCol.HeaderHovered, EditorColors.MainColor.ToVector4());
+                }
+                else
+                {
+                    ImGui.PushStyleColor(ImGuiCol.Header, headerColor);
+                    ImGui.PushStyleColor(ImGuiCol.HeaderHovered, headerColor);
+                }
+                
             }
             else
             {
                 ImGui.PushStyleColor(ImGuiCol.Header, EditorColors.MainColor.ToVector4());
                 ImGui.PushStyleColor(ImGuiCol.HeaderHovered, EditorColors.MainColor.ToVector4());
             }
-            ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+
+            ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(1f, 1f, 1f, 1f));
+
             bool open = ImGui.TreeNodeEx("##node", flags);
+
+            var id = actor.GetID();
+
+            if (ImGui.IsItemActivated())
+            {
+                _pressedActorId = id;
+            }
+
+            if (ImGui.IsItemDeactivated())
+            {
+                if (_pressedActorId.HasValue && _pressedActorId.Value == id && ImGui.IsItemHovered())
+                {
+                    Selector.Selected = actor;
+                }
+
+                _pressedActorId = null;
+            }
+
             if (EditorImGui.BeginPopupContextItem("ActorContext"))
             {
                 Selector.Selected = actor;
@@ -141,11 +176,14 @@ namespace Editor.Views
                 if (ImGui.MenuItem("Duplicate"))
                 {
                 }
+
                 ImGui.BeginDisabled(!actor.Transform.Parent);
+
                 if (ImGui.MenuItem("Clear parent"))
                 {
                     actor.Transform.Parent = null;
                 }
+
                 if (ImGui.MenuItem("Unparent to previous"))
                 {
                     if (actor.Transform.Parent.Parent)
@@ -157,17 +195,20 @@ namespace Editor.Views
                         actor.Transform.Parent = null;
                     }
                 }
+
                 ImGui.EndDisabled();
                 ImGui.Separator();
+
                 if (ImGui.MenuItem("Delete"))
                 {
                     ImGui.EndPopup();
+
                     if (open && hasChildren)
                     {
                         ImGui.TreePop();
                     }
-                    ImGui.PopID();
 
+                    ImGui.PopID();
                     Actor.Destroy(actor);
                     return;
                 }
@@ -177,7 +218,6 @@ namespace Editor.Views
 
             ImGui.PopStyleColor(4);
 
-            var isClicked = ImGui.IsItemClicked();
             ImGui.SameLine();
             var iconCursorX = ImGui.GetCursorPosX();
             var iconOffset = 8;
@@ -192,10 +232,6 @@ namespace Editor.Views
             if (!actor.IsActiveInHierarchy)
                 ImGui.PopStyleColor();
 
-            if (isClicked)
-                Selector.Selected = actor;
-
-           
             if (open && hasChildren)
             {
                 for (int i = 0; i < actor.Transform.Children.Count; i++)
