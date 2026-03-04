@@ -82,7 +82,7 @@ namespace Engine.Data
         }
     }
 
-    internal class ProjectSettings : IEngineService
+    internal class ProjectSettingsData : IEngineService
     {
         [SerializedField] internal LayersSettings LayerSettings { get; set; } = new();
         [SerializedField] internal SceneSettings SceneSettings { get; set; } = new();

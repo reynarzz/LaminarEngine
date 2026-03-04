@@ -32,7 +32,7 @@ namespace Editor.Data
         private static void InitProjectSettings()
         {
             var service = EngineServices.GetService<EngineDataService>();
-            var projectSettings = LoadData<ProjectSettings>(PROJECT_SETTINGS);
+            var projectSettings = LoadData<ProjectSettingsData>(PROJECT_SETTINGS);
             service.Initialize(projectSettings);
         }
 

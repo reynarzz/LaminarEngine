@@ -17,7 +17,7 @@ namespace Editor.Views
         {
             _gridUI = new LayerMatrixUI();
         }
-        protected override void OnDraw(ProjectSettings settings)
+        protected override void OnDraw(ProjectSettingsData settings)
         {
             PropertiesGUIDrawEditor.DrawObject("Physics_Settings", settings.Physics);
 

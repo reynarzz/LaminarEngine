@@ -256,7 +256,7 @@ namespace Editor.Cooker
             WriteProjectSettings(writer, projectSettings);
         }
 
-        private void WriteProjectSettings(BinaryWriter writer, ProjectSettings settings)
+        private void WriteProjectSettings(BinaryWriter writer, ProjectSettingsData settings)
         {
             // ----Layers
 

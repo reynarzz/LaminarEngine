@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Editor
 {
-    internal class EditorSettings
+    internal class EditorSettingsData
     {
         [SerializedField] internal vec3 CameraPosition { get; set; }
         [SerializedField] internal quat CameraRotation { get; set; }

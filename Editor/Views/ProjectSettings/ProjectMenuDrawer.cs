@@ -18,6 +18,6 @@ namespace Editor.Views
             OnDraw(EngineServices.GetService<EngineDataService>().GetProjectSettings());
         }
 
-        protected abstract void OnDraw(ProjectSettings settings);
+        protected abstract void OnDraw(ProjectSettingsData settings);
     }
 }

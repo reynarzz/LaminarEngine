@@ -8,13 +8,13 @@ namespace Engine.Data
 {
     internal class EngineDataService : IEngineService
     {
-        private ProjectSettings _projectData;
-        public void Initialize(ProjectSettings projectData)
+        private ProjectSettingsData _projectData;
+        public void Initialize(ProjectSettingsData projectData)
         {
             _projectData = projectData;
         }
 
-        public ProjectSettings GetProjectSettings()
+        public ProjectSettingsData GetProjectSettings()
         {
             return _projectData;
         }

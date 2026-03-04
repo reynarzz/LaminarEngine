@@ -40,13 +40,25 @@ namespace Editor.Views
                     {
                         ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(0.5f));
                     }
-                    bool open = ImGui.TreeNodeEx(actor.Name, flags);
+
+                    bool open = ImGui.TreeNodeEx("##node", flags);
+
+                    var isClicked = ImGui.IsItemClicked();
+                    ImGui.SameLine();
+                    var iconCursorX = ImGui.GetCursorPosX();
+                    var iconOffset = 8;
+                    ImGui.SetCursorPosX(iconCursorX - iconOffset);
+                    EditorImGui.ImageFromIcon(EditorIcon.Actor2, new GlmNet.vec2(18, 18));
+
+                    ImGui.SameLine();
+                    iconCursorX = ImGui.GetCursorPosX();
+                    ImGui.SetCursorPosX(iconCursorX + iconOffset - 4);
+                    ImGui.TextUnformatted(actor.Name);
 
                     if (!actor.IsActiveInHierarchy)
                         ImGui.PopStyleColor();
 
-                    // Selection handling
-                    if (ImGui.IsItemClicked())
+                    if (isClicked)
                         Selector.Selected = actor;
 
                     if (EditorImGui.BeginPopupContextItem("ActorContext"))
@@ -62,18 +74,15 @@ namespace Editor.Views
 
                         if (ImGui.MenuItem("Rename"))
                         {
-
                         }
 
                         if (ImGui.MenuItem("Duplicate"))
                         {
-
                         }
 
                         ImGui.Separator();
                         if (ImGui.MenuItem("Delete"))
                         {
-
                             ImGui.EndPopup();
                             if (open && hasChildren)
                             {
@@ -144,7 +153,7 @@ namespace Editor.Views
                 ImGui.PopStyleVar();
             }
 
-            if(Selector.Selected is Actor actor && ImGui.IsKeyDown(ImGuiKey.Delete))
+            if (Selector.Selected is Actor actor && ImGui.IsKeyDown(ImGuiKey.Delete))
             {
                 Actor.Destroy(actor);
             }

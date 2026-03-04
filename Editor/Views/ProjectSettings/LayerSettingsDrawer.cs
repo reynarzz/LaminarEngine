@@ -14,7 +14,7 @@ namespace Editor.Views
     internal class LayerSettingsDrawer : ProjectMenuDrawer
     {
         private const string Layer_TITLE = "Layer";
-        protected override void OnDraw(ProjectSettings settings)
+        protected override void OnDraw(ProjectSettingsData settings)
         {
             ImGui.Text("Layers");
 

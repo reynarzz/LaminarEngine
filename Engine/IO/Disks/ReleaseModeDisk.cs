@@ -132,9 +132,9 @@ namespace Engine.IO
             data.Initialize(ReadProjectSettings(reader));
         }
 
-        private ProjectSettings ReadProjectSettings(BinaryReader reader)
+        private ProjectSettingsData ReadProjectSettings(BinaryReader reader)
         {
-            var settings = new ProjectSettings();
+            var settings = new ProjectSettingsData();
 
             // ----Layers:
 

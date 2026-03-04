@@ -12,7 +12,7 @@ namespace Editor.Views
 {
     internal class ScenesSettingsDrawer : ProjectMenuDrawer
     {
-        protected override void OnDraw(ProjectSettings settings)
+        protected override void OnDraw(ProjectSettingsData settings)
         {
             var launchScene = Assets.GetAssetFromGuid(GetGuidSafe(settings.SceneSettings.MainScene));
             ImGui.Text("Launch Scene");
