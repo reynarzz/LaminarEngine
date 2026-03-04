@@ -20,7 +20,11 @@ namespace Engine.Layers
 
         internal override void UpdateLayer()
         {
-            SceneManager.UpdateScenes();
+            // NOTE/TODO: Maybe in the future I would like to update scripts that contain the attribute 'RunInEditModeAttribute'
+            if (Application.IsInPlayMode)
+            {
+                SceneManager.UpdateScenes();
+            }
         }
 
         public override void Close()

@@ -152,7 +152,6 @@ namespace Engine.Rendering
                     }
                     else
                     {
-                        Debug.Log(renderer.Transform.Name);
                         // TODO: implement proper mesh drawing, for now, since it is used just for tilemap, this works
                         var vertexCount = Math.Max(MaxBatchVertexSize, renderer.Mesh.Vertices.Count);
 
