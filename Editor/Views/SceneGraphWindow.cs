@@ -113,7 +113,19 @@ namespace Editor.Views
                     ImGui.PushID(SceneManager.Scenes[i].GetID().ToString());
                     ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.OpenOnArrow | ImGuiTreeNodeFlags.SpanFullWidth | ImGuiTreeNodeFlags.DefaultOpen;
 
-                    bool open = ImGui.TreeNodeEx(SceneManager.Scenes[i].Name, flags);
+                    bool open = ImGui.TreeNodeEx("##scene_node", flags);
+                    bool isClicked = ImGui.IsItemClicked();
+
+                    ImGui.SameLine();
+                    var iconCursorX = ImGui.GetCursorPosX();
+                    var iconOffset = 8;
+                    ImGui.SetCursorPosX(iconCursorX - iconOffset);
+                    EditorImGui.ImageFromIcon(EditorIcon.Scene, new GlmNet.vec2(18, 18));
+
+                    ImGui.SameLine();
+                    iconCursorX = ImGui.GetCursorPosX();
+                    ImGui.SetCursorPosX(iconCursorX + iconOffset - 4);
+                    ImGui.TextUnformatted(SceneManager.Scenes[i].Name);
                     if (EditorImGui.BeginPopupContextItem("SceneContext"))
                     {
                         if (i > 0 && ImGui.MenuItem("Unload Scene"))
@@ -140,6 +152,8 @@ namespace Editor.Views
                     {
                         if (SceneManager.Scenes[i].RootActors.Count > 0)
                         {
+                            ImGui.Dummy(0, 4);
+
                             for (int j = 0; j < SceneManager.Scenes[i].RootActors.Count; j++)
                             {
                                 DrawActor(SceneManager.Scenes[i].RootActors[j]);
