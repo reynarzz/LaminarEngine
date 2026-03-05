@@ -45,7 +45,7 @@ namespace Editor.Cooker
             { "Engine.Serialization" }
         };
 
-        private static HashSet<Type> _typesLibrary = new();
+        private static HashSet<string> _typesLibrary = new();
         internal static string Generate(bool isEditMode = false)
         {
             if (_typesLibrary.Count == 0)
@@ -54,30 +54,24 @@ namespace Editor.Cooker
                 return string.Empty;
             }
 
-            var ids = new Dictionary<Guid, Type>();
+            var ids = new Dictionary<Guid, string>();
 
-            foreach (var type in _typesLibrary)
+            foreach (var typeFullName in _typesLibrary)
             {
-                if (type.IsSpecialName ||
-                    type.FullName.TrimStart().StartsWith("<") ||
-                    _exclusionList.Contains(ReflectionUtils.GetFullTypeName(type)))
+                if (typeFullName.TrimStart().StartsWith("<") ||
+                    _exclusionList.Contains(typeFullName))
                 {
                     continue;
                 }
 
-                var id = ReflectionUtils.GetStableGuid(type);
+                var id = ReflectionUtils.GetStableGuid(typeFullName);
                 if (!ids.ContainsKey(id))
                 {
-                    ids.Add(id, type);
+                    ids.Add(id, typeFullName);
                 }
             }
 
             return GenerateTypeRegistry(ids, isEditMode).ToFullString();
-        }
-
-        internal static bool ContainsType(Type type)
-        {
-            return _typesLibrary.Contains(type);
         }
 
         internal static void AddTypes(params Type[] types)
@@ -87,7 +81,21 @@ namespace Editor.Cooker
 
             foreach (var type in types)
             {
-                _typesLibrary.Add(type);
+                if (type.IsSpecialName)
+                    continue;
+
+                _typesLibrary.Add(ReflectionUtils.GetFullTypeName(type));
+            }
+        }
+
+        internal static void AddTypesFullNames(IList<string> typesNames)
+        {
+            if (typesNames == null || typesNames.Count == 0)
+                return;
+
+            foreach (var name in typesNames)
+            {
+                _typesLibrary.Add(name);
             }
         }
         internal static bool AddType(Type type)
@@ -97,7 +105,7 @@ namespace Editor.Cooker
                 Console.WriteLine("Can't add null type to registry generator");
                 return false;
             }
-            return _typesLibrary.Add(type);
+            return _typesLibrary.Add(ReflectionUtils.GetFullTypeName(type));
         }
 
         /// <summary>
@@ -108,7 +116,7 @@ namespace Editor.Cooker
             _typesLibrary.Clear();
         }
 
-        private static CompilationUnitSyntax GenerateTypeRegistry(Dictionary<Guid, Type> typeMap, bool isEditMode)
+        private static CompilationUnitSyntax GenerateTypeRegistry(Dictionary<Guid, string> typeNamesMap, bool isEditMode)
         {
             // Using statements
             var usings = SyntaxFactory.List(
@@ -125,7 +133,7 @@ namespace Editor.Cooker
 
             // Build dictionary entries: <Guid, Type>
             var initializerExpressions = new SeparatedSyntaxList<ExpressionSyntax>();
-            foreach (var kvp in typeMap)
+            foreach (var kvp in typeNamesMap)
             {
                 var guidLiteral = SyntaxFactory.ParseExpression($"new Guid(\"{kvp.Key:N}\")");
                 var typeOfExpression = GetTypeExpression(kvp.Value);
@@ -170,7 +178,7 @@ namespace Editor.Cooker
 
             // Build reverse dictionary: <Type, Guid>
             var reverseInitializerExpressions = new SeparatedSyntaxList<ExpressionSyntax>();
-            foreach (var kvp in typeMap)
+            foreach (var kvp in typeNamesMap)
             {
                 var typeOfExpression = GetTypeExpression(kvp.Value);
                 if (typeOfExpression == null)
@@ -326,70 +334,58 @@ namespace Editor.Cooker
             return SyntaxFactory.ParseMemberDeclaration(methodSource)!;
         }
 
-        private static ExpressionSyntax GetTypeExpression(Type type)
+        private static ExpressionSyntax GetTypeExpression(string typeFullname)
         {
-            // Only private or protected nested types
-            // if (type.IsNestedPrivate || type.IsNestedFamily || type.IsGenericType)
-            {
-                // Compiler generated types are not taken into account.
-                if (type.Name.StartsWith("<") && type.Name.Contains(">"))
-                    return null;
+            if (typeFullname.StartsWith("<") && typeFullname.Contains(">"))
+                return null;
 
-                string typeString = ReflectionUtils.GetFullTypeName(type);// GetReflectionFullName(type) + ", " + type.Assembly.GetName().Name;
-                //return SyntaxFactory.ParseExpression($"Type.GetType(\"{typeString}\", throwOnError: true)");
-
-                return SyntaxFactory.ParseExpression($"_GetType(\"{typeString}\")");
-            }
-
-            // Public or internal nested types, or top-level types
-            string fullName = GetCSharpFullName(type);
-            return SyntaxFactory.TypeOfExpression(SyntaxFactory.ParseTypeName(fullName));
+            return SyntaxFactory.ParseExpression($"_GetType(\"{typeFullname}\")");
         }
 
-        private static string GetReflectionFullName(Type type)
-        {
-            string name;
+        //private static string GetReflectionFullName(Type type)
+        //{
+        //    string name;
 
-            if (type.IsGenericTypeDefinition)
-            {
-                int arity = type.GetGenericArguments().Length;
-                name = type.Name.Split('`')[0] + "`" + arity;
-            }
-            else
-            {
-                name = type.Name;
-            }
+        //    if (type.IsGenericTypeDefinition)
+        //    {
+        //        int arity = type.GetGenericArguments().Length;
+        //        name = type.Name.Split('`')[0] + "`" + arity;
+        //    }
+        //    else
+        //    {
+        //        name = type.Name;
+        //    }
 
-            if (type.IsNested)
-            {
-                return GetReflectionFullName(type.DeclaringType!) + "+" + name;
-            }
+        //    if (type.IsNested)
+        //    {
+        //        return GetReflectionFullName(type.DeclaringType!) + "+" + name;
+        //    }
 
-            return (type.Namespace != null ? type.Namespace + "." : "") + name;
-        }
+        //    return (type.Namespace != null ? type.Namespace + "." : "") + name;
+        //}
 
-        private static string GetCSharpFullName(Type type)
-        {
-            string name;
+        //private static string GetCSharpFullName(Type type)
+        //{
+        //    string name;
 
-            if (type.IsGenericTypeDefinition)
-            {
-                int arity = type.GetGenericArguments().Length;
-                string commas = new string(',', Math.Max(0, arity - 1));
-                name = type.Name.Split('`')[0] + $"<{commas}>";
-            }
-            else
-            {
-                name = type.Name;
-            }
+        //    if (type.IsGenericTypeDefinition)
+        //    {
+        //        int arity = type.GetGenericArguments().Length;
+        //        string commas = new string(',', Math.Max(0, arity - 1));
+        //        name = type.Name.Split('`')[0] + $"<{commas}>";
+        //    }
+        //    else
+        //    {
+        //        name = type.Name;
+        //    }
 
-            if (type.IsNested)
-            {
-                return GetCSharpFullName(type.DeclaringType!) + "." + name;
-            }
+        //    if (type.IsNested)
+        //    {
+        //        return GetCSharpFullName(type.DeclaringType!) + "." + name;
+        //    }
 
-            return (type.Namespace != null ? type.Namespace + "." : "") + name;
-        }
+        //    return (type.Namespace != null ? type.Namespace + "." : "") + name;
+        //}
 
 
         private static MemberDeclarationSyntax WrapWithIf(MemberDeclarationSyntax member, string symbol)

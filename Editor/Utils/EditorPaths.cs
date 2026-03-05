@@ -40,6 +40,8 @@ namespace Editor
         internal static string HookFolderAbsolutePath => GetGameFolderAbsolutePath(HookFolderRelativePath);
         internal static string CompiledGameDllAbsolutePath => GetGameFolderAbsolutePath(NewGameDllRelativePath);
         internal static string GameHookDLLAbsolutePath => GetGameFolderAbsolutePath(HookGameDllRelativePath);
+        internal static string GameProjectAbsolutePath => Path.Combine(GameRoot, GAME_PROJECT_FULL_NAME);
+
 
         public static string ShipFolderRoot => Path.Combine(AppRoot, SHIP_FOLDER_NAME);
         public static string AndroidShipFolderRoot => Path.Combine(ShipFolderRoot, "android");

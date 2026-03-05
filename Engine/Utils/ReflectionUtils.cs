@@ -524,12 +524,17 @@ namespace Engine.Utils
 
         public static Guid GetStableGuid(Type type)
         {
-            if (type == null)
+            return GetStableGuid(GetFullTypeName(type));
+        }
+
+        public static Guid GetStableGuid(string name)
+        {
+            if (string.IsNullOrEmpty(name))
             {
                 return Guid.Empty;
             }
 
-            var key = GetFullTypeName(type);
+            var key = name;
 
             int byteCount = Encoding.UTF8.GetByteCount(key);
 

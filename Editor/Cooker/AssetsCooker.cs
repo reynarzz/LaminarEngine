@@ -164,7 +164,7 @@ namespace Editor.Cooker
             if (result && options.Type == CookingType.ShipMode)
             {
                 // This generates the whole type registry after all the types where collected from the assets.
-                TypeGenerationStage.GenerateTypeRegistry();
+                await TypeGenerationStage.GenerateTypeRegistry();
             }
             return new DishResult()
             {
