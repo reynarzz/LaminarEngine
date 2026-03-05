@@ -57,6 +57,7 @@ namespace Editor.Build
                 ["AssemblyVersion"] = GetVersion(buildTypeSettings.Version),
                 ["FileVersion"] = GetVersion(buildTypeSettings.Version),
                 ["InformationalVersion"] = GetVersion(buildTypeSettings.Version),
+                ["BUILD_DESKTOP"] = "true",
             };
 
             var defaultConstants = "WINDOWS;WIN32;DESKTOP;";

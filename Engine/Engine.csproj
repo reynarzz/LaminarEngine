@@ -5,12 +5,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-	  <IsTrimmable>false</IsTrimmable>
-	  <PublishTrimmed>false</PublishTrimmed>
-	  <TrimMode>partial</TrimMode>
-	  <TrimmerDefaultAction>Preserve</TrimmerDefaultAction>
-	  <IsAotCompatible>true</IsAotCompatible>
-	  <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+	<PublishTrimmed>false</PublishTrimmed>
+	<TrimMode>link</TrimMode>
   </PropertyGroup>
 
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0'">
@@ -52,31 +48,19 @@
     <Compile Remove="Third\Glfw\**" />
     <Compile Remove="Third\Native\glfw\_bin\**" />
     <Compile Remove="Third\Native\runtimecore\build\**" />
-    <Compile Remove="Third\SoundFlow\Codecs\SoundFlow.Codecs.FFMpeg\obj\**" />
-    <Compile Remove="Third\SoundFlow\Extensions\SoundFlow.Extensions.WebRtc.Apm\obj\**" />
-    <Compile Remove="Third\SoundFlow\Midi\SoundFlow.Midi.PortMidi\obj\**" />
-    <Compile Remove="Third\SoundFlow\Samples\**" />
-    <Compile Remove="Third\SoundFlow\Src\obj\**" />
+    <Compile Remove="Third\SoundFlow\**" />
     <EmbeddedResource Remove="Library\**" />
     <EmbeddedResource Remove="Scene\**" />
     <EmbeddedResource Remove="Third\Glfw\**" />
     <EmbeddedResource Remove="Third\Native\glfw\_bin\**" />
     <EmbeddedResource Remove="Third\Native\runtimecore\build\**" />
-    <EmbeddedResource Remove="Third\SoundFlow\Codecs\SoundFlow.Codecs.FFMpeg\obj\**" />
-    <EmbeddedResource Remove="Third\SoundFlow\Extensions\SoundFlow.Extensions.WebRtc.Apm\obj\**" />
-    <EmbeddedResource Remove="Third\SoundFlow\Midi\SoundFlow.Midi.PortMidi\obj\**" />
-    <EmbeddedResource Remove="Third\SoundFlow\Samples\**" />
-    <EmbeddedResource Remove="Third\SoundFlow\Src\obj\**" />
+    <EmbeddedResource Remove="Third\SoundFlow\**" />
     <None Remove="Library\**" />
     <None Remove="Scene\**" />
     <None Remove="Third\Glfw\**" />
     <None Remove="Third\Native\glfw\_bin\**" />
     <None Remove="Third\Native\runtimecore\build\**" />
-    <None Remove="Third\SoundFlow\Codecs\SoundFlow.Codecs.FFMpeg\obj\**" />
-    <None Remove="Third\SoundFlow\Extensions\SoundFlow.Extensions.WebRtc.Apm\obj\**" />
-    <None Remove="Third\SoundFlow\Midi\SoundFlow.Midi.PortMidi\obj\**" />
-    <None Remove="Third\SoundFlow\Samples\**" />
-    <None Remove="Third\SoundFlow\Src\obj\**" />
+    <None Remove="Third\SoundFlow\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -88,13 +72,34 @@
     <PackageReference Include="FontStashSharp.PlatformAgnostic" Version="1.4.1" />
     <PackageReference Include="K4os.Compression.LZ4" Version="1.3.8" />
     <PackageReference Include="K4os.Compression.LZ4.Streams" Version="1.3.8" />
-	  <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+	<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
   </ItemGroup>
 
 	<ItemGroup Condition="'$(ShipBuild)' == 'true'">
 		<ProjectReference Include="..\Generated\Generated.csproj" />
+
+			<Reference Condition="'$(BUILD_MOBILE)' == 'true'" Include="SoundFlow">
+				<HintPath>Third\SoundFlow\Compiled\Miniaudio\SoundFlow.dll</HintPath>
+			</Reference>
+
+		<None Condition="'$(BUILD_MOBILE)' == 'true'" Include="Third\Soundflow\Src\Backends\MiniAudio\runtimes\**\*.*">
+			<TargetPath>runtimes\%(RecursiveDir)%(Filename)%(Extension)</TargetPath>
+			<PackagePath>runtimes</PackagePath>
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<Pack>true</Pack>
+		</None>
+		
+		<Reference Condition="'$(BUILD_DESKTOP)' == 'true'" Include="SoundFlow">
+			<HintPath>Third\SoundFlow\Compiled\RuntimeCore\SoundFlow.dll</HintPath>
+		</Reference>
 	</ItemGroup>
-	<ItemGroup>
+
+	<ItemGroup Condition="'$(ShipBuild)' != 'true'">
+		<Reference Include="SoundFlow">
+			<HintPath>Third\SoundFlow\Compiled\Debug\SoundFlow.dll</HintPath>
+		</Reference>
+		
+		<!-- Add Runtime ref only when is not a ship build-->
 		<None Include="Third\Soundflow\Src\Backends\MiniAudio\runtimes\**\*.*">
 			<TargetPath>runtimes\%(RecursiveDir)%(Filename)%(Extension)</TargetPath>
 			<PackagePath>runtimes</PackagePath>

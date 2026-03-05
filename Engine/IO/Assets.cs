@@ -76,6 +76,16 @@ namespace Engine
         {
             return Get<AssetResourceBase>(path);
         }
+
+        internal static SceneAsset GetScene(string name)
+        {
+            return Get<SceneAsset>(name);
+        }
+
+
+
+
+
         internal static T Get<T>(string path) where T : AssetResourceBase
         {
 #if DEBUG
@@ -92,13 +102,6 @@ namespace Engine
         {
             return _loadedPaths.ToArray();
         }
-
-        internal static SceneAsset GetScene(string name)
-        {
-            return Get<SceneAsset>(name);
-        }
-
-
 #endif
     }
 }

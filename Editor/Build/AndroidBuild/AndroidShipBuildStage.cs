@@ -51,6 +51,7 @@ namespace Editor.Build
                 ["SupportedOSPlatformVersion"] = ((int)settings.MinimumApiLevel).ToString(),
                 ["AndroidTargetSdkVersion"] = ((int)settings.TargetApiLevel).ToString(),
                 ["BuildAndroid"] = "true",
+                ["BUILD_MOBILE"] = "true"
             };
 
             // NOTE: Not sure why do I have to define build type, msbuild should do it by default.

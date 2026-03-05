@@ -81,7 +81,9 @@
 		<Reference Include="SPIRV-Cross.NET">
 			<HintPath>Third\Spirv-Cross\SPIRV-Cross.NET.dll</HintPath>
 		</Reference>
+		<Reference Include="SoundFlow"> 
+			<HintPath>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\Engine\Third\SoundFlow\Compiled\Debug\SoundFlow.dll'))</HintPath>
+		</Reference>
 	</ItemGroup>
-
 
 </Project>
