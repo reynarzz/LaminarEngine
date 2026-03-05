@@ -15,7 +15,7 @@ namespace Editor.Cooker.Generator
         {
             var engineBin = Path.Combine(EditorPaths.AppRoot, "Engine", "bin");
             var engineTypes = GetAssemblyTypes(GetAssemblyPath(engineBin, "Engine.dll"));
-            var gameTypes = GetAssemblyTypes(GetAssemblyPath(Path.Combine(EditorPaths.AppRoot, "Game", "bin"), "Game.dll"));
+            var gameTypes = GetAssemblyTypes(EditorPaths.GameHookDLLAbsolutePath);
 
             TypeRegistryClassGenerator.AddTypes(engineTypes);
             TypeRegistryClassGenerator.AddTypes(gameTypes);

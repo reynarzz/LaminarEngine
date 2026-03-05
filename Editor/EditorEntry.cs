@@ -32,7 +32,8 @@ namespace Editor
     // - Compile c# Soundflow library when shipping, and have a binary compipled ready for the editor, engine project should not include the files directly.
     // - Layer mask doesn't enable the correct bit using the matrix data from layer mask ui,   
     // - The Game.dll must exist before doing a build because TypeGenerationStage.GetAssemblyTypes(str) searches
-    //     for it to generate the typeRegistry, the build should already have a game.dll compiled.
+    //     for it to generate the typeRegistry, the build should already have a game.dll compiled. Use it from the library folder for now,
+    //     but the game.dll should be compiled for the build type(Release/Debug), and turning on all the directives defined for the target platform.
 
 
     // Serialization:
