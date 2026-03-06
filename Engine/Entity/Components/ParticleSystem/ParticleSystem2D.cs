@@ -85,44 +85,42 @@ namespace Engine
         void IUpdatableComponent.OnUpdate()
         {
             var dt = Time.DeltaTime * SimulationSpeed;
+            var span = CollectionsMarshal.AsSpan(_particles);
 
-            for (int i = _particles.Count - 1; i >= 0; --i)
+            for (int i = span.Length - 1; i >= 0; --i)
             {
-                var particle = _particles[i];
+                ref var particle = ref span[i];
                 particle.Life -= dt;
 
                 if (particle.Life <= 0)
                 {
-                    _particles.RemoveAt(i);
+                    _particles[i] = _particles[_particles.Count - 1];
+                    _particles.RemoveAt(_particles.Count - 1);
+                    span = CollectionsMarshal.AsSpan(_particles); 
                     continue;
                 }
 
                 float time = 1.0f - (particle.Life / particle.StartLife);
-
                 particle.Velocity += Gravity * dt;
                 particle.Position += particle.Velocity * dt;
                 particle.Rotation += particle.AngularVelocity * dt;
                 particle.Color = Color.Lerp(StartColor, EndColor, time);
                 particle.Size = Mathf.Lerp(StartSize, EndSize, time);
-
-                _particles[i] = particle;
             }
 
             _emitAccumulator += dt * EmitRate;
-
             while (_emitAccumulator >= 1.0f)
             {
                 EmitParticle();
                 _emitAccumulator -= 1.0f;
             }
 
-            if(_particles.Count == 0 && _canEmit == false && !_emitEventSent)
+            if (_particles.Count == 0 && !_canEmit && !_emitEventSent)
             {
                 _emitEventSent = true;
                 OnEmitFinished?.Invoke();
             }
         }
-
         private void EmitParticle()
         {
             RendererData.IsDirty = true;
@@ -161,43 +159,38 @@ namespace Engine
         {
             return (float)(Random.Shared.NextDouble() * (max - min) + min);
         }
+     
 
         internal override void Draw()
         {
             var texture = Sprite.Texture;
             var chunk = Sprite.GetAtlasCell();
-            float ppu = texture.PixelPerUnit;
+            var worldMatrix = Transform.WorldMatrix;  
+            var worldZ = Transform.WorldPosition.z; 
 
+            int needed = _particles.Count * 4;
+            while (_vertices.Count < needed)
+            {
+                _vertices.Add(default);
+            }
 
             for (int i = 0; i < _particles.Count; i++)
             {
                 var particle = _particles[i];
 
-                _particlePositionM[3] = new vec4(particle.Position, Transform.WorldPosition.z, 1);
+                _particlePositionM[3] = new vec4(particle.Position, worldZ, 1);
 
-                var particleM = _particlePositionM *
-                                glm.rotate(glm.radians(particle.Rotation), new vec3(0, 0, 1));
+                mat4 particleM = particle.AngularVelocity == 0f // Comparing to a float here is safe.
+                    ? _particlePositionM
+                    : _particlePositionM * glm.rotate(glm.radians(particle.Rotation), new vec3(0, 0, 1));
 
-                var particleModel = particle.IsWorldSpace ? particleM : Transform.WorldMatrix * particleM;
-
-                var size = particle.Size;
-
-                QuadVertices quad = default;
-                GraphicsHelper.CreateQuad(ref quad, chunk.Uvs, size.x, size.y, chunk.Pivot, particle.Color, particleModel);
+                var particleModel = particle.IsWorldSpace ? particleM : worldMatrix * particleM;
+                var verts = CollectionsMarshal.AsSpan(_vertices);
 
                 int baseIndex = i * 4;
-
-                // Resize if needed
-                while (_rendererData.Mesh.Vertices.Count < baseIndex + 4)
-                {
-                    _rendererData.Mesh.Vertices.Add(default);
-                }
-
-                // Update vertex data
-                _rendererData.Mesh.Vertices[baseIndex + 0] = quad.v0;
-                _rendererData.Mesh.Vertices[baseIndex + 1] = quad.v1;
-                _rendererData.Mesh.Vertices[baseIndex + 2] = quad.v2;
-                _rendererData.Mesh.Vertices[baseIndex + 3] = quad.v3;
+                GraphicsHelper.CreateQuad(ref verts[baseIndex + 0], ref verts[baseIndex + 1], ref verts[baseIndex + 2], 
+                                          ref verts[baseIndex + 3], chunk.Uvs, particle.Size.x, particle.Size.y,
+                                          chunk.Pivot, particle.Color, particleModel, 0);
             }
 
             _rendererData.Mesh.IndicesToDrawCount = _particles.Count * 6;
