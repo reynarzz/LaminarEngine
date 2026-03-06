@@ -84,7 +84,8 @@ namespace Engine.Rendering
 
         internal bool Initialize(RendererData2D renderer)
         {
-            if (IsActive) return false;
+            if (IsActive) 
+                return false;
             Clear();
             SortOrder = renderer.SortOrder;
             IsActive = true;
@@ -127,8 +128,8 @@ namespace Engine.Rendering
             }
             return textureIndex >= 0;
         }
-
-        internal void PushGeometry(RendererData2D renderer, Material material, Texture texture, int indicesCount, IList<Vertex> vertices)
+        private void ReserveGeometry(RendererData2D renderer, Material material, Texture texture, int indicesCount, int verticesCount, 
+                                    ref int textureIndex, ref int startIndex)
         {
             _isDirty = true;
             IsActive = true;
@@ -137,7 +138,7 @@ namespace Engine.Rendering
                 Material = material;
             }
 
-            bool textureFound = SetTextureToEmptySlot(texture, out int textureIndex);
+            bool textureFound = SetTextureToEmptySlot(texture, out textureIndex);
             if (!textureFound)
             {
                 Debug.EngineError("Tried to add texture to a full batch");
@@ -147,14 +148,14 @@ namespace Engine.Rendering
             renderer.OnDestroyRenderer += RemoveRenderer;
 
             var id = renderer.GetID();
-            int startIndex = 0;
+            startIndex = 0;
 
             if (_renderers.TryGetValue(id, out var rendererIds))
             {
                 _vertexCount -= rendererIds.VertexCount;
                 _indexCount -= rendererIds.IndexCount;
 
-                rendererIds.VertexCount = vertices.Count;
+                rendererIds.VertexCount = verticesCount;
                 rendererIds.IndexCount = indicesCount;
                 rendererIds.TextureId = textureIndex;
                 _renderers[id] = rendererIds;
@@ -169,10 +170,20 @@ namespace Engine.Rendering
                     Renderer = renderer,
                     RendererId = startIndex,
                     TextureId = textureIndex,
-                    VertexCount = vertices.Count,
+                    VertexCount = verticesCount,
                     IndexCount = indicesCount
                 });
             }
+
+            _vertexCount += verticesCount;
+            _indexCount += indicesCount;
+        }
+
+        internal void PushGeometry(RendererData2D renderer, Material material, Texture texture, int indicesCount, IList<Vertex> vertices)
+        {
+            int textureIndex = 0;
+            int startIndex = 0;
+            ReserveGeometry(renderer, material, texture, indicesCount, vertices.Count, ref textureIndex, ref startIndex);
 
             for (int i = 0; i < vertices.Count; i++)
             {
@@ -181,9 +192,15 @@ namespace Engine.Rendering
                 _verticesData[startIndex + i] = vertex;
                 _vertexOffset = Math.Min(_vertexOffset, startIndex + i);
             }
+        }
 
-            _vertexCount += vertices.Count;
-            _indexCount += indicesCount;
+        internal void PushGeometry(RendererData2D renderer, Material material, Texture texture, int indicesCount, int verticesCount, 
+                                   ref int textureIndex, ref int startIndex, ref Vertex[] vertices)
+        {
+            vertices = _verticesData;
+            ReserveGeometry(renderer, material, texture, indicesCount, verticesCount, ref textureIndex, ref startIndex);
+
+           //_vertexOffset = Math.Min(_vertexOffset, startIndex + i);
         }
 
         internal bool ReplaceTexture(RendererData2D renderer, Texture texture)

@@ -84,7 +84,6 @@ namespace Engine
         {
             return T.GetVertexAttributes();
         }
-
         internal static GfxResource CreateQuadIndexBuffer(int maxQuads)
         {
             var indices = GetQuadIndices(maxQuads);
@@ -125,61 +124,47 @@ namespace Engine
         internal static void CreateQuad(ref QuadVertices vertices, QuadUV uvs, float width, float height, vec2 pivot,
                                          ColorPacketRGBA color, mat4 worldMatrix)
         {
-            float px = pivot.x * width;
-            float py = pivot.y * height;
-
-            vertices.v0 = new Vertex()
-            {
-                Color = color,
-                Position = new vec3(worldMatrix * new vec4(-px, -py, 0, 1)),
-                UV = uvs.BottomLeftUV,
-                WorldCenter = new vec3(worldMatrix[3])
-            };
-
-            vertices.v1 = new Vertex()
-            {
-                Color = color,
-                Position = new vec3(worldMatrix * new vec4(-px, height - py, 0, 1)),
-                UV = uvs.TopLeftUV,
-                WorldCenter = new vec3(worldMatrix[3])
-            };
-
-            vertices.v2 = new Vertex()
-            {
-                Color = color,
-                Position = new vec3(worldMatrix * new vec4(width - px, height - py, 0, 1)),
-                UV = uvs.TopRightUV,
-                WorldCenter = new vec3(worldMatrix[3])
-            };
-
-            vertices.v3 = new Vertex()
-            {
-                Color = color,
-                Position = new vec3(worldMatrix * new vec4(width - px, -py, 0, 1)),
-                UV = uvs.BottomRightUV,
-                WorldCenter = new vec3(worldMatrix[3])
-            };
+            CreateQuad(ref vertices.v0, ref vertices.v1, ref vertices.v2, ref vertices.v3, uvs, width, height, pivot, color, worldMatrix, 0);
         }
 
-        internal static QuadVertices GetUIQuadVertices(Rect rect, Color color)
+        internal static void CreateQuad(ref Vertex v0, ref Vertex v1, ref Vertex v2, ref Vertex v3,
+                                   QuadUV uvs, float width, float height, vec2 pivot,
+                                   ColorPacketRGBA color, mat4 worldMatrix, int textureIndex)
         {
-            var size = rect.Size;
-            QuadVertices vertices = default;
+            float left = -(pivot.x * width);
+            float bottom = -(pivot.y * height);
+            float right = width + left;
+            float top = height + bottom;
 
-            vec2 bottomLeft = rect.Min;
-            vec2 topLeft = new vec2(rect.Min.x, rect.Min.y + size.y);
-            vec2 topRight = rect.Min + size;
-            vec2 bottomRight = new vec2(rect.Min.x + size.x, rect.Min.y);
+            var center = new vec3(worldMatrix[3]);
+            var cx = new vec3(worldMatrix[0]); 
+            var cy = new vec3(worldMatrix[1]); 
 
-            var uvs = QuadUV.DefaultUVs;
+            v0.Position = center + cx * left + cy * bottom;
+            v0.UV = uvs.BottomLeftUV;
+            v0.Color = color;
+            v0.TextureIndex = textureIndex;
+            v0.WorldCenter = center;
 
-            vertices.v0 = new Vertex { Color = color, Position = bottomLeft, UV = uvs.BottomLeftUV };
-            vertices.v1 = new Vertex { Color = color, Position = topLeft, UV = uvs.TopLeftUV };
-            vertices.v2 = new Vertex { Color = color, Position = topRight, UV = uvs.TopRightUV };
-            vertices.v3 = new Vertex { Color = color, Position = bottomRight, UV = uvs.BottomRightUV };
+            v1.Position = center + cx * left + cy * top;
+            v1.UV = uvs.TopLeftUV;
+            v1.Color = color;
+            v1.TextureIndex = textureIndex;
+            v1.WorldCenter = center;
 
-            return vertices;
+            v2.Position = center + cx * right + cy * top;
+            v2.UV = uvs.TopRightUV;
+            v2.Color = color;
+            v2.TextureIndex = textureIndex;
+            v2.WorldCenter = center;
+
+            v3.Position = center + cx * right + cy * bottom;
+            v3.UV = uvs.BottomRightUV;
+            v3.Color = color;
+            v3.TextureIndex = textureIndex;
+            v3.WorldCenter = center;
         }
+
         internal static QuadVertices GetUIQuadVerticesLocal(QuadUV uvs, vec2 size, vec2 pivot, Color color, mat4 worldMatrix)
         {
             QuadVertices q = default;

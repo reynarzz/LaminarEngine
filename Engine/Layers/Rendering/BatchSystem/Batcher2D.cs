@@ -115,15 +115,19 @@ namespace Engine.Rendering
 
                     var worldMatrix = renderer.GetRenderingWorldMatrix();
 
-                    QuadVertices quad = default;
-                    GraphicsHelper.CreateQuad(ref quad, chunk.Uvs, width, height, chunk.Pivot, renderer.Color, worldMatrix);
+                    //GraphicsHelper.CreateQuad(ref _quadVertexArray[0], ref _quadVertexArray[1], ref _quadVertexArray[2], 
+                    //                          ref _quadVertexArray[3], chunk.Uvs, width, height, chunk.Pivot, renderer.Color, worldMatrix);
 
-                    _quadVertexArray[0] = quad.v0;
-                    _quadVertexArray[1] = quad.v1;
-                    _quadVertexArray[2] = quad.v2;
-                    _quadVertexArray[3] = quad.v3;
+                    //currentBatch.PushGeometry(renderer, material, texture, IndicesPerQuad, _quadVertexArray);
 
-                    currentBatch.PushGeometry(renderer, material, texture, IndicesPerQuad, _quadVertexArray);
+                    int textureIndex = 0;
+                    int startIndex = 0;
+                    Vertex[] vertices = null;
+                    currentBatch.PushGeometry(renderer, material, texture, IndicesPerQuad, VerticesPerQuad, ref textureIndex, ref startIndex, ref vertices);
+
+                    GraphicsHelper.CreateQuad(ref vertices[startIndex + 0], ref vertices[startIndex + 1], ref vertices[startIndex + 2],
+                                              ref vertices[startIndex + 3], chunk.Uvs, width, height, chunk.Pivot, renderer.Color, worldMatrix, textureIndex);
+
                 }
                 else
                 {

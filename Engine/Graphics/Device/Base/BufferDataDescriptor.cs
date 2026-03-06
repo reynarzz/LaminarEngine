@@ -25,7 +25,7 @@ namespace Engine.Graphics
 
     internal unsafe class BufferDataDescriptor<T> : BufferDataDescriptor where T: unmanaged
     {
-        internal T[] Buffer { get; set; }
+        internal virtual T[] Buffer { get; set; }
         internal override int BufferLength => Buffer.Length * sizeof(T);
         internal override IntPtr GetBufferUnsafePtr()
         {
@@ -34,5 +34,18 @@ namespace Engine.Graphics
                 return new nint(ptr);
             }
         }
+    }
+
+    internal unsafe class VertexBufferDataDescriptor<T> : BufferDataDescriptor<T> where T: unmanaged, IVertex2D<T>
+    {
+        internal VertexAtrib[] GetVertexAttrib()
+        {
+            return GraphicsHelper.GetVertexAttribs<T>();
+        }
+    }
+
+    internal unsafe class VertexDefaultBufferDataDescriptor : VertexBufferDataDescriptor<Vertex> 
+    {
+
     }
 }
