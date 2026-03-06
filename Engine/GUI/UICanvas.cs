@@ -174,7 +174,7 @@ namespace Engine.GUI
                 return;
 
             element.RectTransform.Recalculate(parent);
-            element.SortOrder = _globalSortOrder;
+            //element.SortOrder = _globalSortOrder;
             if (element is UIGraphicsElement graphics)
             {
                 graphics.OnCanvasDraw(this);
