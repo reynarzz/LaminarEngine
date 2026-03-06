@@ -87,6 +87,13 @@ namespace Editor.Cooker
                 _typesLibrary.Add(ReflectionUtils.GetFullTypeName(type));
             }
         }
+        internal static void AddTypeFullName(string typeName)
+        {
+            if (string.IsNullOrEmpty(typeName))
+                return;
+
+            _typesLibrary.Add(typeName);
+        }
 
         internal static void AddTypesFullNames(IList<string> typesNames)
         {

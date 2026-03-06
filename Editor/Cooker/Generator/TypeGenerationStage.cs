@@ -20,15 +20,14 @@ namespace Editor.Cooker.Generator
             var engineBin = Path.Combine(EditorPaths.AppRoot, "Engine", "bin");
             var engineTypes = GetAssemblyTypes(GetAssemblyPath(engineBin, "Engine.dll"));
 
-            var gameTypes = await ReadProjectTypes(EditorPaths.GameProjectAbsolutePath);
+            // Adds game.dll types.
+            await AddProjectTypes(EditorPaths.GameProjectAbsolutePath);
 
             TypeRegistryClassGenerator.AddTypes(engineTypes);
-            TypeRegistryClassGenerator.AddTypesFullNames(gameTypes);
 
             var str = TypeRegistryClassGenerator.Generate();
 
             File.WriteAllText($"{EditorPaths.AppRoot}/Generated/TypeRegistry_Generated.cs", str);
-
         }
 
         private static string GetAssemblyPath(string root, string name)
@@ -52,15 +51,13 @@ namespace Editor.Cooker.Generator
 
             return asm.DefinedTypes.Select(t => t.AsType()).ToArray();
         }
-
-        private static async Task<List<string>> ReadProjectTypes(string projectFullPath)
+        
+        private static async Task AddProjectTypes(string projectFullPath)
         {
             var workspace = MSBuildWorkspace.Create();
             var project = await workspace.OpenProjectAsync(projectFullPath);
 
             var compilation = await project.GetCompilationAsync();
-
-            var typesNames = new List<string>();
 
             foreach (var tree in compilation.SyntaxTrees)
             {
@@ -70,16 +67,16 @@ namespace Editor.Cooker.Generator
                 var typeDeclarations = root.DescendantNodes().Where(x => x is TypeDeclarationSyntax ||
                                                                          x is EnumDeclarationSyntax ||
                                                                          x is RecordDeclarationSyntax);
+               
                 foreach (var typeDecl in typeDeclarations)
                 {
                     var symbol = model.GetDeclaredSymbol(typeDecl);
                     var name = GetClrTypeName(symbol);
-                    typesNames.Add(name);
-                    Console.WriteLine(name);
+
+                    TypeRegistryClassGenerator.AddTypeFullName(name);
+                    Debug.Log($"Game type detected: {name}");
                 }
             }
-
-            return typesNames;
         }
 
         private static string GetClrTypeName(ISymbol symbol)
