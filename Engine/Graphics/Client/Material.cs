@@ -16,6 +16,7 @@ namespace Engine
         internal List<RenderPass> Passes => _passes;
         [SerializedField] private Dictionary<string, Texture> _textures = new();
         internal Dictionary<string, Texture> Textures => _textures;
+        internal ulong MaterialInstanceId { get; private set; }
         public Shader Shader
         {
             get => _passes.FirstOrDefault()?.Shader; 
@@ -45,10 +46,12 @@ namespace Engine
         //Serializer
         internal Material(string name, Guid guid) : base(name, guid)
         {
-
+            MaterialInstanceId++;
         }
         public Material(Guid guid, string name, Shader shader) : base(name, guid)
         {
+            MaterialInstanceId++;
+
             _textures = new();
             _passes = new List<RenderPass>()
             {

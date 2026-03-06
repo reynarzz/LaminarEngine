@@ -1,13 +1,5 @@
 ﻿using Engine.Graphics;
 using Engine.Utils;
-using GlmNet;
-using Engine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Engine.Rendering
 {
@@ -21,52 +13,50 @@ namespace Engine.Rendering
 
         private const int IndicesPerQuad = 6;
         private const int VerticesPerQuad = 4;
-        private Dictionary<BucketKey, List<RendererData2D>> _renderBuckets;
         private BatchesPool _batchesPool;
         private static Material _pinkMaterial;
         private readonly Vertex[] _quadVertexArray = new Vertex[4];
-        private readonly List<List<RendererData2D>> _sortedBuckets = new();
-        private static readonly Comparison<List<RendererData2D>> _bucketSorter = (a, b) => a[0].SortOrder.CompareTo(b[0].SortOrder);
-
-        private struct BucketKey : IEquatable<BucketKey>
+        private readonly List<RendererData2D> _visibleRenderers = new();
+        private readonly RendererBatchComparer _rendererComparer = new();
+        private sealed class RendererBatchComparer : IComparer<RendererData2D>
         {
-            private readonly Material Material;
-            private readonly int SortOrder;
-
-            public BucketKey(Material material, int sortOrder)
+            public int Compare(RendererData2D a, RendererData2D b)
             {
-                Material = material;
-                SortOrder = sortOrder;
-            }
+                var matA = a.Material;
+                var matB = b.Material;
 
-            public bool Equals(BucketKey other) => Equals(Material, other.Material) && SortOrder == other.SortOrder;
-            public override bool Equals(object obj) => obj is BucketKey other && Equals(other);
-            public override int GetHashCode()
-            {
-                unchecked
+                if (matA == null || matB == null)
                 {
-                    int hash = 17;
-                    hash = hash * 31 + (Material != null ? Material.GetHashCode() : 0);
-                    hash = hash * 31 + SortOrder;
-                    return hash;
-                }
-            }
+                    if (matA == matB)
+                    {
+                        return a.SortOrder.CompareTo(b.SortOrder);
+                    }
 
-            public static bool operator ==(BucketKey a, BucketKey b) => a.Equals(b);
-            public static bool operator !=(BucketKey a, BucketKey b) => !a.Equals(b);
+                    return matA == null ? -1 : 1;
+                }
+
+                int material = matA.MaterialInstanceId.CompareTo(matB.MaterialInstanceId);
+
+                if (material != 0)
+                {
+                    return material;
+                }
+
+                return a.SortOrder.CompareTo(b.SortOrder);
+            }
         }
+
 
         public Batcher2D(int maxQuadsPerBatch)
         {
             MaxQuadsPerBatch = maxQuadsPerBatch;
-            _renderBuckets = new Dictionary<BucketKey, List<RendererData2D>>();
 
-            if(_pinkMaterial == null)
+            if (_pinkMaterial == null)
             {
                 _pinkMaterial = new Material(InternalShaderUtils.GetShaderPink());
                 _pinkMaterial.Name = "Pink Material";
             }
-            
+
             Initialize();
         }
 
@@ -78,7 +68,7 @@ namespace Engine.Rendering
 
         internal List<Batch2D> GetBatches<T>(IReadOnlyCollection<T> renderers) where T : RendererData2D
         {
-            _renderBuckets.Clear();
+            _visibleRenderers.Clear();
 
             foreach (var renderer in renderers)
             {
@@ -87,94 +77,75 @@ namespace Engine.Rendering
                     continue;
                 }
 
-                var key = new BucketKey(renderer.Material, renderer.SortOrder);
+                _visibleRenderers.Add(renderer);
+            }
 
-                ref var bucket = ref CollectionsMarshal.GetValueRefOrAddDefault(_renderBuckets, key, out bool exists);
+            _visibleRenderers.Sort(_rendererComparer);
 
-                if (!exists)
+            foreach (var renderer in _visibleRenderers)
+            {
+                renderer.Draw();
+
+                if (!renderer.IsDirty && !renderer.NeedsInterpolation())
                 {
-                    bucket = new List<RendererData2D>(8);
+                    continue;
+                }
+                else
+                {
+                    renderer.MarkNotDirty();
                 }
 
-                bucket.Add(renderer);
-            }
+                var texture = renderer.Sprite?.Texture ?? Texture2D.White;
+                var material = renderer.Material;
 
-            _sortedBuckets.Clear();
-
-            foreach (var bucket in _renderBuckets.Values)
-            {
-                _sortedBuckets.Add(bucket);
-            }
-
-            _sortedBuckets.Sort(_bucketSorter);
-            // TODO: improve performance of order by sorting, is allocating every frame
-            foreach (var bucket in _sortedBuckets)
-            {
-                foreach (var renderer in bucket)
+                if (!material || material.Shader == null || material.Shader.HasErrors /*|| !material.Shader.NativeShader.IsInitialized*/)
                 {
-                    renderer.Draw();
+                    material = _pinkMaterial;
+                }
 
-                    if (!renderer.IsDirty && !renderer.NeedsInterpolation())
+                if (renderer.Mesh == null)
+                {
+                    var chunk = renderer.Sprite?.GetAtlasCell() ?? TextureAtlasCell.DefaultChunk;
+
+                    float ppu = texture.PixelPerUnit;
+                    var width = (float)chunk.Width / ppu;
+                    var height = (float)chunk.Height / ppu;
+
+                    var currentBatch = _batchesPool.Get(renderer, VerticesPerQuad, MaxBatchVertexSize, texture, material);
+
+                    var worldMatrix = renderer.GetRenderingWorldMatrix();
+
+                    QuadVertices quad = default;
+                    GraphicsHelper.CreateQuad(ref quad, chunk.Uvs, width, height, chunk.Pivot, renderer.Color, worldMatrix);
+
+                    _quadVertexArray[0] = quad.v0;
+                    _quadVertexArray[1] = quad.v1;
+                    _quadVertexArray[2] = quad.v2;
+                    _quadVertexArray[3] = quad.v3;
+
+                    currentBatch.PushGeometry(renderer, material, texture, IndicesPerQuad, _quadVertexArray);
+                }
+                else
+                {
+                    // TODO: implement proper mesh drawing, for now, since it is used just for tilemap, this works
+                    var vertexCount = Math.Max(MaxBatchVertexSize, renderer.Mesh.Vertices.Count);
+
+                    var indices = default(uint[]);
+
+                    if (renderer.Mesh.Indices == null)
                     {
-                        continue;
+                        if (vertexCount > MaxBatchVertexSize)
+                        {
+                            indices = GraphicsHelper.GetQuadIndices(vertexCount / VerticesPerQuad);
+                        }
                     }
                     else
                     {
-                        renderer.MarkNotDirty();
+                        indices = renderer.Mesh.Indices;
                     }
+                    var currentBatch = _batchesPool.Get(renderer, renderer.Mesh.Vertices.Count, vertexCount, texture, material, indices);
 
-                    var texture = renderer.Sprite?.Texture ?? Texture2D.White;
-                    var material = renderer.Material;
-
-                    if (!material || material.Shader == null || material.Shader.HasErrors /*|| !material.Shader.NativeShader.IsInitialized*/)
-                    {
-                        material = _pinkMaterial;
-                    }
-
-                    if (renderer.Mesh == null)
-                    {
-                        var chunk = renderer.Sprite?.GetAtlasCell() ?? TextureAtlasCell.DefaultChunk;
-
-                        float ppu = texture.PixelPerUnit;
-                        var width = (float)chunk.Width / ppu;
-                        var height = (float)chunk.Height / ppu;
-
-                        var currentBatch = _batchesPool.Get(renderer, VerticesPerQuad, MaxBatchVertexSize, texture, material);
-
-                        var worldMatrix = renderer.GetRenderingWorldMatrix();
-
-                        QuadVertices quad = default;
-                        GraphicsHelper.CreateQuad(ref quad, chunk.Uvs, width, height, chunk.Pivot, renderer.Color, worldMatrix);
-
-                        _quadVertexArray[0] = quad.v0;
-                        _quadVertexArray[1] = quad.v1;
-                        _quadVertexArray[2] = quad.v2;
-                        _quadVertexArray[3] = quad.v3;
-
-                        currentBatch.PushGeometry(renderer, material, texture, IndicesPerQuad, _quadVertexArray);
-                    }
-                    else
-                    {
-                        // TODO: implement proper mesh drawing, for now, since it is used just for tilemap, this works
-                        var vertexCount = Math.Max(MaxBatchVertexSize, renderer.Mesh.Vertices.Count);
-
-                        var indices = default(uint[]);
-
-                        if (renderer.Mesh.Indices == null)
-                        {
-                            if (vertexCount > MaxBatchVertexSize)
-                            {
-                                indices = GraphicsHelper.GetQuadIndices(vertexCount / VerticesPerQuad);
-                            }
-                        }
-                        else
-                        {
-                            indices = renderer.Mesh.Indices;
-                        }
-                        var currentBatch = _batchesPool.Get(renderer, renderer.Mesh.Vertices.Count, vertexCount, texture, material, indices);
-
-                        currentBatch.PushGeometry(renderer, material, texture, renderer.Mesh.IndicesToDrawCount, renderer.Mesh.Vertices);
-                    }
+                    currentBatch.PushGeometry(renderer, material, texture, renderer.Mesh.IndicesToDrawCount, renderer.Mesh.Vertices);
                 }
             }
 
@@ -184,8 +155,6 @@ namespace Engine.Rendering
         internal void Clear()
         {
             _batchesPool.ClearPool();
-            _renderBuckets.Clear();
-            _sortedBuckets.Clear();
 
             GfxDeviceManager.Current.DestroyResource(_sharedIndexBuffer);
             Initialize();
