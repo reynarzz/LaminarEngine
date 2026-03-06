@@ -19,7 +19,6 @@ using static Box2D.NET.B2Sensors;
 using static Box2D.NET.B2SolverSets;
 using static Box2D.NET.B2BoardPhases;
 using static Box2D.NET.B2ArenaAllocators;
-using Engine;
 
 namespace Box2D.NET
 {
