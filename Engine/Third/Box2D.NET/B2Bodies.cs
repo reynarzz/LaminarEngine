@@ -19,6 +19,7 @@ using static Box2D.NET.B2Sensors;
 using static Box2D.NET.B2SolverSets;
 using static Box2D.NET.B2BoardPhases;
 using static Box2D.NET.B2ArenaAllocators;
+using Engine;
 
 namespace Box2D.NET
 {
@@ -738,6 +739,11 @@ namespace Box2D.NET
         /// @see b2BodyDef::position and b2BodyDef::rotation
         public static void b2Body_SetTransform(B2BodyId bodyId, B2Vec2 position, B2Rot rotation)
         {
+            if (!b2IsValidRotation(rotation))
+            {
+                Debug.Error("NaN rotation");
+                rotation = b2Rot_identity;
+            }
             B2_ASSERT(b2IsValidVec2(position));
             B2_ASSERT(b2IsValidRotation(rotation));
             B2_ASSERT(b2Body_IsValid(bodyId));
