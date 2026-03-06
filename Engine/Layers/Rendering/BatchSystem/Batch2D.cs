@@ -288,7 +288,16 @@ namespace Engine.Rendering
                 return;
             }
 
-            bool textureUnused = !_renderers.Values.Any(v => v.TextureId == removedTextureId);
+            bool textureUnused = true;
+
+            foreach (var r in _renderers.Values)
+            {
+                if (r.TextureId == removedTextureId)
+                {
+                    textureUnused = false;
+                    break;
+                }
+            }
 
             if (textureUnused)
             {
@@ -304,9 +313,8 @@ namespace Engine.Rendering
                         Textures.Length - (removedTextureId + 1)
                     );
                 }
-                var renderers = _renderers.Keys.ToList();
 
-                foreach (var key in renderers)
+                foreach (var key in _renderers.Keys)
                 {
                     var info = _renderers[key];
 
@@ -339,7 +347,7 @@ namespace Engine.Rendering
                 );
             }
 
-            foreach (var key in _renderers.Keys.ToList())
+            foreach (var key in _renderers.Keys)
             {
                 var info = _renderers[key];
 
