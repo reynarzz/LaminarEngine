@@ -78,32 +78,35 @@ namespace Engine.Rendering
 
         internal List<Batch2D> GetBatches<T>(IReadOnlyCollection<T> renderers) where T : RendererData2D
         {
-            // TODO: Do frustum culling
             _renderBuckets.Clear();
 
             foreach (var renderer in renderers)
             {
                 if (!renderer.IsEnabled)
                 {
-                    // TODO: notify if need to be removed from a batch
                     continue;
                 }
 
                 var key = new BucketKey(renderer.Material, renderer.SortOrder);
 
-                if (!_renderBuckets.ContainsKey(key))
+                ref var bucket = ref CollectionsMarshal.GetValueRefOrAddDefault(_renderBuckets, key, out bool exists);
+
+                if (!exists)
                 {
-                    _renderBuckets.Add(key, new List<RendererData2D>());
+                    bucket = new List<RendererData2D>(8);
                 }
 
-                _renderBuckets[key].Add(renderer);
+                bucket.Add(renderer);
             }
 
-
             _sortedBuckets.Clear();
-            _sortedBuckets.AddRange(_renderBuckets.Values);
-            _sortedBuckets.Sort(_bucketSorter);
 
+            foreach (var bucket in _renderBuckets.Values)
+            {
+                _sortedBuckets.Add(bucket);
+            }
+
+            _sortedBuckets.Sort(_bucketSorter);
             // TODO: improve performance of order by sorting, is allocating every frame
             foreach (var bucket in _sortedBuckets)
             {
