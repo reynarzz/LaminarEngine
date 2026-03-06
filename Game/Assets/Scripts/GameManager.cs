@@ -71,15 +71,15 @@ namespace Game
 
         private void InitializeActorLayers()
         {
-            static string[] GetConstStringValues(Type type)
-            {
-                return type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static)
-                           .Where(f => f.IsLiteral && !f.IsInitOnly && f.FieldType == typeof(string))
-                           .Select(f => (string)f.GetRawConstantValue())
-                           .ToArray();
-            }
+            //static string[] GetConstStringValues(Type type)
+            //{
+            //    return type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static)
+            //               .Where(f => f.IsLiteral && !f.IsInitOnly && f.FieldType == typeof(string))
+            //               .Select(f => (string)f.GetRawConstantValue())
+            //               .ToArray();
+            //}
 
-            var names = GetConstStringValues(typeof(GameConsts));
+           // var names = GetConstStringValues(typeof(GameConsts));
 
             //LayerMask.TurnOff(GameConsts.PLAYER, GameConsts.PLAYER);
             //LayerMask.TurnOff(GameConsts.PLAYER, GameConsts.CHARACTER_IGNORE);
@@ -349,28 +349,34 @@ uniform float uOutlineThickness = 0.04f
             var screenShader = Shader.FromPath("Shaders/ScreenVert.vert", "Shaders/CTRTv_Cheap.frag");
             var pass = new PostProcessingSinglePass(screenShader);
 
-            pass.SetValue("uBackgroundColor", new vec3(0.07f));
-            pass.SetValue("uDistortionStrength", 0);
-            pass.SetValue("uCornerTL", 0);
-            pass.SetValue("uCornerTR", 0);
-            pass.SetValue("uCornerBL", 0);
-            pass.SetValue("uCornerBR", 0);
-            pass.SetValue("uEdgeSoftness", 0.000f);
+            //pass.SetValue("uBackgroundColor", new vec3(0.07f));
+            //pass.SetValue("uDistortionStrength", 0);
+            //pass.SetValue("uCornerTL", 0);
+            //pass.SetValue("uCornerTR", 0);
+            //pass.SetValue("uCornerBL", 0);
+            //pass.SetValue("uCornerBR", 0);
+            //pass.SetValue("uEdgeSoftness", 0.000f);
+            //pass.SetValue("uScanlineIntensity", 0.4f);
+            //pass.SetValue("uScanlineSpacing", 4.0f);
+            //pass.SetValue("uPhosphorGlow", 0.05f);
+            //pass.SetValue("uRGBOffset", 0.0f);
+            //pass.SetValue("uBrightness", 1.52f);
+            //pass.SetValue("uContrast", 1.05f);
+            //pass.SetValue("uRGBBalance", new vec3(1.0f, 0.8f, 0.84f));
+            //pass.SetValue("uGlassReflectStrength", 0.0f);
+            //pass.SetValue("uAberrationStrength", 0.00f);
+            //pass.SetValue("uMaskStrength", 0.01f);
+            //pass.SetValue("uMaskScale", 1.0f);
+            //pass.SetValue("uNoiseStrength", 0.0f);
+            //pass.SetValue("uVignetteStrength", 0.01f);
+            //pass.SetValue("uJitterStrength", 0.5f);
             pass.SetValue("uScanlineIntensity", 0.4f);
             pass.SetValue("uScanlineSpacing", 4.0f);
             pass.SetValue("uPhosphorGlow", 0.05f);
-            pass.SetValue("uRGBOffset", 0.0f);
-            pass.SetValue("uBrightness", 1.52f);
+            pass.SetValue("uBrightness", 1.25f);
             pass.SetValue("uContrast", 1.05f);
             pass.SetValue("uRGBBalance", new vec3(1.0f, 0.8f, 0.84f));
-            pass.SetValue("uGlassReflectStrength", 0.0f);
-            pass.SetValue("uAberrationStrength", 0.00f);
-            pass.SetValue("uMaskStrength", 0.01f);
-            pass.SetValue("uMaskScale", 1.0f);
-            pass.SetValue("uNoiseStrength", 0.0f);
-            pass.SetValue("uVignetteStrength", 0.01f);
             pass.SetValue("uJitterStrength", 0.5f);
-
             PostProcessingStackInternal.Insert(pass, 0);
         }
 

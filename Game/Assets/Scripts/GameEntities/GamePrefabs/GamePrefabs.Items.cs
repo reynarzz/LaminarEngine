@@ -17,11 +17,12 @@ namespace Game
             static Items()
             {
             }
-
+            // TODO: Object pool this.
             public static Collectible[] InstantiateCollectible(ItemId item, int amount, bool instantiateAmount, vec2 position)
             {
                 int count = (instantiateAmount ? amount : 1);
                 var collectibles = new Collectible[count];
+                var audioClip = Assets.GetAudioClip("Audio/HALFTONE/Gameplay/Collectibles_2.wav");
 
                 IEnumerator InstantiateCollectibles()
                 {
@@ -32,8 +33,6 @@ namespace Game
 
                         var collectible = new Actor("Collectible_" + item.ToString()).AddComponent<Collectible>();
                         collectible.Transform.WorldPosition = position;
-
-                        var audioClip = Assets.GetAudioClip("Audio/HALFTONE/Gameplay/Collectibles_2.wav");
 
                         collectible.Init(new Collectible.CollectibleConfig()
                         {

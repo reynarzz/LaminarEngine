@@ -12,8 +12,18 @@ namespace Engine.Rendering
     {
         private readonly GfxResource _sharedIndexBuffer;
         private List<Batch2D> _batches;
+        private readonly Dictionary<RendererData2D, Batch2D> _rendererToBatch = new();
         public int MaxEmptyBatches { get; set; } = 5;
         private bool _recalculateMaxBatches = false;
+
+        private static readonly Comparison<Batch2D> _batchSorter = (x, y) =>
+        {
+            if (x.IsActive != y.IsActive)
+                return x.IsActive ? -1 : 1;
+            if (x.IsActive)
+                return x.SortOrder.CompareTo(y.SortOrder);
+            return 0;
+        };
 
         public BatchesPool(GfxResource sharedIndexBuffer)
         {
@@ -24,37 +34,35 @@ namespace Engine.Rendering
         internal bool GetCurrentBatch(RendererData2D renderer, Texture texture, out Batch2D batchOut)
         {
             batchOut = null;
-            foreach (var batch in _batches)
+
+            if (!_rendererToBatch.TryGetValue(renderer, out var batch))
+                return false;
+
+            if (batch.Material != renderer.Material || batch.SortOrder != renderer.SortOrder ||
+               (renderer.Mesh?.Indices != null && renderer.Mesh.IndicesToDrawCount != batch.IndexCount) ||
+               (renderer.Mesh?.Vertices.Count > batch.VertexCount))
             {
-                if (batch.Contains(renderer))
+                batch.RemoveRenderer(renderer);
+                _rendererToBatch.Remove(renderer);
+
+                if (renderer.PrivateBatch)
                 {
-                    if (batch.Material != renderer.Material || batch.SortOrder != renderer.SortOrder || 
-                       (renderer.Mesh?.Indices != null && renderer.Mesh.IndicesToDrawCount != batch.IndexCount) ||
-                       (renderer.Mesh?.Vertices.Count > batch.VertexCount))
-                    {
-                        batch.RemoveRenderer(renderer);
-
-                        if (renderer.PrivateBatch)
-                        {
-                            DestroyBatch(batch);
-                        }
-                        return false;
-                    }
-                    else if (!batch.Textures.Contains(texture))
-                    {
-                        if (!batch.ReplaceTexture(renderer, texture))
-                        {
-                            batch.RemoveRenderer(renderer);
-                            return false;
-                        }
-                    }
-
-                    batchOut = batch;
-                    return true;
+                    DestroyBatch(batch);
+                }
+                return false;
+            }
+            else if (!batch.Textures.Contains(texture))
+            {
+                if (!batch.ReplaceTexture(renderer, texture))
+                {
+                    batch.RemoveRenderer(renderer);
+                    _rendererToBatch.Remove(renderer);
+                    return false;
                 }
             }
 
-            return false;
+            batchOut = batch;
+            return true;
         }
 
         internal Batch2D Get(RendererData2D renderer, int vertexToAdd, int maxVertexSize, Texture texture, Material mat, uint[] rawIndices = null)
@@ -91,37 +99,46 @@ namespace Engine.Rendering
                 }
             }
 
-
             if (selectedBatch != null)
             {
                 if (selectedBatch.Initialize(renderer))
                 {
+                    _rendererToBatch[renderer] = selectedBatch;
                     SortBatches();
-                    // Debug.Log("Found empty batch for: " + renderer.Name);
                 }
                 else
                 {
-                    // Debug.Log("Found existing batch for: " + renderer.Name + ", Batch: Sorting: " + selectedBatch.SortOrder);
-                    // SortBatches();
+                    _rendererToBatch[renderer] = selectedBatch;
                 }
 
                 return selectedBatch;
             }
+
             var newBatch = new Batch2D(maxVertexSize, _sharedIndexBuffer, rawIndices);
             newBatch.OnBatchEmpty += OnBatchEmpty;
-            // Initialize to clear any old states.
             newBatch.Initialize(renderer);
+            _rendererToBatch[renderer] = newBatch;
 
             _batches.Add(newBatch);
             SortBatches();
-            // Debug.Info($"Create new batch for: {renderer.GetType().Name}: {renderer.Name}: sort: {renderer.SortOrder} ({_batches.Count})");
 
             return newBatch;
         }
 
         private void OnBatchEmpty(Batch2D batch)
         {
-            // Moves empty batch, and puts it to the end.
+            // Remove all renderer mappings pointing to this batch
+            var toRemove = new List<RendererData2D>();
+            foreach (var kvp in _rendererToBatch)
+            {
+                if (kvp.Value == batch)
+                    toRemove.Add(kvp.Key);
+            }
+            foreach (var key in toRemove)
+            {
+                _rendererToBatch.Remove(key);
+            }
+
             batch.Clear();
             if (_batches.Remove(batch))
             {
@@ -135,38 +152,32 @@ namespace Engine.Rendering
 
         private void DestroyBatch(Batch2D batch)
         {
+            // Remove all renderer mappings pointing to this batch
+            var toRemove = new List<RendererData2D>();
+            foreach (var kvp in _rendererToBatch)
+            {
+                if (kvp.Value == batch)
+                {
+                    toRemove.Add(kvp.Key);
+                }
+            }
+            foreach (var key in toRemove)
+            {
+                _rendererToBatch.Remove(key);
+            }
+
             if (_batches.Remove(batch))
             {
                 batch.Dispose();
             }
         }
+
         private void SortBatches()
         {
-            _batches.Sort((x, y) =>
-            {
-                if (x.IsActive && !y.IsActive)
-                {
-                    return -1;
-                }
-                if (!x.IsActive && y.IsActive)
-                {
-                    return 1;
-                }
-
-                // If both are active, sort by SortOrder.
-                if (x.IsActive && y.IsActive)
-                {
-                    return x.SortOrder.CompareTo(y.SortOrder);
-                }
-
-                // if both are inactive, keep original relative order.
-                return 0;
-            });
-
+            _batches.Sort(_batchSorter);
             _recalculateMaxBatches = true;
         }
 
-        // TODO: Delete all batches that are not being used for too long, and are also big.
         internal void ClearPool()
         {
             foreach (var batch in _batches)
@@ -174,8 +185,8 @@ namespace Engine.Rendering
                 batch.Dispose();
             }
             _batches.Clear();
+            _rendererToBatch.Clear();
         }
-
 
         private void RemoveExtraBatches()
         {
@@ -189,16 +200,16 @@ namespace Engine.Rendering
             if (emptyCount > MaxEmptyBatches)
             {
                 var removeCount = emptyCount - MaxEmptyBatches;
+                int removeStart = _batches.Count - removeCount;
 
-                for (int i = 0; i < removeCount; i++)
+                for (int i = removeStart; i < _batches.Count; i++)
                 {
-                    _batches[i + index].Dispose();
+                    _batches[i].Dispose();
                 }
 
-                _batches.RemoveRange(index, removeCount);
+                _batches.RemoveRange(removeStart, removeCount);
 
-                Debug.Warn("Removed empty batches: " + (removeCount) + ", ValidCount: " + index);
-
+                Debug.Warn("Removed empty batches: " + removeCount + ", ValidCount: " + index);
             }
         }
 

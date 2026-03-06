@@ -56,111 +56,92 @@ namespace Engine.Graphics
             return targetRenderTexture;
         }
 
-        private RenderingBatchesInfo RenderBatches(ICamera camera, List<Batch2D> batches, ref mat4 VP, RenderTexture sceneRenderTarget, RenderTexture grabBlitTarget = null)
+        private RenderingBatchesInfo RenderBatches(ICamera camera, List<Batch2D> batches, ref mat4 VP, RenderTexture sceneRenderTarget,
+                                                   RenderTexture grabBlitTarget = null)
         {
             RenderingBatchesInfo info = default;
             for (int i = 0; i < batches.Count; i++)
             {
                 var batch = batches[i];
                 if (!batch.IsActive)
-                {
                     break;
-                }
+
                 info.BatchesCount++;
                 info.TotalRenderers += batch.RenderersCount;
                 batch.Flush();
 
-                //   if (batch.Material)
+                bool isScreenGrabPass = false;
+                for (int j = 0; j < batch.Material.Passes.Count; j++)
                 {
-                    var isScreenGrabPass = batch.Material.Passes.Any(x => x.IsScreenGrabPass);
-
-                    if (isScreenGrabPass)
+                    if (batch.Material.Passes[j].IsScreenGrabPass)
                     {
-                        //GfxDeviceManager.Current.Clear(new ClearDeviceConfig()
-                        //{
-                        //    Color = _mainCamera.BackgroundColor,
-                        //    RenderTarget = _screenGrabTarget.NativeResource
-                        //});
-
-                        if (grabBlitTarget)
-                        {
-                            GfxDeviceManager.Current.BlitRenderTargetTo(grabBlitTarget.NativeResource, _screenGrabTarget.NativeResource);
-                        }
-
-                        info.ScreenGrabPasses++;
-
-                        try
-                        {
-                            for (int j = 0; j < batches.Count; j++)
-                            {
-                                var batchGrab = batches[j];
-                                if (!batchGrab.IsActive || batchGrab == batch)
-                                {
-                                    break;
-                                }
-
-                                batchGrab.Flush();
-                                RenderPass(batchGrab, ref VP, _screenGrabTarget, _screenGrabTarget, camera);
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            Debug.EngineError(e);
-                        }
+                        isScreenGrabPass = true;
+                        break;
                     }
                 }
-                //else
-                //{
-                //    Debug.EngineError("Fatal batch doesn't have material");
-                //}
+
+                if (isScreenGrabPass)
+                {
+                    if (grabBlitTarget != null)
+                    {
+                        GfxDeviceManager.Current.BlitRenderTargetTo(grabBlitTarget.NativeResource, _screenGrabTarget.NativeResource);
+                    }
+
+                    info.ScreenGrabPasses++;
+
+                    try
+                    {
+                        for (int j = 0; j < i; j++) // only batches before current, already flushed
+                        {
+                            var batchGrab = batches[j];
+                            if (!batchGrab.IsActive) break;
+                            RenderPass(batchGrab, ref VP, _screenGrabTarget, _screenGrabTarget, camera);
+                        }
+                    }
+                    catch (Exception e) { Debug.EngineError(e); }
+                }
 
                 RenderPass(batch, ref VP, sceneRenderTarget, _screenGrabTarget, camera);
             }
 
             return info;
         }
-
-        private void RenderPass(Batch2D batch, ref mat4 VP, RenderTexture renderTarget, RenderTexture screenGrabTarget, ICamera camera)
+        private void RenderPass(Batch2D batch, ref mat4 VP, RenderTexture renderTarget,
+    RenderTexture screenGrabTarget, ICamera camera)
         {
-            if(batch == null)
-            {
-                Debug.EngineError("Batch is null");
-            }
-            if (batch.Material == null)
-            {
-                Debug.EngineError("Material is null");
-            }
-            if (batch.Material.Passes == null)
-            {
-                Debug.EngineError("Passes is null");
-            }
+#if DEBUG
+            System.Diagnostics.Debug.Assert(batch != null, "Batch is null");
+            System.Diagnostics.Debug.Assert(batch.Material != null, "Material is null");
+            System.Diagnostics.Debug.Assert(batch.Material.Passes != null, "Passes is null");
+#endif
+
+            var viewport = new vec4(camera.Viewport.x * renderTarget.Width,
+                                    camera.Viewport.y * renderTarget.Height,
+                                    renderTarget.Width * camera.Viewport.z,
+                                    renderTarget.Height * camera.Viewport.w);
+            var screenSize = new vec2(viewport.z, viewport.w);
 
             for (int i = 0; i < batch.Material.Passes.Count; i++)
             {
                 var pass = batch.Material.Passes[i];
+
                 int boundTex = 0;
                 for (; boundTex < batch.Textures.Length; boundTex++)
                 {
                     var tex = batch.Textures[boundTex];
-
                     if (tex == null)
                         break;
-
                     _drawCallData.Textures[boundTex] = tex.NativeResource;
                 }
 
-                // Set material's texture
                 foreach (var (uniformName, texture) in batch.Material.Textures)
                 {
                     _drawCallData.NamedTextures[uniformName] = texture.NativeResource;
                 }
 
                 int screenGrabIndex = boundTex;
-
-                // Grab the color texture
                 _drawCallData.Textures[screenGrabIndex] = pass.IsScreenGrabPass ? screenGrabTarget.NativeResource.SubResources[0] : null;
 
-                // Pipeline
                 _pipelineFeatures.Blending = pass.Blending;
                 _pipelineFeatures.Stencil = pass.Stencil;
 
@@ -171,43 +152,37 @@ namespace Engine.Graphics
                 _drawCallData.Geometry = batch.Geometry;
                 _drawCallData.Features = _pipelineFeatures;
                 _drawCallData.RenderTarget = renderTarget.NativeResource;
-                _drawCallData.Viewport = new vec4(camera.Viewport.x * renderTarget.Width, camera.Viewport.y * renderTarget.Height,
-                                                    renderTarget.Width * camera.Viewport.z, renderTarget.Height * camera.Viewport.w);
+                _drawCallData.Viewport = viewport;
 
-                // Uniforms
                 _drawCallData.Uniforms[(int)Consts.Graphics.Uniforms.VP_MATRIX].SetMat4(Consts.VIEW_PROJ_UNIFORM_NAME, VP);
                 _drawCallData.Uniforms[(int)Consts.Graphics.Uniforms.VIEW_MATRIX].SetMat4(Consts.VIEW_UNIFORM_NAME, camera.ViewMatrix);
                 _drawCallData.Uniforms[(int)Consts.Graphics.Uniforms.PROJECTION_MATRIX].SetMat4(Consts.PROJECTION_UNIFORM_NAME, camera.Projection);
                 _drawCallData.Uniforms[(int)Consts.Graphics.Uniforms.TEXTURES_ARRAY].SetIntArr(Consts.TEX_ARRAY_UNIFORM_NAME, Batch2D.TextureSlotArray);
                 _drawCallData.Uniforms[(int)Consts.Graphics.Uniforms.MODEL_MATRIX].SetMat4(Consts.MODEL_UNIFORM_NAME, batch.WorldMatrix);
                 _drawCallData.Uniforms[(int)Consts.Graphics.Uniforms.SCREEN_RENDER_TARGET_GRAB].SetInt(Consts.SCREEN_GRAB_TEX_UNIFORM_NAME, screenGrabIndex);
-                _drawCallData.Uniforms[(int)Consts.Graphics.Uniforms.SCREEN_SIZE].SetVec2(Consts.SCREEN_SIZE_UNIFORM_NAME, new vec2(renderTarget.Width * camera.Viewport.z, renderTarget.Height * camera.Viewport.w));
+                _drawCallData.Uniforms[(int)Consts.Graphics.Uniforms.SCREEN_SIZE].SetVec2(Consts.SCREEN_SIZE_UNIFORM_NAME, screenSize);
                 _drawCallData.Uniforms[(int)Consts.Graphics.Uniforms.APP_TIME].SetVec3(Consts.TIME_UNIFORM_NAME, new vec3(Time.UnscaledTimeWrap, Time.TimeCurrentWrap, Time.DeltaTime));
-
-                // Clears Next unused uniform, so the device does not send more data than necessary.
                 _drawCallData.Uniforms[(int)Consts.Graphics.Uniforms.COUNT] = default;
 
-                // Adds extra uniforms needed by renderers.
-                int uniformOffset = 0;
-                if(pass.Uniforms != null && pass.Uniforms.Count > 0)
+                if (pass.Uniforms != null && pass.Uniforms.Count > 0)
                 {
+                    int uniformStart = (int)Consts.Graphics.Uniforms.COUNT;
+                    int u = 0;
                     foreach (var uniform in pass.Uniforms.Values)
                     {
-                        if (_drawCallData.Uniforms.Length <= uniformOffset)
+                        int idx = uniformStart + u++;
+                        if (idx >= _drawCallData.Uniforms.Length)
                         {
                             Debug.Error($"Max uniform per drawcall reached: {_drawCallData.Uniforms.Length}");
                             break;
                         }
-                        _drawCallData.Uniforms[uniformOffset + (int)Consts.Graphics.Uniforms.COUNT] = uniform;
-                        uniformOffset++;
+                        _drawCallData.Uniforms[idx] = uniform;
                     }
                 }
 
-                // Draw
                 GfxDeviceManager.Current.Draw(_drawCallData);
             }
         }
-
         private struct RenderingBatchesInfo
         {
             public int BatchesCount { get; set; }
