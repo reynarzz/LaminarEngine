@@ -114,17 +114,38 @@ namespace Engine.Rendering
                 return selectedBatch;
             }
 
-            var newBatch = Batch2D.CreateBatch<Vertex>(maxVertexSize, _sharedIndexBuffer, rawIndices);
-            newBatch.OnBatchEmpty += OnBatchEmpty;
-            newBatch.Initialize(renderer);
+            // TODO: check for the vertex type.
+            var newBatch = CreateBatch(renderer, maxVertexSize, _sharedIndexBuffer, rawIndices);
             _rendererToBatch[renderer.GetID()] = newBatch;
 
             _batches.Add(newBatch);
+            renderer.BatchId = _batches.Count; // TODO:
+
             SortBatches();
 
             return newBatch;
-        }
+        } 
 
+        private Batch2D CreateBatch(RendererData2D renderer, int maxVertexSize, GfxResource sharedIndexBuffer, uint[] rawIndices)
+        {
+            Batch2D newBatch = null;
+            if (renderer.VertexType == null)
+            {
+                throw new NotImplementedException($"Vertex type is null for rendererData '{renderer.ID}'.");
+            }
+            if (renderer.VertexType == typeof(Vertex))
+            {
+                newBatch = Batch2D.CreateBatch<Vertex>(maxVertexSize, _sharedIndexBuffer, rawIndices);
+            }
+            else
+            {
+                throw new NotImplementedException($"Vertex type '{renderer.VertexType}' is not handled by the batch pool.");
+            }
+            newBatch.OnBatchEmpty += OnBatchEmpty;
+            newBatch.Initialize(renderer);
+
+            return newBatch;
+        }
         private void OnBatchEmpty(Batch2D batch)
         {
             // Remove all renderer mappings pointing to this batch

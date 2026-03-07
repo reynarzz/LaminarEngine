@@ -132,7 +132,7 @@ namespace Engine
 
     public class Mesh<T> : Mesh
     {
-        public IList<T> Vertices { get; set; }
+        public IList<T> Vertices { get; set; } // TODO: use arrays,
         public override int VertexCount => Vertices.Count;
         internal override Type VertexType { get; } = typeof(T);
 

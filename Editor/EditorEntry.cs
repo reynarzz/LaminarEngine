@@ -44,6 +44,7 @@ namespace Editor
 
     // Refactor:
     // - Batch2D, this class maintains the vertices in the ram at all times, once the vertex data is send to the gpu, the ram should be freed.
+    // - BatchesPool is using a dictionary and a list to, it should Use a dictionary and keep it ordered, or a list and keep track of rendererIndex.
 
     // Performance fix:
     // UI performance is pretty bad, rewrite the entire UI system.
