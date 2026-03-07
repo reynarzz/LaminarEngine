@@ -40,22 +40,25 @@ namespace Engine
 
         public event Action OnEmitFinished;
         private List<Vertex> _vertices;
+        private Mesh<Vertex> _particleSystemMesh;
+
         protected override void OnAwake()
         {
             base.OnAwake();
 
             _rendererData = (RendererData as RendererData2D);
-            _rendererData.Mesh = new Mesh();
+            _particleSystemMesh = new();
+
+            _rendererData.Mesh = _particleSystemMesh;
 
 
-            _rendererData.Mesh = new Mesh();
             _rendererData.Mesh.IndicesToDrawCount = 0;
             const float bufferOffset = 1.2f;
 
             _particles.Capacity = (int)MathF.Ceiling(EmitRate * ParticleLife * bufferOffset);
 
             _vertices = new List<Vertex>(_particles.Capacity * 4);
-            _rendererData.Mesh.Vertices = _vertices;
+            _particleSystemMesh.Vertices = _vertices;
             Sprite = new Sprite(0, Texture2D.White); // Remove this, reference default sprite
             _rendererData.PrivateBatch = true; // TODO: Remove this
         }

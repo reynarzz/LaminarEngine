@@ -121,17 +121,24 @@ namespace Engine
     //    }
     //}
 
-
-    public class Mesh : EObject
+    public abstract class Mesh : EObject
     {
         internal bool IsDirty { get; private set; }
-        public IList<Vertex> Vertices { get; set; }
-        public uint[] Indices { get; set; }
         public int IndicesToDrawCount { get; set; }
+        public uint[] Indices { get; set; }
+        public abstract int VertexCount { get; }
+        internal abstract Type VertexType { get; }
+    }
+
+    public class Mesh<T> : Mesh
+    {
+        public IList<T> Vertices { get; set; }
+        public override int VertexCount => Vertices.Count;
+        internal override Type VertexType { get; } = typeof(T);
 
         public Mesh()
         {
-            Vertices = new List<Vertex>();
+            Vertices = new List<T>();
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Engine.Rendering
     {
         private readonly GfxResource _sharedIndexBuffer;
         private List<Batch2D> _batches;
-        private readonly Dictionary<RendererData2D, Batch2D> _rendererToBatch = new();
+        private readonly Dictionary<Guid, Batch2D> _rendererToBatch = new();
         public int MaxEmptyBatches { get; set; } = 5;
         private bool _recalculateMaxBatches = false;
 
@@ -35,15 +35,15 @@ namespace Engine.Rendering
         {
             batchOut = null;
 
-            if (!_rendererToBatch.TryGetValue(renderer, out var batch))
+            if (!_rendererToBatch.TryGetValue(renderer.GetID(), out var batch))
                 return false;
 
             if (batch.Material != renderer.Material || batch.SortOrder != renderer.SortOrder ||
                (renderer.Mesh?.Indices != null && renderer.Mesh.IndicesToDrawCount != batch.IndexCount) ||
-               (renderer.Mesh?.Vertices.Count > batch.VertexCount))
+               (renderer.Mesh?.VertexCount > batch.VertexCount))
             {
                 batch.RemoveRenderer(renderer);
-                _rendererToBatch.Remove(renderer);
+                _rendererToBatch.Remove(renderer.GetID());
 
                 if (renderer.PrivateBatch)
                 {
@@ -56,7 +56,7 @@ namespace Engine.Rendering
                 if (!batch.ReplaceTexture(renderer, texture))
                 {
                     batch.RemoveRenderer(renderer);
-                    _rendererToBatch.Remove(renderer);
+                    _rendererToBatch.Remove(renderer.GetID());
                     return false;
                 }
             }
@@ -103,12 +103,12 @@ namespace Engine.Rendering
             {
                 if (selectedBatch.Initialize(renderer))
                 {
-                    _rendererToBatch[renderer] = selectedBatch;
+                    _rendererToBatch[renderer.GetID()] = selectedBatch;
                     SortBatches();
                 }
                 else
                 {
-                    _rendererToBatch[renderer] = selectedBatch;
+                    _rendererToBatch[renderer.GetID()] = selectedBatch;
                 }
 
                 return selectedBatch;
@@ -117,7 +117,7 @@ namespace Engine.Rendering
             var newBatch = Batch2D.CreateBatch<Vertex>(maxVertexSize, _sharedIndexBuffer, rawIndices);
             newBatch.OnBatchEmpty += OnBatchEmpty;
             newBatch.Initialize(renderer);
-            _rendererToBatch[renderer] = newBatch;
+            _rendererToBatch[renderer.GetID()] = newBatch;
 
             _batches.Add(newBatch);
             SortBatches();
@@ -128,7 +128,7 @@ namespace Engine.Rendering
         private void OnBatchEmpty(Batch2D batch)
         {
             // Remove all renderer mappings pointing to this batch
-            var toRemove = new List<RendererData2D>();
+            var toRemove = new List<Guid>();
             foreach (var kvp in _rendererToBatch)
             {
                 if (kvp.Value == batch)
@@ -153,7 +153,7 @@ namespace Engine.Rendering
         private void DestroyBatch(Batch2D batch)
         {
             // Remove all renderer mappings pointing to this batch
-            var toRemove = new List<RendererData2D>();
+            var toRemove = new List<Guid>();
             foreach (var kvp in _rendererToBatch)
             {
                 if (kvp.Value == batch)

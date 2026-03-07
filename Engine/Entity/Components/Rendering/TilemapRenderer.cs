@@ -60,12 +60,13 @@ namespace Engine
             }
         }
         private RendererData2D _rendererData;
+        private Mesh<Vertex> _mesh = new();
 
         internal override void OnInternalInitialize()
         {
             base.OnInternalInitialize();
             _rendererData = RendererData as RendererData2D;
-            _rendererData.Mesh = new Mesh();
+            _rendererData.Mesh = _mesh;
             _rendererData.Mesh.IndicesToDrawCount = 0;
             _rendererData.PrivateBatch = true;
             _rendererData.Bounds = Bounds.GetInitialized();
@@ -91,14 +92,14 @@ namespace Engine
             {
                 layer.Vertices = layer.Vertices ?? Array.Empty<Vertex>();
 
-                _rendererData.Mesh.Vertices = layer.Vertices;
-                _rendererData.Mesh.IndicesToDrawCount = layer.Vertices.Length == 0 ? 0 : layer.IndicesToDraw;
+                _mesh.Vertices = layer.Vertices;
+                _mesh.IndicesToDrawCount = layer.Vertices.Length == 0 ? 0 : layer.IndicesToDraw;
                 _rendererData.Bounds = layer.Bounds;
             }
             else
             {
-                _rendererData.Mesh.Vertices = Array.Empty<Vertex>();
-                _rendererData.Mesh.IndicesToDrawCount = 0;
+                _mesh.Vertices = Array.Empty<Vertex>();
+                _mesh.IndicesToDrawCount = 0;
                 _rendererData.Bounds = default;
             }
 

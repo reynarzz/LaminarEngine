@@ -28,13 +28,16 @@ namespace Engine.Rendering
 
         private bool _isDirty;
         private Dictionary<Guid, RendererIds> _renderers;
+        private bool _isPrivateBatch;
+
         public int RenderersCount => _renderers.Count;
         private GeometryDescriptor _geoDescriptor;
         private VertexCollection _vertexCollection;
         internal abstract class VertexCollection
         {
             internal abstract int Count { get; }
-            internal abstract void SetVertex<T>(int index, T value) where T : unmanaged, IVertex2D<T>;
+            internal abstract void SetVertex<T>(int startIndex, T value) where T : unmanaged, IVertex2D<T>;
+            internal abstract void SetMeshVertices(int startIndex, int textureIndex, Mesh mesh);
             internal abstract void SetVertexTextureIndex(int index, int textureIndex);
             internal abstract void PackVertices(int startIndex, int destinationIndex, int length);
         }
@@ -44,9 +47,10 @@ namespace Engine.Rendering
             private T[] _vertices;
             public T[] Vertices => _vertices;
             internal override int Count => _vertices.Length;
-
-            internal VertexCollection(int count)
+            private readonly Batch2D _targetBatch;
+            internal VertexCollection(Batch2D targetBatch, int count)
             {
+                _targetBatch = targetBatch;
                 _vertices = new T[count];
             }
 
@@ -63,6 +67,25 @@ namespace Engine.Rendering
             internal override void PackVertices(int startIndex, int destinationIndex, int length)
             {
                 Array.Copy(_vertices, startIndex, _vertices, destinationIndex, length);
+            }
+
+            internal override void SetMeshVertices(int startIndex, int textureIndex, Mesh mesh)
+            {
+                var meshT = mesh as Mesh<T>;
+
+                //if (!_targetBatch._isPrivateBatch)
+                //{
+                //    //_vertices = meshT.Vertices;
+                //}
+                //else
+                {
+                    for (int i = 0; i < meshT.Vertices.Count; i++)
+                    {
+                        var vert = meshT.Vertices[i];
+                        vert.TextureIndex = textureIndex;
+                        _vertices[startIndex + i] = vert;
+                    }
+                }
             }
         }
 
@@ -95,7 +118,7 @@ namespace Engine.Rendering
             var batch = new Batch2D();
 
             batch.MaxVertexSize = maxVertexSize;
-            var verticesCollection = new VertexCollection<T>(batch.MaxVertexSize);
+            var verticesCollection = new VertexCollection<T>(batch, batch.MaxVertexSize);
             batch._vertexCollection = verticesCollection;
 
             batch.Textures = new Texture[GfxDeviceManager.Current.GetDeviceInfo().MaxValidTextureUnits - 5];
@@ -132,14 +155,15 @@ namespace Engine.Rendering
 
             return batch;
         }
-
         internal bool Initialize(RendererData2D renderer)
         {
             if (IsActive)
                 return false;
+
             Clear();
             SortOrder = renderer.SortOrder;
             IsActive = true;
+            _isPrivateBatch = renderer.PrivateBatch;
             return true;
         }
 
@@ -151,6 +175,7 @@ namespace Engine.Rendering
             IsActive = false;
             _vertexCount = 0;
             _indexCount = 0;
+            _isPrivateBatch = false;
             _renderers.Clear();
 
             for (int i = 0; i < Textures.Length; i++)
@@ -229,19 +254,13 @@ namespace Engine.Rendering
             _indexCount += indicesCount;
         }
 
-        internal void PushGeometry<T>(RendererData2D renderer, Material material, Texture texture, int indicesCount, IList<T> vertices)
-                                      where T : unmanaged, IVertex2D<T>
+        internal void PushGeometry(RendererData2D renderer, Material material, Texture texture, int indicesCount, Mesh mesh)
         {
             int textureIndex = 0;
             int startIndex = 0;
-            ReserveGeometry(renderer, material, texture, indicesCount, vertices.Count, ref textureIndex, ref startIndex);
+            ReserveGeometry(renderer, material, texture, indicesCount, mesh.VertexCount, ref textureIndex, ref startIndex);
 
-            for (int i = 0; i < vertices.Count; i++)
-            {
-                var vertex = vertices[i];
-                vertex.TextureIndex = textureIndex;
-                _vertexCollection.SetVertex(startIndex + i, vertex);
-            }
+            _vertexCollection.SetMeshVertices(startIndex, textureIndex, mesh);
         }
 
         internal void PushGeometry<T>(RendererData2D renderer, Material material, Texture texture, int indicesCount, int verticesCount,

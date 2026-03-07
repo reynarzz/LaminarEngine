@@ -30,7 +30,7 @@ namespace Editor
     // - The Game.dll must exist before doing a build because TypeGenerationStage.GetAssemblyTypes(str) searches
     //     for it to generate the typeRegistry, the build should already have a game.dll compiled. Use it from the library folder for now,
     //     but the game.dll should be compiled for the build type(Release/Debug), and turning on all the directives defined for the target platform.
-
+    // - Mouse picker should take into account all the vertices types (ex, FontVertex, SpriteVertex), it currently only supports 'Vertex' type.
 
     // Serialization:
     // - Forbid serialization of dictionaries that contains EObject as key?

@@ -50,17 +50,19 @@ namespace Engine.GUI
         private RendererData2D _rendererData;
 
         public float SlicedBorderResolution { get; set; } = 1;
+        private Mesh<Vertex> _mesh;
         protected override void OnAwake()
         {
             base.OnAwake();
 
             _rendererData = (RendererData as RendererData2D);
-            _rendererData.Mesh = new Mesh();
+            _mesh = new();
+            _rendererData.Mesh = _mesh;
 
             _rendererData.Mesh.IndicesToDrawCount = 6;
             for (int i = 0; i < 4; i++)
             {
-                _rendererData.Mesh.Vertices.Add(default);
+                _mesh.Vertices.Add(default);
             }
         }
 
@@ -105,10 +107,10 @@ namespace Engine.GUI
 
             var quad = GraphicsHelper.GetUIQuadVerticesLocal(chunk.Uvs, size, rt.Pivot, Color, Transform.WorldMatrix);
 
-            _rendererData.Mesh.Vertices[0] = quad.v0;
-            _rendererData.Mesh.Vertices[1] = quad.v1;
-            _rendererData.Mesh.Vertices[2] = quad.v2;
-            _rendererData.Mesh.Vertices[3] = quad.v3;
+            _mesh.Vertices[0] = quad.v0;
+            _mesh.Vertices[1] = quad.v1;
+            _mesh.Vertices[2] = quad.v2;
+            _mesh.Vertices[3] = quad.v3;
         }
 
         private void Draw9SliceQuad(RectTransform rt, vec2 size)
@@ -183,12 +185,12 @@ namespace Engine.GUI
             {
                 vec4 wp = Transform.WorldMatrix * new vec4(x, y, 0, 1);
 
-                if (_rendererData.Mesh.Vertices.Count <= _currentSliceVertexIndex)
+                if (_mesh.Vertices.Count <= _currentSliceVertexIndex)
                 {
-                    _rendererData.Mesh.Vertices.Add(default);
+                    _mesh.Vertices.Add(default);
                 }
 
-                _rendererData.Mesh.Vertices[_currentSliceVertexIndex++] = new Vertex()
+                _mesh.Vertices[_currentSliceVertexIndex++] = new Vertex()
                 {
                     Position = new vec2(wp.x, wp.y),
                     UV = new vec2(u, v),

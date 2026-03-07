@@ -200,10 +200,10 @@ namespace Editor.Rendering
                         else
                         {
                             // Empty meshes cannot be picked
-                            if (renderer.Mesh.Vertices.Count == 0 || renderer.Mesh.IndicesToDrawCount == 0)
+                            if (renderer.Mesh.VertexCount == 0 || renderer.Mesh.IndicesToDrawCount == 0)
                                 continue;
 
-                            var bestGeometryMatchPair = _geometries.FirstOrDefault(x => x.verticesCount >= renderer.Mesh.Vertices.Count);
+                            var bestGeometryMatchPair = _geometries.FirstOrDefault(x => x.verticesCount >= renderer.Mesh.VertexCount);
 
                             var geometry = default(GfxResource);
                             var desc = default(GeometryDescriptor);
@@ -222,9 +222,9 @@ namespace Editor.Rendering
                                 }
 
                                 var indexBuffer = GraphicsHelper.CreateQuadIndexBuffer(indicesCount);
-                                geometry = GraphicsHelper.GetEmptyGeometry<Vertex>(renderer.Mesh.Vertices.Count, 0, ref desc, indexBuffer);
+                                geometry = GraphicsHelper.GetEmptyGeometry<Vertex>(renderer.Mesh.VertexCount, 0, ref desc, indexBuffer);
 
-                                _geometries.Add((renderer.Mesh.Vertices.Count, geometry, desc));
+                                _geometries.Add((renderer.Mesh.VertexCount, geometry, desc));
                             }
                             else
                             {
@@ -236,10 +236,11 @@ namespace Editor.Rendering
 
                             unsafe
                             {
-                                vertex.Count = sizeof(Vertex) * renderer.Mesh.Vertices.Count;
+                                vertex.Count = sizeof(Vertex) * renderer.Mesh.VertexCount;
                             }
 
-                            vertex.Buffer = renderer.Mesh.Vertices.ToArray();
+                            // TODO: this should take into account all the vertices types that the engine supports.
+                            vertex.Buffer = (renderer.Mesh as Mesh<Vertex>).Vertices.ToArray();
 
                             _drawCallData.Geometry = geometry;
                             _drawCallData.IndexedDraw.IndexCount = indicesCount;

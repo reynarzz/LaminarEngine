@@ -45,14 +45,16 @@ namespace Engine.GUI
         [SerializedField] public string Text { get => _text.ToString(); set => SetText(value); }
 
         private List<Vertex> _vertex;
+        private Mesh<Vertex> _mesh;
         protected override void OnAwake()
         {
             base.OnAwake();
+            _mesh = new();
             _rendererData = (RendererData as RendererData2D);
-            _rendererData.Mesh = new Mesh();
+            _rendererData.Mesh = _mesh;
             _rendererData.Name = nameof(UIText);
             _vertex = new List<Vertex>(Consts.Graphics.MAX_QUADS_PER_BATCH * 4);
-            _rendererData.Mesh.Vertices = _vertex;
+            _mesh.Vertices = _vertex;
         }
 
         public void DrawQuad(object texture, ref VertexPositionColorTexture topLeft,
@@ -68,14 +70,14 @@ namespace Engine.GUI
                     Sprite = new Sprite(0, tex);
                 }
                 var vertIndex = (_rendererData.Mesh.IndicesToDrawCount / 6) * 4;
-                if (_rendererData.Mesh.Vertices.Count < vertIndex + 4)
+                if (_mesh.Vertices.Count < vertIndex + 4)
                 {
-                    _rendererData.Mesh.Vertices.Add(default);
-                    _rendererData.Mesh.Vertices.Add(default);
-                    _rendererData.Mesh.Vertices.Add(default);
-                    _rendererData.Mesh.Vertices.Add(default);
+                    _mesh.Vertices.Add(default);
+                    _mesh.Vertices.Add(default);
+                    _mesh.Vertices.Add(default);
+                    _mesh.Vertices.Add(default);
                 }
-                var verts = _rendererData.Mesh.Vertices;
+                var verts = _mesh.Vertices;
                 SetFontVertex(verts, ref bottomLeft, vertIndex + 0);
                 SetFontVertex(verts, ref topLeft, vertIndex + 1);
                 SetFontVertex(verts, ref topRight, vertIndex + 2);

@@ -130,7 +130,7 @@ namespace Engine.Rendering
                 else
                 {
                     // TODO: implement proper mesh drawing, for now, since it is used just for tilemap, this works
-                    var vertexCount = Math.Max(MaxBatchVertexSize, renderer.Mesh.Vertices.Count);
+                    var vertexCount = Math.Max(MaxBatchVertexSize, renderer.Mesh.VertexCount);
 
                     var indices = default(uint[]);
 
@@ -145,9 +145,9 @@ namespace Engine.Rendering
                     {
                         indices = renderer.Mesh.Indices;
                     }
-                    var currentBatch = _batchesPool.Get(renderer, renderer.Mesh.Vertices.Count, vertexCount, texture, material, indices);
+                    var currentBatch = _batchesPool.Get(renderer, renderer.Mesh.VertexCount, vertexCount, texture, material, indices);
 
-                    currentBatch.PushGeometry(renderer, material, texture, renderer.Mesh.IndicesToDrawCount, renderer.Mesh.Vertices);
+                    currentBatch.PushGeometry(renderer, material, texture, renderer.Mesh.IndicesToDrawCount, renderer.Mesh);
                 }
             }
 
