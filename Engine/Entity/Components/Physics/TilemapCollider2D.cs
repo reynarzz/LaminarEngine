@@ -40,17 +40,25 @@ namespace Engine
             var layer = _renderer.GetLayer();
             var boxes = layer.CollisionBoxes;
 
-            var polygons = new B2Polygon[boxes.Length];
-            for (int i = 0; i < boxes.Length; i++)
+            if(boxes != null)
             {
-                polygons[i] = B2Geometries.b2MakeOffsetBox(boxes[i].Size.x / 2.0f, boxes[i].Size.y / 2.0f, (boxes[i].Position + Offset).ToB2Vec2(), glm.radians(RotationOffset).ToB2Rot());
+                var polygons = new B2Polygon[boxes.Length];
+                for (int i = 0; i < boxes.Length; i++)
+                {
+                    polygons[i] = B2Geometries.b2MakeOffsetBox(boxes[i].Size.x / 2.0f, boxes[i].Size.y / 2.0f, (boxes[i].Position + Offset).ToB2Vec2(), glm.radians(RotationOffset).ToB2Rot());
+                }
+             
+                return polygons;
             }
-            return polygons;
+            return null;
         }
 
         protected override void UpdateShape()
         {
             var polygons = GetPolygons();
+
+            if (polygons == null)
+                return;
 
             for (int i = 0; i < polygons.Length; i++)
             {

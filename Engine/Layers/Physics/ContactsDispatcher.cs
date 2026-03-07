@@ -147,10 +147,5 @@ namespace Engine.Layers
             colA.OnContactEnd(colB);
             colB.OnContactEnd(colA);
         }
-
-        // Hack: helper to clear all when changing scenes.
-        internal void ClearCollisions()
-        {
-        }
     }
 }

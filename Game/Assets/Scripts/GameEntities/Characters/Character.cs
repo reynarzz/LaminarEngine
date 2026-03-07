@@ -148,6 +148,7 @@ namespace Game
             Rigidbody.LockZRotation = true;
             Rigidbody.Interpolate = true;
             Rigidbody.IsAutoMass = false;
+            Rigidbody.CanSleep = false;
             Renderer.Material = config.Material;
             Collider.Friction = 0;
             Transform.WorldPosition = config.StartPosition;

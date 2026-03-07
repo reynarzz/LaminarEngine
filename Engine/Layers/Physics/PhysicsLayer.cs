@@ -16,7 +16,8 @@ namespace Engine.Layers
         // Samples: https://github.com/ikpil/Box2D.NET/tree/e68c8ff1fb9da8bd87a71159b13010c25eed76f8/src/Box2D.NET.Samples/Samples
 
         private static ContactsDispatcher _contactDispatcher = new();
-        private readonly static List<RigidBody2D> _rigidbodies = new();
+        internal static ContactsDispatcher ContactsDispatcher => _contactDispatcher;
+        private static List<RigidBody2D> _rigidbodies = new();
 
         private static double _accumulator = 0f;
         private float _fixedTimeStep = 0.02f;
@@ -44,7 +45,6 @@ namespace Engine.Layers
 
             return LayerMask.AreEnabled(colA.Actor.Layer, colB.Actor.Layer);
         }
-
         internal static void RegisterRigidbody(RigidBody2D rigid)
         {
             _rigidbodies.Add(rigid);
@@ -53,6 +53,7 @@ namespace Engine.Layers
         internal static void UnregisterRigidbody(RigidBody2D rigid)
         {
             _rigidbodies.Remove(rigid);
+            Debug.Log("Remove: " + rigid.Actor.Name);
         }
 
         internal override void UpdateLayer()
@@ -66,7 +67,7 @@ namespace Engine.Layers
 
                 foreach (var rigidbody in _rigidbodies)
                 {
-                    if (!rigidbody || !rigidbody.IsEnabled || !rigidbody.Actor.IsActiveInHierarchy)
+                    if (!rigidbody)
                         continue;
 
                     rigidbody.PreUpdateBody();
@@ -75,7 +76,6 @@ namespace Engine.Layers
                 }
 
                 B2Worlds.b2World_Step(PhysicWorld.WorldID, _fixedTimeStep, 3);
-
                 _accumulator -= _fixedTimeStep;
 
                 foreach (var rigidbody in _rigidbodies)
@@ -98,15 +98,8 @@ namespace Engine.Layers
             }
         }
 
-        internal static void Clear()
-        {
-            _accumulator = 0;
-            _rigidbodies.Clear();
-            _contactDispatcher.ClearCollisions();
-        }
         public override void Close()
         {
-            Clear();
             PhysicWorld.Clear();
         }
     }

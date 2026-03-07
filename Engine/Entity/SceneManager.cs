@@ -165,8 +165,6 @@ namespace Engine
             }
             if (_scenesToDestroy.Count > 0)
             {
-                // Note: this is provisional.
-                PhysicsLayer.Clear(); // Remove
                 _scenesToDestroy.Clear();
             }
         }
