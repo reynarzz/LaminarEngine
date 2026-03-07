@@ -114,7 +114,7 @@ namespace Engine.Rendering
                 return selectedBatch;
             }
 
-            var newBatch = new Batch2D(maxVertexSize, _sharedIndexBuffer, rawIndices);
+            var newBatch = Batch2D.CreateBatch<Vertex>(maxVertexSize, _sharedIndexBuffer, rawIndices);
             newBatch.OnBatchEmpty += OnBatchEmpty;
             newBatch.Initialize(renderer);
             _rendererToBatch[renderer] = newBatch;

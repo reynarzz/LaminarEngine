@@ -15,7 +15,6 @@ namespace Engine.Rendering
         private const int VerticesPerQuad = 4;
         private BatchesPool _batchesPool;
         private static Material _pinkMaterial;
-        private readonly Vertex[] _quadVertexArray = new Vertex[4];
         private readonly List<RendererData2D> _visibleRenderers = new();
         private readonly RendererBatchComparer _rendererComparer = new();
         private sealed class RendererBatchComparer : IComparer<RendererData2D>
@@ -45,7 +44,6 @@ namespace Engine.Rendering
                 return a.SortOrder.CompareTo(b.SortOrder);
             }
         }
-
 
         public Batcher2D(int maxQuadsPerBatch)
         {

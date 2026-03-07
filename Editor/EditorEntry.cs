@@ -26,11 +26,7 @@ namespace Editor
     // - If a collider change from Trigger to normal (and viceversa), the ontrigerExit/onCollisionExit must be called.
     // - The renderData is not removed from renderingLayer dictionary if the Actor starts disabled in the first frame, and then try to enable it.
     // - Forbid materials to send system uniforms: example: uTime, MVp, etc...
-    // - Batcher doesn't create a new one when the geometry vertex size changes, it should be dynamic.
-    // - The importer doesn't call to update the assets, the counter is cleared back to 0, this only happens when the assetDatabase variable is static.
     // - Screen render target size should take into account the camera viewport values.
-    // - Compile c# Soundflow library when shipping, and have a binary compipled ready for the editor, engine project should not include the files directly.
-    // - Layer mask doesn't enable the correct bit using the matrix data from layer mask ui,   
     // - The Game.dll must exist before doing a build because TypeGenerationStage.GetAssemblyTypes(str) searches
     //     for it to generate the typeRegistry, the build should already have a game.dll compiled. Use it from the library folder for now,
     //     but the game.dll should be compiled for the build type(Release/Debug), and turning on all the directives defined for the target platform.
@@ -71,10 +67,6 @@ namespace Editor
     // Camera position.
     // Project settings: project name, icon, physics, audio etc..
     // Project build settings: 
-
-
-    // Tilemap:
-    // TilemapCollider will decide which layers in a level will contain colliders.
 
     internal class EditorEntry
     {

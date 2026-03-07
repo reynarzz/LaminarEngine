@@ -53,7 +53,6 @@ namespace Engine.Layers
         internal static void UnregisterRigidbody(RigidBody2D rigid)
         {
             _rigidbodies.Remove(rigid);
-            Debug.Log("Remove: " + rigid.Actor.Name);
         }
 
         internal override void UpdateLayer()
