@@ -61,6 +61,9 @@ namespace Engine.Layers
 
             while (_accumulator >= _fixedTimeStep)
             {
+                _contactDispatcher.Update();
+                SceneManager.FixedUpdate();
+
                 foreach (var rigidbody in _rigidbodies)
                 {
                     if (!rigidbody || !rigidbody.IsEnabled || !rigidbody.Actor.IsActiveInHierarchy)
@@ -72,8 +75,6 @@ namespace Engine.Layers
                 }
 
                 B2Worlds.b2World_Step(PhysicWorld.WorldID, _fixedTimeStep, 3);
-                _contactDispatcher.Update();
-                SceneManager.FixedUpdate();
 
                 _accumulator -= _fixedTimeStep;
 

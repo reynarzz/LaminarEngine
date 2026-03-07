@@ -252,7 +252,7 @@ namespace Engine.Rendering
             {
                 if (removedTextureId >= 0 && removedTextureId < Textures.Length)
                     Textures[removedTextureId] = null;
-
+                 
                 IsActive = false;
                 OnBatchEmpty?.Invoke(this);
                 return;
@@ -293,7 +293,7 @@ namespace Engine.Rendering
                 }
             }
 
-            int trailingVertexCount = VertexCount - removedVertexStart;
+            int trailingVertexCount = VertexCount - (removedVertexStart + removedVertexCount);
             if (trailingVertexCount > 0)
             {
                 Array.Copy(_verticesData, removedVertexStart + removedVertexCount, _verticesData, removedVertexStart, trailingVertexCount);
