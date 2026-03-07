@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Box2D.NET;
+using Engine.Layers;
 using Engine.Types;
 using Engine.Utils;
 using GlmNet;
@@ -328,6 +329,8 @@ namespace Engine
             }
 
             Transform.OnChanged += OnTransformChanged;
+
+            PhysicsLayer.RegisterRigidbody(this);
         }
 
         internal void PreUpdateBody()
@@ -459,6 +462,8 @@ namespace Engine
             {
                 B2Bodies.b2DestroyBody(_bodyId);
             }
+
+            PhysicsLayer.UnregisterRigidbody(this);
         }
 
         private bool IsValidBody()

@@ -668,7 +668,6 @@ namespace Engine
                     var comp = actor._components[i] as T;
                     if (comp != null && comp.IsValid() && (comp.IsEnabled || updateIfDisabled))
                     {
-#if DEBUG
                         try
                         {
                             action(comp);
@@ -677,9 +676,6 @@ namespace Engine
                         {
                             Debug.Error(e);
                         }
-#else
-                        action(comp);
-#endif
                     }
                 }
 
