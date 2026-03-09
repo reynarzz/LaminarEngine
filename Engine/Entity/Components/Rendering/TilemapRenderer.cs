@@ -68,7 +68,6 @@ namespace Engine
             _rendererData = RendererData as RendererData2D;
             _rendererData.Mesh = _mesh;
             _rendererData.Mesh.IndicesToDrawCount = 0;
-            _rendererData.PrivateBatch = true;
             _rendererData.Bounds = Bounds.GetInitialized();
             _rendererData.VertexType = typeof(Vertex);
 
