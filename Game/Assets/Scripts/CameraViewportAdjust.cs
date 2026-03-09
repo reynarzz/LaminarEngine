@@ -10,6 +10,7 @@ namespace Game
 {
     internal class CameraViewportAdjust : ScriptBehavior
     {
+        [SerializedField] private vec2 _aspectRatio = new vec2(16.0f, 9.0f);
         protected override void OnAwake()
         {
             base.OnAwake();
@@ -20,12 +21,12 @@ namespace Game
             float screenHeight = Screen.Height;
 
             float targetWidth = screenWidth;
-            float targetHeight = screenWidth * 9.0f / 16.0f;
+            float targetHeight = screenWidth * (_aspectRatio.y / _aspectRatio.x);
 
             if (targetHeight > screenHeight)
             {
                 targetHeight = screenHeight;
-                targetWidth = screenHeight * 16.0f / 9.0f;
+                targetWidth = screenHeight * (_aspectRatio.x / _aspectRatio.y);
             }
 
             float viewportWidth = targetWidth / screenWidth;

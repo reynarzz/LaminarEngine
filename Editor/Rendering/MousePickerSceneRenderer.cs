@@ -240,7 +240,19 @@ namespace Editor.Rendering
                             }
 
                             // TODO: this should take into account all the vertices types that the engine supports.
-                            vertex.Buffer = (renderer.Mesh as Mesh<Vertex>).Vertices.ToArray();
+
+                            if(renderer.VertexType == typeof(Vertex))
+                            {
+                                vertex.Buffer = (renderer.Mesh as Mesh<Vertex>).Vertices.ToArray();
+                            }
+                            else //if (renderer.VertexType == typeof(TextVertex))
+                            {
+                                // vertex.Buffer = (renderer.Mesh as Mesh<TextVertex>).Vertices.ToArray();
+
+                                Debug.Error($"Can't pick object with vertex type: {renderer.VertexType?.Name}, needs to be implemented.");
+
+                                continue;
+                            }
 
                             _drawCallData.Geometry = geometry;
                             _drawCallData.IndexedDraw.IndexCount = indicesCount;

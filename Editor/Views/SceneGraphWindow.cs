@@ -16,7 +16,7 @@ namespace Editor.Views
 
         public override void OnDraw()
         {
-            if (OnBeginWindow("Scene graph"))
+            if (OnBeginWindow("Scene graph", ImGuiWindowFlags.None, true, new GlmNet.vec2()))
             {
                 ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2());
 

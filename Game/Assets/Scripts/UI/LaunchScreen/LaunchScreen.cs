@@ -20,7 +20,7 @@ namespace Game
         private UIText _textPresents;
         protected override void OnStart()
         {
-            _camera = new Actor<Camera>("Camera").GetComponent<Camera>();
+            _camera = new Actor<Camera, CameraViewportAdjust>("Camera").GetComponent<Camera>();
             _defaultFont = Assets.GetFont("Fonts/windows-bold[1].ttf");
             _camera.BackgroundColor = Color.Black;
 
