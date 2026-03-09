@@ -21,7 +21,7 @@ namespace Engine.Utils
         internal class Graphics
         {
             internal const int MAX_UNIFORMS_PER_DRAWCALL = 150;
-            internal const int MAX_QUADS_PER_BATCH = 5000;
+            internal const int MAX_QUADS_PER_BATCH = 3000;
             internal const int MAX_FONT_QUADS_PER_BATCH = 20000;
 
             internal enum Uniforms

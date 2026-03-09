@@ -402,7 +402,7 @@ namespace Engine.Rendering
             var isValidMaterial = Material == mat || !Material;
             var isSameVertexType = renderer.VertexType == VertexType || VertexType == null;
 
-            bool validLayout = isMaxSizeEnough && hasSpace && ((isValidMaterial && isSameSortOrder) || !IsActive);
+            bool validLayout = isMaxSizeEnough && hasSpace && isSameVertexType && ((isValidMaterial && isSameSortOrder) || !IsActive);
             if (!validLayout)
                 return false;
 
