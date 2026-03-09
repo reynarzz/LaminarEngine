@@ -24,7 +24,7 @@ namespace Game
         private GameMaterials()
         {
             SpriteMaterial = Assets.GetMaterial("__InternalAssets__/Materials/SpriteDefault.material");
-            FontMaterial = Assets.GetMaterial("__InternalAssets__/Materials/SpriteDefault.material");
+            FontMaterial = Assets.GetMaterial("__InternalAssets__/Materials/UITextDefault.material");
             SpriteMaterialOverlay = GetMaterial("SpriteMaterialOverlay", "Shaders/SpriteVert.vert", "Shaders/SpriteFrag.frag");
             SpriteMaterialWorld = GetMaterial("SpriteMaterialWorld", "Shaders/SpriteVert.vert", "Shaders/SpriteFrag.frag");
             WobbleMaterial = GetMaterial("WobbleMaterial", "Shaders/VertScreenGrab.vert", "Shaders/ScreenGrabWobble.frag");

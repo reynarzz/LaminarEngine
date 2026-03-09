@@ -69,7 +69,7 @@ namespace Engine.Rendering
 
             internal override void SetMeshVertices(int startIndex, int textureIndex, Mesh mesh, bool isPrivateBatch)
             {
-                var meshT = mesh as Mesh<T>;
+                var meshT = (Mesh<T>)mesh; // If something fails here it means that the correct vertex type was not set to RenderData.VertexType
 
                 //if (!_isPrivateBatch)
                 //{
@@ -400,6 +400,7 @@ namespace Engine.Rendering
             var hasSpace = (MaxVertexSize - VertexCount) >= vertexCount;
             var isSameSortOrder = renderer.SortOrder == SortOrder || SortOrder == int.MinValue;
             var isValidMaterial = Material == mat || !Material;
+            var isSameVertexType = renderer.VertexType == VertexType || VertexType == null;
 
             bool validLayout = isMaxSizeEnough && hasSpace && ((isValidMaterial && isSameSortOrder) || !IsActive);
             if (!validLayout)

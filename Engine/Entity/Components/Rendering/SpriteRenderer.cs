@@ -64,6 +64,7 @@ namespace Engine
             base.OnInternalInitialize();
 
             RenderingLayer.PushRenderer(this);
+            RendererData.VertexType = typeof(Vertex);
         }
 
         public override void OnEnabled()

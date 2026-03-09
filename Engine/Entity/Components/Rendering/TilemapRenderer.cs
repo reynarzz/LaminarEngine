@@ -70,6 +70,7 @@ namespace Engine
             _rendererData.Mesh.IndicesToDrawCount = 0;
             _rendererData.PrivateBatch = true;
             _rendererData.Bounds = Bounds.GetInitialized();
+            _rendererData.VertexType = typeof(Vertex);
 
             RenderingLayer.PushRenderer(this);
         }

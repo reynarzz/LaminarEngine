@@ -44,8 +44,7 @@ namespace Engine.GUI
         ITexture2DManager IFontStashRenderer2.TextureManager => FontManager.Instance.TextureManager;
         [SerializedField] public string Text { get => _text.ToString(); set => SetText(value); }
 
-        private List<Vertex> _vertex;
-        private Mesh<Vertex> _mesh;
+        private Mesh<TextVertex> _mesh;
         protected override void OnAwake()
         {
             base.OnAwake();
@@ -53,8 +52,8 @@ namespace Engine.GUI
             _rendererData = (RendererData as RendererData2D);
             _rendererData.Mesh = _mesh;
             _rendererData.Name = nameof(UIText);
-            _vertex = new List<Vertex>(Consts.Graphics.MAX_QUADS_PER_BATCH * 4);
-            _mesh.Vertices = _vertex;
+            _rendererData.VertexType = typeof(TextVertex);
+            _mesh.Vertices = new List<TextVertex>(Consts.Graphics.MAX_QUADS_PER_BATCH * 4);
         }
 
         public void DrawQuad(object texture, ref VertexPositionColorTexture topLeft,
@@ -94,7 +93,7 @@ namespace Engine.GUI
             return (uint)(r << 24 | g << 16 | b << 8 | a);
         }
 
-        private void SetFontVertex(IList<Vertex> fVertex, ref VertexPositionColorTexture vertex, int vertexIndex)
+        private void SetFontVertex(IList<TextVertex> fVertex, ref VertexPositionColorTexture vertex, int vertexIndex)
         {
             var vert = fVertex[vertexIndex];
             vert.Position = new vec2(vertex.Position.X, vertex.Position.Y);

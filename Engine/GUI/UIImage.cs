@@ -56,9 +56,9 @@ namespace Engine.GUI
             base.OnAwake();
 
             _rendererData = (RendererData as RendererData2D);
+            _rendererData.VertexType = typeof(Vertex);
             _mesh = new();
             _rendererData.Mesh = _mesh;
-
             _rendererData.Mesh.IndicesToDrawCount = 6;
             for (int i = 0; i < 4; i++)
             {

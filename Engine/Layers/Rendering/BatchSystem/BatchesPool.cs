@@ -133,9 +133,14 @@ namespace Engine.Rendering
             {
                 throw new NotImplementedException($"Vertex type is null for rendererData '{renderer.ID}'.");
             }
+
             if (renderer.VertexType == typeof(Vertex))
             {
                 newBatch = Batch2D.CreateBatch<Vertex>(maxVertexSize, _sharedIndexBuffer, rawIndices);
+            }
+            else if (renderer.VertexType == typeof(TextVertex))
+            {
+                newBatch = Batch2D.CreateBatch<TextVertex>(maxVertexSize, _sharedIndexBuffer, rawIndices);
             }
             else
             {

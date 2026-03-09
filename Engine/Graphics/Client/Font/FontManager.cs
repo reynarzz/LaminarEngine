@@ -84,22 +84,27 @@ namespace Engine.Graphics
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    internal struct FontVertex : IVertex<FontVertex>
+    internal struct TextVertex : IVertex2D<TextVertex>
     {
         public vec2 Position;
         public vec2 UV;
         public uint Color;
+        private int _textureIndex;
         public int VertexIndex;
+
+        public int TextureIndex { get => _textureIndex; set => _textureIndex = value; }
 
         private static unsafe VertexAtrib[] _attribs =
         [
-            new VertexAtrib() { Count = 2, Normalized = false, Type = GfxValueType.Float, Stride = sizeof(FontVertex), Offset = 0 }, // Position
-            new VertexAtrib() { Count = 2, Normalized = false, Type = GfxValueType.Float, Stride = sizeof(FontVertex), Offset = sizeof(float) * 2 }, // UV
-            new VertexAtrib() { Count = 1, Normalized = false, Type = GfxValueType.Uint, Stride = sizeof(FontVertex), Offset = sizeof(float) * 4 }, // Color
-            new VertexAtrib() { Count = 1, Normalized = false, Type = GfxValueType.Int, Stride = sizeof(FontVertex), Offset = sizeof(float) * 5 }, // charIndex
+            new VertexAtrib() { Count = 2, Normalized = false, Type = GfxValueType.Float, Stride = sizeof(TextVertex), Offset = 0 }, // Position
+            new VertexAtrib() { Count = 2, Normalized = false, Type = GfxValueType.Float, Stride = sizeof(TextVertex), Offset = sizeof(float) * 2 }, // UV
+            new VertexAtrib() { Count = 1, Normalized = false, Type = GfxValueType.Uint, Stride = sizeof(TextVertex), Offset = sizeof(uint) * 4 }, // Color
+            new VertexAtrib() { Count = 1, Normalized = false, Type = GfxValueType.Int, Stride = sizeof(TextVertex), Offset = sizeof(int) * 5 }, // texIndex
+            new VertexAtrib() { Count = 1, Normalized = false, Type = GfxValueType.Int, Stride = sizeof(TextVertex), Offset = sizeof(int) * 6 }, // charIndex
         ];
 
-        static VertexAtrib[] IVertex<FontVertex>.GetVertexAttributes()
+       
+        static VertexAtrib[] IVertex<TextVertex>.GetVertexAttributes()
         {
             return _attribs;
         }

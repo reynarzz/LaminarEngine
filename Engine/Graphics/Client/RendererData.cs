@@ -21,7 +21,7 @@ namespace Engine.Graphics
 
         private Action _onDraw;
         internal int BatchId { get; set; } = -1;
-        internal Type VertexType { get; protected private set; } = typeof(Vertex); // Default
+        internal Type VertexType { get; set; } = typeof(Vertex); // Default
 
         public RendererData(Guid id, Action onDraw)
         {
