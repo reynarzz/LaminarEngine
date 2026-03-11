@@ -74,7 +74,7 @@ namespace Editor.Rendering
             }
         }
         ";
-        private readonly List<(int verticesCount, GfxResource geometry, GeometryDescriptor desc)> _geometries = new();
+        private readonly List<(int verticesCount, Type vertexType, GfxResource geometry, GeometryDescriptor desc)> _geometries = new();
 
         private Dictionary<uint, RendererData2D> _renderersByColors = new();
         private Dictionary<uint, RendererData2D> _renderersByColorsBackBuffer = new();
@@ -145,8 +145,8 @@ namespace Editor.Rendering
                 _drawCallData.Viewport = new vec4(0, 0, currentRenderTarget.Width, currentRenderTarget.Height);
                 GfxDeviceManager.Current.Clear(new ClearDeviceConfig()
                 {
-                     Color = Color.Black,
-                     RenderTarget = currentRenderTarget.NativeResource
+                    Color = Color.Black,
+                    RenderTarget = currentRenderTarget.NativeResource
                 });
                 void DrawRenderers(List<RendererData2D> renderers, mat4 projM, mat4 viewM, mat4 viewProjM, bool discardAlphaWithTexture, bool discardWithPickedList)
                 {
@@ -203,7 +203,7 @@ namespace Editor.Rendering
                             if (renderer.Mesh.VertexCount == 0 || renderer.Mesh.IndicesToDrawCount == 0)
                                 continue;
 
-                            var bestGeometryMatchPair = _geometries.FirstOrDefault(x => x.verticesCount >= renderer.Mesh.VertexCount);
+                            var bestGeometryMatchPair = _geometries.FirstOrDefault(x => x.verticesCount >= renderer.Mesh.VertexCount && x.vertexType == renderer.VertexType);
 
                             var geometry = default(GfxResource);
                             var desc = default(GeometryDescriptor);
@@ -222,9 +222,9 @@ namespace Editor.Rendering
                                 }
 
                                 var indexBuffer = GraphicsHelper.CreateQuadIndexBuffer(indicesCount);
-                                geometry = GraphicsHelper.GetEmptyGeometry<Vertex>(renderer.Mesh.VertexCount, 0, ref desc, indexBuffer);
+                                geometry = GraphicsHelper.GetEmptyGeometry(renderer.VertexType, renderer.Mesh.VertexCount, 0, ref desc, indexBuffer);
 
-                                _geometries.Add((renderer.Mesh.VertexCount, geometry, desc));
+                                _geometries.Add((renderer.Mesh.VertexCount, renderer.VertexType, geometry, desc));
                             }
                             else
                             {
@@ -232,25 +232,24 @@ namespace Editor.Rendering
                                 desc = bestGeometryMatchPair.desc;
                                 indicesCount = renderer.Mesh.IndicesToDrawCount;
                             }
-                            var vertex = desc.VertexDesc.BufferDesc as BufferDataDescriptor<Vertex>;
 
-                            unsafe
+                           
+                            // NOTE: this should take into account all the vertices types that the engine supports.
+                            if (renderer.VertexType == typeof(Vertex))
                             {
-                                vertex.Count = sizeof(Vertex) * renderer.Mesh.VertexCount;
+                                SetVertexData<Vertex>(desc.VertexDesc.BufferDesc, renderer.Mesh);
                             }
-
-                            // TODO: this should take into account all the vertices types that the engine supports.
-
-                            if(renderer.VertexType == typeof(Vertex))
+                            else if (renderer.VertexType == typeof(TextVertex))
                             {
-                                vertex.Buffer = (renderer.Mesh as Mesh<Vertex>).Vertices.ToArray();
+                                SetVertexData<TextVertex>(desc.VertexDesc.BufferDesc, renderer.Mesh);
                             }
-                            else //if (renderer.VertexType == typeof(TextVertex))
+                            else if (renderer.VertexType == typeof(TilemapVertex))
                             {
-                                // vertex.Buffer = (renderer.Mesh as Mesh<TextVertex>).Vertices.ToArray();
-
+                                SetVertexData<TilemapVertex>(desc.VertexDesc.BufferDesc, renderer.Mesh);
+                            }
+                            else
+                            {
                                 Debug.Error($"Can't pick object with vertex type: {renderer.VertexType?.Name}, needs to be implemented.");
-
                                 continue;
                             }
 
@@ -273,6 +272,18 @@ namespace Editor.Rendering
             RenderAll(_backBuffer, _renderersByColorsBackBuffer, false);
 
             return targetRenderTexture;
+        }
+
+        private void SetVertexData<T>(BufferDataDescriptor desc, Mesh mesh) where T : unmanaged, IVertex2D<T>
+        {
+            var vertex = desc as BufferDataDescriptor<T>;
+            vertex.Buffer = (mesh as Mesh<T>).Vertices.ToArray();
+
+            unsafe
+            {
+                vertex.Count = sizeof(T) * mesh.VertexCount;
+            }
+
         }
 
         protected override void OnRenderingEnd()

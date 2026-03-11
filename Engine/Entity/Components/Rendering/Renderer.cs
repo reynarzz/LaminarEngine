@@ -14,14 +14,26 @@ namespace Engine
     public abstract class Renderer : Component
     {
         internal abstract RendererData RendererData { get; protected private set; }
-        [SerializedField] public Material Material { get => RendererData.Material; set => RendererData.Material = value; }
+        [SerializedField]
+        public Material Material
+        {
+            get => RendererData.Material;
+            set
+            {
+                if (value == RendererData.Material)
+                    return;
+
+                RendererData.Material = value;
+                RendererData.IsDirty = true;
+            }
+        }
 
         internal override void OnInternalInitialize()
         {
             base.OnInternalInitialize();
             Transform.OnChanged -= Transform_OnChanged;
             Transform.OnChanged += Transform_OnChanged;
-        } 
+        }
         protected override void OnAwake()
         {
             RendererData.IsDirty = true;

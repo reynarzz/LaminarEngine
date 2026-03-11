@@ -12,6 +12,27 @@ namespace Engine
 {
     internal static class GraphicsHelper
     {
+
+        internal static GfxResource GetEmptyGeometry(Type vertexType, int vertCount, int indexCount, ref GeometryDescriptor geoDesc,
+                                                     GfxResource indexBuffer = null, bool isSharedIndexBuffer = true)
+        {
+            if (vertexType == typeof(Vertex))
+            {
+                return GetEmptyGeometry<Vertex>(vertCount, indexCount, ref geoDesc, indexBuffer, isSharedIndexBuffer);
+            }
+            else if (vertexType == typeof(TextVertex))
+            {
+                return GetEmptyGeometry<TextVertex>(vertCount, indexCount, ref geoDesc, indexBuffer, isSharedIndexBuffer);
+            }
+            else if (vertexType == typeof(TilemapVertex))
+            {
+                return GetEmptyGeometry<TilemapVertex>(vertCount, indexCount, ref geoDesc, indexBuffer, isSharedIndexBuffer);
+            }
+
+            Debug.Error($"Can't create geometry of Vertex type: '{vertexType}', it needs to be implemented.");
+
+            return null;
+        }
         internal static GfxResource GetEmptyGeometry<T>(int vertCount, int indexCount, ref GeometryDescriptor geoDesc,
                                                         GfxResource indexBuffer = null, bool isSharedIndexBuffer = true)
                                                         where T : unmanaged, IVertex<T>

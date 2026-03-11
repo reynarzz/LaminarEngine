@@ -70,6 +70,8 @@ namespace Engine
                 {
                     _renderData.Bounds = default;
                 }
+
+                _renderData.IsDirty = true;
             }
         }
 
