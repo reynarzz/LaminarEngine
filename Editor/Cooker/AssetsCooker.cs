@@ -64,6 +64,16 @@ namespace Editor.Cooker
             InitAssetCookers();
         }
 
+        internal static AssetType GetAssetTypeFromExtension(string extension)
+        {
+            if(_assetsTypes.TryGetValue(extension, out AssetType type))
+            {
+                return type;
+            }
+
+            return AssetType.Invalid;
+        }
+
         private static void InitAssetCookers()
         {
             if (File.Exists(Paths.GetAssetDatabaseFilePath()))

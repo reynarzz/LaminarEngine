@@ -88,6 +88,10 @@ namespace Editor
             guid = default;
             string metaJson = null;
 
+            if (!path.EndsWith(Paths.ASSET_META_EXT_NAME))
+            {
+                path = path + Paths.ASSET_META_EXT_NAME;
+            }
             if (File.Exists(path))
             {
                 metaJson = File.ReadAllText(path);

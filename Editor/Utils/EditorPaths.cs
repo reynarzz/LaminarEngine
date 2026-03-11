@@ -107,6 +107,36 @@ namespace Editor
             return absoluteAssetPath;
         }
 
+        internal static string GetRelativeAssetPathSafe(string absolutePath)
+        {
+            absolutePath = Paths.ClearPathSeparation(absolutePath);
+            bool GetRelative(string root, out string value)
+            {
+                value = string.Empty;
+                var idx = absolutePath.IndexOf(root);
+                if (idx <= 0)
+                {
+                    return false;
+                }
+
+                value = absolutePath.Substring(idx);
+
+                return true;
+            }
+
+            if(GetRelative(Paths.ASSETS_FOLDER_NAME, out var assetsPath))
+            {
+                return assetsPath;
+            }
+            else if(GetRelative(CookerPaths.INTERNAL_ASSET_FOLDER_NAME, out var internalAssetsPath))
+            {
+                return internalAssetsPath;
+            }
+
+            return string.Empty;
+        }
+
+
         public static class CookerPaths
         {
             public static string AssetsPath { get; }

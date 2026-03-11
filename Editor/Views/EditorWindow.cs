@@ -16,6 +16,7 @@ namespace Editor.Views
         public string WindowName { get; protected set; }
         private readonly string _menuItemPath;
         private bool _isInMenuItem = false;
+        private bool _onOpen = false;
 
         protected EditorWindow()
         {
@@ -56,6 +57,7 @@ namespace Editor.Views
         public void Close()
         {
             _isOpened = false;
+            _onOpen = false;
             if (_isInMenuItem)
             {
                 EditorMenu.Toggle(_menuItemPath, false);
@@ -73,6 +75,11 @@ namespace Editor.Views
             if (!_isOpened)
                 return false;
 
+            if (!_onOpen)
+            {
+                _onOpen = true;
+                OnOpen();
+            }
             if (!_needsToCallEndWindow)
             {
                 _needsToCallEndWindow = true;
