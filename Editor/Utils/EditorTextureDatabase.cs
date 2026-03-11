@@ -41,7 +41,13 @@ namespace Editor.Utils
         Edit,
         Close,
         Plus,
-        Minus
+        Minus,
+        FolderOpenFilled,
+        FolderClosedEmpty,
+        FolderOpenEmpty,
+        FolderClosedFilled,
+        Font,
+        Shader
     }
 
     internal sealed class EditorTextureDatabase
@@ -49,6 +55,9 @@ namespace Editor.Utils
         private static EditorTextureDatabase _instance;
         private Dictionary<EditorIcon, Texture2D> _icons;
         private Dictionary<Type, EditorIcon> _typesToIconTypeMapper;
+        private Dictionary<AssetType, EditorIcon> _assetTypeToEditorIcon;
+
+
         private EditorTextureDatabase()
         {
 
@@ -83,6 +92,12 @@ namespace Editor.Utils
                 { EditorIcon.Close, LoadIconFromDisk("close22x22.png") },
                 { EditorIcon.Plus, LoadIconFromDisk("plus24x24.png") },
                 { EditorIcon.Minus, LoadIconFromDisk("minus30x30.png") },
+                { EditorIcon.FolderClosedEmpty, LoadIconFromDisk("folder_empty.png") },
+                { EditorIcon.FolderClosedFilled, LoadIconFromDisk("folder_filled.png") },
+                { EditorIcon.FolderOpenFilled, LoadIconFromDisk("folder_open_filled.png") },
+                { EditorIcon.FolderOpenEmpty, LoadIconFromDisk("folder_filled.png") },
+                { EditorIcon.Font, LoadIconFromDisk("font30x30.png") },
+                { EditorIcon.Shader, LoadIconFromDisk("shader50x50.png") },
             };
 
             _typesToIconTypeMapper = new Dictionary<Type, EditorIcon>()
@@ -105,7 +120,29 @@ namespace Editor.Utils
                 { typeof(RigidBody2D), EditorIcon.Physics },
                 { typeof(TilemapAsset), EditorIcon.Tilemap },
                 { typeof(Actor), EditorIcon.Actor },
+                { typeof(FontAsset), EditorIcon.Font },
+                { typeof(Shader), EditorIcon.Shader },
             };
+
+            _assetTypeToEditorIcon = new()
+            {
+                { AssetType.Material, EditorIcon.Material },
+                { AssetType.Texture, EditorIcon.Texture },
+                { AssetType.Scene, EditorIcon.Scene },
+                { AssetType.Audio, EditorIcon.Audio },
+                { AssetType.Tilemap, EditorIcon.Tilemap },
+                { AssetType.Text, EditorIcon.Text },
+                { AssetType.AnimationClip, EditorIcon.AnimationClip },
+                { AssetType.AnimationController, EditorIcon.Animator },
+                //{ AssetType.Shader, EditorIcon.Animator },
+                //{ AssetType.Font, EditorIcon.Text },
+
+            };
+        }
+
+        internal void GetIcon(AssetType type)
+        {
+
         }
 
         private Texture2D LoadIconFromDisk(string path)
@@ -146,6 +183,21 @@ namespace Editor.Utils
             if (icon != null)
             {
                 return GetIconImGui(icon);
+            }
+
+            return 0;
+        }
+
+        public static nint GetIconImGui(AssetType assetType)
+        {
+            if (_instance._assetTypeToEditorIcon.TryGetValue(assetType, out var iconType))
+            {
+                var icon = GetIcon(iconType);
+
+                if (icon != null)
+                {
+                    return GetIconImGui(icon);
+                }
             }
 
             return 0;

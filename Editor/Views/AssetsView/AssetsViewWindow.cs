@@ -21,7 +21,7 @@ namespace Editor.Views
         private List<AssetViewFileInfo> _assetsDirectories;
         private AssetViewFileInfo _selectedFile;
 
-        public AssetsViewWindow() : base("Window/Assets View") { }
+        public AssetsViewWindow() : base("Window/Assets") { }
 
         protected override void OnOpen()
         {
@@ -184,10 +184,22 @@ namespace Editor.Views
                         flags |= ImGuiTreeNodeFlags.Leaf;
                     }
 
-                    var open = ImGui.TreeNodeEx($"{file.Filename}##_PREVIEW_{file.AbsolutePath}", flags);
-                    var rootFileClicked = ImGui.IsItemClicked();
-
-                    if (rootFileClicked)
+                    var open = ImGui.TreeNodeEx($"##_PREVIEW_{file.AbsolutePath}", flags);
+                    var isClicked = ImGui.IsItemClicked();
+                    ImGui.SameLine();
+                    nint image = 0;
+                    if(file.Type == FileType.Directory)
+                    {
+                        image = EditorTextureDatabase.GetIconImGui(GetFolderIcon(file, false));
+                    }
+                    else if(file.Type == FileType.Asset) 
+                    {
+                        image = EditorTextureDatabase.GetIconImGui(file.AssetType);
+                    }
+                    EditorImGui.Image(image, new GlmNet.vec2(16, 16));
+                    ImGui.SameLine();
+                    ImGui.Text(file.Filename);
+                    if (isClicked)
                     {
                         if (file.Type == FileType.Asset || ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
                         {
@@ -220,10 +232,10 @@ namespace Editor.Views
         {
             _selectedFile = file;
 
-            if(file.Type == FileType.Asset)
+            if (file.Type == FileType.Asset)
             {
                 // TODO: improve selector so we don't have to load the entire asset.
-                if(file.AssetType == AssetType.Texture)
+                if (file.AssetType == AssetType.Texture)
                 {
                     Selector.Selected = (Assets.GetAssetFromGuid(file.RefId) as TextureAsset).Texture;
                 }
@@ -241,8 +253,12 @@ namespace Editor.Views
             {
                 flags |= ImGuiTreeNodeFlags.Leaf;
             }
-            var open = ImGui.TreeNodeEx($"{fileRoot.Filename}##{fileRoot.AbsolutePath}", flags);
+            var open = ImGui.TreeNodeEx($"##{fileRoot.AbsolutePath}", flags);
             bool isClicked = ImGui.IsItemClicked();
+            ImGui.SameLine();
+            EditorImGui.Image(EditorTextureDatabase.GetIconImGui(GetFolderIcon(fileRoot, open)), new GlmNet.vec2(16, 16));
+            ImGui.SameLine();
+            ImGui.Text(fileRoot.Filename);
 
             if (isClicked)
             {
@@ -262,6 +278,25 @@ namespace Editor.Views
             }
         }
 
+        private EditorIcon GetFolderIcon(AssetViewFileInfo file, bool isOpen)
+        {
+            var folderIcon = EditorIcon.FolderClosedEmpty;
+
+            if (isOpen)
+            {
+                folderIcon = file.DirectoriesCount > 0 ? EditorIcon.FolderOpenFilled : EditorIcon.FolderOpenEmpty;
+            }
+            else
+            {
+                folderIcon = file.Children.Count > 0 ? EditorIcon.FolderClosedFilled : EditorIcon.FolderClosedEmpty;
+            }
+            return folderIcon;
+        }
+
+        private bool IsFileSelected(AssetViewFileInfo file)
+        {
+            return file == _selectedFile;
+        }
         private AssetViewFileInfo EnumerateDirectoryGraphRecursive(string root)
         {
             var rootDirInfo = Enumerate(null, root);
