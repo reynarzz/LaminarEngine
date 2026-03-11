@@ -1,0 +1,259 @@
+{
+  "Version": 1,
+  "Properties": [
+    {
+      "Name": "_passes",
+      "Type": "ComplexCollection",
+      "InternalType": "System.Collections.Generic.List`1[[Engine.RenderPass, Engine]], System.Private.CoreLib",
+      "TypeId": "57d6bb1b-afae-e28c-b56c-5e72ac23cc73",
+      "Simple": null,
+      "Collection": {
+        "$type": "Engine.Serialization.CollectionClasses, Engine",
+        "$value": {
+          "Value": [
+            {
+              "$type": "Engine.Serialization.ComplexClass, Engine",
+              "ClassType": "ComplexClass",
+              "Properties": [
+                {
+                  "Name": "IsScreenGrabPass",
+                  "Type": "Bool",
+                  "InternalType": "System.Boolean, System.Private.CoreLib",
+                  "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+                  "Simple": {
+                    "Kind": "Bool",
+                    "Value": false
+                  }
+                },
+                {
+                  "Name": "Shader",
+                  "Type": "ShaderAsset",
+                  "InternalType": "Engine.Shader, Engine",
+                  "TypeId": "51ffe436-a1d3-b62f-e50a-35e5ead1b47e",
+                  "Simple": null,
+                  "Reference": {
+                    "$type": "Engine.Serialization.ReferenceData, Engine",
+                    "$value": {
+                      "Type": "ShaderAsset",
+                      "RefId": "e3b2b608-bd0e-4145-b5c1-67322f127314"
+                    }
+                  }
+                },
+                {
+                  "Name": "Blending",
+                  "Type": "ComplexClass",
+                  "InternalType": "Engine.Blending, Engine",
+                  "TypeId": "214d9ab0-e82f-3989-8f39-c793cf3bcc02",
+                  "Simple": null,
+                  "Class": {
+                    "$type": "Engine.Serialization.ComplexClass, Engine",
+                    "$value": {
+                      "ClassType": "ComplexClass",
+                      "Properties": [
+                        {
+                          "Name": "Enabled",
+                          "Type": "Bool",
+                          "InternalType": "System.Boolean, System.Private.CoreLib",
+                          "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+                          "Simple": {
+                            "Kind": "Bool",
+                            "Value": true
+                          }
+                        },
+                        {
+                          "Name": "SrcFactor",
+                          "Type": "Enum",
+                          "InternalType": "Engine.BlendFactor, Engine",
+                          "TypeId": "72f9a0bd-5775-a78b-44d5-29ad5b718089",
+                          "Simple": {
+                            "Kind": "Enum",
+                            "Enum": {
+                              "TypeId": "72f9a0bd-5775-a78b-44d5-29ad5b718089",
+                              "EnumInternalType": "Engine.BlendFactor, Engine",
+                              "EnumValue": 6
+                            }
+                          }
+                        },
+                        {
+                          "Name": "DstFactor",
+                          "Type": "Enum",
+                          "InternalType": "Engine.BlendFactor, Engine",
+                          "TypeId": "72f9a0bd-5775-a78b-44d5-29ad5b718089",
+                          "Simple": {
+                            "Kind": "Enum",
+                            "Enum": {
+                              "TypeId": "72f9a0bd-5775-a78b-44d5-29ad5b718089",
+                              "EnumInternalType": "Engine.BlendFactor, Engine",
+                              "EnumValue": 7
+                            }
+                          }
+                        },
+                        {
+                          "Name": "Equation",
+                          "Type": "Enum",
+                          "InternalType": "Engine.BlendEquation, Engine",
+                          "TypeId": "e3084e3a-ac0d-8409-e19f-1894c86263b3",
+                          "Simple": {
+                            "Kind": "Enum",
+                            "Enum": {
+                              "TypeId": "e3084e3a-ac0d-8409-e19f-1894c86263b3",
+                              "EnumInternalType": "Engine.BlendEquation, Engine",
+                              "EnumValue": 0
+                            }
+                          }
+                        }
+                      ],
+                      "InternalType": "Engine.Blending, Engine",
+                      "TypeId": "214d9ab0-e82f-3989-8f39-c793cf3bcc02"
+                    }
+                  }
+                },
+                {
+                  "Name": "Stencil",
+                  "Type": "ComplexClass",
+                  "InternalType": "Engine.Stencil, Engine",
+                  "TypeId": "69e35bb8-e8a9-b726-4465-6f0bf81adc98",
+                  "Simple": null,
+                  "Class": {
+                    "$type": "Engine.Serialization.ComplexClass, Engine",
+                    "$value": {
+                      "ClassType": "ComplexClass",
+                      "Properties": [
+                        {
+                          "Name": "Enabled",
+                          "Type": "Bool",
+                          "InternalType": "System.Boolean, System.Private.CoreLib",
+                          "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+                          "Simple": {
+                            "Kind": "Bool",
+                            "Value": true
+                          }
+                        },
+                        {
+                          "Name": "Func",
+                          "Type": "Enum",
+                          "InternalType": "Engine.StencilFunc, Engine",
+                          "TypeId": "3407b4e4-fcb8-af7d-5ecd-988f459596b1",
+                          "Simple": {
+                            "Kind": "Enum",
+                            "Enum": {
+                              "TypeId": "3407b4e4-fcb8-af7d-5ecd-988f459596b1",
+                              "EnumInternalType": "Engine.StencilFunc, Engine",
+                              "EnumValue": 7
+                            }
+                          }
+                        },
+                        {
+                          "Name": "Ref",
+                          "Type": "Int",
+                          "InternalType": "System.Int32, System.Private.CoreLib",
+                          "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
+                          "Simple": {
+                            "Kind": "Int",
+                            "Value": 3
+                          }
+                        },
+                        {
+                          "Name": "Mask",
+                          "Type": "UInt",
+                          "InternalType": "System.UInt32, System.Private.CoreLib",
+                          "TypeId": "0eb1f326-5a69-6e6a-caaa-206d0252204a",
+                          "Simple": {
+                            "Kind": "UInt",
+                            "Value": 255
+                          }
+                        },
+                        {
+                          "Name": "FailOp",
+                          "Type": "Enum",
+                          "InternalType": "Engine.StencilOp, Engine",
+                          "TypeId": "ad85c27d-e714-8854-a433-c316b3a63658",
+                          "Simple": {
+                            "Kind": "Enum",
+                            "Enum": {
+                              "TypeId": "ad85c27d-e714-8854-a433-c316b3a63658",
+                              "EnumInternalType": "Engine.StencilOp, Engine",
+                              "EnumValue": 0
+                            }
+                          }
+                        },
+                        {
+                          "Name": "ZFailOp",
+                          "Type": "Enum",
+                          "InternalType": "Engine.StencilOp, Engine",
+                          "TypeId": "ad85c27d-e714-8854-a433-c316b3a63658",
+                          "Simple": {
+                            "Kind": "Enum",
+                            "Enum": {
+                              "TypeId": "ad85c27d-e714-8854-a433-c316b3a63658",
+                              "EnumInternalType": "Engine.StencilOp, Engine",
+                              "EnumValue": 0
+                            }
+                          }
+                        },
+                        {
+                          "Name": "ZPassOp",
+                          "Type": "Enum",
+                          "InternalType": "Engine.StencilOp, Engine",
+                          "TypeId": "ad85c27d-e714-8854-a433-c316b3a63658",
+                          "Simple": {
+                            "Kind": "Enum",
+                            "Enum": {
+                              "TypeId": "ad85c27d-e714-8854-a433-c316b3a63658",
+                              "EnumInternalType": "Engine.StencilOp, Engine",
+                              "EnumValue": 2
+                            }
+                          }
+                        }
+                      ],
+                      "InternalType": "Engine.Stencil, Engine",
+                      "TypeId": "69e35bb8-e8a9-b726-4465-6f0bf81adc98"
+                    }
+                  }
+                },
+                {
+                  "Name": "_uniforms",
+                  "Type": "ComplexCollection",
+                  "InternalType": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib],[Engine.Graphics.UniformValue, Engine]], System.Private.CoreLib",
+                  "TypeId": "5ff3c135-711b-d114-8a50-8b3589ab2973",
+                  "Simple": null,
+                  "Collection": {
+                    "$type": "Engine.Serialization.DictionaryClass, Engine",
+                    "$value": {
+                      "KeyType": "None",
+                      "ValueType": "None",
+                      "Keys": [],
+                      "Values": [],
+                      "CollectionType": "Dictionary"
+                    }
+                  }
+                }
+              ],
+              "InternalType": "Engine.RenderPass, Engine",
+              "TypeId": "12e518de-5050-01f0-bbc0-aada33118a8e"
+            }
+          ],
+          "ItemsType": "ComplexClass",
+          "CollectionType": "List"
+        }
+      }
+    },
+    {
+      "Name": "_textures",
+      "Type": "ComplexCollection",
+      "InternalType": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib],[Engine.Texture, Engine]], System.Private.CoreLib",
+      "TypeId": "b149b3b1-461a-3c62-d6f1-df76ecaf9ea0",
+      "Simple": null,
+      "Collection": {
+        "$type": "Engine.Serialization.DictionaryClass, Engine",
+        "$value": {
+          "KeyType": "None",
+          "ValueType": "None",
+          "Keys": [],
+          "Values": [],
+          "CollectionType": "Dictionary"
+        }
+      }
+    }
+  ]
+}

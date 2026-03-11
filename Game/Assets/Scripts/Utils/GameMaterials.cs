@@ -16,6 +16,7 @@ namespace Game
         public Material UIMaterial { get; private set; }
         public Material FontAnimatedMaterial { get; private set; }
         public Material FontMaterial { get; private set; }
+        public Material TilemapMaterial { get; private set; }
         public Material PortalMaterial { get; private set; }
         public Material WobbleMaterial { get; private set; }
         private static GameMaterials _instance;
@@ -25,6 +26,7 @@ namespace Game
         {
             SpriteMaterial = Assets.GetMaterial("__InternalAssets__/Materials/SpriteDefault.material");
             FontMaterial = Assets.GetMaterial("__InternalAssets__/Materials/UITextDefault.material");
+            TilemapMaterial = Assets.GetMaterial("__InternalAssets__/Materials/TilemapDefault.material");
             SpriteMaterialOverlay = GetMaterial("SpriteMaterialOverlay", "Shaders/SpriteVert.vert", "Shaders/SpriteFrag.frag");
             SpriteMaterialWorld = GetMaterial("SpriteMaterialWorld", "Shaders/SpriteVert.vert", "Shaders/SpriteFrag.frag");
             WobbleMaterial = GetMaterial("WobbleMaterial", "Shaders/VertScreenGrab.vert", "Shaders/ScreenGrabWobble.frag");

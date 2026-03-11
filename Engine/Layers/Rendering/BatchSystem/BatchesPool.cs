@@ -142,6 +142,10 @@ namespace Engine.Rendering
             {
                 newBatch = Batch2D.CreateBatch<TextVertex>(maxVertexSize, _sharedIndexBuffer, rawIndices);
             }
+            else if (renderer.VertexType == typeof(TilemapVertex))
+            {
+                newBatch = Batch2D.CreateBatch<TilemapVertex>(maxVertexSize, _sharedIndexBuffer, rawIndices);
+            }
             else
             {
                 throw new NotImplementedException($"Vertex type '{renderer.VertexType}' is not handled by the batch pool.");

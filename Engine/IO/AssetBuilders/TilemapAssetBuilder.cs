@@ -126,7 +126,7 @@ namespace Engine.IO
                 return;
 
             layer.IndicesToDraw = reader.ReadInt32();
-            layer.Vertices = EngineFileUtils.ReadArray<Vertex>(reader, tilesCount * 4);
+            layer.Vertices = EngineFileUtils.ReadArray<TilemapVertex>(reader, tilesCount * 4);
             layer.TilesPosition = EngineFileUtils.ReadArray<vec2>(reader, tilesCount);
             var boxesCount = reader.ReadInt32();
             layer.CollisionBoxes = EngineFileUtils.ReadArray<Box>(reader, boxesCount);

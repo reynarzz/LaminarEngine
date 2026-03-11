@@ -51,7 +51,7 @@ namespace Game
                 var tilemapData = levelInstanceInfo.Tilemaps[i];
                 var tilemapLevelData = tilemapAsset.GetData().Levels.FirstOrDefault(x => x.Value.LevelIndex == levelInstanceInfo.LevelIndex).Value;
                 var tilemap = new Actor(tilemapData.Name).AddComponent<TilemapRenderer>();
-                tilemap.Material = tilemapData.Material ?? GameMaterials.Instance.SpriteMaterial;
+                tilemap.Material = tilemapData.Material ?? GameMaterials.Instance.TilemapMaterial;
                 tilemap.Sprite = levelInstanceInfo.TilemapSprites[tilemapData.SpriteIndex];
                 tilemap.SortOrder = tilemapData.SortingOrder;
 

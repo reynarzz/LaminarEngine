@@ -50,7 +50,7 @@ namespace Engine
         internal Box[] CollisionBoxes { get; set; }
         public Dictionary<Guid, TilemapEntity> Entities { get; set; }
         public bool IsVisible { get; internal set; }
-        internal Vertex[] Vertices { get; set; }
+        internal TilemapVertex[] Vertices { get; set; }
         internal int IndicesToDraw { get; set; }
 
         public ReadOnlySpan<vec2> GetTilesPosition()

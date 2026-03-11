@@ -167,7 +167,7 @@ namespace Editor.Cooker
 
                         if (!string.IsNullOrEmpty(assetPath))
                         {
-                            textureMeta =EditorAssetUtils.GetMetaFromAssetPath(assetPath, AssetType.Texture) as TextureMetaFile;
+                            textureMeta = EditorAssetUtils.GetMetaFromAssetPath(assetPath, AssetType.Texture) as TextureMetaFile;
                             _texturesMeta.Add(guid, textureMeta);
                         }
                     }
@@ -693,8 +693,7 @@ namespace Editor.Cooker
             levelBounds.Min = new vec3(Math.Min(min.x, layerBounds.Min.x), Math.Min(min.y, layerBounds.Min.y), 0);
         }
 
-        public void WriteTile(BinaryWriter writer, Tile tile, vec3 position, TextureMetaFile meta, float ppu,
-            ref Bounds layerBounds)
+        public void WriteTile(BinaryWriter writer, Tile tile, vec3 position, TextureMetaFile meta, float ppu, ref Bounds layerBounds)
         {
             var chunk = TextureAtlasCell.DefaultChunk;
 
@@ -713,11 +712,43 @@ namespace Editor.Cooker
 
             chunk.Uvs = QuadUV.FlipUV(chunk.Uvs, tile.FlipX, tile.FlipY);
 
-            QuadVertices vertices = default;
-            GraphicsHelper.CreateQuad(ref vertices, chunk.Uvs, width, height, chunk.Pivot, Color.White, tileMatrix);
+            QuadVertices verts = default;
+            GraphicsHelper.CreateQuad(ref verts, chunk.Uvs, width, height, chunk.Pivot, Color.White, tileMatrix);
+
+            TilemapVertex v0 = new()
+            {
+                Position = verts.v0.Position,
+                UV = verts.v0.UV,
+                Color = verts.v0.Color,
+                TextureIndex = verts.v0.TextureIndex
+            };
+            TilemapVertex v1 = new()
+            {
+                Position = verts.v1.Position,
+                UV = verts.v1.UV,
+                Color = verts.v1.Color,
+                TextureIndex = verts.v1.TextureIndex
+            };
+            TilemapVertex v2 = new()
+            {
+                Position = verts.v2.Position,
+                UV = verts.v2.UV,
+                Color = verts.v2.Color,
+                TextureIndex = verts.v2.TextureIndex
+            };
+            TilemapVertex v3 = new()
+            {
+                Position = verts.v3.Position,
+                UV = verts.v3.UV,
+                Color = verts.v3.Color,
+                TextureIndex = verts.v3.TextureIndex
+            };
 
             // Write vertices.
-            EditorFileUtils.WriteStruct(writer, vertices);
+            EditorFileUtils.WriteStruct(writer, v0);
+            EditorFileUtils.WriteStruct(writer, v1);
+            EditorFileUtils.WriteStruct(writer, v2);
+            EditorFileUtils.WriteStruct(writer, v3);
 
             ref var max = ref layerBounds.Max;
             ref var min = ref layerBounds.Min;

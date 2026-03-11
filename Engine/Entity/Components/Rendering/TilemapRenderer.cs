@@ -3,6 +3,7 @@ using Engine.Layers;
 using Engine.Types;
 using GlmNet;
 using Engine;
+using System.Runtime.InteropServices;
 
 namespace Engine
 {
@@ -17,6 +18,29 @@ namespace Engine
             Index = index;
             FlipX = flipX;
             FlipY = flipY;
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct TilemapVertex : IVertex2D<TilemapVertex>
+    {
+        public vec2 Position;
+        public vec2 UV;
+        public uint Color;
+        private int _textureIndex;
+
+        public int TextureIndex { get => _textureIndex; set => _textureIndex = value; }
+        private unsafe static VertexAtrib[] _attrib =
+        [
+            new() { Count = 2, Normalized = false, Type = GfxValueType.Float, Stride = sizeof(TilemapVertex), Offset = 0 },
+            new() { Count = 2, Normalized = false, Type = GfxValueType.Float, Stride = sizeof(TilemapVertex), Offset = sizeof(float) * 2 },
+            new() { Count = 1, Normalized = false, Type = GfxValueType.Uint, Stride = sizeof(TilemapVertex), Offset = sizeof(uint) * 4 },
+            new() { Count = 1, Normalized = false, Type = GfxValueType.Int, Stride = sizeof(TilemapVertex), Offset = sizeof(int) * 5 },
+        ];
+
+        static VertexAtrib[] IVertex<TilemapVertex>.GetVertexAttributes()
+        {
+            return _attrib;
         }
     }
 
@@ -60,7 +84,7 @@ namespace Engine
             }
         }
         private RendererData2D _rendererData;
-        private Mesh<Vertex> _mesh = new();
+        private Mesh<TilemapVertex> _mesh = new();
 
         internal override void OnInternalInitialize()
         {
@@ -69,7 +93,7 @@ namespace Engine
             _rendererData.Mesh = _mesh;
             _rendererData.Mesh.IndicesToDrawCount = 0;
             _rendererData.Bounds = Bounds.GetInitialized();
-            _rendererData.VertexType = typeof(Vertex);
+            _rendererData.VertexType = typeof(TilemapVertex);
 
             RenderingLayer.PushRenderer(this);
         }
@@ -90,7 +114,7 @@ namespace Engine
 
             if (layer != null)
             {
-                layer.Vertices = layer.Vertices ?? Array.Empty<Vertex>();
+                layer.Vertices = layer.Vertices ?? Array.Empty<TilemapVertex>();
 
                 _mesh.Vertices = layer.Vertices;
                 _mesh.IndicesToDrawCount = layer.Vertices.Length == 0 ? 0 : layer.IndicesToDraw;
@@ -98,7 +122,7 @@ namespace Engine
             }
             else
             {
-                _mesh.Vertices = Array.Empty<Vertex>();
+                _mesh.Vertices = Array.Empty<TilemapVertex>();
                 _mesh.IndicesToDrawCount = 0;
                 _rendererData.Bounds = default;
             }
