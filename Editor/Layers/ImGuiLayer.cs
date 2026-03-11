@@ -106,7 +106,8 @@ namespace Editor.Layers
                     new BuildWindow(),
                     new TaskWindow(),
                     // new ProjectSettingsWindow(),
-                    // new ConsoleEditorView()
+                    // new ConsoleEditorView(),
+                    new AssetsViewWindow(),
                 };
 
                 IsInitialized = true;
