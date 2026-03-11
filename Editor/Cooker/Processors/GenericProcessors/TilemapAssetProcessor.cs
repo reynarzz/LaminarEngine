@@ -167,7 +167,7 @@ namespace Editor.Cooker
 
                         if (!string.IsNullOrEmpty(assetPath))
                         {
-                            textureMeta = EditorAssetUtils.GetMetaFromAssetPath(assetPath, AssetType.Texture) as TextureMetaFile;
+                            textureMeta = EditorAssetUtils.GetMetaFromAbsolutePath(assetPath, AssetType.Texture) as TextureMetaFile;
                             _texturesMeta.Add(guid, textureMeta);
                         }
                     }

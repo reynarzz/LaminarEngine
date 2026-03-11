@@ -25,7 +25,7 @@ namespace Editor.Views
         public override void OnDraw()
         {
             ImGui.BeginDisabled(BuildSystem.IsAnyBuilding);
-            if (OnBeginWindow("Assets View", ImGuiWindowFlags.Modal, true))
+            if (OnBeginWindow("Assets View", ImGuiWindowFlags.Modal, true, new GlmNet.vec2()))
             {
                 var contentAvail = ImGui.GetContentRegionAvail();
                 ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, new Vector2());
@@ -232,6 +232,16 @@ namespace Editor.Views
                 case AssetType.Texture:
                     {
                         // Check if the texture has atlas, if so, enumerate the sprites.
+                        var textureMeta = EditorAssetUtils.GetMetaFromAbsolutePath(absoluteFilePath, assetType) as TextureMetaFile;
+
+                        if (textureMeta.Config.IsAtlas)
+                        {
+                            for (int i = 0; i < textureMeta.AtlasData.ChunksCount; i++)
+                            {
+
+                                //children.Add(new AssetViewFileInfo() {  RefId = });
+                            }
+                        }
                     }
                     break;
                 case AssetType.Audio:

@@ -15,14 +15,14 @@ namespace Editor
         internal static AssetMeta GetAssetMeta(AssetResourceBase asset)
         {
             var path = EditorPaths.GetAbsolutePathSafe(asset.Path);
-            var meta = GetMetaFromAssetPath(path, EditorIOLayer.Database.GetAssetInfo(asset.GetID()).Type);
+            var meta = GetMetaFromAbsolutePath(path, EditorIOLayer.Database.GetAssetInfo(asset.GetID()).Type);
             return meta;
         }
 
         internal static AssetMeta GetAssetMeta(string assetPathRelative, AssetType type)
         {
             var path = EditorPaths.GetAbsolutePathSafe(assetPathRelative);
-            var meta = GetMetaFromAssetPath(path, type);
+            var meta = GetMetaFromAbsolutePath(path, type);
             return meta;
         }
 
@@ -37,7 +37,7 @@ namespace Editor
                 JsonConvert.SerializeObject(meta, Formatting.Indented));
         }
 
-        internal static AssetMeta GetMetaFromAssetPath(string assetPath, AssetType assetType)
+        internal static AssetMeta GetMetaFromAbsolutePath(string absolutePath, AssetType assetType)
         {
             if (assetType == AssetType.Invalid)
             {
@@ -45,7 +45,7 @@ namespace Editor
                 return null;
             }
 
-            var metaPath = assetPath + Paths.ASSET_META_EXT_NAME;
+            var metaPath = absolutePath + Paths.ASSET_META_EXT_NAME;
 
             string metaJson = null;
 
@@ -61,7 +61,7 @@ namespace Editor
                     return JsonConvert.DeserializeObject<T>(json);
                 }
 
-                var metaOut = _defaultMetaGenerator.GetDefaultAssetMeta(assetPath, assetType);
+                var metaOut = _defaultMetaGenerator.GetDefaultAssetMeta(absolutePath, assetType);
 
                 if (metaOut != null)
                 {

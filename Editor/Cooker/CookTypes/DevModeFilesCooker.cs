@@ -35,7 +35,7 @@ namespace Editor.Cooker
                     continue;
                 }
 
-                var meta = EditorAssetUtils.GetMetaFromAssetPath(filePath, assetType);
+                var meta = EditorAssetUtils.GetMetaFromAbsolutePath(filePath, assetType);
 
                 bool containsAssetInfo = _database.Assets.TryGetValue(meta.GUID, out var assetInfo);
 
