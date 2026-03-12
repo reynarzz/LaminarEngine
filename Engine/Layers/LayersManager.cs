@@ -94,7 +94,14 @@ namespace Engine.Layers
 
             for (int i = 0; i < Layers.Length; i++)
             {
-                Layers[i]?.UpdateLayer();
+                try
+                {
+                    Layers[i]?.UpdateLayer();
+                }
+                catch (Exception e)
+                {
+                    Debug.Error(e.ToString());
+                }
             }
 
             _cleanupLayer.UpdateLayer();
