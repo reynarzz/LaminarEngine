@@ -124,13 +124,13 @@ namespace Editor
                 return true;
             }
 
-            if(GetRelative(Paths.ASSETS_FOLDER_NAME, out var assetsPath))
-            {
-                return assetsPath;
-            }
-            else if(GetRelative(CookerPaths.INTERNAL_ASSET_FOLDER_NAME, out var internalAssetsPath))
+            if (GetRelative(CookerPaths.INTERNAL_ASSET_FOLDER_NAME, out var internalAssetsPath))
             {
                 return internalAssetsPath;
+            }
+            else if (GetRelative(Paths.ASSETS_FOLDER_NAME, out var assetsPath))
+            {
+                return assetsPath;
             }
 
             return string.Empty;

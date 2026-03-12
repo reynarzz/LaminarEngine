@@ -92,7 +92,7 @@ namespace Editor.Utils
                 { EditorIcon.Close, LoadIconFromDisk("close22x22.png") },
                 { EditorIcon.Plus, LoadIconFromDisk("plus24x24.png") },
                 { EditorIcon.Minus, LoadIconFromDisk("minus30x30.png") },
-                { EditorIcon.FolderClosedEmpty, LoadIconFromDisk("folder_empty.png") },
+                { EditorIcon.FolderClosedEmpty, LoadIconFromDisk("folder_empty24x24.png") },
                 { EditorIcon.FolderClosedFilled, LoadIconFromDisk("folder_filled.png") },
                 { EditorIcon.FolderOpenFilled, LoadIconFromDisk("folder_open_filled.png") },
                 { EditorIcon.FolderOpenEmpty, LoadIconFromDisk("folder_filled.png") },

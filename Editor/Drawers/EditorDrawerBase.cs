@@ -14,6 +14,8 @@ namespace Editor
 {
     internal abstract class EditorDrawerBase
     {
+        private readonly vec2 _imageIconSize = new vec2(40, 40);
+
         internal virtual vec2? WindowsPadding { get; } = default;
         protected abstract bool AutoDrawTitle { get; }
         internal virtual void OnOpen(IObject target) { }
@@ -25,13 +27,31 @@ namespace Editor
         }
         private protected void DrawTitle(IObject target)
         {
-            var cursorY = ImGui.GetCursorPosY();
-            ImGui.Dummy(new Vector2(2, 0));
+            var cursorStart = ImGui.GetCursorPos();
+
+            ImGui.Dummy(new Vector2(2, _imageIconSize.y));
             ImGui.SameLine();
-            EditorImGui.Image(EditorTextureDatabase.GetIconImGui(GetIcon(target)), new vec2(30, 30));
+
+            var icon = GetIcon(target);
+
+            var scale = Mathf.Min(_imageIconSize.x / icon.Width, _imageIconSize.y / icon.Height);
+            var scaleTooltip = Mathf.Min(100.0f / icon.Width, 100.0f / icon.Height);
+
+            var scaledW = icon.Width * scale;
+            var scaledH = icon.Height * scale;
+
+            var offsetY = (_imageIconSize.y - scaledH) * 0.5f;
+
+            ImGui.SetCursorPos(new Vector2(ImGui.GetCursorPosX(), cursorStart.Y + offsetY));
+
+            EditorImGui.Image(EditorTextureDatabase.GetIconImGui(icon), new vec2(scaledW, scaledH));
             ImGui.SameLine();
-            ImGui.SetCursorPosY(cursorY + 6);
+
+            ImGui.SetCursorPosY(cursorStart.Y + 6);
+            ImGui.SetCursorPosX(cursorStart.X + 63);
             ImGui.Text(target.Name);
+            
+
             ImGui.SetItemTooltip((target as AssetResourceBase)?.Path ?? target.GetID().ToString());
 
             ImGui.Separator();
