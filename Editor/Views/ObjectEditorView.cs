@@ -62,6 +62,10 @@ namespace Editor
                         InitDrawer(drawer);
                         drawer.OnDraw(Selector.Selected);
                     }
+                    else
+                    {
+                        Clear();
+                    }
                 }
                 else
                 {

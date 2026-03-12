@@ -1355,6 +1355,10 @@ namespace Editor.Utils
                     });
                     RenderItemsInColumns(items);
                 }
+                else if (valueType == typeof(RenderTexture))
+                {
+
+                }
                 else if (valueType.IsAssignableTo(typeof(Texture)))
                 {
                     //foreach (var guid in Assets.GetGuids(AssetType.Texture))

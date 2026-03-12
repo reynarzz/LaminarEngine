@@ -19,6 +19,7 @@ namespace Engine
         Material,
         ShaderV2,
         Scene,
-        Tilemap
+        Tilemap,
+        Script
     }
 }

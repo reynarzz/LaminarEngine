@@ -134,9 +134,10 @@ namespace Editor.Utils
                 { AssetType.Text, EditorIcon.Text },
                 { AssetType.AnimationClip, EditorIcon.AnimationClip },
                 { AssetType.AnimationController, EditorIcon.Animator },
-                //{ AssetType.Shader, EditorIcon.Animator },
-                //{ AssetType.Font, EditorIcon.Text },
-
+                { AssetType.Font, EditorIcon.Font },
+                { AssetType.Shader, EditorIcon.Shader },
+                { AssetType.ShaderV2, EditorIcon.Shader },
+                { AssetType.Script, EditorIcon.ScriptFile },
             };
         }
 
