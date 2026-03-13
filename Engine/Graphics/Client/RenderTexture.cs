@@ -44,7 +44,7 @@ namespace Engine
             _desc.Width = width;
             _desc.Height = height;
 
-            GfxDeviceManager.Current.UpdateResouce(NativeResource, _desc);
+            GfxDeviceManager.Current.UpdateResource(NativeResource, _desc);
         }
 
         protected override void Create()

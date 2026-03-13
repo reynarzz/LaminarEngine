@@ -161,7 +161,7 @@ namespace Engine.Graphics.OpenGL
             return internalMode;
         }
 
-        internal override void UpdateResouce(GfxResource resource, IGfxResourceDescriptor desc)
+        internal override void UpdateResource(GfxResource resource, IGfxResourceDescriptor desc)
         {
             if (resource as GLGeometry != null)
             {

@@ -13,12 +13,7 @@ namespace Editor
 {
     internal class EditorLayersManager : LayersManager
     {
-        private string AnimClipPath => $"{Paths.GetAssetsFolderPath()}/Animattion/AnimClip.bin";
-        private string AnimControllerPath => $"{EditorPaths.AppRoot}AnimController.bin";
-
         private PlaymodeController _playmodeController; // Remove from here
-        private SceneLayer _sceneLayer = new SceneLayer(); // Move this, remove from here
-
         private readonly LayerBase[] _initializationLayers;
         public EditorLayersManager(InputLayerBase inputLayer, WindowStandalone win)
         {
@@ -29,6 +24,7 @@ namespace Editor
             var renderingLayer = new RenderingLayer();
             var editorLayer = new EditorIOLayer();
             var hotReloadLayer = new HotReloadLayer();
+            var sceneLayer = new SceneLayer();
 
             Layers =
             [
@@ -36,7 +32,7 @@ namespace Editor
                 inputLayer,
                 null, // App Layer
                 mainThreadDispLayer,
-                _sceneLayer, // Scene layer
+                sceneLayer, 
                 audioLayer,
                 null, // Physics layer.
                 editorLayer,
@@ -120,8 +116,6 @@ namespace Editor
                 }
             }
             
-            //return; // Temporal to prevent test code to run in main.
-
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
                 Physics2D.DrawColliders = !Physics2D.DrawColliders;
@@ -132,7 +126,7 @@ namespace Editor
             }
         }
 
-
+        // TODO: Move this
         private void GenerateIconAndroidSizes(Texture defaultTexture, Texture foreground, Texture background)
         {
             var resolutions = Enum.GetValues<AndroidIconSizes>();

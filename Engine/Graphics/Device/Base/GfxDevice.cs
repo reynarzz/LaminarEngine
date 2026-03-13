@@ -26,7 +26,7 @@ namespace Engine.Graphics
         internal abstract void BlitRenderTargetTo(GfxResource source, GfxResource target, bool color = true, bool depth = true, bool linear = false);
         internal abstract void SetViewport(vec4 viewport);
 
-        internal abstract void UpdateResouce(GfxResource resource, IGfxResourceDescriptor desc);
+        internal abstract void UpdateResource(GfxResource resource, IGfxResourceDescriptor desc);
         internal abstract void Present(GfxResource renderTarget);
         internal abstract void Present();
 

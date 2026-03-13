@@ -529,7 +529,7 @@ namespace Engine
                 _linesGeoDescriptor.VertexDesc.BufferDesc.Offset = 0;
             }
 
-            GfxDeviceManager.Current.UpdateResouce(_linesGeometry, _linesGeoDescriptor);
+            GfxDeviceManager.Current.UpdateResource(_linesGeometry, _linesGeoDescriptor);
         }
     }
 }

@@ -75,7 +75,7 @@ namespace Engine.Graphics
             throw new NotImplementedException();
         }
 
-        internal override void UpdateResouce(GfxResource resource, IGfxResourceDescriptor desc)
+        internal override void UpdateResource(GfxResource resource, IGfxResourceDescriptor desc)
         {
             throw new NotImplementedException();
         }

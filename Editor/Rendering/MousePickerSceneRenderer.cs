@@ -194,7 +194,7 @@ namespace Editor.Rendering
                                 vertex.Buffer[j] = quadVertices[j];
                             }
 
-                            GfxDeviceManager.Current.UpdateResouce(_quadGeometry, _geoDesc);
+                            GfxDeviceManager.Current.UpdateResource(_quadGeometry, _geoDesc);
                             GfxDeviceManager.Current.Draw(_drawCallData);
                         }
                         else
@@ -256,7 +256,7 @@ namespace Editor.Rendering
                             _drawCallData.Geometry = geometry;
                             _drawCallData.IndexedDraw.IndexCount = indicesCount;
 
-                            GfxDeviceManager.Current.UpdateResouce(geometry, desc);
+                            GfxDeviceManager.Current.UpdateResource(geometry, desc);
                             GfxDeviceManager.Current.Draw(_drawCallData);
                         }
                     }

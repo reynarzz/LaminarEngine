@@ -87,7 +87,7 @@ namespace Engine
             _descriptor.XOffset = xOffset;
             _descriptor.YOffset = yOffset;
 
-            GfxDeviceManager.Current.UpdateResouce(NativeResource, _descriptor);
+            GfxDeviceManager.Current.UpdateResource(NativeResource, _descriptor);
         }
         internal override void UpdateResource(object data, string path, Guid guid)
         {
@@ -99,7 +99,7 @@ namespace Engine
             Channels = deserializedData.Channels;
             Data = deserializedData.Data;
 
-            GfxDeviceManager.Current.UpdateResouce(NativeResource, new TextureDescriptor()
+            GfxDeviceManager.Current.UpdateResource(NativeResource, new TextureDescriptor()
             {
                 Width = Width,
                 Height = Height,
