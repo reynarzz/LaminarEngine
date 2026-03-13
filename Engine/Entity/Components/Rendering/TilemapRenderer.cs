@@ -64,7 +64,7 @@ namespace Engine
                     return;
 
                 _tilemapAsset = value;
-                SetTilemap(_tilemapAsset, Options);
+                _rendererData.IsDirty = true;
             }
         }
 
@@ -80,7 +80,8 @@ namespace Engine
                     return;
 
                 _renderingOptions = value;
-                SetTilemap(Tilemap, _renderingOptions);
+                _rendererData.IsDirty = true;
+
             }
         }
         private RendererData2D _rendererData;
@@ -105,28 +106,33 @@ namespace Engine
             RenderingLayer.PushRenderer(this);
         }
 
+        internal override void Draw()
+        {
+            base.Draw();
+            if (_rendererData.IsDirty)
+            {
+                var layer = GetLayer();
+
+                if (layer != null)
+                {
+                    layer.Vertices = layer.Vertices ?? Array.Empty<TilemapVertex>();
+
+                    _mesh.Vertices = layer.Vertices;
+                    _mesh.IndicesToDrawCount = layer.Vertices.Length == 0 ? 0 : layer.IndicesToDraw;
+                    _rendererData.Bounds = layer.Bounds;
+                }
+                else
+                {
+                    _mesh.Vertices = Array.Empty<TilemapVertex>();
+                    _mesh.IndicesToDrawCount = 0;
+                    _rendererData.Bounds = default;
+                }
+            }
+        }
         public void SetTilemap(TilemapAsset tilemap, TilemapRenderingOptions options)
         {
             _tilemapAsset = tilemap;
             _renderingOptions = options;
-
-            var layer = GetLayer();
-
-            if (layer != null)
-            {
-                layer.Vertices = layer.Vertices ?? Array.Empty<TilemapVertex>();
-
-                _mesh.Vertices = layer.Vertices;
-                _mesh.IndicesToDrawCount = layer.Vertices.Length == 0 ? 0 : layer.IndicesToDraw;
-                _rendererData.Bounds = layer.Bounds;
-            }
-            else
-            {
-                _mesh.Vertices = Array.Empty<TilemapVertex>();
-                _mesh.IndicesToDrawCount = 0;
-                _rendererData.Bounds = default;
-            }
-
             _rendererData.IsDirty = true;
         }
 
