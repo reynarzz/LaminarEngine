@@ -31,7 +31,8 @@ namespace Editor
                 { typeof(Material), new MaterialInspectorDrawer() },
                 { typeof(Texture2D), new TextureInspectorDrawer() },
                 { typeof(TilemapAsset), new TilemapInspectorDrawer() },
-
+                { typeof(TextAsset), new TextInspectorDrawer() },
+                
             };
         }
 

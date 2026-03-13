@@ -315,7 +315,7 @@ namespace Engine.Serialization
         Tilemap = AssetFlag | EObjectFlag | (3009UL << 20),
         Prefab = AssetFlag | EObjectFlag | (3010UL << 20),
         Scene = AssetFlag | EObjectFlag | (3011UL << 20),
-
+        Font = AssetFlag | EObjectFlag | (3012UL << 20),
 
 
         ASSETS_END = AssetFlag | EObjectFlag | (3999UL << 20), // max asset boundary

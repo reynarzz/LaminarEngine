@@ -37,6 +37,7 @@ namespace Engine.Utils
                 case SerializedType.Tilemap:
                 case SerializedType.Prefab:
                 case SerializedType.Scene:
+                case SerializedType.Font:
                     return true;
             }
 

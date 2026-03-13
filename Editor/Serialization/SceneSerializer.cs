@@ -55,26 +55,9 @@ namespace Editor.Serialization
                 Actors = new(),
             };
 
-            void SerializeActors(Actor actor)
-            {
-                if (!actor)
-                    return;
-
-                if (options.CollectedPhysicalActors)
-                {
-                    serializedScene.Actors.Add(actor);
-                }
-                serializedScene.ActorsData.Add(GetActor(actor, options));
-
-                foreach (var child in actor.Transform.Children)
-                {
-                    SerializeActors(child.Actor);
-                }
-            }
-
             foreach (var actor in scene.RootActors)
             {
-                SerializeActors(actor);
+                SerializeActors(actor, serializedScene.Actors, serializedScene.ActorsData, options);
             }
 
             for (var i = 0; i < _componentsToRemove.Count; i++)
@@ -86,7 +69,31 @@ namespace Editor.Serialization
             return serializedScene;
         }
 
-        internal static ActorIR GetActor(Actor actor, SerializationOptions options)
+        internal static List<ActorIR> SerializeActorsTree(Actor actor)
+        {
+            var actorsTree = new List<ActorIR>();
+            SerializeActors(actor, null, actorsTree, default);
+            return actorsTree;
+        }
+
+        private static void SerializeActors(Actor actor, List<Actor> actors, List<ActorIR> actorsIR, SerializationOptions options)
+        {
+            if (!actor)
+                return;
+
+            if (options.CollectedPhysicalActors)
+            {
+                actors.Add(actor);
+            }
+            actorsIR.Add(GetActor(actor, options));
+
+            foreach (var child in actor.Transform.Children)
+            {
+                SerializeActors(child.Actor, actors, actorsIR, options);
+            }
+        }
+
+        private static ActorIR GetActor(Actor actor, SerializationOptions options)
         {
             return new ActorIR()
             {

@@ -53,7 +53,7 @@ namespace Engine
 
             if (!obj.IsAlive)
             {
-                throw new DestroyedObjectException($"Can't use destroyed object of type: '{obj.GetType().Name}'");
+                Debug.Error($"Can't use destroyed object of type: '{obj.GetType().Name}'");
             }
 #if SHOW_ENGINE_MESSAGES
             else if (obj.IsPendingToDestroy)

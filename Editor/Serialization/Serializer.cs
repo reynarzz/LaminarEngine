@@ -112,6 +112,10 @@ namespace Editor.Serialization
                     {
                         return SerializedType.Scene;
                     }
+                    else if (type.IsAssignableTo(typeof(FontAsset)))
+                    {
+                        return SerializedType.Font;
+                    }
                     Debug.Error($"Type: '{ReflectionUtils.GetFriendlyTypeName(type)}' is an asset but is not added to the serializer 'SerializedType', this could cause a crash if trying to save.");
                     return SerializedType.AssetFlag;
                 }

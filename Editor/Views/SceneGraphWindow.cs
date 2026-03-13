@@ -1,5 +1,7 @@
-﻿using Editor.Utils;
+﻿using Editor.Serialization;
+using Editor.Utils;
 using Engine;
+using Engine.Serialization;
 using ImGuiNET;
 using System;
 using System.Numerics;
@@ -178,6 +180,18 @@ namespace Editor.Views
 
                 if (ImGui.MenuItem("Duplicate"))
                 {
+                    // TODO: create and re-assign the new instance ids of actors and components.
+
+                    var actorsTree = SceneSerializer.SerializeActorsTree(actor);
+                    var actorsRootInstances = SceneDeserializer.DeserializeScene(actorsTree, actor.Scene, true);
+
+                    if (actorsRootInstances != null)
+                    {
+                        foreach (var actorRoot in actorsRootInstances)
+                        {
+                            actorRoot.Transform.Parent = actor.Transform.Parent;
+                        }
+                    }
                 }
 
                 ImGui.BeginDisabled(!actor.Transform.Parent);

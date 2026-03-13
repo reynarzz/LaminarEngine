@@ -11,11 +11,13 @@ using System.Threading.Tasks;
 namespace Engine.Serialization
 {
 
+    internal class SceneDeserializer :
 #if SHIP_BUILD
-    internal class SceneDeserializer : SceneDeserializer<TypeResolver> { }
+        SceneDeserializer<TypeResolver>
 #else
-    internal class SceneDeserializer : SceneDeserializer<CombinedTypeResolver> { }
+        SceneDeserializer<CombinedTypeResolver>
 #endif
+    { }
     internal class SceneDeserializer<T> where T : ITypeResolver
     {
         private readonly static Dictionary<Guid, (Actor value, ActorIR data)> _actorsByID = new();
@@ -130,17 +132,35 @@ namespace Engine.Serialization
         }
         public static void DeserializeScene(SceneIR sceneIr, Scene scene)
         {
-            DeserializeScene(sceneIr.Actors, scene);
+            DeserializeScene(sceneIr.Actors, scene, false);
         }
         public static void DeserializeScene(List<ActorIR> actors, Scene scene)
+        {
+            DeserializeScene(actors, scene, true);
+        }
+
+        /// <summary>
+        /// Deserialize actors to the scene.
+        /// </summary>
+        /// <param name="actors"></param>
+        /// <param name="scene"></param>
+        /// <param name="newIds"></param>
+        /// <returns>Root actors (actors without parent)</returns>
+        public static List<Actor> DeserializeScene(List<ActorIR> actors, Scene scene, bool collectRootActors)
         {
             _actorsByID.Clear();
             _componentsByID.Clear();
             _initializationComponents.Clear();
 
             if (actors == null || actors.Count == 0)
-                return;
+                return null;
 
+            List<Actor> rootActors = null;
+
+            if (collectRootActors)
+            {
+                rootActors = new List<Actor>();
+            }
             // Instantiate all the actors.
             for (int i = 0; i < actors.Count; i++)
             {
@@ -151,14 +171,28 @@ namespace Engine.Serialization
                 _actorsByID.Add(actor.GetID(), (actor, actorData));
             }
 
+            if (collectRootActors)
+            {
+                // NOTE: This truly collects the root actors without relying on IRData since
+                //       actors could be deserialized without the real parent (aka: duplicate children).
+                for (int i = 0; i < actors.Count; i++)
+                {
+                    var actorData = actors[i];
+                    if (actorData.ParentID == Guid.Empty || !_actorsByID.ContainsKey(actorData.ParentID) )
+                    {
+                        rootActors.Add(_actorsByID[actorData.ID].value);
+                    }
+                }
+            }
+
             // Resolve parent-child relationship
             for (int i = 0; i < actors.Count; i++)
             {
                 var actorData = actors[i];
 
-                if (actorData.ParentID != Guid.Empty)
+                if (actorData.ParentID != Guid.Empty && _actorsByID.TryGetValue(actorData.ParentID, out var parent))
                 {
-                    _actorsByID[actorData.ID].value.Transform.Parent = _actorsByID[actorData.ParentID].value.Transform;
+                    _actorsByID[actorData.ID].value.Transform.Parent = parent.value.Transform;
                 }
             }
 
@@ -267,6 +301,7 @@ namespace Engine.Serialization
                 _componentsByID.Clear();
             }
 
+            return rootActors;
         }
     }
 }
