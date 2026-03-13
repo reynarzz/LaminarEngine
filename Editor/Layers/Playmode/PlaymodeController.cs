@@ -42,7 +42,12 @@ namespace Editor.Layers
             {
                 // Serialize all the opened scenes.
                 SceneManagerEditor.SerializeScenesPlaymode();
-                var prevSelectedActorId = Selector.SelectedTransform()?.Actor.GetID() ?? Guid.Empty;
+                var prevSelectedActorId = Guid.Empty;
+
+                if (Selector.SelectedTransform())
+                {
+                    prevSelectedActorId = Selector.SelectedTransform().Actor.GetID();
+                }
                 Application.IsInPlayMode = true;
 
                 _time.InitializeAsync();
@@ -69,7 +74,12 @@ namespace Editor.Layers
 
         internal void PlayModeOff()
         {
-            var prevSelectedActorId = Selector.SelectedTransform()?.Actor.GetID() ?? Guid.Empty;
+            var prevSelectedActorId = Guid.Empty;
+
+            if (Selector.SelectedTransform())
+            {
+                prevSelectedActorId = Selector.SelectedTransform().Actor.GetID();
+            }
 
             if (Application.IsInPlayMode)
             {
@@ -87,7 +97,7 @@ namespace Editor.Layers
             SceneManagerEditor.DeserializePlaymodeScene();
             if (prevSelectedActorId != Guid.Empty)
             {
-               Selector.Selected = SceneManager.FindActorByID(prevSelectedActorId);
+                Selector.Selected = SceneManager.FindActorByID(prevSelectedActorId);
             }
         }
     }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Editor
 {
-    internal interface IAssetFileSaver
+    internal interface IFileSaver
     {
         void Write(Guid refId, string relativePath);
     }

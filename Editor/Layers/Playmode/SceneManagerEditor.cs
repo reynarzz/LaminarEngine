@@ -77,6 +77,9 @@ namespace Editor
                     SceneManager.LoadSceneAdditive(editorScene.Name);
                 }
 
+                var scene = SceneManager.Scenes[i + 1];
+                scene.Name = editorScene.Name;
+
                 SceneDeserializer.DeserializeScene(editorScene.ActorsData, SceneManager.Scenes[i + 1]);
             }
         }

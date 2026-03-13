@@ -24,6 +24,10 @@ namespace Editor.Views
 
                 for (int i = SceneManager.Scenes.Count - 1; i >= 0; i--)
                 {
+                    if (i == 0 && !Application.IsInPlayMode)
+                    {
+                        continue;
+                    }
                     ImGui.PushID(SceneManager.Scenes[i].GetID().ToString());
                     ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.OpenOnArrow | ImGuiTreeNodeFlags.SpanFullWidth | ImGuiTreeNodeFlags.DefaultOpen;
 
@@ -43,19 +47,28 @@ namespace Editor.Views
 
                     if (EditorImGui.BeginPopupContextItem("SceneContext"))
                     {
-                        if (i > 0 && ImGui.MenuItem("Unload Scene"))
+                        if (i > 0)
                         {
-                            SceneManager.UnloadScene(SceneManager.Scenes[i]);
-                            ImGui.EndPopup();
-
-                            if (open)
+                            if (ImGui.MenuItem("Reload Scene"))
                             {
-                                ImGui.TreePop();
-                            }
-                            ImGui.PopID();
 
-                            break;
+                            }
+                            else if (ImGui.MenuItem("Unload Scene"))
+                            {
+                                SceneManager.UnloadScene(SceneManager.Scenes[i]);
+                                ImGui.EndPopup();
+
+                                if (open)
+                                {
+                                    ImGui.TreePop();
+                                }
+                                ImGui.PopID();
+
+                                break;
+                            }
+
                         }
+
                         else if (ImGui.MenuItem("Create Actor"))
                         {
                             new Actor("Actor");
@@ -135,7 +148,7 @@ namespace Editor.Views
                     ImGui.PushStyleColor(ImGuiCol.Header, headerColor);
                     ImGui.PushStyleColor(ImGuiCol.HeaderHovered, headerColor);
                 }
-                
+
             }
             else
             {
@@ -145,7 +158,7 @@ namespace Editor.Views
 
             ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(1f, 1f, 1f, 1f));
             bool open = ImGui.TreeNodeEx("##node", flags);
-  
+
             var id = actor.GetID();
 
             if (ImGui.IsItemActivated())

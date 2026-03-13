@@ -12,13 +12,18 @@ namespace Editor
         public static class Save
         {
             private readonly static Dictionary<Guid, DirtyEObject> _dirtyObjectsRefId = new();
-            private readonly static Dictionary<AssetType, IAssetFileSaver> _fileSavers = new()
+            private readonly static Dictionary<AssetType, IFileSaver> _fileSavers = new()
             {
                 { AssetType.Scene, new EditorSceneSaver() }
             };
 
             public static void SaveAll()
             {
+                if (Application.IsInPlayMode)
+                {
+                    Debug.Warn("Cannot save in playmode.");
+                    return;
+                }
                 // Save all to disk
                 foreach (var (refId, dirtyObject) in _dirtyObjectsRefId)
                 {

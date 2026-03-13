@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Editor
 {
-    internal class EditorSceneSaver : IAssetFileSaver
+    internal class EditorSceneSaver : IFileSaver
     {
         public void Write(Guid refId, string relativePath)
         {
