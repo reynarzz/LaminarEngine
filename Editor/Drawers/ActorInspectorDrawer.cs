@@ -40,7 +40,10 @@ namespace Editor.Drawers
                         int index = 0;
                         foreach (var member in members)
                         {
-                            PropertiesGUIDrawEditor.DrawVars(x.GetID().ToString(), component, member, 0, index, 0, true);
+                            if(PropertiesGUIDrawEditor.DrawVars(x.GetID().ToString(), component, member, 0, index, 0, true))
+                            {
+                                EditorSystem.Save.MarkDirty(actor);
+                            }
                             index++;
                         }
                     }

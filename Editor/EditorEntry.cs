@@ -93,7 +93,7 @@ namespace Editor
         {
             // File
             EditorMenu.PushMenu("File/Open", () => Debug.Warn("Open"));
-         //   EditorMenu.PushMenu("File/Save", () => Debug.Warn("Save"), false, "Ctrl+S");
+            EditorMenu.PushMenu("File/Save", EditorSystem.Save.SaveAll, false, "Ctrl+S");
             EditorMenu.PushMenu("File/Save As", () => Debug.Warn("Save As"));
             EditorMenu.PushMenu("File/Settings", () => Debug.Warn("Settings"));
             EditorMenu.PushMenu("File/Quit", () => Debug.Warn("Quit"));

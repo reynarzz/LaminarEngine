@@ -63,6 +63,7 @@ namespace Engine
             if (sceneAsset)
             {
                 var scene = LoadEmptyScene(sceneAsset.Name);
+                scene._SetID(sceneAsset.GetID());
                 SceneDeserializer.DeserializeScene(sceneAsset.SceneIR, scene);
             }
         }

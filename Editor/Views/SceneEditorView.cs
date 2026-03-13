@@ -153,6 +153,7 @@ namespace Editor
                         SetTransform(operation, mode, selectedTransform, position, rotation, scale,
                                      deltaPosition, deltaRotation, deltaScale);
                     }
+                    EditorSystem.Save.MarkDirty(selectedTransform);
                 }
             }
 
