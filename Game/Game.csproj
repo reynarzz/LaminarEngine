@@ -47,16 +47,13 @@
 		</None>
 	</ItemGroup> 
 	<ItemGroup>
-		<Compile Remove="Characters\**" />
 		<Compile Remove="Library\**" />
 		<Compile Remove="obj\**" />
 		<Compile Remove="bin\**" />
 		<EmbeddedResource Remove="bin\**" />
-		<EmbeddedResource Remove="Characters\**" />
 		<EmbeddedResource Remove="Library\**" />
 		<EmbeddedResource Remove="obj\**" />
 		<None Remove="bin\**" />
-		<None Remove="Characters\**" />
 		<None Remove="Library\**" />
 		<None Remove="**\*.mt" />
 		<None Remove="**\*.png" />
@@ -78,9 +75,5 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Engine\Engine.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Assets\Scripts\ServiceLocator\" />
 	</ItemGroup>
 </Project>

@@ -46,7 +46,7 @@ namespace Editor.Utils
             }
             catch (Exception e)
             {
-                Debug.Warn($"Couldn't deserialize json, caller: {caller}()");
+                Debug.Error($"Couldn't deserialize json, caller: {caller}()");
             }
 
             return default;

@@ -157,7 +157,6 @@ namespace Editor.Cooker
             {
                 Console.WriteLine("Check Permission: Dev mode files cooker.");
             }
-            Debug.Log("Finish import: " + _database.UpdatedAssets.Count);
             return !someAssetFailImport;
         }
     }
