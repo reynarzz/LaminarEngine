@@ -14,11 +14,20 @@ namespace Editor.Utils
         private const float POPUP_WINDOW_PADDING = 7.0f;
         public static void Image(nint image, vec2 imageSize)
         {
-            ImGui.Image(image, new Vector2(imageSize.x, imageSize.y), new Vector2(0, 1), new Vector2(1, 0));
+            Image(image, imageSize, new vec4(1, 1, 1, 1));
+        }
+        public static void Image(nint image, vec2 imageSize, vec4 tint)
+        {
+            ImGui.Image(image, new Vector2(imageSize.x, imageSize.y), new Vector2(0, 1), new Vector2(1, 0), new Vector4(tint.x, tint.y, tint.z, tint.w));
         }
         public static void ImageFromIcon(EditorIcon icon, vec2 imageSize)
         {
-            Image(EditorTextureDatabase.GetIconImGui(icon), imageSize);
+            Image(EditorTextureDatabase.GetIconImGui(icon), imageSize, new vec4(1, 1, 1, 1));
+        }
+
+        public static void ImageFromIcon(EditorIcon icon, vec2 imageSize, vec4 tint)
+        {
+            Image(EditorTextureDatabase.GetIconImGui(icon), imageSize, tint);
         }
         public static bool ImageButton(string id, nint image, vec2 imageSize)
         {
@@ -42,7 +51,7 @@ namespace Editor.Utils
                     ImGui.OpenPopup(name);
                 }
             }
-            
+
             var result = ImGui.BeginPopup(name);
             ImGui.PopStyleVar(2);
             return result;

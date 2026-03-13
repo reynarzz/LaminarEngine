@@ -2,6 +2,7 @@
 using Editor.Utils;
 using Engine;
 using Engine.Serialization;
+using GlmNet;
 using ImGuiNET;
 using System;
 using System.Numerics;
@@ -122,9 +123,12 @@ namespace Editor.Views
             if (Selector.Selected && Selector.Selected == actor)
                 flags |= ImGuiTreeNodeFlags.Selected;
 
+            var tintColor = new vec4(1, 1, 1, 1);
             if (!actor.IsActiveInHierarchy)
             {
-                ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(0.5f));
+                const float disabledAlpha = 0.6f;
+                ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(tintColor.x, tintColor.y, tintColor.z, disabledAlpha));
+                tintColor.w = disabledAlpha;
             }
 
             var greenSelected = EditorColors.MainColor.ToVector4();
@@ -252,7 +256,7 @@ namespace Editor.Views
             var iconCursorX = ImGui.GetCursorPosX();
             var iconOffset = 8;
             ImGui.SetCursorPosX(iconCursorX - iconOffset);
-            EditorImGui.ImageFromIcon(EditorIcon.Actor2, new GlmNet.vec2(18, 18));
+            EditorImGui.ImageFromIcon(EditorIcon.Actor2, new GlmNet.vec2(18, 18), tintColor);
 
             ImGui.SameLine();
             iconCursorX = ImGui.GetCursorPosX();

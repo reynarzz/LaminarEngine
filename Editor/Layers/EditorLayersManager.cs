@@ -13,10 +13,8 @@ namespace Editor
 {
     internal class EditorLayersManager : LayersManager
     {
-        private string TestfilePath => $"{EditorPaths.AppRoot}Scene.bin";
-        private string AnimClipPath => $"{EditorPaths.AppRoot}AnimClip.bin";
+        private string AnimClipPath => $"{Paths.GetAssetsFolderPath()}/Animattion/AnimClip.bin";
         private string AnimControllerPath => $"{EditorPaths.AppRoot}AnimController.bin";
-        private string MaterialPath => $"{EditorPaths.AppRoot}Material.bin";
 
         private PlaymodeController _playmodeController; // Remove from here
         private SceneLayer _sceneLayer = new SceneLayer(); // Move this, remove from here
@@ -106,9 +104,6 @@ namespace Editor
             }
         }
 
-        private Shader _test;
-        private Material _materialTest;
-        private TilemapAsset _tilemapAssetTest;
         internal override void Update()
         {
             base.Update();
@@ -134,111 +129,6 @@ namespace Editor
             if (Input.GetKeyDown(KeyCode.Alpha2))
             {
                 Debug.DrawUILines = !Debug.DrawUILines;
-            }
-
-
-            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.S))
-            {
-                if (Application.IsInPlayMode || SceneManager.Scenes.FirstOrDefault() != null)
-                {
-
-                    var obj = Actor.Find("Player");
-                    if (obj)
-                    {
-                        var animator = obj.GetComponent<Animator>();
-                        var animIR = Serializer.Serialize(animator.CurrentState.Clip);
-                        var animControlerIR = Serializer.Serialize(animator.Controller);
-                        var renderer = Actor.Find("Portal").Transform.Children[1].GetComponent<SpriteRenderer>();
-                        var materialIR = Serializer.Serialize(renderer.Material);
-
-                        File.WriteAllText(AnimClipPath, EditorJsonUtils.Serialize(animIR));
-                        File.WriteAllText(AnimControllerPath, EditorJsonUtils.Serialize(animControlerIR));
-                        File.WriteAllText(MaterialPath, EditorJsonUtils.Serialize(materialIR));
-
-                    }
-                }
-
-                InternalAssetsCreator.GenerateAll();
-            }
-            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.A))
-            {
-                if (File.Exists(AnimClipPath))
-                {
-                    var anim = new AnimationClip("Name");
-                    var ir = EditorJsonUtils.Deserialize<List<SerializedPropertyIR>>(File.ReadAllText(AnimClipPath));
-
-                    Deserializer.Deserialize(anim, ir);
-                    var anim2 = Deserializer.Deserialize<AnimationClip>(ir);
-                }
-
-                _materialTest = Assets.GetMaterial("Materials/Material.material");
-                Selector.Selected = Assets.GetTexture("starkTileset.png");//_materialTest;
-
-
-                //GenerateIconAndroidSizes(Assets.GetTexture("Icons/playerhead.png"), 
-                //                         Assets.GetTexture("Icons/playerhead_foreground.png"), 
-                //                         Assets.GetTexture("Icons/playerhead_background.png"));
-
-
-                //ExportSlicedSprites();
-                // var material = Assets.GetMaterial("Materials/Portal_mobile.material");
-                // var json = EditorJsonUtils.Serialize(Serializer.Serialize(material));
-
-                //File.WriteAllText(EditorPaths.GameRoot + "/Assets/Materials/Portal_mobile.material", json);
-
-                // material = Assets.GetMaterial("Materials/Material.material");
-                //Selector.Selected = material;
-                var obj = Actor.Find("Chest");
-                if (obj)
-                {
-                    var value = obj.GetComponent<SpriteRenderer>();
-                    Selector.Selected = value.Sprite.Texture;
-                }
-            }
-
-            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.W))
-            {
-
-                //var a = new TypeRegistry();
-                //if (a.GetType(Guid.Parse("155b8de8a92b2bb630a8026d46704c61"), out Type type))
-                //{
-                //    if (type != null)
-                //    {
-                //        Debug.Log($"Success: {type.FullName}");
-                //    }
-                //}
-                // Test_MaterialBinary.RunTest_Windows();
-                Debug.Log("ctrl w");
-                _tilemapAssetTest = Assets.GetTilemap("Tilemap/WorldTilemap.ldtk");
-                Selector.Selected = _tilemapAssetTest;
-            }
-
-            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.R))
-            {
-                //var clip = Assets.Get<AnimationClip>("Animation/AnimClip.anim");
-                //var clipController = Assets.Get<AnimatorController>("Animation/AnimController.animctrl");
-
-                //_test = Assets.GetShader("Shaders/Test/ShaderTest.shader");
-
-
-                // SerializerTypesFixer();
-                // LoadScene();
-
-                if (File.Exists(TestfilePath))
-                {
-                    var sceneFile = File.ReadAllText(TestfilePath);
-                    var sceneFileIR = EditorJsonUtils.Deserialize<SceneIR>(sceneFile);
-                    LoadScene(sceneFileIR);
-                }
-
-                //using var file = File.OpenRead(EditorPaths.AppRoot + "/SceneBinary.bin");
-                //var reader = new BinaryReader(file);
-                //var scene = BinaryIRDeserializer.DeserializeScene(reader);
-                //LoadScene(scene);
-
-
-                //File.WriteAllText(EditorPaths.AppRoot + "/Engine/Utils/CollectionDeserializer_Generated.cs",
-                //                  CollectionDeserializerGenerator.Generate(true));
             }
         }
 
@@ -279,18 +169,5 @@ namespace Editor
 
         }
 
-        private void LoadScene(SceneIR scene)
-        {
-
-            if (scene != null)
-            {
-
-                // var actors = _actors;
-                Debug.Log("Total actors in scene: " + scene.Actors.Count);
-                SceneManager.Initialize();
-
-                SceneDeserializer.DeserializeScene(scene, SceneManager.ActiveScene);
-            }
-        }
     }
 }
