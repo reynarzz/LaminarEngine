@@ -1,4 +1,5 @@
-﻿using Engine;
+﻿using Editor.Utils;
+using Engine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,15 +25,29 @@ namespace Editor
                     Debug.Warn("Cannot save in playmode.");
                     return;
                 }
+
+                if (_dirtyObjectsRefId.Count == 0)
+                {
+                    Debug.Log("Nothing to save.");
+                    return;
+                }
+                bool isAnySaved = false;
                 // Save all to disk
                 foreach (var (refId, dirtyObject) in _dirtyObjectsRefId)
                 {
-                    if(_fileSavers.TryGetValue(dirtyObject.Type, out var saver))
+                    if (_fileSavers.TryGetValue(dirtyObject.Type, out var saver))
                     {
                         var info = EditorIOLayer.Database.GetAssetInfo(refId);
-
+                        Debug.Log("Saving asset: " + info.Path);
                         saver.Write(refId, info.Path);
+
+                        isAnySaved = true;
                     }
+                }
+
+                if (isAnySaved)
+                {
+                    EditorAssetUtils.RefreshAssetDatabase();
                 }
 
                 // Not longer dirty, clear all.
@@ -41,32 +56,37 @@ namespace Editor
 
             public static void MarkDirty(EObject obj)
             {
-                if (obj)
+                if (!obj)
                 {
-                    var assetType = AssetType.Invalid;
-                    var refId = Guid.Empty;
+                    Debug.Error($"Can't mark dirty null '{nameof(EObject)}'");
+                    return;
+                }
+                var assetType = AssetType.Invalid;
+                var refId = Guid.Empty;
 
-                    var isScene = MarkSceneDirty(obj, ref refId, ref assetType);
+                var isSceneDirty = TryGetSceneDirty(obj, ref refId, ref assetType);
 
-                    if (!isScene)
+                if (Application.IsInPlayMode && isSceneDirty)
+                {
+                    return;
+                }
+                if (!isSceneDirty)
+                {
+                    var info = EditorIOLayer.Database.GetAssetInfo(obj.GetID());
+                    refId = obj.GetID();
+                    assetType = info.Type;
+                }
+
+                if (!_dirtyObjectsRefId.ContainsKey(refId))
+                {
+                    _dirtyObjectsRefId.Add(refId, new DirtyEObject()
                     {
-                        var info = EditorIOLayer.Database.GetAssetInfo(obj.GetID());
-                        refId = obj.GetID();
-                        assetType = info.Type;
-                    }
-
-                    if (!_dirtyObjectsRefId.ContainsKey(refId))
-                    {
-                        _dirtyObjectsRefId.Add(refId, new DirtyEObject()
-                        {
-                            Type = assetType
-                        });
-                    }
-
+                        Type = assetType
+                    });
                 }
             }
 
-            private static bool MarkSceneDirty(EObject obj, ref Guid refId, ref AssetType assetType)
+            private static bool TryGetSceneDirty(EObject obj, ref Guid refId, ref AssetType assetType)
             {
                 if (obj is Actor or Component)
                 {

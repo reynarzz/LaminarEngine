@@ -22,19 +22,22 @@ namespace Engine
         {
             UnloadAll();
             // First Scene is always the 'dontDestroyOnLoad' scene
-            LoadSceneAdditive("DontDestroyOnLoad");
-            LoadSceneAdditive("DefaultScene");
+            LoadSceneAdditive("DontDestroyOnLoad", Guid.NewGuid());
+            LoadSceneAdditive("DefaultScene", Guid.NewGuid());
 
             ActiveScene = _scenes[1];
         }
-
         public static Scene LoadEmptyScene(string name)
+        {
+            return LoadEmptyScene(name, Guid.NewGuid());
+        }
+        public static Scene LoadEmptyScene(string name, Guid refId)
         {
             ClearScenes();
             OnCleanupUpdate();
 
             // TODO: Load scene from file (Probably will never be implemented since all scenes are built at runtime, without a editor)
-            var scene = new Scene(name);
+            var scene = new Scene(name, refId);
             ActiveScene = scene;
             _scenes.Add(scene);
 
@@ -62,12 +65,11 @@ namespace Engine
         {
             if (sceneAsset)
             {
-                var scene = LoadEmptyScene(sceneAsset.Name);
-                scene._SetID(sceneAsset.GetID());
+                var scene = LoadEmptyScene(sceneAsset.Name, sceneAsset.GetID());
                 SceneDeserializer.DeserializeScene(sceneAsset.SceneIR, scene);
             }
         }
-        
+
 
         internal static void UnloadScene(Scene scene)
         {
@@ -100,12 +102,12 @@ namespace Engine
             }
         }
 
-        public static void LoadSceneAdditive(string name)
+        internal static void LoadSceneAdditive(string name, Guid refId)
         {
             if (IsSceneAlreadyAdded(name))
                 return;
 
-            var scene = new Scene(name);
+            var scene = new Scene(name, refId);
             _scenes.Add(scene);
         }
 

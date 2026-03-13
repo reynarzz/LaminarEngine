@@ -15,6 +15,7 @@ namespace Editor.Serialization
     internal class SerializedEditorScene
     {
         public string Name { get; set; }
+        public Guid RefId { get; set; }
         public List<ActorIR> ActorsData { get; set; }
         internal List<Actor> Actors { get; set; }
     }
@@ -51,6 +52,7 @@ namespace Editor.Serialization
             var serializedScene = new SerializedEditorScene()
             {
                 Name = scene.Name,
+                RefId = scene.GetID(),
                 ActorsData = new(),
                 Actors = new(),
             };

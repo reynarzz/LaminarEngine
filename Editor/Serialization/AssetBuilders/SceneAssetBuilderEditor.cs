@@ -15,18 +15,23 @@ namespace Editor.Serialization
     {
         public SceneAsset BuildAsset(ref readonly AssetInfo info, DefaultMetaFile meta, BinaryReader reader)
         {
-            var length = reader.BaseStream.Length;
-            var data = new byte[length];
-            int bytesRead = reader.BaseStream.Read(data, 0, (int)length);
-            string text = Encoding.UTF8.GetString(data, 0, bytesRead);
-
-            var sceneIr = EditorJsonUtils.Deserialize<SceneIR>(text);
-
-            return new SceneAsset(sceneIr, info.Path, meta.GUID);
+            var sceneIR = GetSceneIR(reader);
+            return new SceneAsset(sceneIR, info.Path, meta.GUID);
         }
 
         public void UpdateAsset(ref readonly AssetInfo info, SceneAsset asset, DefaultMetaFile meta, BinaryReader reader)
         {
+            var sceneIR = GetSceneIR(reader);
+            asset.UpdateResource(sceneIR, info.Path, meta.GUID);
+        }
+
+        private SceneIR GetSceneIR(BinaryReader reader)
+        {
+            var length = reader.BaseStream.Length;
+            var data = new byte[length];
+            int bytesRead = reader.BaseStream.Read(data, 0, (int)length);
+            string text = Encoding.UTF8.GetString(data, 0, bytesRead);
+            return EditorJsonUtils.Deserialize<SceneIR>(text);
         }
     }
 }

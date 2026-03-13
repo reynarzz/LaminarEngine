@@ -248,16 +248,17 @@ namespace Editor
                 ImGui.SameLine();
                 ImGui.SetCursorPosX(Math.Max(EditorGuiFieldsResolver.XPosOffset, ImGui.GetCursorPosX()));
 
-                var eObject = value as IObject;
+                var eObject = value as EObject;
                 var eObjectType = eObject != null ? eObject.GetType() : type;
+                EObject resultValue = eObject;
 
-                EditorGuiFieldsResolver.DrawEObjectSlot(eObject, eObjectType, v =>
+                /*resultChanged =*/ EditorGuiFieldsResolver.DrawEObjectSlot(eObject, eObjectType, v =>
                 {
                     setMemberValueCallBack(target, v, prop, index);
-                    return true;
-                });
 
-                resultChanged = true;
+                    resultChanged = eObject != v; // TODO: Remove once the refactor if DrawEObjectSlot is done.
+                    return eObject != v;
+                });
             }
             else if (type == typeof(bool))
             {

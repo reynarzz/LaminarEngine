@@ -19,11 +19,11 @@ namespace Engine
 
         private readonly List<Actor> _rootActors = new();
         internal IReadOnlyList<Actor> RootActors => _rootActors;
-        public Scene()
+        private Scene()
         {
             Name = "Scene";
         }
-        public Scene(string name)
+        public Scene(string name, Guid refId) : base(name, refId)
         {
             Name = name;
         }

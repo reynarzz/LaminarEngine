@@ -72,15 +72,16 @@ namespace Editor
             for (int i = 0; i < _editModeScenes.Count; i++)
             {
                 var editorScene = _editModeScenes[i];
-                if (SceneManager.Scenes.Count - 1 <= i) // -1 to remove the DontDestroyOnLoad Scene
+                if (SceneManager.Scenes.Count - 1 <= i) // the '-1' is to remove the 'DontDestroyOnLoad' Scene
                 {
-                    SceneManager.LoadSceneAdditive(editorScene.Name);
+                    SceneManager.LoadSceneAdditive(editorScene.Name, editorScene.RefId);
                 }
 
                 var scene = SceneManager.Scenes[i + 1];
                 scene.Name = editorScene.Name;
+                scene._SetID(editorScene.RefId);
 
-                SceneDeserializer.DeserializeScene(editorScene.ActorsData, SceneManager.Scenes[i + 1]);
+                SceneDeserializer.DeserializeScene(editorScene.ActorsData, scene);
             }
         }
     }

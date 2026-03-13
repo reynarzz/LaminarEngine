@@ -18,7 +18,7 @@ namespace Engine
 
         internal override void UpdateResource(object data, string path, Guid guid)
         {
-            Debug.Error($"Scene update resource is not implemented, triggered by: {path}.");
+            SceneIR = data as SceneIR;
         }
     }
 }
