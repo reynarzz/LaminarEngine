@@ -300,12 +300,12 @@ namespace Editor.Views
                 case AssetType.Invalid:
                     break;
                 case AssetType.Texture:
-                    break;
                 case AssetType.Audio:
-                    break;
                 case AssetType.Text:
-                    break;
+                case AssetType.ShaderV2:
                 case AssetType.Shader:
+                case AssetType.Script:
+                    EditorFileUtils.OpenFile(file.AbsolutePath);
                     break;
                 case AssetType.Font:
                     break;
@@ -314,8 +314,6 @@ namespace Editor.Views
                 case AssetType.AnimationController:
                     break;
                 case AssetType.Material:
-                    break;
-                case AssetType.ShaderV2:
                     break;
                 case AssetType.Scene:
                     SceneManager.LoadScene(file.RefId);

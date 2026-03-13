@@ -26,7 +26,10 @@ namespace Editor
                                                          null, [info.Path, meta.GUID], null);
             var ir = EditorJsonUtils.Deserialize<TTypeIR>(text);
 
-            Deserializer.Deserialize(assetInstance, ir.Properties);
+            if(ir != default)
+            {
+                Deserializer.Deserialize(assetInstance, ir.Properties);
+            }
 
             return assetInstance as TAsset;
         }

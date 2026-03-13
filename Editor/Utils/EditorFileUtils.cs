@@ -185,5 +185,38 @@ namespace Editor.Utils
                 }
             }
         }
+
+
+        public static void OpenFile(string path)
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(path) { UseShellExecute = true });
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                System.Diagnostics.Process.Start("xdg-open", path);
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                System.Diagnostics.Process.Start("open", path);
+            }
+        }
+
+        public static void ShowInFileExplorer(string path)
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                System.Diagnostics.Process.Start("explorer.exe", $"/select,\"{path}\"");
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                System.Diagnostics.Process.Start("open", $"-R \"{path}\"");
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                System.Diagnostics.Process.Start("xdg-open", Path.GetDirectoryName(path));
+            }
+        }
     }
 }
