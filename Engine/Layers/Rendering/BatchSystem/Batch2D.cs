@@ -232,7 +232,7 @@ namespace Engine.Rendering
 
             // If is not the same geometry it should be removed, so it can be added again at the end of the array so it doesn't
             // cause a buffer overrun.
-            if (!isSameGeometry)
+            if (isFound && !isSameGeometry)
             {
                 RemoveRenderer(renderer, true);
             }
