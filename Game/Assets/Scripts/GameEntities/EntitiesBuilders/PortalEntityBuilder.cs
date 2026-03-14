@@ -10,7 +10,7 @@ namespace Game
     {
         public override GameEntity Build(TilemapEntity entityData, TilemapData worldData)
         {
-            var portal = new Actor<SpriteRenderer>("Portal").AddComponent<Portal>();
+            var portal = Actor.Create<SpriteRenderer>("Portal").AddComponent<Portal>();
             var portalData = new PortalData();
             portal.Transform.WorldPosition = entityData.WorldPosition;
 

@@ -31,7 +31,7 @@ namespace Game
         private static int _matCount = 0;
         protected override void OnAwake()
         {
-            _canvas = new Actor<AudioSource>("Pause menu Canvas").AddComponent<UICanvas>();
+            _canvas = Actor.Create<AudioSource>("Pause menu Canvas").AddComponent<UICanvas>();
             _audioSource = _canvas.GetComponent<AudioSource>();
             _buttonAudioClip = Assets.GetAudioClip("Audio/HALFTONE/UI/1. Buttons/Button_20_adjust.wav");
             _pauseAudioClip = Assets.GetAudioClip("Audio/HALFTONE/UI/1. Buttons/Button_24.wav");

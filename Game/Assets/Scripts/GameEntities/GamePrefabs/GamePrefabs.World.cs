@@ -28,7 +28,7 @@ namespace Game
                     Debug.Error("No position set for platform");
                     return null;
                 }
-                var platform = new Actor<SpriteRenderer>("Platform").AddComponent<Platform>();
+                var platform = Actor.Create<SpriteRenderer>("Platform").AddComponent<Platform>();
                 platform.GetComponent<SpriteRenderer>().Material = GameMaterials.Instance.SpriteMaterial;
                 platform.Actor.Layer = LayerMask.NameToLayer(GameConsts.NO_WALKABLE);
                 platform.Init(position, positions);

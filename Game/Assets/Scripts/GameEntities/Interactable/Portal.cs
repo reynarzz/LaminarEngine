@@ -44,7 +44,7 @@ namespace Game
                 LockedByRenderer.SortOrder = 15;
             }
 
-            var portal = new Actor<Rotate>("PortalSprite").AddComponent<SpriteRenderer>();
+            var portal = Actor.Create<Rotate>("PortalSprite").AddComponent<SpriteRenderer>();
             _renderer = portal.GetComponent<SpriteRenderer>();
             _renderer.SortOrder = 14;
             _renderer.Material = GameMaterials.Instance.PortalMaterial;

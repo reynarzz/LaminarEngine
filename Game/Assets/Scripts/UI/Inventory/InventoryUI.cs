@@ -45,7 +45,7 @@ namespace Game
 
         private void BuildInventory()
         {
-            _inventory = new Actor<UIElement>("Inventory").GetComponent<UIElement>();
+            _inventory = Actor.Create<UIElement>("Inventory").GetComponent<UIElement>();
             _inventory.Transform.Parent = _canvas.Transform;
 
             var inventoryImage = UiUtils.NewImage("Inventory image", new vec2(0, 20), new vec2(320, 240), Color.White, _inventory.Transform);

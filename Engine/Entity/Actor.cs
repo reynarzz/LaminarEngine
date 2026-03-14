@@ -818,55 +818,49 @@ namespace Engine
                 AddToDestroyList(component);
             }
         }
-    }
+        public static Actor Create<T>(string name) where T : Component
+        {
+            var actor = new Actor(name);
+            actor.AddComponent<T>();
+            return actor;
+        }
 
-    public class Actor<
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T1> : Actor where T1 : Component
-    {
-        public Actor() : this(string.Empty, Guid.NewGuid()) { }
-        public Actor(string name) : this(name, Guid.NewGuid()) { }
-        public Actor(string name, Guid id) : base(name, id) => AddComponent<T1>();
-    }
+        public static Actor Create<T1, T2>(string name) where T1: Component 
+                                                        where T2: Component
+        {
+            var actor = Create<T1>(name);
+            actor.AddComponent<T2>();
+            return actor;
+        }
 
-    public class Actor<
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T1,
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T2> : Actor where T1 : Component where T2 : Component
-    {
-        public Actor() : this(string.Empty, Guid.NewGuid()) { }
-        public Actor(string name) : this(name, Guid.NewGuid()) { }
-        public Actor(string name, Guid id) : base(name, id) => AddComponent<T1, T2>();
-    }
+        public static Actor Create<T1, T2, T3>(string name) where T1 : Component
+                                                            where T2 : Component
+                                                            where T3 : Component
+        {
+            var actor = Create<T1, T2>(name);
+            actor.AddComponent<T3>();
+            return actor;
+        }
 
-    public class Actor<
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T1,
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T2,
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T3> : Actor where T1 : Component where T2 : Component where T3 : Component
-    {
-        public Actor() : this(string.Empty, Guid.NewGuid()) { }
-        public Actor(string name) : this(name, Guid.NewGuid()) { }
-        public Actor(string name, Guid id) : base(name, id) => AddComponent<T1, T2, T3>();
-    }
+        public static Actor Create<T1, T2, T3, T4>(string name) where T1 : Component
+                                                                where T2 : Component
+                                                                where T3 : Component
+                                                                where T4 : Component
+        {
+            var actor = Create<T1, T2, T3>(name);
+            actor.AddComponent<T4>();
+            return actor;
+        }
 
-    public class Actor<
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T1,
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T2,
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T3,
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T4> : Actor where T1 : Component where T2 : Component where T3 : Component where T4 : Component
-    {
-        public Actor() : this(string.Empty, Guid.NewGuid()) { }
-        public Actor(string name) : this(name, Guid.NewGuid()) { }
-        public Actor(string name, Guid id) : base(name, id) => AddComponent<T1, T2, T3, T4>();
-    }
-
-    public class Actor<
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T1,
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T2,
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T3,
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T4,
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T5> : Actor where T1 : Component where T2 : Component where T3 : Component where T4 : Component where T5 : Component
-    {
-        public Actor() : this(string.Empty, Guid.NewGuid()) { }
-        public Actor(string name) : this(name, Guid.NewGuid()) { }
-        public Actor(string name, Guid id) : base(name, id) => AddComponent<T1, T2, T3, T4, T5>();
+        public static Actor Create<T1, T2, T3, T4, T5>(string name) where T1 : Component
+                                                                    where T2 : Component
+                                                                    where T3 : Component
+                                                                    where T4 : Component
+                                                                    where T5 : Component
+        {
+            var actor = Create<T1, T2, T3, T4>(name);
+            actor.AddComponent<T5>();
+            return actor;
+        }
     }
 }

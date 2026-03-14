@@ -114,7 +114,7 @@ namespace Game
             {
                 //  yield return null;
                 // yield return null;
-                var music = new Actor<AudioSource>("Music Manager");
+                var music = Actor.Create<AudioSource>("Music Manager");
                 var musicAudio = music.GetComponent<AudioSource>();
                 musicAudio.Loop = true;
                 musicAudio.Transform.Parent = Transform;
@@ -137,7 +137,7 @@ namespace Game
         {
             SceneManager.LoadEmptyScene("Level: " + levelIndex);
             // WaterTest();
-            new Actor<TestScript>("Test Editor script");
+            Actor.Create<TestScript>("Test Editor script");
             CreateCamera();
 
             var result = _tilemapManager.BuildLevel(new LevelInstantiateInfo()
@@ -229,7 +229,7 @@ namespace Game
         {
             if (!Camera)
             {
-                Camera = new Actor<CameraFollow, CameraShake, CameraViewportAdjust>("MainCamera").AddComponent<Camera>();
+                Camera = Actor.Create<CameraFollow, CameraShake, CameraViewportAdjust>("MainCamera").AddComponent<Camera>();
                 Camera.BackgroundColor = new Color(0.2f, 0.2f, 0.2f, 1);
                 Camera.OrthographicSize = GameResolution.y / 2.0f / 16.0f;
                 Camera.ProjectionMode = CameraProjectionMode.Orthographic;
@@ -284,7 +284,7 @@ namespace Game
 
         private void WaterTest()
         {
-            var waterActor = new Actor<SpriteRenderer>();
+            var waterActor = Actor.Create<SpriteRenderer>("Water");
             var renderer = waterActor.GetComponent<SpriteRenderer>();
             renderer.SortOrder = 4;
 
