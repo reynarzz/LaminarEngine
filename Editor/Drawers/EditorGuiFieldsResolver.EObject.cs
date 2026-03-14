@@ -124,7 +124,7 @@ namespace Editor.Utils
 			}
 			ImGui.PopStyleColor();
 			ImGui.SameLine();
-			ImGui.SetCursorPos(preRectCursor.X + width-26, preRectCursor.Y + 3);
+			ImGui.SetCursorPos(preRectCursor.X + width-24, preRectCursor.Y + 3);
 
 			ImGui.PushStyleColor(ImGuiCol.Button, new Vector4(0f, 0f, 0f, 0f));
 			ImGui.PushStyleColor(ImGuiCol.ButtonHovered, new Vector4(0f, 0f, 0f, 0f));
