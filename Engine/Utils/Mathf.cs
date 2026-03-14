@@ -449,9 +449,17 @@ namespace Engine
         {
             return MathF.Max(a, b);
         }
+        public static int Max(int a, int b)
+        {
+            return Math.Max(a, b);
+        }
         public static float Min(float a, float b)
         {
             return MathF.Min(a, b);
+        }
+        public static int Min(int a, int b)
+        {
+            return Math.Min(a, b);
         }
         public static float SmoothNoise1D(float x)
         {

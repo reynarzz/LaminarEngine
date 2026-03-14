@@ -16,7 +16,7 @@ namespace Editor.Views
 {
     internal class AssetsViewWindow : EditorWindow
     {
-        private float _leftPaneWidth = 150f;
+        private float _leftPaneWidth = 200f;
         private const float SplitterWidth = 6f;
         private float _splitterStartWidth;
         private float _splitterAccumulatedDelta;

@@ -136,6 +136,8 @@ namespace Engine.Rendering
 
                     if (renderer.Mesh.Indices == null)
                     {
+                        // TODO: before creating an index array, first check if the renderer is already in a batch and if the indices count fit.
+                        //       if they fit, reuse the same index buffer, and if they do not fit, then create a new index array and delete the prev one.
                         if (vertexCount > MaxBatchVertexSize)
                         {
                             indices = GraphicsHelper.GetQuadIndices(vertexCount / VerticesPerQuad);

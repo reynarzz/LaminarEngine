@@ -29,6 +29,7 @@ namespace Engine.Rendering
         public int RenderersCount => _renderers.Count;
         private GeometryDescriptor _geoDescriptor;
         private VertexCollection _vertexCollection;
+        private int _vertexUpdateOffset = int.MaxValue;
         internal abstract class VertexCollection
         {
             internal abstract int Count { get; }
@@ -37,7 +38,7 @@ namespace Engine.Rendering
             internal abstract void SetVertexTextureIndex(int index, int textureIndex);
             internal abstract void PackVertices(int startIndex, int destinationIndex, int length);
 
-            internal abstract void UpdateDrawableVertices(VertexDataDescriptor desc, int vertexCount);
+            internal abstract void UpdateDrawableVertices(VertexDataDescriptor desc, int updatedVertexCount, int offset);
         }
 
         private class VertexCollection<T> : VertexCollection where T : unmanaged, IVertex2D<T>
@@ -84,9 +85,14 @@ namespace Engine.Rendering
                 }
             }
 
-            internal override void UpdateDrawableVertices(VertexDataDescriptor desc,  int vertexCount)
+            internal override void UpdateDrawableVertices(VertexDataDescriptor desc, int updatedVertexCount, int offset)
             {
-                desc.BufferDesc.Count = vertexCount * Unsafe.SizeOf<T>();
+                unsafe
+                {
+                    //var totalCount = _vertices.Length;
+                    //desc.BufferDesc.Offset = offset * sizeof(T);
+                    desc.BufferDesc.Count = updatedVertexCount * sizeof(T);
+                }
             }
         }
 
@@ -169,42 +175,22 @@ namespace Engine.Rendering
             return true;
         }
 
-        internal void Clear()
+        internal void PushGeometry(RendererData2D renderer, Material material, Texture texture, int indicesCount, Mesh mesh)
         {
-            SortOrder = int.MinValue;
-            Material = null;
-            _isDirty = false;
-            IsActive = false;
-            VertexCount = 0;
-            IndexCount = 0;
-            _isPrivateBatch = false;
-            _renderers.Clear();
+            int textureIndex = 0;
+            int startIndex = 0;
+            ReserveGeometry(renderer, material, texture, indicesCount, mesh.VertexCount, ref textureIndex, ref startIndex);
 
-            for (int i = 0; i < Textures.Length; i++)
-            {
-                Textures[i] = null;
-            }
+            _vertexCollection.SetMeshVertices(startIndex, textureIndex, mesh, renderer.PrivateBatch);
         }
 
-        private bool SetTextureToEmptySlot(Texture texture, out int textureIndex)
+        internal void PushGeometry<T>(RendererData2D renderer, Material material, Texture texture, int indicesCount, int verticesCount,
+                                      ref int textureIndex, ref int startIndex, ref T[] vertices) where T : unmanaged, IVertex2D<T>
         {
-            textureIndex = -1;
-            for (int i = 0; i < Textures.Length; i++)
-            {
-                if (Textures[i] == null)
-                {
-                    Textures[i] = texture;
-                    textureIndex = i;
-                    break;
-                }
-                else if (Textures[i].NativeResource == texture.NativeResource)
-                {
-                    textureIndex = i;
-                    break;
-                }
-            }
-            return textureIndex >= 0;
+            vertices = (_vertexCollection as VertexCollection<T>).Vertices;
+            ReserveGeometry(renderer, material, texture, indicesCount, verticesCount, ref textureIndex, ref startIndex);
         }
+
         private void ReserveGeometry(RendererData2D renderer, Material material, Texture texture, int indicesCount, int verticesCount,
                                     ref int textureIndex, ref int startIndex)
         {
@@ -215,38 +201,40 @@ namespace Engine.Rendering
                 Material = material;
             }
 
-            bool textureFound = SetTextureToEmptySlot(texture, out textureIndex);
-            if (!textureFound)
-            {
-                Debug.EngineError("Tried to add texture to a full batch");
-            }
-
-            renderer.OnDestroyRenderer -= RemoveRenderer;
-            renderer.OnDestroyRenderer += RemoveRenderer;
-
             var id = renderer.GetID();
-            startIndex = 0;
 
             var isFound = _renderers.TryGetValue(id, out var rendererIds);
             var isSameGeometry = rendererIds.VertexCount == verticesCount && rendererIds.IndexCount == indicesCount;
+            var needTextureChange = !isFound || (isFound && Textures[rendererIds.TextureId] != texture);
 
-            // If is not the same geometry it should be removed, so it can be added again at the end of the array so it doesn't
+            textureIndex = rendererIds.TextureId;
+            startIndex = rendererIds.RendererId;
+
+            if (!isFound)
+            {
+                renderer.OnDestroyRenderer += RemoveRenderer;
+            }
+
+            // If is not the same geometry then it should be removed, so it can be added again at the end of the array so it doesn't
             // cause a buffer overrun.
             if (isFound && !isSameGeometry)
             {
                 RemoveRenderer(renderer, true);
             }
+
+            if (needTextureChange)
+            {
+                bool textureFound = SetTextureToEmptySlot(texture, out textureIndex);
+                if (!textureFound)
+                {
+                    Debug.EngineError("Tried to add texture to a full batch");
+                }
+            }
+
             if (isFound && isSameGeometry)
             {
-                VertexCount -= rendererIds.VertexCount;
-                IndexCount -= rendererIds.IndexCount;
-
-                rendererIds.VertexCount = verticesCount;
-                rendererIds.IndexCount = indicesCount;
                 rendererIds.TextureId = textureIndex;
                 _renderers[id] = rendererIds;
-
-                startIndex = rendererIds.RendererId;
             }
             else
             {
@@ -259,56 +247,14 @@ namespace Engine.Rendering
                     VertexCount = verticesCount,
                     IndexCount = indicesCount
                 });
+
+                VertexCount += verticesCount;
+                IndexCount += indicesCount;
             }
 
-            VertexCount += verticesCount;
-            IndexCount += indicesCount;
+            _vertexUpdateOffset = Mathf.Min(startIndex, _vertexUpdateOffset);
         }
 
-        internal void PushGeometry(RendererData2D renderer, Material material, Texture texture, int indicesCount, Mesh mesh)
-        {
-            int textureIndex = 0;
-            int startIndex = 0;
-            ReserveGeometry(renderer, material, texture, indicesCount, mesh.VertexCount, ref textureIndex, ref startIndex);
-
-            _vertexCollection.SetMeshVertices(startIndex, textureIndex, mesh, renderer.PrivateBatch);
-        }
-
-        internal void PushGeometry<T>(RendererData2D renderer, Material material, Texture texture, int indicesCount, int verticesCount,
-                                   ref int textureIndex, ref int startIndex, ref T[] vertices)
-            where T : unmanaged, IVertex2D<T>
-        {
-            vertices = (_vertexCollection as VertexCollection<T>).Vertices;
-            ReserveGeometry(renderer, material, texture, indicesCount, verticesCount, ref textureIndex, ref startIndex);
-        }
-
-        internal bool ReplaceTexture(RendererData2D renderer, Texture texture)
-        {
-            if (_renderers.TryGetValue(renderer.GetID(), out var currentRendererId))
-            {
-                bool anotherUsesTexture = false;
-                foreach (var rendererId in _renderers.Values)
-                {
-                    if (rendererId.Renderer == renderer)
-                        continue;
-
-                    if (rendererId.TextureId == currentRendererId.TextureId)
-                    {
-                        anotherUsesTexture = true;
-                        break;
-                    }
-                }
-
-                if (anotherUsesTexture)
-                {
-                    return SetTextureToEmptySlot(texture, out _);
-                }
-
-                Textures[currentRendererId.TextureId] = texture;
-                return true;
-            }
-            return false;
-        }
         public void RemoveRenderer(RendererData renderer)
         {
             RemoveRenderer(renderer, false);
@@ -330,17 +276,20 @@ namespace Engine.Rendering
 
             _renderers.Remove(renderer.GetID());
 
-            if (_renderers.Count == 0 && !temp)
+            if (_renderers.Count == 0)
             {
-                if (removedTextureId >= 0 && removedTextureId < Textures.Length)
-                    Textures[removedTextureId] = null;
+                if (!temp)
+                {
+                    if (removedTextureId >= 0 && removedTextureId < Textures.Length)
+                        Textures[removedTextureId] = null;
 
-                IsActive = false;
-                OnBatchEmpty?.Invoke(this);
-                return;
+                    IsActive = false;
+                    OnBatchEmpty?.Invoke(this);
+                    return;
+                }
             }
 
-            bool textureUnused = true;
+            bool textureUnused = !temp;
             foreach (var r in _renderers.Values)
             {
                 if (r.TextureId == removedTextureId)
@@ -375,6 +324,7 @@ namespace Engine.Rendering
                 }
             }
 
+
             int trailingVertexCount = VertexCount - (removedVertexStart + removedVertexCount);
             if (trailingVertexCount > 0)
             {
@@ -384,7 +334,7 @@ namespace Engine.Rendering
             foreach (var key in _renderers.Keys)
             {
                 var info = _renderers[key];
-                if (info.RendererId > removedVertexStart)
+                if (info.RendererId >= removedVertexStart + removedVertexCount)
                 {
                     info.RendererId -= removedVertexCount;
                     if (info.RendererId < 0)
@@ -396,22 +346,58 @@ namespace Engine.Rendering
                 }
             }
 
+            _vertexUpdateOffset = Mathf.Min(removedVertexStart, _vertexUpdateOffset);
 
             VertexCount -= removedVertexCount;
             IndexCount -= removedInfo.IndexCount;
         }
 
-        internal void Flush()
+        private bool SetTextureToEmptySlot(Texture texture, out int textureIndex)
         {
-            if (_isDirty)
+            textureIndex = -1;
+            for (int i = 0; i < Textures.Length; i++)
             {
-                _vertexCollection.UpdateDrawableVertices(_geoDescriptor.VertexDesc, VertexCount);
-                GfxDeviceManager.Current.UpdateResource(Geometry, _geoDescriptor);
-
-                _isDirty = false;
+                if (Textures[i] == null)
+                {
+                    Textures[i] = texture;
+                    textureIndex = i;
+                    break;
+                }
+                else if (Textures[i].NativeResource == texture.NativeResource)
+                {
+                    textureIndex = i;
+                    break;
+                }
             }
+            return textureIndex >= 0;
         }
+        internal bool ReplaceTexture(RendererData2D renderer, Texture texture)
+        {
+            if (_renderers.TryGetValue(renderer.GetID(), out var currentRendererId))
+            {
+                bool anotherUsesTexture = false;
+                foreach (var rendererId in _renderers.Values)
+                {
+                    if (rendererId.Renderer == renderer)
+                        continue;
 
+                    if (rendererId.TextureId == currentRendererId.TextureId)
+                    {
+                        anotherUsesTexture = true;
+                        break;
+                    }
+                }
+
+                if (anotherUsesTexture)
+                {
+                    return SetTextureToEmptySlot(texture, out _);
+                }
+
+                Textures[currentRendererId.TextureId] = texture;
+                return true;
+            }
+            return false;
+        }
         internal bool CanPushGeometry(RendererData2D renderer, int vertexCount, int neededBatchVertexSize, Texture texture, Material mat)
         {
             var isMaxSizeEnough = MaxVertexSize >= neededBatchVertexSize;
@@ -439,6 +425,22 @@ namespace Engine.Rendering
             return true;
         }
 
+        internal bool Contains(RendererData2D renderer)
+        {
+            return _renderers.ContainsKey(renderer.GetID());
+        }
+        internal void Flush()
+        {
+            if (_isDirty)
+            {
+                _vertexCollection.UpdateDrawableVertices(_geoDescriptor.VertexDesc, VertexCount, _vertexUpdateOffset);
+                GfxDeviceManager.Current.UpdateResource(Geometry, _geoDescriptor);
+
+                _vertexUpdateOffset = int.MaxValue;
+                _isDirty = false;
+            }
+        }
+
         public void Dispose()
         {
             GfxDeviceManager.Current.DestroyResource(Geometry);
@@ -454,9 +456,25 @@ namespace Engine.Rendering
             _geoDescriptor = null;
         }
 
-        internal bool Contains(RendererData2D renderer)
+        internal void Clear()
         {
-            return _renderers.ContainsKey(renderer.GetID());
+            SortOrder = int.MinValue;
+            Material = null;
+            _isDirty = false;
+            IsActive = false;
+            VertexCount = 0;
+            IndexCount = 0;
+            _isPrivateBatch = false;
+            _renderers.Clear();
+            _vertexUpdateOffset = int.MaxValue;
+
+            if (Textures != null)
+            {
+                for (int i = 0; i < Textures.Length; i++)
+                {
+                    Textures[i] = null;
+                }
+            }
         }
     }
 }

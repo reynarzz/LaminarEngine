@@ -172,11 +172,10 @@ namespace Engine
             var worldZ = Transform.WorldPosition.z; 
 
             int needed = _particles.Count * 4;
-            while (_vertices.Count < needed)
+            if(_vertices.Count < needed)
             {
-                _vertices.Add(default);
+                CollectionsMarshal.SetCount(_vertices, needed);
             }
-
             for (int i = 0; i < _particles.Count; i++)
             {
                 var particle = _particles[i];

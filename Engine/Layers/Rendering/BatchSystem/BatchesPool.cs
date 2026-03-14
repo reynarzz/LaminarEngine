@@ -218,6 +218,10 @@ namespace Engine.Rendering
             _rendererToBatch.Clear();
         }
 
+        internal bool IsRendererBatched(RendererData renderer)
+        {
+            return _rendererToBatch.ContainsKey(renderer.GetID());
+        }
         private void RemoveExtraBatches()
         {
             var index = _batches.FindIndex(x => !x.IsActive);
