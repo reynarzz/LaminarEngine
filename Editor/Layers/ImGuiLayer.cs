@@ -94,11 +94,11 @@ namespace Editor.Layers
 
                 _windows = new List<EditorWindow>()
                 {
-                    _gameWindow,
+                    new AssetsViewWindow(),
+
                     new ActionBarView(),
                     new FooterBarView(),
 
-                    new SceneEditorView("Scene", _editorSurface, _editorCamera),
                     new SceneGraphWindow(),
                     new ObjectEditorView(),
                     new AnimatorEditorView(),
@@ -107,7 +107,11 @@ namespace Editor.Layers
                     new TaskWindow(),
                     new ProjectSettingsWindow(),
                     // new ConsoleEditorView(),
-                    new AssetsViewWindow(),
+
+
+                    _gameWindow,
+                    new SceneEditorView("Scene", _editorSurface, _editorCamera),
+
                 };
 
                 IsInitialized = true;

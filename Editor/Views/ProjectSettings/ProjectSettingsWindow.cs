@@ -24,7 +24,7 @@ namespace Editor.Views
     internal class ProjectSettingsWindow : EditorWindow
     {
 
-        private int _selectedSettings = 2;
+        private int _selectedSettings = 0;
 
         private float _leftPaneWidth = 150f;
         private const float SplitterWidth = 6f;
@@ -156,23 +156,16 @@ namespace Editor.Views
 
             ImGui.SetCursorPosY(cursorY + size.Y * 0.5f);
             ImGui.Text(title);
-            if (isValidSettings)
-            {
-                ImGui.SameLine();
-                var cursorPos = ImGui.GetCursorPos();
+            //if (isValidSettings)
+            //{
+            //    ImGui.SameLine();
+            //    var cursorPos = ImGui.GetCursorPos();
 
-                ImGui.SetCursorPos(cursorPos.X + ImGui.GetContentRegionAvail().X - 146, cursorPos.Y + 4);
-                if (ImGui.Button($"Save {title}"))
-                {
-                }
-                //ImGui.SameLine();
-                //cursorPos = ImGui.GetCursorPos();
-                //ImGui.SetCursorPos(cursorPos.X, cursorPos.Y + 4);
-
-                //if (ImGui.Button("Another"))
-                //{
-                //}
-            }
+            //    ImGui.SetCursorPos(cursorPos.X + ImGui.GetContentRegionAvail().X - 100, cursorPos.Y + 4);
+            //    if (ImGui.Button($"Save {title}"))
+            //    {
+            //    }
+            //}
             ImGui.Separator();
 
             ImGui.BeginChild("ProjectSettingsContent");

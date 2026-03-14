@@ -89,17 +89,16 @@ namespace Editor
 
         protected override vec2 GetViewPosition()
         {
-            var avail = ImGui.GetContentRegionAvail().ToVec2();
             var cursor = ImGui.GetCursorPos().ToVec2();
-
-            var size = new vec2(_width, _height) * _targetResScale;
-            var pos = cursor + (avail - size) * 0.5f;
 
             if (_resolutionType == GameViewResolution.FreeAspect)
             {
-                pos.y += (int)ImGui.GetFrameHeight();
+                return cursor;
             }
-            return pos;
+
+            var avail = ImGui.GetContentRegionAvail().ToVec2();
+            var size = _targetResolution * _targetResScale;
+            return cursor + (avail - size) * 0.5f;
         }
 
         protected override void OnWindowRender()
@@ -189,15 +188,14 @@ namespace Editor
         }
         public override void OnDraw()
         {
-            // Draw the window
             base.OnDraw();
 
             _offsetX = Mathf.RoundToInt(WindowPositionRender.X);
-            var frameOffset = 0;
 
+            var frameOffset = 0f;
             if (_resolutionType == GameViewResolution.FreeAspect)
             {
-                frameOffset = (int)ImGui.GetFrameHeight() / 2;
+                frameOffset = ImGui.GetFrameHeight() / 2f; 
             }
             _offsetY = Mathf.RoundToInt(WindowPositionRender.Y - frameOffset);
 
@@ -207,16 +205,14 @@ namespace Editor
         {
             if (_resolutionType == GameViewResolution.FreeAspect)
             {
-                TryNotifyUpdateResolution(WindowSize.ToVec2());
+                TryNotifyUpdateResolution(WindowSize.ToVec2()); // no subtraction needed
             }
             else
             {
                 if (_autoFit)
                 {
-                    // TODO: only call this when window size changes.
                     _targetResScale = CalculateAutoFitScale(_targetResolution);
                 }
-
                 TryNotifyUpdateResolution(_targetResolution);
             }
         }
