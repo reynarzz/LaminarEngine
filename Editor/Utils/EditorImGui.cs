@@ -1,4 +1,5 @@
-﻿using GlmNet;
+﻿using Engine.Utils;
+using GlmNet;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,22 @@ namespace Editor.Utils
         {
             Image(EditorTextureDatabase.GetIconImGui(icon), imageSize, new vec4(1, 1, 1, 1));
         }
+        public static void ImageQuad(nint texture, vec2 size, vec2 uvBottomLeft, vec2 uvTopLeft, vec2 uvTopRight, vec2 uvBottomRight)
+        {
+            var cursor = ImGui.GetCursorScreenPos();
 
+            var p1 = cursor;
+            var p2 = new Vector2(cursor.X + size.x, cursor.Y);
+            var p3 = new Vector2(cursor.X + size.x, cursor.Y + size.y);
+            var p4 = new Vector2(cursor.X, cursor.Y + size.y);
+
+            var draw = ImGui.GetWindowDrawList();
+
+            draw.AddImageQuad(texture, p1, p2, p3, p4, uvTopLeft.ToVector2(), uvTopRight.ToVector2(), 
+                              uvBottomRight.ToVector2(), uvBottomLeft.ToVector2());
+
+            ImGui.Dummy(size.x, size.y);
+        }
         public static void ImageFromIcon(EditorIcon icon, vec2 imageSize, vec4 tint)
         {
             Image(EditorTextureDatabase.GetIconImGui(icon), imageSize, tint);

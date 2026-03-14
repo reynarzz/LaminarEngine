@@ -55,21 +55,34 @@ namespace Editor.Utils
 			{
 				nint imagePtr = 0;
 				ImGui.SetCursorPos(preRectCursor + new Vector2(-2, 5));
+
 				if (eObject is RenderTexture rendTex)
 				{
 					imagePtr = EditorTextureDatabase.GetIconImGui(rendTex);
-				}
-				else if (eObject is Texture tex)
+                    ImGui.Image(imagePtr, new Vector2(16, 16), new Vector2(0, 1), new Vector2(1, 0));
+
+                }
+                else if (eObject is Texture tex)
 				{
 					imagePtr = EditorTextureDatabase.GetIconImGui(tex);
-				}
-				else
+                    ImGui.Image(imagePtr, new Vector2(16, 16), new Vector2(0, 1), new Vector2(1, 0));
+
+                }
+                else if (eObject is Sprite sprite)
+                {
+                    imagePtr = EditorTextureDatabase.GetIconImGui(sprite.Texture);
+					var cell = sprite.GetAtlasCell();
+                    
+                    EditorImGui.ImageQuad(imagePtr, new vec2(16,16), cell.Uvs.BottomLeftUV, cell.Uvs.TopLeftUV, cell.Uvs.TopRightUV, cell.Uvs.BottomRightUV);
+                }
+                else
 				{
 					imagePtr = EditorTextureDatabase.GetIconImGui(eObject.GetType());
-				}
+                    ImGui.Image(imagePtr, new Vector2(16, 16), new Vector2(0, 1), new Vector2(1, 0));
 
-				ImGui.Image(imagePtr, new Vector2(16, 16), new Vector2(0, 1), new Vector2(1, 0));
-				ImGui.SetCursorPos(preRectCursor + new Vector2(16, 0));
+                }
+
+                ImGui.SetCursorPos(preRectCursor + new Vector2(16, 0));
 			}
 
 
