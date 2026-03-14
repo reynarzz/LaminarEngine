@@ -256,7 +256,7 @@ namespace Editor
                 {
                     setMemberValueCallBack(target, v, prop, index);
 
-                    resultChanged = eObject != v; // TODO: Remove once the refactor if DrawEObjectSlot is done.
+                    resultChanged = eObject != v; // TODO: Remove once the refactor is DrawEObjectSlot is done.
                     return eObject != v;
                 });
             }

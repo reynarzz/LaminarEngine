@@ -72,13 +72,14 @@ namespace Editor
             for (int i = 0; i < _editModeScenes.Count; i++)
             {
                 var editorScene = _editModeScenes[i];
+                var sceneName = Path.GetFileNameWithoutExtension(EditorIOLayer.Database.GetAssetInfo(editorScene.RefId).Path);
                 if (SceneManager.Scenes.Count - 1 <= i) // the '-1' is to remove the 'DontDestroyOnLoad' Scene
                 {
-                    SceneManager.LoadSceneAdditive(editorScene.Name, editorScene.RefId);
+                    SceneManager.LoadSceneAdditive(sceneName, editorScene.RefId);
                 }
 
                 var scene = SceneManager.Scenes[i + 1];
-                scene.Name = editorScene.Name;
+                scene.Name = sceneName;
                 scene._SetID(editorScene.RefId);
 
                 SceneDeserializer.DeserializeScene(editorScene.ActorsData, scene);

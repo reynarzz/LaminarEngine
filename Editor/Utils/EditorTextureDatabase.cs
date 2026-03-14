@@ -119,7 +119,7 @@ namespace Editor.Utils
                 { typeof(CapsuleCollider2D), EditorIcon.CapsuleCollider },
                 { typeof(RigidBody2D), EditorIcon.Physics },
                 { typeof(TilemapAsset), EditorIcon.Tilemap },
-                { typeof(Actor), EditorIcon.Actor },
+                { typeof(Actor), EditorIcon.Actor2 },
                 { typeof(FontAsset), EditorIcon.Font },
                 { typeof(Shader), EditorIcon.Shader },
             };
