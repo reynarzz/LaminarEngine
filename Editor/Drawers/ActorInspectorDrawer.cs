@@ -82,7 +82,8 @@ namespace Editor.Drawers
                 actor.Name = actorName;
                 Debug.Log("Changed name: " + actor.Name);
             }
-
+            EditorImGui.ImageFromIcon(EditorIcon.Layer, new vec2(16, 16));
+            ImGui.SameLine();
             ImGui.Text("Layer");
             ImGui.SameLine();
             var layerNames = LayerMask.GetAllLayerNames();

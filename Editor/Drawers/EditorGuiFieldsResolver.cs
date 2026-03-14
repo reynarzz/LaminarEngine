@@ -1411,7 +1411,6 @@ namespace Editor.Utils
 
                 }
             }
-
             else if (valueType == typeof(Sprite))
             {
                 //var assets = IOLayer.Database.Disk.GetAssetsInfo(SharedTypes.AssetType.Texture);

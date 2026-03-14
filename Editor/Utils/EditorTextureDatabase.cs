@@ -47,7 +47,9 @@ namespace Editor.Utils
         FolderOpenEmpty,
         FolderClosedFilled,
         Font,
-        Shader
+        Shader,
+        Layer,
+        Layer2
     }
 
     internal sealed class EditorTextureDatabase
@@ -98,6 +100,8 @@ namespace Editor.Utils
                 { EditorIcon.FolderOpenEmpty, LoadIconFromDisk("folder_filled.png") },
                 { EditorIcon.Font, LoadIconFromDisk("font30x30.png") },
                 { EditorIcon.Shader, LoadIconFromDisk("shader50x50.png") },
+                { EditorIcon.Layer, LoadIconFromDisk("layer24x24.png") },
+                { EditorIcon.Layer2, LoadIconFromDisk("layer2_64x64.png") },
             };
 
             _typesToIconTypeMapper = new Dictionary<Type, EditorIcon>()

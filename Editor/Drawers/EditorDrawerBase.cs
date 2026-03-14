@@ -17,7 +17,6 @@ namespace Editor
         private readonly vec2 _imageIconSize = new vec2(40, 40);
 
         internal virtual vec2? WindowsPadding { get; } = default;
-        protected abstract bool AutoDrawTitle { get; }
         internal virtual void OnOpen(IObject target) { }
         internal virtual void OnClose() { }
         internal abstract void OnDraw(IObject target);
@@ -63,6 +62,8 @@ namespace Editor
 
     internal abstract class EditorDrawerBase<T> : EditorDrawerBase where T : class, IObject
     {
+        protected abstract bool AutoDrawTitle { get; }
+
         internal override sealed void OnOpen(IObject target)
         {
             OnOpen(target as T);

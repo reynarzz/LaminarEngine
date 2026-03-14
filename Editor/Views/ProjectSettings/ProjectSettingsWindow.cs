@@ -199,7 +199,7 @@ namespace Editor.Views
                 case ProjectSettingsMenuType.Physics:
                     return EditorTextureDatabase.GetIconImGui(EditorIcon.Physics);
                 case ProjectSettingsMenuType.Layers:
-                    return EditorTextureDatabase.GetIconImGui(EditorIcon.Actor);
+                    return EditorTextureDatabase.GetIconImGui(EditorIcon.Layer);
                 case ProjectSettingsMenuType.Scenes:
                     return EditorTextureDatabase.GetIconImGui(EditorIcon.Scene);
                 default:

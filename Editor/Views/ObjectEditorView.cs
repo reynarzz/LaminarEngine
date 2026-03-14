@@ -22,6 +22,7 @@ namespace Editor
         private const string NothingSelectedLabel = "Nothing is selected.";
         private bool _isTextSizeCalculated;
         private Vector2 _textSize;
+        private readonly DefaultInspectorDrawer _defaultDrawer;
 
         public ObjectEditorView() : base("Window/Object Editor")
         {
@@ -34,6 +35,8 @@ namespace Editor
                 { typeof(TextAsset), new TextInspectorDrawer() },
                 
             };
+
+            _defaultDrawer = new();
         }
 
         public override void OnDraw()
@@ -65,7 +68,7 @@ namespace Editor
                     }
                     else
                     {
-                        Clear();
+                        _defaultDrawer.OnDraw(Selector.Selected);
                     }
                 }
                 else
