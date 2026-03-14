@@ -1,6 +1,7 @@
 ﻿using Engine;
 using Engine.Layers;
 using Engine.Utils;
+using GlmNet;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -41,8 +42,9 @@ namespace Editor.Utils
 			var pos = ImGui.GetCursorScreenPos();
 			var size = ImGui.CalcTextSize(label);
 
+			var width = ImGui.GetContentRegionAvail().X - 5;
 			var min = new Vector2(pos.X - 5, pos.Y);
-			var max = new Vector2(pos.X + ImGui.GetContentRegionAvail().X - 5, pos.Y + size.Y + 7);
+			var max = new Vector2(pos.X + width, pos.Y + size.Y + 7);
 
 			var preRectCursor = ImGui.GetCursorPos();
 
@@ -74,7 +76,7 @@ namespace Editor.Utils
 			string suffix = $"({ReflectionUtils.GetFriendlyTypeName(valueType)})";
 			float suffixWidth = ImGui.CalcTextSize(suffix).X;
 
-			const float offset = 6;
+			const float offset = 10;
 			var length = (max.X - min.X) - offset;
 			float availableLabelWidth = length - suffixWidth;
 			if (availableLabelWidth < 0)
@@ -120,14 +122,21 @@ namespace Editor.Utils
 			{
 				ImGui.Text($"{displayLabel} {suffix}");
 			}
-
 			ImGui.PopStyleColor();
-			if (ImGui.IsItemClicked())
+			ImGui.SameLine();
+			ImGui.SetCursorPos(preRectCursor.X + width-26, preRectCursor.Y + 3);
+
+			ImGui.PushStyleColor(ImGuiCol.Button, new Vector4(0f, 0f, 0f, 0f));
+			ImGui.PushStyleColor(ImGuiCol.ButtonHovered, new Vector4(0f, 0f, 0f, 0f));
+			ImGui.PushStyleColor(ImGuiCol.ButtonActive, new Vector4(0f, 0f, 0f, 0f));
+
+			if(EditorImGui.ImageButtonFromIcon("_PICKER_BUTTON_", EditorIcon.CirclePicker, new vec2(13, 13)))
 			{
 				_openPopup = true;
 				_selectedValue = eObject;
 				_selectedSetter = setValue;
 			}
+			ImGui.PopStyleColor(3);
 
 			ImGui.Dummy(new Vector2(0, ImGui.GetStyle().ItemSpacing.Y - 2));
 			PickObjectPopup(valueType, setValue);
