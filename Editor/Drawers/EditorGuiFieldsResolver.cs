@@ -784,12 +784,17 @@ namespace Editor.Utils
             void OnAdd(IList list, int totalLength)
             {
                 var array = list as Array;
+
                 var copy = Array.CreateInstance(elementType, totalLength);
                 Array.Copy(array, copy, array.Length);
                 colNew = copy as T[];
-                var defaultValue = (T)ReflectionUtils.GetDefaultValueInstance(typeof(T));
-                colNew[^1] = defaultValue;
-                onAdded?.Invoke(defaultValue);
+
+                for (int i = array.Length; i < totalLength; i++)
+                {
+                    var defaultValue = (T)ReflectionUtils.GetDefaultValueInstance(typeof(T));
+                    colNew[i] = defaultValue;
+                    onAdded?.Invoke(defaultValue);
+                }
             }
 
             void OnRemove(IList list, int itemIndex)
@@ -841,7 +846,6 @@ namespace Editor.Utils
             var cursorPosY = ImGui.GetCursorPosY();
             if (canChangeSize)
             {
-                ImGui.SameLine();
                 ImGui.SetCursorPosX(ImGui.GetWindowWidth() - 120);
                 ImGui.SetCursorPosY(cursorPosY + 3);
 
@@ -886,16 +890,16 @@ namespace Editor.Utils
                         if (size < val)
                         {
                             onAddCallback(list, val);
+                            changed = true;
                         }
                         else if (size > val)
                         {
                             removeCount(list, val);
+                            changed = true;
                         }
 
                         size = val;
-                        changed = true;
                     }
-                    changed = false;
                 }
             }
 
@@ -906,7 +910,7 @@ namespace Editor.Utils
                 bool show;
                 skip = false;
                 var cursorPosX = ImGui.GetCursorPosX();
-                 
+
                 if (canChangeSize)
                 {
                     ImGui.SetCursorPosX(cursorPosX + 12);
@@ -941,10 +945,15 @@ namespace Editor.Utils
                     ImGui.SetCursorPosY(cursorPosY - 2);
                     // if (!skip)
                     {
-                        if (drawCallback(i, 0, list[i]))
-                            changed = true;
-
-                        // i++;
+                        try
+                        {
+                            if (drawCallback(i, 0, list[i]))
+                                changed = true;
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.Error(e);
+                        }
                     }
 
 

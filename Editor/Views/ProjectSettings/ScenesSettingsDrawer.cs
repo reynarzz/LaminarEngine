@@ -35,6 +35,8 @@ namespace Editor.Views
         private void DrawSceneList(string title, ref SceneSettings.SceneBuildInfo[] sceneList)
         {
             ImGui.Text(title);
+            ImGui.SameLine();
+            EditorGuiFieldsResolver.DrawArrayField(title, ref sceneList, false, ArrayDrawer, OnAdded);
 
             void OnAdded(SceneSettings.SceneBuildInfo sceneInfo)
             {
@@ -42,11 +44,11 @@ namespace Editor.Views
                 sceneInfo.RefId = Guid.Empty.ToString();
             }
 
-            EditorGuiFieldsResolver.DrawArrayField(title, ref sceneList, false, (index, width, item) =>
+            bool ArrayDrawer(int index, float width, object item)
             {
                 SceneAsset scene = null;
                 var sceneInfo = (SceneSettings.SceneBuildInfo)item;
-                if (Guid.TryParse(sceneInfo.RefId, out var guid))
+                if (Guid.TryParse(sceneInfo?.RefId, out var guid))
                 {
                     scene = Assets.GetAssetFromGuid(guid) as SceneAsset;
                 }
@@ -77,7 +79,7 @@ namespace Editor.Views
                 }
 
                 return false;
-            }, OnAdded);
+            }
         }
     }
 }
