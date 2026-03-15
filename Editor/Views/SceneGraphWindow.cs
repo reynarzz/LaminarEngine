@@ -67,13 +67,12 @@ namespace Editor.Views
 
                                 break;
                             }
-
+                            if (ImGui.MenuItem("Create Actor"))
+                            {
+                                new Actor("Actor");
+                            }
                         }
 
-                        else if (ImGui.MenuItem("Create Actor"))
-                        {
-                            new Actor("Actor");
-                        }
 
                         ImGui.EndPopup();
                     }
