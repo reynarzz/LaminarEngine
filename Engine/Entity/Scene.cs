@@ -116,7 +116,7 @@ namespace Engine
                 Actor.Destroy(actor);
             }
 
-            // NOTE: _rootActors are removed indirectly by Actor, so I should iterate backwards.
+            // NOTE: _rootActors are removed indirectly by the Actor, that's why we iterate backwards.
             for (int i = _rootActors.Count - 1; i >= 0; i--)
             {
                 var actor = _rootActors[i];

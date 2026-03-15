@@ -26,6 +26,7 @@ namespace Editor.Views
                 ImGui.Text($"{nameof(EngineInfo.Renderer.UIDrawCalls)}: {EngineInfo.Renderer.UIDrawCalls}");
                 ImGui.Text($"{nameof(EngineInfo.Renderer.TotalBatches)}: {EngineInfo.Renderer.TotalBatches}");
                 ImGui.Text($"{nameof(EngineInfo.Renderer.TotalDrawCalls)}: {EngineInfo.Renderer.TotalDrawCalls}");
+                ImGui.Text($"{nameof(EngineInfo.Renderer.PostProcessingPasses)}: {EngineInfo.Renderer.PostProcessingPasses}");
                 ImGui.Text($"{nameof(EngineInfo.Renderer.SavedByBatching)}: {EngineInfo.Renderer.SavedByBatching}");
             }
 

@@ -117,7 +117,7 @@ namespace Engine.Layers
         {
             if (camera != null && camera.TryGetTarget(out var target))
             {
-                return target != null && target.IsAlive;
+                return target != null && target.IsValid;
             }
 
             return false;
@@ -143,7 +143,7 @@ namespace Engine.Layers
                 {
                     if (surface.PickCameraFromSceneGraph)
                     {
-                        if (_sceneCamera == null || !_sceneCamera.TryGetTarget(out var cam) || cam == null || !cam.IsAlive)
+                        if (_sceneCamera == null || !_sceneCamera.TryGetTarget(out var cam) || cam == null || !cam.IsValid)
                         {
                             _sceneCamera.SetTarget(SceneManager.FindComponent<Camera>(findDisabled: false));
                         }
@@ -151,7 +151,7 @@ namespace Engine.Layers
                         // TODO: Putting a camera in the array can cause problems
                         var existCamera = _sceneCamera.TryGetTarget(out var camera);
 
-                        if (existCamera && camera != null && camera.IsAlive && camera.IsEnabled)
+                        if (existCamera && camera != null && camera.IsValid && camera.IsEnabled)
                         {
                             if (surface.Cameras == null)
                             {
@@ -177,7 +177,7 @@ namespace Engine.Layers
 
         private void RenderScene(RenderingSurface surface, ICamera camera)
         {
-            var isCameraAvailable = camera != null && camera.IsAlive && camera.IsEnabled;
+            var isCameraAvailable = camera != null && camera.IsValid && camera.IsEnabled;
 
             if (!isCameraAvailable)
             {
@@ -311,8 +311,10 @@ namespace Engine.Layers
 
         private void RenderPostProcessing(ref RenderTexture screenRenderTexture)
         {
+            EngineInfo.Renderer.PostProcessingPasses = 0;
             foreach (var pass in PostProcessingStackInternal.Passes)
             {
+                EngineInfo.Renderer.PostProcessingPasses++;
                 screenRenderTexture = pass.Render(screenRenderTexture, _drawPostProcessCallback);
             }
         }

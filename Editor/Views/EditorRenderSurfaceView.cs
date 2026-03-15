@@ -88,7 +88,7 @@ namespace Editor
                 ICamera camera = null;
                 var surfaceCamerasInUse = _surface.Cameras != null && _surface.Cameras.Length > 0 &&
                                           (_surface.Cameras?[0]?.TryGetTarget(out camera) ?? false) && camera != null &&
-                                          camera.IsAlive && camera.IsEnabled;
+                                          camera.IsValid && camera.IsEnabled;
                 if (surfaceCamerasInUse)
                 {
                     var cameraRenderTarget = camera.OutRenderTexture?.NativeResource;

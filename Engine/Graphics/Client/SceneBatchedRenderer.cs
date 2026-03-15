@@ -50,7 +50,6 @@ namespace Engine.Graphics
 
             EngineInfo.Renderer.WBatches = geoBatchesInfo.BatchesCount;
             EngineInfo.Renderer.GrabScreenPass = geoBatchesInfo.ScreenGrabPasses;
-            EngineInfo.Renderer.PostProcessingPasses = PostProcessingStackInternal.Passes.Count;
             EngineInfo.Renderer.SavedByBatching = (geoBatchesInfo.TotalRenderers - geoBatchesInfo.BatchesCount) * (uiBatchesInfo.ScreenGrabPasses + 1);
 
             return targetRenderTexture;
@@ -107,7 +106,7 @@ namespace Engine.Graphics
             return info;
         }
         private void RenderPass(Batch2D batch, ref mat4 VP, RenderTexture renderTarget,
-    RenderTexture screenGrabTarget, ICamera camera)
+                                RenderTexture screenGrabTarget, ICamera camera)
         {
 #if DEBUG
             System.Diagnostics.Debug.Assert(batch != null, "Batch is null");

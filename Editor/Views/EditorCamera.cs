@@ -23,7 +23,7 @@ namespace Editor
         public mat4 ViewMatrix { get; private set; }
 
         public bool IsEnabled => true;
-        public bool IsAlive => true;
+        public bool IsValid => true;
         public Color BackgroundColor => new Color(0.2f, 0.2f, 0.2f, 1.0f);
 
         public RenderTexture RenderTexture { get; set; }

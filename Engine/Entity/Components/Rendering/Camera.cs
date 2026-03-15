@@ -134,7 +134,8 @@ namespace Engine
             }
         }
 
-        bool ICamera.IsAlive => IsAlive;
+        bool ICamera.IsValid => IsValid();
+        // bool ICamera.IsValid => this.IsAlive;
 
         internal override void OnInternalInitialize()
         {

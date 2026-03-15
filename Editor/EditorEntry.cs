@@ -20,7 +20,7 @@ namespace Editor
             Application.IsInPlayMode = false;
             GameProject.Initialize(new ProjectConfig() { ProjectFolderRoot = EditorPaths.GameRoot });
 
-            _win = new WindowStandalone("GFS Editor", 1424, 900, Color.Black, new TextureDescriptor()
+            _win = new WindowStandalone("GFS Editor", 1494, 900, Color.Black, new TextureDescriptor()
             {
                 Width = EditorDefaultIcon.Width,
                 Height = EditorDefaultIcon.Height,

@@ -12,7 +12,7 @@ namespace Engine
         public bool IsEnabled { get; }
         public mat4 Projection { get; }
         public mat4 ViewMatrix { get; }
-        internal bool IsAlive { get;  }
+        internal bool IsValid { get;  }
         public float NearPlane { get; }
         public float FarPlane { get; }
         public float Fov { get; }
