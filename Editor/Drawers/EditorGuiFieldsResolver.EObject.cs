@@ -51,6 +51,7 @@ namespace Editor.Utils
 
             ImGui.SetCursorPos(preRectCursor);
 
+           
             drawList.AddRectFilled(min, max, ImGui.ColorConvertFloat4ToU32(new(0.1f, 0.1f, 0.1f, 1f)), ImGui.GetStyle().FrameRounding);
             if (hasObject)
             {
@@ -141,13 +142,21 @@ namespace Editor.Utils
             ImGui.PushStyleColor(ImGuiCol.ButtonHovered, new Vector4(0f, 0f, 0f, 0f));
             ImGui.PushStyleColor(ImGuiCol.ButtonActive, new Vector4(0f, 0f, 0f, 0f));
 
+            var afterTextCursorPos = ImGui.GetCursorPos();
+
+            ImGui.SetCursorPos(preRectCursor);
+            var invisibleButtonSize = new Vector2(max.X - min.X, max.Y - min.Y);
+            invisibleButtonSize.X -= 30;
+            if (ImGui.InvisibleButton($"DropRect##_DROP_RECT_{valueType.Name}", invisibleButtonSize))
+            {
+            }
             if (EditorImGui.DragAndDrop.ItemDropReference(EditorImGui.DragAndDrop.PAYLOAD_ID_EOBJECT, out var result))
             {
                 Debug.Log("Id: " + result.RefId + ", Type: " + result.Type);
                 DropValue(valueType, result, setValue);
             }
 
-
+            ImGui.SetCursorPos(afterTextCursorPos);
             if (EditorImGui.ImageButtonFromIcon("_PICKER_BUTTON_", EditorIcon.CirclePicker, new vec2(13, 13)))
             {
                 _openPopup = true;

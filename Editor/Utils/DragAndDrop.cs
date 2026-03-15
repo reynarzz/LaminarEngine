@@ -50,7 +50,13 @@ namespace Editor.Utils
                         {
                             ImGui.SetDragDropPayload(payloadId, new IntPtr(ptr2), sizeof(uint));
                         }
-
+                        EditorImGui.Image(EditorTextureDatabase.GetIconImGui(type), new GlmNet.vec2(16, 16));
+                        ImGui.SameLine();
+                        ImGui.Dummy(5, 0);
+                        ImGui.SameLine();
+                        var cursor = ImGui.GetCursorScreenPos();
+                        cursor.Y -= 2;
+                        ImGui.SetCursorScreenPos(cursor);
                         ImGui.Text(title);
                         ImGui.EndDragDropSource();
                     }
