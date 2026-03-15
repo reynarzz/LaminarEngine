@@ -44,9 +44,9 @@ namespace Editor.Layers
                 SceneManagerEditor.SerializeScenesPlaymode();
                 var prevSelectedActorId = Guid.Empty;
 
-                if (Selector.SelectedTransform())
+                if (Selector.Transform)
                 {
-                    prevSelectedActorId = Selector.SelectedTransform().Actor.GetID();
+                    prevSelectedActorId = Selector.Transform.Actor.GetID();
                 }
                 Application.IsInPlayMode = true;
 
@@ -76,9 +76,9 @@ namespace Editor.Layers
         {
             var prevSelectedActorId = Guid.Empty;
 
-            if (Selector.SelectedTransform())
+            if (Selector.Transform)
             {
-                prevSelectedActorId = Selector.SelectedTransform().Actor.GetID();
+                prevSelectedActorId = Selector.Transform.Actor.GetID();
             }
 
             if (Application.IsInPlayMode)

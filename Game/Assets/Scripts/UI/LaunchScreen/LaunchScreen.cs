@@ -7,6 +7,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,6 +21,9 @@ namespace Game
         private UIText _textPresents;
         protected override void OnStart()
         {
+#if DEBUG
+            OnComplete();
+#else
             _camera = Actor.Create<Camera, CameraViewportAdjust>("Camera").GetComponent<Camera>();
             _defaultFont = Assets.GetFont("Fonts/windows-bold[1].ttf");
             _camera.BackgroundColor = Color.Black;
@@ -42,9 +46,6 @@ namespace Game
             scanlines.SetValue("uScanlineSpacing", 2);
             PostProcessingStackInternal.Push(scanlines);
 
-#if DEBUG
-            OnComplete();
-#else
             CreateLaunchScreen();
 #endif
         }

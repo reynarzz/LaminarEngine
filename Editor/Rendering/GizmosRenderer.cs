@@ -226,9 +226,9 @@ namespace Editor.Rendering
 
         private void DrawSelected()
         {
-            if (Selector.SelectedTransform())
+            if (Selector.Transform)
             {
-                var renderer = Selector.SelectedTransform().GetComponent<Renderer>();
+                var renderer = Selector.Transform.GetComponent<Renderer>();
 
                 //if(renderer is TilemapRenderer tilemap)
                 //{
@@ -244,7 +244,7 @@ namespace Editor.Rendering
                 {
                     var s = MathF.Sin(Time.UnscaledTime * 10) * 0.5f + 0.5f;
                     var size = renderer.RendererData.Bounds.Size;// + new vec3(s, s) * 0.5f;
-                    Debug.DrawBox(Selector.SelectedTransform().WorldPosition + renderer.RendererData.Bounds.Center, size, SemiTransparent);
+                    Debug.DrawBox(Selector.Transform.WorldPosition + renderer.RendererData.Bounds.Center, size, SemiTransparent);
 
                 }
             }

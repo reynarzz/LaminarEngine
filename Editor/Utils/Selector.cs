@@ -19,7 +19,7 @@ namespace Editor
                     return null;
 
                 _selected.TryGetTarget(out var target);
-                return target ? target : null;
+                return target && target.IsAlive ? target : null;
             }
             set
             {
@@ -34,17 +34,29 @@ namespace Editor
             }
         }
 
-        public static Transform SelectedTransform()
+        public static Transform Transform
         {
-            if (_selected == null)
-                return null;
-            _selected.TryGetTarget(out var obj);
-            if (obj is Actor actor)
+            get
             {
-                return actor.Transform;
-            }
+                if (_selected == null || !_selected.TryGetTarget(out var obj))
+                {
+                    return null;
+                }
 
-            return obj ? obj as Transform : null;
+                if (obj is Actor actor)
+                {
+                    if (!actor) // Checks if is alive.
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        obj = actor.Transform;
+                    }
+                }
+
+                return obj ? obj as Transform : null;
+            }
         }
     }
 }

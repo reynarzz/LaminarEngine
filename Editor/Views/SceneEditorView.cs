@@ -100,9 +100,9 @@ namespace Editor
 
             ImGui.SetCursorScreenPos(ImGui.GetItemRectMin());
 
-            if (Selector.SelectedTransform())
+            if (Selector.Transform)
             {
-                var selectedTransform = Selector.SelectedTransform();
+                var selectedTransform = Selector.Transform;
 
                 mat4 model = selectedTransform.GetRenderingWorldMatrix();
                 mat4 delta = default;

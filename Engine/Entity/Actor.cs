@@ -474,17 +474,18 @@ namespace Engine
 
             void PendingToDestroyNotify(Actor actor)
             {
+                // Notify children components
+                for (int i = 0; i < actor.Transform.Children.Count; i++)
+                {
+                    PendingToDestroyNotify(actor.Transform.Children[i].Actor);
+                }
+
                 // Notify own components
                 for (int i = 0; i < actor._components.Count; i++)
                 {
                     actor._components[i].IsPendingToDestroy = true;
                 }
 
-                // Notify children components
-                for (int i = 0; i < actor.Transform.Children.Count; i++)
-                {
-                    PendingToDestroyNotify(actor.Transform.Children[i].Actor);
-                }
 
                 actor.IsPendingToDestroy = true;
             }
@@ -724,6 +725,8 @@ namespace Engine
 
                 void OnCleanUpChildren(Actor actor)
                 {
+                    actor.Scene.RemoveActor(actor);
+
                     for (int i = actor._components.Count - 1; i >= 0; i--)
                     {
                         DestroyComponentNoNotify(actor._components[i]);
@@ -735,8 +738,7 @@ namespace Engine
                     }
 
                     actor.IsAlive = false;
-                    Scene.RemoveActor(actor);
-                    //actor.Scene = null;
+                    actor.Scene = null;
                 }
 
                 OnDestroyEventNotify(this);

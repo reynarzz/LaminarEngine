@@ -59,14 +59,12 @@ namespace Editor.Utils
 				if (eObject is RenderTexture rendTex)
 				{
 					imagePtr = EditorTextureDatabase.GetIconImGui(rendTex);
-                    ImGui.Image(imagePtr, new Vector2(16, 16), new Vector2(0, 1), new Vector2(1, 0));
-
+                    EditorImGui.Image(imagePtr, new vec2(16, 16));
                 }
                 else if (eObject is Texture tex)
 				{
 					imagePtr = EditorTextureDatabase.GetIconImGui(tex);
-                    ImGui.Image(imagePtr, new Vector2(16, 16), new Vector2(0, 1), new Vector2(1, 0));
-
+                    EditorImGui.Image(imagePtr, new vec2(16, 16));
                 }
                 else if (eObject is Sprite sprite)
                 {
@@ -78,8 +76,7 @@ namespace Editor.Utils
                 else
 				{
 					imagePtr = EditorTextureDatabase.GetIconImGui(eObject.GetType());
-                    ImGui.Image(imagePtr, new Vector2(16, 16), new Vector2(0, 1), new Vector2(1, 0));
-
+                    EditorImGui.Image(imagePtr, new vec2(16, 16));
                 }
 
                 ImGui.SetCursorPos(preRectCursor + new Vector2(16, 0));

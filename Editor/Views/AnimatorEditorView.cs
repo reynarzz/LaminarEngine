@@ -101,9 +101,9 @@ namespace Editor
 
         public override void OnDraw()
         {
-            if (Selector.SelectedTransform())
+            if (Selector.Transform)
             {
-                var animator = Selector.SelectedTransform().GetComponent<Animator>();
+                var animator = Selector.Transform.GetComponent<Animator>();
 
                 if (animator != _selectedAnimator)
                 {

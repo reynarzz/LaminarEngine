@@ -46,7 +46,7 @@ namespace Editor
             {
                 if (Selector.Selected)
                 {
-                    var transform = Selector.SelectedTransform();
+                    var transform = Selector.Transform;
 
                     if (transform?.Actor)
                     {
@@ -84,7 +84,7 @@ namespace Editor
         {
             if (Selector.Selected)
             {
-                var transform = Selector.SelectedTransform();
+                var transform = Selector.Transform;
 
                 var type = transform?.Actor ? typeof(Actor) : Selector.Selected.GetType();
                 if (_drawers.TryGetValue(type, out var drawer))

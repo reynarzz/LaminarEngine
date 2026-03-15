@@ -25,7 +25,7 @@ namespace Engine.Graphics.OpenGL
 
         protected override bool CreateResource(GeometryDescriptor descriptor)
         {
-            uint prevVAO = _prevVAO;
+            uint prevVAO = GetBoundVAO();// _prevVAO;
             
             Bind();
             if (!_vertBuffer.Create(descriptor.VertexDesc.BufferDesc))
@@ -80,10 +80,21 @@ namespace Engine.Graphics.OpenGL
 
             return true;
         }
-
+        private static uint GetBoundVAO()
+        {
+            int result;
+//#if DESKTOP
+            glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &result);
+//#else
+//        int[] arr = new int[1];
+//        glGetIntegerv(GL_VERTEX_ARRAY_BINDING, arr);
+//        result = arr[0];
+//#endif
+            return (uint)result;
+        }
         internal override void UpdateResource(GeometryDescriptor descriptor)
         {
-            uint prevVAO = _prevVAO;
+            uint prevVAO = GetBoundVAO();// _prevVAO;
 
             Bind();
             _vertBuffer.Update(descriptor.VertexDesc.BufferDesc);
@@ -105,7 +116,7 @@ namespace Engine.Graphics.OpenGL
             }
 
             _prevVAO = prevVAO;
-            glBindVertexArray(_prevVAO);
+            glBindVertexArray(prevVAO);
         }
 
         internal override void Bind()
