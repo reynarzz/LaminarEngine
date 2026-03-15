@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Editor
 {
-    internal class EditorAssetUtils
+    internal static class EditorAssetUtils
     {
         private readonly static DefaultAssetMetaGenerator _defaultMetaGenerator = new();
         internal static AssetMeta GetAssetMeta(AssetResourceBase asset)
@@ -101,6 +101,58 @@ namespace Editor
             }
 
             return false;
+        }
+
+        internal static Type AssetTypeToType(this AssetType type)
+        {
+            Type clrType = null;
+
+            switch (type)
+            {
+                case AssetType.Texture:
+                    clrType = typeof(Texture);
+                    break;
+                case AssetType.Audio:
+                    clrType = typeof(AudioClip);
+                    break;
+                case AssetType.Text:
+                    clrType = typeof(TextAsset);
+                    break;
+                case AssetType.Shader:
+                    clrType = typeof(Shader);
+                    break;
+                case AssetType.Font:
+                    clrType = typeof(FontAsset);
+                    break;
+                case AssetType.AnimationClip:
+                    clrType = typeof(AnimationClip);
+                    break;
+                case AssetType.AnimationController:
+                    clrType = typeof(AnimatorController);
+                    break;
+                case AssetType.Material:
+                    clrType = typeof(Material);
+                    break;
+                case AssetType.ShaderV2:
+                    clrType = typeof(Shader);
+                    break;
+                case AssetType.Scene:
+                    clrType = typeof(SceneAsset);
+                    break;
+                case AssetType.Tilemap:
+                    clrType = typeof(TilemapAsset);
+                    break;
+                case AssetType.Script:
+                    //clrType = typeof(ScriptAsset);
+                    break;
+                case AssetType.RenderTexture:
+                    clrType = typeof(RenderTexture);
+                    break;
+                default:
+                    break;
+            }
+
+            return clrType;
         }
     }
 }

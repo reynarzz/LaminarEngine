@@ -1,9 +1,12 @@
-﻿using Engine;
+﻿using Editor.Cooker;
+using Engine;
 using Engine.Serialization;
+using GlmNet;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,8 +35,20 @@ namespace Editor.Utils
             {
                 return _dragAndDropPayload;
             }
-
-            internal static void ItemDragReference(string title, string payloadId, EObject value, Type type, Guid id)
+            internal static void ItemDragReference(string title, nint image, string payloadId, EObject value, AssetType type, Guid refId)
+            {
+                ItemDragReference(title, image, payloadId, value, type.AssetTypeToType(), refId);
+            }
+            internal static void ItemDragReference(string title, string payloadId, EObject value, AssetType type, Guid refId)
+            {
+                ItemDragReference(title, payloadId, value, type.AssetTypeToType(), refId);
+            }
+            internal static void ItemDragReference(string title, string payloadId, EObject value, Type type, Guid refId)
+            {
+                var image = EditorTextureDatabase.GetIconImGui(type);
+                ItemDragReference(title, image, payloadId, value, type, refId);
+            }
+            internal static void ItemDragReference(string title, nint image, string payloadId, EObject value, Type type, Guid refId)
             {
                 unsafe
                 {
@@ -41,7 +56,7 @@ namespace Editor.Utils
                     {
                         _dragAndDropPayload = new ReferenceDragAndDropPayload()
                         {
-                            RefId = id,
+                            RefId = refId,
                             Type = type,
                             Value = value,
                         };
@@ -50,13 +65,13 @@ namespace Editor.Utils
                         {
                             ImGui.SetDragDropPayload(payloadId, new IntPtr(ptr2), sizeof(uint));
                         }
-                        EditorImGui.Image(EditorTextureDatabase.GetIconImGui(type), new GlmNet.vec2(16, 16));
+                        var cursor = ImGui.GetCursorPos();
+
+                        EditorImGui.Image(image, new vec2(16, 16));
                         ImGui.SameLine();
-                        ImGui.Dummy(5, 0);
-                        ImGui.SameLine();
-                        var cursor = ImGui.GetCursorScreenPos();
                         cursor.Y -= 2;
-                        ImGui.SetCursorScreenPos(cursor);
+                        cursor.X += 20;
+                        ImGui.SetCursorPos(cursor);
                         ImGui.Text(title);
                         ImGui.EndDragDropSource();
                     }

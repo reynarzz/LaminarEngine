@@ -23,7 +23,7 @@ namespace Editor.Views
         private List<AssetViewFileInfo> _assetsDirectories;
         private AssetViewFileInfo _selectedFile;
         private EObject _selectedAsset;
-
+        private int _globalIndex = 0;
         public AssetsViewWindow() : base("Window/Assets View") { }
 
         protected override void OnOpen()
@@ -32,16 +32,28 @@ namespace Editor.Views
 
             if (_assetsDirectories == null)
             {
-                _assetsDirectories = new();
-
-                _assetsDirectories.Clear();
-                _assetsDirectories.Add(EnumerateDirectoryGraphRecursive(Paths.GetAssetsFolderPath()));
-                _assetsDirectories.Add(EnumerateDirectoryGraphRecursive(EditorPaths.CookerPaths.InternalAssetsPath));
+                LoadDirectories();
 
                 SelectFile(_assetsDirectories[0]);
             }
         }
 
+        private void LoadDirectories()
+        {
+            if (_assetsDirectories == null)
+            {
+                _assetsDirectories = new();
+            }
+            else
+            {
+                _assetsDirectories.Clear();
+            }
+            _clickedFile = null;
+            _globalIndex = 0;
+            _assetsDirectories.Add(EnumerateDirectoryGraphRecursive(Paths.GetAssetsFolderPath()));
+            _assetsDirectories.Add(EnumerateDirectoryGraphRecursive(EditorPaths.CookerPaths.InternalAssetsPath));
+
+        }
         public override void OnDraw()
         {
             if (!_selectedAsset)
@@ -56,13 +68,13 @@ namespace Editor.Views
                 ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, new Vector2());
 
                 LeftPane(contentAvail);
+                ImGui.PopStyleVar();
 
                 ImGui.SameLine();
                 Splitter(contentAvail);
                 ImGui.SameLine();
 
                 RightPane(contentAvail);
-                ImGui.PopStyleVar();
             }
 
             OnEndWindow();
@@ -137,9 +149,10 @@ namespace Editor.Views
 
             var avail = ImGui.GetContentRegionAvail();
             ImGui.BeginChild("Files View", new Vector2(avail.X, avail.Y - 30), ImGuiChildFlags.AlwaysUseWindowPadding);
+            ImGui.PopStyleVar();
+
             DrawRightFolderView(_selectedFile);
             ImGui.EndChild();
-            ImGui.PopStyleVar();
             DrawRightFooter();
 
 
@@ -212,10 +225,13 @@ namespace Editor.Views
             {
                 EditorImGui.Image(EditorTextureDatabase.GetIconImGui(_selectedFile.AssetType), new vec2(16, 16));
                 ImGui.SameLine();
-                ImGui.Text($"{_selectedFile.Filename}{_selectedFile.Extension}");
+                ImGui.Text($"{_selectedFile.Filename}{_selectedFile.Extension} ({_selectedFile.AssetType})");
             }
             ImGui.EndChild();
         }
+
+        private AssetViewFileInfo _clickedFile = null;
+        private bool _isDoubleClick = false;
 
         private void DrawRightFolderView(AssetViewFileInfo fileRoot)
         {
@@ -236,7 +252,14 @@ namespace Editor.Views
                     var cursorPos = ImGui.GetCursorPos();
                     ImGui.SetCursorPosX(cursorPos.X - 10);
                     var open = ImGui.TreeNodeEx($"##_PREVIEW_{file.AbsolutePath}_{i}", flags);
-                    var isClicked = ImGui.IsItemClicked();
+
+
+                    var isHover = ImGui.IsItemHovered();
+                    if (ImGui.IsItemClicked())
+                    {
+                        _clickedFile = file;
+                    }
+
                     ImGui.SameLine();
                     cursorPos = ImGui.GetCursorPos();
                     ImGui.SetCursorPosX(cursorPos.X - 14);
@@ -249,21 +272,27 @@ namespace Editor.Views
                     {
                         image = EditorTextureDatabase.GetIconImGui(file.AssetType);
                     }
-                    EditorImGui.Image(image, new GlmNet.vec2(16, 16));
+                    EditorImGui.DragAndDrop.ItemDragReference(file.Filename, image, EditorImGui.DragAndDrop.PAYLOAD_ID_EOBJECT, null, file.AssetType, file.RefId);
+
+                    EditorImGui.Image(image, new vec2(16, 16));
                     ImGui.SameLine();
                     cursorPos = ImGui.GetCursorPos();
                     ImGui.SetCursorPosX(cursorPos.X - 4);
                     ImGui.Text(file.Filename);
-
-                    if (isClicked)
+                    var isDoubleClick = ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left);
+                    var isMouseUp = ImGui.IsMouseReleased(ImGuiMouseButton.Left);
+                    if (isDoubleClick && isHover && _clickedFile == file)
                     {
-                        var isDoubleClick = ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left);
+                        _isDoubleClick = true;
+                    }
 
-                        if (file.Type == FileType.Asset || isDoubleClick)
+                    if (isHover && isMouseUp && _clickedFile == file)
+                    {
+                        if (file.Type == FileType.Asset || _isDoubleClick)
                         {
                             SelectFile(file);
 
-                            if (isDoubleClick)
+                            if (_isDoubleClick)
                             {
                                 OpenAsset(file);
                             }
@@ -272,6 +301,8 @@ namespace Editor.Views
                         {
                             SelectFile(file.Parent);
                         }
+
+                        _isDoubleClick = false;
                     }
 
                     if (open)
@@ -418,6 +449,7 @@ namespace Editor.Views
             directoryInfo.RelativePath = EditorPaths.GetRelativeAssetPathSafe(rootDirectory);
             directoryInfo.Type = FileType.Directory;
             directoryInfo.Filename = folderName;
+            directoryInfo.GlobalIndex = _globalIndex++;
 
             if (parent != null)
             {
@@ -469,6 +501,7 @@ namespace Editor.Views
                     Filename = Path.GetFileNameWithoutExtension(file),
                     Extension = ext,
                     AssetType = assetType,
+                    GlobalIndex = _globalIndex++,
                     RefId = refId,
                 };
                 fileInfo.Children = GetAssetChildren(fileInfo, assetType, file, ref refId);
@@ -481,7 +514,7 @@ namespace Editor.Views
             return directoryInfo;
         }
 
-       
+
         private List<AssetViewFileInfo> GetAssetChildren(AssetViewFileInfo parent, AssetType assetType, string absoluteFilePath, ref Guid refId)
         {
             var children = new List<AssetViewFileInfo>();
@@ -541,6 +574,7 @@ namespace Editor.Views
             public FileType Type { get; set; } = FileType.None;
             public AssetType AssetType { get; set; } = AssetType.Invalid;
             public Guid RefId { get; set; }
+            public int GlobalIndex { get; set; }
             public string RelativePath { get; set; }
             public string AbsolutePath { get; set; }
             public string Filename { get; set; }

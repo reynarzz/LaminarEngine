@@ -174,6 +174,9 @@ namespace Editor.Utils
         }
         public static Texture2D GetIcon(Type targetType)
         {
+            if (targetType == null)
+                return null;
+
             CheckInstance();
             if (_instance._typesToIconTypeMapper.TryGetValue(targetType, out var iconType))
             {

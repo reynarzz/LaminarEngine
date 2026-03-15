@@ -51,7 +51,7 @@ namespace Editor.Utils
 
             ImGui.SetCursorPos(preRectCursor);
 
-           
+
             drawList.AddRectFilled(min, max, ImGui.ColorConvertFloat4ToU32(new(0.1f, 0.1f, 0.1f, 1f)), ImGui.GetStyle().FrameRounding);
             if (hasObject)
             {
@@ -147,12 +147,9 @@ namespace Editor.Utils
             ImGui.SetCursorPos(preRectCursor);
             var invisibleButtonSize = new Vector2(max.X - min.X, max.Y - min.Y);
             invisibleButtonSize.X -= 30;
-            if (ImGui.InvisibleButton($"DropRect##_DROP_RECT_{valueType.Name}", invisibleButtonSize))
-            {
-            }
+            ImGui.InvisibleButton($"DropRect##_DROP_RECT_{valueType.Name}", invisibleButtonSize);
             if (EditorImGui.DragAndDrop.ItemDropReference(EditorImGui.DragAndDrop.PAYLOAD_ID_EOBJECT, out var result))
             {
-                Debug.Log("Id: " + result.RefId + ", Type: " + result.Type);
                 DropValue(valueType, result, setValue);
             }
 
@@ -274,15 +271,31 @@ namespace Editor.Utils
             ImGui.EndPopup();
         }
 
+        private static bool CanBeAssigned(Type payloadType, Type valueType)
+        {
+            if (payloadType.IsAssignableTo(valueType))
+            {
+                return true;
+            }
+            else if (valueType == typeof(Sprite) && payloadType.IsAssignableFrom(typeof(Texture2D)))
+            {
+                return true;
+            }
+            else if (payloadType == typeof(Actor) && valueType.IsAssignableTo(typeof(Component)))
+            {
+                return true;
+            }
+            return false;
+        }
+
         private static void DropValue(Type valueType, EditorImGui.DragAndDrop.ReferenceDragAndDropPayload payload, Func<EObject, bool> setValue)
         {
-            if (payload.Type != valueType && !valueType.IsAssignableTo(typeof(Component)) && 
-                valueType != typeof(EObject))
+            if (!CanBeAssigned(payload.Type,valueType))
             {
                 return;
             }
 
-            // If 'valueType' is EObject then we would select whatever type is in the payload.
+            // If 'valueType' is the type 'EObject' then we would select whatever type is in the payload.
             if (valueType == typeof(EObject))
             {
                 valueType = payload.Type;
@@ -290,29 +303,12 @@ namespace Editor.Utils
 
             if (typeof(AssetResourceBase).IsAssignableFrom(valueType))
             {
-                // Asset picking
-                if (valueType == typeof(Material))
-                {
-                    setValue(Assets.GetAssetFromGuid(payload.RefId));
-                }
-                else if (valueType == typeof(AudioClip))
-                {
-                    setValue(Assets.GetAssetFromGuid(payload.RefId));
-                }
-                else if (valueType == typeof(RenderTexture))
-                {
-                    setValue(Assets.GetAssetFromGuid(payload.RefId));
-                }
-                else if (valueType.IsAssignableTo(typeof(Texture)))
+                if (valueType.IsAssignableTo(typeof(Texture)))
                 {
                     var texture = Assets.GetAssetFromGuid(payload.RefId) as TextureAsset;
                     setValue(texture?.Texture);
                 }
-                else if (valueType == typeof(TilemapAsset))
-                {
-                    setValue(Assets.GetAssetFromGuid(payload.RefId));
-                }
-                else if (valueType == typeof(SceneAsset))
+                else
                 {
                     setValue(Assets.GetAssetFromGuid(payload.RefId));
                 }
@@ -332,12 +328,15 @@ namespace Editor.Utils
             else if (valueType.IsAssignableTo(typeof(Component)))
             {
                 var actor = payload.Value as Actor;
-                foreach (var component in actor.Components)
+                if (actor)
                 {
-                    if (component.GetType().IsAssignableTo(valueType))
+                    foreach (var component in actor.Components)
                     {
-                        setValue(component);
-                        break;
+                        if (component.GetType().IsAssignableTo(valueType))
+                        {
+                            setValue(component);
+                            break;
+                        }
                     }
                 }
             }
