@@ -12,415 +12,425 @@ using System.Threading.Tasks;
 
 namespace Editor.Utils
 {
-	// EObject property drawer
-	public partial class EditorGuiFieldsResolver
-	{
-		public static void DrawEObjectSlot(IObject eObject, Type valueType, Func<EObject, bool> setValue)
-		{
-			ImGui.SameLine();
-			ImGui.SetCursorPosX(MathF.Max(XPosOffset, ImGui.GetCursorPosX()) + 5);
-			var hasObject = eObject != null;
-			string label = hasObject ? $"{eObject.Name}" : $"None";
+    // EObject property drawer
+    public partial class EditorGuiFieldsResolver
+    {
+        private const int ASSETS_COLUMNS_COUNT_POPUP = 4;
+        public static bool DrawEObjectSlot(IObject eObject, Type valueType, Func<EObject, bool> setValue)
+        {
+            ImGui.SameLine();
+            ImGui.SetCursorPosX(MathF.Max(XPosOffset, ImGui.GetCursorPosX()) + 5);
+            var hasObject = eObject != null;
+            string label = hasObject ? $"{eObject.Name}" : $"None";
 
-			if (hasObject)
-			{
-				if (eObject is AssetResourceBase res)
-				{
-					ImGui.SetItemTooltip($"{res.Path}");
-				}
-				else
-				{
-					ImGui.SetItemTooltip(eObject.GetID().ToString());
-				}
-			}
-			else
-			{
+            if (hasObject)
+            {
+                if (eObject is AssetResourceBase res)
+                {
+                    ImGui.SetItemTooltip($"{res.Path}");
+                }
+                else
+                {
+                    ImGui.SetItemTooltip(eObject.GetID().ToString());
+                }
+            }
+            else
+            {
 
-			}
+            }
 
-			var drawList = ImGui.GetWindowDrawList();
-			var pos = ImGui.GetCursorScreenPos();
-			var size = ImGui.CalcTextSize(label);
+            var drawList = ImGui.GetWindowDrawList();
+            var pos = ImGui.GetCursorScreenPos();
+            var size = ImGui.CalcTextSize(label);
 
-			var width = ImGui.GetContentRegionAvail().X - 5;
-			var min = new Vector2(pos.X - 5, pos.Y);
-			var max = new Vector2(pos.X + width, pos.Y + size.Y + 7);
+            var width = ImGui.GetContentRegionAvail().X - 5;
+            var min = new Vector2(pos.X - 5, pos.Y);
+            var max = new Vector2(pos.X + width, pos.Y + size.Y + 7);
 
-			var preRectCursor = ImGui.GetCursorPos();
+            var preRectCursor = ImGui.GetCursorPos();
 
-			ImGui.SetCursorPos(preRectCursor);
+            ImGui.SetCursorPos(preRectCursor);
 
-			drawList.AddRectFilled(min, max, ImGui.ColorConvertFloat4ToU32(new(0.1f, 0.1f, 0.1f, 1f)), ImGui.GetStyle().FrameRounding);
-			if (hasObject)
-			{
-				nint imagePtr = 0;
-				ImGui.SetCursorPos(preRectCursor + new Vector2(-2, 5));
+            drawList.AddRectFilled(min, max, ImGui.ColorConvertFloat4ToU32(new(0.1f, 0.1f, 0.1f, 1f)), ImGui.GetStyle().FrameRounding);
+            if (hasObject)
+            {
+                nint imagePtr = 0;
+                ImGui.SetCursorPos(preRectCursor + new Vector2(-2, 5));
 
-				if (eObject is RenderTexture rendTex)
-				{
-					imagePtr = EditorTextureDatabase.GetIconImGui(rendTex);
+                if (eObject is RenderTexture rendTex)
+                {
+                    imagePtr = EditorTextureDatabase.GetIconImGui(rendTex);
                     EditorImGui.Image(imagePtr, new vec2(16, 16));
                 }
                 else if (eObject is Texture tex)
-				{
-					imagePtr = EditorTextureDatabase.GetIconImGui(tex);
+                {
+                    imagePtr = EditorTextureDatabase.GetIconImGui(tex);
                     EditorImGui.Image(imagePtr, new vec2(16, 16));
                 }
                 else if (eObject is Sprite sprite)
                 {
                     imagePtr = EditorTextureDatabase.GetIconImGui(sprite.Texture);
-					var cell = sprite.GetAtlasCell();
-                    
-                    EditorImGui.ImageQuad(imagePtr, new vec2(16,16), cell.Uvs.BottomLeftUV, cell.Uvs.TopLeftUV, cell.Uvs.TopRightUV, cell.Uvs.BottomRightUV);
+                    var cell = sprite.GetAtlasCell();
+
+                    EditorImGui.ImageQuad(imagePtr, new vec2(16, 16), cell.Uvs.BottomLeftUV, cell.Uvs.TopLeftUV, cell.Uvs.TopRightUV, cell.Uvs.BottomRightUV);
                 }
                 else
-				{
-					imagePtr = EditorTextureDatabase.GetIconImGui(eObject.GetType());
+                {
+                    imagePtr = EditorTextureDatabase.GetIconImGui(eObject.GetType());
                     EditorImGui.Image(imagePtr, new vec2(16, 16));
                 }
 
                 ImGui.SetCursorPos(preRectCursor + new Vector2(16, 0));
-			}
+            }
 
 
-			string suffix = $"({ReflectionUtils.GetFriendlyTypeName(valueType)})";
-			float suffixWidth = ImGui.CalcTextSize(suffix).X;
+            string suffix = $"({ReflectionUtils.GetFriendlyTypeName(valueType)})";
+            float suffixWidth = ImGui.CalcTextSize(suffix).X;
 
-			const float offset = 10;
-			var length = (max.X - min.X) - offset;
-			float availableLabelWidth = length - suffixWidth;
-			if (availableLabelWidth < 0)
-				availableLabelWidth = 0;
+            const float offset = 10;
+            var length = (max.X - min.X) - offset;
+            float availableLabelWidth = length - suffixWidth;
+            if (availableLabelWidth < 0)
+                availableLabelWidth = 0;
 
-			string displayLabel = label;
+            string displayLabel = label;
 
-			float labelWidth = ImGui.CalcTextSize(label).X;
-			ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 2);
+            float labelWidth = ImGui.CalcTextSize(label).X;
+            ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 2);
 
-			if (hasObject)
-			{
-				ImGui.PushStyleColor(ImGuiCol.Text, ImGui.ColorConvertFloat4ToU32(new(1.0f, 1.0f, 1.0f, 1f)));
-			}
-			else
-			{
-				ImGui.PushStyleColor(ImGuiCol.Text, ImGui.ColorConvertFloat4ToU32(new(0.7f, 0.7f, 0.7f, 1f)));
-			}
+            if (hasObject)
+            {
+                ImGui.PushStyleColor(ImGuiCol.Text, ImGui.ColorConvertFloat4ToU32(new(1.0f, 1.0f, 1.0f, 1f)));
+            }
+            else
+            {
+                ImGui.PushStyleColor(ImGuiCol.Text, ImGui.ColorConvertFloat4ToU32(new(0.7f, 0.7f, 0.7f, 1f)));
+            }
 
-			if (labelWidth > availableLabelWidth)
-			{
-				const string ellipsis = "...";
-				float ellipsisWidth = ImGui.CalcTextSize(ellipsis).X;
+            if (labelWidth > availableLabelWidth)
+            {
+                const string ellipsis = "...";
+                float ellipsisWidth = ImGui.CalcTextSize(ellipsis).X;
 
-				int count = 0;
-				float wwidth = 0f;
+                int count = 0;
+                float wwidth = 0f;
 
-				foreach (char c in label)
-				{
-					float w = ImGui.CalcTextSize(c.ToString()).X;
-					if (wwidth + w + ellipsisWidth > availableLabelWidth)
-						break;
+                foreach (char c in label)
+                {
+                    float w = ImGui.CalcTextSize(c.ToString()).X;
+                    if (wwidth + w + ellipsisWidth > availableLabelWidth)
+                        break;
 
-					wwidth += w;
-					count++;
-				}
+                    wwidth += w;
+                    count++;
+                }
 
-				displayLabel = label.Substring(0, count) + ellipsis;
+                displayLabel = label.Substring(0, count) + ellipsis;
 
-				ImGui.Text($"{displayLabel}{suffix}");
-			}
-			else
-			{
-				ImGui.Text($"{displayLabel} {suffix}");
-			}
-			ImGui.PopStyleColor();
-			ImGui.SameLine();
-			ImGui.SetCursorPos(preRectCursor.X + width-24, preRectCursor.Y + 3);
+                ImGui.Text($"{displayLabel}{suffix}");
+            }
+            else
+            {
+                ImGui.Text($"{displayLabel} {suffix}");
+            }
+            ImGui.PopStyleColor();
+            ImGui.SameLine();
+            ImGui.SetCursorPos(preRectCursor.X + width - 24, preRectCursor.Y + 3);
 
-			ImGui.PushStyleColor(ImGuiCol.Button, new Vector4(0f, 0f, 0f, 0f));
-			ImGui.PushStyleColor(ImGuiCol.ButtonHovered, new Vector4(0f, 0f, 0f, 0f));
-			ImGui.PushStyleColor(ImGuiCol.ButtonActive, new Vector4(0f, 0f, 0f, 0f));
+            ImGui.PushStyleColor(ImGuiCol.Button, new Vector4(0f, 0f, 0f, 0f));
+            ImGui.PushStyleColor(ImGuiCol.ButtonHovered, new Vector4(0f, 0f, 0f, 0f));
+            ImGui.PushStyleColor(ImGuiCol.ButtonActive, new Vector4(0f, 0f, 0f, 0f));
 
-			if(EditorImGui.ImageButtonFromIcon("_PICKER_BUTTON_", EditorIcon.CirclePicker, new vec2(13, 13)))
-			{
-				_openPopup = true;
-				_selectedValue = eObject;
-				_selectedSetter = setValue;
-			}
-			ImGui.PopStyleColor(3);
-
-			ImGui.Dummy(new Vector2(0, ImGui.GetStyle().ItemSpacing.Y - 2));
-			PickObjectPopup(valueType, setValue);
-		}
-
-		private static void PickObjectPopup(Type valueType, Func<EObject, bool> setValue, int columnCount = 4)
-		{
-			if (_openPopup)
-			{
-				_openPopup = false;
-				ImGui.CloseCurrentPopup();
-				ImGui.OpenPopup("ObjectPickPopup");
-			}
-
-			//var winSize = ImGui.GetWindowSize();
-
-			//ImGui.SetNextWindowSizeConstraints(new Vector2(400, 100), new Vector2(1400, 500));
-			//var viewPortPos = ImGui.GetWindowViewport().Pos;
-
-			//ImGui.SetNextWindowPos(new Vector2(viewPortPos.X + winSize.X / 2, viewPortPos.Y + winSize.Y / 2 - 250));
-			if (!ImGui.BeginPopup("ObjectPickPopup"))
-				return;
-
-			if (ImGui.Selectable("None"))
-			{
-				setValue(null);
-				ImGui.CloseCurrentPopup();
-				ImGui.EndPopup();
-				return;
-			}
-
-			void RenderItemsInColumns(IEnumerable<(string label, Action action, string path)> items)
-			{
-				if (!items.Any())
-					return;
-
-				int count = 0;
-				ImGui.BeginTable("PopupTable", columnCount, ImGuiTableFlags.None);
-
-				foreach (var item in items)
-				{
-					if (count % columnCount == 0)
-						ImGui.TableNextRow();
-
-					ImGui.TableNextColumn();
-					if (ImGui.Selectable(item.label))
-					{
-						item.action();
-						ImGui.CloseCurrentPopup();
-					}
-					ImGui.SetItemTooltip(item.path);
-
-					count++;
-				}
-
-				ImGui.EndTable();
-			}
+            if (EditorImGui.DragAndDrop.ItemDropReference(EditorImGui.DragAndDrop.PAYLOAD_ID_EOBJECT, out var result))
+            {
+                Debug.Log("Id: " + result.RefId + ", Type: " + result.Type);
+                DropValue(valueType, result, setValue);
+            }
 
 
-			// TODO: refactor the asset picker list behavior.
-			if (typeof(AssetResourceBase).IsAssignableFrom(valueType))
-			{
-				// Asset picking
-				if (valueType == typeof(Material))
-				{
-					//var assets = IOLayer.Database.Disk.GetAssetsInfo(AssetType.Material);
-					//foreach (var (id, info) in assets)
-					//{
-					//    if (ImGui.Selectable($"{Path.GetFileName(info.Path)}##{id}{info.Path}"))
-					//    {
-					//        setValue(Assets.GetMaterial(info.Path));
-					//    }
-					//}
+            if (EditorImGui.ImageButtonFromIcon("_PICKER_BUTTON_", EditorIcon.CirclePicker, new vec2(13, 13)))
+            {
+                _openPopup = true;
+                _selectedValue = eObject;
+                _selectedSetter = setValue;
+            }
+            ImGui.PopStyleColor(3);
 
-					var assets = IOLayer.Database.Disk.GetAssetsInfo(AssetType.Material);
-					var items = assets.Select(a =>
-					{
-						var (id, info) = a;
-						string label = $"{Path.GetFileName(info.Path)}##{id}{info.Path}";
-						return (label, (Action)(() => setValue(Assets.GetMaterial(info.Path))), info.Path);
-					});
-					RenderItemsInColumns(items);
-				}
-				else if (valueType == typeof(AudioClip))
-				{
-					//var audios = IOLayer.Database.Disk.GetAssetsInfo(SharedTypes.AssetType.Audio);
+            ImGui.Dummy(new Vector2(0, ImGui.GetStyle().ItemSpacing.Y - 2));
+            PickObjectPopup(valueType, setValue);
 
-					//foreach (var asset in audios)
-					//{
-					//    if (ImGui.Selectable($"{Path.GetFileName(asset.Value.Path)}##{asset.Key}"))
-					//    {
-					//        setValue(Assets.GetAudioClip(asset.Value.Path));
-					//        ImGui.CloseCurrentPopup();
-					//    }
-					//}
+            return false;
+        }
 
-					var assets = IOLayer.Database.Disk.GetAssetsInfo(Engine.AssetType.Audio);
-					var items = assets.Select(a =>
-					{
-						var (id, info) = a;
-						string label = $"{Path.GetFileName(info.Path)}##{id}";
-						return (label, (Action)(() => setValue(Assets.GetAssetFromGuid(id))), info.Path);
-					});
-					RenderItemsInColumns(items);
-				}
-				else if (valueType == typeof(RenderTexture))
-				{
+        private static void PickObjectPopup(Type valueType, Func<EObject, bool> setValue)
+        {
+            if (_openPopup)
+            {
+                _openPopup = false;
+                ImGui.CloseCurrentPopup();
+                ImGui.OpenPopup("ObjectPickPopup");
+            }
 
-				}
-				else if (valueType.IsAssignableTo(typeof(Texture)))
-				{
-					//foreach (var guid in Assets.GetGuids(AssetType.Texture))
-					//{
-					//    var path = Assets.ResolvePath(guid);
-					//    if (ImGui.Selectable($"{System.IO.Path.GetFileName(path)}##{guid}"))
-					//    {
-					//        setValue(Assets.GetTexture(path));
-					//        ImGui.CloseCurrentPopup();
-					//    }
-					//}
+            //var winSize = ImGui.GetWindowSize();
 
-					var assets = IOLayer.Database.Disk.GetAssetsInfo(AssetType.Texture);
-					var items = assets.Select(a =>
-					{
-						var (id, info) = a;
-						string label = $"{Path.GetFileName(info.Path)}##{id}";
-						return (label, (Action)(() => setValue(Assets.GetTexture(info.Path))), info.Path);
-					});
-					RenderItemsInColumns(items);
-				}
-				else if (valueType == typeof(TilemapAsset))
-				{
-					var assets = IOLayer.Database.Disk.GetAssetsInfo(AssetType.Tilemap);
-					var path = string.Empty;
+            //ImGui.SetNextWindowSizeConstraints(new Vector2(400, 100), new Vector2(1400, 500));
+            //var viewPortPos = ImGui.GetWindowViewport().Pos;
 
-					var items = assets.Select(a =>
-					{
-						var (id, info) = a;
-						string label = $"{Path.GetFileName(info.Path)}##{id}";
+            //ImGui.SetNextWindowPos(new Vector2(viewPortPos.X + winSize.X / 2, viewPortPos.Y + winSize.Y / 2 - 250));
+            if (!ImGui.BeginPopup("ObjectPickPopup"))
+                return;
 
-						return (label, (Action)(() => setValue(Assets.GetAssetFromGuid(id))), info.Path);
-					});
-					RenderItemsInColumns(items);
+            if (ImGui.Selectable("None"))
+            {
+                setValue(null);
+                ImGui.CloseCurrentPopup();
+                ImGui.EndPopup();
+                return;
+            }
 
-				}
-				else if (valueType == typeof(SceneAsset))
-				{
-					var assets = IOLayer.Database.Disk.GetAssetsInfo(AssetType.Scene);
-					var path = string.Empty;
+            if (typeof(AssetResourceBase).IsAssignableFrom(valueType))
+            {
+                // Asset picking
+                if (valueType == typeof(Material))
+                {
+                    DrawAssetColumns(AssetType.Material, Assets.GetAssetFromGuid, setValue);
+                }
+                else if (valueType == typeof(AudioClip))
+                {
+                    DrawAssetColumns(AssetType.Audio, Assets.GetAssetFromGuid, setValue);
+                }
+                else if (valueType == typeof(RenderTexture))
+                {
+                    DrawAssetColumns(AssetType.RenderTexture, Assets.GetAssetFromGuid, setValue);
+                }
+                else if (valueType.IsAssignableTo(typeof(Texture)))
+                {
+                    DrawAssetColumns(AssetType.Texture, refId => (Assets.GetAssetFromGuid(refId) as TextureAsset)?.Texture, setValue);
+                }
+                else if (valueType == typeof(TilemapAsset))
+                {
+                    DrawAssetColumns(AssetType.Tilemap, Assets.GetAssetFromGuid, setValue);
+                }
+                else if (valueType == typeof(SceneAsset))
+                {
+                    DrawAssetColumns(AssetType.Scene, Assets.GetAssetFromGuid, setValue);
+                }
+            }
+            else if (valueType == typeof(Sprite))
+            {
+                var assets = IOLayer.Database.Disk.GetAssetsInfo(AssetType.Texture);
+                var spriteItems = new List<AssetPickedInfo>();
 
-					var items = assets.Select(a =>
-					{
-						var (id, info) = a;
-						string label = $"{Path.GetFileName(info.Path)}##{id}";
+                foreach (var (id, info) in assets)
+                {
+                    var meta = EditorAssetUtils.GetAssetMeta(info.Path, AssetType.Texture) as TextureMetaFile;
+                    if (meta?.AtlasData == null || meta.AtlasData.ChunksCount == 0)
+                        continue;
 
-						return (label, (Action)(() => setValue(Assets.GetAssetFromGuid(id))), info.Path);
-					});
-					RenderItemsInColumns(items);
+                    var atlas = Assets.GetSpriteAtlas(info.Path);
 
-				}
-			}
-			else if (valueType == typeof(Sprite))
-			{
-				//var assets = IOLayer.Database.Disk.GetAssetsInfo(SharedTypes.AssetType.Texture);
-				//foreach (var (id, info) in assets)
-				//{
-				//    // TODO: this is very very slow, I have to cache all the sprites names on load.
-				//    var meta = EditorAssetUtils.GetAssetMeta(info.Path, AssetType.Texture) as TextureMetaFile;
-				//    // var texturesInfo = EditorIOLayer.Database.GetAssetsInfoByType(AssetType.Texture);
+                    for (int i = 0; i < meta.AtlasData.ChunksCount; i++)
+                    {
+                        var name = Sprite.CreateSpriteName(Path.GetFileName(info.Path), i);
+                        var cellId = meta.AtlasData.GetCell(i).ID;
+                        var label = $"{name}##{cellId}{i}{info.Path}";
 
-				//    if (meta?.AtlasData == null || meta.AtlasData.ChunksCount == 0)
-				//        continue;
+                        // This copy is needed since I'm passing it to a lambda.
+                        int iCopy = i;
 
-				//    // TODO: use a tree node for multi sprites
-				//    //if (ImGui.TreeNode())
-				//    //{
+                        spriteItems.Add(new AssetPickedInfo()
+                        {
+                            Name = label,
+                            Path = info.Path,
+                            SetValueCallback = () => setValue(atlas.GetSprite(iCopy)),
+                        });
+                    }
+                }
 
-				//    //}
+                // Render all sprites in columns (choose number of columns here)
+                RenderItemsInColumns(spriteItems);
+            }
+            else
+            {
+                foreach (var scene in SceneManager.Scenes)
+                {
+                    var root = scene.RootActors;
+                    for (int i = 0; i < root.Count; i++)
+                    {
+                        DrawSceneObjectPropertyPicker(root[i].Transform, valueType, setValue);
+                    }
+                }
+            }
 
-				//    for (int i = 0; i < meta.AtlasData.ChunksCount; i++)
-				//    {
-				//        var name = Sprite.CreateSpriteName(Path.GetFileName(info.Path), i);
-				//        if (ImGui.Selectable($"{name}##{meta.AtlasData.GetCell(i).ID}{i}{info.Path}"))
-				//        {
-				//            setValue(Assets.GetSpriteAtlas(info.Path).GetSprite(i));
-				//        }
-				//    }
-				//}
+            ImGui.EndPopup();
+        }
 
-				var assets = IOLayer.Database.Disk.GetAssetsInfo(Engine.AssetType.Texture);
-				var spriteItems = new List<(string label, Action action, string path)>();
+        private static void DropValue(Type valueType, EditorImGui.DragAndDrop.ReferenceDragAndDropPayload payload, Func<EObject, bool> setValue)
+        {
+            if (payload.Type != valueType && !valueType.IsAssignableTo(typeof(Component)) && 
+                valueType != typeof(EObject))
+            {
+                return;
+            }
 
-				foreach (var (id, info) in assets)
-				{
-					var meta = EditorAssetUtils.GetAssetMeta(info.Path, AssetType.Texture) as TextureMetaFile;
-					if (meta?.AtlasData == null || meta.AtlasData.ChunksCount == 0)
-						continue;
+            // If 'valueType' is EObject then we would select whatever type is in the payload.
+            if (valueType == typeof(EObject))
+            {
+                valueType = payload.Type;
+            }
 
-					var atlas = Assets.GetSpriteAtlas(info.Path);
+            if (typeof(AssetResourceBase).IsAssignableFrom(valueType))
+            {
+                // Asset picking
+                if (valueType == typeof(Material))
+                {
+                    setValue(Assets.GetAssetFromGuid(payload.RefId));
+                }
+                else if (valueType == typeof(AudioClip))
+                {
+                    setValue(Assets.GetAssetFromGuid(payload.RefId));
+                }
+                else if (valueType == typeof(RenderTexture))
+                {
+                    setValue(Assets.GetAssetFromGuid(payload.RefId));
+                }
+                else if (valueType.IsAssignableTo(typeof(Texture)))
+                {
+                    var texture = Assets.GetAssetFromGuid(payload.RefId) as TextureAsset;
+                    setValue(texture?.Texture);
+                }
+                else if (valueType == typeof(TilemapAsset))
+                {
+                    setValue(Assets.GetAssetFromGuid(payload.RefId));
+                }
+                else if (valueType == typeof(SceneAsset))
+                {
+                    setValue(Assets.GetAssetFromGuid(payload.RefId));
+                }
+            }
+            else if (valueType == typeof(Sprite))
+            {
+                var texture = Assets.GetAssetFromGuid(payload.RefId) as TextureAsset;
+                if (texture)
+                {
+                    setValue(texture?.Atlas.GetSprite(payload.Index));
+                }
+            }
+            else if (valueType == typeof(Actor))
+            {
+                setValue(payload.Value);
+            }
+            else if (valueType.IsAssignableTo(typeof(Component)))
+            {
+                var actor = payload.Value as Actor;
+                foreach (var component in actor.Components)
+                {
+                    if (component.GetType().IsAssignableTo(valueType))
+                    {
+                        setValue(component);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                setValue(payload.Value);
+            }
+        }
 
-					for (int i = 0; i < meta.AtlasData.ChunksCount; i++)
-					{
-						var name = Sprite.CreateSpriteName(Path.GetFileName(info.Path), i);
-						var cellId = meta.AtlasData.GetCell(i).ID;
-						var label = $"{name}##{cellId}{i}{info.Path}";
+        private static void DrawSceneObjectPropertyPicker(Transform root, Type targetType, Func<EObject, bool> setValue)
+        {
+            if (typeof(Actor).IsAssignableFrom(targetType))
+            {
+                if (ImGui.Selectable($"{root.Name}##{root.GetID()}"))
+                {
+                    setValue(root.Actor);
+                    ImGui.CloseCurrentPopup();
+                }
+            }
+            else if (typeof(IComponent).IsAssignableFrom(targetType))
+            {
+                // TODO: this is slow, it should be cached.
+                var components = root.Actor.Components.Where(x => x.GetType().IsAssignableTo(targetType)).ToArray();
 
-						// This copy is needed since I'm passing it to a lambda.
-						int iCopy = i;
+                if (components.Length > 0 && ImGui.Selectable($"{root.Name}##{root.GetID()}"))
+                {
+                    foreach (var comp in components)
+                    {
+                        if (targetType.IsAssignableFrom(comp.GetType()))
+                        {
+                            if (setValue(comp))
+                                break;
+                        }
+                    }
+                    ImGui.CloseCurrentPopup();
+                }
+            }
+            //else if (typeof(EObject).IsAssignableFrom(targetType))
+            //{
+            //    if (ImGui.Selectable($"{root.Name}##{root.GetID()}"))
+            //    {
+            //        setValue(root.Actor);
+            //        ImGui.CloseCurrentPopup();
+            //    }
+            //}
+            for (int i = 0; i < root.Children.Count; i++)
+            {
+                DrawSceneObjectPropertyPicker(root.Children[i], targetType, setValue);
+            }
+        }
 
-						spriteItems.Add((label, () =>
-						{
-							setValue(atlas.GetSprite(iCopy));
-						}, info.Path));
-					}
-				}
+        private static void DrawAssetColumns(AssetType type, Func<Guid, EObject> getValue, Func<EObject, bool> setValue)
+        {
+            var assets = IOLayer.Database.Disk.GetAssetsInfo(type);
+            var items = assets.Select(idAssetInfo =>
+            {
+                string label = $"{Path.GetFileName(idAssetInfo.Value.Path)}##{idAssetInfo.Key}";
 
-				// Render all sprites in columns (choose number of columns here)
-				RenderItemsInColumns(spriteItems);
-			}
-			else
-			{
-				foreach (var scene in SceneManager.Scenes)
-				{
-					var root = scene.RootActors;
-					for (int i = 0; i < root.Count; i++)
-					{
-						DrawSceneObjectPropertyPicker(root[i].Transform, valueType, setValue);
-					}
-				}
-			}
+                return new AssetPickedInfo()
+                {
+                    Name = label,
+                    SetValueCallback = () => setValue(getValue(idAssetInfo.Key)),
+                    Path = idAssetInfo.Value.Path
+                };
+            });
+            RenderItemsInColumns(items);
+        }
 
-			ImGui.EndPopup();
-		}
+        private static void RenderItemsInColumns(IEnumerable<AssetPickedInfo> items)
+        {
+            if (!items.Any())
+                return;
 
-		private static void DrawSceneObjectPropertyPicker(Transform root, Type targetType, Func<EObject, bool> setValue)
-		{
-			if (typeof(Actor).IsAssignableFrom(targetType))
-			{
-				if (ImGui.Selectable($"{root.Name}##{root.GetID()}"))
-				{
-					setValue(root.Actor);
-					ImGui.CloseCurrentPopup();
-				}
-			}
-			else if (typeof(IComponent).IsAssignableFrom(targetType))
-			{
-				// TODO: this is slow, it should be cached.
-				var components = root.Actor.Components.Where(x => x.GetType().IsAssignableTo(targetType)).ToArray();
+            int count = 0;
+            ImGui.BeginTable("PopupTable", ASSETS_COLUMNS_COUNT_POPUP, ImGuiTableFlags.None);
 
-				if (components.Length > 0 && ImGui.Selectable($"{root.Name}##{root.GetID()}"))
-				{
-					foreach (var comp in components)
-					{
-						if (targetType.IsAssignableFrom(comp.GetType()))
-						{
-							if (setValue(comp))
-								break;
-						}
-					}
-					ImGui.CloseCurrentPopup();
-				}
-			}
-			//else if (typeof(EObject).IsAssignableFrom(targetType))
-			//{
-			//    if (ImGui.Selectable($"{root.Name}##{root.GetID()}"))
-			//    {
-			//        setValue(root.Actor);
-			//        ImGui.CloseCurrentPopup();
-			//    }
-			//}
-			for (int i = 0; i < root.Children.Count; i++)
-			{
-				DrawSceneObjectPropertyPicker(root.Children[i], targetType, setValue);
-			}
-		}
-	}
+            foreach (var item in items)
+            {
+                if (count % ASSETS_COLUMNS_COUNT_POPUP == 0)
+                    ImGui.TableNextRow();
+
+                ImGui.TableNextColumn();
+                if (ImGui.Selectable(item.Name))
+                {
+                    item.SetValueCallback();
+                    ImGui.CloseCurrentPopup();
+                }
+                ImGui.SetItemTooltip(item.Path);
+
+                count++;
+            }
+
+            ImGui.EndTable();
+        }
+
+
+        private struct AssetPickedInfo
+        {
+            public string Name { get; set; }
+            public Action SetValueCallback { get; set; }
+            public string Path { get; set; }
+
+        }
+    }
 }

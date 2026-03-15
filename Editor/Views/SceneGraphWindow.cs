@@ -162,7 +162,7 @@ namespace Editor.Views
 
             ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(1f, 1f, 1f, 1f));
             bool open = ImGui.TreeNodeEx("##node", flags);
-
+            EditorImGui.DragAndDrop.ItemDragReference(actor.Name, EditorImGui.DragAndDrop.PAYLOAD_ID_EOBJECT, actor, actor.GetType(), actor.GetID());
             var id = actor.GetID();
 
             if (ImGui.IsItemActivated())
@@ -194,7 +194,7 @@ namespace Editor.Views
                 if (ImGui.MenuItem("Rename"))
                 {
                 }
-
+                ImGui.BeginDisabled();
                 if (ImGui.MenuItem("Duplicate"))
                 {
                     // TODO: create and re-assign the new instance ids of actors and components.
@@ -210,6 +210,7 @@ namespace Editor.Views
                         }
                     }
                 }
+                ImGui.EndDisabled();
 
                 ImGui.BeginDisabled(!actor.Transform.Parent);
 

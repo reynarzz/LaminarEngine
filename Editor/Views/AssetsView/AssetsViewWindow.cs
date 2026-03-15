@@ -481,69 +481,7 @@ namespace Editor.Views
             return directoryInfo;
         }
 
-        [StructLayout(LayoutKind.Sequential)]
-        private struct ReferenceDragAndDropPayload
-        {
-            public ulong A;
-            public ulong B;
-            public Guid RefId
-            {
-                get
-                {
-                    Span<ulong> parts = stackalloc ulong[2];
-                    parts[0] = A;
-                    parts[1] = B;
-
-                    return new Guid(MemoryMarshal.AsBytes(parts));
-                }
-            }
-        }
-        private ReferenceDragAndDropPayload _dragAndDropPayload;
-        private void DragAndDrop()
-        {
-            unsafe
-            {
-                int dragValue = 10;
-
-                ImGui.Button("Drag Source");
-
-                if (ImGui.BeginDragDropSource())
-                {
-                    Guid refId = Guid.NewGuid();
-
-                    Span<byte> guidBytes = stackalloc byte[sizeof(Guid)];
-                    refId.TryWriteBytes(guidBytes);
-
-                    _dragAndDropPayload = new ReferenceDragAndDropPayload()
-                    {
-                        A = BitConverter.ToUInt64(guidBytes[..8]),
-                        B = BitConverter.ToUInt64(guidBytes[8..])
-                    };
-
-                    fixed(void* ptr = &_dragAndDropPayload)
-                    {
-                        ImGui.SetDragDropPayload("ASSETS_VIEW_VALUE", new IntPtr(ptr), (uint)sizeof(ReferenceDragAndDropPayload));
-                    }
-                    ImGui.Text($"Value: {dragValue}");
-                    ImGui.EndDragDropSource();
-                }
-
-                ImGui.Button("Drop Target");
-
-                if (ImGui.BeginDragDropTarget())
-                {
-                    var payload = ImGui.AcceptDragDropPayload("ASSETS_VIEW_VALUE");
-
-                    if (payload.NativePtr != null)
-                    {
-                        int dropped = *(int*)payload.Data;
-                        dragValue = dropped;
-                    }
-
-                    ImGui.EndDragDropTarget();
-                }
-            }
-        }
+       
         private List<AssetViewFileInfo> GetAssetChildren(AssetViewFileInfo parent, AssetType assetType, string absoluteFilePath, ref Guid refId)
         {
             var children = new List<AssetViewFileInfo>();

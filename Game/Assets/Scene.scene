@@ -615,14 +615,30 @@
               "Type": "ComplexCollection",
               "InternalType": "System.Collections.Generic.List`1[[Game.TestScript+AStruct, Game]], System.Private.CoreLib",
               "TypeId": "6f0458f9-c383-baba-8ba9-4bf46cc750fb",
-              "Simple": null
+              "Simple": null,
+              "Collection": {
+                "$type": "Engine.Serialization.CollectionClasses, Engine",
+                "$value": {
+                  "Value": [],
+                  "ItemsType": "None",
+                  "CollectionType": "List"
+                }
+              }
             },
             {
               "Name": "AStructTypeArray",
               "Type": "ComplexCollection",
               "InternalType": "Game.TestScript+AStruct[], Game",
               "TypeId": "16eecb67-d6a8-6c84-8c27-14ffec260592",
-              "Simple": null
+              "Simple": null,
+              "Collection": {
+                "$type": "Engine.Serialization.CollectionClasses, Engine",
+                "$value": {
+                  "Value": [],
+                  "ItemsType": "None",
+                  "CollectionType": "Array"
+                }
+              }
             },
             {
               "Name": "_TestCLassList",
@@ -651,7 +667,15 @@
               "Type": "ComplexCollection",
               "InternalType": "Game.TestScript+TestClass[], Game",
               "TypeId": "d20cfd48-ff37-a774-28f7-16dbf7df5cf2",
-              "Simple": null
+              "Simple": null,
+              "Collection": {
+                "$type": "Engine.Serialization.CollectionClasses, Engine",
+                "$value": {
+                  "Value": [],
+                  "ItemsType": "None",
+                  "CollectionType": "Array"
+                }
+              }
             },
             {
               "Name": "_interfaceArray",
@@ -757,35 +781,59 @@
               "Simple": null
             },
             {
-              "Name": "test",
-              "Type": "Int",
-              "InternalType": "System.Int32, System.Private.CoreLib",
-              "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
-              "Simple": {
-                "Kind": "Int",
-                "Value": 0
-              }
-            },
-            {
-              "Name": "AnotherStringField",
-              "Type": "String",
-              "InternalType": "System.String, System.Private.CoreLib",
-              "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
-              "Simple": {
-                "Kind": "String",
-                "Value": ""
-              }
-            },
-            {
-              "Name": "AnotherVec2Field",
-              "Type": "Vec2",
-              "InternalType": "GlmNet.vec2, Engine",
-              "TypeId": "898ce777-3bb3-60cf-33cb-4c96808525ae",
-              "Simple": {
-                "Kind": "Vec2",
-                "Value": {
-                  "x": 0.0,
-                  "y": 0.0
+              "Name": "_sprites",
+              "Type": "ReferenceCollection",
+              "InternalType": "Engine.Sprite[], Engine",
+              "TypeId": "4581d1dc-e486-e87a-ccbc-d30a03453418",
+              "Simple": null,
+              "Collection": {
+                "$type": "Engine.Serialization.CollectionReferences, Engine",
+                "$value": {
+                  "Value": [
+                    {
+                      "$type": "Engine.Serialization.SpriteReferenceData, Engine",
+                      "AtlasIndex": 0,
+                      "TexRefId": "69e1a694-395e-4675-a011-b72a07eb40e2",
+                      "Type": "SpriteAsset",
+                      "RefId": "50005a5c-e122-4ecf-a21a-a738a7929708"
+                    },
+                    {
+                      "$type": "Engine.Serialization.SpriteReferenceData, Engine",
+                      "AtlasIndex": 186,
+                      "TexRefId": "ae41cfa8-73fe-4a87-8196-f58a7e3dd748",
+                      "Type": "SpriteAsset",
+                      "RefId": "93da070c-8038-485e-9aca-e070a51cd441"
+                    },
+                    {
+                      "$type": "Engine.Serialization.SpriteReferenceData, Engine",
+                      "AtlasIndex": 70,
+                      "TexRefId": "8f5c1f5f-d718-4140-9168-24ff5acdea97",
+                      "Type": "SpriteAsset",
+                      "RefId": "8886018c-6683-41c7-a6c6-ac1a228aa837"
+                    },
+                    {
+                      "$type": "Engine.Serialization.SpriteReferenceData, Engine",
+                      "AtlasIndex": 346,
+                      "TexRefId": "da64b85c-92f1-4a6f-a576-0ac668e7e2a7",
+                      "Type": "SpriteAsset",
+                      "RefId": "6b9e4a11-3c29-4389-8b72-ae767bc04a86"
+                    },
+                    {
+                      "$type": "Engine.Serialization.SpriteReferenceData, Engine",
+                      "AtlasIndex": 3,
+                      "TexRefId": "43857e7d-82c1-485e-a0ce-235ca0a42cd2",
+                      "Type": "SpriteAsset",
+                      "RefId": "8336aafb-7fb2-451b-ae94-ba0ed6b7d6c7"
+                    }
+                  ],
+                  "ItemsType": [
+                    "SpriteAsset",
+                    "SpriteAsset",
+                    "SpriteAsset",
+                    "SpriteAsset",
+                    "SpriteAsset"
+                  ],
+                  "CollectionType": "Array"
                 }
               }
             },
@@ -969,21 +1017,45 @@
               "Type": "ComplexCollection",
               "InternalType": "System.Collections.Generic.List`1[[Game.TestScript+AAA`1[[System.Int32, System.Private.CoreLib]], Game]], System.Private.CoreLib",
               "TypeId": "24edf2fa-33fb-167c-b197-c8f3eabe2a8d",
-              "Simple": null
+              "Simple": null,
+              "Collection": {
+                "$type": "Engine.Serialization.CollectionClasses, Engine",
+                "$value": {
+                  "Value": [],
+                  "ItemsType": "None",
+                  "CollectionType": "List"
+                }
+              }
             },
             {
               "Name": "AAAStringList",
               "Type": "ComplexCollection",
               "InternalType": "System.Collections.Generic.List`1[[Game.TestScript+AAA`1[[System.String, System.Private.CoreLib]], Game]], System.Private.CoreLib",
               "TypeId": "b884b5c7-956b-6c70-f4c7-ba189d6814f7",
-              "Simple": null
+              "Simple": null,
+              "Collection": {
+                "$type": "Engine.Serialization.CollectionClasses, Engine",
+                "$value": {
+                  "Value": [],
+                  "ItemsType": "None",
+                  "CollectionType": "List"
+                }
+              }
             },
             {
               "Name": "AAAStructList",
               "Type": "ComplexCollection",
               "InternalType": "System.Collections.Generic.List`1[[Game.TestScript+AAA`1[[Game.TestScript+AStruct, Game]], Game]], System.Private.CoreLib",
               "TypeId": "9b36be11-8898-b98c-dfc2-4647e5039a39",
-              "Simple": null
+              "Simple": null,
+              "Collection": {
+                "$type": "Engine.Serialization.CollectionClasses, Engine",
+                "$value": {
+                  "Value": [],
+                  "ItemsType": "None",
+                  "CollectionType": "List"
+                }
+              }
             },
             {
               "Name": "Orientation",
@@ -1182,7 +1254,14 @@
                       "Type": "Actor",
                       "InternalType": "Engine.Actor, Engine",
                       "TypeId": "234a1313-ea9a-edcf-9ca7-bc170f8ee374",
-                      "Simple": null
+                      "Simple": null,
+                      "Reference": {
+                        "$type": "Engine.Serialization.ReferenceData, Engine",
+                        "$value": {
+                          "Type": "Actor",
+                          "RefId": "d581a89b-ec30-439a-bc87-50b8b94b8f59"
+                        }
+                      }
                     },
                     {
                       "Name": "Component",
@@ -1196,21 +1275,252 @@
                       "Type": "ComplexClass",
                       "InternalType": "Game.TestScript+TestClassSub, Game",
                       "TypeId": "757afb8f-bda0-0ce9-7ddb-14493ac92a5f",
-                      "Simple": null
+                      "Simple": null,
+                      "Class": {
+                        "$type": "Engine.Serialization.ComplexClass, Engine",
+                        "$value": {
+                          "ClassType": "ComplexClass",
+                          "Properties": [
+                            {
+                              "Name": "ValueTest",
+                              "Type": "Int",
+                              "InternalType": "System.Int32, System.Private.CoreLib",
+                              "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
+                              "Simple": {
+                                "Kind": "Int",
+                                "Value": 0
+                              }
+                            },
+                            {
+                              "Name": "StringTest",
+                              "Type": "String",
+                              "InternalType": "System.String, System.Private.CoreLib",
+                              "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                              "Simple": {
+                                "Kind": "String",
+                                "Value": ""
+                              }
+                            },
+                            {
+                              "Name": "EnumTest",
+                              "Type": "Enum",
+                              "InternalType": "System.TypeCode, System.Private.CoreLib",
+                              "TypeId": "e5627d8b-4aa8-0fd1-df8c-95660fc125d0",
+                              "Simple": {
+                                "Kind": "Enum",
+                                "Enum": {
+                                  "TypeId": "e5627d8b-4aa8-0fd1-df8c-95660fc125d0",
+                                  "EnumInternalType": "System.TypeCode, System.Private.CoreLib",
+                                  "EnumValue": 0
+                                }
+                              }
+                            },
+                            {
+                              "Name": "vec2Test",
+                              "Type": "Vec2",
+                              "InternalType": "GlmNet.vec2, Engine",
+                              "TypeId": "898ce777-3bb3-60cf-33cb-4c96808525ae",
+                              "Simple": {
+                                "Kind": "Vec2",
+                                "Value": {
+                                  "x": 0.0,
+                                  "y": 0.0
+                                }
+                              }
+                            },
+                            {
+                              "Name": "vec3Test",
+                              "Type": "Vec3",
+                              "InternalType": "GlmNet.vec3, Engine",
+                              "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
+                              "Simple": {
+                                "Kind": "Vec3",
+                                "Value": {
+                                  "x": 0.0,
+                                  "y": 0.0,
+                                  "z": 0.0
+                                }
+                              }
+                            },
+                            {
+                              "Name": "vec4Test",
+                              "Type": "Vec4",
+                              "InternalType": "GlmNet.vec4, Engine",
+                              "TypeId": "000dd809-7bfa-df96-5dc1-02cdc5de5670",
+                              "Simple": {
+                                "Kind": "Vec4",
+                                "Value": {
+                                  "x": 0.0,
+                                  "y": 0.0,
+                                  "z": 0.0,
+                                  "w": 0.0
+                                }
+                              }
+                            },
+                            {
+                              "Name": "mat2Test",
+                              "Type": "Mat2",
+                              "InternalType": "GlmNet.mat2, Engine",
+                              "TypeId": "9a4e9961-4483-17bd-96d9-b0e4244fe0a1",
+                              "Simple": {
+                                "Kind": "Mat2",
+                                "Value": {
+                                  "c0": {
+                                    "x": 0.0,
+                                    "y": 0.0
+                                  },
+                                  "c1": {
+                                    "x": 0.0,
+                                    "y": 0.0
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "Name": "mat3Test",
+                              "Type": "Mat3",
+                              "InternalType": "GlmNet.mat3, Engine",
+                              "TypeId": "50640eb4-929e-e183-c479-01b9bdddda0d",
+                              "Simple": {
+                                "Kind": "Mat3",
+                                "Value": {
+                                  "c0": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                  },
+                                  "c1": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                  },
+                                  "c2": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "Name": "mat4Test",
+                              "Type": "Mat4",
+                              "InternalType": "GlmNet.mat4, Engine",
+                              "TypeId": "9b92fa99-dd8e-0ad0-4b55-3c0a16332b24",
+                              "Simple": {
+                                "Kind": "Mat4",
+                                "Value": {
+                                  "c0": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0,
+                                    "w": 0.0
+                                  },
+                                  "c1": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0,
+                                    "w": 0.0
+                                  },
+                                  "c2": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0,
+                                    "w": 0.0
+                                  },
+                                  "c3": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0,
+                                    "w": 0.0
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "Name": "Vec2List",
+                              "Type": "SimpleCollection",
+                              "InternalType": "System.Collections.Generic.List`1[[GlmNet.vec2, Engine]], System.Private.CoreLib",
+                              "TypeId": "907a9aae-cd65-2299-4291-930cfeacc3c3",
+                              "Simple": null
+                            },
+                            {
+                              "Name": "EnumList",
+                              "Type": "SimpleCollection",
+                              "InternalType": "System.Collections.Generic.List`1[[Engine.Body2DType, Engine]], System.Private.CoreLib",
+                              "TypeId": "e929df43-1894-c2aa-f72d-2e5564429c84",
+                              "Simple": null
+                            },
+                            {
+                              "Name": "AnyEObjectTest",
+                              "Type": "EObjectFlag",
+                              "InternalType": "Engine.EObject, Engine",
+                              "TypeId": "e5283e56-06f2-7ba4-4d91-114c090100a8",
+                              "Simple": null
+                            },
+                            {
+                              "Name": "ActorTest",
+                              "Type": "Actor",
+                              "InternalType": "Engine.Actor, Engine",
+                              "TypeId": "234a1313-ea9a-edcf-9ca7-bc170f8ee374",
+                              "Simple": null
+                            },
+                            {
+                              "Name": "RendererTest",
+                              "Type": "Component",
+                              "InternalType": "Engine.SpriteRenderer, Engine",
+                              "TypeId": "8a8ec899-a0c0-d9bb-e76a-d118eac28eb0",
+                              "Simple": null
+                            },
+                            {
+                              "Name": "RigidBodyTest",
+                              "Type": "Component",
+                              "InternalType": "Engine.RigidBody2D, Engine",
+                              "TypeId": "5efeb7ac-f207-f6b2-efd9-a61d13b88933",
+                              "Simple": null
+                            },
+                            {
+                              "Name": "AnyComponentTest",
+                              "Type": "Component",
+                              "InternalType": "Engine.Component, Engine",
+                              "TypeId": "3e3a868d-c9c8-0090-db9b-4479f8ffe5df",
+                              "Simple": null
+                            }
+                          ],
+                          "InternalType": "Game.TestScript+TestClassSub, Game",
+                          "TypeId": "757afb8f-bda0-0ce9-7ddb-14493ac92a5f"
+                        }
+                      }
                     },
                     {
                       "Name": "_TestComponentList",
                       "Type": "ReferenceCollection",
                       "InternalType": "System.Collections.Generic.List`1[[Engine.Component, Engine]], System.Private.CoreLib",
                       "TypeId": "7db772b5-4e6c-97a7-d3de-9517868c2a92",
-                      "Simple": null
+                      "Simple": null,
+                      "Collection": {
+                        "$type": "Engine.Serialization.CollectionReferences, Engine",
+                        "$value": {
+                          "Value": [],
+                          "ItemsType": [],
+                          "CollectionType": "List"
+                        }
+                      }
                     },
                     {
                       "Name": "_TestActorList",
                       "Type": "ReferenceCollection",
                       "InternalType": "System.Collections.Generic.List`1[[Engine.Actor, Engine]], System.Private.CoreLib",
                       "TypeId": "3762e8e5-cc7e-72d6-c96d-5ae01fdec2ec",
-                      "Simple": null
+                      "Simple": null,
+                      "Collection": {
+                        "$type": "Engine.Serialization.CollectionReferences, Engine",
+                        "$value": {
+                          "Value": [],
+                          "ItemsType": [],
+                          "CollectionType": "List"
+                        }
+                      }
                     },
                     {
                       "Name": "LongTest",
@@ -1219,7 +1529,7 @@
                       "TypeId": "11f5c997-9b76-7920-992b-e9e48a602ab8",
                       "Simple": {
                         "Kind": "Long",
-                        "Value": 987654321012345678
+                        "Value": -3
                       }
                     },
                     {
@@ -1229,7 +1539,7 @@
                       "TypeId": "f68439f8-d4c7-33ac-d0f0-7558e5fa2d26",
                       "Simple": {
                         "Kind": "ULong",
-                        "Value": "18446744073709551615"
+                        "Value": "2"
                       }
                     },
                     {
@@ -1239,7 +1549,7 @@
                       "TypeId": "b876d63d-15ee-e604-7ffc-ca754330681b",
                       "Simple": {
                         "Kind": "Double",
-                        "Value": 0.0
+                        "Value": -5.4
                       }
                     },
                     {
@@ -3673,28 +3983,68 @@
               "Type": "SimpleCollection",
               "InternalType": "System.Collections.Generic.Dictionary`2[[System.Transactions.EnlistmentOptions, System.Transactions.Local],[System.String, System.Private.CoreLib]], System.Private.CoreLib",
               "TypeId": "763a9a77-8120-7688-48c1-469e4bbc578b",
-              "Simple": null
+              "Simple": null,
+              "Collection": {
+                "$type": "Engine.Serialization.DictionarySimple, Engine",
+                "$value": {
+                  "KeyType": "None",
+                  "ValueType": "None",
+                  "Keys": [],
+                  "Values": [],
+                  "CollectionType": "Dictionary"
+                }
+              }
             },
             {
               "Name": "_enumByEnumDictionary",
               "Type": "SimpleCollection",
               "InternalType": "System.Collections.Generic.Dictionary`2[[Engine.BlendFactor, Engine],[Engine.GamePadAxis, Engine]], System.Private.CoreLib",
               "TypeId": "2bd735db-6d3c-8bc9-28a9-19019fb68955",
-              "Simple": null
+              "Simple": null,
+              "Collection": {
+                "$type": "Engine.Serialization.DictionarySimple, Engine",
+                "$value": {
+                  "KeyType": "None",
+                  "ValueType": "None",
+                  "Keys": [],
+                  "Values": [],
+                  "CollectionType": "Dictionary"
+                }
+              }
             },
             {
               "Name": "_mat4ByEnumDictionary",
               "Type": "SimpleCollection",
               "InternalType": "System.Collections.Generic.Dictionary`2[[Engine.BlendFactor, Engine],[GlmNet.mat4, Engine]], System.Private.CoreLib",
               "TypeId": "74776d7d-3317-0d70-0003-9f68bf23957c",
-              "Simple": null
+              "Simple": null,
+              "Collection": {
+                "$type": "Engine.Serialization.DictionarySimple, Engine",
+                "$value": {
+                  "KeyType": "None",
+                  "ValueType": "None",
+                  "Keys": [],
+                  "Values": [],
+                  "CollectionType": "Dictionary"
+                }
+              }
             },
             {
               "Name": "_intArrByEnumDictionary",
               "Type": "ComplexCollection",
               "InternalType": "System.Collections.Generic.Dictionary`2[[Engine.BlendFactor, Engine],[Game.TestScript+Dclas, Game]], System.Private.CoreLib",
               "TypeId": "744b50e2-f67e-8723-004e-92960f8fd837",
-              "Simple": null
+              "Simple": null,
+              "Collection": {
+                "$type": "Engine.Serialization.DictionaryClass, Engine",
+                "$value": {
+                  "KeyType": "None",
+                  "ValueType": "None",
+                  "Keys": [],
+                  "Values": [],
+                  "CollectionType": "Dictionary"
+                }
+              }
             },
             {
               "Name": "_boolArray",

@@ -5,14 +5,11 @@
    most of it is in 'prototype' phase a nice (big) refactor is on the way.
 -Refactor.
 -Changing cameras causes to render prevCamera.
--Weird rendering issue, related to mouse picking pink materials, is it the RenderingSystem, batcher?
 -If I load the runtime mode, and the applicationLayer is enabled, the camera renders black.
 Editor.Cooker, the asset database sometimes doesn't remove old assets correctly.
 - Improve Editor property UI
 
 Fix:
-- Investigate why when the scene is reloaded old objects are still alive.
-- Rebuild the rendering system.
 - Compilation can get stuck forever.
 - If a collider change from Trigger to normal (and viceversa), the ontrigerExit/onCollisionExit must be called.
 - The renderData is not removed from renderingLayer dictionary if the Actor starts disabled in the first frame, and then try to enable it.
@@ -22,6 +19,7 @@ Fix:
     for it to generate the typeRegistry, the build should already have a game.dll compiled. Use it from the library folder for now,
     but the game.dll should be compiled for the build type(Release/Debug), and turning on all the directives defined for the target platform.
 - Mouse picker should take into account all the vertices types (ex, FontVertex, SpriteVertex), it currently only supports 'Vertex' type.
+- Gizmos do not disappear once the renderer is removed, this is because the RendererData2D is created every frame (for testing)
 
 Serialization:
 - Forbid serialization of dictionaries that contains EObject as key?

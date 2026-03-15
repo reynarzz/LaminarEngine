@@ -20,6 +20,7 @@ namespace Engine
         ShaderV2,
         Scene,
         Tilemap,
-        Script
+        Script,
+        RenderTexture
     }
 }

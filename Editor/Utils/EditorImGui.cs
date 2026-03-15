@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Editor.Utils
 {
-    internal class EditorImGui
+    internal partial class EditorImGui
     {
         private const float POPUP_WINDOW_PADDING = 7.0f;
         public static void Image(nint image, vec2 imageSize)
