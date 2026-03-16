@@ -41,6 +41,9 @@ namespace Editor
         public CameraProjectionMode ProjectionMode { get; set; } = CameraProjectionMode.Perspective;
 
         public vec4 Viewport { get; set; } = new vec4(0, 0, 1, 1);
+        private vec3 _focusPosition;
+        private float _focusDistance;
+        private float _focusTime;
 
         public EditorCamera(float aspect = 16f / 9f)
         {
@@ -116,6 +119,7 @@ namespace Editor
                 _pivot += Up * mouseDelta.y * unitsPerPixelY;
             }
 
+
             if (io.MouseWheel != 0 && ImGui.IsWindowHovered())
             {
                 const float zoomSpeed = 0.1f;
@@ -129,8 +133,57 @@ namespace Editor
                 }
             }
 
+
+            if (ImGui.IsKeyPressed(ImGuiKey.F, false) && Selector.Transform)
+            {
+                var dist = (_pivot - _worldPosition).Magnitude;
+                var target = (_pivot - Selector.Transform.WorldPosition).Magnitude;
+
+                if (MathF.Abs(target) < 0.1f)
+                {
+                    dist = Mathf.CompareFloats(dist, _nearFocus) ? _farFocus : _nearFocus;
+                }
+                Focus(Selector.Transform.WorldPosition, dist);
+            }
+            FocusUpdate();
             UpdateView();
         }
+
+        private vec3 _focusStartPivot;
+        private float _focusStartDistance;
+        private const float _nearFocus = 3f;
+        private const float _farFocus = 10f;
+        private void Focus(vec3 worldPosition, float distance)
+        {
+            _focusStartPivot = _pivot;
+            _focusStartDistance = _distance;
+
+            _focusPosition = worldPosition;
+            _focusDistance = distance;
+
+            _focusTime = 1f;
+        }
+
+        private void FocusUpdate()
+        {
+            if (_focusTime <= 0)
+            {
+                return;
+            }
+
+            float dt = ImGui.GetIO().DeltaTime * 6;
+            _focusTime -= dt;
+
+            float t = 1f - _focusTime;
+
+            _pivot = Mathf.Lerp(_focusStartPivot, _focusPosition, t);
+
+            float targetDist = Mathf.Clamp(_focusDistance, MinDistance, MaxDistance);
+            _distance = Mathf.Lerp(_focusStartDistance, targetDist, t);
+
+            _worldPosition = _pivot - Forward * _distance;
+        }
+
         public void MoveThirdPerson(float deltaTime, float speed = 5.0f)
         {
             vec3 move = new vec3(0, 0, 0);
@@ -152,6 +205,21 @@ namespace Editor
                 _pivot += move * speed * deltaTime;
                 UpdateView();
             }
+        }
+        public void SetWorldPosition(vec3 position)
+        {
+            _worldPosition = position;
+            _pivot = _worldPosition + Forward * _distance;
+
+            UpdateView();
+        }
+
+        public void SetWorldRotation(Quaternion rotation)
+        {
+            _rotation = Quaternion.Normalize(rotation);
+            _pivot = _worldPosition + Forward * _distance;
+
+            UpdateView();
         }
         private void UpdateView()
         {
