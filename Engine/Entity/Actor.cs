@@ -252,6 +252,15 @@ namespace Engine
                         {
                             Debug.Error(e);
                         }
+
+                        try
+                        {
+                            (component as IEnabledComponent).OnEnabled();
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.Error(e);
+                        }
                     }
 
                     // NOTE: All components are enabled by default, so this if is unncessary right now,

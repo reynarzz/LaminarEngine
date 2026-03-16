@@ -133,6 +133,7 @@ namespace Editor.Views
             var greenSelected = EditorColors.MainColor.ToVector4();
             greenSelected.W = 0.6f;
             ImGui.PushStyleColor(ImGuiCol.HeaderActive, greenSelected);
+            int popColors = 1;
 
             bool isSelected = Selector.Selected && Selector.Selected == actor;
             var headerColor = ImGui.GetStyle().Colors[(int)ImGuiCol.Header];
@@ -150,6 +151,7 @@ namespace Editor.Views
                 {
                     ImGui.PushStyleColor(ImGuiCol.Header, headerColor);
                     ImGui.PushStyleColor(ImGuiCol.HeaderHovered, headerColor);
+
                 }
 
             }
@@ -157,9 +159,12 @@ namespace Editor.Views
             {
                 ImGui.PushStyleColor(ImGuiCol.Header, greenSelected);
                 ImGui.PushStyleColor(ImGuiCol.HeaderHovered, greenSelected);
+
             }
+            popColors += 2;
 
             ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(1f, 1f, 1f, 1f));
+            popColors += 1;
             bool open = ImGui.TreeNodeEx("##node", flags);
             EditorImGui.DragAndDrop.ItemDragReference(actor.Name, EditorImGui.DragAndDrop.PAYLOAD_ID_EOBJECT, actor, actor.GetType(), actor.GetID());
             var id = actor.GetID();
@@ -244,13 +249,14 @@ namespace Editor.Views
 
                     ImGui.PopID();
                     Actor.Destroy(actor);
+                    ImGui.PopStyleColor(popColors);
                     return;
                 }
 
                 ImGui.EndPopup();
             }
 
-            ImGui.PopStyleColor(4);
+            ImGui.PopStyleColor(popColors);
 
             ImGui.SameLine();
             var iconCursorX = ImGui.GetCursorPosX();

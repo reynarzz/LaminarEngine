@@ -19,7 +19,9 @@ namespace Engine.Layers
 
         private static readonly List<RenderingSurface> _renderingSurfaces = new();
         private Action<Shader, RenderTexture, RenderTexture, UniformValue[]> _drawPostProcessCallback;
-        private WeakReference<ICamera> _sceneCamera = new WeakReference<ICamera>(null);
+        private ICamera _sceneCamera = null;
+        private static readonly List<Camera> _cameras = new();
+
         internal static event Action OnRenderingEnd;
         internal static event Action OnDrawOverlay;
         private RenderTexture _defaultRenderTexture;
@@ -49,7 +51,7 @@ namespace Engine.Layers
                 // Default surface
                 InitializeSurfaces([new RenderingSurface()
                 {
-                   PickCameraFromSceneGraph = true,
+                   PickCamerasFromSceneGraph = true,
                    RenderPostProcessing = true,
                    BlitToScreen = true,
                    RenderUI = true,
@@ -81,7 +83,7 @@ namespace Engine.Layers
             PushRenderer(element, _uiRenderersById, _onUIRendererDestroyed);
         }
 
-        private static void PushRenderer(Renderer renderer, Dictionary<Guid, RendererData2D> dictionary, Action<RendererData> onDestroyed) 
+        private static void PushRenderer(Renderer renderer, Dictionary<Guid, RendererData2D> dictionary, Action<RendererData> onDestroyed)
         {
             renderer.RendererData.OnDestroyRenderer -= onDestroyed;
             renderer.RendererData.OnDestroyRenderer += onDestroyed;
@@ -123,6 +125,19 @@ namespace Engine.Layers
             return false;
         }
 
+        internal static void PushSceneCamera(Camera camera)
+        {
+            if (!_cameras.Contains(camera))
+            {
+                _cameras.Add(camera);
+            }
+        }
+
+        internal static void PopSceneCamera(Camera camera)
+        {
+            _cameras.Remove(camera);
+        }
+
         internal override void UpdateLayer()
         {
             EngineInfo.Renderer.Clear();
@@ -132,43 +147,46 @@ namespace Engine.Layers
             for (int i = 0; i < _renderingSurfaces.Count; i++)
             {
                 var surface = _renderingSurfaces[i];
-                //for (int j = 0; j < surface.SceneRenderers.Count; j++)
-                //{
-                //    var sceneRenderer = surface.SceneRenderers[j];
-                //    sceneRenderer.OnPrepare(_renderersData, _UIElementRenderersData);
-                //    Debug.Log(surface.SceneRenderers[j].GetType().Name);
-                //}
 
-                if (surface.Cameras == null || surface.Cameras.Length == 0 || !IsValidCamera(surface.Cameras[0]))
+                if (surface.PickCamerasFromSceneGraph)
                 {
-                    if (surface.PickCameraFromSceneGraph)
+                    if (surface.Cameras == null)
                     {
-                        if (_sceneCamera == null || !_sceneCamera.TryGetTarget(out var cam) || cam == null || !cam.IsValid)
-                        {
-                            _sceneCamera.SetTarget(SceneManager.FindComponent<Camera>(findDisabled: false));
-                        }
+                        surface.Cameras = new ICamera[1];
+                    }
 
-                        // TODO: Putting a camera in the array can cause problems
-                        var existCamera = _sceneCamera.TryGetTarget(out var camera);
+                    ref var currentCamera = ref surface.Cameras[0];
 
-                        if (existCamera && camera != null && camera.IsValid && camera.IsEnabled)
+                    bool wasAnyCameraFound = false;
+
+                    if (_cameras.Count > 0)
+                    {
+                        foreach (var camera in _cameras)
                         {
-                            if (surface.Cameras == null)
+                            if (camera.IsEnabled)
                             {
-                                surface.Cameras = new WeakReference<ICamera>[1];
+                                if (currentCamera == null || !currentCamera.IsEnabled || camera.Priority >= currentCamera.Priority)
+                                {
+                                    currentCamera = camera;
+                                }
+                                wasAnyCameraFound = true;
                             }
-
-                            surface.Cameras[0] = _sceneCamera;
-                            RenderScene(surface, camera);
                         }
                     }
-                    continue;
+                    if (!wasAnyCameraFound || (currentCamera != null && !currentCamera.IsValid))
+                    {
+                        currentCamera = null;
+                    }
+
+                    _sceneCamera = currentCamera;
                 }
 
-                for (int j = 0; j < surface.Cameras.Length; j++)
+                if (surface.Cameras != null && surface.Cameras.Length > 0)
                 {
-                    surface.Cameras[j].TryGetTarget(out var camera);
-                    RenderScene(surface, camera);
+                    for (int j = 0; j < surface.Cameras.Length; j++)
+                    {
+                        RenderScene(surface, surface.Cameras[j]);
+                    }
                 }
             }
 
@@ -322,9 +340,9 @@ namespace Engine.Layers
         private void PostProcessDraw(Shader shader, RenderTexture inTex, RenderTexture outTex, UniformValue[] uniforms)
         {
             // TODO: Fix selecting the current rendering camera from the surface, for now its using the scene camera.
-            if (_sceneCamera.TryGetTarget(out var camera))
+            if (_sceneCamera != null && _sceneCamera.IsValid && _sceneCamera.IsEnabled)
             {
-                DrawScreenQuad(shader, inTex, outTex, uniforms, camera);
+                DrawScreenQuad(shader, inTex, outTex, uniforms, _sceneCamera);
             }
         }
 

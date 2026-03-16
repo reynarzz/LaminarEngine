@@ -8,6 +8,7 @@ using Engine.Types;
 using Engine.Utils;
 using GlmNet;
 using Engine;
+using Engine.Layers;
 
 namespace Engine
 {
@@ -141,6 +142,19 @@ namespace Engine
         {
             WindowManager.Window.OnWindowChanged += OnWindowChanged;
             UpdateCurrent();
+            RenderingLayer.PushSceneCamera(this);
+        }
+
+        public override void OnEnabled()
+        {
+            base.OnEnabled();
+            RenderingLayer.PushSceneCamera(this);
+        }
+
+        public override void OnDisabled()
+        {
+            base.OnDisabled();
+            RenderingLayer.PopSceneCamera(this);
         }
 
         private void OnWindowChanged(int width, int height)

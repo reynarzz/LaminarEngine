@@ -86,9 +86,13 @@ namespace Editor
 
 
                 ICamera camera = null;
-                var surfaceCamerasInUse = _surface.Cameras != null && _surface.Cameras.Length > 0 &&
-                                          (_surface.Cameras?[0]?.TryGetTarget(out camera) ?? false) && camera != null &&
-                                          camera.IsValid && camera.IsEnabled;
+
+                if (_surface.Cameras != null && _surface.Cameras.Length > 0)
+                {
+                    camera = _surface.Cameras[0];
+                }
+
+                var surfaceCamerasInUse = camera != null && camera.IsValid;
                 if (surfaceCamerasInUse)
                 {
                     var cameraRenderTarget = camera.OutRenderTexture?.NativeResource;
@@ -120,6 +124,8 @@ namespace Editor
             OnEndWindow();
             ImGui.PopStyleColor();
         }
+
+
 
         private void DefaultNoCamerasFound()
         {

@@ -34,6 +34,7 @@ using static Box2D.NET.B2Timers;
 using static Box2D.NET.B2Sensors;
 using static Box2D.NET.B2Worlds;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace Engine.Utils
 {
@@ -229,6 +230,7 @@ namespace Engine.Utils
             LayerMask = layerMask;
         }
     }
+    [StructLayout(LayoutKind.Sequential)]
     public struct CastHit2DArray
     {
         public const int Capacity = 50;

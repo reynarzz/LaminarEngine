@@ -28,7 +28,7 @@ namespace Editor
 
         public RenderTexture RenderTexture { get; set; }
         RenderTexture ICamera.OutRenderTexture { get; set; }
-
+        public int Priority { get; set; }
         public vec3 Forward => GetAxis(Vector3.UnitZ, _rotation);
         public vec3 Right => GetAxis(Vector3.UnitX, _rotation);
         public vec3 Up => GetAxis(Vector3.UnitY, _rotation);

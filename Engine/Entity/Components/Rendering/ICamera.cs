@@ -18,6 +18,7 @@ namespace Engine
         public float Fov { get; }
         public float Aspect { get; }
         public float OrthographicSize { get; }
+        public int Priority { get; }
         public Color BackgroundColor { get; }
         public vec3 WorldPosition { get; }
         public vec3 Forward { get; }

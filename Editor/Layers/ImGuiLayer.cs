@@ -40,7 +40,7 @@ namespace Editor.Layers
             // TODO: move the surface creation to their own classes.
             _gameSurface = new RenderingSurface()
             {
-                PickCameraFromSceneGraph = true,
+                PickCamerasFromSceneGraph = true,
                 RenderPostProcessing = true,
                 RenderTextures = new RenderTexture[1],
                 RenderUI = true,
@@ -70,7 +70,7 @@ namespace Editor.Layers
                 _editorCamera = new EditorCamera();
                 _editorSurface = new RenderingSurface()
                 {
-                    Cameras = [new WeakReference<ICamera>(_editorCamera)],
+                    Cameras = [_editorCamera],
                     RenderDebug = true,
                     RenderPostProcessing = false,
                     RenderUI = true,
