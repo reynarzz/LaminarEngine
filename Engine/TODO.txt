@@ -4,8 +4,7 @@
 -The current code is very slow, and contains tons of bad practices to cut corners, leading to memory leaks, and slowdowns,
    most of it is in 'prototype' phase a nice (big) refactor is on the way.
 -Refactor.
--If I load the runtime mode, and the applicationLayer is enabled, the camera renders black.
-Editor.Cooker, the asset database sometimes doesn't remove old assets correctly.
+- Editor.Cooker, the asset database sometimes doesn't remove old assets correctly.
 - Improve Editor property UI
 
 Fix:
@@ -17,7 +16,6 @@ Fix:
 - The Game.dll must exist before doing a build because TypeGenerationStage.GetAssemblyTypes(str) searches
     for it to generate the typeRegistry, the build should already have a game.dll compiled. Use it from the library folder for now,
     but the game.dll should be compiled for the build type(Release/Debug), and turning on all the directives defined for the target platform.
-- Mouse picker should take into account all the vertices types (ex, FontVertex, SpriteVertex), it currently only supports 'Vertex' type.
 - Gizmos do not disappear once the renderer is removed, this is because the RendererData2D is created every frame (for testing)
 - Memory leak is happening for the index buffer, in Batcher2D mesh section for custom index buffers.
 
@@ -43,7 +41,7 @@ UI performance is pretty bad, rewrite the entire UI system.
 Assets:
 Metadata of every asset should be binary on final build.
 
-Features
+Features:
 - Fully async scene load in the background: async asset loading (mainThreadSync for graphic assets)
 - Audio mixer editor ui
 - Animator using nodes

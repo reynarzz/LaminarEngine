@@ -198,6 +198,12 @@ namespace Editor.Rendering
             var cameras = SceneManager.FindAll<Camera>(false);
             var audio = SceneManager.FindAll<AudioSource>(false);
 
+            // NOTE: For now this clears the gizmos, once I start the refactor this will be gone.
+            foreach (var (id, val) in _renderDatasByType)
+            {
+                val.renderer.OnDestroy();
+            }
+
             _renderDatasByType.Clear();
 
             GetRenderData(cameras, _renderDatasByType, _cameraSprite, camera);
