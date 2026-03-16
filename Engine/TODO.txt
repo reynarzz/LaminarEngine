@@ -16,7 +16,6 @@ Fix:
 - The Game.dll must exist before doing a build because TypeGenerationStage.GetAssemblyTypes(str) searches
     for it to generate the typeRegistry, the build should already have a game.dll compiled. Use it from the library folder for now,
     but the game.dll should be compiled for the build type(Release/Debug), and turning on all the directives defined for the target platform.
-- Gizmos do not disappear once the renderer is removed, this is because the RendererData2D is created every frame (for testing)
 - Memory leak is happening for the index buffer, in Batcher2D mesh section for custom index buffers.
 
 
