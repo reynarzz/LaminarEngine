@@ -62,7 +62,7 @@ namespace Game
         {
             return collider.Actor.Layer == LayerMask.NameToLayer(GameConsts.PLAYER);
         }
-        protected override void OnLateUpdate()
+        public override void OnLateUpdate()
         {
             base.OnLateUpdate();
 
@@ -141,7 +141,7 @@ namespace Game
             _coroutine = StartCoroutine(InteractableRendererAnimation(LockedByRenderer, isVisible));
         }
 
-        protected override void OnLateUpdate()
+        public override void OnLateUpdate()
         {
             base.OnLateUpdate();
             if (LockedByRenderer)

@@ -39,7 +39,7 @@ namespace Editor.Cooker
             }
             else if (!reference.Type.IsDefaultRef())
             {
-                // NOTE: if a new asset hit this, please add the asset type to the function's switch 'IsDefaultRef()'
+                // NOTE: if a new asset hit this, please add the asset type to the function's switch 'SerializedTypeExtensions.IsDefaultRef()'
                 throw new NotImplementedException($"Writer for reference '{reference.Type}'is not implemented");
             }
         }

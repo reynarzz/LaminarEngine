@@ -66,7 +66,7 @@ namespace Game
 
     }
 
-    public abstract class Character : GameEntity, IDamageReceiver
+    public abstract class Character : GameEntity, ILateUpdatableComponent, IFixedUpdatableComponent, IDamageReceiver
     {
         protected Animator Animator { get; private set; }
         protected SpriteRenderer Renderer { get; private set; }
@@ -330,7 +330,7 @@ namespace Game
             return state;
         }
 
-        protected sealed override void OnLateUpdate()
+        void ILateUpdatableComponent.OnLateUpdate()
         {
             if (Animator == null)
                 return;
@@ -422,7 +422,7 @@ namespace Game
             _jumping = false;
         }
 
-        protected override void OnFixedUpdate()
+        public virtual void OnFixedUpdate()
         {
             if (Rigidbody == null)
                 return;

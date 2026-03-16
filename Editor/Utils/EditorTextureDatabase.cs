@@ -137,7 +137,7 @@ namespace Editor.Utils
                 { AssetType.Tilemap, EditorIcon.Tilemap },
                 { AssetType.Text, EditorIcon.Text },
                 { AssetType.AnimationClip, EditorIcon.AnimationClip },
-                { AssetType.AnimationController, EditorIcon.Animator },
+                { AssetType.AnimatorController, EditorIcon.Animator },
                 { AssetType.Font, EditorIcon.Font },
                 { AssetType.Shader, EditorIcon.Shader },
                 { AssetType.ShaderV2, EditorIcon.Shader },

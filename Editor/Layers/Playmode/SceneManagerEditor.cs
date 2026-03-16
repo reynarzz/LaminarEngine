@@ -22,7 +22,7 @@ namespace Editor
             SerializeScenes(_sceneList, new SceneSerializer.SerializationOptions()
             {
                 CollectedPhysicalActors = true,
-                RemoveGameDLLComponentsFromActors = true,
+                RemoveComponentsFromActors = true,
             });
 
             _hotReloadActorsSerialized.Clear();
@@ -37,7 +37,7 @@ namespace Editor
             SerializeScenes(_editModeScenes, new SceneSerializer.SerializationOptions()
             {
                 CollectedPhysicalActors = false,
-                RemoveGameDLLComponentsFromActors = false,
+                RemoveComponentsFromActors = false,
             });
         }
 

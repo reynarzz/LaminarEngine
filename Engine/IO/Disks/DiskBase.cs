@@ -70,7 +70,7 @@ namespace Engine.IO
                         return JsonConvert.DeserializeObject<DefaultMetaFile>(json);
                     case AssetType.AnimationClip:
                         return JsonConvert.DeserializeObject<DefaultMetaFile>(json);
-                    case AssetType.AnimationController:
+                    case AssetType.AnimatorController:
                         return JsonConvert.DeserializeObject<DefaultMetaFile>(json);
                     case AssetType.Material:
                         return JsonConvert.DeserializeObject<DefaultMetaFile>(json);

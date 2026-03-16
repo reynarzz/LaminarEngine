@@ -20,6 +20,9 @@ Fix:
     but the game.dll should be compiled for the build type(Release/Debug), and turning on all the directives defined for the target platform.
 - Mouse picker should take into account all the vertices types (ex, FontVertex, SpriteVertex), it currently only supports 'Vertex' type.
 - Gizmos do not disappear once the renderer is removed, this is because the RendererData2D is created every frame (for testing)
+- Camera selection by RenderingLayer and priority order do not work correctly.
+- Memory leak is happening for the index buffer, in Batcher2D mesh section for custom index buffers.
+
 
 Serialization:
 - Forbid serialization of dictionaries that contains EObject as key?

@@ -66,7 +66,7 @@ namespace Engine
             return null;
         }
 
-        internal override void UpdateResource(object data, string path, Guid guid)
+        protected override void OnUpdateResource(object data, string path, Guid guid)
         {
             throw new NotImplementedException();
         }

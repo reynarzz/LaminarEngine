@@ -73,7 +73,7 @@ namespace Game
             }
         }
 
-        protected override void OnFixedUpdate()
+        public override void OnFixedUpdate()
         {
             base.OnFixedUpdate();
 

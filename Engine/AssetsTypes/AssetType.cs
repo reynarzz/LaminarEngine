@@ -15,7 +15,7 @@ namespace Engine
         Shader,
         Font,
         AnimationClip,
-        AnimationController,
+        AnimatorController,
         Material,
         ShaderV2,
         Scene,

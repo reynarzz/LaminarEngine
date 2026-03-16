@@ -342,7 +342,7 @@ namespace Editor.Views
                     break;
                 case AssetType.AnimationClip:
                     break;
-                case AssetType.AnimationController:
+                case AssetType.AnimatorController:
                     break;
                 case AssetType.Material:
                     break;
@@ -545,7 +545,7 @@ namespace Editor.Views
                     break;
                 case AssetType.AnimationClip:
                     break;
-                case AssetType.AnimationController:
+                case AssetType.AnimatorController:
                     break;
                 case AssetType.Material:
                     break;

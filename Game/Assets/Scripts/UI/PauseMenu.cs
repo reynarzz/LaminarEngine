@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Game
 {
     // NOTE: This is a test class
-    public class PauseMenu : GameUI
+    public class PauseMenu : GameUI, ILateUpdatableComponent
     {
         private UIImage _background;
         private UIImage _buttonImage;
@@ -40,7 +40,7 @@ namespace Game
             var backSize = new vec2(512 * 3, 288 * 3);
             // Background
             _background = UiUtils.NewImage("Background", backSize * 0.5f, backSize, Color32.RGB(200), _canvas.Transform);
-            
+
             _background.BlockEvents = true;
             _background.ReceiveEvents = true;
 
@@ -186,7 +186,7 @@ namespace Game
             }
         }
 
-        protected override void OnLateUpdate()
+        void ILateUpdatableComponent.OnLateUpdate()
         {
 
 

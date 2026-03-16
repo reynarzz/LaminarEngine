@@ -221,6 +221,14 @@ namespace Editor.Utils
                 {
                     DrawAssetColumns(AssetType.Scene, Assets.GetAssetFromGuid, setValue);
                 }
+                else if (valueType == typeof(AnimationClip))
+                {
+                    DrawAssetColumns(AssetType.AnimationClip, Assets.GetAssetFromGuid, setValue);
+                }
+                else if (valueType == typeof(AnimatorController))
+                {
+                    DrawAssetColumns(AssetType.AnimatorController, Assets.GetAssetFromGuid, setValue);
+                }
             }
             else if (valueType == typeof(Sprite))
             {

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Game
 {
     [RequireComponent(typeof(Camera))]
-    public class CameraFollow : ScriptBehavior
+    public class CameraFollow : ScriptBehavior, IDrawableGizmo, ILateUpdatableComponent
     {
         [SerializedField] public Transform Target { get; set; }
         [SerializedField] public float FollowSpeed { get; set; } = 5f;
@@ -30,7 +30,7 @@ namespace Game
             Actor.DontDestroyOnLoad(this);
         }
 
-        protected override void OnLateUpdate()
+        void ILateUpdatableComponent.OnLateUpdate()
         {
             Move();
         }
@@ -95,7 +95,7 @@ namespace Game
                 Debug.DrawBox(new vec3(Transform.WorldPosition.x, Transform.WorldPosition.y, 0), new vec3(deadZoneSize.x, deadZoneSize.y, 0), Color.Green);
             }
         }
-        protected override void OnDrawGizmo()
+        void IDrawableGizmo.OnDrawGizmo()
         {
             if (_showBounds)
             {

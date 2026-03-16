@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    internal interface ILateUpdatableComponent : IComponent
+    public interface ILateUpdatableComponent : IComponent
     {
         void OnLateUpdate();
     }

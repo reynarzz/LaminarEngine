@@ -27,7 +27,7 @@ namespace Engine
             }
         }
 
-        internal override void UpdateResource(object data, string path, Guid id)
+        protected override void OnUpdateResource(object data, string path, Guid id)
         {
             _SetID(id);
 

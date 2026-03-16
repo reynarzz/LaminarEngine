@@ -25,7 +25,7 @@ namespace Editor.Serialization
     {
         internal struct SerializationOptions
         {
-            public bool RemoveGameDLLComponentsFromActors;
+            public bool RemoveComponentsFromActors;
             public bool CollectedPhysicalActors;
         }
         private readonly static List<Component> _componentsToRemove = new();
@@ -34,7 +34,7 @@ namespace Editor.Serialization
             var options = new SerializationOptions()
             {
                 CollectedPhysicalActors = false,
-                RemoveGameDLLComponentsFromActors = false
+                RemoveComponentsFromActors = false
             };
 
             var sceneEditor = SerializeSceneEditor(scene, options);
@@ -110,23 +110,16 @@ namespace Editor.Serialization
         {
             var componentsData = new List<ComponentIR>();
 
-            bool IsFromGameDll(Component component)
-            {
-                return component.GetType().Assembly.GetName().Name.Contains(EditorPaths.GAME_PROJECT_NAME);
-            }
             for (int i = 0; i < actor.Components.Count; i++)
             {
                 componentsData.Add(GetComponentData(actor.Components[i]));
             }
 
-            if (options.RemoveGameDLLComponentsFromActors)
+            if (options.RemoveComponentsFromActors)
             {
                 for (int i = 0; i < actor.Components.Count; i++)
                 {
-                    if (IsFromGameDll(actor.Components[i]))
-                    {
-                        _componentsToRemove.Add(actor.Components[i]);
-                    }
+                    _componentsToRemove.Add(actor.Components[i]);
                 }
             }
 

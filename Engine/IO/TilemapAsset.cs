@@ -19,7 +19,7 @@ namespace Engine
         {
             return _data;
         }
-        internal override void UpdateResource(object data, string path, Guid guid)
+        protected override void OnUpdateResource(object data, string path, Guid guid)
         {
             _data = data as TilemapData;
 

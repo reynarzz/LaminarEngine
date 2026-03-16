@@ -63,7 +63,7 @@ namespace Engine
             UploadShader(Encoding.UTF8.GetBytes(vertexCode), Encoding.UTF8.GetBytes(fragmentCode));
         }
 
-        internal override void UpdateResource(object data, string path, Guid guid)
+        protected override void OnUpdateResource(object data, string path, Guid guid)
         {
             var sources = data as ShaderSource[];
             if (Initialize(sources))

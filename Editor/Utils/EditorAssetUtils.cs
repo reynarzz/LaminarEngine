@@ -127,7 +127,7 @@ namespace Editor
                 case AssetType.AnimationClip:
                     clrType = typeof(AnimationClip);
                     break;
-                case AssetType.AnimationController:
+                case AssetType.AnimatorController:
                     clrType = typeof(AnimatorController);
                     break;
                 case AssetType.Material:

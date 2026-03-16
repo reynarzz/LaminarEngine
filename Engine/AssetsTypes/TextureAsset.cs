@@ -18,7 +18,7 @@ namespace Engine
             Atlas = atlas;
         }
 
-        internal override void UpdateResource(object data, string path, Guid guid)
+        protected override void OnUpdateResource(object data, string path, Guid guid)
         {
             Texture.UpdateResource(data, path, guid);
         }

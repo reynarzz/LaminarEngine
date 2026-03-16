@@ -35,7 +35,7 @@ namespace Editor
                 { AssetType.Audio, new AudioClipAssetBuilder() },
                 { AssetType.Font, new FontAssetBuilder() },
                 { AssetType.AnimationClip, new AnimationClipAssetBuilderEditor() },
-                { AssetType.AnimationController, new AnimationControllerAssetBuilderEditor() },
+                { AssetType.AnimatorController, new AnimationControllerAssetBuilderEditor() },
                 { AssetType.Material, new MaterialAssetBuilderEditor() },
                 { AssetType.Tilemap, new TilemapAssetBuilder() },
                 { AssetType.Scene, new SceneAssetBuilderEditor() },

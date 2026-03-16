@@ -8,7 +8,7 @@ using System.Transactions;
 namespace Game
 {
     public class TestScript : ScriptBehavior
-    {
+    { 
         public class TestClassSub
         {
             [SerializedField] public int ValueTest { get; set; }

@@ -21,9 +21,5 @@ namespace Game
             angle += Time.DeltaTime * 50;
             Transform.LocalEulerAngles = new GlmNet.vec3(0, 0, angle);
         }
-
-        protected override void OnFixedUpdate()
-        {
-        }
     }
 }

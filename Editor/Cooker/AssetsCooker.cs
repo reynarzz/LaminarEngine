@@ -54,7 +54,7 @@ namespace Editor.Cooker
 
                 // animation
                 { ".anim", AssetType.AnimationClip },
-                { ".animctrl", AssetType.AnimationController },
+                { ".animctrl", AssetType.AnimatorController },
 
                 // scene
                 { ".scene", AssetType.Scene },
@@ -98,7 +98,7 @@ namespace Editor.Cooker
                 { AssetType.ShaderV2, new ShaderAssetProcessor() },
                 { AssetType.Font, new RawBytesAssetProcessor() },
                 { AssetType.AnimationClip, new AnimClipProcessorEditor() },
-                { AssetType.AnimationController, new AnimControllerClipProcessorEditor() },
+                { AssetType.AnimatorController, new AnimControllerClipProcessorEditor() },
                 { AssetType.Material, new MaterialProcessorEditor() },
                 { AssetType.Scene, new SceneAssetProcessorEditor() },
                 { AssetType.Tilemap, new TilemapAssetProcessor() }
@@ -113,7 +113,7 @@ namespace Editor.Cooker
                 { AssetType.ShaderV2, new ShaderProcessorShip() },
                 { AssetType.Font, new RawBytesAssetProcessor() },
                 { AssetType.AnimationClip, new RawBytesAssetProcessor() }, // TODO: binary serialization
-                { AssetType.AnimationController, new RawBytesAssetProcessor() }, // TODO: binary serialization
+                { AssetType.AnimatorController, new RawBytesAssetProcessor() }, // TODO: binary serialization
                 { AssetType.Material, new MaterialProcessorShip() },
                 { AssetType.Scene, new SceneAssetProcessorShip() },
                 { AssetType.Tilemap, new TilemapAssetProcessor() }

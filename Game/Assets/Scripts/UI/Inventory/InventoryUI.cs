@@ -139,11 +139,7 @@ namespace Game
             _gridLayout.RecalculateLayout();
             _fitter.ResizeToFitChildren();
         }
-        protected override void OnLateUpdate()
-        {
-            //_inventoryLabel.FontSize = 40;
-            //_inventoryLabel.SetText(((int)Time.FPS).ToString());
-        }
+  
         private void Show(bool show)
         {
             var hidePos = new vec2(-120, 160);

@@ -54,6 +54,9 @@ namespace Engine
         public override int SortOrder { get => base.SortOrder; set => base.SortOrder = value; }
 
         private TilemapAsset _tilemapAsset;
+
+        private uint _tilemapVersion;
+
         [SerializedField]
         public TilemapAsset Tilemap
         {
@@ -65,6 +68,15 @@ namespace Engine
 
                 _tilemapAsset = value;
                 _rendererData.IsDirty = true;
+
+                if(_tilemapAsset == null)
+                {
+                    _tilemapVersion = 0;
+                }
+                else
+                {
+                    _tilemapVersion = _tilemapAsset.Version;
+                }
             }
         }
 
@@ -109,6 +121,13 @@ namespace Engine
         internal override void Draw()
         {
             base.Draw();
+
+            if(Tilemap != null && _tilemapVersion != Tilemap.Version)
+            {
+                _tilemapVersion = Tilemap.Version;
+                _rendererData.IsDirty = true;
+            }
+
             if (_rendererData.IsDirty)
             {
                 var layer = GetLayer();
@@ -129,6 +148,7 @@ namespace Engine
                 }
             }
         }
+
         public void SetTilemap(TilemapAsset tilemap, TilemapRenderingOptions options)
         {
             _tilemapAsset = tilemap;

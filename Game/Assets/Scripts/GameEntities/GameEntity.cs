@@ -7,8 +7,11 @@ using System.Threading.Tasks;
 
 namespace Game
 {
-    public abstract class GameEntity : ScriptBehavior
+    public abstract class GameEntity : ScriptBehavior, ILateUpdatableComponent
     {
-        
+        public virtual void OnLateUpdate()
+        {
+
+        }
     }
 }

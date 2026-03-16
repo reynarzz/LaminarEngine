@@ -89,7 +89,7 @@ namespace Engine
 
             GfxDeviceManager.Current.UpdateResource(NativeResource, _descriptor);
         }
-        internal override void UpdateResource(object data, string path, Guid guid)
+        protected override void OnUpdateResource(object data, string path, Guid guid)
         {
             var deserializedData = data as IO.TextureAssetBuilder.TextureDeserializedData;
             Width = deserializedData.Width;

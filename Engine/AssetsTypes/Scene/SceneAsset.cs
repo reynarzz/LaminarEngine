@@ -16,7 +16,7 @@ namespace Engine
             SceneIR = sceneIR;
         }
 
-        internal override void UpdateResource(object data, string path, Guid guid)
+        protected override void OnUpdateResource(object data, string path, Guid guid)
         {
             SceneIR = data as SceneIR;
         }

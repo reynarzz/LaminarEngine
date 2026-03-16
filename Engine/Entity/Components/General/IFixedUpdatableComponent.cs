@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    internal interface IFixedUpdatableComponent : IComponent
+    public interface IFixedUpdatableComponent : IComponent
     {
         void OnFixedUpdate();
     }
