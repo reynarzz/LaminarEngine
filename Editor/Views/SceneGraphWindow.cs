@@ -123,7 +123,10 @@ namespace Editor.Views
 
         private void SetSelectedActorParentGraph(Actor actor, bool force = false, bool includeActor = false)
         {
-            Selector.Selected = actor;
+            if (actor)
+            {
+                Selector.Selected = actor;
+            }
 
             if (actor && (force || _prevSelectedActorId != actor.GetID()))
             {
