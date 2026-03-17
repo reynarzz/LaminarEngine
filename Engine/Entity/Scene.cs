@@ -29,6 +29,7 @@ namespace Engine
         }
         internal void RegisterRootActor(Actor actor)
         {
+            actor.Scene = this;
             _rootActors.Add(actor);
         }
 

@@ -136,9 +136,14 @@ namespace Engine
                 vec3 oldWorldScale = WorldScale;
 
                 if (value == null)
+                {
                     Actor.Scene.RegisterRootActor(Actor);
+                }
                 else
+                {
                     Actor.Scene.UnregisterRootActor(Actor);
+                    Actor.Scene = value.Actor.Scene; // This makes sure that we set the object in the same scene as the parent.
+                }
 
                 _parent?._children.Remove(this);
                 _parent = value;

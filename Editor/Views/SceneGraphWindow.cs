@@ -12,6 +12,9 @@ namespace Editor.Views
     internal class SceneGraphWindow : EditorWindow
     {
         private Guid? _pressedActorId;
+        private Guid _prevSelectedActorId;
+        private readonly HashSet<Guid> _expandParents = new();
+        private Guid _firstTimeSelectedActorId = default;
 
         public SceneGraphWindow() : base("Window/Scene Graph")
         {
@@ -29,10 +32,18 @@ namespace Editor.Views
                     {
                         continue;
                     }
-                    ImGui.PushID(SceneManager.Scenes[i].GetID().ToString());
+                    var scene = SceneManager.Scenes[i];
+                    ImGui.PushID(scene.GetID().ToString());
                     ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.OpenOnArrow | ImGuiTreeNodeFlags.SpanFullWidth | ImGuiTreeNodeFlags.DefaultOpen;
 
                     bool open = ImGui.TreeNodeEx("##scene_node", flags);
+                    DropActorHandle(dropActor =>
+                    {
+                        dropActor.Transform.Parent = null; // Remove current parent, this makes it root of scene
+                        dropActor.Scene.UnregisterRootActor(dropActor); // Remove from the old scene's root.
+                        scene.RegisterRootActor(dropActor); // add actor to the new scene's root.
+                    });
+
                     bool isClicked = ImGui.IsItemClicked();
 
                     ImGui.SameLine();
@@ -44,7 +55,7 @@ namespace Editor.Views
                     ImGui.SameLine();
                     iconCursorX = ImGui.GetCursorPosX();
                     ImGui.SetCursorPosX(iconCursorX + iconOffset - 4);
-                    ImGui.TextUnformatted(SceneManager.Scenes[i].Name);
+                    ImGui.TextUnformatted(scene.Name);
 
                     if (EditorImGui.BeginPopupContextItem("SceneContext"))
                     {
@@ -56,7 +67,7 @@ namespace Editor.Views
                             }
                             else if (ImGui.MenuItem("Unload Scene"))
                             {
-                                SceneManager.UnloadScene(SceneManager.Scenes[i]);
+                                SceneManager.UnloadScene(scene);
                                 ImGui.EndPopup();
 
                                 if (open)
@@ -79,16 +90,16 @@ namespace Editor.Views
 
                     if (open)
                     {
-                        if (SceneManager.Scenes[i].RootActors.Count > 0)
+                        if (scene.RootActors.Count > 0)
                         {
                             ImGui.Dummy(0, 4);
                             ImGui.PushStyleVar(ImGuiStyleVar.IndentSpacing, 15.5f);
 
-                            SetSelectedActorParentGraph();
+                            SetSelectedActorParentGraph(Selector.Selected as Actor);
 
-                            for (int j = 0; j < SceneManager.Scenes[i].RootActors.Count; j++)
+                            for (int j = 0; j < scene.RootActors.Count; j++)
                             {
-                                DrawActor(SceneManager.Scenes[i].RootActors[j]);
+                                DrawActor(scene.RootActors[j]);
                             }
                             ImGui.PopStyleVar();
                         }
@@ -109,34 +120,26 @@ namespace Editor.Views
 
             OnEndWindow();
         }
-        private Guid _prevSelectedId;
-        private readonly HashSet<Guid> _expandParents = new();
-        private Guid _firstTimeSelectedId = default;
-
-        private void SetSelectedActorParentGraph()
+      
+        private void SetSelectedActorParentGraph(Actor actor)
         {
-            if (Selector.Selected is Actor actor)
+            if (actor && _prevSelectedActorId != actor.GetID() && _expandParents.Count == 0)
             {
-                if (_prevSelectedId != actor.GetID())
+                _prevSelectedActorId = actor.GetID();
+                _firstTimeSelectedActorId = actor.GetID();
+
+                var parent = actor.Transform.Parent;
+                while (parent != null)
                 {
-                    _prevSelectedId = actor.GetID();
-                    _firstTimeSelectedId = actor.GetID();
+                    _expandParents.Add(parent.Actor.GetID());
 
-                    _expandParents.Clear();
-                    var parent = actor.Transform.Parent;
-                    while (parent != null)
+                    parent = parent.Parent;
+
+                    if (!parent)
                     {
-                        _expandParents.Add(parent.Actor.GetID());
-
-                        parent = parent.Parent;
-
-                        if (!parent)
-                        {
-                            break;
-                        }
+                        break;
                     }
                 }
-
             }
         }
         private void DrawActor(Actor actor)
@@ -182,15 +185,12 @@ namespace Editor.Views
                 {
                     ImGui.PushStyleColor(ImGuiCol.Header, headerColor);
                     ImGui.PushStyleColor(ImGuiCol.HeaderHovered, headerColor);
-
                 }
-
             }
             else
             {
                 ImGui.PushStyleColor(ImGuiCol.Header, greenSelected);
                 ImGui.PushStyleColor(ImGuiCol.HeaderHovered, greenSelected);
-
             }
             popColors += 2;
 
@@ -207,7 +207,12 @@ namespace Editor.Views
             bool open = ImGui.TreeNodeEx("##node", flags);
             var isItemVisible = ImGui.IsItemVisible();
 
+            DropActorHandle(dropActor => dropActor.Transform.Parent = actor.Transform);
+
+           
             EditorImGui.DragAndDrop.ItemDragReference(actor.Name, EditorImGui.DragAndDrop.PAYLOAD_ID_EOBJECT, actor, actor.GetType(), actor.GetID());
+            
+           
             var id = actor.GetID();
 
             if (ImGui.IsItemActivated())
@@ -226,9 +231,9 @@ namespace Editor.Views
             }
 
 
-            if (!isItemVisible && _firstTimeSelectedId == actor.GetID())
+            if (!isItemVisible && _firstTimeSelectedActorId == actor.GetID())
             {
-                _firstTimeSelectedId = Guid.Empty;
+                _firstTimeSelectedActorId = Guid.Empty;
                 ImGui.SetScrollHereY();
             }
 
@@ -336,6 +341,19 @@ namespace Editor.Views
             }
 
             ImGui.PopID();
+        }
+
+        private void DropActorHandle(Action<Actor> callback)
+        {
+            if (EditorImGui.DragAndDrop.ItemDropReference(EditorImGui.DragAndDrop.PAYLOAD_ID_EOBJECT, out var value))
+            {
+                if (value.Value is Actor dropActor)
+                {
+                    callback(dropActor);
+                    Selector.Selected = dropActor;
+                    SetSelectedActorParentGraph(dropActor);
+                }
+            }
         }
     }
 }

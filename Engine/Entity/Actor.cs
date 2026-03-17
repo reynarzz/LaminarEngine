@@ -20,7 +20,7 @@ namespace Engine
         internal Prefab PrefabSource { get; set; }
         internal Guid PrefabSourceActorID { get; set; }
 
-        internal Scene Scene { get; private set; }
+        internal Scene Scene { get; set; }
         private List<Component> _components;
         internal List<Component> Components => _components;
         private List<IComponent> _toDeleteComponents = new();
