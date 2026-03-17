@@ -18,6 +18,7 @@ namespace Editor
         private static EditorIOLayer _instance;
         public static EditorIOLayer Instance => _instance; // Dirty, please remove.
         private bool _intiialized = false;
+        internal static event Action OnAssetDatabaseUpdated;
         public EditorIOLayer()
         {
             _instance = this;
@@ -59,6 +60,10 @@ namespace Editor
             foreach (var guid in assetDatabase.UpdatedAssets)
             {
                 Database?.UpdateReloadAsset(guid);
+            }
+            if (assetDatabase.UpdatedAssets.Count > 0 || assetDatabase.ChangedCount > 0)
+            {
+                OnAssetDatabaseUpdated?.Invoke();
             }
         }
 

@@ -84,13 +84,15 @@ namespace Editor.Cooker
         {
         }
 
-        internal override async Task<bool> CookAssetsAsync(CookFileOptions fileOptions, CookingPlatform platform, (string, AssetType)[] files,
+        internal override async Task<CookingResult> CookAssetsAsync(CookFileOptions fileOptions, CookingPlatform platform, (string, AssetType)[] files,
                                                             string outFolder)
         {
             bool success = false;
             Exception failureException = null;
             var path = Path.Combine(outFolder, Paths.GetAssetBuildDataFilename());
             Directory.CreateDirectory(outFolder);
+            var cookResult = new CookingResult();
+
             try
             {
                 await using var fs = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None, TEMP_BUFFER_SIZE, useAsync: true);
@@ -120,7 +122,6 @@ namespace Editor.Cooker
                 long currentAssetOffset = fieldIfOffset * files.Length;
 
                 bufWritter.BaseStream.Position += currentAssetOffset;
-                int count = 0;
                 foreach (var (filePath, assetType) in files)
                 {
                     long startAssetBlockPos = bufWritter.BaseStream.Position;
@@ -167,7 +168,7 @@ namespace Editor.Cooker
 
                     if (!assetData.IsSuccess)
                     {
-                        return false;
+                        return cookResult;
                     }
 
                     if (shouldCompressFile)
@@ -218,9 +219,9 @@ namespace Editor.Cooker
                     // advance file info position in table
                     currentFileIdPosition += fieldIfOffset;
 
-                    count++;
+                    cookResult.ChangedCount++;
 
-                    Console.WriteLine($"Building Assets ({count * 100 / files.Length}%): {filePath}");
+                    Console.WriteLine($"Building Assets ({cookResult.ChangedCount * 100 / files.Length}%): {filePath}");
                 }
 
                 success = true;
@@ -229,7 +230,7 @@ namespace Editor.Cooker
             {
                 Console.WriteLine(e.ToString());
                 failureException = e;
-                return false;
+                return cookResult;
             }
             finally
             {
@@ -243,8 +244,8 @@ namespace Editor.Cooker
                     File.Delete(path);
                 }
             }
-
-            return true;
+            cookResult.IsSuccess = true;
+            return cookResult;
             // File.WriteAllText(Path.Combine(outFolder, Paths.ASSET_BUILD_DATA_FILE_META_NAME), JsonConvert.SerializeObject(new GameDataMetaFile() {  CreationDateBinary = creationDate }));
         }
 

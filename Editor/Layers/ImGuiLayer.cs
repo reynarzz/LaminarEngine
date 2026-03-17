@@ -120,11 +120,18 @@ namespace Editor.Layers
 
         private void Draw()
         {
-            EditorNatives.BeginGLFWImguiInternal();
+            try
+            {
+                EditorNatives.BeginGLFWImguiInternal();
 
-            DockSpace();
+                DockSpace();
 
-            EditorNatives.EndGLFWImguiInternal();
+                EditorNatives.EndGLFWImguiInternal();
+            }
+            catch (System.Exception e)
+            {
+                Debug.Error(e);
+            }
         }
 
         private void DockSpace()

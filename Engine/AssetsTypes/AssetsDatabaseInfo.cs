@@ -14,5 +14,6 @@ namespace Engine
         public Dictionary<Guid, AssetInfo> Assets { get; private set; } = new();
 
         [JsonIgnore] public List<Guid> UpdatedAssets { get; private set; } = new();
+        [JsonIgnore] public int ChangedCount { get; set; }
     }
 }

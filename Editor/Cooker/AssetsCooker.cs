@@ -66,7 +66,7 @@ namespace Editor.Cooker
 
         internal static AssetType GetAssetTypeFromExtension(string extension)
         {
-            if(_assetsTypes.TryGetValue(extension, out AssetType type))
+            if (_assetsTypes.TryGetValue(extension, out AssetType type))
             {
                 return type;
             }
@@ -171,14 +171,15 @@ namespace Editor.Cooker
             var result = await _assetCookers[options.Type].CookAssetsAsync(options.FileOptions, options.Platform,
                                              collectedFiles, options.ExportFolderPath);
 
-            if (result && options.Type == CookingType.ShipMode)
+            if (result.IsSuccess && options.Type == CookingType.ShipMode)
             {
                 // This generates the whole type registry after all the types where collected from the assets.
                 await TypeGenerationStage.GenerateTypeRegistry();
             }
+            _databaseInfo.ChangedCount = result.ChangedCount;
             return new DishResult()
             {
-                IsSuccess = result,
+                IsSuccess = result.IsSuccess,
                 DataInfo = _databaseInfo
             };
         }

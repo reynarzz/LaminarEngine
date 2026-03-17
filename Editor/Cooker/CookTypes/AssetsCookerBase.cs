@@ -13,6 +13,12 @@ namespace Editor.Cooker
         public byte[] Data { get; set; }
     }
 
+    internal struct CookingResult
+    {
+        public bool IsSuccess;
+        public int ChangedCount;
+    }
+
     internal abstract class AssetsCookerBase
     {
         private readonly Dictionary<AssetType, IAssetProcessor> _assetProcessor;
@@ -21,7 +27,7 @@ namespace Editor.Cooker
             _assetProcessor = processor;
         }
 
-        internal abstract Task<bool> CookAssetsAsync(CookFileOptions fileOptions, CookingPlatform platform, 
+        internal abstract Task<CookingResult> CookAssetsAsync(CookFileOptions fileOptions, CookingPlatform platform, 
                                                      (string filePath, AssetType assetType)[] files, string outFolder);
 
         protected AssetProccesResult ProcessAsset(CookingPlatform platform, AssetType type, AssetMeta meta, BinaryReader reader)

@@ -11,7 +11,7 @@ namespace Editor.Cooker
 {
     internal class DevModeFilesCooker : AssetsCookerBase
     {
-        private  AssetsDatabaseInfo _database; // make this private, this is a hack to make the tilemap importer work.
+        private AssetsDatabaseInfo _database; // make this private, this is a hack to make the tilemap importer work.
         public DevModeFilesCooker(AssetsDatabaseInfo database, Dictionary<AssetType, IAssetProcessor> assetProcessor) :
             base(assetProcessor)
         {
@@ -19,11 +19,13 @@ namespace Editor.Cooker
         }
 
         // TODO: Split this function.
-        internal override async Task<bool> CookAssetsAsync(CookFileOptions fileOptions, CookingPlatform platform, (string, AssetType)[] files, string outFolder)
+        internal override async Task<CookingResult> CookAssetsAsync(CookFileOptions fileOptions, CookingPlatform platform, (string, AssetType)[] files, string outFolder)
         {
             bool someAssetFailImport = false;
             Engine.Debug.Log("Dev asset cooking");
             _database.UpdatedAssets.Clear();
+            int importCount = 0;
+            var cookResult = new CookingResult();
             if (!Directory.Exists(outFolder))
             {
                 Directory.CreateDirectory(outFolder);
@@ -60,11 +62,14 @@ namespace Editor.Cooker
 
                     var data = ProcessAsset(platform, assetType, meta, reader);
 
-                    if (!data.IsSuccess)
+                    if (data.IsSuccess)
+                    {
+                        importCount++;
+                    }
+                    else
                     {
                         someAssetFailImport = true;
                     }
-
                     var assetRelPath = Paths.GetRelativeAssetPath(filePath);
                     if (containsAssetInfo)
                     {
@@ -146,8 +151,9 @@ namespace Editor.Cooker
             }
             Console.ForegroundColor = prevColor;
 
+            cookResult.ChangedCount = Math.Abs(_database.TotalAssets - _database.Assets.Count);
             _database.TotalAssets = _database.Assets.Count;
-
+            Debug.Log(cookResult.ChangedCount);
             try
             {
                 // Write asset database
@@ -157,7 +163,8 @@ namespace Editor.Cooker
             {
                 Console.WriteLine("Check Permission: Dev mode files cooker.");
             }
-            return !someAssetFailImport;
+            cookResult.IsSuccess = !someAssetFailImport;
+            return cookResult;
         }
     }
 }

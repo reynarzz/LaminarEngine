@@ -36,6 +36,14 @@ namespace Editor.Views
 
                 SelectFile(_assetsDirectories[0]);
             }
+
+            EditorIOLayer.OnAssetDatabaseUpdated += LoadDirectories;
+        }
+
+        protected override void OnClose()
+        {
+            base.OnClose();
+            EditorIOLayer.OnAssetDatabaseUpdated -= LoadDirectories;
         }
 
         private void LoadDirectories()
@@ -50,10 +58,23 @@ namespace Editor.Views
             }
             _clickedFile = null;
             _globalIndex = 0;
+            var selectedRelPath = string.Empty;
+            var parentOfSelectedRelPath = string.Empty;
+            if (_selectedFile != null)
+            {
+                selectedRelPath = _selectedFile.RelativePath;
+                parentOfSelectedRelPath = _selectedFile.Parent.RelativePath;
+            }
+            _selectedFile = null;
+
             _assetsDirectories.Add(EnumerateDirectoryGraphRecursive(Paths.GetAssetsFolderPath()));
             _assetsDirectories.Add(EnumerateDirectoryGraphRecursive(EditorPaths.CookerPaths.InternalAssetsPath));
-
+            if (!SelectFile(selectedRelPath))
+            {
+                SelectFile(parentOfSelectedRelPath);
+            }
         }
+
         public override void OnDraw()
         {
             if (!_selectedAsset)
@@ -150,7 +171,30 @@ namespace Editor.Views
             var avail = ImGui.GetContentRegionAvail();
             ImGui.BeginChild("Files View", new Vector2(avail.X, avail.Y - 30), ImGuiChildFlags.AlwaysUseWindowPadding);
             ImGui.PopStyleVar();
-
+            if (ImGui.IsWindowHovered() && ImGui.IsMouseClicked(ImGuiMouseButton.Right))
+            {
+                ImGui.OpenPopup("SceneViewWindowRight");
+            }
+            ImGui.BeginDisabled(_selectedFile.RelativePath.StartsWith(EditorPaths.CookerPaths.INTERNAL_ASSET_FOLDER_NAME));
+            if (EditorImGui.BeginPopupContextItem("SceneViewWindowRight"))
+            {
+                if (ImGui.MenuItem("Create Scene"))
+                {
+                    var dirName = "";
+                    if (File.Exists(_selectedFile.AbsolutePath))
+                    {
+                        dirName = Path.GetDirectoryName(_selectedFile.RelativePath);
+                    }
+                    else
+                    {
+                        dirName = _selectedFile.RelativePath;
+                    }
+                    dirName = dirName.Substring(dirName.IndexOf('/') + 1);
+                    EditorAssetFileCreator.CreateScene(dirName, "Scene");
+                }
+                ImGui.EndPopup();
+            }
+            ImGui.EndDisabled();
             DrawRightFolderView(_selectedFile);
             ImGui.EndChild();
             DrawRightFooter();
@@ -187,7 +231,6 @@ namespace Editor.Views
 
             return st[^(index + 1)];
         }
-
         private void DrawRightDirectoryPath()
         {
             var path = _selectedFile?.RelativePath ?? string.Empty;
@@ -353,6 +396,46 @@ namespace Editor.Views
                     break;
             }
         }
+        private bool SelectFile(string relativePath)
+        {
+            AssetViewFileInfo FindFile(AssetViewFileInfo file)
+            {
+                if (file.RelativePath.Equals(relativePath))
+                {
+                    return file;
+                }
+                else if(file.Children != null)
+                {
+                    for (int i = 0; i < file.Children.Count; i++)
+                    {
+                        var result = FindFile(file.Children[i]);
+
+                        if(result != null)
+                        {
+                            return result;
+                        }
+                    }
+                }
+
+                return null;
+            }
+
+            foreach (var dir in _assetsDirectories)
+            {
+                foreach (var file in dir.Children)
+                {
+                    var fileFound = FindFile(file);
+
+                    if(fileFound != null)
+                    {
+                        SelectFile(fileFound);
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
 
         private void SelectFile(AssetViewFileInfo file)
         {
@@ -450,6 +533,7 @@ namespace Editor.Views
             directoryInfo.Type = FileType.Directory;
             directoryInfo.Filename = folderName;
             directoryInfo.GlobalIndex = _globalIndex++;
+            //directoryInfo.RefId = Guid.NewGuid(); // TODO: folders guids should persist.
 
             if (parent != null)
             {
