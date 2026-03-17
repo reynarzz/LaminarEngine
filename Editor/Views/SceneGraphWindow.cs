@@ -121,9 +121,9 @@ namespace Editor.Views
             OnEndWindow();
         }
 
-        private void SetSelectedActorParentGraph(Actor actor)
+        private void SetSelectedActorParentGraph(Actor actor, bool force = false)
         {
-            if (actor && _prevSelectedActorId != actor.GetID())
+            if (actor && (force || _prevSelectedActorId != actor.GetID()))
             {
                 _prevSelectedActorId = actor.GetID();
                 _firstTimeSelectedActorId = actor.GetID();
@@ -358,7 +358,7 @@ namespace Editor.Views
                     callback(dropActor);
                     Selector.Selected = dropActor;
                     _pressedActorId = null;
-                    SetSelectedActorParentGraph(dropActor);
+                    SetSelectedActorParentGraph(dropActor, true);
                 }
             }
         }
