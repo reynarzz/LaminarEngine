@@ -47,16 +47,16 @@ namespace Engine
         [SerializedField] private EventCurve _eventCurve = new();
 
         // The serializer needs this.
-        private AnimationClip() : base(string.Empty, Guid.NewGuid()) // TODO: animation clip
+        private AnimationClip() : base(Guid.NewGuid()) // TODO: animation clip
         {
         }
 
-        internal AnimationClip(string path, Guid guid) : base(path, guid)
+        internal AnimationClip(Guid guid) : base(guid)
         {
-            
+
         }
 
-        public AnimationClip(string name, bool loop = true) : base(string.Empty, Guid.NewGuid()) // TODO: animation clip
+        public AnimationClip(string name, bool loop = true) : base(Guid.NewGuid()) // TODO: animation clip
         {
             Name = name;
             Loop = loop;
@@ -204,7 +204,7 @@ namespace Engine
             return HasProperty(property, _colorCurves);
         }
 
-        protected override void OnUpdateResource(object data, string path, Guid guid)
+        protected override void OnUpdateResource(object data, Guid guid)
         {
             //throw new NotImplementedException();
         }

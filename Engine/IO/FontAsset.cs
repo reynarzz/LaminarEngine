@@ -10,12 +10,12 @@ namespace Engine
     {
         internal byte[] Data { get; }
 
-        public FontAsset(string path, Guid guid, byte[] data) : base(path, guid)
+        public FontAsset(Guid refId, byte[] data) : base(refId)
         {
             Data = data;
         }
 
-        protected override void OnUpdateResource(object data, string path, Guid guid)
+        protected override void OnUpdateResource(object data, Guid refId)
         {
             throw new NotImplementedException();
         }

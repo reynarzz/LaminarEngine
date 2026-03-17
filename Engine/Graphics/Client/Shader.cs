@@ -30,7 +30,7 @@ namespace Engine
         internal IReadOnlyList<ShaderUniform> Uniforms => _uniforms;
         internal IReadOnlyList<ShaderSource> ShaderSources => _sources;
         internal bool HasErrors { get; private set; }
-        internal Shader(ShaderSource[] sources, string path, Guid guid) : base(path, guid)
+        internal Shader(ShaderSource[] sources, Guid guid) : base(guid)
         {
             Initialize(sources);
         }
@@ -57,13 +57,12 @@ namespace Engine
         }
 
         [Obsolete]
-        public Shader(string vertexCode, string fragmentCode, string vertName, string fragName) :
-            base(string.Empty, Guid.NewGuid()) // TODO: load shaders from file.
+        public Shader(string vertexCode, string fragmentCode, string vertName, string fragName) : base(Guid.NewGuid())
         {
             UploadShader(Encoding.UTF8.GetBytes(vertexCode), Encoding.UTF8.GetBytes(fragmentCode));
         }
 
-        protected override void OnUpdateResource(object data, string path, Guid guid)
+        protected override void OnUpdateResource(object data, Guid guid)
         {
             var sources = data as ShaderSource[];
             if (Initialize(sources))

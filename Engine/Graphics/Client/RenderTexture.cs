@@ -11,14 +11,14 @@ namespace Engine
     {
         private readonly RenderTargetDescriptor _desc = new();
         public RenderTexture(int width, int height) :
-            base(string.Empty, Guid.NewGuid(), TextureMode.Clamp, TextureFilter.Nearest, width, height, 4, null)
+            base(Guid.NewGuid(), TextureMode.Clamp, TextureFilter.Nearest, width, height, 4, null)
         {
             Create();
 
         }
 
         public RenderTexture(int width, int height, TextureFilter filter, bool enableMipMaps) :
-          base(string.Empty, Guid.NewGuid(), TextureMode.Clamp, filter, width, height, 4, null)
+          base(Guid.NewGuid(), TextureMode.Clamp, filter, width, height, 4, null)
         {
             _desc.ColorTextureDescriptor.EnableMipMaps = enableMipMaps;
             Create();
@@ -26,7 +26,7 @@ namespace Engine
         }
 
         public RenderTexture(int width, int height, TextureFilter filter, bool enableMipMaps, int samples) :
-         base(string.Empty, Guid.NewGuid(), TextureMode.Clamp, filter, width, height, 4, null)
+         base(Guid.NewGuid(), TextureMode.Clamp, filter, width, height, 4, null)
         {
             _desc.IsMultiSample = samples > 0;
             _desc.SamplesCount = samples;
@@ -66,7 +66,7 @@ namespace Engine
             return null;
         }
 
-        protected override void OnUpdateResource(object data, string path, Guid guid)
+        protected override void OnUpdateResource(object data, Guid guid)
         {
             throw new NotImplementedException();
         }

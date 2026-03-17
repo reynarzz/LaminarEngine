@@ -11,12 +11,12 @@ namespace Engine
     {
         internal SceneIR SceneIR { get; private set; } = new();
 
-        internal SceneAsset(SceneIR sceneIR, string path, Guid guid) : base(path, guid)
+        internal SceneAsset(SceneIR sceneIR, string path, Guid guid) : base(guid)
         {
             SceneIR = sceneIR;
         }
 
-        protected override void OnUpdateResource(object data, string path, Guid guid)
+        protected override void OnUpdateResource(object data, Guid guid)
         {
             SceneIR = data as SceneIR;
         }

@@ -12,15 +12,15 @@ namespace Engine
         public Texture Texture { get; }
         public SpriteAtlas Atlas { get; }
 
-        public TextureAsset(string path, Guid guid, Texture texture, SpriteAtlas atlas) : base(path, guid)
+        public TextureAsset(Guid guid, Texture texture, SpriteAtlas atlas) : base(guid)
         {
             Texture = texture;
             Atlas = atlas;
         }
 
-        protected override void OnUpdateResource(object data, string path, Guid guid)
+        protected override void OnUpdateResource(object data, Guid guid)
         {
-            Texture.UpdateResource(data, path, guid);
+            Texture.UpdateResource(data, guid);
         }
     }
 }

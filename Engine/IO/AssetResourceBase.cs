@@ -14,24 +14,26 @@ namespace Engine
         internal virtual bool IsCacheHardReference { get; protected private set; } = false;
 
         public string Path => IOLayer.Database?.GetAssetInfo(GetID()).Path ?? string.Empty;
+        private string _name = null;
         public override string Name
         {
-            get => System.IO.Path.GetFileNameWithoutExtension(IOLayer.Database?.GetAssetInfo(GetID()).Path ?? string.Empty);
+            get => !string.IsNullOrEmpty(_name) ? _name : System.IO.Path.GetFileNameWithoutExtension(IOLayer.Database?.GetAssetInfo(GetID()).Path ?? string.Empty);
             set
             {
+                _name = value;
             }
         }
 
-        internal AssetResourceBase(string path, Guid guid) : base(System.IO.Path.GetFileNameWithoutExtension(path), guid)
+        internal AssetResourceBase(Guid guid) : base(string.Empty, guid)
         {
         }
 
-        internal void UpdateResource(object data, string path, Guid guid)
+        internal void UpdateResource(object data, Guid guid)
         {
             Version++;
-            OnUpdateResource(data, path, guid);
+            OnUpdateResource(data, guid);
         }
 
-        protected abstract void OnUpdateResource(object data, string path, Guid guid);
+        protected abstract void OnUpdateResource(object data, Guid guid);
     }
 }

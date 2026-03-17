@@ -16,13 +16,13 @@ namespace Editor.Serialization
         public Shader BuildAsset(ref readonly AssetInfo info, AssetMeta meta, BinaryReader reader)
         {
             var shaderSources = GetSources(reader);
-            return new Shader(shaderSources, info.Path, meta.GUID);
+            return new Shader(shaderSources, meta.GUID);
         }
 
         public void UpdateAsset(ref readonly AssetInfo info, Shader asset, AssetMeta meta, BinaryReader reader)
         {
             var shaderSources = GetSources(reader);
-            asset.UpdateResource(shaderSources, info.Path, meta.GUID);
+            asset.UpdateResource(shaderSources, meta.GUID);
         }
 
         private ShaderSource[] GetSources(BinaryReader reader)

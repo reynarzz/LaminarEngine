@@ -44,7 +44,7 @@ namespace Editor.Cooker
                 var metaPath = filePath + Paths.ASSET_META_EXT_NAME;
                 var latestWriteTime = File.GetLastWriteTime(filePath);
                 var metaLatestWriteTime = File.GetLastWriteTime(metaPath);
-                var assetExists = File.Exists(EditorPaths.GetAbsolutePathSafe(assetInfo.Path));
+                var assetExists = containsAssetInfo && File.Exists(EditorPaths.GetAbsolutePathSafe(assetInfo.Path));
                 var isMoved = !assetExists && containsAssetInfo;
 
                 if (isMoved)

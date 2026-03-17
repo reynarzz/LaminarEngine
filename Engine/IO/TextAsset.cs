@@ -10,12 +10,12 @@ namespace Engine
     {
         public string Text { get; private set; }
 
-        public TextAsset(string text, string path, Guid guid) : base(path, guid)
+        public TextAsset(string text, Guid guid) : base(guid)
         {
             Text = text;
         }
 
-        protected override void OnUpdateResource(object data, string path, Guid guid)
+        protected override void OnUpdateResource(object data, Guid guid)
         {
             Text = data as string;
         }

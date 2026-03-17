@@ -12,16 +12,17 @@ namespace Engine
         [SerializedField] internal Dictionary<string, AnimationState> States { get; private set; } = new();
 
         // Remove
-        internal AnimatorController() : base("Animator Controller", Guid.Empty)
+        internal AnimatorController() : base(Guid.Empty)
         {
+            Name = "Animator Controller";
         }
 
         // Serializer
-        internal AnimatorController(string path, Guid guid) : base(path, guid)
+        internal AnimatorController(Guid guid) : base(guid)
         {
         }
 
-        protected override void OnUpdateResource(object data, string path, Guid guid)
+        protected override void OnUpdateResource(object data, Guid guid)
         {
             throw new NotImplementedException();
         }

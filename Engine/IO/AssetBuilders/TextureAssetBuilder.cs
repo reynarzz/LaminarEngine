@@ -15,16 +15,16 @@ namespace Engine.IO
         {
             var data = GetData(reader, meta);
 
-            var texture = new Texture2D(info.Path, meta.GUID, data.Config.Mode, data.Config.Filter,data.Width, data.Height,
+            var texture = new Texture2D(meta.GUID, data.Config.Mode, data.Config.Filter,data.Width, data.Height,
                                         data.Channels, data.Config.PixelPerUnit, data.Data);
 
-            return new TextureAsset(info.Path, meta.GUID, texture, new SpriteAtlas(meta, texture, meta.GUID));
+            return new TextureAsset(meta.GUID, texture, new SpriteAtlas(meta, texture, meta.GUID));
         }
 
         public void UpdateAsset(ref readonly AssetInfo info, TextureAsset asset, TextureMetaFile meta, BinaryReader reader)
         {
             var data = GetData(reader, meta);
-            asset.Texture.UpdateResource(data, info.Path, meta.GUID);
+            asset.Texture.UpdateResource(data, meta.GUID);
         }
 
         internal class TextureDeserializedData

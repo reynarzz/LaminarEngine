@@ -11,7 +11,7 @@ namespace Engine
     {
         [SerializedField] internal ActorIR[] Actors { get; protected private set; }
 
-        internal Prefab(string path, Guid guid) : base(path, guid)
+        internal Prefab(Guid guid) : base(guid)
         {
         }
 
@@ -21,7 +21,7 @@ namespace Engine
             return null;
         }
 
-        protected override void OnUpdateResource(object data, string path, Guid guid)
+        protected override void OnUpdateResource(object data, Guid guid)
         {
 
         }
@@ -29,7 +29,7 @@ namespace Engine
 
     public class Prefab<T> : Prefab where T : Component
     {
-        internal Prefab(string path, Guid guid) : base(path, guid) { }
+        internal Prefab(Guid guid) : base(guid) { }
 
         public new T Instantiate()
         {

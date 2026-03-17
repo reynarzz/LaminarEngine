@@ -13,7 +13,7 @@ namespace Engine.IO
         public Shader BuildAsset(ref readonly AssetInfo info, AssetMeta meta, BinaryReader reader)
         {
             var shaderSources = GetSources(reader);
-            var shader = new Shader(shaderSources, info.Path, meta.GUID);
+            var shader = new Shader(shaderSources, meta.GUID);
 
             if (shader.HasErrors)
             {
@@ -26,7 +26,7 @@ namespace Engine.IO
         public void UpdateAsset(ref readonly AssetInfo info, Shader asset, AssetMeta meta, BinaryReader reader)
         {
             var shaderSources = GetSources(reader);
-            asset.UpdateResource(shaderSources, info.Path, meta.GUID);
+            asset.UpdateResource(shaderSources, meta.GUID);
         }
 
         private ShaderSource[] GetSources(BinaryReader reader)

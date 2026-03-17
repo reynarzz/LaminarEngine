@@ -13,13 +13,13 @@ namespace Engine.IO
         public TilemapAsset BuildAsset(ref readonly AssetInfo info, TilemapMeta meta, BinaryReader reader)
         {
             var data = ReadTilemap(reader);
-            return new TilemapAsset(info.Path, meta.GUID, data);
+            return new TilemapAsset(meta.GUID, data);
         }
 
         public void UpdateAsset(ref readonly AssetInfo info, TilemapAsset asset, TilemapMeta meta, BinaryReader reader)
         {
             var data = ReadTilemap(reader);
-            asset.UpdateResource(data, info.Path, meta.GUID);
+            asset.UpdateResource(data, meta.GUID);
         }
 
         private TilemapData ReadTilemap(BinaryReader reader)

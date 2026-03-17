@@ -11,7 +11,7 @@ namespace Engine.IO
     {
         public FontAsset BuildAsset(ref readonly AssetInfo info, AssetMeta meta, BinaryReader reader)
         {
-            return new FontAsset(info.Path, meta.GUID, reader.ReadBytes((int)reader.BaseStream.Length));
+            return new FontAsset(meta.GUID, reader.ReadBytes((int)reader.BaseStream.Length));
         }
 
         public void UpdateAsset(ref readonly AssetInfo info, FontAsset asset, AssetMeta meta, BinaryReader reader)

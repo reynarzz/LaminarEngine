@@ -14,7 +14,7 @@ namespace Engine
         private TextureMetaFile _textureMeta;
         private readonly Texture2D _targetTexture;
         public int SpriteCount => _sprites.Count;
-        public SpriteAtlas(TextureMetaFile metadata, Texture2D targetTexture, Guid id) : base(targetTexture.Path, id)
+        public SpriteAtlas(TextureMetaFile metadata, Texture2D targetTexture, Guid refId) : base(refId)
         {
             _textureMeta = metadata;
             _targetTexture = targetTexture;
@@ -27,7 +27,7 @@ namespace Engine
             }
         }
 
-        protected override void OnUpdateResource(object data, string path, Guid id)
+        protected override void OnUpdateResource(object data, Guid id)
         {
             _SetID(id);
 

@@ -9,7 +9,7 @@ namespace Engine
     public class TilemapAsset : AssetResourceBase
     {
         private TilemapData _data;
-        internal TilemapAsset(string path, Guid guid, TilemapData data) : base(path, guid)
+        internal TilemapAsset(Guid refId, TilemapData data) : base(refId)
         {
             _data = data;
         }
@@ -19,7 +19,7 @@ namespace Engine
         {
             return _data;
         }
-        protected override void OnUpdateResource(object data, string path, Guid guid)
+        protected override void OnUpdateResource(object data, Guid guid)
         {
             _data = data as TilemapData;
 

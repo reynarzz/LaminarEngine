@@ -18,7 +18,7 @@ namespace Engine
 
         internal GfxResource NativeResource { get; protected private set; }
 
-        internal Texture(string path, Guid guid, TextureMode mode, TextureFilter filter, int width, int height, int channels, byte[] data) : base(path, guid)
+        internal Texture(Guid guid, TextureMode mode, TextureFilter filter, int width, int height, int channels, byte[] data) : base(guid)
         {
             Width = width;
             Height = height;
@@ -30,7 +30,7 @@ namespace Engine
 
         }
 
-        internal Texture(string path, Guid guid, int width, int height, int channels, GfxResource nativeResource) : base(path, guid)
+        internal Texture(string path, Guid guid, int width, int height, int channels, GfxResource nativeResource) : base(guid)
         {
             Width = width;
             Height = height;

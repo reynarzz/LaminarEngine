@@ -22,7 +22,7 @@ namespace Editor.Serialization
         public void UpdateAsset(ref readonly AssetInfo info, SceneAsset asset, DefaultMetaFile meta, BinaryReader reader)
         {
             var sceneIR = GetSceneIR(reader);
-            asset.UpdateResource(sceneIR, info.Path, meta.GUID);
+            asset.UpdateResource(sceneIR, meta.GUID);
         }
 
         private SceneIR GetSceneIR(BinaryReader reader)

@@ -44,11 +44,11 @@ namespace Engine
         }
 
         //Serializer
-        internal Material(string name, Guid guid) : base(name, guid)
+        internal Material(string name, Guid guid) : base(guid)
         {
             MaterialInstanceId++;
         }
-        public Material(Guid guid, string name, Shader shader) : base(name, guid)
+        public Material(Guid guid, string name, Shader shader) : base(guid)
         {
             MaterialInstanceId++;
 
@@ -124,7 +124,7 @@ namespace Engine
             return false;
         }
 
-        protected override void OnUpdateResource(object data, string path, Guid guid)
+        protected override void OnUpdateResource(object data, Guid guid)
         {
             throw new NotImplementedException();
         }

@@ -12,12 +12,12 @@ namespace Engine.IO
     {
         public TextAsset BuildAsset(ref readonly AssetInfo info, AssetMeta meta, BinaryReader reader)
         {
-            return new TextAsset(ReadText(reader), info.Path, meta.GUID);
+            return new TextAsset(ReadText(reader), meta.GUID);
         }
 
         public void UpdateAsset(ref readonly AssetInfo info, TextAsset asset, AssetMeta meta, BinaryReader reader)
         {
-            asset.UpdateResource(ReadText(reader), info.Path, meta.GUID);
+            asset.UpdateResource(ReadText(reader), meta.GUID);
         }
 
         private string ReadText(BinaryReader reader)

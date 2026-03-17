@@ -17,7 +17,7 @@ namespace Engine.IO
             var data = new byte[length];
             int bytesRead = reader.BaseStream.Read(data, 0, (int)length);
 
-            var anim = new AnimationClip(info.Path, meta.GUID);
+            var anim = new AnimationClip(meta.GUID);
 
             // TODO: populate anim data.
 
