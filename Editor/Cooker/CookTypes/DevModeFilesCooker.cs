@@ -53,9 +53,10 @@ namespace Editor.Cooker
                 var metaPath = filePath + Paths.ASSET_META_EXT_NAME;
                 var latestWriteTime = File.GetLastWriteTime(filePath);
                 var metaLatestWriteTime = File.GetLastWriteTime(metaPath);
+                var assetExists = File.Exists(EditorPaths.GetAbsolutePathSafe(assetInfo.Path));
 
                 if (!containsAssetInfo || latestWriteTime > assetInfo.LastWriteTime ||
-                   !isInLibrary || metaLatestWriteTime > assetInfo.MetaWriteTime)
+                   !isInLibrary || metaLatestWriteTime > assetInfo.MetaWriteTime || (!assetExists && containsAssetInfo))
                 {
                     using var fileStream = File.OpenRead(filePath);
                     using var reader = new BinaryReader(fileStream);
@@ -105,32 +106,59 @@ namespace Editor.Cooker
                     await File.WriteAllBytesAsync(binPath, data.Data ?? []);
                 }
             }
+
+            // Clear orphan assets and metas.
+            ClearInvalidAssets(files.Select(a => a.Item1).ToList());
+
+            cookResult.ChangedCount = Math.Abs(_database.TotalAssets - _database.Assets.Count);
+            _database.TotalAssets = _database.Assets.Count;
+            Debug.Log(cookResult.ChangedCount);
+            try
+            {
+                // Write asset database
+                await File.WriteAllTextAsync(Path.Combine(outFolder, Paths.ASSET_DATABASE_FILE_NAME), JsonConvert.SerializeObject(_database, Formatting.Indented));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Check Permission: Dev mode files cooker.");
+            }
+            cookResult.IsSuccess = !someAssetFailImport;
+            return cookResult;
+        }
+
+        private void ClearInvalidAssets(List<string> files)
+        {
             var prevColor = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.Yellow;
             // Clean the list of non existent assets.
-            var currentIds = new HashSet<string>(files.Select(a => a.Item1), StringComparer.OrdinalIgnoreCase);
-            foreach (var item in _database.Assets.ToList())
+            var currentIds = new HashSet<string>(files, StringComparer.OrdinalIgnoreCase);
+            foreach (var (refId, assetInfo) in _database.Assets.ToList())
             {
                 string absoluteAssetPath = null;
 
-                if (!item.Value.Path.StartsWith(EditorPaths.CookerPaths.INTERNAL_ASSET_FOLDER_NAME))
+                if (!assetInfo.Path.StartsWith(EditorPaths.CookerPaths.INTERNAL_ASSET_FOLDER_NAME))
                 {
-                    absoluteAssetPath = Paths.GetAbsoluteAssetPath(item.Value.Path);
+                    absoluteAssetPath = Paths.GetAbsoluteAssetPath(assetInfo.Path);
                 }
                 else
                 {
-                    absoluteAssetPath = Paths.ClearPathSeparation(Path.Combine(EditorPaths.CookerPaths.AssetsPath, item.Value.Path));
+                    absoluteAssetPath = Paths.ClearPathSeparation(Path.Combine(EditorPaths.CookerPaths.AssetsPath, assetInfo.Path));
                 }
+
                 if (!currentIds.Contains(absoluteAssetPath))
                 {
-                    _database.Assets.Remove(item.Key);
+                    var assetBinPath = Paths.CreateBinFilePath(Paths.GetAssetDatabaseFolder(), refId.ToString());
 
-                    // Delete bin file in asset database.
-                    var assetBinPath = Paths.CreateBinFilePath(Paths.GetAssetDatabaseFolder(), item.Key.ToString());
-                    if (File.Exists(assetBinPath))
+                    if (!IsMove(refId, assetInfo.Path))
                     {
-                        Console.WriteLine($"Deleting non existent asset from database: guid: '{item.Key}', Path: '{item.Value.Path}'");
-                        File.Delete(assetBinPath);
+                        _database.Assets.Remove(refId);
+
+                        // Delete bin file in asset database.
+                        if (File.Exists(assetBinPath))
+                        {
+                            Console.WriteLine($"Deleting non existent asset from database: guid: '{refId}', Path: '{assetInfo.Path}'");
+                            File.Delete(assetBinPath);
+                        }
                     }
                 }
             }
@@ -150,21 +178,16 @@ namespace Editor.Cooker
                 }
             }
             Console.ForegroundColor = prevColor;
+        }
 
-            cookResult.ChangedCount = Math.Abs(_database.TotalAssets - _database.Assets.Count);
-            _database.TotalAssets = _database.Assets.Count;
-            Debug.Log(cookResult.ChangedCount);
-            try
+        private bool IsMove(Guid refId, string filePath)
+        {
+            if(_database.Assets.TryGetValue(refId, out var currentAssetPath))
             {
-                // Write asset database
-                await File.WriteAllTextAsync(Path.Combine(outFolder, Paths.ASSET_DATABASE_FILE_NAME), JsonConvert.SerializeObject(_database, Formatting.Indented));
+                return !currentAssetPath.Equals(filePath);
             }
-            catch (Exception e)
-            {
-                Console.WriteLine("Check Permission: Dev mode files cooker.");
-            }
-            cookResult.IsSuccess = !someAssetFailImport;
-            return cookResult;
+
+            return false;
         }
     }
 }

@@ -67,9 +67,9 @@ namespace Editor
             }
         }
 
-        internal void Refresh()
+        internal Task Refresh()
         {
-            BuildSystem.BuildAsync(PlatformBuild.GameAppDomain);
+            return BuildSystem.BuildAsync(PlatformBuild.GameAppDomain);
         }
     }
 }

@@ -71,14 +71,17 @@ namespace Editor.Views
             if (_selectedFile != null)
             {
                 selectedRelPath = _selectedFile.RelativePath;
-                parentOfSelectedRelPath = _selectedFile.Parent.RelativePath;
+                parentOfSelectedRelPath = _selectedFile.Parent?.RelativePath ?? string.Empty;
                 _selectedFile = null;
             }
             _assetsDirectories.Add(EnumerateDirectoryGraphRecursive(Paths.GetAssetsFolderPath()));
             _assetsDirectories.Add(EnumerateDirectoryGraphRecursive(EditorPaths.CookerPaths.InternalAssetsPath));
             if (!SelectFile(selectedRelPath))
             {
-                SelectFile(parentOfSelectedRelPath);
+                if (!SelectFile(parentOfSelectedRelPath))
+                {
+                    SelectFile(_assetsDirectories[0]);
+                }
             }
         }
 
@@ -188,7 +191,7 @@ namespace Editor.Views
                 if (ImGui.MenuItem("Create Scene"))
                 {
                     var relativePathDir = GetFileRelativeFolderClean(_selectedFile);
-                    EditorAssetFileCreator.CreateScene(relativePathDir, "Scene");
+                    EditorAssetUtils.CreateScene(relativePathDir, "Scene");
                 }
                 ImGui.EndPopup();
             }
@@ -213,6 +216,26 @@ namespace Editor.Views
                 dirName = file.RelativePath;
             }
             return Paths.ClearPathSeparation(dirName.Substring(dirName.IndexOf('/') + 1));
+        }
+
+        private string RemoveRootFolder(string relativePath)
+        {
+            if (string.IsNullOrEmpty(relativePath))
+            {
+                return string.Empty;
+            }
+
+            var rootFolder = string.Empty;
+            if (relativePath.StartsWith(EditorPaths.CookerPaths.INTERNAL_ASSET_FOLDER_NAME))
+            {
+                rootFolder = EditorPaths.CookerPaths.INTERNAL_ASSET_FOLDER_NAME;
+            }
+            else
+            {
+                rootFolder = Paths.ASSETS_FOLDER_NAME;
+            }
+
+            return relativePath.Substring(rootFolder.Length + 1);
         }
         private AssetViewFileInfo GetSelectedFileParent(int index)
         {
@@ -301,7 +324,7 @@ namespace Editor.Views
                 if (ImGui.MenuItem("Create Scene"))
                 {
                     var relativePathDir = GetFileRelativeFolderClean(_selectedFile);
-                    EditorAssetFileCreator.CreateScene(relativePathDir, "Scene");
+                    EditorAssetUtils.CreateScene(relativePathDir, "Scene");
                 }
                 if (ImGui.MenuItem("Rename"))
                 {
@@ -384,16 +407,40 @@ namespace Editor.Views
                         ImGui.PushStyleVar(ImGuiStyleVar.FramePadding, new Vector2(4, 0));
                         var renameChange = EditorGuiFieldsResolver.DrawStringField($"##{renameId}", ref changedFilename, 0, true, firstFrameRename);
                         var isContinueKeyPressed = (IsWindowFocused || IsWindowHovered || ImGui.IsItemFocused()) && (ImGui.IsKeyPressed(ImGuiKey.Enter) || ImGui.IsKeyPressed(ImGuiKey.Escape));
+
+                        // Cannot update, user only added white spaces.
+                        if ((renameChange || isContinueKeyPressed) && changedFilename.Trim().Equals(file.Filename))
+                        {
+                            renameChange = false;
+                            isContinueKeyPressed = false;
+                            DeselectFileRename();
+                        }
                         ImGui.PopStyleVar();
                         if (renameChange || isContinueKeyPressed)
                         {
                             if (renameChange && !string.IsNullOrEmpty(changedFilename))
                             {
+                                changedFilename = changedFilename.Trim();
                                 var newFileName = GetFileRelativeFolderClean(file) + "/" + changedFilename + file.Extension;
-                                EditorAssetUtils.MoveAsset(file.RelativePath, newFileName);
-                                file.Filename = changedFilename;
+
+                                if (EditorAssetUtils.MoveAsset(RemoveRootFolder(file.RelativePath), RemoveRootFolder(newFileName), overwrite: false))
+                                {
+                                    var oldFilename = file.Filename;
+                                    file.Filename = changedFilename;
+                                    file.AbsolutePath = Paths.ClearPathSeparation(Path.GetDirectoryName(file.AbsolutePath)) + "/" + changedFilename + file.Extension;
+                                    file.RelativePath = newFileName;
+                                }
+                                else
+                                {
+                                    // Show popup with this message and a 'ok' button, renaming will not be cancelled.
+                                    Debug.Error("There is already a file with this name in this directory.");
+                                    DeselectFileRename();
+                                }
                             }
-                            DeselectFileRename();
+                            else
+                            {
+                                DeselectFileRename();
+                            }
                         }
                         //else if (!IsWindowFocused)
                         //{

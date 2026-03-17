@@ -1,4 +1,6 @@
 ﻿using Editor.Cooker;
+using Editor.Serialization;
+using Editor.Utils;
 using Engine;
 using Newtonsoft.Json;
 using System;
@@ -26,9 +28,9 @@ namespace Editor
             return meta;
         }
 
-        internal static void RefreshAssetDatabase()
+        internal static Task RefreshAssetDatabase()
         {
-            EditorIOLayer.Instance.Refresh();
+            return EditorIOLayer.Instance.Refresh();
         }
 
         internal static void WriteMeta(string relativeAssetPath, AssetMeta meta)
@@ -154,14 +156,49 @@ namespace Editor
 
             return clrType;
         }
-
-        internal static void MoveAsset(string relativePath, string newRelativePath)
+        internal static void CreateScene(string relativeDir, string assetName)
         {
-            // TODO: move asset, or just rename it if the newRelativePath is in the same directory.
-            Debug.Log("Old name: " + relativePath + ", New name: " + newRelativePath);
+            if (string.IsNullOrEmpty(relativeDir))
+            {
+                return;
+            }
+            var newScene = new Scene(Path.GetFileNameWithoutExtension(relativeDir), Guid.NewGuid());
+            var sceneIR = SceneSerializer.SerializeScene(newScene);
+            var json = EditorJsonUtils.Serialize(sceneIR);
 
-            // Update assets database:
+            var directory = EditorPaths.GetAbsolutePathSafe(relativeDir);
+            var absPath = Path.Combine(directory, assetName + ".scene");
+
+            if (Directory.Exists(directory))
+            {
+                File.WriteAllText(absPath, json);
+            }
+            else
+            {
+                Debug.Error($"Directory doesn't exists: {directory}, can't create asset");
+            }
+
             RefreshAssetDatabase();
+        }
+
+        internal static bool MoveAsset(string fromRelativePath, string toRelativePath, bool overwrite)
+        {
+            var currentFile = EditorPaths.GetAbsolutePathSafe(fromRelativePath).Trim();
+            var newFilePath = EditorPaths.GetAbsolutePathSafe(toRelativePath).Trim();
+
+            var exists = File.Exists(newFilePath);
+            if (!exists || (exists && overwrite))
+            {
+                File.Move(currentFile, newFilePath);
+                File.Move(currentFile + Paths.ASSET_META_EXT_NAME, newFilePath + Paths.ASSET_META_EXT_NAME);
+
+                // Update assets database to remove:
+                RefreshAssetDatabase();
+
+                return true;
+            }
+
+            return false;
         }
     }
 }
