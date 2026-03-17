@@ -157,7 +157,7 @@ namespace Editor
             var distance = (_pivot - _worldPosition).Magnitude;
             var target = (_pivot - worldPosition).Magnitude;
 
-            if (MathF.Abs(target) < 0.1f)
+            if (Mathf.IsAlmostZero(target))
             {
                 distance = Mathf.CompareFloats(distance, _nearFocus) ? _farFocus : _nearFocus;
             }
@@ -186,11 +186,12 @@ namespace Editor
             _focusTime -= dt;
 
             float t = 1f - _focusTime;
-            
-            _pivot = !Application.IsInPlayMode ? Mathf.Lerp(_focusStartPivot, _focusPosition, t): _focusPosition;
+            var easingType = EasingType.EaseOutSine;
+
+            _pivot = !Application.IsInPlayMode ? Easing.Apply(easingType, _focusStartPivot, _focusPosition, t): _focusPosition;
 
             float targetDist = Mathf.Clamp(_focusDistance, MinDistance, MaxDistance);
-            _distance = !Application.IsInPlayMode? Mathf.Lerp(_focusStartDistance, targetDist, t): targetDist;
+            _distance = !Application.IsInPlayMode? Easing.Apply(easingType, _focusStartDistance, targetDist, t): targetDist;
 
             _worldPosition = _pivot - Forward * _distance;
         }
