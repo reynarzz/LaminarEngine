@@ -140,7 +140,8 @@ namespace Editor
                 }
             }
 
-            if (ImGui.IsWindowFocused() && ImGui.IsKeyPressed(ImGuiKey.F, false) && Selector.Transform)
+            if ((ImGui.IsWindowHovered() || ImGui.IsWindowFocused()) && ImGui.IsKeyPressed(ImGuiKey.F, false) &&
+                 Selector.Transform)
             {
                 Focus(Selector.Transform.WorldPosition);
             }
@@ -176,16 +177,20 @@ namespace Editor
             {
                 return;
             }
+            if (Application.IsInPlayMode)
+            {
+                _focusTime = 0;
+            }
 
             float dt = ImGui.GetIO().DeltaTime * 6;
             _focusTime -= dt;
 
             float t = 1f - _focusTime;
-
-            _pivot = Mathf.Lerp(_focusStartPivot, _focusPosition, t);
+            
+            _pivot = !Application.IsInPlayMode ? Mathf.Lerp(_focusStartPivot, _focusPosition, t): _focusPosition;
 
             float targetDist = Mathf.Clamp(_focusDistance, MinDistance, MaxDistance);
-            _distance = Mathf.Lerp(_focusStartDistance, targetDist, t);
+            _distance = !Application.IsInPlayMode? Mathf.Lerp(_focusStartDistance, targetDist, t): targetDist;
 
             _worldPosition = _pivot - Forward * _distance;
         }

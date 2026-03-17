@@ -132,7 +132,7 @@ namespace Editor.Views
             }
 
 
-            if (ImGui.IsAnyMouseDown() && ImGui.IsWindowHovered())
+            if (ImGui.IsAnyMouseClicked() && ImGui.IsWindowHovered())
             {
                 ImGui.SetWindowFocus();
             }
