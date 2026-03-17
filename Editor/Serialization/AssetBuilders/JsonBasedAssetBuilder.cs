@@ -23,7 +23,7 @@ namespace Editor
             string text = Encoding.UTF8.GetString(data, 0, bytesRead);
 
             var assetInstance = Activator.CreateInstance(typeof(TAsset), BindingFlags.Instance | BindingFlags.NonPublic,
-                                                         null, [info.Path, meta.GUID], null);
+                                                         null, [meta.GUID], null);
             var ir = EditorJsonUtils.Deserialize<TTypeIR>(text);
 
             if(ir != default)

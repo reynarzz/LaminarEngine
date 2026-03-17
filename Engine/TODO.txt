@@ -42,12 +42,13 @@ Assets:
 Metadata of every asset should be binary on final build.
 
 Features:
+- Assets should only be able to be loaded by dragging and dropping into the scene, or the special folder 'Resources'.
+- Generate the assets index list by reading scenes, so we add all the assets that the deploy build needs.
 - Fully async scene load in the background: async asset loading (mainThreadSync for graphic assets)
 - Audio mixer editor ui
 - Animator using nodes
 - Assets lazy loading: Selecting assets in the inspector should not load the asset, but when the playmode starts,
   create a ImmediateAssetLoad<T> to load as soon as it gets in the property inspector.
-- Generate the assets to be added to the build reading all the scenes that will be added to the build.
 - When an asset is updated, other assets that depend on it should be notified/updated as well, ex: Texture2D->Tilemap
 
 Assets view:

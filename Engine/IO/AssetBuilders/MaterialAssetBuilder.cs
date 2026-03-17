@@ -10,7 +10,7 @@ namespace Engine
         {
             var materialIR = BinaryIRDeserializer.DeserializeMaterial(reader);
 
-            var material = new Material(info.Path, meta.GUID);
+            var material = new Material(meta.GUID);
 
             Deserializer.Deserialize(material, materialIR.Properties);
 

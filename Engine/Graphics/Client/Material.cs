@@ -16,13 +16,14 @@ namespace Engine
         internal List<RenderPass> Passes => _passes;
         [SerializedField] private Dictionary<string, Texture> _textures = new();
         internal Dictionary<string, Texture> Textures => _textures;
+        private static ulong _materialInstanceId = 0;
         internal ulong MaterialInstanceId { get; private set; }
         public Shader Shader
         {
-            get => _passes.FirstOrDefault()?.Shader; 
+            get => _passes.FirstOrDefault()?.Shader;
             set
             {
-                if(_passes.Count == 0)
+                if (_passes.Count == 0)
                 {
                     _passes.Add(new RenderPass(value));
                 }
@@ -35,22 +36,18 @@ namespace Engine
 
         private const string _defaultTypeName = "Material";
 
-        public Material(Shader shader) : this(_defaultTypeName, shader)
-        {
-        }
-
-        public Material(string name, Shader shader) : this(Guid.Empty, name, shader)
-        {
-        }
+        public Material(Shader shader) : this(_defaultTypeName, shader) { }
+        public Material(string name, Shader shader) : this(Guid.Empty, name, shader) { }
 
         //Serializer
-        internal Material(string name, Guid guid) : base(guid)
+        internal Material(Guid guid) : base(guid)
         {
-            MaterialInstanceId++;
+            MaterialInstanceId = _materialInstanceId++;
         }
         public Material(Guid guid, string name, Shader shader) : base(guid)
         {
-            MaterialInstanceId++;
+            Name = name;
+            MaterialInstanceId = _materialInstanceId++;
 
             _textures = new();
             _passes = new List<RenderPass>()
