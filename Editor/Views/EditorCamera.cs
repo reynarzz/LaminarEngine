@@ -9,13 +9,13 @@ namespace Editor
 {
     internal class EditorCamera : ICamera
     {
-        private vec3 _pivot = new vec3(0, 0, 0);
-        private float _distance = 45.0f;
+        private static vec3 _pivot = new vec3(0, 0, 0);
+        private static float _distance = 45.0f;
 
         private Quaternion _rotation = Quaternion.Identity;
 
         private Vector2 _screenSize;
-        private vec3 _worldPosition;
+        private static vec3 _worldPosition;
         private const float MinDistance = 0.01f;
         private const float MaxDistance = 3000.0f;
 
@@ -41,10 +41,13 @@ namespace Editor
         public CameraProjectionMode ProjectionMode { get; set; } = CameraProjectionMode.Perspective;
 
         public vec4 Viewport { get; set; } = new vec4(0, 0, 1, 1);
-        private vec3 _focusPosition;
-        private float _focusDistance;
-        private float _focusTime;
-
+        private static vec3 _focusPosition;
+        private static float _focusDistance;
+        private static float _focusTime;
+        private static vec3 _focusStartPivot;
+        private static float _focusStartDistance;
+        private const float _nearFocus = 3f;
+        private const float _farFocus = 10f;
         public EditorCamera(float aspect = 16f / 9f)
         {
             _screenSize = new Vector2(Screen.Width, Screen.Height);
@@ -83,13 +86,14 @@ namespace Editor
             }
 
             var io = ImGui.GetIO();
-            if (!ImGui.IsWindowHovered() && !ImGui.IsWindowFocused())
-                return;
+
 
             vec2 mouseDelta = new vec2(io.MouseDelta.X, io.MouseDelta.Y);
 
-            if (ImGui.IsMouseDown(ImGuiMouseButton.Right))
+            if (ImGui.IsMouseDown(ImGuiMouseButton.Right) && (ImGui.IsWindowHovered() || ImGui.IsWindowFocused()))
             {
+                ImGui.SetWindowFocus();
+
                 const float sensitivity = 0.005f;
 
 
@@ -105,8 +109,10 @@ namespace Editor
                 _rotation = Quaternion.Normalize(qYaw * qPitch * _rotation);
             }
 
-            if (ImGui.IsMouseDown(ImGuiMouseButton.Middle))
+            if (ImGui.IsMouseDown(ImGuiMouseButton.Middle) && (ImGui.IsWindowHovered() || ImGui.IsWindowFocused()))
             {
+                ImGui.SetWindowFocus();
+
                 float fovY = glm.radians(60.0f);
 
                 float worldHeight = 2.0f * _distance * MathF.Tan(fovY * 0.5f);
@@ -117,6 +123,7 @@ namespace Editor
 
                 _pivot -= Right * mouseDelta.x * unitsPerPixelX;
                 _pivot += Up * mouseDelta.y * unitsPerPixelY;
+
             }
 
 
@@ -133,28 +140,27 @@ namespace Editor
                 }
             }
 
-
-            if (ImGui.IsKeyPressed(ImGuiKey.F, false) && Selector.Transform)
+            if (ImGui.IsWindowFocused() && ImGui.IsKeyPressed(ImGuiKey.F, false) && Selector.Transform)
             {
-                var dist = (_pivot - _worldPosition).Magnitude;
-                var target = (_pivot - Selector.Transform.WorldPosition).Magnitude;
-
-                if (MathF.Abs(target) < 0.1f)
-                {
-                    dist = Mathf.CompareFloats(dist, _nearFocus) ? _farFocus : _nearFocus;
-                }
-                Focus(Selector.Transform.WorldPosition, dist);
+                Focus(Selector.Transform.WorldPosition);
             }
+
+
             FocusUpdate();
             UpdateView();
         }
 
-        private vec3 _focusStartPivot;
-        private float _focusStartDistance;
-        private const float _nearFocus = 3f;
-        private const float _farFocus = 10f;
-        private void Focus(vec3 worldPosition, float distance)
+
+        internal static void Focus(vec3 worldPosition)
         {
+            var distance = (_pivot - _worldPosition).Magnitude;
+            var target = (_pivot - worldPosition).Magnitude;
+
+            if (MathF.Abs(target) < 0.1f)
+            {
+                distance = Mathf.CompareFloats(distance, _nearFocus) ? _farFocus : _nearFocus;
+            }
+
             _focusStartPivot = _pivot;
             _focusStartDistance = _distance;
 

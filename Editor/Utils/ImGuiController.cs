@@ -49,7 +49,7 @@ namespace Editor
             io.BackendFlags |= ImGuiBackendFlags.HasSetMousePos;
             io.KeyRepeatDelay = 0.35f; // default ~0.25
             io.KeyRepeatRate = 0.05f; // default ~0.05
-            io.MouseDoubleClickTime = 0.5f;
+            io.MouseDoubleClickTime = 0.3f;
             io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
             io.ConfigFlags |= ImGuiConfigFlags.ViewportsEnable;
 

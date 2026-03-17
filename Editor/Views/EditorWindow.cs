@@ -54,6 +54,7 @@ namespace Editor.Views
 
             OnOpen();
         }
+
         public void Close()
         {
             _isOpened = false;
@@ -103,7 +104,12 @@ namespace Editor.Views
                 {
                     ImGui.Begin(name, ref _isOpened, flags);
                 }
-               
+
+                if (ImGui.IsAnyMouseClicked() && ImGui.IsWindowHovered())
+                {
+                    ImGui.SetWindowFocus();
+                }
+
                 if (!_isOpened)
                 {
                     Close();
@@ -120,8 +126,17 @@ namespace Editor.Views
             {
                 ImGui.Begin(name);
             }
+            else
+            {
+                ImGui.Begin(name, flags);
+            }
 
-            ImGui.Begin(name, flags);
+
+            if (ImGui.IsAnyMouseDown() && ImGui.IsWindowHovered())
+            {
+                ImGui.SetWindowFocus();
+            }
+
             if (windowsPadding != null)
             {
                 ImGui.PopStyleVar();

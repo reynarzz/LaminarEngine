@@ -84,6 +84,8 @@ namespace Editor.Views
                             ImGui.Dummy(0, 4);
                             ImGui.PushStyleVar(ImGuiStyleVar.IndentSpacing, 15.5f);
 
+                            SetSelectedActorParentGraph();
+
                             for (int j = 0; j < SceneManager.Scenes[i].RootActors.Count; j++)
                             {
                                 DrawActor(SceneManager.Scenes[i].RootActors[j]);
@@ -107,7 +109,36 @@ namespace Editor.Views
 
             OnEndWindow();
         }
+        private Guid _prevSelectedId;
+        private readonly HashSet<Guid> _expandParents = new();
+        private Guid _firstTimeSelectedId = default;
 
+        private void SetSelectedActorParentGraph()
+        {
+            if (Selector.Selected is Actor actor)
+            {
+                if (_prevSelectedId != actor.GetID())
+                {
+                    _prevSelectedId = actor.GetID();
+                    _firstTimeSelectedId = actor.GetID();
+
+                    _expandParents.Clear();
+                    var parent = actor.Transform.Parent;
+                    while (parent != null)
+                    {
+                        _expandParents.Add(parent.Actor.GetID());
+
+                        parent = parent.Parent;
+
+                        if (!parent)
+                        {
+                            break;
+                        }
+                    }
+                }
+
+            }
+        }
         private void DrawActor(Actor actor)
         {
             ImGui.PushID(actor.GetID().ToString());
@@ -165,7 +196,16 @@ namespace Editor.Views
 
             ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(1f, 1f, 1f, 1f));
             popColors += 1;
+
+
+            if (_expandParents.Contains(actor.GetID()))
+            {
+                ImGui.SetNextItemOpen(true, ImGuiCond.Always);
+            }
+
             bool open = ImGui.TreeNodeEx("##node", flags);
+            var isItemVisible = ImGui.IsItemVisible();
+
             EditorImGui.DragAndDrop.ItemDragReference(actor.Name, EditorImGui.DragAndDrop.PAYLOAD_ID_EOBJECT, actor, actor.GetType(), actor.GetID());
             var id = actor.GetID();
 
@@ -184,6 +224,17 @@ namespace Editor.Views
                 _pressedActorId = null;
             }
 
+
+            if (!isItemVisible && _firstTimeSelectedId == actor.GetID())
+            {
+                _firstTimeSelectedId = Guid.Empty;
+                ImGui.SetScrollHereY();
+            }
+
+            if (ImGui.IsItemClicked() && ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
+            {
+                EditorCamera.Focus(actor.Transform.WorldPosition);
+            }
             if (EditorImGui.BeginPopupContextItem("ActorContext"))
             {
                 Selector.Selected = actor;

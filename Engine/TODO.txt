@@ -49,6 +49,9 @@ Features:
 - Generate the assets to be added to the build reading all the scenes that will be added to the build.
 - When an asset is updated, other assets that depend on it should be notified/updated as well, ex: Texture2D->Tilemap
 
+Assets view:
+- Update asset view when asset database is updated.
+
 
 Save Editor config:
 -Current loaded scene name.

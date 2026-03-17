@@ -16902,6 +16902,13 @@ namespace ImGuiNET
             byte ret = ImGuiNative.igIsAnyMouseDown();
             return ret != 0;
         }
+
+        public static bool IsAnyMouseClicked()
+        {
+            return ImGui.IsMouseClicked(ImGuiMouseButton.Left) || 
+                   ImGui.IsMouseClicked(ImGuiMouseButton.Middle) || 
+                   ImGui.IsMouseClicked(ImGuiMouseButton.Right);
+        }
         public static bool IsItemActivated()
         {
             byte ret = ImGuiNative.igIsItemActivated();
