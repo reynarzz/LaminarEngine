@@ -121,10 +121,16 @@ namespace Editor.Views
             OnEndWindow();
         }
 
-        private void SetSelectedActorParentGraph(Actor actor, bool force = false)
+        private void SetSelectedActorParentGraph(Actor actor, bool force = false, bool includeActor = false)
         {
+            Selector.Selected = actor;
+
             if (actor && (force || _prevSelectedActorId != actor.GetID()))
             {
+                if (includeActor)
+                {
+                    _expandParents.Add(actor.GetID());
+                }
                 _prevSelectedActorId = actor.GetID();
                 _firstTimeSelectedActorId = actor.GetID();
 
@@ -147,14 +153,6 @@ namespace Editor.Views
             ImGui.PushID(actor.GetID().ToString());
 
             bool hasChildren = actor.Transform.Children.Count > 0;
-
-            ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.OpenOnArrow | ImGuiTreeNodeFlags.SpanFullWidth;
-
-            if (!hasChildren)
-                flags |= ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.NoTreePushOnOpen;
-
-            if (Selector.Selected && Selector.Selected == actor)
-                flags |= ImGuiTreeNodeFlags.Selected;
 
             var tintColor = new vec4(1, 1, 1, 1);
             if (!actor.IsActiveInHierarchy)
@@ -179,7 +177,7 @@ namespace Editor.Views
                 if (anotherIsDrag)
                 {
                     ImGui.PushStyleColor(ImGuiCol.Header, headerColor);
-                    ImGui.PushStyleColor(ImGuiCol.HeaderHovered, greenSelected);
+                    ImGui.PushStyleColor(ImGuiCol.HeaderHovered, headerColor);
                 }
                 else
                 {
@@ -192,6 +190,7 @@ namespace Editor.Views
                 ImGui.PushStyleColor(ImGuiCol.Header, greenSelected);
                 ImGui.PushStyleColor(ImGuiCol.HeaderHovered, greenSelected);
             }
+            
             popColors += 2;
 
             ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(1f, 1f, 1f, 1f));
@@ -203,6 +202,14 @@ namespace Editor.Views
                 _expandParents.Remove(actor.GetID());
                 ImGui.SetNextItemOpen(true);
             }
+
+            var flags = ImGuiTreeNodeFlags.OpenOnArrow | ImGuiTreeNodeFlags.SpanFullWidth;
+
+            if (!hasChildren)
+                flags |= ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.NoTreePushOnOpen;
+
+            if (Selector.Selected && Selector.Selected == actor)
+                flags |= ImGuiTreeNodeFlags.Selected;
 
             bool open = ImGui.TreeNodeEx("##node", flags);
             var isItemVisible = ImGui.IsItemVisible();
@@ -253,7 +260,35 @@ namespace Editor.Views
 
                 if (ImGui.MenuItem("Create Actor"))
                 {
-                    new Actor("Actor").Transform.Parent = actor.Transform;
+                    var newActor = new Actor("Actor");
+                    newActor.Transform.Parent = actor.Transform;
+                    newActor.Transform.LocalPosition = default;
+                    newActor.Transform.LocalRotation = quat.Identity;
+                    newActor.Transform.LocalScale = vec3.One;
+
+                    SetSelectedActorParentGraph(newActor);
+                }
+
+                if (ImGui.MenuItem("Create Actor Parent"))
+                {
+                    var newActor = new Actor("Actor");
+                    var oldParent = actor.Transform.Parent;
+                    newActor.Scene.UnregisterRootActor(newActor);
+                    newActor.Transform.Parent = oldParent;
+                    if (!oldParent)
+                    {
+                        actor.Scene.RegisterRootActor(newActor);
+                    }
+                    else
+                    {
+                        newActor.Transform.LocalPosition = default;
+                        newActor.Transform.LocalRotation = quat.Identity;
+                        newActor.Transform.LocalScale = vec3.One;
+
+                        newActor.Scene = actor.Scene;
+                    }
+                    actor.Transform.Parent = newActor.Transform;
+                    SetSelectedActorParentGraph(newActor, true, true);
                 }
 
                 ImGui.Separator();
@@ -356,7 +391,6 @@ namespace Editor.Views
                 if (value.Value is Actor dropActor)
                 {
                     callback(dropActor);
-                    Selector.Selected = dropActor;
                     _pressedActorId = null;
                     SetSelectedActorParentGraph(dropActor, true);
                 }
