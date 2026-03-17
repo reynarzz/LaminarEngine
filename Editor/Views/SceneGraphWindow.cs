@@ -120,10 +120,10 @@ namespace Editor.Views
 
             OnEndWindow();
         }
-      
+
         private void SetSelectedActorParentGraph(Actor actor)
         {
-            if (actor && _prevSelectedActorId != actor.GetID() && _expandParents.Count == 0)
+            if (actor && _prevSelectedActorId != actor.GetID())
             {
                 _prevSelectedActorId = actor.GetID();
                 _firstTimeSelectedActorId = actor.GetID();
@@ -201,18 +201,24 @@ namespace Editor.Views
             if (_expandParents.Contains(actor.GetID()))
             {
                 _expandParents.Remove(actor.GetID());
-                ImGui.SetNextItemOpen(true, ImGuiCond.Always);
+                ImGui.SetNextItemOpen(true);
             }
 
             bool open = ImGui.TreeNodeEx("##node", flags);
             var isItemVisible = ImGui.IsItemVisible();
 
-            DropActorHandle(dropActor => dropActor.Transform.Parent = actor.Transform);
+            DropActorHandle(dropActor =>
+            {
+                if (!IsChildren(dropActor, actor))
+                {
+                    dropActor.Transform.Parent = actor.Transform;
+                }
+            });
 
-           
+
             EditorImGui.DragAndDrop.ItemDragReference(actor.Name, EditorImGui.DragAndDrop.PAYLOAD_ID_EOBJECT, actor, actor.GetType(), actor.GetID());
-            
-           
+
+
             var id = actor.GetID();
 
             if (ImGui.IsItemActivated())
@@ -351,9 +357,28 @@ namespace Editor.Views
                 {
                     callback(dropActor);
                     Selector.Selected = dropActor;
+                    _pressedActorId = null;
                     SetSelectedActorParentGraph(dropActor);
                 }
             }
+        }
+
+        /// <summary>
+        /// Checks if 'to' is a children of 'from'
+        /// </summary>
+        private bool IsChildren(Actor from, Actor to)
+        {
+            var parent = to.Transform.Parent;
+            while (parent)
+            {
+                if (parent == from.Transform)
+                {
+                    return true;
+                }
+                parent = parent.Parent;
+            }
+
+            return false;
         }
     }
 }
