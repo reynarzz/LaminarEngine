@@ -56,12 +56,16 @@ namespace Editor
             _devDisk.Initialize();
             Reload(_devDisk);
 
-            // Update database.
-            foreach (var guid in assetDatabase.UpdatedAssets)
+            if(assetDatabase != null)
             {
-                Database?.UpdateReloadAsset(guid);
+                // Update database.
+                foreach (var guid in assetDatabase.UpdatedAssets)
+                {
+                    Database?.UpdateReloadAsset(guid);
+                }
             }
-            if (assetDatabase.UpdatedAssets.Count > 0 || assetDatabase.ChangedCount > 0)
+           
+            if (assetDatabase == null || assetDatabase.UpdatedAssets.Count > 0 || assetDatabase.ChangedCount > 0)
             {
                 OnAssetDatabaseUpdated?.Invoke();
             }

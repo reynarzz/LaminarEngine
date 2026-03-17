@@ -38,6 +38,7 @@ namespace Editor
                 editorLayer,
                 hotReloadLayer,
                 imguiLayer,
+                mainThreadDispLayer,
                 renderingLayer,
             ];
 

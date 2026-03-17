@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Engine.IO;
+using Engine.Layers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,10 +12,18 @@ namespace Engine
     {
         internal uint Version { get; private set; }
         internal virtual bool IsCacheHardReference { get; protected private set; } = false;
-        public string Path { get; }
+
+        public string Path => IOLayer.Database?.GetAssetInfo(GetID()).Path ?? string.Empty;
+        public override string Name
+        {
+            get => System.IO.Path.GetFileNameWithoutExtension(IOLayer.Database?.GetAssetInfo(GetID()).Path ?? string.Empty);
+            set
+            {
+            }
+        }
+
         internal AssetResourceBase(string path, Guid guid) : base(System.IO.Path.GetFileNameWithoutExtension(path), guid)
         {
-            Path = path;
         }
 
         internal void UpdateResource(object data, string path, Guid guid)

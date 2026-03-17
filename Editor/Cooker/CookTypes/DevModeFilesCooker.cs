@@ -41,7 +41,18 @@ namespace Editor.Cooker
 
                 bool containsAssetInfo = _database.Assets.TryGetValue(meta.GUID, out var assetInfo);
 
-                bool isInLibrary = false;
+                var metaPath = filePath + Paths.ASSET_META_EXT_NAME;
+                var latestWriteTime = File.GetLastWriteTime(filePath);
+                var metaLatestWriteTime = File.GetLastWriteTime(metaPath);
+                var assetExists = File.Exists(EditorPaths.GetAbsolutePathSafe(assetInfo.Path));
+                var isMoved = !assetExists && containsAssetInfo;
+
+                if (isMoved)
+                {
+                    cookResult.ChangedCount++;
+                }
+
+                var isInLibrary = false;
 
                 var binPath = Paths.CreateBinFilePath(outFolder, meta.GUID.ToString());
 
@@ -50,42 +61,55 @@ namespace Editor.Cooker
                     isInLibrary = true;
                 }
 
-                var metaPath = filePath + Paths.ASSET_META_EXT_NAME;
-                var latestWriteTime = File.GetLastWriteTime(filePath);
-                var metaLatestWriteTime = File.GetLastWriteTime(metaPath);
-                var assetExists = File.Exists(EditorPaths.GetAbsolutePathSafe(assetInfo.Path));
-
                 if (!containsAssetInfo || latestWriteTime > assetInfo.LastWriteTime ||
-                   !isInLibrary || metaLatestWriteTime > assetInfo.MetaWriteTime || (!assetExists && containsAssetInfo))
+                   !isInLibrary || metaLatestWriteTime > assetInfo.MetaWriteTime || isMoved)
                 {
                     using var fileStream = File.OpenRead(filePath);
                     using var reader = new BinaryReader(fileStream);
 
-                    var data = ProcessAsset(platform, assetType, meta, reader);
+                    AssetProccesResult data = default;
+                    if (!isMoved)
+                    {
+                        data = ProcessAsset(platform, assetType, meta, reader);
 
-                    if (data.IsSuccess)
-                    {
-                        importCount++;
+                        if (data.IsSuccess)
+                        {
+                            importCount++;
+                        }
+                        else
+                        {
+                            someAssetFailImport = true;
+                        }
                     }
-                    else
-                    {
-                        someAssetFailImport = true;
-                    }
+                    
                     var assetRelPath = Paths.GetRelativeAssetPath(filePath);
                     if (containsAssetInfo)
                     {
-                        Console.WriteLine("Updating asset file: " + filePath);
                         assetInfo = _database.Assets[meta.GUID];
+
+                        if (isMoved)
+                        {
+                            Console.WriteLine("Moving asset file: " + filePath);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Updating asset file: " + filePath);
+                        }
+
 
                         assetInfo.LastWriteTime = latestWriteTime;
                         assetInfo.MetaWriteTime = metaLatestWriteTime;
                         assetInfo.Path = assetRelPath;
                         _database.Assets[meta.GUID] = assetInfo;
 
-                        _database.UpdatedAssets.Add(meta.GUID);
+                        if (!isMoved)
+                        {
+                            _database.UpdatedAssets.Add(meta.GUID);
+                        }
                     }
                     else
                     {
+
                         Console.WriteLine("Importing asset file: " + filePath);
 
                         // Write meta
@@ -102,15 +126,18 @@ namespace Editor.Cooker
                         });
                     }
 
-                    // Write asset to library
-                    await File.WriteAllBytesAsync(binPath, data.Data ?? []);
+                    if (!isMoved)
+                    {
+                        // Write asset to library
+                        await File.WriteAllBytesAsync(binPath, data.Data ?? []);
+                    }
                 }
             }
 
             // Clear orphan assets and metas.
             ClearInvalidAssets(files.Select(a => a.Item1).ToList());
 
-            cookResult.ChangedCount = Math.Abs(_database.TotalAssets - _database.Assets.Count);
+            cookResult.ChangedCount += Math.Abs(_database.TotalAssets - _database.Assets.Count);
             _database.TotalAssets = _database.Assets.Count;
             Debug.Log(cookResult.ChangedCount);
             try
@@ -120,7 +147,7 @@ namespace Editor.Cooker
             }
             catch (Exception e)
             {
-                Console.WriteLine("Check Permission: Dev mode files cooker.");
+                Debug.Error("Check Permission: Dev mode files cooker.");
             }
             cookResult.IsSuccess = !someAssetFailImport;
             return cookResult;
@@ -128,8 +155,6 @@ namespace Editor.Cooker
 
         private void ClearInvalidAssets(List<string> files)
         {
-            var prevColor = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.Yellow;
             // Clean the list of non existent assets.
             var currentIds = new HashSet<string>(files, StringComparer.OrdinalIgnoreCase);
             foreach (var (refId, assetInfo) in _database.Assets.ToList())
@@ -156,7 +181,7 @@ namespace Editor.Cooker
                         // Delete bin file in asset database.
                         if (File.Exists(assetBinPath))
                         {
-                            Console.WriteLine($"Deleting non existent asset from database: guid: '{refId}', Path: '{assetInfo.Path}'");
+                            Debug.Warn($"Deleting non existent asset from database: guid: '{refId}', Path: '{assetInfo.Path}'");
                             File.Delete(assetBinPath);
                         }
                     }
@@ -166,7 +191,6 @@ namespace Editor.Cooker
             // Delete non used .mt file in 'Assets' folder
             var mtFiles = Directory.GetFiles(Paths.GetAssetsFolderPath(), "*.mt", SearchOption.AllDirectories);//.ToList();
                                                                                                                // mtFiles.AddRange(Directory.GetFiles(CookerPaths.InternalAssetsPath, "*.mt", SearchOption.AllDirectories));
-
             foreach (var metaPath in mtFiles)
             {
                 var clearPath = Paths.ClearPathSeparation(metaPath);
@@ -174,10 +198,9 @@ namespace Editor.Cooker
                    File.Exists(clearPath))
                 {
                     File.Delete(clearPath);
-                    Console.WriteLine($"Deleting .mt file: {clearPath}");
+                    Debug.Warn($"Deleting .mt file: {clearPath}");
                 }
             }
-            Console.ForegroundColor = prevColor;
         }
 
         private bool IsMove(Guid refId, string filePath)

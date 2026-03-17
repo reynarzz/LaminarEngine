@@ -10,13 +10,16 @@ namespace Engine.Layers
     internal class MainThreadDispatcher : LayerBase
     {
         private static readonly ConcurrentQueue<Func<Task>> _queue = new();
-
         public override void Close()
         {
-
         }
 
         internal override void UpdateLayer()
+        {
+            DispatchAll();
+        }
+
+        internal static void DispatchAll()
         {
             while (_queue.TryDequeue(out var action))
             {
@@ -30,7 +33,6 @@ namespace Engine.Layers
                 }
             }
         }
-
         public static Task EnqueueAsync(Action action)
         {
             var tcs = new TaskCompletionSource<bool>();

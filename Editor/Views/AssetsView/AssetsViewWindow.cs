@@ -2,6 +2,7 @@
 using Editor.Cooker;
 using Editor.Utils;
 using Engine;
+using Engine.Layers;
 using GlmNet;
 using ImGuiNET;
 using System;
@@ -421,14 +422,15 @@ namespace Editor.Views
                             if (renameChange && !string.IsNullOrEmpty(changedFilename))
                             {
                                 changedFilename = changedFilename.Trim();
-                                var newFileName = GetFileRelativeFolderClean(file) + "/" + changedFilename + file.Extension;
+                                var newRelativePath = GetFileRelativeFolderClean(file) + "/" + changedFilename + file.Extension;
 
-                                if (EditorAssetUtils.MoveAsset(RemoveRootFolder(file.RelativePath), RemoveRootFolder(newFileName), overwrite: false))
+
+                                if (EditorAssetUtils.MoveAsset(RemoveRootFolder(file.RelativePath), RemoveRootFolder(newRelativePath), overwrite: false))
                                 {
                                     var oldFilename = file.Filename;
                                     file.Filename = changedFilename;
                                     file.AbsolutePath = Paths.ClearPathSeparation(Path.GetDirectoryName(file.AbsolutePath)) + "/" + changedFilename + file.Extension;
-                                    file.RelativePath = newFileName;
+                                    file.RelativePath = newRelativePath;
                                 }
                                 else
                                 {

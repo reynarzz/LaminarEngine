@@ -13,7 +13,11 @@ namespace Engine
         public Texture2D Texture { get; private set; }
         internal int AtlasIndex { get; private set; }
         private TextureAtlasCell _cell;
-
+        public override string Name
+        {
+            get => CreateSpriteName(Texture?.Name, AtlasIndex);
+            set { }
+        }
         internal Sprite(Texture2D texture, TextureAtlasCell cell, int index) : base(CreateSpriteName(texture?.Name, index), cell.ID)
         {
             AtlasIndex = index;

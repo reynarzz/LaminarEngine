@@ -2,6 +2,7 @@
 using Editor.Serialization;
 using Editor.Utils;
 using Engine;
+using Engine.Layers;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -183,8 +184,8 @@ namespace Editor
 
         internal static bool MoveAsset(string fromRelativePath, string toRelativePath, bool overwrite)
         {
-            var currentFile = EditorPaths.GetAbsolutePathSafe(fromRelativePath).Trim();
-            var newFilePath = EditorPaths.GetAbsolutePathSafe(toRelativePath).Trim();
+            var currentFile = EditorPaths.GetAbsolutePathSafe(fromRelativePath);
+            var newFilePath = EditorPaths.GetAbsolutePathSafe(toRelativePath);
 
             var exists = File.Exists(newFilePath);
             if (!exists || (exists && overwrite))
