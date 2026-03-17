@@ -200,6 +200,7 @@ namespace Editor.Views
 
             if (_expandParents.Contains(actor.GetID()))
             {
+                _expandParents.Remove(actor.GetID());
                 ImGui.SetNextItemOpen(true, ImGuiCond.Always);
             }
 
