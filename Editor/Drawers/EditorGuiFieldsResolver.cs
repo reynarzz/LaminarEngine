@@ -52,14 +52,22 @@ namespace Editor.Utils
         }
         public static bool DrawStringField(string name, ref string value)
         {
-            return DrawStringField(name, ref value, 0, false);
+            return DrawStringField(name, ref value, 0, false, false);
         }
         public static bool DrawStringField(string name, ref string value, float itemWidth = 0, bool pressEnterToConfirm = false)
+        {
+            return DrawStringField(name, ref value, itemWidth, pressEnterToConfirm, false);
+        }
+        public static bool DrawStringField(string name, ref string value, float itemWidth = 0, bool pressEnterToConfirm = false, bool autoFocus = false)
         {
             int bufferSize = Math.Max(257, value?.Length + 1 ?? 257);
             SetNextItemWidth(itemWidth);
 
             var refStr = value;
+            if (autoFocus)
+            {
+                ImGui.SetKeyboardFocusHere();
+            }
             var changed = ImGui.InputText("##" + name, ref refStr, (uint)bufferSize);
 
             if (changed)

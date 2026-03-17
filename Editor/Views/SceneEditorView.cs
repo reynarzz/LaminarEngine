@@ -56,15 +56,6 @@ namespace Editor
 
         }
 
-        private void Focuswindow()
-        {
-            if (ImGui.IsMouseHoveringRect(ImGui.GetWindowPos(), ImGui.GetWindowSize()) && ImGui.IsAnyMouseDown())
-            {
-                // TODO: 
-                // ImGui.FocusWindow(ImGui.GetCurrentWindow());
-            }
-        }
-
         private void RenderGuizmo()
         {
             ImGuizmo.Enable(true);

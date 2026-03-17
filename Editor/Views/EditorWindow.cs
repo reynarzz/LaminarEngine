@@ -14,6 +14,9 @@ namespace Editor.Views
         private bool _isOpened = true;
         private bool _needsToCallEndWindow;
         public string WindowName { get; protected set; }
+        public bool IsWindowFocused { get; private set; }
+        public bool IsWindowHovered { get; private set; }
+
         private readonly string _menuItemPath;
         private bool _isInMenuItem = false;
         private bool _onOpen = false;
@@ -105,10 +108,13 @@ namespace Editor.Views
                     ImGui.Begin(name, ref _isOpened, flags);
                 }
 
-                if (ImGui.IsAnyMouseClicked() && ImGui.IsWindowHovered())
+                IsWindowHovered = ImGui.IsWindowHovered();
+
+                if (ImGui.IsAnyMouseClicked() && IsWindowHovered)
                 {
                     ImGui.SetWindowFocus();
                 }
+
 
                 if (!_isOpened)
                 {
@@ -119,6 +125,8 @@ namespace Editor.Views
                 {
                     ImGui.PopStyleVar();
                 }
+                IsWindowFocused = ImGui.IsWindowFocused();
+
                 return _isOpened;
             }
 
@@ -131,11 +139,14 @@ namespace Editor.Views
                 ImGui.Begin(name, flags);
             }
 
+            IsWindowHovered = ImGui.IsWindowHovered();
 
-            if (ImGui.IsAnyMouseClicked() && ImGui.IsWindowHovered())
+            if (ImGui.IsAnyMouseClicked() && IsWindowHovered)
             {
                 ImGui.SetWindowFocus();
             }
+
+            IsWindowFocused = ImGui.IsWindowFocused();
 
             if (windowsPadding != null)
             {

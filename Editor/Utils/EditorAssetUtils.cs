@@ -154,5 +154,14 @@ namespace Editor
 
             return clrType;
         }
+
+        internal static void MoveAsset(string relativePath, string newRelativePath)
+        {
+            // TODO: move asset, or just rename it if the newRelativePath is in the same directory.
+            Debug.Log("Old name: " + relativePath + ", New name: " + newRelativePath);
+
+            // Update assets database:
+            RefreshAssetDatabase();
+        }
     }
 }
