@@ -71,10 +71,7 @@ namespace Engine.IO
             {
                 return info;
             }
-            else
-            {
-                Debug.Error("Asset with id doesn't exists");
-            }
+            
             return default;
         }
 

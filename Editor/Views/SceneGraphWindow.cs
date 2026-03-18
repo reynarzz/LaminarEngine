@@ -203,16 +203,8 @@ namespace Editor.Views
 
             if (!isSelected || anotherIsDrag)
             {
-                if (anotherIsDrag)
-                {
-                    ImGui.PushStyleColor(ImGuiCol.Header, headerColor);
-                    ImGui.PushStyleColor(ImGuiCol.HeaderHovered, headerColor);
-                }
-                else
-                {
-                    ImGui.PushStyleColor(ImGuiCol.Header, headerColor);
-                    ImGui.PushStyleColor(ImGuiCol.HeaderHovered, headerColor);
-                }
+                ImGui.PushStyleColor(ImGuiCol.Header, headerColor);
+                ImGui.PushStyleColor(ImGuiCol.HeaderHovered, headerColor);
             }
             else
             {
