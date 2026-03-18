@@ -24,6 +24,7 @@ namespace Engine
         public const string ASSET_BUILD_DATA_FULL_FILE_NAME = ASSET_BUILD_DATA_FILE_NAME + ASSET_BUILD_DATA_EXT_NAME; 
         public const string ASSET_BUILD_DATA_FILE_META_NAME = ASSET_BUILD_DATA_FILE_NAME + ASSET_META_EXT_NAME; 
         public const string RELEASE_BUILD_DATA_FOLDER_NAME = "Data";
+        internal const string SHIP_LIBRARIES_FOLDER_NAME = "Internal";
 
         private static string _projectRootFolder;
         public static string ProjectRootFolder

@@ -48,6 +48,8 @@ namespace Editor.Build
                 // Metadata
                 ["Company"] = buildTypeSettings.Company,
                 ["Product"] = buildTypeSettings.ApplicationName,
+                ["AppName"] = buildTypeSettings.ApplicationName,
+                ["EngineInternalsVisibleTo"] = buildTypeSettings.ApplicationName,
                 ["Description"] = buildTypeSettings.Description,
                 ["Authors"] = buildTypeSettings.Authors,
 
@@ -88,12 +90,6 @@ namespace Editor.Build
 
             Directory.CreateDirectory(rootOutputFolder);
 
-            // Rename executable
-            var originalFileName = Path.Combine(EditorPaths.Win32PublishFolderRoot, $"{EditorPaths.DESKTOP_PROJECT_NAME}.exe");
-            var newFileName = Path.Combine(EditorPaths.Win32PublishFolderRoot, $"{buildTypeSettings.ApplicationName}.exe");
-
-            File.Move(originalFileName, newFileName, true);
-
             // Copy build files
             foreach (var file in Directory.EnumerateFiles(EditorPaths.Win32PublishFolderRoot))
             {
@@ -104,7 +100,7 @@ namespace Editor.Build
             }
 
             // Copy assemblies: TODO: copy assemblies from the plugin folder.
-            var assembliesFolder = Path.Combine(rootOutputFolder, EditorPaths.WIN32_DATA_SHIP_FOLDER_NAME, EditorPaths.SHIP_LIBRARIES_FOLDER_NAME);
+            var assembliesFolder = Path.Combine(rootOutputFolder, EditorPaths.WIN32_DATA_SHIP_FOLDER_NAME, Paths.SHIP_LIBRARIES_FOLDER_NAME);
             Directory.CreateDirectory(assembliesFolder);
 
             // Copy glfw dll
@@ -114,7 +110,7 @@ namespace Editor.Build
 
         protected override string GetCSProjPath()
         {
-            return Path.Combine(EditorPaths.DesktopProjectRoot, EditorPaths.DESKTOP_PROJECT_FULL_NAME);
+            return EditorPaths.DesktopCsProjFullPath;
         }
 
         protected override string[] GetTargetsToBuild()

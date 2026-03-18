@@ -14,7 +14,7 @@ namespace Sandbox
             {
                 return;
             }
-            var libsPath = Path.Combine(AppContext.BaseDirectory, "Data/Assemblies");
+            var libsPath = Path.Combine(AppContext.BaseDirectory, $"{Paths.RELEASE_BUILD_DATA_FOLDER_NAME}/{Paths.SHIP_LIBRARIES_FOLDER_NAME}");
 
             string extension = string.Empty;
 

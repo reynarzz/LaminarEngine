@@ -3,7 +3,7 @@
   <assembly fullname="SharedTypes" preserve="all"/>
   <assembly fullname="Game" preserve="all"/>	
   <assembly fullname="Entry_Android" preserve="all"/>
-  <assembly fullname="Entry_Windows" preserve="all"/>
+  <assembly fullname="Entry_Desktop" preserve="all"/>
   <assembly fullname="CsvHelper" preserve="all"/>
   <assembly fullname="Newtonsoft.Json" preserve="all"/>	
 </linker>

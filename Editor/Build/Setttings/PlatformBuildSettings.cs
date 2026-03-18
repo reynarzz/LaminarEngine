@@ -15,7 +15,7 @@ namespace Editor.Build
 
     internal abstract class BuildTypeSettings
     {
-        [SerializedField] public string ApplicationName = "Application";
+        [SerializedField] public string ApplicationName = "AppName";
         [SerializedField] public string OutputPath;
 
         [PropertyHeader("Assets Config")]

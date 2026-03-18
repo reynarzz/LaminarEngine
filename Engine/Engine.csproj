@@ -107,4 +107,10 @@
 			<Pack>true</Pack>
 		</None>
 	</ItemGroup>
+
+	<ItemGroup>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+			<_Parameter1>$(EngineInternalsVisibleTo)</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
 </Project>

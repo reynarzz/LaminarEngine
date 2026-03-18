@@ -8,12 +8,14 @@
 	<PublishSingleFile>true</PublishSingleFile>
     <InvariantGlobalization>true</InvariantGlobalization>
 	<ApplicationIcon>Icon.ico</ApplicationIcon>
+	<AssemblyName>$(AppName)</AssemblyName>
   </PropertyGroup>
 
 	<PropertyGroup>
 	<OutputType>Exe</OutputType>
 	</PropertyGroup>
 
+	
 	<PropertyGroup Condition="'$(OS)' == 'Windows_NT' AND '$(Configuration)' == 'Release'">
 	  <OutputType>WinExe</OutputType>
 	</PropertyGroup>

@@ -137,7 +137,7 @@
                         "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
                         "Simple": {
                           "Kind": "String",
-                          "Value": "Application"
+                          "Value": "AppName"
                         }
                       },
                       {
