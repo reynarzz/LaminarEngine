@@ -182,6 +182,34 @@
                     ],
                     "InternalType": "Engine.Data.SceneSettings+SceneBuildInfo, Engine",
                     "TypeId": "0397fc20-42ba-9341-88a0-6376d6571324"
+                  },
+                  {
+                    "$type": "Engine.Serialization.ComplexClass, Engine",
+                    "ClassType": "ComplexClass",
+                    "Properties": [
+                      {
+                        "Name": "IsBuildAdded",
+                        "Type": "Bool",
+                        "InternalType": "System.Boolean, System.Private.CoreLib",
+                        "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+                        "Simple": {
+                          "Kind": "Bool",
+                          "Value": true
+                        }
+                      },
+                      {
+                        "Name": "RefId",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "Kind": "String",
+                          "Value": "9e40c5e3-e394-4d1a-b4e8-cccf14e410e8"
+                        }
+                      }
+                    ],
+                    "InternalType": "Engine.Data.SceneSettings+SceneBuildInfo, Engine",
+                    "TypeId": "0397fc20-42ba-9341-88a0-6376d6571324"
                   }
                 ],
                 "ItemsType": "ComplexClass",

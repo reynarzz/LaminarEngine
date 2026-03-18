@@ -106,6 +106,7 @@ namespace Engine
             if (!_scenes.Contains(scene) || scene == _scenes[0])
                 return;
 
+            scene.IsPendingToDestroy = true;
             _scenesToDestroy.Add(scene);
             _scenes.Remove(scene);
         }
@@ -156,8 +157,8 @@ namespace Engine
                 return null;
 
             var scene = new Scene(refId);
-            
-            if(!ActiveScene || ActiveScene.GetID() == refId)
+
+            if (!ActiveScene || ActiveScene.GetID() == refId)
             {
                 ActiveScene = scene;
             }
@@ -174,9 +175,15 @@ namespace Engine
             return scene;
         }
 
-        public void UnloadScene(string name)
+        public static void UnloadScene(string name)
         {
-            // TODO: implement it
+            var scene = _scenes.FirstOrDefault(x => x.Name.Equals(name));
+
+            if (scene)
+            {
+                UnloadScene(scene);
+                OnCleanupUpdate();
+            }
         }
 
         private static bool IsSceneAlreadyAdded(Guid refId)
@@ -263,7 +270,7 @@ namespace Engine
                 _scenes[i].OnPreRender();
             }
         }
-        
+
         internal static IReadOnlyList<Actor> FindActorsByTag(string tag)
         {
             return FindAll<Actor, ActorTagMatcher, string>(tag, null);
@@ -285,6 +292,10 @@ namespace Engine
         }
         internal static Actor FindActorByID(Guid id)
         {
+            if (id == Guid.Empty)
+            {
+                return null;
+            }
             return Find<Actor, ActorIDMatcher, Guid>(id);
         }
 

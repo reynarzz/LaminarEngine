@@ -135,7 +135,8 @@ namespace Game
 
         public void BuildLevel(int levelIndex, vec2 playerStartPos = default)
         {
-            //SceneManager.LoadEmptyScene("Level: " + levelIndex);
+            SceneManager.UnloadScene("Gameplay");
+            SceneManager.LoadScene("Gameplay");
             // WaterTest();
             Actor.Create<TestScript>("Test Editor script");
             CreateCamera();

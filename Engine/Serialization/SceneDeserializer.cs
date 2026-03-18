@@ -273,8 +273,9 @@ namespace Engine.Serialization
 
             if (Application.IsInPlayMode)
             {
-                foreach (var component in _initializationComponents)
+                for (int i = 0; i < _initializationComponents.Count; i++)
                 {
+                    var component = _initializationComponents[i];
                     try
                     {
                         (component as IAwakeableComponent).OnAwake();

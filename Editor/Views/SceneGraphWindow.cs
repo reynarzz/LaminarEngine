@@ -65,8 +65,19 @@ namespace Editor.Views
                         {
                             if (!EditorSystem.Save.IsDirty(scene.GetID()))
                             {
+                                Guid? selectedActor = null;
+                                if (Selector.Transform)
+                                {
+                                    selectedActor = Selector.Transform.Actor.GetID();
+                                }
+
                                 // TODO: Check if the scene is dirty, if so, show a message.
                                 SceneManager.ReloadScene(scene.GetID());
+
+                                if (selectedActor != null)
+                                {
+                                    Selector.Selected = SceneManager.FindActorByID(selectedActor.Value);
+                                }
                             }
                             else
                             {
