@@ -11,11 +11,10 @@ namespace Engine.Android
 {
     public class AndroidSystem
     {
-        private GFSEngine _engine;
+        private LaminarEngine _engine;
         private readonly BinaryReader _reader;
         private readonly GLView _view;
         private readonly InputLayerAndroid _input;
-        private const string GameDataFile = "GameData.gfs";
 
         public AndroidSystem(GLView view)
         {
@@ -28,7 +27,7 @@ namespace Engine.Android
         private BinaryReader LoadGameData()
         {
             string basePath = global::Android.App.Application.Context.GetExternalFilesDir(null).AbsolutePath;
-            string gameDataFilePath = Path.Combine(basePath, GameDataFile);
+            string gameDataFilePath = Path.Combine(basePath, Paths.ASSET_BUILD_DATA_FULL_FILE_NAME);
 
             // TODO: check gameFile version.
 
@@ -36,7 +35,7 @@ namespace Engine.Android
             // --if (!File.Exists(gameDataFilePath))
             {
                 // First launch copy from assets
-                using (var assetStream = global::Android.App.Application.Context.Assets.Open(GameDataFile))
+                using (var assetStream = global::Android.App.Application.Context.Assets.Open(Paths.ASSET_BUILD_DATA_FULL_FILE_NAME))
                 using (var outStream = File.Create(gameDataFilePath))
                 {
                     assetStream.CopyTo(outStream);
@@ -91,7 +90,7 @@ namespace Engine.Android
         {
             if (_engine == null)
             {
-                _engine = new GFSEngine(_view, new GameApplication(), _input, _reader);
+                _engine = new LaminarEngine(_view, new GameApplication(), _input, _reader);
             }
             else
             {

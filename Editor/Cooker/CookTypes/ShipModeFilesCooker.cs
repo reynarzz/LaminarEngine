@@ -13,7 +13,7 @@ namespace Editor.Cooker
 {
     internal class ShipModeFilesCooker : AssetsCookerBase
     {
-        /* .gfs file format
+        /* .pak file format
          
             - Magic (char[4])
             - Version (u32)
@@ -89,7 +89,7 @@ namespace Editor.Cooker
         {
             bool success = false;
             Exception failureException = null;
-            var path = Path.Combine(outFolder, Paths.GetAssetBuildDataFilename());
+            var path = Path.Combine(outFolder, Paths.ASSET_BUILD_DATA_FULL_FILE_NAME);
             Directory.CreateDirectory(outFolder);
             var cookResult = new CookingResult();
 
@@ -99,7 +99,7 @@ namespace Editor.Cooker
                 using var bufWritter = new BinaryWriter(fs, Encoding.UTF8, leaveOpen: true);
 
                 // Writes header
-                bufWritter.Write(Encoding.ASCII.GetBytes(AssetUtils.GFSFileFormat.HEADER));
+                bufWritter.Write(Encoding.ASCII.GetBytes(AssetUtils.PakFileFormat.HEADER));
 
                 // Write version
                 bufWritter.Write(VERSION);

@@ -9,9 +9,9 @@ namespace Engine
     internal class AssetUtils
     {
         internal const string ENCRYPTION_VERY_SECURE_PASSWORD = "ThisDefinitelyShouldNotBeHere";
-        internal static class GFSFileFormat
+        internal static class PakFileFormat
         {
-            internal const string HEADER = "GFSD";
+            internal const string HEADER = "LAMP";
         }
 
     }

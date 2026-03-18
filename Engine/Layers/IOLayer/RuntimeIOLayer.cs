@@ -16,7 +16,7 @@ namespace Engine.Layers
 #if DESKTOP
             disk = new ReleaseModeDisk(Paths.GetReleaseDataFolder());
 #elif MOBILE
-            disk = new ReleaseModeDisk(GFSEngine.AssetFileStream);
+            disk = new ReleaseModeDisk(LaminarEngine.AssetFileStream);
 #endif
             var assetbuilder = new Dictionary<AssetType, IAssetBuilder>()
             {

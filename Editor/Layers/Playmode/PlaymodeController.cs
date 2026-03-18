@@ -54,7 +54,7 @@ namespace Editor.Layers
 
                 // Push the needed layers for playmode.
                 var gameLayer = _playmodeLayers[0];
-                gameLayer.layer = ReflectionUtils.GetDefaultValueInstance(GfsTypeRegistryEditor.GameAppType) as LayerBase;
+                gameLayer.layer = ReflectionUtils.GetDefaultValueInstance(LaminarTypeRegistryEditor.GameAppType) as LayerBase;
                 _playmodeLayers[0] = gameLayer;
                 for (int i = _playmodeLayers.Count - 1; i >= 0; --i)
                 {

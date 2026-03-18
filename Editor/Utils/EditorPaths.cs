@@ -18,6 +18,7 @@ namespace Editor
         public static string AndroidProjectRoot { get; }
         public static string DesktopProjectRoot { get; }
 
+        internal const string EDITOR_NAME = Paths.ENGINE_NAME + " Editor";
         internal const string GAME_PROJECT_NAME = "Game";
         internal const string PROJECT_EXTENSION = ".csproj";
         internal const string EDITOR_DATA_EXTENSION = ".dat";
@@ -75,7 +76,7 @@ namespace Editor
 
         private static string GetRootFolder(string startPath)
         {
-            if (File.Exists(startPath + "/GameScratch.sln"))
+            if (File.Exists($"{startPath}/{Paths.ENGINE_NAME}.sln"))
             {
                 return startPath;
             }

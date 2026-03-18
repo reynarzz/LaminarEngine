@@ -22,7 +22,7 @@ VERTEX_SHADER
         fragUV = uv;
         fragTexIndex = texIndex; 
         worldUV = position.xy * 0.1;
-        vColor = GFS_UnpackColor(color);
+        vColor = LAM_UnpackColor(color);
 
         // Transform to clip space
         vec4 posEnd = uVP * vec4(position, 1.0);
@@ -39,7 +39,7 @@ VERTEX_SHADER
 FRAGMENT_SHADER
 {
     uniform sampler2D uTextures[15];
-    #define GFS_TEXTURE_ARRAY uTextures
+    #define LAM_TEXTURE_ARRAY uTextures
     #include "Core.glsl"
 
     in vec2 fragUV;

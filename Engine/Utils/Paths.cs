@@ -8,6 +8,7 @@ namespace Engine
 {
     public static class Paths
     {
+        public const string ENGINE_NAME = "Laminar";
         public const string LIBRARY_FOLDER_NAME = "Library";
         public const string ASSETS_FOLDER_NAME = "Assets";
         public const string GAME_FOLDER_NAME = "Game";
@@ -18,8 +19,9 @@ namespace Engine
         public const string ASSET_DATABASE_FILE_NAME = "AssetsDatabase.txt";
         public const string ASSET_DATABASE_BINARY_EXT_NAME = ".bin";
         public const string ASSET_META_EXT_NAME = ".mt";
-        public const string ASSET_BUILD_DATA_EXT_NAME = ".gfs"; // "Game from scratch"
+        public const string ASSET_BUILD_DATA_EXT_NAME = ".pak";
         public const string ASSET_BUILD_DATA_FILE_NAME = "GameData"; 
+        public const string ASSET_BUILD_DATA_FULL_FILE_NAME = ASSET_BUILD_DATA_FILE_NAME + ASSET_BUILD_DATA_EXT_NAME; 
         public const string ASSET_BUILD_DATA_FILE_META_NAME = ASSET_BUILD_DATA_FILE_NAME + ASSET_META_EXT_NAME; 
         public const string RELEASE_BUILD_DATA_FOLDER_NAME = "Data";
 
@@ -36,11 +38,6 @@ namespace Engine
 
                 _projectRootFolder = Path.GetFullPath(value.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
             }
-        }
-
-        public static string GetAssetBuildDataFilename()
-        {
-            return ASSET_BUILD_DATA_FILE_NAME + ASSET_BUILD_DATA_EXT_NAME;
         }
 
         public static string GetReleaseDataFolder(bool isRelativePath = false)

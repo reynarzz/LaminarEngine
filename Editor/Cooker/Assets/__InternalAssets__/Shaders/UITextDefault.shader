@@ -20,7 +20,7 @@ VERTEX_SHADER
         worldUV = position.xy * 0.1;
         fragTexIndex = texIndex; 
         
-        vColor = GFS_UnpackColor(color); 
+        vColor = LAM_UnpackColor(color); 
         gl_Position = uVP * vec4(position, 0.0f, 1.0); 
     }
 } 
@@ -28,7 +28,7 @@ VERTEX_SHADER
 FRAGMENT_SHADER
 {
     uniform sampler2D uTextures[15];
-    #define GFS_TEXTURE_ARRAY uTextures
+    #define LAM_TEXTURE_ARRAY uTextures
     #include "Core.glsl"
 
     in vec2 fragUV; 
@@ -39,7 +39,7 @@ FRAGMENT_SHADER
 
     void main()  
     {
-        fragColor = GFS_SampleTextureArray(fragTexIndex, fragUV) * vColor;
+        fragColor = LAM_SampleTextureArray(fragTexIndex, fragUV) * vColor;
 
         if(fragColor.a <= 0.000001)
         {

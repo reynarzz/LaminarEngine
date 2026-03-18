@@ -12,7 +12,7 @@ using SoundFlow.Structs;
 
 namespace Editor.Serialization
 {
-    internal class GFSDataProperty : JsonConverter
+    internal class LaminarDataProperty : JsonConverter
     {
         private const string _typeTag = "$type";
         private const string _valueTag = "$value";

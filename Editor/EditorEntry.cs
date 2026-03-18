@@ -12,7 +12,7 @@ namespace Editor
     internal class EditorEntry
     {
         private WindowStandalone _win;
-        private GFSEngine _engine;
+        private LaminarEngine _engine;
         private InputStandAlonePlatform _inputLayer;
 
         internal void Init()
@@ -20,7 +20,7 @@ namespace Editor
             Application.IsInPlayMode = false;
             GameProject.Initialize(new ProjectConfig() { ProjectFolderRoot = EditorPaths.GameRoot });
 
-            _win = new WindowStandalone("GFS Editor", 1494, 900, Color.Black, new TextureDescriptor()
+            _win = new WindowStandalone(EditorPaths.EDITOR_NAME, 1494, 900, Color.Black, new TextureDescriptor()
             {
                 Width = EditorDefaultIcon.Width,
                 Height = EditorDefaultIcon.Height,
@@ -46,7 +46,7 @@ namespace Editor
 
             HelpMenu();
 
-            _engine = new GFSEngine(ImGuiLayer.GameWindow, _inputLayer, editorLayerManager, null);
+            _engine = new LaminarEngine(ImGuiLayer.GameWindow, _inputLayer, editorLayerManager, null);
 
             // Physical window.
             _win.OnWindowChanged += (w, h) =>

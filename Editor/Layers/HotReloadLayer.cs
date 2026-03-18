@@ -91,15 +91,15 @@ namespace Editor.Layers
             {
                 _gameAppAssembly = _assemblyLoadContext.LoadFromStream(asmStream);
             }
-            GfsTypeRegistryEditor.GameAssembly = _gameAppAssembly;
-            ReflectionUtils.SetTypeRegistry(GfsTypeRegistryEditor.Resolve);
+            LaminarTypeRegistryEditor.GameAssembly = _gameAppAssembly;
+            ReflectionUtils.SetTypeRegistry(LaminarTypeRegistryEditor.Resolve);
 
             foreach (var type in _gameAppAssembly.DefinedTypes)
             {
-                GfsTypeRegistryEditor.RegisterRecursive(type);
+                LaminarTypeRegistryEditor.RegisterRecursive(type);
             }
 
-            if (GfsTypeRegistryEditor.GameAppType == null)
+            if (LaminarTypeRegistryEditor.GameAppType == null)
             {
                 Debug.Error("No app layer is defined in the Game.dll");
             }
@@ -117,9 +117,9 @@ namespace Editor.Layers
             List<Type> GetDrawers(Type baseGenericDrawerType, Type baseDrawerType)
             {
                 var customEditorTypes = new List<Type>();
-                AddCustomEditorTypes(GfsTypeRegistryEditor.GameAssembly, customEditorTypes, baseGenericDrawerType, baseDrawerType);
-                AddCustomEditorTypes(GfsTypeRegistryEditor.EngineAssembly, customEditorTypes, baseGenericDrawerType, baseDrawerType);
-                AddCustomEditorTypes(GfsTypeRegistryEditor.EditorAssembly, customEditorTypes, baseGenericDrawerType, baseDrawerType);
+                AddCustomEditorTypes(LaminarTypeRegistryEditor.GameAssembly, customEditorTypes, baseGenericDrawerType, baseDrawerType);
+                AddCustomEditorTypes(LaminarTypeRegistryEditor.EngineAssembly, customEditorTypes, baseGenericDrawerType, baseDrawerType);
+                AddCustomEditorTypes(LaminarTypeRegistryEditor.EditorAssembly, customEditorTypes, baseGenericDrawerType, baseDrawerType);
                 return customEditorTypes;
             }
 
@@ -175,7 +175,7 @@ namespace Editor.Layers
                     SceneManagerEditor.SerializeScenesHotReload();
                 }
 
-                GfsTypeRegistryEditor.Clear();
+                LaminarTypeRegistryEditor.Clear();
 
                 _assemblyLoadContext.Unload();
                 _assemblyLoadContext = null;

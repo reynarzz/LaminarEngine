@@ -26,12 +26,12 @@ namespace Engine.IO
         public ReleaseModeDisk(string folderPath)
         {
             var executablePath = "";
-            executablePath = Path.Combine(folderPath, Paths.GetAssetBuildDataFilename());
+            executablePath = Path.Combine(folderPath, Paths.ASSET_BUILD_DATA_FULL_FILE_NAME);
 
             //Try to check if the file exists alonside the executable.
             if (!File.Exists(executablePath))
             {
-                var path = Path.Combine(AppContext.BaseDirectory, Paths.GetAssetBuildDataFilename());
+                var path = Path.Combine(AppContext.BaseDirectory, Paths.ASSET_BUILD_DATA_FULL_FILE_NAME);
 
                 if (File.Exists(path))
                 {
@@ -39,7 +39,7 @@ namespace Engine.IO
                 }
                 else
                 {
-                    Debug.Error($"Can't find game assets '.gfs', maybe the build failed?");
+                    Debug.Error($"Can't find game assets '{Paths.ASSET_BUILD_DATA_EXT_NAME}', maybe the build failed?");
                 }
             }
             _reader = new BinaryReader(new FileStream(executablePath, FileMode.Open, FileAccess.Read));
@@ -52,11 +52,11 @@ namespace Engine.IO
 
         public override bool Initialize()
         {
-            var header = _reader.ReadBytes(AssetUtils.GFSFileFormat.HEADER.Length);
+            var header = _reader.ReadBytes(AssetUtils.PakFileFormat.HEADER.Length);
 
             var headerStr = Encoding.UTF8.GetString(header);
 
-            if (!headerStr.Equals(AssetUtils.GFSFileFormat.HEADER))
+            if (!headerStr.Equals(AssetUtils.PakFileFormat.HEADER))
             {
                 throw new Exception("Corrupted file data");
             }

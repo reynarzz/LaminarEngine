@@ -40,7 +40,7 @@ namespace Editor
                     p.PropertyName == nameof(SerializedPropertyIR.Collection) || p.PropertyName == nameof(SerializedPropertyIR.Class) ||
                     p.PropertyName == nameof(SerializedPropertyIR.Simple)))
                 {
-                    p.Converter = new GFSDataProperty();
+                    p.Converter = new LaminarDataProperty();
                 }
             }
 

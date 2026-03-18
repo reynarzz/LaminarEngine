@@ -44,9 +44,9 @@ namespace Sandbox
             catch { }
             try
             {
-                new GFSEngine(new WindowStandalone("GFS | By Reynardo Perez", 1280, 720, Color.Black),
-                        new GameApplication(),
-                        new InputStandAlonePlatform()).Run();
+                new LaminarEngine(new WindowStandalone($"{Paths.ENGINE_NAME} | By Reynardo Perez", 1280, 720, Color.Black),
+                            new GameApplication(),
+                            new InputStandAlonePlatform()).Run();
             }
             catch (Exception e)
             {

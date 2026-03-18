@@ -13,7 +13,7 @@ namespace Editor.Serialization
     /// <summary>
     /// Registers all the types so is faster to deserialize them.
     /// </summary>
-    internal static class GfsTypeRegistryEditor
+    internal static class LaminarTypeRegistryEditor
     {
         private static readonly Dictionary<string, Type> _idToType = new();
         private static readonly Dictionary<Type, string> _typeToId = new();
@@ -25,7 +25,7 @@ namespace Editor.Serialization
         internal static Assembly EditorAssembly { get; }
         internal static Assembly GameAssembly { get; set; }
 
-        static GfsTypeRegistryEditor()
+        static LaminarTypeRegistryEditor()
         {
             foreach (var item in AppDomain.CurrentDomain.GetAssemblies())
             {

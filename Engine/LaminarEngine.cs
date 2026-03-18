@@ -5,20 +5,20 @@ using System.Text;
 
 namespace Engine
 {
-    public class GFSEngine
+    public class LaminarEngine
     {
         private LayersManager _layersManager;
         internal static BinaryReader AssetFileStream { get; private set; }
-        public GFSEngine(IWindow window, ApplicationLayer appLayer, InputLayerBase input) :
+        public LaminarEngine(IWindow window, ApplicationLayer appLayer, InputLayerBase input) :
             this(window, appLayer, input, null)
         { }
 
-        public GFSEngine(IWindow window, ApplicationLayer appLayer, InputLayerBase input, BinaryReader assetFileStream) :
+        public LaminarEngine(IWindow window, ApplicationLayer appLayer, InputLayerBase input, BinaryReader assetFileStream) :
             this(window, appLayer, input, new RuntimeIOLayer(), assetFileStream)
         {
 
         }
-        public GFSEngine(IWindow window, ApplicationLayer appLayer, InputLayerBase input, IOLayer ioLayer, BinaryReader assetFileStream)
+        public LaminarEngine(IWindow window, ApplicationLayer appLayer, InputLayerBase input, IOLayer ioLayer, BinaryReader assetFileStream)
             : this(window, input, new LayersManager([new TimeLayer(), input,
                                                    appLayer,
                                                    new MainThreadDispatcher(),
@@ -30,7 +30,7 @@ namespace Engine
         {
         }
 
-        internal GFSEngine(IWindow window, InputLayerBase input, LayersManager layerManager, BinaryReader assetFileStream)
+        internal LaminarEngine(IWindow window, InputLayerBase input, LayersManager layerManager, BinaryReader assetFileStream)
         {
 #if DEBUG
 #if WIN32

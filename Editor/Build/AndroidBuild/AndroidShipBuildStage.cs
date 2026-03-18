@@ -149,7 +149,7 @@ namespace Editor.Build
     public class AndroidConsts
     {
         internal const string DEFAULT_APP_NAME = "Application";
-        internal const string DEFAULT_APP_PACKAGE_NAME = "com.application.gfs";
+        internal const string DEFAULT_APP_PACKAGE_NAME =$"com.application.company";
         internal const string BUILD_TARGET = "SignAndroidPackage";
         internal const string INSTALL_TARGET = "Install";
         internal const string START_TARGET = "Start";

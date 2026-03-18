@@ -188,11 +188,11 @@ namespace Editor.Drawers
 
             _componentTypes.Clear();
 
-            AddComponentsFromAssembly(GfsTypeRegistryEditor.EngineAssembly);
+            AddComponentsFromAssembly(LaminarTypeRegistryEditor.EngineAssembly);
 
-            for (int i = 0; i < GfsTypeRegistryEditor.GameAppComponentTypes.Count; i++)
+            for (int i = 0; i < LaminarTypeRegistryEditor.GameAppComponentTypes.Count; i++)
             {
-                var componentType = GfsTypeRegistryEditor.GameAppComponentTypes[i];
+                var componentType = LaminarTypeRegistryEditor.GameAppComponentTypes[i];
 
                 _componentTypes.Add(componentType);
             }
