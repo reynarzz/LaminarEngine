@@ -20,7 +20,7 @@ namespace Engine
         public const string ASSET_DATABASE_BINARY_EXT_NAME = ".bin";
         public const string ASSET_META_EXT_NAME = ".mt";
         public const string ASSET_BUILD_DATA_EXT_NAME = ".pak";
-        public const string ASSET_BUILD_DATA_FILE_NAME = "GameData"; 
+        public const string ASSET_BUILD_DATA_FILE_NAME = "package"; 
         public const string ASSET_BUILD_DATA_FULL_FILE_NAME = ASSET_BUILD_DATA_FILE_NAME + ASSET_BUILD_DATA_EXT_NAME; 
         public const string ASSET_BUILD_DATA_FILE_META_NAME = ASSET_BUILD_DATA_FILE_NAME + ASSET_META_EXT_NAME; 
         public const string RELEASE_BUILD_DATA_FOLDER_NAME = "Data";

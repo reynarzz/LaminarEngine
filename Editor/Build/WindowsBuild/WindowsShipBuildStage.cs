@@ -104,7 +104,7 @@ namespace Editor.Build
             }
 
             // Copy assemblies: TODO: copy assemblies from the plugin folder.
-            var assembliesFolder = Path.Combine(rootOutputFolder, EditorPaths.WIN32_DATA_SHIP_FOLDER_NAME, "Assemblies");
+            var assembliesFolder = Path.Combine(rootOutputFolder, EditorPaths.WIN32_DATA_SHIP_FOLDER_NAME, EditorPaths.SHIP_LIBRARIES_FOLDER_NAME);
             Directory.CreateDirectory(assembliesFolder);
 
             // Copy glfw dll

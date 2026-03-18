@@ -1,10 +1,10 @@
-# GFS (Game From Scratch)
+# Laminar Engine
 
 <p align="center">
   <img src="Engine.gif" alt="Gameplay">
 </p>
 
-GFS is a 2D video game and game engine built entirely from scratch with **C#**, heavily inspired by the **Unity3D C# API**.
+Laminar Engine is a 2D video game engine built entirely from scratch with **C#**, heavily inspired by the **Unity3D C# API**.
 
 ## Features
 
@@ -19,7 +19,7 @@ GFS is a 2D video game and game engine built entirely from scratch with **C#**, 
 - Modular architecture for easy expansion.
 - Post-processing stack system (via framebuffer passes)
 - Custom file system (simplified).
-- Gamepads support.
+- Gamepad support.
 - Build assets in dev mode (Unity-like import system) and release mode.
 - Cross-platform: Windows, MacOs, Android.
 
