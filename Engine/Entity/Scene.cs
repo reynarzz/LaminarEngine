@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Engine.Layers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,17 +16,22 @@ namespace Engine
         private readonly Action<Actor> _onFixedUpdate = x => x.FixedUpdate();
         private readonly Action<Actor> _onDrawGizmoUpdate = x => x.OnDrawGizmoUpdate();
         private readonly Action<Actor> _onPreRenderUpdate = x => x.OnPreRenderUpdate();
-        
+
+        private string _name;
+        public override string Name 
+        {
+            get => !string.IsNullOrEmpty(_name)? _name: IOLayer.Database?.GetAssetInfo(GetID()).Name ?? string.Empty; 
+            set => _name = value; 
+        }
 
         private readonly List<Actor> _rootActors = new();
         internal IReadOnlyList<Actor> RootActors => _rootActors;
         private Scene()
         {
-            Name = "Scene";
         }
-        public Scene(string name, Guid refId) : base(name, refId)
+
+        internal Scene(Guid refId) : base(string.Empty, refId)
         {
-            Name = name;
         }
         internal void RegisterRootActor(Actor actor)
         {

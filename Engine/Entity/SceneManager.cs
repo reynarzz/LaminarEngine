@@ -22,22 +22,22 @@ namespace Engine
         {
             UnloadAll();
             // First Scene is always the 'dontDestroyOnLoad' scene
-            LoadSceneAdditive("DontDestroyOnLoad", Guid.NewGuid());
+            LoadSceneAdditive("DontDestroyOnLoad", Guid.NewGuid(), true);
             LoadSceneAdditive("DefaultScene", Guid.NewGuid());
 
             ActiveScene = _scenes[1];
         }
+
         public static Scene LoadEmptyScene(string name)
         {
             return LoadEmptyScene(name, Guid.NewGuid());
         }
-        public static Scene LoadEmptyScene(string name, Guid refId)
+        private static Scene LoadEmptyScene(string name, Guid refId)
         {
             ClearScenes();
             OnCleanupUpdate();
 
-            // TODO: Load scene from file (Probably will never be implemented since all scenes are built at runtime, without a editor)
-            var scene = new Scene(name, refId);
+            var scene = new Scene(refId);
             ActiveScene = scene;
             _scenes.Add(scene);
 
@@ -46,7 +46,7 @@ namespace Engine
         public static void LoadScene(string path)
         {
             var sceneAsset = Assets.GetScene(path);
-            LoadSceneFromAsset(sceneAsset);
+            LoadScene(sceneAsset);
         }
 
         public static void LoadScene(Guid id)
@@ -58,10 +58,10 @@ namespace Engine
             }
 
             var sceneAsset = Assets.GetAssetFromGuid(id) as SceneAsset;
-            LoadSceneFromAsset(sceneAsset);
+            LoadScene(sceneAsset);
         }
 
-        private static void LoadSceneFromAsset(SceneAsset sceneAsset)
+        public static void LoadScene(SceneAsset sceneAsset)
         {
             if (sceneAsset)
             {
@@ -69,7 +69,6 @@ namespace Engine
                 SceneDeserializer.DeserializeScene(sceneAsset.SceneIR, scene);
             }
         }
-
 
         internal static void UnloadScene(Scene scene)
         {
@@ -102,12 +101,17 @@ namespace Engine
             }
         }
 
-        internal static void LoadSceneAdditive(string name, Guid refId)
+        internal static void LoadSceneAdditive(string name, Guid refId, bool forceName =false)
         {
             if (IsSceneAlreadyAdded(name))
                 return;
 
-            var scene = new Scene(name, refId);
+            var scene = new Scene(refId);
+
+            if (forceName) 
+            {
+                scene.Name = name; 
+            }
             _scenes.Add(scene);
         }
 

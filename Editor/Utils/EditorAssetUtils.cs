@@ -163,7 +163,7 @@ namespace Editor
             {
                 return;
             }
-            var newScene = new Scene(Path.GetFileNameWithoutExtension(relativeDir), Guid.NewGuid());
+            var newScene = new Scene(Guid.NewGuid());
             var sceneIR = SceneSerializer.SerializeScene(newScene);
             var json = EditorJsonUtils.Serialize(sceneIR);
 

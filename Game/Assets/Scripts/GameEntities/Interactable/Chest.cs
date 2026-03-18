@@ -98,7 +98,7 @@ namespace Game
                     AudioSource.PlayOneShot(Assets.GetAudioClip("Audio/MinifantasySfx/01_chest_open_3.wav"), 0.3f);
 
                     yield return new WaitForSeconds(0.2f);
-                    SpriteRenderer.SortOrder = 0;
+                    SpriteRenderer.SortOrder = -1;
                     if (Data.ChestLoot != null)
                     {
                         if (Data.LockedBy == ItemId.none || player.Inventory.Use(Data.LockedBy))

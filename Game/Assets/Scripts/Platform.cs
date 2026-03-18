@@ -37,6 +37,7 @@ namespace Game
             trigger.Offset = new vec2(0, 0.3f);
             trigger.IsTrigger = true;
             Transform.LocalScale = new vec3(trigger.Size.x, trigger.Size.y, 1);
+            _renderer.SortOrder = 2;
 
             var collider = new Actor("PlatformCollider").AddComponent<BoxCollider2D>();
 

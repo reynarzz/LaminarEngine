@@ -79,7 +79,6 @@ namespace Editor
                 }
 
                 var scene = SceneManager.Scenes[i + 1];
-                scene.Name = sceneName;
                 scene._SetID(editorScene.RefId);
 
                 SceneDeserializer.DeserializeScene(editorScene.ActorsData, scene);

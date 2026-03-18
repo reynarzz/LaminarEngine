@@ -17,7 +17,7 @@ namespace Engine
         private string _name = null;
         public override string Name
         {
-            get => !string.IsNullOrEmpty(_name) ? _name : System.IO.Path.GetFileNameWithoutExtension(IOLayer.Database?.GetAssetInfo(GetID()).Path ?? string.Empty);
+            get => !string.IsNullOrEmpty(_name) ? _name : IOLayer.Database?.GetAssetInfo(GetID()).Name ?? string.Empty;
             set
             {
                 _name = value;

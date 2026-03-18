@@ -100,6 +100,7 @@ namespace Editor.Cooker
                         assetInfo.LastWriteTime = latestWriteTime;
                         assetInfo.MetaWriteTime = metaLatestWriteTime;
                         assetInfo.Path = assetRelPath;
+                        assetInfo.Name = Path.GetFileNameWithoutExtension(assetRelPath);
                         _database.Assets[meta.GUID] = assetInfo;
 
                         if (!isMoved)
@@ -119,6 +120,7 @@ namespace Editor.Cooker
                         {
                             Type = assetType,
                             Path = assetRelPath,
+                            Name = Path.GetFileNameWithoutExtension(assetRelPath),
                             IsEncrypted = false,
                             IsCompressed = false,
                             LastWriteTime = latestWriteTime,

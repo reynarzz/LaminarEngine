@@ -11,6 +11,7 @@ namespace Engine
         public AssetType Type;
         public DateTime LastWriteTime;
         public string Path;
+        public string Name;
         public bool IsCompressed;
         public bool IsEncrypted;
         public DateTime MetaWriteTime;

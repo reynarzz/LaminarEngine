@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    internal class SceneAsset : AssetResourceBase
+    public class SceneAsset : AssetResourceBase
     {
         internal SceneIR SceneIR { get; private set; } = new();
 

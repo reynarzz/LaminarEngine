@@ -168,7 +168,7 @@ namespace Game
                         Name = "Decoration tilemap",
                         EnableCollision = false,
                         LayerIndex = 1,
-                        SortingOrder = 6,
+                        SortingOrder = 5,
                         SpriteIndex = 0
                     },
                     new TilemapInstanceData()
@@ -177,7 +177,7 @@ namespace Game
                         EnableCollision = true,
                         IsTriggerCollision = true,
                         LayerIndex = 0,
-                        SortingOrder = 6,
+                        SortingOrder = 5,
                         SpriteIndex = 1,
                         ColliderOffset = new vec2(0, -0.8f),
                         TilemapAction = x =>
