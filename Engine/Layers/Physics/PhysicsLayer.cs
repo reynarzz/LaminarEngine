@@ -58,7 +58,7 @@ namespace Engine.Layers
         internal override void UpdateLayer()
         {
             _accumulator = Math.Min(_accumulator + Time.DeltaTime, 0.25f);
-
+            var sw = System.Diagnostics.Stopwatch.StartNew();
             while (_accumulator >= _fixedTimeStep)
             {
                 _contactDispatcher.Update();
@@ -95,6 +95,13 @@ namespace Engine.Layers
 
                 rigidbody.CalculatePhysicsInterpolation(rigidbody.Transform, rigidbody.PrevLocalPosition, rigidbody.PrevLocalRotation, alpha);
             }
+
+            sw.Stop();
+            //Console.WriteLine($"Physics: {sw.ElapsedMilliseconds}ms");
+            //if(sw.ElapsedMilliseconds > 5)
+            //{
+            //    Debug.Log("Bodies count: " + PhysicWorld.World.bodies.count);
+            //}
         }
 
         public override void Close()

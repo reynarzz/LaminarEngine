@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Box2D.NET;
@@ -15,6 +16,10 @@ namespace Engine
         public static B2World World { get; private set; }
         private static B2DebugDraw _debugDraw;
         internal static B2DebugDraw DebugDraw => _debugDraw;
+        private static b2EnqueueTaskCallback _enqueueTask;
+        private static b2FinishTaskCallback _finishTask;
+
+        private static int _workerCount; // store what we told Box2D at init
 
         internal static void Initialize(vec3 initialGravity)
         {
@@ -22,8 +27,17 @@ namespace Engine
             worldDef.gravity = new B2Vec2(0, -9.8f);
             worldDef.enableContinuous = true;
 
+            _workerCount = Math.Clamp(Environment.ProcessorCount - 1, 1, 8);
+            _enqueueTask = EnqueueTask;
+            _finishTask = FinishTask;
+            //worldDef.workerCount = _workerCount;
+            //worldDef.enqueueTask = _enqueueTask;
+            worldDef.finishTask = _finishTask;
+            worldDef.userTaskContext = null;
+
             WorldID = B2Worlds.b2CreateWorld(ref worldDef);
             World = B2Worlds.b2GetWorld(0);
+            Console.WriteLine($"[Physics] Running with {worldDef.workerCount} workers");
 
             _debugDraw = new B2DebugDraw()
             {
@@ -54,6 +68,47 @@ namespace Engine
             };
 
         }
+
+        private static object EnqueueTask(b2TaskCallback task, int itemCount, int minRange,
+                                    object taskContext, object userContext)
+        {
+            if (itemCount <= minRange || itemCount < 4)
+            {
+                task(0, itemCount, 0, taskContext);
+                return null;
+            }
+
+            // Never spawn more workers than we told Box2D about
+            int workerCount = Math.Clamp(itemCount / Math.Max(minRange, 1), 1, _workerCount);
+            var countdown = new CountdownEvent(workerCount);
+            int chunkSize = itemCount / workerCount;
+
+            for (int w = 0; w < workerCount; w++)
+            {
+                int start = w * chunkSize;
+                int end = (w == workerCount - 1) ? itemCount : start + chunkSize;
+                uint workerIdx = (uint)w; // now safe — capped to _workerCount
+
+                ThreadPool.QueueUserWorkItem(_ =>
+                {
+                    try { task(start, end, workerIdx, taskContext); }
+                    finally { countdown.Signal(); }
+                });
+            }
+
+            return countdown;
+        }
+
+        private static void FinishTask(object userTask, object userContext)
+        {
+            if (userTask == null) return; // was executed inline, nothing to wait for
+
+            var countdown = (CountdownEvent)userTask;
+            countdown.Wait();
+            countdown.Dispose();
+        }
+
+
         internal static void SetGravity(vec2 gravity)
         {
             B2Worlds.b2World_SetGravity(WorldID, new B2Vec2(gravity.x, gravity.y));
