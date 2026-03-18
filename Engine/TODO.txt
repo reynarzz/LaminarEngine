@@ -18,6 +18,8 @@ Fix:
     but the game.dll should be compiled for the build type(Release/Debug), and turning on all the directives defined for the target platform.
 - Memory leak is happening for the index buffer, in Batcher2D mesh section for custom index buffers.
 - When I do asset operations throught the Asset view I should be able to reload the asset database in the same frame.
+- If there is a compilation issue and the user creates an asset, it will not show up in the assets view since the import happens after the compilation.
+- newly created folders do not appear in the asset view.
 
 Serialization:
 - Forbid serialization of dictionaries that contains EObject as key?

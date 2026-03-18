@@ -212,6 +212,7 @@ namespace Engine
                 if (!IOLayer.Database.ExistsAsset(refId))
                 {
                     Debug.Warn($"Scene with id: '{refId}' doesn't exists. In playmode this could mean that it wasn't added to the build.");
+                    continue;
                 }
                 var assetsInfo = IOLayer.Database.GetAssetInfo(refId);
 

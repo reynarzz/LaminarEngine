@@ -137,6 +137,7 @@ namespace Game
         }
         [SerializedField] private Prefab<SpriteRenderer> _spritePrefab;
         [SerializedField] private Prefab _generalPrefab;
+        [SerializedField] private SceneAsset _scene;
         [SerializedField] private Sprite[] _sprites;
 
         [SerializedField] AAA<int> AAAClass;

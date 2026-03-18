@@ -3,6 +3,7 @@ using Editor.Serialization;
 using Editor.Utils;
 using Engine;
 using Engine.Layers;
+using Engine.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -168,8 +169,7 @@ namespace Editor
             var json = EditorJsonUtils.Serialize(sceneIR);
 
             var directory = EditorPaths.GetAbsolutePathSafe(relativeDir);
-            var absPath = Path.Combine(directory, assetName + ".scene");
-
+            var absPath = Path.Combine(directory, assetName + EditorPaths.SCENE_FILE_EXTENSION);
             if (Directory.Exists(directory))
             {
                 File.WriteAllText(absPath, json);
@@ -190,8 +190,18 @@ namespace Editor
             var exists = File.Exists(newFilePath);
             if (!exists || (exists && overwrite))
             {
-                File.Move(currentFile, newFilePath);
-                File.Move(currentFile + Paths.ASSET_META_EXT_NAME, newFilePath + Paths.ASSET_META_EXT_NAME);
+                if (Directory.Exists(currentFile))
+                {
+                    Directory.Move(currentFile, newFilePath);
+
+                    // TODO: folders will have a id assigned in the future, once that happens uncomment this.
+                    // --Directory.Move(currentFile + Paths.ASSET_META_EXT_NAME, newFilePath + Paths.ASSET_META_EXT_NAME);
+                }
+                else
+                {
+                    File.Move(currentFile, newFilePath);
+                    File.Move(currentFile + Paths.ASSET_META_EXT_NAME, newFilePath + Paths.ASSET_META_EXT_NAME);
+                }
 
                 // Update assets database to remove:
                 RefreshAssetDatabase();

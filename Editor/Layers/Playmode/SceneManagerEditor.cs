@@ -68,12 +68,9 @@ namespace Editor
         internal static void DeserializePlaymodeScene()
         {
             SceneManager.Initialize();
-
-            for (int i = 0; i < _editModeScenes.Count; i++)
+            foreach (var editorScene in _editModeScenes)
             {
-                var editorScene = _editModeScenes[i];
                 var scene = SceneManager.LoadEmptySceneAdditive(editorScene.RefId);
-
                 SceneDeserializer.DeserializeScene(editorScene.ActorsData, scene);
             }
         }

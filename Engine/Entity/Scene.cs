@@ -26,13 +26,10 @@ namespace Engine
 
         private readonly List<Actor> _rootActors = new();
         internal IReadOnlyList<Actor> RootActors => _rootActors;
-        private Scene()
-        {
-        }
 
-        internal Scene(Guid refId) : base(string.Empty, refId)
-        {
-        }
+        // Serializer
+        private Scene() { }
+        internal Scene(Guid refId) : base(refId) { }
         internal void RegisterRootActor(Actor actor)
         {
             actor.Scene = this;

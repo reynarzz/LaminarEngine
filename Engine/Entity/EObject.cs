@@ -30,6 +30,10 @@ namespace Engine
             _id = Guid.NewGuid();
         }
 
+        internal EObject(Guid id)
+        {
+            _id = id;
+        }
         internal EObject(string name, Guid id)
         {
             Name = name;
