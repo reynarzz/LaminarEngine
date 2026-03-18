@@ -121,7 +121,7 @@ namespace Engine
             _onEnablePendingComponents = new();
             _transform = AddComponent<Transform>();
 
-            if (scene != null)
+            if (scene)
             {
                 Scene = scene;
             }

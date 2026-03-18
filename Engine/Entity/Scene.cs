@@ -131,6 +131,8 @@ namespace Engine
             }
 
             _rootActors.Clear();
+            IsAlive = false;
+            IsPendingToDestroy = false;
         }
     }
 }

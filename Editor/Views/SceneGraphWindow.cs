@@ -59,30 +59,44 @@ namespace Editor.Views
 
                     if (EditorImGui.BeginPopupContextItem("SceneContext"))
                     {
-                        if (i > 0)
+                        var isValidScene = i > 0;
+                        ImGui.BeginDisabled(!isValidScene);
+                        if (ImGui.MenuItem("Reload Scene"))
                         {
-                            if (ImGui.MenuItem("Reload Scene"))
+                            if (!EditorSystem.Save.IsDirty(scene.GetID()))
                             {
-
+                                // TODO: Check if the scene is dirty, if so, show a message.
+                                SceneManager.ReloadScene(scene.GetID());
                             }
-                            else if (ImGui.MenuItem("Unload Scene"))
+                            else
                             {
-                                SceneManager.UnloadScene(scene);
-                                ImGui.EndPopup();
-
-                                if (open)
-                                {
-                                    ImGui.TreePop();
-                                }
-                                ImGui.PopID();
-
-                                break;
+                                Debug.Warn("Can't reload dirty scene, save it first");
                             }
-                            if (ImGui.MenuItem("Create Actor"))
+                        }
+                        ImGui.BeginDisabled(i <= 1);
+
+                        if (ImGui.MenuItem("Unload Scene"))
+                        {
+                            SceneManager.UnloadScene(scene);
+                            ImGui.EndPopup();
+
+                            if (open)
                             {
-                                var newActor = new Actor("Actor");
-                                EditorSystem.Save.MarkDirty(newActor);
+                                ImGui.TreePop();
                             }
+                            ImGui.PopID();
+                            ImGui.EndDisabled();
+                            ImGui.EndDisabled();
+                            break;
+                        }
+                        ImGui.EndDisabled();
+
+                        ImGui.EndDisabled();
+
+                        if (ImGui.MenuItem("Create Actor"))
+                        {
+                            var newActor = new Actor("Actor", Guid.NewGuid(), scene);
+                            EditorSystem.Save.MarkDirty(newActor);
                         }
 
 
@@ -194,7 +208,7 @@ namespace Editor.Views
                 ImGui.PushStyleColor(ImGuiCol.Header, greenSelected);
                 ImGui.PushStyleColor(ImGuiCol.HeaderHovered, greenSelected);
             }
-            
+
             popColors += 2;
 
             ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(1f, 1f, 1f, 1f));

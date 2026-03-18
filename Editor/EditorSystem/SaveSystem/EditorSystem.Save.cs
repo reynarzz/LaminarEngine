@@ -64,7 +64,12 @@ namespace Editor
                 var assetType = AssetType.Invalid;
                 var refId = Guid.Empty;
 
-                var isSceneDirty = TryGetSceneDirty(obj, ref refId, ref assetType);
+                var isSceneDirty = TryGetSceneDirty(obj, ref refId, ref assetType, out bool isInvalidScene);
+
+                if (isInvalidScene)
+                {
+                    return;
+                }
 
                 if (Application.IsInPlayMode && isSceneDirty)
                 {
@@ -86,23 +91,37 @@ namespace Editor
                 }
             }
 
-            private static bool TryGetSceneDirty(EObject obj, ref Guid refId, ref AssetType assetType)
+            private static bool TryGetSceneDirty(EObject obj, ref Guid refId, ref AssetType assetType, out bool isInvalidScene)
             {
+                isInvalidScene = false;
                 if (obj is Actor or Component)
                 {
-                    refId = obj switch
+                    Scene scene = null;
+                    scene = obj switch
                     {
-                        Actor actor => actor.Scene.GetID(),
-                        Component component => component.Actor.Scene.GetID(),
-                        _ => Guid.Empty
+                        Actor actor => actor.Scene,
+                        Component component => component.Actor.Scene,
+                        _ => null
                     };
 
-                    assetType = AssetType.Scene;
-
-                    return true;
+                    if(scene && scene != SceneManager.DontDestroyOnLoadScene)
+                    {
+                        assetType = AssetType.Scene;
+                        refId = scene.GetID();
+                        return true;
+                    }
+                    else
+                    {
+                        isInvalidScene = true;
+                    }
                 }
 
                 return false;
+            }
+
+            internal static bool IsDirty(Guid guid)
+            {
+                return _dirtyObjectsRefId.ContainsKey(guid);
             }
         }
 

@@ -4,6 +4,7 @@ using Engine.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,10 +24,7 @@ namespace Engine
         {
             UnloadAll();
             // First Scene is always the 'DontDestroyOnLoad' scene
-            LoadSceneAdditive("DontDestroyOnLoad", Guid.NewGuid(), true);
-            LoadSceneAdditive("DefaultScene", Guid.NewGuid());
-
-            ActiveScene = _scenes[1];
+            CreateSceneInMemory("DontDestroyOnLoad");
         }
 
         internal static Scene CreateSceneInMemory(string name)
@@ -48,11 +46,33 @@ namespace Engine
             return scene;
         }
 
+        private static bool IsActiveSceneValid()
+        {
+            return ActiveScene && _scenes.Contains(ActiveScene) && ActiveScene != DontDestroyOnLoadScene;
+        }
+
+        internal static Scene LoadEmptySceneAdditive(Guid refId)
+        {
+            var scene = new Scene(refId);
+            _scenes.Add(scene);
+            if (!IsActiveSceneValid())
+            {
+                ActiveScene = scene;
+            }
+            return scene;
+        }
         public static void LoadScene(string name)
         {
             if (TryGetSceneAsset(name, out var sceneAsset))
             {
-                LoadScene(sceneAsset);
+                if (!IsSceneAlreadyAdded(sceneAsset.GetID()))
+                {
+                    LoadScene(sceneAsset);
+                }
+                else
+                {
+                    Debug.Warn($"Scene '{name}' is already loaded.");
+                }
             }
             else
             {
@@ -60,15 +80,15 @@ namespace Engine
             }
         }
 
-        public static void LoadScene(Guid id)
+        public static void LoadScene(Guid refId)
         {
-            if (id == Guid.Empty)
+            if (refId == Guid.Empty)
             {
                 Debug.Error("Empty scene id");
                 return;
             }
 
-            var sceneAsset = Assets.GetAssetFromGuid(id) as SceneAsset;
+            var sceneAsset = Assets.GetAssetFromGuid(refId) as SceneAsset;
             LoadScene(sceneAsset);
         }
 
@@ -90,10 +110,27 @@ namespace Engine
             _scenes.Remove(scene);
         }
 
+        internal static void ReloadScene(Guid refId)
+        {
+            var scene = _scenes.FirstOrDefault(x => x.GetID() == refId);
+            if (!scene)
+            {
+                Debug.Error($"Scene '{refId}' is not already loaded, can't reload.");
+                return;
+            }
+
+            var index = _scenes.IndexOf(scene);
+
+            UnloadScene(scene);
+            OnCleanupUpdate();
+            LoadSceneAdditive(refId, index);
+        }
+
         internal static void UnloadAll()
         {
             for (int i = 0; i < _scenes.Count; i++)
             {
+                _scenes[i].IsPendingToDestroy = true;
                 _scenesToDestroy.Add(_scenes[i]);
             }
 
@@ -108,22 +145,33 @@ namespace Engine
             for (int i = _scenes.Count - 1; i > 0; --i)
             {
                 _scenesToDestroy.Add(_scenes[i]);
+                _scenes[i].IsPendingToDestroy = true;
                 _scenes.RemoveAt(i);
             }
         }
 
-        internal static void LoadSceneAdditive(string name, Guid refId, bool forceName = false)
+        internal static Scene LoadSceneAdditive(Guid refId, int index = -1)
         {
-            if (IsSceneAlreadyAdded(name))
-                return;
+            if (IsSceneAlreadyAdded(refId) || !TryGetSceneAsset(refId, out var sceneAsset))
+                return null;
 
             var scene = new Scene(refId);
-
-            if (forceName)
+            
+            if(!ActiveScene || ActiveScene.GetID() == refId)
             {
-                scene.Name = name;
+                ActiveScene = scene;
             }
-            _scenes.Add(scene);
+            SceneDeserializer.DeserializeScene(sceneAsset.SceneIR, scene);
+            if (index < 0 || index >= _scenes.Count)
+            {
+                _scenes.Add(scene);
+            }
+            else
+            {
+                _scenes.Insert(index, scene);
+            }
+
+            return scene;
         }
 
         public void UnloadScene(string name)
@@ -131,12 +179,23 @@ namespace Engine
             // TODO: implement it
         }
 
-        private static bool IsSceneAlreadyAdded(string name)
+        private static bool IsSceneAlreadyAdded(Guid refId)
         {
-            return _scenes.Exists(x => x?.Name.Equals(name) ?? false);
+            if (refId == Guid.Empty)
+            {
+                return false;
+            }
+            return _scenes.Exists(x => x?.GetID() == refId);
         }
-
         private static bool TryGetSceneAsset(string sceneName, out SceneAsset scene)
+        {
+            return TryGetSceneAsset((assetInfo, _) => assetInfo.Name.Equals(sceneName), out scene);
+        }
+        private static bool TryGetSceneAsset(Guid refId, out SceneAsset scene)
+        {
+            return TryGetSceneAsset((_, id) => id == refId, out scene);
+        }
+        private static bool TryGetSceneAsset(Func<AssetInfo, Guid, bool> comparer, out SceneAsset scene)
         {
             scene = null;
             var sceneSettings = EngineServices.GetService<EngineDataService>().GetProjectSettings().SceneSettings;
@@ -144,13 +203,30 @@ namespace Engine
             foreach (var refId in sceneSettings.GetAllScenesId())
             {
                 var assetsInfo = IOLayer.Database.GetAssetInfo(refId);
-                if (assetsInfo.Name.Equals(sceneName))
+                if (comparer(assetsInfo, refId))
                 {
                     scene = Assets.GetAssetFromGuid(refId) as SceneAsset;
                     return true;
                 }
             }
             return false;
+        }
+
+        internal static void OnCleanupUpdate()
+        {
+            for (int i = 0; i < _scenes.Count; i++)
+            {
+                _scenes[i].DeletePending();
+            }
+
+            foreach (var scene in _scenesToDestroy)
+            {
+                scene.Destroy();
+            }
+            if (_scenesToDestroy.Count > 0)
+            {
+                _scenesToDestroy.Clear();
+            }
         }
 
         internal static void UpdateScenes()
@@ -187,23 +263,7 @@ namespace Engine
                 _scenes[i].OnPreRender();
             }
         }
-        internal static void OnCleanupUpdate()
-        {
-            for (int i = 0; i < _scenes.Count; i++)
-            {
-                _scenes[i].DeletePending();
-            }
-
-            foreach (var scene in _scenesToDestroy)
-            {
-                scene.Destroy();
-            }
-            if (_scenesToDestroy.Count > 0)
-            {
-                _scenesToDestroy.Clear();
-            }
-        }
-
+        
         internal static IReadOnlyList<Actor> FindActorsByTag(string tag)
         {
             return FindAll<Actor, ActorTagMatcher, string>(tag, null);
