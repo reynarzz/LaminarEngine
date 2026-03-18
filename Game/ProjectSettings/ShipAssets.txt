@@ -1,5 +1,7 @@
 GameLaunchScene.scene
 Scene.scene
+Scenes/Gameplay.scene
+Scenes/GameStart.scene
 Fonts/windows-bold[1].ttf
 Materials/Portal.material
 Materials/Portal_mobile.material

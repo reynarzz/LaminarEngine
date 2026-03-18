@@ -104,12 +104,14 @@ namespace Engine.IO
                 {
                     pathBytes = AssetEncrypter.DecryptBytes(pathBytes, AssetUtils.ENCRYPTION_VERY_SECURE_PASSWORD);
                 }
+                var path = Encoding.UTF8.GetString(pathBytes);
                 AssetDatabaseInfo.Assets.Add(guid, new AssetInfo()
                 {
                     Type = assetType,
                     IsCompressed = isCompressed,
                     IsEncrypted = isEncrypted,
-                    Path = Encoding.UTF8.GetString(pathBytes)
+                    Name = Path.GetFileNameWithoutExtension(path),
+                    Path = path
                 });
 
                 _assetsLocations.Add(guid, new AssetLocInfo()

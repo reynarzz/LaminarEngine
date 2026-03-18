@@ -196,7 +196,7 @@ namespace Engine
         }
         private static bool TryGetSceneAsset(string sceneName, out SceneAsset scene)
         {
-            return TryGetSceneAsset((assetInfo, _) => assetInfo.Name.Equals(sceneName), out scene);
+            return TryGetSceneAsset((assetInfo, _) => assetInfo.Name?.Equals(sceneName) ?? false, out scene);
         }
         private static bool TryGetSceneAsset(Guid refId, out SceneAsset scene)
         {
@@ -209,7 +209,12 @@ namespace Engine
 
             foreach (var refId in sceneSettings.GetAllScenesId())
             {
+                if (!IOLayer.Database.ExistsAsset(refId))
+                {
+                    Debug.Warn($"Scene with id: '{refId}' doesn't exists. In playmode this could mean that it wasn't added to the build.");
+                }
                 var assetsInfo = IOLayer.Database.GetAssetInfo(refId);
+
                 if (comparer(assetsInfo, refId))
                 {
                     scene = Assets.GetAssetFromGuid(refId) as SceneAsset;

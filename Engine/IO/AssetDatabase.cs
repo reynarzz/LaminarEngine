@@ -61,14 +61,20 @@ namespace Engine.IO
 
             return null;
         }
-
+        internal bool ExistsAsset(Guid id)
+        {
+            return _disk.AssetDatabaseInfo.Assets.ContainsKey(id);
+        }
         internal AssetInfo GetAssetInfo(Guid id)
         {
             if (_disk.AssetDatabaseInfo.Assets.TryGetValue(id, out var info))
             {
                 return info;
             }
-
+            else
+            {
+                Debug.Error("Asset with id doesn't exists");
+            }
             return default;
         }
 
