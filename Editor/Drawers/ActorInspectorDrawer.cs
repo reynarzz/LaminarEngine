@@ -40,7 +40,7 @@ namespace Editor.Drawers
                         int index = 0;
                         foreach (var member in members)
                         {
-                            if(PropertiesGUIDrawEditor.DrawVars(x.GetID().ToString(), component, member, 0, index, 0, true))
+                            if (PropertiesGUIDrawEditor.DrawVars(x.GetID().ToString(), component, member, 0, index, 0, true))
                             {
                                 EditorSystem.Save.MarkDirty(actor);
                             }
@@ -71,6 +71,7 @@ namespace Editor.Drawers
             var isEnabled = actor.IsActiveSelf;
             if (EditorGuiFieldsResolver.DrawBoolField("##__ENABLE_ACTOR__", ref isEnabled))
             {
+                EditorSystem.Save.MarkDirty(actor);
                 actor.IsActiveSelf = isEnabled;
             }
 
@@ -79,6 +80,7 @@ namespace Editor.Drawers
             var actorName = actor.Name;
             if (EditorGuiFieldsResolver.DrawStringField("##_ACTOR_NAME_", ref actorName, 0, true))
             {
+                EditorSystem.Save.MarkDirty(actor);
                 actor.Name = actorName;
                 Debug.Log("Changed name: " + actor.Name);
             }
@@ -91,6 +93,7 @@ namespace Editor.Drawers
 
             if (EditorGuiFieldsResolver.DrawCombo("Layers", ref layerIndex, layerNames, 46))
             {
+                EditorSystem.Save.MarkDirty(actor);
                 actor.Layer = LayerMask.NameToLayer(layerNames[layerIndex]);
             }
             ImGui.SameLine();
@@ -136,6 +139,8 @@ namespace Editor.Drawers
                     if (ImGui.Selectable($"{componentType.Name}##{componentType.AssemblyQualifiedName}"))
                     {
                         actor.AddComponent(componentType);
+                        EditorSystem.Save.MarkDirty(actor);
+
                         ImGui.CloseCurrentPopup();
                     }
                 }

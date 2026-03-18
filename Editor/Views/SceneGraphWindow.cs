@@ -28,7 +28,7 @@ namespace Editor.Views
 
                 for (int i = SceneManager.Scenes.Count - 1; i >= 0; i--)
                 {
-                    if (i == 0 && !Application.IsInPlayMode)
+                    if (i == 0 && (!Application.IsInPlayMode || SceneManager.Scenes[0].RootActors.Count == 0))
                     {
                         continue;
                     }
@@ -80,7 +80,8 @@ namespace Editor.Views
                             }
                             if (ImGui.MenuItem("Create Actor"))
                             {
-                                new Actor("Actor");
+                                var newActor = new Actor("Actor");
+                                EditorSystem.Save.MarkDirty(newActor);
                             }
                         }
 

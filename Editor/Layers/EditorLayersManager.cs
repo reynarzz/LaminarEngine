@@ -93,8 +93,8 @@ namespace Editor
             }
             else
             {
-                // TODO: load default scene from another place.
-                SceneManager.LoadEmptyScene("Default Scene");
+                // TODO: Move this default scene creation to another place.
+                SceneManager.CreateSceneInMemory("Default Scene");
                 var camera = new Actor("Main Camera").AddComponent<Camera>();
                 camera.Transform.LocalPosition = new GlmNet.vec3(0, 0, -10);
                 camera.BackgroundColor = new Color32(49, 121, 79, 255);
