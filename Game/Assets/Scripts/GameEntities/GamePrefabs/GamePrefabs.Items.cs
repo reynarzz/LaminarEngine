@@ -26,6 +26,7 @@ namespace Game
 
                 IEnumerator InstantiateCollectibles()
                 {
+                    var wait = new WaitForSeconds(0.04f);
                     for (int i = 0; i < count; i++)
                     {
                         var angle = glm.radians(Random.Shared.Next(60, 120));
@@ -47,7 +48,7 @@ namespace Game
 
                         collectibles[i] = collectible;
 
-                        yield return null;
+                        yield return wait;
                     }
                 }
                 GameManager.Instance.StartCoroutine(InstantiateCollectibles());
