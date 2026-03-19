@@ -158,7 +158,7 @@ namespace Editor
 
             return clrType;
         }
-        internal static void CreateScene(string relativeDir, string assetName)
+        internal static void CreateScene(string relativeDir)
         {
             if (string.IsNullOrEmpty(relativeDir))
             {
@@ -168,15 +168,15 @@ namespace Editor
             var sceneIR = SceneSerializer.SerializeScene(newScene);
             var json = EditorJsonUtils.Serialize(sceneIR);
 
-            var directory = EditorPaths.GetAbsolutePathSafe(relativeDir);
-            var absPath = Path.Combine(directory, assetName + EditorPaths.SCENE_FILE_EXTENSION);
-            if (Directory.Exists(directory))
+            var absPath = EditorPaths.GetAbsolutePathSafe(relativeDir);
+            var dirName = Path.GetDirectoryName(absPath);
+            if (Directory.Exists(dirName))
             {
                 File.WriteAllText(absPath, json);
             }
             else
             {
-                Debug.Error($"Directory doesn't exists: {directory}, can't create asset");
+                Debug.Error($"Directory doesn't exists: {dirName}, can't create asset");
             }
 
             RefreshAssetDatabase();

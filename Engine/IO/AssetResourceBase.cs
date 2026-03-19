@@ -13,6 +13,10 @@ namespace Engine
         internal uint Version { get; private set; }
         internal virtual bool IsCacheHardReference { get; protected private set; } = false;
 
+        /// <summary>
+        /// it is on disk or just in memory? After deletion this should be false.
+        /// </summary>
+        internal bool IsPhysicallyAvailable { get; set; }
         public string Path => IOLayer.Database?.GetAssetInfo(GetID()).Path ?? string.Empty;
         private string _name = null;
         public override string Name

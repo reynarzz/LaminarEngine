@@ -165,6 +165,7 @@ namespace Engine.IO
                 }
                 else
                 {
+                    asset.IsPhysicallyAvailable = true;
                     _databaseCache.PushAsset(guid, asset);
                 }
 

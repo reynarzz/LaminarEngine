@@ -20,7 +20,18 @@ namespace Editor.Utils
         {
             ImGui.SameLine();
             ImGui.SetCursorPosX(MathF.Max(XPosOffset, ImGui.GetCursorPosX()) + 5);
-            var hasObject = eObject != null;
+            var hasObject = eObject != null && eObject.IsValid();
+            bool isAsset = false;
+            bool isAssetMissingReference = false;
+
+            if (hasObject && eObject is AssetResourceBase asset)
+            {
+                isAsset = true;
+                // TODO: Show a 'Missing reference' text in the
+                isAssetMissingReference = !asset.IsPhysicallyAvailable;
+                hasObject = asset.IsPhysicallyAvailable;
+            }
+
             string label = hasObject ? $"{eObject.Name}" : $"None";
 
             if (hasObject)
@@ -298,7 +309,7 @@ namespace Editor.Utils
 
         private static void DropValue(Type valueType, EditorImGui.DragAndDrop.ReferenceDragAndDropPayload payload, Func<EObject, bool> setValue)
         {
-            if (!CanBeAssigned(payload.Type,valueType))
+            if (!CanBeAssigned(payload.Type, valueType))
             {
                 return;
             }

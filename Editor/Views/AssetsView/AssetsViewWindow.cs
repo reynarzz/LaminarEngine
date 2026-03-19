@@ -320,9 +320,16 @@ namespace Editor.Views
                 if (ImGui.MenuItem("Create Scene"))
                 {
                     var relativePathDir = GetFileRelativeFolderClean(file);
+                    var writePath = EditorAssetUtils.RemoveRootAssetFolder(relativePathDir);
+                    if (!string.IsNullOrEmpty(writePath))
+                    {
+                        writePath += "/";
+                    }
+
                     var defaultSceneName = "Scene";
-                    EditorAssetUtils.CreateScene(relativePathDir, defaultSceneName);
-                    SelectFile(relativePathDir + "/" + defaultSceneName + EditorPaths.SCENE_FILE_EXTENSION);
+                    writePath += defaultSceneName + EditorPaths.SCENE_FILE_EXTENSION;
+                    var relativeScenePath = Paths.ASSETS_FOLDER_NAME + "/" + writePath;
+                    CreateFile(relativeScenePath, _ => EditorAssetUtils.CreateScene(writePath));
                 }
                 if (ImGui.MenuItem("Rename"))
                 {
@@ -337,16 +344,11 @@ namespace Editor.Views
                     {
                         relativePathDir += "/";
                     }
+
                     var tempDirName = "NewFolder";
                     relativePathDir += tempDirName;
 
-                    EditorAssetUtils.CreateDirectory(relativePathDir);
-                    // TODO: Select the new created folder, and active rename.
-                    LoadDirectories();
-
-                    // After this point the old file was destroyed by the update so we need to find the new file with the same path.
-                    var newFile = FindFile(Paths.ASSETS_FOLDER_NAME + "/" + relativePathDir);
-                    SelectRename(newFile);
+                    CreateFile(relativePathDir, EditorAssetUtils.CreateDirectory);
                 }
                 if (ImGui.MenuItem("Delete"))
                 {
@@ -356,6 +358,17 @@ namespace Editor.Views
                     {
                         EditorAssetUtils.DeleAsset(relativePathDir);
                         LoadDirectories();
+
+                        if (file.Type == FileType.Asset)
+                        {
+                            var asset = Assets.GetAssetFromGuid(file.RefId);
+
+                            // This make sure to mark the assets in the cache as not available physically.
+                            if (asset)
+                            {
+                                asset.IsPhysicallyAvailable = false;
+                            }
+                        }
 
                         if (file.Type == FileType.Directory && _currentDirFile == file)
                         {
@@ -369,6 +382,16 @@ namespace Editor.Views
             ImGui.EndDisabled();
         }
 
+        private void CreateFile(string relativePath, Action<string> createCallback)
+        {
+            createCallback?.Invoke(relativePath);
+
+            LoadDirectories();
+
+            // After this point the old file was destroyed by the update so we need to find the new file with the same path.
+            var newFile = FindFile(Paths.ASSETS_FOLDER_NAME + "/" + relativePath);
+            SelectRename(newFile);
+        }
         private void SelectRename(AssetViewFileInfo file)
         {
             DeselectFileRename();
