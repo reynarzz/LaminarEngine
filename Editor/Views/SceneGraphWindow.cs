@@ -18,6 +18,8 @@ namespace Editor.Views
         private Guid _firstTimeSelectedActorId = default;
         private readonly WeakReference<Actor> _currentDraggingActor = new WeakReference<Actor>(null);
         private bool _isPendingToDropActor = false;
+        private const string WINDOW_NAME = "Scene graph###Scene graph";
+        private const string WINDOW_DIRTY_NAME = "Scene graph*###Scene graph";
 
         private struct SelectionInfo
         {
@@ -29,9 +31,13 @@ namespace Editor.Views
         {
         }
 
+        private string GetWindowName()
+        {
+            return EditorSystem.Save.IsAnyAssetDirty(AssetType.Scene) ? WINDOW_DIRTY_NAME : WINDOW_NAME;
+        }
         public override void OnDraw()
         {
-            if (OnBeginWindow("Scene graph", ImGuiWindowFlags.None, true, new GlmNet.vec2()))
+            if (OnBeginWindow(GetWindowName(), ImGuiWindowFlags.None, true, new GlmNet.vec2()))
             {
                 ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2());
 
