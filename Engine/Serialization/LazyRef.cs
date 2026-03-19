@@ -17,7 +17,7 @@ namespace Engine
         internal void SetRefId(SerializableGuid refId);
         internal bool HasRef();
     }
-    public struct LazyRef<T> : ILazyRef where T : AssetResourceBase
+    public struct LazyRef<T> : ILazyRef where T : Asset
     {
         [SerializedField] private SerializableGuid _refId;
         [SerializedField] private AssetType _type;

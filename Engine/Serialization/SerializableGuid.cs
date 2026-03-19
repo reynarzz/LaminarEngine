@@ -1,45 +1,63 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Engine.Serialization
 {
     [StructLayout(LayoutKind.Sequential)]
-    internal struct SerializableGuid
+    internal struct SerializableGuid : IEquatable<SerializableGuid>
     {
         [SerializedField] private ulong _a;
         [SerializedField] private ulong _b;
+
+        public SerializableGuid(ulong a, ulong b)
+        {
+            _a = a;
+            _b = b;
+        }
 
         public Guid Guid
         {
             get
             {
                 Span<byte> bytes = stackalloc byte[16];
-                BitConverter.TryWriteBytes(bytes.Slice(0, 8), _a);
-                BitConverter.TryWriteBytes(bytes.Slice(8, 8), _b);
+                BitConverter.TryWriteBytes(bytes[..8], _a);
+                BitConverter.TryWriteBytes(bytes[8..], _b);
                 return new Guid(bytes);
-            }
-            set
-            {
-                Span<byte> bytes = stackalloc byte[16];
-                value.TryWriteBytes(bytes);
-                _a = BitConverter.ToUInt64(bytes.Slice(0, 8));
-                _b = BitConverter.ToUInt64(bytes.Slice(8, 8));
             }
         }
 
         public static implicit operator SerializableGuid(Guid guid)
         {
-            return new SerializableGuid() { Guid = guid };
+            Span<byte> bytes = stackalloc byte[16];
+            guid.TryWriteBytes(bytes);
+            return new SerializableGuid(BitConverter.ToUInt64(bytes[..8]), BitConverter.ToUInt64(bytes[8..]));
         }
 
         public static implicit operator Guid(SerializableGuid guid)
         {
             return guid.Guid;
         }
+
+        public bool Equals(SerializableGuid other)
+        {
+            return _a == other._a && _b == other._b;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is SerializableGuid other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(_a, _b);
+        }
+
+        public override string ToString()
+        {
+            return Guid.ToString();
+        }
+
         public static bool operator ==(SerializableGuid a, SerializableGuid b)
         {
             return a._a == b._a && a._b == b._b;
@@ -66,10 +84,6 @@ namespace Engine.Serialization
         public static bool operator !=(SerializableGuid b, Guid a)
         {
             return a != b.Guid;
-        }
-        public override string ToString()
-        {
-            return Guid.ToString();
         }
     }
 }
