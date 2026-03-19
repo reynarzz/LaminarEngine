@@ -200,7 +200,7 @@
                     {
                       "Name": "_refId",
                       "Type": "ComplexClass",
-                      "InternalType": "Engine.Serialization.RefId, Engine",
+                      "InternalType": "Engine.Serialization.SerializableGuid, Engine",
                       "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5",
                       "Simple": null,
                       "Class": {
@@ -229,7 +229,7 @@
                               }
                             }
                           ],
-                          "InternalType": "Engine.Serialization.RefId, Engine",
+                          "InternalType": "Engine.Serialization.SerializableGuid, Engine",
                           "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5"
                         }
                       }
@@ -268,7 +268,7 @@
                     {
                       "Name": "_refId",
                       "Type": "ComplexClass",
-                      "InternalType": "Engine.Serialization.RefId, Engine",
+                      "InternalType": "Engine.Serialization.SerializableGuid, Engine",
                       "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5",
                       "Simple": null,
                       "Class": {
@@ -297,7 +297,7 @@
                               }
                             }
                           ],
-                          "InternalType": "Engine.Serialization.RefId, Engine",
+                          "InternalType": "Engine.Serialization.SerializableGuid, Engine",
                           "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5"
                         }
                       }
@@ -336,7 +336,7 @@
                     {
                       "Name": "_refId",
                       "Type": "ComplexClass",
-                      "InternalType": "Engine.Serialization.RefId, Engine",
+                      "InternalType": "Engine.Serialization.SerializableGuid, Engine",
                       "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5",
                       "Simple": null,
                       "Class": {
@@ -365,7 +365,7 @@
                               }
                             }
                           ],
-                          "InternalType": "Engine.Serialization.RefId, Engine",
+                          "InternalType": "Engine.Serialization.SerializableGuid, Engine",
                           "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5"
                         }
                       }
@@ -407,7 +407,7 @@
                         {
                           "Name": "_refId",
                           "Type": "ComplexClass",
-                          "InternalType": "Engine.Serialization.RefId, Engine",
+                          "InternalType": "Engine.Serialization.SerializableGuid, Engine",
                           "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5",
                           "Simple": null,
                           "Class": {
@@ -436,7 +436,7 @@
                                   }
                                 }
                               ],
-                              "InternalType": "Engine.Serialization.RefId, Engine",
+                              "InternalType": "Engine.Serialization.SerializableGuid, Engine",
                               "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5"
                             }
                           }
@@ -466,7 +466,7 @@
                         {
                           "Name": "_refId",
                           "Type": "ComplexClass",
-                          "InternalType": "Engine.Serialization.RefId, Engine",
+                          "InternalType": "Engine.Serialization.SerializableGuid, Engine",
                           "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5",
                           "Simple": null,
                           "Class": {
@@ -495,7 +495,7 @@
                                   }
                                 }
                               ],
-                              "InternalType": "Engine.Serialization.RefId, Engine",
+                              "InternalType": "Engine.Serialization.SerializableGuid, Engine",
                               "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5"
                             }
                           }
@@ -525,7 +525,7 @@
                         {
                           "Name": "_refId",
                           "Type": "ComplexClass",
-                          "InternalType": "Engine.Serialization.RefId, Engine",
+                          "InternalType": "Engine.Serialization.SerializableGuid, Engine",
                           "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5",
                           "Simple": null,
                           "Class": {
@@ -554,7 +554,7 @@
                                   }
                                 }
                               ],
-                              "InternalType": "Engine.Serialization.RefId, Engine",
+                              "InternalType": "Engine.Serialization.SerializableGuid, Engine",
                               "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5"
                             }
                           }
@@ -600,7 +600,7 @@
                         {
                           "Name": "_refId",
                           "Type": "ComplexClass",
-                          "InternalType": "Engine.Serialization.RefId, Engine",
+                          "InternalType": "Engine.Serialization.SerializableGuid, Engine",
                           "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5",
                           "Simple": null,
                           "Class": {
@@ -629,7 +629,7 @@
                                   }
                                 }
                               ],
-                              "InternalType": "Engine.Serialization.RefId, Engine",
+                              "InternalType": "Engine.Serialization.SerializableGuid, Engine",
                               "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5"
                             }
                           }
@@ -659,7 +659,7 @@
                         {
                           "Name": "_refId",
                           "Type": "ComplexClass",
-                          "InternalType": "Engine.Serialization.RefId, Engine",
+                          "InternalType": "Engine.Serialization.SerializableGuid, Engine",
                           "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5",
                           "Simple": null,
                           "Class": {
@@ -688,7 +688,7 @@
                                   }
                                 }
                               ],
-                              "InternalType": "Engine.Serialization.RefId, Engine",
+                              "InternalType": "Engine.Serialization.SerializableGuid, Engine",
                               "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5"
                             }
                           }
@@ -718,7 +718,7 @@
                         {
                           "Name": "_refId",
                           "Type": "ComplexClass",
-                          "InternalType": "Engine.Serialization.RefId, Engine",
+                          "InternalType": "Engine.Serialization.SerializableGuid, Engine",
                           "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5",
                           "Simple": null,
                           "Class": {
@@ -747,7 +747,7 @@
                                   }
                                 }
                               ],
-                              "InternalType": "Engine.Serialization.RefId, Engine",
+                              "InternalType": "Engine.Serialization.SerializableGuid, Engine",
                               "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5"
                             }
                           }
@@ -777,7 +777,7 @@
                         {
                           "Name": "_refId",
                           "Type": "ComplexClass",
-                          "InternalType": "Engine.Serialization.RefId, Engine",
+                          "InternalType": "Engine.Serialization.SerializableGuid, Engine",
                           "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5",
                           "Simple": null,
                           "Class": {
@@ -806,7 +806,7 @@
                                   }
                                 }
                               ],
-                              "InternalType": "Engine.Serialization.RefId, Engine",
+                              "InternalType": "Engine.Serialization.SerializableGuid, Engine",
                               "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5"
                             }
                           }
@@ -836,7 +836,7 @@
                         {
                           "Name": "_refId",
                           "Type": "ComplexClass",
-                          "InternalType": "Engine.Serialization.RefId, Engine",
+                          "InternalType": "Engine.Serialization.SerializableGuid, Engine",
                           "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5",
                           "Simple": null,
                           "Class": {
@@ -865,7 +865,7 @@
                                   }
                                 }
                               ],
-                              "InternalType": "Engine.Serialization.RefId, Engine",
+                              "InternalType": "Engine.Serialization.SerializableGuid, Engine",
                               "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5"
                             }
                           }
@@ -895,7 +895,7 @@
                         {
                           "Name": "_refId",
                           "Type": "ComplexClass",
-                          "InternalType": "Engine.Serialization.RefId, Engine",
+                          "InternalType": "Engine.Serialization.SerializableGuid, Engine",
                           "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5",
                           "Simple": null,
                           "Class": {
@@ -924,7 +924,7 @@
                                   }
                                 }
                               ],
-                              "InternalType": "Engine.Serialization.RefId, Engine",
+                              "InternalType": "Engine.Serialization.SerializableGuid, Engine",
                               "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5"
                             }
                           }
