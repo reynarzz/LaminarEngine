@@ -358,21 +358,28 @@ namespace Editor.Views
                 }
                 if (ImGui.MenuItem("Delete"))
                 {
-                    var relativePathDir = EditorAssetUtils.RemoveRootAssetFolder(file.RelativePath);
+                    string messageTitle = file.Type == FileType.Asset? $"Delete selected asset?": $"Delete Directory?";
+                    string messageText = $"{file.RelativePath} ({file.AssetType})\n\nCannot undo.";
+                    var result = EditorFileDialog.MessageBox(messageTitle, messageText, MessageBoxChoice.Yes_No, MessageBoxIcon.Warning);
 
-                    if (!string.IsNullOrEmpty(relativePathDir))
+                    if (result == MessageBoxButton.Yes)
                     {
-                        EditorAssetUtils.DeleAsset(relativePathDir);
-                        LoadDirectories();
+                        var relativePathDir = EditorAssetUtils.RemoveRootAssetFolder(file.RelativePath);
 
-                        if (file.Type == FileType.Asset)
+                        if (!string.IsNullOrEmpty(relativePathDir))
                         {
-                            Assets.DestroyAsset(file.RefId);
-                        }
+                            EditorAssetUtils.DeleAsset(relativePathDir);
+                            LoadDirectories();
 
-                        if (file.Type == FileType.Directory && _currentDirFile == file)
-                        {
-                            _currentDirFile = file?.Parent ?? _assetsDirectories[0];
+                            if (file.Type == FileType.Asset)
+                            {
+                                Assets.DestroyAsset(file.RefId);
+                            }
+
+                            if (file.Type == FileType.Directory && _currentDirFile == file)
+                            {
+                                _currentDirFile = file?.Parent ?? _assetsDirectories[0];
+                            }
                         }
                     }
 

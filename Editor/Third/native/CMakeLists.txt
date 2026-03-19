@@ -47,6 +47,7 @@ nativemenu/cnativemenu.cpp
 avirimageresize/cavirresize.cpp
 stbimagewrite/cstbimagewrite.cpp
 nativefiledialog/src/cfiledialog.cpp
+nativefiledialog/src/MessageBox.cpp
 $<$<BOOL:WIN32>:nativemenu/NativeMenu.cpp>
 $<$<BOOL:APPLE>:nativemenu/NativeMenu.mm>
 )

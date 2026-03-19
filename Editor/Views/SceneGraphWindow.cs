@@ -63,32 +63,54 @@ namespace Editor.Views
                         ImGui.BeginDisabled(!isValidScene);
                         if (ImGui.MenuItem("Reload Scene"))
                         {
-                            if (!EditorSystem.Save.IsDirty(scene.GetID()))
+                            void ReloadScene()
                             {
                                 Guid? selectedActor = null;
                                 if (Selector.Transform)
                                 {
                                     selectedActor = Selector.Transform.Actor.GetID();
                                 }
-
-                                // TODO: Check if the scene is dirty, if so, show a message.
                                 SceneManager.ReloadScene(scene.GetID());
-
                                 if (selectedActor != null)
                                 {
                                     Selector.Selected = SceneManager.FindActorByID(selectedActor.Value);
                                 }
                             }
+
+                            if (!EditorSystem.Save.IsDirty(scene.GetID()))
+                            {
+                                ReloadScene();
+                            }
                             else
                             {
-                                Debug.Warn($"The scene '{scene.Name}' contains unsaved changes. message box Options: Cancel, Reload anyway. (remove dirty)");
+                                string messageTitle = "Reload Scene";
+                                string messageText = $"Scene '{scene.Name}' contains unsaved changes, still reload?";
+                                var result = EditorFileDialog.MessageBox(messageTitle, messageText, MessageBoxChoice.Yes_No, MessageBoxIcon.Warning);
+                                if (result == MessageBoxButton.Yes)
+                                {
+                                    ReloadScene();
+                                }
                             }
                         }
                         ImGui.BeginDisabled(i <= 1);
 
                         if (ImGui.MenuItem("Unload Scene"))
                         {
-                            SceneManager.UnloadScene(scene);
+                            if (!EditorSystem.Save.IsDirty(scene.GetID()))
+                            {
+                                SceneManager.UnloadScene(scene);
+                            }
+                            else
+                            {
+                                string messageTitle = "Unload Scene";
+                                string messageText = $"Scene '{scene.Name}' contains unsaved changes, still unload?";
+                                var result = EditorFileDialog.MessageBox(messageTitle, messageText, MessageBoxChoice.Yes_No, MessageBoxIcon.Warning);
+
+                                if(result == MessageBoxButton.Yes)
+                                {
+                                    SceneManager.UnloadScene(scene);
+                                }
+                            }
                             ImGui.EndPopup();
 
                             if (open)

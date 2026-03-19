@@ -43,7 +43,8 @@ namespace Editor
         [DllImport(EditorNatives.EDITOR_NATIVES, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr OpenFolders(string openPath, out ulong count);
 
-
+        [DllImport(EditorNatives.EDITOR_NATIVES, CallingConvention = CallingConvention.Cdecl)]
+        private static extern int Open_MessageBox(string title, string text, int choice, int icon);
         internal static void DisplayFolder(string path)
         {
             DisplayFolder(path, false);
@@ -68,6 +69,7 @@ namespace Editor
         {
             return SaveFile(openPath, string.Empty, filters, out path);
         }
+
 
         public static bool SaveFile(string openPath, string defaultName, out string path)
         {
@@ -290,7 +292,12 @@ namespace Editor
                 Debug.Error("Can't 'ShowInExplorer', Not supported for this platform.");
             }
         }
-    }
+        
+        internal static MessageBoxButton MessageBox(string title, string text, MessageBoxChoice choice, MessageBoxIcon icon)
+        {
+            return (MessageBoxButton)Open_MessageBox(title, text, (int)choice, (int)icon); 
+        }
+    } 
     internal struct FileFilter
     {
 
@@ -301,4 +308,33 @@ namespace Editor
         public string Extensions;
     }
 
+
+    internal enum MessageBoxButton
+    {
+        Cancel = -1,
+        Ok,
+        Yes,
+        No,
+        Abort,
+        Retry,
+        Ignore,
+    };
+
+    internal enum MessageBoxChoice
+    {
+        Ok = 0,
+        Ok_Cancel,
+        Yes_No,
+        Yes_No_Cancel,
+        Retry_Cancel,
+        Abort_Retry_Ignore,
+    };
+
+    internal enum MessageBoxIcon
+    {
+        Info = 0,
+        Warning,
+        Error,
+        Question,
+    };
 }
