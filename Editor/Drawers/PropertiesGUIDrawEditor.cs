@@ -66,14 +66,14 @@ namespace Editor
 
         public static bool DrawObject(string objectId, object target)
         {
-            if(target == null)
+            if (target == null)
             {
                 Debug.Error($"Can't draw target with id: {objectId}, is null.");
                 return false;
             }
             var members = ReflectionUtils.GetAllMembersWithAttribute<SerializedFieldAttribute>(target.GetType(), true, true);
             var anyChange = false;
-            foreach (var member in members) 
+            foreach (var member in members)
             {
                 var hasChanged = DrawVars(objectId, target, member, true);
                 if (hasChanged)
@@ -195,8 +195,8 @@ namespace Editor
 
             var isValidClass = (type.IsClass) && type != typeof(string);
             if ((ReflectionUtils.GetPropertiesCount(prop) > 1 && (isValidClass) &&
-                !ReflectionUtils.IsEObject(type)) ||
-                (ReflectionUtils.IsCollection(prop) && isValidClass && !ReflectionUtils.IsEObject(type)) ||
+                !ReflectionUtils.IsEObject(type) && !ReflectionUtils.IsLazy(type)) ||
+                (ReflectionUtils.IsCollection(prop) && isValidClass && !ReflectionUtils.IsEObject(type) && !ReflectionUtils.IsLazy(type))  ||
                 ReflectionUtils.IsUserDefinedStruct(prop))
             {
                 flags = ImGuiTreeNodeFlags.OpenOnArrow;
@@ -250,14 +250,37 @@ namespace Editor
 
                 var eObject = value as EObject;
                 var eObjectType = eObject != null ? eObject.GetType() : type;
-                EObject resultValue = eObject;
 
-                /*resultChanged =*/ EditorGuiFieldsResolver.DrawEObjectSlot(eObject, eObjectType, v =>
+                /*resultChanged =*/
+                EditorGuiFieldsResolver.DrawEObjectSlot(eObject, eObjectType, v =>
                 {
                     setMemberValueCallBack(target, v, prop, index);
 
                     resultChanged = eObject != v; // TODO: Remove once the refactor is DrawEObjectSlot is done.
                     return eObject != v;
+                });
+            }
+            else if (ReflectionUtils.IsLazy(type))
+            {
+                ImGui.SameLine();
+                ImGui.SetCursorPosX(Math.Max(EditorGuiFieldsResolver.XPosOffset, ImGui.GetCursorPosX()));
+
+                var eObject = value != null ? (ILazyRef)value : default;
+                var eObjectType = eObject.HasRef() ? eObject.GetAssetType().AssetTypeToType() : ReflectionUtils.GetLazyType(type);
+
+                EditorGuiFieldsResolver.DrawEObjectSlot(eObject, eObjectType, v =>
+                {
+                    resultChanged = (v != null && v.GetID() != eObject.GetRefId()) || (eObject.HasRef() && v == null); 
+
+                    if (resultChanged && eObject != null)
+                    {
+                        eObject.SetRefId(v?.GetID() ?? Guid.Empty);
+                        eObject.SetAssetType(v?.GetType().AssetToAssetType() ?? AssetType.Invalid);
+                    }
+
+                    setMemberValueCallBack(target, eObject, prop, index);
+
+                    return resultChanged;
                 });
             }
             else if (type == typeof(bool))

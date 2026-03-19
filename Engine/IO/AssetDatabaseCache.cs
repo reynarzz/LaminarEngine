@@ -56,5 +56,11 @@ namespace Engine.IO
                 _assetsHardRefs.Add(guid, asset);
             }
         }
+
+        internal void Remove(Guid refId)
+        {
+            _assetsHardRefs.Remove(refId);
+            _assets.Remove(refId);
+        }
     }
 }

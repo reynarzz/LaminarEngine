@@ -118,8 +118,8 @@ namespace Engine
 
             if (asset)
             {
-                // TODO: also remove from cache.
                 asset.IsPhysicallyAvailable = false;
+                IOLayer.GetDatabase().RemoveFromCache(refId);
             }
         }
 #endif

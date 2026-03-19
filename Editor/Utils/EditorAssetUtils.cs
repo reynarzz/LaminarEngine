@@ -106,7 +106,41 @@ namespace Editor
 
             return false;
         }
+        internal static AssetType AssetToAssetType(this Type type)
+        {
+            if (type == null)
+            {
+                return AssetType.Invalid;
+            }
 
+            if (typeof(Texture).IsAssignableFrom(type)) 
+                return AssetType.Texture;
+            if (typeof(AudioClip).IsAssignableFrom(type)) 
+                return AssetType.Audio;
+            if (typeof(TextAsset).IsAssignableFrom(type)) 
+                return AssetType.Text;
+            if (typeof(Shader).IsAssignableFrom(type)) 
+                return AssetType.Shader;
+            if (typeof(FontAsset).IsAssignableFrom(type))
+                return AssetType.Font;
+            if (typeof(AnimationClip).IsAssignableFrom(type))
+                return AssetType.AnimationClip;
+            if (typeof(AnimatorController).IsAssignableFrom(type)) 
+                return AssetType.AnimatorController;
+            if (typeof(Material).IsAssignableFrom(type))
+                return AssetType.Material;
+            if (typeof(SceneAsset).IsAssignableFrom(type)) 
+                return AssetType.Scene;
+            if (typeof(TilemapAsset).IsAssignableFrom(type)) 
+                return AssetType.Tilemap;
+            if (typeof(RenderTexture).IsAssignableFrom(type)) 
+                return AssetType.RenderTexture;
+
+            if (typeof(Shader).IsAssignableFrom(type)) 
+                return AssetType.ShaderV2;
+
+            return AssetType.Invalid;
+        }
         internal static Type AssetTypeToType(this AssetType type)
         {
             Type clrType = null;
@@ -152,8 +186,8 @@ namespace Editor
                 case AssetType.RenderTexture:
                     clrType = typeof(RenderTexture);
                     break;
-                default:
-                    break;
+               // default:
+                   // throw new NotImplementedException(type.ToString());
             }
 
             return clrType;

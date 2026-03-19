@@ -233,5 +233,10 @@ namespace Engine.IO
             Debug.Error($"Builder for asset type '{info.Type}' was not found");
             return null;
         }
+
+        internal void RemoveFromCache(Guid refId)
+        {
+            _databaseCache.Remove(refId);
+        }
     }
 }

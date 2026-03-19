@@ -16,6 +16,12 @@ namespace Editor.Utils
     public partial class EditorGuiFieldsResolver
     {
         private const int ASSETS_COLUMNS_COUNT_POPUP = 4;
+        public static bool DrawEObjectSlot<T>(in T lazy, Type valueType, Func<EObject, bool> setValue) where T: ILazyRef
+        {
+            // TODO: do not load the asset like this, this defeats the purpose, but for testing is fine for now.
+            return DrawEObjectSlot(Assets.GetAssetFromGuid(lazy.GetRefId()), valueType, setValue);
+        }
+
         public static bool DrawEObjectSlot(IObject eObject, Type valueType, Func<EObject, bool> setValue)
         {
             ImGui.SameLine();
@@ -168,8 +174,6 @@ namespace Editor.Utils
             if (EditorImGui.ImageButtonFromIcon("_PICKER_BUTTON_", EditorIcon.CirclePicker, new vec2(13, 13)))
             {
                 _openPopup = true;
-                _selectedValue = eObject;
-                _selectedSetter = setValue;
             }
             ImGui.PopStyleColor(3);
 
@@ -292,6 +296,10 @@ namespace Editor.Utils
 
         private static bool CanBeAssigned(Type payloadType, Type valueType)
         {
+            if (ReflectionUtils.IsLazy(valueType))
+            {
+                ReflectionUtils.TryGetLazyType(valueType, out valueType);
+            }
             if (payloadType.IsAssignableTo(valueType))
             {
                 return true;

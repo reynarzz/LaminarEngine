@@ -19,8 +19,6 @@ namespace Editor.Utils
         private static readonly Vector2 VECTOR_INNER_SPACING = new Vector2(3, 2);
         private static bool _openPopup;
 
-        private static object _selectedValue;
-        private static Func<EObject, bool> _selectedSetter;
         public delegate (object valueOut, bool result) onDrawDictionaryArgCallback(Type argKey, string argName, object argValue);
         private const string DEFAULT_COLLECTION_ITEM_TITLE = "item";
 

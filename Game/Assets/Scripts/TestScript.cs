@@ -140,35 +140,35 @@ namespace Game
         [SerializedField] private SceneAsset _scene;
         [SerializedField] private Sprite[] _sprites;
 
-        [SerializedField] AAA<int> AAAClass;
-        [SerializedField] AAA<string, Body2DType> AAAClass2v;
-        [SerializedField] AAA<int, TestClass, float> AAAClass3v;
-        [SerializedField] List<AAA<int>> AAAIntList;
-        [SerializedField] List<AAA<string>> AAAStringList;
-        [SerializedField] List<AAA<AStruct>> AAAStructList;
+        //[SerializedField] AAA<int> AAAClass;
+        //[SerializedField] AAA<string, Body2DType> AAAClass2v;
+        //[SerializedField] AAA<int, TestClass, float> AAAClass3v;
+        //[SerializedField] List<AAA<int>> AAAIntList;
+        //[SerializedField] List<AAA<string>> AAAStringList;
+        //[SerializedField] List<AAA<AStruct>> AAAStructList;
 
-        [SerializedField] private quat Orientation;
-        [SerializedField] public AStruct StructType { get; set; }
-        [SerializedField] public List<AStruct> AStructTypeList { get; set; }
-        [SerializedField] public AStruct[] AStructTypeArray { get; set; }
-        [SerializedField][HideFromInspector] public List<TestClass> _TestCLassList { get; set; }
-        [SerializedField] public TestClass TestClassObj;
+        //[SerializedField] private quat Orientation;
+        //[SerializedField] public AStruct StructType { get; set; }
+        //[SerializedField] public List<AStruct> AStructTypeList { get; set; }
+        //[SerializedField] public AStruct[] AStructTypeArray { get; set; }
+        //[SerializedField][HideFromInspector] public List<TestClass> _TestCLassList { get; set; }
+        //[SerializedField] public TestClass TestClassObj;
         //[SerializedField] public List<string> StringTest;
         // [SerializedField] public List<int> IntTest { get; set; } = new();
         // [SerializedField] public List<Component> _TestComponentList { get; set; }
         // [SerializedField] public List<Component> _TestComponentArray { get; set; }
         // [SerializedField] public List<Actor> _TestActorList { get; set; }
-        [SerializedField] public Actor[] _TestActorArray { get; set; }
+        //[SerializedField] public Actor[] _TestActorArray { get; set; }
         //[SerializedField] public double DoubleField { get; set; }
         //[SerializedField] public Component ComponentTest { get; set; }
         // [SerializedField] public Actor ActorTest { get; set; }
         //[ExposeEditorField] private List<List<int>> _nestedList;
-        [PropertyHeader("Important fields")]
+       // [PropertyHeader("Important fields")]
         //[SerializedField] public string String { get; set; }
         //[SerializedField] public IComponent ComponentInterface { get; set; }
         //[SerializedField] public IObject ObjectInterface { get; set; }
         //[SerializedField] public Body2DType[] EnumArray { get; set; }
-        [SerializedField] public TestClass[] TestClassArray { get; set; }
+       // [SerializedField] public TestClass[] TestClassArray { get; set; }
 
 
         //[SerializedField]
@@ -179,31 +179,33 @@ namespace Game
         //private Dictionary<int, AssetResourceBase> _assetDictionary =
         //   new Dictionary<int, AssetResourceBase> { { 1, null }, { 22, new Sprite() } };
 
+        [SerializedField] private LazyRef<SceneAsset> _lazyTilemap;
+        [SerializedField] private LazyRef<SceneAsset>[] _lazyTilemapArr;
 
-        [SerializedField]
-        private Dictionary<int, AStruct> _complexDictionary =
-           new Dictionary<int, AStruct> { { 1, default }, { 51, new AStruct() { IntValue = 100 } } };
+        //[SerializedField]
+        //private Dictionary<int, AStruct> _complexDictionary =
+        //   new Dictionary<int, AStruct> { { 1, default }, { 51, new AStruct() { IntValue = 100 } } };
 
-        [SerializedField]
-        private Dictionary<int, string> _intStringDictionary =
-           new Dictionary<int, string> { { 3, "first value" }, { 51, "Second value" } };
+        //[SerializedField]
+        //private Dictionary<int, string> _intStringDictionary =
+        //   new Dictionary<int, string> { { 3, "first value" }, { 51, "Second value" } };
 
-        [SerializedField]
-        private Dictionary<int, Component> _compStringDictionary =
-           new Dictionary<int, Component> { { 3, default }, { 51, default } };
+        //[SerializedField]
+        //private Dictionary<int, Component> _compStringDictionary =
+        //   new Dictionary<int, Component> { { 3, default }, { 51, default } };
 
-        [SerializedField]
-        private Dictionary<int, quat> _quatDictionary =
-          new Dictionary<int, quat> { { 3, default }, { 51, new quat(1, 0, 0, 0) } };
+        //[SerializedField]
+        //private Dictionary<int, quat> _quatDictionary =
+        //  new Dictionary<int, quat> { { 3, default }, { 51, new quat(1, 0, 0, 0) } };
 
-        [SerializedField] private ITestInterface<int>[] _interfaceArray { get; set; } = new TestScript.ITestInterface<int>[] { new InterA() { Texture = Assets.GetTexture("starkTileset.png") } };
-        [SerializedField]
-        private Dictionary<EnlistmentOptions, string> _enumByStringDictionary;
+        //[SerializedField] private ITestInterface<int>[] _interfaceArray { get; set; } = new TestScript.ITestInterface<int>[] { new InterA() { Texture = Assets.GetTexture("starkTileset.png") } };
+        //[SerializedField]
+        //private Dictionary<EnlistmentOptions, string> _enumByStringDictionary;
 
-        [SerializedField]
-        private Dictionary<BlendFactor, GamePadAxis> _enumByEnumDictionary;
-        [SerializedField]
-        private Dictionary<BlendFactor, mat4> _mat4ByEnumDictionary;
+        //[SerializedField]
+        //private Dictionary<BlendFactor, GamePadAxis> _enumByEnumDictionary;
+        //[SerializedField]
+        //private Dictionary<BlendFactor, mat4> _mat4ByEnumDictionary;
 
         private class Dclas
         {
@@ -212,7 +214,7 @@ namespace Game
 
         [SerializedField]
         private Dictionary<BlendFactor, Dclas> _intArrByEnumDictionary;
-        [SerializedField] private bool[] _boolArray;
+        //[SerializedField] private bool[] _boolArray;
 
         [ShowMethodInEditor]
         public void AMethodCallingFromEditor()

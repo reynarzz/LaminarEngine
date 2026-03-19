@@ -587,7 +587,7 @@ namespace Engine.Utils
             if (type != null)
             {
                 return type.IsValueType && !type.IsPrimitive && !type.IsEnum &&
-                    !type.Namespace.Equals(typeof(vec2).Namespace) && type != typeof(Color) && type != typeof(Color32);
+                    !type.Namespace.Equals(typeof(vec2).Namespace) && type != typeof(Color) && type != typeof(Color32) && !IsLazy(type);
             }
             return false;
         }
@@ -835,10 +835,39 @@ namespace Engine.Utils
             return false;
         }
 
-        public static bool IsEObject(Type t)
+        public static bool IsEObject(Type type)
         {
-            return typeof(EObject).IsAssignableFrom(t);// || typeof(IObject).IsAssignableFrom(t);
+            return typeof(EObject).IsAssignableFrom(type);
         }
+
+        public static bool IsLazy(Type type)
+        {
+            return type == typeof(LazyRef) || (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(LazyRef<>));
+        }
+        public static Type GetLazyType(Type lazy)
+        {
+            TryGetLazyType(lazy, out var outType);
+            return outType;
+        }
+        public static bool TryGetLazyType(Type type, out Type innerType)
+        {
+            innerType = null;
+
+            if (type == typeof(LazyRef))
+            {
+                return false;
+            }
+
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(LazyRef<>))
+            {
+                innerType = type.GetGenericArguments()[0];
+                return true;
+            }
+
+            return false;
+        }
+
+
         /// <summary>
         /// Walks the complete object graph of 'target' to make sure that it has at least one member (field/property) with the 'searchedType'
         /// </summary>

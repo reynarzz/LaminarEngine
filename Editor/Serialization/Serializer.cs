@@ -165,7 +165,7 @@ namespace Editor.Serialization
             {
                 return GetSimpleType(type);
             }
-            else if (type.IsClass || ReflectionUtils.IsUserDefinedStruct(type))
+            else if (type.IsClass || ReflectionUtils.IsUserDefinedStruct(type) || ReflectionUtils.IsLazy(type))
             {
                 return SerializedType.ComplexClass;
             }
