@@ -49,8 +49,6 @@ Features:
 - Fully async scene load in the background: async asset loading (mainThreadSync for graphic assets)
 - Audio mixer editor ui
 - Animator using nodes
-- Assets lazy loading: Selecting assets in the inspector should not load the asset, but when the playmode starts,
-  create a ImmediateAssetLoad<T> to load as soon as it gets in the property inspector.
 - When an asset is updated, other assets that depend on it should be notified/updated as well, ex: Texture2D->Tilemap
 - Show a 'Missing reference' text in the EObject property for assetTypes.
 

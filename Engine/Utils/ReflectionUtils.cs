@@ -842,7 +842,7 @@ namespace Engine.Utils
 
         public static bool IsLazy(Type type)
         {
-            return type == typeof(LazyRef) || (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(LazyRef<>));
+            return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(LazyRef<>);
         }
         public static Type GetLazyType(Type lazy)
         {
@@ -852,11 +852,6 @@ namespace Engine.Utils
         public static bool TryGetLazyType(Type type, out Type innerType)
         {
             innerType = null;
-
-            if (type == typeof(LazyRef))
-            {
-                return false;
-            }
 
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(LazyRef<>))
             {

@@ -179,9 +179,17 @@ namespace Game
         //private Dictionary<int, AssetResourceBase> _assetDictionary =
         //   new Dictionary<int, AssetResourceBase> { { 1, null }, { 22, new Sprite() } };
 
-        [SerializedField] private LazyRef<SceneAsset> _lazyTilemap;
-        [SerializedField] private LazyRef<SceneAsset>[] _lazyTilemapArr;
+        [SerializedField] private LazyRef<SceneAsset> _lazyScene;
+        [SerializedField] private LazyRef<Prefab<SpriteRenderer>> _lazyPrefab;
+        [SerializedField] private LazyRef<SceneAsset>[] _lazyArr;
 
+        protected override void OnStart()
+        {
+            base.OnStart();
+
+            var asset = _lazyScene.GetRef();
+            
+        }
         //[SerializedField]
         //private Dictionary<int, AStruct> _complexDictionary =
         //   new Dictionary<int, AStruct> { { 1, default }, { 51, new AStruct() { IntValue = 100 } } };

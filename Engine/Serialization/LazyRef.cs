@@ -8,47 +8,6 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    internal struct LazyRef : ILazyRef
-    {
-        [SerializedField] internal SerializableGuid RefId;
-        [SerializedField] internal AssetType Type;
-        internal AssetResourceBase Asset;
-        public bool HasRef()
-        {
-            return RefId != Guid.Empty && Type != AssetType.Invalid;
-        }
-
-        SerializableGuid ILazyRef.GetRefId()
-        {
-            return RefId;
-        }
-
-        AssetType ILazyRef.GetAssetType()
-        {
-            return Type;
-        }
-
-        void ILazyRef.SetAssetType(AssetType type)
-        {
-            Type = type;
-        }
-
-        void ILazyRef.SetRefId(SerializableGuid refId)
-        {
-            RefId = refId;
-        }
-
-        public static bool operator ==(LazyRef a, LazyRef b)
-        {
-            return a.Type == b.Type && a.RefId == b.RefId;
-        }
-
-        public static bool operator !=(LazyRef a, LazyRef b)
-        {
-            return a.Type != b.Type || a.RefId != b.RefId;
-        }
-    }
-
     public interface ILazyRef
     {
         internal AssetType GetAssetType();
