@@ -296,6 +296,9 @@ namespace Editor.Utils
 
         private static bool CanBeAssigned(Type payloadType, Type valueType)
         {
+            if (payloadType == null)
+                return false;
+
             if (ReflectionUtils.IsLazy(valueType))
             {
                 ReflectionUtils.TryGetLazyType(valueType, out valueType);

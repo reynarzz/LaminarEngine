@@ -180,8 +180,10 @@ namespace Game
         //   new Dictionary<int, AssetResourceBase> { { 1, null }, { 22, new Sprite() } };
 
         [SerializedField] private LazyRef<SceneAsset> _lazyScene;
+        [SerializedField] private LazyRef<Material> _lazyMat;
         [SerializedField] private LazyRef<Prefab<SpriteRenderer>> _lazyPrefab;
         [SerializedField] private LazyRef<SceneAsset>[] _lazyArr;
+        [SerializedField] private LazyRef<AssetResourceBase>[] _lazyResources;
 
         protected override void OnStart()
         {
