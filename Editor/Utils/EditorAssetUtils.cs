@@ -215,15 +215,17 @@ namespace Editor
             }
             var path = EditorPaths.GetAbsolutePathSafe(relativePath);
 
-            //if (Directory.Exists(path))
-            //{
-            //    Directory.Delete(path, true);
-            //}
-            //else
-            //{
-            //    File.Delete(path);
-            //    File.Delete(path + Paths.ASSET_META_EXT_NAME);
-            //}
+            if (Directory.Exists(path))
+            {
+                Directory.Delete(path, true);
+            }
+            else
+            {
+                File.Delete(path);
+                File.Delete(path + Paths.ASSET_META_EXT_NAME);
+            }
+
+            RefreshAssetDatabase();
         }
 
         internal static bool MoveAsset(string fromRelativePath, string toRelativePath, bool overwrite)
@@ -254,6 +256,13 @@ namespace Editor
             }
 
             return false;
+        }
+
+        internal static void CreateDirectory(string relativePathDir)
+        {
+            var absPath = EditorPaths.GetAbsolutePathSafe(relativePathDir);
+            Directory.CreateDirectory(absPath);
+            RefreshAssetDatabase();
         }
     }
 }

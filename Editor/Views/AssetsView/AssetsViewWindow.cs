@@ -326,24 +326,27 @@ namespace Editor.Views
                 }
                 if (ImGui.MenuItem("Rename"))
                 {
-                    DeselectFileRename();
-                    _selectedFileRename = file;
-                    ImGui.SetWindowFocus(WINDOW_NAME);
+                    SelectRename(file);
                 }
                 if (ImGui.MenuItem("Create Folder"))
                 {
-                    var relativePathDir = GetFileRelativeFolderClean(file);
-                    var tempDirName = "NewFolder";
-                    Directory.CreateDirectory(Path.Combine(file.AbsolutePath, tempDirName));
-                    // TODO: Select the new created folder, and active rename.
+                    var folder = GetFileRelativeFolderClean(file);
+                    var relativePathDir = EditorAssetUtils.RemoveRootAssetFolder(folder);
 
                     if (!string.IsNullOrEmpty(relativePathDir))
                     {
                         relativePathDir += "/";
                     }
-                    SelectDirectory(relativePathDir + tempDirName);
+                    var tempDirName = "NewFolder";
+                    relativePathDir += tempDirName;
 
+                    EditorAssetUtils.CreateDirectory(relativePathDir);
+                    // TODO: Select the new created folder, and active rename.
                     LoadDirectories();
+
+                    // After this point the old file was destroyed by the update so we need to find the new file with the same path.
+                    var newFile = FindFile(Paths.ASSETS_FOLDER_NAME + "/" + relativePathDir);
+                    SelectRename(newFile);
                 }
                 if (ImGui.MenuItem("Delete"))
                 {
@@ -352,10 +355,11 @@ namespace Editor.Views
                     if (!string.IsNullOrEmpty(relativePathDir))
                     {
                         EditorAssetUtils.DeleAsset(relativePathDir);
+                        LoadDirectories();
 
-                        if (file.Type == FileType.Directory)
+                        if (file.Type == FileType.Directory && _currentDirFile == file)
                         {
-                            LoadDirectories();
+                            _currentDirFile = file?.Parent ?? _assetsDirectories[0];
                         }
                     }
 
@@ -363,6 +367,13 @@ namespace Editor.Views
                 ImGui.EndPopup();
             }
             ImGui.EndDisabled();
+        }
+
+        private void SelectRename(AssetViewFileInfo file)
+        {
+            DeselectFileRename();
+            _selectedFileRename = file;
+            ImGui.SetWindowFocus(WINDOW_NAME);
         }
         private void DrawRightFolderView(AssetViewFileInfo fileRoot)
         {
@@ -466,7 +477,7 @@ namespace Editor.Views
                                     }
                                     else
                                     {
-                                        newRelativePath = relFolder.Substring(index) + changedFilename;
+                                        newRelativePath = relFolder.Substring(0, index) + "/" + changedFilename;
                                     }
                                 }
 
@@ -483,6 +494,8 @@ namespace Editor.Views
                                     Debug.Error("There is already a file with this name in this directory.");
                                     DeselectFileRename();
                                 }
+
+                                LoadDirectories();
                             }
                             else
                             {
@@ -601,35 +614,40 @@ namespace Editor.Views
         {
             return SelectFileInfo(relativePath, SelectFile);
         }
-        private bool SelectFileInfo(string relativePath, Action<AssetViewFileInfo> selectCallBack)
-        {
-            AssetViewFileInfo FindFile(AssetViewFileInfo file)
-            {
-                if (file.RelativePath.Equals(relativePath))
-                {
-                    return file;
-                }
-                else if (file.Children != null)
-                {
-                    for (int i = 0; i < file.Children.Count; i++)
-                    {
-                        var result = FindFile(file.Children[i]);
 
-                        if (result != null)
-                        {
-                            return result;
-                        }
+        private AssetViewFileInfo FindFile(string relativePath)
+        {
+            return FindFile(relativePath, _assetsDirectories[0]);
+        }
+
+        private AssetViewFileInfo FindFile(string relativePath, AssetViewFileInfo rootFile)
+        {
+            if (rootFile.RelativePath.Equals(relativePath, StringComparison.OrdinalIgnoreCase))
+            {
+                return rootFile;
+            }
+            else if (rootFile.Children != null)
+            {
+                for (int i = 0; i < rootFile.Children.Count; i++)
+                {
+                    var result = FindFile(relativePath, rootFile.Children[i]);
+
+                    if (result != null)
+                    {
+                        return result;
                     }
                 }
-
-                return null;
             }
 
+            return null;
+        }
+        private bool SelectFileInfo(string relativePath, Action<AssetViewFileInfo> selectCallBack)
+        {
             foreach (var dir in _assetsDirectories)
             {
                 foreach (var file in dir.Children)
                 {
-                    var fileFound = FindFile(file);
+                    var fileFound = FindFile(relativePath, file);
 
                     if (fileFound != null)
                     {
