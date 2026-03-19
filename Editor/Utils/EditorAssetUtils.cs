@@ -181,6 +181,50 @@ namespace Editor
 
             RefreshAssetDatabase();
         }
+        internal static string RemoveRootAssetFolder(string relativePath)
+        {
+            if (string.IsNullOrEmpty(relativePath) || relativePath.Equals(Paths.ASSETS_FOLDER_NAME, StringComparison.OrdinalIgnoreCase) ||
+                relativePath.Equals(EditorPaths.CookerPaths.INTERNAL_ASSET_FOLDER_NAME, StringComparison.OrdinalIgnoreCase))
+            {
+                return string.Empty;
+            }
+
+            var rootFolder = string.Empty;
+            if (relativePath.StartsWith(EditorPaths.CookerPaths.INTERNAL_ASSET_FOLDER_NAME))
+            {
+                rootFolder = EditorPaths.CookerPaths.INTERNAL_ASSET_FOLDER_NAME;
+            }
+            else if (relativePath.StartsWith(Paths.ASSETS_FOLDER_NAME))
+            {
+                rootFolder = Paths.ASSETS_FOLDER_NAME;
+            }
+            else
+            {
+                return relativePath;
+            }
+
+            return relativePath.Substring(rootFolder.Length + 1);
+        }
+        internal static void DeleAsset(string relativePath)
+        {
+            if (relativePath.Equals(Paths.ASSETS_FOLDER_NAME, StringComparison.OrdinalIgnoreCase) ||
+                relativePath.Equals(EditorPaths.CookerPaths.INTERNAL_ASSET_FOLDER_NAME, StringComparison.OrdinalIgnoreCase))
+            {
+                Debug.Error("Can't delete root asset folder: " + relativePath);
+                return;
+            }
+            var path = EditorPaths.GetAbsolutePathSafe(relativePath);
+
+            //if (Directory.Exists(path))
+            //{
+            //    Directory.Delete(path, true);
+            //}
+            //else
+            //{
+            //    File.Delete(path);
+            //    File.Delete(path + Paths.ASSET_META_EXT_NAME);
+            //}
+        }
 
         internal static bool MoveAsset(string fromRelativePath, string toRelativePath, bool overwrite)
         {
