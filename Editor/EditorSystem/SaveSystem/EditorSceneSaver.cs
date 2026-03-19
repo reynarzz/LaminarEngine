@@ -13,7 +13,13 @@ namespace Editor
     {
         public void Write(Guid refId, string relativePath)
         {
-            var scene = SceneManager.Scenes.First(x => x.GetID() == refId);
+            var scene = SceneManager.Scenes.FirstOrDefault(x => x?.GetID() == refId);
+
+            if (!scene)
+            {
+                Debug.Error($"Can't save scene '{refId}', not found in loaded scenes.");
+                return; 
+            }
             var sceneIR = SceneSerializer.SerializeScene(scene);
             var absPath = EditorPaths.GetAbsolutePathSafe(relativePath);
 

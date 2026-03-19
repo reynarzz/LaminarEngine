@@ -493,6 +493,7 @@ namespace Editor.Views
                     // _dragActorId = Guid.Empty;
                     callback(dropActor);
                     _pressedActorId = null;
+                    EditorSystem.Save.MarkDirty(dropActor);
                     SetSelectedActorParentGraph(dropActor, true);
                 }
             }

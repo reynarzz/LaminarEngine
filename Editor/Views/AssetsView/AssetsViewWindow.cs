@@ -360,7 +360,9 @@ namespace Editor.Views
                 if (ImGui.MenuItem("Delete"))
                 {
                     string messageTitle = file.Type == FileType.Asset ? $"Delete selected asset?" : $"Delete Directory?";
-                    string messageText = $"{file.RelativePath} ({file.AssetType})\n\nCannot undo.";
+                    var assetType = file.Type == FileType.Asset ? $"({file.AssetType})" : string.Empty;
+
+                    string messageText = $"{file.RelativePath} {assetType}\n\nCannot undo.";
                     var result = EditorFileDialog.MessageBox(messageTitle, messageText, MessageBoxChoice.Yes_No, MessageBoxIcon.Warning);
 
                     if (result == MessageBoxButton.Yes)
@@ -619,7 +621,46 @@ namespace Editor.Views
                 case AssetType.Material:
                     break;
                 case AssetType.Scene:
-                    SceneManager.LoadScene(file.RefId);
+                    {
+                        if (!EditorSystem.Save.IsAnyAssetDirty(AssetType.Scene))
+                        {
+                            SceneManager.LoadScene(file.RefId);
+                        }
+                        else
+                        {
+                            var dirtyScenes = new List<Scene>();
+                            int index = 0;
+                            var dirtySceneNames = new StringBuilder();
+                            for (int i = 1; i < SceneManager.Scenes.Count; i++)
+                            {
+                                var scene = SceneManager.Scenes[i];
+
+                                if (EditorSystem.Save.IsDirty(scene.GetID()))
+                                {
+                                    dirtyScenes.Add(scene);
+                                    dirtySceneNames.AppendLine(scene.Name + EditorPaths.SCENE_FILE_EXTENSION);
+                                }
+                            }
+
+                            string messageTitle = "Open scene.";
+                            string messageText = $"Current opened scenes have unsaved changes:\n\n{dirtySceneNames.ToString()}\nSave current, and then load '{file.Filename}{EditorPaths.SCENE_FILE_EXTENSION}'?";
+                            var result = EditorFileDialog.MessageBox(messageTitle, messageText, MessageBoxChoice.Yes_No_Cancel, MessageBoxIcon.Warning);
+
+                            if (result == MessageBoxButton.Yes)
+                            {
+                                EditorSystem.Save.SaveAll();
+                                SceneManager.LoadScene(file.RefId);
+                            }
+                            else if (result == MessageBoxButton.No)
+                            {
+                                foreach (var dirtyScene in dirtyScenes)
+                                {
+                                    EditorSystem.Save.RemoveDirty(dirtyScene.GetID());
+                                }
+                                SceneManager.LoadScene(file.RefId);
+                            }
+                        }
+                    }
                     break;
                 case AssetType.Tilemap:
                     break;

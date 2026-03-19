@@ -1,5 +1,6 @@
 ﻿using Editor.Utils;
 using Engine;
+using Engine.Layers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,11 +38,19 @@ namespace Editor
                 {
                     if (_fileSavers.TryGetValue(dirtyObject.Type, out var saver))
                     {
-                        var info = EditorIOLayer.Database.GetAssetInfo(refId);
-                        Debug.Log("Saving asset: " + info.Path);
-                        saver.Write(refId, info.Path);
+                        if (EditorIOLayer.Database.ExistsAsset(refId))
+                        {
+                            var info = EditorIOLayer.Database.GetAssetInfo(refId);
+                            Debug.Log("Saving asset: " + info.Path);
+                            saver.Write(refId, info.Path);
 
-                        isAnySaved = true;
+                            isAnySaved = true;
+                        }
+                        else
+                        {
+                            Debug.Error($"Can't save asset '{refId}' it doesn't exists.");
+                        }
+
                     }
                 }
 
@@ -61,6 +70,7 @@ namespace Editor
                     Debug.Error($"Can't mark dirty null '{nameof(EObject)}'");
                     return;
                 }
+
                 var assetType = AssetType.Invalid;
                 var refId = Guid.Empty;
 
@@ -94,6 +104,12 @@ namespace Editor
             private static bool TryGetSceneDirty(EObject obj, ref Guid refId, ref AssetType assetType, out bool isInvalidScene)
             {
                 isInvalidScene = false;
+
+                if (Application.IsInPlayMode)
+                {
+                    isInvalidScene = true;
+                    return false;
+                }
                 if (obj is Actor or Component)
                 {
                     Scene scene = null;
@@ -104,7 +120,7 @@ namespace Editor
                         _ => null
                     };
 
-                    if(scene && scene != SceneManager.DontDestroyOnLoadScene)
+                    if (scene && scene != SceneManager.DontDestroyOnLoadScene)
                     {
                         assetType = AssetType.Scene;
                         refId = scene.GetID();
@@ -119,9 +135,27 @@ namespace Editor
                 return false;
             }
 
+            internal static bool IsAnyAssetDirty(AssetType type)
+            {
+                foreach (var (refId, assetType) in _dirtyObjectsRefId)
+                {
+                    if (assetType.Type == type)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
             internal static bool IsDirty(Guid guid)
             {
                 return _dirtyObjectsRefId.ContainsKey(guid);
+            }
+
+            internal static void RemoveDirty(Guid refId)
+            {
+                _dirtyObjectsRefId.Remove(refId);
             }
         }
 
