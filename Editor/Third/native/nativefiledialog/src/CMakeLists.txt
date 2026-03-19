@@ -8,7 +8,8 @@ set(PUBLIC_HEADER_FILES
 
 set(EXTRA_CUSTOM_FILES
   FileDialog.cpp
-  FileDialog.h)
+  FileDialog.h
+  portable-file-dialogs.h)
 
 set(SOURCE_FILES ${PUBLIC_HEADER_FILES})
 

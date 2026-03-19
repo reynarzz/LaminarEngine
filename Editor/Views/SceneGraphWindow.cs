@@ -81,7 +81,7 @@ namespace Editor.Views
                             }
                             else
                             {
-                                Debug.Warn("Can't reload dirty scene, save it first");
+                                Debug.Warn($"The scene '{scene.Name}' contains unsaved changes. message box Options: Cancel, Reload anyway. (remove dirty)");
                             }
                         }
                         ImGui.BeginDisabled(i <= 1);
