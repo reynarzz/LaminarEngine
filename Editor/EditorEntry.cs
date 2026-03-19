@@ -45,7 +45,7 @@ namespace Editor
 
 
             HelpMenu();
-
+            WindowManager.PhysicalWindow = _win;
             _engine = new LaminarEngine(ImGuiLayer.GameWindow, _inputLayer, editorLayerManager, null);
 
             // Physical window.

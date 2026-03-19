@@ -56,7 +56,7 @@ namespace Editor
             _devDisk.Initialize();
             Reload(_devDisk);
 
-            if(assetDatabase != null)
+            if (assetDatabase != null)
             {
                 // Update database.
                 foreach (var guid in assetDatabase.UpdatedAssets)
@@ -64,11 +64,17 @@ namespace Editor
                     Database?.UpdateReloadAsset(guid);
                 }
             }
-           
+
             if (assetDatabase == null || assetDatabase.UpdatedAssets.Count > 0 || assetDatabase.ChangedCount > 0)
             {
                 OnAssetDatabaseUpdated?.Invoke();
             }
+        }
+
+        internal override void UpdateLayer()
+        {
+            base.UpdateLayer();
+            WindowManager.PhysicalWindow.Name = EditorSystem.Save.IsAnyDirty() ? EditorPaths.EDITOR_DIRTY_NAME : EditorPaths.EDITOR_NAME;
         }
 
         internal Task Refresh()

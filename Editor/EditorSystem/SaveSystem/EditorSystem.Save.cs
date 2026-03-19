@@ -135,6 +135,10 @@ namespace Editor
                 return false;
             }
 
+            internal static bool IsAnyDirty()
+            {
+                return _dirtyObjectsRefId.Count > 0;
+            }
             internal static bool IsAnyAssetDirty(AssetType type)
             {
                 foreach (var (refId, assetType) in _dirtyObjectsRefId)

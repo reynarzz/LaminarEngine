@@ -69,7 +69,7 @@ namespace Engine
             get => _windowName;
             set
             {
-                if (_windowName == value)
+                if (_windowName.Equals(value))
                 {
                     return;
                 }

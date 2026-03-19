@@ -234,6 +234,7 @@ namespace Editor.Drawers
             if (EditorGuiFieldsResolver.DrawBoolField($"##__COMPONENT__ENABLED_{baseID}", ref enabled))
             {
                 component.IsEnabled = enabled;
+                EditorSystem.Save.MarkDirty(component);
             }
             ImGui.SetCursorPosX(cursorX + 12);
             ImGui.SameLine();
@@ -266,6 +267,8 @@ namespace Editor.Drawers
                 {
                     // Reset component logic
                     if (component is IDisposable disposable) disposable.Dispose();
+
+                    EditorSystem.Save.MarkDirty(component);
                 }
 
                 ImGui.Separator();
@@ -280,6 +283,7 @@ namespace Editor.Drawers
                 if (ImGui.MenuItem("Paste values"))
                 {
                     // TODO:
+                    EditorSystem.Save.MarkDirty(component);
                 }
                 ImGui.EndDisabled();
 
@@ -289,6 +293,8 @@ namespace Editor.Drawers
                 if (ImGui.MenuItem("Remove"))
                 {
                     Actor.Destroy(component);
+                    EditorSystem.Save.MarkDirty(component);
+
                     ImGui.EndDisabled();
                     ImGui.EndPopup();
                     return;
