@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    public class TextAsset : AssetResourceBase
+    public class TextAsset : Asset
     {
         public string Text { get; private set; }
 

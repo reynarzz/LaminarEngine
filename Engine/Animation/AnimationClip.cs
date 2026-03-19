@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    public class AnimationClip : AssetResourceBase
+    public class AnimationClip : Asset
     {
         [ShowFieldNoSerialize]
         public float Duration

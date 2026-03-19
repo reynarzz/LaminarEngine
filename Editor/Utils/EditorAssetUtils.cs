@@ -16,7 +16,7 @@ namespace Editor
     internal static class EditorAssetUtils
     {
         private readonly static DefaultAssetMetaGenerator _defaultMetaGenerator = new();
-        internal static AssetMeta GetAssetMeta(AssetResourceBase asset)
+        internal static AssetMeta GetAssetMeta(Asset asset)
         {
             var path = EditorPaths.GetAbsolutePathSafe(asset.Path);
             var meta = GetMetaFromAbsolutePath(path, EditorIOLayer.Database.GetAssetInfo(asset.GetID()).Type);

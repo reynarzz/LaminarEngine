@@ -75,7 +75,7 @@ namespace Engine.IO
             return default;
         }
 
-        internal async Task<T> GetAssetAsync<T>(string path) where T : AssetResourceBase
+        internal async Task<T> GetAssetAsync<T>(string path) where T : Asset
         {
             if (_guidPathDict.TryGetByValue(Paths.ClearPathSeparation(path), out var guid))
             {
@@ -87,7 +87,7 @@ namespace Engine.IO
             return default;
         }
 
-        internal T GetAsset<T>(string path) where T : AssetResourceBase
+        internal T GetAsset<T>(string path) where T : Asset
         {
             if (_guidPathDict.TryGetByValue(Paths.ClearPathSeparation(path), out var guid))
             {
@@ -99,7 +99,7 @@ namespace Engine.IO
             return default;
         }
 
-        private async Task<T> GetAssetAsync<T>(Guid guid) where T : AssetResourceBase
+        private async Task<T> GetAssetAsync<T>(Guid guid) where T : Asset
         {
             if (_databaseCache.GetAsset<T>(guid, out var asset))
             {
@@ -134,7 +134,7 @@ namespace Engine.IO
             }
         }
 
-        internal T GetAsset<T>(Guid guid) where T : AssetResourceBase
+        internal T GetAsset<T>(Guid guid) where T : Asset
         {
             if (guid == Guid.Empty)
                 return null;
@@ -179,7 +179,7 @@ namespace Engine.IO
         }
 
         // TODO: cleanup this function.
-        private AssetResourceBase BuildAsset(AssetInfo info, AssetMeta meta, Guid guid, byte[] rawData, bool update = false)
+        private Asset BuildAsset(AssetInfo info, AssetMeta meta, Guid guid, byte[] rawData, bool update = false)
         {
             var encoding = Encoding.Default;
 
@@ -213,7 +213,7 @@ namespace Engine.IO
                     reader = new BinaryReader(AssetCompressor.DecompressStream(reader.BaseStream));
                 }
 
-                AssetResourceBase asset = null;
+                Asset asset = null;
 
                 if (!update)
                 {

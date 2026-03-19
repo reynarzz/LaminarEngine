@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Engine
 {
-    public class Shader : AssetResourceBase
+    public class Shader : Asset
     {
         [ShowFieldNoSerialize(isReadOnly: true)] private ShaderUniform[] _uniforms;
         private ShaderSource[] _sources;

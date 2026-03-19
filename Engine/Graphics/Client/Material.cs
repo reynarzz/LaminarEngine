@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    public class Material : AssetResourceBase
+    public class Material : Asset
     {
         [SerializedField] private List<RenderPass> _passes = new();
         internal List<RenderPass> Passes => _passes;

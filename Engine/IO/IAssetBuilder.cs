@@ -10,17 +10,17 @@ namespace Engine.IO
 {
     internal interface IAssetBuilder
     {
-        internal AssetResourceBase BuildAsset(ref readonly AssetInfo info, AssetMeta meta, BinaryReader reader);
-        internal void UpdateAsset(ref readonly AssetInfo info, AssetResourceBase asset, AssetMeta meta, BinaryReader reader);
+        internal Asset BuildAsset(ref readonly AssetInfo info, AssetMeta meta, BinaryReader reader);
+        internal void UpdateAsset(ref readonly AssetInfo info, Asset asset, AssetMeta meta, BinaryReader reader);
     }
 
-    internal interface IAssetBuilder<TAsset, TMeta> : IAssetBuilder where TAsset : AssetResourceBase where TMeta : AssetMeta
+    internal interface IAssetBuilder<TAsset, TMeta> : IAssetBuilder where TAsset : Asset where TMeta : AssetMeta
     {
-        AssetResourceBase IAssetBuilder.BuildAsset(ref readonly AssetInfo info, AssetMeta meta, BinaryReader reader)
+        Asset IAssetBuilder.BuildAsset(ref readonly AssetInfo info, AssetMeta meta, BinaryReader reader)
         {
             return BuildAsset(in info, meta as TMeta, reader);
         }
-        void IAssetBuilder.UpdateAsset(ref readonly AssetInfo info, AssetResourceBase asset, AssetMeta meta, BinaryReader reader)
+        void IAssetBuilder.UpdateAsset(ref readonly AssetInfo info, Asset asset, AssetMeta meta, BinaryReader reader)
         {
             UpdateAsset(in info, asset as TAsset, meta as TMeta, reader);
         }

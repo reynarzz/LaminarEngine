@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    public abstract class AssetResourceBase : EObject
+    public abstract class Asset : EObject
     {
         internal uint Version { get; private set; }
         internal virtual bool IsCacheHardReference { get; protected private set; } = false;
@@ -28,7 +28,7 @@ namespace Engine
             }
         }
 
-        internal AssetResourceBase(Guid guid) : base(string.Empty, guid)
+        internal Asset(Guid guid) : base(string.Empty, guid)
         {
         }
 

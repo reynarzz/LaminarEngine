@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    public class Prefab : AssetResourceBase
+    public class Prefab : Asset
     {
         [SerializedField] internal ActorIR[] Actors { get; protected private set; }
 

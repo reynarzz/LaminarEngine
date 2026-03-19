@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    public class AudioClip : AssetResourceBase
+    public class AudioClip : Asset
     {
         public TimeSpan Duration { get; }
         public int SampleRate { get; }

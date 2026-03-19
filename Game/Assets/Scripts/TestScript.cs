@@ -183,7 +183,7 @@ namespace Game
         [SerializedField] private LazyRef<Material> _lazyMat;
         [SerializedField] private LazyRef<Prefab<SpriteRenderer>> _lazyPrefab;
         [SerializedField] private LazyRef<SceneAsset>[] _lazyArr;
-        [SerializedField] private LazyRef<AssetResourceBase>[] _lazyResources;
+        [SerializedField] private LazyRef<Asset>[] _lazyResources;
 
         protected override void OnStart()
         {

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Editor
 {
-    internal abstract class JsonBasedAssetBuilder<TAsset, TMeta, TTypeIR> : IAssetBuilder<TAsset, TMeta> where TAsset : AssetResourceBase
+    internal abstract class JsonBasedAssetBuilder<TAsset, TMeta, TTypeIR> : IAssetBuilder<TAsset, TMeta> where TAsset : Asset
                                                                                                          where TMeta : AssetMeta
                                                                                                          where TTypeIR : TypeIRBase
     {

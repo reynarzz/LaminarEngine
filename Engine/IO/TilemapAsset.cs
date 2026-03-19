@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    public class TilemapAsset : AssetResourceBase
+    public class TilemapAsset : Asset
     {
         private TilemapData _data;
         internal TilemapAsset(Guid refId, TilemapData data) : base(refId)

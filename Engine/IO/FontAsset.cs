@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    public class FontAsset : AssetResourceBase
+    public class FontAsset : Asset
     {
         internal byte[] Data { get; }
 

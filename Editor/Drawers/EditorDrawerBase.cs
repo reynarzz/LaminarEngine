@@ -51,7 +51,7 @@ namespace Editor
             ImGui.Text(target.Name);
             
 
-            ImGui.SetItemTooltip((target as AssetResourceBase)?.Path ?? target.GetID().ToString());
+            ImGui.SetItemTooltip((target as Asset)?.Path ?? target.GetID().ToString());
 
             ImGui.Separator();
 

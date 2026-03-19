@@ -43,13 +43,13 @@ namespace Engine
         {
             return Get<Material>(path);
         }
-        internal static AssetResourceBase GetAssetFromGuid(Guid guid)
+        internal static Asset GetAssetFromGuid(Guid guid)
         {
             if(guid == Guid.Empty)
             {
                 return null;
             }
-            return IOLayer.GetDatabase().GetAsset<AssetResourceBase>(guid);
+            return IOLayer.GetDatabase().GetAsset<Asset>(guid);
         }
 
         public static FontAsset GetFont(string path)
@@ -72,9 +72,9 @@ namespace Engine
         {
             return Get<TilemapAsset>(path);
         }
-        public static AssetResourceBase Get(string path)
+        public static Asset Get(string path)
         {
-            return Get<AssetResourceBase>(path);
+            return Get<Asset>(path);
         }
 
         internal static SceneAsset GetScene(string name)
@@ -86,7 +86,7 @@ namespace Engine
 
 
 
-        internal static T Get<T>(string path) where T : AssetResourceBase
+        internal static T Get<T>(string path) where T : Asset
         {
 #if DEBUG
             if (!string.IsNullOrEmpty(path) && !_loadedPaths.Contains(path))
@@ -114,7 +114,7 @@ namespace Engine
                 return;
             }
 
-            var asset = IOLayer.GetDatabase().GetAsset<AssetResourceBase>(refId);
+            var asset = IOLayer.GetDatabase().GetAsset<Asset>(refId);
 
             if (asset)
             {

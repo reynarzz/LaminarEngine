@@ -74,7 +74,7 @@ namespace Editor.Serialization
                 {
                     return SerializedType.Actor;
                 }
-                else if (type.IsAssignableTo(typeof(AssetResourceBase)))
+                else if (type.IsAssignableTo(typeof(Asset)))
                 {
                     if (type.IsAssignableTo(typeof(Texture)))
                     {

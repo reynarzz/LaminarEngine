@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    internal class TextureAsset : AssetResourceBase
+    internal class TextureAsset : Asset
     {
         internal override bool IsCacheHardReference { get; private protected set; } = true;
         public Texture Texture { get; }

@@ -30,7 +30,7 @@ namespace Editor.Utils
             bool isAsset = false;
             bool isAssetMissingReference = false;
 
-            if (hasObject && eObject is AssetResourceBase asset)
+            if (hasObject && eObject is Asset asset)
             {
                 isAsset = true;
                 // TODO: Show a 'Missing reference' text in the
@@ -42,7 +42,7 @@ namespace Editor.Utils
 
             if (hasObject)
             {
-                if (eObject is AssetResourceBase res)
+                if (eObject is Asset res)
                 {
                     ImGui.SetItemTooltip($"{res.Path}");
                 }
@@ -209,7 +209,7 @@ namespace Editor.Utils
                 return;
             }
 
-            if (typeof(AssetResourceBase).IsAssignableFrom(valueType))
+            if (typeof(Asset).IsAssignableFrom(valueType))
             {
                 // Asset picking
                 if (valueType == typeof(Material))
@@ -331,7 +331,7 @@ namespace Editor.Utils
                 valueType = payload.Type;
             }
 
-            if (typeof(AssetResourceBase).IsAssignableFrom(valueType))
+            if (typeof(Asset).IsAssignableFrom(valueType))
             {
                 if (valueType.IsAssignableTo(typeof(Texture)))
                 {

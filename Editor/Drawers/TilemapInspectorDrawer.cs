@@ -106,7 +106,7 @@ namespace Editor.Drawers
             ApplyMeta(target, _meta);
         }
 
-        public void ApplyMeta(AssetResourceBase asset, AssetMeta meta)
+        public void ApplyMeta(Asset asset, AssetMeta meta)
         {
             if (ImGui.Button("Apply All", new Vector2(ImGui.GetContentRegionAvail().X, 23)))
             {

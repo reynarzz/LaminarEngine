@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    public class SpriteAtlas : AssetResourceBase
+    public class SpriteAtlas : Asset
     {
         private List<Sprite> _sprites;
         private TextureMetaFile _textureMeta;

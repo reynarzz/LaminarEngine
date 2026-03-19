@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    public abstract class Texture : AssetResourceBase
+    public abstract class Texture : Asset
     {
         public int Width { get; protected set; }
         public int Height { get; protected set; }

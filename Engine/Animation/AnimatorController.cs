@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    public class AnimatorController : AssetResourceBase
+    public class AnimatorController : Asset
     {
         [SerializedField] internal AnimatorParameters Parameters { get; private set; } = new();
         [SerializedField] internal Dictionary<string, AnimationState> States { get; private set; } = new();
