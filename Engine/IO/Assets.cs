@@ -102,6 +102,26 @@ namespace Engine
         {
             return _loadedPaths.ToArray();
         }
+
+        /// <summary>
+        /// Destroy asset instance and removes it from cache.
+        /// </summary>
+        /// <param name="refId"></param>
+        internal static void DestroyAsset(Guid refId)
+        {
+            if(refId == Guid.Empty)
+            {
+                return;
+            }
+
+            var asset = IOLayer.GetDatabase().GetAsset<AssetResourceBase>(refId);
+
+            if (asset)
+            {
+                // TODO: also remove from cache.
+                asset.IsPhysicallyAvailable = false;
+            }
+        }
 #endif
     }
 }

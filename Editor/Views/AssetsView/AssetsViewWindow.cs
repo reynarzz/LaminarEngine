@@ -310,6 +310,7 @@ namespace Editor.Views
             if (ImGui.IsWindowHovered() && ImGui.IsItemClicked(ImGuiMouseButton.Right))
             {
                 DeselectFileRename();
+                ImGui.SetWindowFocus(WINDOW_NAME);
                 ImGui.OpenPopup("__FileItempopup__");
             }
             ImGui.BeginDisabled(_currentDirFile.RelativePath.StartsWith(EditorPaths.CookerPaths.INTERNAL_ASSET_FOLDER_NAME));
@@ -317,6 +318,11 @@ namespace Editor.Views
             if (EditorImGui.BeginPopupContextItem("__FileItempopup__"))
             {
                 SelectFile(file);
+
+                if (ImGui.MenuItem("Show in Explorer"))
+                {
+                    EditorFileDialog.ShowInExplorer(file.AbsolutePath);
+                }
                 if (ImGui.MenuItem("Create Scene"))
                 {
                     var relativePathDir = GetFileRelativeFolderClean(file);
@@ -361,13 +367,7 @@ namespace Editor.Views
 
                         if (file.Type == FileType.Asset)
                         {
-                            var asset = Assets.GetAssetFromGuid(file.RefId);
-
-                            // This make sure to mark the assets in the cache as not available physically.
-                            if (asset)
-                            {
-                                asset.IsPhysicallyAvailable = false;
-                            }
+                            Assets.DestroyAsset(file.RefId);
                         }
 
                         if (file.Type == FileType.Directory && _currentDirFile == file)
@@ -519,6 +519,7 @@ namespace Editor.Views
                                 }
 
                                 LoadDirectories();
+                                ImGui.SetScrollHereY();
                             }
                             else
                             {
@@ -546,26 +547,19 @@ namespace Editor.Views
                     // Select an item.
                     if (isHover && isMouseUp && _clickedFile == file)
                     {
-                        //if (file.Type == FileType.Asset || _isDoubleClick)
-                        {
-                            SelectFile(file);
+                        SelectFile(file);
 
-                            if (_isDoubleClick)
+                        if (_isDoubleClick)
+                        {
+                            if (file.Type == FileType.Asset)
                             {
-                                if (file.Type == FileType.Asset)
-                                {
-                                    OpenAsset(file);
-                                }
-                                else
-                                {
-                                    SelectDirectory(file);
-                                }
+                                OpenAsset(file);
+                            }
+                            else
+                            {
+                                SelectDirectory(file);
                             }
                         }
-                        //else if (_isDoubleClick)
-                        //{
-                        //    SelectDirectory(file.Parent);
-                        //}
 
                         _isDoubleClick = false;
                     }

@@ -274,6 +274,22 @@ namespace Editor
 
             return result;
         }
+
+        internal static void ShowInExplorer(string fullPath)
+        {
+            if (OperatingSystem.IsWindows())
+            {
+                System.Diagnostics.Process.Start("explorer.exe", $"/select,\"{fullPath.Replace('/', '\\')}\"");
+            }
+            else if (OperatingSystem.IsMacOS())
+            {
+                System.Diagnostics.Process.Start("open", $"-R \"{Paths.ClearPathSeparation(fullPath)}\"");
+            }
+            else
+            {
+                Debug.Error("Can't 'ShowInExplorer', Not supported for this platform.");
+            }
+        }
     }
     internal struct FileFilter
     {

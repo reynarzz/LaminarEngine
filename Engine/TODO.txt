@@ -8,6 +8,7 @@
 - Improve Editor property UI
 
 Fix:
+- Reload the asset database in the same frame after doing asset operations (create,delete,move,copy) using the Asset View window.
 - Compilation can get stuck forever.
 - If a collider change from Trigger to normal (and viceversa), the ontrigerExit/onCollisionExit must be called.
 - The renderData is not removed from renderingLayer dictionary if the Actor starts disabled in the first frame, and then try to enable it.
@@ -17,7 +18,6 @@ Fix:
     for it to generate the typeRegistry, the build should already have a game.dll compiled. Use it from the library folder for now,
     but the game.dll should be compiled for the build type(Release/Debug), and turning on all the directives defined for the target platform.
 - Memory leak is happening for the index buffer, in Batcher2D mesh section for custom index buffers.
-- When I do asset operations throught the Asset view I should be able to reload the asset database in the same frame.
 - If there is a compilation issue and the user creates an asset, it will not show up in the assets view since the import happens after the compilation.
 - newly created folders do not appear in the asset view.
 
