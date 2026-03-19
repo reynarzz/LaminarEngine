@@ -99,6 +99,7 @@ namespace Editor.Views
                                 var result = EditorFileDialog.MessageBox(messageTitle, messageText, MessageBoxChoice.Yes_No, MessageBoxIcon.Warning);
                                 if (result == MessageBoxButton.Yes)
                                 {
+                                    EditorSystem.Save.RemoveDirty(scene.GetID());
                                     ReloadScene();
                                 }
                             }

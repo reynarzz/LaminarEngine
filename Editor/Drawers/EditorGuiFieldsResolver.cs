@@ -1127,6 +1127,7 @@ namespace Editor.Utils
 
                         if (res.result)
                         {
+                            changed = true;
                             valueOut = res.valueOut;
                         }
                     }

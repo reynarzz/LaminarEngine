@@ -292,8 +292,9 @@ namespace Editor.Drawers
                 ImGui.Separator();
                 if (ImGui.MenuItem("Remove"))
                 {
+                    var actor = component.Actor;
                     Actor.Destroy(component);
-                    EditorSystem.Save.MarkDirty(component);
+                    EditorSystem.Save.MarkDirty(actor);
 
                     ImGui.EndDisabled();
                     ImGui.EndPopup();

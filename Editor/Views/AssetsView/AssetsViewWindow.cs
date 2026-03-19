@@ -79,14 +79,22 @@ namespace Editor.Views
             _assetsDirectories.Add(EnumerateDirectoryGraphRecursive(Paths.GetAssetsFolderPath()));
             _assetsDirectories.Add(EnumerateDirectoryGraphRecursive(EditorPaths.CookerPaths.InternalAssetsPath));
 
-            SelectDirectory(selectedRelPath);
-            if (!SelectFile(selectedRelPath))
+            bool TrySelectFile(string relativePath)
             {
-                SelectDirectory(parentOfSelectedRelPath);
-                if (!SelectFile(parentOfSelectedRelPath))
+                if (!Selector.Transform)
+                {
+                    return SelectFile(relativePath);
+                }
+                return false;
+
+            }
+            TrySelectFile(selectedRelPath);
+            if (!SelectDirectory(selectedRelPath))
+            {
+                TrySelectFile(parentOfSelectedRelPath);
+                if (!SelectDirectory(parentOfSelectedRelPath))
                 {
                     SelectDirectory(_assetsDirectories[0]);
-                    SelectFile(_assetsDirectories[0]);
                 }
             }
         }
