@@ -52,7 +52,7 @@ namespace Engine
                 if (!IsValidBody())
                     return;
 
-                    B2Bodies.b2Body_SetType(_bodyId, (B2BodyType)_bodyType);
+                B2Bodies.b2Body_SetType(_bodyId, (B2BodyType)_bodyType);
             }
         }
 
@@ -205,7 +205,6 @@ namespace Engine
             }
         }
 
-        private vec2 _velocity;
 
         [ShowFieldNoSerialize(isReadOnly: true)]
         public vec2 Velocity
@@ -351,12 +350,31 @@ namespace Engine
                 if (!IsValidBody())
                     return;
 
+                if (!B2Bodies.b2Body_IsAwake(_bodyId))
+                    return;
+
                 var position = B2Bodies.b2Body_GetPosition(_bodyId);
-                _velocity = B2Bodies.b2Body_GetLinearVelocity(_bodyId).ToVec2();
 
                 Transform.WorldPosition = new vec3(position.X, position.Y, Transform.WorldPosition.z);
                 Transform.WorldRotation = B2Bodies.b2Body_GetRotation(_bodyId).B2RotToQuat();
             }
+        }
+
+        public void MoveToPosition(vec2 target, float speed)
+        {
+            var current = B2Bodies.b2Body_GetPosition(_bodyId);
+            var delta = target.ToB2Vec2() - current;
+            float distance = delta.ToVec2().Magnitude;
+
+            if (distance < 0.01f)
+            {
+                Velocity = default;
+                return;
+            }
+
+            var direction = delta.ToVec2() * (1.0f / distance);
+            float actualSpeed = MathF.Min(speed, distance / Time.DeltaTime);
+            Velocity = direction * actualSpeed;
         }
 
         public void AddForce(vec2 force, ForceMode2D mode)
@@ -489,7 +507,7 @@ namespace Engine
             if (!IsValidBody())
                 return;
 
-                B2Bodies.b2Body_Disable(_bodyId);
+            B2Bodies.b2Body_Disable(_bodyId);
         }
     }
 }
