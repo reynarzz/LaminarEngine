@@ -12,10 +12,19 @@ namespace Editor.Views
     internal class SceneGraphWindow : EditorWindow
     {
         private Guid? _pressedActorId;
-        private Guid _prevSelectedActorId;
+        private Guid _prevSelectedActorIdGraph;
+        private Guid _prevDragActorId;
         private readonly HashSet<Guid> _expandParents = new();
         private Guid _firstTimeSelectedActorId = default;
+        private readonly WeakReference<Actor> _currentDraggingActor = new WeakReference<Actor>(null);
+        private bool _isPendingToDropActor = false;
 
+        private struct SelectionInfo
+        {
+            public bool Expanded { get; set; }
+        }
+
+        private readonly Dictionary<Guid, SelectionInfo> _currentSelectionGraph = new();
         public SceneGraphWindow() : base("Window/Scene Graph")
         {
         }
@@ -25,6 +34,8 @@ namespace Editor.Views
             if (OnBeginWindow("Scene graph", ImGuiWindowFlags.None, true, new GlmNet.vec2()))
             {
                 ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2());
+
+                PopulateDragGraph();
 
                 for (int i = SceneManager.Scenes.Count - 1; i >= 0; i--)
                 {
@@ -106,7 +117,7 @@ namespace Editor.Views
                                 string messageText = $"Scene '{scene.Name}' contains unsaved changes, still unload?";
                                 var result = EditorFileDialog.MessageBox(messageTitle, messageText, MessageBoxChoice.Yes_No, MessageBoxIcon.Warning);
 
-                                if(result == MessageBoxButton.Yes)
+                                if (result == MessageBoxButton.Yes)
                                 {
                                     SceneManager.UnloadScene(scene);
                                 }
@@ -130,6 +141,7 @@ namespace Editor.Views
                         {
                             var newActor = new Actor("Actor", Guid.NewGuid(), scene);
                             EditorSystem.Save.MarkDirty(newActor);
+                            SetSelectedActorParentGraph(newActor);
                         }
 
 
@@ -169,6 +181,36 @@ namespace Editor.Views
             OnEndWindow();
         }
 
+        private void PopulateDragGraph()
+        {
+            var hasTarget = _currentDraggingActor.TryGetTarget(out var draggedActor);
+
+            if (!hasTarget)
+            {
+                _currentSelectionGraph.Clear();
+            }
+            if (hasTarget && draggedActor.GetID() != _prevDragActorId)
+            {
+                _currentSelectionGraph.Clear();
+                _prevDragActorId = draggedActor.GetID();
+
+                void PopulateSelectionGraph(Actor current)
+                {
+                    _currentSelectionGraph.Add(current.GetID(), default);
+                    for (int i = 0; i < current.Transform.Children.Count; i++)
+                    {
+                        PopulateSelectionGraph(current.Transform.Children[i].Actor);
+                    }
+                }
+                PopulateSelectionGraph(draggedActor);
+            }
+
+            if (_isPendingToDropActor)
+            {
+                _prevDragActorId = Guid.Empty;
+                _currentDraggingActor.SetTarget(null);
+            }
+        }
         private void SetSelectedActorParentGraph(Actor actor, bool force = false, bool includeActor = false)
         {
             if (actor)
@@ -176,13 +218,13 @@ namespace Editor.Views
                 Selector.Selected = actor;
             }
 
-            if (actor && (force || _prevSelectedActorId != actor.GetID()))
+            if (actor && (force || _prevSelectedActorIdGraph != actor.GetID()))
             {
                 if (includeActor)
                 {
                     _expandParents.Add(actor.GetID());
                 }
-                _prevSelectedActorId = actor.GetID();
+                _prevSelectedActorIdGraph = actor.GetID();
                 _firstTimeSelectedActorId = actor.GetID();
 
                 var parent = actor.Transform.Parent;
@@ -239,8 +281,8 @@ namespace Editor.Views
             ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(1f, 1f, 1f, 1f));
             popColors += 1;
 
-
-            if (_expandParents.Contains(actor.GetID()))
+            if ((_currentSelectionGraph.TryGetValue(actor.GetID(), out var selectedInfo) && selectedInfo.Expanded) ||
+                _expandParents.Contains(actor.GetID()))
             {
                 _expandParents.Remove(actor.GetID());
                 ImGui.SetNextItemOpen(true);
@@ -257,6 +299,12 @@ namespace Editor.Views
             bool open = ImGui.TreeNodeEx("##node", flags);
             var isItemVisible = ImGui.IsItemVisible();
 
+            if (_currentSelectionGraph.TryGetValue(actor.GetID(), out var selectionInfo))
+            {
+                selectionInfo.Expanded = open || (flags & ImGuiTreeNodeFlags.Leaf) != 0;
+                _currentSelectionGraph[actor.GetID()] = selectionInfo;
+            }
+
             DropActorHandle(dropActor =>
             {
                 if (!IsChildren(dropActor, actor))
@@ -266,8 +314,17 @@ namespace Editor.Views
             });
 
 
-            EditorImGui.DragAndDrop.ItemDragReference(actor.Name, EditorImGui.DragAndDrop.PAYLOAD_ID_EOBJECT, actor, actor.GetType(), actor.GetID());
+            var isDrag = EditorImGui.DragAndDrop.ItemDragReference(actor.Name, EditorImGui.DragAndDrop.PAYLOAD_ID_EOBJECT, actor, actor.GetType(), actor.GetID());
 
+            if (isDrag)
+            {
+                _isPendingToDropActor = false;
+                _currentDraggingActor.SetTarget(actor);
+            }
+            else if (!ImGui.IsMouseDragging(ImGuiMouseButton.Left))
+            {
+                _isPendingToDropActor = true;
+            }
 
             var id = actor.GetID();
 
@@ -433,6 +490,7 @@ namespace Editor.Views
             {
                 if (value.Value is Actor dropActor)
                 {
+                    // _dragActorId = Guid.Empty;
                     callback(dropActor);
                     _pressedActorId = null;
                     SetSelectedActorParentGraph(dropActor, true);

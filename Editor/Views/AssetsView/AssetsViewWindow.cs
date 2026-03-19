@@ -307,15 +307,16 @@ namespace Editor.Views
 
         private void DrawFileItemPopup(AssetViewFileInfo file)
         {
+            const string popupId = "__FileItempopup__";
             if (ImGui.IsWindowHovered() && ImGui.IsItemClicked(ImGuiMouseButton.Right))
             {
                 DeselectFileRename();
                 ImGui.SetWindowFocus(WINDOW_NAME);
-                ImGui.OpenPopup("__FileItempopup__");
+                ImGui.OpenPopup(popupId);
             }
             ImGui.BeginDisabled(_currentDirFile.RelativePath.StartsWith(EditorPaths.CookerPaths.INTERNAL_ASSET_FOLDER_NAME));
 
-            if (EditorImGui.BeginPopupContextItem("__FileItempopup__"))
+            if (ImGui.BeginPopup(popupId))
             {
                 SelectFile(file);
 
@@ -358,7 +359,7 @@ namespace Editor.Views
                 }
                 if (ImGui.MenuItem("Delete"))
                 {
-                    string messageTitle = file.Type == FileType.Asset? $"Delete selected asset?": $"Delete Directory?";
+                    string messageTitle = file.Type == FileType.Asset ? $"Delete selected asset?" : $"Delete Directory?";
                     string messageText = $"{file.RelativePath} ({file.AssetType})\n\nCannot undo.";
                     var result = EditorFileDialog.MessageBox(messageTitle, messageText, MessageBoxChoice.Yes_No, MessageBoxIcon.Warning);
 

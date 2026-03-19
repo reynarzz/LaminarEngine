@@ -35,24 +35,25 @@ namespace Editor.Utils
             {
                 return _dragAndDropPayload;
             }
-            internal static void ItemDragReference(string title, nint image, string payloadId, EObject value, AssetType type, Guid refId)
+            internal static bool ItemDragReference(string title, nint image, string payloadId, EObject value, AssetType type, Guid refId)
             {
-                ItemDragReference(title, image, payloadId, value, type.AssetTypeToType(), refId);
+                return ItemDragReference(title, image, payloadId, value, type.AssetTypeToType(), refId);
             }
-            internal static void ItemDragReference(string title, string payloadId, EObject value, AssetType type, Guid refId)
+            internal static bool ItemDragReference(string title, string payloadId, EObject value, AssetType type, Guid refId)
             {
-                ItemDragReference(title, payloadId, value, type.AssetTypeToType(), refId);
+                return ItemDragReference(title, payloadId, value, type.AssetTypeToType(), refId);
             }
-            internal static void ItemDragReference(string title, string payloadId, EObject value, Type type, Guid refId)
+            internal static bool ItemDragReference(string title, string payloadId, EObject value, Type type, Guid refId)
             {
                 var image = EditorTextureDatabase.GetIconImGui(type);
-                ItemDragReference(title, image, payloadId, value, type, refId);
+                return ItemDragReference(title, image, payloadId, value, type, refId);
             }
-            internal static void ItemDragReference(string title, nint image, string payloadId, EObject value, Type type, Guid refId)
+            internal static bool ItemDragReference(string title, nint image, string payloadId, EObject value, Type type, Guid refId)
             {
                 unsafe
                 {
-                    if (ImGui.BeginDragDropSource())
+                    var isDrag = ImGui.BeginDragDropSource();
+                    if (isDrag)
                     {
                         _dragAndDropPayload = new ReferenceDragAndDropPayload()
                         {
@@ -75,6 +76,8 @@ namespace Editor.Utils
                         ImGui.Text(title);
                         ImGui.EndDragDropSource();
                     }
+
+                    return isDrag;
                 }
             }
 
