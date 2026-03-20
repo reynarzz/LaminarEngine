@@ -37,6 +37,11 @@ namespace Engine
 
         private B2Polygon[] GetPolygons()
         {
+            if(!_renderer)
+            {
+                _renderer = AddComponent<TilemapRenderer>();
+            }
+
             var layer = _renderer.GetLayer();
             var boxes = layer.CollisionBoxes;
 

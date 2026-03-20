@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -56,21 +57,27 @@ namespace Engine
 
             return result;
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsAlmostZero(float x)
         {
             return MathF.Abs(x) < Epsilon;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool CompareFloats(float f1, float f2, float epsilon = Epsilon)
         {
             return MathF.Abs(f1 - f2) <= epsilon;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float PingPong(float t, float length = 1f)
         {
             t = t % (2f * length);
             return length - Math.Abs(t - length);
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Wrap(float t, float length)
         {
             return t - MathF.Floor(t / length) * length;

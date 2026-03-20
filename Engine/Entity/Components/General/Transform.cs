@@ -202,7 +202,10 @@ namespace Engine
                     mat4 parentInv = InverseTRS(Parent.WorldPosition, Parent.WorldRotation, Parent.WorldScale);
                     LocalPosition = new vec3(parentInv * new vec4(value, 1));
                 }
-                else LocalPosition = value;
+                else
+                {
+                    LocalPosition = value;
+                }
             }
         }
 
@@ -235,8 +238,18 @@ namespace Engine
             }
             set
             {
-                if (Parent != null) LocalScale = new vec3(value.x / Parent.WorldScale.x, value.y / Parent.WorldScale.y, value.z / Parent.WorldScale.z);
-                else LocalScale = value;
+                if (Parent != null)
+                {
+                    var parentScale = Parent.WorldScale;
+
+                    LocalScale = new vec3(!Mathf.IsAlmostZero(parentScale.x) ? value.x / parentScale.x : 0.0f,
+                                          !Mathf.IsAlmostZero(parentScale.y) ? value.y / parentScale.y : 0.0f,
+                                          !Mathf.IsAlmostZero(parentScale.z) ? value.z / parentScale.z : 0.0f);
+                }
+                else
+                {
+                    LocalScale = value;
+                }
             }
         }
 
