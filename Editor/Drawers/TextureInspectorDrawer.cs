@@ -21,10 +21,10 @@ namespace Editor.Drawers
         private Texture2D _texture;
         private TextureMetaFile _meta;
         private MemberInfo[] _configProperties;
-        protected override Texture2D GetTitleIcon(Texture2D target)
+        protected override TitleIconInfo GetTitleIcon(Texture2D target)
         {
             // Pass the same texture as the icon.
-            return target;
+            return new TitleIconInfo() { Texture = target };
         }
         internal override void OnOpen(Texture2D target)
         {

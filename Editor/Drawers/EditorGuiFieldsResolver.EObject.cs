@@ -91,7 +91,7 @@ namespace Editor.Utils
                     imagePtr = EditorTextureDatabase.GetIconImGui(sprite.Texture);
                     var cell = sprite.GetAtlasCell();
 
-                    EditorImGui.ImageQuad(imagePtr, new vec2(16, 16), cell.Uvs.BottomLeftUV, cell.Uvs.TopLeftUV, cell.Uvs.TopRightUV, cell.Uvs.BottomRightUV);
+                    EditorImGui.Image(imagePtr, new vec2(16, 16), cell.Uvs.BottomLeftUV, cell.Uvs.TopLeftUV, cell.Uvs.TopRightUV, cell.Uvs.BottomRightUV);
                 }
                 else
                 {

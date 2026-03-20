@@ -36,6 +36,7 @@ Refactor:
 - BatchesPool is using a dictionary and a list to, it should Use a dictionary and keep it ordered, or a list and keep track of rendererIndex.
 - Clean up DrawEObjectSlot() in 'EditorGuiFieldsResolver.cs'
 - AssetsViewWindow class needs a cleanup.
+- SceneGraphWindow, and move actor popup outside to its own function, and call it outside the actor loop.
 
 Performance fix:
 UI performance is pretty bad, rewrite the entire UI system.
@@ -49,7 +50,7 @@ Features:
 - Fully async scene load in the background: async asset loading (mainThreadSync for graphic assets)
 - When an asset is updated, other assets that depend on it should be notified/updated as well, ex: Texture2D->Tilemap
 - Show a 'Missing reference' text in the EObject property for assetTypes.
-- Sprites should be able to show uo in the AssetView
+- Sprites should be able to show up in the AssetView
 
 Save Editor config:
 -Current loaded scene name.

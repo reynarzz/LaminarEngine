@@ -182,6 +182,7 @@ namespace Editor.Views
 
             if (Selector.Selected is Actor actor && ImGui.IsKeyDown(ImGuiKey.Delete))
             {
+                EditorSystem.Save.MarkDirty(actor);
                 Actor.Destroy(actor);
             }
 
@@ -453,6 +454,7 @@ namespace Editor.Views
                     }
 
                     ImGui.PopID();
+                    EditorSystem.Save.MarkDirty(actor);
                     Actor.Destroy(actor);
                     ImGui.PopStyleColor(popColors);
                     return;

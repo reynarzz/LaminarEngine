@@ -20,9 +20,9 @@ namespace Editor
         internal virtual void OnOpen(IObject target) { }
         internal virtual void OnClose() { }
         internal abstract void OnDraw(IObject target);
-        protected virtual Texture2D GetIcon(IObject target)
+        protected virtual TitleIconInfo GetIcon(IObject target)
         {
-            return EditorTextureDatabase.GetIcon(target.GetType());
+            return new TitleIconInfo() { Texture = EditorTextureDatabase.GetIcon(target.GetType()) };
         }
         private protected void DrawTitle(IObject target)
         {
@@ -31,25 +31,39 @@ namespace Editor
             ImGui.Dummy(new Vector2(2, _imageIconSize.y));
             ImGui.SameLine();
 
-            var icon = GetIcon(target);
+            var iconInfo = GetIcon(target);
+            var icon = iconInfo.Texture;
 
-            var scale = Mathf.Min(_imageIconSize.x / icon.Width, _imageIconSize.y / icon.Height);
-            var scaleTooltip = Mathf.Min(100.0f / icon.Width, 100.0f / icon.Height);
+            if (icon)
+            {
+                var width = iconInfo.Size == null ? icon.Width: iconInfo.Size.Value.x;
+                var height = iconInfo.Size == null ? icon.Height : iconInfo.Size.Value.y;
 
-            var scaledW = icon.Width * scale;
-            var scaledH = icon.Height * scale;
+                var scale = Mathf.Min(_imageIconSize.x / width, _imageIconSize.y / height);
+                var scaleTooltip = Mathf.Min(100.0f / width, 100.0f / height);
 
-            var offsetY = (_imageIconSize.y - scaledH) * 0.5f;
+                var scaledW = width * scale;
+                var scaledH = height * scale;
 
-            ImGui.SetCursorPos(new Vector2(ImGui.GetCursorPosX(), cursorStart.Y + offsetY));
+                var offsetY = (_imageIconSize.y - scaledH) * 0.5f;
 
-            EditorImGui.Image(EditorTextureDatabase.GetIconImGui(icon), new vec2(scaledW, scaledH));
-            ImGui.SameLine();
+                ImGui.SetCursorPos(new Vector2(ImGui.GetCursorPosX(), cursorStart.Y + offsetY));
+
+                if (iconInfo.Uvs == null)
+                {
+                    EditorImGui.Image(EditorTextureDatabase.GetIconImGui(icon), new vec2(scaledW, scaledH));
+                }
+                else
+                {
+                    EditorImGui.Image(EditorTextureDatabase.GetIconImGui(icon), new vec2(scaledW, scaledH), iconInfo.Uvs.Value);
+                }
+                ImGui.SameLine();
+            }
 
             ImGui.SetCursorPosY(cursorStart.Y + 6);
             ImGui.SetCursorPosX(cursorStart.X + 63);
             ImGui.Text(target.Name);
-            
+
 
             ImGui.SetItemTooltip((target as Asset)?.Path ?? target.GetID().ToString());
 
@@ -58,6 +72,12 @@ namespace Editor
             ImGui.Dummy(new Vector2(0, 2));
         }
 
+        protected struct TitleIconInfo
+        {
+            public Texture2D Texture { get; set; }
+            public QuadUV? Uvs { get; set; }
+            public vec2? Size { get; set; }
+        }
     }
 
     internal abstract class EditorDrawerBase<T> : EditorDrawerBase where T : class, IObject
@@ -68,11 +88,11 @@ namespace Editor
         {
             OnOpen(target as T);
         }
-        internal virtual void OnOpen(T target) {}
+        internal virtual void OnOpen(T target) { }
 
-        protected sealed override Texture2D GetIcon(IObject target)
+        protected sealed override TitleIconInfo GetIcon(IObject target)
         {
-           return GetTitleIcon(target as T);
+            return GetTitleIcon(target as T);
         }
 
         internal sealed override void OnDraw(IObject target)
@@ -85,9 +105,10 @@ namespace Editor
         }
 
         protected abstract void OnDraw(T target);
-        protected virtual Texture2D GetTitleIcon(T target)
+        protected virtual TitleIconInfo GetTitleIcon(T target)
         {
-           return base.GetIcon(target);
+            return base.GetIcon(target);
         }
+
     }
 }

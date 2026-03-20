@@ -315,7 +315,7 @@ namespace Editor.Views
 
         private void DrawFileItemPopup(AssetViewFileInfo file)
         {
-            const string popupId = "__FileItempopup__";
+            string popupId = $"__FileItempopup__{file.RefId}";
             if (ImGui.IsWindowHovered() && ImGui.IsItemClicked(ImGuiMouseButton.Right))
             {
                 DeselectFileRename();
@@ -436,23 +436,15 @@ namespace Editor.Views
 
                     if (file != _selectedFileRename)
                     {
-                        flags |= ImGuiTreeNodeFlags.SpanFullWidth;
+                        flags |= ImGuiTreeNodeFlags.SpanTextWidth;
                     }
                     var cursorPos = ImGui.GetCursorPos();
                     ImGui.SetCursorPosX(cursorPos.X - 10);
+
+                    ImGui.PushStyleColor(ImGuiCol.HeaderHovered, new Vector4());
+                    ImGui.PushStyleColor(ImGuiCol.HeaderActive, new Vector4());
                     var open = ImGui.TreeNodeEx($"##_PREVIEW_{file.AbsolutePath}_{i}", flags);
-                    DrawFileItemPopup(file);
-
-                    var isHover = ImGui.IsItemHovered();
-                    if (ImGui.IsItemClicked(ImGuiMouseButton.Left) || ImGui.IsItemClicked(ImGuiMouseButton.Right))
-                    {
-                        _clickedFile = file;
-
-                        if (_selectedFileRename != file)
-                        {
-                            DeselectFileRename();
-                        }
-                    }
+                    ImGui.PopStyleColor(2);
 
                     ImGui.SameLine();
                     cursorPos = ImGui.GetCursorPos();
@@ -466,7 +458,6 @@ namespace Editor.Views
                     {
                         image = EditorTextureDatabase.GetIconImGui(file.AssetType);
                     }
-                    EditorImGui.DragAndDrop.ItemDragReference(file.Filename, image, EditorImGui.DragAndDrop.PAYLOAD_ID_EOBJECT, null, file.AssetType, file.RefId);
 
                     EditorImGui.Image(image, new vec2(16, 16));
                     ImGui.SameLine();
@@ -552,8 +543,23 @@ namespace Editor.Views
                     }
                     else
                     {
+                        var isSelected = BeginSelectedColor(file);
                         ImGui.SetCursorPosX(cursorPos.X - 4);
-                        ImGui.Text(file.Filename);
+                        ImGui.Selectable(file.Filename, isSelected);
+                        EndSelectedColor(file, isSelected);
+                        EditorImGui.DragAndDrop.ItemDragReference(file.Filename, image, EditorImGui.DragAndDrop.PAYLOAD_ID_EOBJECT, null, file.AssetType, file.RefId);
+                        DrawFileItemPopup(file);
+                    }
+
+                    var isHover = ImGui.IsItemHovered();
+                    if ((ImGui.IsItemClicked(ImGuiMouseButton.Left) || ImGui.IsItemClicked(ImGuiMouseButton.Right)) && !ImGui.IsItemToggledOpen())
+                    {
+                        _clickedFile = file;
+
+                        if (_selectedFileRename != file)
+                        {
+                            DeselectFileRename();
+                        }
                     }
 
                     var isDoubleClick = ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left);
@@ -590,12 +596,15 @@ namespace Editor.Views
                             for (int j = 0; j < file.Children.Count; j++)
                             {
                                 var child = file.Children[j];
-                                if (ImGui.Selectable(child.Filename))
-                                {
+                                var isSelected = BeginSelectedColor(child);
 
+                                if (ImGui.Selectable(child.Filename + $"##ASSET_CHILDREN_{child.RefId}{i}", isSelected))
+                                {
+                                    SelectFile(child);
                                 }
+                                EndSelectedColor(child, isSelected);
                                 image = EditorTextureDatabase.GetIconImGui(child.AssetType);
-                                EditorImGui.DragAndDrop.ItemDragReference(child.Filename, image, EditorImGui.DragAndDrop.PAYLOAD_ID_EOBJECT, null, 
+                                EditorImGui.DragAndDrop.ItemDragReference(child.Filename, image, EditorImGui.DragAndDrop.PAYLOAD_ID_EOBJECT, null,
                                                                           child.AssetType, child.RefId, child.NestedAssetIndex);
 
                             }
@@ -604,6 +613,30 @@ namespace Editor.Views
                         ImGui.TreePop();
                     }
                 }
+            }
+        }
+
+        private bool BeginSelectedColor(AssetViewFileInfo file)
+        {
+            bool isSelected = _selectedFile == file;
+
+            if (isSelected)
+            {
+                var col = EditorColors.MainColor.ToVector4();
+                col.W = 0.6f;
+
+                ImGui.PushStyleColor(ImGuiCol.Header, col);
+                ImGui.PushStyleColor(ImGuiCol.HeaderHovered, col);
+                ImGui.PushStyleColor(ImGuiCol.HeaderActive, col);
+            }
+            return isSelected;
+        }
+
+        private void EndSelectedColor(AssetViewFileInfo file, bool isSelected)
+        {
+            if (isSelected)
+            {
+                ImGui.PopStyleColor(3);
             }
         }
 
@@ -753,6 +786,11 @@ namespace Editor.Views
                 {
                     _selectedAsset = (Assets.GetAssetFromGuid(file.RefId) as TextureAsset).Texture;
                 }
+                else if (file.AssetType == AssetType.Sprite)
+                {
+                    var textureAsset = (Assets.GetAssetFromGuid(file.RefId) as TextureAsset);
+                    _selectedAsset = textureAsset.Atlas.GetSprite(file.NestedAssetIndex);
+                }
                 else
                 {
                     _selectedAsset = Assets.GetAssetFromGuid(file.RefId);
@@ -787,7 +825,6 @@ namespace Editor.Views
 
             if (isClicked)
             {
-                SelectFile(default(AssetViewFileInfo));
                 SelectDirectory(fileRoot);
             }
             if (open)

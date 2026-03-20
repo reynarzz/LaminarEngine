@@ -33,6 +33,7 @@ namespace Editor
                 { typeof(Texture2D), new TextureInspectorDrawer() },
                 { typeof(TilemapAsset), new TilemapInspectorDrawer() },
                 { typeof(TextAsset), new TextInspectorDrawer() },
+                { typeof(Sprite), new SpriteInspectorDrawer() },
                 
             };
 
