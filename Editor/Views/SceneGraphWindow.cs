@@ -574,6 +574,14 @@ namespace Editor.Views
                     var sprite = texAsset.Atlas.GetSprite(payload.Index);
                     SetSprite(target, sprite);
                 }
+                else if (payload.Type == typeof(Material) && target)
+                {
+                    var renderer = target.GetComponent<Renderer>();
+                    if (renderer)
+                    {
+                        renderer.Material = Assets.GetAssetFromGuid(payload.RefId) as Material;
+                    }
+                }
             }
         }
 

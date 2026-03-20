@@ -74,7 +74,7 @@ namespace Engine
         public static float PingPong(float t, float length = 1f)
         {
             t = t % (2f * length);
-            return length - Math.Abs(t - length);
+            return length - MathF.Abs(t - length);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
