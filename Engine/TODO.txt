@@ -51,6 +51,9 @@ Features:
 - When an asset is updated, other assets that depend on it should be notified/updated as well, ex: Texture2D->Tilemap
 - Show a 'Missing reference' text in the EObject property for assetTypes.
 - Sprites should be able to show up in the AssetView
+- [Editor] Display collider boundaries at edit mode when selecting an actor, this should be recursive.
+- [Editor] Implement edit handles for colliders: box circle.
+- [Editor] Add menu item options for adding sprites: Square, Circle, Capsule, Triangle.
 
 Save Editor config:
 -Current loaded scene name.
