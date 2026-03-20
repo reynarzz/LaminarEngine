@@ -6,6 +6,7 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -66,7 +67,11 @@ namespace Editor.Drawers
                 }
                 _atlasEditor.OnDraw(target);
             }
-
+            if (ImGui.Button("Apply", new Vector2(ImGui.GetContentRegionAvail().X, 23)))
+            {
+                EditorAssetUtils.WriteMeta(target.Path, _meta);
+                EditorAssetUtils.RefreshAssetDatabase();
+            }
             ImGui.EndDisabled();
         }
 
