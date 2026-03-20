@@ -47,14 +47,9 @@ Features:
 - Assets should only be able to be loaded by dragging and dropping into the scene, or the special folder 'Resources'.
 - Generate the assets index list by reading scenes, so we add all the assets that the deploy build needs.
 - Fully async scene load in the background: async asset loading (mainThreadSync for graphic assets)
-- Audio mixer editor ui
-- Animator using nodes
 - When an asset is updated, other assets that depend on it should be notified/updated as well, ex: Texture2D->Tilemap
 - Show a 'Missing reference' text in the EObject property for assetTypes.
-
-Assets view:
-- Update asset view when asset database is updated.
-
+- Sprites should be able to show uo in the AssetView
 
 Save Editor config:
 -Current loaded scene name.

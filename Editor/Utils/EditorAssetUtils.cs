@@ -186,8 +186,11 @@ namespace Editor
                 case AssetType.RenderTexture:
                     clrType = typeof(RenderTexture);
                     break;
-               // default:
-                   // throw new NotImplementedException(type.ToString());
+                case AssetType.Sprite:
+                    clrType = typeof(Sprite);
+                    break;
+                    // default:
+                    // throw new NotImplementedException(type.ToString());
             }
 
             return clrType;

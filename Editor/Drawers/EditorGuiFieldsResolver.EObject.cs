@@ -16,7 +16,7 @@ namespace Editor.Utils
     public partial class EditorGuiFieldsResolver
     {
         private const int ASSETS_COLUMNS_COUNT_POPUP = 4;
-        public static bool DrawEObjectSlot<T>(in T lazy, Type valueType, Func<EObject, bool> setValue) where T: ILazyRef
+        public static bool DrawEObjectSlot<T>(in T lazy, Type valueType, Func<EObject, bool> setValue) where T : ILazyRef
         {
             // TODO: do not load the asset like this, this defeats the purpose, but for testing is fine for now.
             return DrawEObjectSlot(Assets.GetAssetFromGuid(lazy.GetRefId()), valueType, setValue);
@@ -38,23 +38,24 @@ namespace Editor.Utils
                 hasObject = asset.IsPhysicallyAvailable;
             }
 
-            string label = hasObject ? $"{eObject.Name}" : $"None";
+            string label = null;
 
             if (hasObject)
             {
-                if (eObject is Asset res)
+                if (isAssetMissingReference)
                 {
-                    ImGui.SetItemTooltip($"{res.Path}");
+                    label = $"Missing Ref: {eObject.Name}";
                 }
                 else
                 {
-                    ImGui.SetItemTooltip(eObject.GetID().ToString());
+                    label = $"{eObject.Name}";
                 }
             }
             else
             {
-
+                label = "None";
             }
+
 
             var drawList = ImGui.GetWindowDrawList();
             var pos = ImGui.GetCursorScreenPos();
@@ -165,6 +166,18 @@ namespace Editor.Utils
             var invisibleButtonSize = new Vector2(max.X - min.X, max.Y - min.Y);
             invisibleButtonSize.X -= 30;
             ImGui.InvisibleButton($"DropRect##_DROP_RECT_{valueType.Name}", invisibleButtonSize);
+
+            if (hasObject)
+            {
+                if (eObject is Asset res)
+                {
+                    ImGui.SetItemTooltip($"{res.Path}");
+                }
+                else
+                {
+                    ImGui.SetItemTooltip(eObject.GetID().ToString());
+                }
+            }
             if (EditorImGui.DragAndDrop.ItemDropReference(EditorImGui.DragAndDrop.PAYLOAD_ID_EOBJECT, out var result))
             {
                 DropValue(valueType, result, setValue);
@@ -348,7 +361,8 @@ namespace Editor.Utils
                 var texture = Assets.GetAssetFromGuid(payload.RefId) as TextureAsset;
                 if (texture)
                 {
-                    setValue(texture?.Atlas.GetSprite(payload.Index));
+                    var atlas = texture?.Atlas.GetSprite(Mathf.Max(0, payload.Index));
+                    setValue(atlas);
                 }
             }
             else if (valueType == typeof(Actor))

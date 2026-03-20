@@ -21,6 +21,7 @@ namespace Engine
         Scene,
         Tilemap,
         Script,
-        RenderTexture
+        RenderTexture,
+        Sprite
     }
 }

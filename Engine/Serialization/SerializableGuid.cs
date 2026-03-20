@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers.Binary;
 using System.Runtime.InteropServices;
 
 namespace Engine.Serialization
@@ -20,8 +21,8 @@ namespace Engine.Serialization
             get
             {
                 Span<byte> bytes = stackalloc byte[16];
-                BitConverter.TryWriteBytes(bytes[..8], _a);
-                BitConverter.TryWriteBytes(bytes[8..], _b);
+                BinaryPrimitives.WriteUInt64LittleEndian(bytes[..8], _a);
+                BinaryPrimitives.WriteUInt64LittleEndian(bytes[8..], _b);
                 return new Guid(bytes);
             }
         }
@@ -30,7 +31,8 @@ namespace Engine.Serialization
         {
             Span<byte> bytes = stackalloc byte[16];
             guid.TryWriteBytes(bytes);
-            return new SerializableGuid(BitConverter.ToUInt64(bytes[..8]), BitConverter.ToUInt64(bytes[8..]));
+            return new SerializableGuid(BinaryPrimitives.ReadUInt64LittleEndian(bytes[..8]),
+                                        BinaryPrimitives.ReadUInt64LittleEndian(bytes[8..]));
         }
 
         public static implicit operator Guid(SerializableGuid guid)

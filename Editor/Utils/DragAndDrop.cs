@@ -35,6 +35,10 @@ namespace Editor.Utils
             {
                 return _dragAndDropPayload;
             }
+            internal static bool ItemDragReference(string title, nint image, string payloadId, EObject value, AssetType type, Guid refId, int index)
+            {
+                return ItemDragReference(title, image, payloadId, value, type.AssetTypeToType(), refId, index);
+            }
             internal static bool ItemDragReference(string title, nint image, string payloadId, EObject value, AssetType type, Guid refId)
             {
                 return ItemDragReference(title, image, payloadId, value, type.AssetTypeToType(), refId);
@@ -48,7 +52,7 @@ namespace Editor.Utils
                 var image = EditorTextureDatabase.GetIconImGui(type);
                 return ItemDragReference(title, image, payloadId, value, type, refId);
             }
-            internal static bool ItemDragReference(string title, nint image, string payloadId, EObject value, Type type, Guid refId)
+            internal static bool ItemDragReference(string title, nint image, string payloadId, EObject value, Type type, Guid refId, int index = -1)
             {
                 unsafe
                 {
@@ -60,6 +64,7 @@ namespace Editor.Utils
                             RefId = refId,
                             Type = type,
                             Value = value,
+                            Index = index
                         };
 
                         fixed (int* ptr2 = &_emptyDragValue)

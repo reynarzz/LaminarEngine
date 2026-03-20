@@ -427,7 +427,8 @@ namespace Editor.Views
                 for (int i = 0; i < fileRoot.Children.Count; i++)
                 {
                     var file = fileRoot.Children[i];
-                    var flags = ImGuiTreeNodeFlags.OpenOnArrow | ImGuiTreeNodeFlags.DefaultOpen;
+                    var flags = ImGuiTreeNodeFlags.OpenOnArrow;
+
                     if (file.Type == FileType.Directory || (file.Type == FileType.Asset && file.FilesCount == 0))
                     {
                         flags |= ImGuiTreeNodeFlags.Leaf;
@@ -589,7 +590,14 @@ namespace Editor.Views
                             for (int j = 0; j < file.Children.Count; j++)
                             {
                                 var child = file.Children[j];
-                                ImGui.Text(child.Filename);
+                                if (ImGui.Selectable(child.Filename))
+                                {
+
+                                }
+                                image = EditorTextureDatabase.GetIconImGui(child.AssetType);
+                                EditorImGui.DragAndDrop.ItemDragReference(child.Filename, image, EditorImGui.DragAndDrop.PAYLOAD_ID_EOBJECT, null, 
+                                                                          child.AssetType, child.RefId, child.NestedAssetIndex);
+
                             }
                         }
 
@@ -907,12 +915,22 @@ namespace Editor.Views
                         // Check if the texture has atlas, if so, enumerate the sprites.
                         var textureMeta = EditorAssetUtils.GetMetaFromAbsolutePath(absoluteFilePath, assetType) as TextureMetaFile;
 
-                        if (textureMeta.Config.IsAtlas)
+                        if (textureMeta.Config.IsAtlas && textureMeta.AtlasData != null)
                         {
+                            parent.FilesCount = textureMeta.AtlasData.ChunksCount;
                             for (int i = 0; i < textureMeta.AtlasData.ChunksCount; i++)
                             {
-
-                                //children.Add(new AssetViewFileInfo() {  RefId = });
+                                children.Add(new AssetViewFileInfo()
+                                {
+                                    RefId = parent.RefId,
+                                    Type = FileType.Asset,
+                                    Parent = parent,
+                                    Filename = Sprite.CreateSpriteName(parent.Filename, i),
+                                    AbsolutePath = absoluteFilePath,
+                                    RelativePath = parent.RelativePath,
+                                    AssetType = AssetType.Sprite,
+                                    NestedAssetIndex = i,
+                                });
                             }
                         }
                     }
@@ -963,6 +981,7 @@ namespace Editor.Views
             public string Extension { get; set; }
             public int FilesCount { get; set; }
             public int DirectoriesCount { get; set; }
+            public int NestedAssetIndex { get; set; }
             public AssetViewFileInfo Parent { get; set; }
             public List<AssetViewFileInfo> Children { get; set; } = new();
         }
