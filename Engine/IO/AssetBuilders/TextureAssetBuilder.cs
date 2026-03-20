@@ -25,6 +25,7 @@ namespace Engine.IO
         {
             var data = GetData(reader, meta);
             asset.Texture.UpdateResource(data, meta.GUID);
+            asset.Atlas.UpdateResource(meta, meta.GUID);
         }
 
         internal class TextureDeserializedData

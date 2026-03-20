@@ -131,5 +131,12 @@ namespace Engine
             IsAlive = false;
             IsPendingToDestroy = false;
         }
+
+        internal void ChangeOrder(int current, int index)
+        {
+            var actor = _rootActors[current];
+            _rootActors.RemoveAt(current);
+            _rootActors.Insert(index, actor);
+        }
     }
 }

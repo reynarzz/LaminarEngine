@@ -85,7 +85,7 @@ namespace Engine
         {
             get
             {
-               // if (Application.IsInPlayMode)
+                // if (Application.IsInPlayMode)
                 {
                     SyncLocalEulerDelta();
                 }
@@ -287,6 +287,108 @@ namespace Engine
             return NeedsInterpolation && Actor && !Actor.IsAwaking ? InterpolatedWorldMatrix : WorldMatrix;
         }
 
+        public void SetSiblingIndex(int index)
+        {
+            var siblingIndex = GetSiblingIndex();
+            SetSiblingIndex(index, siblingIndex);
+        }
+        private void SetSiblingIndex(int index, int siblingIndex)
+        {
+            if (Parent != null)
+            {
+                index = Mathf.Clamp(index, 0, Parent.Children.Count - 1);
+                if (index == siblingIndex)
+                {
+                    return;
+                }
+                Parent._children.RemoveAt(siblingIndex);
+                Parent._children.Insert(index, this);
+            }
+            else
+            {
+                index = Mathf.Clamp(index, 0, Actor.Scene.RootActors.Count - 1);
+                if (index == siblingIndex)
+                {
+                    return;
+                }
+                Actor.Scene.ChangeOrder(siblingIndex, index);
+            }
+        }
+
+        internal bool CanMoveSiblingUp()
+        {
+            return CanMoveSiblingUp(GetSiblingIndex());
+        }
+        internal bool CanMoveSiblingDown()
+        {
+            return GetSiblingIndex() > 0;
+        }
+        private bool CanMoveSiblingUp(int siblingIndex)
+        {
+            if (Parent)
+            {
+                return Parent.Children.Count - 1 > siblingIndex;
+            }
+
+            return Actor.Scene.RootActors.Count - 1 > siblingIndex;
+        }
+
+        public bool MoveSiblingUp()
+        {
+            var index = GetSiblingIndex();
+
+            if (!CanMoveSiblingUp(index))
+                return false;
+
+            SetSiblingIndex(index + 1, index);
+
+            return true;
+        }
+
+        public bool MoveSiblingDown()
+        {
+            var index = GetSiblingIndex();
+
+            if (index == 0)
+                return false;
+
+            SetSiblingIndex(index - 1, index);
+
+            return true;
+        }
+
+        public void SetAsFirstSibling()
+        {
+            SetSiblingIndex(0);
+        }
+        public void SetAsLastSibling()
+        {
+            SetSiblingIndex(int.MaxValue);
+        }
+        public int GetSiblingIndex()
+        {
+            int Get<T>(IReadOnlyList<T> children)
+            {
+                for (int i = 0; i < children.Count; i++)
+                {
+                    if (children[i] is Transform a && a == this)
+                    {
+                        return i;
+                    }
+                    else if (children[i] is Actor act && act.Transform == this)
+                    {
+                        return i;
+                    }
+                }
+                return -1;
+            }
+            if (_parent)
+            {
+                return Get(Parent._children);
+            }
+
+            return Get(Actor.Scene.RootActors);
+        }
         private static vec3 QuaternionToEuler(quat q)
         {
             vec3 euler;

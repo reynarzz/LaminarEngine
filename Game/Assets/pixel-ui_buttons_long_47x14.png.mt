@@ -1,8 +1,8 @@
 {
   "Config": {
-    "IsAtlas": false,
-    "Mode": "Clamp",
-    "Filter": "Nearest",
+    "IsAtlas": true,
+    "Mode": 0,
+    "Filter": 0,
     "PixelPerUnit": 100
   },
   "AtlasData": {

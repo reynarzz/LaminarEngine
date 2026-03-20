@@ -51,17 +51,28 @@ namespace Engine
             if (_textureMeta.AtlasData.ChunksCount == 0)
             {
                 // Return default sprite if the texture is texture2D.
-                var defaultSprite = _sprites[index];
-
-                if (defaultSprite == null)
+                try
                 {
-                    var defaultCell = TextureAtlasCell.DefaultChunk;
-                    defaultCell.ID = _targetTexture.GetID();
-                    defaultCell.Width = _targetTexture.Width;
-                    defaultCell.Height = _targetTexture.Height;
-                    defaultSprite = CreateSprite(defaultCell, index);
+                    index = Mathf.Max(0, index);
+                    var defaultSprite = _sprites[index];
+
+                    if (defaultSprite == null)
+                    {
+                        var defaultCell = TextureAtlasCell.DefaultChunk;
+                        defaultCell.ID = _targetTexture.GetID();
+                        defaultCell.Width = _targetTexture.Width;
+                        defaultCell.Height = _targetTexture.Height;
+                        defaultSprite = CreateSprite(defaultCell, index);
+                    }
+                    return defaultSprite;
                 }
-                return defaultSprite;
+                catch (Exception e)
+                {
+                    Debug.Log($"Sprites count: {_sprites.Count}, Index: {index}, Texture: {_targetTexture.Path}");
+                    Debug.Error(e);
+                    throw;
+                }
+             
             }
             if (_textureMeta.AtlasData.ChunksCount <= index)
             {

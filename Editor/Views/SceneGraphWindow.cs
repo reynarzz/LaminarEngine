@@ -20,6 +20,7 @@ namespace Editor.Views
         private bool _isPendingToDropActor = false;
         private const string WINDOW_NAME = "Scene graph###Scene graph";
         private const string WINDOW_DIRTY_NAME = "Scene graph*###Scene graph";
+        private bool _wasDragging = false;
 
         private struct SelectionInfo
         {
@@ -39,10 +40,32 @@ namespace Editor.Views
         {
             if (OnBeginWindow(GetWindowName(), ImGuiWindowFlags.None, true, new GlmNet.vec2()))
             {
+                var screenCursor = ImGui.GetCursorScreenPos();
+
+                var isMouseDrag = ImGui.IsMouseDragging(ImGuiMouseButton.Left);
+                if (isMouseDrag || _wasDragging)
+                {
+                    _wasDragging = isMouseDrag;
+                    ImGui.InvisibleButton("SCENE_GRAPH_DropArea", ImGui.GetContentRegionAvail());
+                    DropActorHandle(null, dropActor =>
+                    {
+                        dropActor.Transform.Parent = null;
+                    });
+
+                }
+                else if (ImGui.IsItemClicked(ImGuiMouseButton.Right))
+                {
+                    Debug.Log("Window clicked");
+                }
+
+                ImGui.SetCursorScreenPos(screenCursor);
                 ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2());
 
                 PopulateDragGraph();
-
+                if (IsWindowFocused && ImGui.IsKeyPressed(ImGuiKey.Escape))
+                {
+                    Selector.Selected = null;
+                }
                 for (int i = SceneManager.Scenes.Count - 1; i >= 0; i--)
                 {
                     if (i == 0 && (!Application.IsInPlayMode || SceneManager.Scenes[0].RootActors.Count == 0))
@@ -54,7 +77,7 @@ namespace Editor.Views
                     ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.OpenOnArrow | ImGuiTreeNodeFlags.SpanFullWidth | ImGuiTreeNodeFlags.DefaultOpen;
 
                     bool open = ImGui.TreeNodeEx("##scene_node", flags);
-                    DropActorHandle(dropActor =>
+                    DropActorHandle(null, dropActor =>
                     {
                         dropActor.Transform.Parent = null; // Remove current parent, this makes it root of scene
                         dropActor.Scene.UnregisterRootActor(dropActor); // Remove from the old scene's root.
@@ -313,7 +336,7 @@ namespace Editor.Views
                 _currentSelectionGraph[actor.GetID()] = selectionInfo;
             }
 
-            DropActorHandle(dropActor =>
+            DropActorHandle(actor, dropActor =>
             {
                 if (!IsChildren(dropActor, actor))
                 {
@@ -375,6 +398,7 @@ namespace Editor.Views
                     newActor.Transform.LocalScale = vec3.One;
 
                     SetSelectedActorParentGraph(newActor);
+                    EditorSystem.Save.MarkDirty(actor);
                 }
 
                 if (ImGui.MenuItem("Create Actor Parent"))
@@ -397,6 +421,7 @@ namespace Editor.Views
                     }
                     actor.Transform.Parent = newActor.Transform;
                     SetSelectedActorParentGraph(newActor, true, true);
+                    EditorSystem.Save.MarkDirty(actor);
                 }
 
                 ImGui.Separator();
@@ -419,14 +444,17 @@ namespace Editor.Views
                             actorRoot.Transform.Parent = actor.Transform.Parent;
                         }
                     }
+
+                    EditorSystem.Save.MarkDirty(actor);
                 }
                 ImGui.EndDisabled();
-
+                ImGui.Separator();
                 ImGui.BeginDisabled(!actor.Transform.Parent);
 
                 if (ImGui.MenuItem("Clear parent"))
                 {
                     actor.Transform.Parent = null;
+                    EditorSystem.Save.MarkDirty(actor);
                 }
 
                 if (ImGui.MenuItem("Unparent to previous"))
@@ -439,11 +467,40 @@ namespace Editor.Views
                     {
                         actor.Transform.Parent = null;
                     }
+                    EditorSystem.Save.MarkDirty(actor);
                 }
 
                 ImGui.EndDisabled();
-                ImGui.Separator();
+                ImGui.BeginDisabled(!actor.Transform.CanMoveSiblingDown());
+                if (ImGui.MenuItem("Set as first sibling"))
+                {
+                    actor.Transform.SetAsFirstSibling();
+                    EditorSystem.Save.MarkDirty(actor);
+                }
+                ImGui.EndDisabled();
+                ImGui.BeginDisabled(!actor.Transform.CanMoveSiblingUp());
+                if (ImGui.MenuItem("Set as last sibling"))
+                {
+                    actor.Transform.SetAsLastSibling();
+                    EditorSystem.Save.MarkDirty(actor);
+                }
+                ImGui.EndDisabled();
 
+                ImGui.BeginDisabled(!actor.Transform.CanMoveSiblingDown());
+                if (ImGui.MenuItem("Move up"))
+                {
+                    actor.Transform.MoveSiblingDown();
+                    EditorSystem.Save.MarkDirty(actor);
+                }
+                ImGui.EndDisabled();
+                ImGui.BeginDisabled(!actor.Transform.CanMoveSiblingUp());
+                if (ImGui.MenuItem("Move Down"))
+                {
+                    actor.Transform.MoveSiblingUp();
+                    EditorSystem.Save.MarkDirty(actor);
+                }
+                ImGui.EndDisabled();
+                ImGui.Separator();
                 if (ImGui.MenuItem("Delete"))
                 {
                     ImGui.EndPopup();
@@ -493,11 +550,11 @@ namespace Editor.Views
             ImGui.PopID();
         }
 
-        private void DropActorHandle(Action<Actor> callback)
+        private void DropActorHandle(Actor target, Action<Actor> callback)
         {
-            if (EditorImGui.DragAndDrop.ItemDropReference(EditorImGui.DragAndDrop.PAYLOAD_ID_EOBJECT, out var value))
+            if (EditorImGui.DragAndDrop.ItemDropReference(EditorImGui.DragAndDrop.PAYLOAD_ID_EOBJECT, out var payload))
             {
-                if (value.Value is Actor dropActor)
+                if (payload.Value is Actor dropActor)
                 {
                     // _dragActorId = Guid.Empty;
                     callback(dropActor);
@@ -505,9 +562,37 @@ namespace Editor.Views
                     EditorSystem.Save.MarkDirty(dropActor);
                     SetSelectedActorParentGraph(dropActor, true);
                 }
+                else if (payload.Type == typeof(Texture2D) || payload.Type == typeof(Texture))
+                {
+                    var texAsset = Assets.GetAssetFromGuid(payload.RefId) as TextureAsset;
+                    var sprite = texAsset.Atlas.GetSprite(0);
+                    SetSprite(target, sprite);
+                }
+                else if (payload.Type == typeof(Sprite))
+                {
+                    var texAsset = Assets.GetAssetFromGuid(payload.RefId) as TextureAsset;
+                    var sprite = texAsset.Atlas.GetSprite(payload.Index);
+                    SetSprite(target, sprite);
+                }
             }
         }
 
+        private void SetSprite(Actor target, Sprite sprite)
+        {
+            var renderer = new Actor(sprite.Name).AddComponent<SpriteRenderer>();
+            renderer.Material = Assets.GetMaterial(EditorPaths.CookerPaths.INTERNAL_ASSET_FOLDER_NAME + "/Materials/SpriteDefault.material");
+            renderer.Sprite = sprite;
+
+            if (target)
+            {
+                renderer.Transform.Parent = target.Transform;
+                renderer.Transform.LocalPosition = default;
+                renderer.Transform.LocalRotation = quat.Identity;
+            }
+
+            Selector.Selected = renderer.Actor;
+            EditorSystem.Save.MarkDirty(renderer);
+        }
         /// <summary>
         /// Checks if 'to' is a children of 'from'
         /// </summary>
