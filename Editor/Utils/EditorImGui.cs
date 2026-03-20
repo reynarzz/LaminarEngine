@@ -14,6 +14,38 @@ namespace Editor.Utils
     internal partial class EditorImGui
     {
         private const float POPUP_WINDOW_PADDING = 7.0f;
+
+        public static void Image(nint image, ivec2 imageSize, ivec2 maxSize)
+        {
+            Image(image, imageSize, maxSize, null);
+        }
+        public static void Image(nint image, ivec2 imageSize, ivec2 maxSize, QuadUV? uvs)
+        {
+            var cursor = ImGui.GetCursorScreenPos();
+
+            var width = imageSize.x == 0 ? maxSize.x : imageSize.x;
+            var height = imageSize.y == 0 ? maxSize.y : imageSize.y;
+            var scale = Mathf.Min((float)maxSize.x / width, (float)maxSize.y / height);
+
+            var scaledW = (float)width * scale;
+            var scaledH = (float)height * scale;
+
+            var offsetY = ((float)maxSize.y - scaledH) * 0.5f;
+
+            if (uvs == null)
+            {
+                ImGui.SetCursorScreenPos(new Vector2(cursor.X, cursor.Y + offsetY));
+                Image(image, new vec2(scaledW, scaledH));
+            }
+            else
+            {
+                Image(image, new vec2(scaledW, scaledH), uvs.Value.BottomLeftUV, uvs.Value.TopLeftUV, uvs.Value.TopRightUV, 
+                      uvs.Value.BottomRightUV, new vec2(cursor.X, cursor.Y + offsetY));
+            }
+
+            ImGui.SetCursorScreenPos(cursor);
+
+        }
         public static void Image(nint image, vec2 imageSize)
         {
             Image(image, imageSize, new vec4(1, 1, 1, 1));
@@ -33,11 +65,14 @@ namespace Editor.Utils
         public static void Image(nint texture, vec2 size, vec2 uvBottomLeft, vec2 uvTopLeft, vec2 uvTopRight, vec2 uvBottomRight)
         {
             var cursor = ImGui.GetCursorScreenPos();
-
-            var p1 = cursor;
-            var p2 = new Vector2(cursor.X + size.x, cursor.Y);
-            var p3 = new Vector2(cursor.X + size.x, cursor.Y + size.y);
-            var p4 = new Vector2(cursor.X, cursor.Y + size.y);
+            Image(texture, size, uvBottomLeft, uvTopLeft, uvTopRight, uvBottomRight, cursor.ToVec2());
+        }
+        public static void Image(nint texture, vec2 size, vec2 uvBottomLeft, vec2 uvTopLeft, vec2 uvTopRight, vec2 uvBottomRight, vec2 cursor)
+        {
+            var p1 = cursor.ToVector2();
+            var p2 = new Vector2(cursor.x + size.x, cursor.y);
+            var p3 = new Vector2(cursor.x + size.x, cursor.y + size.y);
+            var p4 = new Vector2(cursor.x, cursor.y + size.y);
 
             var draw = ImGui.GetWindowDrawList();
 

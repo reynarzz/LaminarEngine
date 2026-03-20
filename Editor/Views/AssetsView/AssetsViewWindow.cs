@@ -202,6 +202,11 @@ namespace Editor.Views
 
 
             ImGui.EndChild();
+
+            //if (Selector.Transform || !Selector.Selected)
+            //{
+            //    SelectFile(default(AssetViewFileInfo));
+            //}
         }
 
         private void DrawWindowPopup()
@@ -303,8 +308,31 @@ namespace Editor.Views
 
             if (_selectedFile != null && _selectedFile.Type == FileType.Asset)
             {
-                EditorImGui.Image(EditorTextureDatabase.GetIconImGui(_selectedFile.AssetType), new vec2(16, 16));
+                var cursor = ImGui.GetCursorPos();
+
+                if (_selectedFile.AssetType == AssetType.Texture)
+                {
+                    var texAsset = Assets.GetAssetFromGuid(_selectedFile.RefId) as TextureAsset;
+                    EditorImGui.Image(EditorTextureDatabase.GetIconImGui(texAsset.Texture),
+                                      new ivec2(texAsset.Texture.Width, texAsset.Texture.Height), new ivec2(16, 16));
+
+                }
+                else if (_selectedFile.AssetType == AssetType.Sprite)
+                {
+                    var texAsset = Assets.GetAssetFromGuid(_selectedFile.RefId) as TextureAsset;
+
+                    var sprite = texAsset.Atlas.GetSprite(_selectedFile.NestedAssetIndex);
+                    var cell = sprite.GetAtlasCell();
+
+                    EditorImGui.Image(EditorTextureDatabase.GetIconImGui(texAsset.Texture),
+                                      new ivec2(cell.Width, cell.Height), new ivec2(16, 16), cell.Uvs);
+                }
+                else
+                {
+                    EditorImGui.Image(EditorTextureDatabase.GetIconImGui(_selectedFile.AssetType), new vec2(16, 16));
+                }
                 ImGui.SameLine();
+                ImGui.SetCursorPosY(cursor.Y);
                 ImGui.Text($"{_selectedFile.Filename}{_selectedFile.Extension} ({_selectedFile.AssetType})");
             }
             ImGui.EndChild();
@@ -450,13 +478,23 @@ namespace Editor.Views
                     cursorPos = ImGui.GetCursorPos();
                     ImGui.SetCursorPosX(cursorPos.X - 14);
                     nint image = 0;
+                    TextureAsset texAsset = null;
                     if (file.Type == FileType.Directory)
                     {
                         image = EditorTextureDatabase.GetIconImGui(GetFolderIcon(file, false));
                     }
                     else if (file.Type == FileType.Asset)
                     {
-                        image = EditorTextureDatabase.GetIconImGui(file.AssetType);
+                        if (file.AssetType == AssetType.Texture || file.AssetType == AssetType.Sprite)
+                        {
+                            texAsset = Assets.GetAssetFromGuid(file.RefId) as TextureAsset;
+
+                            image = EditorTextureDatabase.GetIconImGui(texAsset.Texture);
+                        }
+                        else
+                        {
+                            image = EditorTextureDatabase.GetIconImGui(file.AssetType);
+                        }
                     }
 
                     EditorImGui.Image(image, new vec2(16, 16));
@@ -547,7 +585,19 @@ namespace Editor.Views
                         ImGui.SetCursorPosX(cursorPos.X - 4);
                         ImGui.Selectable(file.Filename, isSelected);
                         EndSelectedColor(file, isSelected);
-                        EditorImGui.DragAndDrop.ItemDragReference(file.Filename, image, EditorImGui.DragAndDrop.PAYLOAD_ID_EOBJECT, null, file.AssetType, file.RefId);
+
+                        if (file.AssetType == AssetType.Texture)
+                        {
+                            EditorImGui.DragAndDrop.ItemDragReference(file.Filename, image, EditorImGui.DragAndDrop.PAYLOAD_ID_EOBJECT,
+                                                                      null, file.AssetType, file.RefId, -1, null, texAsset.Texture.Width, texAsset.Texture.Height);
+                        }
+                        else
+                        {
+
+                            EditorImGui.DragAndDrop.ItemDragReference(file.Filename, image, EditorImGui.DragAndDrop.PAYLOAD_ID_EOBJECT,
+                                                                      null, file.AssetType, file.RefId);
+                        }
+
                         DrawFileItemPopup(file);
                     }
 
@@ -598,14 +648,41 @@ namespace Editor.Views
                                 var child = file.Children[j];
                                 var isSelected = BeginSelectedColor(child);
 
+                                if (child.AssetType == AssetType.Sprite)
+                                {
+                                    var sprite = texAsset.Atlas.GetSprite(child.NestedAssetIndex);
+                                    var cell = sprite.GetAtlasCell();
+                                    EditorImGui.Image(EditorTextureDatabase.GetIconImGui(sprite.Texture),
+                                                      new ivec2(cell.Width, cell.Height), new ivec2(16, 16), cell.Uvs);
+                                }
+                                else
+                                {
+                                    image = EditorTextureDatabase.GetIconImGui(child.AssetType);
+                                    EditorImGui.Image(image, new vec2(16, 16));
+                                }
+
+                                ImGui.SameLine();
                                 if (ImGui.Selectable(child.Filename + $"##ASSET_CHILDREN_{child.RefId}{i}", isSelected))
                                 {
                                     SelectFile(child);
                                 }
                                 EndSelectedColor(child, isSelected);
-                                image = EditorTextureDatabase.GetIconImGui(child.AssetType);
-                                EditorImGui.DragAndDrop.ItemDragReference(child.Filename, image, EditorImGui.DragAndDrop.PAYLOAD_ID_EOBJECT, null,
+
+                                if (child.AssetType == AssetType.Sprite)
+                                {
+                                    var sprite = texAsset.Atlas.GetSprite(child.NestedAssetIndex);
+                                    var cell = sprite.GetAtlasCell();
+                                    EditorImGui.DragAndDrop.ItemDragReference(child.Filename, EditorTextureDatabase.GetIconImGui(sprite.Texture),
+                                                                              EditorImGui.DragAndDrop.PAYLOAD_ID_EOBJECT, null, child.AssetType,
+                                                                              child.RefId, child.NestedAssetIndex, cell.Uvs, cell.Width, cell.Height);
+                                }
+                                else
+                                {
+                                    image = EditorTextureDatabase.GetIconImGui(child.AssetType);
+                                    EditorImGui.DragAndDrop.ItemDragReference(child.Filename, image, EditorImGui.DragAndDrop.PAYLOAD_ID_EOBJECT, null,
                                                                           child.AssetType, child.RefId, child.NestedAssetIndex);
+                                }
+
 
                             }
                         }
@@ -795,13 +872,13 @@ namespace Editor.Views
                 {
                     _selectedAsset = Assets.GetAssetFromGuid(file.RefId);
                 }
+                Selector.Selected = _selectedAsset;
             }
             else
             {
                 _selectedAsset = null;
             }
 
-            Selector.Selected = _selectedAsset;
         }
 
         private void DrawFolderPicker(AssetViewFileInfo fileRoot, bool isDefaultOpened = false)

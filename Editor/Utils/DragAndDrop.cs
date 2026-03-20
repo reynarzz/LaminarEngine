@@ -20,7 +20,7 @@ namespace Editor.Utils
             public const string PAYLOAD_ID_EOBJECT = "EOBJECT_VALUE";
             // This is used so dear imgui registers a value, but we do not send complex values to dearImgui
             private static int _emptyDragValue = 0;
-
+            private static readonly ivec2 _iconSize = new ivec2(16, 16);
             [StructLayout(LayoutKind.Sequential)]
             internal struct ReferenceDragAndDropPayload
             {
@@ -34,6 +34,11 @@ namespace Editor.Utils
             public static ReferenceDragAndDropPayload GetCurrentDropPayload()
             {
                 return _dragAndDropPayload;
+            }
+            internal static bool ItemDragReference(string title, nint image, string payloadId, EObject value, AssetType type, Guid refId, 
+                                                   int index, QuadUV? uvs, int width, int height)
+            {
+                return ItemDragReference(title, image, payloadId, value, type.AssetTypeToType(), refId, index, uvs, width, height);
             }
             internal static bool ItemDragReference(string title, nint image, string payloadId, EObject value, AssetType type, Guid refId, int index)
             {
@@ -52,7 +57,8 @@ namespace Editor.Utils
                 var image = EditorTextureDatabase.GetIconImGui(type);
                 return ItemDragReference(title, image, payloadId, value, type, refId);
             }
-            internal static bool ItemDragReference(string title, nint image, string payloadId, EObject value, Type type, Guid refId, int index = -1)
+            internal static bool ItemDragReference(string title, nint image, string payloadId, EObject value, Type type, Guid refId, int index = -1,
+                                                   QuadUV? uvs = null, int width = 0, int height = 0)
             {
                 unsafe
                 {
@@ -73,7 +79,25 @@ namespace Editor.Utils
                         }
                         var cursor = ImGui.GetCursorPos();
 
-                        EditorImGui.Image(image, new vec2(16, 16));
+                        width = width == 0 ? _iconSize.x : width;
+                        height = height == 0 ? _iconSize.y : height;
+                        var scale = Mathf.Min((float)_iconSize.x / width, (float)_iconSize.y / height);
+
+                        var scaledW = width * scale;
+                        var scaledH = height * scale;
+
+                        var offsetY = (_iconSize.y - scaledH) * 0.5f;
+
+                        ImGui.SetCursorPos(new Vector2(ImGui.GetCursorPosX(), cursor.Y + offsetY));
+
+                        if (uvs == null)
+                        {
+                            EditorImGui.Image(image, new vec2(scaledW, scaledH));
+                        }
+                        else
+                        {
+                            EditorImGui.Image(image, new vec2(scaledW, scaledH), uvs.Value);
+                        }
                         ImGui.SameLine();
                         cursor.Y -= 2;
                         cursor.X += 20;

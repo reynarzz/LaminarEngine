@@ -1,5 +1,6 @@
 ﻿using Editor.Utils;
 using Engine;
+using Engine.Layers;
 using GlmNet;
 using ImGuiNET;
 using SPIRVCross.NET;
@@ -36,15 +37,13 @@ namespace Editor
 
             if (icon)
             {
-                var width = iconInfo.Size == null ? icon.Width: iconInfo.Size.Value.x;
+                var width = iconInfo.Size == null ? icon.Width : iconInfo.Size.Value.x;
                 var height = iconInfo.Size == null ? icon.Height : iconInfo.Size.Value.y;
-
                 var scale = Mathf.Min(_imageIconSize.x / width, _imageIconSize.y / height);
-                var scaleTooltip = Mathf.Min(100.0f / width, 100.0f / height);
 
                 var scaledW = width * scale;
                 var scaledH = height * scale;
-
+                
                 var offsetY = (_imageIconSize.y - scaledH) * 0.5f;
 
                 ImGui.SetCursorPos(new Vector2(ImGui.GetCursorPosX(), cursorStart.Y + offsetY));
@@ -62,8 +61,10 @@ namespace Editor
 
             ImGui.SetCursorPosY(cursorStart.Y + 6);
             ImGui.SetCursorPosX(cursorStart.X + 63);
-            ImGui.Text(target.Name);
 
+
+            var title = $"{target.Name} ({target.GetType().Name})";
+            ImGui.Text(title);
 
             ImGui.SetItemTooltip((target as Asset)?.Path ?? target.GetID().ToString());
 

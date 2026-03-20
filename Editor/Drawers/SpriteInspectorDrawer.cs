@@ -25,7 +25,10 @@ namespace Editor.Drawers
         }
         protected override void OnDraw(Sprite target)
         {
-            ImGui.Text("Sprite: " + target.Name);
+            var cell = target.GetAtlasCell();
+            ImGui.Text($"Name {target.Name}");
+            ImGui.Text($"Pivot  ({cell.Pivot.x}, {cell.Pivot.y})");
+            ImGui.Text($"Size ({cell.Width}, {cell.Height})");
         }
     }
 }
