@@ -286,7 +286,25 @@ namespace Editor.Drawers
                     EditorSystem.Save.MarkDirty(component);
                 }
                 ImGui.EndDisabled();
+                ImGui.BeginDisabled(component is Transform);
 
+                var index = component.Actor.Components.IndexOf(component);
+                ImGui.BeginDisabled(index <= 1);
+                if (ImGui.MenuItem("Move up"))
+                {
+                    // TODO: check if actor requires the one that is on top, if so, then do not move to the top.
+                    component.Actor.Components.RemoveAt(index);
+                    component.Actor.Components.Insert(index - 1, component);
+                }
+                ImGui.EndDisabled();
+                ImGui.BeginDisabled(index >= component.Actor.Components.Count - 1);
+                if (ImGui.MenuItem("Move down"))
+                {
+                    component.Actor.Components.RemoveAt(index);
+                    component.Actor.Components.Insert(index + 1, component);
+                }
+                ImGui.EndDisabled();
+                ImGui.EndDisabled();
                 bool shouldDisableRemove = componentIndex <= 0;
                 ImGui.BeginDisabled(shouldDisableRemove);
                 ImGui.Separator();

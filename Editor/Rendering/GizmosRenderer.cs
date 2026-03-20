@@ -249,7 +249,7 @@ namespace Editor.Rendering
                 if (renderer)
                 {
                     var s = MathF.Sin(Time.UnscaledTime * 10) * 0.5f + 0.5f;
-                    var size = renderer.RendererData.Bounds.Size;// + new vec3(s, s) * 0.5f;
+                    var size = renderer.RendererData.Bounds.Size * Selector.Transform.WorldScale;// + new vec3(s, s) * 0.5f;
                     Debug.DrawBox(Selector.Transform.WorldPosition + renderer.RendererData.Bounds.Center, size, SemiTransparent);
 
                 }
