@@ -17,6 +17,16 @@ namespace Engine
         [ShowFieldNoSerialize(true)] public vec3 Center => (Min + Max) * 0.5f;
         [ShowFieldNoSerialize(true)] public vec3 Extents => (Max - Min) * 0.5f;
 
+        public static readonly Bounds One = new()
+        {
+            Min = new vec3(-0.5f, -0.5f, -0.5f),
+            Max = new vec3( 0.5f,  0.5f,  0.5f)
+        };
+        public static readonly Bounds One2D = new()
+        {
+            Min = new vec3(-0.5f, -0.5f, 0.0f),
+            Max = new vec3( 0.5f,  0.5f, 0.0f)
+        };
         internal static Bounds GetInitialized()
         {
             return new Bounds()

@@ -65,6 +65,7 @@ namespace Engine
 
             RenderingLayer.PushRenderer(this);
             RendererData.VertexType = typeof(Vertex);
+            RendererData.Bounds = Bounds.One2D;
         }
 
         public override void OnEnabled()

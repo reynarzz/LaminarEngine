@@ -140,6 +140,16 @@ namespace GlmNet
 
         #endregion
 
+        public static mat4 Scale(vec3 scale)
+        {
+            return new mat4(
+                new vec4(scale.x, 0f,      0f,      0f),
+                new vec4(0f,      scale.y, 0f,      0f),
+                new vec4(0f,      0f,      scale.z, 0f),
+                new vec4(0f,      0f,      0f,      1f)
+            );
+        }
+        
         #region Multiplication (SIMD-accelerated, column-major)
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -68,7 +68,7 @@ namespace Engine
                 }
                 else
                 {
-                    _renderData.Bounds = default;
+                    _renderData.Bounds = Bounds.One2D;
                 }
 
                 _renderData.IsDirty = true;

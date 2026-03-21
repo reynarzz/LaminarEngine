@@ -26,6 +26,7 @@ namespace Editor.Rendering
         private Shader _gizmosShader;
         public int PixelsPerUnit { get; set; } = 64;
         private Material _mat;
+
         private enum GizmoType
         {
             Camera,
@@ -74,6 +75,7 @@ namespace Editor.Rendering
             gl_Position = uVP * vec4(billboardPos, 1.0);
         }
 ";
+
         string _gizmosFrag = @"
         #version 330 core
 
@@ -117,6 +119,7 @@ namespace Editor.Rendering
             fragColor = c;
         }
 ";
+
         string _gizmosLineVert = @"
   #version 330 core
   layout(location = 0) in vec3 position;
@@ -150,6 +153,7 @@ namespace Editor.Rendering
 ";
 
         private Material _lineMat;
+
         public GizmosRenderer()
         {
             _batcher = new Batcher2D(Consts.Graphics.MAX_QUADS_PER_BATCH);
@@ -227,7 +231,6 @@ namespace Editor.Rendering
             }).Select(x => x.renderer).ToArray();
 
             _batches = _batcher.GetBatches(componentsToDraw);
-
         }
 
         private void DrawSelected()
@@ -236,23 +239,27 @@ namespace Editor.Rendering
             {
                 var renderer = Selector.Transform.GetComponent<Renderer>();
 
-                //if(renderer is TilemapRenderer tilemap)
-                //{
-                //    var lines = GraphicsHelper.CreateGrid((int)tilemap.GridSize.x, (int)tilemap.GridSize.y, 16);
-
-                //    for (int i = 0; i < lines.Count-1; i+= 2)
-                //    {
-                //        Debug.DrawLine(lines[0], lines[1], Color.White);
-                //    }
-                //}
-                //else
+                // if(renderer is TilemapRenderer tilemap)
+                // {
+                //     var lines = GraphicsHelper.CreateGrid(tilemap.GetLayer().SizeGridBased.x, 
+                //         tilemap.GetLayer().SizeGridBased.y, 16);
+                //
+                //     for (int i = 0; i < lines.Count-1; i+= 2)
+                //     {
+                //         Debug.DrawLine(lines[0], lines[1], Color.White);
+                //     }
+                // }
+                // else
                 if (renderer)
                 {
-                    var s = MathF.Sin(Time.UnscaledTime * 10) * 0.5f + 0.5f;
                     var size = renderer.RendererData.Bounds.Size;
+                    //var s = (MathF.Sin(Time.UnscaledTime * 5) * 0.5f + 0.5f) * 0.05f;
+                    //size = size + new vec3(s * Math.Sign(size.x), s * Math.Sign(size.y), s * Math.Sign(size.z));
                     var offset = renderer.RendererData.Bounds.Center;
-                    Debug.DrawBox(Selector.Transform.WorldMatrix, offset, size, SemiTransparent);
+                    var mat = Selector.Transform.WorldMatrix;
 
+
+                    Debug.DrawBox(mat, offset, size, Color.White);
                 }
             }
         }
@@ -264,12 +271,12 @@ namespace Editor.Rendering
             if (camera.ProjectionMode == CameraProjectionMode.Perspective)
             {
                 points = GraphicsHelper.CreatePerspectiveFrustumLines(camera.WorldPosition, camera.Forward, camera.Right, camera.Up,
-                                                                      glm.radians(camera.Fov), camera.Aspect, camera.NearPlane, camera.FarPlane);
+                    glm.radians(camera.Fov), camera.Aspect, camera.NearPlane, camera.FarPlane);
             }
             else
             {
                 points = GraphicsHelper.CreateOrthoFrustumLines(camera.WorldPosition, camera.Forward, camera.Right, camera.Up,
-                                                                camera.OrthographicSize * 2.0f, camera.Aspect, camera.NearPlane, camera.FarPlane);
+                    camera.OrthographicSize * 2.0f, camera.Aspect, camera.NearPlane, camera.FarPlane);
             }
 
             for (int i = 0; i < points.Count - 1; i += 2)
@@ -279,7 +286,7 @@ namespace Editor.Rendering
         }
 
         private void GetRenderData<T>(List<T> components, Dictionary<Guid, (WeakReference<Component> component, RendererData2D renderer)> renderDatas,
-                                      Sprite sprite, ICamera camera) where T : Component
+            Sprite sprite, ICamera camera) where T : Component
         {
             for (int i = 0; i < components.Count; i++)
             {

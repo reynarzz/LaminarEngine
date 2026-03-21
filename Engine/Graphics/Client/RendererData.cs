@@ -17,7 +17,7 @@ namespace Engine.Graphics
         public virtual bool IsEnabled { get; set; }
         public bool PrivateBatch { get; set; }
         public Guid ID { get; set; }
-        public Bounds Bounds;
+        public Bounds Bounds = Bounds.One;
 
         private Action _onDraw;
         internal int BatchId { get; set; } = -1;
