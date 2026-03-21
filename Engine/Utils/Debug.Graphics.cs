@@ -285,6 +285,52 @@ namespace Engine
             _drawUIVertices = false;
         }
 
+        public static void DrawBox(mat4 transform, vec3 offset, vec3 size, Color color)
+        {
+#if !DEBUG
+            return;
+#endif
+            Initialize();
+
+            vec3 half = size * 0.5f;
+
+            Span<vec3> vertices = stackalloc vec3[8]
+            {
+                new vec3(-half.x, -half.y, -half.z),
+                new vec3(half.x, -half.y, -half.z),
+                new vec3(half.x, half.y, -half.z),
+                new vec3(-half.x, half.y, -half.z),
+                new vec3(-half.x, -half.y, half.z),
+                new vec3(half.x, -half.y, half.z),
+                new vec3(half.x, half.y, half.z),
+                new vec3(-half.x, half.y, half.z)
+            };
+
+            Span<vec3> world = stackalloc vec3[8];
+
+            for (int i = 0; i < 8; i++)
+            {
+                vec3 local = vertices[i] + offset;
+                vec4 transformed = transform * new vec4(local, 1.0f);
+                world[i] = new vec3(transformed.x, transformed.y, transformed.z);
+            }
+
+            DrawLine(world[0], world[1], color);
+            DrawLine(world[1], world[2], color);
+            DrawLine(world[2], world[3], color);
+            DrawLine(world[3], world[0], color);
+
+            DrawLine(world[4], world[5], color);
+            DrawLine(world[5], world[6], color);
+            DrawLine(world[6], world[7], color);
+            DrawLine(world[7], world[4], color);
+
+            DrawLine(world[0], world[4], color);
+            DrawLine(world[1], world[5], color);
+            DrawLine(world[2], world[6], color);
+            DrawLine(world[3], world[7], color);
+        }
+
         public static void DrawBox(vec3 origin, vec3 size, vec3 eulerAngles, Color color)
         {
 #if !DEBUG

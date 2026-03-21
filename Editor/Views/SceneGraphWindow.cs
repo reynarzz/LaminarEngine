@@ -421,6 +421,7 @@ namespace Editor.Views
                     }
                     actor.Transform.Parent = newActor.Transform;
                     SetSelectedActorParentGraph(newActor, true, true);
+                    
                     EditorSystem.Save.MarkDirty(actor);
                 }
 
