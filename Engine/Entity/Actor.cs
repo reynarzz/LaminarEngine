@@ -1,4 +1,5 @@
-﻿using Engine.Types;
+﻿using Engine.Analysis;
+using Engine.Types;
 using Engine.Utils;
 using System;
 using System.Collections.Generic;
@@ -583,8 +584,13 @@ namespace Engine
 
         internal void Awake()
         {
+            LaminarProfiler.Begin("OnAwake");
             UpdateScriptBeginEvent(this, _getAwakePending, _awakeAction, false);
+            LaminarProfiler.End();
+
+            LaminarProfiler.Begin("OnEnable");
             UpdateScriptBeginEvent(this, _getEnablePending, _enabledAction);
+            LaminarProfiler.End();
         }
 
         internal void Start()
@@ -593,32 +599,44 @@ namespace Engine
             {
                 IsAwaking = false;
             }
+            LaminarProfiler.Begin("OnStart");
             UpdateScriptBeginEvent(this, _getStartPending, _startAction);
+            LaminarProfiler.End();
         }
 
         internal void Update()
         {
+            LaminarProfiler.Begin("OnUpdate");
             UpdateScriptsFunction(this, _updateAction);
+            LaminarProfiler.End();
         }
 
         internal void LateUpdate()
         {
+            LaminarProfiler.Begin("OnLateUpdate");
             UpdateScriptsFunction(this, _lateUpdateAction);
+            LaminarProfiler.End();
         }
 
         internal void FixedUpdate()
         {
+            LaminarProfiler.Begin("OnFixedUpdate");
             UpdateScriptsFunction(this, _fixedUpdateAction);
+            LaminarProfiler.End();
         }
 
         internal void OnDrawGizmoUpdate()
         {
+            LaminarProfiler.Begin("OnDrawGizmoUpdate");
             UpdateScriptsFunction(this, _drawGizmoUpdateAction, true);
+            LaminarProfiler.End();
         }
 
         internal void OnPreRenderUpdate()
         {
+            LaminarProfiler.Begin("OnPreRenderUpdate");
             UpdateScriptsFunction(this, _preRenderUpdateAction, true);
+            LaminarProfiler.End();
         }
 
         private void UpdateScriptBeginEvent<T>(Actor actor, Func<Actor, List<IComponent>> getPendingComponents,
@@ -638,7 +656,14 @@ namespace Engine
                         {
                             try
                             {
+#if DEBUG
+                                LaminarProfiler.Begin(component.GetType().Name);
+#endif
                                 action(component);
+#if DEBUG
+
+                                LaminarProfiler.End();
+#endif
                             }
                             catch (Exception e)
                             {
@@ -680,7 +705,13 @@ namespace Engine
                     {
                         try
                         {
+#if DEBUG
+                            LaminarProfiler.Begin(comp.GetType().Name);
+#endif
                             action(comp);
+#if DEBUG
+                            LaminarProfiler.End();
+#endif
                         }
                         catch (Exception e)
                         {
@@ -836,8 +867,8 @@ namespace Engine
             return actor;
         }
 
-        public static Actor Create<T1, T2>(string name) where T1: Component 
-                                                        where T2: Component
+        public static Actor Create<T1, T2>(string name) where T1 : Component
+                                                        where T2 : Component
         {
             var actor = Create<T1>(name);
             actor.AddComponent<T2>();

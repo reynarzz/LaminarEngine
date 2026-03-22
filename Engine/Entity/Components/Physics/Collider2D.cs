@@ -9,10 +9,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Engine.Analysis;
 
 namespace Engine
 {
-    public abstract class Collider2D : Component, IUpdatableComponent
+    public abstract class Collider2D : Component, IFixedUpdatableComponent
 #if DEBUG
         , IDrawableGizmo
 #endif
@@ -221,7 +222,7 @@ namespace Engine
         }
 
 
-        public void OnUpdate()
+        void IFixedUpdatableComponent.OnFixedUpdate()
         {
             UpdateStay();
         }
@@ -464,42 +465,54 @@ namespace Engine
         {
             if (other && other.Actor)
             {
+                LaminarProfiler.Begin("OnCollisionEnter");
                 OnNotifyScripts(_onCollisionEnter, new Collision2D() { Collider = this, OtherCollider = other });
+                LaminarProfiler.End();
             }
         }
         private void NotifyCollisionStay(Collider2D other, CollisionData kvp)
         {
             if (other && other.Actor)
             {
+                LaminarProfiler.Begin("OnCollisionStay");
                 OnNotifyScripts(_onCollisionStay, new Collision2D() { Collider = this, OtherCollider = other });
+                LaminarProfiler.End();
             }
         }
         private void NotifyCollisionExit(Collider2D other, CollisionData data)
         {
             if (other && other.Actor)
             {
+                LaminarProfiler.Begin("OnCollisionExit");
                 OnNotifyScripts(_onCollisionExit, new Collision2D() { Collider = this, OtherCollider = other });
+                LaminarProfiler.End();
             }
         }
         private void NotifyTriggerEnter(Collider2D other)
         {
             if (other && other.Actor)
             {
+                LaminarProfiler.Begin("OnTriggerEnter");
                 OnNotifyScripts(_onTriggerEnter, other);
+                LaminarProfiler.End();
             }
         }
         private void NotifyTriggerStay(Collider2D other)
         {
             if (other && other.Actor)
             {
+                LaminarProfiler.Begin("OnTriggerStay");
                 OnNotifyScripts(_onTriggerStay, other);
+                LaminarProfiler.End();
             }
         }
         private void NotifyTriggerExit(Collider2D other)
         {
             if (other && other.Actor)
             {
+                LaminarProfiler.Begin("OnTriggerExit");
                 OnNotifyScripts(_onTriggerExit, other);
+                LaminarProfiler.End();
             }
         }
         private void OnNotifyScripts<T>(Action<ScriptBehavior, T> funcEvent, T data)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Engine.Analysis;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -10,7 +11,7 @@ namespace Engine.Layers
 {
     internal class LayersManager
     {
-        protected LayerBase[] Layers {  get; set; }
+        protected LayerBase[] Layers { get; set; }
         private readonly CleanUpLayer _cleanupLayer = new();
         private MainThreadDispatcher _initializationDispatcher = new();
         internal bool LayersInitialized { get; protected private set; }
@@ -91,20 +92,33 @@ namespace Engine.Layers
 #endif
                 return;
             }
+            LaminarProfiler.BeginFrame();
 
             for (int i = 0; i < Layers.Length; i++)
             {
                 try
                 {
-                    Layers[i]?.UpdateLayer();
+                    var layer = Layers[i];
+                    if (layer != null)
+                    {
+                        LaminarProfiler.Begin(layer.GetType().Name);
+                        layer.UpdateLayer();
+                        LaminarProfiler.End();
+                    }
                 }
                 catch (Exception e)
                 {
                     Debug.Error(e.ToString());
                 }
+                finally
+                {
+                    LaminarProfiler.End();
+                }
             }
-
+            LaminarProfiler.Begin(EngineProfilerIds.CleanupLayer);
             _cleanupLayer.UpdateLayer();
+            LaminarProfiler.End();
+            LaminarProfiler.EndFrame();
         }
 
         internal virtual void PublishEvent(EventType type, object value)

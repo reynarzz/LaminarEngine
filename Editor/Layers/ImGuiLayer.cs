@@ -95,7 +95,7 @@ namespace Editor.Layers
                 _windows = new List<EditorWindow>()
                 {
                     new AssetsViewWindow(),
-
+                    new ProfilerWindow(),
                     new ActionBarView(),
                     new FooterBarView(),
 
