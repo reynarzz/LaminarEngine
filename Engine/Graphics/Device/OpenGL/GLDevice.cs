@@ -46,14 +46,14 @@ namespace Engine.Graphics.OpenGL
             _gfxDeviceInfo.MaxHardwareTextureUnits = maxTextureUnits;
             _gfxDeviceInfo.MaxTexAccessInVertexShader = maxTextureUnitsAccessInVertexShader;
 
-            _gfxDeviceInfo.MaxValidTextureUnits = Math.Min(_gfxDeviceInfo.MaxHardwareTextureUnits, _gfxDeviceInfo.MaxTexAccessInVertexShader);
             _gfxDeviceInfo.Vendor = glGetString(GL_VENDOR);
-            _gfxDeviceInfo.Renderer = glGetString(GL_RENDERER);
+            _gfxDeviceInfo.Device = glGetString(GL_RENDERER);
             _gfxDeviceInfo.Version = glGetString(GL_VERSION);
 
             Debug.Log("OpenGL Version: " + _gfxDeviceInfo.Version);
-            Debug.Log("OpenGL Renderer: " + _gfxDeviceInfo.Renderer);
-            Debug.Log("OpenGL MaxTextureUnits: " + _gfxDeviceInfo.MaxValidTextureUnits);
+            Debug.Log("OpenGL Device: " + _gfxDeviceInfo.Device);
+            Debug.Log("OpenGL Max Shader Texture Units: " + _gfxDeviceInfo.MaxShaderTextureUnits);
+            Debug.Log("OpenGL Max Hardware Texture Units: " + _gfxDeviceInfo.MaxHardwareTextureUnits);
             Debug.Log("OpenGL MaxUniformsCount: " + _gfxDeviceInfo.MaxUniformsCount);
 
             _defaultVAO = glGenVertexArray();

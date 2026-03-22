@@ -1,6 +1,6 @@
 #version 330 core
 
-uniform sampler2D uTextures[15]; //uniform sampler2D uTextures[{32}]
+uniform sampler2D uTextures[8];
 in vec2 fragUV;
 in vec4 vColor;
 
@@ -19,13 +19,6 @@ vec4 SampleIndexedTexture(int index, vec2 uv)
         case 5:  return texture(uTextures[5], uv);
         case 6:  return texture(uTextures[6], uv);
         case 7:  return texture(uTextures[7], uv);
-        case 8:  return texture(uTextures[8], uv);
-        case 9:  return texture(uTextures[9], uv);
-        case 10: return texture(uTextures[10], uv);
-        case 11: return texture(uTextures[11], uv);
-        case 12: return texture(uTextures[12], uv);
-        case 13: return texture(uTextures[13], uv);
-        case 14: return texture(uTextures[14], uv);
     }
 
     // fallback color if out of range

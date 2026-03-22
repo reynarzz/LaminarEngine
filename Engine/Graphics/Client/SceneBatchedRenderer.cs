@@ -21,7 +21,7 @@ namespace Engine.Graphics
 
             _drawCallData = new DrawCallData()
             {
-                Textures = new GfxResource[GfxDeviceManager.Current.GetDeviceInfo().MaxValidTextureUnits],
+                Textures = new GfxResource[GfxDeviceManager.Current.GetDeviceInfo().MaxHardwareTextureUnits],
                 Uniforms = new UniformValue[GfxDeviceManager.Current.GetDeviceInfo().MaxUniformsCount],
             };
             _screenGrabTarget = new RenderTexture(Screen.Width, Screen.Height);
@@ -139,6 +139,7 @@ namespace Engine.Graphics
                 }
 
                 int screenGrabIndex = boundTex;
+                Debug.Log(screenGrabIndex);
                 _drawCallData.Textures[screenGrabIndex] = pass.IsScreenGrabPass ? screenGrabTarget.NativeResource.SubResources[0] : null;
 
                 _pipelineFeatures.Blending = pass.Blending;

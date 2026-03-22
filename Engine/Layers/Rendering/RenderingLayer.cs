@@ -44,7 +44,7 @@ namespace Engine.Layers
 
                 _screenQuadDrawCallData = new DrawCallData()
                 {
-                    Textures = new GfxResource[GfxDeviceManager.Current.GetDeviceInfo().MaxValidTextureUnits],
+                    Textures = new GfxResource[GfxDeviceManager.Current.GetDeviceInfo().MaxShaderTextureUnits],
                     Uniforms = new UniformValue[GfxDeviceManager.Current.GetDeviceInfo().MaxUniformsCount],
                 };
 

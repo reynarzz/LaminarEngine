@@ -26,7 +26,7 @@ VERTEX_SHADER
 
 FRAGMENT_SHADER
 {
-    uniform sampler2D uTextures[15];
+    uniform sampler2D uTextures[8];
     #define LAM_TEXTURE_ARRAY uTextures
     #include "Core.glsl"
 
@@ -39,10 +39,5 @@ FRAGMENT_SHADER
     void main()  
     {
         fragColor = LAM_SampleTextureArray(fragTexIndex, fragUV) * vColor;
-
-        if(fragColor.a <= 0.000001)
-        {
-            discard;
-        }
     }
 }

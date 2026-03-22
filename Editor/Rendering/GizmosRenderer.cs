@@ -168,7 +168,7 @@ namespace Editor.Rendering
 
             _drawCallData = new DrawCallData()
             {
-                Textures = new GfxResource[GfxDeviceManager.Current.GetDeviceInfo().MaxValidTextureUnits],
+                Textures = new GfxResource[GfxDeviceManager.Current.GetDeviceInfo().MaxShaderTextureUnits],
                 Uniforms = new UniformValue[10],
             };
 

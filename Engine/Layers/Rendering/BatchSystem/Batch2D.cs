@@ -110,14 +110,15 @@ namespace Engine.Rendering
 
         static Batch2D()
         {
-            TextureSlotArray = new int[GfxDeviceManager.Current.GetDeviceInfo().MaxValidTextureUnits - 5];
+            TextureSlotArray = new int[GfxDeviceManager.Current.GetDeviceInfo().MaxShaderTextureUnits];
             for (int i = 0; i < TextureSlotArray.Length; i++)
             {
                 TextureSlotArray[i] = i;
             }
         }
 
-        internal static Batch2D CreateBatch<T>(int maxVertexSize, GfxResource sharedIndexBuffer, uint[] rawIndices) where T : unmanaged, IVertex2D<T>
+        internal static Batch2D CreateBatch<T>(int maxVertexSize, GfxResource sharedIndexBuffer, uint[] rawIndices)
+                                               where T : unmanaged, IVertex2D<T>
         {
             var verticesCollection = new VertexCollection<T>(maxVertexSize);
 
@@ -125,7 +126,7 @@ namespace Engine.Rendering
             {
                 MaxVertexSize = maxVertexSize,
                 VertexType = typeof(T),
-                Textures = new Texture[GfxDeviceManager.Current.GetDeviceInfo().MaxValidTextureUnits - 5],
+                Textures = new Texture[GfxDeviceManager.Current.GetDeviceInfo().MaxShaderTextureUnits],
                 _renderers = new Dictionary<Guid, RendererIds>(),
                 _geoDescriptor = new GeometryDescriptor(),
                 _vertexCollection = verticesCollection

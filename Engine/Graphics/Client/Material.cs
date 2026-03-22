@@ -82,7 +82,7 @@ namespace Engine
 
         public void AddTexture(string name, Texture texture)
         {
-            var maxTextures = GfxDeviceManager.Current.GetDeviceInfo().MaxHardwareTextureUnits;
+            var maxTextures = GfxDeviceManager.Current.GetDeviceInfo().MaxShaderTextureUnits;
             if (_textures.Count < maxTextures)
             {
                 _textures[name] = texture;

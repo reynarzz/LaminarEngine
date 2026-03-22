@@ -82,9 +82,25 @@ namespace Engine
             return Get<SceneAsset>(name);
         }
 
+        /// <summary>
+        /// Destroy asset instance and removes it from cache.
+        /// </summary>
+        /// <param name="refId"></param>
+        internal static void DestroyAsset(Guid refId)
+        {
+            if (refId == Guid.Empty)
+            {
+                return;
+            }
 
+            var asset = IOLayer.GetDatabase().GetAsset<Asset>(refId);
 
-
+            if (asset)
+            {
+                asset.IsPhysicallyAvailable = false;
+                IOLayer.GetDatabase().RemoveFromCache(refId);
+            }
+        }
 
         internal static T Get<T>(string path) where T : Asset
         {
@@ -101,26 +117,6 @@ namespace Engine
         public static string[] LoadedPaths()
         {
             return _loadedPaths.ToArray();
-        }
-
-        /// <summary>
-        /// Destroy asset instance and removes it from cache.
-        /// </summary>
-        /// <param name="refId"></param>
-        internal static void DestroyAsset(Guid refId)
-        {
-            if(refId == Guid.Empty)
-            {
-                return;
-            }
-
-            var asset = IOLayer.GetDatabase().GetAsset<Asset>(refId);
-
-            if (asset)
-            {
-                asset.IsPhysicallyAvailable = false;
-                IOLayer.GetDatabase().RemoveFromCache(refId);
-            }
         }
 #endif
     }

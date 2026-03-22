@@ -14,7 +14,7 @@ VERTEX_SHADER
     uniform mat4 uVP;
     out vec2 worldUV;
 
-    void main() 
+    void main()
     { 
         fragUV = uv;   
         worldUV = position.xy * 0.1;
@@ -27,7 +27,7 @@ VERTEX_SHADER
 
 FRAGMENT_SHADER
 {
-    uniform sampler2D uTextures[15];
+    uniform sampler2D uTextures[8];
     #define LAM_TEXTURE_ARRAY uTextures
     #include "Core.glsl"
 
@@ -37,13 +37,8 @@ FRAGMENT_SHADER
     flat in int fragTexIndex; 
     out vec4 fragColor;
 
-    void main()  
+    void main()
     {
         fragColor = LAM_SampleTextureArray(fragTexIndex, fragUV) * vColor;
-
-        if(fragColor.a <= 0.000001)
-        {
-            discard;
-        }
     }
 }
