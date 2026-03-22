@@ -17,7 +17,7 @@ namespace Engine.Layers
 
         private static ContactsDispatcher _contactDispatcher = new();
         internal static ContactsDispatcher ContactsDispatcher => _contactDispatcher;
-        private static List<RigidBody2D> _rigidbodies = new();
+        private static List<RigidBody2D> _rigidbodies = new(100);
 
         private static double _accumulator = 0f;
         private float _fixedTimeStep = 0.02f;
