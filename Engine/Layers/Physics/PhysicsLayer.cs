@@ -85,6 +85,7 @@ namespace Engine.Layers
                     rigidbody.PostUpdateBody();
                 }
             }
+            sw.Stop();
 
             float alpha = (float)_accumulator / _fixedTimeStep;
 
@@ -96,9 +97,8 @@ namespace Engine.Layers
                 rigidbody.CalculatePhysicsInterpolation(rigidbody.Transform, rigidbody.PrevLocalPosition, rigidbody.PrevLocalRotation, alpha);
             }
 
-            sw.Stop();
             //Console.WriteLine($"Physics: {sw.ElapsedMilliseconds}ms");
-            //if(sw.ElapsedMilliseconds > 5)
+            //if (sw.ElapsedMilliseconds > 5)
             //{
             //    Debug.Log("Bodies count: " + PhysicWorld.World.bodies.count);
             //}
