@@ -37,6 +37,7 @@ Refactor:
 - Clean up DrawEObjectSlot() in 'EditorGuiFieldsResolver.cs'
 - AssetsViewWindow class needs a cleanup.
 - SceneGraphWindow, and move actor popup outside to its own function, and call it outside the actor loop.
+- Polish material UI.
 
 Performance fix:
 UI performance is pretty bad, rewrite the entire UI system.
@@ -45,6 +46,7 @@ Assets:
 Metadata of every asset should be binary on final build.
 
 Features:
+- Implement V1 Prefabs: Without data linking. But just a template that you can drag into the scene.
 - Assets should only be able to be loaded by dragging and dropping into the scene, or the special folder 'Resources'.
 - Generate the assets index list by reading scenes, so we add all the assets that the deploy build needs.
 - Fully async scene load in the background: async asset loading (mainThreadSync for graphic assets)

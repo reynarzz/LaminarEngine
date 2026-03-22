@@ -114,7 +114,6 @@ namespace Engine.Rendering
                 return selectedBatch;
             }
 
-            // TODO: check for the vertex type.
             var newBatch = CreateBatch(renderer, maxVertexSize, _sharedIndexBuffer, rawIndices);
             _rendererToBatch[renderer.GetID()] = newBatch;
 
