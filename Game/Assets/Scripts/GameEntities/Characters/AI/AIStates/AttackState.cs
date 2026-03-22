@@ -37,7 +37,7 @@ namespace Game
                 return;
 
             }
-            if (MathF.Abs(dir.y) > 2 && Context.Detector.IsTargetDetected)
+            if (MathF.Abs(dir.y) > 2 && Context.Detector != null && Context.Detector.IsTargetDetected)
             {
                 Context.Jump();
             }

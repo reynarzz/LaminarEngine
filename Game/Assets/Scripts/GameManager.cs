@@ -230,7 +230,10 @@ namespace Game
         {
             if (!Camera)
             {
-                Camera = Actor.Create<CameraFollow, CameraShake, CameraViewportAdjust>("MainCamera").AddComponent<Camera>();
+                Camera = Actor.Create<CameraFollow, CameraShake>("MainCamera").AddComponent<Camera>();
+#if DESKTOP
+                Camera.AddComponent<CameraViewportAdjust>();
+#endif
                 Camera.BackgroundColor = new Color(0.2f, 0.2f, 0.2f, 1);
                 Camera.OrthographicSize = GameResolution.y / 2.0f / 16.0f;
                 Camera.ProjectionMode = CameraProjectionMode.Orthographic;

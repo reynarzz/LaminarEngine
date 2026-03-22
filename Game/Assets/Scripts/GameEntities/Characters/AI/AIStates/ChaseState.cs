@@ -19,7 +19,10 @@ namespace Game
         public override void OnEnter()
         {
             Context.Target = Actor.Find("Player").GetComponent<Character>();
-            Context.Detector.Size = 13;
+            if(Context.Detector != null)
+            {
+                Context.Detector.Size = 13;
+            }
         }
 
         public override void OnUpdate()
@@ -33,7 +36,8 @@ namespace Game
                 var dir = Context.Transform.WorldPosition - Context.Target.Transform.WorldPosition;
                 var transitionDist = 1.4f;
 
-                if (Context.Detector.IsTargetDetected)
+
+                if (Context.Detector != null && Context.Detector.IsTargetDetected)
                 {
                     _currentTimeToSearch = _timeToSearch;
                 }
@@ -41,7 +45,7 @@ namespace Game
                 {
                     _currentTimeToSearch -= Time.DeltaTime;
                 }
-                if ((!Context.Detector.IsTargetDetected && _currentTimeToSearch <= 0) || !Context.Target.IsCharacterAlive())
+                if ((Context.Detector != null && !Context.Detector.IsTargetDetected && _currentTimeToSearch <= 0) || !Context.Target.IsCharacterAlive())
                 {
                     Context.Walk(0);
                     // ReturnToParent();

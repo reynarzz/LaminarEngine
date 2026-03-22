@@ -13,7 +13,7 @@ namespace Game
         private float _timeMoving = 1;
         public PatrolState() : base([new ChaseState<T>()])
         {
-            
+
         }
 
         public override void OnInit()
@@ -35,15 +35,18 @@ namespace Game
             {
                 //var engageDist = 5f;
                 // var dir = (Context.Target.Transform.WorldPosition - Context.Transform.WorldPosition);
-                
-                if (Context.Detector.IsTargetDetected && Context.Target.IsCharacterAlive() && !Context.Target.IsEnteringThroughDoor)
+
+                if (Context.Detector != null)
                 {
-                    FSM.ChangeState<ChaseState<T>>();
-                }
-                else
-                {
-                    // TODO: patrol here
-                    Context.Walk(0);
+                    if (Context.Detector.IsTargetDetected && Context.Target.IsCharacterAlive() && !Context.Target.IsEnteringThroughDoor)
+                    {
+                        FSM.ChangeState<ChaseState<T>>();
+                    }
+                    else
+                    {
+                        // TODO: patrol here
+                        Context.Walk(0);
+                    }
                 }
             }
         }
