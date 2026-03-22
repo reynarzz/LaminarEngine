@@ -128,7 +128,7 @@ namespace Editor.Rendering
   layout(location = 3) in int texIndex; 
   
   out vec2 fragUV;
-  flat out int fragTexIndex;            // flat = no interpolation between vertices
+  flat out int fragTexIndex;            
   out vec4 vColor;
   uniform mat4 uVP;
   out vec2 worldUV;

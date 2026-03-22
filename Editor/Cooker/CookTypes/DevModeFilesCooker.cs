@@ -70,6 +70,22 @@ namespace Editor.Cooker
                     AssetProccesResult data = default;
                     if (!isMoved)
                     {
+                        if (containsAssetInfo)
+                        {
+                            if (isMoved)
+                            {
+                                Console.WriteLine("Moving asset file: " + filePath);
+                            }
+                            else
+                            {
+                                Console.WriteLine("Updating asset file: " + filePath);
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Importing asset file: " + filePath);
+                        }
+
                         data = ProcessAsset(platform, assetType, meta, reader);
 
                         if (data.IsSuccess)
@@ -81,22 +97,11 @@ namespace Editor.Cooker
                             someAssetFailImport = true;
                         }
                     }
-                    
+
                     var assetRelPath = Paths.GetRelativeAssetPath(filePath);
                     if (containsAssetInfo)
                     {
                         assetInfo = _database.Assets[meta.GUID];
-
-                        if (isMoved)
-                        {
-                            Console.WriteLine("Moving asset file: " + filePath);
-                        }
-                        else
-                        {
-                            Console.WriteLine("Updating asset file: " + filePath);
-                        }
-
-
                         assetInfo.LastWriteTime = latestWriteTime;
                         assetInfo.MetaWriteTime = metaLatestWriteTime;
                         assetInfo.Path = assetRelPath;
@@ -110,9 +115,6 @@ namespace Editor.Cooker
                     }
                     else
                     {
-
-                        Console.WriteLine("Importing asset file: " + filePath);
-
                         // Write meta
                         await File.WriteAllTextAsync(metaPath, EditorJsonUtils.Serialize(meta));
 
@@ -207,7 +209,7 @@ namespace Editor.Cooker
 
         private bool IsMove(Guid refId, string filePath)
         {
-            if(_database.Assets.TryGetValue(refId, out var currentAssetPath))
+            if (_database.Assets.TryGetValue(refId, out var currentAssetPath))
             {
                 return !currentAssetPath.Equals(filePath);
             }

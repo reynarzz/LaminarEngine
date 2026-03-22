@@ -93,11 +93,17 @@ namespace Engine.Graphics
                         for (int j = 0; j < i; j++) // only batches before current, already flushed
                         {
                             var batchGrab = batches[j];
-                            if (!batchGrab.IsActive) break;
+                            if (!batchGrab.IsActive)
+                            {
+                                break;
+                            }
                             RenderPass(batchGrab, ref VP, _screenGrabTarget, _screenGrabTarget, camera);
                         }
                     }
-                    catch (Exception e) { Debug.EngineError(e); }
+                    catch (Exception e)
+                    {
+                        Debug.EngineError(e);
+                    }
                 }
 
                 RenderPass(batch, ref VP, sceneRenderTarget, _screenGrabTarget, camera);
@@ -139,7 +145,7 @@ namespace Engine.Graphics
                 }
 
                 int screenGrabIndex = boundTex;
-                Debug.Log(screenGrabIndex);
+
                 _drawCallData.Textures[screenGrabIndex] = pass.IsScreenGrabPass ? screenGrabTarget.NativeResource.SubResources[0] : null;
 
                 _pipelineFeatures.Blending = pass.Blending;

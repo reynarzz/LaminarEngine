@@ -12,7 +12,7 @@ VERTEX_SHADER
     out vec2 screenUV;
     out vec2 worldUV;
 
-    flat out int fragTexIndex;            // flat = no interpolation between vertices
+    flat out int fragTexIndex;            
     out vec4 vColor;
     uniform mat4 uVP;
     uniform mat4 uProjectionMatrix;
@@ -38,10 +38,9 @@ VERTEX_SHADER
 
 FRAGMENT_SHADER
 {
-    uniform sampler2D uTextures[8];
-    #define LAM_TEXTURE_ARRAY uTextures
+    #define LAM_TEXTURE_ARRAY 
     #include "Core.glsl"
-
+     
     in vec2 fragUV;
     in vec2 screenUV;
     in vec4 vColor;

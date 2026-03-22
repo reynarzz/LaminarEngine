@@ -23,7 +23,7 @@ namespace Engine.Utils
             internal const int MAX_UNIFORMS_PER_DRAWCALL = 150;
             internal const int MAX_QUADS_PER_BATCH = 300;
             internal const int MAX_FONT_QUADS_PER_BATCH = 10000;
-            internal const int MAX_TEXTURE_UNITS_SHADER = 8;
+            internal const int MAX_TEXTURE_UNITS_SHADER = 7;
 
             internal enum Uniforms
             {

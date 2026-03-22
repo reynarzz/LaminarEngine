@@ -8,7 +8,7 @@ VERTEX_SHADER
     layout(location = 3) in int texIndex; 
 
     out vec2 fragUV;
-    flat out int fragTexIndex;            // flat = no interpolation between vertices
+    flat out int fragTexIndex;            
     out vec4 vColor;
     uniform mat4 uVP;
     out vec2 worldUV;
@@ -26,8 +26,7 @@ VERTEX_SHADER
 
 FRAGMENT_SHADER
 {
-    uniform sampler2D uTextures[8];
-    #define LAM_TEXTURE_ARRAY uTextures
+    #define LAM_TEXTURE_ARRAY 
     #include "Core.glsl"
 
     in vec2 fragUV; 

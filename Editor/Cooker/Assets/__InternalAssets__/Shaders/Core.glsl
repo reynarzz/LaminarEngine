@@ -1,3 +1,5 @@
+#define MAX_TEXTURE_UNITS 7
+
 vec4 LAM_UnpackColor(uint c) 
 {
     float r = float((c >> 24) & 0xFFu) / 255.0;
@@ -47,18 +49,19 @@ vec4 LAM_Luminance(vec4 color)
 }
 
 #ifdef LAM_TEXTURE_ARRAY
+uniform sampler2D uTextures[MAX_TEXTURE_UNITS];
+
 vec4 LAM_SampleTextureArray(int index, vec2 uv)
-{
+{ 
     switch(index)
     {
-        case 0:  return texture(LAM_TEXTURE_ARRAY[0], uv);
-        case 1:  return texture(LAM_TEXTURE_ARRAY[1], uv);
-        case 2:  return texture(LAM_TEXTURE_ARRAY[2], uv);
-        case 3:  return texture(LAM_TEXTURE_ARRAY[3], uv);
-        case 4:  return texture(LAM_TEXTURE_ARRAY[4], uv);
-        case 5:  return texture(LAM_TEXTURE_ARRAY[5], uv);
-        case 6:  return texture(LAM_TEXTURE_ARRAY[6], uv);
-        case 7:  return texture(LAM_TEXTURE_ARRAY[7], uv);
+        case 0:  return texture(uTextures[0], uv);
+        case 1:  return texture(uTextures[1], uv);
+        case 2:  return texture(uTextures[2], uv);
+        case 3:  return texture(uTextures[3], uv);
+        case 4:  return texture(uTextures[4], uv);
+        case 5:  return texture(uTextures[5], uv);
+        case 6:  return texture(uTextures[6], uv);
     }
 
     // fallback color if out of range
