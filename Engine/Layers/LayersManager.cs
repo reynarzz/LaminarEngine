@@ -84,15 +84,17 @@ namespace Engine.Layers
 
         internal virtual void Update()
         {
+            LaminarProfiler.BeginFrame();
+
             if (!LayersInitialized)
             {
                 _initializationDispatcher.UpdateLayer();
 #if DESKTOP
                 GLFW.Glfw.PollEvents();
 #endif
+                LaminarProfiler.EndFrame();
                 return;
             }
-            LaminarProfiler.BeginFrame();
 
             for (int i = 0; i < Layers.Length; i++)
             {

@@ -54,6 +54,7 @@ Features:
 - [Editor] Display collider boundaries at edit mode when selecting an actor, this should be recursive.
 - [Editor] Implement edit handles for colliders: box circle.
 - [Editor] Add menu item options for adding sprites: Square, Circle, Capsule, Triangle.
+- [Editor] Import scripts and have metadata info such as 'if overrides physics methods', so rigidbodies can enable or disable physics features accordingly.
 
 Save Editor config:
 -Current loaded scene name.

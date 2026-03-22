@@ -8,6 +8,7 @@ namespace Editor.Views
     {
         private int _id = 0;
         private LaminarProfiler.Node _rootSnapshot;
+
         public ProfilerWindow() : base("Window/Profiler")
         {
         }
@@ -16,18 +17,16 @@ namespace Editor.Views
         {
             if (OnBeginWindow("Profiler"))
             {
-                if(ImGui.Button("Take Snapshot"))
+                if (ImGui.Button("Take Snapshot"))
                 {
                     _rootSnapshot = LaminarProfiler.GetRoot().Clone();
                 }
 
                 if (_rootSnapshot != null)
                 {
-                    // Flamegraph (main view)
                     DrawFlameGraph(_rootSnapshot);
                 }
 
-                // Optional: table view below
                 if (ImGui.CollapsingHeader("Hierarchy"))
                 {
                     if (ImGui.BeginTable("ProfilerTable", 3, ImGuiTableFlags.Borders | ImGuiTableFlags.Resizable | ImGuiTableFlags.RowBg))
@@ -52,46 +51,47 @@ namespace Editor.Views
             OnEndWindow();
         }
 
-        // -------------------------
-        // Flamegraph
-        // -------------------------
-
         private void DrawFlameGraph(LaminarProfiler.Node root)
         {
             var drawList = ImGui.GetWindowDrawList();
 
-            Vector2 origin = ImGui.GetCursorScreenPos();
             float width = ImGui.GetContentRegionAvail().X;
             float barHeight = 18.0f;
 
-            long total = root.ElapsedTicks;
-            if (total <= 0)
+            if (root.ElapsedTicks <= 0)
                 return;
 
-            DrawNodeRecursive(root, 0, 0.0f, width, root.ElapsedTicks, drawList, origin);
+            int depth = GetMaxDepth(root);
+            float totalHeight = depth * barHeight;
 
-            ImGui.Dummy(new Vector2(width, GetMaxDepth(root) * barHeight));
+            Vector2 origin = ImGui.GetCursorScreenPos();
+            ImGui.Dummy(new Vector2(width, totalHeight));
+
+            DrawNodeRecursive(root, 0, 0.0f, width, root.ElapsedTicks, drawList, origin);
         }
+
         private void DrawNodeRecursive(
-    LaminarProfiler.Node node,
-    int depth,
-    float xOffset,
-    float totalWidth,
-    long rootTicks,
-    ImDrawListPtr drawList,
-    Vector2 origin)
+            LaminarProfiler.Node node,
+            int depth,
+            float xOffset,
+            float width,
+            long parentTicks,
+            ImDrawListPtr drawList,
+            Vector2 origin)
         {
             if (node.ElapsedTicks <= 0)
                 return;
 
             float barHeight = 18.0f;
 
-            // width relative to ROOT (not parent)
-            float ratio = rootTicks > 0
-                ? (float)node.ElapsedTicks / rootTicks
+            float ratio = parentTicks > 0
+                ? (float)node.ElapsedTicks / parentTicks
                 : 0f;
 
-            float w = totalWidth * ratio;
+            float w = width * ratio;
+
+            if (w < 1.0f)
+                return;
 
             float x0 = origin.X + xOffset;
             float y0 = origin.Y + depth * barHeight;
@@ -118,7 +118,6 @@ namespace Editor.Views
                 ImGui.EndTooltip();
             }
 
-            // IMPORTANT: children are laid out sequentially using ROOT scale
             float childOffset = xOffset;
 
             if (node.Children.Count > 1)
@@ -130,18 +129,18 @@ namespace Editor.Views
             {
                 var child = node.Children[i];
 
-                float childRatio = rootTicks > 0
-                    ? (float)child.ElapsedTicks / rootTicks
+                float childRatio = node.ElapsedTicks > 0
+                    ? (float)child.ElapsedTicks / node.ElapsedTicks
                     : 0f;
 
-                float childWidth = totalWidth * childRatio;
+                float childWidth = w * childRatio;
 
                 DrawNodeRecursive(
                     child,
                     depth + 1,
                     childOffset,
-                    totalWidth,
-                    rootTicks,
+                    w,
+                    node.ElapsedTicks,
                     drawList,
                     origin);
 
@@ -174,10 +173,6 @@ namespace Editor.Views
             return ImGui.ColorConvertFloat4ToU32(new Vector4(r, g, b, 1.0f));
         }
 
-        // -------------------------
-        // Table (optional)
-        // -------------------------
-
         private void DrawNode(LaminarProfiler.Node node)
         {
             ImGui.TableNextRow();
@@ -200,7 +195,8 @@ namespace Editor.Views
 
             if (open)
             {
-                node.Children.Sort((a, b) => b.ElapsedTicks.CompareTo(a.ElapsedTicks)); // Add this
+                node.Children.Sort((a, b) => b.ElapsedTicks.CompareTo(a.ElapsedTicks));
+
                 for (int i = 0; i < node.Children.Count; i++)
                 {
                     DrawNode(node.Children[i]);

@@ -1,4 +1,5 @@
-﻿using Engine.Graphics;
+﻿using Engine.Analysis;
+using Engine.Graphics;
 using Engine.GUI;
 using Engine.Utils;
 using GlmNet;
@@ -222,17 +223,17 @@ namespace Engine.Layers
                 isCameraAvailable = false;
                 return;
             }
-
             if (surface.DrawGizmos)
             {
+                LaminarProfiler.Begin("Draw Gizmos");
                 surface.GizmosRenderer?.OnBegin(camera);
+                LaminarProfiler.End();
             }
 
             for (int i = 0; i < surface.SceneRenderers.Count; i++)
             {
                 var sceneRenderer = surface.SceneRenderers[i];
                 var targetRenderTexture = GetCurrentRenderTexture(surface, camera, sceneRenderer);
-
                 if (!targetRenderTexture)
                 {
                     continue;
@@ -251,26 +252,31 @@ namespace Engine.Layers
                 });
                 sceneRenderer.OnPrepare(_renderersById.Values, _uiRenderersById.Values);
                 // TODO: begin
+                LaminarProfiler.Begin($"Scene Renderer: {sceneRenderer.GetType().Name}");
                 sceneRenderer.OnBegin();
-
                 var processedRenderTexture = sceneRenderer.OnRenderScene(surface, camera, targetRenderTexture);
-
+                LaminarProfiler.End();
+#if DEBUG || EDITOR
+                LaminarProfiler.Begin($"Draw Debug: {sceneRenderer.GetType().Name}");
                 if (surface.RenderDebug)
                 {
-#if DEBUG || EDITOR
                     SceneManager.OnDrawGizmos();
                     var VP = camera.Projection * camera.ViewMatrix;
                     Debug.DrawGeometries(VP, surface.UIViewProj, processedRenderTexture.NativeResource);
-#endif
+
                 }
                 if (surface.DrawGizmos)
                 {
                     processedRenderTexture = surface?.GizmosRenderer?.OnRender(camera, surface, processedRenderTexture);
                 }
+                LaminarProfiler.End();
+#endif
 
                 if (surface.RenderPostProcessing)
                 {
+                    LaminarProfiler.Begin($"Draw Post-Processing: {sceneRenderer.GetType().Name}");
                     RenderPostProcessing(ref processedRenderTexture);
+                    LaminarProfiler.End();
                 }
 
                 bool IsCameraRenderTexture = camera.RenderTexture;
