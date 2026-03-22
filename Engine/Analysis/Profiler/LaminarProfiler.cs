@@ -148,8 +148,10 @@ namespace Engine.Analysis
             return default;
 #endif
         }
+#if DEBUG
 
         internal static Node GetRoot() => _root;
+#endif
 
         public static double TicksToMilliseconds(long ticks)
         {
