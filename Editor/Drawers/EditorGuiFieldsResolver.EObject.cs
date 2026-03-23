@@ -165,7 +165,15 @@ namespace Editor.Utils
             ImGui.SetCursorPos(preRectCursor);
             var invisibleButtonSize = new Vector2(max.X - min.X, max.Y - min.Y);
             invisibleButtonSize.X -= 30;
-            ImGui.InvisibleButton($"DropRect##_DROP_RECT_{valueType.Name}", invisibleButtonSize);
+
+            if(valueType == null)
+            {
+                ImGui.PopStyleColor(3);
+                ImGui.SetCursorPos(afterTextCursorPos);
+                ImGui.Dummy(new Vector2(0, ImGui.GetStyle().ItemSpacing.Y - 2));
+                return false;
+            }
+            ImGui.InvisibleButton($"DropRect##_DROP_RECT_{valueType?.Name}", invisibleButtonSize);
 
             if (hasObject)
             {

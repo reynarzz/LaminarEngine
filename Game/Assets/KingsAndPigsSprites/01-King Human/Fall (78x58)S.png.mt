@@ -9,7 +9,6 @@
   "AtlasData": {
     "_chunks": [
       {
-        "ID": "e7ca868d-b5d4-49e0-9a00-d870d4048946",
         "Pivot": {
           "x": 0.4,
           "y": 0.42

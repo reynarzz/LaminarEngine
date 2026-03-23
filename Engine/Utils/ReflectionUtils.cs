@@ -1015,6 +1015,10 @@ namespace Engine.Utils
         }
         public static string GetFriendlyTypeName(Type type)
         {
+            if(type == null)
+            {
+                return "Null Type";
+            }
             if (!type.IsGenericType)
                 return type.Name;
 

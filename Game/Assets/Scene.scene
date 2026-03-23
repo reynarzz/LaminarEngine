@@ -144,35 +144,35 @@
                       "AtlasIndex": 0,
                       "TexRefId": "69e1a694-395e-4675-a011-b72a07eb40e2",
                       "Type": "SpriteAsset",
-                      "RefId": "50005a5c-e122-4ecf-a21a-a738a7929708"
+                      "RefId": "69e1a694-395e-4675-a011-b72a07eb40e2"
                     },
                     {
                       "$type": "Engine.Serialization.SpriteReferenceData, Engine",
                       "AtlasIndex": 186,
                       "TexRefId": "ae41cfa8-73fe-4a87-8196-f58a7e3dd748",
                       "Type": "SpriteAsset",
-                      "RefId": "93da070c-8038-485e-9aca-e070a51cd441"
+                      "RefId": "ae41cfa8-73fe-4a87-8196-f58a7e3dd748"
                     },
                     {
                       "$type": "Engine.Serialization.SpriteReferenceData, Engine",
                       "AtlasIndex": 70,
                       "TexRefId": "8f5c1f5f-d718-4140-9168-24ff5acdea97",
                       "Type": "SpriteAsset",
-                      "RefId": "8886018c-6683-41c7-a6c6-ac1a228aa837"
+                      "RefId": "8f5c1f5f-d718-4140-9168-24ff5acdea97"
                     },
                     {
                       "$type": "Engine.Serialization.SpriteReferenceData, Engine",
                       "AtlasIndex": 346,
                       "TexRefId": "da64b85c-92f1-4a6f-a576-0ac668e7e2a7",
                       "Type": "SpriteAsset",
-                      "RefId": "6b9e4a11-3c29-4389-8b72-ae767bc04a86"
+                      "RefId": "da64b85c-92f1-4a6f-a576-0ac668e7e2a7"
                     },
                     {
                       "$type": "Engine.Serialization.SpriteReferenceData, Engine",
                       "AtlasIndex": 3,
                       "TexRefId": "43857e7d-82c1-485e-a0ce-235ca0a42cd2",
                       "Type": "SpriteAsset",
-                      "RefId": "8336aafb-7fb2-451b-ae94-ba0ed6b7d6c7"
+                      "RefId": "43857e7d-82c1-485e-a0ce-235ca0a42cd2"
                     }
                   ],
                   "ItemsType": [
@@ -615,7 +615,7 @@
                                   "TypeId": "f68439f8-d4c7-33ac-d0f0-7558e5fa2d26",
                                   "Simple": {
                                     "Kind": "ULong",
-                                    "Value": "5127504208917797032"
+                                    "Value": "5369304029555107307"
                                   }
                                 },
                                 {
@@ -625,7 +625,7 @@
                                   "TypeId": "f68439f8-d4c7-33ac-d0f0-7558e5fa2d26",
                                   "Simple": {
                                     "Kind": "ULong",
-                                    "Value": "1695974617872121239"
+                                    "Value": "3135835943822080901"
                                   }
                                 }
                               ],
@@ -644,7 +644,7 @@
                             "Enum": {
                               "TypeId": "da7b8b59-a214-82f1-7384-9fe29086ec58",
                               "EnumInternalType": "Engine.AssetType, Engine",
-                              "EnumValue": 0
+                              "EnumValue": 1
                             }
                           }
                         }
@@ -703,7 +703,7 @@
                             "Enum": {
                               "TypeId": "da7b8b59-a214-82f1-7384-9fe29086ec58",
                               "EnumInternalType": "Engine.AssetType, Engine",
-                              "EnumValue": 10
+                              "EnumValue": 14
                             }
                           }
                         }
@@ -880,7 +880,7 @@
                             "Enum": {
                               "TypeId": "da7b8b59-a214-82f1-7384-9fe29086ec58",
                               "EnumInternalType": "Engine.AssetType, Engine",
-                              "EnumValue": 3
+                              "EnumValue": 7
                             }
                           }
                         }
@@ -910,7 +910,7 @@
                                   "TypeId": "f68439f8-d4c7-33ac-d0f0-7558e5fa2d26",
                                   "Simple": {
                                     "Kind": "ULong",
-                                    "Value": "4973264232035080256"
+                                    "Value": "5330952243896258126"
                                   }
                                 },
                                 {
@@ -920,7 +920,7 @@
                                   "TypeId": "f68439f8-d4c7-33ac-d0f0-7558e5fa2d26",
                                   "Simple": {
                                     "Kind": "ULong",
-                                    "Value": "18065040096309519295"
+                                    "Value": "1313062861600973483"
                                   }
                                 }
                               ],
@@ -1274,7 +1274,7 @@
                   "AtlasIndex": 0,
                   "TexRefId": "da64b85c-92f1-4a6f-a576-0ac668e7e2a7",
                   "Type": "SpriteAsset",
-                  "RefId": "04013e58-b16d-453f-a813-784d7a06d739"
+                  "RefId": "da64b85c-92f1-4a6f-a576-0ac668e7e2a7"
                 }
               }
             },
@@ -1499,7 +1499,7 @@
                   "AtlasIndex": 0,
                   "TexRefId": "da64b85c-92f1-4a6f-a576-0ac668e7e2a7",
                   "Type": "SpriteAsset",
-                  "RefId": "04013e58-b16d-453f-a813-784d7a06d739"
+                  "RefId": "da64b85c-92f1-4a6f-a576-0ac668e7e2a7"
                 }
               }
             },
@@ -1673,7 +1673,7 @@
                   "AtlasIndex": 0,
                   "TexRefId": "da64b85c-92f1-4a6f-a576-0ac668e7e2a7",
                   "Type": "SpriteAsset",
-                  "RefId": "04013e58-b16d-453f-a813-784d7a06d739"
+                  "RefId": "da64b85c-92f1-4a6f-a576-0ac668e7e2a7"
                 }
               }
             },
@@ -1847,7 +1847,7 @@
                   "AtlasIndex": 0,
                   "TexRefId": "2f779d6a-a4bb-4860-b3d7-9a2ed747698b",
                   "Type": "SpriteAsset",
-                  "RefId": "c03eed30-1bda-4d04-8551-7e5df67799b4"
+                  "RefId": "2f779d6a-a4bb-4860-b3d7-9a2ed747698b"
                 }
               }
             },
@@ -2088,7 +2088,7 @@
                   "AtlasIndex": 0,
                   "TexRefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb",
                   "Type": "SpriteAsset",
-                  "RefId": "008b6407-6443-429e-994c-f7137394ab36"
+                  "RefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb"
                 }
               }
             },
@@ -2623,7 +2623,7 @@
                   "AtlasIndex": 0,
                   "TexRefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb",
                   "Type": "SpriteAsset",
-                  "RefId": "008b6407-6443-429e-994c-f7137394ab36"
+                  "RefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb"
                 }
               }
             },
@@ -3215,7 +3215,7 @@
                   "AtlasIndex": 1,
                   "TexRefId": "95aed4ef-62cc-41c7-984b-473d4fd70f15",
                   "Type": "SpriteAsset",
-                  "RefId": "00029feb-6256-4302-a87a-1d9edd07b295"
+                  "RefId": "95aed4ef-62cc-41c7-984b-473d4fd70f15"
                 }
               }
             },
@@ -4305,6 +4305,501 @@
       ]
     },
     {
+      "Name": "Platform",
+      "Layer": 10,
+      "IsActiveSelf": true,
+      "ID": "ebbc4dec-bf8f-4166-a8ad-989666bf9e15",
+      "ParentID": "00000000-0000-0000-0000-000000000000",
+      "Components": [
+        {
+          "InternalType": "Engine.Transform, Engine",
+          "TypeId": "a0a8e468-8126-f549-138c-b26e62da1186",
+          "IsEnabled": true,
+          "ID": "245e387d-7751-410f-8b29-37aecddeeb7b",
+          "Properties": [
+            {
+              "Name": "LocalPosition",
+              "Type": "Vec3",
+              "InternalType": "GlmNet.vec3, Engine",
+              "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
+              "Simple": {
+                "Kind": "Vec3",
+                "Value": {
+                  "x": -27.485666,
+                  "y": -5.8390336,
+                  "z": 0.0
+                }
+              }
+            },
+            {
+              "Name": "LocalRotation",
+              "Type": "Quat",
+              "InternalType": "GlmNet.quat, Engine",
+              "TypeId": "bd9d317e-0216-6052-93b0-a68d64e1c1a1",
+              "Simple": {
+                "Kind": "Quat",
+                "Value": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0,
+                  "w": 1.0
+                }
+              }
+            },
+            {
+              "Name": "LocalScale",
+              "Type": "Vec3",
+              "InternalType": "GlmNet.vec3, Engine",
+              "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
+              "Simple": {
+                "Kind": "Vec3",
+                "Value": {
+                  "x": 3.0,
+                  "y": 0.4,
+                  "z": 1.0
+                }
+              }
+            }
+          ]
+        },
+        {
+          "InternalType": "Engine.SpriteRenderer, Engine",
+          "TypeId": "8a8ec899-a0c0-d9bb-e76a-d118eac28eb0",
+          "IsEnabled": true,
+          "ID": "a2f0ddf6-e5b9-44b6-8709-ba37ce158fa9",
+          "Properties": [
+            {
+              "Name": "SortOrder",
+              "Type": "Int",
+              "InternalType": "System.Int32, System.Private.CoreLib",
+              "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
+              "Simple": {
+                "Kind": "Int",
+                "Value": 0
+              }
+            },
+            {
+              "Name": "Color",
+              "Type": "Color",
+              "InternalType": "Engine.Color, Engine",
+              "TypeId": "8b690ecd-d4a6-1ad0-33be-76887ab30172",
+              "Simple": {
+                "Kind": "Color",
+                "Value": {
+                  "R": 0.0,
+                  "G": 1.0,
+                  "B": 0.0,
+                  "A": 1.0
+                }
+              }
+            },
+            {
+              "Name": "FlipX",
+              "Type": "Bool",
+              "InternalType": "System.Boolean, System.Private.CoreLib",
+              "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+              "Simple": {
+                "Kind": "Bool",
+                "Value": false
+              }
+            },
+            {
+              "Name": "FlipY",
+              "Type": "Bool",
+              "InternalType": "System.Boolean, System.Private.CoreLib",
+              "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+              "Simple": {
+                "Kind": "Bool",
+                "Value": false
+              }
+            },
+            {
+              "Name": "Sprite",
+              "Type": "SpriteAsset",
+              "InternalType": "Engine.Sprite, Engine",
+              "TypeId": "8b10d6e4-cc00-3d5a-8210-c8fd378f2f1a",
+              "Simple": null
+            },
+            {
+              "Name": "Material",
+              "Type": "MaterialAsset",
+              "InternalType": "Engine.Material, Engine",
+              "TypeId": "6d303096-cf4b-322c-c9c9-a5b025e553d7",
+              "Simple": null,
+              "Reference": {
+                "$type": "Engine.Serialization.ReferenceData, Engine",
+                "$value": {
+                  "Type": "MaterialAsset",
+                  "RefId": "37ac14f4-9425-4ec2-8f6d-18b11a5c6ea2"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "InternalType": "Engine.RigidBody2D, Engine",
+          "TypeId": "5efeb7ac-f207-f6b2-efd9-a61d13b88933",
+          "IsEnabled": true,
+          "ID": "9075ff60-b734-4371-9078-bf0703ddd01d",
+          "Properties": [
+            {
+              "Name": "BodyType",
+              "Type": "Enum",
+              "InternalType": "Engine.Body2DType, Engine",
+              "TypeId": "00060224-875f-d0ed-33fb-52ef4b5c2839",
+              "Simple": {
+                "Kind": "Enum",
+                "Enum": {
+                  "TypeId": "00060224-875f-d0ed-33fb-52ef4b5c2839",
+                  "EnumInternalType": "Engine.Body2DType, Engine",
+                  "EnumValue": 1
+                }
+              }
+            },
+            {
+              "Name": "Interpolate",
+              "Type": "Bool",
+              "InternalType": "System.Boolean, System.Private.CoreLib",
+              "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+              "Simple": {
+                "Kind": "Bool",
+                "Value": true
+              }
+            },
+            {
+              "Name": "LockZRotation",
+              "Type": "Bool",
+              "InternalType": "System.Boolean, System.Private.CoreLib",
+              "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+              "Simple": {
+                "Kind": "Bool",
+                "Value": false
+              }
+            },
+            {
+              "Name": "IsContinuos",
+              "Type": "Bool",
+              "InternalType": "System.Boolean, System.Private.CoreLib",
+              "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+              "Simple": {
+                "Kind": "Bool",
+                "Value": false
+              }
+            },
+            {
+              "Name": "CanSleep",
+              "Type": "Bool",
+              "InternalType": "System.Boolean, System.Private.CoreLib",
+              "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+              "Simple": {
+                "Kind": "Bool",
+                "Value": false
+              }
+            },
+            {
+              "Name": "IsAutoMass",
+              "Type": "Bool",
+              "InternalType": "System.Boolean, System.Private.CoreLib",
+              "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+              "Simple": {
+                "Kind": "Bool",
+                "Value": false
+              }
+            },
+            {
+              "Name": "Mass",
+              "Type": "Float",
+              "InternalType": "System.Single, System.Private.CoreLib",
+              "TypeId": "8bb080fb-0417-4cec-2ad6-a37e93d2bde3",
+              "Simple": {
+                "Kind": "Float",
+                "Value": 1.0
+              }
+            },
+            {
+              "Name": "GravityScale",
+              "Type": "Float",
+              "InternalType": "System.Single, System.Private.CoreLib",
+              "TypeId": "8bb080fb-0417-4cec-2ad6-a37e93d2bde3",
+              "Simple": {
+                "Kind": "Float",
+                "Value": 1.0
+              }
+            },
+            {
+              "Name": "AngularDamping",
+              "Type": "Float",
+              "InternalType": "System.Single, System.Private.CoreLib",
+              "TypeId": "8bb080fb-0417-4cec-2ad6-a37e93d2bde3",
+              "Simple": {
+                "Kind": "Float",
+                "Value": 0.0
+              }
+            }
+          ]
+        },
+        {
+          "InternalType": "Engine.BoxCollider2D, Engine",
+          "TypeId": "41ce9ac5-6fe2-5c15-9a3d-134f585fcc9c",
+          "IsEnabled": true,
+          "ID": "c0cbbcf3-4584-41d1-b4c5-70b710f89352",
+          "Properties": [
+            {
+              "Name": "Size",
+              "Type": "Vec2",
+              "InternalType": "GlmNet.vec2, Engine",
+              "TypeId": "898ce777-3bb3-60cf-33cb-4c96808525ae",
+              "Simple": {
+                "Kind": "Vec2",
+                "Value": {
+                  "x": 3.0,
+                  "y": 0.4
+                }
+              }
+            },
+            {
+              "Name": "Offset",
+              "Type": "Vec2",
+              "InternalType": "GlmNet.vec2, Engine",
+              "TypeId": "898ce777-3bb3-60cf-33cb-4c96808525ae",
+              "Simple": {
+                "Kind": "Vec2",
+                "Value": {
+                  "x": 0.0,
+                  "y": 0.3
+                }
+              }
+            },
+            {
+              "Name": "IsTrigger",
+              "Type": "Bool",
+              "InternalType": "System.Boolean, System.Private.CoreLib",
+              "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+              "Simple": {
+                "Kind": "Bool",
+                "Value": true
+              }
+            },
+            {
+              "Name": "Friction",
+              "Type": "Float",
+              "InternalType": "System.Single, System.Private.CoreLib",
+              "TypeId": "8bb080fb-0417-4cec-2ad6-a37e93d2bde3",
+              "Simple": {
+                "Kind": "Float",
+                "Value": 0.6
+              }
+            },
+            {
+              "Name": "Bounciness",
+              "Type": "Float",
+              "InternalType": "System.Single, System.Private.CoreLib",
+              "TypeId": "8bb080fb-0417-4cec-2ad6-a37e93d2bde3",
+              "Simple": {
+                "Kind": "Float",
+                "Value": 0.0
+              }
+            }
+          ]
+        },
+        {
+          "InternalType": "Engine.BoxCollider2D, Engine",
+          "TypeId": "41ce9ac5-6fe2-5c15-9a3d-134f585fcc9c",
+          "IsEnabled": true,
+          "ID": "e95673ca-df79-42ad-9587-2d48dc3b858a",
+          "Properties": [
+            {
+              "Name": "Size",
+              "Type": "Vec2",
+              "InternalType": "GlmNet.vec2, Engine",
+              "TypeId": "898ce777-3bb3-60cf-33cb-4c96808525ae",
+              "Simple": {
+                "Kind": "Vec2",
+                "Value": {
+                  "x": 1.0,
+                  "y": 1.0
+                }
+              }
+            },
+            {
+              "Name": "Offset",
+              "Type": "Vec2",
+              "InternalType": "GlmNet.vec2, Engine",
+              "TypeId": "898ce777-3bb3-60cf-33cb-4c96808525ae",
+              "Simple": {
+                "Kind": "Vec2",
+                "Value": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            },
+            {
+              "Name": "IsTrigger",
+              "Type": "Bool",
+              "InternalType": "System.Boolean, System.Private.CoreLib",
+              "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+              "Simple": {
+                "Kind": "Bool",
+                "Value": false
+              }
+            },
+            {
+              "Name": "Friction",
+              "Type": "Float",
+              "InternalType": "System.Single, System.Private.CoreLib",
+              "TypeId": "8bb080fb-0417-4cec-2ad6-a37e93d2bde3",
+              "Simple": {
+                "Kind": "Float",
+                "Value": 0.0
+              }
+            },
+            {
+              "Name": "Bounciness",
+              "Type": "Float",
+              "InternalType": "System.Single, System.Private.CoreLib",
+              "TypeId": "8bb080fb-0417-4cec-2ad6-a37e93d2bde3",
+              "Simple": {
+                "Kind": "Float",
+                "Value": 0.0
+              }
+            }
+          ]
+        },
+        {
+          "InternalType": "Game.Platform, Game",
+          "TypeId": "c241062b-7acd-e2b0-86d2-ce6a124589aa",
+          "IsEnabled": true,
+          "ID": "721998f1-53e4-408a-a7fc-c9bb2bb81116",
+          "Properties": []
+        }
+      ]
+    },
+    {
+      "Name": "PlatformCollider",
+      "Layer": 6,
+      "IsActiveSelf": true,
+      "ID": "280aa8ce-a3d3-46c3-bb53-ba5d8674b516",
+      "ParentID": "ebbc4dec-bf8f-4166-a8ad-989666bf9e15",
+      "Components": [
+        {
+          "InternalType": "Engine.Transform, Engine",
+          "TypeId": "a0a8e468-8126-f549-138c-b26e62da1186",
+          "IsEnabled": true,
+          "ID": "a10ebd0c-e698-4bfe-a5eb-f8f73d7d3831",
+          "Properties": [
+            {
+              "Name": "LocalPosition",
+              "Type": "Vec3",
+              "InternalType": "GlmNet.vec3, Engine",
+              "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
+              "Simple": {
+                "Kind": "Vec3",
+                "Value": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                }
+              }
+            },
+            {
+              "Name": "LocalRotation",
+              "Type": "Quat",
+              "InternalType": "GlmNet.quat, Engine",
+              "TypeId": "bd9d317e-0216-6052-93b0-a68d64e1c1a1",
+              "Simple": {
+                "Kind": "Quat",
+                "Value": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0,
+                  "w": 1.0
+                }
+              }
+            },
+            {
+              "Name": "LocalScale",
+              "Type": "Vec3",
+              "InternalType": "GlmNet.vec3, Engine",
+              "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
+              "Simple": {
+                "Kind": "Vec3",
+                "Value": {
+                  "x": 0.33333334,
+                  "y": 2.5,
+                  "z": 1.0
+                }
+              }
+            }
+          ]
+        },
+        {
+          "InternalType": "Engine.BoxCollider2D, Engine",
+          "TypeId": "41ce9ac5-6fe2-5c15-9a3d-134f585fcc9c",
+          "IsEnabled": true,
+          "ID": "a4f0c1c2-7d28-4db1-8216-ab5bd650c316",
+          "Properties": [
+            {
+              "Name": "Size",
+              "Type": "Vec2",
+              "InternalType": "GlmNet.vec2, Engine",
+              "TypeId": "898ce777-3bb3-60cf-33cb-4c96808525ae",
+              "Simple": {
+                "Kind": "Vec2",
+                "Value": {
+                  "x": 3.0,
+                  "y": 0.4
+                }
+              }
+            },
+            {
+              "Name": "Offset",
+              "Type": "Vec2",
+              "InternalType": "GlmNet.vec2, Engine",
+              "TypeId": "898ce777-3bb3-60cf-33cb-4c96808525ae",
+              "Simple": {
+                "Kind": "Vec2",
+                "Value": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            },
+            {
+              "Name": "IsTrigger",
+              "Type": "Bool",
+              "InternalType": "System.Boolean, System.Private.CoreLib",
+              "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+              "Simple": {
+                "Kind": "Bool",
+                "Value": false
+              }
+            },
+            {
+              "Name": "Friction",
+              "Type": "Float",
+              "InternalType": "System.Single, System.Private.CoreLib",
+              "TypeId": "8bb080fb-0417-4cec-2ad6-a37e93d2bde3",
+              "Simple": {
+                "Kind": "Float",
+                "Value": 0.6
+              }
+            },
+            {
+              "Name": "Bounciness",
+              "Type": "Float",
+              "InternalType": "System.Single, System.Private.CoreLib",
+              "TypeId": "8bb080fb-0417-4cec-2ad6-a37e93d2bde3",
+              "Simple": {
+                "Kind": "Float",
+                "Value": 0.0
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
       "Name": "Pig Enemy",
       "Layer": 3,
       "IsActiveSelf": true,
@@ -4454,7 +4949,7 @@
                   "AtlasIndex": 0,
                   "TexRefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb",
                   "Type": "SpriteAsset",
-                  "RefId": "008b6407-6443-429e-994c-f7137394ab36"
+                  "RefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb"
                 }
               }
             },
@@ -4953,7 +5448,16 @@
               "Type": "SpriteAsset",
               "InternalType": "Engine.Sprite, Engine",
               "TypeId": "8b10d6e4-cc00-3d5a-8210-c8fd378f2f1a",
-              "Simple": null
+              "Simple": null,
+              "Reference": {
+                "$type": "Engine.Serialization.SpriteReferenceData, Engine",
+                "$value": {
+                  "AtlasIndex": 72,
+                  "TexRefId": "8f5c1f5f-d718-4140-9168-24ff5acdea97",
+                  "Type": "SpriteAsset",
+                  "RefId": "8f5c1f5f-d718-4140-9168-24ff5acdea97"
+                }
+              }
             },
             {
               "Name": "Material",
@@ -5477,7 +5981,7 @@
                   "AtlasIndex": 160,
                   "TexRefId": "2f779d6a-a4bb-4860-b3d7-9a2ed747698b",
                   "Type": "SpriteAsset",
-                  "RefId": "d4d50341-2f41-4340-b1df-3f35cc17b9a3"
+                  "RefId": "2f779d6a-a4bb-4860-b3d7-9a2ed747698b"
                 }
               }
             },
@@ -5911,7 +6415,7 @@
                   "AtlasIndex": 162,
                   "TexRefId": "2f779d6a-a4bb-4860-b3d7-9a2ed747698b",
                   "Type": "SpriteAsset",
-                  "RefId": "1f0b3c24-e714-47db-8d0f-13d6f13db9aa"
+                  "RefId": "2f779d6a-a4bb-4860-b3d7-9a2ed747698b"
                 }
               }
             },
@@ -6345,7 +6849,7 @@
                   "AtlasIndex": 1,
                   "TexRefId": "95aed4ef-62cc-41c7-984b-473d4fd70f15",
                   "Type": "SpriteAsset",
-                  "RefId": "00029feb-6256-4302-a87a-1d9edd07b295"
+                  "RefId": "95aed4ef-62cc-41c7-984b-473d4fd70f15"
                 }
               }
             },
@@ -6693,7 +7197,7 @@
                   "AtlasIndex": 183,
                   "TexRefId": "ae41cfa8-73fe-4a87-8196-f58a7e3dd748",
                   "Type": "SpriteAsset",
-                  "RefId": "c51fcc9f-fb91-4ea6-90cc-84dbdeb7ea18"
+                  "RefId": "ae41cfa8-73fe-4a87-8196-f58a7e3dd748"
                 }
               }
             },
@@ -6865,7 +7369,7 @@
                   "AtlasIndex": 0,
                   "TexRefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb",
                   "Type": "SpriteAsset",
-                  "RefId": "008b6407-6443-429e-994c-f7137394ab36"
+                  "RefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb"
                 }
               }
             },
@@ -7400,7 +7904,7 @@
                   "AtlasIndex": 0,
                   "TexRefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb",
                   "Type": "SpriteAsset",
-                  "RefId": "008b6407-6443-429e-994c-f7137394ab36"
+                  "RefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb"
                 }
               }
             },
@@ -7935,7 +8439,7 @@
                   "AtlasIndex": 0,
                   "TexRefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb",
                   "Type": "SpriteAsset",
-                  "RefId": "008b6407-6443-429e-994c-f7137394ab36"
+                  "RefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb"
                 }
               }
             },
@@ -8470,7 +8974,7 @@
                   "AtlasIndex": 0,
                   "TexRefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb",
                   "Type": "SpriteAsset",
-                  "RefId": "008b6407-6443-429e-994c-f7137394ab36"
+                  "RefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb"
                 }
               }
             },
@@ -9005,7 +9509,7 @@
                   "AtlasIndex": 0,
                   "TexRefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb",
                   "Type": "SpriteAsset",
-                  "RefId": "008b6407-6443-429e-994c-f7137394ab36"
+                  "RefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb"
                 }
               }
             },
@@ -9540,7 +10044,7 @@
                   "AtlasIndex": 0,
                   "TexRefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb",
                   "Type": "SpriteAsset",
-                  "RefId": "008b6407-6443-429e-994c-f7137394ab36"
+                  "RefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb"
                 }
               }
             },
@@ -10075,7 +10579,7 @@
                   "AtlasIndex": 0,
                   "TexRefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb",
                   "Type": "SpriteAsset",
-                  "RefId": "008b6407-6443-429e-994c-f7137394ab36"
+                  "RefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb"
                 }
               }
             },
@@ -10610,7 +11114,7 @@
                   "AtlasIndex": 0,
                   "TexRefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb",
                   "Type": "SpriteAsset",
-                  "RefId": "008b6407-6443-429e-994c-f7137394ab36"
+                  "RefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb"
                 }
               }
             },
@@ -11145,7 +11649,7 @@
                   "AtlasIndex": 0,
                   "TexRefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb",
                   "Type": "SpriteAsset",
-                  "RefId": "008b6407-6443-429e-994c-f7137394ab36"
+                  "RefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb"
                 }
               }
             },
@@ -11680,7 +12184,7 @@
                   "AtlasIndex": 0,
                   "TexRefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb",
                   "Type": "SpriteAsset",
-                  "RefId": "008b6407-6443-429e-994c-f7137394ab36"
+                  "RefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb"
                 }
               }
             },
@@ -12703,7 +13207,7 @@
                   "AtlasIndex": 162,
                   "TexRefId": "2f779d6a-a4bb-4860-b3d7-9a2ed747698b",
                   "Type": "SpriteAsset",
-                  "RefId": "1f0b3c24-e714-47db-8d0f-13d6f13db9aa"
+                  "RefId": "2f779d6a-a4bb-4860-b3d7-9a2ed747698b"
                 }
               }
             },
@@ -13536,6 +14040,1294 @@
       ]
     },
     {
+      "Name": "PortalSprite",
+      "Layer": 0,
+      "IsActiveSelf": true,
+      "ID": "eff4422d-d3a6-4032-8c88-0f6bfeff04ce",
+      "ParentID": "9181622f-4501-403f-b2b1-2ef675480d4c",
+      "Components": [
+        {
+          "InternalType": "Engine.Transform, Engine",
+          "TypeId": "a0a8e468-8126-f549-138c-b26e62da1186",
+          "IsEnabled": true,
+          "ID": "30c7ce09-288e-4bba-8bef-02ff351defe5",
+          "Properties": [
+            {
+              "Name": "LocalPosition",
+              "Type": "Vec3",
+              "InternalType": "GlmNet.vec3, Engine",
+              "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
+              "Simple": {
+                "Kind": "Vec3",
+                "Value": {
+                  "x": -7.315174,
+                  "y": 2.880124,
+                  "z": 0.0
+                }
+              }
+            },
+            {
+              "Name": "LocalRotation",
+              "Type": "Quat",
+              "InternalType": "GlmNet.quat, Engine",
+              "TypeId": "bd9d317e-0216-6052-93b0-a68d64e1c1a1",
+              "Simple": {
+                "Kind": "Quat",
+                "Value": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.5628739,
+                  "w": 0.8265428
+                }
+              }
+            },
+            {
+              "Name": "LocalScale",
+              "Type": "Vec3",
+              "InternalType": "GlmNet.vec3, Engine",
+              "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
+              "Simple": {
+                "Kind": "Vec3",
+                "Value": {
+                  "x": 6.0,
+                  "y": 6.0,
+                  "z": 0.0
+                }
+              }
+            }
+          ]
+        },
+        {
+          "InternalType": "Game.Rotate, Game",
+          "TypeId": "d4af6db7-a081-882a-56c6-19a9b50f405a",
+          "IsEnabled": true,
+          "ID": "2a75b607-ceb9-4ed1-921d-d268350b1afe",
+          "Properties": []
+        },
+        {
+          "InternalType": "Engine.SpriteRenderer, Engine",
+          "TypeId": "8a8ec899-a0c0-d9bb-e76a-d118eac28eb0",
+          "IsEnabled": true,
+          "ID": "73f7d558-d8a0-4611-b5e4-1f51f9ae7d7d",
+          "Properties": [
+            {
+              "Name": "SortOrder",
+              "Type": "Int",
+              "InternalType": "System.Int32, System.Private.CoreLib",
+              "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
+              "Simple": {
+                "Kind": "Int",
+                "Value": 14
+              }
+            },
+            {
+              "Name": "Color",
+              "Type": "Color",
+              "InternalType": "Engine.Color, Engine",
+              "TypeId": "8b690ecd-d4a6-1ad0-33be-76887ab30172",
+              "Simple": {
+                "Kind": "Color",
+                "Value": {
+                  "R": 1.0,
+                  "G": 1.0,
+                  "B": 1.0,
+                  "A": 1.0
+                }
+              }
+            },
+            {
+              "Name": "FlipX",
+              "Type": "Bool",
+              "InternalType": "System.Boolean, System.Private.CoreLib",
+              "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+              "Simple": {
+                "Kind": "Bool",
+                "Value": false
+              }
+            },
+            {
+              "Name": "FlipY",
+              "Type": "Bool",
+              "InternalType": "System.Boolean, System.Private.CoreLib",
+              "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+              "Simple": {
+                "Kind": "Bool",
+                "Value": false
+              }
+            },
+            {
+              "Name": "Sprite",
+              "Type": "SpriteAsset",
+              "InternalType": "Engine.Sprite, Engine",
+              "TypeId": "8b10d6e4-cc00-3d5a-8210-c8fd378f2f1a",
+              "Simple": null
+            },
+            {
+              "Name": "Material",
+              "Type": "MaterialAsset",
+              "InternalType": "Engine.Material, Engine",
+              "TypeId": "6d303096-cf4b-322c-c9c9-a5b025e553d7",
+              "Simple": null,
+              "Reference": {
+                "$type": "Engine.Serialization.ReferenceData, Engine",
+                "$value": {
+                  "Type": "MaterialAsset",
+                  "RefId": "f96c1165-c30d-4da9-adf7-048f57d89204"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Name": "PortalSprite",
+      "Layer": 0,
+      "IsActiveSelf": true,
+      "ID": "6ac395e4-49cf-4139-ba55-a977236b0693",
+      "ParentID": "9181622f-4501-403f-b2b1-2ef675480d4c",
+      "Components": [
+        {
+          "InternalType": "Engine.Transform, Engine",
+          "TypeId": "a0a8e468-8126-f549-138c-b26e62da1186",
+          "IsEnabled": true,
+          "ID": "71eade7f-e363-4662-831b-cc835ca6e77d",
+          "Properties": [
+            {
+              "Name": "LocalPosition",
+              "Type": "Vec3",
+              "InternalType": "GlmNet.vec3, Engine",
+              "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
+              "Simple": {
+                "Kind": "Vec3",
+                "Value": {
+                  "x": -9.952839,
+                  "y": -3.8192554,
+                  "z": 0.0
+                }
+              }
+            },
+            {
+              "Name": "LocalRotation",
+              "Type": "Quat",
+              "InternalType": "GlmNet.quat, Engine",
+              "TypeId": "bd9d317e-0216-6052-93b0-a68d64e1c1a1",
+              "Simple": {
+                "Kind": "Quat",
+                "Value": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.5628739,
+                  "w": 0.8265428
+                }
+              }
+            },
+            {
+              "Name": "LocalScale",
+              "Type": "Vec3",
+              "InternalType": "GlmNet.vec3, Engine",
+              "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
+              "Simple": {
+                "Kind": "Vec3",
+                "Value": {
+                  "x": 6.0,
+                  "y": 6.0,
+                  "z": 0.0
+                }
+              }
+            }
+          ]
+        },
+        {
+          "InternalType": "Game.Rotate, Game",
+          "TypeId": "d4af6db7-a081-882a-56c6-19a9b50f405a",
+          "IsEnabled": true,
+          "ID": "143ac0cb-7c63-4930-8c77-1e4e71ccec71",
+          "Properties": []
+        },
+        {
+          "InternalType": "Engine.SpriteRenderer, Engine",
+          "TypeId": "8a8ec899-a0c0-d9bb-e76a-d118eac28eb0",
+          "IsEnabled": true,
+          "ID": "cf932f3d-501d-40db-bc61-ceda17a4e6b0",
+          "Properties": [
+            {
+              "Name": "SortOrder",
+              "Type": "Int",
+              "InternalType": "System.Int32, System.Private.CoreLib",
+              "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
+              "Simple": {
+                "Kind": "Int",
+                "Value": 14
+              }
+            },
+            {
+              "Name": "Color",
+              "Type": "Color",
+              "InternalType": "Engine.Color, Engine",
+              "TypeId": "8b690ecd-d4a6-1ad0-33be-76887ab30172",
+              "Simple": {
+                "Kind": "Color",
+                "Value": {
+                  "R": 1.0,
+                  "G": 1.0,
+                  "B": 1.0,
+                  "A": 1.0
+                }
+              }
+            },
+            {
+              "Name": "FlipX",
+              "Type": "Bool",
+              "InternalType": "System.Boolean, System.Private.CoreLib",
+              "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+              "Simple": {
+                "Kind": "Bool",
+                "Value": false
+              }
+            },
+            {
+              "Name": "FlipY",
+              "Type": "Bool",
+              "InternalType": "System.Boolean, System.Private.CoreLib",
+              "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+              "Simple": {
+                "Kind": "Bool",
+                "Value": false
+              }
+            },
+            {
+              "Name": "Sprite",
+              "Type": "SpriteAsset",
+              "InternalType": "Engine.Sprite, Engine",
+              "TypeId": "8b10d6e4-cc00-3d5a-8210-c8fd378f2f1a",
+              "Simple": null
+            },
+            {
+              "Name": "Material",
+              "Type": "MaterialAsset",
+              "InternalType": "Engine.Material, Engine",
+              "TypeId": "6d303096-cf4b-322c-c9c9-a5b025e553d7",
+              "Simple": null,
+              "Reference": {
+                "$type": "Engine.Serialization.ReferenceData, Engine",
+                "$value": {
+                  "Type": "MaterialAsset",
+                  "RefId": "f96c1165-c30d-4da9-adf7-048f57d89204"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Name": "Portal",
+      "Layer": 8,
+      "IsActiveSelf": true,
+      "ID": "b0c67386-384f-452d-b6ff-bed0dc5ea85f",
+      "ParentID": "00000000-0000-0000-0000-000000000000",
+      "Components": [
+        {
+          "InternalType": "Engine.Transform, Engine",
+          "TypeId": "a0a8e468-8126-f549-138c-b26e62da1186",
+          "IsEnabled": true,
+          "ID": "021d6f3a-55d7-406a-90ee-ebc60e9a2f62",
+          "Properties": [
+            {
+              "Name": "LocalPosition",
+              "Type": "Vec3",
+              "InternalType": "GlmNet.vec3, Engine",
+              "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
+              "Simple": {
+                "Kind": "Vec3",
+                "Value": {
+                  "x": 53.40058,
+                  "y": -8.241656,
+                  "z": 0.0
+                }
+              }
+            },
+            {
+              "Name": "LocalRotation",
+              "Type": "Quat",
+              "InternalType": "GlmNet.quat, Engine",
+              "TypeId": "bd9d317e-0216-6052-93b0-a68d64e1c1a1",
+              "Simple": {
+                "Kind": "Quat",
+                "Value": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0,
+                  "w": 1.0
+                }
+              }
+            },
+            {
+              "Name": "LocalScale",
+              "Type": "Vec3",
+              "InternalType": "GlmNet.vec3, Engine",
+              "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
+              "Simple": {
+                "Kind": "Vec3",
+                "Value": {
+                  "x": 1.0,
+                  "y": 1.0,
+                  "z": 1.0
+                }
+              }
+            }
+          ]
+        },
+        {
+          "InternalType": "Engine.SpriteRenderer, Engine",
+          "TypeId": "8a8ec899-a0c0-d9bb-e76a-d118eac28eb0",
+          "IsEnabled": false,
+          "ID": "8117dfc3-9ffd-4f75-b70e-94062439c10b",
+          "Properties": [
+            {
+              "Name": "SortOrder",
+              "Type": "Int",
+              "InternalType": "System.Int32, System.Private.CoreLib",
+              "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
+              "Simple": {
+                "Kind": "Int",
+                "Value": -1
+              }
+            },
+            {
+              "Name": "Color",
+              "Type": "Color",
+              "InternalType": "Engine.Color, Engine",
+              "TypeId": "8b690ecd-d4a6-1ad0-33be-76887ab30172",
+              "Simple": {
+                "Kind": "Color",
+                "Value": {
+                  "R": 1.0,
+                  "G": 1.0,
+                  "B": 1.0,
+                  "A": 1.0
+                }
+              }
+            },
+            {
+              "Name": "FlipX",
+              "Type": "Bool",
+              "InternalType": "System.Boolean, System.Private.CoreLib",
+              "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+              "Simple": {
+                "Kind": "Bool",
+                "Value": false
+              }
+            },
+            {
+              "Name": "FlipY",
+              "Type": "Bool",
+              "InternalType": "System.Boolean, System.Private.CoreLib",
+              "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+              "Simple": {
+                "Kind": "Bool",
+                "Value": false
+              }
+            },
+            {
+              "Name": "Sprite",
+              "Type": "SpriteAsset",
+              "InternalType": "Engine.Sprite, Engine",
+              "TypeId": "8b10d6e4-cc00-3d5a-8210-c8fd378f2f1a",
+              "Simple": null
+            },
+            {
+              "Name": "Material",
+              "Type": "MaterialAsset",
+              "InternalType": "Engine.Material, Engine",
+              "TypeId": "6d303096-cf4b-322c-c9c9-a5b025e553d7",
+              "Simple": null,
+              "Reference": {
+                "$type": "Engine.Serialization.ReferenceData, Engine",
+                "$value": {
+                  "Type": "MaterialAsset",
+                  "RefId": "37ac14f4-9425-4ec2-8f6d-18b11a5c6ea2"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "InternalType": "Engine.BoxCollider2D, Engine",
+          "TypeId": "41ce9ac5-6fe2-5c15-9a3d-134f585fcc9c",
+          "IsEnabled": false,
+          "ID": "6ba720fd-ff52-4e1f-b674-ea2478fd4b7e",
+          "Properties": [
+            {
+              "Name": "Size",
+              "Type": "Vec2",
+              "InternalType": "GlmNet.vec2, Engine",
+              "TypeId": "898ce777-3bb3-60cf-33cb-4c96808525ae",
+              "Simple": {
+                "Kind": "Vec2",
+                "Value": {
+                  "x": 1.0,
+                  "y": 1.0
+                }
+              }
+            },
+            {
+              "Name": "Offset",
+              "Type": "Vec2",
+              "InternalType": "GlmNet.vec2, Engine",
+              "TypeId": "898ce777-3bb3-60cf-33cb-4c96808525ae",
+              "Simple": {
+                "Kind": "Vec2",
+                "Value": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            },
+            {
+              "Name": "IsTrigger",
+              "Type": "Bool",
+              "InternalType": "System.Boolean, System.Private.CoreLib",
+              "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+              "Simple": {
+                "Kind": "Bool",
+                "Value": true
+              }
+            },
+            {
+              "Name": "Friction",
+              "Type": "Float",
+              "InternalType": "System.Single, System.Private.CoreLib",
+              "TypeId": "8bb080fb-0417-4cec-2ad6-a37e93d2bde3",
+              "Simple": {
+                "Kind": "Float",
+                "Value": 0.6
+              }
+            },
+            {
+              "Name": "Bounciness",
+              "Type": "Float",
+              "InternalType": "System.Single, System.Private.CoreLib",
+              "TypeId": "8bb080fb-0417-4cec-2ad6-a37e93d2bde3",
+              "Simple": {
+                "Kind": "Float",
+                "Value": 0.0
+              }
+            }
+          ]
+        },
+        {
+          "InternalType": "Engine.AudioSource, Engine",
+          "TypeId": "95229323-269a-7088-1fe0-a3ebc7762d8f",
+          "IsEnabled": true,
+          "ID": "dfe96e60-c774-4ea7-994c-e11e275b66c7",
+          "Properties": [
+            {
+              "Name": "Clip",
+              "Type": "AudioClipAsset",
+              "InternalType": "Engine.AudioClip, Engine",
+              "TypeId": "f8e24151-7cda-e0c6-0c4f-5a2c7fdd5e44",
+              "Simple": null
+            },
+            {
+              "Name": "Loop",
+              "Type": "Bool",
+              "InternalType": "System.Boolean, System.Private.CoreLib",
+              "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+              "Simple": {
+                "Kind": "Bool",
+                "Value": false
+              }
+            },
+            {
+              "Name": "Volume",
+              "Type": "Float",
+              "InternalType": "System.Single, System.Private.CoreLib",
+              "TypeId": "8bb080fb-0417-4cec-2ad6-a37e93d2bde3",
+              "Simple": {
+                "Kind": "Float",
+                "Value": 1.0
+              }
+            },
+            {
+              "Name": "Pan",
+              "Type": "Float",
+              "InternalType": "System.Single, System.Private.CoreLib",
+              "TypeId": "8bb080fb-0417-4cec-2ad6-a37e93d2bde3",
+              "Simple": {
+                "Kind": "Float",
+                "Value": 0.0
+              }
+            },
+            {
+              "Name": "PlaybackSpeed",
+              "Type": "Float",
+              "InternalType": "System.Single, System.Private.CoreLib",
+              "TypeId": "8bb080fb-0417-4cec-2ad6-a37e93d2bde3",
+              "Simple": {
+                "Kind": "Float",
+                "Value": 1.0
+              }
+            }
+          ]
+        },
+        {
+          "InternalType": "Engine.BoxCollider2D, Engine",
+          "TypeId": "41ce9ac5-6fe2-5c15-9a3d-134f585fcc9c",
+          "IsEnabled": true,
+          "ID": "ed57b063-f21b-4277-8f1e-caf08f7f5e17",
+          "Properties": [
+            {
+              "Name": "Size",
+              "Type": "Vec2",
+              "InternalType": "GlmNet.vec2, Engine",
+              "TypeId": "898ce777-3bb3-60cf-33cb-4c96808525ae",
+              "Simple": {
+                "Kind": "Vec2",
+                "Value": {
+                  "x": 1.0,
+                  "y": 1.0
+                }
+              }
+            },
+            {
+              "Name": "Offset",
+              "Type": "Vec2",
+              "InternalType": "GlmNet.vec2, Engine",
+              "TypeId": "898ce777-3bb3-60cf-33cb-4c96808525ae",
+              "Simple": {
+                "Kind": "Vec2",
+                "Value": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            },
+            {
+              "Name": "IsTrigger",
+              "Type": "Bool",
+              "InternalType": "System.Boolean, System.Private.CoreLib",
+              "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+              "Simple": {
+                "Kind": "Bool",
+                "Value": false
+              }
+            },
+            {
+              "Name": "Friction",
+              "Type": "Float",
+              "InternalType": "System.Single, System.Private.CoreLib",
+              "TypeId": "8bb080fb-0417-4cec-2ad6-a37e93d2bde3",
+              "Simple": {
+                "Kind": "Float",
+                "Value": 0.0
+              }
+            },
+            {
+              "Name": "Bounciness",
+              "Type": "Float",
+              "InternalType": "System.Single, System.Private.CoreLib",
+              "TypeId": "8bb080fb-0417-4cec-2ad6-a37e93d2bde3",
+              "Simple": {
+                "Kind": "Float",
+                "Value": 0.0
+              }
+            }
+          ]
+        },
+        {
+          "InternalType": "Engine.AudioSource, Engine",
+          "TypeId": "95229323-269a-7088-1fe0-a3ebc7762d8f",
+          "IsEnabled": true,
+          "ID": "fbacc204-35a1-4f96-adaa-95e4e62e5631",
+          "Properties": [
+            {
+              "Name": "Clip",
+              "Type": "AudioClipAsset",
+              "InternalType": "Engine.AudioClip, Engine",
+              "TypeId": "f8e24151-7cda-e0c6-0c4f-5a2c7fdd5e44",
+              "Simple": null
+            },
+            {
+              "Name": "Loop",
+              "Type": "Bool",
+              "InternalType": "System.Boolean, System.Private.CoreLib",
+              "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+              "Simple": {
+                "Kind": "Bool",
+                "Value": false
+              }
+            },
+            {
+              "Name": "Volume",
+              "Type": "Float",
+              "InternalType": "System.Single, System.Private.CoreLib",
+              "TypeId": "8bb080fb-0417-4cec-2ad6-a37e93d2bde3",
+              "Simple": {
+                "Kind": "Float",
+                "Value": 1.0
+              }
+            },
+            {
+              "Name": "Pan",
+              "Type": "Float",
+              "InternalType": "System.Single, System.Private.CoreLib",
+              "TypeId": "8bb080fb-0417-4cec-2ad6-a37e93d2bde3",
+              "Simple": {
+                "Kind": "Float",
+                "Value": 0.0
+              }
+            },
+            {
+              "Name": "PlaybackSpeed",
+              "Type": "Float",
+              "InternalType": "System.Single, System.Private.CoreLib",
+              "TypeId": "8bb080fb-0417-4cec-2ad6-a37e93d2bde3",
+              "Simple": {
+                "Kind": "Float",
+                "Value": 1.0
+              }
+            }
+          ]
+        },
+        {
+          "InternalType": "Game.Portal, Game",
+          "TypeId": "8fc42683-13de-0d1e-6b34-7f19ece60d93",
+          "IsEnabled": true,
+          "ID": "eaa377ed-da61-41d3-aebf-70ae3e7f7657",
+          "Properties": []
+        },
+        {
+          "InternalType": "Engine.CircleCollider2D, Engine",
+          "TypeId": "8c98198e-4844-bd1b-caf4-c90e69cde96f",
+          "IsEnabled": true,
+          "ID": "f915a601-c4d2-4cd4-ad8f-68acae7f9656",
+          "Properties": [
+            {
+              "Name": "Radius",
+              "Type": "Float",
+              "InternalType": "System.Single, System.Private.CoreLib",
+              "TypeId": "8bb080fb-0417-4cec-2ad6-a37e93d2bde3",
+              "Simple": {
+                "Kind": "Float",
+                "Value": 3.0
+              }
+            },
+            {
+              "Name": "Offset",
+              "Type": "Vec2",
+              "InternalType": "GlmNet.vec2, Engine",
+              "TypeId": "898ce777-3bb3-60cf-33cb-4c96808525ae",
+              "Simple": {
+                "Kind": "Vec2",
+                "Value": {
+                  "x": 0.0,
+                  "y": 0.0
+                }
+              }
+            },
+            {
+              "Name": "IsTrigger",
+              "Type": "Bool",
+              "InternalType": "System.Boolean, System.Private.CoreLib",
+              "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+              "Simple": {
+                "Kind": "Bool",
+                "Value": true
+              }
+            },
+            {
+              "Name": "Friction",
+              "Type": "Float",
+              "InternalType": "System.Single, System.Private.CoreLib",
+              "TypeId": "8bb080fb-0417-4cec-2ad6-a37e93d2bde3",
+              "Simple": {
+                "Kind": "Float",
+                "Value": 0.6
+              }
+            },
+            {
+              "Name": "Bounciness",
+              "Type": "Float",
+              "InternalType": "System.Single, System.Private.CoreLib",
+              "TypeId": "8bb080fb-0417-4cec-2ad6-a37e93d2bde3",
+              "Simple": {
+                "Kind": "Float",
+                "Value": 0.0
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Name": "InteractableIcon",
+      "Layer": 0,
+      "IsActiveSelf": true,
+      "ID": "ce8eeada-187b-4706-a123-bdf07f95b54d",
+      "ParentID": "b0c67386-384f-452d-b6ff-bed0dc5ea85f",
+      "Components": [
+        {
+          "InternalType": "Engine.Transform, Engine",
+          "TypeId": "a0a8e468-8126-f549-138c-b26e62da1186",
+          "IsEnabled": true,
+          "ID": "e6b49f71-aa15-4b9d-aaea-ab33bb22f756",
+          "Properties": [
+            {
+              "Name": "LocalPosition",
+              "Type": "Vec3",
+              "InternalType": "GlmNet.vec3, Engine",
+              "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
+              "Simple": {
+                "Kind": "Vec3",
+                "Value": {
+                  "x": 0.0,
+                  "y": 0.11505985,
+                  "z": 0.0
+                }
+              }
+            },
+            {
+              "Name": "LocalRotation",
+              "Type": "Quat",
+              "InternalType": "GlmNet.quat, Engine",
+              "TypeId": "bd9d317e-0216-6052-93b0-a68d64e1c1a1",
+              "Simple": {
+                "Kind": "Quat",
+                "Value": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0,
+                  "w": 1.0
+                }
+              }
+            },
+            {
+              "Name": "LocalScale",
+              "Type": "Vec3",
+              "InternalType": "GlmNet.vec3, Engine",
+              "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
+              "Simple": {
+                "Kind": "Vec3",
+                "Value": {
+                  "x": 1.0,
+                  "y": 1.0,
+                  "z": 1.0
+                }
+              }
+            }
+          ]
+        },
+        {
+          "InternalType": "Engine.SpriteRenderer, Engine",
+          "TypeId": "8a8ec899-a0c0-d9bb-e76a-d118eac28eb0",
+          "IsEnabled": true,
+          "ID": "2964f51d-1c9d-425d-b1d0-6e8c15f4c5b5",
+          "Properties": [
+            {
+              "Name": "SortOrder",
+              "Type": "Int",
+              "InternalType": "System.Int32, System.Private.CoreLib",
+              "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
+              "Simple": {
+                "Kind": "Int",
+                "Value": 15
+              }
+            },
+            {
+              "Name": "Color",
+              "Type": "Color",
+              "InternalType": "Engine.Color, Engine",
+              "TypeId": "8b690ecd-d4a6-1ad0-33be-76887ab30172",
+              "Simple": {
+                "Kind": "Color",
+                "Value": {
+                  "R": 1.0,
+                  "G": 1.0,
+                  "B": 1.0,
+                  "A": 0.0
+                }
+              }
+            },
+            {
+              "Name": "FlipX",
+              "Type": "Bool",
+              "InternalType": "System.Boolean, System.Private.CoreLib",
+              "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+              "Simple": {
+                "Kind": "Bool",
+                "Value": false
+              }
+            },
+            {
+              "Name": "FlipY",
+              "Type": "Bool",
+              "InternalType": "System.Boolean, System.Private.CoreLib",
+              "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+              "Simple": {
+                "Kind": "Bool",
+                "Value": false
+              }
+            },
+            {
+              "Name": "Sprite",
+              "Type": "SpriteAsset",
+              "InternalType": "Engine.Sprite, Engine",
+              "TypeId": "8b10d6e4-cc00-3d5a-8210-c8fd378f2f1a",
+              "Simple": null,
+              "Reference": {
+                "$type": "Engine.Serialization.SpriteReferenceData, Engine",
+                "$value": {
+                  "AtlasIndex": 0,
+                  "TexRefId": "bbfe6f19-76a8-4c1a-afcc-4b737f1c90dc",
+                  "Type": "SpriteAsset",
+                  "RefId": "bbfe6f19-76a8-4c1a-afcc-4b737f1c90dc"
+                }
+              }
+            },
+            {
+              "Name": "Material",
+              "Type": "MaterialAsset",
+              "InternalType": "Engine.Material, Engine",
+              "TypeId": "6d303096-cf4b-322c-c9c9-a5b025e553d7",
+              "Simple": null,
+              "Reference": {
+                "$type": "Engine.Serialization.ReferenceData, Engine",
+                "$value": {
+                  "Type": "MaterialAsset",
+                  "RefId": "37ac14f4-9425-4ec2-8f6d-18b11a5c6ea2"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Name": "PortalSprite",
+      "Layer": 0,
+      "IsActiveSelf": true,
+      "ID": "98226f7b-d72a-47a9-a303-42759aee8c65",
+      "ParentID": "b0c67386-384f-452d-b6ff-bed0dc5ea85f",
+      "Components": [
+        {
+          "InternalType": "Engine.Transform, Engine",
+          "TypeId": "a0a8e468-8126-f549-138c-b26e62da1186",
+          "IsEnabled": true,
+          "ID": "ebd39e2e-c312-4f3b-8572-b2601f3eafb2",
+          "Properties": [
+            {
+              "Name": "LocalPosition",
+              "Type": "Vec3",
+              "InternalType": "GlmNet.vec3, Engine",
+              "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
+              "Simple": {
+                "Kind": "Vec3",
+                "Value": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0
+                }
+              }
+            },
+            {
+              "Name": "LocalRotation",
+              "Type": "Quat",
+              "InternalType": "GlmNet.quat, Engine",
+              "TypeId": "bd9d317e-0216-6052-93b0-a68d64e1c1a1",
+              "Simple": {
+                "Kind": "Quat",
+                "Value": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.5628739,
+                  "w": 0.8265428
+                }
+              }
+            },
+            {
+              "Name": "LocalScale",
+              "Type": "Vec3",
+              "InternalType": "GlmNet.vec3, Engine",
+              "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
+              "Simple": {
+                "Kind": "Vec3",
+                "Value": {
+                  "x": 6.0,
+                  "y": 6.0,
+                  "z": 0.0
+                }
+              }
+            }
+          ]
+        },
+        {
+          "InternalType": "Game.Rotate, Game",
+          "TypeId": "d4af6db7-a081-882a-56c6-19a9b50f405a",
+          "IsEnabled": true,
+          "ID": "34c41031-626b-4c12-86ec-df60c3641b48",
+          "Properties": []
+        },
+        {
+          "InternalType": "Engine.SpriteRenderer, Engine",
+          "TypeId": "8a8ec899-a0c0-d9bb-e76a-d118eac28eb0",
+          "IsEnabled": true,
+          "ID": "ab2fc4df-bf44-48f0-a934-a03082606cc3",
+          "Properties": [
+            {
+              "Name": "SortOrder",
+              "Type": "Int",
+              "InternalType": "System.Int32, System.Private.CoreLib",
+              "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
+              "Simple": {
+                "Kind": "Int",
+                "Value": 14
+              }
+            },
+            {
+              "Name": "Color",
+              "Type": "Color",
+              "InternalType": "Engine.Color, Engine",
+              "TypeId": "8b690ecd-d4a6-1ad0-33be-76887ab30172",
+              "Simple": {
+                "Kind": "Color",
+                "Value": {
+                  "R": 1.0,
+                  "G": 1.0,
+                  "B": 1.0,
+                  "A": 1.0
+                }
+              }
+            },
+            {
+              "Name": "FlipX",
+              "Type": "Bool",
+              "InternalType": "System.Boolean, System.Private.CoreLib",
+              "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+              "Simple": {
+                "Kind": "Bool",
+                "Value": false
+              }
+            },
+            {
+              "Name": "FlipY",
+              "Type": "Bool",
+              "InternalType": "System.Boolean, System.Private.CoreLib",
+              "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+              "Simple": {
+                "Kind": "Bool",
+                "Value": false
+              }
+            },
+            {
+              "Name": "Sprite",
+              "Type": "SpriteAsset",
+              "InternalType": "Engine.Sprite, Engine",
+              "TypeId": "8b10d6e4-cc00-3d5a-8210-c8fd378f2f1a",
+              "Simple": null
+            },
+            {
+              "Name": "Material",
+              "Type": "MaterialAsset",
+              "InternalType": "Engine.Material, Engine",
+              "TypeId": "6d303096-cf4b-322c-c9c9-a5b025e553d7",
+              "Simple": null,
+              "Reference": {
+                "$type": "Engine.Serialization.ReferenceData, Engine",
+                "$value": {
+                  "Type": "MaterialAsset",
+                  "RefId": "f96c1165-c30d-4da9-adf7-048f57d89204"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Name": "PortalSprite",
+      "Layer": 0,
+      "IsActiveSelf": true,
+      "ID": "ff2640eb-6307-4018-8b6f-1770d89f82e3",
+      "ParentID": "b0c67386-384f-452d-b6ff-bed0dc5ea85f",
+      "Components": [
+        {
+          "InternalType": "Engine.Transform, Engine",
+          "TypeId": "a0a8e468-8126-f549-138c-b26e62da1186",
+          "IsEnabled": true,
+          "ID": "4d4475ac-6417-44f3-95a7-649ab626ea7d",
+          "Properties": [
+            {
+              "Name": "LocalPosition",
+              "Type": "Vec3",
+              "InternalType": "GlmNet.vec3, Engine",
+              "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
+              "Simple": {
+                "Kind": "Vec3",
+                "Value": {
+                  "x": -7.315174,
+                  "y": 2.880124,
+                  "z": 0.0
+                }
+              }
+            },
+            {
+              "Name": "LocalRotation",
+              "Type": "Quat",
+              "InternalType": "GlmNet.quat, Engine",
+              "TypeId": "bd9d317e-0216-6052-93b0-a68d64e1c1a1",
+              "Simple": {
+                "Kind": "Quat",
+                "Value": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.5628739,
+                  "w": 0.8265428
+                }
+              }
+            },
+            {
+              "Name": "LocalScale",
+              "Type": "Vec3",
+              "InternalType": "GlmNet.vec3, Engine",
+              "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
+              "Simple": {
+                "Kind": "Vec3",
+                "Value": {
+                  "x": 6.0,
+                  "y": 6.0,
+                  "z": 0.0
+                }
+              }
+            }
+          ]
+        },
+        {
+          "InternalType": "Game.Rotate, Game",
+          "TypeId": "d4af6db7-a081-882a-56c6-19a9b50f405a",
+          "IsEnabled": true,
+          "ID": "a86b7f72-70c3-4901-8d8f-91c368374aab",
+          "Properties": []
+        },
+        {
+          "InternalType": "Engine.SpriteRenderer, Engine",
+          "TypeId": "8a8ec899-a0c0-d9bb-e76a-d118eac28eb0",
+          "IsEnabled": true,
+          "ID": "b7bddf87-68cb-4b46-b40f-e2471408a746",
+          "Properties": [
+            {
+              "Name": "SortOrder",
+              "Type": "Int",
+              "InternalType": "System.Int32, System.Private.CoreLib",
+              "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
+              "Simple": {
+                "Kind": "Int",
+                "Value": 14
+              }
+            },
+            {
+              "Name": "Color",
+              "Type": "Color",
+              "InternalType": "Engine.Color, Engine",
+              "TypeId": "8b690ecd-d4a6-1ad0-33be-76887ab30172",
+              "Simple": {
+                "Kind": "Color",
+                "Value": {
+                  "R": 1.0,
+                  "G": 1.0,
+                  "B": 1.0,
+                  "A": 1.0
+                }
+              }
+            },
+            {
+              "Name": "FlipX",
+              "Type": "Bool",
+              "InternalType": "System.Boolean, System.Private.CoreLib",
+              "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+              "Simple": {
+                "Kind": "Bool",
+                "Value": false
+              }
+            },
+            {
+              "Name": "FlipY",
+              "Type": "Bool",
+              "InternalType": "System.Boolean, System.Private.CoreLib",
+              "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+              "Simple": {
+                "Kind": "Bool",
+                "Value": false
+              }
+            },
+            {
+              "Name": "Sprite",
+              "Type": "SpriteAsset",
+              "InternalType": "Engine.Sprite, Engine",
+              "TypeId": "8b10d6e4-cc00-3d5a-8210-c8fd378f2f1a",
+              "Simple": null
+            },
+            {
+              "Name": "Material",
+              "Type": "MaterialAsset",
+              "InternalType": "Engine.Material, Engine",
+              "TypeId": "6d303096-cf4b-322c-c9c9-a5b025e553d7",
+              "Simple": null,
+              "Reference": {
+                "$type": "Engine.Serialization.ReferenceData, Engine",
+                "$value": {
+                  "Type": "MaterialAsset",
+                  "RefId": "f96c1165-c30d-4da9-adf7-048f57d89204"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Name": "PortalSprite",
+      "Layer": 0,
+      "IsActiveSelf": true,
+      "ID": "f0ed2932-a98e-491c-8be3-5bb8b47268d9",
+      "ParentID": "b0c67386-384f-452d-b6ff-bed0dc5ea85f",
+      "Components": [
+        {
+          "InternalType": "Engine.Transform, Engine",
+          "TypeId": "a0a8e468-8126-f549-138c-b26e62da1186",
+          "IsEnabled": true,
+          "ID": "e3975e9c-4403-45be-8d7b-d8978408573a",
+          "Properties": [
+            {
+              "Name": "LocalPosition",
+              "Type": "Vec3",
+              "InternalType": "GlmNet.vec3, Engine",
+              "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
+              "Simple": {
+                "Kind": "Vec3",
+                "Value": {
+                  "x": -9.952839,
+                  "y": -3.8192554,
+                  "z": 0.0
+                }
+              }
+            },
+            {
+              "Name": "LocalRotation",
+              "Type": "Quat",
+              "InternalType": "GlmNet.quat, Engine",
+              "TypeId": "bd9d317e-0216-6052-93b0-a68d64e1c1a1",
+              "Simple": {
+                "Kind": "Quat",
+                "Value": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.5628739,
+                  "w": 0.8265428
+                }
+              }
+            },
+            {
+              "Name": "LocalScale",
+              "Type": "Vec3",
+              "InternalType": "GlmNet.vec3, Engine",
+              "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
+              "Simple": {
+                "Kind": "Vec3",
+                "Value": {
+                  "x": 6.0,
+                  "y": 6.0,
+                  "z": 0.0
+                }
+              }
+            }
+          ]
+        },
+        {
+          "InternalType": "Game.Rotate, Game",
+          "TypeId": "d4af6db7-a081-882a-56c6-19a9b50f405a",
+          "IsEnabled": true,
+          "ID": "12316fa6-f991-421f-8c04-52816bf59f10",
+          "Properties": []
+        },
+        {
+          "InternalType": "Engine.SpriteRenderer, Engine",
+          "TypeId": "8a8ec899-a0c0-d9bb-e76a-d118eac28eb0",
+          "IsEnabled": true,
+          "ID": "276f21ac-b609-41e5-afb5-90296480b7a8",
+          "Properties": [
+            {
+              "Name": "SortOrder",
+              "Type": "Int",
+              "InternalType": "System.Int32, System.Private.CoreLib",
+              "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
+              "Simple": {
+                "Kind": "Int",
+                "Value": 14
+              }
+            },
+            {
+              "Name": "Color",
+              "Type": "Color",
+              "InternalType": "Engine.Color, Engine",
+              "TypeId": "8b690ecd-d4a6-1ad0-33be-76887ab30172",
+              "Simple": {
+                "Kind": "Color",
+                "Value": {
+                  "R": 1.0,
+                  "G": 1.0,
+                  "B": 1.0,
+                  "A": 1.0
+                }
+              }
+            },
+            {
+              "Name": "FlipX",
+              "Type": "Bool",
+              "InternalType": "System.Boolean, System.Private.CoreLib",
+              "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+              "Simple": {
+                "Kind": "Bool",
+                "Value": false
+              }
+            },
+            {
+              "Name": "FlipY",
+              "Type": "Bool",
+              "InternalType": "System.Boolean, System.Private.CoreLib",
+              "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+              "Simple": {
+                "Kind": "Bool",
+                "Value": false
+              }
+            },
+            {
+              "Name": "Sprite",
+              "Type": "SpriteAsset",
+              "InternalType": "Engine.Sprite, Engine",
+              "TypeId": "8b10d6e4-cc00-3d5a-8210-c8fd378f2f1a",
+              "Simple": null
+            },
+            {
+              "Name": "Material",
+              "Type": "MaterialAsset",
+              "InternalType": "Engine.Material, Engine",
+              "TypeId": "6d303096-cf4b-322c-c9c9-a5b025e553d7",
+              "Simple": null,
+              "Reference": {
+                "$type": "Engine.Serialization.ReferenceData, Engine",
+                "$value": {
+                  "Type": "MaterialAsset",
+                  "RefId": "f96c1165-c30d-4da9-adf7-048f57d89204"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
       "Name": "Portal",
       "Layer": 8,
       "IsActiveSelf": true,
@@ -14120,7 +15912,7 @@
                   "AtlasIndex": 176,
                   "TexRefId": "ae41cfa8-73fe-4a87-8196-f58a7e3dd748",
                   "Type": "SpriteAsset",
-                  "RefId": "b009641a-62f3-4217-abfc-7b07b3dfdf79"
+                  "RefId": "ae41cfa8-73fe-4a87-8196-f58a7e3dd748"
                 }
               }
             },
@@ -14433,7 +16225,7 @@
                   "AtlasIndex": 0,
                   "TexRefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb",
                   "Type": "SpriteAsset",
-                  "RefId": "008b6407-6443-429e-994c-f7137394ab36"
+                  "RefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb"
                 }
               }
             },
@@ -15025,7 +16817,7 @@
                   "AtlasIndex": 1,
                   "TexRefId": "95aed4ef-62cc-41c7-984b-473d4fd70f15",
                   "Type": "SpriteAsset",
-                  "RefId": "00029feb-6256-4302-a87a-1d9edd07b295"
+                  "RefId": "95aed4ef-62cc-41c7-984b-473d4fd70f15"
                 }
               }
             },
@@ -15373,7 +17165,7 @@
                   "AtlasIndex": 177,
                   "TexRefId": "ae41cfa8-73fe-4a87-8196-f58a7e3dd748",
                   "Type": "SpriteAsset",
-                  "RefId": "8d9796da-ba2a-4d11-b7ca-ec7fa03003ac"
+                  "RefId": "ae41cfa8-73fe-4a87-8196-f58a7e3dd748"
                 }
               }
             },
@@ -15602,7 +17394,7 @@
                   "AtlasIndex": 162,
                   "TexRefId": "2f779d6a-a4bb-4860-b3d7-9a2ed747698b",
                   "Type": "SpriteAsset",
-                  "RefId": "1f0b3c24-e714-47db-8d0f-13d6f13db9aa"
+                  "RefId": "2f779d6a-a4bb-4860-b3d7-9a2ed747698b"
                 }
               }
             },
@@ -15979,7 +17771,7 @@
                   "AtlasIndex": 0,
                   "TexRefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb",
                   "Type": "SpriteAsset",
-                  "RefId": "008b6407-6443-429e-994c-f7137394ab36"
+                  "RefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb"
                 }
               }
             },
@@ -16514,7 +18306,7 @@
                   "AtlasIndex": 0,
                   "TexRefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb",
                   "Type": "SpriteAsset",
-                  "RefId": "008b6407-6443-429e-994c-f7137394ab36"
+                  "RefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb"
                 }
               }
             },
@@ -17049,7 +18841,7 @@
                   "AtlasIndex": 0,
                   "TexRefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb",
                   "Type": "SpriteAsset",
-                  "RefId": "008b6407-6443-429e-994c-f7137394ab36"
+                  "RefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb"
                 }
               }
             },
@@ -17584,7 +19376,7 @@
                   "AtlasIndex": 0,
                   "TexRefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb",
                   "Type": "SpriteAsset",
-                  "RefId": "008b6407-6443-429e-994c-f7137394ab36"
+                  "RefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb"
                 }
               }
             },
@@ -18119,7 +19911,7 @@
                   "AtlasIndex": 0,
                   "TexRefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb",
                   "Type": "SpriteAsset",
-                  "RefId": "008b6407-6443-429e-994c-f7137394ab36"
+                  "RefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb"
                 }
               }
             },
@@ -18654,7 +20446,7 @@
                   "AtlasIndex": 0,
                   "TexRefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb",
                   "Type": "SpriteAsset",
-                  "RefId": "008b6407-6443-429e-994c-f7137394ab36"
+                  "RefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb"
                 }
               }
             },
@@ -19246,7 +21038,7 @@
                   "AtlasIndex": 162,
                   "TexRefId": "2f779d6a-a4bb-4860-b3d7-9a2ed747698b",
                   "Type": "SpriteAsset",
-                  "RefId": "1f0b3c24-e714-47db-8d0f-13d6f13db9aa"
+                  "RefId": "2f779d6a-a4bb-4860-b3d7-9a2ed747698b"
                 }
               }
             },
@@ -19680,7 +21472,7 @@
                   "AtlasIndex": 162,
                   "TexRefId": "2f779d6a-a4bb-4860-b3d7-9a2ed747698b",
                   "Type": "SpriteAsset",
-                  "RefId": "1f0b3c24-e714-47db-8d0f-13d6f13db9aa"
+                  "RefId": "2f779d6a-a4bb-4860-b3d7-9a2ed747698b"
                 }
               }
             },
@@ -20028,7 +21820,7 @@
                   "AtlasIndex": 135,
                   "TexRefId": "ae41cfa8-73fe-4a87-8196-f58a7e3dd748",
                   "Type": "SpriteAsset",
-                  "RefId": "8e73794a-6e2c-485d-8a8d-b213e3c02c9a"
+                  "RefId": "ae41cfa8-73fe-4a87-8196-f58a7e3dd748"
                 }
               }
             },
@@ -20257,7 +22049,7 @@
                   "AtlasIndex": 162,
                   "TexRefId": "2f779d6a-a4bb-4860-b3d7-9a2ed747698b",
                   "Type": "SpriteAsset",
-                  "RefId": "1f0b3c24-e714-47db-8d0f-13d6f13db9aa"
+                  "RefId": "2f779d6a-a4bb-4860-b3d7-9a2ed747698b"
                 }
               }
             },
@@ -20691,7 +22483,7 @@
                   "AtlasIndex": 1,
                   "TexRefId": "95aed4ef-62cc-41c7-984b-473d4fd70f15",
                   "Type": "SpriteAsset",
-                  "RefId": "00029feb-6256-4302-a87a-1d9edd07b295"
+                  "RefId": "95aed4ef-62cc-41c7-984b-473d4fd70f15"
                 }
               }
             },
@@ -21673,7 +23465,7 @@
                   "AtlasIndex": 0,
                   "TexRefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb",
                   "Type": "SpriteAsset",
-                  "RefId": "008b6407-6443-429e-994c-f7137394ab36"
+                  "RefId": "3a2110bd-ff40-45ce-a3f7-960a57a8fecb"
                 }
               }
             },
@@ -22265,7 +24057,7 @@
                   "AtlasIndex": 160,
                   "TexRefId": "2f779d6a-a4bb-4860-b3d7-9a2ed747698b",
                   "Type": "SpriteAsset",
-                  "RefId": "d4d50341-2f41-4340-b1df-3f35cc17b9a3"
+                  "RefId": "2f779d6a-a4bb-4860-b3d7-9a2ed747698b"
                 }
               }
             },

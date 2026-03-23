@@ -9,7 +9,6 @@
   "AtlasData": {
     "_chunks": [
       {
-        "ID": "bbafbf5e-94b5-494c-a3f6-aac552a78e84",
         "Pivot": {
           "x": 0.58,
           "y": 0.34
@@ -38,7 +37,6 @@
         "Height": 28
       },
       {
-        "ID": "2b5da72a-a502-435a-b52c-9ac30c619dad",
         "Pivot": {
           "x": 0.58,
           "y": 0.34
@@ -67,7 +65,6 @@
         "Height": 28
       },
       {
-        "ID": "cc7e7e1e-bd99-4fd4-9d0d-6ad36eb31d4c",
         "Pivot": {
           "x": 0.58,
           "y": 0.34
@@ -96,7 +93,6 @@
         "Height": 28
       },
       {
-        "ID": "657d6554-1a8e-4361-a93c-daa56a503d99",
         "Pivot": {
           "x": 0.58,
           "y": 0.34

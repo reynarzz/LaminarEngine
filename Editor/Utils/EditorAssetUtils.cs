@@ -115,7 +115,13 @@ namespace Editor
 
             if (typeof(Texture).IsAssignableFrom(type)) 
                 return AssetType.Texture;
-            if (typeof(AudioClip).IsAssignableFrom(type)) 
+            if (typeof(Texture2D).IsAssignableFrom(type))
+                return AssetType.Texture2D;
+            //if (typeof(Texture2D).IsAssignableFrom(type))
+            //    return AssetType.Texture3D;
+            if (typeof(Sprite).IsAssignableFrom(type))
+                return AssetType.Sprite;
+            if (typeof(AudioClip).IsAssignableFrom(type))
                 return AssetType.Audio;
             if (typeof(TextAsset).IsAssignableFrom(type)) 
                 return AssetType.Text;
@@ -188,6 +194,12 @@ namespace Editor
                     break;
                 case AssetType.Sprite:
                     clrType = typeof(Sprite);
+                    break;
+                case AssetType.Texture2D:
+                    clrType = typeof(Texture2D);
+                    break;
+                case AssetType.Texture3D:
+                    clrType = null;// typeof(Texture3D);
                     break;
                     // default:
                     // throw new NotImplementedException(type.ToString());

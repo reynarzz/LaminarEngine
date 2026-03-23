@@ -196,7 +196,7 @@ namespace Editor
             var isValidClass = (type.IsClass) && type != typeof(string);
             if ((ReflectionUtils.GetPropertiesCount(prop) > 1 && (isValidClass) &&
                 !ReflectionUtils.IsEObject(type) && !ReflectionUtils.IsLazy(type)) ||
-                (ReflectionUtils.IsCollection(prop) && isValidClass && !ReflectionUtils.IsEObject(type) && !ReflectionUtils.IsLazy(type))  ||
+                (ReflectionUtils.IsCollection(prop) && isValidClass && !ReflectionUtils.IsEObject(type) && !ReflectionUtils.IsLazy(type)) ||
                 ReflectionUtils.IsUserDefinedStruct(prop))
             {
                 flags = ImGuiTreeNodeFlags.OpenOnArrow;
@@ -266,11 +266,39 @@ namespace Editor
                 ImGui.SetCursorPosX(Math.Max(EditorGuiFieldsResolver.XPosOffset, ImGui.GetCursorPosX()));
 
                 var eObject = value != null ? (ILazyRef)value : default;
-                var eObjectType = eObject.HasRef() ? eObject.GetAssetType().AssetTypeToType() : ReflectionUtils.GetLazyType(type);
+                Type eObjectType = null;
+                if (eObject.HasRef())
+                {
+                    eObjectType = eObject.GetAssetType().AssetTypeToType();
+                }
+                else
+                {
+                    if (eObject.GetAssetType() == AssetType.Invalid && eObject.GetRefId() != Guid.Empty)
+                    {
+                        var assetTypeEnum = IOLayer.Database.GetAssetInfo(eObject.GetRefId()).Type;
+                        eObject.SetAssetType(assetTypeEnum);
+                        setMemberValueCallBack(target, eObject, prop, index);
+                        resultChanged = true;
+
+                        if (assetTypeEnum != AssetType.Invalid)
+                        {
+                            eObjectType = assetTypeEnum.AssetTypeToType();
+                        }
+                        else
+                        {
+                            eObjectType = ReflectionUtils.GetLazyType(type);
+                        }
+                        Debug.Warn($"RefId: '{eObject.GetRefId()}' Had assetType: 'Invalid', probably the assetType enum was modified affecting the order");
+                    }
+                    else
+                    {
+                        eObjectType = ReflectionUtils.GetLazyType(type);
+                    }
+                }
 
                 EditorGuiFieldsResolver.DrawEObjectSlot(eObject, eObjectType, v =>
                 {
-                    resultChanged = (v != null && v.GetID() != eObject.GetRefId()) || (eObject.HasRef() && v == null); 
+                    resultChanged = (v != null && v.GetID() != eObject.GetRefId()) || (eObject.HasRef() && v == null);
 
                     if (resultChanged && eObject != null)
                     {

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
+    // NOTE: Do not reorder this enum.
     public enum AssetType
     {
         Invalid,

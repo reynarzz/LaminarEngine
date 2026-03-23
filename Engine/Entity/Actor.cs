@@ -207,6 +207,10 @@ namespace Engine
                     {
                         ReflectionUtils.SetMemberValue(to, member, ReflectionUtils.GetMemberValue(from, member));
                     }
+                    else
+                    {
+                        Debug.Error($"Can't copy data to Member: {member.Name}, Type: {type.Name}");
+                    }
                 }
             }
         }

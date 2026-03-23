@@ -9,7 +9,6 @@
   "AtlasData": {
     "_chunks": [
       {
-        "ID": "0ee5563c-08a0-4d52-a682-73481c6ee5c6",
         "Pivot": {
           "x": 0.4,
           "y": 0.42
@@ -38,7 +37,6 @@
         "Height": 58
       },
       {
-        "ID": "ad20a427-d632-47dd-9b30-2ba6ed59f4e1",
         "Pivot": {
           "x": 0.4,
           "y": 0.42

@@ -28,7 +28,7 @@ Fix:
 - Memory leak is happening for the index buffer, in Batcher2D mesh section for custom index buffers.
 - If there is a compilation issue and the user creates an asset, it will not show up in the assets view since the import happens after the compilation.
 - newly created folders do not appear in the asset view.
-
+- When 'SHIP' building check that the LazyRef is pointing to a valid AssetType.
 
 Serialization:
 - Forbid serialization of dictionaries that contains EObject as key?
