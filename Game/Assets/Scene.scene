@@ -587,7 +587,7 @@
               "Name": "_lazyResources",
               "Type": "ComplexCollection",
               "InternalType": "Engine.LazyRef`1[[Engine.Asset, Engine]][], Engine",
-              "TypeId": "6674ad67-c675-1ed0-99cf-f02d5e970398",
+              "TypeId": "0f5b550d-5253-7dc2-daa1-a9a397d0531b",
               "Simple": null,
               "Collection": {
                 "$type": "Engine.Serialization.CollectionClasses, Engine",
@@ -650,7 +650,7 @@
                         }
                       ],
                       "InternalType": "Engine.LazyRef`1[[Engine.Asset, Engine]], Engine",
-                      "TypeId": "6101266c-05a6-94ac-7193-61903305d65a"
+                      "TypeId": "a6fc6450-9651-c9e7-ed04-36e7bbea1435"
                     },
                     {
                       "$type": "Engine.Serialization.ComplexClass, Engine",
@@ -709,7 +709,7 @@
                         }
                       ],
                       "InternalType": "Engine.LazyRef`1[[Engine.Asset, Engine]], Engine",
-                      "TypeId": "6101266c-05a6-94ac-7193-61903305d65a"
+                      "TypeId": "a6fc6450-9651-c9e7-ed04-36e7bbea1435"
                     },
                     {
                       "$type": "Engine.Serialization.ComplexClass, Engine",
@@ -768,7 +768,7 @@
                         }
                       ],
                       "InternalType": "Engine.LazyRef`1[[Engine.Asset, Engine]], Engine",
-                      "TypeId": "6101266c-05a6-94ac-7193-61903305d65a"
+                      "TypeId": "a6fc6450-9651-c9e7-ed04-36e7bbea1435"
                     },
                     {
                       "$type": "Engine.Serialization.ComplexClass, Engine",
@@ -827,7 +827,7 @@
                         }
                       ],
                       "InternalType": "Engine.LazyRef`1[[Engine.Asset, Engine]], Engine",
-                      "TypeId": "6101266c-05a6-94ac-7193-61903305d65a"
+                      "TypeId": "a6fc6450-9651-c9e7-ed04-36e7bbea1435"
                     },
                     {
                       "$type": "Engine.Serialization.ComplexClass, Engine",
@@ -886,7 +886,7 @@
                         }
                       ],
                       "InternalType": "Engine.LazyRef`1[[Engine.Asset, Engine]], Engine",
-                      "TypeId": "6101266c-05a6-94ac-7193-61903305d65a"
+                      "TypeId": "a6fc6450-9651-c9e7-ed04-36e7bbea1435"
                     },
                     {
                       "$type": "Engine.Serialization.ComplexClass, Engine",
@@ -945,7 +945,7 @@
                         }
                       ],
                       "InternalType": "Engine.LazyRef`1[[Engine.Asset, Engine]], Engine",
-                      "TypeId": "6101266c-05a6-94ac-7193-61903305d65a"
+                      "TypeId": "a6fc6450-9651-c9e7-ed04-36e7bbea1435"
                     }
                   ],
                   "ItemsType": "ComplexClass",
@@ -1063,7 +1063,7 @@
               "TypeId": "8bb080fb-0417-4cec-2ad6-a37e93d2bde3",
               "Simple": {
                 "Kind": "Float",
-                "Value": 37.9
+                "Value": 18.4
               }
             },
             {
@@ -1221,7 +1221,7 @@
                 "$type": "Engine.Serialization.ReferenceData, Engine",
                 "$value": {
                   "Type": "Tilemap",
-                  "RefId": "349b5840-9578-4504-bfa3-b74141eab3fa"
+                  "RefId": "288ad5a8-fb39-40cb-b764-d4bc14c64797"
                 }
               }
             },
@@ -1446,7 +1446,7 @@
                 "$type": "Engine.Serialization.ReferenceData, Engine",
                 "$value": {
                   "Type": "Tilemap",
-                  "RefId": "349b5840-9578-4504-bfa3-b74141eab3fa"
+                  "RefId": "288ad5a8-fb39-40cb-b764-d4bc14c64797"
                 }
               }
             },
@@ -1620,7 +1620,7 @@
                 "$type": "Engine.Serialization.ReferenceData, Engine",
                 "$value": {
                   "Type": "Tilemap",
-                  "RefId": "349b5840-9578-4504-bfa3-b74141eab3fa"
+                  "RefId": "288ad5a8-fb39-40cb-b764-d4bc14c64797"
                 }
               }
             },
@@ -1794,7 +1794,7 @@
                 "$type": "Engine.Serialization.ReferenceData, Engine",
                 "$value": {
                   "Type": "Tilemap",
-                  "RefId": "349b5840-9578-4504-bfa3-b74141eab3fa"
+                  "RefId": "288ad5a8-fb39-40cb-b764-d4bc14c64797"
                 }
               }
             },
