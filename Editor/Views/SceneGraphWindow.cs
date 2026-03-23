@@ -454,19 +454,33 @@ namespace Editor.Views
 
                 if (ImGui.MenuItem("Clear parent"))
                 {
+                    var rootParent = actor.Transform.RootParent;
+                    if (rootParent)
+                    {
+                        var index = rootParent.GetSiblingIndex();
+                        actor.Transform.Parent = null;
+                        actor.Transform.SetSiblingIndex(index + 1);
+                        SetSelectedActorParentGraph(actor, true, true);
+                    }
                     actor.Transform.Parent = null;
                     EditorSystem.Save.MarkDirty(actor);
                 }
 
                 if (ImGui.MenuItem("Unparent to previous"))
                 {
-                    if (actor.Transform.Parent.Parent)
+                    if (actor.Transform.Parent?.Parent)
                     {
+                        var parentIndex = actor.Transform.Parent.GetSiblingIndex();
                         actor.Transform.Parent = actor.Transform.Parent.Parent;
+                        actor.Transform.SetSiblingIndex(parentIndex + 1);
+                        SetSelectedActorParentGraph(actor, true, true);
                     }
-                    else
+                    else if(actor.Transform.Parent)
                     {
+                        var parentIndex = actor.Transform.Parent.GetSiblingIndex();
                         actor.Transform.Parent = null;
+                        actor.Transform.SetSiblingIndex(parentIndex + 1);
+                        SetSelectedActorParentGraph(actor, true, true);
                     }
                     EditorSystem.Save.MarkDirty(actor);
                 }

@@ -1,11 +1,18 @@
 ﻿// TODO: This file shows the features and bugs that are already known, and will or are being worked on.
 
-    
+[High priority] To start making the game I need to finish:
+- Make sure the serializer is fully working.
+- Inspector drawer can dirty changes.
+- To replace the prefab system, I will create a simple script that instantiate stuff and I call it from the editor.
+
+[Note]
 -The current code is very slow, and contains tons of bad practices to cut corners, leading to memory leaks, and slowdowns,
    most of it is in 'prototype' phase a nice (big) refactor is on the way.
 -Refactor.
 - Editor.Cooker, the asset database sometimes doesn't remove old assets correctly.
 - Improve Editor property UI
+- Scenes should be saved as a graph of nodes, and not a 'graph of transform/actors', so I can put anything in the nodes not only transforms.
+
 
 Fix:
 - Reload the asset database in the same frame after doing asset operations (create,delete,move,copy) using the Asset View window.
@@ -43,9 +50,6 @@ Refactor:
 Performance fix:
 UI performance is pretty bad, rewrite the entire UI system.
 
-Assets:
-Metadata of every asset should be binary on final build.
-
 Features:
 - Implement V1 Prefabs: Without data linking. But just a template that you can drag into the scene.
 - Implement 'OnChanged' for InspectorDrawer, so here we could precalculate the data of the new selection.
@@ -59,6 +63,7 @@ Features:
 - [Editor] Implement edit handles for colliders: box circle.
 - [Editor] Add menu item options for adding sprites: Square, Circle, Capsule, Triangle.
 - [Editor] Import scripts and have metadata info such as 'if overrides physics methods', so rigidbodies can enable or disable physics features accordingly.
+- Metadata of every asset should be binary on final build.
 
 Save Editor config:
 -Current loaded scene name.

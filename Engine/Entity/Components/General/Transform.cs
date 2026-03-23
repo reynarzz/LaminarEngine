@@ -272,6 +272,24 @@ namespace Engine
 
         internal bool NeedsInterpolation { get; set; }
         internal mat4 InterpolatedWorldMatrix { get; set; }
+        public Transform RootParent
+        {
+            get
+            {
+                var parent = Parent;
+                while (parent)
+                {
+                    var newParent = parent.Parent;
+                    if (!newParent)
+                    {
+                        return parent;
+                    }
+                    parent = newParent;
+                }
+
+                return parent;
+            }
+        }
 
         // Helper to update world transforms if dirty
         private void UpdateWorldIfDirty()
