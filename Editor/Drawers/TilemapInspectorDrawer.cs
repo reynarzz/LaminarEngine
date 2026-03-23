@@ -26,46 +26,49 @@ namespace Editor.Drawers
         }
 
         private LayerInfo[] _layersInfo;
-
+        private TilemapAsset _asset;
         internal override void OnOpen(TilemapAsset target)
         {
-            _meta = EditorAssetUtils.GetAssetMeta(target) as TilemapMeta;
-
-
-            var data = target.GetData();
-            var level = data.Levels.FirstOrDefault().Value;
-
-            if(level != null)
-            {
-                if(level.Layers != null && level.Layers.Count > 0)
-                {
-                    var layers = level.Layers.Values.ToArray();
-                    _layersInfo = new LayerInfo[layers.Length];
-
-                    for ( int i = 0; i < layers.Length; i++ ) 
-                    {
-                        _layersInfo[i] = new LayerInfo()
-                        {
-                            Identifier = layers[i].Identifier,
-                            Type = layers[i].Type
-                        };
-                    }
-                }
-            }
 
             // TODO: maintain the meta in sync with the tilemap level and layers here
 
             // data.Levels.Layers
-            _layerConfig = _meta.Layers;
         }
 
         protected override void OnDraw(TilemapAsset target)
         {
-            var data = target.GetData();
+            TilemapData data = null;
+            if (_asset != target)
+            {
+                _asset = target;
+                _meta = EditorAssetUtils.GetAssetMeta(target) as TilemapMeta;
 
-          //  var show = ImGui.TreeNodeEx($"Layer");
+                data = target.GetData();
+                var level = data.Levels.FirstOrDefault().Value;
 
-          //  if (show)
+                if (level != null)
+                {
+                    if (level.Layers != null && level.Layers.Count > 0)
+                    {
+                        var layers = level.Layers.Values.ToArray();
+                        _layersInfo = new LayerInfo[layers.Length];
+
+                        for (int i = 0; i < layers.Length; i++)
+                        {
+                            _layersInfo[i] = new LayerInfo()
+                            {
+                                Identifier = layers[i].Identifier,
+                                Type = layers[i].Type
+                            };
+                        }
+                    }
+                }
+            }
+            _layerConfig = _meta.Layers;
+
+            //  var show = ImGui.TreeNodeEx($"Layer");
+
+            //  if (show)
             {
                 for (int j = 0; j < _layerConfig.Length; j++)
                 {

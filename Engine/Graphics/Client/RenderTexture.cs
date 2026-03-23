@@ -11,22 +11,22 @@ namespace Engine
     {
         private readonly RenderTargetDescriptor _desc = new();
         public RenderTexture(int width, int height) :
-            base(Guid.NewGuid(), TextureMode.Clamp, TextureFilter.Nearest, width, height, 4, null)
+            base(Guid.NewGuid(), TextureWrapMode.Clamp, TextureFilterMode.Nearest, width, height, 4, null)
         {
             Create();
 
         }
 
-        public RenderTexture(int width, int height, TextureFilter filter, bool enableMipMaps) :
-          base(Guid.NewGuid(), TextureMode.Clamp, filter, width, height, 4, null)
+        public RenderTexture(int width, int height, TextureFilterMode filter, bool enableMipMaps) :
+          base(Guid.NewGuid(), TextureWrapMode.Clamp, filter, width, height, 4, null)
         {
             _desc.ColorTextureDescriptor.EnableMipMaps = enableMipMaps;
             Create();
 
         }
 
-        public RenderTexture(int width, int height, TextureFilter filter, bool enableMipMaps, int samples) :
-         base(Guid.NewGuid(), TextureMode.Clamp, filter, width, height, 4, null)
+        public RenderTexture(int width, int height, TextureFilterMode filter, bool enableMipMaps, int samples) :
+         base(Guid.NewGuid(), TextureWrapMode.Clamp, filter, width, height, 4, null)
         {
             _desc.IsMultiSample = samples > 0;
             _desc.SamplesCount = samples;

@@ -29,7 +29,7 @@ namespace Engine
         public static Texture2D White { get; } = Get1PixelTexture("WhiteTexture_Internal", [0xFF, 0xFF, 0xFF, 0xFF]);
         public static Texture2D Black { get; } = Get1PixelTexture("BlackTexture_Internal", [0x00, 0x00, 0x00, 0xFF]);
         private readonly TextureDescriptor _descriptor = new();
-        public Texture2D(Guid refId, TextureMode mode, TextureFilter filter, int width, int height, int channels, int pixelsPerUnit, byte[] data) :
+        public Texture2D(Guid refId, TextureWrapMode mode, TextureFilterMode filter, int width, int height, int channels, int pixelsPerUnit, byte[] data) :
                 base(refId, mode, filter, width, height, channels, data)
         {
             if (pixelsPerUnit <= 0)
@@ -41,14 +41,14 @@ namespace Engine
             Create();
         }
 
-        public Texture2D(TextureMode mode, TextureFilter filter, int width, int height, int channels, int pixelsPerUnit, byte[] data) :
+        public Texture2D(TextureWrapMode mode, TextureFilterMode filter, int width, int height, int channels, int pixelsPerUnit, byte[] data) :
             this(Guid.NewGuid(), mode, filter, width, height, channels, pixelsPerUnit, data)
         {
             Create();
 
         }
 
-        public Texture2D(TextureMode mode, TextureFilter filter, int width, int height, int channels, byte[] data) :
+        public Texture2D(TextureWrapMode mode, TextureFilterMode filter, int width, int height, int channels, byte[] data) :
             this(mode, filter, width, height, channels, 1, data)
         {
 
@@ -69,7 +69,7 @@ namespace Engine
 
         private static Texture2D Get1PixelTexture(string name, byte[] color)
         {
-            var texture = new Texture2D(Guid.NewGuid(), TextureMode.Clamp, TextureFilter.Nearest, 1, 1, 4, 1, color);
+            var texture = new Texture2D(Guid.NewGuid(), TextureWrapMode.Clamp, TextureFilterMode.Nearest, 1, 1, 4, 1, color);
             texture.Name = name;
             return texture;
         }

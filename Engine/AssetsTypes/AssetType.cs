@@ -10,6 +10,10 @@ namespace Engine
     {
         Invalid,
         Texture,
+        Texture2D,
+        Texture3D,
+        Cubemap,
+        Sprite,
         Audio,
         Text,
         Shader,
@@ -22,6 +26,5 @@ namespace Engine
         Tilemap,
         Script,
         RenderTexture,
-        Sprite
     }
 }

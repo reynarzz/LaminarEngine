@@ -159,7 +159,7 @@ namespace Editor.Rendering
             _batcher = new Batcher2D(Consts.Graphics.MAX_QUADS_PER_BATCH);
             _renderDatasByType = new();
 
-            _renderTexture = new RenderTexture(1920, 1080, TextureFilter.Linear, true,
+            _renderTexture = new RenderTexture(1920, 1080, TextureFilterMode.Linear, true,
                 Math.Min(GfxDeviceManager.Current.GetDeviceInfo().MaxSamples, 4));
             // _renderTexture = new RenderTexture(1920, 1080, TextureFilter.Linear, true);
 
@@ -189,7 +189,7 @@ namespace Editor.Rendering
             {
                 StbImage.stbi_set_flip_vertically_on_load(1);
                 var image = ImageResult.FromStream(File.OpenRead(Path.Combine(EditorPaths.DataRoot, "Resources", pathInResources)));
-                return new Sprite(new Texture2D(TextureMode.Clamp, TextureFilter.Linear, image.Width, image.Height, 4, PixelsPerUnit, image.Data));
+                return new Sprite(new Texture2D(TextureWrapMode.Clamp, TextureFilterMode.Linear, image.Width, image.Height, 4, PixelsPerUnit, image.Data));
             }
 
             _cameraSprite = LoadSprite("cameraIcon3.png");

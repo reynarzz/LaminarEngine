@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Buffers.Binary;
 using System.Runtime.InteropServices;
 
@@ -7,8 +8,8 @@ namespace Engine.Serialization
     [StructLayout(LayoutKind.Sequential)]
     internal struct SerializableGuid : IEquatable<SerializableGuid>
     {
-        [SerializedField] private ulong _a;
-        [SerializedField] private ulong _b;
+        [JsonProperty, SerializedField] private ulong _a;
+        [JsonProperty, SerializedField] private ulong _b;
 
         public SerializableGuid(ulong a, ulong b)
         {
@@ -16,6 +17,7 @@ namespace Engine.Serialization
             _b = b;
         }
 
+        [JsonIgnore]
         public Guid Guid
         {
             get

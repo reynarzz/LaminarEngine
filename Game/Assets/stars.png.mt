@@ -1,6 +1,7 @@
 {
   "Config": {
     "IsAtlas": false,
+    "Type": "Sprite",
     "Mode": "Repeat",
     "Filter": "Nearest",
     "PixelPerUnit": 100

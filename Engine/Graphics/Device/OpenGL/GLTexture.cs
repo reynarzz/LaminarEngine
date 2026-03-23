@@ -139,7 +139,7 @@ namespace Engine.Graphics.OpenGL
 
             switch (descriptor.Filter)
             {
-                case TextureFilter.Nearest:
+                case TextureFilterMode.Nearest:
                     if (descriptor.EnableMipMaps)
                     {
                         minFilter = GL_NEAREST_MIPMAP_NEAREST;
@@ -151,7 +151,7 @@ namespace Engine.Graphics.OpenGL
                         magFilter = GL_NEAREST;
                     }
                     break;
-                case TextureFilter.Linear:
+                case TextureFilterMode.Linear:
                     if (descriptor.EnableMipMaps)
                     {
                         minFilter = GL_LINEAR_MIPMAP_LINEAR;
@@ -172,10 +172,10 @@ namespace Engine.Graphics.OpenGL
             int texMode = 0;
             switch (descriptor.Mode)
             {
-                case TextureMode.Clamp:
+                case TextureWrapMode.Clamp:
                     texMode = GL_CLAMP_TO_EDGE;
                     break;
-                case TextureMode.Repeat:
+                case TextureWrapMode.Repeat:
                     texMode = GL_REPEAT;
                     break;
                 default:

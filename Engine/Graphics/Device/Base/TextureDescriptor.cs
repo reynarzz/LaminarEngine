@@ -17,7 +17,7 @@ namespace Engine.Graphics
         internal bool IsMultiSample { get; set; }
         internal int SamplesCount { get; set; }
         internal bool EnableMipMaps { get; set; }
-        internal TextureMode Mode { get; set; } = TextureMode.Clamp;
-        internal TextureFilter Filter { get; set; } = TextureFilter.Nearest;
+        internal TextureWrapMode Mode { get; set; } = TextureWrapMode.Clamp;
+        internal TextureFilterMode Filter { get; set; } = TextureFilterMode.Nearest;
     }
 }

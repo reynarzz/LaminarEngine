@@ -11,14 +11,14 @@ namespace Engine
     {
         public int Width { get; protected set; }
         public int Height { get; protected set; }
-        [SerializedField] public TextureMode Mode { get; protected set; }
-        [SerializedField] public TextureFilter Filter { get; protected set; }
+        [SerializedField] public TextureWrapMode Mode { get; protected set; }
+        [SerializedField] public TextureFilterMode Filter { get; protected set; }
         public int Channels { get; protected set; }
         internal protected byte[] Data { get; internal set; }
 
         internal GfxResource NativeResource { get; protected private set; }
 
-        internal Texture(Guid guid, TextureMode mode, TextureFilter filter, int width, int height, int channels, byte[] data) : base(guid)
+        internal Texture(Guid guid, TextureWrapMode mode, TextureFilterMode filter, int width, int height, int channels, byte[] data) : base(guid)
         {
             Width = width;
             Height = height;

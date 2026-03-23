@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Engine.Serialization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace Engine
     internal struct TilemapLayerConfig
     {
         [SerializedField] public int EntityPixelPerUnit;
-        [SerializedField] public Guid TextureRef;
+        [SerializedField] public SerializableGuid TextureRef;
     }
     internal class TilemapMeta : AssetMeta
     {

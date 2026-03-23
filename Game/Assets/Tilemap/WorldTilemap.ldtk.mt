@@ -2,28 +2,46 @@
   "Layers": [
     {
       "EntityPixelPerUnit": 16,
-      "TextureRef": "2f779d6a-a4bb-4860-b3d7-9a2ed747698b"
+      "TextureRef": {
+        "_a": 5215349492357242218,
+        "_b": 10045639433352042419
+      }
     },
     {
       "EntityPixelPerUnit": 16,
-      "TextureRef": "da64b85c-92f1-4a6f-a576-0ac668e7e2a7"
+      "TextureRef": {
+        "_a": 5363667248670357596,
+        "_b": 12097485986255763109
+      }
     },
     {
       "EntityPixelPerUnit": 16,
-      "TextureRef": "00000000-0000-0000-0000-000000000000"
+      "TextureRef": {
+        "_a": 0,
+        "_b": 0
+      }
     },
     {
       "EntityPixelPerUnit": 16,
-      "TextureRef": "da64b85c-92f1-4a6f-a576-0ac668e7e2a7"
+      "TextureRef": {
+        "_a": 5363667248670357596,
+        "_b": 12097485986255763109
+      }
     },
     {
       "EntityPixelPerUnit": 16,
-      "TextureRef": "da64b85c-92f1-4a6f-a576-0ac668e7e2a7"
+      "TextureRef": {
+        "_a": 5363667248670357596,
+        "_b": 12097485986255763109
+      }
     },
     {
       "EntityPixelPerUnit": 16,
-      "TextureRef": "da64b85c-92f1-4a6f-a576-0ac668e7e2a7"
+      "TextureRef": {
+        "_a": 5363667248670357596,
+        "_b": 12097485986255763109
+      }
     }
   ],
-  "GUID": "349b5840-9578-4504-bfa3-b74141eab3fa"
+  "GUID": "288ad5a8-fb39-40cb-b764-d4bc14c64797"
 }

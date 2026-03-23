@@ -21,6 +21,7 @@ Fix:
 - If there is a compilation issue and the user creates an asset, it will not show up in the assets view since the import happens after the compilation.
 - newly created folders do not appear in the asset view.
 
+
 Serialization:
 - Forbid serialization of dictionaries that contains EObject as key?
 - If a dictionary has a complexClass as a key/value, and a EObject as key/value, the dictionary should not
@@ -47,6 +48,7 @@ Metadata of every asset should be binary on final build.
 
 Features:
 - Implement V1 Prefabs: Without data linking. But just a template that you can drag into the scene.
+- Implement 'OnChanged' for InspectorDrawer, so here we could precalculate the data of the new selection.
 - Assets should only be able to be loaded by dragging and dropping into the scene, or the special folder 'Resources'.
 - Generate the assets index list by reading scenes, so we add all the assets that the deploy build needs.
 - Fully async scene load in the background: async asset loading (mainThreadSync for graphic assets)

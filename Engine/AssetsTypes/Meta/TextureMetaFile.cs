@@ -9,15 +9,24 @@ using System.Threading.Tasks;
 // Fix namespace
 namespace Engine
 {
-    public enum TextureMode
+    public enum TextureWrapMode
     {
         Clamp,
         Repeat
     }
-    public enum TextureFilter
+    public enum TextureFilterMode
     {
         Nearest,
         Linear
+    }
+
+    public enum TextureType
+    {
+        Texture,
+        Texture2D,
+        Texture3D,
+        Sprite,
+        CubeMap,
     }
 }
 
@@ -27,8 +36,9 @@ namespace Engine
     public class TextureConfig
     {
         public bool IsAtlas { get; set; }
-        public TextureMode Mode { get; set; }
-        public TextureFilter Filter { get; set; }
+        public TextureType Type { get; set; } = TextureType.Sprite;
+        public TextureWrapMode Mode { get; set; }
+        public TextureFilterMode Filter { get; set; }
         public int PixelPerUnit { get; set; }
     }
 

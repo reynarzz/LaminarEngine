@@ -2,20 +2,32 @@
   "Layers": [
     {
       "EntityPixelPerUnit": 16,
-      "TextureRef": "00000000-0000-0000-0000-000000000000"
+      "TextureRef": {
+        "_a": 0,
+        "_b": 0
+      }
     },
     {
       "EntityPixelPerUnit": 16,
-      "TextureRef": "00000000-0000-0000-0000-000000000000"
+      "TextureRef": {
+        "_a": 0,
+        "_b": 0
+      }
     },
     {
       "EntityPixelPerUnit": 16,
-      "TextureRef": "00000000-0000-0000-0000-000000000000"
+      "TextureRef": {
+        "_a": 0,
+        "_b": 0
+      }
     },
     {
       "EntityPixelPerUnit": 16,
-      "TextureRef": "00000000-0000-0000-0000-000000000000"
+      "TextureRef": {
+        "_a": 0,
+        "_b": 0
+      }
     }
   ],
-  "GUID": "693a045b-0ba3-4ce6-b52b-adf7acc151ee"
+  "GUID": "9a130f0a-496e-4bd6-bc1e-430ff59105b3"
 }

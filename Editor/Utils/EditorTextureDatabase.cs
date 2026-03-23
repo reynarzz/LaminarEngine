@@ -160,7 +160,7 @@ namespace Editor.Utils
 
                 var image = ImageResult.FromStream(file);
 
-                return new Texture2D(TextureMode.Clamp, TextureFilter.Linear, image.Width, image.Height, 4, image.Data);
+                return new Texture2D(TextureWrapMode.Clamp, TextureFilterMode.Linear, image.Width, image.Height, 4, image.Data);
             }
 
             Debug.Error($"Editor icon doesn't exists at path: {finalPath}");

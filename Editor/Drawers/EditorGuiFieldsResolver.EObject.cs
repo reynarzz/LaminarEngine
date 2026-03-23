@@ -34,8 +34,8 @@ namespace Editor.Utils
             {
                 isAsset = true;
                 // TODO: Show a 'Missing reference' text in the
-                isAssetMissingReference = !asset.IsPhysicallyAvailable;
-                hasObject = asset.IsPhysicallyAvailable;
+                //--isAssetMissingReference = !asset.IsPhysicallyAvailable;
+                //--hasObject = asset.IsPhysicallyAvailable;
             }
 
             string label = null;
@@ -236,6 +236,15 @@ namespace Editor.Utils
                 else if (valueType == typeof(RenderTexture))
                 {
                     DrawAssetColumns(AssetType.RenderTexture, Assets.GetAssetFromGuid, setValue);
+                }
+                else if (valueType.IsAssignableTo(typeof(Texture2D)))
+                {
+                    DrawAssetColumns(AssetType.Texture, refId =>
+                    {
+                        var texture = (Assets.GetAssetFromGuid(refId) as TextureAsset)?.Texture;
+                        return texture as Texture2D;
+                    }, setValue);
+
                 }
                 else if (valueType.IsAssignableTo(typeof(Texture)))
                 {

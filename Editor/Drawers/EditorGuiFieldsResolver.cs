@@ -365,6 +365,24 @@ namespace Editor.Utils
             return false;
         }
 
+        public static bool DrawEnum<T>(string name, ref T value, float itemWidth = 0, bool pressEnterToConfirm = false) where T : Enum
+        {
+            ImGui.SameLine();
+            ImGui.SetCursorPosX(Math.Max(XPosOffset, ImGui.GetCursorPosX()));
+
+            string[] names = Enum.GetNames(typeof(T));
+
+            // Find the index of the value
+            var idx = Array.IndexOf(Enum.GetValues(typeof(T)), value);
+            if (DrawCombo(name, ref idx, names, itemWidth))
+            {
+                value = (T)Enum.Parse(typeof(T), names[idx]);
+                return true;
+            }
+
+            return false;
+        }
+
         public static bool DrawCombo(string name, ref int index, IReadOnlyList<string> values, float itemWidth = 0)
         {
             SetNextItemWidth(itemWidth);

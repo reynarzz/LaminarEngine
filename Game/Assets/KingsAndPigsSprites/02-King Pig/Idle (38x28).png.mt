@@ -1,6 +1,7 @@
 {
   "Config": {
     "IsAtlas": true,
+    "Type": "Sprite",
     "Mode": "Clamp",
     "Filter": "Nearest",
     "PixelPerUnit": 16
