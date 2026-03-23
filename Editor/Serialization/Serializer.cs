@@ -116,15 +116,16 @@ namespace Editor.Serialization
                     {
                         return SerializedType.Font;
                     }
+                    else if (type.IsAssignableTo(typeof(Sprite)))
+                    {
+                        return SerializedType.SpriteAsset;
+                    }
                     Debug.Error($"Type: '{ReflectionUtils.GetFriendlyTypeName(type)}' is an asset but is not added to the serializer 'SerializedType', this could cause a crash if trying to save.");
                     return SerializedType.AssetFlag;
                 }
                 else
                 {
-                    if (type.IsAssignableTo(typeof(Sprite)))
-                    {
-                        return SerializedType.SpriteAsset;
-                    }
+                    
                     return SerializedType.EObjectFlag;
                 }
             }
@@ -165,7 +166,7 @@ namespace Editor.Serialization
             {
                 return GetSimpleType(type);
             }
-            else if (type.IsClass || ReflectionUtils.IsUserDefinedStruct(type) || ReflectionUtils.IsLazy(type))
+            else if (type.IsClass || ReflectionUtils.IsUserDefinedStruct(type) || ReflectionUtils.IsLazy(type)) // TODO: IsLazy() should not be here.
             {
                 return SerializedType.ComplexClass;
             }

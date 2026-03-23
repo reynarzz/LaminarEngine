@@ -8,7 +8,13 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    public class Sprite : EObject
+    public struct SpriteUpdateData
+    {
+        internal int Index;
+        internal Texture2D Texture;
+        internal TextureAtlasCell Cell;
+    }
+    public class Sprite : SubAsset<SpriteUpdateData>
     {
         public Texture2D Texture { get; private set; }
         internal int AtlasIndex { get; private set; }
@@ -18,7 +24,8 @@ namespace Engine
             get => CreateSpriteName(Texture?.Name, AtlasIndex);
             set { }
         }
-        internal Sprite(Texture2D texture, TextureAtlasCell cell, int index) : base(CreateSpriteName(texture?.Name, index), cell.ID)
+        
+        internal Sprite(Texture2D texture, TextureAtlasCell cell, int index) : base(texture.GetID())
         {
             AtlasIndex = index;
             Texture = texture;
@@ -29,7 +36,7 @@ namespace Engine
         {
             Name = texture?.Name;
         }
-        public Sprite(int atlasIndex, Texture2D texture) : base(texture.Path, Guid.NewGuid())
+        public Sprite(int atlasIndex, Texture2D texture) : base(texture.GetID())
         {
             AtlasIndex = atlasIndex;
             Texture = texture;
@@ -45,7 +52,6 @@ namespace Engine
                 if (cell.Width <= 1 && cell.Height <= 1)
                 {
                     cell = TextureAtlasCell.DefaultChunk;
-                    cell.ID = GetID();
                     cell.Width = Texture.Width;
                     cell.Height = Texture.Height;
                 }
@@ -59,19 +65,18 @@ namespace Engine
             return TextureAtlasCell.DefaultChunk;
         }
 
-        internal void UpdateResource(Texture2D texture, TextureAtlasCell cell, int index)
-        {
-            Texture = texture;
-            Name = CreateSpriteName(texture.Name, index);
-            _cell = cell;
-            AtlasIndex = index;
-            _SetID(cell.ID);
-        }
-
         internal static string CreateSpriteName(string baseName, int index)
         {
             var postFix = (index > 0) ? $"({index})" : string.Empty;
             return $"{baseName}{postFix}";
+        }
+
+        internal override void UpdateResource(SpriteUpdateData data, Guid guid)
+        {
+            Texture = data.Texture;
+            Name = CreateSpriteName(Texture.Name, data.Index);
+            _cell = data.Cell;
+            AtlasIndex = data.Index;
         }
     }
 }

@@ -41,7 +41,7 @@ namespace Engine
                 if (sprite != null)
                 {
                     var cell = _textureMeta.AtlasData.GetCell(i);
-                    sprite.UpdateResource(_targetTexture, cell, i);
+                    sprite.UpdateResource(new SpriteUpdateData() { Index = i, Texture = _targetTexture, Cell = cell }, id);
                 }
             }
         }
@@ -59,7 +59,6 @@ namespace Engine
                     if (defaultSprite == null)
                     {
                         var defaultCell = TextureAtlasCell.DefaultChunk;
-                        defaultCell.ID = _targetTexture.GetID();
                         defaultCell.Width = _targetTexture.Width;
                         defaultCell.Height = _targetTexture.Height;
                         defaultSprite = CreateSprite(defaultCell, index);
@@ -72,7 +71,7 @@ namespace Engine
                     Debug.Error(e);
                     throw;
                 }
-             
+
             }
             if (_textureMeta.AtlasData.ChunksCount <= index)
             {

@@ -48,14 +48,12 @@ namespace Engine
     {
         public static TextureAtlasCell DefaultChunk = new TextureAtlasCell()
         {
-            ID = Guid.NewGuid(),
             Pivot = new vec2(0.5f, 0.5f),
             Uvs = QuadUV.DefaultUVs,
             Width = 1,
             Height = 1,
         };
 
-        public Guid ID { get; set; }
         public vec2 Pivot { get; set; }
         public QuadUV Uvs { get; set; }
         public int XPixel { get; set; }

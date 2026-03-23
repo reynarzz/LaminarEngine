@@ -50,6 +50,8 @@ namespace Editor.Views
                     DropActorHandle(null, dropActor =>
                     {
                         dropActor.Transform.Parent = null;
+
+                        return true;
                     });
 
                 }
@@ -82,6 +84,7 @@ namespace Editor.Views
                         dropActor.Transform.Parent = null; // Remove current parent, this makes it root of scene
                         dropActor.Scene.UnregisterRootActor(dropActor); // Remove from the old scene's root.
                         scene.RegisterRootActor(dropActor); // add actor to the new scene's root.
+                        return true;
                     });
 
                     bool isClicked = ImGui.IsItemClicked();
@@ -341,7 +344,10 @@ namespace Editor.Views
                 if (!IsChildren(dropActor, actor))
                 {
                     dropActor.Transform.Parent = actor.Transform;
+                    return true;
                 }
+
+                return false;
             });
 
 
@@ -421,7 +427,7 @@ namespace Editor.Views
                     }
                     actor.Transform.Parent = newActor.Transform;
                     SetSelectedActorParentGraph(newActor, true, true);
-                    
+
                     EditorSystem.Save.MarkDirty(actor);
                 }
 
@@ -430,25 +436,25 @@ namespace Editor.Views
                 if (ImGui.MenuItem("Rename"))
                 {
                 }
-                ImGui.BeginDisabled();
                 if (ImGui.MenuItem("Duplicate"))
                 {
                     // TODO: create and re-assign the new instance ids of actors and components.
 
-                    var actorsTree = SceneSerializer.SerializeActorsTree(actor);
-                    var actorsRootInstances = SceneDeserializer.DeserializeScene(actorsTree, actor.Scene, true);
+                    //var actorsTree = SceneSerializer.SerializeActorsTree(actor);
+                    //var actorsRootInstances = SceneDeserializer.DeserializeScene(actorsTree, actor.Scene, true);
 
-                    if (actorsRootInstances != null)
-                    {
-                        foreach (var actorRoot in actorsRootInstances)
-                        {
-                            actorRoot.Transform.Parent = actor.Transform.Parent;
-                        }
-                    }
+                    //if (actorsRootInstances != null)
+                    //{
+                    //    foreach (var actorRoot in actorsRootInstances)
+                    //    {
+                    //        actorRoot.Transform.Parent = actor.Transform.Parent;
+                    //    }
+                    //}
 
-                    EditorSystem.Save.MarkDirty(actor);
+                    var duplicated = Actor.Duplicate(actor);
+                    SetSelectedActorParentGraph(duplicated);
+                    EditorSystem.Save.MarkDirty(duplicated);
                 }
-                ImGui.EndDisabled();
                 ImGui.Separator();
                 ImGui.BeginDisabled(!actor.Transform.Parent);
 
@@ -475,7 +481,7 @@ namespace Editor.Views
                         actor.Transform.SetSiblingIndex(parentIndex + 1);
                         SetSelectedActorParentGraph(actor, true, true);
                     }
-                    else if(actor.Transform.Parent)
+                    else if (actor.Transform.Parent)
                     {
                         var parentIndex = actor.Transform.Parent.GetSiblingIndex();
                         actor.Transform.Parent = null;
@@ -565,17 +571,22 @@ namespace Editor.Views
             ImGui.PopID();
         }
 
-        private void DropActorHandle(Actor target, Action<Actor> callback)
+        private void DropActorHandle(Actor target, Func<Actor, bool> callback)
         {
             if (EditorImGui.DragAndDrop.ItemDropReference(EditorImGui.DragAndDrop.PAYLOAD_ID_EOBJECT, out var payload))
             {
                 if (payload.Value is Actor dropActor)
                 {
-                    // _dragActorId = Guid.Empty;
-                    callback(dropActor);
-                    _pressedActorId = null;
-                    EditorSystem.Save.MarkDirty(dropActor);
-                    SetSelectedActorParentGraph(dropActor, true);
+                    if (dropActor == target || dropActor.Transform.Parent == target?.Transform)
+                    {
+                        return;
+                    }
+                    if (callback(dropActor))
+                    {
+                        _pressedActorId = null;
+                        EditorSystem.Save.MarkDirty(dropActor);
+                        SetSelectedActorParentGraph(dropActor, true);
+                    }
                 }
                 else if (payload.Type == typeof(Texture2D) || payload.Type == typeof(Texture))
                 {
@@ -595,6 +606,7 @@ namespace Editor.Views
                     if (renderer)
                     {
                         renderer.Material = Assets.GetAssetFromGuid(payload.RefId) as Material;
+                        EditorSystem.Save.MarkDirty(renderer);
                     }
                 }
             }

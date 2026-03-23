@@ -28,9 +28,7 @@ namespace Engine
             }
         }
 
-        internal Asset(Guid guid) : base(string.Empty, guid)
-        {
-        }
+        internal Asset(Guid guid) : base(string.Empty, guid) { }
 
         internal void UpdateResource(object data, Guid guid)
         {
@@ -39,5 +37,35 @@ namespace Engine
         }
 
         protected abstract void OnUpdateResource(object data, Guid guid);
+    }
+
+    internal abstract class Asset<T> : Asset
+    {
+        internal Asset(Guid guid) : base(guid) { }
+
+        protected sealed override void OnUpdateResource(object data, Guid guid)
+        {
+            UpdateResource((T)data, guid);
+        }
+
+        internal abstract void UpdateResource(T data, Guid guid);
+    }
+
+    public abstract class SubAsset : Asset
+    {
+        internal SubAsset(Guid guid) : base(guid) { }
+    }
+
+    /// <summary>
+    /// </summary>
+    /// <typeparam name="T">Data type used to update the resource</typeparam>
+    public abstract class SubAsset<T> : SubAsset
+    {
+        internal SubAsset(Guid guid) : base(guid) { }
+        protected sealed override void OnUpdateResource(object data, Guid guid)
+        {
+            UpdateResource((T)data, guid);
+        }
+        internal abstract void UpdateResource(T data, Guid guid);
     }
 }

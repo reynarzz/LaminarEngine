@@ -1,9 +1,10 @@
 ﻿// TODO: This file shows the features and bugs that are already known, and will or are being worked on.
 
 [High priority] To start making the game I need to finish:
-- Make sure the serializer is fully working.
+- Make sure the serializer is fully working: (the serialize should return a bool indicating if success or not, so we don't save corrupted data.)
 - Inspector drawer can dirty changes.
 - To replace the prefab system, I will create a simple script that instantiate stuff and I call it from the editor.
+- Implement proper actor duplication taking into account their reference tree.
 
 [Note]
 -The current code is very slow, and contains tons of bad practices to cut corners, leading to memory leaks, and slowdowns,

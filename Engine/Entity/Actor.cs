@@ -134,6 +134,83 @@ namespace Engine
             Scene.RegisterRootActor(this);
         }
 
+        public static Actor Duplicate(Actor copy)
+        {
+            return Duplicate(copy, null);
+        }
+
+        public static Actor Duplicate(Actor copy, Transform parent)
+        {
+            if (!parent)
+            {
+                parent = copy.Transform.Parent;
+            }
+            // TODO: Deep copy and assign new parent.
+
+            return Instantiate(copy.Transform, parent);
+
+            Actor Instantiate(Transform transform, Transform parent)
+            {
+                var actorCpy = new Actor(transform.Actor.Name);
+                actorCpy.Layer = transform.Actor.Layer;
+                actorCpy.Tag = transform.Actor.Tag;
+                actorCpy.PrefabSource = transform.Actor.PrefabSource;
+                actorCpy.PrefabSourceActorID = transform.Actor.PrefabSourceActorID;
+                actorCpy._isEnabled = transform.Actor._isEnabled;
+
+                if (parent)
+                {
+                    actorCpy.Transform.Parent = parent;
+                }
+                else
+                {
+                    actorCpy.Transform.SetSiblingIndex(transform.GetSiblingIndex() + 1);
+                }
+
+                for (int i = 0; i < transform.Actor._components.Count; i++)
+                {
+                    var component = transform.Actor._components[i];
+                    var cpyComponent = actorCpy.AddComponent(component.GetType());
+                    CopyComponentData(component, cpyComponent);
+                }
+
+                var count = transform.Children.Count;
+                for (int i = 0; i < count; i++)
+                {
+                    Instantiate(transform.Children[i], actorCpy.Transform);
+                }
+
+                return actorCpy;
+            }
+
+            void CopyComponentData(Component from, Component to)
+            {
+                to.IsEnabledDontNotify = from.IsEnabled;
+                to.IsAlive = from.IsAlive;
+              
+                if (from is Transform fromTransform)
+                {
+                    var toTransform = to as Transform;
+                    toTransform.WorldPosition = fromTransform.WorldPosition;
+                    toTransform.WorldRotation = fromTransform.WorldRotation;
+                    toTransform.WorldScale = fromTransform.WorldScale;
+                    return;
+                }
+                var members = ReflectionUtils.GetAllMembersWithAttribute<SerializedFieldAttribute>(from.GetType()).ToList();
+
+                foreach (var member in members)
+                {
+                    var type = ReflectionUtils.GetMemberType(member);
+                    var isAsset = type == typeof(Asset) || type.IsAssignableTo(typeof(Asset));
+                    var isInternalType = ReflectionUtils.IsInternalType(type);
+                    if (isAsset || isInternalType)
+                    {
+                        ReflectionUtils.SetMemberValue(to, member, ReflectionUtils.GetMemberValue(from, member));
+                    }
+                }
+            }
+        }
+
         public Component AddComponent([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
                                       Type type)
         {

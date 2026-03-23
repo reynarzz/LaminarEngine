@@ -24,7 +24,6 @@ namespace Engine.Utils
 
             return new TextureAtlasCell()
             {
-                ID = Guid.NewGuid(),
                 Width = width,
                 Height = height,
                 Pivot = new vec2(pivotX, pivotY),

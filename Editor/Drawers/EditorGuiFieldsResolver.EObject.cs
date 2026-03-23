@@ -266,40 +266,39 @@ namespace Editor.Utils
                 {
                     DrawAssetColumns(AssetType.AnimatorController, Assets.GetAssetFromGuid, setValue);
                 }
-            }
-            else if (valueType == typeof(Sprite))
-            {
-                var assets = IOLayer.Database.Disk.GetAssetsInfo(AssetType.Texture);
-                var spriteItems = new List<AssetPickedInfo>();
-
-                foreach (var (id, info) in assets)
+                else if (valueType == typeof(Sprite))
                 {
-                    var meta = EditorAssetUtils.GetAssetMeta(info.Path, AssetType.Texture) as TextureMetaFile;
-                    if (meta?.AtlasData == null || meta.AtlasData.ChunksCount == 0)
-                        continue;
+                    var assets = IOLayer.Database.Disk.GetAssetsInfo(AssetType.Texture);
+                    var spriteItems = new List<AssetPickedInfo>();
 
-                    var atlas = Assets.GetSpriteAtlas(info.Path);
-
-                    for (int i = 0; i < meta.AtlasData.ChunksCount; i++)
+                    foreach (var (id, info) in assets)
                     {
-                        var name = Sprite.CreateSpriteName(Path.GetFileName(info.Path), i);
-                        var cellId = meta.AtlasData.GetCell(i).ID;
-                        var label = $"{name}##{cellId}{i}{info.Path}";
+                        var meta = EditorAssetUtils.GetAssetMeta(info.Path, AssetType.Texture) as TextureMetaFile;
+                        if (meta?.AtlasData == null || meta.AtlasData.ChunksCount == 0)
+                            continue;
 
-                        // This copy is needed since I'm passing it to a lambda.
-                        int iCopy = i;
+                        var atlas = Assets.GetSpriteAtlas(info.Path);
 
-                        spriteItems.Add(new AssetPickedInfo()
+                        for (int i = 0; i < meta.AtlasData.ChunksCount; i++)
                         {
-                            Name = label,
-                            Path = info.Path,
-                            SetValueCallback = () => setValue(atlas.GetSprite(iCopy)),
-                        });
-                    }
-                }
+                            var name = Sprite.CreateSpriteName(Path.GetFileName(info.Path), i);
+                            var label = $"{name}###{i}__{info.Path}";
 
-                // Render all sprites in columns (choose number of columns here)
-                RenderItemsInColumns(spriteItems);
+                            // This copy is needed since I'm passing it to a lambda.
+                            int iCopy = i;
+
+                            spriteItems.Add(new AssetPickedInfo()
+                            {
+                                Name = label,
+                                Path = info.Path,
+                                SetValueCallback = () => setValue(atlas.GetSprite(iCopy)),
+                            });
+                        }
+                    }
+
+                    // Render all sprites in columns (choose number of columns here)
+                    RenderItemsInColumns(spriteItems);
+                }
             }
             else
             {

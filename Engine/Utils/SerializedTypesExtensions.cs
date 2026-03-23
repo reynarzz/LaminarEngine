@@ -28,6 +28,7 @@ namespace Engine.Utils
                 case SerializedType.Actor:
                 case SerializedType.TextureAsset:
                 case SerializedType.MaterialAsset:
+                // case SerializedType.SpriteAsset: // SubAsset: Not a default ref since it needs special care as any other sub asset.
                 case SerializedType.ShaderAsset:
                 case SerializedType.AudioClipAsset:
                 case SerializedType.AnimationAsset:
