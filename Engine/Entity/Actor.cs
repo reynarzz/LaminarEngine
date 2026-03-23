@@ -145,10 +145,19 @@ namespace Engine
             {
                 parent = copy.Transform.Parent;
             }
-            // TODO: Deep copy and assign new parent.
 
-            return Instantiate(copy.Transform, parent);
+            var actorsLinks = new Dictionary<Guid, (Actor orginal, Actor copy)>();
+            var componentsLinks = new Dictionary<Guid, (Component original, Component copy)>();
 
+            // Instantiate everything
+            var newActorRoot = Instantiate(copy.Transform, parent);
+
+            // Copy component data.
+            foreach (var (ogComponentId, componentLink) in componentsLinks)
+            {
+                CopyComponentData(componentLink.original, componentLink.copy);
+            }
+            return newActorRoot;
             Actor Instantiate(Transform transform, Transform parent)
             {
                 var actorCpy = new Actor(transform.Actor.Name);
@@ -166,13 +175,13 @@ namespace Engine
                 {
                     actorCpy.Transform.SetSiblingIndex(transform.GetSiblingIndex() + 1);
                 }
-
                 for (int i = 0; i < transform.Actor._components.Count; i++)
                 {
                     var component = transform.Actor._components[i];
                     var cpyComponent = actorCpy.AddComponent(component.GetType());
-                    CopyComponentData(component, cpyComponent);
+                    componentsLinks.Add(component.GetID(), (component, cpyComponent));
                 }
+                actorsLinks.Add(transform.Actor.GetID(), (transform.Actor, actorCpy));
 
                 var count = transform.Children.Count;
                 for (int i = 0; i < count; i++)
@@ -185,9 +194,13 @@ namespace Engine
 
             void CopyComponentData(Component from, Component to)
             {
+                if (from.GetType() != to.GetType())
+                {
+                    Debug.Error($"Components are not the same, cannot copy data. fromComponent{from.GetType().Name}, toComponent{to.GetType().Name}");
+                }
                 to.IsEnabledDontNotify = from.IsEnabled;
                 to.IsAlive = from.IsAlive;
-              
+
                 if (from is Transform fromTransform)
                 {
                     var toTransform = to as Transform;
@@ -196,21 +209,48 @@ namespace Engine
                     toTransform.WorldScale = fromTransform.WorldScale;
                     return;
                 }
-                var members = ReflectionUtils.GetAllMembersWithAttribute<SerializedFieldAttribute>(from.GetType()).ToList();
+                SetValueToTarget(from, to);
+            }
+
+            void SetValueToTarget(object target, object to)
+            {
+                var members = ReflectionUtils.GetAllMembersWithAttribute<SerializedFieldAttribute>(target.GetType()).ToList();
+                // actorsLinks;
+                // componentsLinks;
 
                 foreach (var member in members)
                 {
                     var type = ReflectionUtils.GetMemberType(member);
                     var isAsset = type == typeof(Asset) || type.IsAssignableTo(typeof(Asset));
                     var isInternalType = ReflectionUtils.IsInternalType(type);
+                    var value = ReflectionUtils.GetMemberValue(target, member);
                     if (isAsset || isInternalType)
                     {
-                        ReflectionUtils.SetMemberValue(to, member, ReflectionUtils.GetMemberValue(from, member));
+                        ReflectionUtils.SetMemberValue(to, member, value);
                     }
-                    else
+                    else if (type.IsAssignableTo(typeof(Component)))
                     {
+                        SetLinkReference(componentsLinks, to, value as Component, member);
+                    }
+                    else if (type.IsAssignableTo(typeof(Actor)))
+                    {
+                        SetLinkReference(actorsLinks, to, value as Actor, member);
+                    }
+                    else if (type.IsClass || ReflectionUtils.IsUserDefinedStruct(member))
+                    {
+                        // TODO: create the instance, walk the tree and assign the types accordingly.
                         Debug.Error($"Can't copy data to Member: {member.Name}, Type: {type.Name}");
                     }
+                }
+
+                void SetLinkReference<T>(Dictionary<Guid, (T original, T copy)> links, object target, T value, MemberInfo member) where T: EObject
+                {
+                    if (value != null && links.TryGetValue(value.GetID(), out var actorLink))
+                    {
+                        // It should link to the copy since its part of the copy hierarchy.
+                        value = actorLink.copy;
+                    }
+                    ReflectionUtils.SetMemberValue(target, member, value);
                 }
             }
         }
