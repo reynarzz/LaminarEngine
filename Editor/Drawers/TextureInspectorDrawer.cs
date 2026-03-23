@@ -93,7 +93,8 @@ namespace Editor.Drawers
                 var isAtlas = _meta.Config.IsAtlas;
                 ImGui.Text("Is Atlas");
                 ImGui.SameLine();
-                if (EditorGuiFieldsResolver.DrawBoolField("###_TEXTURE_IS_ATLAS__", ref isAtlas))
+                EditorGuiFieldsResolver.SetPropertyDefaultCursorPos();
+                if (EditorGuiFieldsResolver.DrawBoolField("###_TEXTURE_IS_ATLAS__", ref isAtlas, EditorGuiFieldsResolver.XPosOffset))
                 {
                     _meta.Config.IsAtlas = isAtlas;
                 }
@@ -101,6 +102,7 @@ namespace Editor.Drawers
                 var ppu = _meta.Config.PixelPerUnit;
                 ImGui.Text("Pixels per Unit");
                 ImGui.SameLine();
+                EditorGuiFieldsResolver.SetPropertyDefaultCursorPos();
                 if (EditorGuiFieldsResolver.DrawIntField("###_PIXELS_PER_UNIT", ref ppu))
                 {
                     _meta.Config.PixelPerUnit = ppu;
