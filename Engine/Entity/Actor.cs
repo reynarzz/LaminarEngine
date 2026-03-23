@@ -236,6 +236,18 @@ namespace Engine
                     {
                         SetLinkReference(actorsLinks, to, value as Actor, member);
                     }
+                    else if (ReflectionUtils.IsCollection(member))
+                    {
+                        if (ReflectionUtils.IsCollectionOfInternalTypes(type))
+                        {
+                            // Simple collections will be copied as they are
+                            ReflectionUtils.SetMemberValue(to, member, value);
+                        }
+                        else
+                        {
+                            // TODO: Copy item by item recursive.
+                        }
+                    }
                     else if (type.IsClass || ReflectionUtils.IsUserDefinedStruct(member))
                     {
                         // TODO: create the instance, walk the tree and assign the types accordingly.
@@ -243,7 +255,7 @@ namespace Engine
                     }
                 }
 
-                void SetLinkReference<T>(Dictionary<Guid, (T original, T copy)> links, object target, T value, MemberInfo member) where T: EObject
+                void SetLinkReference<T>(Dictionary<Guid, (T original, T copy)> links, object target, T value, MemberInfo member) where T : EObject
                 {
                     if (value != null && links.TryGetValue(value.GetID(), out var actorLink))
                     {

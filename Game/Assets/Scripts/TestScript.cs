@@ -135,10 +135,10 @@ namespace Game
             [SerializedField] private Body2DType bod;
             [SerializedField] public AStruct[] AStructTypeArray { get; set; }
         }
-        [SerializedField] private Prefab<SpriteRenderer> _spritePrefab;
-        [SerializedField] private Prefab _generalPrefab;
-        [SerializedField] private SceneAsset _scene;
-        [SerializedField] private Sprite[] _sprites;
+        //  [SerializedField] private Prefab<SpriteRenderer> _spritePrefab;
+        // [SerializedField] private Prefab _generalPrefab;
+        // [SerializedField] private SceneAsset _scene;
+        // [SerializedField] private Sprite[] _sprites;
 
         //[SerializedField] AAA<int> AAAClass;
         //[SerializedField] AAA<string, Body2DType> AAAClass2v;
@@ -163,12 +163,12 @@ namespace Game
         //[SerializedField] public Component ComponentTest { get; set; }
         // [SerializedField] public Actor ActorTest { get; set; }
         //[ExposeEditorField] private List<List<int>> _nestedList;
-       // [PropertyHeader("Important fields")]
+        // [PropertyHeader("Important fields")]
         //[SerializedField] public string String { get; set; }
         //[SerializedField] public IComponent ComponentInterface { get; set; }
         //[SerializedField] public IObject ObjectInterface { get; set; }
         //[SerializedField] public Body2DType[] EnumArray { get; set; }
-       // [SerializedField] public TestClass[] TestClassArray { get; set; }
+        // [SerializedField] public TestClass[] TestClassArray { get; set; }
 
 
         //[SerializedField]
@@ -179,17 +179,41 @@ namespace Game
         //private Dictionary<int, AssetResourceBase> _assetDictionary =
         //   new Dictionary<int, AssetResourceBase> { { 1, null }, { 22, new Sprite() } };
 
-        [SerializedField] private LazyRef<SceneAsset> _lazyScene;
-        [SerializedField] private LazyRef<Material> _lazyMat;
-        [SerializedField] private LazyRef<Prefab<SpriteRenderer>> _lazyPrefab;
-        [SerializedField] private LazyRef<SceneAsset>[] _lazyArr;
-        [SerializedField] private LazyRef<Asset>[] _lazyResources;
+        //[SerializedField] private LazyRef<SceneAsset> _lazyScene;
+        //[SerializedField] private LazyRef<Material> _lazyMat;
+        //[SerializedField] private LazyRef<Prefab<SpriteRenderer>> _lazyPrefab;
+        //[SerializedField] private LazyRef<SceneAsset>[] _lazyArr;
+        //[SerializedField] private LazyRef<Asset>[] _lazyResources;
+
+
+        //private class Dclas
+        //{
+        //    [SerializedField] private int[] _intArr;
+        //}
+
+        //[SerializedField]
+        //private Dictionary<BlendFactor, Dclas> _intArrByEnumDictionary;
+
+        [SerializedField]
+        private AAA<Component, Actor> _generic;
+
+        [SerializedField] private Actor _actor;
+        [SerializedField] private Actor _actor2;
+        [SerializedField] private Component _component1;
+        [SerializedField] private SpriteRenderer _renderer;
+        [SerializedField] private int[] _arr1; 
+        [SerializedField] private string[] _arr2;
+        [SerializedField] private float[] _arr3;
+        [SerializedField] private Component[] _componentsArr;
+        [SerializedField] private Actor[] _actorsArr;
+        [SerializedField] private Dictionary<float, BlendFactor> _dictionary;
+        [SerializedField] private Dictionary<float, string> _dictionary2;
 
         protected override void OnStart()
         {
             base.OnStart();
 
-            var asset = _lazyScene.GetRef();
+          //  var asset = _lazyScene.GetRef();
             
         }
         //[SerializedField]
@@ -217,13 +241,6 @@ namespace Game
         //[SerializedField]
         //private Dictionary<BlendFactor, mat4> _mat4ByEnumDictionary;
 
-        private class Dclas
-        {
-            [SerializedField] private int[] _intArr;
-        }
-
-        [SerializedField]
-        private Dictionary<BlendFactor, Dclas> _intArrByEnumDictionary;
         //[SerializedField] private bool[] _boolArray;
 
         [ShowMethodInEditor]
