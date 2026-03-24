@@ -201,13 +201,15 @@ namespace Game
         [SerializedField] private Actor _actor2;
         [SerializedField] private Component _component1;
         [SerializedField] private SpriteRenderer _renderer;
-        [SerializedField] private int[] _arr1; 
-        [SerializedField] private string[] _arr2;
-        [SerializedField] private float[] _arr3;
+        //[SerializedField] private int[] _arr1; 
+        //[SerializedField] private string[] _arr2;
+        //[SerializedField] private float[] _arr3;
         [SerializedField] private Component[] _componentsArr;
+        [SerializedField] private List<Component> _componentsList;
+        [SerializedField] private List<AAA<Component, Actor, string>> _actorsList;
         [SerializedField] private Actor[] _actorsArr;
-        [SerializedField] private Dictionary<float, BlendFactor> _dictionary;
-        [SerializedField] private Dictionary<float, string> _dictionary2;
+        //[SerializedField] private Dictionary<float, BlendFactor> _dictionary;
+        //[SerializedField] private Dictionary<float, string> _dictionary2;
 
         protected override void OnStart()
         {

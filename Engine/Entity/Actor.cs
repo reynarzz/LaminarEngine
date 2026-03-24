@@ -2,6 +2,7 @@
 using Engine.Types;
 using Engine.Utils;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -192,6 +193,11 @@ namespace Engine
                 return actorCpy;
             }
 
+            void SetMemberValueSafe(object target, MemberInfo member, object value, int index)
+            {
+                ReflectionUtils.SetMemberValueSafe(target, value, member, index);
+            }
+
             void CopyComponentData(Component from, Component to)
             {
                 if (from.GetType() != to.GetType())
@@ -209,70 +215,89 @@ namespace Engine
                     toTransform.LocalScale = fromTransform.LocalScale;
                     return;
                 }
-                SetValueToCopy(from, to);
+                var members = ReflectionUtils.GetAllMembersWithAttribute<SerializedFieldAttribute>(from.GetType()).ToList();
+
+                foreach (var member in members)
+                {
+                    var value = ReflectionUtils.GetMemberValue(from, member);
+
+                    SetValueToCopy(to, value, member);
+                }
             }
 
-            void SetValueToCopy(object target, object to)
+            void SetValueToCopy(object target, object value, MemberInfo member, int index = 0)
             {
-                var members = ReflectionUtils.GetAllMembersWithAttribute<SerializedFieldAttribute>(target.GetType()).ToList();
                 try
                 {
+                    var type = value != null ? value.GetType() : ReflectionUtils.GetMemberType(member);
 
-                    foreach (var member in members)
+                    var isAsset = type == typeof(Asset) || type.IsAssignableTo(typeof(Asset));
+                    var isInternalType = ReflectionUtils.IsInternalType(type);
+                    if (value == null)
                     {
-                        var value = ReflectionUtils.GetMemberValue(target, member);
-                        var type = value != null ? value.GetType() : ReflectionUtils.GetMemberType(member);
-
-                        var isAsset = type == typeof(Asset) || type.IsAssignableTo(typeof(Asset));
-                        var isInternalType = ReflectionUtils.IsInternalType(type);
-
-                        if (isAsset || isInternalType)
+                        SetMemberValueSafe(target, member, value, index);
+                        return;
+                    }
+                    if (isAsset || isInternalType)
+                    {
+                        SetMemberValueSafe(target, member, value, index);
+                    }
+                    else if (type.IsAssignableTo(typeof(Component)))
+                    {
+                        SetLinkReference(componentsLinks, target, value as Component, member, index);
+                    }
+                    else if (type.IsAssignableTo(typeof(Actor)))
+                    {
+                        SetLinkReference(actorsLinks, target, value as Actor, member, index);
+                    }
+                    else if (ReflectionUtils.IsCollection(type, out var collectionType))
+                    {
+                        if (ReflectionUtils.IsCollectionOfInternalTypes(type))
                         {
-                            ReflectionUtils.SetMemberValue(to, member, value);
+                            // Simple collections will be copied as they are
+                            SetMemberValueSafe(target, member, value, index);
                         }
-                        else if (type.IsAssignableTo(typeof(Component)))
+                        else
                         {
-                            SetLinkReference(componentsLinks, to, value as Component, member);
-                        }
-                        else if (type.IsAssignableTo(typeof(Actor)))
-                        {
-                            SetLinkReference(actorsLinks, to, value as Actor, member);
-                        }
-                        else if (ReflectionUtils.IsCollection(type, out var collectionType))
-                        {
-                            if (ReflectionUtils.IsCollectionOfInternalTypes(type))
+                            // TODO: Deep Copy item by item recursive.
+                            if (collectionType == CollectionType.Dictionary)
                             {
-                                // Simple collections will be copied as they are
-                                ReflectionUtils.SetMemberValue(to, member, value);
+                                Debug.Warn($"Can't copy complex dictionary '{type.Name}', not implemented.");
                             }
                             else
                             {
-                                Debug.Warn($"Can't copy complex collection '{type.Name}', not implemented.");
-                                // TODO: Deep Copy item by item recursive.
-                                if (collectionType == CollectionType.Dictionary)
-                                {
+                                var valArr = value as IList;
+                                var collection1d = ReflectionUtils.GetDefaultValueInstance(type, valArr.Count) as IList;
+                                ReflectionUtils.EnsureCount(collection1d, valArr.Count);
 
-                                }
-                                else
+                                for (int i = 0; i < collection1d.Count; i++)
                                 {
-
+                                    SetValueToCopy(collection1d, valArr[i], member, i);
                                 }
+                                SetMemberValueSafe(target, member, collection1d, index);
                             }
                         }
-                        else if ((type.IsClass || ReflectionUtils.IsUserDefinedStruct(member)) && value != null)
-                        {
-                            var classCopyInstance = ReflectionUtils.GetDefaultValueInstance(type);
+                    }
+                    else if ((type.IsClass || ReflectionUtils.IsUserDefinedStruct(member)) && value != null)
+                    {
+                        var classCopyInstance = ReflectionUtils.GetDefaultValueInstance(type);
 
-                            if (classCopyInstance != null)
+                        if (classCopyInstance != null)
+                        {
+                            var members = ReflectionUtils.GetAllMembersWithAttribute<SerializedFieldAttribute>(type).ToList();
+                            foreach (var classMember in members)
                             {
-                                SetValueToCopy(value, classCopyInstance);
-                                ReflectionUtils.SetMemberValue(to, member, classCopyInstance);
+                                var memValue = ReflectionUtils.GetMemberValue(value, classMember);
+
+                                SetValueToCopy(classCopyInstance, memValue, classMember);
                             }
-                            else
-                            {
-                                // Probably a interface/abstract class, or an object that cannot be constructed because it hasn't a default constructor.
-                                ReflectionUtils.SetMemberValue(to, member, null);
-                            }
+                            SetMemberValueSafe(target, member, classCopyInstance, index);
+
+                        }
+                        else
+                        {
+                            // Probably an interface/abstract class, or an object that cannot be constructed because it hasn't a default constructor.
+                            SetMemberValueSafe(target, member, null, index);
                         }
                     }
                 }
@@ -280,14 +305,15 @@ namespace Engine
                 {
                     Debug.Error(e);
                 }
-                void SetLinkReference<T>(Dictionary<Guid, (T original, T copy)> links, object target, T value, MemberInfo member) where T : EObject
+                void SetLinkReference<T>(Dictionary<Guid, (T original, T copy)> links, object target, T value, MemberInfo member, int index) where T : EObject
                 {
                     if (value != null && links.TryGetValue(value.GetID(), out var actorLink))
                     {
                         // It should link to the copy since its part of the copy hierarchy.
                         value = actorLink.copy;
                     }
-                    ReflectionUtils.SetMemberValue(target, member, value);
+
+                    SetMemberValueSafe(target, member, value, index);
                 }
             }
         }
