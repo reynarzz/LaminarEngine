@@ -26,7 +26,7 @@
                 "Value": {
                   "x": 0.0,
                   "y": -1.1492081,
-                  "z": -2.9586
+                  "z": -3.3586
                 }
               }
             },
@@ -109,903 +109,121 @@
               }
             },
             {
-              "Name": "_spritePrefab",
-              "Type": "Prefab",
-              "InternalType": "Engine.Prefab`1[[Engine.SpriteRenderer, Engine]], Engine",
-              "TypeId": "03b1ee78-7b5e-2399-7968-b45ed5dce709",
+              "Name": "_generic",
+              "Type": "ComplexClass",
+              "InternalType": "Game.TestScript+AAA`2[[Engine.Component, Engine],[Engine.Actor, Engine]], Game",
+              "TypeId": "9186abce-4337-a05f-bd3f-dc3f39d5f2c8",
+              "Simple": null,
+              "Class": {
+                "$type": "Engine.Serialization.ComplexClass, Engine",
+                "$value": {
+                  "ClassType": "ComplexClass",
+                  "Properties": [
+                    {
+                      "Name": "TValue1",
+                      "Type": "Component",
+                      "InternalType": "Engine.Component, Engine",
+                      "TypeId": "3e3a868d-c9c8-0090-db9b-4479f8ffe5df",
+                      "Simple": null
+                    },
+                    {
+                      "Name": "TValue2",
+                      "Type": "Actor",
+                      "InternalType": "Engine.Actor, Engine",
+                      "TypeId": "234a1313-ea9a-edcf-9ca7-bc170f8ee374",
+                      "Simple": null
+                    }
+                  ],
+                  "InternalType": "Game.TestScript+AAA`2[[Engine.Component, Engine],[Engine.Actor, Engine]], Game",
+                  "TypeId": "9186abce-4337-a05f-bd3f-dc3f39d5f2c8"
+                }
+              }
+            },
+            {
+              "Name": "_actor",
+              "Type": "Actor",
+              "InternalType": "Engine.Actor, Engine",
+              "TypeId": "234a1313-ea9a-edcf-9ca7-bc170f8ee374",
               "Simple": null
             },
             {
-              "Name": "_generalPrefab",
-              "Type": "Prefab",
-              "InternalType": "Engine.Prefab, Engine",
-              "TypeId": "6cc15611-ccf7-5027-3292-fcfd8fc8a6dd",
+              "Name": "_actor2",
+              "Type": "Actor",
+              "InternalType": "Engine.Actor, Engine",
+              "TypeId": "234a1313-ea9a-edcf-9ca7-bc170f8ee374",
               "Simple": null
             },
             {
-              "Name": "_scene",
-              "Type": "Scene",
-              "InternalType": "Engine.SceneAsset, Engine",
-              "TypeId": "15395071-0bd7-ff47-c639-ebd9257dd835",
+              "Name": "_component1",
+              "Type": "Component",
+              "InternalType": "Engine.Component, Engine",
+              "TypeId": "3e3a868d-c9c8-0090-db9b-4479f8ffe5df",
               "Simple": null
             },
             {
-              "Name": "_sprites",
+              "Name": "_renderer",
+              "Type": "Component",
+              "InternalType": "Engine.SpriteRenderer, Engine",
+              "TypeId": "8a8ec899-a0c0-d9bb-e76a-d118eac28eb0",
+              "Simple": null
+            },
+            {
+              "Name": "_componentsArr",
               "Type": "ReferenceCollection",
-              "InternalType": "Engine.Sprite[], Engine",
-              "TypeId": "4581d1dc-e486-e87a-ccbc-d30a03453418",
+              "InternalType": "Engine.Component[], Engine",
+              "TypeId": "3d1e2a29-ce8d-a3ff-7801-548a55738d66",
               "Simple": null,
               "Collection": {
                 "$type": "Engine.Serialization.CollectionReferences, Engine",
                 "$value": {
-                  "Value": [
-                    {
-                      "$type": "Engine.Serialization.SpriteReferenceData, Engine",
-                      "AtlasIndex": 0,
-                      "TexRefId": "69e1a694-395e-4675-a011-b72a07eb40e2",
-                      "Type": "SpriteAsset",
-                      "RefId": "69e1a694-395e-4675-a011-b72a07eb40e2"
-                    },
-                    {
-                      "$type": "Engine.Serialization.SpriteReferenceData, Engine",
-                      "AtlasIndex": 186,
-                      "TexRefId": "ae41cfa8-73fe-4a87-8196-f58a7e3dd748",
-                      "Type": "SpriteAsset",
-                      "RefId": "ae41cfa8-73fe-4a87-8196-f58a7e3dd748"
-                    },
-                    {
-                      "$type": "Engine.Serialization.SpriteReferenceData, Engine",
-                      "AtlasIndex": 70,
-                      "TexRefId": "8f5c1f5f-d718-4140-9168-24ff5acdea97",
-                      "Type": "SpriteAsset",
-                      "RefId": "8f5c1f5f-d718-4140-9168-24ff5acdea97"
-                    },
-                    {
-                      "$type": "Engine.Serialization.SpriteReferenceData, Engine",
-                      "AtlasIndex": 346,
-                      "TexRefId": "da64b85c-92f1-4a6f-a576-0ac668e7e2a7",
-                      "Type": "SpriteAsset",
-                      "RefId": "da64b85c-92f1-4a6f-a576-0ac668e7e2a7"
-                    },
-                    {
-                      "$type": "Engine.Serialization.SpriteReferenceData, Engine",
-                      "AtlasIndex": 3,
-                      "TexRefId": "43857e7d-82c1-485e-a0ce-235ca0a42cd2",
-                      "Type": "SpriteAsset",
-                      "RefId": "43857e7d-82c1-485e-a0ce-235ca0a42cd2"
-                    }
-                  ],
-                  "ItemsType": [
-                    "SpriteAsset",
-                    "SpriteAsset",
-                    "SpriteAsset",
-                    "SpriteAsset",
-                    "SpriteAsset"
-                  ],
+                  "Value": [],
+                  "ItemsType": [],
                   "CollectionType": "Array"
                 }
               }
             },
             {
-              "Name": "_lazyScene",
-              "Type": "ComplexClass",
-              "InternalType": "Engine.LazyRef`1[[Engine.SceneAsset, Engine]], Engine",
-              "TypeId": "6d95552e-628c-629f-62af-8f6c6aa5c3fc",
+              "Name": "_componentsList",
+              "Type": "ReferenceCollection",
+              "InternalType": "System.Collections.Generic.List`1[[Engine.Component, Engine]], System.Private.CoreLib",
+              "TypeId": "7db772b5-4e6c-97a7-d3de-9517868c2a92",
               "Simple": null,
-              "Class": {
-                "$type": "Engine.Serialization.ComplexClass, Engine",
+              "Collection": {
+                "$type": "Engine.Serialization.CollectionReferences, Engine",
                 "$value": {
-                  "ClassType": "ComplexClass",
-                  "Properties": [
-                    {
-                      "Name": "_refId",
-                      "Type": "ComplexClass",
-                      "InternalType": "Engine.Serialization.SerializableGuid, Engine",
-                      "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5",
-                      "Simple": null,
-                      "Class": {
-                        "$type": "Engine.Serialization.ComplexClass, Engine",
-                        "$value": {
-                          "ClassType": "ComplexClass",
-                          "Properties": [
-                            {
-                              "Name": "_a",
-                              "Type": "ULong",
-                              "InternalType": "System.UInt64, System.Private.CoreLib",
-                              "TypeId": "f68439f8-d4c7-33ac-d0f0-7558e5fa2d26",
-                              "Simple": {
-                                "Kind": "ULong",
-                                "Value": "5060671324830410166"
-                              }
-                            },
-                            {
-                              "Name": "_b",
-                              "Type": "ULong",
-                              "InternalType": "System.UInt64, System.Private.CoreLib",
-                              "TypeId": "f68439f8-d4c7-33ac-d0f0-7558e5fa2d26",
-                              "Simple": {
-                                "Kind": "ULong",
-                                "Value": "9153095946753369273"
-                              }
-                            }
-                          ],
-                          "InternalType": "Engine.Serialization.SerializableGuid, Engine",
-                          "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5"
-                        }
-                      }
-                    },
-                    {
-                      "Name": "_type",
-                      "Type": "Enum",
-                      "InternalType": "Engine.AssetType, Engine",
-                      "TypeId": "da7b8b59-a214-82f1-7384-9fe29086ec58",
-                      "Simple": {
-                        "Kind": "Enum",
-                        "Enum": {
-                          "TypeId": "da7b8b59-a214-82f1-7384-9fe29086ec58",
-                          "EnumInternalType": "Engine.AssetType, Engine",
-                          "EnumValue": 10
-                        }
-                      }
-                    }
-                  ],
-                  "InternalType": "Engine.LazyRef`1[[Engine.SceneAsset, Engine]], Engine",
-                  "TypeId": "6d95552e-628c-629f-62af-8f6c6aa5c3fc"
+                  "Value": [],
+                  "ItemsType": [],
+                  "CollectionType": "List"
                 }
               }
             },
             {
-              "Name": "_lazyMat",
-              "Type": "ComplexClass",
-              "InternalType": "Engine.LazyRef`1[[Engine.Material, Engine]], Engine",
-              "TypeId": "474f5215-9f41-3f1f-32d5-e8ab0de1d9ee",
-              "Simple": null,
-              "Class": {
-                "$type": "Engine.Serialization.ComplexClass, Engine",
-                "$value": {
-                  "ClassType": "ComplexClass",
-                  "Properties": [
-                    {
-                      "Name": "_refId",
-                      "Type": "ComplexClass",
-                      "InternalType": "Engine.Serialization.SerializableGuid, Engine",
-                      "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5",
-                      "Simple": null,
-                      "Class": {
-                        "$type": "Engine.Serialization.ComplexClass, Engine",
-                        "$value": {
-                          "ClassType": "ComplexClass",
-                          "Properties": [
-                            {
-                              "Name": "_a",
-                              "Type": "ULong",
-                              "InternalType": "System.UInt64, System.Private.CoreLib",
-                              "TypeId": "f68439f8-d4c7-33ac-d0f0-7558e5fa2d26",
-                              "Simple": {
-                                "Kind": "ULong",
-                                "Value": "5675261368008971508"
-                              }
-                            },
-                            {
-                              "Name": "_b",
-                              "Type": "ULong",
-                              "InternalType": "System.UInt64, System.Private.CoreLib",
-                              "TypeId": "f68439f8-d4c7-33ac-d0f0-7558e5fa2d26",
-                              "Simple": {
-                                "Kind": "ULong",
-                                "Value": "11704393751292571023"
-                              }
-                            }
-                          ],
-                          "InternalType": "Engine.Serialization.SerializableGuid, Engine",
-                          "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5"
-                        }
-                      }
-                    },
-                    {
-                      "Name": "_type",
-                      "Type": "Enum",
-                      "InternalType": "Engine.AssetType, Engine",
-                      "TypeId": "da7b8b59-a214-82f1-7384-9fe29086ec58",
-                      "Simple": {
-                        "Kind": "Enum",
-                        "Enum": {
-                          "TypeId": "da7b8b59-a214-82f1-7384-9fe29086ec58",
-                          "EnumInternalType": "Engine.AssetType, Engine",
-                          "EnumValue": 8
-                        }
-                      }
-                    }
-                  ],
-                  "InternalType": "Engine.LazyRef`1[[Engine.Material, Engine]], Engine",
-                  "TypeId": "474f5215-9f41-3f1f-32d5-e8ab0de1d9ee"
-                }
-              }
-            },
-            {
-              "Name": "_lazyPrefab",
-              "Type": "ComplexClass",
-              "InternalType": "Engine.LazyRef`1[[Engine.Prefab`1[[Engine.SpriteRenderer, Engine]], Engine]], Engine",
-              "TypeId": "2c82d256-2ebe-26ea-6b35-e5e2d11a6f25",
-              "Simple": null,
-              "Class": {
-                "$type": "Engine.Serialization.ComplexClass, Engine",
-                "$value": {
-                  "ClassType": "ComplexClass",
-                  "Properties": [
-                    {
-                      "Name": "_refId",
-                      "Type": "ComplexClass",
-                      "InternalType": "Engine.Serialization.SerializableGuid, Engine",
-                      "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5",
-                      "Simple": null,
-                      "Class": {
-                        "$type": "Engine.Serialization.ComplexClass, Engine",
-                        "$value": {
-                          "ClassType": "ComplexClass",
-                          "Properties": [
-                            {
-                              "Name": "_a",
-                              "Type": "ULong",
-                              "InternalType": "System.UInt64, System.Private.CoreLib",
-                              "TypeId": "f68439f8-d4c7-33ac-d0f0-7558e5fa2d26",
-                              "Simple": {
-                                "Kind": "ULong",
-                                "Value": "0"
-                              }
-                            },
-                            {
-                              "Name": "_b",
-                              "Type": "ULong",
-                              "InternalType": "System.UInt64, System.Private.CoreLib",
-                              "TypeId": "f68439f8-d4c7-33ac-d0f0-7558e5fa2d26",
-                              "Simple": {
-                                "Kind": "ULong",
-                                "Value": "0"
-                              }
-                            }
-                          ],
-                          "InternalType": "Engine.Serialization.SerializableGuid, Engine",
-                          "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5"
-                        }
-                      }
-                    },
-                    {
-                      "Name": "_type",
-                      "Type": "Enum",
-                      "InternalType": "Engine.AssetType, Engine",
-                      "TypeId": "da7b8b59-a214-82f1-7384-9fe29086ec58",
-                      "Simple": {
-                        "Kind": "Enum",
-                        "Enum": {
-                          "TypeId": "da7b8b59-a214-82f1-7384-9fe29086ec58",
-                          "EnumInternalType": "Engine.AssetType, Engine",
-                          "EnumValue": 0
-                        }
-                      }
-                    }
-                  ],
-                  "InternalType": "Engine.LazyRef`1[[Engine.Prefab`1[[Engine.SpriteRenderer, Engine]], Engine]], Engine",
-                  "TypeId": "2c82d256-2ebe-26ea-6b35-e5e2d11a6f25"
-                }
-              }
-            },
-            {
-              "Name": "_lazyArr",
+              "Name": "_actorsList",
               "Type": "ComplexCollection",
-              "InternalType": "Engine.LazyRef`1[[Engine.SceneAsset, Engine]][], Engine",
-              "TypeId": "571db860-a5f2-7517-851b-a0a2f45adf94",
+              "InternalType": "System.Collections.Generic.List`1[[Game.TestScript+AAA`3[[Engine.Component, Engine],[Engine.Actor, Engine],[System.String, System.Private.CoreLib]], Game]], System.Private.CoreLib",
+              "TypeId": "c5bd959a-4e1f-87bd-ce98-8a2b585d0997",
               "Simple": null,
               "Collection": {
                 "$type": "Engine.Serialization.CollectionClasses, Engine",
                 "$value": {
-                  "Value": [
-                    {
-                      "$type": "Engine.Serialization.ComplexClass, Engine",
-                      "ClassType": "ComplexClass",
-                      "Properties": [
-                        {
-                          "Name": "_refId",
-                          "Type": "ComplexClass",
-                          "InternalType": "Engine.Serialization.SerializableGuid, Engine",
-                          "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5",
-                          "Simple": null,
-                          "Class": {
-                            "$type": "Engine.Serialization.ComplexClass, Engine",
-                            "$value": {
-                              "ClassType": "ComplexClass",
-                              "Properties": [
-                                {
-                                  "Name": "_a",
-                                  "Type": "ULong",
-                                  "InternalType": "System.UInt64, System.Private.CoreLib",
-                                  "TypeId": "f68439f8-d4c7-33ac-d0f0-7558e5fa2d26",
-                                  "Simple": {
-                                    "Kind": "ULong",
-                                    "Value": "0"
-                                  }
-                                },
-                                {
-                                  "Name": "_b",
-                                  "Type": "ULong",
-                                  "InternalType": "System.UInt64, System.Private.CoreLib",
-                                  "TypeId": "f68439f8-d4c7-33ac-d0f0-7558e5fa2d26",
-                                  "Simple": {
-                                    "Kind": "ULong",
-                                    "Value": "0"
-                                  }
-                                }
-                              ],
-                              "InternalType": "Engine.Serialization.SerializableGuid, Engine",
-                              "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5"
-                            }
-                          }
-                        },
-                        {
-                          "Name": "_type",
-                          "Type": "Enum",
-                          "InternalType": "Engine.AssetType, Engine",
-                          "TypeId": "da7b8b59-a214-82f1-7384-9fe29086ec58",
-                          "Simple": {
-                            "Kind": "Enum",
-                            "Enum": {
-                              "TypeId": "da7b8b59-a214-82f1-7384-9fe29086ec58",
-                              "EnumInternalType": "Engine.AssetType, Engine",
-                              "EnumValue": 0
-                            }
-                          }
-                        }
-                      ],
-                      "InternalType": "Engine.LazyRef`1[[Engine.SceneAsset, Engine]], Engine",
-                      "TypeId": "6d95552e-628c-629f-62af-8f6c6aa5c3fc"
-                    },
-                    {
-                      "$type": "Engine.Serialization.ComplexClass, Engine",
-                      "ClassType": "ComplexClass",
-                      "Properties": [
-                        {
-                          "Name": "_refId",
-                          "Type": "ComplexClass",
-                          "InternalType": "Engine.Serialization.SerializableGuid, Engine",
-                          "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5",
-                          "Simple": null,
-                          "Class": {
-                            "$type": "Engine.Serialization.ComplexClass, Engine",
-                            "$value": {
-                              "ClassType": "ComplexClass",
-                              "Properties": [
-                                {
-                                  "Name": "_a",
-                                  "Type": "ULong",
-                                  "InternalType": "System.UInt64, System.Private.CoreLib",
-                                  "TypeId": "f68439f8-d4c7-33ac-d0f0-7558e5fa2d26",
-                                  "Simple": {
-                                    "Kind": "ULong",
-                                    "Value": "4806048022861661272"
-                                  }
-                                },
-                                {
-                                  "Name": "_b",
-                                  "Type": "ULong",
-                                  "InternalType": "System.UInt64, System.Private.CoreLib",
-                                  "TypeId": "f68439f8-d4c7-33ac-d0f0-7558e5fa2d26",
-                                  "Simple": {
-                                    "Kind": "ULong",
-                                    "Value": "13462990312046584709"
-                                  }
-                                }
-                              ],
-                              "InternalType": "Engine.Serialization.SerializableGuid, Engine",
-                              "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5"
-                            }
-                          }
-                        },
-                        {
-                          "Name": "_type",
-                          "Type": "Enum",
-                          "InternalType": "Engine.AssetType, Engine",
-                          "TypeId": "da7b8b59-a214-82f1-7384-9fe29086ec58",
-                          "Simple": {
-                            "Kind": "Enum",
-                            "Enum": {
-                              "TypeId": "da7b8b59-a214-82f1-7384-9fe29086ec58",
-                              "EnumInternalType": "Engine.AssetType, Engine",
-                              "EnumValue": 10
-                            }
-                          }
-                        }
-                      ],
-                      "InternalType": "Engine.LazyRef`1[[Engine.SceneAsset, Engine]], Engine",
-                      "TypeId": "6d95552e-628c-629f-62af-8f6c6aa5c3fc"
-                    },
-                    {
-                      "$type": "Engine.Serialization.ComplexClass, Engine",
-                      "ClassType": "ComplexClass",
-                      "Properties": [
-                        {
-                          "Name": "_refId",
-                          "Type": "ComplexClass",
-                          "InternalType": "Engine.Serialization.SerializableGuid, Engine",
-                          "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5",
-                          "Simple": null,
-                          "Class": {
-                            "$type": "Engine.Serialization.ComplexClass, Engine",
-                            "$value": {
-                              "ClassType": "ComplexClass",
-                              "Properties": [
-                                {
-                                  "Name": "_a",
-                                  "Type": "ULong",
-                                  "InternalType": "System.UInt64, System.Private.CoreLib",
-                                  "TypeId": "f68439f8-d4c7-33ac-d0f0-7558e5fa2d26",
-                                  "Simple": {
-                                    "Kind": "ULong",
-                                    "Value": "0"
-                                  }
-                                },
-                                {
-                                  "Name": "_b",
-                                  "Type": "ULong",
-                                  "InternalType": "System.UInt64, System.Private.CoreLib",
-                                  "TypeId": "f68439f8-d4c7-33ac-d0f0-7558e5fa2d26",
-                                  "Simple": {
-                                    "Kind": "ULong",
-                                    "Value": "0"
-                                  }
-                                }
-                              ],
-                              "InternalType": "Engine.Serialization.SerializableGuid, Engine",
-                              "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5"
-                            }
-                          }
-                        },
-                        {
-                          "Name": "_type",
-                          "Type": "Enum",
-                          "InternalType": "Engine.AssetType, Engine",
-                          "TypeId": "da7b8b59-a214-82f1-7384-9fe29086ec58",
-                          "Simple": {
-                            "Kind": "Enum",
-                            "Enum": {
-                              "TypeId": "da7b8b59-a214-82f1-7384-9fe29086ec58",
-                              "EnumInternalType": "Engine.AssetType, Engine",
-                              "EnumValue": 0
-                            }
-                          }
-                        }
-                      ],
-                      "InternalType": "Engine.LazyRef`1[[Engine.SceneAsset, Engine]], Engine",
-                      "TypeId": "6d95552e-628c-629f-62af-8f6c6aa5c3fc"
-                    }
-                  ],
-                  "ItemsType": "ComplexClass",
-                  "CollectionType": "Array"
+                  "Value": [],
+                  "ItemsType": "None",
+                  "CollectionType": "List"
                 }
               }
             },
             {
-              "Name": "_lazyResources",
-              "Type": "ComplexCollection",
-              "InternalType": "Engine.LazyRef`1[[Engine.Asset, Engine]][], Engine",
-              "TypeId": "0f5b550d-5253-7dc2-daa1-a9a397d0531b",
+              "Name": "_actorsArr",
+              "Type": "ReferenceCollection",
+              "InternalType": "Engine.Actor[], Engine",
+              "TypeId": "5829741e-5415-c784-026e-0021793585e4",
               "Simple": null,
               "Collection": {
-                "$type": "Engine.Serialization.CollectionClasses, Engine",
+                "$type": "Engine.Serialization.CollectionReferences, Engine",
                 "$value": {
-                  "Value": [
-                    {
-                      "$type": "Engine.Serialization.ComplexClass, Engine",
-                      "ClassType": "ComplexClass",
-                      "Properties": [
-                        {
-                          "Name": "_refId",
-                          "Type": "ComplexClass",
-                          "InternalType": "Engine.Serialization.SerializableGuid, Engine",
-                          "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5",
-                          "Simple": null,
-                          "Class": {
-                            "$type": "Engine.Serialization.ComplexClass, Engine",
-                            "$value": {
-                              "ClassType": "ComplexClass",
-                              "Properties": [
-                                {
-                                  "Name": "_a",
-                                  "Type": "ULong",
-                                  "InternalType": "System.UInt64, System.Private.CoreLib",
-                                  "TypeId": "f68439f8-d4c7-33ac-d0f0-7558e5fa2d26",
-                                  "Simple": {
-                                    "Kind": "ULong",
-                                    "Value": "5369304029555107307"
-                                  }
-                                },
-                                {
-                                  "Name": "_b",
-                                  "Type": "ULong",
-                                  "InternalType": "System.UInt64, System.Private.CoreLib",
-                                  "TypeId": "f68439f8-d4c7-33ac-d0f0-7558e5fa2d26",
-                                  "Simple": {
-                                    "Kind": "ULong",
-                                    "Value": "3135835943822080901"
-                                  }
-                                }
-                              ],
-                              "InternalType": "Engine.Serialization.SerializableGuid, Engine",
-                              "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5"
-                            }
-                          }
-                        },
-                        {
-                          "Name": "_type",
-                          "Type": "Enum",
-                          "InternalType": "Engine.AssetType, Engine",
-                          "TypeId": "da7b8b59-a214-82f1-7384-9fe29086ec58",
-                          "Simple": {
-                            "Kind": "Enum",
-                            "Enum": {
-                              "TypeId": "da7b8b59-a214-82f1-7384-9fe29086ec58",
-                              "EnumInternalType": "Engine.AssetType, Engine",
-                              "EnumValue": 1
-                            }
-                          }
-                        }
-                      ],
-                      "InternalType": "Engine.LazyRef`1[[Engine.Asset, Engine]], Engine",
-                      "TypeId": "a6fc6450-9651-c9e7-ed04-36e7bbea1435"
-                    },
-                    {
-                      "$type": "Engine.Serialization.ComplexClass, Engine",
-                      "ClassType": "ComplexClass",
-                      "Properties": [
-                        {
-                          "Name": "_refId",
-                          "Type": "ComplexClass",
-                          "InternalType": "Engine.Serialization.SerializableGuid, Engine",
-                          "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5",
-                          "Simple": null,
-                          "Class": {
-                            "$type": "Engine.Serialization.ComplexClass, Engine",
-                            "$value": {
-                              "ClassType": "ComplexClass",
-                              "Properties": [
-                                {
-                                  "Name": "_a",
-                                  "Type": "ULong",
-                                  "InternalType": "System.UInt64, System.Private.CoreLib",
-                                  "TypeId": "f68439f8-d4c7-33ac-d0f0-7558e5fa2d26",
-                                  "Simple": {
-                                    "Kind": "ULong",
-                                    "Value": "5060671324830410166"
-                                  }
-                                },
-                                {
-                                  "Name": "_b",
-                                  "Type": "ULong",
-                                  "InternalType": "System.UInt64, System.Private.CoreLib",
-                                  "TypeId": "f68439f8-d4c7-33ac-d0f0-7558e5fa2d26",
-                                  "Simple": {
-                                    "Kind": "ULong",
-                                    "Value": "9153095946753369273"
-                                  }
-                                }
-                              ],
-                              "InternalType": "Engine.Serialization.SerializableGuid, Engine",
-                              "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5"
-                            }
-                          }
-                        },
-                        {
-                          "Name": "_type",
-                          "Type": "Enum",
-                          "InternalType": "Engine.AssetType, Engine",
-                          "TypeId": "da7b8b59-a214-82f1-7384-9fe29086ec58",
-                          "Simple": {
-                            "Kind": "Enum",
-                            "Enum": {
-                              "TypeId": "da7b8b59-a214-82f1-7384-9fe29086ec58",
-                              "EnumInternalType": "Engine.AssetType, Engine",
-                              "EnumValue": 14
-                            }
-                          }
-                        }
-                      ],
-                      "InternalType": "Engine.LazyRef`1[[Engine.Asset, Engine]], Engine",
-                      "TypeId": "a6fc6450-9651-c9e7-ed04-36e7bbea1435"
-                    },
-                    {
-                      "$type": "Engine.Serialization.ComplexClass, Engine",
-                      "ClassType": "ComplexClass",
-                      "Properties": [
-                        {
-                          "Name": "_refId",
-                          "Type": "ComplexClass",
-                          "InternalType": "Engine.Serialization.SerializableGuid, Engine",
-                          "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5",
-                          "Simple": null,
-                          "Class": {
-                            "$type": "Engine.Serialization.ComplexClass, Engine",
-                            "$value": {
-                              "ClassType": "ComplexClass",
-                              "Properties": [
-                                {
-                                  "Name": "_a",
-                                  "Type": "ULong",
-                                  "InternalType": "System.UInt64, System.Private.CoreLib",
-                                  "TypeId": "f68439f8-d4c7-33ac-d0f0-7558e5fa2d26",
-                                  "Simple": {
-                                    "Kind": "ULong",
-                                    "Value": "5596218476771152229"
-                                  }
-                                },
-                                {
-                                  "Name": "_b",
-                                  "Type": "ULong",
-                                  "InternalType": "System.UInt64, System.Private.CoreLib",
-                                  "TypeId": "f68439f8-d4c7-33ac-d0f0-7558e5fa2d26",
-                                  "Simple": {
-                                    "Kind": "ULong",
-                                    "Value": "329563593324689325"
-                                  }
-                                }
-                              ],
-                              "InternalType": "Engine.Serialization.SerializableGuid, Engine",
-                              "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5"
-                            }
-                          }
-                        },
-                        {
-                          "Name": "_type",
-                          "Type": "Enum",
-                          "InternalType": "Engine.AssetType, Engine",
-                          "TypeId": "da7b8b59-a214-82f1-7384-9fe29086ec58",
-                          "Simple": {
-                            "Kind": "Enum",
-                            "Enum": {
-                              "TypeId": "da7b8b59-a214-82f1-7384-9fe29086ec58",
-                              "EnumInternalType": "Engine.AssetType, Engine",
-                              "EnumValue": 8
-                            }
-                          }
-                        }
-                      ],
-                      "InternalType": "Engine.LazyRef`1[[Engine.Asset, Engine]], Engine",
-                      "TypeId": "a6fc6450-9651-c9e7-ed04-36e7bbea1435"
-                    },
-                    {
-                      "$type": "Engine.Serialization.ComplexClass, Engine",
-                      "ClassType": "ComplexClass",
-                      "Properties": [
-                        {
-                          "Name": "_refId",
-                          "Type": "ComplexClass",
-                          "InternalType": "Engine.Serialization.SerializableGuid, Engine",
-                          "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5",
-                          "Simple": null,
-                          "Class": {
-                            "$type": "Engine.Serialization.ComplexClass, Engine",
-                            "$value": {
-                              "ClassType": "ComplexClass",
-                              "Properties": [
-                                {
-                                  "Name": "_a",
-                                  "Type": "ULong",
-                                  "InternalType": "System.UInt64, System.Private.CoreLib",
-                                  "TypeId": "f68439f8-d4c7-33ac-d0f0-7558e5fa2d26",
-                                  "Simple": {
-                                    "Kind": "ULong",
-                                    "Value": "5305146574498250282"
-                                  }
-                                },
-                                {
-                                  "Name": "_b",
-                                  "Type": "ULong",
-                                  "InternalType": "System.UInt64, System.Private.CoreLib",
-                                  "TypeId": "f68439f8-d4c7-33ac-d0f0-7558e5fa2d26",
-                                  "Simple": {
-                                    "Kind": "ULong",
-                                    "Value": "5655456317901483675"
-                                  }
-                                }
-                              ],
-                              "InternalType": "Engine.Serialization.SerializableGuid, Engine",
-                              "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5"
-                            }
-                          }
-                        },
-                        {
-                          "Name": "_type",
-                          "Type": "Enum",
-                          "InternalType": "Engine.AssetType, Engine",
-                          "TypeId": "da7b8b59-a214-82f1-7384-9fe29086ec58",
-                          "Simple": {
-                            "Kind": "Enum",
-                            "Enum": {
-                              "TypeId": "da7b8b59-a214-82f1-7384-9fe29086ec58",
-                              "EnumInternalType": "Engine.AssetType, Engine",
-                              "EnumValue": 2
-                            }
-                          }
-                        }
-                      ],
-                      "InternalType": "Engine.LazyRef`1[[Engine.Asset, Engine]], Engine",
-                      "TypeId": "a6fc6450-9651-c9e7-ed04-36e7bbea1435"
-                    },
-                    {
-                      "$type": "Engine.Serialization.ComplexClass, Engine",
-                      "ClassType": "ComplexClass",
-                      "Properties": [
-                        {
-                          "Name": "_refId",
-                          "Type": "ComplexClass",
-                          "InternalType": "Engine.Serialization.SerializableGuid, Engine",
-                          "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5",
-                          "Simple": null,
-                          "Class": {
-                            "$type": "Engine.Serialization.ComplexClass, Engine",
-                            "$value": {
-                              "ClassType": "ComplexClass",
-                              "Properties": [
-                                {
-                                  "Name": "_a",
-                                  "Type": "ULong",
-                                  "InternalType": "System.UInt64, System.Private.CoreLib",
-                                  "TypeId": "f68439f8-d4c7-33ac-d0f0-7558e5fa2d26",
-                                  "Simple": {
-                                    "Kind": "ULong",
-                                    "Value": "5566469828999664691"
-                                  }
-                                },
-                                {
-                                  "Name": "_b",
-                                  "Type": "ULong",
-                                  "InternalType": "System.UInt64, System.Private.CoreLib",
-                                  "TypeId": "f68439f8-d4c7-33ac-d0f0-7558e5fa2d26",
-                                  "Simple": {
-                                    "Kind": "ULong",
-                                    "Value": "4774018085896428169"
-                                  }
-                                }
-                              ],
-                              "InternalType": "Engine.Serialization.SerializableGuid, Engine",
-                              "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5"
-                            }
-                          }
-                        },
-                        {
-                          "Name": "_type",
-                          "Type": "Enum",
-                          "InternalType": "Engine.AssetType, Engine",
-                          "TypeId": "da7b8b59-a214-82f1-7384-9fe29086ec58",
-                          "Simple": {
-                            "Kind": "Enum",
-                            "Enum": {
-                              "TypeId": "da7b8b59-a214-82f1-7384-9fe29086ec58",
-                              "EnumInternalType": "Engine.AssetType, Engine",
-                              "EnumValue": 7
-                            }
-                          }
-                        }
-                      ],
-                      "InternalType": "Engine.LazyRef`1[[Engine.Asset, Engine]], Engine",
-                      "TypeId": "a6fc6450-9651-c9e7-ed04-36e7bbea1435"
-                    },
-                    {
-                      "$type": "Engine.Serialization.ComplexClass, Engine",
-                      "ClassType": "ComplexClass",
-                      "Properties": [
-                        {
-                          "Name": "_refId",
-                          "Type": "ComplexClass",
-                          "InternalType": "Engine.Serialization.SerializableGuid, Engine",
-                          "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5",
-                          "Simple": null,
-                          "Class": {
-                            "$type": "Engine.Serialization.ComplexClass, Engine",
-                            "$value": {
-                              "ClassType": "ComplexClass",
-                              "Properties": [
-                                {
-                                  "Name": "_a",
-                                  "Type": "ULong",
-                                  "InternalType": "System.UInt64, System.Private.CoreLib",
-                                  "TypeId": "f68439f8-d4c7-33ac-d0f0-7558e5fa2d26",
-                                  "Simple": {
-                                    "Kind": "ULong",
-                                    "Value": "5330952243896258126"
-                                  }
-                                },
-                                {
-                                  "Name": "_b",
-                                  "Type": "ULong",
-                                  "InternalType": "System.UInt64, System.Private.CoreLib",
-                                  "TypeId": "f68439f8-d4c7-33ac-d0f0-7558e5fa2d26",
-                                  "Simple": {
-                                    "Kind": "ULong",
-                                    "Value": "1313062861600973483"
-                                  }
-                                }
-                              ],
-                              "InternalType": "Engine.Serialization.SerializableGuid, Engine",
-                              "TypeId": "2a1ccb3c-0b7d-0bd4-a59e-e7d90e32d5e5"
-                            }
-                          }
-                        },
-                        {
-                          "Name": "_type",
-                          "Type": "Enum",
-                          "InternalType": "Engine.AssetType, Engine",
-                          "TypeId": "da7b8b59-a214-82f1-7384-9fe29086ec58",
-                          "Simple": {
-                            "Kind": "Enum",
-                            "Enum": {
-                              "TypeId": "da7b8b59-a214-82f1-7384-9fe29086ec58",
-                              "EnumInternalType": "Engine.AssetType, Engine",
-                              "EnumValue": 11
-                            }
-                          }
-                        }
-                      ],
-                      "InternalType": "Engine.LazyRef`1[[Engine.Asset, Engine]], Engine",
-                      "TypeId": "a6fc6450-9651-c9e7-ed04-36e7bbea1435"
-                    }
-                  ],
-                  "ItemsType": "ComplexClass",
+                  "Value": [],
+                  "ItemsType": [],
                   "CollectionType": "Array"
-                }
-              }
-            },
-            {
-              "Name": "_intArrByEnumDictionary",
-              "Type": "ComplexCollection",
-              "InternalType": "System.Collections.Generic.Dictionary`2[[Engine.BlendFactor, Engine],[Game.TestScript+Dclas, Game]], System.Private.CoreLib",
-              "TypeId": "744b50e2-f67e-8723-004e-92960f8fd837",
-              "Simple": null,
-              "Collection": {
-                "$type": "Engine.Serialization.DictionaryClass, Engine",
-                "$value": {
-                  "KeyType": "None",
-                  "ValueType": "None",
-                  "Keys": [
-                    {
-                      "$type": "Engine.Serialization.ComplexClass, Engine",
-                      "ClassType": "Enum",
-                      "Properties": [
-                        {
-                          "Name": "D_K",
-                          "Type": "Enum",
-                          "InternalType": "Engine.BlendFactor, Engine",
-                          "TypeId": "72f9a0bd-5775-a78b-44d5-29ad5b718089",
-                          "Simple": {
-                            "Kind": "Enum",
-                            "Enum": {
-                              "TypeId": "72f9a0bd-5775-a78b-44d5-29ad5b718089",
-                              "EnumInternalType": "Engine.BlendFactor, Engine",
-                              "EnumValue": 0
-                            }
-                          }
-                        }
-                      ],
-                      "InternalType": "Engine.BlendFactor, Engine",
-                      "TypeId": "72f9a0bd-5775-a78b-44d5-29ad5b718089"
-                    }
-                  ],
-                  "Values": [
-                    {
-                      "$type": "Engine.Serialization.ComplexClass, Engine",
-                      "ClassType": "ComplexClass",
-                      "Properties": [
-                        {
-                          "Name": "_intArr",
-                          "Type": "SimpleCollection",
-                          "InternalType": "System.Int32[], System.Private.CoreLib",
-                          "TypeId": "1f7dc9a1-7f79-e7e9-c900-f27c46af0d82",
-                          "Simple": null
-                        }
-                      ],
-                      "InternalType": "Game.TestScript+Dclas, Game",
-                      "TypeId": "f5a55fb7-f54d-e5b5-e5f9-7dd7ee841c28"
-                    }
-                  ],
-                  "CollectionType": "Dictionary"
                 }
               }
             }
