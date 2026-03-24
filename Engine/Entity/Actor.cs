@@ -166,6 +166,7 @@ namespace Engine
                 actorCpy.PrefabSource = transform.Actor.PrefabSource;
                 actorCpy.PrefabSourceActorID = transform.Actor.PrefabSourceActorID;
                 actorCpy._isEnabled = transform.Actor._isEnabled;
+                actorsLinks.Add(transform.Actor.GetID(), (transform.Actor, actorCpy));
 
                 if (parent)
                 {
@@ -181,7 +182,6 @@ namespace Engine
                     var cpyComponent = actorCpy.AddComponent(component.GetType());
                     componentsLinks.Add(component.GetID(), (component, cpyComponent));
                 }
-                actorsLinks.Add(transform.Actor.GetID(), (transform.Actor, actorCpy));
 
                 var count = transform.Children.Count;
                 for (int i = 0; i < count; i++)
@@ -209,52 +209,68 @@ namespace Engine
                     toTransform.LocalScale = fromTransform.LocalScale;
                     return;
                 }
-                SetValueToTarget(from, to);
+                SetValueToCopy(from, to);
             }
 
-            void SetValueToTarget(object target, object to)
+            void SetValueToCopy(object target, object to)
             {
                 var members = ReflectionUtils.GetAllMembersWithAttribute<SerializedFieldAttribute>(target.GetType()).ToList();
-                // actorsLinks;
-                // componentsLinks;
-
-                foreach (var member in members)
+                try
                 {
-                    var type = ReflectionUtils.GetMemberType(member);
-                    var isAsset = type == typeof(Asset) || type.IsAssignableTo(typeof(Asset));
-                    var isInternalType = ReflectionUtils.IsInternalType(type);
-                    var value = ReflectionUtils.GetMemberValue(target, member);
-                    if (isAsset || isInternalType)
+
+                    foreach (var member in members)
                     {
-                        ReflectionUtils.SetMemberValue(to, member, value);
-                    }
-                    else if (type.IsAssignableTo(typeof(Component)))
-                    {
-                        SetLinkReference(componentsLinks, to, value as Component, member);
-                    }
-                    else if (type.IsAssignableTo(typeof(Actor)))
-                    {
-                        SetLinkReference(actorsLinks, to, value as Actor, member);
-                    }
-                    else if (ReflectionUtils.IsCollection(member))
-                    {
-                        if (ReflectionUtils.IsCollectionOfInternalTypes(type))
+                        var value = ReflectionUtils.GetMemberValue(target, member);
+                        var type = value != null ? value.GetType() : ReflectionUtils.GetMemberType(member);
+
+                        var isAsset = type == typeof(Asset) || type.IsAssignableTo(typeof(Asset));
+                        var isInternalType = ReflectionUtils.IsInternalType(type);
+
+                        if (isAsset || isInternalType)
                         {
-                            // Simple collections will be copied as they are
                             ReflectionUtils.SetMemberValue(to, member, value);
                         }
-                        else
+                        else if (type.IsAssignableTo(typeof(Component)))
                         {
-                            // TODO: Copy item by item recursive.
+                            SetLinkReference(componentsLinks, to, value as Component, member);
+                        }
+                        else if (type.IsAssignableTo(typeof(Actor)))
+                        {
+                            SetLinkReference(actorsLinks, to, value as Actor, member);
+                        }
+                        else if (ReflectionUtils.IsCollection(member))
+                        {
+                            if (ReflectionUtils.IsCollectionOfInternalTypes(type))
+                            {
+                                // Simple collections will be copied as they are
+                                ReflectionUtils.SetMemberValue(to, member, value);
+                            }
+                            else
+                            {
+                                // TODO: Copy item by item recursive.
+                            }
+                        }
+                        else if ((type.IsClass || ReflectionUtils.IsUserDefinedStruct(member)) && value != null)
+                        {
+                            var classCopyInstance = ReflectionUtils.GetDefaultValueInstance(type);
+
+                            if(classCopyInstance != null)
+                            {
+                                SetValueToCopy(value, classCopyInstance);
+                                ReflectionUtils.SetMemberValue(to, member, classCopyInstance);
+                            }
+                            else
+                            {
+                                // Probably an interface or abstract class.
+                                ReflectionUtils.SetMemberValue(to, member, null);
+                            }
                         }
                     }
-                    else if (type.IsClass || ReflectionUtils.IsUserDefinedStruct(member))
-                    {
-                        // TODO: create the instance, walk the tree and assign the types accordingly.
-                        Debug.Error($"Can't copy data to Member: {member.Name}, Type: {type.Name}");
-                    }
                 }
-
+                catch (Exception e)
+                {
+                    Debug.Error(e);
+                }
                 void SetLinkReference<T>(Dictionary<Guid, (T original, T copy)> links, object target, T value, MemberInfo member) where T : EObject
                 {
                     if (value != null && links.TryGetValue(value.GetID(), out var actorLink))
