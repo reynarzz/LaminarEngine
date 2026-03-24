@@ -204,9 +204,9 @@ namespace Engine
                 if (from is Transform fromTransform)
                 {
                     var toTransform = to as Transform;
-                    toTransform.WorldPosition = fromTransform.WorldPosition;
-                    toTransform.WorldRotation = fromTransform.WorldRotation;
-                    toTransform.WorldScale = fromTransform.WorldScale;
+                    toTransform.LocalPosition = fromTransform.LocalPosition;
+                    toTransform.LocalRotation = fromTransform.LocalRotation;
+                    toTransform.LocalScale = fromTransform.LocalScale;
                     return;
                 }
                 SetValueToTarget(from, to);
