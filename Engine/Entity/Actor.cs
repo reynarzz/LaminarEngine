@@ -162,11 +162,11 @@ namespace Engine
             Actor Instantiate(Transform transform, Transform parent)
             {
                 var actorCpy = new Actor(transform.Actor.Name);
+                actorCpy.IsActiveSelf = transform.Actor.IsActiveSelf;
                 actorCpy.Layer = transform.Actor.Layer;
                 actorCpy.Tag = transform.Actor.Tag;
                 actorCpy.PrefabSource = transform.Actor.PrefabSource;
                 actorCpy.PrefabSourceActorID = transform.Actor.PrefabSourceActorID;
-                actorCpy._isEnabled = transform.Actor._isEnabled;
                 actorsLinks.Add(transform.Actor.GetID(), (transform.Actor, actorCpy));
 
                 if (parent)

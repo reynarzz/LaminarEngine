@@ -535,6 +535,10 @@ namespace Editor.Views
                     EditorSystem.Save.MarkDirty(actor);
                     Actor.Destroy(actor);
                     ImGui.PopStyleColor(popColors);
+                    if (!actor.IsActiveInHierarchy)
+                    {
+                        ImGui.PopStyleColor();
+                    }
                     return;
                 }
 

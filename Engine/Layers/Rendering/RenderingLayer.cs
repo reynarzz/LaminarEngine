@@ -116,16 +116,6 @@ namespace Engine.Layers
             _renderingSurfaces.AddRange(configs);
         }
 
-        private bool IsValidCamera(WeakReference<ICamera> camera)
-        {
-            if (camera != null && camera.TryGetTarget(out var target))
-            {
-                return target != null && target.IsValid;
-            }
-
-            return false;
-        }
-
         internal static void PushSceneCamera(Camera camera)
         {
             if (!_cameras.Contains(camera))
@@ -164,7 +154,7 @@ namespace Engine.Layers
                     {
                         foreach (var camera in _cameras)
                         {
-                            if (camera.IsEnabled)
+                            if (camera.Actor.IsActiveInHierarchy && camera.IsEnabled)
                             {
                                 if (currentCamera == null || !currentCamera.IsEnabled || camera.Priority >= currentCamera.Priority)
                                 {
