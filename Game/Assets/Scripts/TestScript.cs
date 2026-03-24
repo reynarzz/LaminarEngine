@@ -186,13 +186,17 @@ namespace Game
         //[SerializedField] private LazyRef<Asset>[] _lazyResources;
 
 
-        //private class Dclas
-        //{
-        //    [SerializedField] private int[] _intArr;
-        //}
+        private class Dclas
+        {
+            [SerializedField] private int[] _intArr;
+            [SerializedField] private Actor Actor;
+            [SerializedField] private Component Component1;
+            [SerializedField] private List<Component> ComponentList;
+            [SerializedField] private List<Actor> ActorList;
+        }
 
-        //[SerializedField]
-        //private Dictionary<BlendFactor, Dclas> _intArrByEnumDictionary;
+        [SerializedField]
+        private Dictionary<BlendFactor, Dclas> _intArrByEnumDictionary;
 
         [SerializedField]
         private AAA<Component, Actor> _generic;

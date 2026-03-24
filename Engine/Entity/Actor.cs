@@ -140,6 +140,7 @@ namespace Engine
             return Duplicate(copy, null);
         }
 
+        private delegate void SetValueToDuplicateCallback(object target, MemberInfo member, object value, int index);
         public static Actor Duplicate(Actor copy, Transform parent)
         {
             if (!parent)
@@ -221,11 +222,11 @@ namespace Engine
                 {
                     var value = ReflectionUtils.GetMemberValue(from, member);
 
-                    SetValueToCopy(to, value, member);
+                    SetValueToCopy(to, value, member, 0, SetMemberValueSafe);
                 }
             }
 
-            void SetValueToCopy(object target, object value, MemberInfo member, int index = 0)
+            void SetValueToCopy(object target, object value, MemberInfo member, int index, SetValueToDuplicateCallback setValue)
             {
                 try
                 {
@@ -235,12 +236,12 @@ namespace Engine
                     var isInternalType = ReflectionUtils.IsInternalType(type);
                     if (value == null)
                     {
-                        SetMemberValueSafe(target, member, value, index);
+                        setValue(target, member, value, index);
                         return;
                     }
                     if (isAsset || isInternalType)
                     {
-                        SetMemberValueSafe(target, member, value, index);
+                        setValue(target, member, value, index);
                     }
                     else if (type.IsAssignableTo(typeof(Component)))
                     {
@@ -255,14 +256,35 @@ namespace Engine
                         if (ReflectionUtils.IsCollectionOfInternalTypes(type))
                         {
                             // Simple collections will be copied as they are
-                            SetMemberValueSafe(target, member, value, index);
+                            setValue(target, member, value, index);
                         }
                         else
                         {
-                            // TODO: Deep Copy item by item recursive.
                             if (collectionType == CollectionType.Dictionary)
                             {
-                                Debug.Warn($"Can't copy complex dictionary '{type.Name}', not implemented.");
+                                var valDict = value as IDictionary;
+                                var dictionaryValCopy = ReflectionUtils.GetDefaultValueInstance(type, valDict.Count) as IDictionary;
+
+                                var keysCopy = new List<object>(valDict.Keys.Count);
+
+                                // Get all the keys first.
+                                foreach (var dkey in valDict.Keys)
+                                {
+                                    SetValueToCopy(dictionaryValCopy, dkey, member, 0, (target, member, value, index) =>
+                                    {
+                                        keysCopy.Add(value);
+                                    });
+                                }
+
+                                // Assign keys and values.
+                                for (int i = 0; i < keysCopy.Count; i++)
+                                {
+                                    SetValueToCopy(dictionaryValCopy, valDict[keysCopy[i]], member, i, (target, member, value, index) =>
+                                    {
+                                        dictionaryValCopy[keysCopy[i]] = value;
+                                    });
+                                }
+                                setValue(target, member, dictionaryValCopy, index);
                             }
                             else
                             {
@@ -272,9 +294,9 @@ namespace Engine
 
                                 for (int i = 0; i < collection1d.Count; i++)
                                 {
-                                    SetValueToCopy(collection1d, valArr[i], member, i);
+                                    SetValueToCopy(collection1d, valArr[i], member, i, SetMemberValueSafe);
                                 }
-                                SetMemberValueSafe(target, member, collection1d, index);
+                                setValue(target, member, collection1d, index);
                             }
                         }
                     }
@@ -289,15 +311,15 @@ namespace Engine
                             {
                                 var memValue = ReflectionUtils.GetMemberValue(value, classMember);
 
-                                SetValueToCopy(classCopyInstance, memValue, classMember);
+                                SetValueToCopy(classCopyInstance, memValue, classMember, 0, SetMemberValueSafe);
                             }
-                            SetMemberValueSafe(target, member, classCopyInstance, index);
+                            setValue(target, member, classCopyInstance, index);
 
                         }
                         else
                         {
                             // Probably an interface/abstract class, or an object that cannot be constructed because it hasn't a default constructor.
-                            SetMemberValueSafe(target, member, null, index);
+                            setValue(target, member, null, index);
                         }
                     }
                 }
@@ -313,7 +335,7 @@ namespace Engine
                         value = actorLink.copy;
                     }
 
-                    SetMemberValueSafe(target, member, value, index);
+                    setValue(target, member, value, index);
                 }
             }
         }
