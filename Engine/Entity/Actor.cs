@@ -247,7 +247,8 @@ namespace Engine
                             }
                             else
                             {
-                                // TODO: Copy item by item recursive.
+                                Debug.Warn($"Can't copy complex collection '{type.Name}', not implemented.");
+                                // TODO: Deep Copy item by item recursive.
                                 if (collectionType == CollectionType.Dictionary)
                                 {
 
