@@ -53,6 +53,17 @@ namespace Editor.Drawers
             }
         }
 
+        private static void DrawID(string id, EObject obj)
+        {
+            ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(1, 1, 1, 0.35f));
+            ImGui.Indent(EditorGuiFieldsResolver.GetIdentation());
+            ImGui.Text(id);
+            ImGui.SameLine();
+            EditorGuiFieldsResolver.SetPropertyDefaultCursorPos();
+            ImGui.Text(obj.GetID().ToString());
+            ImGui.Unindent(EditorGuiFieldsResolver.GetIdentation());
+            ImGui.PopStyleColor();
+        }
         private void DrawActor(Actor actor)
         {
             var drawList = ImGui.GetWindowDrawList();
@@ -65,6 +76,9 @@ namespace Editor.Drawers
 
             drawList.AddRectFilled(pos, new Vector2(pos.X + width + 1, pos.Y + height), color);
             // BeginGroupPanel(actor.Name, new(ImGui.GetContentRegionAvail().X, 0));
+
+            DrawID("Actor", actor);
+
             var identationAmount = 6;
             ImGui.Indent(identationAmount);
             ImGui.Dummy(0, 10);
@@ -329,6 +343,8 @@ namespace Editor.Drawers
             // Draw component properties
             void DrawComponentProperties()
             {
+                DrawID("Component", component);
+
                 if (CustomEditorDatabase.TryGetCustomComponentDrawer(component.GetType(), out var drawer))
                 {
                     drawer.Draw(component, () => drawPropertiesDefault?.Invoke(component));
@@ -459,7 +475,7 @@ namespace Editor.Drawers
             ImGui.Dummy(Vector2.Zero);
             ImGui.EndGroup();
         }
-        public void OnClose()
+        internal override void OnClose()
         {
         }
     }

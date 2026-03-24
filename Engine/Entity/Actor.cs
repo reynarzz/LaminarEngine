@@ -179,7 +179,7 @@ namespace Engine
                 for (int i = 0; i < transform.Actor._components.Count; i++)
                 {
                     var component = transform.Actor._components[i];
-                    var cpyComponent = actorCpy.AddComponent(component.GetType());
+                    var cpyComponent = actorCpy.AddComponent(component.GetType(), false, component.IsEnabledDontNotify);
                     componentsLinks.Add(component.GetID(), (component, cpyComponent));
                 }
 
@@ -238,7 +238,7 @@ namespace Engine
                         {
                             SetLinkReference(actorsLinks, to, value as Actor, member);
                         }
-                        else if (ReflectionUtils.IsCollection(member))
+                        else if (ReflectionUtils.IsCollection(type, out var collectionType))
                         {
                             if (ReflectionUtils.IsCollectionOfInternalTypes(type))
                             {
@@ -248,20 +248,28 @@ namespace Engine
                             else
                             {
                                 // TODO: Copy item by item recursive.
+                                if (collectionType == CollectionType.Dictionary)
+                                {
+
+                                }
+                                else
+                                {
+
+                                }
                             }
                         }
                         else if ((type.IsClass || ReflectionUtils.IsUserDefinedStruct(member)) && value != null)
                         {
                             var classCopyInstance = ReflectionUtils.GetDefaultValueInstance(type);
 
-                            if(classCopyInstance != null)
+                            if (classCopyInstance != null)
                             {
                                 SetValueToCopy(value, classCopyInstance);
                                 ReflectionUtils.SetMemberValue(to, member, classCopyInstance);
                             }
                             else
                             {
-                                // Probably an interface or abstract class.
+                                // Probably a interface/abstract class, or an object that cannot be constructed because it hasn't a default constructor.
                                 ReflectionUtils.SetMemberValue(to, member, null);
                             }
                         }
@@ -288,7 +296,11 @@ namespace Engine
         {
             return AddComponent(type, Guid.Empty, true, true, false, out _);
         }
-
+        internal Component AddComponent([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
+                                         Type type, bool autoAddRequiredComponents, bool enabledByDefault)
+        {
+            return AddComponent(type, Guid.Empty, autoAddRequiredComponents, enabledByDefault, false, out _);
+        }
         internal Component AddComponent([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
                                          Type type, Guid id, bool autoAddRequiredComponents, bool enabledByDefault, bool isDeserializing,
             out bool isPendingToInitialize)

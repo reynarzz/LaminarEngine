@@ -32,6 +32,10 @@ namespace Editor.Utils
             SetNextItemWidth(0);
         }
 
+        internal static float GetIdentation()
+        {
+            return ImGui.GetTreeNodeToLabelSpacing();
+        }
         private static void SetNextItemWidth(float width, bool trueWidth = false)
         {
             if (trueWidth)
