@@ -300,7 +300,7 @@ namespace Engine
                             }
                         }
                     }
-                    else if ((type.IsClass || ReflectionUtils.IsUserDefinedStruct(member)) && value != null)
+                    else if ((type.IsClass || ReflectionUtils.IsUserDefinedStruct(member) || ReflectionUtils.IsLazy(type)) && value != null)
                     {
                         var classCopyInstance = ReflectionUtils.GetDefaultValueInstance(type);
 
@@ -314,7 +314,6 @@ namespace Engine
                                 SetValueToCopy(classCopyInstance, memValue, classMember, 0, SetMemberValueSafe);
                             }
                             setValue(target, member, classCopyInstance, index);
-
                         }
                         else
                         {
