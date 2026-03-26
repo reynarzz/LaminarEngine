@@ -436,25 +436,14 @@ namespace Editor.Views
                 if (ImGui.MenuItem("Rename"))
                 {
                 }
-                if (ImGui.MenuItem("Duplicate"))
+                ImGui.BeginDisabled(Application.IsInPlayMode); // TODO: / Note: Temporal 
+                if (ImGui.MenuItem(Application.IsInPlayMode? "Duplicate (Playmode Disabled)" : "Duplicate"))
                 {
-                    // TODO: create and re-assign the new instance ids of actors and components.
-
-                    //var actorsTree = SceneSerializer.SerializeActorsTree(actor);
-                    //var actorsRootInstances = SceneDeserializer.DeserializeScene(actorsTree, actor.Scene, true);
-
-                    //if (actorsRootInstances != null)
-                    //{
-                    //    foreach (var actorRoot in actorsRootInstances)
-                    //    {
-                    //        actorRoot.Transform.Parent = actor.Transform.Parent;
-                    //    }
-                    //}
-
                     var duplicated = Actor.Duplicate(actor);
                     SetSelectedActorParentGraph(duplicated);
                     EditorSystem.Save.MarkDirty(duplicated);
                 }
+                ImGui.EndDisabled();    
                 ImGui.Separator();
                 ImGui.BeginDisabled(!actor.Transform.Parent);
 
