@@ -1,6 +1,7 @@
 # Laminar Engine
 
 <p align="center">
+  <img src="engine preview.png" alt="preview">
   <img src="Engine.gif" alt="Gameplay">
 </p>
 
