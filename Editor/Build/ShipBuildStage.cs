@@ -12,12 +12,18 @@ namespace Editor.Build
         protected ShipBuildStage(ILogger logger) : base(logger) { }
         protected sealed override Dictionary<string, string> GetBuildProperties()
         {
-            var props = GetAllBuildProperties();
+            GetAllBuildProperties(out var props, out var settings);
+            
             var constants = props[DefaultPropertyConsts.DEFINE_CONSTANTS];
 
             if (constants.EndsWith(";"))
             {
                 constants = constants.TrimEnd(';');
+            }
+
+            if (settings.NativeAOT)
+            {
+                props["PublishAot"] = "true";
             }
 
             return new Dictionary<string, string>(props)
@@ -27,7 +33,6 @@ namespace Editor.Build
             };
         }
 
-        protected abstract Dictionary<string, string> GetAllBuildProperties();
-
+        protected abstract void GetAllBuildProperties(out Dictionary<string, string> props, out PlatformBuildSettings settings);
     }
 }

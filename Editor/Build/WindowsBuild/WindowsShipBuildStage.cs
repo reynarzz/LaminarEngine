@@ -20,14 +20,15 @@ namespace Editor.Build
         })
         { }
 
-        protected override Dictionary<string, string> GetAllBuildProperties()
+        protected override void GetAllBuildProperties(out Dictionary<string, string> props, out PlatformBuildSettings settings)
         {
-            var settings = GetBuildSettings<WindowsBuildSettings>(PlatformBuild.Windows);
-            var buildTypeSettings = settings.GetCurrentBuildTypeSettings();
+            var winSettings = GetBuildSettings<WindowsBuildSettings>(PlatformBuild.Windows);
+            settings = winSettings;
+            var buildTypeSettings = winSettings.GetCurrentBuildTypeSettings();
 
-            var props = new Dictionary<string, string>()
+            props = new Dictionary<string, string>()
             {
-                ["Configuration"] = settings.Type == BuildType.Release ? "Release" : "Debug",
+                ["Configuration"] = winSettings.Type == BuildType.Release ? "Release" : "Debug",
                 ["Platform"] = "x64",
                 ["TargetFramework"] = "net9.0",
                 // Publish settings
@@ -64,7 +65,8 @@ namespace Editor.Build
 
             var defaultConstants = "WINDOWS;WIN32;DESKTOP;";
 
-            if (settings.Type == BuildType.Release)
+           
+            if (winSettings.Type == BuildType.Release)
             {
                 props["DefineConstants"] = defaultConstants + "RELEASE";
                 props["DebugType"] = "none";
@@ -74,7 +76,6 @@ namespace Editor.Build
             {
                 props["DefineConstants"] = defaultConstants + "DEBUG";
             }
-            return props;
         }
 
         protected override void OnBuildSuccess()

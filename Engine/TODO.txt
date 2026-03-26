@@ -4,7 +4,7 @@
 - Make sure the serializer is fully working: (the serialize should return a bool indicating if success or not, so we don't save corrupted data.)
 - Inspector drawer can dirty changes.
 - To replace the prefab system, I will create a simple script that instantiate stuff and I call it from the editor.
-- Implement proper actor duplication taking into account their reference tree.
+-Implement ScriptableObject.
 
 [Note]
 -The current code is very slow, and contains tons of bad practices to cut corners, leading to memory leaks, and slowdowns,
@@ -29,6 +29,7 @@ Fix:
 - If there is a compilation issue and the user creates an asset, it will not show up in the assets view since the import happens after the compilation.
 - newly created folders do not appear in the asset view.
 - When 'SHIP' building check that the LazyRef is pointing to a valid AssetType.
+- Transformation for children doesn't work using the transform component after finishing compilaiton?
 
 Serialization:
 - Forbid serialization of dictionaries that contains EObject as key?
@@ -47,6 +48,8 @@ Refactor:
 - AssetsViewWindow class needs a cleanup.
 - SceneGraphWindow, and move actor popup outside to its own function, and call it outside the actor loop.
 - Polish material UI.
+- Remove 'Newtonsoft.json' and instead use 'System.Text.Json' since it supports NativeAOT (native executable compilation)
+
 
 Performance fix:
 UI performance is pretty bad, rewrite the entire UI system.
@@ -65,6 +68,7 @@ Features:
 - [Editor] Add menu item options for adding sprites: Square, Circle, Capsule, Triangle.
 - [Editor] Import scripts and have metadata info such as 'if overrides physics methods', so rigidbodies can enable or disable physics features accordingly.
 - Metadata of every asset should be binary on final build.
+- Native AOT compilation.
 
 Save Editor config:
 -Current loaded scene name.

@@ -20,10 +20,11 @@ namespace Editor.Build
         })
         { }
 
-        protected override Dictionary<string, string> GetAllBuildProperties()
+        protected override void GetAllBuildProperties(out Dictionary<string, string> props, out PlatformBuildSettings settings)
         {
-            var settings = GetBuildSettings<AndroidBuildSettings>(PlatformBuild.Android);
-            var buildTypeSettings = settings.GetCurrentBuildTypeSettings();
+            var settingsAndroid = GetBuildSettings<AndroidBuildSettings>(PlatformBuild.Android);
+            settings = settingsAndroid;
+            var buildTypeSettings = settingsAndroid.GetCurrentBuildTypeSettings();
 
             var packageName = AndroidConsts.DEFAULT_APP_PACKAGE_NAME;
 
@@ -32,38 +33,37 @@ namespace Editor.Build
                 packageName = buildTypeSettings.PackageName;
             }
 
-            var properties = new Dictionary<string, string>()
+            props = new Dictionary<string, string>()
             {
-                ["Configuration"] = settings.Type == BuildType.Release ? "Release" : "Debug",
+                ["Configuration"] = settingsAndroid.Type == BuildType.Release ? "Release" : "Debug",
                 ["Platform"] = "AnyCPU",
                 ["AndroidSdkDirectory"] = GetAndroidSdkPath(),
                 ["AndroidKeyStore"] = "false",
-                ["AndroidSigningKeyAlias"] = settings.KeyAlias,
-                ["AndroidSigningKeyPass"] = settings.KeyPass,
-                ["AndroidSigningStorePass"] = settings.StorePass,
+                ["AndroidSigningKeyAlias"] = settingsAndroid.KeyAlias,
+                ["AndroidSigningKeyPass"] = settingsAndroid.KeyPass,
+                ["AndroidSigningStorePass"] = settingsAndroid.StorePass,
                 ["OutputPath"] = EditorPaths.AndroidPublishFolderRoot + "/",
                 ["AndroidApplicationLabel"] = buildTypeSettings.ApplicationName,
                 ["PublishTrimmed"] = "true",
                 ["DefineConstants"] = "$(DefineConstants);ANDROID;MOBILE",
                 ["TrimMode"] = "link",
                 ["ApplicationId"] = packageName,
-                ["ApplicationDisplayVersion"] = GetVersion(settings.Version),
-                ["SupportedOSPlatformVersion"] = ((int)settings.MinimumApiLevel).ToString(),
-                ["AndroidTargetSdkVersion"] = ((int)settings.TargetApiLevel).ToString(),
+                ["ApplicationDisplayVersion"] = GetVersion(settingsAndroid.Version),
+                ["SupportedOSPlatformVersion"] = ((int)settingsAndroid.MinimumApiLevel).ToString(),
+                ["AndroidTargetSdkVersion"] = ((int)settingsAndroid.TargetApiLevel).ToString(),
                 ["BuildAndroid"] = "true",
                 ["BUILD_MOBILE"] = "true"
             };
 
             // NOTE: Not sure why do I have to define build type, msbuild should do it by default.
-            if(settings.Type == BuildType.Release)
+            if (settingsAndroid.Type == BuildType.Release)
             {
-                properties["DefineConstants"] = "$(DefineConstants);ANDROID;MOBILE;RELEASE";
+                props["DefineConstants"] = "$(DefineConstants);ANDROID;MOBILE;RELEASE";
             }
             else
             {
-                properties["DefineConstants"] = "$(DefineConstants);ANDROID;MOBILE;DEBUG";
+                props["DefineConstants"] = "$(DefineConstants);ANDROID;MOBILE;DEBUG";
             }
-            return properties;
         }
 
         protected override void OnBeforeBuild()
@@ -73,7 +73,7 @@ namespace Editor.Build
         }
         protected override void OnBuildSuccess()
         {
-            
+
             var settings = GetBuildSettings<AndroidBuildSettings>(PlatformBuild.Android);
             var rootOutputFolder = GetOutputFolder(settings);
             Directory.CreateDirectory(rootOutputFolder);
@@ -149,7 +149,7 @@ namespace Editor.Build
     public class AndroidConsts
     {
         internal const string DEFAULT_APP_NAME = "Application";
-        internal const string DEFAULT_APP_PACKAGE_NAME =$"com.application.company";
+        internal const string DEFAULT_APP_PACKAGE_NAME = $"com.application.company";
         internal const string BUILD_TARGET = "SignAndroidPackage";
         internal const string INSTALL_TARGET = "Install";
         internal const string START_TARGET = "Start";
