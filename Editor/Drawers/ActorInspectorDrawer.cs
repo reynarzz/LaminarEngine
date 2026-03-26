@@ -55,6 +55,7 @@ namespace Editor.Drawers
 
         private static void DrawID(string id, EObject obj)
         {
+            return; // Note: Enable only to debug actors and components ids.
             ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(1, 1, 1, 0.35f));
             ImGui.Indent(EditorGuiFieldsResolver.GetIdentation());
             ImGui.Text(id);

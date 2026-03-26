@@ -4,17 +4,17 @@
   "ComponentsVersion": 1,
   "Actors": [
     {
-      "Name": "Test Editor script",
+      "Name": "Camera",
       "Layer": 0,
       "IsActiveSelf": true,
-      "ID": "4f9b9712-6947-46f9-be66-ec68bd59a63f",
+      "ID": "dbe782cf-c920-4005-90a0-8455dcca322c",
       "ParentID": "00000000-0000-0000-0000-000000000000",
       "Components": [
         {
           "InternalType": "Engine.Transform, Engine",
           "TypeId": "a0a8e468-8126-f549-138c-b26e62da1186",
           "IsEnabled": true,
-          "ID": "ebeb04a7-5524-4ffe-b0f7-4bea17cba0b9",
+          "ID": "4e66294c-4eb3-4dea-a90e-7802ca33c219",
           "Properties": [
             {
               "Name": "LocalPosition",
@@ -25,8 +25,8 @@
                 "Kind": "Vec3",
                 "Value": {
                   "x": 0.0,
-                  "y": -1.1492081,
-                  "z": -3.3586
+                  "y": 0.0,
+                  "z": -10.0
                 }
               }
             },
@@ -62,330 +62,10 @@
           ]
         },
         {
-          "InternalType": "Game.TestScript, Game",
-          "TypeId": "33e4f8e3-e4d5-4605-a4f4-0b9c6392f161",
-          "IsEnabled": true,
-          "ID": "cd85f1d0-419c-4f4f-ba4b-78994e3ac562",
-          "Properties": [
-            {
-              "Name": "InterfaceSera",
-              "Type": "ComplexClass",
-              "InternalType": "Game.TestScript+InterA, Game",
-              "TypeId": "47478514-3aab-d4b4-28bc-d0a3cecede95",
-              "Simple": null,
-              "Class": {
-                "$type": "Engine.Serialization.ComplexClass, Engine",
-                "$value": {
-                  "ClassType": "ComplexClass",
-                  "Properties": [
-                    {
-                      "Name": "a",
-                      "Type": "Int",
-                      "InternalType": "System.Int32, System.Private.CoreLib",
-                      "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
-                      "Simple": {
-                        "Kind": "Int",
-                        "Value": 0
-                      }
-                    },
-                    {
-                      "Name": "Texture",
-                      "Type": "TextureAsset",
-                      "InternalType": "Engine.Texture2D, Engine",
-                      "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
-                      "Simple": null,
-                      "Reference": {
-                        "$type": "Engine.Serialization.ReferenceData, Engine",
-                        "$value": {
-                          "Type": "TextureAsset",
-                          "RefId": "2f779d6a-a4bb-4860-b3d7-9a2ed747698b"
-                        }
-                      }
-                    }
-                  ],
-                  "InternalType": "Game.TestScript+InterA, Game",
-                  "TypeId": "47478514-3aab-d4b4-28bc-d0a3cecede95"
-                }
-              }
-            },
-            {
-              "Name": "_intArrByEnumDictionary",
-              "Type": "ComplexCollection",
-              "InternalType": "System.Collections.Generic.Dictionary`2[[Engine.BlendFactor, Engine],[Game.TestScript+Dclas, Game]], System.Private.CoreLib",
-              "TypeId": "744b50e2-f67e-8723-004e-92960f8fd837",
-              "Simple": null,
-              "Collection": {
-                "$type": "Engine.Serialization.DictionaryClass, Engine",
-                "$value": {
-                  "KeyType": "None",
-                  "ValueType": "None",
-                  "Keys": [
-                    {
-                      "$type": "Engine.Serialization.ComplexClass, Engine",
-                      "ClassType": "Enum",
-                      "Properties": [
-                        {
-                          "Name": "D_K",
-                          "Type": "Enum",
-                          "InternalType": "Engine.BlendFactor, Engine",
-                          "TypeId": "72f9a0bd-5775-a78b-44d5-29ad5b718089",
-                          "Simple": {
-                            "Kind": "Enum",
-                            "Enum": {
-                              "TypeId": "72f9a0bd-5775-a78b-44d5-29ad5b718089",
-                              "EnumInternalType": "Engine.BlendFactor, Engine",
-                              "EnumValue": 3
-                            }
-                          }
-                        }
-                      ],
-                      "InternalType": "Engine.BlendFactor, Engine",
-                      "TypeId": "72f9a0bd-5775-a78b-44d5-29ad5b718089"
-                    }
-                  ],
-                  "Values": [
-                    {
-                      "$type": "Engine.Serialization.ComplexClass, Engine",
-                      "ClassType": "ComplexClass",
-                      "Properties": [
-                        {
-                          "Name": "_intArr",
-                          "Type": "SimpleCollection",
-                          "InternalType": "System.Int32[], System.Private.CoreLib",
-                          "TypeId": "1f7dc9a1-7f79-e7e9-c900-f27c46af0d82",
-                          "Simple": null,
-                          "Collection": {
-                            "$type": "Engine.Serialization.CollectionDataInt, Engine",
-                            "$value": {
-                              "Value": [
-                                -7,
-                                10,
-                                11,
-                                -22,
-                                25
-                              ],
-                              "ItemsType": "Int",
-                              "CollectionType": "Array"
-                            }
-                          }
-                        },
-                        {
-                          "Name": "Actor",
-                          "Type": "Actor",
-                          "InternalType": "Engine.Actor, Engine",
-                          "TypeId": "234a1313-ea9a-edcf-9ca7-bc170f8ee374",
-                          "Simple": null,
-                          "Reference": {
-                            "$type": "Engine.Serialization.ReferenceData, Engine",
-                            "$value": {
-                              "Type": "Actor",
-                              "RefId": "4f9b9712-6947-46f9-be66-ec68bd59a63f"
-                            }
-                          }
-                        },
-                        {
-                          "Name": "Component1",
-                          "Type": "Component",
-                          "InternalType": "Engine.Transform, Engine",
-                          "TypeId": "a0a8e468-8126-f549-138c-b26e62da1186",
-                          "Simple": null,
-                          "Reference": {
-                            "$type": "Engine.Serialization.ReferenceData, Engine",
-                            "$value": {
-                              "Type": "Component",
-                              "RefId": "7b37f51a-b0e2-40b9-b09b-9878542c2c66"
-                            }
-                          }
-                        },
-                        {
-                          "Name": "ComponentList",
-                          "Type": "ReferenceCollection",
-                          "InternalType": "System.Collections.Generic.List`1[[Engine.Component, Engine]], System.Private.CoreLib",
-                          "TypeId": "7db772b5-4e6c-97a7-d3de-9517868c2a92",
-                          "Simple": null,
-                          "Collection": {
-                            "$type": "Engine.Serialization.CollectionReferences, Engine",
-                            "$value": {
-                              "Value": [
-                                {
-                                  "Type": "Component",
-                                  "RefId": "cfdb45c0-a175-4dfc-976f-67142407a78e"
-                                },
-                                {
-                                  "Type": "Component",
-                                  "RefId": "ebeb04a7-5524-4ffe-b0f7-4bea17cba0b9"
-                                }
-                              ],
-                              "ItemsType": [
-                                "Component",
-                                "Component"
-                              ],
-                              "CollectionType": "List"
-                            }
-                          }
-                        },
-                        {
-                          "Name": "ActorList",
-                          "Type": "ReferenceCollection",
-                          "InternalType": "System.Collections.Generic.List`1[[Engine.Actor, Engine]], System.Private.CoreLib",
-                          "TypeId": "3762e8e5-cc7e-72d6-c96d-5ae01fdec2ec",
-                          "Simple": null,
-                          "Collection": {
-                            "$type": "Engine.Serialization.CollectionReferences, Engine",
-                            "$value": {
-                              "Value": [
-                                {
-                                  "Type": "Actor",
-                                  "RefId": "68f91399-4ae2-43d4-8b19-bd1fefc05d2f"
-                                },
-                                {
-                                  "Type": "Actor",
-                                  "RefId": "041d3252-7bdd-4483-a270-04e474a081eb"
-                                }
-                              ],
-                              "ItemsType": [
-                                "Actor",
-                                "Actor"
-                              ],
-                              "CollectionType": "List"
-                            }
-                          }
-                        }
-                      ],
-                      "InternalType": "Game.TestScript+Dclas, Game",
-                      "TypeId": "f5a55fb7-f54d-e5b5-e5f9-7dd7ee841c28"
-                    }
-                  ],
-                  "CollectionType": "Dictionary"
-                }
-              }
-            },
-            {
-              "Name": "_generic",
-              "Type": "ComplexClass",
-              "InternalType": "Game.TestScript+AAA`2[[Engine.Component, Engine],[Engine.Actor, Engine]], Game",
-              "TypeId": "9186abce-4337-a05f-bd3f-dc3f39d5f2c8",
-              "Simple": null,
-              "Class": {
-                "$type": "Engine.Serialization.ComplexClass, Engine",
-                "$value": {
-                  "ClassType": "ComplexClass",
-                  "Properties": [
-                    {
-                      "Name": "TValue1",
-                      "Type": "Component",
-                      "InternalType": "Engine.Component, Engine",
-                      "TypeId": "3e3a868d-c9c8-0090-db9b-4479f8ffe5df",
-                      "Simple": null
-                    },
-                    {
-                      "Name": "TValue2",
-                      "Type": "Actor",
-                      "InternalType": "Engine.Actor, Engine",
-                      "TypeId": "234a1313-ea9a-edcf-9ca7-bc170f8ee374",
-                      "Simple": null
-                    }
-                  ],
-                  "InternalType": "Game.TestScript+AAA`2[[Engine.Component, Engine],[Engine.Actor, Engine]], Game",
-                  "TypeId": "9186abce-4337-a05f-bd3f-dc3f39d5f2c8"
-                }
-              }
-            },
-            {
-              "Name": "_actor",
-              "Type": "Actor",
-              "InternalType": "Engine.Actor, Engine",
-              "TypeId": "234a1313-ea9a-edcf-9ca7-bc170f8ee374",
-              "Simple": null
-            },
-            {
-              "Name": "_actor2",
-              "Type": "Actor",
-              "InternalType": "Engine.Actor, Engine",
-              "TypeId": "234a1313-ea9a-edcf-9ca7-bc170f8ee374",
-              "Simple": null
-            },
-            {
-              "Name": "_component1",
-              "Type": "Component",
-              "InternalType": "Engine.Component, Engine",
-              "TypeId": "3e3a868d-c9c8-0090-db9b-4479f8ffe5df",
-              "Simple": null
-            },
-            {
-              "Name": "_renderer",
-              "Type": "Component",
-              "InternalType": "Engine.SpriteRenderer, Engine",
-              "TypeId": "8a8ec899-a0c0-d9bb-e76a-d118eac28eb0",
-              "Simple": null
-            },
-            {
-              "Name": "_componentsArr",
-              "Type": "ReferenceCollection",
-              "InternalType": "Engine.Component[], Engine",
-              "TypeId": "3d1e2a29-ce8d-a3ff-7801-548a55738d66",
-              "Simple": null,
-              "Collection": {
-                "$type": "Engine.Serialization.CollectionReferences, Engine",
-                "$value": {
-                  "Value": [],
-                  "ItemsType": [],
-                  "CollectionType": "Array"
-                }
-              }
-            },
-            {
-              "Name": "_componentsList",
-              "Type": "ReferenceCollection",
-              "InternalType": "System.Collections.Generic.List`1[[Engine.Component, Engine]], System.Private.CoreLib",
-              "TypeId": "7db772b5-4e6c-97a7-d3de-9517868c2a92",
-              "Simple": null,
-              "Collection": {
-                "$type": "Engine.Serialization.CollectionReferences, Engine",
-                "$value": {
-                  "Value": [],
-                  "ItemsType": [],
-                  "CollectionType": "List"
-                }
-              }
-            },
-            {
-              "Name": "_actorsList",
-              "Type": "ComplexCollection",
-              "InternalType": "System.Collections.Generic.List`1[[Game.TestScript+AAA`3[[Engine.Component, Engine],[Engine.Actor, Engine],[System.String, System.Private.CoreLib]], Game]], System.Private.CoreLib",
-              "TypeId": "c5bd959a-4e1f-87bd-ce98-8a2b585d0997",
-              "Simple": null,
-              "Collection": {
-                "$type": "Engine.Serialization.CollectionClasses, Engine",
-                "$value": {
-                  "Value": [],
-                  "ItemsType": "None",
-                  "CollectionType": "List"
-                }
-              }
-            },
-            {
-              "Name": "_actorsArr",
-              "Type": "ReferenceCollection",
-              "InternalType": "Engine.Actor[], Engine",
-              "TypeId": "5829741e-5415-c784-026e-0021793585e4",
-              "Simple": null,
-              "Collection": {
-                "$type": "Engine.Serialization.CollectionReferences, Engine",
-                "$value": {
-                  "Value": [],
-                  "ItemsType": [],
-                  "CollectionType": "Array"
-                }
-              }
-            }
-          ]
-        },
-        {
           "InternalType": "Engine.Camera, Engine",
           "TypeId": "88f9aeee-7111-6981-1770-6e2b74c8ffb4",
           "IsEnabled": true,
-          "ID": "089c5449-48b6-411f-a6a3-cecddd5656ce",
+          "ID": "3932ea46-d29b-44e9-8141-6732abce742a",
           "Properties": [
             {
               "Name": "BackgroundColor",
@@ -395,9 +75,9 @@
               "Simple": {
                 "Kind": "Color",
                 "Value": {
-                  "R": 0.37167242,
-                  "G": 0.4470588,
-                  "B": 0.41069597,
+                  "R": 0.19215687,
+                  "G": 0.3019608,
+                  "B": 0.4745098,
                   "A": 1.0
                 }
               }
@@ -423,7 +103,7 @@
               "TypeId": "8bb080fb-0417-4cec-2ad6-a37e93d2bde3",
               "Simple": {
                 "Kind": "Float",
-                "Value": 60.8
+                "Value": 60.0
               }
             },
             {
@@ -433,7 +113,7 @@
               "TypeId": "8bb080fb-0417-4cec-2ad6-a37e93d2bde3",
               "Simple": {
                 "Kind": "Float",
-                "Value": 18.4
+                "Value": 31.4
               }
             },
             {
@@ -485,292 +165,6 @@
                   "y": 0.0,
                   "z": 1.0,
                   "w": 1.0
-                }
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "Name": "pixel-ui_slot",
-      "Layer": 0,
-      "IsActiveSelf": true,
-      "ID": "68f91399-4ae2-43d4-8b19-bd1fefc05d2f",
-      "ParentID": "4f9b9712-6947-46f9-be66-ec68bd59a63f",
-      "Components": [
-        {
-          "InternalType": "Engine.Transform, Engine",
-          "TypeId": "a0a8e468-8126-f549-138c-b26e62da1186",
-          "IsEnabled": true,
-          "ID": "7b37f51a-b0e2-40b9-b09b-9878542c2c66",
-          "Properties": [
-            {
-              "Name": "LocalPosition",
-              "Type": "Vec3",
-              "InternalType": "GlmNet.vec3, Engine",
-              "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
-              "Simple": {
-                "Kind": "Vec3",
-                "Value": {
-                  "x": 0.0,
-                  "y": 0.0,
-                  "z": 0.0
-                }
-              }
-            },
-            {
-              "Name": "LocalRotation",
-              "Type": "Quat",
-              "InternalType": "GlmNet.quat, Engine",
-              "TypeId": "bd9d317e-0216-6052-93b0-a68d64e1c1a1",
-              "Simple": {
-                "Kind": "Quat",
-                "Value": {
-                  "x": 0.0,
-                  "y": 0.0,
-                  "z": 0.0,
-                  "w": 1.0
-                }
-              }
-            },
-            {
-              "Name": "LocalScale",
-              "Type": "Vec3",
-              "InternalType": "GlmNet.vec3, Engine",
-              "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
-              "Simple": {
-                "Kind": "Vec3",
-                "Value": {
-                  "x": 1.0,
-                  "y": 1.0,
-                  "z": 1.0
-                }
-              }
-            }
-          ]
-        },
-        {
-          "InternalType": "Engine.SpriteRenderer, Engine",
-          "TypeId": "8a8ec899-a0c0-d9bb-e76a-d118eac28eb0",
-          "IsEnabled": true,
-          "ID": "d140be10-f2df-4fe8-a843-0f2b00b92224",
-          "Properties": [
-            {
-              "Name": "SortOrder",
-              "Type": "Int",
-              "InternalType": "System.Int32, System.Private.CoreLib",
-              "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
-              "Simple": {
-                "Kind": "Int",
-                "Value": 0
-              }
-            },
-            {
-              "Name": "Color",
-              "Type": "Color",
-              "InternalType": "Engine.Color, Engine",
-              "TypeId": "8b690ecd-d4a6-1ad0-33be-76887ab30172",
-              "Simple": {
-                "Kind": "Color",
-                "Value": {
-                  "R": 1.0,
-                  "G": 1.0,
-                  "B": 1.0,
-                  "A": 1.0
-                }
-              }
-            },
-            {
-              "Name": "FlipX",
-              "Type": "Bool",
-              "InternalType": "System.Boolean, System.Private.CoreLib",
-              "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
-              "Simple": {
-                "Kind": "Bool",
-                "Value": false
-              }
-            },
-            {
-              "Name": "FlipY",
-              "Type": "Bool",
-              "InternalType": "System.Boolean, System.Private.CoreLib",
-              "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
-              "Simple": {
-                "Kind": "Bool",
-                "Value": false
-              }
-            },
-            {
-              "Name": "Sprite",
-              "Type": "SpriteAsset",
-              "InternalType": "Engine.Sprite, Engine",
-              "TypeId": "8b10d6e4-cc00-3d5a-8210-c8fd378f2f1a",
-              "Simple": null,
-              "Reference": {
-                "$type": "Engine.Serialization.SpriteReferenceData, Engine",
-                "$value": {
-                  "AtlasIndex": 0,
-                  "TexRefId": "e262c230-ecc4-432e-bba0-3f72c89b186d",
-                  "Type": "SpriteAsset",
-                  "RefId": "e262c230-ecc4-432e-bba0-3f72c89b186d"
-                }
-              }
-            },
-            {
-              "Name": "Material",
-              "Type": "MaterialAsset",
-              "InternalType": "Engine.Material, Engine",
-              "TypeId": "6d303096-cf4b-322c-c9c9-a5b025e553d7",
-              "Simple": null,
-              "Reference": {
-                "$type": "Engine.Serialization.ReferenceData, Engine",
-                "$value": {
-                  "Type": "MaterialAsset",
-                  "RefId": "37ac14f4-9425-4ec2-8f6d-18b11a5c6ea2"
-                }
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "Name": "eInteract3",
-      "Layer": 0,
-      "IsActiveSelf": true,
-      "ID": "041d3252-7bdd-4483-a270-04e474a081eb",
-      "ParentID": "4f9b9712-6947-46f9-be66-ec68bd59a63f",
-      "Components": [
-        {
-          "InternalType": "Engine.Transform, Engine",
-          "TypeId": "a0a8e468-8126-f549-138c-b26e62da1186",
-          "IsEnabled": true,
-          "ID": "cfdb45c0-a175-4dfc-976f-67142407a78e",
-          "Properties": [
-            {
-              "Name": "LocalPosition",
-              "Type": "Vec3",
-              "InternalType": "GlmNet.vec3, Engine",
-              "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
-              "Simple": {
-                "Kind": "Vec3",
-                "Value": {
-                  "x": 0.0,
-                  "y": 0.0,
-                  "z": 0.0
-                }
-              }
-            },
-            {
-              "Name": "LocalRotation",
-              "Type": "Quat",
-              "InternalType": "GlmNet.quat, Engine",
-              "TypeId": "bd9d317e-0216-6052-93b0-a68d64e1c1a1",
-              "Simple": {
-                "Kind": "Quat",
-                "Value": {
-                  "x": 0.0,
-                  "y": 0.0,
-                  "z": 0.0,
-                  "w": 1.0
-                }
-              }
-            },
-            {
-              "Name": "LocalScale",
-              "Type": "Vec3",
-              "InternalType": "GlmNet.vec3, Engine",
-              "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
-              "Simple": {
-                "Kind": "Vec3",
-                "Value": {
-                  "x": 1.0,
-                  "y": 1.0,
-                  "z": 1.0
-                }
-              }
-            }
-          ]
-        },
-        {
-          "InternalType": "Engine.SpriteRenderer, Engine",
-          "TypeId": "8a8ec899-a0c0-d9bb-e76a-d118eac28eb0",
-          "IsEnabled": true,
-          "ID": "2c13d80d-d1d0-4764-937e-04334d9c1191",
-          "Properties": [
-            {
-              "Name": "SortOrder",
-              "Type": "Int",
-              "InternalType": "System.Int32, System.Private.CoreLib",
-              "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
-              "Simple": {
-                "Kind": "Int",
-                "Value": 0
-              }
-            },
-            {
-              "Name": "Color",
-              "Type": "Color",
-              "InternalType": "Engine.Color, Engine",
-              "TypeId": "8b690ecd-d4a6-1ad0-33be-76887ab30172",
-              "Simple": {
-                "Kind": "Color",
-                "Value": {
-                  "R": 1.0,
-                  "G": 1.0,
-                  "B": 1.0,
-                  "A": 1.0
-                }
-              }
-            },
-            {
-              "Name": "FlipX",
-              "Type": "Bool",
-              "InternalType": "System.Boolean, System.Private.CoreLib",
-              "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
-              "Simple": {
-                "Kind": "Bool",
-                "Value": false
-              }
-            },
-            {
-              "Name": "FlipY",
-              "Type": "Bool",
-              "InternalType": "System.Boolean, System.Private.CoreLib",
-              "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
-              "Simple": {
-                "Kind": "Bool",
-                "Value": false
-              }
-            },
-            {
-              "Name": "Sprite",
-              "Type": "SpriteAsset",
-              "InternalType": "Engine.Sprite, Engine",
-              "TypeId": "8b10d6e4-cc00-3d5a-8210-c8fd378f2f1a",
-              "Simple": null,
-              "Reference": {
-                "$type": "Engine.Serialization.SpriteReferenceData, Engine",
-                "$value": {
-                  "AtlasIndex": 0,
-                  "TexRefId": "bbfe6f19-76a8-4c1a-afcc-4b737f1c90dc",
-                  "Type": "SpriteAsset",
-                  "RefId": "bbfe6f19-76a8-4c1a-afcc-4b737f1c90dc"
-                }
-              }
-            },
-            {
-              "Name": "Material",
-              "Type": "MaterialAsset",
-              "InternalType": "Engine.Material, Engine",
-              "TypeId": "6d303096-cf4b-322c-c9c9-a5b025e553d7",
-              "Simple": null,
-              "Reference": {
-                "$type": "Engine.Serialization.ReferenceData, Engine",
-                "$value": {
-                  "Type": "MaterialAsset",
-                  "RefId": "37ac14f4-9425-4ec2-8f6d-18b11a5c6ea2"
                 }
               }
             }
@@ -1588,6 +982,672 @@
               "Simple": {
                 "Kind": "ULong",
                 "Value": "42"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Name": "Test Editor script",
+      "Layer": 0,
+      "IsActiveSelf": true,
+      "ID": "453b523e-1841-4a4f-a035-d3b100054cac",
+      "ParentID": "00000000-0000-0000-0000-000000000000",
+      "Components": [
+        {
+          "InternalType": "Engine.Transform, Engine",
+          "TypeId": "a0a8e468-8126-f549-138c-b26e62da1186",
+          "IsEnabled": true,
+          "ID": "33c31b59-e386-40ed-9c5c-56474a61a0d3",
+          "Properties": [
+            {
+              "Name": "LocalPosition",
+              "Type": "Vec3",
+              "InternalType": "GlmNet.vec3, Engine",
+              "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
+              "Simple": {
+                "Kind": "Vec3",
+                "Value": {
+                  "x": 0.0,
+                  "y": -4.9643345,
+                  "z": 0.0
+                }
+              }
+            },
+            {
+              "Name": "LocalRotation",
+              "Type": "Quat",
+              "InternalType": "GlmNet.quat, Engine",
+              "TypeId": "bd9d317e-0216-6052-93b0-a68d64e1c1a1",
+              "Simple": {
+                "Kind": "Quat",
+                "Value": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0,
+                  "w": 1.0
+                }
+              }
+            },
+            {
+              "Name": "LocalScale",
+              "Type": "Vec3",
+              "InternalType": "GlmNet.vec3, Engine",
+              "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
+              "Simple": {
+                "Kind": "Vec3",
+                "Value": {
+                  "x": 1.0,
+                  "y": 1.0,
+                  "z": 1.0
+                }
+              }
+            }
+          ]
+        },
+        {
+          "InternalType": "Game.TestScript, Game",
+          "TypeId": "33e4f8e3-e4d5-4605-a4f4-0b9c6392f161",
+          "IsEnabled": true,
+          "ID": "bb5d0503-7402-4a24-9f09-da09c4b84f59",
+          "Properties": [
+            {
+              "Name": "InterfaceSera",
+              "Type": "ComplexClass",
+              "InternalType": "Game.TestScript+InterA, Game",
+              "TypeId": "47478514-3aab-d4b4-28bc-d0a3cecede95",
+              "Simple": null,
+              "Class": {
+                "$type": "Engine.Serialization.ComplexClass, Engine",
+                "$value": {
+                  "ClassType": "ComplexClass",
+                  "Properties": [
+                    {
+                      "Name": "a",
+                      "Type": "Int",
+                      "InternalType": "System.Int32, System.Private.CoreLib",
+                      "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
+                      "Simple": {
+                        "Kind": "Int",
+                        "Value": 0
+                      }
+                    },
+                    {
+                      "Name": "Texture",
+                      "Type": "TextureAsset",
+                      "InternalType": "Engine.Texture2D, Engine",
+                      "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
+                      "Simple": null,
+                      "Reference": {
+                        "$type": "Engine.Serialization.ReferenceData, Engine",
+                        "$value": {
+                          "Type": "TextureAsset",
+                          "RefId": "2f779d6a-a4bb-4860-b3d7-9a2ed747698b"
+                        }
+                      }
+                    }
+                  ],
+                  "InternalType": "Game.TestScript+InterA, Game",
+                  "TypeId": "47478514-3aab-d4b4-28bc-d0a3cecede95"
+                }
+              }
+            },
+            {
+              "Name": "_intArrByEnumDictionary",
+              "Type": "ComplexCollection",
+              "InternalType": "System.Collections.Generic.Dictionary`2[[Engine.BlendFactor, Engine],[Game.TestScript+Dclas, Game]], System.Private.CoreLib",
+              "TypeId": "744b50e2-f67e-8723-004e-92960f8fd837",
+              "Simple": null,
+              "Collection": {
+                "$type": "Engine.Serialization.DictionaryClass, Engine",
+                "$value": {
+                  "KeyType": "None",
+                  "ValueType": "None",
+                  "Keys": [
+                    {
+                      "$type": "Engine.Serialization.ComplexClass, Engine",
+                      "ClassType": "Enum",
+                      "Properties": [
+                        {
+                          "Name": "D_K",
+                          "Type": "Enum",
+                          "InternalType": "Engine.BlendFactor, Engine",
+                          "TypeId": "72f9a0bd-5775-a78b-44d5-29ad5b718089",
+                          "Simple": {
+                            "Kind": "Enum",
+                            "Enum": {
+                              "TypeId": "72f9a0bd-5775-a78b-44d5-29ad5b718089",
+                              "EnumInternalType": "Engine.BlendFactor, Engine",
+                              "EnumValue": 3
+                            }
+                          }
+                        }
+                      ],
+                      "InternalType": "Engine.BlendFactor, Engine",
+                      "TypeId": "72f9a0bd-5775-a78b-44d5-29ad5b718089"
+                    }
+                  ],
+                  "Values": [
+                    {
+                      "$type": "Engine.Serialization.ComplexClass, Engine",
+                      "ClassType": "ComplexClass",
+                      "Properties": [
+                        {
+                          "Name": "_intArr",
+                          "Type": "SimpleCollection",
+                          "InternalType": "System.Int32[], System.Private.CoreLib",
+                          "TypeId": "1f7dc9a1-7f79-e7e9-c900-f27c46af0d82",
+                          "Simple": null,
+                          "Collection": {
+                            "$type": "Engine.Serialization.CollectionDataInt, Engine",
+                            "$value": {
+                              "Value": [
+                                -7,
+                                10,
+                                11,
+                                -22,
+                                25
+                              ],
+                              "ItemsType": "Int",
+                              "CollectionType": "Array"
+                            }
+                          }
+                        },
+                        {
+                          "Name": "Actor",
+                          "Type": "Actor",
+                          "InternalType": "Engine.Actor, Engine",
+                          "TypeId": "234a1313-ea9a-edcf-9ca7-bc170f8ee374",
+                          "Simple": null,
+                          "Reference": {
+                            "$type": "Engine.Serialization.ReferenceData, Engine",
+                            "$value": {
+                              "Type": "Actor",
+                              "RefId": "453b523e-1841-4a4f-a035-d3b100054cac"
+                            }
+                          }
+                        },
+                        {
+                          "Name": "Component1",
+                          "Type": "Component",
+                          "InternalType": "Engine.Transform, Engine",
+                          "TypeId": "a0a8e468-8126-f549-138c-b26e62da1186",
+                          "Simple": null,
+                          "Reference": {
+                            "$type": "Engine.Serialization.ReferenceData, Engine",
+                            "$value": {
+                              "Type": "Component",
+                              "RefId": "416c04de-0928-4286-80db-57a014391ddf"
+                            }
+                          }
+                        },
+                        {
+                          "Name": "ComponentList",
+                          "Type": "ReferenceCollection",
+                          "InternalType": "System.Collections.Generic.List`1[[Engine.Component, Engine]], System.Private.CoreLib",
+                          "TypeId": "7db772b5-4e6c-97a7-d3de-9517868c2a92",
+                          "Simple": null,
+                          "Collection": {
+                            "$type": "Engine.Serialization.CollectionReferences, Engine",
+                            "$value": {
+                              "Value": [
+                                {
+                                  "Type": "Component",
+                                  "RefId": "31009bf5-0ed9-4036-a2a6-f20c52aa703c"
+                                },
+                                {
+                                  "Type": "Component",
+                                  "RefId": "33c31b59-e386-40ed-9c5c-56474a61a0d3"
+                                }
+                              ],
+                              "ItemsType": [
+                                "Component",
+                                "Component"
+                              ],
+                              "CollectionType": "List"
+                            }
+                          }
+                        },
+                        {
+                          "Name": "ActorList",
+                          "Type": "ReferenceCollection",
+                          "InternalType": "System.Collections.Generic.List`1[[Engine.Actor, Engine]], System.Private.CoreLib",
+                          "TypeId": "3762e8e5-cc7e-72d6-c96d-5ae01fdec2ec",
+                          "Simple": null,
+                          "Collection": {
+                            "$type": "Engine.Serialization.CollectionReferences, Engine",
+                            "$value": {
+                              "Value": [
+                                {
+                                  "Type": "Actor",
+                                  "RefId": "8994cd52-ac46-4fac-a0dc-d2160ae6d149"
+                                },
+                                {
+                                  "Type": "Actor",
+                                  "RefId": "b5a6098b-9514-4961-a268-5efe73e4bc26"
+                                }
+                              ],
+                              "ItemsType": [
+                                "Actor",
+                                "Actor"
+                              ],
+                              "CollectionType": "List"
+                            }
+                          }
+                        }
+                      ],
+                      "InternalType": "Game.TestScript+Dclas, Game",
+                      "TypeId": "f5a55fb7-f54d-e5b5-e5f9-7dd7ee841c28"
+                    }
+                  ],
+                  "CollectionType": "Dictionary"
+                }
+              }
+            },
+            {
+              "Name": "_generic",
+              "Type": "ComplexClass",
+              "InternalType": "Game.TestScript+AAA`2[[Engine.Component, Engine],[Engine.Actor, Engine]], Game",
+              "TypeId": "9186abce-4337-a05f-bd3f-dc3f39d5f2c8",
+              "Simple": null,
+              "Class": {
+                "$type": "Engine.Serialization.ComplexClass, Engine",
+                "$value": {
+                  "ClassType": "ComplexClass",
+                  "Properties": [
+                    {
+                      "Name": "TValue1",
+                      "Type": "Component",
+                      "InternalType": "Engine.Component, Engine",
+                      "TypeId": "3e3a868d-c9c8-0090-db9b-4479f8ffe5df",
+                      "Simple": null
+                    },
+                    {
+                      "Name": "TValue2",
+                      "Type": "Actor",
+                      "InternalType": "Engine.Actor, Engine",
+                      "TypeId": "234a1313-ea9a-edcf-9ca7-bc170f8ee374",
+                      "Simple": null
+                    }
+                  ],
+                  "InternalType": "Game.TestScript+AAA`2[[Engine.Component, Engine],[Engine.Actor, Engine]], Game",
+                  "TypeId": "9186abce-4337-a05f-bd3f-dc3f39d5f2c8"
+                }
+              }
+            },
+            {
+              "Name": "_actor",
+              "Type": "Actor",
+              "InternalType": "Engine.Actor, Engine",
+              "TypeId": "234a1313-ea9a-edcf-9ca7-bc170f8ee374",
+              "Simple": null
+            },
+            {
+              "Name": "_actor2",
+              "Type": "Actor",
+              "InternalType": "Engine.Actor, Engine",
+              "TypeId": "234a1313-ea9a-edcf-9ca7-bc170f8ee374",
+              "Simple": null
+            },
+            {
+              "Name": "_component1",
+              "Type": "Component",
+              "InternalType": "Engine.Component, Engine",
+              "TypeId": "3e3a868d-c9c8-0090-db9b-4479f8ffe5df",
+              "Simple": null
+            },
+            {
+              "Name": "_renderer",
+              "Type": "Component",
+              "InternalType": "Engine.SpriteRenderer, Engine",
+              "TypeId": "8a8ec899-a0c0-d9bb-e76a-d118eac28eb0",
+              "Simple": null
+            },
+            {
+              "Name": "_componentsArr",
+              "Type": "ReferenceCollection",
+              "InternalType": "Engine.Component[], Engine",
+              "TypeId": "3d1e2a29-ce8d-a3ff-7801-548a55738d66",
+              "Simple": null,
+              "Collection": {
+                "$type": "Engine.Serialization.CollectionReferences, Engine",
+                "$value": {
+                  "Value": [],
+                  "ItemsType": [],
+                  "CollectionType": "Array"
+                }
+              }
+            },
+            {
+              "Name": "_componentsList",
+              "Type": "ReferenceCollection",
+              "InternalType": "System.Collections.Generic.List`1[[Engine.Component, Engine]], System.Private.CoreLib",
+              "TypeId": "7db772b5-4e6c-97a7-d3de-9517868c2a92",
+              "Simple": null,
+              "Collection": {
+                "$type": "Engine.Serialization.CollectionReferences, Engine",
+                "$value": {
+                  "Value": [],
+                  "ItemsType": [],
+                  "CollectionType": "List"
+                }
+              }
+            },
+            {
+              "Name": "_actorsList",
+              "Type": "ComplexCollection",
+              "InternalType": "System.Collections.Generic.List`1[[Game.TestScript+AAA`3[[Engine.Component, Engine],[Engine.Actor, Engine],[System.String, System.Private.CoreLib]], Game]], System.Private.CoreLib",
+              "TypeId": "c5bd959a-4e1f-87bd-ce98-8a2b585d0997",
+              "Simple": null,
+              "Collection": {
+                "$type": "Engine.Serialization.CollectionClasses, Engine",
+                "$value": {
+                  "Value": [],
+                  "ItemsType": "None",
+                  "CollectionType": "List"
+                }
+              }
+            },
+            {
+              "Name": "_actorsArr",
+              "Type": "ReferenceCollection",
+              "InternalType": "Engine.Actor[], Engine",
+              "TypeId": "5829741e-5415-c784-026e-0021793585e4",
+              "Simple": null,
+              "Collection": {
+                "$type": "Engine.Serialization.CollectionReferences, Engine",
+                "$value": {
+                  "Value": [],
+                  "ItemsType": [],
+                  "CollectionType": "Array"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Name": "pixel-ui_slot",
+      "Layer": 0,
+      "IsActiveSelf": true,
+      "ID": "8994cd52-ac46-4fac-a0dc-d2160ae6d149",
+      "ParentID": "453b523e-1841-4a4f-a035-d3b100054cac",
+      "Components": [
+        {
+          "InternalType": "Engine.Transform, Engine",
+          "TypeId": "a0a8e468-8126-f549-138c-b26e62da1186",
+          "IsEnabled": true,
+          "ID": "416c04de-0928-4286-80db-57a014391ddf",
+          "Properties": [
+            {
+              "Name": "LocalPosition",
+              "Type": "Vec3",
+              "InternalType": "GlmNet.vec3, Engine",
+              "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
+              "Simple": {
+                "Kind": "Vec3",
+                "Value": {
+                  "x": 0.0,
+                  "y": 0.5059571,
+                  "z": 0.0
+                }
+              }
+            },
+            {
+              "Name": "LocalRotation",
+              "Type": "Quat",
+              "InternalType": "GlmNet.quat, Engine",
+              "TypeId": "bd9d317e-0216-6052-93b0-a68d64e1c1a1",
+              "Simple": {
+                "Kind": "Quat",
+                "Value": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0,
+                  "w": 1.0
+                }
+              }
+            },
+            {
+              "Name": "LocalScale",
+              "Type": "Vec3",
+              "InternalType": "GlmNet.vec3, Engine",
+              "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
+              "Simple": {
+                "Kind": "Vec3",
+                "Value": {
+                  "x": 1.0,
+                  "y": 1.0,
+                  "z": 1.0
+                }
+              }
+            }
+          ]
+        },
+        {
+          "InternalType": "Engine.SpriteRenderer, Engine",
+          "TypeId": "8a8ec899-a0c0-d9bb-e76a-d118eac28eb0",
+          "IsEnabled": true,
+          "ID": "5d22e096-6133-405e-b2fb-89a708307a3d",
+          "Properties": [
+            {
+              "Name": "SortOrder",
+              "Type": "Int",
+              "InternalType": "System.Int32, System.Private.CoreLib",
+              "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
+              "Simple": {
+                "Kind": "Int",
+                "Value": 0
+              }
+            },
+            {
+              "Name": "Color",
+              "Type": "Color",
+              "InternalType": "Engine.Color, Engine",
+              "TypeId": "8b690ecd-d4a6-1ad0-33be-76887ab30172",
+              "Simple": {
+                "Kind": "Color",
+                "Value": {
+                  "R": 1.0,
+                  "G": 1.0,
+                  "B": 1.0,
+                  "A": 1.0
+                }
+              }
+            },
+            {
+              "Name": "FlipX",
+              "Type": "Bool",
+              "InternalType": "System.Boolean, System.Private.CoreLib",
+              "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+              "Simple": {
+                "Kind": "Bool",
+                "Value": false
+              }
+            },
+            {
+              "Name": "FlipY",
+              "Type": "Bool",
+              "InternalType": "System.Boolean, System.Private.CoreLib",
+              "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+              "Simple": {
+                "Kind": "Bool",
+                "Value": false
+              }
+            },
+            {
+              "Name": "Sprite",
+              "Type": "SpriteAsset",
+              "InternalType": "Engine.Sprite, Engine",
+              "TypeId": "8b10d6e4-cc00-3d5a-8210-c8fd378f2f1a",
+              "Simple": null,
+              "Reference": {
+                "$type": "Engine.Serialization.SpriteReferenceData, Engine",
+                "$value": {
+                  "AtlasIndex": 0,
+                  "TexRefId": "e262c230-ecc4-432e-bba0-3f72c89b186d",
+                  "Type": "SpriteAsset",
+                  "RefId": "e262c230-ecc4-432e-bba0-3f72c89b186d"
+                }
+              }
+            },
+            {
+              "Name": "Material",
+              "Type": "MaterialAsset",
+              "InternalType": "Engine.Material, Engine",
+              "TypeId": "6d303096-cf4b-322c-c9c9-a5b025e553d7",
+              "Simple": null,
+              "Reference": {
+                "$type": "Engine.Serialization.ReferenceData, Engine",
+                "$value": {
+                  "Type": "MaterialAsset",
+                  "RefId": "37ac14f4-9425-4ec2-8f6d-18b11a5c6ea2"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Name": "eInteract3",
+      "Layer": 0,
+      "IsActiveSelf": true,
+      "ID": "b5a6098b-9514-4961-a268-5efe73e4bc26",
+      "ParentID": "453b523e-1841-4a4f-a035-d3b100054cac",
+      "Components": [
+        {
+          "InternalType": "Engine.Transform, Engine",
+          "TypeId": "a0a8e468-8126-f549-138c-b26e62da1186",
+          "IsEnabled": true,
+          "ID": "31009bf5-0ed9-4036-a2a6-f20c52aa703c",
+          "Properties": [
+            {
+              "Name": "LocalPosition",
+              "Type": "Vec3",
+              "InternalType": "GlmNet.vec3, Engine",
+              "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
+              "Simple": {
+                "Kind": "Vec3",
+                "Value": {
+                  "x": 0.0,
+                  "y": -0.17674685,
+                  "z": 0.0
+                }
+              }
+            },
+            {
+              "Name": "LocalRotation",
+              "Type": "Quat",
+              "InternalType": "GlmNet.quat, Engine",
+              "TypeId": "bd9d317e-0216-6052-93b0-a68d64e1c1a1",
+              "Simple": {
+                "Kind": "Quat",
+                "Value": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0,
+                  "w": 1.0
+                }
+              }
+            },
+            {
+              "Name": "LocalScale",
+              "Type": "Vec3",
+              "InternalType": "GlmNet.vec3, Engine",
+              "TypeId": "024a3e2b-7d51-249d-b61e-d85a451344b4",
+              "Simple": {
+                "Kind": "Vec3",
+                "Value": {
+                  "x": 1.0,
+                  "y": 1.0,
+                  "z": 1.0
+                }
+              }
+            }
+          ]
+        },
+        {
+          "InternalType": "Engine.SpriteRenderer, Engine",
+          "TypeId": "8a8ec899-a0c0-d9bb-e76a-d118eac28eb0",
+          "IsEnabled": true,
+          "ID": "bb8e6409-701d-47ec-901f-d3cde14b03fc",
+          "Properties": [
+            {
+              "Name": "SortOrder",
+              "Type": "Int",
+              "InternalType": "System.Int32, System.Private.CoreLib",
+              "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
+              "Simple": {
+                "Kind": "Int",
+                "Value": 0
+              }
+            },
+            {
+              "Name": "Color",
+              "Type": "Color",
+              "InternalType": "Engine.Color, Engine",
+              "TypeId": "8b690ecd-d4a6-1ad0-33be-76887ab30172",
+              "Simple": {
+                "Kind": "Color",
+                "Value": {
+                  "R": 1.0,
+                  "G": 1.0,
+                  "B": 1.0,
+                  "A": 1.0
+                }
+              }
+            },
+            {
+              "Name": "FlipX",
+              "Type": "Bool",
+              "InternalType": "System.Boolean, System.Private.CoreLib",
+              "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+              "Simple": {
+                "Kind": "Bool",
+                "Value": false
+              }
+            },
+            {
+              "Name": "FlipY",
+              "Type": "Bool",
+              "InternalType": "System.Boolean, System.Private.CoreLib",
+              "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+              "Simple": {
+                "Kind": "Bool",
+                "Value": false
+              }
+            },
+            {
+              "Name": "Sprite",
+              "Type": "SpriteAsset",
+              "InternalType": "Engine.Sprite, Engine",
+              "TypeId": "8b10d6e4-cc00-3d5a-8210-c8fd378f2f1a",
+              "Simple": null,
+              "Reference": {
+                "$type": "Engine.Serialization.SpriteReferenceData, Engine",
+                "$value": {
+                  "AtlasIndex": 0,
+                  "TexRefId": "bbfe6f19-76a8-4c1a-afcc-4b737f1c90dc",
+                  "Type": "SpriteAsset",
+                  "RefId": "bbfe6f19-76a8-4c1a-afcc-4b737f1c90dc"
+                }
+              }
+            },
+            {
+              "Name": "Material",
+              "Type": "MaterialAsset",
+              "InternalType": "Engine.Material, Engine",
+              "TypeId": "6d303096-cf4b-322c-c9c9-a5b025e553d7",
+              "Simple": null,
+              "Reference": {
+                "$type": "Engine.Serialization.ReferenceData, Engine",
+                "$value": {
+                  "Type": "MaterialAsset",
+                  "RefId": "37ac14f4-9425-4ec2-8f6d-18b11a5c6ea2"
+                }
               }
             }
           ]
