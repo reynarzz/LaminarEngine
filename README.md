@@ -1,8 +1,10 @@
 # Laminar Engine
 
 <p align="center">
-  <img src="engine preview.png" alt="preview">
-  <img src="Engine.gif" alt="Gameplay">
+  <div style="position: relative; display: inline-block;">
+    <img src="engine preview.png" alt="preview">
+    <img src="Engine.gif" alt="Gameplay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+  </div>
 </p>
 
 Laminar Engine is a 2D/3D video game engine built entirely from scratch with **C#**, inspired by the **Unity C# API**.
