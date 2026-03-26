@@ -54,7 +54,7 @@ namespace Engine
                 try
                 {
                     index = Mathf.Max(0, index);
-                    var defaultSprite = _sprites[index];
+                    var defaultSprite = _sprites.Count <= index ? null : _sprites[index];
 
                     if (defaultSprite == null)
                     {
