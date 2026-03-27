@@ -271,6 +271,7 @@ namespace Engine.Serialization
                 Deserializer.DeserializeTarget(componentValue.value, componentValue.data.Properties, deserializerData);
             }
 
+            // TODO: This should be inside the Actor class.
             if (Application.IsInPlayMode)
             {
                 for (int i = 0; i < _initializationComponents.Count; i++)
