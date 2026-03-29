@@ -30,7 +30,7 @@ namespace Editor.Build
                 }
             }
 
-            var androidSettings = EditorDataManager.BuildSettings.GetBuildSettings(PlatformBuild.Android) as AndroidBuildSettings;
+            var androidSettings = EditorProjectDataManager.BuildSettings.GetBuildSettings(PlatformBuild.Android) as AndroidBuildSettings;
 
             if (androidSettings.RunAfterBuild)
             {

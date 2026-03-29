@@ -15,7 +15,7 @@ namespace Editor.Build
         {
             Debug.Log("Trying to install to device.");
 
-            var settings = EditorDataManager.BuildSettings.GetBuildSettings(PlatformBuild.Android) as AndroidBuildSettings;
+            var settings = EditorProjectDataManager.BuildSettings.GetBuildSettings(PlatformBuild.Android) as AndroidBuildSettings;
             var current = settings.GetCurrentBuildTypeSettings();
 
             var rootFolder = AndroidShipBuildStage.GetOutputFolder(settings);

@@ -19,7 +19,7 @@ namespace Editor.Build
 
         protected override CookData OnBeforeBuild()
         {
-            var settings = EditorDataManager.BuildSettings.GetBuildSettings(PlatformBuild.Android) as AndroidBuildSettings;
+            var settings = EditorProjectDataManager.BuildSettings.GetBuildSettings(PlatformBuild.Android) as AndroidBuildSettings;
             var buildTypeSettings = settings.GetCurrentBuildTypeSettings();
 
             return new()

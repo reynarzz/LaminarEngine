@@ -79,7 +79,7 @@ namespace Editor.Build
 
         protected PlatformBuildSettings GetBuildSettings(PlatformBuild platform)
         {
-            return EditorDataManager.BuildSettings.GetBuildSettings(platform);
+            return EditorProjectDataManager.BuildSettings.GetBuildSettings(platform);
         }
     }
 }

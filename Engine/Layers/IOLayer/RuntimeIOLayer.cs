@@ -10,7 +10,7 @@ namespace Engine.Layers
 {
     internal class RuntimeIOLayer : IOLayer
     {
-        public override Task InitializeAsync()
+        public override Task<LayerInitResult> InitializeAsync()
         {
             DiskBase disk = null;
 #if DESKTOP
@@ -42,7 +42,7 @@ namespace Engine.Layers
                 Debug.Error(e);   
             }
 
-            return Task.CompletedTask;
+            return Task.FromResult(LayerInitResult.Success);
         }
     }
 }

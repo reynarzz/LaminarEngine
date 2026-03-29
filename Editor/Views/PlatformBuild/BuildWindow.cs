@@ -120,7 +120,7 @@ namespace Editor.Views
 
             if(ImGui.Button("Save all config test"))
             {
-                EditorDataManager.SaveAll();
+                EditorProjectDataManager.SaveAll();
             }
             ImGui.EndChild();
         }
@@ -153,7 +153,7 @@ namespace Editor.Views
                 ImGui.SetCursorPos(cursorPos.X + ImGui.GetContentRegionAvail().X -146, cursorPos.Y + 4);
                 if (ImGui.Button("Build"))
                 {
-                    var platformSettings = EditorDataManager.BuildSettings.GetBuildSettings(GetSelectedPlatform());
+                    var platformSettings = EditorProjectDataManager.BuildSettings.GetBuildSettings(GetSelectedPlatform());
                     platformSettings.RunAfterBuild = false;
                     BuildSystem.BuildAsync(GetSelectedPlatform());
                 }
@@ -163,7 +163,7 @@ namespace Editor.Views
 
                 if (ImGui.Button("Build and Run"))
                 {
-                    var platformSettings = EditorDataManager.BuildSettings.GetBuildSettings(GetSelectedPlatform());
+                    var platformSettings = EditorProjectDataManager.BuildSettings.GetBuildSettings(GetSelectedPlatform());
                     platformSettings.RunAfterBuild = true;
                     BuildSystem.BuildAsync(GetSelectedPlatform());
                 }
@@ -173,7 +173,7 @@ namespace Editor.Views
             ImGui.BeginChild("BuildSettingsContent");
             if (isValidPlatformBuild)
             {
-                var settings = EditorDataManager.BuildSettings.GetBuildSettings(GetSelectedPlatform());
+                var settings = EditorProjectDataManager.BuildSettings.GetBuildSettings(GetSelectedPlatform());
                 drawer.OnDraw(settings);
             }
             else

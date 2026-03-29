@@ -34,9 +34,9 @@ namespace Engine.Layers
             _drawPostProcessCallback = PostProcessDraw;
         }
 
-        public override Task InitializeAsync()
+        public override async Task<LayerInitResult> InitializeAsync()
         {
-            return MainThreadDispatcher.EnqueueAsync(() =>
+            await MainThreadDispatcher.EnqueueAsync(() =>
             {
                 GfxDeviceManager.Init();
 
@@ -67,6 +67,7 @@ namespace Engine.Layers
                 IsInitialized = true;
             });
 
+            return LayerInitResult.Success;
         }
 
         private void OnWindowsChanged(int w, int h)

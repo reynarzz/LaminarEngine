@@ -8,6 +8,7 @@ using Engine.Utils;
 using System.Reflection;
 using System.Runtime.Loader;
 using Editor.Drawers;
+using Editor.Data;
 
 namespace Editor.Layers
 {
@@ -18,12 +19,22 @@ namespace Editor.Layers
         private bool _canSwapDll = false;
         private bool _isSwappingDll = false;
 
-        public override async Task InitializeAsync()
+        public override async Task<LayerInitResult> InitializeAsync()
         {
-            await BuildSystem.BuildAsync(PlatformBuild.GameAppDomain);
-            _canSwapDll = true;
-            UpdateLayer();
-            BuildSystem.OnBuildCompleted += OnBuildCompleted;
+            //await Task.Run(async () =>
+            //{
+            //    while (EditorConfigManager.GetLastLoadedProject() != null)
+            //    {
+
+            //    }
+            //});
+
+            //await BuildSystem.BuildAsync(PlatformBuild.GameAppDomain);
+            //_canSwapDll = true;
+            //UpdateLayer();
+            //BuildSystem.OnBuildCompleted += OnBuildCompleted;
+
+            return LayerInitResult.Success;
         }
 
 
@@ -38,7 +49,7 @@ namespace Editor.Layers
             }
         }
 
-        internal void SwapDll(bool serializeCurrentScene = true)
+        private void SwapDll(bool serializeCurrentScene = true)
         {
             Debug.Log("Rebuild detected");
 
@@ -157,6 +168,9 @@ namespace Editor.Layers
         // Swap happens at a certain point to avoid UI's sudden jumps.
         internal override void UpdateLayer()
         {
+            if (!EditorConfigManager.IsProjectLoaded())
+                return;
+
             if (_canSwapDll && !_isSwappingDll && !Application.IsInPlayMode)
             {
                 _canSwapDll = false;
@@ -188,6 +202,9 @@ namespace Editor.Layers
 
         public override void OnEvent(EventType currentEvent, object value)
         {
+            if (!EditorConfigManager.IsProjectLoaded())
+                return;
+
             if (currentEvent == EventType.WindowFocusEnter)
             {
                 BuildSystem.BuildAsync(PlatformBuild.GameAppDomain);

@@ -1,4 +1,5 @@
 ﻿using Editor.Build;
+using Editor.Data;
 using Editor.Rendering;
 using Editor.Utils;
 using Editor.Views;
@@ -30,11 +31,15 @@ namespace Editor.Layers
         private readonly IWindow _win;
         private readonly InputLayerBase _inputLayer;
         private readonly ImGuiController _imguiController;
+        private readonly InitializationWindow _initWindow;
+        private readonly ProjectWizardWindow _projectWizardWindow;
         public ImGuiLayer(IWindow window, InputLayerBase inputLayer, LayersManager layerManager)
         {
             _win = window;
             _inputLayer = inputLayer;
             _imguiController = new ImGuiController();
+            _initWindow = new InitializationWindow();
+            _projectWizardWindow = new ProjectWizardWindow();
 
 
             // TODO: move the surface creation to their own classes.
@@ -56,14 +61,14 @@ namespace Editor.Layers
                 }
                 else
                 {
-                    DrawInitialization();
+                    DrawPreInitialization();
                 }
             };
         }
 
-        public override Task InitializeAsync()
+        public override async Task<LayerInitResult> InitializeAsync()
         {
-            return MainThreadDispatcher.EnqueueAsync(() =>
+            await MainThreadDispatcher.EnqueueAsync(() =>
             {
                 var sceneBatcher = new SceneBatchedRenderer();
                 _gameSurface.SceneRenderers = new() { sceneBatcher };
@@ -116,6 +121,8 @@ namespace Editor.Layers
 
                 IsInitialized = true;
             });
+
+            return LayerInitResult.Success;
         }
 
         private void Draw()
@@ -177,41 +184,20 @@ namespace Editor.Layers
             }
         }
 
-        // TODO: show real progress.
-        private float _fakeProgress = 0;
-        private void DrawInitialization()
+        private void DrawPreInitialization()
         {
             EditorNatives.BeginGLFWImguiInternal();
-            var winSize = new Vector2(300, 100);
-            var viewport = ImGui.GetMainViewport();
 
-            ImGui.SetNextWindowSize(winSize, ImGuiCond.Once);
-            ImGui.SetNextWindowPos(viewport.Pos.X + viewport.Size.X * 0.5f - winSize.X * 0.5f,
-                                   viewport.Pos.Y + viewport.Size.Y * 0.5f - winSize.Y * 0.5f);
-            ImGui.Begin("Initializing Editor", ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove);
-            _fakeProgress += ImGui.GetIO().DeltaTime * 0.04f;
-
-            string fakeMessage = null;
-
-            if(_fakeProgress <= 0.3f)
+            if (EditorConfigManager.IsProjectLoaded())
             {
-                fakeMessage = "Compiling GameApplication Domain";
-            }
-            else if(_fakeProgress < 1.0f)
-            {
-                fakeMessage = "Importing assets";
+                _initWindow.OnDraw();
             }
             else
             {
-                fakeMessage = "Finishing up";
+                _projectWizardWindow.OnDraw();
             }
 
-            ImGui.Text($"{fakeMessage}");
-          
-            ImGui.ProgressBar(_fakeProgress, new Vector2(270, 20));
-            ImGui.End();
             EditorNatives.EndGLFWImguiInternal();
-
         }
 
         public override void Close() { }

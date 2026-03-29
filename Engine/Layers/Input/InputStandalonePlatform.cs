@@ -37,14 +37,14 @@ namespace Engine.Layers.Input
             Gamepad = new GamepadInput(_gamepads);
         }
 
-        public override Task InitializeAsync()
+        public override Task<LayerInitResult> InitializeAsync()
         {
             _keyCodesArray = Enum.GetValues<KeyCode>();
             _mouseButtonsArray = Enum.GetValues<MouseButton>();
 
             _previousKeys = new HashSet<KeyCode>();
             _previousMouse = new HashSet<MouseButton>();
-            return Task.CompletedTask;
+            return Task.FromResult(LayerInitResult.Success);
 
         }
 

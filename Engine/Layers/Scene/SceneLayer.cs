@@ -8,14 +8,14 @@ namespace Engine.Layers
 {
     internal class SceneLayer : LayerBase
     {
-        public override Task InitializeAsync()
+        public override Task<LayerInitResult> InitializeAsync()
         {
             SceneManager.Initialize();
 
             var data = EngineServices.GetService<EngineDataService>().GetProjectSettings();
             LayerMask.UpdateLayers(data.Physics.CollisionMatrix, data.LayerSettings.Layers);
 
-            return Task.CompletedTask;
+            return Task.FromResult(LayerInitResult.Success);
         }
 
         internal override void UpdateLayer()

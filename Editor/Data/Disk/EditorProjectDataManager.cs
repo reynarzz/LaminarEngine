@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Editor.Data
 {
-    internal static class EditorDataManager
+    internal static class EditorProjectDataManager
     {
         private static BuildSettings _buildSettings;
         private static EditorSettingsData _editorSettings;

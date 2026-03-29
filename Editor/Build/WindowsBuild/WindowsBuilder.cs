@@ -22,7 +22,7 @@ namespace Editor.Build
             {
                 var rootOutputFolder = EditorPaths.ShipWin32FolderRoot;
 
-                var settings = EditorDataManager.BuildSettings.GetBuildSettings(PlatformBuild.Windows) as WindowsBuildSettings;
+                var settings = EditorProjectDataManager.BuildSettings.GetBuildSettings(PlatformBuild.Windows) as WindowsBuildSettings;
                 var buildTypeSettings = settings.GetCurrentBuildTypeSettings();
                 if (!string.IsNullOrEmpty(buildTypeSettings.OutputPath))
                 {

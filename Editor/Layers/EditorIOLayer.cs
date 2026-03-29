@@ -24,7 +24,7 @@ namespace Editor
             _instance = this;
         }
 
-        public override Task InitializeAsync()
+        public override Task<LayerInitResult> InitializeAsync()
         {
             // Editor asset builders
             InitializeIO(_devDisk, new Dictionary<AssetType, IAssetBuilder>()
@@ -42,10 +42,10 @@ namespace Editor
                 { AssetType.Scene, new SceneAssetBuilderEditor() },
             });
 
-            EditorDataManager.Init();
+            EditorProjectDataManager.Init();
 
             _intiialized = true;
-            return Task.CompletedTask;
+            return Task.FromResult(LayerInitResult.Success);
         }
 
         internal void ReloadDisk(AssetsDatabaseInfo assetDatabase)

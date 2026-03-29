@@ -10,16 +10,18 @@ namespace Engine.Layers
 {
     public abstract class ApplicationLayer : LayerBase
     {
-        public sealed override Task InitializeAsync()
+        public sealed override async Task<LayerInitResult> InitializeAsync()
         {
 #if SHIP_BUILD
             var result = LoadMainScene();
             if (!result)
             {
-                return Task.FromCanceled(new CancellationToken(true));
+                return LayerInitResult.Error;
             }
 #endif
-            return MainThreadDispatcher.EnqueueAsync(OnInitialize);
+            await MainThreadDispatcher.EnqueueAsync(OnInitialize);
+
+            return LayerInitResult.Success;
         }
 #if SHIP_BUILD
         private bool LoadMainScene()

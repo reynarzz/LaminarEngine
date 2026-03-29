@@ -22,7 +22,7 @@ namespace Engine.Layers
         private static double _accumulator = 0f;
         private float _fixedTimeStep = 0.02f;
 
-        public override Task InitializeAsync()
+        public override Task<LayerInitResult> InitializeAsync()
         {
             _contactDispatcher = new ContactsDispatcher();
 
@@ -35,7 +35,7 @@ namespace Engine.Layers
 
             _rigidbodies.Clear();
 
-            return Task.CompletedTask;
+            return Task.FromResult(LayerInitResult.Success);
         }
 
         public bool CustomFilter(B2ShapeId shapeIdA, B2ShapeId shapeIdB, object context)

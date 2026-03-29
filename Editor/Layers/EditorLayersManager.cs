@@ -25,18 +25,19 @@ namespace Editor
             var editorLayer = new EditorIOLayer();
             var hotReloadLayer = new HotReloadLayer();
             var sceneLayer = new SceneLayer();
-
+            var projectLoader = new ProjectLoaderLayer();
             Layers =
             [
                 timeLayer,
                 inputLayer,
                 null, // App Layer
                 mainThreadDispLayer,
-                sceneLayer, 
+                sceneLayer,
                 audioLayer,
                 null, // Physics layer.
                 editorLayer,
                 hotReloadLayer,
+                projectLoader,
                 imguiLayer,
                 mainThreadDispLayer,
                 renderingLayer,
@@ -60,14 +61,31 @@ namespace Editor
 
             async Task InitializeLayers()
             {
-                for (int i = Layers.Length - 1; i >= 0; i--)
+                for (int i = Layers.Length - 1; i >= 0;)
                 {
                     var layer = Layers[i];
 
                     if (layer != null)
                     {
-                        await layer.InitializeAsync();
-                        Debug.Log("Initialized layer: " + layer.GetType().Name);
+                        if (!layer.IsInitialized)
+                        {
+                            var result = await layer.InitializeAsync();
+
+                            var message = result.Message;
+                            switch (message)
+                            {
+                                case LayerInitializationType.Success:
+                                    i--;
+                                    Debug.Log("Initialized layer: " + layer.GetType().Name);
+                                    break;
+                                case LayerInitializationType.Error:
+                                    return;
+                                case LayerInitializationType.InProgress:
+                                    await Task.Yield();
+                                    break;
+                            }
+                        }
+
                     }
                 }
 
@@ -87,7 +105,7 @@ namespace Editor
 
         private void LoadScene()
         {
-            if (Guid.TryParse(EditorDataManager.EditorSettings.OpenedSceneRefId, out var id))
+            if (Guid.TryParse(EditorProjectDataManager.EditorSettings.OpenedSceneRefId, out var id))
             {
                 SceneManager.LoadScene(id);
             }
@@ -116,7 +134,7 @@ namespace Editor
                     }
                 }
             }
-            
+
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
                 Physics2D.DrawColliders = !Physics2D.DrawColliders;

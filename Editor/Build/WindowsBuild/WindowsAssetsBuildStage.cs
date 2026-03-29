@@ -19,7 +19,7 @@ namespace Editor.Build
 
         protected override CookData OnBeforeBuild()
         {
-            var settings = EditorDataManager.BuildSettings.GetBuildSettings(PlatformBuild.Windows) as WindowsBuildSettings;
+            var settings = EditorProjectDataManager.BuildSettings.GetBuildSettings(PlatformBuild.Windows) as WindowsBuildSettings;
             var buildTypeSettings = settings.GetCurrentBuildTypeSettings();
 
             return new CookData()

@@ -131,7 +131,7 @@ namespace Editor.Views
 
             if (ImGui.Button("Save project settings"))
             {
-                EditorDataManager.SaveProjectSettings();
+                EditorProjectDataManager.SaveProjectSettings();
             }
             ImGui.EndChild();
         }

@@ -23,7 +23,7 @@ namespace Engine.Layers
         private float _currentRetryTime = 0;
         private static readonly AudioFormat _defaultFormat = AudioFormat.DvdHq;
 
-        public override Task InitializeAsync()
+        public override Task<LayerInitResult> InitializeAsync()
         {
             try
             {
@@ -50,7 +50,7 @@ namespace Engine.Layers
             // Effects:
             // ParametricEqualizer 
 
-            return Task.CompletedTask;
+            return Task.FromResult(LayerInitResult.Success);
         }
 
         internal override void UpdateLayer()

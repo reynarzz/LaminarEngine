@@ -63,6 +63,7 @@ namespace Editor
         public static string EngineNativesFolderRoot => Path.Combine(AppRoot, "Engine", "Third", "Native", "bin");
         public static string EngineWin32NativesFolderRoot => Path.Combine(EngineNativesFolderRoot, "win");
 
+        public static readonly string ConfigDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Paths.ENGINE_NAME);
 
         static EditorPaths()
         {

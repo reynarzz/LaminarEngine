@@ -12,7 +12,7 @@ namespace Engine.Layers
         private const float _timeWrapLength = 10;
         private float _second;
         private int _frames;
-        public override Task InitializeAsync()
+        public override Task<LayerInitResult> InitializeAsync()
         {
             _stopwatch = new Stopwatch();
             _stopwatch.Start();
@@ -22,7 +22,7 @@ namespace Engine.Layers
             Restart();
             IsInitialized = true;
 
-            return Task.CompletedTask;
+            return Task.FromResult(LayerInitResult.Success);
         }
 
         internal override void UpdateLayer()
@@ -52,7 +52,7 @@ namespace Engine.Layers
             Time.TimeCurrentWrap = Mathf.Wrap(_timePast, _timeWrapLength);
 
             //Time.FPS = Time.UnscaledDeltaTime > 0f ? 1f / Time.UnscaledDeltaTime : 0f;
-            if((_second += Time.UnscaledDeltaTime) >= 1.0f)
+            if ((_second += Time.UnscaledDeltaTime) >= 1.0f)
             {
                 Time.FPS = _frames;
                 _second = 0;
