@@ -1,4 +1,5 @@
-﻿using Engine;
+﻿using Editor.Serialization;
+using Engine;
 using Engine.Utils;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -266,7 +267,10 @@ namespace Editor.Cooker
                 classDecl = classDecl.AddMembers(dictionaryReverseField, getIDMethod);
             }
 
-            classDecl = classDecl.AddMembers(GetResolveTypeMethod(), GenerateGetTypeMethod(), GenerateResolveAssemblyMethod());
+            classDecl = classDecl.AddMembers(GetResolveTypeMethod(), 
+                                             GenerateGetTypeMethod(), 
+                                             GenerateResolveAssemblyMethod(),
+                                             GenerateGetApplicationTypeMethod());
 
             // Build namespace
             var ns = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.ParseName("Generated"))
@@ -338,6 +342,26 @@ namespace Editor.Cooker
             }
             ";
 
+            return SyntaxFactory.ParseMemberDeclaration(methodSource)!;
+        }
+
+        private static MemberDeclarationSyntax GenerateGetApplicationTypeMethod()
+        {
+            var name = ReflectionUtils.GetFullTypeName(LaminarTypeRegistryEditor.GameAppType);
+
+            string methodSource = $@"
+            internal static Type GetApplicationLayerType()
+            {{
+                var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+
+                foreach (var item in assemblies)
+                {{
+                    Console.WriteLine(""Assembly: "" + item.FullName);
+                }}
+
+                return _GetType(""{name}"");
+            }}
+            ";
             return SyntaxFactory.ParseMemberDeclaration(methodSource)!;
         }
 

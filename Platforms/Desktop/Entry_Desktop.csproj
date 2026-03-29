@@ -1,31 +1,32 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-	<SelfContained>true</SelfContained>
-	<PublishSingleFile>true</PublishSingleFile>
-    <InvariantGlobalization>true</InvariantGlobalization>
-	<ApplicationIcon>Icon.ico</ApplicationIcon>
-	<AssemblyName>$(AppName)</AssemblyName>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<SelfContained>true</SelfContained>
+		<PublishSingleFile>true</PublishSingleFile>
+		<InvariantGlobalization>true</InvariantGlobalization>
+		<ApplicationIcon>Icon.ico</ApplicationIcon>
+		<AssemblyName>$(AppName)</AssemblyName>
+	</PropertyGroup>
 
 	<PropertyGroup>
-	<OutputType>Exe</OutputType>
+		<OutputType>Exe</OutputType>
 	</PropertyGroup>
 
-	
 	<PropertyGroup Condition="'$(OS)' == 'Windows_NT' AND '$(Configuration)' == 'Release'">
-	  <OutputType>WinExe</OutputType>
+		<OutputType>WinExe</OutputType>
 	</PropertyGroup>
-	
-	<ItemGroup>
-    <Content Include="Icon.ico" />
-  </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Engine\Engine.csproj" />
-    <ProjectReference Include="..\..\Game\Game.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<Content Include="Icon.ico" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\Engine\Engine.csproj" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(ShipBuild)' == 'true'">
+		<ProjectReference Include="$(ApplicationProjectPath)" />
+	</ItemGroup>
 </Project>

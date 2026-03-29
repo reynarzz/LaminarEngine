@@ -1,10 +1,9 @@
 ﻿using Engine;
 using Engine.Layers.Input;
-using Game;
 
 namespace Sandbox
 {
-    internal class Program
+    internal class Program : ExecutableEntry
     {
         private static readonly Mutex _mutex = new Mutex(false, "Global\\SandboxApp_Game");
 
@@ -45,7 +44,7 @@ namespace Sandbox
             try
             {
                 new LaminarEngine(new WindowStandalone($"{Paths.ENGINE_NAME} | By Reynardo Perez", 1280, 720, Color.Black),
-                            new GameApplication(),
+                            GetApplicationLayer(),
                             new InputStandAlonePlatform()).Run();
             }
             catch (Exception e)

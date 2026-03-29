@@ -21,6 +21,11 @@ namespace Engine.Utils
                                          | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
         public static object GetDefaultValueInstance(Type type, int length = 0)
         {
+            if(type == null)
+            {
+                Debug.Error("Can't create instance of a null type.");
+                return null;
+            }
             if (type.IsValueType)
             {
                 if (type.IsEnum)

@@ -5,7 +5,6 @@ using Android.OS;
 using Android.Views;
 using Engine;
 using Engine.Android;
-using Game;
 using System.Text;
 
 namespace Android

@@ -28,11 +28,6 @@
 	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
 		<EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
 	</PropertyGroup>
-	
-	<ItemGroup>
-		<ProjectReference Include="..\..\Engine\Engine.csproj" />
-        <ProjectReference Include="..\..\Game\Game.csproj" />
-  </ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Xamarin.Google.Android.Play.Asset.Delivery" Version="2.3.0.4" />
@@ -64,5 +59,13 @@
 		<AndroidNativeLibrary Include="..\..\Engine\Third\Soundflow\Src\Backends\MiniAudio\runtimes\android\x86_64\libminiaudio.so">
 			<Abi>x86_64</Abi>
 		</AndroidNativeLibrary>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\Engine\Engine.csproj" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(ShipBuild)' == 'true'">
+		<ProjectReference Include="$(ApplicationProjectPath)" />
 	</ItemGroup>
 </Project>

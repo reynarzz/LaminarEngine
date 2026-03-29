@@ -1,6 +1,5 @@
 ﻿using Android.Runtime;
 using Android.Views;
-using Game;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Engine.Android
 {
-    public class AndroidSystem
+    internal class AndroidSystem : ExecutableEntry
     {
         private LaminarEngine _engine;
         private readonly BinaryReader _reader;
@@ -90,7 +89,7 @@ namespace Engine.Android
         {
             if (_engine == null)
             {
-                _engine = new LaminarEngine(_view, new GameApplication(), _input, _reader);
+                _engine = new LaminarEngine(_view, GetApplicationLayer(), _input, _reader);
             }
             else
             {

@@ -1,13 +1,12 @@
 ﻿using Android.Content.Res;
 using Android.Opengl;
-using Game;
 using Javax.Microedition.Khronos.Opengles;
 using Engine;
 using System.Text;
 
 namespace Engine.Android
 {
-    public class GLRenderer : Java.Lang.Object, GLSurfaceView.IRenderer
+    internal class GLRenderer : Java.Lang.Object, GLSurfaceView.IRenderer
     {
         private readonly GLView _glView;
         private readonly AndroidSystem _system;

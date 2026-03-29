@@ -70,6 +70,11 @@ Features:
 - Metadata of every asset should be binary on final build.
 - Native AOT compilation.
 
+Editor project wizard:
+- When creating a project the Game.csproj should point to the Engine.dll that resides in  Engine/Bin/Debug folder.
+- Entry_Desktop, Entry_Android and Entry_iOS should set the game.csproj path when doing the ship build using the build parameters.
+
+
 Save Editor config:
 -Current loaded scene name.
 -Layers.

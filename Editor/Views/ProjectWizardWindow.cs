@@ -1,5 +1,6 @@
 ﻿using Editor.Cooker;
 using Editor.Data;
+using Editor.Utils;
 using Engine;
 using ImGuiNET;
 using System;
@@ -15,20 +16,62 @@ namespace Editor.Views
         public override void OnDraw()
         {
             ImGui.Begin("Project");
+
+            OpenProjectGUI();
+            ImGui.Separator();
+            CreateProjectGUI();
+            ImGui.End();
+        }
+
+        private void OpenProjectGUI()
+        {
             if (ImGui.Button("Open project"))
             {
                 if (EditorFileDialog.PickFolder("C:/", out var selected))
                 {
-                    var isValid = IsValidProject(selected);
-                    Debug.Log(selected + "Is Valid: " + isValid);
+                    if (IsValidProject(selected, out var csProjFullPath))
+                    {
+                        LoadProject(selected, csProjFullPath);
+                        Debug.Log(selected + "Is Valid: ");
+                    }
+                }
+            }
+        }
+
+        private static ProjectCreatedInfo _projectCreateInfo = new();
+
+        private void CreateProjectGUI()
+        {
+            ImGui.Text("Project Name");
+            ImGui.SameLine();
+            EditorGuiFieldsResolver.DrawStringField("", ref _projectCreateInfo.ProjectName);
+
+            ImGui.Text("Directory");
+            ImGui.SameLine();
+            ImGui.TextWrapped(_projectCreateInfo.ProjectRootDirectory);
+            ImGui.SameLine();
+            if (ImGui.Button("Select"))
+            {
+                if (EditorFileDialog.PickFolder(_projectCreateInfo.ProjectRootDirectory, out var selected))
+                {
+                    _projectCreateInfo.ProjectRootDirectory = selected;
                 }
             }
 
-            ImGui.End();
-        }
+            ImGui.Text("Use intermediary directory");
+            ImGui.SameLine();
+            EditorGuiFieldsResolver.DrawBoolField("###_Intermediary_", ref _projectCreateInfo.UseIntermediaryDirectory);
 
-        private bool IsValidProject(string root)
+            ImGui.BeginDisabled(!_projectCreateInfo.IsValidProjectData());
+            if (ImGui.Button("Create Project"))
+            {
+                GameProject.CreateDefaultProject(_projectCreateInfo);
+            }
+            ImGui.EndDisabled();
+        }
+        private bool IsValidProject(string root, out string csProjectFullPath)
         {
+            csProjectFullPath = string.Empty;
             // Check if is has project settings folder
             var projectSettingsPath = Path.Combine(root, Paths.PROJECT_SETTINGS_FOLDER_NAME);
             if (!Directory.Exists(projectSettingsPath))
@@ -41,37 +84,41 @@ namespace Editor.Views
                 return false;
             }
 
-            // EditorProjectDataManager.SaveProjectSettings
-
             var projectsFiles = Directory.EnumerateFiles(root, "*.csproj");
 
-            var gameCsProjFullPath = string.Empty;
             foreach (var item in projectsFiles)
             {
-                gameCsProjFullPath = Paths.ClearPathSeparation(item);
+                csProjectFullPath = Paths.ClearPathSeparation(item);
                 break;
             }
 
-            if (string.IsNullOrEmpty(gameCsProjFullPath))
+            if (string.IsNullOrEmpty(csProjectFullPath))
             {
-                // TODO: ask user to pick the project or select one.
+                // TODO: ask the user to pick the project or select one.
+                return false;
             }
 
-            var assemblyName = Path.GetFileName(gameCsProjFullPath);
-            EditorPaths.GameRoot = Paths.ClearPathSeparation(root);
+            return true;
+        }
+
+        private void LoadProject(string projectDirRootAbsolutePath, string gameCsprojAbsolutePath)
+        {
+            var assemblyName = Path.GetFileName(gameCsprojAbsolutePath);
+            projectDirRootAbsolutePath = Paths.ClearPathSeparation(projectDirRootAbsolutePath); ;
+            EditorPaths.GameRoot = projectDirRootAbsolutePath;
             EditorPaths.GameCsProjName = Path.GetFileNameWithoutExtension(assemblyName); // derive from project settings, and if is not found ask the user to pick it or create it.
             GameProject.Initialize(new ProjectConfig() { ProjectFolderRoot = EditorPaths.GameRoot });
 
             var projectInfo = new EditorLoadedProjectData()
             {
+                ProjectName = "Game",
+                ProjectRootPath = projectDirRootAbsolutePath,
                 AssemblyName = assemblyName,
-                AssemblyAbsolutePath = gameCsProjFullPath,
-                ProjectRootPath = root,
-                ProjectName = "Game"
+                AssemblyAbsolutePath = Paths.ClearPathSeparation(gameCsprojAbsolutePath),
             };
-            EditorConfigManager.SetLoadedProject(projectInfo);
 
-            return true;
+            EditorConfigManager.SetLoadedProject(projectInfo);
         }
+
     }
 }

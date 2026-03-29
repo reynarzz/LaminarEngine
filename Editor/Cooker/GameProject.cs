@@ -7,6 +7,18 @@ using System.Threading.Tasks;
 
 namespace Editor.Cooker
 {
+    internal class ProjectCreatedInfo
+    {
+        public string ProjectName = string.Empty;
+        public string ProjectRootDirectory = string.Empty;
+        public bool UseIntermediaryDirectory = false;
+
+        public bool IsValidProjectData()
+        {
+            return !string.IsNullOrEmpty(ProjectName) && !string.IsNullOrEmpty(ProjectRootDirectory);
+        }
+    }
+
     public class GameProject
     {
         public static void Initialize(ProjectConfig config)
@@ -16,13 +28,13 @@ namespace Editor.Cooker
                 Console.WriteLine("Wrong root path");
                 return;
             }
-
             InitializeProjectDirectories(config.ProjectFolderRoot);
         }
 
-        private static void InitializeProjectDirectories(string projectRoot)
+        private static void InitializeProjectDirectories(string rootFolder)
         {
-            Paths.ProjectRootFolder = projectRoot;
+            Paths.ProjectRootFolder = rootFolder;
+
             var directories = new string[]
             {
                 Paths.GetAssetsFolderPath(),
@@ -34,6 +46,20 @@ namespace Editor.Cooker
             {
                 Directory.CreateDirectory(dir);
             }
+        }
+
+        internal static void CreateDefaultProject(ProjectCreatedInfo info)
+        {
+            var root = info.ProjectRootDirectory;
+            if (info.UseIntermediaryDirectory)
+            {
+                root = Path.Combine(root, info.ProjectName);
+
+                Directory.CreateDirectory(root);
+            }
+            InitializeProjectDirectories(root);
+
+            // TODO: Create default ProjectSettings.dat
         }
     }
 }

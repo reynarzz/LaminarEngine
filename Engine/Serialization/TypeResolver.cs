@@ -52,5 +52,13 @@ namespace Engine.Serialization
             return ReflectionUtils.ResolveType(prop.EnumInternalType, out type);
 #endif
         }
+
+        public static Type GetApplicationLayerTypeShip()
+        {
+#if SHIP_BUILD
+            return Generated.TypeRegistryRuntime.GetApplicationLayerType();
+#endif
+            throw new InvalidOperationException("Only call this on ship builds");
+        }
     }
 }
