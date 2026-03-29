@@ -69,23 +69,33 @@ namespace Editor
                     {
                         if (!layer.IsInitialized)
                         {
-                            var result = await layer.InitializeAsync();
-
-                            var message = result.Message;
-                            switch (message)
+                            try
                             {
-                                case LayerInitializationType.Success:
-                                    i--;
-                                    Debug.Log("Initialized layer: " + layer.GetType().Name);
-                                    break;
-                                case LayerInitializationType.Error:
-                                    return;
-                                case LayerInitializationType.InProgress:
-                                    await Task.Yield();
-                                    break;
+                                var result = await layer.InitializeAsync();
+
+                                var message = result.Message;
+                                switch (message)
+                                {
+                                    case LayerInitializationType.Success:
+                                        i--;
+                                        Debug.Log("Initialized layer: " + layer.GetType().Name);
+                                        break;
+                                    case LayerInitializationType.Error:
+                                        return;
+                                    case LayerInitializationType.InProgress:
+                                        await Task.Yield();
+                                        break;
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                Debug.Error(e);
                             }
                         }
-
+                    }
+                    else
+                    {
+                        i--;
                     }
                 }
 

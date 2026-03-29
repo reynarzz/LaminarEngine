@@ -4,6 +4,8 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -146,17 +148,55 @@ namespace Editor.Cooker
             Debug.Log(cookResult.ChangedCount);
             try
             {
-                // Write asset database
-                await File.WriteAllTextAsync(Path.Combine(outFolder, Paths.ASSET_DATABASE_FILE_NAME), JsonConvert.SerializeObject(_database, Formatting.Indented));
+                var writePath = Path.Combine(outFolder, Paths.ASSET_DATABASE_FILE_NAME);
+
+                if (OperatingSystem.IsWindows())
+                {
+
+                    // Write asset database
+                    // await File.WriteAllTextAsync(writePath, JsonConvert.SerializeObject(_database, Formatting.Indented));
+
+                    //using var stream = new FileStream(writePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
+                    //using var writer = new StreamWriter(stream);
+                    //await writer.WriteAsync(JsonConvert.SerializeObject(_database, Formatting.Indented));
+
+                    ForceGrantAccess(outFolder);                          // fix the folder
+                    if (File.Exists(writePath))
+                        ForceGrantAccess(writePath); // fix the file if it exists
+                }
+
+                await File.WriteAllTextAsync(writePath, JsonConvert.SerializeObject(_database, Formatting.Indented));
+
             }
             catch (Exception e)
             {
-                Debug.Error("Check Permission: Dev mode files cooker.");
+                Debug.Error($"Check write Permission: '{nameof(DevModeFilesCooker)}.cs'.");
+
+                return new CookingResult() { IsSuccess = false };
             }
             cookResult.IsSuccess = !someAssetFailImport;
             return cookResult;
         }
+        public static void ForceGrantAccess(string path)
+        {
+            // Works on both files and folders
+            var info = new DirectoryInfo(path);
+            var security = info.GetAccessControl();
 
+            // Take ownership first
+            security.SetOwner(System.Security.Principal.WindowsIdentity.GetCurrent().User);
+            info.SetAccessControl(security);
+
+            // Then grant full control
+            security.AddAccessRule(new FileSystemAccessRule(
+                System.Security.Principal.WindowsIdentity.GetCurrent().User,
+                FileSystemRights.FullControl,
+                InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit,
+                PropagationFlags.None,
+                AccessControlType.Allow
+            ));
+            info.SetAccessControl(security);
+        }
         private void ClearInvalidAssets(List<string> files)
         {
             // Clean the list of non existent assets.

@@ -10,20 +10,27 @@ namespace Editor.Data
     internal class EditorLoadedProjectData
     {
         public string ProjectName { get; set; }
-        public string RootDir { get; set; }
+        public string ProjectRootPath { get; set; }
         public string AssemblyName { get; set; }
+        public string AssemblyAbsolutePath { get; set; }
     }
 
     internal static class EditorConfigManager
     {
+        private static EditorLoadedProjectData _loadedProject;
         public static EditorLoadedProjectData GetLastLoadedProject()
         {
-            return  null;
+            return _loadedProject;
         }
 
         public static bool IsProjectLoaded()
         {
-            return false;
+            return _loadedProject != null;
+        }
+
+        internal static void SetLoadedProject(EditorLoadedProjectData projectData)
+        {
+            _loadedProject = projectData;
         }
     }
 }

@@ -34,7 +34,7 @@ namespace Editor.Build
 
         protected override string GetCSProjPath()
         {
-            return Path.Combine(EditorPaths.GameRoot, EditorPaths.GAME_PROJECT_FULL_NAME);
+            return Path.Combine(EditorPaths.GameRoot, EditorPaths.GameCSProjFullName);
         }
 
         protected override string[] GetTargetsToBuild()
@@ -62,7 +62,7 @@ namespace Editor.Build
 
             if (!File.Exists(EditorPaths.CompiledGameDllAbsolutePath))
             {
-                Debug.Log($"Original '{EditorPaths.GAME_PROJECT_NAME}.dll' is non existent.");
+                Debug.Log($"Original '{EditorPaths.GameCsProjName}.dll' is non existent.");
                 return true;
             }
 

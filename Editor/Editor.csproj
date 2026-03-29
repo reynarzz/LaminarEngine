@@ -9,6 +9,7 @@
 	  <AppendRuntimeIdentifierToOutputPath>False</AppendRuntimeIdentifierToOutputPath>
 	  <AppendTargetFrameworkToOutputPath>False</AppendTargetFrameworkToOutputPath>
 	  <DefineConstants>$(DefineConstants);EDITOR</DefineConstants>
+	  <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup> 
 	
 	<PropertyGroup Condition="'$(OS)' == 'Unix' AND&#xD;&#xA;'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform(&#xD;&#xA;   $([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'True'">

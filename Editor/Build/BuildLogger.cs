@@ -42,7 +42,7 @@ namespace Editor
 
             source.WarningRaised += (_, e) =>
             {
-                if (e.ProjectFile.EndsWith(EditorPaths.GAME_PROJECT_FULL_NAME))
+                if (e.ProjectFile.EndsWith(EditorPaths.GameCSProjFullName))
                 {
                     var index = e.File.IndexOf("Assets");
                     var name = index >=0? e.File.Substring(index, e.File.Length - index): e.File;

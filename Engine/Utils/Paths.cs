@@ -11,9 +11,8 @@ namespace Engine
         public const string ENGINE_NAME = "Laminar";
         public const string LIBRARY_FOLDER_NAME = "Library";
         public const string ASSETS_FOLDER_NAME = "Assets";
-        public const string GAME_FOLDER_NAME = "Game";
         public const string SHIP_ASSETS_LIST_FILE_NAME = "ShipAssets.txt";
-        public const string PROJECT_CONFIG_FOLDER_NAME = "ProjectSettings";
+        public const string PROJECT_SETTINGS_FOLDER_NAME = "ProjectSettings";
 
         public const string ASSET_DATABASE_FOLDER_NAME = "AssetsDatabase";
         public const string ASSET_DATABASE_FILE_NAME = "AssetsDatabase.txt";
@@ -52,7 +51,7 @@ namespace Engine
         }
         public static string GetProjectSettingsFolder(bool isRelativePath = false)
         {
-            return ClearPathSeparation(Path.Join(GetAbsolutePathFlag(isRelativePath), PROJECT_CONFIG_FOLDER_NAME));
+            return ClearPathSeparation(Path.Join(GetAbsolutePathFlag(isRelativePath), PROJECT_SETTINGS_FOLDER_NAME));
         }
 
         public static string GetShipAssetsFilePath(bool isRelativePath = false)

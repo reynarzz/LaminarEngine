@@ -17,13 +17,11 @@ namespace Editor.Data
     {
         private static BuildSettings _buildSettings;
         private static EditorSettingsData _editorSettings;
-        public static BuildSettings BuildSettings => _buildSettings ?? (_buildSettings = LoadData<BuildSettings>(BUILD_SETTINGS));
-        public static EditorSettingsData EditorSettings => _editorSettings ?? (_editorSettings = LoadData<EditorSettingsData>(EDITOR_SETTINGS));
+        public static BuildSettings BuildSettings => _buildSettings ?? (_buildSettings = LoadData<BuildSettings>(EditorPaths.BUILD_SETTINGS_NAME));
+        public static EditorSettingsData EditorSettings => _editorSettings ?? (_editorSettings = LoadData<EditorSettingsData>(EditorPaths.EDITOR_SETTINGS_NAME));
 
 
-        private const string BUILD_SETTINGS = "BuildSettings";
-        private const string PROJECT_SETTINGS = "ProjectSettings";
-        private const string EDITOR_SETTINGS = "EditorSettings";
+
 
 
         internal static void Init()
@@ -34,7 +32,7 @@ namespace Editor.Data
         private static void InitProjectSettings()
         {
             var service = EngineServices.GetService<EngineDataService>();
-            var projectSettings = LoadData<ProjectSettingsData>(PROJECT_SETTINGS);
+            var projectSettings = LoadData<ProjectSettingsData>(EditorPaths.PROJECT_SETTINGS_NAME);
             service.Initialize(projectSettings);
         }
 
@@ -49,18 +47,18 @@ namespace Editor.Data
 
         private static void SaveBuildSettings()
         {
-            WriteData(BUILD_SETTINGS, _buildSettings);
+            WriteData(EditorPaths.BUILD_SETTINGS_NAME, _buildSettings);
         }
 
         internal static void SaveProjectSettings()
         {
             var service = EngineServices.GetService<EngineDataService>();
-            WriteData(PROJECT_SETTINGS, service.GetProjectSettings());
+            WriteData(EditorPaths.PROJECT_SETTINGS_NAME, service.GetProjectSettings());
         }
 
         internal static void SaveEditorSettings()
         {
-            WriteData(EDITOR_SETTINGS, _editorSettings);
+            WriteData(EditorPaths.EDITOR_SETTINGS_NAME, _editorSettings);
         }
 
         private static void WriteData(string name, object data)

@@ -21,18 +21,10 @@ namespace Editor.Layers
 
         public override async Task<LayerInitResult> InitializeAsync()
         {
-            //await Task.Run(async () =>
-            //{
-            //    while (EditorConfigManager.GetLastLoadedProject() != null)
-            //    {
-
-            //    }
-            //});
-
-            //await BuildSystem.BuildAsync(PlatformBuild.GameAppDomain);
-            //_canSwapDll = true;
-            //UpdateLayer();
-            //BuildSystem.OnBuildCompleted += OnBuildCompleted;
+            await BuildSystem.BuildAsync(PlatformBuild.GameAppDomain);
+            _canSwapDll = true;
+            UpdateLayer();
+            BuildSystem.OnBuildCompleted += OnBuildCompleted;
 
             return LayerInitResult.Success;
         }
@@ -59,9 +51,9 @@ namespace Editor.Layers
             File.Copy(EditorPaths.CompiledGameDllAbsolutePath, EditorPaths.GameHookDLLAbsolutePath, true);
 
             var pdbPath = Paths.ClearPathSeparation(Path.Combine(EditorPaths.GameBinFolderAbsolutePath,
-                                                                 EditorPaths.GAME_PROJECT_NAME + ".pdb"));
+                                                                 EditorPaths.GameCsProjName + ".pdb"));
             var pdbTargetPath = Paths.ClearPathSeparation(Path.Combine(EditorPaths.HookFolderAbsolutePath,
-                                                          EditorPaths.GAME_PROJECT_NAME + ".pdb"));
+                                                          EditorPaths.GameCsProjName + ".pdb"));
 
             byte[] pdbBytes = null;
             if (File.Exists(pdbPath))

@@ -18,7 +18,6 @@ namespace Editor
         internal void Init()
         {
             Application.IsInPlayMode = false;
-            GameProject.Initialize(new ProjectConfig() { ProjectFolderRoot = EditorPaths.GameRoot });
 
             _win = new WindowStandalone(EditorPaths.EDITOR_NAME, 1494, 900, Color.Black, new TextureDescriptor()
             {
