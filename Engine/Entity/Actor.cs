@@ -140,7 +140,6 @@ namespace Engine
             return Duplicate(copy, null);
         }
 
-        private delegate void SetValueToDuplicateCallback(object target, MemberInfo member, object value, int index);
         public static Actor Duplicate(Actor copy, Transform parent)
         {
             if (!parent)
@@ -226,7 +225,8 @@ namespace Engine
                 }
             }
 
-            void SetValueToCopy(object target, object value, MemberInfo member, int index, SetValueToDuplicateCallback setValue)
+            void SetValueToCopy(object target, object value, MemberInfo member, int index, 
+                                Action<object, MemberInfo, object, int> setValue)
             {
                 try
                 {
