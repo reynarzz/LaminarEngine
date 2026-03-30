@@ -348,10 +348,24 @@ namespace Editor.Cooker
         private static MemberDeclarationSyntax GenerateGetApplicationTypeMethod()
         {
             var name = ReflectionUtils.GetFullTypeName(LaminarTypeRegistryEditor.GameAppType);
-
+            var assembly = LaminarTypeRegistryEditor.GameAppType.Assembly.FullName;
             string methodSource = $@"
             internal static Type GetApplicationLayerType()
             {{
+                var asm = Assembly.Load(""{assembly}"");
+
+                var refs = asm.GetReferencedAssemblies();
+                for (int i = 0; i < refs.Length; i++)
+                {{
+                    try
+                    {{
+                        Assembly.Load(refs[i]);
+                    }}
+                    catch
+                    {{
+                    }}
+                }}
+
                 var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
                 foreach (var item in assemblies)

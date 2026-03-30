@@ -44,8 +44,7 @@ namespace Sandbox
             try
             {
                 new LaminarEngine(new WindowStandalone($"{Paths.ENGINE_NAME} | By Reynardo Perez", 1280, 720, Color.Black),
-                            GetApplicationLayer(),
-                            new InputStandAlonePlatform()).Run();
+                                  GetApplicationLayer(), new InputStandAlonePlatform()).Run();
             }
             catch (Exception e)
             {

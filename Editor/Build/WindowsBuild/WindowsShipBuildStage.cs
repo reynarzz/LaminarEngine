@@ -104,7 +104,7 @@ namespace Editor.Build
             var assembliesFolder = Path.Combine(rootOutputFolder, EditorPaths.WIN32_DATA_SHIP_FOLDER_NAME, Paths.SHIP_LIBRARIES_FOLDER_NAME);
             Directory.CreateDirectory(assembliesFolder);
 
-            // Copy glfw dll
+            // Copy runtimecore dll
             string runtimeCore = "RuntimeCore.dll";
             File.Copy(Path.Combine(EditorPaths.EngineWin32NativesFolderRoot, runtimeCore), Path.Combine(assembliesFolder, runtimeCore), true);
         }

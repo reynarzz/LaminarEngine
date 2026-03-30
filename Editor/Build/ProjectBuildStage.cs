@@ -30,23 +30,23 @@ namespace Editor.Build
         {
             OnBeforeBuild();
 
-            var projectCollection = new ProjectCollection(GetBuildProperties());
-            var project = projectCollection.LoadProject(GetCSProjPath());
+            var buildProperties = GetBuildProperties();
 
-            // Logger
+            var projectCollection = new ProjectCollection();
+
             _parameters = new BuildParameters(projectCollection)
             {
                 Loggers = [_logger]
             };
 
-            _instance = project.CreateProjectInstance();
+            BuildManager.DefaultBuildManager.Build(_parameters,
+                new BuildRequestData(GetCSProjPath(), buildProperties, null, ["Restore"], null));
 
-            // Restore packages, such as nugget.
-            BuildManager.DefaultBuildManager.Build(_parameters, new BuildRequestData(_instance, ["Restore"]));
+            BuildManager.DefaultBuildManager.ResetCaches();
 
-            // Project build.
-            var result = BuildManager.DefaultBuildManager.Build(_parameters, new BuildRequestData(_instance, GetTargetsToBuild(), null,
-                                                                BuildRequestDataFlags.ReplaceExistingProjectInstance));
+            var result = BuildManager.DefaultBuildManager.Build(_parameters,
+                new BuildRequestData(GetCSProjPath(), buildProperties, null, GetTargetsToBuild(), null,
+                    BuildRequestDataFlags.ReplaceExistingProjectInstance));
 
             var buildResult = new BuildStageResult()
             {
@@ -54,13 +54,9 @@ namespace Editor.Build
             };
 
             if (buildResult.IsSuccess)
-            {
                 OnBuildSuccess();
-            }
             else
-            {
                 OnBuildFailed();
-            }
 
             return buildResult;
         }

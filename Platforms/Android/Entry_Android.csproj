@@ -1,30 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net9.0-android</TargetFramework>
-    <SupportedOSPlatformVersion>23</SupportedOSPlatformVersion>
-    <OutputType>Exe</OutputType>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <ApplicationId>com.reynarzz.company</ApplicationId>
-    <ApplicationVersion>1</ApplicationVersion>
-    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-	<RuntimeIdentifiers>android-arm;android-arm64</RuntimeIdentifiers>
-	<DefineConstants>ANDROID;MOBILE;$(DefineConstants)</DefineConstants>
-	<AndroidFastDeploymentEnabled>false</AndroidFastDeploymentEnabled>
-	<MinSdkVersion>23</MinSdkVersion>
-	<TargetSdkVersion>34</TargetSdkVersion>
-	<CompileSdkVersion>34</CompileSdkVersion>
-	<UseLatestAndroidPlatformSdk>true</UseLatestAndroidPlatformSdk>
-	<GameDataOutDir>$(MSBuildProjectDirectory)/Assets/</GameDataOutDir>
-	  
-	  <!--
+	<PropertyGroup>
+		<TargetFramework>net9.0-android</TargetFramework>
+		<SupportedOSPlatformVersion>23</SupportedOSPlatformVersion>
+		<OutputType>Exe</OutputType>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<ApplicationId>com.reynarzz.company</ApplicationId>
+		<ApplicationVersion>1</ApplicationVersion>
+		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+		<RuntimeIdentifiers>android-arm;android-arm64</RuntimeIdentifiers>
+		<DefineConstants>ANDROID;MOBILE;$(DefineConstants)</DefineConstants>
+		<AndroidFastDeploymentEnabled>false</AndroidFastDeploymentEnabled>
+		<MinSdkVersion>23</MinSdkVersion>
+		<TargetSdkVersion>34</TargetSdkVersion>
+		<CompileSdkVersion>34</CompileSdkVersion>
+		<UseLatestAndroidPlatformSdk>true</UseLatestAndroidPlatformSdk>
+		<GameDataOutDir>$(MSBuildProjectDirectory)/Assets/</GameDataOutDir>
+
+		<!--
       Enables trim analyzers and full trimming during Release mode.
       To learn more, see: https://learn.microsoft.com/dotnet/core/deploying/trimming/trimming-options#trimming-granularity
     -->
-    <TrimMode>full</TrimMode>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-  </PropertyGroup>
-	
+		<TrimMode>full</TrimMode>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+	</PropertyGroup>
+
 	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
 		<EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
 	</PropertyGroup>
@@ -35,7 +35,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Assets\" />
+		<Folder Include="Assets\" />
 	</ItemGroup>
 
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
@@ -66,6 +66,11 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(ShipBuild)' == 'true'">
-		<ProjectReference Include="$(ApplicationProjectPath)" />
+		<ProjectReference Include="$(ApplicationProjectPath)">
+			<ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+			<Private>true</Private>
+			<OutputItemType>Content</OutputItemType>
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</ProjectReference>
 	</ItemGroup>
 </Project>
