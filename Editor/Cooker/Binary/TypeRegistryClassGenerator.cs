@@ -365,14 +365,14 @@ namespace Editor.Cooker
                     {{
                     }}
                 }}
-
+#if DEBUG
                 var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
                 foreach (var item in assemblies)
                 {{
                     Console.WriteLine(""Assembly: "" + item.FullName);
                 }}
-
+#endif
                 return _GetType(""{name}"");
             }}
             ";

@@ -188,7 +188,7 @@ namespace Editor.Rendering
             Sprite LoadSprite(string pathInResources)
             {
                 StbImage.stbi_set_flip_vertically_on_load(1);
-                var image = ImageResult.FromStream(File.OpenRead(Path.Combine(EditorPaths.DataRoot, "Resources", pathInResources)));
+                var image = ImageResult.FromStream(File.OpenRead(Path.Combine(EditorPaths.EditorDataRoot, "Resources", pathInResources)));
                 return new Sprite(new Texture2D(TextureWrapMode.Clamp, TextureFilterMode.Linear, image.Width, image.Height, 4, PixelsPerUnit, image.Data));
             }
 

@@ -1,0 +1,83 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net9.0-windows;net9.0</TargetFrameworks>
+		<ImplicitUsings>false</ImplicitUsings>
+		<Nullable>disable</Nullable>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<RestoreLockedMode>false</RestoreLockedMode>
+		<OutputType>Library</OutputType>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)'=='Release'">
+		<DebugType>none</DebugType>
+		<DebugSymbols>false</DebugSymbols>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0'">
+		<DefineConstants>DESKTOP;$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
+
+	<!-- Windows -->
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-windows'">
+		<DefineConstants>WINDOWS;DESKTOP;$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
+	<!-- macOS -->
+	<PropertyGroup Condition="'$(OS)' == 'Unix' AND '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'True'">
+		<DefineConstants>MACOS;OSX;UNIX;DESKTOP;$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
+	<!-- Linux -->
+	<PropertyGroup Condition="'$(OS)' == 'Unix' AND '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'True'">
+		<DefineConstants>LINUX;UNIX;DESKTOP;$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
+
+	<!-- Android -->
+	<PropertyGroup Condition="'$(BuildAndroid)' == 'true'">
+		<DefineConstants>ANDROID;MOBILE</DefineConstants>
+	</PropertyGroup>
+	<!-- iOS -->
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios'">
+		<DefineConstants>IOS;MOBILE</DefineConstants>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="Assets\**\*" Visible="true">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Remove="Library\**" />
+		<Compile Remove="obj\**" />
+		<Compile Remove="bin\**" />
+		<EmbeddedResource Remove="bin\**" />
+		<EmbeddedResource Remove="Library\**" />
+		<EmbeddedResource Remove="obj\**" />
+		<None Remove="bin\**" />
+		<None Remove="Library\**" />
+		<None Remove="**\*.mt" />
+		<None Remove="**\*.png" />
+		<None Remove="**\*.wav" />
+		<None Remove="**\*.mp3" />
+		<None Remove="**\*.jpg" />
+		<None Remove="**\*.zip" />
+		<None Remove="**\*.ldtk" />
+		<None Remove="**\*.material" />
+		<None Remove="**\*.scene" />
+		<None Remove="**\*.dat" />
+		<None Remove="**\*.ttf" />
+		<None Remove="obj\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!--Remove this, it should come from the plugins folder-->
+		<PackageReference Include="CsvHelper" Version="33.1.0" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(ShipBuild)' == 'true'">
+		<ProjectReference Include="$(EngineProjectPath)" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(ShipBuild)' == 'false'">
+		<ProjectReference Include="$__ENGINE_FULL_PATH__" />
+	</ItemGroup>
+</Project>

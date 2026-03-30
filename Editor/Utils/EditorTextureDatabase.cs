@@ -152,7 +152,7 @@ namespace Editor.Utils
 
         private Texture2D LoadIconFromDisk(string path)
         {
-            var finalPath = Paths.ClearPathSeparation(Path.Combine(EditorPaths.DataRoot, "Resources/Icons", path));
+            var finalPath = Paths.ClearPathSeparation(Path.Combine(EditorPaths.EditorDataRoot, "Resources/Icons", path));
             if (File.Exists(finalPath))
             {
                 StbImage.stbi_set_flip_vertically_on_load(1);

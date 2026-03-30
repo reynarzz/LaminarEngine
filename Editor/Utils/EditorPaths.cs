@@ -12,7 +12,7 @@ namespace Editor
     {
         internal static string AppRoot { get; }
         public static string EditorRoot { get; }
-        internal static string DataRoot { get; }
+        internal static string EditorDataRoot { get; }
         internal static string GameRoot { get; set; }
         internal static string EngineRoot { get; }
         public static string AndroidProjectRoot { get; }
@@ -27,11 +27,15 @@ namespace Editor
         internal const string ENGINE_PROJECT_FULL_NAME = ENGINE_PROJECT_NAME + PROJECT_EXTENSION;
         internal const string GAME_BUILD_TYPE = "Debug";
         internal const string SHIP_DEFAULT_FOLDER_NAME = "_Ship";
+        internal const string EDITOR_RESOURCES_DIRECTORY_NAME = "Resources";
 
         internal const string ANDROID_PROJECT_NAME = "Entry_Android";
         internal const string DESKTOP_PROJECT_NAME = "Entry_Desktop";
+        internal const string GAME_PROJECT_NAME = "Game";
         internal const string ANDROID_PROJECT_FULL_NAME = ANDROID_PROJECT_NAME + PROJECT_EXTENSION;
         internal const string DESKTOP_PROJECT_FULL_NAME = DESKTOP_PROJECT_NAME + PROJECT_EXTENSION;
+        internal const string GAME_PROJECT_FULL_NAME = GAME_PROJECT_NAME + PROJECT_EXTENSION;
+
         internal const string WIN32_DATA_SHIP_FOLDER_NAME = "Data";
 
         internal const string BUILD_SETTINGS_NAME = "BuildSettings";
@@ -44,7 +48,7 @@ namespace Editor
         internal static string NewGameDllRelativePath => $@"Library/Build/bin/{GAME_BUILD_TYPE}/{GameCsProjName}.dll";
         internal static string HookGameDllRelativePath => Path.Combine(HookFolderRelativePath, $"{GameCsProjName}.dll");
 
-        internal static string GameCsProjName { get; set; } = "Game";
+        internal static string GameCsProjName { get; set; }
         internal static string GameBinFolderAbsolutePath => GetGameFolderAbsolutePath($@"Library/Build/bin/{GAME_BUILD_TYPE}");
         internal static string HookFolderAbsolutePath => GetGameFolderAbsolutePath(HookFolderRelativePath);
         internal static string CompiledGameDllAbsolutePath => GetGameFolderAbsolutePath(NewGameDllRelativePath);
@@ -69,20 +73,22 @@ namespace Editor
 
         public static string EngineNativesFolderRoot => Path.Combine(AppRoot, "Engine", "Third", "Native", "bin");
         public static string EngineWin32NativesFolderRoot => Path.Combine(EngineNativesFolderRoot, "win");
-        public static string EngineCsProjFullPath => Path.Combine(EngineRoot, ENGINE_PROJECT_FULL_NAME);
+        public static string EngineCsProjFullPath => Paths.ClearPathSeparation(Path.Combine(EngineRoot, ENGINE_PROJECT_FULL_NAME));
 
         public static readonly string ConfigDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Paths.ENGINE_NAME);
-
+        public static string EditorResourceFullPath { get; }
         static EditorPaths()
         {
             var root = Paths.ClearPathSeparation(GetRootFolder(AppContext.BaseDirectory) + Path.DirectorySeparatorChar);
 
             AppRoot = Paths.ClearPathSeparation(root);
             EditorRoot = Paths.ClearPathSeparation(Path.Combine(AppRoot, "Editor"));
-            DataRoot = Paths.ClearPathSeparation(Path.Combine(EditorRoot, "Data"));
+            EditorDataRoot = Paths.ClearPathSeparation(Path.Combine(EditorRoot, "Data"));
             AndroidProjectRoot = Paths.ClearPathSeparation(Path.Combine(AppRoot, "Platforms", "Android"));
             DesktopProjectRoot = Paths.ClearPathSeparation(Path.Combine(AppRoot, "Platforms", "Desktop"));
             EngineRoot = Paths.ClearPathSeparation(Path.Combine(AppRoot, "Engine"));
+
+            EditorResourceFullPath = Paths.ClearPathSeparation(Path.Combine(EditorDataRoot, EDITOR_RESOURCES_DIRECTORY_NAME));
         }
 
         private static string GetRootFolder(string startPath)
