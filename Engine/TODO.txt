@@ -30,6 +30,9 @@ Fix:
 - newly created folders do not appear in the asset view.
 - When 'SHIP' building check that the LazyRef is pointing to a valid AssetType.
 - Transformation for children doesn't work using the transform component after finishing compilaiton?
+- Deleting a texture that was assigned to an Actor, and then trying to select another will crash the engine.
+- Selecting a texture without Atlas enabled, after being disabled will give a index out exception (not sure if this is the right repro yet)
+
 
 Serialization:
 - Forbid serialization of dictionaries that contains EObject as key?
