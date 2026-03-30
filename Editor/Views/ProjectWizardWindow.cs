@@ -88,16 +88,30 @@ namespace Editor.Views
 
             foreach (var item in projectsFiles)
             {
-                csProjectFullPath = Paths.ClearPathSeparation(item);
-                break;
+                var path = Paths.ClearPathSeparation(item);
+                if(Path.GetFileName(path).Equals(EditorPaths.GAME_PROJECT_FULL_NAME))
+                {
+                    csProjectFullPath = path;
+                    break;
+                }
             }
 
-            if (string.IsNullOrEmpty(csProjectFullPath))
+            try
             {
-                // TODO: ask the user to pick the project or select one.
-                return false;
-            }
+                if (string.IsNullOrEmpty(csProjectFullPath))
+                {
+                    Debug.Warn("Not valid .csproj was found. Creating default one now");
+                    var projFullPath = Paths.ClearPathSeparation(Path.Combine(root, EditorPaths.GAME_PROJECT_FULL_NAME));
 
+                    GameProject.CreateDefaultProject(new ProjectCreatedInfo() { ProjectName = "Game", ProjectRootDirectory = projFullPath });
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.Error(e);
+            }
+            
             return true;
         }
 

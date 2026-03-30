@@ -77,7 +77,7 @@
 		<ProjectReference Include="$(EngineProjectPath)" />
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(ShipBuild)' == 'false'">
+	<ItemGroup Condition="'$(ShipBuild)' != 'true'">
 		<ProjectReference Include="$__ENGINE_FULL_PATH__" />
 	</ItemGroup>
 </Project>

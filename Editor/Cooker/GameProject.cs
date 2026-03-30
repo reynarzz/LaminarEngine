@@ -21,6 +21,8 @@ namespace Editor.Cooker
 
     public class GameProject
     {
+        private const string ENGINE_PATH_GAME_PROJECT_TAG = "$__ENGINE_FULL_PATH__";
+
         public static void Initialize(ProjectConfig config)
         {
             if (string.IsNullOrEmpty(config.ProjectFolderRoot) || !Directory.Exists(config.ProjectFolderRoot))
@@ -29,6 +31,27 @@ namespace Editor.Cooker
                 return;
             }
             InitializeProjectDirectories(config.ProjectFolderRoot);
+        }
+
+        internal static void CreateDefaultProject(ProjectCreatedInfo info)
+        {
+            var root = info.ProjectRootDirectory;
+            if (info.UseIntermediaryDirectory)
+            {
+                root = Path.Combine(root, info.ProjectName);
+
+                Directory.CreateDirectory(root);
+            }
+            InitializeProjectDirectories(root);
+
+            // TODO: Create default ProjectSettings.dat
+        }
+
+        private static void GenerateGameProject(string root)
+        {
+            var template = File.ReadAllText(Path.Combine(EditorPaths.EditorResourceFullPath, "GameProjectTemplate.txt"));
+            var gamecsProj = template.Replace(ENGINE_PATH_GAME_PROJECT_TAG, Path.GetFullPath(EditorPaths.EngineCsProjFullPath));
+            File.WriteAllText(Path.Combine(root, EditorPaths.GAME_PROJECT_FULL_NAME), gamecsProj);
         }
 
         private static void InitializeProjectDirectories(string rootFolder)
@@ -48,30 +71,6 @@ namespace Editor.Cooker
             }
 
             GenerateGameProject(rootFolder);
-        }
-
-        internal static void CreateDefaultProject(ProjectCreatedInfo info)
-        {
-            var root = info.ProjectRootDirectory;
-            if (info.UseIntermediaryDirectory)
-            {
-                root = Path.Combine(root, info.ProjectName);
-
-                Directory.CreateDirectory(root);
-            }
-            InitializeProjectDirectories(root);
-
-            GenerateGameProject(root);
-            // TODO: Create default ProjectSettings.dat
-        }
-
-        private const string ENGINE_PATH_GAME_PROJECT_TAG = "$__ENGINE_FULL_PATH__";
-
-        private static void GenerateGameProject(string root)
-        {
-            var template = File.ReadAllText(Path.Combine(EditorPaths.EditorResourceFullPath, "GameProjectTemplate.txt"));
-            var gamecsProj = template.Replace(ENGINE_PATH_GAME_PROJECT_TAG, Path.GetFullPath(EditorPaths.EngineCsProjFullPath));
-            File.WriteAllText(Path.Combine(root, EditorPaths.GAME_PROJECT_FULL_NAME), gamecsProj);
         }
     }
 }
