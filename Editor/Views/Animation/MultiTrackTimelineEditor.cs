@@ -297,8 +297,12 @@ namespace Editor.Views
             drawList.AddLine(new Vector2(x, canvasPos.Y), new Vector2(x, canvasPos.Y + canvasSize.Y),
                              ImGui.GetColorU32(new Vector4(1, 0.2f, 0.2f, 1)), 2.0f);
 
-            //drawList.AddTriangleFilled(new Vector2(x - 6, canvasPos.Y + _headerHeight - 2), new Vector2(x + 6, canvasPos.Y + _headerHeight - 2),
-            //                           new Vector2(x, canvasPos.Y + 4),ImGui.GetColorU32(new Vector4(1, 0.2f, 0.2f, 1)));
+            float handleSize = 8.0f;
+
+            Vector2 handleMin = new Vector2(x - handleSize, canvasPos.Y );
+            Vector2 handleMax = new Vector2(x + handleSize, canvasPos.Y + _headerHeight - 2);
+
+            drawList.AddRectFilled(handleMin, handleMax, ImGui.GetColorU32(new Vector4(1, 0.2f, 0.2f, 1)));
         }
 
         private static void HandleInput(ImDrawListPtr drawList, Vector2 mousePos, Vector2 canvasPos, Vector2 canvasSize, List<Track> tracks)
@@ -308,7 +312,7 @@ namespace Editor.Views
             float timelineTop = canvasPos.Y + _headerHeight;
             float timelineBottom = canvasPos.Y + canvasSize.Y;
 
-            if (mousePos.Y < timelineTop || mousePos.Y > timelineBottom)
+            if (mousePos.Y < canvasPos.Y || mousePos.Y > timelineBottom)
             {
                 _draggingPlayhead = false;
                 return;
@@ -316,10 +320,31 @@ namespace Editor.Views
 
             if (ImGui.IsMouseClicked(ImGuiMouseButton.Left))
             {
-                bool clickedPlayhead = MathF.Abs(mousePos.X - TimeToScreenX(_playheadTime, originX)) < 6.0f;
+                float playheadX = TimeToScreenX(_playheadTime, originX);
 
-                if (clickedPlayhead)
+                float handleSize = 8.0f;
+                Vector2 handleMin = new Vector2(playheadX - handleSize, canvasPos.Y + 4);
+                Vector2 handleMax = new Vector2(playheadX + handleSize, canvasPos.Y + _headerHeight - 2);
+
+                bool clickedPlayheadLine = MathF.Abs(mousePos.X - playheadX) < 6.0f;
+                bool clickedPlayheadHandle = mousePos.X >= handleMin.X && mousePos.X <= handleMax.X &&
+                                             mousePos.Y >= handleMin.Y && mousePos.Y <= handleMax.Y;
+
+                bool clickedHeader = mousePos.Y >= canvasPos.Y && mousePos.Y <= canvasPos.Y + _headerHeight;
+
+                if (clickedPlayheadLine || clickedPlayheadHandle)
                 {
+                    _draggingPlayhead = true;
+                }
+                else if (clickedHeader && mousePos.X >= timelineLeft)
+                {
+                    float time = ScreenXToTime(mousePos.X, originX);
+                    if (time < 0.0f)
+                    {
+                        time = 0.0f;
+                    }
+
+                    _playheadTime = SnapTime(time);
                     _draggingPlayhead = true;
                 }
                 else
@@ -365,7 +390,6 @@ namespace Editor.Views
                     }
                 }
             }
-
             if (_draggingPlayhead && ImGui.IsMouseDown(ImGuiMouseButton.Left))
             {
                 float time = ScreenXToTime(mousePos.X, originX);
