@@ -13,9 +13,9 @@ namespace Editor.Views
             
         }
 
-        private List<MultiTrackTimelineEditor.Track> _tracks = new List<MultiTrackTimelineEditor.Track>()
+        private List<MultiTrackTimelineEditor.Track> _tracks = new()
         {
-            new MultiTrackTimelineEditor.Track
+            new()
             {
                 Name = "Position",
                 Keys = new List<MultiTrackTimelineEditor.Keyframe>
@@ -24,7 +24,7 @@ namespace Editor.Views
                     new MultiTrackTimelineEditor.Keyframe { Time = 1.5f },
                 }
             },
-            new MultiTrackTimelineEditor.Track
+            new()
             {
                 Name = "Rotation",
                 Keys = new List<MultiTrackTimelineEditor.Keyframe>
