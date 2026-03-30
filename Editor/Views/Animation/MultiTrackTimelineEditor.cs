@@ -262,13 +262,13 @@ namespace Editor.Views
             var trackMin = new Vector2(canvasPos.X, trackTop);
             var trackMax = new Vector2(canvasPos.X + canvasSize.X, trackBottom);
 
-            drawList.AddRectFilled(trackMin, trackMax, ImGui.GetColorU32(new Vector4(0.13f, 0.10f, 0.10f, 1.0f)));
+            drawList.AddRectFilled(trackMin, trackMax, ImGui.GetColorU32(new Vector4(0.13f, 0.50f, 0.10f, 1.0f)));
 
             drawList.AddLine(new Vector2(canvasPos.X, trackBottom), new Vector2(canvasPos.X + canvasSize.X, trackBottom),
                              ImGui.GetColorU32(new Vector4(0.25f, 0.25f, 0.25f, 1)));
 
             drawList.AddRectFilled(trackMin, new Vector2(canvasPos.X + _trackLabelWidth, trackBottom),
-                                   ImGui.GetColorU32(new Vector4(0.18f, 0.12f, 0.12f, 1)));
+                                   ImGui.GetColorU32(new Vector4(1.0f, 0.12f, 0.12f, 1)));
 
             drawList.AddText(new Vector2(canvasPos.X + 6, trackTop + 6),
                              ImGui.GetColorU32(new Vector4(1, 1, 1, 1)), "Events");
@@ -288,13 +288,12 @@ namespace Editor.Views
                 uint col = k.Selected ? ImGui.GetColorU32(new Vector4(1.0f, 0.6f, 0.2f, 1.0f))
                                       : ImGui.GetColorU32(new Vector4(1.0f, 0.3f, 0.3f, 1.0f));
 
-                var p0 = new Vector2(x, y - size);
-                var p1 = new Vector2(x + size, y);
-                var p2 = new Vector2(x, y + size);
-                var p3 = new Vector2(x - size, y);
+                var p0 = new Vector2(x, y + size);
+                var p1 = new Vector2(x + size, y - size);
+                var p2 = new Vector2(x - size, y - size);
 
-                drawList.AddQuadFilled(p0, p1, p2, p3, col);
-                drawList.AddQuad(p0, p1, p2, p3, ImGui.GetColorU32(new Vector4(0, 0, 0, 1)));
+                drawList.AddTriangleFilled(p0, p1, p2, col);
+                drawList.AddTriangle(p0, p1, p2, ImGui.GetColorU32(new Vector4(0, 0, 0, 1)));
             }
 
             drawList.PopClipRect();
@@ -374,15 +373,15 @@ namespace Editor.Views
                 return;
             }
 
-            drawList.AddLine(new Vector2(x, canvasPos.Y), new Vector2(x, canvasPos.Y + canvasSize.Y),
-                ImGui.GetColorU32(new Vector4(1, 0.2f, 0.2f, 1)), 2.0f);
+            var playheadColor = new Vector4(1, 1.0f, 1.0f, 1);
+            drawList.AddLine(new Vector2(x, canvasPos.Y), new Vector2(x, canvasPos.Y + canvasSize.Y), ImGui.GetColorU32(playheadColor), 2.0f);
 
-            float handleSize = 8.0f;
+            float handleSize = 4.0f;
 
             var handleMin = new Vector2(x - handleSize, canvasPos.Y);
             var handleMax = new Vector2(x + handleSize, canvasPos.Y + _headerHeight - 2);
 
-            drawList.AddRectFilled(handleMin, handleMax, ImGui.GetColorU32(new Vector4(1, 0.2f, 0.2f, 1)));
+            drawList.AddRectFilled(handleMin, handleMax, ImGui.GetColorU32(playheadColor));
         }
 
         private static void HandleInput(ImDrawListPtr drawList, Vector2 mousePos, Vector2 canvasPos, Vector2 canvasSize, List<Track> tracks)
