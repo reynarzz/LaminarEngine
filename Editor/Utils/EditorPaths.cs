@@ -35,7 +35,10 @@ namespace Editor
         internal const string ANDROID_PROJECT_FULL_NAME = ANDROID_PROJECT_NAME + PROJECT_EXTENSION;
         internal const string DESKTOP_PROJECT_FULL_NAME = DESKTOP_PROJECT_NAME + PROJECT_EXTENSION;
         internal const string GAME_PROJECT_FULL_NAME = GAME_PROJECT_NAME + PROJECT_EXTENSION;
+        internal const string GAME_PROJECT_TEMPLATE_FILE_NAME = "GameProject_TEMPLATE.txt";
+        internal const string GAME_APPLICATION_TEMPLATE_CS_FILE_NAME = "GameApplication_TEMPLATE.txt";
 
+        internal const string GAME_APPLICATION_CS_FILE_NAME = "GameApplication.cs";
         internal const string WIN32_DATA_SHIP_FOLDER_NAME = "Data";
 
         internal const string BUILD_SETTINGS_NAME = "BuildSettings";

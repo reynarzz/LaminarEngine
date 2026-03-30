@@ -12,7 +12,7 @@ namespace Engine
         private static ulong[] MaskBits;
         private static Dictionary<string, int> _namesToLayers;
         private static Dictionary<int, string> _layersToNames;
-        private const int ARRAY_SIZE = sizeof(ulong) * 8;
+        internal const int ARRAY_SIZE = sizeof(ulong) * 8;
         public const ulong All = ulong.MaxValue;
 
         static LayerMask()

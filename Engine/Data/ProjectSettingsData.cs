@@ -11,16 +11,20 @@ namespace Engine.Data
     {
         [SerializedField] public vec3 Gravity { get; set; } = new vec3(0, -9.8f, 0);
         [SerializedField] internal float FixedTimeStep { get; set; } = 0.02f;
-        [SerializedField, HideFromInspector] public bool[] CollisionMatrix { get; set; } = [];
+        [SerializedField, HideFromInspector] public bool[] CollisionMatrix { get; set; } = new bool[LayerMask.ARRAY_SIZE];
     }
 
     internal class LayersSettings
     {
-        [SerializedField] internal string[] Layers = ["Default", "Background", "Foreground", "Player", "UI"];
+        [SerializedField] internal string[] Layers;
 
+        public LayersSettings()
+        {
+            Layers = GetDefaultLayers();
+        }
         internal string[] GetDefaultLayers()
         {
-            var layers = new string[sizeof(ulong)*8];
+            var layers = new string[sizeof(ulong) * 8];
             layers[0] = "Default";
             layers[1] = "Background";
             layers[2] = "Foreground";

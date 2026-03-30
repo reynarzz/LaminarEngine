@@ -1,0 +1,34 @@
+using Engine;
+using Engine.Layers;
+using System;
+using System.Threading.Tasks;
+
+namespace Game
+{
+    public class GameApplication : ApplicationLayer
+    {
+        // Define initialization procedure here.
+        protected override void OnInitialize()
+        {
+#if DEBUG
+    #if WIN32
+                Debug.Log("Running windows");
+    #elif MACOS
+                Debug.Log("Running macOS");
+    #elif ANDROID
+                Debug.Log("Running android");
+    #elif IOS
+                Debug.Log("Running iOS");
+    #elif EDITOR
+                Debug.Log("Running editor");
+    #endif
+#else
+           Screen.IsFullScreen = true;
+           WindowManager.Window.CursorVisible = false;
+#endif
+        }
+
+        // Called when the application is closed.
+        public override void Close() { }
+    }
+}

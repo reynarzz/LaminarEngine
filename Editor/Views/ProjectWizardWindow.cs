@@ -27,12 +27,12 @@ namespace Editor.Views
         {
             if (ImGui.Button("Open project"))
             {
-                if (EditorFileDialog.PickFolder("C:/", out var selected))
+                if (EditorFileDialog.PickFolder("C:/", out var rootFolderSelected))
                 {
-                    if (IsValidProject(selected, out var csProjFullPath))
+                    if (IsValidProject(rootFolderSelected))
                     {
-                        LoadProject(selected, csProjFullPath);
-                        Debug.Log(selected + "Is Valid: ");
+                        LoadProject(rootFolderSelected);
+                        Debug.Log(rootFolderSelected + "Is Valid: ");
                     }
                 }
             }
@@ -66,12 +66,12 @@ namespace Editor.Views
             if (ImGui.Button("Create Project"))
             {
                 GameProject.CreateDefaultProject(_projectCreateInfo);
+                LoadProject(_projectCreateInfo.ProjectRootDirectory);
             }
             ImGui.EndDisabled();
         }
-        private bool IsValidProject(string root, out string csProjectFullPath)
+        private bool IsValidProject(string root)
         {
-            csProjectFullPath = string.Empty;
             // Check if is has project settings folder
             var projectSettingsPath = Path.Combine(root, Paths.PROJECT_SETTINGS_FOLDER_NAME);
             if (!Directory.Exists(projectSettingsPath))
@@ -85,11 +85,12 @@ namespace Editor.Views
             }
 
             var projectsFiles = Directory.EnumerateFiles(root, "*.csproj");
+            var csProjectFullPath = string.Empty;
 
             foreach (var item in projectsFiles)
             {
                 var path = Paths.ClearPathSeparation(item);
-                if(Path.GetFileName(path).Equals(EditorPaths.GAME_PROJECT_FULL_NAME))
+                if (Path.GetFileName(path).Equals(EditorPaths.GAME_PROJECT_FULL_NAME))
                 {
                     csProjectFullPath = path;
                     break;
@@ -111,14 +112,16 @@ namespace Editor.Views
             {
                 Debug.Error(e);
             }
-            
+
             return true;
         }
 
-        private void LoadProject(string projectDirRootAbsolutePath, string gameCsprojAbsolutePath)
+        private void LoadProject(string projectDirRootAbsolutePath)
         {
+            projectDirRootAbsolutePath = Paths.ClearPathSeparation(projectDirRootAbsolutePath);
+
+            var gameCsprojAbsolutePath = Path.Combine(projectDirRootAbsolutePath, EditorPaths.GAME_PROJECT_FULL_NAME);
             var assemblyName = Path.GetFileName(gameCsprojAbsolutePath);
-            projectDirRootAbsolutePath = Paths.ClearPathSeparation(projectDirRootAbsolutePath); ;
             EditorPaths.GameRoot = projectDirRootAbsolutePath;
             EditorPaths.GameCsProjName = Path.GetFileNameWithoutExtension(assemblyName); // derive from project settings, and if is not found ask the user to pick it or create it.
             GameProject.Initialize(new ProjectConfig() { ProjectFolderRoot = EditorPaths.GameRoot });
