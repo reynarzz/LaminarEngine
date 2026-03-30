@@ -85,7 +85,7 @@ namespace Editor.Views
             DrawTracks(drawList, canvasPos, canvasSize, tracks);
             DrawPlayhead(drawList, canvasPos, canvasSize);
 
-            if (hovered)
+            if (hovered || _draggingPlayhead || _draggingKeyframes || _boxSelecting)
             {
                 HandleInput(drawList, mousePos, canvasPos, canvasSize, tracks);
             }
@@ -232,6 +232,7 @@ namespace Editor.Views
             }
         }
 
+
         private static void DrawTracks(ImDrawListPtr drawList, Vector2 canvasPos, Vector2 canvasSize, List<Track> tracks)
         {
             float startY = canvasPos.Y + _headerHeight;
@@ -254,11 +255,6 @@ namespace Editor.Views
 
                 drawList.AddRectFilled(trackMin, trackMax, ImGui.GetColorU32(bgColor));
 
-                drawList.AddRectFilled(trackMin, new Vector2(canvasPos.X + _trackLabelWidth, trackBottom),
-                                       ImGui.GetColorU32(new Vector4(0.16f, 0.16f, 0.16f, 1)));
-
-                drawList.AddText(new Vector2(canvasPos.X + 6, trackTop + 10), ImGui.GetColorU32(new Vector4(1, 1, 1, 1)), tracks[t].Name);
-
                 drawList.AddLine(new Vector2(canvasPos.X, trackBottom), new Vector2(canvasPos.X + canvasSize.X, trackBottom),
                                  ImGui.GetColorU32(new Vector4(0.25f, 0.25f, 0.25f, 1)));
 
@@ -273,12 +269,15 @@ namespace Editor.Views
                                             ImGui.GetColorU32(new Vector4(0.2f, 0.8f, 1.0f, 1.0f));
 
                     drawList.AddRectFilled(new Vector2(x - size, y - size), new Vector2(x + size, y + size), col);
-
                     drawList.AddRect(new Vector2(x - size, y - size), new Vector2(x + size, y + size), ImGui.GetColorU32(new Vector4(0, 0, 0, 1)));
                 }
+
+                drawList.AddRectFilled(trackMin, new Vector2(canvasPos.X + _trackLabelWidth, trackBottom),
+                                       ImGui.GetColorU32(new Vector4(0.16f, 0.16f, 0.16f, 1)));
+
+                drawList.AddText(new Vector2(canvasPos.X + 6, trackTop + 10), ImGui.GetColorU32(new Vector4(1, 1, 1, 1)), tracks[t].Name);
             }
         }
-
         private static void DrawPlayhead(ImDrawListPtr drawList, Vector2 canvasPos, Vector2 canvasSize)
         {
             float originX = canvasPos.X;
@@ -312,10 +311,12 @@ namespace Editor.Views
             float timelineTop = canvasPos.Y + _headerHeight;
             float timelineBottom = canvasPos.Y + canvasSize.Y;
 
-            if (mousePos.Y < canvasPos.Y || mousePos.Y > timelineBottom)
+            if (!_draggingPlayhead && !_draggingKeyframes && !_boxSelecting)
             {
-                _draggingPlayhead = false;
-                return;
+                if (mousePos.Y < canvasPos.Y || mousePos.Y > timelineBottom)
+                {
+                    return;
+                }
             }
 
             if (ImGui.IsMouseClicked(ImGuiMouseButton.Left))

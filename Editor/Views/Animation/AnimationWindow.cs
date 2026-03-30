@@ -37,7 +37,7 @@ namespace Editor.Views
 
         public override void OnDraw()
         {
-            if (OnBeginWindow("Animation"))
+            if (OnBeginWindow("Animation", ImGuiNET.ImGuiWindowFlags.None, true, new GlmNet.vec2()))
             {
                 MultiTrackTimelineEditor.Draw(ref _tracks);
             }
