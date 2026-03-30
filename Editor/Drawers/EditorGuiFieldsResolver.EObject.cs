@@ -166,7 +166,7 @@ namespace Editor.Utils
             var invisibleButtonSize = new Vector2(max.X - min.X, max.Y - min.Y);
             invisibleButtonSize.X -= 30;
 
-            if(valueType == null)
+            if (valueType == null)
             {
                 ImGui.PopStyleColor(3);
                 ImGui.SetCursorPos(afterTextCursorPos);
@@ -282,24 +282,37 @@ namespace Editor.Utils
                     foreach (var (id, info) in assets)
                     {
                         var meta = EditorAssetUtils.GetAssetMeta(info.Path, AssetType.Texture) as TextureMetaFile;
-                        if (meta?.AtlasData == null || meta.AtlasData.ChunksCount == 0)
+                        if (meta?.AtlasData == null)
                             continue;
 
                         var atlas = Assets.GetSpriteAtlas(info.Path);
 
-                        for (int i = 0; i < meta.AtlasData.ChunksCount; i++)
+                        if (meta.AtlasData.ChunksCount > 0)
                         {
-                            var name = Sprite.CreateSpriteName(Path.GetFileName(info.Path), i);
-                            var label = $"{name}###{i}__{info.Path}";
 
-                            // This copy is needed since I'm passing it to a lambda.
-                            int iCopy = i;
+                            for (int i = 0; i < meta.AtlasData.ChunksCount; i++)
+                            {
+                                var name = Sprite.CreateSpriteName(Path.GetFileName(info.Path), i);
+                                var label = $"{name}###{i}__{info.Path}";
 
+                                // This copy is needed since I'm passing it to a lambda.
+                                int iCopy = i;
+
+                                spriteItems.Add(new AssetPickedInfo()
+                                {
+                                    Name = label,
+                                    Path = info.Path,
+                                    SetValueCallback = () => setValue(atlas.GetSprite(iCopy)),
+                                });
+                            }
+                        }
+                        else
+                        {
                             spriteItems.Add(new AssetPickedInfo()
                             {
-                                Name = label,
+                                Name = info.Name,
                                 Path = info.Path,
-                                SetValueCallback = () => setValue(atlas.GetSprite(iCopy)),
+                                SetValueCallback = () => setValue(atlas.GetSprite(0)),
                             });
                         }
                     }
@@ -336,7 +349,7 @@ namespace Editor.Utils
             {
                 return true;
             }
-            else if (valueType == typeof(Sprite) && payloadType.IsAssignableFrom(typeof(Texture2D)))
+            else if (valueType == typeof(Sprite) && (payloadType.IsAssignableFrom(typeof(Texture2D)) || payloadType.IsAssignableFrom(typeof(Texture))))
             {
                 return true;
             }
@@ -360,7 +373,16 @@ namespace Editor.Utils
                 valueType = payload.Type;
             }
 
-            if (typeof(Asset).IsAssignableFrom(valueType))
+            if (valueType == typeof(Sprite))
+            {
+                var texture = Assets.GetAssetFromGuid(payload.RefId) as TextureAsset;
+                if (texture)
+                {
+                    var atlas = texture?.Atlas.GetSprite(Mathf.Max(0, payload.Index));
+                    setValue(atlas);
+                }
+            }
+            else if (typeof(Asset).IsAssignableFrom(valueType))
             {
                 if (valueType.IsAssignableTo(typeof(Texture)))
                 {
@@ -370,15 +392,6 @@ namespace Editor.Utils
                 else
                 {
                     setValue(Assets.GetAssetFromGuid(payload.RefId));
-                }
-            }
-            else if (valueType == typeof(Sprite))
-            {
-                var texture = Assets.GetAssetFromGuid(payload.RefId) as TextureAsset;
-                if (texture)
-                {
-                    var atlas = texture?.Atlas.GetSprite(Mathf.Max(0, payload.Index));
-                    setValue(atlas);
                 }
             }
             else if (valueType == typeof(Actor))
