@@ -5,7 +5,6 @@ using ImGuiNET;
 
 namespace Editor.Views
 {
-
     public static class MultiTrackTimelineEditor
     {
         public class Keyframe
@@ -20,6 +19,15 @@ namespace Editor.Views
             public List<Keyframe> Keys = new List<Keyframe>();
         }
 
+        public class EventKeyframe
+        {
+            public float Time;
+            public bool Selected;
+            public string Name = "";
+        }
+
+        private static List<EventKeyframe> _eventKeys = new List<EventKeyframe>();
+
         private static float _zoom = 120.0f;
         private static float _scrollX = 0.0f;
 
@@ -27,12 +35,16 @@ namespace Editor.Views
         private static bool _draggingPlayhead = false;
 
         private static bool _draggingKeyframes = false;
+        private static bool _draggingEventKeys = false;
         private static bool _boxSelecting = false;
+
         private static Vector2 _boxSelectStart;
         private static Vector2 _boxSelectEnd;
 
         private static Vector2 _dragStartMouse;
+
         private static Dictionary<Keyframe, float> _dragOriginalTimes = new Dictionary<Keyframe, float>();
+        private static Dictionary<EventKeyframe, float> _dragOriginalEventTimes = new Dictionary<EventKeyframe, float>();
 
         private static float _snapStep = 0.1f;
         private static bool _snapEnabled = true;
@@ -40,6 +52,7 @@ namespace Editor.Views
         private static float _trackHeight = 40.0f;
         private static float _headerHeight = 24.0f;
         private static float _trackLabelWidth = 140.0f;
+        private static float _eventTrackHeight = 28.0f;
 
         public static void Draw(ref List<Track> tracks)
         {
@@ -68,7 +81,6 @@ namespace Editor.Views
             Vector2 mousePos = ImGui.GetIO().MousePos;
 
             drawList.AddRectFilled(canvasPos, canvasPos + canvasSize, ImGui.GetColorU32(new Vector4(0.10f, 0.10f, 0.10f, 1.0f)));
-
             drawList.AddRect(canvasPos, canvasPos + canvasSize, ImGui.GetColorU32(new Vector4(0.35f, 0.35f, 0.35f, 1.0f)));
 
             if (hovered)
@@ -82,10 +94,11 @@ namespace Editor.Views
             }
 
             DrawTimeHeader(drawList, canvasPos, canvasSize);
+            DrawEventTrack(drawList, canvasPos, canvasSize);
             DrawTracks(drawList, canvasPos, canvasSize, tracks);
             DrawPlayhead(drawList, canvasPos, canvasSize);
 
-            if (hovered || _draggingPlayhead || _draggingKeyframes || _boxSelecting)
+            if (hovered || _draggingPlayhead || _draggingKeyframes || _draggingEventKeys || _boxSelecting)
             {
                 HandleInput(drawList, mousePos, canvasPos, canvasSize, tracks);
             }
@@ -171,14 +184,14 @@ namespace Editor.Views
 
         private static void DrawTimeHeader(ImDrawListPtr drawList, Vector2 canvasPos, Vector2 canvasSize)
         {
-            Vector2 headerMin = canvasPos;
-            Vector2 headerMax = new Vector2(canvasPos.X + canvasSize.X, canvasPos.Y + _headerHeight);
+            var headerMin = canvasPos;
+            var headerMax = new Vector2(canvasPos.X + canvasSize.X, canvasPos.Y + _headerHeight);
 
             drawList.AddRectFilled(headerMin, headerMax, ImGui.GetColorU32(new Vector4(0.14f, 0.14f, 0.14f, 1)));
 
             drawList.AddLine(new Vector2(canvasPos.X + _trackLabelWidth, canvasPos.Y),
-                new Vector2(canvasPos.X + _trackLabelWidth, canvasPos.Y + canvasSize.Y),
-                ImGui.GetColorU32(new Vector4(0.3f, 0.3f, 0.3f, 1)));
+                             new Vector2(canvasPos.X + _trackLabelWidth, canvasPos.Y + canvasSize.Y),
+                             ImGui.GetColorU32(new Vector4(0.3f, 0.3f, 0.3f, 1)));
 
             float majorStep = 1.0f;
             float minorStep = 0.1f;
@@ -216,7 +229,9 @@ namespace Editor.Views
 
                 bool major = MathF.Abs((t / majorStep) - MathF.Round(t / majorStep)) < 0.001f;
 
-                uint color = major ? ImGui.GetColorU32(new Vector4(0.4f, 0.4f, 0.4f, 1)) : ImGui.GetColorU32(new Vector4(0.25f, 0.25f, 0.25f, 1));
+                uint color = major
+                    ? ImGui.GetColorU32(new Vector4(0.4f, 0.4f, 0.4f, 1))
+                    : ImGui.GetColorU32(new Vector4(0.25f, 0.25f, 0.25f, 1));
 
                 if (x >= canvasPos.X + _trackLabelWidth)
                 {
@@ -229,17 +244,65 @@ namespace Editor.Views
                 }
             }
 
-            drawList.AddRectFilled(canvasPos,
-                                   new Vector2(canvasPos.X + _trackLabelWidth, canvasPos.Y + _headerHeight),
+            drawList.AddRectFilled(canvasPos, new Vector2(canvasPos.X + _trackLabelWidth, canvasPos.Y + _headerHeight),
                                    ImGui.GetColorU32(new Vector4(0.16f, 0.16f, 0.16f, 1)));
 
             drawList.AddLine(new Vector2(canvasPos.X + _trackLabelWidth, canvasPos.Y),
                              new Vector2(canvasPos.X + _trackLabelWidth, canvasPos.Y + _headerHeight),
                              ImGui.GetColorU32(new Vector4(0.3f, 0.3f, 0.3f, 1)));
         }
+
+        private static void DrawEventTrack(ImDrawListPtr drawList, Vector2 canvasPos, Vector2 canvasSize)
+        {
+            float originX = canvasPos.X;
+
+            float trackTop = canvasPos.Y + _headerHeight;
+            float trackBottom = trackTop + _eventTrackHeight;
+
+            var trackMin = new Vector2(canvasPos.X, trackTop);
+            var trackMax = new Vector2(canvasPos.X + canvasSize.X, trackBottom);
+
+            drawList.AddRectFilled(trackMin, trackMax, ImGui.GetColorU32(new Vector4(0.13f, 0.10f, 0.10f, 1.0f)));
+
+            drawList.AddLine(new Vector2(canvasPos.X, trackBottom), new Vector2(canvasPos.X + canvasSize.X, trackBottom),
+                             ImGui.GetColorU32(new Vector4(0.25f, 0.25f, 0.25f, 1)));
+
+            drawList.AddRectFilled(trackMin, new Vector2(canvasPos.X + _trackLabelWidth, trackBottom),
+                                   ImGui.GetColorU32(new Vector4(0.18f, 0.12f, 0.12f, 1)));
+
+            drawList.AddText(new Vector2(canvasPos.X + 6, trackTop + 6),
+                             ImGui.GetColorU32(new Vector4(1, 1, 1, 1)), "Events");
+
+            var clipMin = new Vector2(canvasPos.X + _trackLabelWidth, trackTop);
+            var clipMax = new Vector2(canvasPos.X + canvasSize.X, trackBottom);
+
+            drawList.PushClipRect(clipMin, clipMax, true);
+
+            foreach (EventKeyframe k in _eventKeys)
+            {
+                float x = TimeToScreenX(k.Time, originX);
+                float y = trackTop + _eventTrackHeight * 0.5f;
+
+                float size = 6.0f;
+
+                uint col = k.Selected ? ImGui.GetColorU32(new Vector4(1.0f, 0.6f, 0.2f, 1.0f))
+                                      : ImGui.GetColorU32(new Vector4(1.0f, 0.3f, 0.3f, 1.0f));
+
+                var p0 = new Vector2(x, y - size);
+                var p1 = new Vector2(x + size, y);
+                var p2 = new Vector2(x, y + size);
+                var p3 = new Vector2(x - size, y);
+
+                drawList.AddQuadFilled(p0, p1, p2, p3, col);
+                drawList.AddQuad(p0, p1, p2, p3, ImGui.GetColorU32(new Vector4(0, 0, 0, 1)));
+            }
+
+            drawList.PopClipRect();
+        }
+
         private static void DrawTracks(ImDrawListPtr drawList, Vector2 canvasPos, Vector2 canvasSize, List<Track> tracks)
         {
-            float startY = canvasPos.Y + _headerHeight;
+            float startY = canvasPos.Y + _headerHeight + _eventTrackHeight;
             float originX = canvasPos.X;
 
             for (int t = 0; t < tracks.Count; t++)
@@ -262,6 +325,11 @@ namespace Editor.Views
                 drawList.AddLine(new Vector2(canvasPos.X, trackBottom), new Vector2(canvasPos.X + canvasSize.X, trackBottom),
                                  ImGui.GetColorU32(new Vector4(0.25f, 0.25f, 0.25f, 1)));
 
+                var clipMin = new Vector2(canvasPos.X + _trackLabelWidth, trackTop);
+                var clipMax = new Vector2(canvasPos.X + canvasSize.X, trackBottom);
+
+                drawList.PushClipRect(clipMin, clipMax, true);
+
                 foreach (Keyframe k in tracks[t].Keys)
                 {
                     float x = TimeToScreenX(k.Time, originX);
@@ -269,24 +337,28 @@ namespace Editor.Views
 
                     float size = 6.0f;
 
-                    uint col = k.Selected ? ImGui.GetColorU32(new Vector4(1.0f, 0.8f, 0.2f, 1.0f)) :
-                                            ImGui.GetColorU32(new Vector4(0.2f, 0.8f, 1.0f, 1.0f));
+                    uint col = k.Selected ? ImGui.GetColorU32(new Vector4(1.0f, 0.8f, 0.2f, 1.0f))
+                                          : ImGui.GetColorU32(new Vector4(0.2f, 0.8f, 1.0f, 1.0f));
 
-                    Vector2 p0 = new Vector2(x, y - size);
-                    Vector2 p1 = new Vector2(x + size, y);
-                    Vector2 p2 = new Vector2(x, y + size);
-                    Vector2 p3 = new Vector2(x - size, y);
+                    var p0 = new Vector2(x, y - size);
+                    var p1 = new Vector2(x + size, y);
+                    var p2 = new Vector2(x, y + size);
+                    var p3 = new Vector2(x - size, y);
 
                     drawList.AddQuadFilled(p0, p1, p2, p3, col);
                     drawList.AddQuad(p0, p1, p2, p3, ImGui.GetColorU32(new Vector4(0, 0, 0, 1)));
                 }
 
+                drawList.PopClipRect();
+
                 drawList.AddRectFilled(trackMin, new Vector2(canvasPos.X + _trackLabelWidth, trackBottom),
                                        ImGui.GetColorU32(new Vector4(0.16f, 0.16f, 0.16f, 1)));
 
-                drawList.AddText(new Vector2(canvasPos.X + 6, trackTop + 10), ImGui.GetColorU32(new Vector4(1, 1, 1, 1)), tracks[t].Name);
+                drawList.AddText(new Vector2(canvasPos.X + 6, trackTop + 10),
+                                 ImGui.GetColorU32(new Vector4(1, 1, 1, 1)), tracks[t].Name);
             }
         }
+
         private static void DrawPlayhead(ImDrawListPtr drawList, Vector2 canvasPos, Vector2 canvasSize)
         {
             float originX = canvasPos.X;
@@ -303,12 +375,12 @@ namespace Editor.Views
             }
 
             drawList.AddLine(new Vector2(x, canvasPos.Y), new Vector2(x, canvasPos.Y + canvasSize.Y),
-                             ImGui.GetColorU32(new Vector4(1, 0.2f, 0.2f, 1)), 2.0f);
+                ImGui.GetColorU32(new Vector4(1, 0.2f, 0.2f, 1)), 2.0f);
 
             float handleSize = 8.0f;
 
-            Vector2 handleMin = new Vector2(x - handleSize, canvasPos.Y );
-            Vector2 handleMax = new Vector2(x + handleSize, canvasPos.Y + _headerHeight - 2);
+            var handleMin = new Vector2(x - handleSize, canvasPos.Y);
+            var handleMax = new Vector2(x + handleSize, canvasPos.Y + _headerHeight - 2);
 
             drawList.AddRectFilled(handleMin, handleMax, ImGui.GetColorU32(new Vector4(1, 0.2f, 0.2f, 1)));
         }
@@ -320,7 +392,7 @@ namespace Editor.Views
             float timelineTop = canvasPos.Y + _headerHeight;
             float timelineBottom = canvasPos.Y + canvasSize.Y;
 
-            if (!_draggingPlayhead && !_draggingKeyframes && !_boxSelecting)
+            if (!_draggingPlayhead && !_draggingKeyframes && !_draggingEventKeys && !_boxSelecting)
             {
                 if (mousePos.Y < canvasPos.Y || mousePos.Y > timelineBottom)
                 {
@@ -333,8 +405,8 @@ namespace Editor.Views
                 float playheadX = TimeToScreenX(_playheadTime, originX);
 
                 float handleSize = 8.0f;
-                Vector2 handleMin = new Vector2(playheadX - handleSize, canvasPos.Y + 4);
-                Vector2 handleMax = new Vector2(playheadX + handleSize, canvasPos.Y + _headerHeight - 2);
+                var handleMin = new Vector2(playheadX - handleSize, canvasPos.Y + 4);
+                var handleMax = new Vector2(playheadX + handleSize, canvasPos.Y + _headerHeight - 2);
 
                 bool clickedPlayheadHandle = mousePos.X >= handleMin.X && mousePos.X <= handleMax.X &&
                                              mousePos.Y >= handleMin.Y && mousePos.Y <= handleMax.Y;
@@ -358,43 +430,75 @@ namespace Editor.Views
                 }
                 else
                 {
-                    int clickedTrackIndex = GetTrackIndex(mousePos.Y, canvasPos.Y, tracks.Count);
-                    Keyframe clickedKey = FindKeyframeAt(mousePos, canvasPos, tracks, clickedTrackIndex);
-
                     bool ctrl = ImGui.GetIO().KeyCtrl;
                     bool shift = ImGui.GetIO().KeyShift;
 
-                    if (!ctrl && !shift && clickedKey == null)
-                    {
-                        ClearSelection(tracks);
-                    }
+                    EventKeyframe clickedEvent = FindEventKeyframeAt(mousePos, canvasPos);
 
-                    if (clickedKey != null)
+                    if (clickedEvent != null)
                     {
+                        if (!ctrl && !shift && !clickedEvent.Selected)
+                        {
+                            ClearSelection(tracks);
+                            ClearEventSelection();
+                        }
+
                         if (ctrl)
                         {
-                            clickedKey.Selected = !clickedKey.Selected;
+                            clickedEvent.Selected = !clickedEvent.Selected;
                         }
                         else
                         {
-                            if (!clickedKey.Selected)
+                            if (!clickedEvent.Selected)
                             {
-                                ClearSelection(tracks);
-                                clickedKey.Selected = true;
+                                ClearEventSelection();
+                                clickedEvent.Selected = true;
                             }
                         }
 
-                        _draggingKeyframes = true;
+                        _draggingEventKeys = true;
                         _dragStartMouse = mousePos;
-                        CacheSelectedOriginalTimes(tracks);
+                        CacheSelectedEventOriginalTimes();
                     }
                     else
                     {
-                        if (mousePos.X >= timelineLeft && mousePos.Y >= timelineTop)
+                        int clickedTrackIndex = GetTrackIndex(mousePos.Y, canvasPos.Y, tracks.Count);
+                        Keyframe clickedKey = FindKeyframeAt(mousePos, canvasPos, tracks, clickedTrackIndex);
+
+                        if (!ctrl && !shift && clickedKey == null)
                         {
-                            _boxSelecting = true;
-                            _boxSelectStart = mousePos;
-                            _boxSelectEnd = mousePos;
+                            ClearSelection(tracks);
+                            ClearEventSelection();
+                        }
+
+                        if (clickedKey != null)
+                        {
+                            if (ctrl)
+                            {
+                                clickedKey.Selected = !clickedKey.Selected;
+                            }
+                            else
+                            {
+                                if (!clickedKey.Selected)
+                                {
+                                    ClearSelection(tracks);
+                                    ClearEventSelection();
+                                    clickedKey.Selected = true;
+                                }
+                            }
+
+                            _draggingKeyframes = true;
+                            _dragStartMouse = mousePos;
+                            CacheSelectedOriginalTimes(tracks);
+                        }
+                        else
+                        {
+                            if (mousePos.X >= timelineLeft && mousePos.Y >= timelineTop)
+                            {
+                                _boxSelecting = true;
+                                _boxSelectStart = mousePos;
+                                _boxSelectEnd = mousePos;
+                            }
                         }
                     }
                 }
@@ -438,6 +542,30 @@ namespace Editor.Views
                 }
             }
 
+            if (_draggingEventKeys && ImGui.IsMouseDown(ImGuiMouseButton.Left))
+            {
+                float deltaPixels = mousePos.X - _dragStartMouse.X;
+                float deltaTime = deltaPixels / _zoom;
+
+                foreach (EventKeyframe k in _eventKeys)
+                {
+                    if (!k.Selected)
+                    {
+                        continue;
+                    }
+
+                    float original = _dragOriginalEventTimes[k];
+                    float newTime = original + deltaTime;
+
+                    if (newTime < 0.0f)
+                    {
+                        newTime = 0.0f;
+                    }
+
+                    k.Time = SnapTime(newTime);
+                }
+            }
+
             if (_boxSelecting && ImGui.IsMouseDown(ImGuiMouseButton.Left))
             {
                 _boxSelectEnd = mousePos;
@@ -453,6 +581,18 @@ namespace Editor.Views
                 if (!ctrl)
                 {
                     ClearSelection(tracks);
+                    ClearEventSelection();
+                }
+
+                foreach (EventKeyframe k in _eventKeys)
+                {
+                    float x = TimeToScreenX(k.Time, originX);
+                    float y = canvasPos.Y + _headerHeight + _eventTrackHeight * 0.5f;
+
+                    if (x >= min.X && x <= max.X && y >= min.Y && y <= max.Y)
+                    {
+                        k.Selected = true;
+                    }
                 }
 
                 foreach (Track tr in tracks)
@@ -462,7 +602,7 @@ namespace Editor.Views
                         float x = TimeToScreenX(k.Time, originX);
 
                         int trackIndex = tracks.IndexOf(tr);
-                        float trackTop = canvasPos.Y + _headerHeight + trackIndex * _trackHeight;
+                        float trackTop = canvasPos.Y + _headerHeight + _eventTrackHeight + trackIndex * _trackHeight;
                         float y = trackTop + _trackHeight * 0.5f;
 
                         if (x >= min.X && x <= max.X && y >= min.Y && y <= max.Y)
@@ -477,19 +617,22 @@ namespace Editor.Views
             {
                 _draggingPlayhead = false;
                 _draggingKeyframes = false;
+                _draggingEventKeys = false;
                 _boxSelecting = false;
             }
 
             if (ImGui.IsKeyPressed(ImGuiKey.Delete))
             {
                 DeleteSelectedKeys(tracks);
+                DeleteSelectedEventKeys();
             }
 
             if (ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
             {
-                int clickedTrackIndex = GetTrackIndex(mousePos.Y, canvasPos.Y, tracks.Count);
+                float timelineStartY = canvasPos.Y + _headerHeight;
+                float eventBottom = timelineStartY + _eventTrackHeight;
 
-                if (clickedTrackIndex >= 0 && clickedTrackIndex < tracks.Count && mousePos.X >= timelineLeft)
+                if (mousePos.Y >= timelineStartY && mousePos.Y <= eventBottom && mousePos.X >= timelineLeft)
                 {
                     float time = ScreenXToTime(mousePos.X, originX);
 
@@ -500,13 +643,32 @@ namespace Editor.Views
 
                     time = SnapTime(time);
 
-                    tracks[clickedTrackIndex].Keys.Add(new Keyframe { Time = time });
+                    _eventKeys.Add(new EventKeyframe { Time = time, Name = "Event" });
+                }
+                else
+                {
+                    int clickedTrackIndex = GetTrackIndex(mousePos.Y, canvasPos.Y, tracks.Count);
+
+                    if (clickedTrackIndex >= 0 && clickedTrackIndex < tracks.Count && mousePos.X >= timelineLeft)
+                    {
+                        float time = ScreenXToTime(mousePos.X, originX);
+
+                        if (time < 0.0f)
+                        {
+                            time = 0.0f;
+                        }
+
+                        time = SnapTime(time);
+
+                        tracks[clickedTrackIndex].Keys.Add(new Keyframe { Time = time });
+                    }
                 }
             }
         }
+
         private static int GetTrackIndex(float mouseY, float canvasY, int trackCount)
         {
-            float startY = canvasY + _headerHeight;
+            float startY = canvasY + _headerHeight + _eventTrackHeight;
             float localY = mouseY - startY;
 
             if (localY < 0.0f)
@@ -532,12 +694,33 @@ namespace Editor.Views
             }
 
             float originX = canvasPos.X;
-            float trackTop = canvasPos.Y + _headerHeight + trackIndex * _trackHeight;
+            float trackTop = canvasPos.Y + _headerHeight + _eventTrackHeight + trackIndex * _trackHeight;
             float y = trackTop + _trackHeight * 0.5f;
 
             float keySize = 6.0f;
 
             foreach (Keyframe k in tracks[trackIndex].Keys)
+            {
+                float x = TimeToScreenX(k.Time, originX);
+
+                if (MathF.Abs(mousePos.X - x) <= keySize && MathF.Abs(mousePos.Y - y) <= keySize)
+                {
+                    return k;
+                }
+            }
+
+            return null;
+        }
+
+        private static EventKeyframe FindEventKeyframeAt(Vector2 mousePos, Vector2 canvasPos)
+        {
+            float originX = canvasPos.X;
+            float trackTop = canvasPos.Y + _headerHeight;
+            float y = trackTop + _eventTrackHeight * 0.5f;
+
+            float keySize = 6.0f;
+
+            foreach (EventKeyframe k in _eventKeys)
             {
                 float x = TimeToScreenX(k.Time, originX);
 
@@ -561,6 +744,14 @@ namespace Editor.Views
             }
         }
 
+        private static void ClearEventSelection()
+        {
+            foreach (EventKeyframe k in _eventKeys)
+            {
+                k.Selected = false;
+            }
+        }
+
         private static void CacheSelectedOriginalTimes(List<Track> tracks)
         {
             _dragOriginalTimes.Clear();
@@ -577,12 +768,30 @@ namespace Editor.Views
             }
         }
 
+        private static void CacheSelectedEventOriginalTimes()
+        {
+            _dragOriginalEventTimes.Clear();
+
+            foreach (EventKeyframe k in _eventKeys)
+            {
+                if (k.Selected)
+                {
+                    _dragOriginalEventTimes[k] = k.Time;
+                }
+            }
+        }
+
         private static void DeleteSelectedKeys(List<Track> tracks)
         {
             foreach (Track tr in tracks)
             {
                 tr.Keys.RemoveAll(k => k.Selected);
             }
+        }
+
+        private static void DeleteSelectedEventKeys()
+        {
+            _eventKeys.RemoveAll(k => k.Selected);
         }
     }
 }
