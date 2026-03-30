@@ -58,6 +58,8 @@ Performance fix:
 - Create UI system to work exactly like UGui.
 
 Features:
+- Implement simple animation window.
+- Polygon collider mesh editor (using handles)
 - Implement V1 Prefabs: Without data linking. But just a template that you can drag into the scene.
 - Implement 'OnChanged' for InspectorDrawer, so here we could precalculate the data of the new selection.
 - Assets should only be able to be loaded by dragging and dropping into the scene, or the special folder 'Resources'.

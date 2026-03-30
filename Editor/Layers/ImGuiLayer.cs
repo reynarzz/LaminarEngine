@@ -103,6 +103,7 @@ namespace Editor.Layers
                     new AssetsViewWindow(),
                     new ActionBarView(),
                     new FooterBarView(),
+                    new AnimationWindow(),
 
                     new SceneGraphWindow(),
                     new ObjectEditorView(),
