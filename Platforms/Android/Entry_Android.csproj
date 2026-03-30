@@ -66,11 +66,6 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(ShipBuild)' == 'true'">
-		<ProjectReference Include="$(ApplicationProjectPath)">
-			<ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-			<Private>true</Private>
-			<OutputItemType>Content</OutputItemType>
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</ProjectReference>
+		<ProjectReference Include="$(ApplicationProjectPath)"/>
 	</ItemGroup>
 </Project>
