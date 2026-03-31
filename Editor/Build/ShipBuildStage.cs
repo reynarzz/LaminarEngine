@@ -26,8 +26,9 @@ namespace Editor.Build
                 props["PublishAot"] = "true";
             }
 
-            props["ApplicationProjectPath"] = Path.GetFullPath(EditorPaths.GameProjectAbsolutePath);
-            props["EngineProjectPath"] = EditorPaths.EngineCsProjFullPath;
+            props["LAM_APPLICATION_PROJECT_PATH"] = Path.GetFullPath(EditorPaths.GameProjectAbsolutePath);
+            props["LAM_ENGINE_PROJECT_PATH"] = EditorPaths.EngineCsProjFullPath;
+            props["LAM_GENERATED_PROJECT"] = EditorPaths.GameGenerateProjectCsProjFileFullPath;
 
             return new Dictionary<string, string>(props)
             {

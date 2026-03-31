@@ -74,7 +74,7 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(ShipBuild)' == 'true'">
-		<ProjectReference Include="$(EngineProjectPath)" />
+		<ProjectReference Include="$(LAM_ENGINE_PROJECT_PATH)" />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(ShipBuild)' != 'true'">

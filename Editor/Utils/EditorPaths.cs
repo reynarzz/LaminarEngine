@@ -25,6 +25,10 @@ namespace Editor
         internal const string SCENE_FILE_EXTENSION = ".scene";
         internal const string ENGINE_PROJECT_NAME = "Engine";
         internal const string ENGINE_PROJECT_FULL_NAME = ENGINE_PROJECT_NAME + PROJECT_EXTENSION;
+
+        internal const string GENERATED_PROJECT_NAME = "Generated";
+        internal const string GENERATED_PROJECT_FULL_NAME = GENERATED_PROJECT_NAME + PROJECT_EXTENSION;
+
         internal const string GAME_BUILD_TYPE = "Debug";
         internal const string SHIP_DEFAULT_FOLDER_NAME = "_Ship";
         internal const string EDITOR_RESOURCES_DIRECTORY_NAME = "Resources";
@@ -36,9 +40,8 @@ namespace Editor
         internal const string DESKTOP_PROJECT_FULL_NAME = DESKTOP_PROJECT_NAME + PROJECT_EXTENSION;
         internal const string GAME_PROJECT_FULL_NAME = GAME_PROJECT_NAME + PROJECT_EXTENSION;
         internal const string GAME_PROJECT_TEMPLATE_FILE_NAME = "GameProject_TEMPLATE.txt";
-        internal const string GAME_APPLICATION_TEMPLATE_CS_FILE_NAME = "GameApplication_TEMPLATE.txt";
+        internal const string GENERATED_PROJECT_TEMPLATE_FILE_NAME = "GeneratedProject_TEMPLATE.txt";
 
-        internal const string GAME_APPLICATION_CS_FILE_NAME = "GameApplication.cs";
         internal const string WIN32_DATA_SHIP_FOLDER_NAME = "Data";
 
         internal const string BUILD_SETTINGS_NAME = "BuildSettings";
@@ -47,20 +50,28 @@ namespace Editor
 
         internal const string PROJECT_SETTINGS_DAT_FULL_NAME = PROJECT_SETTINGS_NAME + EDITOR_DATA_EXTENSION;
 
-        internal static string HookFolderRelativePath => $@"Library/Build/bin/{GAME_BUILD_TYPE}/Hook";
-        internal static string NewGameDllRelativePath => $@"Library/Build/bin/{GAME_BUILD_TYPE}/{GameCsProjName}.dll";
+        internal const string LIBRARY_FOLDER_NAME = "Library";
+        internal const string BUILD_FOLDER_NAME = "Build";
+        internal const string GENERATED_FOLDER_NAME = "Generated";
+
+        internal const string EDITOR_TEMPLATES_FOLDER_NAME = "Templates";
+        internal static string BuildFolderRelativePath => Path.Combine(LIBRARY_FOLDER_NAME, BUILD_FOLDER_NAME);
+        internal static string HookFolderRelativePath => $@"{BuildFolderRelativePath}/bin/{GAME_BUILD_TYPE}/Hook";
+        internal static string NewGameDllRelativePath => $@"{BuildFolderRelativePath}/bin/{GAME_BUILD_TYPE}/{GameCsProjName}.dll";
         internal static string HookGameDllRelativePath => Path.Combine(HookFolderRelativePath, $"{GameCsProjName}.dll");
 
         internal static string GameCsProjName { get; set; }
-        internal static string GameBinFolderAbsolutePath => GetGameFolderAbsolutePath($@"Library/Build/bin/{GAME_BUILD_TYPE}");
+        internal static string GameBinFolderAbsolutePath => GetGameFolderAbsolutePath($@"{BuildFolderRelativePath}/bin/{GAME_BUILD_TYPE}");
         internal static string HookFolderAbsolutePath => GetGameFolderAbsolutePath(HookFolderRelativePath);
         internal static string CompiledGameDllAbsolutePath => GetGameFolderAbsolutePath(NewGameDllRelativePath);
         internal static string GameHookDLLAbsolutePath => GetGameFolderAbsolutePath(HookGameDllRelativePath);
+        internal static string GameBuildFolderAbsolutePath => GetGameFolderAbsolutePath(BuildFolderRelativePath);
         internal static string GameProjectAbsolutePath => Path.Combine(GameRoot, GameCSProjFullName);
         internal static string GameCSProjFullName => GameCsProjName + PROJECT_EXTENSION;
-
+        internal static string GameGeneratedProjectFolderAbsolutePath => GetGameFolderAbsolutePath($"{BuildFolderRelativePath}/{GENERATED_FOLDER_NAME}");
+        internal static string GameGenerateProjectCsProjFileFullPath => Path.Combine(GameGeneratedProjectFolderAbsolutePath, GENERATED_PROJECT_FULL_NAME);
         internal static string DesktopCsProjFullPath => Path.Combine(DesktopProjectRoot, DESKTOP_PROJECT_FULL_NAME);
-        public static string ShipFolderRoot => Path.Combine(AppRoot, SHIP_DEFAULT_FOLDER_NAME);
+        public static string ShipFolderRoot => Path.Combine(GameRoot, SHIP_DEFAULT_FOLDER_NAME);
         public static string AndroidShipFolderRoot => Path.Combine(ShipFolderRoot, "android");
         public static string AndroidProjectAssetsFolderRoot => Path.Combine(AndroidProjectRoot, "Assets");
         public static string AndroidPublishFolderRoot => Path.Combine(AndroidProjectRoot, "bin", "Publish");
@@ -79,7 +90,9 @@ namespace Editor
         public static string EngineCsProjFullPath => Paths.ClearPathSeparation(Path.Combine(EngineRoot, ENGINE_PROJECT_FULL_NAME));
 
         public static readonly string ConfigDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Paths.ENGINE_NAME);
+        public static string EditorTemplatesFolderFullPath => Path.Combine(EditorResourceFullPath, EDITOR_TEMPLATES_FOLDER_NAME);
         public static string EditorResourceFullPath { get; }
+
         static EditorPaths()
         {
             var root = Paths.ClearPathSeparation(GetRootFolder(AppContext.BaseDirectory) + Path.DirectorySeparatorChar);

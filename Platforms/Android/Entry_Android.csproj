@@ -66,6 +66,6 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(ShipBuild)' == 'true'">
-		<ProjectReference Include="$(ApplicationProjectPath)"/>
+		<ProjectReference Include="$(LAM_APPLICATION_PROJECT_PATH)"/>
 	</ItemGroup>
 </Project>

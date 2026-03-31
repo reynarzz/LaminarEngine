@@ -76,7 +76,7 @@
   </ItemGroup>
 
 	<ItemGroup Condition="'$(ShipBuild)' == 'true'">
-		<ProjectReference Include="..\Generated\Generated.csproj" />
+		<ProjectReference Include="$(LAM_GENERATED_PROJECT)" />
 
 			<Reference Condition="'$(BUILD_MOBILE)' == 'true'" Include="SoundFlow">
 				<HintPath>Third\SoundFlow\Compiled\Miniaudio\SoundFlow.dll</HintPath>

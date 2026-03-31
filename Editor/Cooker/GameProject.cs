@@ -57,7 +57,7 @@ namespace Editor.Cooker
 
             string LoadTemplate(string templateRelFileName)
             {
-                return File.ReadAllText(Path.Combine(EditorPaths.EditorResourceFullPath, templateRelFileName));
+                return File.ReadAllText(Path.Combine(EditorPaths.EditorTemplatesFolderFullPath, templateRelFileName));
             }
         }
 

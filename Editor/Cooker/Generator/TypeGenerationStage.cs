@@ -27,7 +27,16 @@ namespace Editor.Cooker.Generator
 
             var str = TypeRegistryClassGenerator.Generate();
 
-            File.WriteAllText($"{EditorPaths.AppRoot}/Generated/TypeRegistry_Generated.cs", str);
+            if (!Directory.Exists(EditorPaths.GameGeneratedProjectFolderAbsolutePath))
+            {
+                Directory.CreateDirectory(EditorPaths.GameGeneratedProjectFolderAbsolutePath);
+            }
+
+            var generatedProject = File.ReadAllText(Path.Combine(EditorPaths.EditorTemplatesFolderFullPath, 
+                                                                 EditorPaths.GENERATED_PROJECT_TEMPLATE_FILE_NAME));
+
+            File.WriteAllText(EditorPaths.GameGenerateProjectCsProjFileFullPath, generatedProject);
+            File.WriteAllText($"{EditorPaths.GameGeneratedProjectFolderAbsolutePath}/TypeRegistry_Generated.cs", str);
         }
 
         private static string GetAssemblyPath(string root, string name)
@@ -51,7 +60,7 @@ namespace Editor.Cooker.Generator
 
             return asm.DefinedTypes.Select(t => t.AsType()).ToArray();
         }
-        
+
         private static async Task AddProjectTypes(string projectFullPath)
         {
             var workspace = MSBuildWorkspace.Create();
@@ -67,7 +76,7 @@ namespace Editor.Cooker.Generator
                 var typeDeclarations = root.DescendantNodes().Where(x => x is TypeDeclarationSyntax ||
                                                                          x is EnumDeclarationSyntax ||
                                                                          x is RecordDeclarationSyntax);
-               
+
                 foreach (var typeDecl in typeDeclarations)
                 {
                     var symbol = model.GetDeclaredSymbol(typeDecl);
