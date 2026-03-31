@@ -17,11 +17,8 @@ namespace Editor.Data
     {
         private static BuildSettings _buildSettings;
         private static EditorSettingsData _editorSettings;
-        public static BuildSettings BuildSettings => _buildSettings ?? (_buildSettings = LoadData<BuildSettings>(EditorPaths.BUILD_SETTINGS_NAME));
-        public static EditorSettingsData EditorSettings => _editorSettings ?? (_editorSettings = LoadData<EditorSettingsData>(EditorPaths.EDITOR_SETTINGS_NAME));
-
-
-
+        public static BuildSettings BuildSettings => _buildSettings ?? (_buildSettings = LoadData<BuildSettings>(EditorPaths.BUILD_SETTINGS_NAME, out _));
+        public static EditorSettingsData EditorSettings => _editorSettings ?? (_editorSettings = LoadData<EditorSettingsData>(EditorPaths.EDITOR_SETTINGS_NAME, out _));
 
 
         internal static void Init()
@@ -32,7 +29,11 @@ namespace Editor.Data
         private static void InitProjectSettings()
         {
             var service = EngineServices.GetService<EngineDataService>();
-            var projectSettings = LoadData<ProjectSettingsData>(EditorPaths.PROJECT_SETTINGS_NAME);
+            var projectSettings = LoadData<ProjectSettingsData>(EditorPaths.PROJECT_SETTINGS_NAME, out var isNewlyCreated);
+            if (isNewlyCreated)
+            {
+                projectSettings.InitDefault();
+            }
             service.Initialize(projectSettings);
         }
 
@@ -68,13 +69,15 @@ namespace Editor.Data
             File.WriteAllText(Path.Combine(projectSettings, $"{name}{EditorPaths.EDITOR_DATA_EXTENSION}"), json);
         }
 
-        private static T LoadData<T>(string name) where T : class, new()
+        private static T LoadData<T>(string name, out bool newlyCreated) where T : class, new()
         {
+            newlyCreated = false;
             var projectSettings = Paths.GetProjectSettingsFolder();
             var filePath = Path.Combine(projectSettings, $"{name}{EditorPaths.EDITOR_DATA_EXTENSION}");
 
             if (!File.Exists(filePath))
             {
+                newlyCreated = true;
                 return new T();
             }
             var json = File.ReadAllText(filePath);

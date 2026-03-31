@@ -11,7 +11,15 @@ namespace Engine.Data
     {
         [SerializedField] public vec3 Gravity { get; set; } = new vec3(0, -9.8f, 0);
         [SerializedField] internal float FixedTimeStep { get; set; } = 0.02f;
-        [SerializedField, HideFromInspector] public bool[] CollisionMatrix { get; set; } = new bool[LayerMask.ARRAY_SIZE];
+        [SerializedField, HideFromInspector] public bool[] CollisionMatrix { get; set; } = new bool[LayerMask.ARRAY_SIZE * LayerMask.ARRAY_SIZE];
+
+        internal void InitDefault()
+        {
+            for (int i = 0; i < CollisionMatrix.Length; i++)
+            {
+                CollisionMatrix[i] = true;
+            }
+        }
     }
 
     internal class LayersSettings
@@ -91,5 +99,10 @@ namespace Engine.Data
         [SerializedField] internal LayersSettings LayerSettings { get; set; } = new();
         [SerializedField] internal SceneSettings SceneSettings { get; set; } = new();
         [SerializedField] internal PhysicsSettings Physics { get; set; } = new();
+
+        internal void InitDefault()
+        {
+            Physics.InitDefault();
+        }
     }
 }
