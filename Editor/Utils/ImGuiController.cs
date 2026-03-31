@@ -52,7 +52,8 @@ namespace Editor
             io.MouseDoubleClickTime = 0.3f;
             io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
             io.ConfigFlags |= ImGuiConfigFlags.ViewportsEnable;
-
+            io.ConfigWindowsMoveFromTitleBarOnly = true;
+            io.ConfigDockingWithShift = true;
             Styles2();
         }
 
