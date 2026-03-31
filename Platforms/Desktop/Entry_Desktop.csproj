@@ -34,4 +34,8 @@
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</ProjectReference>
 	</ItemGroup>
+
+	<ItemGroup>
+		<TrimmerRootDescriptor Include="$(LAM_TRIMMER_LINK_RD_FILE)" />
+	</ItemGroup>
 </Project>

@@ -68,4 +68,8 @@
 	<ItemGroup Condition="'$(ShipBuild)' == 'true'">
 		<ProjectReference Include="$(LAM_APPLICATION_PROJECT_PATH)"/>
 	</ItemGroup>
+
+	<ItemGroup>
+		<TrimmerRootDescriptor Include="$(LAM_TRIMMER_LINK_RD_FILE)" />
+	</ItemGroup>
 </Project>

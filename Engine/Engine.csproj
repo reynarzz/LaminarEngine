@@ -81,6 +81,8 @@
 			<Reference Condition="'$(BUILD_MOBILE)' == 'true'" Include="SoundFlow">
 				<HintPath>Third\SoundFlow\Compiled\Miniaudio\SoundFlow.dll</HintPath>
 			</Reference>
+		
+		<TrimmerRootDescriptor Include="$(LAM_TRIMMER_LINK_RD_FILE)" />
 
 		<None Condition="'$(BUILD_MOBILE)' == 'true'" Include="Third\Soundflow\Src\Backends\MiniAudio\runtimes\**\*.*">
 			<TargetPath>runtimes\%(RecursiveDir)%(Filename)%(Extension)</TargetPath>
@@ -113,4 +115,5 @@
 			<_Parameter1>$(EngineInternalsVisibleTo)</_Parameter1>
 		</AssemblyAttribute>
 	</ItemGroup>
+
 </Project>

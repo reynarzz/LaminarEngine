@@ -130,6 +130,8 @@ namespace Editor.Views
                 }
                 IsWindowFocused = ImGui.IsWindowFocused();
 
+                ImGui.PopStyleVar();
+
                 return _isOpened;
             }
 
@@ -141,6 +143,8 @@ namespace Editor.Views
             {
                 ImGui.Begin(name, flags);
             }
+            ImGui.PopStyleVar();
+
             _isDocked = ImGui.IsWindowDocked();
 
             IsWindowHovered = ImGui.IsWindowHovered();
@@ -164,8 +168,6 @@ namespace Editor.Views
             if (_needsToCallEndWindow)
             {
                 ImGui.End();
-                ImGui.PopStyleVar();
-
             }
 
 

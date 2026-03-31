@@ -29,6 +29,7 @@ namespace Editor.Build
             props["LAM_APPLICATION_PROJECT_PATH"] = Path.GetFullPath(EditorPaths.GameProjectAbsolutePath);
             props["LAM_ENGINE_PROJECT_PATH"] = EditorPaths.EngineCsProjFullPath;
             props["LAM_GENERATED_PROJECT"] = EditorPaths.GameGeneratedProjectCsProjFileFullPath;
+            props["LAM_TRIMMER_LINK_RD_FILE"] = EditorPaths.GameGeneratedLinkerRDFileFullPath;
 
             return new Dictionary<string, string>(props)
             {
