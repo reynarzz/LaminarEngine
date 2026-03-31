@@ -56,6 +56,7 @@ namespace Engine.Serialization
         public static Type GetApplicationLayerTypeShip()
         {
 #if SHIP_BUILD
+            Generated.TypeRegistryRuntime.PreloadGameAssembly();
             return Generated.TypeRegistryRuntime.GetApplicationLayerType();
 #endif
             throw new InvalidOperationException("Only call this on ship builds");

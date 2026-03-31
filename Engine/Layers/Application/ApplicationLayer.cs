@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Engine.Layers
 {
-    public abstract class ApplicationLayer : LayerBase
+    public class ApplicationLayer : LayerBase
     {
         public sealed override async Task<LayerInitResult> InitializeAsync()
         {
@@ -66,8 +66,9 @@ namespace Engine.Layers
             return true;
         }
 #endif
-        protected abstract void OnInitialize();
+        protected virtual void OnInitialize() { }
         public virtual void OnFocusEnter() { }
         public virtual void OnFocusExit() { }
+        public override void Close() { }
     }
 }

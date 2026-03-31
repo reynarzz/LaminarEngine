@@ -50,15 +50,10 @@ namespace Editor.Cooker
         private static void GenerateGameProject(string root)
         {
             // Generate Game.csproj
-           
+
             var gameCsProjTemplate = LoadTemplate(EditorPaths.GAME_PROJECT_TEMPLATE_FILE_NAME);
             var gamecsProj = gameCsProjTemplate.Replace(ENGINE_PATH_GAME_PROJECT_TAG, Path.GetFullPath(EditorPaths.EngineCsProjFullPath));
             File.WriteAllText(Path.Combine(root, EditorPaths.GAME_PROJECT_FULL_NAME), gamecsProj);
-
-            // Generate GameApplication.cs
-            var gameAppTemplate = LoadTemplate(EditorPaths.GAME_APPLICATION_TEMPLATE_CS_FILE_NAME);
-            File.WriteAllText(Path.Combine(root, Paths.ASSETS_FOLDER_NAME, EditorPaths.GAME_APPLICATION_CS_FILE_NAME), gameAppTemplate);
-
 
             string LoadTemplate(string templateRelFileName)
             {

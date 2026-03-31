@@ -18,7 +18,7 @@ namespace Editor.Serialization
         private static readonly Dictionary<string, Type> _idToType = new();
         private static readonly Dictionary<Type, string> _typeToId = new();
 
-        internal static Type GameAppType { get; private set; }
+        internal static Type GameAppType { get; set; }
         internal static List<Type> GameAppComponentTypes { get; private set; } = new();
 
         internal static Assembly EngineAssembly { get; }

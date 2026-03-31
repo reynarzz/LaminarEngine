@@ -267,10 +267,11 @@ namespace Editor.Cooker
                 classDecl = classDecl.AddMembers(dictionaryReverseField, getIDMethod);
             }
 
-            classDecl = classDecl.AddMembers(GetResolveTypeMethod(), 
-                                             GenerateGetTypeMethod(), 
+            classDecl = classDecl.AddMembers(GetResolveTypeMethod(),
+                                             GenerateGetTypeMethod(),
                                              GenerateResolveAssemblyMethod(),
-                                             GenerateGetApplicationTypeMethod());
+                                             GenerateGetApplicationTypeMethod(),
+                                             PreloadGameAssembly());
 
             // Build namespace
             var ns = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.ParseName("Generated"))
@@ -348,11 +349,22 @@ namespace Editor.Cooker
         private static MemberDeclarationSyntax GenerateGetApplicationTypeMethod()
         {
             var name = ReflectionUtils.GetFullTypeName(LaminarTypeRegistryEditor.GameAppType);
-            var assembly = LaminarTypeRegistryEditor.GameAppType.Assembly.FullName;
+
             string methodSource = $@"
             internal static Type GetApplicationLayerType()
             {{
-                var asm = Assembly.Load(""{assembly}"");
+                return _GetType(""{name}"");
+            }}
+            ";
+            return SyntaxFactory.ParseMemberDeclaration(methodSource)!;
+        }
+
+        private static MemberDeclarationSyntax PreloadGameAssembly()
+        {
+            string methodSource = $@"
+            internal static void PreloadGameAssembly()
+            {{
+                var asm = Assembly.Load(""{EditorPaths.GAME_PROJECT_NAME}"");
 
                 var refs = asm.GetReferencedAssemblies();
                 for (int i = 0; i < refs.Length; i++)
@@ -373,7 +385,6 @@ namespace Editor.Cooker
                     Console.WriteLine(""Assembly: "" + item.FullName);
                 }}
 #endif
-                return _GetType(""{name}"");
             }}
             ";
             return SyntaxFactory.ParseMemberDeclaration(methodSource)!;

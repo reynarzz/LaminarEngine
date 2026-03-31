@@ -104,7 +104,8 @@ namespace Editor.Layers
 
             if (LaminarTypeRegistryEditor.GameAppType == null)
             {
-                Debug.Error("No app layer is defined in the Game.dll");
+                LaminarTypeRegistryEditor.GameAppType = typeof(ApplicationLayer);
+                Debug.Warn($"No application layer was defined in the {EditorPaths.GAME_PROJECT_NAME}.dll, the default one will be used instead.");
             }
 
             UpdateCustomEditor();
