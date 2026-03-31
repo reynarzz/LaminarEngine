@@ -28,7 +28,7 @@ namespace Editor.Build
 
             props["LAM_APPLICATION_PROJECT_PATH"] = Path.GetFullPath(EditorPaths.GameProjectAbsolutePath);
             props["LAM_ENGINE_PROJECT_PATH"] = EditorPaths.EngineCsProjFullPath;
-            props["LAM_GENERATED_PROJECT"] = EditorPaths.GameGenerateProjectCsProjFileFullPath;
+            props["LAM_GENERATED_PROJECT"] = EditorPaths.GameGeneratedProjectCsProjFileFullPath;
 
             return new Dictionary<string, string>(props)
             {

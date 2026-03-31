@@ -35,7 +35,13 @@ namespace Editor.Cooker.Generator
             var generatedProject = File.ReadAllText(Path.Combine(EditorPaths.EditorTemplatesFolderFullPath, 
                                                                  EditorPaths.GENERATED_PROJECT_TEMPLATE_FILE_NAME));
 
-            File.WriteAllText(EditorPaths.GameGenerateProjectCsProjFileFullPath, generatedProject);
+            var types = TypeRegistryClassGenerator.GetAllTypes();
+            
+            var generatedLinker = RdXmlGenerator.Generate(types);
+
+            File.WriteAllText(EditorPaths.GameGeneratedProjectCsProjFileFullPath, generatedProject);
+            File.WriteAllText(EditorPaths.GameGeneratedLinkerRDFileFullPath, generatedLinker);
+
             File.WriteAllText($"{EditorPaths.GameGeneratedProjectFolderAbsolutePath}/TypeRegistry_Generated.cs", str);
         }
 

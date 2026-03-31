@@ -25,9 +25,12 @@ namespace Editor
         internal const string SCENE_FILE_EXTENSION = ".scene";
         internal const string ENGINE_PROJECT_NAME = "Engine";
         internal const string ENGINE_PROJECT_FULL_NAME = ENGINE_PROJECT_NAME + PROJECT_EXTENSION;
+        internal const string XML_EXTENSION = ".xml";
 
         internal const string GENERATED_PROJECT_NAME = "Generated";
+        internal const string GENERATED_LINKER_RD_NAME = "rd";
         internal const string GENERATED_PROJECT_FULL_NAME = GENERATED_PROJECT_NAME + PROJECT_EXTENSION;
+        internal const string GENERATED_LINKER_RD_FULL_NAME = GENERATED_LINKER_RD_NAME + XML_EXTENSION;
 
         internal const string GAME_BUILD_TYPE = "Debug";
         internal const string SHIP_DEFAULT_FOLDER_NAME = "_Ship";
@@ -69,7 +72,9 @@ namespace Editor
         internal static string GameProjectAbsolutePath => Path.Combine(GameRoot, GameCSProjFullName);
         internal static string GameCSProjFullName => GameCsProjName + PROJECT_EXTENSION;
         internal static string GameGeneratedProjectFolderAbsolutePath => GetGameFolderAbsolutePath($"{BuildFolderRelativePath}/{GENERATED_FOLDER_NAME}");
-        internal static string GameGenerateProjectCsProjFileFullPath => Path.Combine(GameGeneratedProjectFolderAbsolutePath, GENERATED_PROJECT_FULL_NAME);
+        internal static string GameGeneratedProjectCsProjFileFullPath => Path.Combine(GameGeneratedProjectFolderAbsolutePath, GENERATED_PROJECT_FULL_NAME);
+        internal static string GameGeneratedLinkerRDFileFullPath => Path.Combine(GameGeneratedProjectFolderAbsolutePath, GENERATED_LINKER_RD_FULL_NAME);
+
         internal static string DesktopCsProjFullPath => Path.Combine(DesktopProjectRoot, DESKTOP_PROJECT_FULL_NAME);
         public static string ShipFolderRoot => Path.Combine(GameRoot, SHIP_DEFAULT_FOLDER_NAME);
         public static string AndroidShipFolderRoot => Path.Combine(ShipFolderRoot, "android");

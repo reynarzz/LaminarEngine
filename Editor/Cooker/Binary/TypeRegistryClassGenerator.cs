@@ -47,6 +47,7 @@ namespace Editor.Cooker
         };
 
         private static HashSet<string> _typesLibrary = new();
+        private readonly static List<string> _generatedClean = new();
         internal static string Generate(bool isEditMode = false)
         {
             if (_typesLibrary.Count == 0)
@@ -54,7 +55,8 @@ namespace Editor.Cooker
                 Console.WriteLine("Can't generate TypeRegistry, no types were added to the list.");
                 return string.Empty;
             }
-
+            _generatedClean.Clear();
+            _generatedClean.Capacity = _typesLibrary.Count;
             var ids = new Dictionary<Guid, string>();
 
             foreach (var typeFullName in _typesLibrary)
@@ -64,6 +66,7 @@ namespace Editor.Cooker
                 {
                     continue;
                 }
+                _generatedClean.Add(typeFullName);
 
                 var id = ReflectionUtils.GetStableGuid(typeFullName);
                 if (!ids.ContainsKey(id))
@@ -122,6 +125,12 @@ namespace Editor.Cooker
         internal static void ClearTypesLibrary()
         {
             _typesLibrary.Clear();
+            _generatedClean.Clear();
+        }
+
+        internal static string[] GetAllTypes()
+        {
+            return _generatedClean.ToArray();
         }
 
         private static CompilationUnitSyntax GenerateTypeRegistry(Dictionary<Guid, string> typeNamesMap, bool isEditMode)
@@ -358,38 +367,90 @@ namespace Editor.Cooker
             ";
             return SyntaxFactory.ParseMemberDeclaration(methodSource)!;
         }
+        private static IEnumerable<string> GetRefsOnly(Assembly asm, bool recursive)
+        {
+            var visited = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
+            IEnumerable<string> Walk(Assembly a)
+            {
+                foreach (var r in a.GetReferencedAssemblies())
+                {
+                    if (string.IsNullOrWhiteSpace(r.Name))
+                    {
+                        continue;
+                    }
+
+                    if (!visited.Add(r.Name))
+                    {
+                        continue;
+                    }
+
+                    yield return r.Name;
+
+                    if (recursive)
+                    {
+                        Assembly? loaded = null;
+
+                        try
+                        {
+                            loaded = Assembly.Load(r);
+                        }
+                        catch
+                        {
+                        }
+
+                        if (loaded != null)
+                        {
+                            foreach (var child in Walk(loaded))
+                            {
+                                yield return child;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return Walk(asm);
+        }
         private static MemberDeclarationSyntax PreloadGameAssembly()
         {
-            string methodSource = $@"
+            var loadedAssemblies = new[]
+            {
+                LaminarTypeRegistryEditor.EngineAssembly.GetName().Name,
+                LaminarTypeRegistryEditor.GameAssembly.GetName().Name
+            }.Concat(GetRefsOnly(LaminarTypeRegistryEditor.GameAssembly, false))
+            .Where(n => !string.IsNullOrWhiteSpace(n))
+            .Distinct()
+            .OrderBy(n => n)
+            .ToArray();
+
+            var bakedLoads = string.Join("\n", loadedAssemblies.Select(name =>
+                    $@"        try
+            {{
+                Assembly.Load(""{name}"");
+            }}
+            catch
+            {{
+            }}"));
+
+            var methodSource = $@"
             internal static void PreloadGameAssembly()
             {{
-                var asm = Assembly.Load(""{EditorPaths.GAME_PROJECT_NAME}"");
+            {bakedLoads}
 
-                var refs = asm.GetReferencedAssemblies();
-                for (int i = 0; i < refs.Length; i++)
-                {{
-                    try
-                    {{
-                        Assembly.Load(refs[i]);
-                    }}
-                    catch
-                    {{
-                    }}
-                }}
-#if DEBUG
+            #if DEBUG
                 var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
                 foreach (var item in assemblies)
                 {{
                     Console.WriteLine(""Assembly: "" + item.FullName);
                 }}
-#endif
+            #endif
             }}
             ";
+
             return SyntaxFactory.ParseMemberDeclaration(methodSource)!;
         }
-
         private static ExpressionSyntax GetTypeExpression(string typeFullname)
         {
             if (typeFullname.StartsWith("<") && typeFullname.Contains(">"))
