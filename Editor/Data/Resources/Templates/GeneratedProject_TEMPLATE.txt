@@ -16,7 +16,7 @@
 
 	<!--Linker trimmer hint-->
 	<ItemGroup>
-		<TrimmerRootDescriptor Include="rd.xml" />
+		<TrimmerRootDescriptor Include="$(LAM_TRIMMER_LINK_RD_FILE)" />
 	</ItemGroup>
 
 </Project>

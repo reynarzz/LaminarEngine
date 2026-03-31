@@ -10,6 +10,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
 using Microsoft.Build.Locator;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Editor.Serialization;
 
 namespace Editor.Cooker.Generator
 {
@@ -36,8 +37,9 @@ namespace Editor.Cooker.Generator
                                                                  EditorPaths.GENERATED_PROJECT_TEMPLATE_FILE_NAME));
 
             var types = TypeRegistryClassGenerator.GetAllTypes();
-            
-            var generatedLinker = RdXmlGenerator.Generate(types);
+
+            var generatedLinker = RdXmlGenerator.Generate(LaminarTypeRegistryEditor.EngineAssembly, 
+                                                          LaminarTypeRegistryEditor.GameAssembly);
 
             File.WriteAllText(EditorPaths.GameGeneratedProjectCsProjFileFullPath, generatedProject);
             File.WriteAllText(EditorPaths.GameGeneratedLinkerRDFileFullPath, generatedLinker);
