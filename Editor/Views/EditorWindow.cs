@@ -20,7 +20,7 @@ namespace Editor.Views
         private readonly string _menuItemPath;
         private bool _isInMenuItem = false;
         private bool _onOpen = false;
-
+        private bool _isDocked = false;
         protected EditorWindow()
         {
         }
@@ -66,6 +66,7 @@ namespace Editor.Views
             {
                 EditorMenu.Toggle(_menuItemPath, false);
             }
+            _isDocked = false;
             OnClose();
         }
 
@@ -97,6 +98,7 @@ namespace Editor.Views
                 var val = windowsPadding.GetValueOrDefault();
                 ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, new System.Numerics.Vector2(val.x, val.y));
             }
+            ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, _isDocked ? 0 : 3);
             if (canClose)
             {
                 if (flags == ImGuiWindowFlags.None)
@@ -107,6 +109,7 @@ namespace Editor.Views
                 {
                     ImGui.Begin(name, ref _isOpened, flags);
                 }
+                _isDocked = ImGui.IsWindowDocked();
 
                 IsWindowHovered = ImGui.IsWindowHovered();
 
@@ -138,6 +141,7 @@ namespace Editor.Views
             {
                 ImGui.Begin(name, flags);
             }
+            _isDocked = ImGui.IsWindowDocked();
 
             IsWindowHovered = ImGui.IsWindowHovered();
 
@@ -160,6 +164,8 @@ namespace Editor.Views
             if (_needsToCallEndWindow)
             {
                 ImGui.End();
+                ImGui.PopStyleVar();
+
             }
 
 

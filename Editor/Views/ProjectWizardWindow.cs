@@ -106,7 +106,7 @@ namespace Editor.Views
             }
 
             ImGui.SetCursorPos(startCursor);
-            if (ImGui.BeginTable("##ProjectsTable", 3, ImGuiTableFlags.BordersInnerV | ImGuiTableFlags.SizingStretchProp))
+            if (ImGui.BeginTable("##ProjectsTable", 3, ImGuiTableFlags.NoBordersInBody | ImGuiTableFlags.SizingStretchProp))
             {
                 ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.NoReorder, 80.0f);
                 ImGui.TableSetupColumn("Modified", ImGuiTableColumnFlags.NoReorder, 20);
@@ -195,34 +195,58 @@ namespace Editor.Views
         {
             DrawTitleBar("New Project");
 
-            ImGui.Text("Project Name");
-            ImGui.SameLine();
-            EditorGuiFieldsResolver.DrawStringField("", ref _projectCreateInfo.ProjectName);
+            float labelWidth = 120.0f;
+            float fieldSpacing = 8.0f;
+            float buttonWidth = 80.0f;
 
+            // Project Name
+            ImGui.BeginGroup();
+            ImGui.Text("Project Name");
+            ImGui.SameLine(labelWidth + fieldSpacing);
+            EditorGuiFieldsResolver.DrawStringField("##ProjectName", ref _projectCreateInfo.ProjectName);
+            ImGui.EndGroup();
+
+            ImGui.Spacing();
+
+            // Project Directory
+            ImGui.BeginGroup();
             ImGui.Text("Directory");
-            ImGui.SameLine();
+            ImGui.SameLine(labelWidth + fieldSpacing);
             ImGui.TextWrapped(_projectCreateInfo.ProjectRootDirectory);
             ImGui.SameLine();
-            if (ImGui.Button("Select"))
+            if (ImGui.Button("Select", new Vector2(buttonWidth, 0)))
             {
                 if (EditorFileDialog.PickFolder(_projectCreateInfo.ProjectRootDirectory, out var selected))
                 {
                     _projectCreateInfo.ProjectRootDirectory = selected;
                 }
             }
+            ImGui.EndGroup();
 
-            ImGui.Text("Use intermediary directory");
-            ImGui.SameLine();
-            EditorGuiFieldsResolver.DrawBoolField("###_Intermediary_", ref _projectCreateInfo.UseIntermediaryDirectory);
+            ImGui.Spacing();
+
+            ImGui.BeginGroup();
+            ImGui.Text("intermediary directory");
+            ImGui.SameLine(labelWidth + fieldSpacing);
+            EditorGuiFieldsResolver.SetPropertyDefaultCursorPos();
+            EditorGuiFieldsResolver.DrawBoolField("##Intermediary", ref _projectCreateInfo.UseIntermediaryDirectory);
+            if (ImGui.IsItemHovered())
+            {
+                ImGui.SetTooltip("If enabled, the build will use an intermediate directory for the project.");
+            }
+            ImGui.EndGroup();
+
+            ImGui.Spacing();
 
             ImGui.BeginDisabled(!_projectCreateInfo.IsValidProjectData());
-            if (ImGui.Button("Create Project"))
+            if (ImGui.Button("Create Project", new Vector2(ImGui.GetContentRegionAvail().X, 35)))
             {
                 GameProject.CreateDefaultProject(_projectCreateInfo);
                 LoadProject(_projectCreateInfo.ProjectRootDirectory);
             }
             ImGui.EndDisabled();
         }
+
         private bool IsValidProject(string root)
         {
             // Check if is has project settings folder
