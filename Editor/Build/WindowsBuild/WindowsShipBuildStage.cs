@@ -65,7 +65,12 @@ namespace Editor.Build
 
             var defaultConstants = "WINDOWS;WIN32;DESKTOP;";
 
-           
+
+            if (settings.NativeAOT)
+            {
+                props["PublishAot"] = "true";
+            }
+
             if (winSettings.Type == BuildType.Release)
             {
                 props["DefineConstants"] = defaultConstants + "RELEASE";

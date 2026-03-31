@@ -55,10 +55,22 @@ namespace Editor.Build
                 ["BUILD_MOBILE"] = "true"
             };
 
+            if (settings.NativeAOT)
+            {
+                props["AndroidEnableProfiledAot"] = "false";
+                props["AotAssemblies"] = "true";
+                props["EnableLLVM"] = "true";
+                props["AndroidLinkMode"] = "SdkAndUser";
+                props["AndroidStripMode"] = "All";
+                props["AndroidAotMode"] = "Full";
+            }
+
             // NOTE: Not sure why do I have to define build type, msbuild should do it by default.
             if (settingsAndroid.Type == BuildType.Release)
             {
                 props["DefineConstants"] = "$(DefineConstants);ANDROID;MOBILE;RELEASE";
+                props["DebugType"] = "none";
+                props["Optimize"] = "true";
             }
             else
             {

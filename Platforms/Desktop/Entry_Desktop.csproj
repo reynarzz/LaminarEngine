@@ -26,16 +26,16 @@
 		<ProjectReference Include="..\..\Engine\Engine.csproj" />
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(ShipBuild)' == 'true'">
+	<ItemGroup>
 		<ProjectReference Include="$(LAM_APPLICATION_PROJECT_PATH)">
 			<ReferenceOutputAssembly>true</ReferenceOutputAssembly>
 			<Private>true</Private>
 			<OutputItemType>Content</OutputItemType>
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</ProjectReference>
+		<TrimmerRootDescriptor Include="$(LAM_TRIMMER_LINK_RD_FILE)" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<TrimmerRootDescriptor Include="$(LAM_TRIMMER_LINK_RD_FILE)" />
 	</ItemGroup>
 </Project>

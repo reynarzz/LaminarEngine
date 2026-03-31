@@ -21,15 +21,15 @@ namespace Editor.Build
                 constants = constants.TrimEnd(';');
             }
 
-            if (settings.NativeAOT)
-            {
-                props["PublishAot"] = "true";
-            }
-
             props["LAM_APPLICATION_PROJECT_PATH"] = Path.GetFullPath(EditorPaths.GameProjectAbsolutePath);
             props["LAM_ENGINE_PROJECT_PATH"] = EditorPaths.EngineCsProjFullPath;
             props["LAM_GENERATED_PROJECT"] = EditorPaths.GameGeneratedProjectCsProjFileFullPath;
             props["LAM_TRIMMER_LINK_RD_FILE"] = EditorPaths.GameGeneratedLinkerRDFileFullPath;
+
+            if(settings.Type == BuildType.Release)
+            {
+                props["Optimize"] = "true";
+            }
 
             return new Dictionary<string, string>(props)
             {
