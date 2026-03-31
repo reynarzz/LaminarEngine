@@ -202,7 +202,7 @@ namespace Editor.Views
             // Project Name
             ImGui.BeginGroup();
             ImGui.Text("Project Name");
-            ImGui.SameLine(labelWidth + fieldSpacing);
+          //  ImGui.SameLine(labelWidth + fieldSpacing);
             EditorGuiFieldsResolver.DrawStringField("##ProjectName", ref _projectCreateInfo.ProjectName);
             ImGui.EndGroup();
 
@@ -213,7 +213,7 @@ namespace Editor.Views
             ImGui.Text("Directory");
             ImGui.SameLine(labelWidth + fieldSpacing);
             ImGui.TextWrapped(_projectCreateInfo.ProjectRootDirectory);
-            ImGui.SameLine();
+          //  ImGui.SameLine();
             if (ImGui.Button("Select", new Vector2(buttonWidth, 0)))
             {
                 if (EditorFileDialog.PickFolder(_projectCreateInfo.ProjectRootDirectory, out var selected))

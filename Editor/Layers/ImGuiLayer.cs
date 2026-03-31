@@ -63,7 +63,7 @@ namespace Editor.Layers
                 {
                     GfxDeviceManager.Current.Clear(new ClearDeviceConfig()
                     {
-                        Color = new Color(0.2f, 0.2f, 0.2f, 1.0f),
+                        Color = new Color(0.17f, 0.17f, 0.17f, 1.0f),
                         RenderTarget = null
                     });
 
