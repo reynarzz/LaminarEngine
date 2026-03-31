@@ -141,7 +141,7 @@ namespace Engine.Layers
 
         public override void Close()
         {
-            _engine.Dispose();
+            _engine?.Dispose();
         }
     }
 }

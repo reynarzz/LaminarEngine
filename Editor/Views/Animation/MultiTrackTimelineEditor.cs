@@ -374,7 +374,7 @@ namespace Editor.Views
             }
 
             var playheadColor = new Vector4(1, 1.0f, 1.0f, 1);
-            drawList.AddLine(new Vector2(x, canvasPos.Y), new Vector2(x, canvasPos.Y + canvasSize.Y), ImGui.GetColorU32(playheadColor), 2.0f);
+            drawList.AddLine(new Vector2(x, canvasPos.Y), new Vector2(x, canvasPos.Y + canvasSize.Y), ImGui.GetColorU32(playheadColor), 1.0f);
 
             float handleSize = 4.0f;
 

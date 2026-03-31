@@ -55,6 +55,11 @@ namespace Editor.Layers
 
             RenderingLayer.OnDrawOverlay += () =>
             {
+                GfxDeviceManager.Current.Clear(new ClearDeviceConfig()
+                {
+                    Color = new Color(0.2f, 0.2f, 0.2f, 1.0f),
+                    RenderTarget = null
+                });
                 if (layerManager.LayersInitialized)
                 {
                     Draw();
