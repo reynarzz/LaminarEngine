@@ -15,34 +15,85 @@ namespace Editor.Views
 {
     internal class ProjectWizardWindow : EditorWindow
     {
+        private static ProjectCreatedInfo _projectCreateInfo = new();
+
         public override void OnDraw()
         {
-
+            ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 2);
             var viewport = ImGui.GetMainViewport();
             var winSize = new Vector2(viewport.Size.X / 1.2f, 400);
 
-            ImGui.SetNextWindowSize(winSize, ImGuiCond.Always);
-            ImGui.SetNextWindowPos(viewport.Pos.X + viewport.Size.X * 0.5f - winSize.X * 0.5f,
-                                   viewport.Pos.Y + viewport.Size.Y * 0.5f - winSize.Y * 0.5f);
-            ImGui.Begin("Project",  ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoTitleBar);
-            var projWinSize = ImGui.GetContentRegionAvail();
-            ImGui.BeginChild("__OPEN_PROJECT__", new Vector2(projWinSize.X / 1.5f, projWinSize.Y));
+            float spacing = 4.0f;
+
+            Vector2 basePos = new Vector2(viewport.Pos.X + viewport.Size.X * 0.5f - winSize.X * 0.5f,
+                                          viewport.Pos.Y + viewport.Size.Y * 0.5f - winSize.Y * 0.5f);
+
+            float leftWidth = winSize.X / 1.5f;
+            float rightWidth = winSize.X - leftWidth - spacing;
+
+            Vector2 leftSize = new Vector2(leftWidth, winSize.Y);
+            Vector2 rightSize = new Vector2(rightWidth, winSize.Y);
+
+            Vector2 leftPos = basePos;
+            Vector2 rightPos = new Vector2(basePos.X + leftWidth + spacing, basePos.Y);
+
+            ImGui.SetNextWindowPos(leftPos, ImGuiCond.Always);
+            ImGui.SetNextWindowSize(leftSize, ImGuiCond.Always);
+            ImGui.Begin("__OPEN_PROJECT__", ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoTitleBar);
+
+
             OpenProjectGUI();
-            ImGui.EndChild();
-            
-            ImGui.SameLine();
-
-            ImGui.BeginChild("__CREATE_PROJECT__");
-            CreateProjectGUI();
-            ImGui.EndChild();
-
             ImGui.End();
+
+            ImGui.SetNextWindowPos(rightPos, ImGuiCond.Always);
+            ImGui.SetNextWindowSize(rightSize, ImGuiCond.Always);
+            ImGui.Begin("__CREATE_PROJECT__", ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoTitleBar);
+
+
+            CreateProjectGUI();
+            ImGui.End();
+            ImGui.PopStyleVar();
         }
 
+        private Vector2 DrawTitleBar(string title)
+        {
+            float titleBarHeight = 45.0f;
 
+            var drawList = ImGui.GetWindowDrawList();
+            var winPos = ImGui.GetWindowPos();
+            var winSizeCurrent = ImGui.GetWindowSize();
+
+            uint titleBg = ImGui.GetColorU32(new Vector4(0.1f, 0.1f, 0.1f, 0.85f));
+            drawList.AddRectFilled(winPos, new Vector2(winPos.X + winSizeCurrent.X, winPos.Y + titleBarHeight),
+                                   titleBg, ImGui.GetStyle().WindowRounding,
+                                   ImDrawFlags.RoundCornersTop);
+
+            var titleCursor = ImGui.GetCursorPos();
+
+            ImGui.SetWindowFontScale(1.6f);
+            var textSize = ImGui.CalcTextSize(title);
+            float centerX = (winSizeCurrent.X - textSize.X) * 0.5f;
+
+            ImGui.SetCursorPos(new Vector2(centerX, titleCursor.Y));
+
+            ImGui.TextUnformatted(title);
+            ImGui.SetWindowFontScale(1.0f);
+
+            var cursor = ImGui.GetCursorPos();
+            ImGui.SetCursorPos(cursor.X, cursor.Y + 8.0f);
+
+            return titleCursor;
+        }
         private void OpenProjectGUI()
         {
-            if (ImGui.Button("Open project"))
+            var titleCursor = DrawTitleBar("Projects");
+
+            float buttonWidth = 120.0f;
+            float buttonHeight = 31;
+            float availX = ImGui.GetContentRegionAvail().X;
+            var startCursor = ImGui.GetCursorPos();
+            ImGui.SetCursorPos(titleCursor.X + availX - buttonWidth, titleCursor.Y + 1);
+            if (ImGui.Button("Open project", new Vector2(buttonWidth, buttonHeight)))
             {
                 if (EditorFileDialog.PickFolder("C:/", out var rootFolderSelected))
                 {
@@ -54,13 +105,12 @@ namespace Editor.Views
                 }
             }
 
-            ImGui.Separator();
-
+            ImGui.SetCursorPos(startCursor);
             if (ImGui.BeginTable("##ProjectsTable", 3, ImGuiTableFlags.BordersInnerV | ImGuiTableFlags.SizingStretchProp))
             {
-                ImGui.TableSetupColumn("Name");
-                ImGui.TableSetupColumn("Modified");
-                ImGui.TableSetupColumn("Settings");
+                ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.NoReorder, 80.0f);
+                ImGui.TableSetupColumn("Modified", ImGuiTableColumnFlags.NoReorder, 20);
+                ImGui.TableSetupColumn("Settings", ImGuiTableColumnFlags.NoReorder, 10);
                 ImGui.TableHeadersRow();
 
                 var path = "C:/User/Games/Project";
@@ -79,8 +129,8 @@ namespace Editor.Views
                     float pathHeight = ImGui.GetTextLineHeight();
                     float rowHeight = padding + titleHeight + pathHeight + padding;
 
-                    Vector2 cursorPos = ImGui.GetCursorScreenPos();
-                    Vector2 avail = ImGui.GetContentRegionAvail();
+                    var cursorPos = ImGui.GetCursorScreenPos();
+                    var avail = ImGui.GetContentRegionAvail();
 
                     ImGui.InvisibleButton($"##ProjectSelect{i}", new Vector2(avail.X, rowHeight));
 
@@ -123,7 +173,7 @@ namespace Editor.Views
                     ImGui.TextUnformatted(projectPath);
                     ImGui.PopStyleColor();
 
-                    if (clicked)
+                    if (clicked && IsValidProject(projectPath))
                     {
                         // LoadProject(projectPath);
                     }
@@ -140,10 +190,11 @@ namespace Editor.Views
                 ImGui.EndTable();
             }
         }
-        private static ProjectCreatedInfo _projectCreateInfo = new();
 
         private void CreateProjectGUI()
         {
+            DrawTitleBar("New Project");
+
             ImGui.Text("Project Name");
             ImGui.SameLine();
             EditorGuiFieldsResolver.DrawStringField("", ref _projectCreateInfo.ProjectName);
