@@ -1,6 +1,7 @@
 ﻿using Engine;
 using ImGuiNET;
 using System;
+using System.Linq;
 using System.Numerics;
 
 namespace Editor.Views
@@ -23,16 +24,33 @@ namespace Editor.Views
 
         public bool[] Matrix { get; set; }
 
-        private int GetIndex(int i, int j, int count)
+        private int GetIndex(int row, int col)
         {
-            if (i > j)
+            if (col > row)
             {
-                int temp = i;
-                i = j;
-                j = temp;
+                int temp = row;
+                row = col;
+                col = temp;
             }
 
-            return i * count - (i * (i - 1)) / 2 + (j - i);
+            return row * (row + 1) / 2 + col;
+        }
+
+        public void EnsureMatrixSize()
+        {
+            if (_layerNames == null)
+            {
+                Matrix = null;
+                return;
+            }
+
+            int count = _layerNames.Length;
+            int requiredSize = count * (count + 1) / 2;
+
+            if (Matrix == null || Matrix.Length != requiredSize)
+            {
+                Matrix = new bool[requiredSize];
+            }
         }
 
         public void SetAll(bool value)
@@ -48,6 +66,13 @@ namespace Editor.Views
 
         public bool Draw()
         {
+            if (_layerNames == null)
+            {
+                return false;
+            }
+
+            EnsureMatrixSize();
+
             int count = _layerNames.Length;
             if (count <= 0)
             {
@@ -55,18 +80,24 @@ namespace Editor.Views
             }
 
             var flags = ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.BordersInner;
+
             ImGui.PushStyleVar(ImGuiStyleVar.FramePadding, new Vector2(1, 1));
             ImGui.PushStyleVar(ImGuiStyleVar.CellPadding, new Vector2(2, 2));
+
             bool changed = false;
-            // TODO: This is very slow, and allocates every frame this window is visisble. Fix this.
-            var tableCount = _layerNames.Where(x => !string.IsNullOrEmpty(x)).Count();
+
+            // TODO: This is very slow, and allocates every frame this window is visible. Fix this.
+            int tableCount = _layerNames.Where(x => !string.IsNullOrEmpty(x)).Count();
+
             if (ImGui.BeginTable("LayerCollisionMatrix", tableCount + 1, flags))
             {
                 DrawHeaderRow(count);
                 changed = DrawRows(count);
                 ImGui.EndTable();
             }
+
             ImGui.PopStyleVar(2);
+
             return changed;
         }
 
@@ -97,20 +128,23 @@ namespace Editor.Views
         private float GetMaxTextSize()
         {
             float max = 0;
+
             for (int i = 0; i < _layerNames.Length; i++)
             {
+                if (string.IsNullOrEmpty(_layerNames[i]))
+                    continue;
+
                 max = Mathf.Max(max, ImGui.CalcTextSize(_layerNames[i]).X);
             }
+
             return max;
         }
 
         private bool DrawRows(int count)
-
         {
             bool changed = false;
-            float columnWidth = ImGui.GetColumnWidth();
             var maxTextSize = GetMaxTextSize();
-         
+
             for (int row = 0; row < count; row++)
             {
                 var rowName = _layerNames[row];
@@ -120,6 +154,7 @@ namespace Editor.Views
                 ImGui.TableNextRow();
 
                 ImGui.TableSetColumnIndex(0);
+
                 var textSize = ImGui.CalcTextSize(rowName);
                 ImGui.SetCursorPosX(ImGui.GetCursorPosX() - textSize.X + maxTextSize);
                 ImGui.Text(rowName);
@@ -137,14 +172,14 @@ namespace Editor.Views
 
                     ImGui.PushID(row * 1000 + col);
 
-                    int index = GetIndex(row, col, count);
-
                     if (col > row)
                     {
                         ImGui.Text("");
                     }
                     else
                     {
+                        int index = GetIndex(row, col);
+
                         bool value = Matrix[index];
                         if (ImGui.Checkbox("##cell", ref value))
                         {
@@ -156,6 +191,7 @@ namespace Editor.Views
                     ImGui.PopID();
                 }
             }
+
             return changed;
         }
 

@@ -51,7 +51,7 @@ Refactor:
 - SceneGraphWindow, and move actor popup outside to its own function, and call it outside the actor loop.
 - Polish material UI.
 - Remove 'Newtonsoft.json' and instead use 'System.Text.Json' since it supports NativeAOT (native executable compilation)
-
+- The 'Generated' project should be project dependant and be generated at build time at the Library/Build directory.
 
 Performance fix:
 - UI performance is pretty bad, rewrite the entire UI system.
