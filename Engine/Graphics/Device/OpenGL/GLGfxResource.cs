@@ -47,7 +47,7 @@ namespace Engine.Graphics.OpenGL
                 return;
             }
             _handleBinder(handle);
-            GLHelpers.CheckGLError();
+            GLHelpers.CheckGLError(GetType().Name);
         }
 
         internal virtual void Bind()
@@ -63,6 +63,8 @@ namespace Engine.Graphics.OpenGL
                 return;
             }
             _handleBinder(0);
+            GLHelpers.CheckGLError(GetType().Name);
+
         }
 
         internal bool Create(T descriptor)
@@ -70,13 +72,17 @@ namespace Engine.Graphics.OpenGL
             if (!IsInitialized)
             {
                 CreateHandle();
+                GLHelpers.CheckGLError(GetType().Name);
 
                 IsInitialized = CreateResource(descriptor);
+                GLHelpers.CheckGLError(GetType().Name);
 
                 if (!IsInitialized)
                 {
                     Debug.Error($"Could not create resource (returns false): {GetType().Name}");
                     DestroyHandle();
+                    GLHelpers.CheckGLError(GetType().Name);
+
                 }
 
                 return IsInitialized;
@@ -92,7 +98,7 @@ namespace Engine.Graphics.OpenGL
             if (IsInitialized)
             {
                 UpdateResource(descriptor);
-                GLHelpers.CheckGLError();
+                GLHelpers.CheckGLError(GetType().Name);
             }
         }
 
@@ -102,13 +108,13 @@ namespace Engine.Graphics.OpenGL
         private void CreateHandle()
         {
             Handle = _handleCreator();
-            GLHelpers.CheckGLError();
+            GLHelpers.CheckGLError(GetType().Name);
         }
 
         private void DestroyHandle()
         {
             _handleDeleter?.Invoke(Handle);
-            GLHelpers.CheckGLError();
+            GLHelpers.CheckGLError(GetType().Name);
 
             Handle = 0;
         }
@@ -121,6 +127,8 @@ namespace Engine.Graphics.OpenGL
                 Debug.Warn("Free gfx resource: " + GetType().Name);
 #endif
                 DestroyHandle();
+                GLHelpers.CheckGLError(GetType().Name);
+
                 IsInitialized = false;
             }
         }

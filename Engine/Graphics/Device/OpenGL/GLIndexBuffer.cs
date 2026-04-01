@@ -27,7 +27,7 @@ namespace Engine.Graphics.OpenGL
             _prevBoundBuffer = _currentBoundBuffer;
             _prevBoundBufferTarget = _currentBoundBufferTarget;
             base.Bind();
-            GLHelpers.CheckGLError();
+            GLHelpers.CheckGLError(GetType().Name);
 
             _currentBoundBuffer = Handle;
             _currentBoundBufferTarget = Target;
@@ -36,14 +36,14 @@ namespace Engine.Graphics.OpenGL
         internal override void Unbind()
         {
             base.Unbind();
-            GLHelpers.CheckGLError();
+            GLHelpers.CheckGLError(GetType().Name);
 
             _currentBoundBuffer = _prevBoundBuffer;
             _currentBoundBufferTarget = _prevBoundBufferTarget;
-            if (_currentBoundBuffer >= 0)
+            if (_currentBoundBuffer >= 0 && _currentBoundBufferTarget != 0)
             {
                 glBindBuffer(_currentBoundBufferTarget, _currentBoundBuffer);
-                GLHelpers.CheckGLError();
+                GLHelpers.CheckGLError(GetType().Name);
 
             }
         }

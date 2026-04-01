@@ -28,12 +28,14 @@ namespace Engine.Graphics.OpenGL
             uint prevVAO = GetBoundVAO();// _prevVAO;
             
             Bind();
+            GLHelpers.CheckGLError(GetType().Name);
             if (!_vertBuffer.Create(descriptor.VertexDesc.BufferDesc))
             {
                 Debug.Error("Failed to create vertex buffer.");
                 Unbind();
                 return false;
             }
+            GLHelpers.CheckGLError(GetType().Name);
 
             if (descriptor.SharedIndexBuffer == null && descriptor.IndexDesc != null)
             {
@@ -45,17 +47,22 @@ namespace Engine.Graphics.OpenGL
                     Unbind();
                     return false;
                 }
+                GLHelpers.CheckGLError(GetType().Name);
 
                 _indexBuffer.Bind();
+                GLHelpers.CheckGLError(GetType().Name);
+
             }
             else if (descriptor.SharedIndexBuffer != null)
             {
                 (descriptor.SharedIndexBuffer as GLIndexBuffer).Bind();
+                GLHelpers.CheckGLError(GetType().Name);
 
                 _sharedBuffer = descriptor.SharedIndexBuffer as GLIndexBuffer;
             }
            
             _vertBuffer.Bind();
+            GLHelpers.CheckGLError(GetType().Name);
 
             for (uint i = 0; i < descriptor.VertexDesc.Attribs.Length; i++)
             {
@@ -69,14 +76,18 @@ namespace Engine.Graphics.OpenGL
                 {
                     glVertexAttribPointer(i, attrib.Count, attrib.Type.ToGL(), attrib.Normalized, attrib.Stride, attrib.Offset);
                 }
+                GLHelpers.CheckGLError(GetType().Name);
 
                 glEnableVertexAttribArray(i);
+                GLHelpers.CheckGLError(GetType().Name);
+
             }
 
             //  Unbind();
 
             _prevVAO = prevVAO;
             glBindVertexArray(_prevVAO);
+            GLHelpers.CheckGLError(GetType().Name);
 
             return true;
         }
@@ -85,20 +96,28 @@ namespace Engine.Graphics.OpenGL
             int result;
 //#if DESKTOP
             glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &result);
-//#else
-//        int[] arr = new int[1];
-//        glGetIntegerv(GL_VERTEX_ARRAY_BINDING, arr);
-//        result = arr[0];
-//#endif
+            GLHelpers.CheckGLError(nameof(GLGeometry));
+
+            //#else
+            //        int[] arr = new int[1];
+            //        glGetIntegerv(GL_VERTEX_ARRAY_BINDING, arr);
+            //        result = arr[0];
+            //#endif
             return (uint)result;
         }
         internal override void UpdateResource(GeometryDescriptor descriptor)
         {
             uint prevVAO = GetBoundVAO();// _prevVAO;
+            GLHelpers.CheckGLError(GetType().Name);
 
             Bind();
+            GLHelpers.CheckGLError(GetType().Name);
+
             _vertBuffer.Update(descriptor.VertexDesc.BufferDesc);
+            GLHelpers.CheckGLError(GetType().Name);
+
             _vertBuffer.Bind();
+            GLHelpers.CheckGLError(GetType().Name);
 
             if (descriptor.SharedIndexBuffer != null && descriptor.SharedIndexBuffer != _sharedBuffer)
             {
@@ -108,15 +127,23 @@ namespace Engine.Graphics.OpenGL
             if (_sharedBuffer != null)
             {
                 _sharedBuffer.Bind();
+                GLHelpers.CheckGLError(GetType().Name);
+
             }
             else if (_indexBuffer != null)
             {
                 _indexBuffer.Update(descriptor.IndexDesc);
+                GLHelpers.CheckGLError(GetType().Name);
+
                 _indexBuffer.Bind();
+                GLHelpers.CheckGLError(GetType().Name);
+
             }
 
             _prevVAO = prevVAO;
             glBindVertexArray(prevVAO);
+            GLHelpers.CheckGLError(GetType().Name);
+
         }
 
         internal override void Bind()
@@ -128,10 +155,14 @@ namespace Engine.Graphics.OpenGL
         protected override void FreeResource()
         {
             _vertBuffer.Dispose();
+            GLHelpers.CheckGLError(GetType().Name);
+
             _sharedBuffer = null;
             if (_indexBuffer != null)
             {
                 _indexBuffer.Dispose();
+                GLHelpers.CheckGLError(GetType().Name);
+
             }
             base.FreeResource();
         }

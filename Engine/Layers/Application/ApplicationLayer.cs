@@ -18,13 +18,13 @@ namespace Engine.Layers
                 var result = LoadMainScene();
                 if (!result)
                 {
-                    return LayerInitResult.Error;
+                    return Task.FromResult(LayerInitResult.Error);
                 }
             }
             catch (Exception e)
             {
                 Debug.Error(e);
-                return LayerInitResult.Error;
+                return Task.FromResult(LayerInitResult.Error);
             }
 #endif
             return MainThreadDispatcher.EnqueueAsync(() =>

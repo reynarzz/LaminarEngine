@@ -131,13 +131,13 @@ namespace Engine.Graphics.OpenGL
                 }
             }
         }
-#if RELEASE
+#if RELEASE || !DEBUG_GRAPHICS
         internal static void CheckGLError(string a = default, int b = default)
         {
 
         }
-#else
-        internal static void CheckGLError([CallerMemberName] string mem = "", [CallerLineNumber] int lineNum = default)
+#else 
+        internal static void CheckGLError(string typeCaller = null, [CallerMemberName] string mem = "", [CallerLineNumber] int lineNum = default)
         {
             uint err;
             bool printedHeader = false;
@@ -147,13 +147,7 @@ namespace Engine.Graphics.OpenGL
 #endif
             while ((err = (uint)GetError()) != GL_NO_ERROR)
             {
-                if (!printedHeader)
-                {
-                    Console.WriteLine($"OpenGL error(s) at: {mem}");
-                    Console.WriteLine(Environment.StackTrace);
-                    printedHeader = true;
-                }
-
+                
                 string name = err switch
                 {
                     0x0500 => "GL_INVALID_ENUM",
@@ -165,13 +159,20 @@ namespace Engine.Graphics.OpenGL
                     0x0506 => "GL_INVALID_FRAMEBUFFER_OPERATION",
                     _ => "UNKNOWN"
                 };
-
-                Console.WriteLine($"OpenGL error at {mem}, ln:{lineNum}: {name} (0x{err:X})");
-#if DESKTOP
-                Console.ForegroundColor = col;
-#endif
-
+                if (!printedHeader)
+                {
+                    Console.WriteLine($"OpenGL error(s) at: {typeCaller} {mem}, {name}");
+                    Console.WriteLine(Environment.StackTrace);
+                    printedHeader = true;
+                }
+                else
+                {
+                    Console.WriteLine($"OpenGL error at {mem}, ln:{lineNum}: {name} (0x{err:X})");
+                }
             }
+#if DESKTOP
+            Console.ForegroundColor = col;
+#endif
         }
 #endif
     }

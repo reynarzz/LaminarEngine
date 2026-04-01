@@ -36,7 +36,7 @@ namespace Engine.Graphics.OpenGL
 
             _currentBoundBuffer = _prevBoundBuffer;
             _currentBoundBufferTarget = _prevBoundBufferTarget;
-            if (_currentBoundBuffer >= 0)
+            if (_currentBoundBuffer > 0 && _prevBoundBuffer != 0)
             {
                 glBindBuffer(_currentBoundBufferTarget, _currentBoundBuffer);
             }

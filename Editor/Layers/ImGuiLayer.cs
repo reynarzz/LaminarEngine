@@ -73,7 +73,7 @@ namespace Editor.Layers
         }
 
         public override Task<LayerInitResult> InitializeAsync()
-        {
+        { 
             return MainThreadDispatcher.EnqueueAsync(() =>
             {
                 var sceneBatcher = new SceneBatchedRenderer();
@@ -89,7 +89,7 @@ namespace Editor.Layers
                     DrawGizmos = true,
                     GizmosRenderer = new GizmosRenderer(),
                     RenderTextures = [new RenderTexture(1920, 1080) { Name = "Scene view Render Texture" },
-                                  new RenderTexture(1920, 1080) { Name = "Mouse picker Render Texture" }],
+                                      new RenderTexture(1920, 1080) { Name = "Mouse picker Render Texture" }],
                     SceneRenderers =
                     {
                         sceneBatcher,
@@ -127,8 +127,10 @@ namespace Editor.Layers
                 };
 
                 IsInitialized = true;
-                return LayerInitResult.Success;
+return LayerInitResult.Success;
+
             });
+
         }
 
         private void Draw()

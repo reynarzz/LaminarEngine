@@ -55,11 +55,6 @@ namespace Engine.Rendering
                 _pinkMaterial.Name = "Pink Material";
             }
 
-            Initialize();
-        }
-
-        internal void Initialize()
-        {
             _sharedIndexBuffer = GraphicsHelper.CreateQuadIndexBuffer(MaxQuadsPerBatch);
             _batchesPool = new BatchesPool(_sharedIndexBuffer);
         }
@@ -154,14 +149,6 @@ namespace Engine.Rendering
             }
 
             return _batchesPool.GetActiveBatches();
-        }
-
-        internal void Clear()
-        {
-            _batchesPool.ClearPool();
-
-            GfxDeviceManager.Current.DestroyResource(_sharedIndexBuffer);
-            Initialize();
         }
     }
 }
