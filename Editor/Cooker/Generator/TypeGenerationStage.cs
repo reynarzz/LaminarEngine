@@ -36,8 +36,7 @@ namespace Editor.Cooker.Generator
             var generatedProject = File.ReadAllText(Path.Combine(EditorPaths.EditorTemplatesFolderFullPath, 
                                                                  EditorPaths.GENERATED_PROJECT_TEMPLATE_FILE_NAME));
 
-            var types = TypeRegistryClassGenerator.GetAllTypes();
-
+           
             var generatedLinker = RdXmlGenerator.Generate(LaminarTypeRegistryEditor.EngineAssembly, 
                                                           LaminarTypeRegistryEditor.GameAssembly);
 

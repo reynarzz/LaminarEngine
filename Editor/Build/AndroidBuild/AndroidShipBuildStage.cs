@@ -44,9 +44,7 @@ namespace Editor.Build
                 ["AndroidSigningStorePass"] = settingsAndroid.StorePass,
                 ["OutputPath"] = EditorPaths.AndroidPublishFolderRoot + "/",
                 ["AndroidApplicationLabel"] = buildTypeSettings.ApplicationName,
-                ["PublishTrimmed"] = "true",
                 ["DefineConstants"] = "$(DefineConstants);ANDROID;MOBILE",
-                ["TrimMode"] = "link",
                 ["ApplicationId"] = packageName,
                 ["ApplicationDisplayVersion"] = GetVersion(settingsAndroid.Version),
                 ["SupportedOSPlatformVersion"] = ((int)settingsAndroid.MinimumApiLevel).ToString(),
@@ -62,19 +60,25 @@ namespace Editor.Build
                 props["EnableLLVM"] = "true";
                 props["AndroidLinkMode"] = "SdkAndUser";
                 props["AndroidEnableProfiledAot"] = "false";
-                props["AndroidStripMode"] = "All";
             }
 
             // NOTE: Not sure why do I have to define build type, msbuild should do it by default.
             if (settingsAndroid.Type == BuildType.Release)
             {
                 props["DefineConstants"] = "$(DefineConstants);ANDROID;MOBILE;RELEASE";
-                props["DebugType"] = "none";
+                props["DebugType"] = "None";
                 props["Optimize"] = "true";
+                props["AndroidStripMode"] = "All";
+                props["PublishTrimmed"] = "true";
+                props["TrimMode"] = "link";
             }
             else
             {
                 props["DefineConstants"] = "$(DefineConstants);ANDROID;MOBILE;DEBUG";
+                props["DebugSymbols"] = "true";
+                props["DebugType"] = "Embedded";
+                props["Optimize"] = "false";
+                props["AndroidStripMode"] = "None";
             }
         }
 

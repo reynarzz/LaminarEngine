@@ -56,7 +56,7 @@ namespace Engine.Layers
             }
             var sceneSettings = EngineServices.GetService<EngineDataService>().GetProjectSettings().SceneSettings;
             SceneManager.Initialize();
-            var scene = (SceneAsset)Assets.GetAssetFromGuid(GetGuidSafe(sceneSettings.MainScene));
+            var scene = Assets.GetAssetFromGuid(GetGuidSafe(sceneSettings.MainScene)) as SceneAsset;
 
             if (!scene)
             {
@@ -68,7 +68,10 @@ namespace Engine.Layers
                     return false;
                 }
             }
-
+            else
+            {
+                Debug.Success("Scene found: " + scene.Name);
+            }
             SceneDeserializer.DeserializeScene(scene.SceneIR, SceneManager.ActiveScene);
 
             return true;
