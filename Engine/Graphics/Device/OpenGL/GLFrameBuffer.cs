@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using Engine.Graphics.OpenGL;
+
 #if DESKTOP
 using static OpenGL.GL;
 #else
-    using static OpenGL.ES.GLES30;
+using static OpenGL.ES.GLES30;
 #endif
-
 
 namespace Engine.Graphics
 {
@@ -23,16 +23,48 @@ namespace Engine.Graphics
 
         protected internal override GfxResource[] SubResources { get; protected set; }
 
-        public GLFrameBuffer() : base(glGenFramebuffer,
-                                    glDeleteFramebuffer,
-                                    handle => glBindFramebuffer(GL_FRAMEBUFFER, handle))
+        private static uint _boundFrameBuffer = uint.MaxValue;
+        private static uint _boundReadFrameBuffer = uint.MaxValue;
+        private static uint _boundDrawFrameBuffer = uint.MaxValue;
+
+        private static void BindFrameBufferCached(uint handle)
         {
+            if (_boundFrameBuffer == handle)
+            {
+                return;
+            }
+
+            glBindFramebuffer(GL_FRAMEBUFFER, handle);
+            _boundFrameBuffer = handle;
         }
 
-        /// <summary>
-        /// Blit the low-resolution framebuffer to the screen with nearest-neighbor scaling.
-        /// </summary>
+        private static void BindReadFrameBufferCached(uint handle)
+        {
+            if (_boundReadFrameBuffer == handle)
+            {
+                return;
+            }
 
+            glBindFramebuffer(GL_READ_FRAMEBUFFER, handle);
+            _boundReadFrameBuffer = handle;
+        }
+
+        private static void BindDrawFrameBufferCached(uint handle)
+        {
+            if (_boundDrawFrameBuffer == handle)
+            {
+                return;
+            }
+
+            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, handle);
+            _boundDrawFrameBuffer = handle;
+        }
+
+        public GLFrameBuffer() : base(glGenFramebuffer,
+                                    glDeleteFramebuffer,
+                                    handle => BindFrameBufferCached(handle))
+        {
+        }
 
         protected override bool CreateResource(RenderTargetDescriptor descriptor)
         {
@@ -44,21 +76,6 @@ namespace Engine.Graphics
 
             if (descriptor.IsMultiSample)
             {
-                //ColorTexture = new GLTexture();
-                //ColorTexture.Create(new TextureDescriptor()
-                //{
-                //    Buffer = null,
-                //    Width = descriptor.Width,
-                //    Height = descriptor.Height,
-                //    Channels = 4,
-                //    IsMultiSample = true,
-                //    SamplesCount = descriptor.SamplesCount
-                //});
-
-                //ColorTexture.Bind();
-                //SubResources = [ColorTexture];
-                // glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, ColorTexture.Handle, 0);
-
                 _colorRBO = glGenRenderbuffer();
                 GLHelpers.CheckGLError();
                 glBindRenderbuffer(_colorRBO);
@@ -70,7 +87,6 @@ namespace Engine.Graphics
                 glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, _colorRBO);
                 GLHelpers.CheckGLError();
 
-                // Multisampled Depth and Stencil 
                 _depthStencilRBO = glGenRenderbuffer();
                 GLHelpers.CheckGLError();
 
@@ -123,7 +139,6 @@ namespace Engine.Graphics
                 return false;
             }
 
-            Unbind();
             return true;
         }
 
@@ -137,68 +152,55 @@ namespace Engine.Graphics
 
             CreateResource(descriptor);
             GLHelpers.CheckGLError();
-
         }
 
         internal void BlitToScreen(int windowWidth, int windowHeight)
         {
-            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            BindFrameBufferCached(0);
             GLHelpers.CheckGLError();
 
-            glBindFramebuffer(GL_READ_FRAMEBUFFER, Handle);
-
+            BindReadFrameBufferCached(Handle);
             GLHelpers.CheckGLError();
-            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+
+            BindDrawFrameBufferCached(0);
             GLHelpers.CheckGLError();
 
             glBlitFramebuffer(0, 0, _width, _height, 0, 0, windowWidth, windowHeight,
                                  GL_COLOR_BUFFER_BIT, GL_NEAREST);
             GLHelpers.CheckGLError();
-
-            glBindFramebuffer(GL_FRAMEBUFFER, 0);
-            GLHelpers.CheckGLError();
-
         }
 
         internal void BlitTo(GLFrameBuffer target, bool color = true, bool depth = false, bool linear = false)
         {
-            glBindFramebuffer(GL_READ_FRAMEBUFFER, this.Handle);       // Source
+            BindReadFrameBufferCached(this.Handle);
             GLHelpers.CheckGLError();
 
-            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, target.Handle);     // Destination
+            BindDrawFrameBufferCached(target.Handle);
             GLHelpers.CheckGLError();
 
             uint mask = 0;
             if (color) mask |= GL_COLOR_BUFFER_BIT;
             if (depth) mask |= GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT;
 
-            glBlitFramebuffer(
-                0, 0, this.Width, this.Height,
-                0, 0, target.Width, target.Height,
-                mask,
-               linear ? GL_LINEAR : GL_NEAREST);
+            glBlitFramebuffer(0, 0, this.Width, this.Height, 0, 0, target.Width, target.Height,
+                              mask, linear ? GL_LINEAR : GL_NEAREST);
             GLHelpers.CheckGLError();
 
-            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            BindFrameBufferCached(0);
             GLHelpers.CheckGLError();
 
-            glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);       // Source
+            BindReadFrameBufferCached(0);
             GLHelpers.CheckGLError();
 
-            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);     // Destination
+            BindDrawFrameBufferCached(0);
             GLHelpers.CheckGLError();
-
-
         }
 
-        /// <summary>
-        /// Read pixels from the framebuffer (useful for screenshots or pixel effects)
-        /// </summary>
         internal unsafe byte[] ReadPixels(int x, int y, int width, int height)
         {
             byte[] pixels = new byte[width * height * 4];
 
-            glBindFramebuffer(GL_FRAMEBUFFER, Handle);
+            BindFrameBufferCached(Handle);
             GLHelpers.CheckGLError();
 
             fixed (byte* ptr = pixels)
@@ -208,11 +210,10 @@ namespace Engine.Graphics
 
             }
 
-            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            BindFrameBufferCached(0);
             GLHelpers.CheckGLError();
 
             return pixels;
         }
-
     }
 }
