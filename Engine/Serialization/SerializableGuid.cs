@@ -11,22 +11,22 @@ namespace Engine.Serialization
         [JsonProperty, SerializedField] private ulong _a;
         [JsonProperty, SerializedField] private ulong _b;
 
+        [JsonIgnore] public ulong A => _a;
+        [JsonIgnore] public ulong B => _b;
+        [JsonIgnore] public Guid Guid => ToGuid(_a, _b);
+
         public SerializableGuid(ulong a, ulong b)
         {
             _a = a;
             _b = b;
         }
 
-        [JsonIgnore]
-        public Guid Guid
+        public static Guid ToGuid(ulong a, ulong b)
         {
-            get
-            {
-                Span<byte> bytes = stackalloc byte[16];
-                BinaryPrimitives.WriteUInt64LittleEndian(bytes[..8], _a);
-                BinaryPrimitives.WriteUInt64LittleEndian(bytes[8..], _b);
-                return new Guid(bytes);
-            }
+            Span<byte> bytes = stackalloc byte[16];
+            BinaryPrimitives.WriteUInt64LittleEndian(bytes[..8], a);
+            BinaryPrimitives.WriteUInt64LittleEndian(bytes[8..], b);
+            return new Guid(bytes);
         }
 
         public static implicit operator SerializableGuid(Guid guid)

@@ -1,5 +1,6 @@
 ﻿using Editor.Serialization;
 using Engine;
+using Engine.Serialization;
 using Engine.Utils;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -135,6 +136,7 @@ namespace Editor.Cooker
                 SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("System")),
                 SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("System.Collections.Generic")),
                 SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("System.Reflection")),
+                SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("System.Runtime.CompilerServices")),
             ]);
 
             if (isEditMode)
@@ -146,7 +148,8 @@ namespace Editor.Cooker
 
             foreach (var kvp in typeNamesMap)
             {
-                kvpCode.AppendLine($"{{ new Guid(\"{kvp.Key:N}\"), \"{kvp.Value}\" }},");
+                SerializableGuid abGuid = kvp.Key;
+                kvpCode.AppendLine($"{{ ToGuid(0x{abGuid.A:X16}, 0x{abGuid.B:X16}), \"{kvp.Value}\" }},");
             }
 
             string fieldCode = $@"private static readonly Dictionary<Guid, string> {DICTIONARY_TYPES_STR_NAME};";
@@ -187,7 +190,8 @@ namespace Editor.Cooker
                                              GenerateGetTypeMethod(),
                                              GenerateResolveAssemblyMethod(),
                                              GenerateGetApplicationTypeMethod(),
-                                             PreloadAssemblies());
+                                             PreloadAssemblies(),
+                                             GetGuidConverterMethod());
 
             // Build namespace
             var ns = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.ParseName("Generated"))
@@ -363,6 +367,27 @@ namespace Editor.Cooker
             return SyntaxFactory.ParseMemberDeclaration(methodSource)!;
         }
 
+        private static MemberDeclarationSyntax GetGuidConverterMethod()
+        {
+            string methodSource = @"
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            private static Guid ToGuid(ulong a, ulong b)
+            {
+                return new Guid((int)(a & 0xFFFFFFFF),
+                                (short)((a >> 32) & 0xFFFF),
+                                (short)((a >> 48) & 0xFFFF),
+                                (byte)(b & 0xFF),
+                                (byte)((b >> 8) & 0xFF),
+                                (byte)((b >> 16) & 0xFF),
+                                (byte)((b >> 24) & 0xFF),
+                                (byte)((b >> 32) & 0xFF),
+                                (byte)((b >> 40) & 0xFF),
+                                (byte)((b >> 48) & 0xFF),
+                                (byte)((b >> 56) & 0xFF));
+            }
+            ";
+            return SyntaxFactory.ParseMemberDeclaration(methodSource)!;
+        }
         private static ExpressionSyntax GetTypeExpression(string typeFullname)
         {
             if (typeFullname.StartsWith("<") && typeFullname.Contains(">"))
