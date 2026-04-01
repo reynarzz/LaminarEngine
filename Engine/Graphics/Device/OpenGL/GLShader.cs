@@ -215,10 +215,17 @@ namespace Engine.Graphics.OpenGL
             }
         }
 
+        private Dictionary<int, mat4> _cache = new();
+
         internal void SetUniform(string name, mat4 value)
         {
             if (!GetLocation(name, out var location))
                 return;
+
+            if (_cache.TryGetValue(location, out var oldValue) && IsSame(value, oldValue))
+                return;
+
+            _cache[location] = value;
 
             unsafe
             {
@@ -226,17 +233,31 @@ namespace Engine.Graphics.OpenGL
             }
         }
 
+        private static unsafe bool IsSame(mat4 a, mat4 b)
+        {
+            ulong* pa = (ulong*)&a;
+            ulong* pb = (ulong*)&b;
+
+            return pa[0] == pb[0] &&
+                   pa[1] == pb[1] &&
+                   pa[2] == pb[2] &&
+                   pa[3] == pb[3] &&
+                   pa[4] == pb[4] &&
+                   pa[5] == pb[5] &&
+                   pa[6] == pb[6] &&
+                   pa[7] == pb[7];
+        }
+
         // Tries to find the location for 'name', if found, the location will be cached.
         private bool GetLocation(string name, out int location)
         {
-            location = -1;
             if (_uniformLocations.TryGetValue(name, out location))
-            {
                 return location >= 0;
-            }
+
             location = glGetUniformLocation(Handle, name);
             _uniformLocations.Add(name, location);
-            return false;
+
+            return location >= 0;
         }
     }
 }
