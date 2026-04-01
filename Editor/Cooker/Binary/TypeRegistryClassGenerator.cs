@@ -416,7 +416,6 @@ namespace Editor.Cooker
         {
             var loadedAssemblies = new[]
             { 
-                LaminarTypeRegistryEditor.EngineAssembly.GetName().Name,
                 LaminarTypeRegistryEditor.GameAssembly.GetName().Name
             };
             //.Concat(GetRefsOnly(LaminarTypeRegistryEditor.GameAssembly, false))
