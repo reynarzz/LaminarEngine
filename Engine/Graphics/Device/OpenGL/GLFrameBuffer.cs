@@ -60,28 +60,28 @@ namespace Engine.Graphics
                 // glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, ColorTexture.Handle, 0);
 
                 _colorRBO = glGenRenderbuffer();
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
                 glBindRenderbuffer(_colorRBO);
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
                 glRenderbufferStorageMultisample(GL_RENDERBUFFER, descriptor.SamplesCount, GL_RGBA8, _width, _height);
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
                 glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, _colorRBO);
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
                 // Multisampled Depth and Stencil 
                 _depthStencilRBO = glGenRenderbuffer();
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
                 glBindRenderbuffer(_depthStencilRBO);
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
                 glRenderbufferStorageMultisample(GL_RENDERBUFFER, descriptor.SamplesCount, GL_DEPTH24_STENCIL8, _width, _height);
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
                 glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, _depthStencilRBO);
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
             }
             else
@@ -101,19 +101,19 @@ namespace Engine.Graphics
                 SubResources = [ColorTexture];
 
                 glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, ColorTexture.Handle, 0);
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
                 _depthStencilRBO = glGenRenderbuffer();
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
                 glBindRenderbuffer(_depthStencilRBO);
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
                 glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, descriptor.Width, descriptor.Height);
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
                 glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, _depthStencilRBO);
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
             }
 
@@ -133,40 +133,40 @@ namespace Engine.Graphics
 
             ColorTexture?.Dispose();
             glDeleteRenderbuffer(_depthStencilRBO);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             CreateResource(descriptor);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
         }
 
         internal void BlitToScreen(int windowWidth, int windowHeight)
         {
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             glBindFramebuffer(GL_READ_FRAMEBUFFER, Handle);
 
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
             glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             glBlitFramebuffer(0, 0, _width, _height, 0, 0, windowWidth, windowHeight,
                                  GL_COLOR_BUFFER_BIT, GL_NEAREST);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
         }
 
         internal void BlitTo(GLFrameBuffer target, bool color = true, bool depth = false, bool linear = false)
         {
             glBindFramebuffer(GL_READ_FRAMEBUFFER, this.Handle);       // Source
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             glBindFramebuffer(GL_DRAW_FRAMEBUFFER, target.Handle);     // Destination
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             uint mask = 0;
             if (color) mask |= GL_COLOR_BUFFER_BIT;
@@ -177,16 +177,16 @@ namespace Engine.Graphics
                 0, 0, target.Width, target.Height,
                 mask,
                linear ? GL_LINEAR : GL_NEAREST);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);       // Source
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);     // Destination
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
 
         }
@@ -199,17 +199,17 @@ namespace Engine.Graphics
             byte[] pixels = new byte[width * height * 4];
 
             glBindFramebuffer(GL_FRAMEBUFFER, Handle);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             fixed (byte* ptr = pixels)
             {
                 glReadPixels(x, y, width, height, GL_RGBA, GL_UNSIGNED_BYTE, (IntPtr)ptr);
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
             }
 
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             return pixels;
         }

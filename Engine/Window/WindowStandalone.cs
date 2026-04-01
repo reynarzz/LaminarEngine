@@ -219,13 +219,13 @@ namespace Engine
             // Glfw.SetWindowAttribute(NativeWindow, WindowAttribute.Decorated, false);
 
             GL.glClearColor(windowColor.R, windowColor.G, windowColor.B, 1.0f);
-            Graphics.OpenGL.GLHelpers.CheckGLError(GetType().Name);
+            Graphics.OpenGL.GLHelpers.CheckGLError();
 
             GL.glClear(GL.GL_COLOR_BUFFER_BIT);
-            Graphics.OpenGL.GLHelpers.CheckGLError(GetType().Name);
+            Graphics.OpenGL.GLHelpers.CheckGLError();
 
             SwapBuffers();
-            Graphics.OpenGL.GLHelpers.CheckGLError(GetType().Name);
+            Graphics.OpenGL.GLHelpers.CheckGLError();
 
             Glfw.ShowWindow(NativeWindow);
             //Glfw.SetWindowAttribute(NativeWindow, WindowAttribute.Decorated, true);
@@ -243,7 +243,7 @@ namespace Engine
             }
 
             GL.glGenBuffer();
-            Graphics.OpenGL.GLHelpers.CheckGLError(GetType().Name);
+            Graphics.OpenGL.GLHelpers.CheckGLError();
 
         }
         private void LoadIconRandom(TextureDescriptor image)

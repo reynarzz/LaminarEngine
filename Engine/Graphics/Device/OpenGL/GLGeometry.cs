@@ -28,14 +28,14 @@ namespace Engine.Graphics.OpenGL
             uint prevVAO = GetBoundVAO();// _prevVAO;
             
             Bind();
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
             if (!_vertBuffer.Create(descriptor.VertexDesc.BufferDesc))
             {
                 Debug.Error("Failed to create vertex buffer.");
                 Unbind();
                 return false;
             }
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             if (descriptor.SharedIndexBuffer == null && descriptor.IndexDesc != null)
             {
@@ -47,22 +47,22 @@ namespace Engine.Graphics.OpenGL
                     Unbind();
                     return false;
                 }
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
                 _indexBuffer.Bind();
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
             }
             else if (descriptor.SharedIndexBuffer != null)
             {
                 (descriptor.SharedIndexBuffer as GLIndexBuffer).Bind();
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
                 _sharedBuffer = descriptor.SharedIndexBuffer as GLIndexBuffer;
             }
            
             _vertBuffer.Bind();
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             for (uint i = 0; i < descriptor.VertexDesc.Attribs.Length; i++)
             {
@@ -76,10 +76,10 @@ namespace Engine.Graphics.OpenGL
                 {
                     glVertexAttribPointer(i, attrib.Count, attrib.Type.ToGL(), attrib.Normalized, attrib.Stride, attrib.Offset);
                 }
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
                 glEnableVertexAttribArray(i);
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
             }
 
@@ -87,7 +87,7 @@ namespace Engine.Graphics.OpenGL
 
             _prevVAO = prevVAO;
             glBindVertexArray(_prevVAO);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             return true;
         }
@@ -96,7 +96,7 @@ namespace Engine.Graphics.OpenGL
             int result;
 //#if DESKTOP
             glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &result);
-            GLHelpers.CheckGLError(nameof(GLGeometry));
+            GLHelpers.CheckGLError();
 
             //#else
             //        int[] arr = new int[1];
@@ -108,16 +108,16 @@ namespace Engine.Graphics.OpenGL
         internal override void UpdateResource(GeometryDescriptor descriptor)
         {
             uint prevVAO = GetBoundVAO();// _prevVAO;
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             Bind();
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             _vertBuffer.Update(descriptor.VertexDesc.BufferDesc);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             _vertBuffer.Bind();
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             if (descriptor.SharedIndexBuffer != null && descriptor.SharedIndexBuffer != _sharedBuffer)
             {
@@ -127,22 +127,22 @@ namespace Engine.Graphics.OpenGL
             if (_sharedBuffer != null)
             {
                 _sharedBuffer.Bind();
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
             }
             else if (_indexBuffer != null)
             {
                 _indexBuffer.Update(descriptor.IndexDesc);
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
                 _indexBuffer.Bind();
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
             }
 
             _prevVAO = prevVAO;
             glBindVertexArray(prevVAO);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
         }
 
@@ -155,13 +155,13 @@ namespace Engine.Graphics.OpenGL
         protected override void FreeResource()
         {
             _vertBuffer.Dispose();
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             _sharedBuffer = null;
             if (_indexBuffer != null)
             {
                 _indexBuffer.Dispose();
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
             }
             base.FreeResource();

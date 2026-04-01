@@ -47,7 +47,7 @@ namespace Engine.Graphics.OpenGL
                 return;
             }
             _handleBinder(handle);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
         }
 
         internal virtual void Bind()
@@ -63,7 +63,7 @@ namespace Engine.Graphics.OpenGL
                 return;
             }
             _handleBinder(0);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
         }
 
@@ -72,16 +72,16 @@ namespace Engine.Graphics.OpenGL
             if (!IsInitialized)
             {
                 CreateHandle();
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
                 IsInitialized = CreateResource(descriptor);
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
                 if (!IsInitialized)
                 {
                     Debug.Error($"Could not create resource (returns false): {GetType().Name}");
                     DestroyHandle();
-                    GLHelpers.CheckGLError(GetType().Name);
+                    GLHelpers.CheckGLError();
 
                 }
 
@@ -98,7 +98,7 @@ namespace Engine.Graphics.OpenGL
             if (IsInitialized)
             {
                 UpdateResource(descriptor);
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
             }
         }
 
@@ -108,13 +108,13 @@ namespace Engine.Graphics.OpenGL
         private void CreateHandle()
         {
             Handle = _handleCreator();
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
         }
 
         private void DestroyHandle()
         {
             _handleDeleter?.Invoke(Handle);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             Handle = 0;
         }
@@ -127,7 +127,7 @@ namespace Engine.Graphics.OpenGL
                 Debug.Warn("Free gfx resource: " + GetType().Name);
 #endif
                 DestroyHandle();
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
                 IsInitialized = false;
             }

@@ -132,12 +132,12 @@ namespace Engine.Graphics.OpenGL
             }
         }
 #if RELEASE || !DEBUG_GRAPHICS
-        internal static void CheckGLError(string a = default, int b = default)
+        internal static void CheckGLError(Type typeCaller = null)
         {
 
         }
 #else 
-        internal static void CheckGLError(string typeCaller = null, [CallerMemberName] string mem = "", [CallerLineNumber] int lineNum = default)
+        internal static void CheckGLError(Type typeCaller = null, [CallerMemberName] string mem = "", [CallerLineNumber] int lineNum = default)
         {
             uint err;
             bool printedHeader = false;

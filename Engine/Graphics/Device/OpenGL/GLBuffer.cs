@@ -48,13 +48,13 @@ namespace Engine.Graphics.OpenGL
             }
 
             Bind();
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             glBufferData(Target, desc.BufferLength, desc.GetBufferUnsafePtr().ToPointer(), usage);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             Unbind();
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             return true;
         }
@@ -64,16 +64,16 @@ namespace Engine.Graphics.OpenGL
                 return;
 
             Bind();
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             unsafe
             {
                 glBufferSubData(Target, desc.Offset, desc.Count, desc.GetBufferUnsafePtr().ToPointer());
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
             }
             Unbind();
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
         }
 
 

@@ -57,10 +57,10 @@ namespace Engine.Graphics.OpenGL
             Debug.Log("OpenGL MaxUniformsCount: " + _gfxDeviceInfo.MaxUniformsCount);
 
             _defaultVAO = glGenVertexArray();
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             glBindVertexArray(_defaultVAO);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
         }
 
@@ -76,13 +76,13 @@ namespace Engine.Graphics.OpenGL
                 target.Bind();
             }
             glClearColor(config.Color.R, config.Color.G, config.Color.B, config.Color.A);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             glClearStencil(0);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             //if (target != null)
             //    glViewport(0, 0, target.Width, target.Height);
@@ -97,7 +97,7 @@ namespace Engine.Graphics.OpenGL
         {
             GLGeometry geometry = new GLGeometry();
             geometry.Create(desc);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             return geometry;
         }
@@ -107,7 +107,7 @@ namespace Engine.Graphics.OpenGL
             // TODO: Also create the vao here
             var vertexBuffer = new GLVertexBuffer();
             vertexBuffer.Create(desc.BufferDesc);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             return vertexBuffer;
         }
@@ -116,7 +116,7 @@ namespace Engine.Graphics.OpenGL
         {
             var indexBuffer = new GLIndexBuffer();
             indexBuffer.Create(desc);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             return indexBuffer;
         }
@@ -124,11 +124,11 @@ namespace Engine.Graphics.OpenGL
         internal override GfxResource CreateShader(ShaderDescriptor desc)
         {
             glBindVertexArray(DefaultVAO);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             var shader = new GLShader();
             shader.Create(desc);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             return shader;
         }
@@ -137,7 +137,7 @@ namespace Engine.Graphics.OpenGL
         {
             var texture = new GLTexture();
             texture.Create(desc);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             return texture;
         }
@@ -146,7 +146,7 @@ namespace Engine.Graphics.OpenGL
         {
             var fbuffer = new GLFrameBuffer();
             fbuffer.Create(desc);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             return fbuffer;
         }
@@ -156,7 +156,7 @@ namespace Engine.Graphics.OpenGL
             unsafe
             {
                 glDrawElements(GetGLDrawMode(mode), indicesLength, GL_UNSIGNED_INT, null);
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
             }
         }
@@ -164,7 +164,7 @@ namespace Engine.Graphics.OpenGL
         internal override void DrawArrays(DrawMode mode, int startIndex, int vertexCount)
         {
             glDrawArrays(GetGLDrawMode(mode), startIndex, vertexCount);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
         }
 
@@ -192,19 +192,19 @@ namespace Engine.Graphics.OpenGL
             if (resource as GLGeometry != null)
             {
                 (resource as GLGeometry).UpdateResource(desc as GeometryDescriptor);
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
             }
             else if (resource is GLFrameBuffer buffer)
             {
                 buffer.UpdateResource(desc as RenderTargetDescriptor);
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
             }
             else if (resource is GLTexture texture)
             {
                 texture.UpdateResource(desc as TextureDescriptor);
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
             }
         }
@@ -226,14 +226,14 @@ namespace Engine.Graphics.OpenGL
             {
                 _cachedViewport = new ivec4(x, y, w, h);
                 glViewport(x, y, w, h);
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
             }
         }
 
         internal override void Present()
         {
             WindowManager.Window.SwapBuffers();
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
         }
 
         internal override void Present(GfxResource renderTarget)
@@ -242,7 +242,7 @@ namespace Engine.Graphics.OpenGL
             if (frameBuffer != null)
             {
                 frameBuffer.BlitToScreen(Screen.Width, Screen.Height);
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
             }
 
@@ -263,19 +263,19 @@ namespace Engine.Graphics.OpenGL
                 if (features.Blending.Enabled)
                 {
                     glEnable(GL_BLEND);
-                    GLHelpers.CheckGLError(GetType().Name);
+                    GLHelpers.CheckGLError();
 
                     glBlendFunc(GLHelpers.MapBlendFactor(features.Blending.SrcFactor), GLHelpers.MapBlendFactor(features.Blending.DstFactor));
-                    GLHelpers.CheckGLError(GetType().Name);
+                    GLHelpers.CheckGLError();
 
                     glBlendEquation(GLHelpers.MapBlendEquation(features.Blending.Equation));
-                    GLHelpers.CheckGLError(GetType().Name);
+                    GLHelpers.CheckGLError();
 
                 }
                 else
                 {
                     glDisable(GL_BLEND);
-                    GLHelpers.CheckGLError(GetType().Name);
+                    GLHelpers.CheckGLError();
 
                 }
             }
@@ -286,22 +286,22 @@ namespace Engine.Graphics.OpenGL
                 if (isStencilEnabled)
                 {
                     glEnable(GL_STENCIL_TEST);
-                    GLHelpers.CheckGLError(GetType().Name);
+                    GLHelpers.CheckGLError();
 
                     glStencilMask(0xFF);
-                    GLHelpers.CheckGLError(GetType().Name);
+                    GLHelpers.CheckGLError();
 
                     glStencilFunc(GLHelpers.MapFunc(features.Stencil.Func), features.Stencil.Ref, features.Stencil.Mask);
-                    GLHelpers.CheckGLError(GetType().Name);
+                    GLHelpers.CheckGLError();
 
                     glStencilOp(GLHelpers.MapOp(features.Stencil.FailOp), GLHelpers.MapOp(features.Stencil.ZFailOp), GLHelpers.MapOp(features.Stencil.ZPassOp));
-                    GLHelpers.CheckGLError(GetType().Name);
+                    GLHelpers.CheckGLError();
 
                 }
                 else
                 {
                     glDisable(GL_STENCIL_TEST);
-                    GLHelpers.CheckGLError(GetType().Name);
+                    GLHelpers.CheckGLError();
 
                 }
             }
@@ -312,13 +312,13 @@ namespace Engine.Graphics.OpenGL
                 if (features.DepthTesting)
                 {
                     glEnable(GL_DEPTH_TEST);
-                    GLHelpers.CheckGLError(GetType().Name);
+                    GLHelpers.CheckGLError();
 
                 }
                 else
                 {
                     glDisable(GL_DEPTH_TEST);
-                    GLHelpers.CheckGLError(GetType().Name);
+                    GLHelpers.CheckGLError();
 
                 }
             }
@@ -328,23 +328,23 @@ namespace Engine.Graphics.OpenGL
         {
             var frameBuffer = renderTarget as GLFrameBuffer;
             frameBuffer?.Bind();
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             draw?.Invoke();
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             frameBuffer?.Unbind();
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
         }
         internal override void Draw(DrawCallData drawCallData)
         {
             (drawCallData.Geometry as GLGeometry).Bind();
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             var shader = drawCallData.Shader as GLShader;
             shader.Bind();
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             int textureIndex = 0;
             for (; textureIndex < drawCallData.Textures.Length; textureIndex++)
@@ -353,17 +353,17 @@ namespace Engine.Graphics.OpenGL
                 if (tex == null)
                     break;
                 (tex as GLTexture).Bind(textureIndex);
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
             }
 
             foreach (var (uniform, texture) in drawCallData.NamedTextures)
             {
                 shader.SetUniform(uniform, textureIndex);
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
                 (texture as GLTexture).Bind(textureIndex);
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
                 textureIndex++;
             }
@@ -373,7 +373,7 @@ namespace Engine.Graphics.OpenGL
             if (renderTarget != null)
             {
                 renderTarget.Bind();
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
             }
 
             SetViewport(drawCallData.Viewport);
@@ -397,12 +397,12 @@ namespace Engine.Graphics.OpenGL
             if (renderTarget != null)
             {
                 renderTarget.Unbind();
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
             }
             shader.Unbind();
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
             (drawCallData.Geometry as GLGeometry).Unbind();
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
         }
 
         internal override byte[] ReadRenderTargetColors(GfxResource nativeResource, int x, int y, int width, int height)
@@ -410,7 +410,7 @@ namespace Engine.Graphics.OpenGL
             if (nativeResource is GLFrameBuffer buffer)
             {
                 var buff = buffer.ReadPixels(x, y, width, height);
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
                 return buff;
             }
@@ -422,7 +422,7 @@ namespace Engine.Graphics.OpenGL
         {
             var sourceFB = (source as GLFrameBuffer);
             sourceFB.BlitTo(target as GLFrameBuffer, color, depth, linear);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
         }
 
         internal override void DestroyResource(GfxResource resource)
@@ -430,7 +430,7 @@ namespace Engine.Graphics.OpenGL
             if (resource != null && resource.IsInitialized)
             {
                 resource.Dispose();
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
             }
         }

@@ -127,7 +127,7 @@ namespace Editor.Layers
                 };
 
                 IsInitialized = true;
-return LayerInitResult.Success;
+                return LayerInitResult.Success;
 
             });
 

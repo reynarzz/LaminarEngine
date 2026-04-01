@@ -28,31 +28,31 @@ namespace Engine.Graphics.OpenGL
             }
 
             uint vertId = CompileShader(GL_VERTEX_SHADER, descriptor.VertexSource, descriptor.VertName);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             if (vertId == 0)
                 return false;
 
             uint fragId = CompileShader(GL_FRAGMENT_SHADER, descriptor.FragmentSource, descriptor.FragName);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             if (fragId == 0)
                 return false;
 
             glAttachShader(Handle, vertId);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             glAttachShader(Handle, fragId);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             glLinkProgram(Handle);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             glDeleteShader(vertId);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             glDeleteShader(fragId);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             bool validated = true;
 
@@ -65,33 +65,33 @@ namespace Engine.Graphics.OpenGL
         private unsafe uint CompileShader(int shaderType, byte[] shaderSource, string name)
         {
             uint shaderId = glCreateShader(shaderType);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             string src = Encoding.UTF8.GetString(shaderSource);
 
             glShaderSource(shaderId, src);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             glCompileShader(shaderId);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
 #if DEBUG
             int result = GL_FALSE;
             glGetShaderiv(shaderId, GL_COMPILE_STATUS, &result);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             if (result == GL_FALSE)
             {
                 int length = 0;
                 glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &length);
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
                 var message = glGetShaderInfoLog(shaderId, length);
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
                 Debug.Error($"failed to compile '{ShaderTypeName(shaderType)}' \n{message}, name: {name}");
                 glDeleteShader(shaderId);
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
                 return 0;
             }
@@ -106,7 +106,7 @@ namespace Engine.Graphics.OpenGL
 #endif
             int linkStatus;
             glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             if (linkStatus == GL_FALSE)
             {

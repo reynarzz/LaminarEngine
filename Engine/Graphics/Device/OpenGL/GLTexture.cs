@@ -40,7 +40,7 @@ namespace Engine.Graphics.OpenGL
                 {
                     glTexImage2D(GL_TEXTURE_2D, 0, GetInternalFormat(descriptor.Channels), descriptor.Width, descriptor.Height, 0,
                                  GetFormat(descriptor.Channels), GL_UNSIGNED_BYTE, data);
-                    GLHelpers.CheckGLError(GetType().Name);
+                    GLHelpers.CheckGLError();
 
                 }
 
@@ -169,10 +169,10 @@ namespace Engine.Graphics.OpenGL
                     throw new Exception("GL filter not implemented");
             }
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilter);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             int texMode = 0;
             switch (descriptor.Mode)
@@ -188,10 +188,10 @@ namespace Engine.Graphics.OpenGL
             }
 
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, texMode);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, texMode);
-            GLHelpers.CheckGLError(GetType().Name);
+            GLHelpers.CheckGLError();
 
         }
 
@@ -218,10 +218,10 @@ namespace Engine.Graphics.OpenGL
             {
                 _slotBound = slot;
                 glActiveTexture(GL_TEXTURE0 + slot);
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
                 glBindTexture(GL_TEXTURE_2D, handle);
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
             }
 
@@ -235,17 +235,17 @@ namespace Engine.Graphics.OpenGL
             {
 #if !MOBILE
                 glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
 #endif
             }
             else
             {
                 glActiveTexture(GL_TEXTURE0 + _slotBound);
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
                 glBindTexture(GL_TEXTURE_2D, 0);
-                GLHelpers.CheckGLError(GetType().Name);
+                GLHelpers.CheckGLError();
 
                 _slotBound = 0;
             }
