@@ -33,15 +33,15 @@ namespace Engine.Layers
                 }
             }
         }
-        public static Task EnqueueAsync(Action action)
+        public static Task<T> EnqueueAsync<T>(Func<T> action)
         {
-            var tcs = new TaskCompletionSource<bool>();
+            var tcs = new TaskCompletionSource<T>();
             _queue.Enqueue(() =>
             {
                 try
                 {
-                    action();
-                    tcs.SetResult(true);
+                    var value = action();
+                    tcs.SetResult(value);
                 }
                 catch (Exception ex)
                 {

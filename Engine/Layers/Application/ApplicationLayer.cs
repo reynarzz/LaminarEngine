@@ -10,7 +10,7 @@ namespace Engine.Layers
 {
     public class ApplicationLayer : LayerBase
     {
-        public sealed override async Task<LayerInitResult> InitializeAsync()
+        public sealed override Task<LayerInitResult> InitializeAsync()
         {
 #if SHIP_BUILD
             try
@@ -27,9 +27,11 @@ namespace Engine.Layers
                 return LayerInitResult.Error;
             }
 #endif
-            await MainThreadDispatcher.EnqueueAsync(OnInitialize);
-
-            return LayerInitResult.Success;
+            return MainThreadDispatcher.EnqueueAsync(() =>
+            {
+                OnInitialize();
+                return LayerInitResult.Success;
+            });
         }
 #if SHIP_BUILD
         private bool LoadMainScene()

@@ -93,6 +93,7 @@ namespace Editor.Build
             {
                 OnBuildCompleted?.Invoke(result);
                 resultCallback?.Invoke(result);
+                return true;
             });
         }
     }

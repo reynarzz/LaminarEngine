@@ -102,7 +102,7 @@ namespace Editor
                 Debug.Log("Layers fully initialized");
                 LayersInitialized = true;
 
-                await MainThreadDispatcher.EnqueueAsync(OnLayersInitialized);
+                await MainThreadDispatcher.EnqueueAsync(() => { OnLayersInitialized(); return true; });
             }
 
             Task.Run(InitializeLayers);

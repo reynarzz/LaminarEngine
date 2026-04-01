@@ -42,6 +42,7 @@ namespace Editor.Build
             await MainThreadDispatcher.EnqueueAsync(() =>
             {
                 EditorIOLayer.Instance.ReloadDisk(assetDatabase);
+                return true;
             });
 
             return new BuildStageResult()

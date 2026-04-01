@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 #if DESKTOP
@@ -130,5 +131,48 @@ namespace Engine.Graphics.OpenGL
                 }
             }
         }
+#if RELEASE
+        internal static void CheckGLError(string a = default, int b = default)
+        {
+
+        }
+#else
+        internal static void CheckGLError([CallerMemberName] string mem = "", [CallerLineNumber] int lineNum = default)
+        {
+            uint err;
+            bool printedHeader = false;
+#if DESKTOP
+            var col = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Red;
+#endif
+            while ((err = (uint)GetError()) != GL_NO_ERROR)
+            {
+                if (!printedHeader)
+                {
+                    Console.WriteLine($"OpenGL error(s) at: {mem}");
+                    Console.WriteLine(Environment.StackTrace);
+                    printedHeader = true;
+                }
+
+                string name = err switch
+                {
+                    0x0500 => "GL_INVALID_ENUM",
+                    0x0501 => "GL_INVALID_VALUE",
+                    0x0502 => "GL_INVALID_OPERATION",
+                    0x0503 => "GL_STACK_OVERFLOW",
+                    0x0504 => "GL_STACK_UNDERFLOW",
+                    0x0505 => "GL_OUT_OF_MEMORY",
+                    0x0506 => "GL_INVALID_FRAMEBUFFER_OPERATION",
+                    _ => "UNKNOWN"
+                };
+
+                Console.WriteLine($"OpenGL error at {mem}, ln:{lineNum}: {name} (0x{err:X})");
+#if DESKTOP
+                Console.ForegroundColor = col;
+#endif
+
+            }
+        }
+#endif
     }
 }

@@ -34,9 +34,9 @@ namespace Engine.Layers
             _drawPostProcessCallback = PostProcessDraw;
         }
 
-        public override async Task<LayerInitResult> InitializeAsync()
+        public override Task<LayerInitResult> InitializeAsync()
         {
-            await MainThreadDispatcher.EnqueueAsync(() =>
+            return MainThreadDispatcher.EnqueueAsync(() =>
             {
                 GfxDeviceManager.Init();
 
@@ -65,9 +65,8 @@ namespace Engine.Layers
                 _screenGeometry = GraphicsHelper.CreateQuadGeometry();
                 WindowManager.Window.OnWindowChanged += OnWindowsChanged;
                 IsInitialized = true;
+                return LayerInitResult.Success;
             });
-
-            return LayerInitResult.Success;
         }
 
         private void OnWindowsChanged(int w, int h)
@@ -230,10 +229,10 @@ namespace Engine.Layers
                     continue;
                 }
 
-                GfxDeviceManager.Current.SetViewport(new vec4(camera.Viewport.x * targetRenderTexture.Width,
-                                                              camera.Viewport.y * targetRenderTexture.Height,
-                                                              targetRenderTexture.Width * camera.Viewport.z,
-                                                              targetRenderTexture.Height * camera.Viewport.w));
+                //GfxDeviceManager.Current.SetViewport(new vec4(camera.Viewport.x * targetRenderTexture.Width,
+                //                                              camera.Viewport.y * targetRenderTexture.Height,
+                //                                              targetRenderTexture.Width * camera.Viewport.z,
+                //                                              targetRenderTexture.Height * camera.Viewport.w));
 
                 // Clear main render target.
                 GfxDeviceManager.Current.Clear(new ClearDeviceConfig()
@@ -246,6 +245,7 @@ namespace Engine.Layers
                 LaminarProfiler.Begin($"Scene Renderer: {sceneRenderer.GetType().Name}");
                 sceneRenderer.OnBegin();
                 var processedRenderTexture = sceneRenderer.OnRenderScene(surface, camera, targetRenderTexture);
+
                 LaminarProfiler.End();
 #if DEBUG || EDITOR
                 LaminarProfiler.Begin($"Draw Debug: {sceneRenderer.GetType().Name}");

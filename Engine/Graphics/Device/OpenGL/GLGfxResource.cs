@@ -47,6 +47,7 @@ namespace Engine.Graphics.OpenGL
                 return;
             }
             _handleBinder(handle);
+            GLHelpers.CheckGLError();
         }
 
         internal virtual void Bind()
@@ -91,6 +92,7 @@ namespace Engine.Graphics.OpenGL
             if (IsInitialized)
             {
                 UpdateResource(descriptor);
+                GLHelpers.CheckGLError();
             }
         }
 
@@ -100,14 +102,16 @@ namespace Engine.Graphics.OpenGL
         private void CreateHandle()
         {
             Handle = _handleCreator();
+            GLHelpers.CheckGLError();
         }
 
         private void DestroyHandle()
         {
             _handleDeleter?.Invoke(Handle);
+            GLHelpers.CheckGLError();
+
             Handle = 0;
         }
-
 
         protected override void FreeResource()
         {

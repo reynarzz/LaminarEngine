@@ -46,7 +46,12 @@ namespace Sandbox
                 new LaminarEngine(new WindowStandalone($"{Paths.ENGINE_NAME} | By Reynardo Perez", 1280, 720, Color.Black),
                                   GetApplicationLayer(), new InputStandAlonePlatform()).Run();
             }
-            catch (Exception e)
+            catch
+#if DEBUG
+
+            (Exception e)
+#endif
+
             {
 #if DEBUG
                 File.WriteAllText("Error.txt", e.ToString());

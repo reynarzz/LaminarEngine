@@ -72,9 +72,9 @@ namespace Editor.Layers
             };
         }
 
-        public override async Task<LayerInitResult> InitializeAsync()
+        public override Task<LayerInitResult> InitializeAsync()
         {
-            await MainThreadDispatcher.EnqueueAsync(() =>
+            return MainThreadDispatcher.EnqueueAsync(() =>
             {
                 var sceneBatcher = new SceneBatchedRenderer();
                 _gameSurface.SceneRenderers = new() { sceneBatcher };
@@ -127,9 +127,8 @@ namespace Editor.Layers
                 };
 
                 IsInitialized = true;
+                return LayerInitResult.Success;
             });
-
-            return LayerInitResult.Success;
         }
 
         private void Draw()
