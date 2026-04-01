@@ -201,7 +201,9 @@ namespace Engine.Graphics.OpenGL
         {
             if (_isMultisample)
             {
+#if !MOBILE
                 glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, handle);
+#endif
             }
             else
             {
@@ -218,7 +220,9 @@ namespace Engine.Graphics.OpenGL
         {
             if (_isMultisample)
             {
+#if !MOBILE
                 glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+#endif
             }
             else
             {

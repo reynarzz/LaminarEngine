@@ -52,17 +52,17 @@ namespace Editor.Build
                 ["SupportedOSPlatformVersion"] = ((int)settingsAndroid.MinimumApiLevel).ToString(),
                 ["AndroidTargetSdkVersion"] = ((int)settingsAndroid.TargetApiLevel).ToString(),
                 ["BuildAndroid"] = "true",
-                ["BUILD_MOBILE"] = "true"
+                ["BUILD_MOBILE"] = "true",
             };
 
             if (settings.NativeAOT)
             {
-                props["AndroidEnableProfiledAot"] = "false";
-                props["AotAssemblies"] = "true";
+                props["AndroidAotMode"] = "Normal";
+                props["AotAssemblies"] = "true"; 
                 props["EnableLLVM"] = "true";
                 props["AndroidLinkMode"] = "SdkAndUser";
+                props["AndroidEnableProfiledAot"] = "false";
                 props["AndroidStripMode"] = "All";
-                props["AndroidAotMode"] = "Full";
             }
 
             // NOTE: Not sure why do I have to define build type, msbuild should do it by default.

@@ -13,9 +13,17 @@ namespace Engine.Layers
         public sealed override async Task<LayerInitResult> InitializeAsync()
         {
 #if SHIP_BUILD
-            var result = LoadMainScene();
-            if (!result)
+            try
             {
+                var result = LoadMainScene();
+                if (!result)
+                {
+                    return LayerInitResult.Error;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.Error(e);
                 return LayerInitResult.Error;
             }
 #endif

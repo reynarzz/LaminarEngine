@@ -37,8 +37,8 @@ namespace Editor.Build
                 AddStage(_installBuildStage);
             }
 
-            PerformOp(() => Directory.Delete(EditorPaths.AndroidShipFolderRoot, true));
-            PerformOp(() => Directory.Delete(EditorPaths.AndroidPublishFolderRoot, true));
+            // PerformOp(() => Directory.Delete(EditorPaths.AndroidShipFolderRoot, true));
+           // PerformOp(() => Directory.Delete(EditorPaths.AndroidPublishFolderRoot, true));
         }
 
         protected override void OnAfterBuild(BuildResult result)

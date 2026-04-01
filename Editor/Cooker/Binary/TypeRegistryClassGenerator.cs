@@ -418,11 +418,12 @@ namespace Editor.Cooker
             {
                 LaminarTypeRegistryEditor.EngineAssembly.GetName().Name,
                 LaminarTypeRegistryEditor.GameAssembly.GetName().Name
-            }.Concat(GetRefsOnly(LaminarTypeRegistryEditor.GameAssembly, false))
-            .Where(n => !string.IsNullOrWhiteSpace(n))
-            .Distinct()
-            .OrderBy(n => n)
-            .ToArray();
+            };
+            //.Concat(GetRefsOnly(LaminarTypeRegistryEditor.GameAssembly, false))
+            //.Where(n => !string.IsNullOrWhiteSpace(n))
+            //.Distinct()
+            //.OrderBy(n => n)
+            //.ToArray();
 
             var bakedLoads = string.Join("\n", loadedAssemblies.Select(name =>
                     $@"        try

@@ -196,31 +196,30 @@ namespace Engine.IO
             return null;
         }
 
-        protected override async Task<byte[]> LoadAssetFromDiskAsync(Guid guid)
+        protected override Task<byte[]> LoadAssetFromDiskAsync(Guid guid)
         {
-            if (_assetsLocations.TryGetValue(guid, out var locations))
+            return Task.Run(() =>
             {
-                _reader.BaseStream.Position = locations.AssetDataLoc;
-                var data = new byte[locations.AssetDataSize];
-                var bytesRead = 0;
-                while (bytesRead < data.Length)
+                if (_assetsLocations.TryGetValue(guid, out var locations))
                 {
-
-#if IOS
-                    int read = _reader.BaseStream.Read(data, bytesRead, data.Length - bytesRead);
-#else
-                    int read = await _reader.BaseStream.ReadAsync(data, bytesRead, data.Length - bytesRead);
-#endif
-                    if (read == 0)
+                    _reader.BaseStream.Position = locations.AssetDataLoc;
+                    var data = new byte[locations.AssetDataSize];
+                    var bytesRead = 0;
+                    while (bytesRead < data.Length)
                     {
-                        throw new EndOfStreamException("Unexpected end of stream while reading asset data.");
-                    }
-                    bytesRead += read;
-                }
-                return data;
-            }
+                        int read = _reader.BaseStream.Read(data, bytesRead, data.Length - bytesRead);
 
-            return null;
+                        if (read == 0)
+                        {
+                            throw new EndOfStreamException("Unexpected end of stream while reading asset data.");
+                        }
+                        bytesRead += read;
+                    }
+                    return data;
+                }
+
+                return null;
+            });
         }
 
         protected override byte[] LoadMetaFromDisk(Guid guid)

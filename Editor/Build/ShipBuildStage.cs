@@ -13,7 +13,7 @@ namespace Editor.Build
         protected sealed override Dictionary<string, string> GetBuildProperties()
         {
             GetAllBuildProperties(out var props, out var settings);
-            
+
             var constants = props[DefaultPropertyConsts.DEFINE_CONSTANTS];
 
             if (constants.EndsWith(";"))
@@ -26,11 +26,14 @@ namespace Editor.Build
             props["LAM_GENERATED_PROJECT"] = EditorPaths.GameGeneratedProjectCsProjFileFullPath;
             props["LAM_TRIMMER_LINK_RD_FILE"] = EditorPaths.GameGeneratedLinkerRDFileFullPath;
 
-            if(settings.Type == BuildType.Release)
+            if (settings.Type == BuildType.Release)
             {
                 props["Optimize"] = "true";
             }
-
+            if (settings.NativeAOT)
+            {
+                constants += ";NATIVE_AOT";
+            }
             return new Dictionary<string, string>(props)
             {
                 ["ShipBuild"] = "true",
