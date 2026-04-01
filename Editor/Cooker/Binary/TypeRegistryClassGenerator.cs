@@ -34,6 +34,11 @@ namespace Editor.Cooker
             }
         }
 
+        private const string REGISTRY_CLASS_NAME = "TypeRegistryRuntime";
+        private const string DICTIONARY_CACHED_TYPES_NAME = "_typesCache";
+        private const string DICTIONARY_TYPES_STR_NAME = "_typesStr";
+        private const string ASSEMBLIES_BY_NAME_CACHE = "_assembliesByName";
+
         private static readonly HashSet<string> _exclusionList = new(new ContainsAComparer())
         {
             { "Box2D" },
@@ -45,7 +50,6 @@ namespace Editor.Cooker
             { "Generated" },
             { "Engine.Serialization" }
         };
-
         private static HashSet<string> _typesLibrary = new();
         internal static string Generate(bool isEditMode = false)
         {
@@ -138,143 +142,52 @@ namespace Editor.Cooker
                 usings = usings.Add(SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("Editor.Serialization")));
             }
 
-            // Build dictionary entries: <Guid, Type>
-            var initializerExpressions = new SeparatedSyntaxList<ExpressionSyntax>();
+            var kvpCode = new StringBuilder();
+
             foreach (var kvp in typeNamesMap)
             {
-                var guidLiteral = SyntaxFactory.ParseExpression($"new Guid(\"{kvp.Key:N}\")");
-                var typeOfExpression = GetTypeExpression(kvp.Value);
-
-                if (typeOfExpression == null)
-                {
-                    continue;
-                }
-                var kvpExpression = SyntaxFactory.InitializerExpression(
-                    SyntaxKind.ComplexElementInitializerExpression,
-                    SyntaxFactory.SeparatedList<ExpressionSyntax>(new[] { guidLiteral, typeOfExpression })
-                );
-
-                initializerExpressions = initializerExpressions.Add(kvpExpression);
+                kvpCode.AppendLine($"{{ new Guid(\"{kvp.Key:N}\"), \"{kvp.Value}\" }},");
             }
 
-            var dictionaryField = SyntaxFactory.FieldDeclaration(
-                SyntaxFactory.VariableDeclaration(
-                    SyntaxFactory.ParseTypeName("Dictionary<Guid, Type>"))
-                    .WithVariables(
-                        SyntaxFactory.SingletonSeparatedList(
-                            SyntaxFactory.VariableDeclarator("_types")
-                                         .WithInitializer(
-                                             SyntaxFactory.EqualsValueClause(
-                                                 SyntaxFactory.ObjectCreationExpression(
-                                                     SyntaxFactory.ParseTypeName("Dictionary<Guid, Type>"))
-                                                 .WithInitializer(
-                                                     SyntaxFactory.InitializerExpression(
-                                                         SyntaxKind.CollectionInitializerExpression,
-                                                         initializerExpressions
-                                                     )
-                                                 )
-                                             )
-                                         )
-                        )
-                    )
-            ).AddModifiers(
-                SyntaxFactory.Token(SyntaxKind.PrivateKeyword),
-                SyntaxFactory.Token(SyntaxKind.StaticKeyword),
-                SyntaxFactory.Token(SyntaxKind.ReadOnlyKeyword)
-            );
-            var field = SyntaxFactory.FieldDeclaration(
-            SyntaxFactory.VariableDeclaration(SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.BoolKeyword))) 
-                           .WithVariables(SyntaxFactory.SingletonSeparatedList(SyntaxFactory.VariableDeclarator("_isGameAssemblyLoaded")           
-                           .WithInitializer(SyntaxFactory.EqualsValueClause(SyntaxFactory.LiteralExpression(SyntaxKind.FalseLiteralExpression))))))
-                           .AddModifiers(SyntaxFactory.Token(SyntaxKind.PrivateKeyword), SyntaxFactory.Token(SyntaxKind.StaticKeyword));
-            // Build reverse dictionary: <Type, Guid>
-            var reverseInitializerExpressions = new SeparatedSyntaxList<ExpressionSyntax>();
-            foreach (var kvp in typeNamesMap)
-            {
-                var typeOfExpression = GetTypeExpression(kvp.Value);
-                if (typeOfExpression == null)
-                {
-                    continue;
-                }
-                var guidLiteral = SyntaxFactory.ParseExpression($"new Guid(\"{kvp.Key:N}\")");
+            string fieldCode = $@"private static readonly Dictionary<Guid, string> {DICTIONARY_TYPES_STR_NAME};";
+            var dictionaryStrTypesField = (FieldDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration(fieldCode);
 
-                var kvpExpression = SyntaxFactory.InitializerExpression(
-                    SyntaxKind.ComplexElementInitializerExpression,
-                    SyntaxFactory.SeparatedList<ExpressionSyntax>(new[] { typeOfExpression, guidLiteral })
-                );
+            string ctorCode = $@"
+            static {REGISTRY_CLASS_NAME}()
+            {{
+                PreloadAssemblies();
+    
+                {DICTIONARY_TYPES_STR_NAME} = new()
+                {{
+                    {kvpCode}
+                }};
+            }}
+            ";
 
-                reverseInitializerExpressions = reverseInitializerExpressions.Add(kvpExpression);
-            }
+            var staticCtor = (ConstructorDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration(ctorCode);
 
+            string dictionaryCacheCode = $"private static readonly Dictionary<Guid, Type> {DICTIONARY_CACHED_TYPES_NAME} = new();";
 
+            string assembliesByNameCacheCode = $"private static Dictionary<string, Assembly> {ASSEMBLIES_BY_NAME_CACHE} = new();";
+            var assembliesByNameCache = (FieldDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration(assembliesByNameCacheCode);
+
+            var dictionaryCachedTypesField = (FieldDeclarationSyntax)SyntaxFactory.ParseMemberDeclaration(dictionaryCacheCode);
 
             // Build class and implement ITypeRegistry
-            var classDecl = SyntaxFactory.ClassDeclaration("TypeRegistryRuntime")
+            var classDecl = SyntaxFactory.ClassDeclaration(REGISTRY_CLASS_NAME)
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.InternalKeyword),
                               SyntaxFactory.Token(SyntaxKind.StaticKeyword))
                 .WithLeadingTrivia(SyntaxFactory.Comment(
                     $"/* This class was generated by a tool. Please do not edit manually.\n" +
                     $"Info:\n" +
                     $"Types Count: {_typesLibrary.Count} \n*/"), SyntaxFactory.ElasticCarriageReturnLineFeed)
-                .AddMembers(dictionaryField, field);
-
-
-            if (isEditMode)
-            {
-                var dictionaryReverseField = SyntaxFactory.FieldDeclaration(
-                    SyntaxFactory.VariableDeclaration(
-                        SyntaxFactory.ParseTypeName("Dictionary<Type, Guid>"))
-                        .WithVariables(
-                            SyntaxFactory.SingletonSeparatedList(
-                                SyntaxFactory.VariableDeclarator("_typesReverse")
-                                             .WithInitializer(
-                                                 SyntaxFactory.EqualsValueClause(
-                                                     SyntaxFactory.ObjectCreationExpression(
-                                                         SyntaxFactory.ParseTypeName("Dictionary<Type, Guid>"))
-                                                     .WithInitializer(
-                                                         SyntaxFactory.InitializerExpression(
-                                                             SyntaxKind.CollectionInitializerExpression,
-                                                             reverseInitializerExpressions
-                                                         )
-                                                     )
-                                                 )
-                                             )
-                            )
-                        )
-                ).AddModifiers(
-                    SyntaxFactory.Token(SyntaxKind.PrivateKeyword),
-                    SyntaxFactory.Token(SyntaxKind.StaticKeyword),
-                    SyntaxFactory.Token(SyntaxKind.ReadOnlyKeyword)
-                );
-
-                // Build GetID(Type type, out Guid id) method
-                var getIDMethod = SyntaxFactory.MethodDeclaration(
-                        SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.BoolKeyword)),
-                        "GetID"
-                    )
-                    .AddModifiers(SyntaxFactory.Token(SyntaxKind.InternalKeyword),
-                                  SyntaxFactory.Token(SyntaxKind.StaticKeyword))
-                    .AddParameterListParameters(
-                        SyntaxFactory.Parameter(SyntaxFactory.Identifier("type"))
-                                     .WithType(SyntaxFactory.ParseTypeName("Type")),
-                        SyntaxFactory.Parameter(SyntaxFactory.Identifier("id"))
-                                     .WithType(SyntaxFactory.ParseTypeName("Guid"))
-                                     .WithModifiers(
-                                         SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.OutKeyword))
-                                     )
-                    )
-                    .WithBody(SyntaxFactory.Block(
-                        SyntaxFactory.ParseStatement("return _typesReverse.TryGetValue(type, out id);")
-                    ));
-
-                classDecl = classDecl.AddMembers(dictionaryReverseField, getIDMethod);
-            }
+                .AddMembers(dictionaryCachedTypesField, dictionaryStrTypesField, assembliesByNameCache, staticCtor);
 
             classDecl = classDecl.AddMembers(GetResolveTypeMethod(),
                                              GenerateGetTypeMethod(),
                                              GenerateResolveAssemblyMethod(),
                                              GenerateGetApplicationTypeMethod(),
-                                             PreloadGameAssembly());
+                                             PreloadAssemblies());
 
             // Build namespace
             var ns = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.ParseName("Generated"))
@@ -291,25 +204,18 @@ namespace Editor.Cooker
 
         private static MemberDeclarationSyntax GenerateGetTypeMethod()
         {
-            const string methodSource = @"
-            private static Type _GetType(string typeStr)
-            {
-                if(!_isGameAssemblyLoaded)
-                {
-                    _isGameAssemblyLoaded = true;
-                    PreloadGameAssembly();
-                }
-
-                try
-                {
+            const string methodSource = $@"
+            private static Type SearchType(Guid id)
+            {{
+                if({DICTIONARY_TYPES_STR_NAME}.TryGetValue(id, out var typeStr))
+                {{
                     return Type.GetType(typeStr, ResolveAssembly, null, true);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(""[ERROR]:"" + e.ToString());
-                    return null;
-                }
-            }
+                }}
+                
+                Console.WriteLine($""[ERROR]: Cannot find type {{id}}"");
+
+                return null;
+            }}
             ";
 
             return SyntaxFactory.ParseMemberDeclaration(methodSource)!;
@@ -317,39 +223,43 @@ namespace Editor.Cooker
 
         private static MemberDeclarationSyntax GetResolveTypeMethod()
         {
-            const string methodSrc = @"
+            const string methodSrc = $@"
             internal static bool ResolveType(Guid id, out Type type)
-            {
+            {{
                 type = null;
-                try
-                {
-                    return _types.TryGetValue(id, out type);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.ToString());
+
+                if(id == Guid.Empty)
+                {{
+                    Console.WriteLine(""TypeId is empty"");             
                     return false;
-                }
-            }";
+                }}
+            
+                if({DICTIONARY_CACHED_TYPES_NAME}.TryGetValue(id, out type))
+                {{
+                    return type != null;
+                }}
+                
+                type = SearchType(id);
+                {DICTIONARY_CACHED_TYPES_NAME}.Add(id, type);
+                return type != null;
+            }}";
 
             return SyntaxFactory.ParseMemberDeclaration(methodSrc)!;
         }
         private static MemberDeclarationSyntax GenerateResolveAssemblyMethod()
         {
-            const string methodSource = @"
+            const string methodSource = $@"
             private static Assembly ResolveAssembly(AssemblyName name)
-            {
-                var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-                for (int i = 0; i < assemblies.Length; i++)
-                {
-                    var asm = assemblies[i];
-                    if (AssemblyName.ReferenceMatchesDefinition(asm.GetName(), name))
-                    {
-                        return asm;
-                    }
-                }
+            {{
+                if({ASSEMBLIES_BY_NAME_CACHE}.TryGetValue(name.Name!, out var assembly))
+                {{
+                    return assembly;
+                }}
+                
+                Console.WriteLine($""Assembly: '{{name.Name}}' wasn't found."");             
+
                 return null;
-            }
+            }}
             ";
 
             return SyntaxFactory.ParseMemberDeclaration(methodSource)!;
@@ -362,7 +272,7 @@ namespace Editor.Cooker
             string methodSource = $@"
             internal static Type GetApplicationLayerType()
             {{
-                return _GetType(""{name}"");
+                return Type.GetType(""{name}"", ResolveAssembly, null, true);
             }}
             ";
             return SyntaxFactory.ParseMemberDeclaration(methodSource)!;
@@ -412,7 +322,7 @@ namespace Editor.Cooker
 
             return Walk(asm);
         }
-        private static MemberDeclarationSyntax PreloadGameAssembly()
+        private static MemberDeclarationSyntax PreloadAssemblies()
         {
             var loadedAssemblies = new[]
             { 
@@ -434,23 +344,25 @@ namespace Editor.Cooker
             }}"));
 
             var methodSource = $@"
-            private static void PreloadGameAssembly()
+            private static void PreloadAssemblies()
             {{
             {bakedLoads}
 
-            #if DEBUG
                 var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-
                 foreach (var item in assemblies)
                 {{
+                    {ASSEMBLIES_BY_NAME_CACHE}.Add(item.GetName().Name, item);
+
+            #if DEBUG
                     Console.WriteLine(""Assembly: "" + item.FullName);
-                }}
             #endif
+                }}
             }}
             ";
 
             return SyntaxFactory.ParseMemberDeclaration(methodSource)!;
         }
+
         private static ExpressionSyntax GetTypeExpression(string typeFullname)
         {
             if (typeFullname.StartsWith("<") && typeFullname.Contains(">"))
@@ -458,52 +370,6 @@ namespace Editor.Cooker
 
             return SyntaxFactory.ParseExpression($"_GetType(\"{typeFullname}\")");
         }
-
-        //private static string GetReflectionFullName(Type type)
-        //{
-        //    string name;
-
-        //    if (type.IsGenericTypeDefinition)
-        //    {
-        //        int arity = type.GetGenericArguments().Length;
-        //        name = type.Name.Split('`')[0] + "`" + arity;
-        //    }
-        //    else
-        //    {
-        //        name = type.Name;
-        //    }
-
-        //    if (type.IsNested)
-        //    {
-        //        return GetReflectionFullName(type.DeclaringType!) + "+" + name;
-        //    }
-
-        //    return (type.Namespace != null ? type.Namespace + "." : "") + name;
-        //}
-
-        //private static string GetCSharpFullName(Type type)
-        //{
-        //    string name;
-
-        //    if (type.IsGenericTypeDefinition)
-        //    {
-        //        int arity = type.GetGenericArguments().Length;
-        //        string commas = new string(',', Math.Max(0, arity - 1));
-        //        name = type.Name.Split('`')[0] + $"<{commas}>";
-        //    }
-        //    else
-        //    {
-        //        name = type.Name;
-        //    }
-
-        //    if (type.IsNested)
-        //    {
-        //        return GetCSharpFullName(type.DeclaringType!) + "." + name;
-        //    }
-
-        //    return (type.Namespace != null ? type.Namespace + "." : "") + name;
-        //}
-
 
         private static MemberDeclarationSyntax WrapWithIf(MemberDeclarationSyntax member, string symbol)
         {
