@@ -146,11 +146,24 @@ namespace Engine.Graphics.OpenGL
             CreateResource(descriptor);
         }
 
+        private readonly Dictionary<int, int> _intCache = new();
+        private readonly Dictionary<int, uint> _uintCache = new();
+        private readonly Dictionary<int, float> _floatCache = new();
+        private readonly Dictionary<int, vec2> _vec2Cache = new();
+        private readonly Dictionary<int, vec3> _vec3Cache = new();
+        private readonly Dictionary<int, vec4> _vec4Cache = new();
+        private readonly Dictionary<int, mat4> _mat4Cache = new();
+        private readonly Dictionary<int, int[]> _intArrayCache = new();
+
         internal void SetUniform(string name, int value)
         {
             if (!GetLocation(name, out var location))
                 return;
 
+            if (_intCache.TryGetValue(location, out var oldValue) && oldValue == value)
+                return;
+
+            _intCache[location] = value;
             glUniform1i(location, value);
         }
 
@@ -159,6 +172,10 @@ namespace Engine.Graphics.OpenGL
             if (!GetLocation(name, out var location))
                 return;
 
+            if (_uintCache.TryGetValue(location, out var oldValue) && oldValue == value)
+                return;
+
+            _uintCache[location] = value;
             glUniform1ui(location, value);
         }
 
@@ -167,6 +184,10 @@ namespace Engine.Graphics.OpenGL
             if (!GetLocation(name, out var location))
                 return;
 
+            if (_floatCache.TryGetValue(location, out var oldValue) && BitwiseEqual(oldValue, value))
+                return;
+
+            _floatCache[location] = value;
             glUniform1f(location, value);
         }
 
@@ -174,6 +195,11 @@ namespace Engine.Graphics.OpenGL
         {
             if (!GetLocation(name, out var location))
                 return;
+
+            if (_intArrayCache.TryGetValue(location, out var oldValue) && SequenceEqual(oldValue, value))
+                return;
+
+            _intArrayCache[location] = (int[])value.Clone();
 
             unsafe
             {
@@ -187,6 +213,11 @@ namespace Engine.Graphics.OpenGL
             if (!GetLocation(name, out var location))
                 return;
 
+            if (_vec2Cache.TryGetValue(location, out var oldValue) && BitwiseEqual(oldValue, value))
+                return;
+
+            _vec2Cache[location] = value;
+
             unsafe
             {
                 glUniform2fv(location, 1, &value.x);
@@ -197,6 +228,11 @@ namespace Engine.Graphics.OpenGL
         {
             if (!GetLocation(name, out var location))
                 return;
+
+            if (_vec3Cache.TryGetValue(location, out var oldValue) && BitwiseEqual(oldValue, value))
+                return;
+
+            _vec3Cache[location] = value;
 
             unsafe
             {
@@ -209,23 +245,26 @@ namespace Engine.Graphics.OpenGL
             if (!GetLocation(name, out var location))
                 return;
 
+            if (_vec4Cache.TryGetValue(location, out var oldValue) && BitwiseEqual(oldValue, value))
+                return;
+
+            _vec4Cache[location] = value;
+
             unsafe
             {
                 glUniform4fv(location, 1, &value.x);
             }
         }
 
-        private Dictionary<int, mat4> _cache = new();
-
         internal void SetUniform(string name, mat4 value)
         {
             if (!GetLocation(name, out var location))
                 return;
 
-            if (_cache.TryGetValue(location, out var oldValue) && IsSame(value, oldValue))
+            if (_mat4Cache.TryGetValue(location, out var oldValue) && BitwiseEqual(oldValue, value))
                 return;
 
-            _cache[location] = value;
+            _mat4Cache[location] = value;
 
             unsafe
             {
@@ -233,7 +272,33 @@ namespace Engine.Graphics.OpenGL
             }
         }
 
-        private static unsafe bool IsSame(mat4 a, mat4 b)
+        private static unsafe bool BitwiseEqual(float a, float b)
+        {
+            return *(uint*)&a == *(uint*)&b;
+        }
+
+        private static unsafe bool BitwiseEqual(vec2 a, vec2 b)
+        {
+            return *(ulong*)&a == *(ulong*)&b;
+        }
+
+        private static unsafe bool BitwiseEqual(vec3 a, vec3 b)
+        {
+            ulong* pa = (ulong*)&a;
+            ulong* pb = (ulong*)&b;
+
+            return pa[0] == pb[0] && *(uint*)(pa + 1) == *(uint*)(pb + 1);
+        }
+
+        private static unsafe bool BitwiseEqual(vec4 a, vec4 b)
+        {
+            ulong* pa = (ulong*)&a;
+            ulong* pb = (ulong*)&b;
+
+            return pa[0] == pb[0] && pa[1] == pb[1];
+        }
+
+        private static unsafe bool BitwiseEqual(mat4 a, mat4 b)
         {
             ulong* pa = (ulong*)&a;
             ulong* pb = (ulong*)&b;
@@ -246,6 +311,26 @@ namespace Engine.Graphics.OpenGL
                    pa[5] == pb[5] &&
                    pa[6] == pb[6] &&
                    pa[7] == pb[7];
+        }
+
+        private static bool SequenceEqual(int[] a, int[] b)
+        {
+            if (ReferenceEquals(a, b))
+                return true;
+
+            if (a == null || b == null)
+                return false;
+
+            if (a.Length != b.Length)
+                return false;
+
+            for (int i = 0; i < a.Length; i++)
+            {
+                if (a[i] != b[i])
+                    return false;
+            }
+
+            return true;
         }
 
         // Tries to find the location for 'name', if found, the location will be cached.
