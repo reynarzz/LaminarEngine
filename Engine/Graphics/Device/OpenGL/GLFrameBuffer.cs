@@ -39,10 +39,10 @@ namespace Engine.Graphics
             if (handle == 0)
                 handle = DefaultFrameBuffer;
 
-            if (_boundFrameBuffer == handle)
-            {
-                return;
-            }
+            //if (_boundFrameBuffer == handle)
+            //{
+            //    return;
+            //}
             
             glBindFramebuffer(GL_FRAMEBUFFER, handle);
             _boundFrameBuffer = handle;
@@ -53,10 +53,10 @@ namespace Engine.Graphics
             if (handle == 0)
                 handle = DefaultFrameBuffer;
             
-            if (_boundReadFrameBuffer == handle)
-            {
-                return;
-            }
+            //if (_boundReadFrameBuffer == handle)
+            //{
+            //    return;
+            //}
 
             glBindFramebuffer(GL_READ_FRAMEBUFFER, handle);
             _boundReadFrameBuffer = handle;
@@ -67,10 +67,10 @@ namespace Engine.Graphics
             if (handle == 0)
                 handle = DefaultFrameBuffer;
             
-            if (_boundDrawFrameBuffer == handle)
-            {
-                return;
-            }
+            //if (_boundDrawFrameBuffer == handle)
+            //{
+            //    return;
+            //}
 
             glBindFramebuffer(GL_DRAW_FRAMEBUFFER, handle);
             _boundDrawFrameBuffer = handle;
