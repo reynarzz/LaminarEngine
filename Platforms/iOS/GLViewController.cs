@@ -33,7 +33,9 @@ namespace Engine.IOS
 
         private InputLayerIOS _inputTest = new();
 
-        public void SetWindowSize(int width, int height) { }
+        public void SetWindowSize(int width, int height)
+        {
+        }
 
         public void UpdateView(int width, int height)
         {
@@ -53,7 +55,7 @@ namespace Engine.IOS
                 DrawableDepthFormat = GLKViewDrawableDepthFormat.Format24,
                 DrawableStencilFormat = GLKViewDrawableStencilFormat.Format8,
                 MultipleTouchEnabled = true,
-               // Delegate = this, // required for DrawInRect to fire
+                // Delegate = this, // required for DrawInRect to fire
             };
 
             var layer = (CAEAGLLayer)_view.Layer;
@@ -84,14 +86,14 @@ namespace Engine.IOS
             base.ViewDidAppear(animated);
             try
             {
-                if (_engine != null) 
+                if (_engine != null)
                     return;
 
                 EAGLContext.SetCurrentContext(_context);
                 _view.BindDrawable();
 
-                Width = PhysicalWidth  = (int)_view.DrawableWidth;
-                Height = PhysicalHeight = (int)_view.DrawableHeight;
+                _newWidth = Width = PhysicalWidth = (int)_view.DrawableWidth;
+               _newHeight = Height = PhysicalHeight = (int)_view.DrawableHeight;
 
                 Debug.Log($"Size: {Width}x{Height}");
 
@@ -113,7 +115,28 @@ namespace Engine.IOS
 
         public override void Update()
         {
-            
+        }
+
+        private int _newWidth;
+        private int _newHeight;
+
+        public override void ViewDidLayoutSubviews()
+        {
+            base.ViewDidLayoutSubviews();
+
+            if (_view == null)
+                return;
+
+            var newWidth = (int)_view.DrawableWidth;
+            var newHeight = (int)_view.DrawableHeight;
+
+            if (newWidth == 0 || newHeight == 0)
+                return;
+            if (newWidth == _newWidth && newHeight == _newHeight)
+                return;
+
+            _newWidth = newWidth;
+            _newHeight = newHeight;
         }
 
         public override void DrawInRect(GLKView view, CGRect rect)
@@ -127,7 +150,14 @@ namespace Engine.IOS
 
             try
             {
-                 _engine.Update();
+                if (_newWidth != Width || _newHeight != Height)
+                {
+                    Width = PhysicalWidth = _newWidth;
+                    Height = PhysicalHeight = _newHeight;
+                    OnWindowChanged?.Invoke(Width, Height);
+                }
+
+                _engine.Update();
             }
             catch (Exception e)
             {

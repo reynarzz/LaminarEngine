@@ -277,6 +277,7 @@ namespace OpenGL.ES
 
         [LibraryImport(LIB, EntryPoint = "glGetError")]
         public static partial int glGetError();
+        public static int GetError() => glGetError();
 
         [LibraryImport(LIB, EntryPoint = "glGetFloatv")]
         public static partial void glGetFloatv(int pname, float* data);
@@ -476,6 +477,7 @@ namespace OpenGL.ES
         public static partial void glStencilOpSeparate(int face, int sfail, int dpfail, int dppass);
 
         [LibraryImport(LIB, EntryPoint = "glTexImage2D")]
+        [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
         public static partial void glTexImage2D(int target, int level, int internalformat,
             int width, int height, int border, int format, int type, void* data);
 
@@ -1177,7 +1179,7 @@ namespace OpenGL.ES
         public const int GL_RED_INTEGER = 0x8D94;
         public const int GL_RGB_INTEGER = 0x8D98;
         public const int GL_RGBA_INTEGER = 0x8D99;
-
+        public const int GL_BGRA = 0x80E1;
         // Stencil ops
         public const int GL_KEEP = 0x1E00;
         public const int GL_REPLACE = 0x1E01;

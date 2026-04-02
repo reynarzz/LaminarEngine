@@ -144,7 +144,7 @@ namespace Engine.IO
                 return asset;
             }
 
-            var assetContent = Disk.GetAssetAsync(guid).GetAwaiter().GetResult();
+            var assetContent = Disk.GetAsset(guid);
 
             if (assetContent.Success)
             {

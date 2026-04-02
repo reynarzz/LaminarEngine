@@ -162,7 +162,20 @@ namespace Editor.Rendering
             _renderTexture = new RenderTexture(1920, 1080, TextureFilterMode.Linear, true,
                 Math.Min(GfxDeviceManager.Current.GetDeviceInfo().MaxSamples, 4));
             // _renderTexture = new RenderTexture(1920, 1080, TextureFilter.Linear, true);
+            #if MOBILE
+            string ReplaceVersionCoreToGLES3(string shader)
+            {
+                return System.Text.RegularExpressions.Regex.Replace(
+                    shader,
+                    @"#version\s+\d+\s+core",
+                    "#version 300 es"
+                );
+            }
 
+            _gizmosVert = ReplaceVersionCoreToGLES3(_gizmosVert);
+            _gizmosFrag = ReplaceVersionCoreToGLES3(_gizmosFrag);
+            _gizmosLineVert = ReplaceVersionCoreToGLES3(_gizmosLineVert);
+            #endif
             _mat = new Material(new Shader(_gizmosVert, _gizmosFrag));
             _lineMat = new Material(new Shader(_gizmosLineVert, _gizmosFrag));
 
