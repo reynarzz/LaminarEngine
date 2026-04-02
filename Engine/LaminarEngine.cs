@@ -37,6 +37,8 @@ namespace Engine
                     Debug.Log("Engine running windows");
 #elif ANDROID
                     Debug.Log("Engine running android");
+#elif IOS
+                    Debug.Log("Engine running ios");
 #elif MACOS
                     Debug.Log("Engine running macOs");
 #elif EDITOR

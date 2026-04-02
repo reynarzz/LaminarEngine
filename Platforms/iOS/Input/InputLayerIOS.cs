@@ -17,6 +17,11 @@ namespace Engine.IOS
         public override bool GetMouse(MouseButton button){return false; }
         public override bool GetMouseDown(MouseButton button){return false; }
         public override bool GetMouseUp(MouseButton button){return false; }
+        internal override void UpdateLayer()
+        {
+            base.UpdateLayer();
+        }
+
         public override void Close()
         {
             

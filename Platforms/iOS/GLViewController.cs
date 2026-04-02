@@ -1,16 +1,17 @@
 using CoreAnimation;
+using Engine.Graphics;
 using GLKit;
 using OpenGLES;
+using static OpenGL.ES.GLES30;
 
 namespace Engine.IOS
 {
-    public class GLViewController : UIViewController, IWindow  
+    public class GLViewController : GLKViewController, IWindow
     {
         private EAGLContext _context;
         private BinaryReader _reader;
         private LaminarEngine _engine;
         private GLKView _view;
-        private CADisplayLink _displayLink;
 
         public string Name { get; set; }
         public bool IsFullScreen { get; set; }
@@ -52,6 +53,7 @@ namespace Engine.IOS
                 DrawableDepthFormat = GLKViewDrawableDepthFormat.Format24,
                 DrawableStencilFormat = GLKViewDrawableStencilFormat.Format8,
                 MultipleTouchEnabled = true,
+               // Delegate = this, // required for DrawInRect to fire
             };
 
             var layer = (CAEAGLLayer)_view.Layer;
@@ -65,6 +67,10 @@ namespace Engine.IOS
             base.ViewDidLoad();
             try
             {
+                PreferredFramesPerSecond = 60;
+                Paused = false;
+                ResumeOnDidBecomeActive = true;
+
                 _reader = OpenBundleBinary($"Assets/{Paths.ASSET_BUILD_DATA_FULL_FILE_NAME}");
             }
             catch (Exception e)
@@ -78,6 +84,9 @@ namespace Engine.IOS
             base.ViewDidAppear(animated);
             try
             {
+                if (_engine != null) 
+                    return;
+
                 EAGLContext.SetCurrentContext(_context);
                 _view.BindDrawable();
 
@@ -86,48 +95,44 @@ namespace Engine.IOS
 
                 Debug.Log($"Size: {Width}x{Height}");
 
-                if (_engine == null)
-                    _engine = new LaminarEngine(this, ExecutableEntry.GetApplicationLayer(), _inputTest, _reader);
-
-                StartDisplayLink();
+                _engine = new LaminarEngine(this, ExecutableEntry.GetApplicationLayer(), _inputTest, _reader);
             }
             catch (Exception e)
             {
                 Debug.Log(e.ToString());
             }
+
+            Paused = false;
         }
 
         public override void ViewDidDisappear(bool animated)
         {
             base.ViewDidDisappear(animated);
-            StopDisplayLink();
+            Paused = true; //pauses GLKViewController's internal display link
         }
 
-        private void StartDisplayLink()
+        public override void Update()
         {
-            StopDisplayLink(); // avoid double-creating
-            _displayLink = CADisplayLink.Create(OnFrame);
-            _displayLink.PreferredFramesPerSecond = 60;
-            _displayLink.AddToRunLoop(NSRunLoop.Main, NSRunLoopMode.Default);
-            Debug.Log("DisplayLink started");
-        }
-
-        private void StopDisplayLink()
-        {
-            _displayLink?.Invalidate();
-            _displayLink = null;
-        }
-
-        private void OnFrame()
-        {
-            if (_engine == null || !_engine.IsInitialized)
-                return;
             
-            Debug.Log("OnFrame"); 
+        }
+
+        public override void DrawInRect(GLKView view, CGRect rect)
+        {
+            if (_engine == null)
+                return;
+
             EAGLContext.SetCurrentContext(_context);
             _view.BindDrawable();
-            _engine?.Update();
-            _view.Display();
+            GLFrameBuffer.SyncDefaultFrameBuffer();
+
+            try
+            {
+                 _engine.Update();
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e.ToString());
+            }
         }
 
         private BinaryReader OpenBundleBinary(string relativePath)
@@ -136,6 +141,8 @@ namespace Engine.IOS
             return new BinaryReader(File.OpenRead(path));
         }
 
-        public void SwapBuffers() { }
+        public void SwapBuffers()
+        {
+        }
     }
 }
