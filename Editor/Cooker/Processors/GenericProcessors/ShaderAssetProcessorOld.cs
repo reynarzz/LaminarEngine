@@ -31,9 +31,8 @@ namespace Editor.Cooker
                         {
                             lines[i] = "#version 330 core";
                             _sb.AppendLine(lines[i]);
-
                         }
-                        else if (platform == CookingPlatform.Android)
+                        else if (platform == CookingPlatform.Android || platform == CookingPlatform.IOS)
                         {
                             lines[i] = "#version 300 es";
                             _sb.AppendLine(lines[i]);
@@ -43,7 +42,6 @@ namespace Editor.Cooker
                         {
                             lines[i] = "#version 330 core";
                             _sb.AppendLine(lines[i]);
-
                         }
                     }
                     else

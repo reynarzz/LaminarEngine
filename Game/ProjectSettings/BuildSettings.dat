@@ -54,6 +54,28 @@
             ],
             "InternalType": "Editor.Build.PlatformBuild, Editor",
             "TypeId": "b5d78a8f-ad76-27bc-a569-eb732e643f2a"
+          },
+          {
+            "$type": "Engine.Serialization.ComplexClass, Engine",
+            "ClassType": "Enum",
+            "Properties": [
+              {
+                "Name": "D_K",
+                "Type": "Enum",
+                "InternalType": "Editor.Build.PlatformBuild, Editor",
+                "TypeId": "b5d78a8f-ad76-27bc-a569-eb732e643f2a",
+                "Simple": {
+                  "Kind": "Enum",
+                  "Enum": {
+                    "TypeId": "b5d78a8f-ad76-27bc-a569-eb732e643f2a",
+                    "EnumInternalType": "Editor.Build.PlatformBuild, Editor",
+                    "EnumValue": 4
+                  }
+                }
+              }
+            ],
+            "InternalType": "Editor.Build.PlatformBuild, Editor",
+            "TypeId": "b5d78a8f-ad76-27bc-a569-eb732e643f2a"
           }
         ],
         "Values": [
@@ -437,6 +459,16 @@
                 }
               },
               {
+                "Name": "NativeAOT",
+                "Type": "Bool",
+                "InternalType": "System.Boolean, System.Private.CoreLib",
+                "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+                "Simple": {
+                  "Kind": "Bool",
+                  "Value": false
+                }
+              },
+              {
                 "Name": "ShareDefaultSettings",
                 "Type": "Bool",
                 "InternalType": "System.Boolean, System.Private.CoreLib",
@@ -494,7 +526,7 @@
                   "Enum": {
                     "TypeId": "c3474a00-03b1-058f-c9d4-53ccb3cbb6a6",
                     "EnumInternalType": "Editor.Build.AndroidApiLevel, Editor",
-                    "EnumValue": 0
+                    "EnumValue": 23
                   }
                 }
               },
@@ -949,6 +981,16 @@
                 }
               },
               {
+                "Name": "NativeAOT",
+                "Type": "Bool",
+                "InternalType": "System.Boolean, System.Private.CoreLib",
+                "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+                "Simple": {
+                  "Kind": "Bool",
+                  "Value": false
+                }
+              },
+              {
                 "Name": "ShareDefaultSettings",
                 "Type": "Bool",
                 "InternalType": "System.Boolean, System.Private.CoreLib",
@@ -961,6 +1003,492 @@
             ],
             "InternalType": "Editor.Build.AndroidBuildSettings, Editor",
             "TypeId": "3732c59f-64ea-5db5-2de1-1d230ce95cab"
+          },
+          {
+            "$type": "Engine.Serialization.ComplexClass, Engine",
+            "ClassType": "ComplexClass",
+            "Properties": [
+              {
+                "Name": "Default",
+                "Type": "ComplexClass",
+                "InternalType": "Editor.Build.iOSBuildTypeSettings, Editor",
+                "TypeId": "0de01ba3-c9a5-5a99-4c70-c1e739b2fb18",
+                "Simple": null,
+                "Class": {
+                  "$type": "Engine.Serialization.ComplexClass, Engine",
+                  "$value": {
+                    "ClassType": "ComplexClass",
+                    "Properties": [
+                      {
+                        "Name": "Icon",
+                        "Type": "TextureAsset",
+                        "InternalType": "Engine.Texture2D, Engine",
+                        "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
+                        "Simple": null
+                      },
+                      {
+                        "Name": "Description",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "Kind": "String",
+                          "Value": "Application description"
+                        }
+                      },
+                      {
+                        "Name": "Company",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "Kind": "String",
+                          "Value": "My Company"
+                        }
+                      },
+                      {
+                        "Name": "Authors",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "Kind": "String",
+                          "Value": "Author"
+                        }
+                      },
+                      {
+                        "Name": "Version",
+                        "Type": "IVec3",
+                        "InternalType": "GlmNet.ivec3, Engine",
+                        "TypeId": "0eb55f0e-9fb6-9ca0-f707-35ea8c2c71b9",
+                        "Simple": {
+                          "Kind": "IVec3",
+                          "Value": {
+                            "x": 1,
+                            "y": 0,
+                            "z": 0
+                          }
+                        }
+                      },
+                      {
+                        "Name": "CodesignKey",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "Kind": "String",
+                          "Value": ""
+                        }
+                      },
+                      {
+                        "Name": "ProvisioningProfile",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "Kind": "String",
+                          "Value": ""
+                        }
+                      },
+                      {
+                        "Name": "PackageName",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "Kind": "String",
+                          "Value": "com.reynarzz.gfs"
+                        }
+                      },
+                      {
+                        "Name": "ApplicationName",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "Kind": "String",
+                          "Value": "AppName"
+                        }
+                      },
+                      {
+                        "Name": "OutputPath",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "Kind": "String",
+                          "Value": ""
+                        }
+                      },
+                      {
+                        "Name": "EncryptAssets",
+                        "Type": "Bool",
+                        "InternalType": "System.Boolean, System.Private.CoreLib",
+                        "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+                        "Simple": {
+                          "Kind": "Bool",
+                          "Value": false
+                        }
+                      },
+                      {
+                        "Name": "CompressAssets",
+                        "Type": "Bool",
+                        "InternalType": "System.Boolean, System.Private.CoreLib",
+                        "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+                        "Simple": {
+                          "Kind": "Bool",
+                          "Value": false
+                        }
+                      },
+                      {
+                        "Name": "CompressionLevel",
+                        "Type": "Int",
+                        "InternalType": "System.Int32, System.Private.CoreLib",
+                        "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
+                        "Simple": {
+                          "Kind": "Int",
+                          "Value": 0
+                        }
+                      }
+                    ],
+                    "InternalType": "Editor.Build.iOSBuildTypeSettings, Editor",
+                    "TypeId": "0de01ba3-c9a5-5a99-4c70-c1e739b2fb18"
+                  }
+                }
+              },
+              {
+                "Name": "Release",
+                "Type": "ComplexClass",
+                "InternalType": "Editor.Build.iOSBuildTypeSettings, Editor",
+                "TypeId": "0de01ba3-c9a5-5a99-4c70-c1e739b2fb18",
+                "Simple": null,
+                "Class": {
+                  "$type": "Engine.Serialization.ComplexClass, Engine",
+                  "$value": {
+                    "ClassType": "ComplexClass",
+                    "Properties": [
+                      {
+                        "Name": "Icon",
+                        "Type": "TextureAsset",
+                        "InternalType": "Engine.Texture2D, Engine",
+                        "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
+                        "Simple": null
+                      },
+                      {
+                        "Name": "Description",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "Kind": "String",
+                          "Value": "Application description"
+                        }
+                      },
+                      {
+                        "Name": "Company",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "Kind": "String",
+                          "Value": "My Company"
+                        }
+                      },
+                      {
+                        "Name": "Authors",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "Kind": "String",
+                          "Value": "Author"
+                        }
+                      },
+                      {
+                        "Name": "Version",
+                        "Type": "IVec3",
+                        "InternalType": "GlmNet.ivec3, Engine",
+                        "TypeId": "0eb55f0e-9fb6-9ca0-f707-35ea8c2c71b9",
+                        "Simple": {
+                          "Kind": "IVec3",
+                          "Value": {
+                            "x": 1,
+                            "y": 0,
+                            "z": 0
+                          }
+                        }
+                      },
+                      {
+                        "Name": "CodesignKey",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "Kind": "String",
+                          "Value": ""
+                        }
+                      },
+                      {
+                        "Name": "ProvisioningProfile",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "Kind": "String",
+                          "Value": ""
+                        }
+                      },
+                      {
+                        "Name": "PackageName",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "Kind": "String",
+                          "Value": "com.reynarzz.gfs"
+                        }
+                      },
+                      {
+                        "Name": "ApplicationName",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "Kind": "String",
+                          "Value": "AppName"
+                        }
+                      },
+                      {
+                        "Name": "OutputPath",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "Kind": "String",
+                          "Value": ""
+                        }
+                      },
+                      {
+                        "Name": "EncryptAssets",
+                        "Type": "Bool",
+                        "InternalType": "System.Boolean, System.Private.CoreLib",
+                        "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+                        "Simple": {
+                          "Kind": "Bool",
+                          "Value": false
+                        }
+                      },
+                      {
+                        "Name": "CompressAssets",
+                        "Type": "Bool",
+                        "InternalType": "System.Boolean, System.Private.CoreLib",
+                        "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+                        "Simple": {
+                          "Kind": "Bool",
+                          "Value": false
+                        }
+                      },
+                      {
+                        "Name": "CompressionLevel",
+                        "Type": "Int",
+                        "InternalType": "System.Int32, System.Private.CoreLib",
+                        "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
+                        "Simple": {
+                          "Kind": "Int",
+                          "Value": 0
+                        }
+                      }
+                    ],
+                    "InternalType": "Editor.Build.iOSBuildTypeSettings, Editor",
+                    "TypeId": "0de01ba3-c9a5-5a99-4c70-c1e739b2fb18"
+                  }
+                }
+              },
+              {
+                "Name": "Debug",
+                "Type": "ComplexClass",
+                "InternalType": "Editor.Build.iOSBuildTypeSettings, Editor",
+                "TypeId": "0de01ba3-c9a5-5a99-4c70-c1e739b2fb18",
+                "Simple": null,
+                "Class": {
+                  "$type": "Engine.Serialization.ComplexClass, Engine",
+                  "$value": {
+                    "ClassType": "ComplexClass",
+                    "Properties": [
+                      {
+                        "Name": "Icon",
+                        "Type": "TextureAsset",
+                        "InternalType": "Engine.Texture2D, Engine",
+                        "TypeId": "22ad5e81-a6e9-1514-925c-9a74599e46ba",
+                        "Simple": null
+                      },
+                      {
+                        "Name": "Description",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "Kind": "String",
+                          "Value": "Application description"
+                        }
+                      },
+                      {
+                        "Name": "Company",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "Kind": "String",
+                          "Value": "My Company"
+                        }
+                      },
+                      {
+                        "Name": "Authors",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "Kind": "String",
+                          "Value": "Author"
+                        }
+                      },
+                      {
+                        "Name": "Version",
+                        "Type": "IVec3",
+                        "InternalType": "GlmNet.ivec3, Engine",
+                        "TypeId": "0eb55f0e-9fb6-9ca0-f707-35ea8c2c71b9",
+                        "Simple": {
+                          "Kind": "IVec3",
+                          "Value": {
+                            "x": 1,
+                            "y": 0,
+                            "z": 0
+                          }
+                        }
+                      },
+                      {
+                        "Name": "CodesignKey",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "Kind": "String",
+                          "Value": ""
+                        }
+                      },
+                      {
+                        "Name": "ProvisioningProfile",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "Kind": "String",
+                          "Value": ""
+                        }
+                      },
+                      {
+                        "Name": "PackageName",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "Kind": "String",
+                          "Value": "com.reynarzz.gfs"
+                        }
+                      },
+                      {
+                        "Name": "ApplicationName",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "Kind": "String",
+                          "Value": "AppName"
+                        }
+                      },
+                      {
+                        "Name": "OutputPath",
+                        "Type": "String",
+                        "InternalType": "System.String, System.Private.CoreLib",
+                        "TypeId": "f084b6f8-34b7-be35-7fe2-a7ea0448d3dc",
+                        "Simple": {
+                          "Kind": "String",
+                          "Value": ""
+                        }
+                      },
+                      {
+                        "Name": "EncryptAssets",
+                        "Type": "Bool",
+                        "InternalType": "System.Boolean, System.Private.CoreLib",
+                        "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+                        "Simple": {
+                          "Kind": "Bool",
+                          "Value": false
+                        }
+                      },
+                      {
+                        "Name": "CompressAssets",
+                        "Type": "Bool",
+                        "InternalType": "System.Boolean, System.Private.CoreLib",
+                        "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+                        "Simple": {
+                          "Kind": "Bool",
+                          "Value": false
+                        }
+                      },
+                      {
+                        "Name": "CompressionLevel",
+                        "Type": "Int",
+                        "InternalType": "System.Int32, System.Private.CoreLib",
+                        "TypeId": "6c7bdc68-ffcd-0ba1-18b5-1e5239c15d37",
+                        "Simple": {
+                          "Kind": "Int",
+                          "Value": 0
+                        }
+                      }
+                    ],
+                    "InternalType": "Editor.Build.iOSBuildTypeSettings, Editor",
+                    "TypeId": "0de01ba3-c9a5-5a99-4c70-c1e739b2fb18"
+                  }
+                }
+              },
+              {
+                "Name": "Type",
+                "Type": "Enum",
+                "InternalType": "Editor.Build.BuildType, Editor",
+                "TypeId": "ab1e56b1-7744-1df5-8d84-eda53bf8a4c5",
+                "Simple": {
+                  "Kind": "Enum",
+                  "Enum": {
+                    "TypeId": "ab1e56b1-7744-1df5-8d84-eda53bf8a4c5",
+                    "EnumInternalType": "Editor.Build.BuildType, Editor",
+                    "EnumValue": 1
+                  }
+                }
+              },
+              {
+                "Name": "NativeAOT",
+                "Type": "Bool",
+                "InternalType": "System.Boolean, System.Private.CoreLib",
+                "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+                "Simple": {
+                  "Kind": "Bool",
+                  "Value": false
+                }
+              },
+              {
+                "Name": "ShareDefaultSettings",
+                "Type": "Bool",
+                "InternalType": "System.Boolean, System.Private.CoreLib",
+                "TypeId": "99af364b-b73d-5a12-fa6a-aba428f8595d",
+                "Simple": {
+                  "Kind": "Bool",
+                  "Value": true
+                }
+              }
+            ],
+            "InternalType": "Editor.Build.iOSBuildSettings, Editor",
+            "TypeId": "fc4d9a46-2231-7afc-2d2f-d31cd762b036"
           }
         ],
         "CollectionType": "Dictionary"

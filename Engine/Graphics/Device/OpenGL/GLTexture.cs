@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 #if DESKTOP
 using static OpenGL.GL;
+
 #else
     using static OpenGL.ES.GLES30;
 #endif
@@ -26,6 +27,7 @@ namespace Engine.Graphics.OpenGL
         {
         }
 
+        private byte[] _buffer;
         protected unsafe override bool CreateResource(TextureDescriptor descriptor)
         {
             _isMultisample = descriptor.IsMultiSample;
@@ -36,15 +38,19 @@ namespace Engine.Graphics.OpenGL
             _channels = descriptor.Channels;
             if (!descriptor.IsMultiSample)
             {
-                fixed (byte* data = descriptor.Buffer)
+                if (descriptor.Buffer != null)
+                {
+                    _buffer = descriptor.Buffer;
+                }
+                
+                SetTextureFeatures(descriptor);
+                
+                fixed (byte* data = _buffer)
                 {
                     glTexImage2D(GL_TEXTURE_2D, 0, GetInternalFormat(descriptor.Channels), descriptor.Width, descriptor.Height, 0,
-                                 GetFormat(descriptor.Channels), GL_UNSIGNED_BYTE, data);
+                        GetFormat(descriptor.Channels), GL_UNSIGNED_BYTE, data);
                     GLHelpers.CheckGLError();
-
                 }
-
-                SetTextureFeatures(descriptor);
             }
             else
             {
@@ -53,7 +59,6 @@ namespace Engine.Graphics.OpenGL
 
                 throw new Exception("Not multiplatorm");
             }
-
 
             Unbind();
 
@@ -65,28 +70,39 @@ namespace Engine.Graphics.OpenGL
             var prevBoundText = _prevBoundTexture;
             var prevBoundSlot = _prevBoundSlot;
             Bind();
+            GLHelpers.CheckGLError();
+
             SetTextureFeatures(descriptor);
+
+            GLHelpers.CheckGLError();
             fixed (void* data = descriptor.Buffer)
             {
                 var isSizeFit = DoesNewSizeFit(descriptor);
 
                 int prev;
                 glGetIntegerv(GL_UNPACK_ALIGNMENT, &prev);
+
+                GLHelpers.CheckGLError();
                 glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+                GLHelpers.CheckGLError();
 
                 _channels = descriptor.Channels;
                 glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+                GLHelpers.CheckGLError();
+
                 if (isSizeFit)
                 {
                     glTexSubImage2D(GL_TEXTURE_2D, 0, descriptor.XOffset, descriptor.YOffset,
-                                    descriptor.Width, descriptor.Height, GetFormat(descriptor.Channels), GL_UNSIGNED_BYTE, data);
+                        descriptor.Width, descriptor.Height, GetFormat(descriptor.Channels), GL_UNSIGNED_BYTE, data);
+                    GLHelpers.CheckGLError();
                 }
                 else
                 {
                     _width = descriptor.Width;
                     _height = descriptor.Height;
                     glTexImage2D(GL_TEXTURE_2D, 0, GetInternalFormat(descriptor.Channels), descriptor.Width, descriptor.Height, 0,
-                                 GetFormat(descriptor.Channels), GL_UNSIGNED_BYTE, data);
+                        GetFormat(descriptor.Channels), GL_UNSIGNED_BYTE, data);
+                    GLHelpers.CheckGLError();
                 }
 
                 //if (descriptor.EnableMipMaps)
@@ -95,12 +111,16 @@ namespace Engine.Graphics.OpenGL
                 //}
 
                 glPixelStorei(GL_UNPACK_ALIGNMENT, prev);
+                GLHelpers.CheckGLError();
             }
-            Unbind();
 
-            if(prevBoundText >= 0)
+            Unbind();
+            GLHelpers.CheckGLError();
+
+            if (prevBoundText >= 0)
             {
                 Bind(prevBoundText, prevBoundSlot);
+                GLHelpers.CheckGLError();
             }
         }
 
@@ -122,11 +142,12 @@ namespace Engine.Graphics.OpenGL
             {
                 1 => GL_R8,
                 2 => GL_RG8,
-                // 3 => GL_RGB8, // TODO
+                3 => GL_RGB8,
                 4 => GL_RGBA8,
                 _ => GL_RGBA8
             };
         }
+
         private bool DoesNewSizeFit(TextureDescriptor descriptor)
         {
             return descriptor.XOffset + descriptor.Width <= _width &&
@@ -145,29 +166,32 @@ namespace Engine.Graphics.OpenGL
                     if (descriptor.EnableMipMaps)
                     {
                         minFilter = GL_NEAREST_MIPMAP_NEAREST;
-                        magFilter = GL_NEAREST_MIPMAP_NEAREST;
+                        magFilter = GL_NEAREST;
                     }
                     else
                     {
                         minFilter = GL_NEAREST;
                         magFilter = GL_NEAREST;
                     }
+
                     break;
                 case TextureFilterMode.Linear:
                     if (descriptor.EnableMipMaps)
                     {
                         minFilter = GL_LINEAR_MIPMAP_LINEAR;
-                        magFilter = GL_LINEAR_MIPMAP_LINEAR;
+                        magFilter = GL_LINEAR;
                     }
                     else
                     {
                         minFilter = GL_LINEAR;
                         magFilter = GL_LINEAR;
                     }
+
                     break;
                 default:
                     throw new Exception("GL filter not implemented");
             }
+
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter);
             GLHelpers.CheckGLError();
 
@@ -192,7 +216,6 @@ namespace Engine.Graphics.OpenGL
 
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, texMode);
             GLHelpers.CheckGLError();
-
         }
 
         /// <summary>
@@ -202,10 +225,12 @@ namespace Engine.Graphics.OpenGL
         {
             Bind(0);
         }
+
         internal void Bind(int slot)
         {
             Bind(Handle, slot);
         }
+
         internal void Bind(uint handle, int slot)
         {
             if (_isMultisample)
@@ -222,7 +247,6 @@ namespace Engine.Graphics.OpenGL
 
                 glBindTexture(GL_TEXTURE_2D, handle);
                 GLHelpers.CheckGLError();
-
             }
 
             _prevBoundTexture = handle;

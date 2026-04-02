@@ -40,6 +40,25 @@ namespace Engine.IO
             return default;
         }
 
+        public RawAssetContent GetAsset(Guid guid)
+        {
+            if (AssetDatabaseInfo.Assets.TryGetValue(guid, out var info))
+            {
+                var data =  LoadAssetFromDisk(guid);
+
+                if (data == null)
+                {
+                    Debug.Error("Fatal: Can't load asset from disk, is in database table but contents are not in disk?");
+                    return default;
+                }
+
+                return new RawAssetContent() { Info = info, RawData = data };
+            }
+
+            return default;
+        }
+
+
         internal KeyValuePair<Guid, AssetInfo>[] GetAssetsInfo(AssetType assetType)
         {
             return AssetDatabaseInfo.Assets.Where(x => x.Value.Type == assetType).ToArray();

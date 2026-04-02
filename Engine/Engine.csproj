@@ -23,8 +23,8 @@
 	</PropertyGroup>
 
 	<!-- iOS -->
-	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios'">
-		<DefineConstants>IOS;MOBILE;$(DefineConstants)</DefineConstants>
+	<PropertyGroup Condition="'$(iOSBuild)' == 'true'" >
+		<DefineConstants>IOS;MOBILE;SHIP_BUILD;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>
 	
 	<!-- Linux -->
@@ -75,16 +75,27 @@
 	<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
   </ItemGroup>
 
+	<ItemGroup Condition="'$(iOSBuild)' == 'true'">
+  <None Include="Third\Soundflow\Src\Backends\MiniAudio\runtimes\ios-arm64\*.dylib">
+    <TargetPath>runtimes\ios-arm64\%(Filename)%(Extension)</TargetPath>
+    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+  </None>
+</ItemGroup>
+
+
 	<ItemGroup Condition="'$(ShipBuild)' == 'true'">
 		<ProjectReference Include="$(LAM_GENERATED_PROJECT)" />
 
-			<Reference Condition="'$(BUILD_MOBILE)' == 'true'" Include="SoundFlow">
+			<Reference Condition="'$(AndroidBuild)' == 'true'" Include="SoundFlow">
 				<HintPath>Third\SoundFlow\Compiled\Miniaudio\SoundFlow.dll</HintPath>
+			</Reference>
+			<Reference Condition="'$(iOSBuild)' == 'true'" Include="SoundFlow">
+				<HintPath>Third\SoundFlow\Compiled\Miniaudio\SoundFlow_ios.dll</HintPath>
 			</Reference>
 		
 		<TrimmerRootDescriptor Include="$(LAM_TRIMMER_LINK_RD_FILE)" />
 
-		<None Condition="'$(BUILD_MOBILE)' == 'true'" Include="Third\Soundflow\Src\Backends\MiniAudio\runtimes\**\*.*">
+		<None Condition="'$(AndroidBuild)' == 'true'" Include="Third\Soundflow\Src\Backends\MiniAudio\runtimes\**\*.*">
 			<TargetPath>runtimes\%(RecursiveDir)%(Filename)%(Extension)</TargetPath>
 			<PackagePath>runtimes</PackagePath>
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>

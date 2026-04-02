@@ -89,7 +89,7 @@ namespace Engine.Android
         {
             if (_engine == null)
             {
-                _engine = new LaminarEngine(_view, GetApplicationLayer(), _input, _reader);
+                _engine = new LaminarEngine(_view, ExecutableEntry.GetApplicationLayer(), _input, _reader);
             }
             else
             {

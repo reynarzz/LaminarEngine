@@ -16,6 +16,7 @@ namespace Editor
         internal static string GameRoot { get; set; }
         internal static string EngineRoot { get; }
         public static string AndroidProjectRoot { get; }
+        public static string iOSProjectRoot { get; }
         public static string DesktopProjectRoot { get; }
 
         internal const string EDITOR_NAME = Paths.ENGINE_NAME + " Editor";
@@ -37,9 +38,13 @@ namespace Editor
         internal const string EDITOR_RESOURCES_DIRECTORY_NAME = "Resources";
 
         internal const string ANDROID_PROJECT_NAME = "Entry_Android";
+        internal const string IOS_PROJECT_NAME = "Entry_iOS";
+        
         internal const string DESKTOP_PROJECT_NAME = "Entry_Desktop";
         internal const string GAME_PROJECT_NAME = "Game";
         internal const string ANDROID_PROJECT_FULL_NAME = ANDROID_PROJECT_NAME + PROJECT_EXTENSION;
+        internal const string IOS_PROJECT_FULL_NAME = IOS_PROJECT_NAME + PROJECT_EXTENSION;
+        
         internal const string DESKTOP_PROJECT_FULL_NAME = DESKTOP_PROJECT_NAME + PROJECT_EXTENSION;
         internal const string GAME_PROJECT_FULL_NAME = GAME_PROJECT_NAME + PROJECT_EXTENSION;
         internal const string GAME_PROJECT_TEMPLATE_FILE_NAME = "GameProject_TEMPLATE.txt";
@@ -83,11 +88,16 @@ namespace Editor
         public static string DesktopPublishFolderRoot => Path.Combine(DesktopProjectRoot, "bin", "Publish");
         public static string Win32PublishFolderRoot => Path.Combine(DesktopPublishFolderRoot, "win32");
 
+        public static string iOSProjectAssetsFolderRoot => Path.Combine(iOSProjectRoot, "Assets");
+        public static string iOSShipFolderRoot => Path.Combine(ShipFolderRoot, "ios");
+        public static string iOSPublishFolderRoot => Path.Combine(iOSProjectRoot, "bin", "Publish");
+        
+        
+        
         public static string ShipWin32FolderRoot => Path.Combine(ShipFolderRoot, "win32");
         public static string Win32ShipGameDataFolderRoot => Path.Combine(ShipWin32FolderRoot, "Data");
 
         public static string ShipMacOsFolderRoot => Path.Combine(ShipFolderRoot, "osx");
-        public static string ShipIOSFolderRoot => Path.Combine(ShipFolderRoot, "ios");
         public static string ShipLinuxFolderRoot => Path.Combine(ShipFolderRoot, "linux");
 
         public static string EngineNativesFolderRoot => Path.Combine(AppRoot, "Engine", "Third", "Native", "bin");
@@ -106,6 +116,7 @@ namespace Editor
             EditorRoot = Paths.ClearPathSeparation(Path.Combine(AppRoot, "Editor"));
             EditorDataRoot = Paths.ClearPathSeparation(Path.Combine(EditorRoot, "Data"));
             AndroidProjectRoot = Paths.ClearPathSeparation(Path.Combine(AppRoot, "Platforms", "Android"));
+            iOSProjectRoot = Paths.ClearPathSeparation(Path.Combine(AppRoot, "Platforms", "iOS"));
             DesktopProjectRoot = Paths.ClearPathSeparation(Path.Combine(AppRoot, "Platforms", "Desktop"));
             EngineRoot = Paths.ClearPathSeparation(Path.Combine(AppRoot, "Engine"));
 

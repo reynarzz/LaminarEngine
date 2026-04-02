@@ -12,6 +12,7 @@ namespace Engine.Graphics
 {
     internal class GLFrameBuffer : GLGfxResource<RenderTargetDescriptor>
     {
+        private static uint DefaultFrameBuffer = 0;
         public GLTexture ColorTexture { get; private set; }
         private uint _depthStencilRBO;
         private uint _colorRBO;
@@ -27,19 +28,31 @@ namespace Engine.Graphics
         private static uint _boundReadFrameBuffer = uint.MaxValue;
         private static uint _boundDrawFrameBuffer = uint.MaxValue;
 
+        public GLFrameBuffer() : base(glGenFramebuffer,
+            glDeleteFramebuffer,
+            handle => BindFrameBufferCached(handle))
+        {
+        }
+
         private static void BindFrameBufferCached(uint handle)
         {
+            if (handle == 0)
+                handle = DefaultFrameBuffer;
+
             if (_boundFrameBuffer == handle)
             {
                 return;
             }
-
+            
             glBindFramebuffer(GL_FRAMEBUFFER, handle);
             _boundFrameBuffer = handle;
         }
 
         private static void BindReadFrameBufferCached(uint handle)
         {
+            if (handle == 0)
+                handle = DefaultFrameBuffer;
+            
             if (_boundReadFrameBuffer == handle)
             {
                 return;
@@ -51,6 +64,9 @@ namespace Engine.Graphics
 
         private static void BindDrawFrameBufferCached(uint handle)
         {
+            if (handle == 0)
+                handle = DefaultFrameBuffer;
+            
             if (_boundDrawFrameBuffer == handle)
             {
                 return;
@@ -58,12 +74,6 @@ namespace Engine.Graphics
 
             glBindFramebuffer(GL_DRAW_FRAMEBUFFER, handle);
             _boundDrawFrameBuffer = handle;
-        }
-
-        public GLFrameBuffer() : base(glGenFramebuffer,
-                                    glDeleteFramebuffer,
-                                    handle => BindFrameBufferCached(handle))
-        {
         }
 
         protected override bool CreateResource(RenderTargetDescriptor descriptor)
@@ -138,7 +148,7 @@ namespace Engine.Graphics
                 Debug.Error("Framebuffer is not complete!");
                 return false;
             }
-
+            
             return true;
         }
 
@@ -156,18 +166,20 @@ namespace Engine.Graphics
 
         internal void BlitToScreen(int windowWidth, int windowHeight)
         {
-            BindFrameBufferCached(0);
+            BindFrameBufferCached(DefaultFrameBuffer);
             GLHelpers.CheckGLError();
 
             BindReadFrameBufferCached(Handle);
             GLHelpers.CheckGLError();
 
-            BindDrawFrameBufferCached(0);
+            BindDrawFrameBufferCached(DefaultFrameBuffer);
             GLHelpers.CheckGLError();
 
             glBlitFramebuffer(0, 0, _width, _height, 0, 0, windowWidth, windowHeight,
                                  GL_COLOR_BUFFER_BIT, GL_NEAREST);
             GLHelpers.CheckGLError();
+            
+            BindFrameBufferCached(DefaultFrameBuffer);
         }
 
         internal void BlitTo(GLFrameBuffer target, bool color = true, bool depth = false, bool linear = false)
@@ -186,13 +198,13 @@ namespace Engine.Graphics
                               mask, linear ? GL_LINEAR : GL_NEAREST);
             GLHelpers.CheckGLError();
 
-            BindFrameBufferCached(0);
+            BindFrameBufferCached(DefaultFrameBuffer);
             GLHelpers.CheckGLError();
 
-            BindReadFrameBufferCached(0);
+            BindReadFrameBufferCached(DefaultFrameBuffer);
             GLHelpers.CheckGLError();
 
-            BindDrawFrameBufferCached(0);
+            BindDrawFrameBufferCached(DefaultFrameBuffer);
             GLHelpers.CheckGLError();
         }
 
@@ -210,10 +222,26 @@ namespace Engine.Graphics
 
             }
 
-            BindFrameBufferCached(0);
+            BindFrameBufferCached(DefaultFrameBuffer);
             GLHelpers.CheckGLError();
 
             return pixels;
+        }
+
+        internal override void Unbind()
+        {
+            BindFrameBufferCached(DefaultFrameBuffer);
+        }
+
+        internal static unsafe void SyncDefaultFrameBuffer()
+        {
+            int fbo = 0;
+            glGetIntegerv(GL_FRAMEBUFFER_BINDING,  &fbo);
+            DefaultFrameBuffer = (uint)fbo;
+            
+            _boundFrameBuffer = uint.MaxValue;
+            _boundReadFrameBuffer = uint.MaxValue;
+            _boundDrawFrameBuffer = uint.MaxValue;
         }
     }
 }

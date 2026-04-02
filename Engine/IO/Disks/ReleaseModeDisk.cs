@@ -205,16 +205,7 @@ namespace Engine.IO
                     _reader.BaseStream.Position = locations.AssetDataLoc;
                     var data = new byte[locations.AssetDataSize];
                     var bytesRead = 0;
-                    while (bytesRead < data.Length)
-                    {
-                        int read = _reader.BaseStream.Read(data, bytesRead, data.Length - bytesRead);
-
-                        if (read == 0)
-                        {
-                            throw new EndOfStreamException("Unexpected end of stream while reading asset data.");
-                        }
-                        bytesRead += read;
-                    }
+                        _reader.BaseStream.ReadExactly(data, bytesRead, data.Length - bytesRead);
                     return data;
                 }
 

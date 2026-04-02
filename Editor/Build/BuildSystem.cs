@@ -43,6 +43,7 @@ namespace Editor.Build
                 { PlatformBuild.GameAppDomain, new EditorBuilder() },
                 { PlatformBuild.Windows, new WindowsBuilder() },
                 { PlatformBuild.Android, new AndroidBuilder() },
+                { PlatformBuild.IOS, new iOSBuilder() },
             };
         }
 

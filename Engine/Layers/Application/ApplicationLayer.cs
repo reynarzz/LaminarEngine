@@ -12,23 +12,23 @@ namespace Engine.Layers
     {
         public sealed override Task<LayerInitResult> InitializeAsync()
         {
-#if SHIP_BUILD
-            try
-            {
-                var result = LoadMainScene();
-                if (!result)
-                {
-                    return Task.FromResult(LayerInitResult.Error);
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.Error(e);
-                return Task.FromResult(LayerInitResult.Error);
-            }
-#endif
             return MainThreadDispatcher.EnqueueAsync(() =>
             {
+#if SHIP_BUILD
+                try
+                {
+                    var result = LoadMainScene();
+                    if (!result)
+                    {
+                        return LayerInitResult.Error;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.Error(e);
+                    return LayerInitResult.Error;
+                }
+#endif
                 OnInitialize();
                 return LayerInitResult.Success;
             });
@@ -56,10 +56,12 @@ namespace Engine.Layers
 
                 return false;
             }
-            var sceneSettings = EngineServices.GetService<EngineDataService>().GetProjectSettings().SceneSettings;
             SceneManager.Initialize();
-            var scene = Assets.GetAssetFromGuid(GetGuidSafe(sceneSettings.MainScene)) as SceneAsset;
-
+            var sceneSettings = EngineServices.GetService<EngineDataService>().GetProjectSettings().SceneSettings;
+            var guid = GetGuidSafe(sceneSettings.MainScene);
+            Debug.Log(guid);
+            var scene = Assets.GetAssetFromGuid(guid) as SceneAsset;
+            
             if (!scene)
             {
                 Debug.Warn("Main scene wasn't found, make sure it's added to the project settings.");

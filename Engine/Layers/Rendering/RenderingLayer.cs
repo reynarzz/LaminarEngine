@@ -229,10 +229,10 @@ namespace Engine.Layers
                     continue;
                 }
 
-                //GfxDeviceManager.Current.SetViewport(new vec4(camera.Viewport.x * targetRenderTexture.Width,
-                //                                              camera.Viewport.y * targetRenderTexture.Height,
-                //                                              targetRenderTexture.Width * camera.Viewport.z,
-                //                                              targetRenderTexture.Height * camera.Viewport.w));
+                GfxDeviceManager.Current.SetViewport(new vec4(camera.Viewport.x * targetRenderTexture.Width,
+                                                              camera.Viewport.y * targetRenderTexture.Height,
+                                                              targetRenderTexture.Width * camera.Viewport.z,
+                                                              targetRenderTexture.Height * camera.Viewport.w));
 
                 // Clear main render target.
                 GfxDeviceManager.Current.Clear(new ClearDeviceConfig()

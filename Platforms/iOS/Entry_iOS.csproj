@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0-ios</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>true</ImplicitUsings>
+    <SupportedOSPlatformVersion>13.0</SupportedOSPlatformVersion>
+    <RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <BaseIntermediateOutputPath>obj/</BaseIntermediateOutputPath>
+    <IntermediateOutputPath>obj/$(Configuration)/</IntermediateOutputPath>
+    <BaseOutputPath>bin/</BaseOutputPath>
+    <OutputPath>bin/$(Configuration)/</OutputPath>
+    <!--
+      Enable full trimming in Release mode.
+      To learn more, see: https://learn.microsoft.com/dotnet/core/deploying/trimming/trimming-options#trimming-granularity
+    -->
+    <TrimMode Condition="'$(Configuration)' == 'Release'">link</TrimMode>
+  </PropertyGroup>
+
+<PropertyGroup>
+    <ApplicationId>com.reynarzz.gfs</ApplicationId>
+  <CodesignKey>Apple Development</CodesignKey>
+  <CodesignProvision>Automatic</CodesignProvision>
+</PropertyGroup>
+
+<PropertyGroup>
+    <!-- Use full linker to prevent stripping symbols -->
+    <MtouchLink>Full</MtouchLink>
+    <!-- Pass flags to the linker -->
+ 
+</PropertyGroup>
+
+<ItemGroup>
+  <BundleResource Include="Assets/**" />
+</ItemGroup>
+
+  	<ItemGroup>
+		<ProjectReference Include="..\..\Engine\Engine.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="$(LAM_APPLICATION_PROJECT_PATH)"/>
+		<TrimmerRootDescriptor Include="$(LAM_TRIMMER_LINK_RD_FILE)" />
+	</ItemGroup>
+
+</Project>

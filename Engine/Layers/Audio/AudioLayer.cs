@@ -57,7 +57,7 @@ namespace Engine.Layers
         {
             base.UpdateLayer();
 
-            if (_currentDevice == null && (_currentRetryTime -= Time.DeltaTime) <= 0)
+            if (_currentDevice == null && (_currentRetryTime -= Time.DeltaTime) <= 0 && _engine != null)
             {
                 if (_engine.PlaybackDevices != null)
                 {
