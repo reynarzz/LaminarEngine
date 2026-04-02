@@ -48,3 +48,4 @@ Engine/Third/Native/bin/win/Release/
 Engine/Third/Native/bin/lib/RuntimeCore.exp
 Engine/Third/SoundFlow/Src/bin/
 Platforms/iOS/Assets/package.pak
+/.idea
