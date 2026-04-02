@@ -86,8 +86,11 @@
 	<ItemGroup Condition="'$(ShipBuild)' == 'true'">
 		<ProjectReference Include="$(LAM_GENERATED_PROJECT)" />
 
-			<Reference Condition="'$(MOBILE)' == 'true'" Include="SoundFlow">
+			<Reference Condition="'$(AndroidBuild)' == 'true'" Include="SoundFlow">
 				<HintPath>Third\SoundFlow\Compiled\Miniaudio\SoundFlow.dll</HintPath>
+			</Reference>
+			<Reference Condition="'$(iOSBuild)' == 'true'" Include="SoundFlow">
+				<HintPath>Third\SoundFlow\Compiled\Miniaudio\SoundFlow_ios.dll</HintPath>
 			</Reference>
 		
 		<TrimmerRootDescriptor Include="$(LAM_TRIMMER_LINK_RD_FILE)" />

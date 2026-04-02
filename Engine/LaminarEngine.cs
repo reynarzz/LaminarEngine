@@ -71,6 +71,8 @@ namespace Engine
                 Update();
             }
         }
+        
+        public bool IsInitialized => _layersManager != null && _layersManager.LayersInitialized;
 
         public void Update()
         {

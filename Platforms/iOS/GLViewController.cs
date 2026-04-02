@@ -1,93 +1,71 @@
+using CoreAnimation;
 using GLKit;
-using OpenGL;
 using OpenGLES;
-using static OpenGL.ES.GLES30;
 
 namespace Engine.IOS
 {
-    public class GLViewController : GLKViewController, IWindow
+    public class GLViewController : UIViewController, IWindow  
     {
         private EAGLContext _context;
         private BinaryReader _reader;
         private LaminarEngine _engine;
         private GLKView _view;
+        private CADisplayLink _displayLink;
 
         public string Name { get; set; }
         public bool IsFullScreen { get; set; }
         public bool CursorVisible { get; set; }
-
         public Color StartWindowColor { get; }
-
         public bool ShouldClose { get; }
-
         public int MonitorCount { get; set; }
-
         public bool IsInitialized { get; set; } = true;
-
         public bool CanResize { get; set; }
         public event Action<int, int> OnWindowChanged;
         public event Action OnWindowClose;
         public int PhysicalWidth { get; set; }
         public int PhysicalHeight { get; set; }
-
         public int Width { get; set; }
-
         public int Height { get; set; }
         public int OffsetX => 0;
         public int OffsetY => 0;
-        private InputLayerIOS _inputTest = new();
         public nint NativeWindow => 0;
-        public void SetWindowSize(int width, int height)
-        {
-        }
+
+        private InputLayerIOS _inputTest = new();
+
+        public void SetWindowSize(int width, int height) { }
+
         public void UpdateView(int width, int height)
         {
             PhysicalWidth = width;
             PhysicalHeight = height;
-
             OnWindowChanged?.Invoke(width, height);
         }
+
+        public override void LoadView()
+        {
+            _context = new EAGLContext(EAGLRenderingAPI.OpenGLES3);
+            EAGLContext.SetCurrentContext(_context);
+
+            _view = new GLKView(UIScreen.MainScreen.Bounds, _context)
+            {
+                DrawableColorFormat = GLKViewDrawableColorFormat.RGBA8888,
+                DrawableDepthFormat = GLKViewDrawableDepthFormat.Format24,
+                DrawableStencilFormat = GLKViewDrawableStencilFormat.Format8,
+                MultipleTouchEnabled = true,
+            };
+
+            var layer = (CAEAGLLayer)_view.Layer;
+            layer.Opaque = true;
+
+            View = _view;
+        }
+
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
-
-
             try
             {
-                // Create an OpenGL ES 3.0 context
-                _context = new EAGLContext(EAGLRenderingAPI.OpenGLES3);
-
-                // _view = new GLKView(View.Frame, _context)
-                // {
-                //     DrawableColorFormat = GLKViewDrawableColorFormat.RGBA8888,
-                //     DrawableDepthFormat = GLKViewDrawableDepthFormat.Format24,
-                //     DrawableStencilFormat = GLKViewDrawableStencilFormat.Format8,
-                //     MultipleTouchEnabled = true
-                // };
-
-                _view = (GLKView)View;
-                _view.Context = _context;
-                _view.DrawableColorFormat = GLKViewDrawableColorFormat.RGBA8888;
-                _view.DrawableDepthFormat = GLKViewDrawableDepthFormat.Format24;
-                _view.DrawableStencilFormat = GLKViewDrawableStencilFormat.Format8;
-                _view.Alpha = 1;
-                _view.MultipleTouchEnabled = true;
-                // Hook up the rendering method.
-                //
-
-                // Configure the GLKViewController properties
-                PreferredFramesPerSecond = 60;
-
-                var layer = (CoreAnimation.CAEAGLLayer)_view.Layer;
-                layer.Opaque = true;
-                layer.Opacity = 1;
-                layer.DrawableProperties = new NSDictionary(EAGLDrawableProperty.RetainedBacking, false, EAGLDrawableProperty.ColorFormat, EAGLColorFormat.RGBA8);
-
-
                 _reader = OpenBundleBinary($"Assets/{Paths.ASSET_BUILD_DATA_FULL_FILE_NAME}");
-
-                Debug.Log($"width: {Width}, Height: {Height}, Pwidth: {PhysicalWidth}, PHeight: {PhysicalHeight}, ----asdasd");
-
             }
             catch (Exception e)
             {
@@ -98,7 +76,58 @@ namespace Engine.IOS
         public override void ViewDidAppear(bool animated)
         {
             base.ViewDidAppear(animated);
+            try
+            {
+                EAGLContext.SetCurrentContext(_context);
+                _view.BindDrawable();
 
+                Width = PhysicalWidth  = (int)_view.DrawableWidth;
+                Height = PhysicalHeight = (int)_view.DrawableHeight;
+
+                Debug.Log($"Size: {Width}x{Height}");
+
+                if (_engine == null)
+                    _engine = new LaminarEngine(this, ExecutableEntry.GetApplicationLayer(), _inputTest, _reader);
+
+                StartDisplayLink();
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e.ToString());
+            }
+        }
+
+        public override void ViewDidDisappear(bool animated)
+        {
+            base.ViewDidDisappear(animated);
+            StopDisplayLink();
+        }
+
+        private void StartDisplayLink()
+        {
+            StopDisplayLink(); // avoid double-creating
+            _displayLink = CADisplayLink.Create(OnFrame);
+            _displayLink.PreferredFramesPerSecond = 60;
+            _displayLink.AddToRunLoop(NSRunLoop.Main, NSRunLoopMode.Default);
+            Debug.Log("DisplayLink started");
+        }
+
+        private void StopDisplayLink()
+        {
+            _displayLink?.Invalidate();
+            _displayLink = null;
+        }
+
+        private void OnFrame()
+        {
+            if (_engine == null || !_engine.IsInitialized)
+                return;
+            
+            Debug.Log("OnFrame"); 
+            EAGLContext.SetCurrentContext(_context);
+            _view.BindDrawable();
+            _engine?.Update();
+            _view.Display();
         }
 
         private BinaryReader OpenBundleBinary(string relativePath)
@@ -107,52 +136,6 @@ namespace Engine.IOS
             return new BinaryReader(File.OpenRead(path));
         }
 
-        public override void Update()
-        {
-            // Game update logic here
-        }
-        // void Draw(object sender, GLKViewDrawEventArgs args)
-        // {
-
-        // }
-
-        public override void DrawInRect(GLKView view, CGRect rect)
-        {
-            try
-            {
-               
-                if (_engine == null)
-                {
-                     EAGLContext.SetCurrentContext(_context);
-                    view.BindDrawable();
-                
-                     Width = (int)_view.DrawableWidth;
-                Height = (int)_view.DrawableHeight;
-
-                PhysicalWidth  = (int)_view.DrawableWidth;
-                PhysicalHeight = (int)_view.DrawableHeight;
-                Debug.Log($"size ({Width}, {Height})");
-                    var status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-                        Debug.Log("Is frame buffer ok?: " + (status == GL_FRAMEBUFFER_COMPLETE));
-
-                    //if (status == GL_FRAMEBUFFER_COMPLETE)
-                    {
-                        _engine = new LaminarEngine(this, ExecutableEntry.GetApplicationLayer(), _inputTest, _reader);
-                    }
-                }
-                else
-                {
-                    _engine.Update();
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.Log(e.ToString());
-            }
-        }
-        
-        public void SwapBuffers()
-        {
-        }
+        public void SwapBuffers() { }
     }
 }
