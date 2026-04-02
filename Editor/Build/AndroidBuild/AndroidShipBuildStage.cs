@@ -65,7 +65,7 @@ namespace Editor.Build
             // NOTE: Not sure why do I have to define build type, msbuild should do it by default.
             if (settingsAndroid.Type == BuildType.Release)
             {
-                props["DefineConstants"] = "$(DefineConstants);ANDROID;MOBILE;RELEASE";
+                props["DefineConstants"] = "ANDROID;MOBILE;RELEASE";
                 props["DebugType"] = "None";
                 props["Optimize"] = "true";
                 props["AndroidStripMode"] = "All";
@@ -74,7 +74,7 @@ namespace Editor.Build
             }
             else
             {
-                props["DefineConstants"] = "$(DefineConstants);ANDROID;MOBILE;DEBUG";
+                props["DefineConstants"] = "ANDROID;MOBILE;DEBUG";
                 props["DebugSymbols"] = "true";
                 props["DebugType"] = "Embedded";
                 props["Optimize"] = "false";

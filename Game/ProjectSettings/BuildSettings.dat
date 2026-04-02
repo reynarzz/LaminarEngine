@@ -526,7 +526,7 @@
                   "Enum": {
                     "TypeId": "c3474a00-03b1-058f-c9d4-53ccb3cbb6a6",
                     "EnumInternalType": "Editor.Build.AndroidApiLevel, Editor",
-                    "EnumValue": 0
+                    "EnumValue": 23
                   }
                 }
               },

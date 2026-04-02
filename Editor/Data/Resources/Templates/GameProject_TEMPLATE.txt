@@ -32,11 +32,11 @@
 	</PropertyGroup>
 
 	<!-- Android -->
-	<PropertyGroup Condition="'$(BuildAndroid)' == 'true'">
+	<PropertyGroup Condition="'$(AndroidBuild)' == 'true'">
 		<DefineConstants>ANDROID;MOBILE</DefineConstants>
 	</PropertyGroup>
 	<!-- iOS -->
-	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios'">
+	<PropertyGroup Condition="'$(iOSBuild)' == 'true'">
 		<DefineConstants>IOS;MOBILE</DefineConstants>
 	</PropertyGroup>
 

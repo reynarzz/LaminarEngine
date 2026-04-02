@@ -27,6 +27,7 @@ namespace Engine.Graphics.OpenGL
         {
         }
 
+        private byte[] _buffer;
         protected unsafe override bool CreateResource(TextureDescriptor descriptor)
         {
             _isMultisample = descriptor.IsMultiSample;
@@ -37,16 +38,19 @@ namespace Engine.Graphics.OpenGL
             _channels = descriptor.Channels;
             if (!descriptor.IsMultiSample)
             {
+                if (descriptor.Buffer != null)
+                {
+                    _buffer = descriptor.Buffer;
+                }
+                
                 SetTextureFeatures(descriptor);
-
-                glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-                fixed (byte* data = descriptor.Buffer)
+                
+                fixed (byte* data = _buffer)
                 {
                     glTexImage2D(GL_TEXTURE_2D, 0, GetInternalFormat(descriptor.Channels), descriptor.Width, descriptor.Height, 0,
                         GetFormat(descriptor.Channels), GL_UNSIGNED_BYTE, data);
                     GLHelpers.CheckGLError();
                 }
-                // glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
             }
             else
             {
@@ -55,7 +59,6 @@ namespace Engine.Graphics.OpenGL
 
                 throw new Exception("Not multiplatorm");
             }
-
 
             Unbind();
 
@@ -205,7 +208,6 @@ namespace Engine.Graphics.OpenGL
                     texMode = GL_REPEAT;
                     break;
                 default:
-                    texMode = GL_CLAMP_TO_EDGE;
                     break;
             }
 
