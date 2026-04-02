@@ -49,7 +49,7 @@ namespace Editor.Build
                 ["ApplicationDisplayVersion"] = GetVersion(settingsAndroid.Version),
                 ["SupportedOSPlatformVersion"] = ((int)settingsAndroid.MinimumApiLevel).ToString(),
                 ["AndroidTargetSdkVersion"] = ((int)settingsAndroid.TargetApiLevel).ToString(),
-                ["BuildAndroid"] = "true",
+                ["AndroidBuild"] = "true",
                 ["BUILD_MOBILE"] = "true",
             };
 
