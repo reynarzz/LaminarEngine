@@ -84,7 +84,7 @@ namespace Engine.IOS
                 layer.DrawableProperties = new NSDictionary(EAGLDrawableProperty.RetainedBacking, false, EAGLDrawableProperty.ColorFormat, EAGLColorFormat.RGBA8);
 
 
-                _reader = OpenBundleBinary("Assets/GameData.gfs");
+                _reader = OpenBundleBinary($"Assets/{Paths.ASSET_BUILD_DATA_FULL_FILE_NAME}");
 
                 Debug.Log($"width: {Width}, Height: {Height}, Pwidth: {PhysicalWidth}, PHeight: {PhysicalHeight}, ----asdasd");
 

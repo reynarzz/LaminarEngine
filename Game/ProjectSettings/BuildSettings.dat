@@ -1462,7 +1462,7 @@
                   "Enum": {
                     "TypeId": "ab1e56b1-7744-1df5-8d84-eda53bf8a4c5",
                     "EnumInternalType": "Editor.Build.BuildType, Editor",
-                    "EnumValue": 0
+                    "EnumValue": 1
                   }
                 }
               },
