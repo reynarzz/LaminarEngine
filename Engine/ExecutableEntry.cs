@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    internal abstract class ExecutableEntry
+    internal interface ExecutableEntry
     {
         private static ApplicationLayer _appLayer;
-        protected static ApplicationLayer GetApplicationLayer()
+        internal static ApplicationLayer GetApplicationLayer()
         {
 #if SHIP_BUILD
             if (_appLayer == null)

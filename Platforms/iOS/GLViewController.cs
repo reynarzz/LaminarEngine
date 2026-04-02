@@ -1,4 +1,3 @@
-using Game;
 using GLKit;
 using OpenGL;
 using OpenGLES;
@@ -10,7 +9,7 @@ namespace Engine.IOS
     {
         private EAGLContext _context;
         private BinaryReader _reader;
-        private GFSEngine _engine;
+        private LaminarEngine _engine;
         private GLKView _view;
 
         public string Name { get; set; }
@@ -85,7 +84,6 @@ namespace Engine.IOS
                 layer.DrawableProperties = new NSDictionary(EAGLDrawableProperty.RetainedBacking, false, EAGLDrawableProperty.ColorFormat, EAGLColorFormat.RGBA8);
 
 
-                Debug.Prefix = "com.reynarzz.gfs:CONSOLE ";
                 _reader = OpenBundleBinary("Assets/GameData.gfs");
 
                 Debug.Log($"width: {Width}, Height: {Height}, Pwidth: {PhysicalWidth}, PHeight: {PhysicalHeight}, ----asdasd");
@@ -139,9 +137,7 @@ namespace Engine.IOS
 
                     //if (status == GL_FRAMEBUFFER_COMPLETE)
                     {
-
-                        _engine = new GFSEngine(this, new GameApplication(), _inputTest, _reader);
-
+                        _engine = new LaminarEngine(this, ExecutableEntry.GetApplicationLayer(), _inputTest, _reader);
                     }
                 }
                 else
@@ -154,7 +150,7 @@ namespace Engine.IOS
                 Debug.Log(e.ToString());
             }
         }
-
+        
         public void SwapBuffers()
         {
         }

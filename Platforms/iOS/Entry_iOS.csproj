@@ -7,7 +7,10 @@
     <SupportedOSPlatformVersion>13.0</SupportedOSPlatformVersion>
     <RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-
+    <BaseIntermediateOutputPath>obj/</BaseIntermediateOutputPath>
+    <IntermediateOutputPath>obj/$(Configuration)/</IntermediateOutputPath>
+    <BaseOutputPath>bin/</BaseOutputPath>
+    <OutputPath>bin/$(Configuration)/</OutputPath>
     <!--
       Enable full trimming in Release mode.
       To learn more, see: https://learn.microsoft.com/dotnet/core/deploying/trimming/trimming-options#trimming-granularity
@@ -34,8 +37,13 @@
   <BundleResource Include="Assets/**" />
 </ItemGroup>
 
-  <ItemGroup>
+  	<ItemGroup>
 		<ProjectReference Include="..\..\Engine\Engine.csproj" />
-        <ProjectReference Include="..\..\Game\Game.csproj" />
-  </ItemGroup>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="$(LAM_APPLICATION_PROJECT_PATH)"/>
+		<TrimmerRootDescriptor Include="$(LAM_TRIMMER_LINK_RD_FILE)" />
+	</ItemGroup>
+
 </Project>

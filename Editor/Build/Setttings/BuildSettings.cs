@@ -17,9 +17,10 @@ namespace Editor.Build
             {
                 { PlatformBuild.Windows, new WindowsBuildSettings() },
                 { PlatformBuild.Android, new AndroidBuildSettings() },
+                { PlatformBuild.IOS, new iOSBuildSettings() },
             };
         }
-
+ 
         public PlatformBuildSettings GetBuildSettings(PlatformBuild platform)
         {
             if(_platformsBuildSettings.TryGetValue(platform, out var settings))

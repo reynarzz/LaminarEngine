@@ -31,7 +31,7 @@ namespace Editor.Views
             {
                 { PlatformBuild.Windows, new WindowsBuildDrawer() },
                 { PlatformBuild.Android, new AndroidBuildDrawer() },
-
+                { PlatformBuild.IOS, new iOSBuildDrawer() }
             };
         }
 
