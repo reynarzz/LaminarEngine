@@ -66,6 +66,7 @@ namespace Editor.Build
                 props["Optimize"] = "true";
                 props["DebugType"] = "None";
                 props["DebugSymbols"] = "false";
+                props["MtouchUseLlvm"] = "true";
                 // props["PublishTrimmed"] = "true";
                 // props["TrimMode"] = "link";
             }

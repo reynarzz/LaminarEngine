@@ -26,7 +26,6 @@
 
 <PropertyGroup>
   <MtouchLink>None</MtouchLink> 
-  <MtouchEnableLLVM>true</MtouchEnableLLVM>
 </PropertyGroup>
 
 

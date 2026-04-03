@@ -84,6 +84,8 @@ namespace Engine.IOS
         public override void ViewDidAppear(bool animated)
         {
             base.ViewDidAppear(animated);
+            UIApplication.SharedApplication.IdleTimerDisabled = true;
+            
             try
             {
                 if (_engine != null)
