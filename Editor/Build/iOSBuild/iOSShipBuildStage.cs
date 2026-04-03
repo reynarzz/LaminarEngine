@@ -80,6 +80,9 @@ namespace Editor.Build
         {
             var buildTypeSettings = GetBuildSettings<iOSBuildSettings>(PlatformBuild.IOS).GetCurrentBuildTypeSettings();
             UpdateAppName(buildTypeSettings.ApplicationName);
+            
+            Directory.Delete(EditorPaths.iOSProjectRoot + "/bin", true);
+            Directory.Delete(EditorPaths.iOSProjectRoot + "/obj", true);
         }
 
         protected override void OnBuildSuccess()

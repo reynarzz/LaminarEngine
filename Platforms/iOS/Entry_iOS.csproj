@@ -24,13 +24,6 @@
   <CodesignProvision>Automatic</CodesignProvision>
 </PropertyGroup>
 
-<PropertyGroup>
-    <!-- Use full linker to prevent stripping symbols -->
-    <MtouchLink>Full</MtouchLink>
-    <!-- Pass flags to the linker -->
- 
-</PropertyGroup>
-
 <ItemGroup>
   <BundleResource Include="Assets/**" />
 </ItemGroup>
