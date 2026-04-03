@@ -14,7 +14,6 @@ namespace Engine
         Stationary,
         Up,
         Move,
-        Cancel,
     }
 
     public struct TouchState

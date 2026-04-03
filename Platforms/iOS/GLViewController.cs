@@ -31,14 +31,12 @@ namespace Engine.IOS
         public int Height { get; set; }
         public int OffsetX => 0;
         public int OffsetY => 0;
-
         public nint NativeWindow => 0;
-
         // Set to true to auto hide, but note that if auto is on, it will disables home bar background color blending.
         public override bool PrefersHomeIndicatorAutoHidden => false;
         public override UIRectEdge PreferredScreenEdgesDeferringSystemGestures => UIRectEdge.Bottom;
-
-
+        
+        private static readonly InputLayerIOS _inputTest = new();
         public void SetWindowSize(int width, int height)
         {
         }
@@ -92,7 +90,7 @@ namespace Engine.IOS
         {
             base.ViewDidAppear(animated);
             UIApplication.SharedApplication.IdleTimerDisabled = true;
-
+            
             try
             {
                 if (_engine != null)
@@ -105,7 +103,7 @@ namespace Engine.IOS
 
                 Debug.Log($"Size: {Width}x{Height}");
 
-                _engine = new LaminarEngine(this, ExecutableEntry.GetApplicationLayer(), new InputLayerIOS(), _reader);
+                _engine = new LaminarEngine(this, ExecutableEntry.GetApplicationLayer(), _inputTest, _reader);
             }
             catch (Exception e)
             {
@@ -137,10 +135,10 @@ namespace Engine.IOS
         {
             EAGLContext.SetCurrentContext(_context);
             _view.BindDrawable();
-
-            if (_engine == null)
+            
+            if(_engine == null)
                 return;
-
+           
             GLFrameBuffer.SyncDefaultFrameBuffer();
 
             try
@@ -170,27 +168,25 @@ namespace Engine.IOS
         public override void TouchesBegan(NSSet touches, UIEvent evt)
         {
             base.TouchesBegan(touches, evt);
-            foreach (UITouch touch in touches)
-            {
-                var location = touch.LocationInView(_view);
-                Debug.Log($"Touch began at {location.X}, {location.Y}");
-            }
+           _inputTest.OnTouchesBegan(touches, _view);
         }
 
         public override void TouchesMoved(NSSet touches, UIEvent evt)
         {
             base.TouchesMoved(touches, evt);
-            foreach (UITouch touch in touches)
-            {
-                var location = touch.LocationInView(_view);
-                Debug.Log($"Touch moved to {location.X}, {location.Y}");
-            }
+            _inputTest.OnTouchesMoved(touches, _view);
         }
 
         public override void TouchesEnded(NSSet touches, UIEvent evt)
         {
             base.TouchesEnded(touches, evt);
-            Debug.Log("Touch ended");
+            _inputTest.OnTouchesEnded(touches, _view);
+        }
+
+        public override void TouchesCancelled(NSSet touches, UIEvent? evt)
+        {
+            base.TouchesCancelled(touches, evt);
+            _inputTest.OnTouchesCancelled(touches, _view);
         }
 
         public override void ViewWillAppear(bool animated)
