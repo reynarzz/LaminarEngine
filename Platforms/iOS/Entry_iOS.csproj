@@ -11,6 +11,8 @@
     <IntermediateOutputPath>obj/$(Configuration)/</IntermediateOutputPath>
     <BaseOutputPath>bin/</BaseOutputPath>
     <OutputPath>bin/$(Configuration)/</OutputPath>
+	  <AssemblyName>$(LAM_EXECUTABLE_NAME)</AssemblyName>
+
     <!--
       Enable full trimming in Release mode.
       To learn more, see: https://learn.microsoft.com/dotnet/core/deploying/trimming/trimming-options#trimming-granularity

@@ -1009,6 +1009,20 @@
             "ClassType": "ComplexClass",
             "Properties": [
               {
+                "Name": "_orientation",
+                "Type": "Enum",
+                "InternalType": "Editor.Build.DeviceOrientation, Editor",
+                "TypeId": "5eeec139-777f-ba40-ec3e-1fdaf7fc70ea",
+                "Simple": {
+                  "Kind": "Enum",
+                  "Enum": {
+                    "TypeId": "5eeec139-777f-ba40-ec3e-1fdaf7fc70ea",
+                    "EnumInternalType": "Editor.Build.DeviceOrientation, Editor",
+                    "EnumValue": 4
+                  }
+                }
+              },
+              {
                 "Name": "Default",
                 "Type": "ComplexClass",
                 "InternalType": "Editor.Build.iOSBuildTypeSettings, Editor",
@@ -1057,7 +1071,7 @@
                         }
                       },
                       {
-                        "Name": "Version",
+                        "Name": "ShortVersion",
                         "Type": "IVec3",
                         "InternalType": "GlmNet.ivec3, Engine",
                         "TypeId": "0eb55f0e-9fb6-9ca0-f707-35ea8c2c71b9",
@@ -1068,6 +1082,16 @@
                             "y": 0,
                             "z": 0
                           }
+                        }
+                      },
+                      {
+                        "Name": "BundleVersion",
+                        "Type": "UInt",
+                        "InternalType": "System.UInt32, System.Private.CoreLib",
+                        "TypeId": "0eb1f326-5a69-6e6a-caaa-206d0252204a",
+                        "Simple": {
+                          "Kind": "UInt",
+                          "Value": 1
                         }
                       },
                       {
@@ -1205,7 +1229,7 @@
                         }
                       },
                       {
-                        "Name": "Version",
+                        "Name": "ShortVersion",
                         "Type": "IVec3",
                         "InternalType": "GlmNet.ivec3, Engine",
                         "TypeId": "0eb55f0e-9fb6-9ca0-f707-35ea8c2c71b9",
@@ -1216,6 +1240,16 @@
                             "y": 0,
                             "z": 0
                           }
+                        }
+                      },
+                      {
+                        "Name": "BundleVersion",
+                        "Type": "UInt",
+                        "InternalType": "System.UInt32, System.Private.CoreLib",
+                        "TypeId": "0eb1f326-5a69-6e6a-caaa-206d0252204a",
+                        "Simple": {
+                          "Kind": "UInt",
+                          "Value": 1
                         }
                       },
                       {
@@ -1353,7 +1387,7 @@
                         }
                       },
                       {
-                        "Name": "Version",
+                        "Name": "ShortVersion",
                         "Type": "IVec3",
                         "InternalType": "GlmNet.ivec3, Engine",
                         "TypeId": "0eb55f0e-9fb6-9ca0-f707-35ea8c2c71b9",
@@ -1364,6 +1398,16 @@
                             "y": 0,
                             "z": 0
                           }
+                        }
+                      },
+                      {
+                        "Name": "BundleVersion",
+                        "Type": "UInt",
+                        "InternalType": "System.UInt32, System.Private.CoreLib",
+                        "TypeId": "0eb1f326-5a69-6e6a-caaa-206d0252204a",
+                        "Simple": {
+                          "Kind": "UInt",
+                          "Value": 1
                         }
                       },
                       {

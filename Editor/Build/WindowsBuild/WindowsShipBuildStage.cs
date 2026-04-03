@@ -49,8 +49,6 @@ namespace Editor.Build
                 // Metadata
                 ["Company"] = buildTypeSettings.Company,
                 ["Product"] = buildTypeSettings.ApplicationName,
-                ["AppName"] = buildTypeSettings.ApplicationName,
-                ["EngineInternalsVisibleTo"] = buildTypeSettings.ApplicationName,
                 ["Description"] = buildTypeSettings.Description,
                 ["Authors"] = buildTypeSettings.Authors,
 

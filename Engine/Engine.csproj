@@ -123,7 +123,7 @@
 
 	<ItemGroup>
 		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
-			<_Parameter1>$(EngineInternalsVisibleTo)</_Parameter1>
+			<_Parameter1>$(LAM_ENGINE_INTERNALS_VISIBLE_TO_0)</_Parameter1>
 		</AssemblyAttribute>
 	</ItemGroup>
 

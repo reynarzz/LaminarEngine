@@ -16,6 +16,7 @@
 		<CompileSdkVersion>34</CompileSdkVersion>
 		<UseLatestAndroidPlatformSdk>true</UseLatestAndroidPlatformSdk>
 		<GameDataOutDir>$(MSBuildProjectDirectory)/Assets/</GameDataOutDir>
+		<AssemblyName>$(LAM_EXECUTABLE_NAME)</AssemblyName>
 
 		<!--
       Enables trim analyzers and full trimming during Release mode.

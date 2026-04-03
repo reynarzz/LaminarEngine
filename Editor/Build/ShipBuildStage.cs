@@ -21,11 +21,15 @@ namespace Editor.Build
                 constants = constants.TrimEnd(';');
             }
 
+            var appName = settings.GetCurrentBuildTypeSettings().ApplicationName;
+            
             props["LAM_APPLICATION_PROJECT_PATH"] = Path.GetFullPath(EditorPaths.GameProjectAbsolutePath);
             props["LAM_ENGINE_PROJECT_PATH"] = EditorPaths.EngineCsProjFullPath;
             props["LAM_GENERATED_PROJECT"] = EditorPaths.GameGeneratedProjectCsProjFileFullPath;
             props["LAM_TRIMMER_LINK_RD_FILE"] = EditorPaths.GameGeneratedLinkerRDFileFullPath;
-
+            props["LAM_EXECUTABLE_NAME"] = appName;
+            props["LAM_ENGINE_INTERNALS_VISIBLE_TO_0"] = appName;
+            
             if (settings.Type == BuildType.Release)
             {
                 props["Optimize"] = "true";

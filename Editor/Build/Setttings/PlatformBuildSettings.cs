@@ -30,6 +30,8 @@ namespace Editor.Build
         [SerializedField] public bool NativeAOT { get; set; } = false;
         [SerializedField] public bool ShareDefaultSettings { get; set; } = true;
         public bool RunAfterBuild { get; set; }
+
+        public abstract BuildTypeSettings GetCurrentBuildTypeSettings();
     }
 
     internal abstract class PlatformBuildSettings<T> : PlatformBuildSettings where T: BuildTypeSettings, new()
@@ -38,7 +40,7 @@ namespace Editor.Build
         [SerializedField] public T Release { get; private set; } = new T();
         [SerializedField] public T Debug { get; private set; } = new T();
 
-        public T GetCurrentBuildTypeSettings()
+        public override T GetCurrentBuildTypeSettings()
         {
             if (ShareDefaultSettings)
             {

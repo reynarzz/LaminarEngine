@@ -32,7 +32,8 @@ namespace Engine.IOS
         public int OffsetX => 0;
         public int OffsetY => 0;
         public nint NativeWindow => 0;
-
+        public override bool PrefersHomeIndicatorAutoHidden => true;
+        
         private InputLayerIOS _inputTest = new();
         public void SetWindowSize(int width, int height)
         {

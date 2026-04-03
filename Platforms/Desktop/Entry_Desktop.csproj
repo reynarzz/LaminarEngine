@@ -7,7 +7,8 @@
 		<PublishSingleFile>true</PublishSingleFile>
 		<InvariantGlobalization>true</InvariantGlobalization>
 		<ApplicationIcon>Icon.ico</ApplicationIcon>
-		<AssemblyName>$(AppName)</AssemblyName>
+		<AssemblyName>$(LAM_EXECUTABLE_NAME)</AssemblyName>
+
 	</PropertyGroup>
 
 	<PropertyGroup>
