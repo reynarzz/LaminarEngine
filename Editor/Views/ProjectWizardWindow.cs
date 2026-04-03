@@ -21,7 +21,7 @@ namespace Editor.Views
         {
             ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 2);
             var viewport = ImGui.GetMainViewport();
-            var winSize = new Vector2(viewport.Size.X / 1.2f, 400);
+            var winSize = new Vector2(viewport.Size.X / 1.1f, viewport.Size.Y / 1.1f);
 
             float spacing = 4.0f;
 
