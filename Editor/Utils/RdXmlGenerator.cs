@@ -8,7 +8,7 @@ namespace Editor
 {
     internal static class RdXmlGenerator
     {
-        public static string Generate(params Assembly[] assemblies)
+        public static string Generate(params string[] assemblies)
         {
             if (assemblies == null)
                 throw new ArgumentNullException(nameof(assemblies));
@@ -17,9 +17,9 @@ namespace Editor
 
             sb.AppendLine("<linker>");
 
-            foreach (var asm in assemblies.Where(x => x != null).Distinct().OrderBy(x => x.GetName().Name))
+            foreach (var asm in assemblies)
             {
-                string asmName = asm.GetName().Name;
+                string asmName = asm;
 
                 if (string.IsNullOrWhiteSpace(asmName))
                     continue;
