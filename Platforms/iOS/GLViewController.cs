@@ -1,8 +1,10 @@
+using System;
 using CoreAnimation;
 using Engine.Graphics;
+using Foundation;
 using GLKit;
 using OpenGLES;
-using static OpenGL.ES.GLES30;
+using UIKit;
 
 namespace Engine.IOS
 {
@@ -166,7 +168,7 @@ namespace Engine.IOS
             foreach (UITouch touch in touches)
             {
                 var location = touch.LocationInView(_view);
-                Console.WriteLine($"Touch began at {location.X}, {location.Y}");
+                Debug.Log($"Touch began at {location.X}, {location.Y}");
             }
         }
 
@@ -176,14 +178,14 @@ namespace Engine.IOS
             foreach (UITouch touch in touches)
             {
                 var location = touch.LocationInView(_view);
-                Console.WriteLine($"Touch moved to {location.X}, {location.Y}");
+                Debug.Log($"Touch moved to {location.X}, {location.Y}");
             }
         }
 
         public override void TouchesEnded(NSSet touches, UIEvent evt)
         {
             base.TouchesEnded(touches, evt);
-            Console.WriteLine("Touch ended");
+            Debug.Log("Touch ended");
         }
 
         public override void ViewWillAppear(bool animated)
@@ -192,32 +194,7 @@ namespace Engine.IOS
 
 
             // Hide the navigation bar
-            NavigationController?.SetNavigationBarHidden(true, animated: false);
-            NavigationController?.SetToolbarHidden(true, false);
             NavigationController?.SetNeedsUpdateOfHomeIndicatorAutoHidden();
-        }
-
-        public override bool PrefersStatusBarHidden()
-        {
-            // hide the top status bar
-            return true;
-        }
-
-
-        private bool allowLandscape = true;
-
-        public void SetOrientationMode(bool landscape)
-        {
-            allowLandscape = landscape;
-            UIDevice.CurrentDevice.SetValueForKey(
-                NSNumber.FromInt32((int)UIInterfaceOrientation.Unknown),
-                new NSString("orientation")
-            );
-        }
-
-        public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations()
-        {
-            return allowLandscape ? UIInterfaceOrientationMask.Landscape : UIInterfaceOrientationMask.Portrait;
         }
 
         public void SwapBuffers()

@@ -1,12 +1,7 @@
-﻿using Editor.Data;
-using GlmNet;
+﻿using GlmNet;
 using Engine;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Editor.Build
 {
@@ -18,6 +13,17 @@ namespace Editor.Build
         internal const string PUBLISH_TARGET = "Publish";
         internal const string INSTALL_TARGET = "Install";
         internal const string START_TARGET = "Start";
+    }
+
+    internal enum DeviceOrientation
+    {
+        Any,
+        PortraitAny,
+        PortraitUp,
+        PortraitDown,
+        LandscapeAny,
+        LandscapeLeft,
+        LandscapeRight
     }
 
     internal class iOSShipBuildStage : ShipBuildStage
@@ -56,7 +62,7 @@ namespace Editor.Build
                 ["ApplicationTitle"] = buildTypeSettings.ApplicationName,
                 ["DefineConstants"] = defines,
                 ["iOSBuild"] = "true",
-                ["MOBILE"]="true",
+                ["MOBILE"] = "true",
                 ["BUILD_MOBILE"] = "true",
                 ["OutputPath"] = EditorPaths.iOSPublishFolderRoot
             };
@@ -80,11 +86,12 @@ namespace Editor.Build
 
         protected override void OnBeforeBuild()
         {
-            var buildTypeSettings = GetBuildSettings<iOSBuildSettings>(PlatformBuild.IOS).GetCurrentBuildTypeSettings();
-            UpdateAppName(buildTypeSettings.ApplicationName);
+            var buildTypeSettings = GetBuildSettings<iOSBuildSettings>(PlatformBuild.IOS);
+
+            UpdateAppConfig(buildTypeSettings);
             var bin = EditorPaths.iOSProjectRoot + "/bin";
             var obj = EditorPaths.iOSProjectRoot + "/obj";
-            
+
             Directory.Delete(bin, true);
             Directory.Delete(obj, true);
 
@@ -133,33 +140,65 @@ namespace Editor.Build
 
         private string GetVersion(ivec3 version)
         {
-            return $"{version.x}.{version.y}.{version.z}.{0}";
+            return $"{version.x}.{version.y}.{version.z}";
         }
 
-        private void UpdateAppName(string name)
-        {
-            // var stringsXmlPath = Path.Combine(EditorPaths.AndroidProjectRoot, "Resources", "values", "strings.xml");
-           // File.WriteAllText(stringsXmlPath, BuildAndroidStringsXml(name));
-        }
+        private readonly static string[] _deviceOrientationNames =
+        [
+            "UIInterfaceOrientationPortrait",
+            "UIInterfaceOrientationPortraitUpsideDown",
+            "UIInterfaceOrientationLandscapeLeft",
+            "UIInterfaceOrientationLandscapeRight"
+        ];
 
-        private string BuildAndroidStringsXml(string applicationName)
+        private readonly static Dictionary<DeviceOrientation, int[]> _orientationMapper = new()
         {
-            if (string.IsNullOrEmpty(applicationName))
+            [DeviceOrientation.Any] = [0, 1, 2, 3],
+            [DeviceOrientation.PortraitAny] = [0, 1],
+            [DeviceOrientation.PortraitUp] = [0],
+            [DeviceOrientation.PortraitDown] = [1],
+            [DeviceOrientation.LandscapeAny] = [2, 3],
+            [DeviceOrientation.LandscapeLeft] = [2],
+            [DeviceOrientation.LandscapeRight] = [3],
+        };
+
+        private const string TEMPLATE_DEVICE_ORIENTATION_ID = "$__LAM_DEVICE_ORIENTATION__";
+        private const string TEMPLATE_APP_NAME_ID = "$__LAM_APP_NAME__";
+        private const string TEMPLATE_BUNDLE_ID_ID = "$__LAM_BUNDLE_ID__";
+        private const string TEMPLATE_SHORT_VERSION_ID = "$__LAM_SHORT_VERSION__";
+        private const string TEMPLATE_BUNDLE_VERSION_ID = "$__LAM_BUNDLE_VERSION__";
+        private const string TEMPLATE_BUNDLE_NAME_ID = "$__LAM_BUNDLE_NAME__";
+        
+        private void UpdateAppConfig(iOSBuildSettings settings)
+        {
+            var typeSettings = settings.GetCurrentBuildTypeSettings();
+
+            var template = File.ReadAllText(EditorPaths.InfoPlistFileTemplateFullPath);
+
+            template = template.Replace(TEMPLATE_APP_NAME_ID, typeSettings.ApplicationName);
+            template = template.Replace(TEMPLATE_BUNDLE_NAME_ID, typeSettings.ApplicationName);
+            template = template.Replace(TEMPLATE_BUNDLE_ID_ID, typeSettings.PackageName);
+            
+            if (!_orientationMapper.TryGetValue(settings._orientation, out var mappedIdxs))
             {
-                applicationName = iOSConsts.DEFAULT_APP_NAME;
+                mappedIdxs = _orientationMapper[DeviceOrientation.Any];
             }
 
-            var escapedName = SecurityElement.Escape(applicationName);
+            var orientationTags = new StringBuilder();
 
-            //return $@"<resources>
-            //            <string name=""app_name"">{escapedName}</string>
-            //            <string name=""app_text"">{escapedName}</string>
-            //          </resources>";
+            foreach (var idx in mappedIdxs)
+            {
+                orientationTags.AppendLine($"<string>{_deviceOrientationNames[idx]}</string>");
+            }
 
-            return $@"<resources>
-	<string name=""app_name"">{escapedName}</string>
-	<string name=""app_text"">{escapedName}</string>
-</resources>";
+            template = template.Replace(TEMPLATE_DEVICE_ORIENTATION_ID, orientationTags.ToString());
+
+            var shortVersion = GetVersion(typeSettings.ShortVersion);
+            template = template.Replace(TEMPLATE_SHORT_VERSION_ID, shortVersion);
+            
+            template = template.Replace(TEMPLATE_BUNDLE_VERSION_ID, typeSettings.BundleVersion.ToString());
+            
+            File.WriteAllText(EditorPaths.InfoPlistFileBuildFullPath, template);
         }
     }
 }

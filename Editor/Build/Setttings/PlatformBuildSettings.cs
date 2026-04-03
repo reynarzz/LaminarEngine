@@ -53,12 +53,4 @@ namespace Editor.Build
             return Debug;
         }
     }
-
-    internal class AssetsBuildSettings
-    {
-        public bool EncryptAll { get; set; }
-        public bool CompressAll { get; set; }
-        public int CompressionLevel { get; set; }
-
-    }
 }
