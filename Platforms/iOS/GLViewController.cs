@@ -31,10 +31,14 @@ namespace Engine.IOS
         public int Height { get; set; }
         public int OffsetX => 0;
         public int OffsetY => 0;
+
         public nint NativeWindow => 0;
-        public override bool PrefersHomeIndicatorAutoHidden => true;
-        
-        private InputLayerIOS _inputTest = new();
+
+        // Set to true to auto hide, but note that if auto is on, it will disables home bar background color blending.
+        public override bool PrefersHomeIndicatorAutoHidden => false;
+        public override UIRectEdge PreferredScreenEdgesDeferringSystemGestures => UIRectEdge.Bottom;
+
+
         public void SetWindowSize(int width, int height)
         {
         }
@@ -88,7 +92,7 @@ namespace Engine.IOS
         {
             base.ViewDidAppear(animated);
             UIApplication.SharedApplication.IdleTimerDisabled = true;
-            
+
             try
             {
                 if (_engine != null)
@@ -101,7 +105,7 @@ namespace Engine.IOS
 
                 Debug.Log($"Size: {Width}x{Height}");
 
-                _engine = new LaminarEngine(this, ExecutableEntry.GetApplicationLayer(), _inputTest, _reader);
+                _engine = new LaminarEngine(this, ExecutableEntry.GetApplicationLayer(), new InputLayerIOS(), _reader);
             }
             catch (Exception e)
             {
@@ -133,10 +137,10 @@ namespace Engine.IOS
         {
             EAGLContext.SetCurrentContext(_context);
             _view.BindDrawable();
-            
-            if(_engine == null)
+
+            if (_engine == null)
                 return;
-           
+
             GLFrameBuffer.SyncDefaultFrameBuffer();
 
             try
