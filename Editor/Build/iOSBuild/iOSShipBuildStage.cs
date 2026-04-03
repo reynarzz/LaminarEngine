@@ -65,8 +65,9 @@ namespace Editor.Build
             {
                 props["Optimize"] = "true";
                 props["DebugType"] = "None";
-                props["PublishTrimmed"] = "true";
-                props["TrimMode"] = "link";
+                props["DebugSymbols"] = "false";
+                // props["PublishTrimmed"] = "true";
+                // props["TrimMode"] = "link";
             }
             else
             {
@@ -80,9 +81,16 @@ namespace Editor.Build
         {
             var buildTypeSettings = GetBuildSettings<iOSBuildSettings>(PlatformBuild.IOS).GetCurrentBuildTypeSettings();
             UpdateAppName(buildTypeSettings.ApplicationName);
+            var bin = EditorPaths.iOSProjectRoot + "/bin";
+            var obj = EditorPaths.iOSProjectRoot + "/obj";
             
-            Directory.Delete(EditorPaths.iOSProjectRoot + "/bin", true);
-            Directory.Delete(EditorPaths.iOSProjectRoot + "/obj", true);
+            Directory.Delete(bin, true);
+            Directory.Delete(obj, true);
+
+            // In case the build fails due to a tooling error, this will make sure that the build directories exist,
+            //  otherwise the editor will have to be reopened.
+            Directory.CreateDirectory(bin);
+            Directory.CreateDirectory(obj);
         }
 
         protected override void OnBuildSuccess()
