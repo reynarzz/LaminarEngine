@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFrameworks>net9.0-windows;net9.0</TargetFrameworks>
@@ -6,10 +6,9 @@
 		<Nullable>disable</Nullable>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<RestoreLockedMode>false</RestoreLockedMode>
+		<OutputType>Library</OutputType>
 	</PropertyGroup>
 
-
-	
 	<PropertyGroup Condition="'$(Configuration)'=='Release'">
 		<DebugType>none</DebugType>
 		<DebugSymbols>false</DebugSymbols>
@@ -31,21 +30,21 @@
 	<PropertyGroup Condition="'$(OS)' == 'Unix' AND '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'True'">
 		<DefineConstants>LINUX;UNIX;DESKTOP;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>
-	
+
 	<!-- Android -->
-	<PropertyGroup Condition="'$(BuildAndroid)' == 'true'">
+	<PropertyGroup Condition="'$(AndroidBuild)' == 'true'">
 		<DefineConstants>ANDROID;MOBILE</DefineConstants>
 	</PropertyGroup>
 	<!-- iOS -->
-	<PropertyGroup Condition="'$(TargetFramework)' == 'net9.0-ios'">
+	<PropertyGroup Condition="'$(iOSBuild)' == 'true'">
 		<DefineConstants>IOS;MOBILE</DefineConstants>
 	</PropertyGroup>
-	
+
 	<ItemGroup>
 		<None Include="Assets\**\*" Visible="true">
 			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
 		</None>
-	</ItemGroup> 
+	</ItemGroup>
 	<ItemGroup>
 		<Compile Remove="Library\**" />
 		<Compile Remove="obj\**" />
@@ -70,10 +69,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="CsvHelper" Version="33.1.0" />
+		<!--Remove this, it should come from the plugins folder-->
+		<PackageReference Include="CsvHelper" Version="33.1.0" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\Engine\Engine.csproj" />
+	<ItemGroup Condition="'$(ShipBuild)' == 'true'">
+		<ProjectReference Include="$(LAM_ENGINE_PROJECT_PATH)" />
+		<TrimmerRootDescriptor Include="$(LAM_TRIMMER_LINK_RD_FILE)" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(ShipBuild)' != 'true'">
+		<ProjectReference Include="/Users/reynardoperez/Projects/GameFScratch/Engine/Engine.csproj" />
 	</ItemGroup>
 </Project>

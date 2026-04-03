@@ -1,9 +1,11 @@
-﻿<linker>
+<linker>
   <assembly fullname="Engine" preserve="all"/>
-  <assembly fullname="SharedTypes" preserve="all"/>
   <assembly fullname="Game" preserve="all"/>	
   <assembly fullname="Entry_Android" preserve="all"/>
+  <assembly fullname="Entry_iOS" preserve="all"/>
   <assembly fullname="Entry_Desktop" preserve="all"/>
   <assembly fullname="CsvHelper" preserve="all"/>
-  <assembly fullname="Newtonsoft.Json" preserve="all"/>	
+  <assembly fullname="Newtonsoft.Json" preserve="all"/>
+  <assembly fullname="SoundFlow" preserve="all"/>
+  <assembly fullname="SoundFlow_ios" preserve="all"/>
 </linker>

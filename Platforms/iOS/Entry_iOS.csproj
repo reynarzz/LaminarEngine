@@ -24,6 +24,12 @@
   <CodesignProvision>Automatic</CodesignProvision>
 </PropertyGroup>
 
+<PropertyGroup>
+  <MtouchLink>None</MtouchLink> 
+  <MtouchEnableLLVM>true</MtouchEnableLLVM>
+</PropertyGroup>
+
+
 <ItemGroup>
   <BundleResource Include="Assets/**" />
 </ItemGroup>
