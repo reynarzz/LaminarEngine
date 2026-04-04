@@ -51,3 +51,5 @@ Platforms/iOS/Assets/package.pak
 /.idea
 Platforms/iOS/Info.plist
 Platforms/iOS/Info.plist
+/Engine/Third/Native/miniaudio/miniaudio/build
+/Engine/Third/Native/miniaudio/build-ios

@@ -64,9 +64,10 @@ namespace Editor.Build
                 ["iOSBuild"] = "true",
                 ["MOBILE"] = "true",
                 ["BUILD_MOBILE"] = "true",
-                ["OutputPath"] = EditorPaths.iOSPublishFolderRoot
+                ["OutputPath"] = EditorPaths.iOSPublishFolderRoot,
+                ["LAM_IOS_NATIVE_DIR"] = EditorPaths.iOSProjectRoot + "/NativeLibraries/"
             };
-
+            
             if (isRelease)
             {
                 props["Optimize"] = "true";

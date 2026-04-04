@@ -21,6 +21,17 @@
   </PropertyGroup>
 
 <PropertyGroup>
+  <MtouchExtraArgs>-cxx -gcc_flags "$(LAM_IOS_NATIVE_DIR)libminiaudio.a"</MtouchExtraArgs>
+</PropertyGroup>
+
+<ItemGroup>
+ <NativeReference Include="$(LAM_IOS_NATIVE_DIR)/libminiaudio.a">
+    <Kind>Static</Kind>
+    <ForceLoad>true</ForceLoad>
+  </NativeReference>
+</ItemGroup>
+
+<PropertyGroup>
     <ApplicationId>com.reynarzz.gfs</ApplicationId>
   <CodesignKey>Apple Development</CodesignKey>
   <CodesignProvision>Automatic</CodesignProvision>
