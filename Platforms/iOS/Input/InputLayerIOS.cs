@@ -14,7 +14,11 @@ namespace Engine.IOS
     {
         public override TouchInput Touch { get; } = new();
         public override GamepadInput Gamepad { get; } = new();
-        public override vec2 MousePosition { get; } = default;
+        public override vec2 MousePosition => _mousePosition;
+
+        private vec2 _mousePosition;
+        private readonly Dictionary<UITouch, int> _touchIds = new();
+        private readonly bool[] _freeIds = new bool[TouchInput.MaxTouches];
 
         public override bool GetKey(KeyCode key)
         {
@@ -104,6 +108,11 @@ namespace Engine.IOS
                     Touch.TouchCount++;
                 }
             }
+            
+            if (Touch.TouchCount > 0)
+            {
+                _mousePosition = Touch.State[Touch.TouchCount - 1].Position;
+            }
         }
 
         public void OnTouchesBegan(NSSet touches, GLKView view)
@@ -169,11 +178,7 @@ namespace Engine.IOS
             state.Delta = new vec2((float)(currentPos.X - previousPos.X), (float)(currentPos.Y - previousPos.Y)) * scale;
             state.PrevPosition = new vec2((float)previousPos.X, (float)previousPos.Y) * scale;
         }
-
-
-        private readonly Dictionary<UITouch, int> _touchIds = new();
-        private readonly bool[] _freeIds = new bool[TouchInput.MaxTouches];
-
+        
         private int GetPointerId(UITouch touch)
         {
             if (_touchIds.TryGetValue(touch, out int id))
