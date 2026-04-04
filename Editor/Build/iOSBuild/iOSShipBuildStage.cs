@@ -75,7 +75,6 @@ namespace Editor.Build
                 props["DebugSymbols"] = "false";
                 props["MtouchUseLlvm"] = "true";
                 props["MtouchDebug"] = "false";
-                props["GeneratedSymbols"] = "true";
                 // props["PublishTrimmed"] = "true";
                 // props["TrimMode"] = "link";
             }
