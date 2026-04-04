@@ -56,20 +56,11 @@ namespace Engine.IOS
             {
                 ref var state = ref Touch.State[i];
 
-                const float threshold = 0.01f;
-
-                if (state.Type != TouchEvent.Up && state.Type != TouchEvent.None)
+                if (state.Type == TouchEvent.Down)
                 {
                     if (state.IsDownEventConsumed)
                     {
-                        if (MathF.Abs(state.Delta.x) < threshold && MathF.Abs(state.Delta.y) < threshold)
-                        {
-                            state.Type = TouchEvent.Stationary;
-                        }
-                        else
-                        {
-                            state.Type = TouchEvent.Move;
-                        }
+                        state.Type = TouchEvent.Stationary;
                     }
                     else
                     {
@@ -89,6 +80,7 @@ namespace Engine.IOS
                         state.Delta = vec2.Zero;
                     }
                 }
+
                 if (state.Type == TouchEvent.Up)
                 {
                     if (state.IsUpEventConsumed)
@@ -110,7 +102,6 @@ namespace Engine.IOS
                 if (state.Type != TouchEvent.None)
                 {
                     Touch.TouchCount++;
-                    Debug.Log($"id: {i}, evt: {state.Type} pos: {state.Position}, delta: {state.Delta}");
                 }
             }
         }
@@ -128,7 +119,8 @@ namespace Engine.IOS
         {
             foreach (UITouch touch in touches)
             {
-                SetTouchState(_touchIds[touch], touch, view, TouchEvent.Move);
+                var id = GetPointerId(touch);
+                SetTouchState(id, touch, view, TouchEvent.Move);
             }
         }
 
@@ -136,16 +128,31 @@ namespace Engine.IOS
         {
             foreach (UITouch touch in touches)
             {
-                SetTouchState(_touchIds[touch], touch, view, TouchEvent.Up);
+                var id = GetPointerId(touch);
+                SetTouchState(id, touch, view, TouchEvent.Up);
                 ReleasePointerId(touch);
             }
         }
 
+        public void OnTouchesCancelled(NSSet touches, GLKView view)
+        {
+            OnTouchesEnded(touches, view);
+        }
+
         private void SetTouchState(int id, UITouch touch, GLKView view, TouchEvent tEvent)
         {
+            if (id < 0 || id >= Touch.State.Length)
+            {
+                Debug.Log("Invalid touch id: " + id);
+                return;
+            }
+
             ref var state = ref Touch.State[id];
-            state.IsUpEventConsumed = false;
-            state.IsDownEventConsumed = false;
+
+            if (state.Type == TouchEvent.Down && !state.IsDownEventConsumed)
+            {
+                tEvent = TouchEvent.Down;
+            }
 
             state.Type = tEvent;
             state.PointerId = id;
@@ -157,24 +164,15 @@ namespace Engine.IOS
             {
                 state.LastMoveTimeMs = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             }
+
             state.Position = new vec2((float)currentPos.X, (float)currentPos.Y) * scale;
             state.Delta = new vec2((float)(currentPos.X - previousPos.X), (float)(currentPos.Y - previousPos.Y)) * scale;
             state.PrevPosition = new vec2((float)previousPos.X, (float)previousPos.Y) * scale;
         }
 
-        public void OnTouchesCancelled(NSSet touches, GLKView view)
-        {
-            foreach (UITouch touch in touches)
-            {
-                SetTouchState(_touchIds[touch], touch, view, TouchEvent.Up);
-                ReleasePointerId(touch);
-            }
-        }
 
         private readonly Dictionary<UITouch, int> _touchIds = new();
-        private readonly Queue<int> _freeIds = new();
-        private int _nextId = 0;
-        private const int MaxTouches = 10;
+        private readonly bool[] _freeIds = new bool[TouchInput.MaxTouches];
 
         private int GetPointerId(UITouch touch)
         {
@@ -183,22 +181,18 @@ namespace Engine.IOS
                 return id;
             }
 
-            if (_freeIds.Count > 0)
+            for (int i = 0; i < _freeIds.Length; i++)
             {
-                id = _freeIds.Dequeue();
-            }
-            else
-            {
-                if (_nextId >= MaxTouches)
+                if (!_freeIds[i])
                 {
-                    return -1;
+                    _freeIds[i] = true;
+                    _touchIds[touch] = i;
+                    return i;
                 }
-
-                id = _nextId++;
             }
 
-            _touchIds[touch] = id;
-            return id;
+            // Max touches used.
+            return -1;
         }
 
         private void ReleasePointerId(UITouch touch)
@@ -206,10 +200,10 @@ namespace Engine.IOS
             if (_touchIds.TryGetValue(touch, out int id))
             {
                 _touchIds.Remove(touch);
-                _freeIds.Enqueue(id);
+                _freeIds[id] = false;
             }
         }
-        
+
         public override void Close()
         {
         }

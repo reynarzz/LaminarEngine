@@ -18,7 +18,6 @@ namespace Engine.Android
         private readonly TouchInput _touchInput;
         private readonly GamepadInput _gamepad;
         private readonly Dictionary<int, int> _pointerToSlot;
-        private const float _deathZone = 0.001f;
         private vec2 _mousePosition;
 
         public InputLayerAndroid()
@@ -159,7 +158,7 @@ namespace Engine.Android
                             state.Delta = state.Position - state.PrevPosition;
                             state.PrevPosition = state.Position;
                             state.LastMoveTimeMs = SystemClock.UptimeMillis();
-                            if (state.Type != TouchEvent.Down && state.Delta.Magnitude > _deathZone)
+                            if (state.Type == TouchEvent.Down && state.IsDownEventConsumed)
                             {
                                 state.Type = TouchEvent.Move;
                             }

@@ -279,6 +279,8 @@ namespace Game
             }
         }
         private int _walkPointerId = -1;
+        private int _jumpTouchId = 0;
+        private int _attackTouchId = 0;
         private void TouchInput()
         {
             vec2 Normalize(vec2 pointerPos)
@@ -319,9 +321,10 @@ namespace Game
                         {
                             if (touch.Type == TouchEvent.Down)
                             {
+                                _jumpTouchId = touch.PointerId;
                                 BeginJump();
                             }
-                            else if (touch.Type == TouchEvent.Up)
+                            else if (touch.Type == TouchEvent.Up && _jumpTouchId == touch.PointerId)
                             {
                                 EndJump();
                             }

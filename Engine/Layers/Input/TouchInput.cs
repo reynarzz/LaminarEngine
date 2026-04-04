@@ -30,8 +30,11 @@ namespace Engine
 
     public class TouchInput
     {
+        internal const int MaxTouches = 20;
+        internal const float DEATH_ZONE = 0.001f;
+        
         public int TouchCount { get; internal set; } = 0;
-        internal TouchState[] State = new TouchState[20];
+        internal TouchState[] State = new TouchState[MaxTouches];
 
         public ref TouchState GetTouch(int index)
         {
