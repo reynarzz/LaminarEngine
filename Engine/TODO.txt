@@ -32,7 +32,7 @@ Fix:
 - Transformation for children doesn't work using the transform component after finishing compilaiton?
 - Deleting a texture that was assigned to an Actor, and then trying to select another will crash the engine.
 - Selecting a texture without Atlas enabled, after being disabled will give a index out exception (not sure if this is the right repro yet)
-
+- Fix assembly loading, right now csvhelper is not added for windows, but it works on other platforms.
 
 Serialization:
 - Forbid serialization of dictionaries that contains EObject as key?
