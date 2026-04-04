@@ -51,8 +51,7 @@ Refactor:
 - SceneGraphWindow, and move actor popup outside to its own function, and call it outside the actor loop.
 - Polish material UI.
 - Remove 'Newtonsoft.json' and instead use 'System.Text.Json' since it supports NativeAOT (native executable compilation)
-- The 'RdXmlGenerator.Generate' should accept a string array with just assembly names, and 
-  all the assemblies referenced by the 'Game.dll' assembly should be added as well.
+- Implement custom font rendering.
 
 Performance fix:
 - UI performance is pretty bad, rewrite the entire UI system.
@@ -75,6 +74,7 @@ Features:
 - [Editor] Import scripts and have metadata info such as 'if overrides physics methods', so rigidbodies can enable or disable physics features accordingly.
 - Metadata of every asset should be binary on final build.
 - Native AOT compilation.
+- Platform compilation objs should be placed in 'ProjectName/Library' directory, and not inside the platform dir.
 
 Editor project wizard:
 - When creating a project the Game.csproj should point to the Engine.dll that resides in  Engine/Bin/Debug folder.
