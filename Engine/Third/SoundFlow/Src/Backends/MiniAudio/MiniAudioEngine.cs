@@ -8,6 +8,9 @@ using SoundFlow.Abstracts.Devices;
 using SoundFlow.Backends.MiniAudio.Devices;
 using SoundFlow.Backends.MiniAudio.Enums;
 using SoundFlow.Backends.MiniAudio.Structs;
+#if IOS || __IOS__ || MONOMAC
+using ObjCRuntime;
+#endif
 
 namespace SoundFlow.Backends.MiniAudio;
 
@@ -19,8 +22,6 @@ public class MiniAudioEngine : AudioEngine
     private nint _context;
     private readonly List<AudioDevice> _activeDevices = [];
     private readonly MiniAudioBackend[]? _backendPriority;
-
-    internal static readonly Native.AudioCallback DataCallback = OnAudioData;
 
     private readonly ConcurrentDictionary<nint, MiniAudioDevice> _deviceMap = new();
     private static readonly ConcurrentDictionary<nint, GCHandle> ActiveEngineHandles = new();
@@ -108,8 +109,8 @@ public class MiniAudioEngine : AudioEngine
         _backendPriority = backendPriority?.ToArray();
         InitializeBackend();
     }
-
-    private static void OnAudioData(nint pDevice, nint pOutput, nint pInput, uint frameCount)
+    [UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    internal static void OnAudioData(nint pDevice, nint pOutput, nint pInput, uint frameCount)
     {
         // Look up the GCHandle using the native device pointer.
         if (!ActiveEngineHandles.TryGetValue(pDevice, out var engineHandle) ||

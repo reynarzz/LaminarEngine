@@ -7,15 +7,18 @@ namespace SoundFlow.Backends.MiniAudio;
 
 internal static unsafe partial class Native
 {
-#if SHIP_BUILD
-#if DESKTOP
-    private const string LibraryName = "RuntimeCore";
-#else
-        private const string LibraryName = "miniaudio"; // provisional, all platforms should use RuntimeCore.
-#endif
-#else
-    private const string LibraryName = "miniaudio";
-#endif
+// #if SHIP_BUILD
+// #if DESKTOP
+//     private const string LibraryName = "RuntimeCore";
+// #else
+//         private const string LibraryName = "miniaudio"; // provisional, all platforms should use RuntimeCore.
+// #endif
+// #else
+//     private const string LibraryName = "miniaudio";
+// #endif
+
+    private const string LibraryName = "__Internal";
+
 
     #region Delegates
 
@@ -24,10 +27,10 @@ internal static unsafe partial class Native
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate MiniAudioResult BufferProcessingCallback(
-        nint pCodecContext,          // The native decoder/encoder instance pointer (ma_decoder*, ma_encoder*)
-        nint pBuffer,                // The buffer pointer (void* pBufferOut or const void* pBufferIn)
-        ulong bytesRequested,        // The number of bytes requested (bytesToRead or bytesToWrite)
-        out ulong bytesTransferred   // The actual number of bytes processed/transferred (size_t*)
+        nint pCodecContext, // The native decoder/encoder instance pointer (ma_decoder*, ma_encoder*)
+        nint pBuffer, // The buffer pointer (void* pBufferOut or const void* pBufferIn)
+        ulong bytesRequested, // The number of bytes requested (bytesToRead or bytesToWrite)
+        out ulong bytesTransferred // The actual number of bytes processed/transferred (size_t*)
     );
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -256,8 +259,9 @@ internal static unsafe partial class Native
     public static partial nint AllocateEncoderConfig(SampleFormat format, uint channels,
         uint sampleRate);
 
-    [LibraryImport(LibraryName, EntryPoint = "sf_allocate_device_config")]
-    public static partial nint AllocateDeviceConfig(Capability capabilityType, uint sampleRate, AudioCallback dataCallback, nint pSfConfig);
+    [DllImport(LibraryName, EntryPoint = "sf_allocate_device_config")]
+    public static extern unsafe nint AllocateDeviceConfig(Capability capabilityType, uint sampleRate,
+        delegate* unmanaged[Cdecl]<nint, nint, nint, uint, void> dataCallback, nint pSfConfig);
 
     #endregion
 

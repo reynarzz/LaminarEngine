@@ -41,23 +41,22 @@ internal sealed class MiniAudioDevice : IDisposable
             var pSfConfig = MarshalConfig(
                 miniAudioDeviceConfig, configHandles);
 
-            var deviceConfig = Native.AllocateDeviceConfig(
-                Capability,
-                (uint)Format.SampleRate,
-                MiniAudioEngine.DataCallback,
-                pSfConfig
-            );
-
-            _device = Native.AllocateDevice();
-            var result = Native.DeviceInit(context, deviceConfig, _device);
-            Native.Free(deviceConfig);
-
-            if (result != MiniAudioResult.Success)
+            unsafe
             {
-                Native.Free(_device);
-                throw new InvalidOperationException($"Unable to init device {info?.Name ?? "Default Device"}. Result: {result}");
+                var deviceConfig = Native.AllocateDeviceConfig(Capability, (uint)Format.SampleRate, &MiniAudioEngine.OnAudioData, pSfConfig);
+                
+                _device = Native.AllocateDevice();
+                var result = Native.DeviceInit(context, deviceConfig, _device);
+                Native.Free(deviceConfig);
+                
+                if (result != MiniAudioResult.Success)
+                {
+                    Native.Free(_device);
+                    throw new InvalidOperationException($"Unable to init device {info?.Name ?? "Default Device"}. Result: {result}");
+                }
             }
-            
+           
+           
             MiniAudioEngine.RegisterEngineHandle(_device, Engine);
         }
         finally
