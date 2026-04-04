@@ -279,9 +279,7 @@ namespace Editor.Views
                 if (string.IsNullOrEmpty(csProjectFullPath))
                 {
                     Debug.Warn("Not valid .csproj was found. Creating default one now");
-                    var projFullPath = Paths.ClearPathSeparation(Path.Combine(root, EditorPaths.GAME_PROJECT_FULL_NAME));
-
-                    GameProject.CreateDefaultProject(new ProjectCreatedInfo() { ProjectName = "Game", ProjectRootDirectory = projFullPath });
+                    GameProject.CreateDefaultProject(new ProjectCreatedInfo() { ProjectName = "Game", ProjectRootDirectory = root });
                     return true;
                 }
             }
