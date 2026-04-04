@@ -8,9 +8,6 @@ using SoundFlow.Abstracts.Devices;
 using SoundFlow.Backends.MiniAudio.Devices;
 using SoundFlow.Backends.MiniAudio.Enums;
 using SoundFlow.Backends.MiniAudio.Structs;
-#if IOS || __IOS__ || MONOMAC
-using ObjCRuntime;
-#endif
 
 namespace SoundFlow.Backends.MiniAudio;
 
