@@ -29,14 +29,16 @@ namespace Game
 
             const float fps = 11.5f;
 
-            string[] atlasid = ["player_idle",
-                                "player_run",
-                                "player_jump",
-                                "player_fall",
-                                "player_hit",
-                                "player_dead",
-                                "player_attack",
-                                ];
+            string[] atlasid =
+            [
+                "player_idle",
+                "player_run",
+                "player_jump",
+                "player_fall",
+                "player_hit",
+                "player_dead",
+                "player_attack",
+            ];
 
             var states = new AnimationsStates();
             for (int i = 0; i < AnimationsStates.Length; i++)
@@ -112,6 +114,7 @@ namespace Game
         {
             _canMove = false;
             IsEnteringThroughDoor = true;
+
             IEnumerator WalkToDoor()
             {
                 if (!door)
@@ -119,6 +122,7 @@ namespace Game
                     Debug.Error("Door is null! why?");
                     yield break;
                 }
+
                 var walkDir = door.Transform.WorldPosition.x - Transform.WorldPosition.x;
 
                 while (Math.Abs(walkDir) > 0.1f)
@@ -166,6 +170,7 @@ namespace Game
                 }
             }
         }
+
         protected override void OnUpdate()
         {
             _shootCooldownTime -= Time.DeltaTime;
@@ -182,7 +187,6 @@ namespace Game
                 TouchInput();
 #endif
                 GamepadInput();
-
             }
 
 #if DEBUG
@@ -190,16 +194,17 @@ namespace Game
             {
                 //Death();
             }
+
             if (Input.GetKeyDown(KeyCode.Z))
             {
                 Restart();
             }
+
             if (Input.GetKeyDown(KeyCode.H))
             {
                 HitDamage(Transform.WorldPosition, 1);
             }
 #endif
-           
         }
 
         public void GamepadInput()
@@ -255,7 +260,6 @@ namespace Game
             }
             else if (Input.GetKeyUp(KeyCode.Space))
             {
-
                 EndJump();
             }
 
@@ -278,18 +282,26 @@ namespace Game
                 Walk(0);
             }
         }
+
         private int _walkPointerId = -1;
+        private int _jumpTouchId = 0;
+        private int _attackTouchId = -1;
+
         private void TouchInput()
         {
             vec2 Normalize(vec2 pointerPos)
             {
                 return pointerPos / new vec2(Screen.Width, Screen.Height);
             }
+
             if (Input.Touch.TouchCount > 0)
             {
                 for (int i = 0; i < Input.Touch.TouchCount; i++)
                 {
-                    ref var touch = ref Input.Touch.GetTouch(i);
+                    var touch = Input.Touch.GetTouch(i);
+                    if (touch.PointerId < 0)
+                        continue;
+
                     var pointerPos = Normalize(touch.Position);
 
                     var activellYPressing = (touch.Type == TouchEvent.Down || touch.Type == TouchEvent.Stationary || touch.Type == TouchEvent.Move);
@@ -319,21 +331,29 @@ namespace Game
                         {
                             if (touch.Type == TouchEvent.Down)
                             {
+                                _jumpTouchId = touch.PointerId;
                                 BeginJump();
                             }
-                            else if (touch.Type == TouchEvent.Up)
+                            else if (touch.Type == TouchEvent.Up && _jumpTouchId == touch.PointerId)
                             {
                                 EndJump();
                             }
                         }
-                        else
-                        {
-                            if (_shootCooldownTime <= 0)
-                            {
-                                _shootCooldownTime = _shootCooldown;
-                                Attack();
-                            }
-                        }
+                    }
+
+                    var shootArea = pointerPos.x > 0.8f && pointerPos.y >= 0.5f;
+                    var isValidAttackPointerId = _attackTouchId == -1 || _attackTouchId == touch.PointerId;
+
+                    if (activellYPressing && shootArea && _shootCooldownTime <= 0 && isValidAttackPointerId)
+                    {
+                        _shootCooldownTime = _shootCooldown;
+                        _attackTouchId = touch.PointerId;
+                        Attack();
+                    }
+
+                    if (touch.Type == TouchEvent.Up && _attackTouchId == touch.PointerId)
+                    {
+                        _attackTouchId = -1;
                     }
                 }
             }
@@ -358,7 +378,7 @@ namespace Game
             var bullet = new Actor("Bullet").AddComponent<Bullet>();
 
             var mask = LayerMask.NameToBit(GameConsts.Default) | LayerMask.NameToBit(GameConsts.ENEMY) |
-                                           LayerMask.NameToBit(GameConsts.PLATFORM);
+                       LayerMask.NameToBit(GameConsts.PLATFORM);
             bullet.Shoot(origin, vec2.Right * LookDir, _bulletSpeed, mask);
 
             return true;

@@ -1,3 +1,6 @@
+using Foundation;
+using UIKit;
+
 namespace iOS;
 
 [Register ("AppDelegate")]
@@ -21,5 +24,28 @@ public class AppDelegate : UIApplicationDelegate {
 		// Called when the user discards a scene session.
 		// If any sessions were discarded while the application was not running, this will be called shortly after 'FinishedLaunching'.
 		// Use this method to release any resources that were specific to the discarded scenes, as they will not return.
+	}
+	
+	private nint _bgTask = UIApplication.BackgroundTaskInvalid;
+
+	public override void DidEnterBackground(UIApplication application)
+	{
+		_bgTask = application.BeginBackgroundTask("MyTask", () =>
+		{
+			// Expiration handler iOS is about to kill this app, clean up
+			application.EndBackgroundTask(_bgTask);
+			_bgTask = UIApplication.BackgroundTaskInvalid;
+		});
+		
+		// Do your work here before time runs out (<=30 sec)
+	}
+
+	public override void WillEnterForeground(UIApplication application)
+	{
+		if (_bgTask != UIApplication.BackgroundTaskInvalid)
+		{
+			application.EndBackgroundTask(_bgTask);
+			_bgTask = UIApplication.BackgroundTaskInvalid;
+		}
 	}
 }

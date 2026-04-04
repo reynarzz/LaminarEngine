@@ -27,6 +27,7 @@
 		<DefineConstants>IOS;MOBILE;SHIP_BUILD;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>
 	
+
 	<!-- Linux -->
 	<PropertyGroup Condition="'$(OS)' == 'Unix' AND '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'True'">
 		<DefineConstants>LINUX;UNIX;DESKTOP;$(DefineConstants)</DefineConstants>
@@ -90,7 +91,7 @@
 				<HintPath>Third\SoundFlow\Compiled\Miniaudio\SoundFlow.dll</HintPath>
 			</Reference>
 			<Reference Condition="'$(iOSBuild)' == 'true'" Include="SoundFlow">
-				<HintPath>Third\SoundFlow\Compiled\Miniaudio\SoundFlow_ios.dll</HintPath>
+				<HintPath>Third\SoundFlow\Compiled\Miniaudio\ios\SoundFlow.dll</HintPath>
 			</Reference>
 		
 		<TrimmerRootDescriptor Include="$(LAM_TRIMMER_LINK_RD_FILE)" />
@@ -123,7 +124,7 @@
 
 	<ItemGroup>
 		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
-			<_Parameter1>$(EngineInternalsVisibleTo)</_Parameter1>
+			<_Parameter1>$(LAM_ENGINE_INTERNALS_VISIBLE_TO_0)</_Parameter1>
 		</AssemblyAttribute>
 	</ItemGroup>
 

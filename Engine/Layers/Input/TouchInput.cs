@@ -14,11 +14,22 @@ namespace Engine
         Stationary,
         Up,
         Move,
-        Cancel,
     }
 
     public struct TouchState
     {
+        public static readonly TouchState None = new()
+        {
+            PointerId = -1,
+            Type = TouchEvent.None,
+            Position = vec2.Zero,
+            Delta = vec2.Zero,
+            IsDownEventConsumed = false,
+            IsUpEventConsumed = false,
+            PrevPosition = vec2.Zero,
+            LastMoveTimeMs = 0
+        };
+
         public int PointerId;
         public TouchEvent Type;
         public vec2 Position;
@@ -31,13 +42,37 @@ namespace Engine
 
     public class TouchInput
     {
-        public int TouchCount { get; internal set; } = 0;
-        internal TouchState[] State = new TouchState[20];
+        internal const int MaxTouches = 20;
+        internal const float DEATH_ZONE = 0.001f;
 
-        public ref TouchState GetTouch(int index)
+        public int TouchCount { get; internal set; } = 0;
+        internal readonly TouchState[] State;
+
+        public TouchInput()
         {
-            return ref State[index];
+            State = new TouchState[MaxTouches];
+            for (int i = 0; i < State.Length; i++)
+            {
+                State[i] = TouchState.None;
+            }
+        }
+        
+        public TouchState GetTouch(int index)
+        {
+            if (TouchCount <= 0)
+                return TouchState.None;
+
+            for (int i = 0; i < MaxTouches; i++)
+            {
+                ref var state = ref State[index + i];
+
+                if (state.PointerId >= 0)
+                {
+                    return state;
+                }
+            }
+
+            return TouchState.None;
         }
     }
-
 }

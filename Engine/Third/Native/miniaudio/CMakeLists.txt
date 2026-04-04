@@ -9,7 +9,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 set(LIBRARY_NAME "miniaudio")
 
 # Building Shared Library
-add_library(${LIBRARY_NAME} OBJECT
+add_library(${LIBRARY_NAME} STATIC
         library.c
         library.h
         miniaudio/miniaudio.h)
@@ -78,6 +78,7 @@ elseif (CMAKE_SYSTEM_NAME STREQUAL "macOS")
     )
 
 elseif (CMAKE_SYSTEM_NAME STREQUAL "iOS")
+    enable_language(OBJC)
     # Set language to Objective-C for iOS
     set_source_files_properties(library.c PROPERTIES LANGUAGE OBJC)
 
@@ -96,15 +97,9 @@ elseif (CMAKE_SYSTEM_NAME STREQUAL "iOS")
 
     # iOS: miniaudio.framework/miniaudio
     set_target_properties(${LIBRARY_NAME} PROPERTIES
-            FRAMEWORK TRUE
-            FRAMEWORK_VERSION A
-            MACOSX_FRAMEWORK_IDENTIFIER com.mackron.miniaudio
-            MACOSX_FRAMEWORK_SHORT_VERSION_STRING "1.0"
-            MACOSX_FRAMEWORK_BUNDLE_VERSION "1"
-            XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY ""
-            XCODE_ATTRIBUTE_CODE_SIGNING_REQUIRED "NO"
-            XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED "NO"
-    )
+        PREFIX "lib"
+        SUFFIX ".a"
+)
 
 elseif (CMAKE_SYSTEM_NAME STREQUAL "Android")
     target_link_options(${LIBRARY_NAME} PRIVATE "-Wl,-z,max-page-size=16384")

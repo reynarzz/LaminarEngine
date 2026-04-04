@@ -49,6 +49,7 @@ namespace Editor
         internal const string GAME_PROJECT_FULL_NAME = GAME_PROJECT_NAME + PROJECT_EXTENSION;
         internal const string GAME_PROJECT_TEMPLATE_FILE_NAME = "GameProject_TEMPLATE.txt";
         internal const string GENERATED_PROJECT_TEMPLATE_FILE_NAME = "GeneratedProject_TEMPLATE.txt";
+        internal const string INFO_PLIST_TEMPLATE_FILE_NAME = "info_plist_TEMPLATE.txt";
 
         internal const string WIN32_DATA_SHIP_FOLDER_NAME = "Data";
 
@@ -106,6 +107,10 @@ namespace Editor
 
         public static readonly string ConfigDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Paths.ENGINE_NAME);
         public static string EditorTemplatesFolderFullPath => Path.Combine(EditorResourceFullPath, EDITOR_TEMPLATES_FOLDER_NAME);
+        public static string InfoPlistFileTemplateFullPath => Path.Combine(EditorTemplatesFolderFullPath, INFO_PLIST_TEMPLATE_FILE_NAME);
+     
+        public static string InfoPlistFileBuildFullPath => Path.Combine(iOSProjectRoot, "Info.plist");
+        
         public static string EditorResourceFullPath { get; }
 
         static EditorPaths()

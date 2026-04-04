@@ -28,17 +28,18 @@ namespace Editor.Cooker.Generator
 
             var str = TypeRegistryClassGenerator.Generate();
 
-            if (!Directory.Exists(EditorPaths.GameGeneratedProjectFolderAbsolutePath))
+            if (Directory.Exists(EditorPaths.GameGeneratedProjectFolderAbsolutePath))
             {
-                Directory.CreateDirectory(EditorPaths.GameGeneratedProjectFolderAbsolutePath);
+                Directory.Delete(EditorPaths.GameGeneratedProjectFolderAbsolutePath, true);
             }
 
-            var generatedProject = File.ReadAllText(Path.Combine(EditorPaths.EditorTemplatesFolderFullPath, 
-                                                                 EditorPaths.GENERATED_PROJECT_TEMPLATE_FILE_NAME));
+            Directory.CreateDirectory(EditorPaths.GameGeneratedProjectFolderAbsolutePath);
 
-           
-            var generatedLinker = RdXmlGenerator.Generate(LaminarTypeRegistryEditor.EngineAssembly, 
-                                                          LaminarTypeRegistryEditor.GameAssembly);
+            var generatedProject = File.ReadAllText(Path.Combine(EditorPaths.EditorTemplatesFolderFullPath,
+                EditorPaths.GENERATED_PROJECT_TEMPLATE_FILE_NAME));
+
+            var generatedLinker = RdXmlGenerator.Generate(LaminarTypeRegistryEditor.EngineAssembly.GetName().Name,
+                LaminarTypeRegistryEditor.GameAssembly.GetName().Name, "SoundFlow", "SoundFlow_ios");
 
             File.WriteAllText(EditorPaths.GameGeneratedProjectCsProjFileFullPath, generatedProject);
             File.WriteAllText(EditorPaths.GameGeneratedLinkerRDFileFullPath, generatedLinker);

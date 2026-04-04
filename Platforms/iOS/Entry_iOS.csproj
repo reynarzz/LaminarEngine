@@ -11,6 +11,8 @@
     <IntermediateOutputPath>obj/$(Configuration)/</IntermediateOutputPath>
     <BaseOutputPath>bin/</BaseOutputPath>
     <OutputPath>bin/$(Configuration)/</OutputPath>
+	  <AssemblyName>$(LAM_EXECUTABLE_NAME)</AssemblyName>
+
     <!--
       Enable full trimming in Release mode.
       To learn more, see: https://learn.microsoft.com/dotnet/core/deploying/trimming/trimming-options#trimming-granularity
@@ -19,17 +21,26 @@
   </PropertyGroup>
 
 <PropertyGroup>
+  <MtouchExtraArgs>-cxx -gcc_flags "$(LAM_IOS_NATIVE_DIR)libminiaudio.a"</MtouchExtraArgs>
+</PropertyGroup>
+
+<ItemGroup>
+ <NativeReference Include="$(LAM_IOS_NATIVE_DIR)/libminiaudio.a">
+    <Kind>Static</Kind>
+    <ForceLoad>true</ForceLoad>
+  </NativeReference>
+</ItemGroup>
+
+<PropertyGroup>
     <ApplicationId>com.reynarzz.gfs</ApplicationId>
   <CodesignKey>Apple Development</CodesignKey>
   <CodesignProvision>Automatic</CodesignProvision>
 </PropertyGroup>
 
 <PropertyGroup>
-    <!-- Use full linker to prevent stripping symbols -->
-    <MtouchLink>Full</MtouchLink>
-    <!-- Pass flags to the linker -->
- 
+  <MtouchLink>None</MtouchLink> 
 </PropertyGroup>
+
 
 <ItemGroup>
   <BundleResource Include="Assets/**" />

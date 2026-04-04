@@ -1,8 +1,10 @@
+using System;
 using CoreAnimation;
 using Engine.Graphics;
+using Foundation;
 using GLKit;
 using OpenGLES;
-using static OpenGL.ES.GLES30;
+using UIKit;
 
 namespace Engine.IOS
 {
@@ -13,14 +15,14 @@ namespace Engine.IOS
         private LaminarEngine _engine;
         private GLKView _view;
 
-        public string Name { get; set; }
-        public bool IsFullScreen { get; set; }
+        public string Name { get; set; } = "Iphone Window";
+        public bool IsFullScreen { get; set; } = true;
         public bool CursorVisible { get; set; }
         public Color StartWindowColor { get; }
         public bool ShouldClose { get; }
-        public int MonitorCount { get; set; }
+        public int MonitorCount { get; set; } = 1;
         public bool IsInitialized { get; set; } = true;
-        public bool CanResize { get; set; }
+        public bool CanResize { get; set; } = false;
         public event Action<int, int> OnWindowChanged;
         public event Action OnWindowClose;
         public int PhysicalWidth { get; set; }
@@ -30,9 +32,11 @@ namespace Engine.IOS
         public int OffsetX => 0;
         public int OffsetY => 0;
         public nint NativeWindow => 0;
-
-        private InputLayerIOS _inputTest = new();
-
+        // Set to true to auto hide, but note that if auto is on, it will disables home bar background color blending.
+        public override bool PrefersHomeIndicatorAutoHidden => false;
+        public override UIRectEdge PreferredScreenEdgesDeferringSystemGestures => UIRectEdge.Bottom;
+        
+        private static readonly InputLayerIOS _inputTest = new();
         public void SetWindowSize(int width, int height)
         {
         }
@@ -57,6 +61,7 @@ namespace Engine.IOS
                 MultipleTouchEnabled = true,
                 // Delegate = this, // required for DrawInRect to fire
             };
+            _view.BackgroundColor = UIColor.Black;
 
             var layer = (CAEAGLLayer)_view.Layer;
             layer.Opaque = true;
@@ -84,16 +89,17 @@ namespace Engine.IOS
         public override void ViewDidAppear(bool animated)
         {
             base.ViewDidAppear(animated);
+            UIApplication.SharedApplication.IdleTimerDisabled = true;
+            
             try
             {
                 if (_engine != null)
                     return;
-
                 EAGLContext.SetCurrentContext(_context);
                 _view.BindDrawable();
 
-                _newWidth = Width = PhysicalWidth = (int)_view.DrawableWidth;
-               _newHeight = Height = PhysicalHeight = (int)_view.DrawableHeight;
+                Width = PhysicalWidth = (int)_view.DrawableWidth;
+                Height = PhysicalHeight = (int)_view.DrawableHeight;
 
                 Debug.Log($"Size: {Width}x{Height}");
 
@@ -117,47 +123,34 @@ namespace Engine.IOS
         {
         }
 
-        private int _newWidth;
-        private int _newHeight;
-
         public override void ViewDidLayoutSubviews()
         {
             base.ViewDidLayoutSubviews();
 
             if (_view == null)
                 return;
-
-            var newWidth = (int)_view.DrawableWidth;
-            var newHeight = (int)_view.DrawableHeight;
-
-            if (newWidth == 0 || newHeight == 0)
-                return;
-            if (newWidth == _newWidth && newHeight == _newHeight)
-                return;
-
-            _newWidth = newWidth;
-            _newHeight = newHeight;
         }
 
         public override void DrawInRect(GLKView view, CGRect rect)
         {
-            if (_engine == null)
-                return;
-
             EAGLContext.SetCurrentContext(_context);
             _view.BindDrawable();
+            
+            if(_engine == null)
+                return;
+           
             GLFrameBuffer.SyncDefaultFrameBuffer();
 
             try
             {
-                if (_newWidth != Width || _newHeight != Height)
+                _engine.Update();
+
+                if (_view.DrawableWidth != Width || _view.DrawableHeight != Height)
                 {
-                    Width = PhysicalWidth = _newWidth;
-                    Height = PhysicalHeight = _newHeight;
+                    Width = PhysicalWidth = (int)_view.DrawableWidth;
+                    Height = PhysicalHeight = (int)_view.DrawableHeight;
                     OnWindowChanged?.Invoke(Width, Height);
                 }
-
-                _engine.Update();
             }
             catch (Exception e)
             {
@@ -169,6 +162,40 @@ namespace Engine.IOS
         {
             var path = Path.Combine(NSBundle.MainBundle.ResourcePath, relativePath);
             return new BinaryReader(File.OpenRead(path));
+        }
+
+
+        public override void TouchesBegan(NSSet touches, UIEvent evt)
+        {
+            base.TouchesBegan(touches, evt);
+           _inputTest.OnTouchesBegan(touches, _view);
+        }
+
+        public override void TouchesMoved(NSSet touches, UIEvent evt)
+        {
+            base.TouchesMoved(touches, evt);
+            _inputTest.OnTouchesMoved(touches, _view);
+        }
+
+        public override void TouchesEnded(NSSet touches, UIEvent evt)
+        {
+            base.TouchesEnded(touches, evt);
+            _inputTest.OnTouchesEnded(touches, _view);
+        }
+
+        public override void TouchesCancelled(NSSet touches, UIEvent? evt)
+        {
+            base.TouchesCancelled(touches, evt);
+            _inputTest.OnTouchesCancelled(touches, _view);
+        }
+
+        public override void ViewWillAppear(bool animated)
+        {
+            base.ViewWillAppear(animated);
+
+
+            // Hide the navigation bar
+            NavigationController?.SetNeedsUpdateOfHomeIndicatorAutoHidden();
         }
 
         public void SwapBuffers()

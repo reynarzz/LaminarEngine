@@ -14,7 +14,8 @@ namespace Editor.Build
         [SerializedField] public string Description { get; set; } = "Application description";
         [SerializedField] public string Company { get; set; } = "My Company";
         [SerializedField] public string Authors { get; set; } = "Author";
-        [SerializedField] public ivec3 Version { get; set; } = new ivec3(1, 0, 0);
+        [SerializedField] public ivec3 ShortVersion { get; set; } = new ivec3(1, 0, 0);
+        [SerializedField] public uint BundleVersion { get; set; } = 1;
 
         [SerializedField] public string CodesignKey { get; set; } = string.Empty;
         [SerializedField] public string ProvisioningProfile { get; set; } = string.Empty;
@@ -23,6 +24,7 @@ namespace Editor.Build
 
     internal class iOSBuildSettings : PlatformBuildSettings<iOSBuildTypeSettings>
     {
-
+        [SerializedField] internal DeviceOrientation _orientation = DeviceOrientation.LandscapeAny;
+        
     }
 }
