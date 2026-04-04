@@ -89,13 +89,7 @@ namespace Engine.IOS
                 {
                     if (state.IsUpEventConsumed)
                     {
-                        state.Type = TouchEvent.None;
-                        state.PointerId = -1;
-                        state.IsUpEventConsumed = false;
-                        state.IsDownEventConsumed = false;
-                        state.Position = vec2.Zero;
-                        state.Delta = vec2.Zero;
-                        state.PrevPosition = vec2.Zero;
+                        state = TouchState.None;
                     }
                     else
                     {
