@@ -51,15 +51,15 @@ namespace Game
         {
 #if DEBUG
 #if WIN32
-                Debug.Log("Running windows");
+                Debug.Log("Running Windows");
 #elif ANDROID
-                Debug.Log("Running android");
+                Debug.Log("Running Android");
 #elif IOS
-                Debug.Log("Running android");
+                Debug.Log("Running iOS");
 #elif MACOS
                 Debug.Log("Running macOs");
 #elif EDITOR
-                Debug.Log("Running editor");
+                Debug.Log("Running Editor");
 #endif
 #elif RELEASE
             Screen.IsFullScreen = true;
